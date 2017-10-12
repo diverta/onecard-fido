@@ -36,19 +36,22 @@
 // nRF52 PCA10040
 #elif NRF52
 
-#define PIN_SCAN_SW_IN						2
-#define PIN_DRV_TRIG_OUT					3
-#define PIN_MAIN_SW_IN						4
-#define PIN_PWR_CONT_OUT					28
-#define PIN_WAKEUP_OUT						30
-#define PIN_EPD_BUSY_N						7
-#define PIN_SPI_AT_CS						8
-#define PIN_SPI_MISO						10
-#define PIN_SPI_MOSI						11
-#define PIN_SPI_SCK							14
-#define PIN_SPI_EPD_CS						15
-#define PIN_EPD_POWER_EN_OUT				17
-#define PIN_EPD_RESET_OUT					19
+#define PIN_SCAN_SW_IN						28
+#define PIN_DRV_TRIG_OUT					15
+#define PIN_MAIN_SW_IN						30
+#define PIN_PWR_CONT_OUT					29
+#define PIN_WAKEUP_OUT						5
+//#define PIN_EPD_BUSY_N						7
+#define PIN_SPI_AT_CS						14
+#define PIN_SPI_MISO						8
+#define PIN_SPI_MOSI						6
+#define PIN_SPI_SCK							12
+//#define PIN_SPI_EPD_CS						15
+//#define PIN_EPD_POWER_EN_OUT				17
+//#define PIN_EPD_RESET_OUT					19
+
+#define PIN_LED2			    		27
+#define PIN_LED3				    	31
 
 #endif
 
