@@ -38,7 +38,7 @@
 #if  NRF_BLE_GATT_ENABLED
 // <o> NRF_BLE_GATT_MAX_MTU_SIZE - Static maximum MTU size that is passed to the @ref sd_ble_enable function. 
 #ifndef NRF_BLE_GATT_MAX_MTU_SIZE
-#define NRF_BLE_GATT_MAX_MTU_SIZE 23
+#define NRF_BLE_GATT_MAX_MTU_SIZE 67
 #endif
 
 #endif //NRF_BLE_GATT_ENABLED
@@ -110,7 +110,7 @@
  
 
 #ifndef BLE_DIS_ENABLED
-#define BLE_DIS_ENABLED 0
+#define BLE_DIS_ENABLED 1
 #endif
 
 // <q> BLE_GLS_ENABLED  - ble_gls - Glucose Service
@@ -223,6 +223,20 @@
 
 #ifndef BLE_TPS_ENABLED
 #define BLE_TPS_ENABLED 0
+#endif
+
+// <q> BLE_ONE_CARD_ENABLED  - ble_one_card - One Card Service
+ 
+
+#ifndef BLE_ONE_CARD_ENABLED
+#define BLE_ONE_CARD_ENABLED 0
+#endif
+
+// <q> BLE_U2F_ENABLED  - ble_u2f - FIDO U2F Service
+ 
+
+#ifndef BLE_U2F_ENABLED
+#define BLE_U2F_ENABLED 1
 #endif
 
 // </h> 
@@ -1643,7 +1657,7 @@
 // <e> RNG_ENABLED - nrf_drv_rng - RNG peripheral driver
 //==========================================================
 #ifndef RNG_ENABLED
-#define RNG_ENABLED 0
+#define RNG_ENABLED 1
 #endif
 #if  RNG_ENABLED
 // <q> RNG_CONFIG_ERROR_CORRECTION  - Error correction
@@ -3232,7 +3246,7 @@
  
 
 #ifndef ECC_ENABLED
-#define ECC_ENABLED 0
+#define ECC_ENABLED 1
 #endif
 
 // <e> FDS_ENABLED - fds - Flash data storage module
@@ -3442,7 +3456,7 @@
 // <e> MEM_MANAGER_ENABLED - mem_manager - Dynamic memory allocator
 //==========================================================
 #ifndef MEM_MANAGER_ENABLED
-#define MEM_MANAGER_ENABLED 0
+#define MEM_MANAGER_ENABLED 1
 #endif
 #if  MEM_MANAGER_ENABLED
 // <o> MEMORY_MANAGER_SMALL_BLOCK_COUNT - Size of each memory blocks identified as 'small' block.  <0-255> 
@@ -3644,7 +3658,7 @@
  
 
 #ifndef NRF_QUEUE_ENABLED
-#define NRF_QUEUE_ENABLED 0
+#define NRF_QUEUE_ENABLED 1
 #endif
 
 // <q> NRF_STRERROR_ENABLED  - nrf_strerror - Library for converting error code to string.
@@ -3779,7 +3793,7 @@
 // <4=> Debug 
 
 #ifndef NRF_LOG_DEFAULT_LEVEL
-#define NRF_LOG_DEFAULT_LEVEL 3
+#define NRF_LOG_DEFAULT_LEVEL 4
 #endif
 
 // <e> NRF_LOG_DEFERRED - Enable deffered logger.
@@ -3832,7 +3846,7 @@
 // <e> NRF_LOG_BACKEND_SERIAL_USES_UART - If enabled data is printed over UART
 //==========================================================
 #ifndef NRF_LOG_BACKEND_SERIAL_USES_UART
-#define NRF_LOG_BACKEND_SERIAL_USES_UART 0
+#define NRF_LOG_BACKEND_SERIAL_USES_UART 1
 #endif
 #if  NRF_LOG_BACKEND_SERIAL_USES_UART
 // <o> NRF_LOG_BACKEND_SERIAL_UART_BAUDRATE  - Default Baudrate
@@ -3901,7 +3915,7 @@
 // <e> NRF_LOG_BACKEND_SERIAL_USES_RTT - If enabled data is printed using RTT
 //==========================================================
 #ifndef NRF_LOG_BACKEND_SERIAL_USES_RTT
-#define NRF_LOG_BACKEND_SERIAL_USES_RTT 1
+#define NRF_LOG_BACKEND_SERIAL_USES_RTT 0
 #endif
 #if  NRF_LOG_BACKEND_SERIAL_USES_RTT
 // <o> NRF_LOG_BACKEND_RTT_OUTPUT_BUFFER_SIZE - RTT output buffer size. 
@@ -3968,6 +3982,59 @@
 
 // </h> 
 //==========================================================
+
+// </h> 
+//==========================================================
+
+// <h> nRF_Crypto 
+
+//==========================================================
+// <e> NRF_CRYPTO_ENABLED - nrf_crypto - Cryptography library
+//==========================================================
+#ifndef NRF_CRYPTO_ENABLED
+#define NRF_CRYPTO_ENABLED 1
+#endif
+#if  NRF_CRYPTO_ENABLED
+// <q> NRF_CRYPTO_BACKEND_CC310_LIB  - Enables the ARM Cryptocell CC310 backend
+ 
+
+// <i> The hardware-accelerated cryptography backend is available only on nRF52840.
+
+#ifndef NRF_CRYPTO_BACKEND_CC310_LIB
+#define NRF_CRYPTO_BACKEND_CC310_LIB 0
+#endif
+
+// <e> NRF_CRYPTO_BACKEND_MICRO_ECC - Enables the micro-ecc software backend
+
+// <i> The micro-ecc library provides a software implementation of ECC cryptography for nRF5 Series devices.
+//==========================================================
+#ifndef NRF_CRYPTO_BACKEND_MICRO_ECC
+#define NRF_CRYPTO_BACKEND_MICRO_ECC 1
+#endif
+#if  NRF_CRYPTO_BACKEND_MICRO_ECC
+// <q> NRF_CRYPTO_BACKEND_SW  - Enables hashing
+ 
+
+// <i> If enabled, the cryptography library supports hashing (needed for signing).
+
+#ifndef NRF_CRYPTO_BACKEND_SW
+#define NRF_CRYPTO_BACKEND_SW 1
+#endif
+
+// <q> NRF_CRYPTO_SUPPORTS_RNG  - Enables RNG
+ 
+
+// <i> If enabled, the cryptography library supports random number generation (needed for key generation).
+
+#ifndef NRF_CRYPTO_SUPPORTS_RNG
+#define NRF_CRYPTO_SUPPORTS_RNG 1
+#endif
+
+#endif //NRF_CRYPTO_BACKEND_MICRO_ECC
+// </e>
+
+#endif //NRF_CRYPTO_ENABLED
+// </e>
 
 // </h> 
 //==========================================================
