@@ -51,6 +51,19 @@
 #include "card_manager.h"
 #include "one_card_spi_master.h"
 
+/*
+ * FOR FIDO BLE Service.
+ */
+#include "ble_u2f.h"
+#include "ble_u2f_status.h"
+#include "ble_u2f_init.h"
+#include "ble_u2f_command.h"
+#include "ble_u2f_pairing.h"
+#include "ble_u2f_util.h"
+#include "ble_dis.h"
+
+#include "sdk_config.h"
+
 /*******************************************************************************
  * constant definition.
  ******************************************************************************/
@@ -68,8 +81,8 @@
 #define APP_ADV_INTERVAL                300                                         /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 #define APP_ADV_TIMEOUT_IN_SECONDS      180                                         /**< The advertising timeout in units of seconds. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(100, UNIT_1_25_MS)            /**< Minimum acceptable connection interval (0.1 seconds). */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(200, UNIT_1_25_MS)            /**< Maximum acceptable connection interval (0.2 second). */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(20, UNIT_1_25_MS)             /**< Minimum acceptable connection interval (0.1 seconds). */
+#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(75, UNIT_1_25_MS)             /**< Maximum acceptable connection interval (0.2 second). */
 #define SLAVE_LATENCY                   0                                           /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)             /**< Connection supervisory timeout (4 seconds). */
 
@@ -87,6 +100,8 @@
 #define SEC_PARAM_MAX_KEY_SIZE          16                                          /**< Maximum encryption key size. */
 
 #define PASSKEY_LENGTH                  6                                           /**< Length of pass-key received by the stack for display. */
+
+#define CONN_CFG_TAG                    1
 
 /*
  * timer.
@@ -118,10 +133,7 @@
  */
 #define MANUFACTURER_NAME				"Diverta,Inc"								/**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUM						"One Card Example"							/**< Model number. Will be passed to Device Information Service. */
-#define SERIAL_NUM						"0000-0000-0000"							/**< Serial number. Will be passed to Device Information Service. */
-#define HW_REV							"13.0.0"									/**< hardware revision. Will be passed to Device Information Service. */
 #define FW_REV							"13.0.0"									/**< firmware revision. Will be passed to Device Information Service. */
-#define SW_REV							"0.0.1"										/**< software revision. Will be passed to Device Information Service. */
 
 /*
  * ble : service
@@ -157,8 +169,10 @@ static void on_no_operation_timer_timeout(void *p_context);
 static void on_trigger_disabled_timer_timeout(void *p_context);
 static void on_card_sync_timer_timeout(void *p_context);
 static void on_seq_req_timer_timeout(void *p_context);
+/* 
+ * Reserved for future
 static void on_app_button_long_push_timer_timeout(void *p_context);
-
+ */
 
 /*
  * gpiote.
@@ -176,7 +190,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action);
 /*
  * peer manager.
  */
-static void peer_manager_init(bool erase_bonds);
+static void peer_manager_init(void);
 static void on_pm_evt(pm_evt_t const * p_evt);
 
 /*
@@ -239,13 +253,19 @@ static bool m_long_pushed = false;
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                            /**< Handle of the current connection. */
 static nrf_ble_gatt_t m_gatt;                                                       /**< GATT module instance. */
 
-static pm_peer_id_t m_peer_to_be_deleted = PM_PEER_ID_INVALID;
-
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
+#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 static ble_uuid_t m_adv_uuids[] = {
-	//{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE         },
+	{BLE_UUID_U2F_SERVICE,                BLE_UUID_TYPE_BLE},
+	{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE},
 	{BLE_UUID_ONE_CARD_SERVICE          , BLE_UUID_TYPE_VENDOR_BEGIN}
 };                                                                                  /**< Universally unique service identifiers. */
+#else
+static ble_uuid_t m_adv_uuids[] = {
+	{BLE_UUID_U2F_SERVICE,                BLE_UUID_TYPE_BLE},
+	{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
+};                                                                                  /**< Universally unique service identifiers. */
+#endif
 
 /* YOUR_JOB: Declare all services structure your application is using
    static ble_xx_service_t                     m_xxs;
@@ -256,6 +276,11 @@ static const ble_one_card_t *m_ble_one_card = NULL;                             
 static uint8_t m_serial_code[SERIAL_CODE_LEN + 1];
 static uint8_t m_serial_retry_count = 0;
 
+/*
+ * FOR FIDO BLE Service
+ */
+static ble_u2f_t                        m_u2f;
+
 
 /*******************************************************************************
  * entry point.
@@ -265,41 +290,50 @@ static uint8_t m_serial_retry_count = 0;
  */
 int main(void)
 {
-    ret_code_t  err_code;
-    bool        erase_bonds;
-
     log_init();
-    
     NRF_LOG_INFO("[APP]Launched.\r\n");
 
     // initialize application.
     timers_init();
     gpiote_init();
     buttons_init();
-    
+    NRF_LOG_INFO("[APP]Application initialized.\r\n");
+
     // initialize ble stack.
     ble_stack_init();
-    peer_manager_init(erase_bonds);
-    if (erase_bonds == true) {
-        NRF_LOG_INFO("[APP]Bonds erased!\r\n");
-    }
+    NRF_LOG_INFO("[APP]BLE stack initialized.\r\n");
+
+    // initialize ble services.
     ble_gap_init();
     ble_gatt_init();
-    ble_services_init();
-    ble_adv_init();
     ble_conn_init();
+    ble_services_init();
+    NRF_LOG_INFO("[APP]BLE services initialized.\r\n");
+
+    // initialize peer manager.
+    peer_manager_init();
+    NRF_LOG_INFO("[APP]Peer manager initialized.\r\n");
     
+    // アドバタイジング設定の前に、
+    // ペアリングモードをFDSから取得
+    ble_u2f_pairing_get_mode(&m_u2f);
+    ble_adv_init();
+    NRF_LOG_INFO("[APP]BLE connection initialized.\r\n");
+
     // Magstripe Data.
     magstripedata_init();
     one_card_spi_master_init();
-    
+
     // Serial Code.
+#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
     serial_code_generate();
     ble_one_card_set_serial_code(m_ble_one_card, (uint8_t*)SERIAL_CODE_BLANK, SERIAL_CODE_LEN);
+#endif
 
     // start execution.
     timers_start();
     ble_adv_start();
+    NRF_LOG_INFO("[APP]BLE advertising started.\r\n");
 
     // Enter main loop.
     for (;;) {
@@ -337,7 +371,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
  */
 static void on_sys_evt_dispatch(uint32_t sys_evt)
 {
-	NRF_LOG_INFO("[APP]on_sys_evt_dispatch(%u).\r\n", (unsigned int)sys_evt);
+	//NRF_LOG_INFO("[APP]on_sys_evt_dispatch(%u).\r\n", (unsigned int)sys_evt);
 
     // Dispatch the system event to the fstorage module, where it will be
     // dispatched to the Flash Data Storage (FDS) module.
@@ -358,22 +392,19 @@ static void on_sys_evt_dispatch(uint32_t sys_evt)
  */
 static void on_ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
-	NRF_LOG_INFO("[APP]on_ble_evt_dispatch.\r\n");
+    // ペアリングモードでない場合は、
+    // ペアリング要求に応じないようにする
+    if (ble_u2f_pairing_reject_request(m_conn_handle, p_ble_evt) == true) {
+        return;
+    }
 
-    /** The Connection state module has to be fed BLE events in order to function correctly
-     * Remember to call ble_conn_state_on_ble_evt before calling any ble_conns_state_* functions. */
     ble_conn_state_on_ble_evt(p_ble_evt);
     pm_on_ble_evt(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
+    nrf_ble_gatt_on_ble_evt(&m_gatt, p_ble_evt);
+    ble_u2f_on_ble_evt(&m_u2f, p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
-    nrf_ble_gatt_on_ble_evt(&m_gatt, p_ble_evt);
-	
-    /*YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
-       ble_xxs_on_ble_evt(&m_xxs, p_ble_evt);
-       ble_yys_on_ble_evt(&m_yys, p_ble_evt);
-     */
-    ble_one_card_on_ble_evt(p_ble_evt);
 }
 
 /**@brief Function for handling Peer Manager events.
@@ -382,9 +413,15 @@ static void on_ble_evt_dispatch(ble_evt_t * p_ble_evt)
  */
 static void on_pm_evt(pm_evt_t const * p_evt)
 {
+    // ペアリング済みである端末からの
+    // 再ペアリング要求を受入れるようにする
+    if (ble_u2f_pairing_allow_repairing(p_evt) == true) {
+        return;
+    }
+
     ret_code_t err_code;
 
-    NRF_LOG_INFO("[APP]on_pm_evt(%d).\r\n", p_evt->evt_id);
+    //NRF_LOG_INFO("[APP]on_pm_evt(%d).\r\n", p_evt->evt_id);
 
     switch (p_evt->evt_id) {
         case PM_EVT_BONDED_PEER_CONNECTED:
@@ -395,27 +432,10 @@ static void on_pm_evt(pm_evt_t const * p_evt)
 
         case PM_EVT_CONN_SEC_SUCCEEDED:
         {
-            pm_conn_sec_status_t conn_sec_status;
-
-            // Check if the link is authenticated (meaning at least MITM).
-            err_code = pm_conn_sec_status_get(p_evt->conn_handle, &conn_sec_status);
-            APP_ERROR_CHECK(err_code);
-
-            if (conn_sec_status.mitm_protected) {
-                NRF_LOG_INFO("[APP]Link secured. Role: %d. conn_handle: %d, Procedure: %d\r\n",
-                             ble_conn_state_role(p_evt->conn_handle),
-                             p_evt->conn_handle,
-                             p_evt->params.conn_sec_succeeded.procedure);
-            }
-            else {
-                // The peer did not use MITM, disconnect.
-                NRF_LOG_INFO("[APP]Collector did not use MITM, disconnecting\r\n");
-                err_code = pm_peer_id_get(m_conn_handle, &m_peer_to_be_deleted);
-                APP_ERROR_CHECK(err_code);
-                err_code = sd_ble_gap_disconnect(m_conn_handle,
-                                                 BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-                APP_ERROR_CHECK(err_code);
-            }
+            NRF_LOG_INFO("[APP]Connection secured: role: %d, conn_handle: 0x%x, procedure: %d.\r\n",
+                         ble_conn_state_role(p_evt->conn_handle),
+                         p_evt->conn_handle,
+                         p_evt->params.conn_sec_succeeded.procedure);
         }
 		break;
 
@@ -427,6 +447,7 @@ static void on_pm_evt(pm_evt_t const * p_evt)
              * Sometimes, it cannot be restarted until the link is disconnected and reconnected.
              * Sometimes it is impossible, to secure the link, or the peer device does not support it.
              * How to handle this error is highly application dependent. */
+            NRF_LOG_ERROR("[APP]Secured connection failed. \r\n");
         } break;
 
         case PM_EVT_CONN_SEC_CONFIG_REQ:
@@ -452,7 +473,7 @@ static void on_pm_evt(pm_evt_t const * p_evt)
 
         case PM_EVT_PEERS_DELETE_SUCCEEDED:
         {
-            ble_adv_start();
+            NRF_LOG_ERROR("[APP]Bonding information has deleted. \r\n");
         }
 		break;
 
@@ -540,7 +561,7 @@ static void on_conn_params_error_handler(uint32_t nrf_error)
  */
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 {
-    NRF_LOG_INFO("[APP]on_adv_evt(%d).\r\n", ble_adv_evt);
+    //NRF_LOG_INFO("[APP]on_adv_evt(%d).\r\n", ble_adv_evt);
     
     switch (ble_adv_evt) {
         case BLE_ADV_EVT_IDLE:
@@ -563,20 +584,34 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 {
     ret_code_t err_code = NRF_SUCCESS;
 
-    NRF_LOG_INFO("[APP]on_ble_evt(%d).\r\n", p_ble_evt->header.evt_id);
+    //NRF_LOG_INFO("[APP]on_ble_evt(0x%02x).\r\n", p_ble_evt->header.evt_id);
     
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("[APP]Disconnected.\r\n");
+            m_conn_handle = BLE_CONN_HANDLE_INVALID;
             break; // BLE_GAP_EVT_DISCONNECTED
 
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("[APP]Connected.\r\n");
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            // Start Security Request timer.
-            err_code = app_timer_start(m_sec_req_timer_id, SECURITY_REQUEST_DELAY, NULL);
-            APP_ERROR_CHECK(err_code);
             break; // BLE_GAP_EVT_CONNECTED
+
+        case BLE_GAP_EVT_DATA_LENGTH_UPDATE_REQUEST:
+        {
+            ble_gap_data_length_params_t dl_params;
+
+            // Clearing the struct will effectivly set members to @ref BLE_GAP_DATA_LENGTH_AUTO
+            memset(&dl_params, 0, sizeof(ble_gap_data_length_params_t));
+            err_code = sd_ble_gap_data_length_update(p_ble_evt->evt.gap_evt.conn_handle, &dl_params, NULL);
+            APP_ERROR_CHECK(err_code);
+        } break;
+
+        case BLE_GATTS_EVT_SYS_ATTR_MISSING:
+            // No system attributes have been stored.
+            err_code = sd_ble_gatts_sys_attr_set(m_conn_handle, NULL, 0, 0);
+            APP_ERROR_CHECK(err_code);
+            break; // BLE_GATTS_EVT_SYS_ATTR_MISSING
 
         case BLE_GATTC_EVT_TIMEOUT:
             // Disconnect on GATT Client timeout event.
@@ -594,50 +629,14 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             APP_ERROR_CHECK(err_code);
             break; // BLE_GATTS_EVT_TIMEOUT
 
-        case BLE_GAP_EVT_PASSKEY_DISPLAY:
-        {
-            // Don't send delayed Security Request if security procedure is already in progress.
-            err_code = app_timer_stop(m_sec_req_timer_id);
-            APP_ERROR_CHECK(err_code);
-            
-            char passkey[PASSKEY_LENGTH + 1];
-            memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, PASSKEY_LENGTH);
-            passkey[PASSKEY_LENGTH] = '\0';
-
-            NRF_LOG_INFO("[APP]Passkey: %s\r\n", nrf_log_push(passkey));
-        }
-		break; // BLE_GAP_EVT_PASSKEY_DISPLAY
-
         case BLE_EVT_USER_MEM_REQUEST:
             err_code = sd_ble_user_mem_reply(p_ble_evt->evt.gattc_evt.conn_handle, NULL);
             APP_ERROR_CHECK(err_code);
             break; // BLE_EVT_USER_MEM_REQUEST
 
-        case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
-        {
-            ble_gatts_evt_rw_authorize_request_t  req;
-            ble_gatts_rw_authorize_reply_params_t auth_reply;
-
-            req = p_ble_evt->evt.gatts_evt.params.authorize_request;
-
-            if (req.type != BLE_GATTS_AUTHORIZE_TYPE_INVALID) {
-                if ((req.request.write.op == BLE_GATTS_OP_PREP_WRITE_REQ)     ||
-                    (req.request.write.op == BLE_GATTS_OP_EXEC_WRITE_REQ_NOW) ||
-                    (req.request.write.op == BLE_GATTS_OP_EXEC_WRITE_REQ_CANCEL)) {
-                    if (req.type == BLE_GATTS_AUTHORIZE_TYPE_WRITE) {
-                        auth_reply.type = BLE_GATTS_AUTHORIZE_TYPE_WRITE;
-                    }
-                    else {
-                        auth_reply.type = BLE_GATTS_AUTHORIZE_TYPE_READ;
-                    }
-                    auth_reply.params.write.gatt_status = APP_FEATURE_NOT_SUPPORTED;
-                    err_code = sd_ble_gatts_rw_authorize_reply(p_ble_evt->evt.gatts_evt.conn_handle,
-                                                               &auth_reply);
-                    APP_ERROR_CHECK(err_code);
-                }
-            }
-        }
-		break; // BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST
+        case BLE_GATTS_EVT_HVN_TX_COMPLETE:
+            ble_u2f_status_on_tx_complete(&m_u2f);
+            break; // BLE_GATTS_EVT_HVN_TX_COMPLETE
 
         default:
             // No implementation needed.
@@ -652,8 +651,6 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
  */
 static void on_one_card_evt(uint16_t evt_id)
 {
-	ret_code_t err_code;
-	
 	NRF_LOG_INFO("[APP]on_one_card_evt(%d).\r\n", evt_id);
 	
 	switch (evt_id) {
@@ -818,7 +815,7 @@ static void on_no_operation_timer_timeout(void *p_context)
 	// count down.
 	if (0 < m_no_operation_timer_sec) {
 		m_no_operation_timer_sec--;
-		NRF_LOG_INFO("[APP]No operation timer timeout(%d).\r\n", m_no_operation_timer_sec);
+		//NRF_LOG_INFO("[APP]No operation timer timeout(%d).\r\n", m_no_operation_timer_sec);
 		// time up.
 		if (m_no_operation_timer_sec == 0) {
 			// TODO
@@ -948,6 +945,13 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 			else if (pin_no == PIN_MAIN_SW_IN) {
 				// timer stop.
 				app_timer_stop(m_long_push_timer_id);
+
+                // FIDO U2F固有の処理を実行
+                NRF_LOG_INFO("[APP]PIN_MAIN_SW_IN short pushed(%d).\r\n", pin_no);
+                if (ble_u2f_command_on_mainsw_event(&m_u2f) == true) {
+                    break;
+                }
+
 				// switch the current card selection.
 				magstripedata_switch_card_selection();
 			}
@@ -968,6 +972,11 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 				// not supported...
 			}
 			else if (pin_no == PIN_MAIN_SW_IN) {
+                // FIDO U2F固有の処理を実行
+                NRF_LOG_INFO("[APP]PIN_MAIN_SW_IN long pushed(%d).\r\n", pin_no);
+                if (ble_u2f_command_on_mainsw_long_push_event(&m_u2f) == true) {
+                    break;
+                }
 			}
 			else {
 				// do nothing...
@@ -1087,6 +1096,10 @@ static void buttons_init(void)
 
     err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
+
+    // BLE U2Fで使用するLEDのピン番号を設定
+    m_u2f.led_for_pairing_mode  = PIN_LED2;
+    m_u2f.led_for_user_presence = PIN_LED3;
 }
 
 /**@brief Function for starting timers.
@@ -1108,11 +1121,8 @@ static void timers_start(void)
 }
 
 /**@brief Function for the Peer Manager initialization.
- *
- * @param[in] erase_bonds  Indicates whether bonding information should be cleared from
- *                         persistent storage during initialization of the Peer Manager.
  */
-static void peer_manager_init(bool erase_bonds)
+static void peer_manager_init(void)
 {
     ble_gap_sec_params_t sec_param;
     ret_code_t           err_code;
@@ -1120,14 +1130,8 @@ static void peer_manager_init(bool erase_bonds)
     err_code = pm_init();
     APP_ERROR_CHECK(err_code);
 
-    if (erase_bonds) {
-        err_code = pm_peers_delete();
-        APP_ERROR_CHECK(err_code);
-    }
-
     memset(&sec_param, 0, sizeof(ble_gap_sec_params_t));
 
-#if 0
     // Security parameters to be used for all security procedures.
     sec_param.bond           = SEC_PARAM_BOND;
     sec_param.mitm           = SEC_PARAM_MITM;
@@ -1141,26 +1145,15 @@ static void peer_manager_init(bool erase_bonds)
     sec_param.kdist_own.id   = 1;
     sec_param.kdist_peer.enc = 1;
     sec_param.kdist_peer.id  = 1;
-#else
-    /* Passkey bonding with keyboard capabilities: */
-    sec_param.bond              = 1;
-    sec_param.mitm              = 1;
-    sec_param.lesc              = 0;
-    sec_param.keypress          = 0;
-    sec_param.io_caps           = BLE_GAP_IO_CAPS_DISPLAY_ONLY;
-    sec_param.oob               = 0;
-    sec_param.min_key_size      = SEC_PARAM_MIN_KEY_SIZE;
-    sec_param.max_key_size      = SEC_PARAM_MAX_KEY_SIZE;
-    sec_param.kdist_own.enc     = 1;
-    sec_param.kdist_own.id      = 1;
-    sec_param.kdist_peer.enc    = 1;
-    sec_param.kdist_peer.id     = 1;
-#endif
 
     err_code = pm_sec_params_set(&sec_param);
     APP_ERROR_CHECK(err_code);
 
     err_code = pm_register(on_pm_evt);
+    APP_ERROR_CHECK(err_code);
+
+    // FDS処理完了後のU2F処理を続行させる
+    err_code = fds_register(ble_u2f_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -1184,10 +1177,6 @@ static void ble_stack_init(void)
 
     // Overwrite some of the default configurations for the BLE stack.
     ble_cfg_t ble_cfg;
-    //memset(&ble_cfg, 0, sizeof(ble_cfg));
-    //ble_cfg.common_cfg.vs_uuid_cfg.vs_uuid_count = 0;
-    //err_code = sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, &ble_cfg, ram_start);
-    //APP_ERROR_CHECK(err_code);
 
     // Configure the maximum number of connections.
     memset(&ble_cfg, 0, sizeof(ble_cfg));
@@ -1195,6 +1184,23 @@ static void ble_stack_init(void)
     ble_cfg.gap_cfg.role_count_cfg.central_role_count = 0;
     ble_cfg.gap_cfg.role_count_cfg.central_sec_count  = 0;
     err_code = sd_ble_cfg_set(BLE_GAP_CFG_ROLE_COUNT, &ble_cfg, ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // FIDO機能に対応できるようにするため、
+    // デフォルトのBLE設定を変更する
+    // Configure the maximum ATT MTU.
+    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
+    ble_cfg.conn_cfg.conn_cfg_tag                 = CONN_CFG_TAG;
+    ble_cfg.conn_cfg.params.gatt_conn_cfg.att_mtu = NRF_BLE_GATT_MAX_MTU_SIZE;
+    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GATT, &ble_cfg, ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // Configure the maximum event length.
+    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
+    ble_cfg.conn_cfg.conn_cfg_tag                     = CONN_CFG_TAG;
+    ble_cfg.conn_cfg.params.gap_conn_cfg.event_length = 320;
+    ble_cfg.conn_cfg.params.gap_conn_cfg.conn_count   = BLE_GAP_CONN_COUNT_DEFAULT;
+    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GAP, &ble_cfg, ram_start);
     APP_ERROR_CHECK(err_code);
 
     // Enable BLE stack.
@@ -1228,10 +1234,6 @@ static void ble_gap_init(void)
                                           strlen(DEVICE_NAME));
     APP_ERROR_CHECK(err_code);
 
-    /* YOUR_JOB: Use an appearance value matching the application's use case.
-       err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_);
-       APP_ERROR_CHECK(err_code); */
-
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
 
     gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
@@ -1249,63 +1251,48 @@ static void ble_gatt_init(void)
 {
     ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
     APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_ble_gatt_att_mtu_periph_set(&m_gatt, BLE_GATT_ATT_MTU_PERIPH_SIZE);
+    APP_ERROR_CHECK(err_code);
 }
 
 /**@brief Function for initializing services that will be used by the application.
  */
 static void ble_services_init(void)
 {
-    /* YOUR_JOB: Add code to initialize the services used by the application.
-       uint32_t                           err_code;
-       ble_xxs_init_t                     xxs_init;
-       ble_yys_init_t                     yys_init;
-
-       // Initialize XXX Service.
-       memset(&xxs_init, 0, sizeof(xxs_init));
-
-       xxs_init.evt_handler                = NULL;
-       xxs_init.is_xxx_notify_supported    = true;
-       xxs_init.ble_xx_initial_value.level = 100;
-
-       err_code = ble_bas_init(&m_xxs, &xxs_init);
-       APP_ERROR_CHECK(err_code);
-
-       // Initialize YYY Service.
-       memset(&yys_init, 0, sizeof(yys_init));
-       yys_init.evt_handler                  = on_yys_evt;
-       yys_init.ble_yy_initial_value.counter = 0;
-
-       err_code = ble_yy_service_init(&yys_init, &yy_init);
-       APP_ERROR_CHECK(err_code);
-     */
 	ret_code_t err_code;
-	ble_one_card_init_t	one_card_init;
-	//ble_dis_init_t		dis_init;
 
 	// Initialize Diverta One Card Service.
+#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
+	ble_one_card_init_t	one_card_init;
 	memset(&one_card_init, 0, sizeof(one_card_init));
 	one_card_init.evt_handler = on_one_card_evt;
 
 	err_code = ble_one_card_init(&one_card_init, &m_ble_one_card);
 	APP_ERROR_CHECK(err_code);
-	
-	// Initialize Device Information Service.
-#if 0
-	memset(&dis_init, 0, sizeof(dis_init));
-	ble_srv_ascii_to_utf8(&dis_init.manufact_name_str   , MANUFACTURER_NAME);
-	ble_srv_ascii_to_utf8(&dis_init.model_num_str       , MODEL_NUM);
-	ble_srv_ascii_to_utf8(&dis_init.serial_num_str      , SERIAL_NUM);
-	ble_srv_ascii_to_utf8(&dis_init.hw_rev_str          , HW_REV);
-	ble_srv_ascii_to_utf8(&dis_init.fw_rev_str          , FW_REV);
-	ble_srv_ascii_to_utf8(&dis_init.sw_rev_str          , SW_REV);
-	dis_init.p_sys_id = NULL;
+#endif
 
-	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&dis_init.dis_attr_md.read_perm);
-	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&dis_init.dis_attr_md.write_perm);
+    // Initialize FIDO U2F Service.
+    err_code = ble_u2f_init_services(&m_u2f);
+    APP_ERROR_CHECK(err_code);
+
+	// Initialize Device Information Service.
+    //  FIDO U2Fでは、以下の3項目を
+    //  DISにより提供するのが必須.
+    //   Manufacturer Name String
+    //   Model Number String
+    //   Firmware Revision String
+	ble_dis_init_t dis_init;
+	memset(&dis_init, 0, sizeof(dis_init));
+	ble_srv_ascii_to_utf8(&dis_init.manufact_name_str, MANUFACTURER_NAME);
+	ble_srv_ascii_to_utf8(&dis_init.model_num_str    , MODEL_NUM);
+	ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , FW_REV);
+
+    BLE_GAP_CONN_SEC_MODE_SET_ENC_NO_MITM(&dis_init.dis_attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&dis_init.dis_attr_md.write_perm);
 
 	err_code = ble_dis_init(&dis_init);
 	APP_ERROR_CHECK(err_code);
-#endif
 }
 
 /**@brief Function for initializing the Connection Parameters module.
@@ -1336,24 +1323,32 @@ static void ble_adv_init(void)
 {
     ret_code_t             err_code;
     ble_advdata_t          advdata;
+    ble_advdata_t          scanrsp;
     ble_adv_modes_config_t options;
 
     // Build advertising data struct to pass into @ref ble_advertising_init.
     memset(&advdata, 0, sizeof(advdata));
+    advdata.name_type          = BLE_ADVDATA_FULL_NAME;
+    advdata.include_appearance = false;
 
-    advdata.name_type               = BLE_ADVDATA_FULL_NAME;
-    advdata.include_appearance      = true;
-    advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-    advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
-    advdata.uuids_complete.p_uuids  = m_adv_uuids;
+    // ペアリングモードでない場合は、
+    // ディスカバリーができないよう設定
+    advdata.flags = ble_u2f_pairing_advertising_flag();
 
+    memset(&scanrsp, 0, sizeof(scanrsp));
+    scanrsp.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
+    scanrsp.uuids_complete.p_uuids  = m_adv_uuids;
+    
     memset(&options, 0, sizeof(options));
     options.ble_adv_fast_enabled  = true;
     options.ble_adv_fast_interval = APP_ADV_INTERVAL;
     options.ble_adv_fast_timeout  = APP_ADV_TIMEOUT_IN_SECONDS;
 
-    err_code = ble_advertising_init(&advdata, NULL, &options, on_adv_evt, NULL);
+    err_code = ble_advertising_init(&advdata, &scanrsp, &options, on_adv_evt, NULL);
     APP_ERROR_CHECK(err_code);
+
+    // デフォルトから変更したBLE設定でアドバタイズを行うよう指示
+    ble_advertising_conn_cfg_tag_set(CONN_CFG_TAG);
 }
 
 /*
@@ -1361,6 +1356,7 @@ static void ble_adv_init(void)
  */
 static void ble_adv_start(void)
 {
+    NRF_LOG_INFO("ble_adv_start \r\n");
     ret_code_t err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
 
     APP_ERROR_CHECK(err_code);
@@ -1383,7 +1379,12 @@ static void sleep_mode_enter(void)
 {
     ret_code_t err_code;
 
+    // FIDO U2Fで使用しているLEDを消灯
+    ble_u2f_led_light_LED(m_u2f.led_for_pairing_mode,  false);
+    ble_u2f_led_light_LED(m_u2f.led_for_user_presence, false);
+
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
+    NRF_LOG_DEBUG("[APP]calling sd_power_system_off() \r\n");
     err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
 }
@@ -1450,8 +1451,10 @@ static void magstripedata_switch_card_selection(void)
 	
 	// Attribute value の更新.
 	// # Selected Card Number.
+#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 	ble_one_card_set_selected_card_no(m_ble_one_card, current_card_no);
 	NRF_LOG_INFO("[APP]current card no: %d\r\n", current_card_no);
+#endif
 	
 	// transfer the MagstripeData.
 	magstripedata_transfer(p_selected_card->card_type, 

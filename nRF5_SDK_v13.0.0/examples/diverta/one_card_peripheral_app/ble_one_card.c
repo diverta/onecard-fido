@@ -3,6 +3,8 @@
  *
  * One Card サービス.
  */
+#include "sdk_common.h"
+#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 
 /*******************************************************************************
  * include.
@@ -1907,3 +1909,4 @@ static void ble_one_card_parse_gatts_user_mem_to_attr_value(ble_one_card_gatts_u
 		// do nothing...
 	}
 }
+#endif // NRF_MODULE_ENABLED(BLE_ONE_CARD)

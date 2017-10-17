@@ -225,6 +225,13 @@
 #define BLE_TPS_ENABLED 0
 #endif
 
+// <q> BLE_ONE_CARD_ENABLED  - ble_one_card - One Card Service
+ 
+
+#ifndef BLE_ONE_CARD_ENABLED
+#define BLE_ONE_CARD_ENABLED 0
+#endif
+
 // <q> BLE_U2F_ENABLED  - ble_u2f - FIDO U2F Service
  
 
@@ -3786,7 +3793,7 @@
 // <4=> Debug 
 
 #ifndef NRF_LOG_DEFAULT_LEVEL
-#define NRF_LOG_DEFAULT_LEVEL 3
+#define NRF_LOG_DEFAULT_LEVEL 4
 #endif
 
 // <e> NRF_LOG_DEFERRED - Enable deffered logger.
