@@ -52,13 +52,14 @@
 #include "one_card_spi_master.h"
 
 /*
- * FOR FIDO BLE Service.
+ * For FIDO BLE Service.
  */
 #include "ble_u2f.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_init.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_pairing.h"
+#include "ble_u2f_pairing_lesc.h"
 #include "ble_u2f_util.h"
 #include "ble_dis.h"
 
@@ -92,7 +93,7 @@
 
 #define SEC_PARAM_BOND                  1                                           /**< Perform bonding. */
 #define SEC_PARAM_MITM                  0                                           /**< Man In The Middle protection not required. */
-#define SEC_PARAM_LESC                  0                                           /**< LE Secure Connections not enabled. */
+#define SEC_PARAM_LESC                  1                                           /**< LE Secure Connections not enabled. */
 #define SEC_PARAM_KEYPRESS              0                                           /**< Keypress notifications not enabled. */
 #define SEC_PARAM_IO_CAPABILITIES       BLE_GAP_IO_CAPS_NONE                        /**< No I/O capabilities. */
 #define SEC_PARAM_OOB                   0                                           /**< Out Of Band data not available. */
@@ -277,9 +278,9 @@ static uint8_t m_serial_code[SERIAL_CODE_LEN + 1];
 static uint8_t m_serial_retry_count = 0;
 
 /*
- * FOR FIDO BLE Service
+ * For FIDO BLE Service
  */
-static ble_u2f_t                        m_u2f;
+static ble_u2f_t m_u2f;
 
 
 /*******************************************************************************
@@ -582,6 +583,11 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
  */
 static void on_ble_evt(ble_evt_t * p_ble_evt)
 {
+    // LESCペアリングによる鍵交換処理
+    if (ble_u2f_pairing_lesc_on_ble_evt(p_ble_evt) == true) {
+        return;
+    }
+
     ret_code_t err_code = NRF_SUCCESS;
 
     //NRF_LOG_INFO("[APP]on_ble_evt(0x%02x).\r\n", p_ble_evt->header.evt_id);
@@ -1154,6 +1160,10 @@ static void peer_manager_init(void)
 
     // FDS処理完了後のU2F処理を続行させる
     err_code = fds_register(ble_u2f_command_on_fs_evt);
+    APP_ERROR_CHECK(err_code);
+
+    // LESC用のキーペアを生成する
+    err_code = ble_u2f_pairing_lesc_generate_key_pair();
     APP_ERROR_CHECK(err_code);
 }
 

@@ -2909,6 +2909,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_version.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_u2f_pairing_lesc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2954,6 +2959,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\components\libraries\crypto\nrf_crypto_rng.c</FilePath>
             </File>
+            <File>
+              <FileName>nrf_crypto_ecdh.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\components\libraries\crypto\nrf_crypto_ecdh.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2988,6 +2998,11 @@
               <FileName>nrf_crypto_sw_rng.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\components\libraries\crypto\backend\nrf_crypto_sw\nrf_crypto_sw_rng.c</FilePath>
+            </File>
+            <File>
+              <FileName>micro_ecc_lib_ecdh.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\components\libraries\crypto\backend\micro_ecc\micro_ecc_lib_ecdh.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5901,6 +5916,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_version.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_u2f_pairing_lesc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5946,6 +5966,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\components\libraries\crypto\nrf_crypto_rng.c</FilePath>
             </File>
+            <File>
+              <FileName>nrf_crypto_ecdh.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\components\libraries\crypto\nrf_crypto_ecdh.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5980,6 +6005,11 @@
               <FileName>nrf_crypto_sw_rng.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\components\libraries\crypto\backend\nrf_crypto_sw\nrf_crypto_sw_rng.c</FilePath>
+            </File>
+            <File>
+              <FileName>micro_ecc_lib_ecdh.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\components\libraries\crypto\backend\micro_ecc\micro_ecc_lib_ecdh.c</FilePath>
             </File>
           </Files>
         </Group>
