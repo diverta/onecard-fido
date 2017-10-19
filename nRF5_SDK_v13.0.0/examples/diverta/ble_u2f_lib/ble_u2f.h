@@ -174,7 +174,7 @@ typedef struct
 
 
 uint32_t ble_u2f_init(ble_u2f_t * p_u2f);
-void     ble_u2f_on_ble_evt(ble_u2f_t * p_u2f, ble_evt_t * p_ble_evt);
+bool     ble_u2f_on_ble_evt(ble_u2f_t * p_u2f, ble_evt_t * p_ble_evt);
 
 
 #ifdef __cplusplus

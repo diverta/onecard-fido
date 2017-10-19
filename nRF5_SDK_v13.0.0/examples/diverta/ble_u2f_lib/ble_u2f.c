@@ -8,7 +8,7 @@
 #define NRF_LOG_MODULE_NAME "ble_u2f"
 #include "nrf_log.h"
 
-static void on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
+static void ble_u2f_on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 {
     // U2Fクライアントとの接続が行われた時は、
     // 接続ハンドルを保持する
@@ -18,7 +18,7 @@ static void on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
     ble_u2f_command_initialize_context();
 }
 
-static void on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
+static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 {
     // U2Fクライアントとの接続が切り離された時は、
     // 接続ハンドルをクリアする
@@ -30,7 +30,7 @@ static void on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 }
 
 
-static void on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+static bool ble_u2f_on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
@@ -45,17 +45,23 @@ static void on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
             p_u2f->is_notification_enabled = false;
             NRF_LOG_DEBUG("on_cccd_write: Notification status changed to disabled \r\n");
         }
+        return true;
 
     } else if (p_evt_write->handle == p_u2f->u2f_control_point_handles.value_handle) {
         // Control Point（コマンドバッファ）の内容更新時の処理
         // コマンドバッファに入力されたリクエストデータを取得し、
         // その内容を判定し処理を実行
         ble_u2f_command_on_ble_evt_write(p_u2f, p_evt_write);
+        return true;
+
+    } else {
+        // 他のBLEサービスに処理させる
+        return false;
     }
 }
 
 
-static void on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
     uint32_t err_code;
     ble_gatts_evt_rw_authorize_request_t  req;
@@ -64,16 +70,16 @@ static void on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     // 書込操作以外は対象外
     req = p_ble_evt->evt.gatts_evt.params.authorize_request;
     if (req.type == BLE_GATTS_AUTHORIZE_TYPE_INVALID) {
-        return;
+        return false;
     }
     if (req.request.write.op != BLE_GATTS_OP_WRITE_REQ) {
-        return;
+        return false;
     }
 
-    // U2F Service Revision Bitfieldへの書込時
     if (req.request.write.handle == p_u2f->u2f_service_revision_bitfield_handles.value_handle) {
+        // U2F Service Revision Bitfieldへの書込時
         if (req.type != BLE_GATTS_AUTHORIZE_TYPE_WRITE) {
-            return;
+            return false;
         }
         auth_reply.type = BLE_GATTS_AUTHORIZE_TYPE_WRITE;
 
@@ -93,38 +99,45 @@ static void on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
         // レスポンス実行
         err_code = sd_ble_gatts_rw_authorize_reply(p_ble_evt->evt.gatts_evt.conn_handle, &auth_reply);
-        APP_ERROR_CHECK(err_code);            
+        APP_ERROR_CHECK(err_code);
+        return true;
+
+    } else {
+        // 他のBLEサービスに処理させる
+        return false;
     }
 }
 
 
-void ble_u2f_on_ble_evt(ble_u2f_t * p_u2f, ble_evt_t * p_ble_evt)
+bool ble_u2f_on_ble_evt(ble_u2f_t * p_u2f, ble_evt_t * p_ble_evt)
 {
     if ((p_u2f == NULL) || (p_ble_evt == NULL)) {
-        return;
+        return false;
     }
 
+    bool ret = false;
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
-            on_connect(p_u2f, p_ble_evt);
+            ble_u2f_on_connect(p_u2f, p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            on_disconnect(p_u2f, p_ble_evt);
+            ble_u2f_on_disconnect(p_u2f, p_ble_evt);
             break;
 
         case BLE_GATTS_EVT_WRITE:
-            on_write(p_u2f, p_ble_evt);
+            ret = ble_u2f_on_write(p_u2f, p_ble_evt);
             break;
 
         case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
-            on_rw_authorize_request(p_u2f, p_ble_evt);
+            ret = ble_u2f_on_rw_authorize_request(p_u2f, p_ble_evt);
             break;
 
         default:
-            // No implementation needed.
             break;
     }
+    
+    return ret;
 }
 
 #endif // NRF_MODULE_ENABLED(BLE_U2F)

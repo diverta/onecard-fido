@@ -229,7 +229,7 @@
  
 
 #ifndef BLE_ONE_CARD_ENABLED
-#define BLE_ONE_CARD_ENABLED 0
+#define BLE_ONE_CARD_ENABLED 1
 #endif
 
 // <q> BLE_U2F_ENABLED  - ble_u2f - FIDO U2F Service

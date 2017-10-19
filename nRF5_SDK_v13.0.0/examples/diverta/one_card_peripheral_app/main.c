@@ -63,19 +63,12 @@
 #include "ble_u2f_util.h"
 #include "ble_dis.h"
 
-#include "sdk_config.h"
-
 /*******************************************************************************
  * constant definition.
  ******************************************************************************/
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-#define IS_SRVC_CHANGED_CHARACT_PRESENT 1                                           /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
-
 #define APP_FEATURE_NOT_SUPPORTED       BLE_GATT_STATUS_ATTERR_APP_BEGIN + 2        /**< Reply when unsupported features are requested. */
-
-#define CENTRAL_LINK_COUNT              0                                           /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
-#define PERIPHERAL_LINK_COUNT           1                                           /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
 #define DEVICE_NAME                     "OneCard_Peripheral"                        /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Diverta,Inc"                               /**< Manufacturer. Will be passed to Device Information Service. */
@@ -170,10 +163,6 @@ static void on_no_operation_timer_timeout(void *p_context);
 static void on_trigger_disabled_timer_timeout(void *p_context);
 static void on_card_sync_timer_timeout(void *p_context);
 static void on_seq_req_timer_timeout(void *p_context);
-/* 
- * Reserved for future
-static void on_app_button_long_push_timer_timeout(void *p_context);
- */
 
 /*
  * gpiote.
@@ -255,18 +244,11 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                        
 static nrf_ble_gatt_t m_gatt;                                                       /**< GATT module instance. */
 
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
-#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 static ble_uuid_t m_adv_uuids[] = {
 	{BLE_UUID_U2F_SERVICE,                BLE_UUID_TYPE_BLE},
 	{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE},
 	{BLE_UUID_ONE_CARD_SERVICE          , BLE_UUID_TYPE_VENDOR_BEGIN}
 };                                                                                  /**< Universally unique service identifiers. */
-#else
-static ble_uuid_t m_adv_uuids[] = {
-	{BLE_UUID_U2F_SERVICE,                BLE_UUID_TYPE_BLE},
-	{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
-};                                                                                  /**< Universally unique service identifiers. */
-#endif
 
 /* YOUR_JOB: Declare all services structure your application is using
    static ble_xx_service_t                     m_xxs;
@@ -326,12 +308,10 @@ int main(void)
     one_card_spi_master_init();
 
     // Serial Code.
-#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
     serial_code_generate();
     ble_one_card_set_serial_code(m_ble_one_card, (uint8_t*)SERIAL_CODE_BLANK, SERIAL_CODE_LEN);
-#endif
 
-    // start execution.
+// start execution.
     timers_start();
     ble_adv_start();
     NRF_LOG_INFO("[APP]BLE advertising started.\r\n");
@@ -403,7 +383,13 @@ static void on_ble_evt_dispatch(ble_evt_t * p_ble_evt)
     pm_on_ble_evt(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
     nrf_ble_gatt_on_ble_evt(&m_gatt, p_ble_evt);
-    ble_u2f_on_ble_evt(&m_u2f, p_ble_evt);
+
+    if (ble_u2f_on_ble_evt(&m_u2f, p_ble_evt) == false) {
+        // FIDO U2Fで処理されたイベントは、
+        // One Cardサービスで重複処理されないようにする
+        ble_one_card_on_ble_evt(p_ble_evt);
+    }
+
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
 }
@@ -1273,14 +1259,12 @@ static void ble_services_init(void)
 	ret_code_t err_code;
 
 	// Initialize Diverta One Card Service.
-#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 	ble_one_card_init_t	one_card_init;
 	memset(&one_card_init, 0, sizeof(one_card_init));
 	one_card_init.evt_handler = on_one_card_evt;
 
 	err_code = ble_one_card_init(&one_card_init, &m_ble_one_card);
 	APP_ERROR_CHECK(err_code);
-#endif
 
     // Initialize FIDO U2F Service.
     err_code = ble_u2f_init_services(&m_u2f);
@@ -1461,11 +1445,9 @@ static void magstripedata_switch_card_selection(void)
 	
 	// Attribute value の更新.
 	// # Selected Card Number.
-#if NRF_MODULE_ENABLED(BLE_ONE_CARD)
 	ble_one_card_set_selected_card_no(m_ble_one_card, current_card_no);
 	NRF_LOG_INFO("[APP]current card no: %d\r\n", current_card_no);
-#endif
-	
+
 	// transfer the MagstripeData.
 	magstripedata_transfer(p_selected_card->card_type, 
 						   p_selected_card->card_code.value, 
