@@ -488,6 +488,44 @@ void ble_one_card_serial_code(const ble_one_card_t	*p_ble_one_card,
 	}
 }
 
+//
+// FIXME:後日削除
+// One CardサービスのTXテスト用
+// RXで受信したデータをそのままTXにエコーバックする.
+//
+static void ble_one_card_tx_test(const ble_one_card_t *p_ble_one_card, const uint8_t *p_value, uint16_t value_length)
+{
+    // One Card接続先に対してレスポンスを送信する
+    //   接続されていない場合は何もしない
+    if (p_ble_one_card->conn_handle == BLE_CONN_HANDLE_INVALID) {
+        return;
+    }
+
+    uint16_t hvx_send_length;
+    ble_gatts_hvx_params_t hvx_params;
+    uint32_t err_code;
+
+    hvx_send_length = value_length;
+
+    memset(&hvx_params, 0, sizeof(hvx_params));
+    hvx_params.handle = p_ble_one_card->tx_char.handles.value_handle;
+    hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+    hvx_params.offset = 0;
+    hvx_params.p_len  = &hvx_send_length;
+    hvx_params.p_data = p_value;
+
+    err_code = sd_ble_gatts_hvx(p_ble_one_card->conn_handle, &hvx_params);
+    if (err_code == NRF_SUCCESS) {
+        if (hvx_send_length != value_length) {
+            err_code = NRF_ERROR_DATA_SIZE;
+            NRF_LOG_ERROR("ble_one_card_tx_test: invalid send data size \r\n");
+
+        } else {
+            NRF_LOG_DEBUG("ble_one_card_tx_test (%dbytes) \r\n", hvx_send_length);
+        }
+    }
+}
+
 /**
  * @brief Rx.
  *
@@ -502,6 +540,12 @@ void ble_one_card_rx(const ble_one_card_t	*p_ble_one_card,
 	if (p_ble_one_card != NULL) {
 		*p_value	= p_ble_one_card->rx_char.value;
 		*p_length	= p_ble_one_card->rx_char.length;
+
+        //
+        // FIXME:後日削除
+        // One CardサービスのTXテスト用
+        //
+        ble_one_card_tx_test(p_ble_one_card, *p_value, *p_length);
 	}
 }
 
@@ -1329,6 +1373,7 @@ static uint32_t ble_one_card_add_tx_char(ble_one_card_t *p_ble_one_card)
     BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attr_md.read_perm);
     BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attr_md.write_perm);
     attr_md.vloc	= BLE_GATTS_VLOC_STACK;
+    attr_md.vlen    = 1;
 
     // Attribute value.
     // # 20bytes(utf8_s).
