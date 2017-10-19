@@ -622,6 +622,7 @@ static uint32_t ble_one_card_add_characteristics(ble_one_card_t *p_ble_one_card)
 {
     uint32_t   err_code;
 
+#if 0
     // キャラクタリスティックの登録.
     // # Selected Card Number.
     err_code = ble_one_card_add_select_card_no_char(&m_ble_one_card);
@@ -684,14 +685,14 @@ static uint32_t ble_one_card_add_characteristics(ble_one_card_t *p_ble_one_card)
     if (err_code != NRF_SUCCESS) {
         return err_code;
     }
+#endif
     
     // キャラクタリスティックの登録.
     // # Tx.
-	// 現状用途不明のため、無効.
-    //err_code = ble_one_card_add_tx_char(&m_ble_one_card);
-    //if (err_code != NRF_SUCCESS) {
-    //    return err_code;
-    //}
+    err_code = ble_one_card_add_tx_char(&m_ble_one_card);
+    if (err_code != NRF_SUCCESS) {
+        return err_code;
+    }
     
     // キャラクタリスティックの登録.
     // # Rx.
