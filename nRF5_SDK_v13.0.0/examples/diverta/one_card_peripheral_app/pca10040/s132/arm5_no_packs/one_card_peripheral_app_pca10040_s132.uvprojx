@@ -2914,6 +2914,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_u2f_crypto_ecb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_crypto_ecb.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5920,6 +5925,11 @@
               <FileName>ble_u2f_pairing_lesc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_crypto_ecb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_crypto_ecb.c</FilePath>
             </File>
           </Files>
         </Group>
