@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 
+bool ble_u2f_crypto_ecb_init(void);
 void ble_u2f_crypto_ecb_encrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet);
 void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet);
 

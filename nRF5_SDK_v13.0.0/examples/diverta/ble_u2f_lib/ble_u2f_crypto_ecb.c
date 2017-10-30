@@ -3,7 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
+#include "fds.h"
+
+// for nrf_drv_rng_xxx
+#include "nrf_drv_rng.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_crypto_ecb"
@@ -14,23 +19,144 @@
 static nrf_ecb_hal_data_t m_ecb_data;
 static uint8_t block_cipher[ECB_BLOCK_LENGTH];
 
-// AES ECBで使用する初期化ベクターとパスコード
-// FIXME: 
-//   この値は本来外部から与えるものではないため、
-//   トークンの初回使用時にランダマイズされたものを生成し、
-//   以降はFlash ROMに保管したものを使用できるように
-//   後日改修予定
-//
-uint8_t m_initialization_vector[ECB_BLOCK_LENGTH] = {
-    0x38, 0xa7, 0xc3, 0x8e, 0x6b, 0xb8, 0x3f, 0x79, 
-    0xad, 0x7b, 0x7b, 0xba, 0x0c, 0x58, 0x4c, 0x58
-};
-uint8_t m_ecb_key[ECB_BLOCK_LENGTH] = {
-    0xfe, 0xc0, 0x87, 0x32, 0x72, 0xab, 0x5e, 0x9c, 
-    0x96, 0x12, 0x85, 0x4e, 0x47, 0x0d, 0xfc, 0xe2
-};
+// AES ECBで使用する初期化ベクターとパスワード
+uint8_t *m_initialization_vector;
+uint8_t *m_password;
 
-static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key) {
+// Flash ROM書込み用データの一時格納領域
+static fds_record_chunk_t  m_fds_record_chunks[1];
+static uint32_t            m_random_vector[8];
+
+// AES CFBモード
+#define AES_CFB_MODE_ENCRYPTION 0
+#define AES_CFB_MODE_DECRYPTION 1
+
+
+static bool write_random_vector(uint32_t *p_fds_record_buffer)
+{
+    ret_code_t ret;
+
+    // 一時領域（確保済み）のアドレスを取得
+    m_fds_record_chunks[0].p_data       = p_fds_record_buffer;
+    m_fds_record_chunks[0].length_words = 8;
+
+    fds_record_t record;
+    record.file_id         = U2F_AESKEYS_FILE_ID;
+    record.key             = U2F_AESKEYS_MODE_RECORD_KEY;
+    record.data.p_chunks   = m_fds_record_chunks;
+    record.data.num_chunks = 1;
+
+    fds_record_desc_t record_desc;
+    fds_find_token_t  ftok = {0};
+    ret = fds_record_find(U2F_AESKEYS_FILE_ID, U2F_AESKEYS_MODE_RECORD_KEY, &record_desc, &ftok);
+    if (ret == FDS_SUCCESS) {
+        // 既存のデータが存在する場合は上書き
+        ret = fds_record_update(&record_desc, &record);
+        if (ret != FDS_SUCCESS) {
+            NRF_LOG_ERROR("write_random_vector: fds_record_update returns 0x%02x \r\n", ret);
+            return false;
+        }
+
+    } else if (ret == FDS_ERR_NOT_FOUND) {
+        // 既存のデータが存在しない場合は新規追加
+        ret = fds_record_write(&record_desc, &record);
+        if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
+            // 書込みができない場合はエラー扱いとする
+            NRF_LOG_ERROR("write_random_vector: no space in flash \r\n");
+            return false;
+
+        } else if (ret != FDS_SUCCESS) {
+            NRF_LOG_ERROR("write_random_vector: fds_record_write returns 0x%02x \r\n", ret);
+            return false;
+        }
+
+    } else {
+        NRF_LOG_DEBUG("write_random_vector: fds_record_find returns 0x%02x \r\n", ret);
+        return false;
+    }
+
+    return true;
+}
+
+bool ble_u2f_crypto_ecb_init(void)
+{
+    // 32バイトのランダムベクターを生成
+    memset(m_random_vector, 0, sizeof(m_random_vector));
+    uint32_t err_code = nrf_drv_rng_rand((uint8_t *)m_random_vector, 32);
+    APP_ERROR_CHECK(err_code);
+
+    // Flash ROMに書き出して保存
+    if (write_random_vector(m_random_vector) == false) {
+        return false;
+    }
+
+    NRF_LOG_DEBUG("Generated random vector for AES password \r\n");
+    return true;
+}
+
+
+static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *data_buffer)
+{
+	fds_flash_record_t flash_record;
+	uint32_t *data;
+    uint16_t  data_length;
+    ret_code_t err_code;
+
+    err_code = fds_record_open(record_desc, &flash_record);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("read_random_vector_record: fds_record_open returns 0x%02x \r\n", err_code);
+        return false;
+    }
+
+    data = (uint32_t *)flash_record.p_data;
+    data_length = flash_record.p_header->tl.length_words;
+    memcpy(data_buffer, data, data_length * sizeof(uint32_t));
+
+    err_code = fds_record_close(record_desc);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("read_random_vector_record: fds_record_close returns 0x%02x \r\n", err_code);
+        return false;	
+    }
+    return true;
+}
+
+static bool read_random_vector(uint32_t *p_fds_record_buffer)
+{
+    // １レコード分読込
+    fds_record_desc_t record_desc;
+    fds_find_token_t  ftok = {0};
+    ret_code_t ret = fds_record_find(U2F_AESKEYS_FILE_ID, U2F_AESKEYS_MODE_RECORD_KEY, &record_desc, &ftok);
+    if (ret == FDS_SUCCESS) {
+        // レコードが存在するときは領域にデータを格納
+        if (read_random_vector_record(&record_desc, p_fds_record_buffer) == false) {
+            // データ格納失敗時
+            return false;
+        }
+    } else {
+        // レコードが存在しないときや
+        // その他エラー発生時
+        return false;
+    }
+    return true;
+}
+
+static bool retrieve_ecb_keys()
+{
+    if (read_random_vector(m_random_vector) == false) {
+        // Flash ROMにランダムベクターを格納したレコードが存在しない場合
+        // 処理終了
+        return false;
+    }
+
+    // Flash ROMレコードから取り出したランダムベクターを
+    // 16バイトずつ分割し、初期化ベクター、パスワードに設定
+    m_initialization_vector = (uint8_t *)m_random_vector;
+    m_password = (uint8_t *)m_random_vector + ECB_BLOCK_LENGTH;
+    return true;
+}
+
+static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key) 
+{
     // AES ECB構造体、ブロック暗号格納領域を初期化
     memset(&m_ecb_data, 0, sizeof(nrf_ecb_hal_data_t));
     memset(block_cipher, 0, sizeof(block_cipher));
@@ -42,52 +168,40 @@ static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key) {
 
     // ブロック暗号を、引数の領域にセット
     memcpy(block_cipher, m_ecb_data.ciphertext, SOC_ECB_CIPHERTEXT_LENGTH);
-
-    // 生成されたブロック暗号をdebug
-    NRF_LOG_DEBUG("block_cipher \r\n");
-    dump_octets(block_cipher, SOC_ECB_CIPHERTEXT_LENGTH);
 }
 
-void ble_u2f_crypto_ecb_encrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) {
+static void process_aes_cfb_crypto(uint8_t mode, uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
+{
+    // AES ECB暗号を取得
+    retrieve_ecb_keys();
+
     // 最初のブロック暗号生成時の入力には
     // 初期化ベクターを指定
     uint8_t *cleartext = m_initialization_vector;
 
     for (int i = 0; i < packet_length; i += ECB_BLOCK_LENGTH) {
         // ブロック暗号を生成して暗号化
-        calculate_block_cipher(cleartext, m_ecb_key);
+        calculate_block_cipher(cleartext, m_password);
         for (int j = 0; j < ECB_BLOCK_LENGTH; j++) {
             out_packet[i + j] = packet[i + j] ^ block_cipher[j];
         }
         // 次回ブロック暗号生成時に入力となる領域を設定
-        cleartext = out_packet + i;
+        if (mode == AES_CFB_MODE_ENCRYPTION) {
+            cleartext = out_packet + i;
+        } else {
+            cleartext = packet + i;
+        }
     }
-
-    // 暗号化前後のバイト配列(64バイト)をdebug
-    NRF_LOG_DEBUG("non encrypted array \r\n");
-    dump_octets(packet, packet_length);
-    NRF_LOG_DEBUG("encrypted array \r\n");
-    dump_octets(out_packet, packet_length);
 }
 
-void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) {
-    // 最初のブロック暗号生成時の入力には
-    // 初期化ベクターを指定
-    uint8_t *cleartext = m_initialization_vector;
+void ble_u2f_crypto_ecb_encrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
+{
+    process_aes_cfb_crypto(AES_CFB_MODE_ENCRYPTION, packet, packet_length, out_packet);
+}
 
-    for (int i = 0; i < packet_length; i += ECB_BLOCK_LENGTH) {
-        // ブロック暗号を生成して暗号化
-        calculate_block_cipher(cleartext, m_ecb_key);
-        for (int j = 0; j < ECB_BLOCK_LENGTH; j++) {
-            out_packet[i + j] = packet[i + j] ^ block_cipher[j];
-        }
-        // 次回ブロック暗号生成時に入力となる領域を設定
-        cleartext = packet + i;
-    }
-
-    // 復号化後のバイト配列(64バイト)をdebug
-    NRF_LOG_DEBUG("decrypted array \r\n");
-    dump_octets(out_packet, packet_length);
+void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
+{
+    process_aes_cfb_crypto(AES_CFB_MODE_DECRYPTION, packet, packet_length, out_packet);
 }
 
 #endif // NRF_MODULE_ENABLED(BLE_U2F)

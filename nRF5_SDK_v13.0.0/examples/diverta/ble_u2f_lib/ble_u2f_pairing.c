@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
 #include "peer_manager.h"
 #include "fds.h"
@@ -10,11 +11,6 @@
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_pairing"
 #include "nrf_log.h"
-
-// Flash ROMに保存するための
-// ファイルID、レコードKey
-#define U2F_PAIRING_FILE_ID    (0xBFFD)
-#define U2F_PAIRING_MODE_RECORD_KEY (0xBFFE)
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_chunk_t  m_fds_record_chunks[1];

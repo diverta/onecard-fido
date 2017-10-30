@@ -4,21 +4,16 @@
 #include <string.h>
 
 #include "ble_u2f_keypair.h"
+#include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
 #include "fds.h"
+
+// for ble_u2f_crypto_ecb_init
+#include "ble_u2f_crypto_ecb.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_flash"
 #include "nrf_log.h"
-
-
-// Flash ROMに保存するための
-// ファイルID、レコードKey
-//  0xBFFE: 鍵・証明書
-//  0xBFFD: トークンカウンター
-#define U2F_FILE_ID            (0xBFFE)
-#define U2F_KEYPAIR_RECORD_KEY (0xBFFE)
-#define U2F_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_chunk_t  m_fds_record_chunks[3];
@@ -39,6 +34,11 @@ bool ble_u2f_flash_keydata_delete(void)
         return false;
     }
 
+    // AES秘密鍵を初期化する
+    if (ble_u2f_crypto_ecb_init() == false) {
+        return false;
+    }
+    
     // ガベージコレクションを実行する
     err_code = fds_gc();
     if (err_code != FDS_SUCCESS) {
