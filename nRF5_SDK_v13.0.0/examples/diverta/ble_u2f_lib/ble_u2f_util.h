@@ -19,9 +19,6 @@ void ble_u2f_send_error_response(ble_u2f_context_t *p_u2f_context, uint16_t err_
 void ble_u2f_send_command_error_response(ble_u2f_context_t *p_u2f_context, uint8_t err_code);
 void ble_u2f_send_keepalive_response(ble_u2f_context_t *p_u2f_context);
 
-uint16_t ble_u2f_copy_keyhandle_data(uint8_t *p_dest_buffer, uint32_t *keypair_cert_buffer);
-uint16_t ble_u2f_copy_publickey_data(uint8_t *p_dest_buffer, uint32_t *keypair_cert_buffer);
-
 bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context);
 bool ble_u2f_response_message_allocate(ble_u2f_context_t *p_u2f_context);
 

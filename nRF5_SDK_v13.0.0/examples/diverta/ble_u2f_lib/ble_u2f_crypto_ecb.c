@@ -164,7 +164,8 @@ static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key)
     // 引数のcleartext, keyからブロック暗号(16バイト)を自動生成
     memcpy(m_ecb_data.key, p_key, SOC_ECB_KEY_LENGTH);
     memcpy(m_ecb_data.cleartext, p_cleartext, SOC_ECB_CLEARTEXT_LENGTH);
-    sd_ecb_block_encrypt(&m_ecb_data);
+    uint32_t err_code = sd_ecb_block_encrypt(&m_ecb_data);
+    APP_ERROR_CHECK(err_code);
 
     // ブロック暗号を、引数の領域にセット
     memcpy(block_cipher, m_ecb_data.ciphertext, SOC_ECB_CIPHERTEXT_LENGTH);

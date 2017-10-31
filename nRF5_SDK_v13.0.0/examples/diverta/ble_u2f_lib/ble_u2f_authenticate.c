@@ -2,7 +2,7 @@
 #if NRF_MODULE_ENABLED(BLE_U2F)
 #include <stdio.h>
 #include <string.h>
-#include "ble_u2f_keypair.h"
+#include "ble_u2f_securekey.h"
 #include "ble_u2f_crypto.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_status.h"
@@ -22,10 +22,10 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
     U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint8_t request_keyhandle_length = p_apdu->data[64];
     char *p_request_keyhandle = (char *)p_apdu->data + 65;
-    
+
     // トークン内で保持されているキーハンドルを参照
-    uint8_t stored_keyhandle_length = KEYH_WORD_NUM * 4;
-    char *p_stored_keyhandle = (char *)(p_u2f_context->keypair_cert_buffer + SKEY_WORD_NUM + PKEY_WORD_NUM);
+    uint8_t stored_keyhandle_length = 4;
+    char *p_stored_keyhandle = (char *)(p_u2f_context->securekey_buffer + SKEY_WORD_NUM);
 
     if (request_keyhandle_length != stored_keyhandle_length) {
         // 両方のキーハンドルを比較し、長さが異なる場合はNGと判定
@@ -179,7 +179,7 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     // 署名ベースを生成
     uint8_t user_presence = p_u2f_context->user_presence_byte;
     uint32_t token_counter = p_u2f_context->token_counter;
-    uint32_t *keypair_cert_buffer = p_u2f_context->keypair_cert_buffer;
+    uint32_t *keypair_cert_buffer = p_u2f_context->securekey_buffer;
     if (create_signature_base(p_u2f_context, keypair_cert_buffer, user_presence, token_counter) == false) {
         return false;
     }
@@ -187,8 +187,7 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     // キーペアから署名を生成
     uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
     uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
-    if (ble_u2f_crypto_sign(
-        keypair_cert_buffer, keypair_cert_buffer + SKEY_WORD_NUM,
+    if (ble_u2f_crypto_sign(ble_u2f_securekey_skey(p_u2f_context), 
         signature_base_buffer, signature_base_buffer_length) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;

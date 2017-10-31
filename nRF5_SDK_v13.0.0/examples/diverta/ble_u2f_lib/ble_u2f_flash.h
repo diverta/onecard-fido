@@ -14,7 +14,7 @@ extern "C" {
 //  鍵・証明書・トークンカウンター管理用
 //
 #define U2F_FILE_ID                  (0xBFFE)
-#define U2F_KEYPAIR_RECORD_KEY       (0xBFFE)
+#define U2F_SKEY_CERT_RECORD_KEY     (0xBFFE)
 #define U2F_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 //
 //  ペアリングモード管理用

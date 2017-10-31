@@ -11,9 +11,6 @@
 #include "ble_u2f.h"
 #include "ble_u2f_status.h"
 
-// for SKEY_WORD_NUM,PKEY_WORD_NUM,KEYH_WORD_NUM
-#include "ble_u2f_keypair.h"
-
 // for bsp_board_led_on|off, BSP_BOARD_LED_3
 #include "bsp.h"
 
@@ -80,47 +77,6 @@ void ble_u2f_send_keepalive_response(ble_u2f_context_t *p_u2f_context)
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
     ble_u2f_status_response_send(p_u2f_context->p_u2f);
-}
-
-
-uint16_t ble_u2f_copy_keyhandle_data(uint8_t *p_dest_buffer, uint32_t *keypair_cert_buffer)
-{
-    // キーハンドルは、ワード単位でビッグエンディアン格納されているので
-    // バイト単位のアドレスに変換
-    uint8_t *p_keyhandle  = (uint8_t *)(keypair_cert_buffer + SKEY_WORD_NUM + PKEY_WORD_NUM);
-    uint8_t  keyhandle_length = KEYH_WORD_NUM * sizeof(uint32_t);
-
-    // キーハンドルデータを指定の領域に格納
-    memcpy(p_dest_buffer, p_keyhandle, keyhandle_length);
-    
-    // コピーしたサイズを戻す
-    return keyhandle_length;
-}
-
-
-uint16_t ble_u2f_copy_publickey_data(uint8_t *p_dest_buffer, uint32_t *keypair_cert_buffer)
-{
-    uint16_t copied_size = 0;
-    
-    // 公開鍵は、ワード単位でリトルエンディアン格納されているので
-    // ビッグエンディアンに変換してから格納
-    uint8_t *p_publickey  = (uint8_t *)(keypair_cert_buffer + SKEY_WORD_NUM);
-
-    // 1バイト目＝0x04
-    p_dest_buffer[copied_size++] = U2F_POINT_UNCOMPRESSED;
-
-    // 2-33バイト目＝公開鍵のx部を設定
-    for (uint8_t i = 32; i > 0; i--) {
-        p_dest_buffer[copied_size++] = *(p_publickey + i - 1);
-    }
-
-    // 34-65バイト目＝公開鍵のy部を設定
-    for (uint8_t i = 64; i > 32; i--) {
-        p_dest_buffer[copied_size++] = *(p_publickey + i - 1);
-    }
-        
-    // コピーしたサイズを戻す
-    return copied_size;
 }
 
 

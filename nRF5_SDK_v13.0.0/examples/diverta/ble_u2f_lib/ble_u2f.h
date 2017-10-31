@@ -158,8 +158,8 @@ typedef struct
     ble_u2f_t        *p_u2f;
     BLE_HEADER_T     *p_ble_header;
     U2F_APDU_T       *p_apdu;
-    uint32_t         *keypair_cert_buffer;
-    uint16_t          keypair_cert_buffer_length;
+    uint32_t         *securekey_buffer;
+    uint16_t          securekey_buffer_length;
     uint8_t          *apdu_data_buffer;
     uint16_t          apdu_data_buffer_length;
     uint8_t          *response_message_buffer;

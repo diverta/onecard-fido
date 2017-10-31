@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ble_u2f_keypair.h"
+#include "ble_u2f_securekey.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
 #include "fds.h"
@@ -27,7 +27,6 @@ bool ble_u2f_flash_keydata_delete(void)
     ret_code_t err_code;
 
     // 秘密鍵／証明書をFlash ROM領域から削除
-    NRF_LOG_DEBUG("ble_u2f_keypare_erase start \r\n");
     err_code = fds_file_delete(U2F_FILE_ID);
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_file_delete returns 0x%02x \r\n", err_code);
@@ -78,31 +77,31 @@ static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata
 
 static uint32_t *keydata_buffer_allocate(ble_u2f_context_t *p_u2f_context)
 {
-    uint32_t *keydata_buffer = p_u2f_context->keypair_cert_buffer;
-    uint16_t  keypair_buffer_length = p_u2f_context->keypair_cert_buffer_length;
+    uint32_t *keydata_buffer = p_u2f_context->securekey_buffer;
+    uint16_t  keydata_buffer_length = p_u2f_context->securekey_buffer_length;
     if (keydata_buffer != NULL) {
         // 既に確保済みの場合
-        NRF_LOG_DEBUG("keypair_cert_buffer already allocated (%d bytes) \r\n", 
-            keypair_buffer_length);
+        NRF_LOG_DEBUG("securekey_buffer already allocated (%d bytes) \r\n", 
+            keydata_buffer_length);
         return keydata_buffer;
     }
 
     // Flash ROM読込用領域の確保
-    keypair_buffer_length = sizeof(uint32_t) * KEYPAIR_CERT_WORD_NUM;
-    keydata_buffer = (uint32_t *)malloc(keypair_buffer_length);
+    keydata_buffer_length = sizeof(uint32_t) * SKEY_CERT_WORD_NUM;
+    keydata_buffer = (uint32_t *)malloc(keydata_buffer_length);
     if (keydata_buffer == NULL) {
         // 領域が確保出来なかったら終了
-        NRF_LOG_ERROR("keypair_cert_buffer allocation failed \r\n");
+        NRF_LOG_ERROR("securekey_buffer allocation failed \r\n");
         return keydata_buffer;
     }
-    NRF_LOG_DEBUG("keypair_cert_buffer allocated (%d bytes) \r\n", keypair_buffer_length);
+    NRF_LOG_DEBUG("securekey_buffer allocated (%d bytes) \r\n", keydata_buffer_length);
 
     // 確保した領域のアドレスと長さを共有情報に保持
-    p_u2f_context->keypair_cert_buffer = keydata_buffer;
-    p_u2f_context->keypair_cert_buffer_length = keypair_buffer_length;
+    p_u2f_context->securekey_buffer = keydata_buffer;
+    p_u2f_context->securekey_buffer_length = keydata_buffer_length;
 
     // 確保領域は0xff（Flash ROM未書込状態）で初期化
-    memset(keydata_buffer, 0xff, keypair_buffer_length);
+    memset(keydata_buffer, 0xff, keydata_buffer_length);
     return keydata_buffer;
 }
 
@@ -119,7 +118,7 @@ bool ble_u2f_flash_keydata_read(ble_u2f_context_t *p_u2f_context)
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(U2F_FILE_ID, U2F_KEYPAIR_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(U2F_FILE_ID, U2F_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
         if (keydata_record_get(&record_desc, keydata_buffer) == false) {
@@ -142,19 +141,18 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
     ret_code_t ret;
 
     // 一時領域（確保済み）のアドレスを取得
-    uint32_t *keydata_buffer = p_u2f_context->keypair_cert_buffer;
-    m_fds_record_chunks[0].p_data       = keydata_buffer;
-    m_fds_record_chunks[0].length_words = KEYPAIR_CERT_WORD_NUM;
+    m_fds_record_chunks[0].p_data       = p_u2f_context->securekey_buffer;
+    m_fds_record_chunks[0].length_words = SKEY_CERT_WORD_NUM;
 
     fds_record_t record;
     record.file_id         = U2F_FILE_ID;
-    record.key             = U2F_KEYPAIR_RECORD_KEY;
+    record.key             = U2F_SKEY_CERT_RECORD_KEY;
     record.data.p_chunks   = m_fds_record_chunks;
     record.data.num_chunks = 1;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(U2F_FILE_ID, U2F_KEYPAIR_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(U2F_FILE_ID, U2F_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
