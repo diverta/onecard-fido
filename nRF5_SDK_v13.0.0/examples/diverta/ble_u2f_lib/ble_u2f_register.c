@@ -6,6 +6,7 @@
 #include "ble_u2f_crypto.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_status.h"
+#include "ble_u2f_crypto_ecb.h"
 #include "ble_u2f_util.h"
 
 // for nrf_value_length_t
@@ -14,11 +15,6 @@
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_register"
 #include "nrf_log.h"
-
-// for ble_u2f_crypto_ecb
-#include "ble_u2f_crypto_ecb.h"
-static uint8_t keyhandle_base[64];
-static uint8_t keyhandle[64];
 
 
 static bool add_token_counter(ble_u2f_context_t *p_u2f_context)
@@ -29,7 +25,7 @@ static bool add_token_counter(ble_u2f_context_t *p_u2f_context)
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
     U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint8_t *p_appid_hash = p_apdu->data + 32;
+    uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
     uint32_t token_counter = 0;
     uint32_t reserve_word = 0xffffffff;
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
@@ -99,8 +95,8 @@ static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
     offset += copied_size;
 
     // キーハンドルを格納
-    copied_size = sizeof(keyhandle);
-    memcpy(signature_base_buffer + offset, keyhandle, copied_size);
+    copied_size = sizeof(keyhandle_buffer);
+    memcpy(signature_base_buffer + offset, keyhandle_buffer, copied_size);
     offset += copied_size;
 
     // 公開鍵を格納
@@ -132,11 +128,11 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     offset += copy_publickey_data(response_message_buffer + offset);
 
     // キーハンドル長
-    uint8_t keyhandle_length = sizeof(keyhandle);
+    uint8_t keyhandle_length = sizeof(keyhandle_buffer);
     response_message_buffer[offset++] = keyhandle_length;
 
     // キーハンドル
-    memcpy(response_message_buffer + offset, keyhandle, keyhandle_length);
+    memcpy(response_message_buffer + offset, keyhandle_buffer, keyhandle_length);
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
@@ -201,32 +197,16 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-static bool generate_new_keypair(ble_u2f_context_t *p_u2f_context)
+static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
 {
     // micro-eccにより、キーペアを新規生成する
     ble_u2f_crypto_generate_keypair();
     nrf_value_length_t *private_key = ble_u2f_crypto_private_key();
 
-    // APDUから取得したappIdHash、秘密鍵を
-    // 指定の領域に格納
-    memset(keyhandle_base, 0, sizeof(keyhandle_base));
+    // APDUから取得したappIdHash、秘密鍵を使用し、
+    // キーハンドルを新規生成する
     uint8_t *p_appid_hash = p_u2f_context->p_apdu->data + U2F_CHAL_SIZE;
-    memcpy(keyhandle_base, p_appid_hash, U2F_APPID_SIZE);
-    memcpy(keyhandle_base + U2F_APPID_SIZE, private_key->p_value, private_key->length);
-
-    // AES ECB暗号対象のバイト配列＆長さを指定し、
-    // Cipher Feedback Modeによる暗号化を実行
-    memset(keyhandle, 0, sizeof(keyhandle));
-    uint16_t data_length = 64;
-    ble_u2f_crypto_ecb_encrypt(keyhandle_base, data_length, keyhandle);
-
-    // for debug
-    NRF_LOG_DEBUG("keyhandle base \r\n");
-    dump_octets(keyhandle_base, data_length);
-    NRF_LOG_DEBUG("generated keyhandle \r\n");
-    dump_octets(keyhandle, data_length);
-
-    return false;
+    ble_u2f_crypto_ecb_generate_keyhandle(p_appid_hash, private_key);
 }
 
 void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
@@ -240,8 +220,8 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
-    // 新規にキーペアを生成する
-    generate_new_keypair(p_u2f_context);
+    // キーハンドルを新規生成
+    generate_keyhandle(p_u2f_context);
 
     if (create_register_response_message(p_u2f_context) == false) {
         // U2Fのリクエストデータを取得し、
