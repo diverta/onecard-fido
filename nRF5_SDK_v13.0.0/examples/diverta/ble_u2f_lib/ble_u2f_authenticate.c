@@ -8,44 +8,48 @@
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_user_presence.h"
+#include "ble_u2f_crypto_ecb.h"
 #include "ble_u2f_util.h"
+
+// for nrf_value_length_t
+#include "nrf_crypto_types.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_authenticate"
 #include "nrf_log.h"
 
 
+static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
+{
+    // appIdHashを参照し、APDUの33バイト目のアドレスを戻す
+    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
+
+    return p_appid_hash;
+}
+
 static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
 {
     // リクエストデータのキーハンドルを参照
     //   APDUの65バイト目以降
     U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint8_t request_keyhandle_length = p_apdu->data[64];
-    char *p_request_keyhandle = (char *)p_apdu->data + 65;
+    nrf_value_length_t keyhandle;
+    keyhandle.length = p_apdu->data[64];
+    keyhandle.p_value = p_apdu->data + 65;
 
-    // トークン内で保持されているキーハンドルを参照
-    uint8_t stored_keyhandle_length = 4;
-    char *p_stored_keyhandle = (char *)(p_u2f_context->securekey_buffer + SKEY_WORD_NUM);
-
-    if (request_keyhandle_length != stored_keyhandle_length) {
-        // 両方のキーハンドルを比較し、長さが異なる場合はNGと判定
-        return false;
-
-    } else if (strncmp(p_request_keyhandle, p_stored_keyhandle, stored_keyhandle_length) != 0) {
-        // 両方のキーハンドルを比較し、内容が異なっている場合はNGと判定
+    // キーハンドルを復号化
+    //   keyhandle_base_bufferに
+    //   AppIDHash、秘密鍵が格納される
+    ble_u2f_crypto_ecb_restore_keyhandle_base(&keyhandle);
+    
+    // リクエストデータからappIDHashを取得
+    // キーハンドルに含まれているものと異なる場合はエラー
+    uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
+    if (strncmp((char *)keyhandle_base_buffer, (char *)p_appid_hash, U2F_APPID_SIZE) != 0) {
         return false;
     }
 
     return true;
-}
-
-static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
-{
-    // appIdHashを参照し、APDUの33バイト目のアドレスを戻す
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint8_t *p_appid_hash = p_apdu->data + 32;
-
-    return p_appid_hash;
 }
 
 static bool update_token_counter(ble_u2f_context_t *p_u2f_context)
@@ -102,7 +106,7 @@ static uint16_t copy_token_counter_data(uint8_t *p_dest_buffer, uint32_t token_c
     return 4;
 }
 
-static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint32_t *keypair_cert_buffer, uint8_t user_presence, uint32_t token_counter)
+static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user_presence, uint32_t token_counter)
 {
     uint8_t offset = 0;
 
@@ -179,15 +183,17 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     // 署名ベースを生成
     uint8_t user_presence = p_u2f_context->user_presence_byte;
     uint32_t token_counter = p_u2f_context->token_counter;
-    uint32_t *keypair_cert_buffer = p_u2f_context->securekey_buffer;
-    if (create_signature_base(p_u2f_context, keypair_cert_buffer, user_presence, token_counter) == false) {
+    if (create_signature_base(p_u2f_context, user_presence, token_counter) == false) {
         return false;
     }
 
-    // キーペアから署名を生成
+    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
+    uint8_t *private_key_le = keyhandle_base_buffer + U2F_APPID_SIZE;
+
+    // キーハンドルから取り出した秘密鍵により署名を生成
     uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
     uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
-    if (ble_u2f_crypto_sign(ble_u2f_securekey_skey(p_u2f_context), 
+    if (ble_u2f_crypto_sign(private_key_le, 
         signature_base_buffer, signature_base_buffer_length) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
@@ -234,16 +240,15 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     NRF_LOG_DEBUG("ble_u2f_authenticate start \r\n");
 
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
-        // キーペア（秘密鍵／公開鍵／キーハンドル）および
-        // 証明書をFlash ROMから読込
+        // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, 0x01);
         return;
     }
 
     if (check_request_keyhandle(p_u2f_context) == false) {
-        // リクエストデータのキーハンドルを参照し、
-        // トークン内で保持されているキーハンドルと違う場合、
+        // リクエストデータのキーハンドルを復号化し、
+        // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
         NRF_LOG_ERROR("ble_u2f_authenticate: invalid keyhandle \r\n");
         ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
