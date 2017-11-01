@@ -44,10 +44,28 @@ const nrf_crypto_signature_info_t sig_info_p256 =
 #define ASN_SEQUENCE 0x30;
 
 
+void ble_u2f_crypto_init(void)
+{
+    ret_code_t err_code;
+    if (nrf_crypto_is_initialized() == true) {
+        return;
+    }
+    // micro-eccの初期化が未実行の場合は
+    // nrf_crypto_initを実行する
+    err_code = nrf_crypto_init();
+    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x \r\n", err_code);
+    if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
+        APP_ERROR_CHECK(err_code);
+    }
+}
+
 void ble_u2f_crypto_generate_keypair(void)
 {
     ret_code_t err_code;
     NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair start \r\n");
+
+    // micro-eccの初期化を実行する
+    ble_u2f_crypto_init();
 
     // 秘密鍵および公開鍵を生成する
     err_code = nrf_crypto_ecc_key_pair_generate(BLE_LESC_CURVE_TYPE_INFO, &private_key, &public_key);
@@ -74,11 +92,7 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_bu
     NRF_LOG_DEBUG("ble_u2f_crypto_sign start \r\n");
 
     // micro-eccの初期化を実行する
-    err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_init() returns 0x%02x \r\n", err_code);
-    if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
-        APP_ERROR_CHECK(err_code);
-    }
+    ble_u2f_crypto_init();
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成

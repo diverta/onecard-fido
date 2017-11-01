@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_crypto.h"
 
 // for pm_lesc_public_key_set
 #include "peer_manager.h"
@@ -29,11 +30,10 @@ NRF_CRYPTO_ECDH_SHARED_SECRET_CREATE_FROM_ARRAY(m_dh_key, SECP256R1, m_lesc_dh_k
 uint32_t ble_u2f_pairing_lesc_generate_key_pair(void)
 {
     // 暗号化モジュールを初期化
-    ret_code_t err_code = nrf_crypto_init();
-    APP_ERROR_CHECK(err_code);
+    ble_u2f_crypto_init();
 
     // キーペア(秘密鍵、公開鍵)を生成
-    err_code = nrf_crypto_ecc_key_pair_generate(NRF_CRYPTO_BLE_ECDH_CURVE_INFO, &m_private_key, &m_public_key);
+    ret_code_t err_code = nrf_crypto_ecc_key_pair_generate(NRF_CRYPTO_BLE_ECDH_CURVE_INFO, &m_private_key, &m_public_key);
     APP_ERROR_CHECK(err_code);
 
     // 生成した公開鍵をバイナリー形式に変換
