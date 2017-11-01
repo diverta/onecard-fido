@@ -46,9 +46,15 @@ const nrf_crypto_signature_info_t sig_info_p256 =
 
 void ble_u2f_crypto_generate_keypair(void)
 {
+    ret_code_t err_code;
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair start \r\n");
+
     // 秘密鍵および公開鍵を生成する
-    ret_code_t err_code = nrf_crypto_ecc_key_pair_generate(BLE_LESC_CURVE_TYPE_INFO, &private_key, &public_key);
+    err_code = nrf_crypto_ecc_key_pair_generate(BLE_LESC_CURVE_TYPE_INFO, &private_key, &public_key);
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair: nrf_crypto_ecc_key_pair_generate() returns 0x%02x \r\n", err_code);
     APP_ERROR_CHECK(err_code);
+
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair end \r\n");
 }
 
 nrf_value_length_t *ble_u2f_crypto_private_key(void)
@@ -69,7 +75,7 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_bu
 
     // micro-eccの初期化を実行する
     err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_init() returns %d \r\n", err_code);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_init() returns 0x%02x \r\n", err_code);
     if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
         APP_ERROR_CHECK(err_code);
     }
@@ -79,7 +85,7 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_bu
     err_code = nrf_crypto_hash_compute(hash_info_sha256, 
                     signature_base_buffer, signature_base_buffer_length, 
                     &hashed_buffer);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_compute() returns %d \r\n", err_code);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_compute() returns 0x%02x \r\n", err_code);
     APP_ERROR_CHECK(err_code);
 
     // 署名用の秘密鍵（32バイト）を設定
@@ -90,7 +96,7 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_bu
 
     // ハッシュデータと秘密鍵により、署名データ作成
     err_code = nrf_crypto_ecdsa_sign_hash(sig_info_p256, &private_key_for_sign, &hashed_buffer, &signature);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign_hash() returns %d \r\n", err_code);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign_hash() returns 0x%02x \r\n", err_code);
 
     NRF_LOG_DEBUG("ble_u2f_crypto_sign end \r\n");
     return NRF_SUCCESS;
