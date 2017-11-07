@@ -14,10 +14,13 @@ extern "C" {
 #endif
 
 
-uint32_t * ble_u2f_crypto_compute_publickey(uint32_t *skey_buffer);
-uint32_t * ble_u2f_crypto_compute_keyhandle(uint32_t *pkey_buffer);
-uint32_t ble_u2f_crypto_sign(uint32_t *skey_buffer, uint32_t *pkey_buffer, uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length);
-bool ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature);
+void     ble_u2f_crypto_init(void);
+void     ble_u2f_crypto_generate_keypair(void);
+uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length);
+bool     ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature);
+
+nrf_value_length_t *ble_u2f_crypto_private_key(void);
+nrf_value_length_t *ble_u2f_crypto_public_key(void);
 
 
 #ifdef __cplusplus

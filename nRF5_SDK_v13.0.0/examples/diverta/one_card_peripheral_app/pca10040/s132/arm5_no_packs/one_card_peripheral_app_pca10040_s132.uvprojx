@@ -2875,11 +2875,6 @@
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_init.c</FilePath>
             </File>
             <File>
-              <FileName>ble_u2f_keypair.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_keypair.c</FilePath>
-            </File>
-            <File>
               <FileName>ble_u2f_pairing.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing.c</FilePath>
@@ -2913,6 +2908,16 @@
               <FileName>ble_u2f_pairing_lesc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_crypto_ecb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_crypto_ecb.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_securekey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_securekey.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5882,11 +5887,6 @@
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_init.c</FilePath>
             </File>
             <File>
-              <FileName>ble_u2f_keypair.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_keypair.c</FilePath>
-            </File>
-            <File>
               <FileName>ble_u2f_pairing.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing.c</FilePath>
@@ -5920,6 +5920,16 @@
               <FileName>ble_u2f_pairing_lesc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_pairing_lesc.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_crypto_ecb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_crypto_ecb.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_securekey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_securekey.c</FilePath>
             </File>
           </Files>
         </Group>

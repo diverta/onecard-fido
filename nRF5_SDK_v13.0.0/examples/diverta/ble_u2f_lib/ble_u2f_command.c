@@ -9,7 +9,7 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
-#include "ble_u2f_keypair.h"
+#include "ble_u2f_securekey.h"
 #include "ble_u2f_user_presence.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_flash.h"
@@ -93,9 +93,9 @@ void ble_u2f_command_initialize_context(void)
 void ble_u2f_command_finalize_context(void)
 {
     // ヒープに確保済みの領域を一括解放する
-    if (m_u2f_context.keypair_cert_buffer != NULL) {
-        free(m_u2f_context.keypair_cert_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.keypair_cert_buffer freed \r\n");
+    if (m_u2f_context.securekey_buffer != NULL) {
+        free(m_u2f_context.securekey_buffer);
+        NRF_LOG_DEBUG("m_u2f_context.securekey_buffer freed \r\n");
     }
     if (m_u2f_context.apdu_data_buffer != NULL) {
         free(m_u2f_context.apdu_data_buffer);
@@ -250,15 +250,15 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             break;
 
         case COMMAND_INITFSTR:
-            ble_u2f_keypare_erase(&m_u2f_context);
+            ble_u2f_securekey_erase(&m_u2f_context);
             break;
 
         case COMMAND_INITSKEY:
-            ble_u2f_keypare_install_skey(&m_u2f_context);
+            ble_u2f_securekey_install_skey(&m_u2f_context);
             break;
 
         case COMMAND_INITCERT:
-            ble_u2f_keypare_install_cert(&m_u2f_context);
+            ble_u2f_securekey_install_cert(&m_u2f_context);
             break;
 
         case COMMAND_U2F_REGISTER:
@@ -304,15 +304,15 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
             break;
 
         case COMMAND_INITFSTR:
-            ble_u2f_keypare_erase_response(&m_u2f_context, p_evt);
+            ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
             break;
 
         case COMMAND_INITSKEY:
-            ble_u2f_keypare_install_skey_response(&m_u2f_context, p_evt);
+            ble_u2f_securekey_install_skey_response(&m_u2f_context, p_evt);
             break;
 
         case COMMAND_INITCERT:
-            ble_u2f_keypare_install_cert_response(&m_u2f_context, p_evt);
+            ble_u2f_securekey_install_cert_response(&m_u2f_context, p_evt);
             break;
 
         case COMMAND_U2F_REGISTER:

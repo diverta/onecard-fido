@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
-#include "ble_u2f_util.h"
-#include "ble_u2f_keypair.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_crypto"
@@ -18,20 +16,15 @@
 
 
 // micro-eccで生成される鍵情報
-NRF_CRYPTO_ECC_PRIVATE_KEY_RAW_CREATE(privateKey, SECP256R1);
-NRF_CRYPTO_ECC_PUBLIC_KEY_CREATE(publicKey, SECP256R1);
-NRF_CRYPTO_HASH_CREATE(keyhandle_buffer, SHA256);
+NRF_CRYPTO_ECC_PRIVATE_KEY_CREATE(private_key, SECP256R1);
+NRF_CRYPTO_ECC_PUBLIC_KEY_CREATE(public_key, SECP256R1);
 
 // micro-eccで生成される署名情報
+NRF_CRYPTO_ECC_PRIVATE_KEY_RAW_CREATE(private_key_for_sign, SECP256R1);
 NRF_CRYPTO_HASH_CREATE(hashed_buffer, SHA256);
 NRF_CRYPTO_ECDSA_SIGNATURE_CREATE(signature, SECP256R1);
 
 // ハッシュ化データ、署名データに関する情報
-const nrf_crypto_hash_info_t hash_info_sha256_be =
-{
-    .hash_type = NRF_CRYPTO_HASH_TYPE_SHA256,
-    .endian_type = NRF_CRYPTO_ENDIAN_BE
-};
 const nrf_crypto_hash_info_t hash_info_sha256 =
 {
     .hash_type = NRF_CRYPTO_HASH_TYPE_SHA256,
@@ -51,116 +44,73 @@ const nrf_crypto_signature_info_t sig_info_p256 =
 #define ASN_SEQUENCE 0x30;
 
 
-static bool set_private_key_address(uint32_t *skey_buffer)
-{
-    // 秘密鍵格納領域のチェック
-    if (skey_buffer == NULL || skey_buffer[0] == 0) {
-        return false;
-    }
-
-    // 秘密鍵（32バイト）の格納領域を設定
-    privateKey.p_value = (uint8_t *)skey_buffer;
-    privateKey.length = SKEY_WORD_NUM * 4;
-
-    return true;
-}
-
-static bool set_public_key_address(uint32_t *pkey_buffer)
-{
-    // 公開鍵格納領域のチェック
-    if (pkey_buffer == NULL || pkey_buffer[0] == 0) {
-        return false;
-    }
-
-    // 公開鍵（64バイト）の格納領域を設定
-    publicKey.p_value = (uint8_t *)pkey_buffer;
-    publicKey.length = PKEY_WORD_NUM * 4;
-
-    return true;
-}
-
-uint32_t * ble_u2f_crypto_compute_publickey(uint32_t *skey_buffer)
+void ble_u2f_crypto_init(void)
 {
     ret_code_t err_code;
-
-    // 秘密鍵格納領域のチェック
-    if (set_private_key_address(skey_buffer) == false) {
-        NRF_LOG_DEBUG("ble_u2f_crypto_compute_publickey: invalid private key \r\n");
-        return NULL;
+    if (nrf_crypto_is_initialized() == true) {
+        return;
     }
-
-    // 秘密鍵から公開鍵（64バイト）を生成する
-    err_code = nrf_crypto_ecc_public_key_calculate(BLE_LESC_CURVE_TYPE_INFO, &privateKey, &publicKey);
-    APP_ERROR_CHECK(err_code);
-    NRF_LOG_DEBUG("compute_publickey: nrf_crypto_ecc_public_key_calculate() done \r\n");
-
-    return (uint32_t *)publicKey.p_value;
-}
-
-
-uint32_t * ble_u2f_crypto_compute_keyhandle(uint32_t *pkey_buffer)
-{
-    ret_code_t err_code;
-
-    // 公開鍵格納領域のチェック
-    if (set_public_key_address(pkey_buffer) == false) {
-        NRF_LOG_DEBUG("ble_u2f_crypto_compute_keyhandle: invalid public key \r\n");
-        return NULL;
-    }
-
-    // 公開鍵バイト配列からSHA256アルゴリズムにより、
-    // ハッシュデータ作成
-    err_code = nrf_crypto_hash_compute(hash_info_sha256_be, 
-                    publicKey.p_value, PKEY_WORD_NUM * 4, 
-                    &keyhandle_buffer);
-    NRF_LOG_DEBUG("compute_keyhandle: nrf_crypto_hash_compute() returns %d \r\n", err_code);
-    APP_ERROR_CHECK(err_code);
-    
-    return (uint32_t *)keyhandle_buffer.p_value;
-}
-
-
-uint32_t ble_u2f_crypto_sign(uint32_t *skey_buffer, uint32_t *pkey_buffer, 
-    uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length)
-{
-    ret_code_t err_code;
-
-    // 秘密鍵格納領域のチェック
-    if (set_private_key_address(skey_buffer) == false) {
-        NRF_LOG_DEBUG("ble_u2f_crypto_sign: invalid private key \r\n");
-        return NULL;
-    }
-
-    // 公開鍵格納領域のチェック
-    if (set_public_key_address(pkey_buffer) == false) {
-        NRF_LOG_DEBUG("ble_u2f_crypto_sign: invalid public key \r\n");
-        return NULL;
-    }
-
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign start \r\n");
-
-    // micro-eccの初期化を実行する
+    // micro-eccの初期化が未実行の場合は
+    // nrf_crypto_initを実行する
     err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_init() returns %d \r\n", err_code);
+    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x \r\n", err_code);
     if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
         APP_ERROR_CHECK(err_code);
     }
+}
+
+void ble_u2f_crypto_generate_keypair(void)
+{
+    ret_code_t err_code;
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair start \r\n");
+
+    // micro-eccの初期化を実行する
+    ble_u2f_crypto_init();
+
+    // 秘密鍵および公開鍵を生成する
+    err_code = nrf_crypto_ecc_key_pair_generate(BLE_LESC_CURVE_TYPE_INFO, &private_key, &public_key);
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair: nrf_crypto_ecc_key_pair_generate() returns 0x%02x \r\n", err_code);
+    APP_ERROR_CHECK(err_code);
+
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair end \r\n");
+}
+
+nrf_value_length_t *ble_u2f_crypto_private_key(void)
+{
+    return &private_key;
+}
+
+nrf_value_length_t *ble_u2f_crypto_public_key(void)
+{
+    return &public_key;
+}
+
+
+uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length)
+{
+    ret_code_t err_code;
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign start \r\n");
+
+    // micro-eccの初期化を実行する
+    ble_u2f_crypto_init();
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成
     err_code = nrf_crypto_hash_compute(hash_info_sha256, 
                     signature_base_buffer, signature_base_buffer_length, 
                     &hashed_buffer);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_compute() returns %d \r\n", err_code);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_compute() returns 0x%02x \r\n", err_code);
     APP_ERROR_CHECK(err_code);
 
-    // ハッシュデータと秘密鍵により、署名データ作成
-    err_code = nrf_crypto_ecdsa_sign_hash(sig_info_p256, &privateKey, &hashed_buffer, &signature);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign_hash() returns %d \r\n", err_code);
+    // 署名用の秘密鍵（32バイト）を設定
+    //   private_key_leは
+    //   リトルエンディアン化された秘密鍵のバイト配列
+    private_key_for_sign.p_value = private_key_le;
+    private_key_for_sign.length = NRF_CRYPTO_ECC_PRIVATE_KEY_SIZE_SECP256R1;
 
-    // ハッシュデータと公開鍵により、署名データの内容を検証
-    err_code = nrf_crypto_ecdsa_verify_hash(sig_info_p256, &publicKey, &hashed_buffer, &signature);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_verify_hash() returns %d \r\n", err_code);
+    // ハッシュデータと秘密鍵により、署名データ作成
+    err_code = nrf_crypto_ecdsa_sign_hash(sig_info_p256, &private_key_for_sign, &hashed_buffer, &signature);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign_hash() returns 0x%02x \r\n", err_code);
 
     NRF_LOG_DEBUG("ble_u2f_crypto_sign end \r\n");
     return NRF_SUCCESS;
