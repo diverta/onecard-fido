@@ -31,24 +31,6 @@ static bool is_valid_command(uint8_t command)
     }
 }
 
-static bool check_apdu_data_length(BLE_HEADER_T *p_ble_header, int offset, U2F_APDU_T *p_apdu)
-{
-    // Control Pointに格納されている
-    // 受信データの先頭アドレスとデータ長を取得
-    int      data_length  = control_point_buffer_length - offset;
-    uint32_t total_length = p_apdu->Lc;
-    if (data_length > total_length) {
-        // データヘッダー設定されたデータ長が不正の場合
-        // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("apdu data length(%d) exceeds Lc(%d) \r\n", data_length, total_length);
-        p_ble_header->CMD = U2F_COMMAND_ERROR;
-        p_ble_header->ERROR = U2F_ERR_INVALID_LEN;
-        return false;
-    }
-
-    return true;
-}
-
 static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context, BLE_HEADER_T *p_ble_header, U2F_APDU_T *p_apdu)
 {
     if (control_point_buffer_length < 3) {
@@ -128,12 +110,6 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         }
         // データ長が0の場合は以降の処理を行わない
         return true;
-    }
-    
-    if (check_apdu_data_length(p_ble_header, offset, p_apdu) == false) {
-        // データヘッダー設定されたデータ長が不正の場合
-        // エラーレスポンスメッセージを作成
-        return false;
     }
 
     if (ble_u2f_control_point_apdu_allocate(p_u2f_context, p_apdu) == false) {
@@ -231,6 +207,14 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
         // 後続パケットに対する処理を行う
         u2f_request_receive_following_packet(&ble_header_t, &apdu_t);
         ble_header_t.CONT = false;
+    }
+
+    if (apdu_t.data_length > apdu_t.Lc) {
+        // データヘッダー設定されたデータ長が不正の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("apdu data length(%d) exceeds Lc(%d) \r\n", apdu_t.data_length, apdu_t.Lc);
+        ble_header_t.CMD = U2F_COMMAND_ERROR;
+        ble_header_t.ERROR = U2F_ERR_INVALID_LEN;
     }
 
     // 共有情報にBLEヘッダーとAPDUの参照を引き渡す
