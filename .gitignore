@@ -7,3 +7,15 @@ RTE
 JLinkLog.txt
 JLinkSettings.ini
 
+# ignore extension for Visual Studio
+*.obj
+*.db
+
+# ignore sub directories
+Release
+core
+.vs
+
+# ignore sub directories for Xcode
+U2FMaintenanceTool.xcodeproj
+
