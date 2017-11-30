@@ -117,18 +117,9 @@
         return;
     }
 
-    // 書き込むコマンドを編集
-    unsigned char arrHeader[] = {0x83, 0x00, 0x29, 0x00, 0x40, 0x03, 0x00, 0x00, 0x00, 0x20};
-    unsigned char arrFooter[] = {0x00, 0x00};
-    NSData *dataHeader = [[NSData alloc] initWithBytes:arrHeader length:sizeof(arrHeader)];
-    NSData *dataFooter = [[NSData alloc] initWithBytes:arrFooter length:sizeof(arrFooter)];
-    
-    NSMutableData *dataRequest = [NSMutableData alloc];
-    [dataRequest appendData:dataHeader];
-    [dataRequest appendData:dataSkey];
-    [dataRequest appendData:dataFooter];
-
-    [self setCommandArray:[NSArray arrayWithObject:dataRequest]];
+    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
+    NSData *dataForRequest = [self generateAPDUDataFrom:dataSkey INS:0x40 P1:0x03];
+    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
 - (NSData *)readCertFromFile:(NSString *)certFilePath {
