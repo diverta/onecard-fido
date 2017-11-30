@@ -76,7 +76,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         
         // 実行するコマンドを編集
         self.toolCommand = toolCommand;
-        if ([self.toolCommand createCommandArrayWith:nil] == false) {
+        if ([self.toolCommand createCommandArrayFor:[self.toolCommand command] fromData:nil] == false) {
             [self notifyFailMessageToAppDelegate:[self.toolCommand lastOccuredErrorMessage]];
             return;
         }
@@ -419,7 +419,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)doAfterResponseFromCharacteristicWith:(NSData *)responseData {
         // 後続処理がある場合は主処理に戻る
-        if ([self.toolCommand doAfterResponseWith:responseData]) {
+        if ([self.toolCommand doAfterResponseFor:[self.toolCommand command] withData:responseData]) {
             [self executeCommandArray];
             return;
         }

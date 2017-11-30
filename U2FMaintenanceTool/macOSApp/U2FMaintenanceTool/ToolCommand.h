@@ -29,8 +29,8 @@ typedef enum : NSInteger {
 @property (nonatomic) NSString *certFilePath;
 @property (nonatomic) bool      commandSuccess;
 
-- (bool)createCommandArrayWith:(NSData *)parameterData;
-- (bool)doAfterResponseWith:(NSData *)responseValue;
+- (bool)createCommandArrayFor:(Command)command fromData:(NSData *)parameterData;
+- (bool)doAfterResponseFor:(Command)command withData:(NSData *)responseData;
 
 @end
 
