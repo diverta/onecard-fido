@@ -265,11 +265,31 @@
     return [registerResponse subdataWithRange:NSMakeRange(66, 65)];
 }
 
-- (void)createCommandTestAuthCheckFrom:(NSData *)registerResponse {
+- (void)createCommandTestAuthNoUserPresFrom:(NSData *)registerResponse {
     // Registerレスポンスからキーハンドルを切り出し、テストデータに連結
     NSMutableData *requestData = [self createTestRequestData];
     [requestData appendData:[self getKeyHandleDataFrom:registerResponse]];
 
+    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
+    NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:0x08];
+    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+}
+
+- (void)createCommandTestAuthUserPresFrom:(NSData *)registerResponse {
+    // Registerレスポンスからキーハンドルを切り出し、テストデータに連結
+    NSMutableData *requestData = [self createTestRequestData];
+    [requestData appendData:[self getKeyHandleDataFrom:registerResponse]];
+    
+    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
+    NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:0x03];
+    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+}
+
+- (void)createCommandTestAuthCheckFrom:(NSData *)registerResponse {
+    // Registerレスポンスからキーハンドルを切り出し、テストデータに連結
+    NSMutableData *requestData = [self createTestRequestData];
+    [requestData appendData:[self getKeyHandleDataFrom:registerResponse]];
+    
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:0x07];
     [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
@@ -312,6 +332,14 @@
             // Registerレスポンスを引数指定
             [self createCommandTestAuthCheckFrom:parameterData];
             break;
+        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            // Registerレスポンスを引数指定
+            [self createCommandTestAuthNoUserPresFrom:parameterData];
+            break;
+        case COMMAND_TEST_AUTH_USER_PRESENCE:
+            // Registerレスポンスを引数指定
+            [self createCommandTestAuthUserPresFrom:parameterData];
+            break;
         default:
             [self setCommandArray:nil];
             break;
@@ -326,6 +354,10 @@
 }
 
 - (bool)doAfterResponseWith:(NSData *)responseValue {
+    // Registerレスポンスは、３件のテストケースで共通使用するため、
+    // ここで保持しておく必要がある
+    static NSData *registerReponseValue;
+    
     // レスポンスの末尾２バイトが0x9000でなければエラー扱い
     NSUInteger length = [responseValue length];
     NSData *responseBytes = [responseValue subdataWithRange:NSMakeRange(length-2, 2)];
@@ -370,13 +402,21 @@
             break;
         case COMMAND_TEST_REGISTER:
             NSLog(@"Register test success");
-            // 後続処理のコマンドを設定(Registerレスポンスを引数指定)
+            registerReponseValue = responseValue;
             self.command = COMMAND_TEST_AUTH_CHECK;
-            doNextCommand = [self createCommandArrayWith:responseValue];
+            doNextCommand = [self createCommandArrayWith:registerReponseValue];
             break;
         case COMMAND_TEST_AUTH_CHECK:
             NSLog(@"Authenticate test (check) success");
+            self.command = COMMAND_TEST_AUTH_NO_USER_PRESENCE;
+            doNextCommand = [self createCommandArrayWith:registerReponseValue];
+            break;
+        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
+        case COMMAND_TEST_AUTH_USER_PRESENCE:
+            NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
             NSLog(@"Health check end");
+            registerReponseValue = nil;
             break;
         default:
             break;
