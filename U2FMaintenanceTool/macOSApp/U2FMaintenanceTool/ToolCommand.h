@@ -13,7 +13,8 @@ typedef enum : NSInteger {
     COMMAND_ERASE_SKEY_CERT,
     COMMAND_INSTALL_SKEY,
     COMMAND_INSTALL_CERT,
-    COMMAND_CHECK_HEALTH
+    COMMAND_TEST_REGISTER,
+    COMMAND_TEST_AUTH_CHECK
 } Command;
 
 @interface ToolCommand : NSObject
@@ -26,8 +27,8 @@ typedef enum : NSInteger {
 @property (nonatomic) NSString *certFilePath;
 @property (nonatomic) bool      commandSuccess;
 
-- (bool)createCommandArray;
-- (bool)doWithResponseValue:(NSData *)responseValue;
+- (bool)createCommandArrayWith:(NSData *)parameterData;
+- (bool)doAfterResponseWith:(NSData *)responseValue;
 
 @end
 

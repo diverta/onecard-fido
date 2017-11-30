@@ -76,7 +76,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         
         // 実行するコマンドを編集
         self.toolCommand = toolCommand;
-        if ([self.toolCommand createCommandArray] == false) {
+        if ([self.toolCommand createCommandArrayWith:nil] == false) {
             [self notifyFailMessageToAppDelegate:[self.toolCommand lastOccuredErrorMessage]];
             return;
         }
@@ -410,16 +410,16 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             // 全データを受信したら、タイムアウト監視を停止し、後続の処理を行う
             [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
             [self notifyMessageToAppDelegate:@"レスポンスを受信しました。"];
-            [self didResponseFromCharacteristic:receivedData];
+            [self doAfterResponseFromCharacteristicWith:receivedData];
             receivedData = nil;
         }
     }
 
 #pragma mark - Process after response from peripheral
 
-    - (void)didResponseFromCharacteristic:(NSData *)responseData {
+    - (void)doAfterResponseFromCharacteristicWith:(NSData *)responseData {
         // 後続処理がある場合は主処理に戻る
-        if ([self.toolCommand doWithResponseValue:responseData]) {
+        if ([self.toolCommand doAfterResponseWith:responseData]) {
             [self executeCommandArray];
             return;
         }
