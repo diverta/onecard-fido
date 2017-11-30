@@ -47,6 +47,7 @@ typedef enum : NSInteger {
         [self.button1 setEnabled:enabled];
         [self.button2 setEnabled:enabled];
         [self.button3 setEnabled:enabled];
+        [self.button4 setEnabled:enabled];
         [self.fieldPath1 setEnabled:enabled];
         [self.fieldPath2 setEnabled:enabled];
         [self.buttonPath1 setEnabled:enabled];

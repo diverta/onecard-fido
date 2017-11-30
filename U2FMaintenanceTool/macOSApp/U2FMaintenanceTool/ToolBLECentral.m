@@ -331,10 +331,10 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     - (void)executeCommandArray {
         // U2F Control Pointに、実行するコマンドを書き込み
         for (NSData *data in self.toolCommand.commandArray) {
+            [NSThread sleepForTimeInterval:0.25];
             [self.connectedPeripheral writeValue:data
                                forCharacteristic:self.u2fControlPointChar
                                             type:CBCharacteristicWriteWithResponse];
-            [NSThread sleepForTimeInterval:0.25];
             NSLog(@"Sent request %@", data);
         }
         [self notifyMessageToAppDelegate:@"リクエストを送信しました。"];
