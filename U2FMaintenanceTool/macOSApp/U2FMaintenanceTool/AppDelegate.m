@@ -47,6 +47,7 @@ typedef enum : NSInteger {
         [self.button1 setEnabled:enabled];
         [self.button2 setEnabled:enabled];
         [self.button3 setEnabled:enabled];
+        [self.button4 setEnabled:enabled];
         [self.fieldPath1 setEnabled:enabled];
         [self.fieldPath2 setEnabled:enabled];
         [self.buttonPath1 setEnabled:enabled];
@@ -102,7 +103,7 @@ typedef enum : NSInteger {
     - (IBAction)button4DidPress:(id)sender {
         // ヘルスチェック実行
         [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_CHECK_HEALTH];
+        [self.toolCommand setCommand:COMMAND_TEST_REGISTER];
         [self.central doCommand:self.toolCommand];
         [self setMessageWhenSuccess:@"ヘルスチェックが成功しました。"];
     }
