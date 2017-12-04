@@ -380,9 +380,11 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         static NSUInteger     totalLength;
         static NSMutableData *receivedData;
 
+        // タイムアウト監視を停止
+        [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
+
+        // U2F Status監視エラー発生時はメッセージを画面表示
         if (error) {
-            // U2F Status監視エラー発生時は、タイムアウト監視を停止し、メッセージを画面表示
-            [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
             [self notifyErrorMessageToAppDelegate:@"レスポンスを受信できませんでした。" error:error];
             return;
         }
@@ -393,7 +395,11 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         // 後続データの存在有無をチェック
         NSData *dataBLEHeader = [responseData subdataWithRange:NSMakeRange(0, 3)];
         unsigned char *bytesBLEHeader = (unsigned char *)[dataBLEHeader bytes];
-        if (bytesBLEHeader[0] == 0x83) {
+        if (bytesBLEHeader[0] == 0x82) {
+            // キープアライブの場合は引き続き次のレスポンスを待つ
+            receivedData = nil;
+
+        } else if (bytesBLEHeader[0] == 0x83) {
             // ヘッダーから全受信データ長を取得
             totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
             // 4バイト目から後ろを切り出して連結
@@ -406,12 +412,15 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
         NSLog(@"Received response %@", responseData);
 
-        if ([receivedData length] == totalLength) {
-            // 全データを受信したら、タイムアウト監視を停止し、後続の処理を行う
-            [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
+        if (receivedData && ([receivedData length] == totalLength)) {
+            // 全データを受信したら後続の処理を行う
             [self notifyMessageToAppDelegate:@"レスポンスを受信しました。"];
             [self doAfterResponseFromCharacteristicWith:receivedData];
             receivedData = nil;
+
+        } else {
+            // 後続のレスポンス待ち（タイムアウト監視開始）
+            [self startRequestTimeout:self.u2fStatusChar];
         }
     }
 

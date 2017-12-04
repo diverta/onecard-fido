@@ -393,6 +393,9 @@
             break;
         case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
             NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
+            doNextCommand = [self createCommandArrayFor:COMMAND_TEST_AUTH_USER_PRESENCE
+                                               fromData:registerReponseData];
+            break;
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
             NSLog(@"Health check end");
