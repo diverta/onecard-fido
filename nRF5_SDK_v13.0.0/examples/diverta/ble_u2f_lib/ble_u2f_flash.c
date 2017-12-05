@@ -135,6 +135,24 @@ bool ble_u2f_flash_keydata_read(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
+bool ble_u2f_flash_keydata_available(ble_u2f_context_t *p_u2f_context)
+{
+    // 一時領域（確保済み）のアドレスを取得
+    uint32_t *keydata_buffer = p_u2f_context->securekey_buffer;
+    if (keydata_buffer == NULL) {
+        return false;
+    }
+
+    // 一時領域が初期状態であればunavailableと判定
+    // (初期状態=確保領域の全ワードが0xffffffff)
+    for (uint16_t i = 0; i < SKEY_CERT_WORD_NUM; i++) {
+        if (keydata_buffer[i] != 0xffffffff) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
 {
