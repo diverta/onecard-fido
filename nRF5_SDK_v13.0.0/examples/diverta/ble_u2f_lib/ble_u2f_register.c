@@ -220,6 +220,13 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
+    if (ble_u2f_flash_keydata_available(p_u2f_context) == false) {
+        // 秘密鍵と証明書がFlash ROMに登録されていない場合
+        // エラーレスポンスを生成して戻す
+        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        return;
+    }
+    
     // キーハンドルを新規生成
     generate_keyhandle(p_u2f_context);
 
