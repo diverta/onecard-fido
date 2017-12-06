@@ -125,28 +125,31 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
     }
 
     // 秘密鍵をFlash ROMに格納する
+    // (fds_record_update/writeまたはfds_gcが実行される)
     if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x06);
+        ble_u2f_send_error_response(p_u2f_context, 0x04);
     }
 }
 
 void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
-    if (p_evt->id != FDS_EVT_WRITE && p_evt->id != FDS_EVT_UPDATE) {
-        // write/update完了イベントでない場合はスルー
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
 
-    ret_code_t result = p_evt->result;
-    if (result == FDS_SUCCESS) {
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // ここでエラーレスポンスを戻す
+        ble_u2f_send_error_response(p_u2f_context, 0x06);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS GC done \r\n");
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_securekey_install_skey end \r\n");
-
-    } else {
-        // エラーレスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x06);
-        NRF_LOG_DEBUG("ble_u2f_securekey_install_skey abend \r\n");
     }
 }
 
@@ -215,6 +218,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
     memcpy(cert_buffer + 1, data, length);
 
     // 証明書データをFlash ROMへ書込
+    // (fds_record_update/writeまたはfds_gcが実行される)
     if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x04);
     }
@@ -222,21 +226,23 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
-    if (p_evt->id != FDS_EVT_WRITE && p_evt->id != FDS_EVT_UPDATE) {
-        // write/update完了イベントでない場合はスルー
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
 
-    ret_code_t result = p_evt->result;
-    if (result == FDS_SUCCESS) {
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // ここでエラーレスポンスを戻す
+        ble_u2f_send_error_response(p_u2f_context, 0x06);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS GC done \r\n");
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_securekey_install_cert end \r\n");
-
-    } else {
-        // エラーレスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x05);
-        NRF_LOG_DEBUG("ble_u2f_securekey_install_cert abend \r\n");
     }
 }
 

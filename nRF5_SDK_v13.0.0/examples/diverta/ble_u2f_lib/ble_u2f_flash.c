@@ -173,29 +173,31 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
-        if (ret != FDS_SUCCESS) {
-            NRF_LOG_ERROR("fds_record_update returns 0x%02x \r\n", ret);
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_update returns 0x%02x \r\n", ret);
             return false;
         }
 
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
-        if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
-            // 書込みができない場合はエラー扱い
-            // (Disconnect時にGCを実行させて終了）
-            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: no space in flash. call GC later \r\n");
-            p_u2f_context->need_fdc_gc = true;
-            return false;
-
-        } else if (ret != FDS_SUCCESS) {
-            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds returns 0x%02x \r\n", ret);
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_write returns 0x%02x \r\n", ret);
             return false;
         }
 
     } else {
         NRF_LOG_DEBUG("fds_record_find returns 0x%02x \r\n", ret);
         return false;
+    }
+    
+    if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
+        // 書込みができない場合、ガベージコレクションを実行
+        // (fds_gcが実行される。NGであればエラー扱い)
+        NRF_LOG_ERROR("ble_u2f_flash_keydata_write: no space in flash, calling FDS GC \r\n");
+        if (ble_u2f_flash_force_fdc_gc() == false) {
+            return false;
+        }
     }
     
     return true;
@@ -306,7 +308,6 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
         // 書込みができない場合はエラー扱い
         // (Disconnect時にGCを実行させて終了）
         NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: no space in flash. call GC later \r\n");
-        p_u2f_context->need_fdc_gc = true;
         return false;
 
     } else if (ret != FDS_SUCCESS) {

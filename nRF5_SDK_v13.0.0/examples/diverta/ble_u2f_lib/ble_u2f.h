@@ -169,7 +169,6 @@ typedef struct
     uint8_t           keepalive_status_byte;
     uint8_t           user_presence_byte;
     uint32_t          token_counter;
-    bool              need_fdc_gc;
 } ble_u2f_context_t;
 
 
