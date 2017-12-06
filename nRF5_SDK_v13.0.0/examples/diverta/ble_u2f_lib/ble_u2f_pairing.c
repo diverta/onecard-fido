@@ -166,19 +166,14 @@ void ble_u2f_pairing_change_mode(ble_u2f_context_t *p_u2f_context)
         m_pairing_mode = NON_PAIRING_MODE;
     }
     
-    if (fds_gc() != FDS_SUCCESS) {
+    if (ble_u2f_flash_force_fdc_gc() == false) {
         // ガベージコレクションを実行
+        // (fds_gcが実行される)
         // NGであればエラー扱い
         return;
     }
 
-    if (write_pairing_mode() == false) {
-        // ペアリングモードをFlash ROMへ保存
-        // NGであればエラー扱い
-        return;
-    }
-
-    // Flash ROM保存後に
+    // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
     p_u2f_context->command = COMMAND_CHANGE_PAIRING_MODE;
@@ -186,14 +181,24 @@ void ble_u2f_pairing_change_mode(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
-    if (p_evt->id != FDS_EVT_WRITE && p_evt->id != FDS_EVT_UPDATE) {
-        // write/update完了イベントでない場合はスルー
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
-    // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
-    // 変更したペアリングモード設定を反映するため、システムリセットを実行
-    NRF_LOG_INFO("ble_u2f_pairing_reflect_mode_change called. \r\n");
-    NVIC_SystemReset();
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // fds_gc完了の場合は、ペアリングモードをFlash ROMへ保存
+        // (fds_record_update/writeが実行される)
+        write_pairing_mode();
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // fds_record_update/write完了の場合
+        // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
+        // 変更したペアリングモード設定を反映するため、システムリセットを実行
+        NRF_LOG_INFO("ble_u2f_pairing_reflect_mode_change called. \r\n");
+        NVIC_SystemReset();
+    }
 }
 
 static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_buffer)
