@@ -8,9 +8,6 @@
 #include "ble_u2f_util.h"
 #include "fds.h"
 
-// for ble_u2f_crypto_ecb_init
-#include "ble_u2f_crypto_ecb.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_flash"
 #include "nrf_log.h"
@@ -22,6 +19,20 @@ static uint32_t m_token_counter;
 static uint32_t m_reserve_word;
 
 
+bool ble_u2f_flash_force_fdc_gc(void)
+{
+    ret_code_t err_code;
+
+    // FDSガベージコレクションを強制実行
+    err_code = fds_gc();
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fds_gc returns 0x%02x \r\n", err_code);
+        return false;
+    }
+
+    return true;
+}
+
 bool ble_u2f_flash_keydata_delete(void)
 {
     ret_code_t err_code;
@@ -30,18 +41,6 @@ bool ble_u2f_flash_keydata_delete(void)
     err_code = fds_file_delete(U2F_FILE_ID);
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_file_delete returns 0x%02x \r\n", err_code);
-        return false;
-    }
-
-    // AES秘密鍵を初期化する
-    if (ble_u2f_crypto_ecb_init() == false) {
-        return false;
-    }
-    
-    // ガベージコレクションを実行する
-    err_code = fds_gc();
-    if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_gc returns 0x%02x \r\n", err_code);
         return false;
     }
 

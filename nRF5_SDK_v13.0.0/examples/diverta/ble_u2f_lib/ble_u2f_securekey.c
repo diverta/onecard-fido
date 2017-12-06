@@ -9,6 +9,9 @@
 #include "ble_u2f_crypto.h"
 #include "ble_u2f_util.h"
 
+// for ble_u2f_crypto_ecb_init
+#include "ble_u2f_crypto_ecb.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_securekey"
 #include "nrf_log.h"
@@ -17,6 +20,7 @@
 void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
 {
     // 秘密鍵／証明書をFlash ROM領域から削除
+    // (fds_file_deleteが実行される)
     NRF_LOG_DEBUG("ble_u2f_securekey_erase start \r\n");
     if (ble_u2f_flash_keydata_delete() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x01);
@@ -26,21 +30,32 @@ void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
-    if (p_evt->id != FDS_EVT_GC) {
-        // GC完了イベントでない場合はスルー
+    if (p_evt->result != FDS_SUCCESS) {
+        // エラーレスポンスを生成してU2Fクライアントに戻す
+        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
 
-    ret_code_t result = p_evt->result;
-    if (result == FDS_SUCCESS) {
+    if (p_evt->id == FDS_EVT_DEL_FILE) {
+        // fds_file_delete完了の場合は、ガベージコレクションを実行する
+        // (fds_gcが実行される)
+        if (ble_u2f_flash_force_fdc_gc() == false) {
+            ble_u2f_send_error_response(p_u2f_context, 0x03);
+        }
+        
+    } else if (p_evt->id == FDS_EVT_GC) {
+        // fds_gc完了の場合は、AES秘密鍵の初期化処理を行う
+        // (fds_record_update/writeが実行される)
+        if (ble_u2f_crypto_ecb_init() == false) {
+            ble_u2f_send_error_response(p_u2f_context, 0x04);
+        }
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // fds_record_update/write完了の場合
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_securekey_erase end \r\n");
-
-    } else {
-        // エラーレスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
-        NRF_LOG_ERROR("ble_u2f_securekey_erase abend \r\n");
     }
 }
 
