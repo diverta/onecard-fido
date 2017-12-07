@@ -58,7 +58,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
-        if (ret != FDS_SUCCESS) {
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("write_random_vector: fds_record_update returns 0x%02x \r\n", ret);
             return false;
         }
@@ -66,12 +66,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
-        if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
-            // 書込みができない場合はエラー扱いとする
-            NRF_LOG_ERROR("write_random_vector: no space in flash \r\n");
-            return false;
-
-        } else if (ret != FDS_SUCCESS) {
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("write_random_vector: fds_record_write returns 0x%02x \r\n", ret);
             return false;
         }
@@ -79,6 +74,15 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     } else {
         NRF_LOG_DEBUG("write_random_vector: fds_record_find returns 0x%02x \r\n", ret);
         return false;
+    }
+
+    if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
+        // 書込みができない場合、ガベージコレクションを実行
+        // (fds_gcが実行される。NGであればエラー扱い)
+        NRF_LOG_ERROR("write_random_vector: no space in flash, calling FDS GC \r\n");
+        if (ble_u2f_flash_force_fdc_gc() == false) {
+            return false;
+        }
     }
 
     return true;

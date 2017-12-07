@@ -38,18 +38,17 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、ガベージコレクションを実行する
-        // (fds_gcが実行される)
-        if (ble_u2f_flash_force_fdc_gc() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x03);
-        }
-        
-    } else if (p_evt->id == FDS_EVT_GC) {
-        // fds_gc完了の場合は、AES秘密鍵の初期化処理を行う
-        // (fds_record_update/writeが実行される)
+        // fds_file_delete完了の場合は、AES秘密鍵の初期化処理を行う
+        // (fds_record_update/writeまたはfds_gcが実行される)
         if (ble_u2f_crypto_ecb_init() == false) {
             ble_u2f_send_error_response(p_u2f_context, 0x04);
         }
+
+    } else if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // ここでエラーレスポンスを戻す
+        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
+        NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS GC done \r\n");
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // fds_record_update/write完了の場合
@@ -143,7 +142,7 @@ void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, f
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x06);
+        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
         NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS GC done \r\n");
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
@@ -236,7 +235,7 @@ void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, f
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x06);
+        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
         NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS GC done \r\n");
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {

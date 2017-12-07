@@ -37,6 +37,9 @@ extern "C" {
 #define U2F_SW_WRONG_LENGTH             0x6700
 #define U2F_SW_CLA_NOT_SUPPORTED        0x6E00
 
+// 独自定義のステータスワード
+#define U2F_SW_FDS_GC_DONE              0x9E01
+
 // BLEパケット項目のサイズ
 #define OPCODE_LENGTH 1
 #define HANDLE_LENGTH 2
