@@ -109,11 +109,6 @@ void ble_u2f_command_finalize_context(void)
         free(m_u2f_context.signature_data_buffer);
         NRF_LOG_DEBUG("m_u2f_context.signature_data_buffer freed \r\n");
     }
-    if (m_u2f_context.need_fdc_gc == true) {
-        // ガベージコレクションを実行する
-        ret_code_t err_code = fds_gc();
-        NRF_LOG_WARNING("fds_gc done: returns 0x%02x \r\n", err_code);
-    }
 
     // ユーザー所在確認を停止(キープアライブを停止)
     ble_u2f_user_presence_terminate(&m_u2f_context);

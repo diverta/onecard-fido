@@ -28,6 +28,7 @@ extern "C" {
 #define U2F_AESKEYS_MODE_RECORD_KEY  (0xBFFE)
 
 
+bool ble_u2f_flash_force_fdc_gc(void);
 bool ble_u2f_flash_keydata_delete(void);
 bool ble_u2f_flash_keydata_read(ble_u2f_context_t *p_u2f_context);
 bool ble_u2f_flash_keydata_available(ble_u2f_context_t *p_u2f_context);

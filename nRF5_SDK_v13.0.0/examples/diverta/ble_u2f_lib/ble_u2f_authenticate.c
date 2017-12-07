@@ -228,6 +228,7 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
     
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
+    // (fds_record_update/writeまたはfds_gcが実行される)
     if (update_token_counter(p_u2f_context) == false) {
         // エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, 0x03);
@@ -309,21 +310,23 @@ static void send_authentication_response(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
-    if (p_evt->id != FDS_EVT_WRITE && p_evt->id != FDS_EVT_UPDATE) {
-        // write/update完了イベントでない場合はスルー
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
 
-    ret_code_t result = p_evt->result;
-    if (result == FDS_SUCCESS) {
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // ここでエラーレスポンスを戻す
+        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
+        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS GC done \r\n");
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_authentication_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_authenticate end \r\n");
-
-    } else {
-        // エラーレスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x05);
-        NRF_LOG_ERROR("ble_u2f_authenticate abend \r\n");
     }
 }
 
