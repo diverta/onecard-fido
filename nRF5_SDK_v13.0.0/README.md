@@ -1,14 +1,12 @@
-# One Card FIDO対応
+# BLE U2Fサービス
 
 ## 概要
-One Card上で稼働する、FIDO U2F対応のBLEサービスです。<br>
-（以下「BLE U2Fサービス」と称します）
+FIDO U2Fの仕様に準拠したBLEサービスです。<br>
+One Card機能の一部として稼働します。
 
-FIDO U2Fに関する情報：
-<br>
-https://fidoalliance.org/download/
+FIDO U2Fに関する情報 : https://fidoalliance.org/download/
 
-FIDO U2F対応デバイスは、USBポートに挿して使用する「YubiKey」が有名ですが、One Card FIDO U2F対応は、USBポートではなく、One CardのBLEを使用しています。
+FIDO U2F対応デバイスは、USBポートに挿して使用する「YubiKey」が有名ですが、BLE U2Fサービスは、USBポートではなく、One CardのBLEを使用しています。
 
 機能スコープとしては下図の 2.Processing の部分に該当します。
 <br>
@@ -44,10 +42,8 @@ BLE (Bluetooth Low Energy) 4.2以上が推奨されます。
 
 2017/12/11現在で、こちらでBLE U2Fサービスで認証情報登録／認証ができることを確認しているサイトは以下になります。
 
-Google U2F Demo :
-<br>
-https://crxjs-dot-u2fdemo.appspot.com/
-<br>
+Google U2F Demo : https://crxjs-dot-u2fdemo.appspot.com/
+
 <img src="../assets/0003.png" width="600">
 
 他のPC環境（Windows、macOS等）では、ChromeブラウザーがFIDO U2FのBLEエクステンションをサポートしていないので、2017/12/11時点では動作確認できておりません。
