@@ -28,39 +28,41 @@ nRF52DKを使用しています。
 ### コードのチェックアウト
 
 c:¥nordic（ディレクトリーがない場合は作成）配下に移動し、GitHubからコードをチェックアウトします。<br>
-エクスプローラで見ると、下図のような感じになります。<br>
-<img src="../assets/0004.png" width="500">
+エクスプローラで見ると、下図のような感じになります。
+
+<img src="../assets/0004.png" width="600">
 
 ### プロジェクト設定の確認
 
 nRF52DKとPCを、USBケーブルで接続したのち、one_card_peripheral_app_pca10040_s132.uvprojx というファイルをダブルクリックします。
-<br>
-<img src="../assets/0005.png" width="500">
+
+<img src="../assets/0005.png" width="600">
 
 μVisionが起動したら、プロジェクト設定を確認します。
-<br>
-<img src="../assets/0006.png" width="500">
+
+<img src="../assets/0006.png" width="800">
 
 プロジェクト設定のポップアップを確認します。<br>
 JLINK / J-TRACE Cortexが選択されていることを確認し、Settingsボタンをクリックします。
-<br>
-<img src="../assets/0007.png" width="350">
+
+<img src="../assets/0007.png" width="500">
 
 表示されたポップアップの、SW DeviceにDevice Nameが表示されていることを確認します。
-<br>
-<img src="../assets/0008.png" width="350">
+
+<img src="../assets/0008.png" width="500">
 
 ### ビルドとプログラム書込み(Download)
 
 ビルドを実行します。
-<br>
-<img src="../assets/0009.png" width="500">
+
+<img src="../assets/0009.png" width="800">
 
 ビルドの結果「0 Error(s)」となっていることを確認し、プログラムの書込みを実行します。
-<br>
-<img src="../assets/0010.png" width="500">
 
-エラーが発生しなければ、下図のようになります。<br>
+<img src="../assets/0010.png" width="800">
+
+エラーが発生しなければ、下図のようになります。
+
+<img src="../assets/0011.png" width="800">
+
 これでプログラムの書込みは完了です。
-<br>
-<img src="../assets/0011.png" width="500">
