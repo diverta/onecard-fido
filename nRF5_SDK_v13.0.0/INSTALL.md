@@ -40,7 +40,7 @@ Bluetoothをクリックします。<br>OneCard_Peripheralが表示されます�
 
 #### macOSの場合
 
-[U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.app)をGitHubからダウンロードして起動します。<br>
+[U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.zip)をGitHubからダウンロード／解凍して起動します。<br>
 画面上の「ヘルスチェック実行」ボタンをクリックします。
 
 <img src="../assets/0017.png" width="500">
@@ -222,4 +222,4 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 ## 鍵・証明書のインストール
 
-別途提供している [U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.app) を使用して、インストールができます。
+別途提供している [U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.zip) を使用して、インストールができます。
