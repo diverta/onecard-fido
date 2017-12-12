@@ -19,3 +19,14 @@ PC環境から、BLE U2Fサービスの動作に必要な鍵・証明書の導�
 GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 
 コード格納場所--->[U2FMaintenanceTool](U2FMaintenanceTool)
+
+## 各種手順
+
+* [One Cardアプリケーションビルド手順](nRF5_SDK_v13.0.0/BUILD.md) <br>
+ソースチェックアウトからμVisionによるビルド／書込みまでの手順を掲載しています。
+
+* [One Cardペアリング手順](nRF5_SDK_v13.0.0/PAIRING.md) <br>
+ペアリングモード変更／ペアリング実行の手順を掲載しています。
+
+* [鍵・証明書インストール手順](nRF5_SDK_v13.0.0/INSTALL.md) <br>
+鍵・証明書インストールなどの手順を掲載しています。
