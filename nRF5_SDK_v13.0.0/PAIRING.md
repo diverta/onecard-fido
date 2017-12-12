@@ -63,6 +63,28 @@ macOSの設定画面からBluetooth設定を参照すると、下図のように
 
 これで、macOSとのペアリングは完了です。
 
+### Chrome OSの場合
+
+Chrome OSデスクトップの右下端をクリックします。<br>
+コンテキストメニューが表示されますので、歯車のアイコンをクリックし、設定画面を表示させます。
+
+<img src="../assets/0035.png" width="300">
+
+Bluetooth欄をクリックします。<br>
+Bluetooth が「オン」になっていない場合は、右端のトグルをクリックして「オン」に変更します。
+
+<img src="../assets/0036.png" width="800">
+
+「ペア設定されていないデバイス」欄にOneCard_Peripheralが表示されていることを確認し「OneCard_Peripheral」表示部をクリックします。
+
+<img src="../assets/0037.png" width="550">
+
+接続処理が行われ「ペア設定されたデバイス」欄にOneCard_Peripheralが「接続済み」として表示されます。
+
+<img src="../assets/0038.png" width="800">
+
+これで、Chrome OSとのペアリングは完了です。
+
 ## ペアリングモード--->非ペアリングモードへの変更
 
 ペアリングモードから、非ペアリングモードに変更させるためには、One CardのMAIN SWを５秒間押し続けます。
