@@ -152,10 +152,59 @@ OpenSSL 0.9.8zh 14 Jan 2016
 MacBookPro-makmorit-jp:~ makmorit$
 ```
 
+## U2F管理ツールの準備
+
+[U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
+
+macOS環境の場合は [こちらの手順](../nRF5_SDK_v13.0.0/PAIRING.md#macosの場合) を参照して取得します。
+
+Windows環境の場合は [こちらの実行ファイル](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceTool.exe) をダウンロードします。
+
 ## 鍵・証明書のインストール
 
-[U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.zip) を使用して、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を、One Cardにインストールします。
+U2F管理ツールを使用して、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を、One Cardにインストールします。
 
-## ヘルスチェックの実行
+### macOS環境の場合
 
-[U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.zip) を使用して、インストールされた鍵・証明書を使用し、動作確認（ヘルスチェック）を実行します。
+U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
+表示された画面の「鍵・証明書消去／AES暗号生成」ボタンをクリックします。
+
+<img src="../assets/0027.png" width="550">
+
+One Card側の処理が成功すると「鍵・証明書削除処理が成功しました。」と表示されます。
+
+<img src="../assets/0028.png" width="550">
+
+続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
+
+<img src="../assets/0029.png" width="550">
+
+U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
+
+<img src="../assets/0030.png" width="550">
+
+One Card側の処理が成功すると「鍵・証明書インストール処理が成功しました。」と表示されます。
+
+<img src="../assets/0031.png" width="550">
+
+これで、鍵・証明書のインストールは完了です。
+
+### Windows環境の場合
+
+コマンド「U2FMaintenanceTool.exe -E」を実行します。
+
+<img src="../assets/0023.png" width="750">
+
+One Card側の処理が成功すると「鍵・証明書をFlash ROMから削除しました。」というメッセージが表示されます。
+
+<img src="../assets/0024.png" width="750">
+
+続いて、コマンド「U2FMaintenanceTool.exe -I <秘密鍵ファイルのパス> <証明書ファイルのパス>」を実行します。
+
+<img src="../assets/0025.png" width="750">
+
+One Card側の処理が成功すると「秘密鍵をFlash ROMにインストールしました。」「証明書をFlash ROMにインストールしました。」というメッセージが表示されます。
+
+<img src="../assets/0026.png" width="750">
+
+これで、鍵・証明書のインストールは完了です。
