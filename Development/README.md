@@ -15,10 +15,8 @@
 ## TODO
 
 * <b>Android環境でのサポート状況確認</b><br>
-Android向けGoogle Playで既にサポートずみ（とのこと）である、BLE U2Fサービスが利用できるかどうかを、実機で確認する予定です。
-<br><br>
-[ご参考] Googleサポート状況に関する議論：
-<br>
+Android向けGoogle Playで既にサポートずみ（とのこと）である、BLE U2Fサービスが利用できるかどうかを、実機で確認する予定です。<br><br>
+[ご参考] Googleサポート状況に関する議論：<br>
 https://groups.google.com/a/fidoalliance.org/forum/#!topic/fido-dev/-hT1UF0FKTo
 
 * <b>ブラウザーエクステンションの調査・開発</b><br>
