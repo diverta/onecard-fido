@@ -30,3 +30,6 @@ GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 
 * [鍵・証明書インストール手順](nRF5_SDK_v13.0.0/INSTALL.md) <br>
 鍵・証明書インストールなどの手順を掲載しています。
+
+* [FIDO U2F認証テスト手順](nRF5_SDK_v13.0.0/CERTTEST.md) <br>
+FIDOアライアンスから提供されている、FIDO U2F認証取得のための事前テストツール（BLECertificationTool.exe）について、実行手順を掲載しています。
