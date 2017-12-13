@@ -34,11 +34,6 @@ GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 * [FIDO U2F認証テスト手順](nRF5_SDK_v13.0.0/CERTTEST.md) <br>
 FIDOアライアンスから提供されている、FIDO U2F認証取得のための事前テストツール（BLECertificationTool.exe）について、実行手順を掲載しています。
 
-## 各種検証
+## 開発情報
 
-* [Chrome OSでのU2F認証テスト](nRF5_SDK_v13.0.0/CHROMEOSTEST.md) <br>
-テスト用のChromeエクステンションを使用し、[U2F認証テストサイト](https://crxjs-dot-u2fdemo.appspot.com/)でU2F認証ができることを確認しました。<br>
-その時の手順および結果を掲載しております。
-
-* （未実施）AndroidでのU2F認証テスト<br>
-後日、実施予定です。
+開発に関する情報は、[こちらのページ](Development/README.md)にまとめて記載しております。

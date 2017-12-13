@@ -47,21 +47,3 @@ Google U2F Demo : https://crxjs-dot-u2fdemo.appspot.com/
 <img src="../assets/0003.png" width="600">
 
 他のPC環境（Windows、macOS等）では、ChromeブラウザーがFIDO U2FのBLEエクステンションをサポートしていないので、2017/12/11時点では動作確認できておりません。
-
-## TODO
-
-### Android環境でのサポート状況確認
-
-Android向けGoogle Playで既にサポートずみ（とのこと）である、BLE U2Fサービスが利用できるかどうかを、実機で確認する予定です。
-
-[ご参考] Googleサポート状況に関する議論：
-<br>
-https://groups.google.com/a/fidoalliance.org/forum/#!topic/fido-dev/-hT1UF0FKTo
-
-### ブラウザーエクステンションの調査・開発
-
-PC環境で動作するFIDO U2F BLEエクステンションの調査・開発を予定しております。
-
-## FIXME
-
-現状顕在化している問題点はございません。
