@@ -11,7 +11,7 @@ Windows 10のみサポートされています。
 
 - プログラム<br>
 こちらからダウンロードできます。<br>
-[BLECertificationTool.exe](../assets/BLECertificationTool.exe)
+[BLECertificationTool.exe](../Research/BLECertificationTool.exe)
 
 このテストツールを使用してテストを実行する手順を、下記に掲載いたします。
 
