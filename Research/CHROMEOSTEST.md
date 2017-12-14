@@ -13,11 +13,11 @@
 
 - テスト用BLEエクステンション<br>
 こちらからダウンロードできます。<br>
-[u2f-ble-helper.crx](../Research/u2f-ble-helper.crx)
+[u2f-ble-helper.crx](u2f-ble-helper.crx)
 
 - （ご参考）ソースコード<br>
 上記エクステンションは、こちらのコードからパッケージ化したバイナリーファイルです。<br>
-[u2f-ble-helper](../Research/u2f-ble-helper/)
+[u2f-ble-helper](u2f-ble-helper/)
 
 ### BLEエクステンションのインストール
 
@@ -36,7 +36,7 @@ Chromeブラウザーの拡張機能ページを開き、u2f-ble-helper.crxを�
 
 - 親エクステンションのコード<br>
 「u2f-chrome-extension」ディレクトリーを丸ごとコピーし、Chrome OSに配置します。<br>
-[u2f-chrome-extension](../Research/u2f-ref-code/u2f-chrome-extension/)
+[u2f-chrome-extension](u2f-ref-code/u2f-chrome-extension/)
 
 - （ご参考）パッケージ化しない理由<br>
 上記コードをパッケージ化して、作成したエクステンションをインストールすると、エクステンションのIDが変わってしまうため、テスト用サイトが指定したIDと一致しなくなり、結果認証テストが失敗します。<br>

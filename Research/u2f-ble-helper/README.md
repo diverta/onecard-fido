@@ -31,4 +31,4 @@ U2Fエクステンションについては、こちらのページ（[u2f-chrome
 
 ## 使用例
 
-こちらのページ（[Chrome OSでのU2F認証テスト](../../Development/CHROMEOSTEST.md)）をご参照ください。
+こちらのページ（[Chrome OSでのU2F認証テスト](../../Research/CHROMEOSTEST.md)）をご参照ください。
