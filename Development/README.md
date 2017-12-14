@@ -8,6 +8,9 @@
 * [micro-eccビルド手順](../nRF5_SDK_v13.0.0/BUILDMECC.md) <br>
 BLE U2Fサービスで使用する暗号化ライブラリー「micro-ecc」のビルド手順を掲載しています。
 
+* [FIDO U2F認証テストツールビルド手順](../Research/BLECertificationTool.BUILD.md) <br>
+FIDO U2F認証テストツール（BLECertificationTool.exe）のビルド手順を掲載しています。
+
 ## 各種検証
 
 * <b>[Chrome OSでのU2F認証テスト](CHROMEOSTEST.md)</b><br>
