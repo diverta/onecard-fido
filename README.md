@@ -20,21 +20,18 @@ GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 
 コード格納場所--->[U2FMaintenanceTool](U2FMaintenanceTool)
 
-## 各種手順
+## 運用に関する情報
 
-* [One Cardペアリング手順](Usage/PAIRING.md) <br>
-ペアリングモード変更／ペアリング実行の手順を掲載しています。
+[こちらのページ](Usage/README.md)からご参照いただけます。
 
-* [鍵・証明書インストール手順](Usage/INSTALL.md) <br>
-鍵・証明書インストールなどの手順を掲載しています。
+## 開発に関する情報
 
-* [FIDO U2F認証テスト手順](Usage/CERTTEST.md) <br>
-FIDOアライアンスから提供されている、FIDO U2F認証取得のための事前テストツール（BLECertificationTool.exe）について、実行手順を掲載しています。
+[こちらのページ](Development/README.md)からご参照いただけます。
 
-## 開発情報
+## 調査に関する情報
 
-開発に関する情報は、[こちらのページ](Development/README.md)にまとめて記載しております。
+[こちらのページ](Research/README.md)からご参照いただけます。
 
-## 調査情報
+## 障害に関する情報
 
-調査に関する情報は、[こちらのページ](Research/README.md)にまとめて記載しております。
+[Issues](https://github.com/diverta/onecard-fido/issues)からご参照いただけます。
