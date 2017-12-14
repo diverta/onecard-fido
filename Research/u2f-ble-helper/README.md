@@ -27,7 +27,7 @@ U2Fエクステンションについては、こちらのページ（[u2f-chrome
 このコードからChromeブラウザーを使用してパッケージ化したバイナリーファイルを用意しました。
 
 こちらからダウンロードできます。<br>
-[u2f-ble-helper.crx](../Research/u2f-ble-helper.crx)
+[u2f-ble-helper.crx](../u2f-ble-helper.crx)
 
 ## 使用例
 
