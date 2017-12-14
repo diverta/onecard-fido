@@ -36,7 +36,8 @@ URL: https://github.com/fido-alliance/jovasco-u2f-ref-code.git <br><br>
 （下図の通り、３箇所あります）
 
 <img src="../assets/0062.png" width="800">
-￼
+
+
 ## ビルド実行
 
 BLECertificationTool.exeのビルドを実行します。
