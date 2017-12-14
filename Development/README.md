@@ -2,10 +2,10 @@
 
 ## 各種手順
 
-* [One Cardアプリケーションビルド手順](nRF5_SDK_v13.0.0/BUILD.md) <br>
+* [One Cardアプリケーションビルド手順](../nRF5_SDK_v13.0.0/BUILD.md) <br>
 ソースチェックアウトからμVisionによるビルド／書込みまでの手順を掲載しています。
 
-* [micro-eccビルド手順](nRF5_SDK_v13.0.0/BUILDMECC.md) <br>
+* [micro-eccビルド手順](../nRF5_SDK_v13.0.0/BUILDMECC.md) <br>
 BLE U2Fサービスで使用する暗号化ライブラリー「micro-ecc」のビルド手順を掲載しています。
 
 ## 各種検証

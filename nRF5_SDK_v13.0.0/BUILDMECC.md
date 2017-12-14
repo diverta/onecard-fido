@@ -84,14 +84,14 @@ GNU_INSTALL_ROOTとGNU_VERSIONを修正します。<br>
 MSYSにパスを通しておきます。<br>
 （c:¥mingw¥msys¥1.0¥bin;c:¥mingw¥bin）
 
-armgcc配下のMakefileを使用してビルドします。<br>
-（armgcc配下に移動し「C:¥MinGW¥msys¥1.0¥bin¥make.exe」を実行）
+nrf52_keil¥armgcc配下のMakefileを使用してビルドします。<br>
+（nrf52_keil¥armgcc配下に移動し「C:¥MinGW¥msys¥1.0¥bin¥make.exe」を実行）
 
 <img src="../assets/0059.png" width="750">
 
 上図のように「Done」と表示されればビルドは成功です。
 
-本プロジェクトでは、配下に作成された「micro_ecc_lib_nrf52.lib」というファイルをライブラリーとして使用します。
+本プロジェクトでは、nrf52_keil¥armgcc配下に作成された「micro_ecc_lib_nrf52.lib」というファイルをライブラリーとして使用します。
 
 <img src="../assets/0060.png" width="750">
 
