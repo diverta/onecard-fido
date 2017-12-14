@@ -38,9 +38,6 @@ Chromeブラウザーの拡張機能ページを開き、u2f-ble-helper.crxを�
 「u2f-chrome-extension」ディレクトリーを丸ごとコピーし、Chrome OSに配置します。<br>
 [u2f-chrome-extension](../Research/u2f-ref-code/u2f-chrome-extension/)
 
-- （ご参考）出典(GitHub)<br>
-[u2f-chrome-extension](https://github.com/google/u2f-ref-code/tree/master/u2f-chrome-extension)
-
 - （ご参考）パッケージ化しない理由<br>
 上記コードをパッケージ化して、作成したエクステンションをインストールすると、エクステンションのIDが変わってしまうため、テスト用サイトが指定したIDと一致しなくなり、結果認証テストが失敗します。<br>
 このため、上記手順のとおり、パッケージ化されていない状態で、Chromeブラウザーにインストールしております。
@@ -55,7 +52,7 @@ Chromeブラウザーの拡張機能ページを開き、u2f-ble-helper.crxを�
 
 <img src="../assets/0038.png" width="750">
 
-ペアリングが行われていない場合は、[One Cardペアリング手順](PAIRING.md) によりペアリングをおこなってください。
+ペアリングが行われていない場合は、[One Cardペアリング手順](../Usage/PAIRING.md) によりペアリングをおこなってください。
 
 ### テスト用エクステンションが稼働していること
 
