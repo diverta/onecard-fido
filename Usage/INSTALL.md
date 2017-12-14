@@ -156,7 +156,7 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 [U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
 
-macOS環境の場合は [こちらの手順](../nRF5_SDK_v13.0.0/PAIRING.md#macosの場合) を参照して取得します。
+macOS環境の場合は [こちらの手順](PAIRING.md#macosの場合) を参照して取得します。
 
 Windows環境の場合は [こちらの実行ファイル](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceTool.exe) をダウンロードします。
 

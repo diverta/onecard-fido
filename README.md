@@ -22,16 +22,13 @@ GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 
 ## 各種手順
 
-* [One Cardアプリケーションビルド手順](nRF5_SDK_v13.0.0/BUILD.md) <br>
-ソースチェックアウトからμVisionによるビルド／書込みまでの手順を掲載しています。
-
-* [One Cardペアリング手順](nRF5_SDK_v13.0.0/PAIRING.md) <br>
+* [One Cardペアリング手順](Usage/PAIRING.md) <br>
 ペアリングモード変更／ペアリング実行の手順を掲載しています。
 
-* [鍵・証明書インストール手順](nRF5_SDK_v13.0.0/INSTALL.md) <br>
+* [鍵・証明書インストール手順](Usage/INSTALL.md) <br>
 鍵・証明書インストールなどの手順を掲載しています。
 
-* [FIDO U2F認証テスト手順](nRF5_SDK_v13.0.0/CERTTEST.md) <br>
+* [FIDO U2F認証テスト手順](Usage/CERTTEST.md) <br>
 FIDOアライアンスから提供されている、FIDO U2F認証取得のための事前テストツール（BLECertificationTool.exe）について、実行手順を掲載しています。
 
 ## 開発情報
