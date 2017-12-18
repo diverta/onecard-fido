@@ -373,6 +373,8 @@ static void on_sys_evt_dispatch(uint32_t sys_evt)
  */
 static void on_ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
+    NRF_LOG_DEBUG("on_ble_evt_dispatch called (evt_id=0x%02x) \r\n", p_ble_evt->header.evt_id);
+
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     if (ble_u2f_pairing_reject_request(m_conn_handle, p_ble_evt) == true) {
