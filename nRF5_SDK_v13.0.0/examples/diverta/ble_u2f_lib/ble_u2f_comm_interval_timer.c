@@ -41,9 +41,6 @@ static void communication_interval_timer_init(ble_u2f_t *p_u2f)
         return;
     }
     app_timer_created = true;
-
-    // for debug
-    NRF_LOG_DEBUG("communication_interval_timeout_handler_init \r\n");
 }
 
 void ble_u2f_comm_interval_timer_stop(ble_u2f_t *p_u2f)
@@ -59,9 +56,6 @@ void ble_u2f_comm_interval_timer_stop(ble_u2f_t *p_u2f)
         NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_comm_interval_timer_id) returns %d \r\n", err_code);
         return;
     }
-
-    // for debug
-    NRF_LOG_DEBUG("ble_u2f_comm_interval_timer_stop \r\n");
 }
 
 void ble_u2f_comm_interval_timer_start(ble_u2f_t *p_u2f)
@@ -86,9 +80,6 @@ void ble_u2f_comm_interval_timer_start(ble_u2f_t *p_u2f)
         return;
     }
     app_timer_started = true;
-
-    // for debug
-    NRF_LOG_DEBUG("ble_u2f_comm_interval_timer_start \r\n");
 }
 
 #endif // NRF_MODULE_ENABLED(BLE_U2F)
