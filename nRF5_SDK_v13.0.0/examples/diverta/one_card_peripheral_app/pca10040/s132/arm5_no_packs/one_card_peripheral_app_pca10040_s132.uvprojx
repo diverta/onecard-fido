@@ -2919,6 +2919,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_securekey.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_u2f_comm_interval_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_comm_interval_timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5930,6 +5935,11 @@
               <FileName>ble_u2f_securekey.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_securekey.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_u2f_comm_interval_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\ble_u2f_lib\ble_u2f_comm_interval_timer.c</FilePath>
             </File>
           </Files>
         </Group>

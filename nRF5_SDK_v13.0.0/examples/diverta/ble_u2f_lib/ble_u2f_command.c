@@ -67,12 +67,6 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
     NRF_LOG_INFO("ble_u2f_command_on_mainsw_long_push_event \r\n");
-    if (p_u2f->conn_handle != BLE_CONN_HANDLE_INVALID) {
-        // U2Fクライアントと接続中のときに
-        // MAIN SWが押下された場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: cannot change pairing mode in BLE connection \r\n");
-        return false;
-    }
 
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);
