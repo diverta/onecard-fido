@@ -3,6 +3,9 @@
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 
+// 無通信タイマー
+#include "ble_u2f_comm_interval_timer.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_status"
 #include "nrf_log.h"
@@ -185,6 +188,11 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
         // 送信済みバイト数、シーケンスを更新
         send_info_t.sent_length += data_length;
         send_info_t.sequence++;
+
+        // 最終レコードの場合は、次回リクエストまでの経過秒数監視をスタート
+        if (send_info_t.sent_length == send_info_t.data_length) {
+            ble_u2f_comm_interval_timer_start(p_u2f);
+        }
     }
 
     return err_code;
