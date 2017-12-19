@@ -84,7 +84,6 @@ bool ble_u2f_pairing_reject_request(uint16_t ble_conn_handle, ble_evt_t *p_ble_e
             // ペアリングモードでない場合は、
             // ペアリング要求に応じないようにする
             NRF_LOG_ERROR("Reject pairing request from an already bonded peer. \r\n");
-            sd_ble_gap_disconnect(ble_conn_handle, BLE_HCI_UNSUPPORTED_REMOTE_FEATURE);
             return true;
         }
     }
