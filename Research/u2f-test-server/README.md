@@ -45,20 +45,20 @@ Web Bluetooth APIの確認のため、One Cardは電源を入れてアドバタ�
 このプロジェクト（u2f-test-server）を丸ごと、Eclipse IDE (for Java) にインポートします。<br>
 その後、U2fHttpServerクラスのmain関数を実行します。
 
-<img src="../assets/0002.png" width="750">
+<img src="../assets/0002.png" width="900">
 
 U2Fサーバーが起動します。<br>
 （下図のように、コンソールにU2fHttpServerが起動した旨が表示されます）
 
-<img src="../assets/0003.png" width="750">
+<img src="../assets/0003.png" width="900">
 
 ### U2Fデバイスの登録
 
 YubiKey NEOをPCに挿したのち、Chromeブラウザーを起動します。<br>
-その後、アドレスバーに「http://localhost:8080/」を入力して実行しますと、テスト用ページが表示されます。<br>
+その後、アドレスバーに「[http://localhost:8080/](http://localhost:8080/)」を入力して実行しますと、テスト用ページが表示されます。<br>
 （下図はデベロッパー・ツールを右側に表示させた例です）
 
-<img src="../assets/0004.png" width="750">
+<img src="../assets/0004.png" width="900">
 
 「Register U2F Authenticator」ボタンをクリックすると、Web Bluetooth API「navigator.bluetooth.requestDevice」が実行されます。
 
@@ -92,12 +92,12 @@ YubiKey NEOをPCに挿したのち、Chromeブラウザーを起動します。<
 requestDeviceすると、下図のようなダイアログが表示され、デバイスの選択を促します。<br>
 デバイスを選択し「Pair」ボタンをクリックします。
 
-<img src="../assets/0005.png" width="750">
+<img src="../assets/0005.png" width="900">
 
 デバイスを選択すると処理が進み、ページに「Waiting for user touch」というガイダンスが表示されますので、ここでYubiKeyに指を触れます。<br>
 （注：この部分はYubiKeyの仕様であり、FIDOで矯正されていない部分のため、BLE化する際に無くなる予定）
 
-<img src="../assets/0006.png" width="750">
+<img src="../assets/0006.png" width="900">
 
 YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレスポンスをU2Fサーバーへ転送、の流れで処理が進みます。
 
@@ -105,7 +105,7 @@ YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレ�
 ここでは、<u><b>トークン・カウンターの値が０になっていること</b></u>に注目します。<br>
 （下図では「counter: 0」の表記が確認できます）
 
-<img src="../assets/0007.png" width="750">
+<img src="../assets/0007.png" width="900">
 
 これで、U2FデバイスがU2Fサーバーに登録されました。
 
@@ -115,12 +115,12 @@ YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレ�
 
 下図のようなダイアログが表示されたら、デバイスを選択し「Pair」ボタンをクリックします。
 
-<img src="../assets/0008.png" width="750">
+<img src="../assets/0008.png" width="900">
 
 デバイスを選択すると処理が進み、ページに「Waiting for user touch」というガイダンスが表示されますので、ここでYubiKeyに指を触れます。<br>
 （注：認証時のユーザー所在確認は、FIDOで強制されている部分のため、BLE化しても変わりません）
 
-<img src="../assets/0009.png" width="750">
+<img src="../assets/0009.png" width="900">
 
 YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレスポンスをU2Fサーバーへ転送、の流れで処理が進みます。
 
@@ -128,6 +128,6 @@ YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレ�
 ここでは、<u><b>トークン・カウンターの値が変わっていること</b></u>に注目します。<br>
 （下図では「counter: 11」の表記が確認できます。なお本オペレーションの前に、認証を10回試行しています）
 
-<img src="../assets/0010.png" width="750">
+<img src="../assets/0010.png" width="900">
 
 これで、U2FデバイスによるU2F認証は完了です。
