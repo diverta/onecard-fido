@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>U2F Test Server</title>
+    <script src="/u2f-ble-helper.js"></script>
     <script src="/u2f-api.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -9,10 +10,6 @@
     $(function() {
         $('input[type="button"]').button();
     });
-
-    // U2F BLEデバイスの参照を保持
-    var bleU2fDevice;
-
 
     function doFinishEnroll(enrollData, enrollResponse) {
         // U2F Registerの結果をU2Fサーバーに通知
@@ -31,20 +28,12 @@
                 "Finish enroll failed: " + status;
         });
 
-        // BLE U2Fデバイス参照が取得できたら、
-        // BLEデバイス情報を参照(for debug)
-        console.log("Reference of bleU2fDevice", bleU2fDevice);
+        console.log("Finish enroll end");
     }
 
     function doStartEnroll(enrollData) {
         // アプリケーション情報を使用し、
         // U2F Registrationを実行
-        // 注意：
-        //   BLE U2Fヘルパー疎通が未済のため、
-        //   YubiKey NEOを台本板にして動作確認しています
-        //
-        //   後日、bleU2fDeviceを使った処理と置き換える予定です。
-        //
         u2f.register(enrollData.appId, [enrollData], [],
             function (registerResponse) {
                 var errorCode = registerResponse.errorCode;
@@ -106,20 +95,12 @@
                 "Finish sign failed: " + status;
         });
 
-        // BLE U2Fデバイス参照が取得できたら、
-        // BLEデバイス情報を参照(for debug)
-        console.log("Reference of bleU2fDevice", bleU2fDevice);
+        console.log("Finish sign end");
     }
 
     function doStartSign(signData) {
         // アプリケーション情報を使用し、
         // U2F Authenticationを実行
-        // 注意：
-        //   BLE U2Fヘルパー疎通が未済のため、
-        //   YubiKey NEOを台本板にして動作確認しています
-        //
-        //   後日、bleU2fDeviceを使った処理と置き換える予定です。
-        //
         var sessionIdList = {};
         signData.registeredKeys.forEach(function(registeredKey) {
             sessionIdList[registeredKey.keyHandle] = registeredKey.sessionId;
@@ -176,10 +157,18 @@
             "Requesting BLE U2F device...";
 
         // Web Bluetooth APIを実行
-        navigator.bluetooth.requestDevice({acceptAllDevices:true})
+        //   FIDO U2FのUUIDはセキュリティー上、フィルター指定不可とのこと。
+        //   指定すると下記のエラーが発生します。
+        //     SecurityError: requestDevice() called with a filter containing a blocklisted UUID. 
+        //     https://goo.gl/4NeimX
+        //   回避策として、デバイス名を指定するようにします。
+        options = {filters: [
+            {name: 'OneCard_Peripheral'}
+        ]};
+        navigator.bluetooth.requestDevice(options)
         .then(device => {
             // BLE U2Fデバイスの参照を保持
-            bleU2fDevice = device;
+            u2fBleHelper.setBleU2fDevice(device);
 
             // 以降の処理を振り分け
             if (processType == 'enroll') {

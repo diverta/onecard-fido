@@ -653,7 +653,14 @@ u2f.sendSignRequest = function(appId, challenge, registeredKeys, callback, opt_t
     var timeoutSeconds = (typeof opt_timeoutSeconds !== 'undefined' ?
         opt_timeoutSeconds : u2f.EXTENSION_TIMEOUT_SEC);
     var req = u2f.formatSignRequest_(appId, challenge, registeredKeys, timeoutSeconds, reqId);
-    port.postMessage(req);
+
+    // Web Bluetooth APIで取得したBluetoothDeviceオブジェクトの参照は、
+    // Chrome Extensionに渡すことが出来ない。
+    // したがって、Chrome Extensionではなく、
+    // BLE U2Fヘルパーを直接呼び出すことにより、
+    // BluetoothDeviceを使用し、nRF52と通信を行う
+    var message = u2fBleHelper.sendSignRequest(req);
+    u2f.responseHandler_(message);
   });
 };
 
@@ -703,7 +710,14 @@ u2f.sendRegisterRequest = function(appId, registerRequests, registeredKeys, call
         opt_timeoutSeconds : u2f.EXTENSION_TIMEOUT_SEC);
     var req = u2f.formatRegisterRequest_(
         appId, registeredKeys, registerRequests, timeoutSeconds, reqId);
-    port.postMessage(req);
+
+    // Web Bluetooth APIで取得したBluetoothDeviceオブジェクトの参照は、
+    // Chrome Extensionに渡すことが出来ない。
+    // したがって、Chrome Extensionではなく、
+    // BLE U2Fヘルパーを直接呼び出すことにより、
+    // BluetoothDeviceを使用し、nRF52と通信を行う
+    var message = u2fBleHelper.sendRegisterRequest(req);
+    u2f.responseHandler_(message);
   });
 };
 
