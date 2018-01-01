@@ -21,44 +21,50 @@ https://developer.chrome.com/extensions/nativeMessaging
 下記URLで公開されているサンプルを使用して動作確認します。<br>
 https://developer.chrome.com/extensions/nativeMessaging#examples
 
-- テスト用エクステンション<br>
+#### サンプルの取得
+
 こちらからダウンロードできます。<br>
 [The examples/api/nativeMessaging directory](https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging)
 <img src="assets/0012.png" width="800">
 
-- エクステンション配置<br>
+#### エクステンション配置
+
 ダウンロードしたファイルを任意のフォルダーに展開します。<br>
 <img src="assets/0013.png" width="500">
-<br>
+
 フォルダー「host」に格納されているインストール用スクリプト「install_host.sh」を実行して、エクステンションをインストールします。<br>
 <img src="assets/0014.png" width="750">
 
-- Chromeのセットアップ<br>
+#### Chromeのセットアップ
+
 拡張機能ページの「Load unpacked extension...」をクリックします。<br>
 <img src="assets/0015.png" width="750">
-<br>
+
 先述のエクステンション配置フォルダー内の「app」を選択します。<br>
 <img src="assets/0016.png" width="500">
-<br>
+
 拡張機能ページにエクステンション「Native Messaging Example」が追加されます。<br>
 <img src="assets/0017.png" width="750">
 
-- エクステンションの実行<br>
+#### エクステンションの実行
+
 拡張機能ページの「Loaded from:」のリンクをクリックします。<br>
 <img src="assets/0018.png" width="750">
-<br>
+
 先述のエクステンションフォルダー「app」が開きますので、HTMLページ「main.html」をChromeで開きます。<br>
 <img src="assets/0019.png" width="500">
-<br>
+
 HTMLページの「Connect」ボタンをクリックします。<br>
 <img src="assets/0020.png" width="750">
 
-- 実行結果<br>
+#### 実行結果
+
 HTMLページに「Connecting to〜」というメッセージが表示されたまま、ハングしてしまいます。<br>
 デベロッパーツールで確認すると、エラーメッセージ「Uncaught TypeError」が表示されておりました。<br>
 <img src="assets/0021.png" width="750">
-<br>
+
 残念ながら、エラーが発生したmain.jsで実行された関数「chrome.runtime.connectNative」は、macOS版のChromeではサポートされていないことが確認されました。
+
 ```
 function connect() {
     var hostName = "com.google.chrome.example.echo";
