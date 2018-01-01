@@ -718,6 +718,7 @@ u2f.sendRegisterRequest = function(appId, registerRequests, registeredKeys, call
     // BluetoothDeviceを使用し、nRF52と通信を行う
     var message = u2fBleHelper.sendRegisterRequest(req);
     u2f.responseHandler_(message);
+    //port.postMessage(req);
   });
 };
 

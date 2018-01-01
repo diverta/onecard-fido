@@ -156,19 +156,24 @@
         document.getElementById('status').innerHTML =
             "Requesting BLE U2F device...";
 
+        var DEVICE_INFOMATION_SERVICE_UUID_ = "0000180a-0000-1000-8000-00805f9b34fb";
+        var FIDO_U2F_SERVICE_UUID_          = "0000fffd-0000-1000-8000-00805f9b34fb";
+
         // Web Bluetooth APIを実行
         //   FIDO U2FのUUIDはセキュリティー上、フィルター指定不可とのこと。
         //   指定すると下記のエラーが発生します。
         //     SecurityError: requestDevice() called with a filter containing a blocklisted UUID. 
         //     https://goo.gl/4NeimX
         //   回避策として、デバイス名を指定するようにします。
-        options = {filters: [
-            {name: 'OneCard_Peripheral'}
-        ]};
+        options = {
+            acceptAllDevices: true,
+            optionalServices: [DEVICE_INFOMATION_SERVICE_UUID_, FIDO_U2F_SERVICE_UUID_]
+        };
         navigator.bluetooth.requestDevice(options)
-        .then(device => {
-            // BLE U2Fデバイスの参照を保持
-            u2fBleHelper.setBleU2fDevice(device);
+        .then(device => device.gatt.connect())
+        .then(server => server.getPrimaryServices())
+        .then(services => {
+            console.log("GATT services", services);
 
             // 以降の処理を振り分け
             if (processType == 'enroll') {
