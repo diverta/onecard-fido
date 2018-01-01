@@ -15,6 +15,9 @@ macOSでサポートされている「Web Bluetooth API」を使用して、BLE 
 結果としては、実現不可能という判断となりました。<br>
 その時の検討内容および動作確認結果などを掲載しております。
 
+* <b>[\[WIP\] ブラウザーエクステンションの調査](CHROMEBLEEXT.md)</b><br>
+PC環境で動作するFIDO U2F BLEエクステンションの調査です。
+
 ## 補足説明
 
 （未作成）
@@ -27,6 +30,3 @@ macOSでサポートされている「Web Bluetooth API」を使用して、BLE 
 Android向けGoogle Playで既にサポートずみ（とのこと）である、BLE U2Fサービスが利用できるかどうかを、実機で確認する予定です。<br><br>
 [ご参考] Googleサポート状況に関する議論：<br>
 https://groups.google.com/a/fidoalliance.org/forum/#!topic/fido-dev/-hT1UF0FKTo
-
-* <b>ブラウザーエクステンションの調査</b><br>
-PC環境で動作するFIDO U2F BLEエクステンションの調査を予定しております。
