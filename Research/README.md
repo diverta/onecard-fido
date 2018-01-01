@@ -2,6 +2,10 @@
 
 ## 各種調査・検証
 
+* <b>[U2Fローカルテストサーバー](u2f-test-server/README.md)</b><br>
+ChromeでBLE U2F対応調査／開発を行う際に使用する、ローカルテスト用のU2Fサーバーを構築しました。<br>
+U2Fローカルテストサーバーについて、概要説明や、利用手順を掲載しております。
+
 * <b>[Chrome OSでのU2F認証テスト](CHROMEOSTEST.md)</b><br>
 テスト用のChromeエクステンションを使用し、[U2F認証テストサイト](https://crxjs-dot-u2fdemo.appspot.com/)でU2F認証ができることを確認しました。<br>
 その時の手順および結果を掲載しております。
