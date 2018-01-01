@@ -1,4 +1,4 @@
-# [WIP] Chrome(macOS版)でのBLE U2F対応調査
+# [調査中止] Chrome(macOS版)でのBLE U2F対応調査
 
 ## 概要
 
@@ -123,25 +123,272 @@ Chromeブラウザー上で動作するボタンスクリプト（＝サーバ�
 * メリット - U2Fクライアント機能が集約されるので、処理の制御関係がわかりやすい（エクステンションが不要）
 * デメリット - U2FクライアントのJavaScriptを新規開発して、サーバー側に用意する必要がある
 
-下記に検討内容を掲載します。
+下記に検討・調査した内容を掲載します。
 
 ### サーバーアプリケーションを作成
 
 調査用／開発用に使用するための、サーバーアプリケーションを作成します。
 
-以下の実装が参考になります。<br>
+以下の実装を参考にしました。<br>
 U2F-GAE-Demo：https://github.com/google/u2f-ref-code#u2f-gae-demo
 
-詳細は後報します。
+作成したサーバーアプリケーションは「[u2f-test-server](../u2f-test-server/)」に格納しています。<br>
+これはJava版eclipseで稼働させることができます。
 
 ### テスト用ボタンスクリプトを作成
 
-まずは、navigator.bluetoothを使用して、nRF52をディスカバーするボタンスクリプトを作成し、動作確認をします。
+まずは、navigator.bluetoothを使用して、nRF52をディスカバーするボタンスクリプトを作成し、動作確認をします。<br>
+サーバーアプリケーションの「[index.html](../u2f-test-server/html/index.html)」に、ボタンスクリプトを記述しています。
 
-詳細は後報します。
+```
+<html>
+<head>
+：
+    <script type="text/javascript">
+    ：
+    function doProcess(processType) {
+      ：
+        var DEVICE_INFOMATION_SERVICE_UUID_ = "0000180a-0000-1000-8000-00805f9b34fb";
+        var FIDO_U2F_SERVICE_UUID_          = "0000fffd-0000-1000-8000-00805f9b34fb";
+
+        // Web Bluetooth APIを実行
+        //   FIDO U2FのUUIDはセキュリティー上、フィルター指定不可とのこと。
+        //   指定すると下記のエラーが発生します。
+        //     SecurityError: requestDevice() called with a filter containing a blocklisted UUID.
+        //     https://goo.gl/4NeimX
+        //   回避策として、デバイス名を指定するようにします。
+        options = {
+            acceptAllDevices: true,
+            optionalServices: [DEVICE_INFOMATION_SERVICE_UUID_, FIDO_U2F_SERVICE_UUID_]
+        };
+        navigator.bluetooth.requestDevice(options)
+        .then(device => device.gatt.connect())
+        .then(server => server.getPrimaryServices())
+        .then(services => {
+            console.log("GATT services", services);
+            ：
+        })
+        .catch(error => {
+            // BLE U2Fデバイス参照が取得できない場合
+            document.getElementById('status').innerHTML =
+                "Requesting BLE U2F device failed: " + error;
+        });
+    }
+    </script>
+</head>
+<body>
+    <h1>U2F Test Server</h1>
+    <div>
+        <input type="button" value="Register U2F Authenticator" onClick="doProcess('enroll');"/>
+        ：
+```
+
+結果として、ディスカバー自体はできたのですが、Chrome版Web Bluetooth APIの仕様上、FIDOデバイスに対してはBLE接続が拒絶されてしまうことが確認されております。
 
 ### 実装済みU2Fクライアント処理の移植
 
 エクステンションに実装されているU2Fクライアント処理を、ボタンスクリプトから呼び出せるJavaScriptに移設します。
 
-詳細は後報します。
+具体的には、サーバーアプリケーションの「index.html」からSourceされるJavaScript「[u2f-ble-helper.js](../u2f-test-server/js/u2f-ble-helper.js)」に、U2Fクライアント処理を移設しています。
+
+* index.html<br>
+「Register U2F Authenticator」ボタンのクリックで、U2F JavaScript API「u2f.register」を呼び出します。
+```
+<html>
+<head>
+    <title>U2F Test Server</title>
+    <script src="/u2f-ble-helper.js"></script>
+    <script src="/u2f-api.js"></script>
+    ：
+    function doStartEnroll(enrollData) {
+        // アプリケーション情報を使用し、
+        // U2F Registrationを実行
+        u2f.register(enrollData.appId, [enrollData], [],
+            function (registerResponse) {
+                ：
+                // U2F Registrationの結果をU2Fサーバーへ返却
+                doFinishEnroll(enrollData, registerResponse);
+            }, 60
+        );
+        ：
+    }
+
+    function doProcessEnroll() {
+        // Register U2F Authenticatorボタン押下時の処理
+        //
+        // U2Fサーバーにアクセスし、
+        // U2Fトークン登録処理(Enroll)で使用する
+        // アプリケーション情報を取得
+        $.get('/enrollData.js', {userName:'userName'})
+        .done(function(enrollDataJavaScript) {
+            ：
+            // アプリケーション情報を使用し、
+            // U2F Registrationを実行
+            doStartEnroll(enrollData);
+       })
+       ：
+    }
+    ：
+    function doProcess(processType) {
+      ：
+        navigator.bluetooth.requestDevice(options)
+        .then(device => device.gatt.connect())
+        .then(server => server.getPrimaryServices())
+        .then(services => {
+            console.log("GATT services", services);
+
+            // 以降の処理を振り分け
+            if (processType == 'enroll') {
+                doProcessEnroll();
+            } else if (processType == 'sign') {
+                doProcessSign();
+            }
+    ：
+    </script>
+</head>
+<body>
+    <h1>U2F Test Server</h1>
+    <div>
+        <input type="button" value="Register U2F Authenticator" onClick="doProcess('enroll');"/>
+        ：
+```
+
+* u2f-api.js<br>
+U2F JavaScript API「u2f.register」は、U2Fクライアント処理である「u2fBleHelper.sendRegisterRequest」を呼び出します。
+```
+'use strict';
+var u2f = u2f || {};
+：
+u2f.register = function(appId, registerRequests, registeredKeys, callback, opt_timeoutSeconds) {
+    if (js_api_version === undefined) {
+    ：
+    } else {
+      // We know the JS API version. Send the actual register request in the supported API version.
+      u2f.sendRegisterRequest(appId, registerRequests, registeredKeys,
+          callback, opt_timeoutSeconds);
+    }
+};
+```
+
+* u2f-ble-helper.js<br>
+U2Fクライアント処理では、nRF52のソフトデバイスとBLE通信を行い（下記はTODOコード）、返却されたレスポンスを、呼び出し元のJavaScript APIに転送して処理を完了させます。
+```
+'use strict';
+var u2fBleHelper = u2fBleHelper || {};
+  ：
+  //
+  // U2F JavaScript APIから直接呼び出される関数群
+  //
+  u2fBleHelper.sendRegisterRequest = function(registerRequest) {
+      console.log("u2fBleHelper.sendRegisterRequest", registerRequest);
+
+      // TODO:
+      // ここでBLE U2Fサービス(nRF52)とやり取りを行い、
+      // U2F Register処理を実行する
+      console.log("u2fBleHelper.sendRegisterRequest", bleU2fDevice);
+
+      var registerRequests = registerRequest['registerRequests'];
+      var appId = registerRequest['appId'];
+      var encodedEnrollChallenges =
+          encodeEnrollChallenges_(registerRequests, appId);
+      var request = {
+          type: 'enroll_helper_request',
+          enrollChallenges: encodedEnrollChallenges
+      };
+      console.log("u2fBleHelper.sendRegisterRequest", request);
+
+      var enrollMessage = createEnrollCommand(request);
+      sendMessageToAuthenticator(enrollMessage, -1);
+
+      // U2F JavaScript APIに返却するレスポンスを格納
+      //   リクエストID以外はDummy
+      var responseData = {
+          errorCode: 0,
+          clientData: "",
+          registrationData: ""
+      };
+
+      var reqId = registerRequest.requestId;
+      var messageData = {
+          requestId: reqId,
+          responseData: responseData
+      };
+
+      var message = {
+          data: messageData
+      };
+
+      // レスポンスをU2F JavaScript APIに返却
+      return message;
+  }
+```
+
+## FIDO BLE U2Fサービスの拒絶について
+
+前述した通り、Chrome版Web Bluetooth APIの仕様上、FIDOデバイスに対してはBLE接続が拒絶されてしまうことが確認されております。
+
+### 理由
+
+FIDOデバイスのUUID（0000fffd-0000-1000-8000-00805f9b34fb）は、ChromeのBluetoothDeviceオブジェクト（navigator.bluetooth）のrequestDeviceオプションに対するブロックリストに上がっているようです。<br>
+(2018/01/01現在)<br>
+
+* ブロックリストはこちら：<br>
+https://github.com/WebBluetoothCG/registries/blob/master/gatt_blocklist.txt
+
+* ブロックリストの掲載内容（抜粋）：<br>
+```
+# The FIDO Bluetooth Specification at
+# https://fidoalliance.org/specs/fido-u2f-bt-protocol-id-20150514.pdf
+# section 6.7.1 "Bluetooth pairing: Client considerations" warns that
+# system-wide pairing poses security risks. Specifically, a website
+# could use raw GATT commands to impersonate another website to the
+# FIDO device.
+0000fffd-0000-1000-8000-00805f9b34fb
+```
+このため、ChromeのBluetoothDeviceが、FIDOデバイスへのアクセスを禁止してしまう動作となってしまいます。
+
+### 確認された動作
+
+* 動作確認時のコード<br>
+navigator.bluetooth.requestDeviceのオプションに、デバイス情報サービスと、FIDO U2Fサービスを指定して実行させました。<br>
+```
+<html>
+<head>
+：
+    <script type="text/javascript">
+    ：
+    function doProcess(processType) {
+      ：
+        var DEVICE_INFOMATION_SERVICE_UUID_ = "0000180a-0000-1000-8000-00805f9b34fb";
+        var FIDO_U2F_SERVICE_UUID_          = "0000fffd-0000-1000-8000-00805f9b34fb";
+
+        // Web Bluetooth APIを実行
+        options = {
+            acceptAllDevices: true,
+            optionalServices: [DEVICE_INFOMATION_SERVICE_UUID_, FIDO_U2F_SERVICE_UUID_]
+        };
+        navigator.bluetooth.requestDevice(options)
+        .then(device => device.gatt.connect())
+        .then(server => server.getPrimaryServices())
+        .then(services => {
+            console.log("GATT services", services);
+            ：
+        })
+        ：
+    </script>
+</head>
+<body>
+    <h1>U2F Test Server</h1>
+    <div>
+        <input type="button" value="Register U2F Authenticator" onClick="doProcess('enroll');"/>
+        ：
+```
+
+* 接続されたBLEサービス<br>
+下図、デベロッパーツールのログ上には、デバイス情報サービスだけがリストされ、FIDO U2Fサービスはリストされませんでした。<br><br>
+<img src="../assets/0011.png" width="600">
+
+
+### 対策
+
+Web Bluetooth APIではなく、他の方法により、JavaScriptからBLEサービスに接続させる必要があります。
