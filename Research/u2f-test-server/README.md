@@ -28,10 +28,10 @@ U2Fクライアント（JavaScript API）は、サーバー側に設置しなけ
 2018/1/1現在、BLE版U2Fクライアント（JavaScript）はセットアップされていません。
 
 したがって、U2F Register/Authenticationの処理は、USB版U2Fクライアントを使用して動作確認を行なっています。<br>
-Chrome U2Fエクステンションに同梱されている、UsbHelperクラスを使用しています。
+Chrome U2Fエクステンションに同梱されている、UsbHelperクラスを使用します。
 
 これは、後日調査・開発するBLE版U2Fクライアント（JavaScript）で置き換える予定です。<br>
-BLE版U2Fクライアントは、Web Bluetooth APIの仕様上の制約により、Chromeエクステンション実装はできないため、HTMLからsrcタグで参照されるJavaScriptにより実装する予定です。
+BLE版U2Fクライアントを、Chromeエクステンションとして開発する場合は、BleHelperクラスを新設の上、Chrome U2Fエクステンション内に同梱するようにします。
 
 動作確認時のセットアップは下図のようになります。<br>
 U2F Register/Authenticationの処理を実行するため、YubiKey NEOをPCに挿しておきます。
