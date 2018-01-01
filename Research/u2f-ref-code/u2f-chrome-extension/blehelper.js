@@ -22,7 +22,9 @@ function BleHelper() {
 inherits(BleHelper, GenericRequestHelper);
 
 
-var BLE_HELPER_EXTENSION_ID = 'naodkhmgbblamoijhmonofommoajlide';
+//var BLE_HELPER_EXTENSION_ID = 'naodkhmgbblamoijhmonofommoajlide';
+// for test
+var BLE_HELPER_EXTENSION_ID = 'mmafjllbfijjcejkmnaoioihhfnelodd';
 
 function BleEnrollHandler(request) {
   this.request_  = request;

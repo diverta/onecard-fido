@@ -185,10 +185,15 @@ typedef enum : NSInteger {
     }
 
     - (void)notifySuccess {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleInformational];
-        [alert setMessageText:[self messageWhenSuccess]];
-        [alert runModal];
+        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
+        if ([self messageWhenSuccess]) {
+            [self appendLogMessage:[self messageWhenSuccess]];
+
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setAlertStyle:NSAlertStyleInformational];
+            [alert setMessageText:[self messageWhenSuccess]];
+            [alert runModal];
+        }
         [self enableButtons:true];
     }
 
