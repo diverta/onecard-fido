@@ -12,8 +12,6 @@ var en_view = new Uint8Array(ENABLE_NOTIFICATIONS);
 en_view[0] = 1;
 en_view[1] = 0;
 
-var bleU2fDevice = undefined;
-
 var HELPER_ENROLL_MSG_TYPE = "enroll_helper_request";
 var HELPER_SIGN_MSG_TYPE = "sign_helper_request";
 var authenticator;
@@ -54,13 +52,36 @@ var sign_helper_reply = {
   }
 };
 
+var hostName = "com.google.chrome.example.echo";
+var port = null;
+
+function sendNativeMessage(textValue) {
+    if (port) {
+        message = {"text": textValue};
+        port.postMessage(message);
+        console.log("Sent native message:", JSON.stringify(message));
+    }
+}
+
+function onNativeMessage(message) {
+    console.log("Received native message:", JSON.stringify(message));
+}
+
+function onDisconnected() {
+    console.log("Failed to connect:", chrome.runtime.lastError.message);
+    port = null;
+}
+
 function init() {
 
-  console.log("sending notification registration to FIDO U2F extension");
-  chrome.runtime.sendMessage('pfboblefjcgdjicmnffhdgionmgcdmne', chrome.runtime.id);
+    console.log("sending notification registration to FIDO U2F extension");
+    chrome.runtime.sendMessage('pfboblefjcgdjicmnffhdgionmgcdmne', chrome.runtime.id);
 
-  console.log('Hello, World! It is ' + new Date());
+    console.log('Hello, World! It is ' + new Date());
 
+    port = chrome.runtime.connectNative(hostName);
+    port.onMessage.addListener(onNativeMessage);
+    port.onDisconnect.addListener(onDisconnected);
 };
 
 chrome.runtime.onMessageExternal.addListener(
@@ -84,17 +105,13 @@ function sendEnrollRequest(request, sendResponse){
     console.log("sending enroll request");
     U2F_STATE = U2F_STATE_ENROLL;
 
-    if (bleU2fDevice == undefined) {
-        bleU2fDevice =
-        navigator.bluetooth.requestDevice({acceptAllDevices:true})
-        .then(device => console.log(device))
-        .catch(error => console.log(error));
-    }
-
 /*
     var enrollMessage = createEnrollCommand(request);
     sendMessageToAuthenticator(enrollMessage, -1);
 */
+    // for research
+    sendNativeMessage("sending enroll request to native");
+
     helperResponse = sendResponse;
 }
 

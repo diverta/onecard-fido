@@ -29,6 +29,7 @@ if (chrome.hid) {
 UsbGnubbyDevice.register(gnubbies);
 
 var REQUEST_HELPER = new DelegatingHelper();
+REQUEST_HELPER.addHelper(new BleHelper());
 REQUEST_HELPER.addHelper(new UsbHelper());
 
 var FACTORY_REGISTRY = (function() {
