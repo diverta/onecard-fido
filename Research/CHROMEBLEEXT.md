@@ -12,7 +12,10 @@ https://developer.chrome.com/extensions/nativeMessaging
 
 具体的には、Chromeから起動したサブプロセスと、エクステンションの間で、標準入出力（STDIO）経由でやり取りをすることができるようです。
 
-ただし（動作確認中に発覚したのですが）確認用に使用したmacOS版Chromeでは、2018年度以降サポートされなくなる（＝実行できなくなる）のことです。<br>
+ただし（動作確認中に発覚したのですが）確認用に使用したmacOS版Chromeでは、2018年度以降サポートされなくなる（＝Chromeストアからの提供ができなくなってしまう）のことです。<br>
+下記URLに、正式アナウンスがあります。<br>
+https://blog.chromium.org/2016/08/from-chrome-apps-to-web.html
+
 ご参考までに、マイナビニュースというサイトが、[Googleアプリのサポート終了の旨を報じています](https://news.mynavi.jp/article/20160822-a034/)。<br>
 <img src="assets/0024.png" width="600">
 
@@ -75,4 +78,6 @@ HTMLページ、サブプロセス画面の両方に実行結果が表示され�
 
 別途用意している[U2F管理ツール](../../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeブラウザーとNative Messagingを介した通信は可能と考えられます。
 
-ただし先述の通り、macOS上でのNative Messagingが、2018年度以降実行できなくなるとのことなので、Native Messagingによる対応の検討は、見送るものとさせていただきます。
+他方、先述の通り、macOS上でNative Messagingが使用できるChromeアプリが、2018年度以降Chromeストアで正式提供できなくなるとのことです。
+
+なので、Native Messagingによる対応の検討は見送りとし、[他の代替え手段](https://developers.chrome.com/apps/migration)による検討を継続、とさせていただきます。
