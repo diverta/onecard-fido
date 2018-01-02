@@ -3,20 +3,20 @@
 PC環境で動作するFIDO U2F BLEエクステンションを、Chromeエクステンションで実装できるかどうかの継続調査です。<br>
 調査時の手順および結果を、以下に掲載いたします。
 
-## Native Messagingによるエクステンション実装 ---> 対応不可
+## ChromeのNative Messagingによる実装 ---> 対応不可
 
-Chrome<--->サブプロセス間通信（Native Messaging）がGoogle Chromeで用意されているようでした。
+Chrome<--->サブプロセス間通信（Native Messaging）がGoogle Chromeで用意されていました。
 
 参考URL：<br>
 https://developer.chrome.com/extensions/nativeMessaging
 
 具体的には、Chromeから起動したサブプロセスと、エクステンションの間で、標準入出力（STDIO）経由でやり取りをすることができるようです。
 
-ただし（動作確認中に発覚したのですが）確認用に使用したmacOSではすでにサポートされていないとのことで、後述のとおり、検証は失敗してしまいました。<br>
+ただし（動作確認中に発覚したのですが）確認用に使用したmacOS版Chromeでは、2018年度以降サポートされなくなる（＝実行できなくなる）のことです。<br>
+ご参考までに、マイナビニュースというサイトが、[Googleアプリのサポート終了の旨を報じています](https://news.mynavi.jp/article/20160822-a034/)。<br>
+<img src="assets/0024.png" width="600">
 
-<img src="assets/0022.png" width="800">
-
-### サンプルにより動作確認
+### サンプルによる動作確認
 
 下記URLで公開されているサンプルを使用して動作確認します。<br>
 https://developer.chrome.com/extensions/nativeMessaging#examples
@@ -27,15 +27,15 @@ https://developer.chrome.com/extensions/nativeMessaging#examples
 [The examples/api/nativeMessaging directory](https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging)
 <img src="assets/0012.png" width="800">
 
-#### エクステンション配置
+#### サブプロセスの導入
 
 ダウンロードしたファイルを任意のフォルダーに展開します。<br>
 <img src="assets/0013.png" width="500">
 
-フォルダー「host」に格納されているインストール用スクリプト「install_host.sh」を実行して、エクステンションをインストールします。<br>
+フォルダー「host」に格納されているインストール用スクリプト「install_host.sh」を実行して、サブプロセスをインストールします。<br>
 <img src="assets/0014.png" width="750">
 
-#### Chromeのセットアップ
+#### エクステンションの導入
 
 拡張機能ページの「Load unpacked extension...」をクリックします。<br>
 <img src="assets/0015.png" width="750">
@@ -46,32 +46,33 @@ https://developer.chrome.com/extensions/nativeMessaging#examples
 拡張機能ページにエクステンション「Native Messaging Example」が追加されます。<br>
 <img src="assets/0017.png" width="750">
 
-#### エクステンションの実行
+#### Chromeアプリの実行
 
-拡張機能ページの「Loaded from:」のリンクをクリックします。<br>
+Chromeアプリページ（[chrome://apps](chrome://apps)）の「Native Messaging...」をクリックします。<br>
 <img src="assets/0018.png" width="750">
 
-先述のエクステンションフォルダー「app」が開きますので、HTMLページ「main.html」をChromeで開きます。<br>
-<img src="assets/0019.png" width="500">
-
 HTMLページの「Connect」ボタンをクリックします。<br>
+<img src="assets/0019.png" width="750">
+
+HTMLページにテキストボックスと「Send」ボタンが表示されます。<br>
+メッセージを入力し「Send」ボタンをクリックします。<br>
 <img src="assets/0020.png" width="750">
 
-#### 実行結果
-
-HTMLページに「Connecting to〜」というメッセージが表示されたまま、ハングしてしまいます。<br>
-デベロッパーツールで確認すると、エラーメッセージ「Uncaught TypeError」が表示されておりました。<br>
+HTMLページに実行結果が表示されます。<br>
 <img src="assets/0021.png" width="750">
 
-残念ながら、エラーが発生したmain.jsで実行された関数「chrome.runtime.connectNative」は、macOS版のChromeではサポートされていないことが確認されました。
+裏で立ち上がっているサブプロセス（PythonのGUIプログラム）の画面を見ると、先ほど「Send」したメッセージが表示されていることが確認できます。<br>
+その後、サブプロセス側からメッセージを送信してみます。<br>
+画面にメッセージを入力して「Send」ボタンをクリックします。<br>
+<img src="assets/0022.png" width="750">
 
-```
-function connect() {
-    var hostName = "com.google.chrome.example.echo";
-    appendMessage("Connecting to native messaging host <b>" + hostName + "</b>")
-    port = chrome.runtime.connectNative(hostName);
-    port.onMessage.addListener(onNativeMessage);
-    port.onDisconnect.addListener(onDisconnected);
-    updateUiState();
-}
-```
+HTMLページ、サブプロセス画面の両方に実行結果が表示されます。<br>
+<img src="assets/0023.png" width="750">
+
+これで、Chrome<--->サブプロセス間で通信（Native Messaging）ができていることが確認できました。
+
+#### 確認結果からの考察
+
+別途用意している[U2F管理ツール](../../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeブラウザーとNative Messagingを介した通信は可能と考えられます。
+
+ただし先述の通り、macOS上でのNative Messagingが、2018年度以降実行できなくなるとのことなので、Native Messagingによる対応の検討は、見送るものとさせていただきます。
