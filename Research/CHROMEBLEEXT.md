@@ -3,16 +3,16 @@
 PC環境で動作するFIDO U2F BLEエクステンションを、Chromeエクステンションで実装できるかどうかの継続調査です。<br>
 調査時の手順および結果を、以下に掲載いたします。
 
-## ChromeのNative Messagingによる実装 ---> 対応不可
+## Chromeアプリによる実装 ---> 対応不可
 
-Chrome<--->サブプロセス間通信（Native Messaging）がGoogle Chromeで用意されていました。
+Chromeアプリ<--->サブプロセス間通信（Native Messaging）がGoogle Chrome Appsで用意されていました。
 
 参考URL：<br>
 https://developer.chrome.com/extensions/nativeMessaging
 
-具体的には、Chromeから起動したサブプロセスと、エクステンションの間で、標準入出力（STDIO）経由でやり取りをすることができるようです。
+具体的には、Chromeアプリから起動したサブプロセスと、エクステンションの間で、標準入出力（STDIO）経由でやり取りをすることができるようです。
 
-ただし（動作確認中に発覚したのですが）確認用に使用したmacOS版Chromeでは、2018年度以降サポートされなくなる（＝Chromeストアからの提供ができなくなってしまう）のことです。<br>
+ただし（動作確認中に発覚したのですが）確認用に使用したmacOS版Chromeアプリでは、2018年度以降サポートされなくなる（＝Chromeストアからの提供ができなくなってしまう）のことです。<br>
 下記URLに、正式アナウンスがあります。<br>
 https://blog.chromium.org/2016/08/from-chrome-apps-to-web.html
 
@@ -21,7 +21,7 @@ https://blog.chromium.org/2016/08/from-chrome-apps-to-web.html
 
 ### サンプルによる動作確認
 
-下記URLで公開されているサンプルを使用して動作確認します。<br>
+下記URLで公開されている、Chromeアプリのサンプルを使用して動作確認します。<br>
 https://developer.chrome.com/extensions/nativeMessaging#examples
 
 #### サンプルの取得
@@ -72,11 +72,11 @@ HTMLページに実行結果が表示されます。<br>
 HTMLページ、サブプロセス画面の両方に実行結果が表示されます。<br>
 <img src="assets/0023.png" width="750">
 
-これで、Chrome<--->サブプロセス間で通信（Native Messaging）ができていることが確認できました。
+これで、Chromeアプリ<--->サブプロセス間で通信（Native Messaging）ができていることが確認できました。
 
 #### 確認結果からの考察
 
-別途用意している[U2F管理ツール](../../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeブラウザーとNative Messagingを介した通信は可能と考えられます。
+別途用意している[U2F管理ツール](../../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeアプリとNative Messagingを介した通信は可能と考えられます。
 
 他方、先述の通り、macOS上でNative Messagingが使用できるChromeアプリが、2018年度以降Chromeストアで正式提供できなくなるとのことです。
 
