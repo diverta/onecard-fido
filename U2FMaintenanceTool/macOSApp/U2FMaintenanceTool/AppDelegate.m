@@ -31,6 +31,41 @@ typedef enum : NSInteger {
             [CBUUID UUIDWithString:@"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"]
         ];
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
+
+        // ２番目の引数がChromeエクステンションIDになっている場合
+        // Chromeエクステンションから実行されたと判定し、
+        // ネイティブアプリとして動作するようにする
+        NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
+        if ([commandLineArgs count] < 2) {
+            return;
+        }
+        NSString *extensionID = [commandLineArgs objectAtIndex:1];
+        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
+            != NSOrderedSame) {
+            return;
+        }
+
+        // ネイティブアプリとして動作させる場合は、ボタンを押下できないようにする
+        [self enableButtons:false];
+
+        // 標準入力をメッセージとして受信する
+        NSFileHandle *_input = [NSFileHandle fileHandleWithStandardInput];
+        NSFileHandle *_output = [NSFileHandle fileHandleWithStandardOutput];
+        [_input waitForDataInBackgroundAndNotify];
+        [[NSNotificationCenter defaultCenter]
+         addObserverForName:NSFileHandleDataAvailableNotification
+         object:_input queue:nil usingBlock:^(NSNotification *note){
+             NSData *_data = [_input availableData];
+             if ([_data length] > 0) {
+                 NSLog(@"Received Data:[%@]", _data);
+                 
+                 NSData *_dataString = [_data subdataWithRange:NSMakeRange(4, [_data length] - 4)];
+                 NSLog(@"Received String:[%@]",
+                       [[NSString alloc] initWithData:_dataString encoding:NSUTF8StringEncoding]);
+                 [_output writeData:_data];
+                 [_input waitForDataInBackgroundAndNotify];
+             }
+         }];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
