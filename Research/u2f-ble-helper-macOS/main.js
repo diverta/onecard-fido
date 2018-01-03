@@ -85,32 +85,84 @@ function init() {
 };
 
 chrome.runtime.onMessageExternal.addListener(
-  function(request, sender, sendResponse) {
-    console.log("got a message from the extenstion", JSON.stringify(request));
+    function(request, sender, sendResponse) {
+        console.log("got a message from the extenstion", JSON.stringify(request));
 
-    if (request.type == HELPER_ENROLL_MSG_TYPE) {
-      sendEnrollRequest(request, sendResponse);
+        if (request.type == HELPER_ENROLL_MSG_TYPE) {
+            sendEnrollRequest(request, sendResponse);
+        } else if (request.type == HELPER_SIGN_MSG_TYPE) {
+            sendSignRequest(request, sendResponse);
+        } else {
+            console.log("unknown request type sent by FIDO extension");
+        }
 
-    } else if (request.type == HELPER_SIGN_MSG_TYPE) {
-      sendSignRequest(request, sendResponse);
+        return true;
+    }
+);
 
-    } else {
-      console.log("unknown request type sent by FIDO extension");
+
+// メッセージ送信時の処理
+function sendMessageToAuthenticator(message, sequence){
+    if (!message || message.byteLength === 0){
+        return;
     }
 
-    return true;
-});
+    var data_view =  new Uint8Array(message);
+    var data_view_max_length = undefined;
+    var messageSegment = undefined;
+    var messageTemp = undefined;
+
+    if (sequence == -1) {
+        data_view_max_length = MAX_CHARACTERISTIC_LENGTH;
+        if (data_view.length > data_view_max_length) {
+            // 分割１回目の場合で、データ長が64バイトをこえる場合は
+            // 64バイトだけを送信し、残りのデータを継続送信
+            messageSegment = new Uint8Array(message.slice(0, data_view_max_length));
+        
+        } else {
+            // 分割１回目の場合で、データ長が64バイト以下の場合は
+            // そのまま送信して終了
+            messageSegment = new Uint8Array(message);
+        }
+    
+    } else {
+        data_view_max_length = MAX_CHARACTERISTIC_LENGTH - 1
+        if (data_view.length > data_view_max_length) {
+            // 分割２回目以降の場合で、データ長が63バイトを超える場合、
+            // 63バイトだけを送信し、残りのデータを継続送信
+            messageTemp = new Uint8Array(message.slice(0, data_view_max_length));
+            
+        } else {
+            // 分割２回目以降の場合で、データ長が63バイト以下の場合は
+            // そのまま送信して終了
+            messageTemp = new Uint8Array(message);
+        }
+        
+        // 先頭にシーケンスを付加
+        var seq = new Uint8Array([sequence]);
+        var len = seq.length + messageTemp.length;
+        var u8 = new Uint8Array(len);
+        u8.set(seq);
+        u8.set(messageTemp, seq.length);
+        messageSegment = u8.buffer;
+    }
+
+    var messageSegmentHex = unPackBinaryToHex(messageSegment);
+    if (data_view.length > data_view_max_length) {
+        sendNativeMessage(messageSegmentHex);
+        sendMessageToAuthenticator(message.slice(data_view_max_length), ++sequence);
+    } else {
+        sendNativeMessage(messageSegmentHex);
+        console.log('Complete message to authenticator has been sent!');
+    }
+}
 
 function sendEnrollRequest(request, sendResponse){
     console.log("sending enroll request");
     U2F_STATE = U2F_STATE_ENROLL;
 
-/*
     var enrollMessage = createEnrollCommand(request);
     sendMessageToAuthenticator(enrollMessage, -1);
-*/
-    // for research
-    sendNativeMessage("sending enroll request to native");
 
     helperResponse = sendResponse;
 }
@@ -126,9 +178,9 @@ function sendSignRequest(request, sendResponse){
     sign_helper_reply.responseData.appIdHash = request.signData[0].appIdHash;
     sign_helper_reply.responseData.challengeHash = request.signData[0].challengeHash;
     sign_helper_reply.responseData.keyHandle = request.signData[0].keyHandle;
-/*
+
     var signMessage = createSignCommand(request);
     sendMessageToAuthenticator(signMessage, -1);
-*/
+
     helperResponse = sendResponse;
 }
