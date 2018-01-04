@@ -12,8 +12,9 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolCommand    *toolCommand;
     @property (nonatomic) ToolBLECentral *central;
 
-    @property (nonatomic) PathType pathType;
+    @property (nonatomic) PathType  pathType;
     @property (nonatomic) NSString *messageWhenSuccess;
+    @property (nonatomic) bool      communicateAsChromeNative;
 
 @end
 
@@ -31,41 +32,6 @@ typedef enum : NSInteger {
             [CBUUID UUIDWithString:@"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"]
         ];
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
-
-        // ２番目の引数がChromeエクステンションIDになっている場合
-        // Chromeエクステンションから実行されたと判定し、
-        // ネイティブアプリとして動作するようにする
-        NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
-        if ([commandLineArgs count] < 2) {
-            return;
-        }
-        NSString *extensionID = [commandLineArgs objectAtIndex:1];
-        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
-            != NSOrderedSame) {
-            return;
-        }
-
-        // ネイティブアプリとして動作させる場合は、ボタンを押下できないようにする
-        [self enableButtons:false];
-
-        // 標準入力をメッセージとして受信する
-        NSFileHandle *_input = [NSFileHandle fileHandleWithStandardInput];
-        NSFileHandle *_output = [NSFileHandle fileHandleWithStandardOutput];
-        [_input waitForDataInBackgroundAndNotify];
-        [[NSNotificationCenter defaultCenter]
-         addObserverForName:NSFileHandleDataAvailableNotification
-         object:_input queue:nil usingBlock:^(NSNotification *note){
-             NSData *_data = [_input availableData];
-             if ([_data length] > 0) {
-                 NSLog(@"Received Data:[%@]", _data);
-                 
-                 NSData *_dataString = [_data subdataWithRange:NSMakeRange(4, [_data length] - 4)];
-                 NSLog(@"Received String:[%@]",
-                       [[NSString alloc] initWithData:_dataString encoding:NSUTF8StringEncoding]);
-                 [_output writeData:_data];
-                 [_input waitForDataInBackgroundAndNotify];
-             }
-         }];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -76,6 +42,83 @@ typedef enum : NSInteger {
         self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
         [self.textView performSelector:@selector(scrollPageDown:) withObject:nil afterDelay:0];
     }
+
+#pragma mark - Functions for communication with chrome extension
+
+    - (void)setCommunicationMode {
+        [self setCommunicateAsChromeNative:false];
+
+        // プログラム起動引数をチェック
+        NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
+        if ([commandLineArgs count] < 2) {
+            return;
+        }
+
+        // ２番目の引数がChromeエクステンションIDになっている場合
+        // Chromeエクステンションから実行されたと判定し、
+        // ネイティブアプリとして動作するようにする
+        NSString *extensionID = [commandLineArgs objectAtIndex:1];
+        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
+            != NSOrderedSame) {
+            return;
+        }
+
+        // ネイティブアプリ動作に固有の処理を実行
+        [self setCommunicateAsChromeNative:true];
+        [self setStandardInputNotification];
+    }
+
+    - (bool)doBLEHelperCommandWith:(NSData *)receivedData {
+        NSString *_receivedString = [[NSString alloc]
+                                     initWithData:receivedData encoding:NSUTF8StringEncoding];
+        NSLog(@"Received String:[%@]", _receivedString);
+ 
+        // ヘルスチェック実行（仮コードです）
+        [self enableButtons:false];
+        [self.toolCommand setCommand:COMMAND_TEST_REGISTER];
+        [self.central doCommand:self.toolCommand];
+        [self setMessageWhenSuccess:@"ヘルスチェックが成功しました。"];
+
+        return true;
+    }
+
+    - (void)standardInputDidAvailable:(NSFileHandle *)input {
+        // これ以上メッセージを受信できなくなった場合は終了
+        NSData *_data = [input availableData];
+        if ([_data length] == 0) {
+            NSLog(@"End of message from chrome extension");
+            return;
+        }
+
+        // 最初の４バイトを除去し、受信メッセージテキストを抽出（仮コードです）
+        NSLog(@"Received Data:[%@]", _data);
+        NSData *_dataString = [_data subdataWithRange:NSMakeRange(4, [_data length] - 4)];
+
+        // BLEと通信を行う
+        [self doBLEHelperCommandWith:_dataString];
+        
+        // 標準出力にエコーバック（仮コードです）
+        [[NSFileHandle fileHandleWithStandardOutput] writeData:_data];
+
+        // 次のメッセージが受信できるよう設定
+        [input waitForDataInBackgroundAndNotify];
+    }
+
+    - (void)setStandardInputNotification {
+        // 標準入力をメッセージとして受信できるよう設定
+        NSFileHandle *_input = [NSFileHandle fileHandleWithStandardInput];
+        [_input waitForDataInBackgroundAndNotify];
+
+        // 標準入力を受信した時の処理
+        NSNotificationCenter *_defaultCenter = [NSNotificationCenter defaultCenter];
+        [_defaultCenter addObserverForName:NSFileHandleDataAvailableNotification
+            object:_input queue:nil
+            usingBlock:^(NSNotification *notification){
+                [self standardInputDidAvailable:_input];
+         }];
+    }
+
+#pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
@@ -206,6 +249,16 @@ typedef enum : NSInteger {
     }
 
 #pragma mark - Call back from ToolBLECentral
+
+    - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
+        NSLog(@"centralManagerDidUpdateState: %ld", state);
+
+        if (state == CBCentralManagerStatePoweredOn) {
+            // BLEデバイスが有効化された後に、
+            // ネイティブアプリ動作モード時に固有な初期化処理を実行する
+            [self setCommunicationMode];
+        }
+    }
 
     - (void)notifyFailWithMessage:(NSString *)errorMessage {
         NSAlert *alert = [[NSAlert alloc] init];

@@ -20,6 +20,7 @@
 
 @protocol ToolBLECentralDelegate <NSObject>
 
+    - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)notifyFailWithMessage:(NSString *)errorMessage;
     - (void)notifySuccess;
     - (void)notifyMessage:(NSString *)message;

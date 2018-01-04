@@ -34,7 +34,8 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     }
 
     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-        NSLog(@"centralManagerDidUpdateState: %ld", central.state);
+        CBCentralManagerState _state = (CBCentralManagerState)[central state];
+        [self.delegate notifyCentralManagerStateUpdate:_state];
     }
 
 #pragma mark - Notify to appDelegate
