@@ -91,7 +91,7 @@ HTMLページ、サブプロセス画面の両方に実行結果が表示され�
 
 ## 確認結果からの考察
 
-別途用意している[U2F管理ツール](../../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeアプリとNative Messagingを介した通信は可能と考えられます。
+別途用意している[U2F管理ツール](../U2FMaintenanceTool/macOSApp)を改修することにより、ChromeアプリとNative Messagingを介した通信は可能と考えられます。
 
 他方、先述の通り、macOS上でNative Messagingが使用できるChromeアプリが、2018年度以降Chromeストアで正式提供できなくなるとのことです。
 
