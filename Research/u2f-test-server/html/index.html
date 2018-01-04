@@ -151,13 +151,7 @@
     }
 
     function doHealthCheck() {
-        // U2F Authenticator Health Checkボタン押下時の処理
-        //
-        // U2F管理ツールを起動し、ヘルスチェックを実行
-        //   doProcessEnroll()--->doProcessSign()の順に実行
-        //   BLE経由でU2F機能が動作することを確認
-        //
-        // ただし、現時点でdoProcessSign()が実行できないため、
+        // BLE U2F Health Checkボタン押下時の処理
         // 以下は仮コードです
         doProcessEnroll();
     }
@@ -179,11 +173,11 @@
 <body>
     <h1>U2F Test Server</h1>
     <div>
-        <input type="button" value="(WIP) Register U2F Authenticator" onClick="doProcess('enroll');"/>
+        <input type="button" value="Register U2F Authenticator" onClick="doProcess('enroll');"/>
         <div>&nbsp;</div>
-        <input type="button" value="(WIP) Test Authentication" onClick="doProcess('sign');"/>
+        <input type="button" value="Test Authentication" onClick="doProcess('sign');"/>
         <div>&nbsp;</div>
-        <input type="button" value="U2F Authenticator Health Check" onClick="doProcess('healthcheck');"/>
+        <input type="button" value="BLE U2F Health Check" onClick="doProcess('healthcheck');"/>
     </div>
     <div>&nbsp;</div>
     <div id="status"></div>
