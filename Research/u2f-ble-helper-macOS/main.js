@@ -52,7 +52,7 @@ var sign_helper_reply = {
   }
 };
 
-var hostName = "com.google.chrome.example.echo";
+var hostName = "jp.co.diverta.chrome.helper.ble.u2f";
 var port = null;
 
 function sendNativeMessage(textValue) {

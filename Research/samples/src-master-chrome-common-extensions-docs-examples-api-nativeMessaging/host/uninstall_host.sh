@@ -19,6 +19,6 @@ else
   fi
 fi
 
-HOST_NAME=com.google.chrome.example.echo
-rm "$TARGET_DIR/com.google.chrome.example.echo.json"
+HOST_NAME=jp.co.diverta.chrome.helper.ble.u2f
+rm "$TARGET_DIR/$HOST_NAME.json"
 echo "Native messaging host $HOST_NAME has been uninstalled."

@@ -20,7 +20,7 @@ else
   fi
 fi
 
-HOST_NAME=com.google.chrome.example.echo
+HOST_NAME=jp.co.diverta.chrome.helper.ble.u2f
 
 # Create directory to store native messaging host.
 mkdir -p "$TARGET_DIR"
