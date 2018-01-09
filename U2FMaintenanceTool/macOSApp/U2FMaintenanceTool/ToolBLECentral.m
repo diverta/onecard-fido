@@ -1,5 +1,4 @@
 #import "ToolBLECentral.h"
-#import "ToolCommand.h"
 
 static const NSTimeInterval kScanningTimeout   = 10.0;
 static const NSTimeInterval kConnectingTimeout = 10.0;
@@ -13,8 +12,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     @property(nonatomic) CBCharacteristic *u2fControlPointChar;
     @property(nonatomic) CBCharacteristic *u2fStatusChar;
-
-    @property(nonatomic) ToolCommand      *toolCommand;
 
 @end
 
@@ -40,45 +37,31 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
 #pragma mark - Notify to appDelegate
 
-    - (void)notifyMessageToAppDelegate:(NSString *)message {
+    - (void)notifyMessage:(NSString *)message {
         if (message) {
             NSLog(@"%@", message);
         }
-        [self.delegate notifyMessage:message];
+        [self.delegate notifyCentralManagerMessage:message];
     }
 
-    - (void)notifyFailMessageToAppDelegate:(NSString *)message {
-        [self notifyMessageToAppDelegate:message];
-        [self.delegate notifyFailWithMessage:message];
-    }
-
-    - (void)notifyErrorMessageToAppDelegate:(NSString *)message error:(NSError *)err {
-        if (err) {
-            NSLog(@"%@ %@", message, [err description]);
+    - (void)notifyConnectionFailed:(NSString *)message error:(NSError *)error {
+        if (error) {
+            NSLog(@"%@ %@", message, [error description]);
+        } else {
+            NSLog(@"%@", message);
         }
-        [self.delegate notifyMessage:message];
-        [self.delegate notifyFailWithMessage:message];
-    }
-
-    - (void)notifySuccessToAppDelegate {
-        [self.delegate notifySuccess];
+        [self.delegate notifyCentralManagerMessage:message];
+        [self.delegate notifyCentralManagerConnectFailed:message];
     }
 
 #pragma mark - Entry for process
 
-    - (void)doCommand:(ToolCommand *)toolCommand {
+    - (void)doConnect {
         NSAssert(self.serviceUUIDs.count > 0, @"Need to specify services");
         NSAssert(self.characteristicUUIDs.count > 0, @"Need to specify characteristics UUID");
 
         if (self.manager.state != CBCentralManagerStatePoweredOn) {
-            [self notifyFailMessageToAppDelegate:@"BLEが無効化されています。BLEを有効にしてください。"];
-            return;
-        }
-        
-        // 実行するコマンドを編集
-        self.toolCommand = toolCommand;
-        if ([self.toolCommand createCommandArrayFor:[self.toolCommand command] fromData:nil] == false) {
-            [self notifyFailMessageToAppDelegate:[self.toolCommand lastOccuredErrorMessage]];
+            [self notifyConnectionFailed:@"BLEが無効化されています。BLEを有効にしてください。" error:nil];
             return;
         }
 
@@ -92,7 +75,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         if (self.manager.state != CBCentralManagerStatePoweredOn) {
             return;
         }
-        [self notifyMessageToAppDelegate:@"FIDO U2Fデバイスのスキャンを開始します"];
+        [self notifyMessage:@"FIDO U2Fデバイスのスキャンを開始します"];
 
         // スキャン設定
         [self startScanningTimeoutMonitor];
@@ -118,7 +101,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
                 continue;
             }
             // スキャンを停止し、ペリフェラルに接続
-            [self notifyMessageToAppDelegate:@"FIDO U2Fデバイスのスキャンを完了しました"];
+            [self notifyMessage:@"FIDO U2Fデバイスのスキャンを完了しました"];
             [self cancelScanForPeripherals];
             [self cancelScanningTimeoutMonitor];
             [self connectPeripheral:peripheral];
@@ -139,7 +122,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)scanningDidTimeout {
         [self cancelScanForPeripherals];
-        [self notifyFailMessageToAppDelegate:@"FIDO U2Fデバイスのスキャンがタイムアウトしました。"];
+        [self notifyConnectionFailed:@"FIDO U2Fデバイスのスキャンがタイムアウトしました。" error:nil];
     }
 
 #pragma mark - Connection timeout monitor
@@ -159,7 +142,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)connectionDidTimeout:(CBPeripheral *)peripheral {
         [self.manager cancelPeripheralConnection:peripheral];
-        [self notifyFailMessageToAppDelegate:@"FIDO U2Fデバイスの接続要求がタイムアウトしました。"];
+        [self notifyConnectionFailed:@"FIDO U2Fデバイスの接続要求がタイムアウトしました。" error:nil];
     }
 
 #pragma mark - Connect peripheral
@@ -178,7 +161,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         }
         // 接続されたペリフェラルの参照を保持
         self.connectedPeripheral = peripheral;
-        [self notifyMessageToAppDelegate:@"FIDO U2Fデバイスに接続しました。"];
+        [self notifyMessage:@"FIDO U2Fデバイスに接続しました。"];
 
         // FIDO BLE U2Fサービスのディスカバーを開始
         [self cancelConnectionTimeoutMonitor:peripheral];
@@ -189,7 +172,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
         [self cancelConnectionTimeoutMonitor:peripheral];
-        [self notifyErrorMessageToAppDelegate:@"FIDO U2Fデバイスの接続に失敗しました。" error:error];
+        [self notifyConnectionFailed:@"FIDO U2Fデバイスの接続に失敗しました。" error:error];
     }
 
     - (void)centralManager:(CBCentralManager *)central
@@ -202,15 +185,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         self.u2fStatusChar       = nil;
 
         // 切断完了
-        [self notifyMessageToAppDelegate:@"FIDO U2Fデバイスの接続を切断しました。"];
-
-        // 終了メッセージを表示
-        if ([self.toolCommand lastOccuredErrorMessage]) {
-            [self notifyFailMessageToAppDelegate:[self.toolCommand lastOccuredErrorMessage]];
-
-        } else if ([self.toolCommand commandSuccess]) {
-            [self notifySuccessToAppDelegate];
-        }
+        [self notifyMessage:@"FIDO U2Fデバイスの接続を切断しました。"];
     }
 
 #pragma mark - Discover services
@@ -225,7 +200,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
    didDiscoverServices:(NSError *)error {
         if (error) {
             // BLEサービスディスカバーに失敗時は、画面にエラーメッセージを表示
-            [self notifyErrorMessageToAppDelegate:@"BLEサービスが見つかりません。" error:error];
+            [self notifyConnectionFailed:@"BLEサービスが見つかりません。" error:error];
             return;
         }
 
@@ -234,14 +209,14 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         for (CBService *service in peripheral.services) {
             if ([self.serviceUUIDs containsObject:service.UUID]) {
                 self.connectedService = service;
-                [self notifyMessageToAppDelegate:@"FIDO BLE U2Fサービスが見つかりました。"];
+                [self notifyMessage:@"FIDO BLE U2Fサービスが見つかりました。"];
                 break;
             }
         }
 
         if (!self.connectedService) {
             // FIDO BLE U2Fサービスがない場合は、画面にエラーメッセージを表示
-            [self notifyFailMessageToAppDelegate:@"FIDO BLE U2Fサービスが見つかりません。"];
+            [self notifyConnectionFailed:@"FIDO BLE U2Fサービスが見つかりません。" error:nil];
             return;
         }
 
@@ -262,7 +237,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             error:(NSError *)error {
         if (error) {
             // キャラクタリスティックのディスカバーエラー発生時は、以降の処理を行わない
-            [self notifyErrorMessageToAppDelegate:@"FIDO BLE U2Fサービスと通信できません。" error:error];
+            [self notifyConnectionFailed:@"FIDO BLE U2Fサービスと通信できません。" error:error];
             return;
         }
 
@@ -311,34 +286,34 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         error:(NSError *)error {
         if (error) {
             // エラーメッセージを画面表示し切断処理実行
-            [self notifyErrorMessageToAppDelegate:@"FIDO BLE U2Fサービスからデータを受信できません。" error:error];
+            [self notifyConnectionFailed:@"FIDO BLE U2Fサービスからデータを受信できません。" error:error];
             [self disconnect];
             return;
         }
 
         if (characteristic.isNotifying) {
-            // コマンドの実行を開始
-            [self notifyMessageToAppDelegate:@"受信データの監視を開始します。"];
-            [self executeCommandArray];
+            // 接続完了をAppDelegateに通知
+            [self notifyMessage:@"受信データの監視を開始します。"];
+            [self.delegate notifyCentralManagerConnected];
         } else {
             // 切断処理
-            [self notifyMessageToAppDelegate:@"受信データの監視を停止します。"];
+            [self notifyMessage:@"受信データの監視を停止します。"];
             [self disconnect];
         }
     }
 
 #pragma mark - Do main process
 
-    - (void)executeCommandArray {
+    - (void)sendBleMessages:(NSArray<NSData *> *)bleMessages {
         // U2F Control Pointに、実行するコマンドを書き込み
-        for (NSData *data in self.toolCommand.commandArray) {
+        for (NSData *data in bleMessages) {
             [NSThread sleepForTimeInterval:0.25];
             [self.connectedPeripheral writeValue:data
                                forCharacteristic:self.u2fControlPointChar
                                             type:CBCharacteristicWriteWithResponse];
             NSLog(@"Sent request %@", data);
         }
-        [self notifyMessageToAppDelegate:@"リクエストを送信しました。"];
+        [self notifyMessage:@"リクエストを送信しました。"];
     }
 
 #pragma mark - Request timeout monitor
@@ -356,7 +331,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)requestDidTimeout:(CBCharacteristic *)characteristic {
         [self disconnect];
-        [self notifyFailMessageToAppDelegate:@"リクエストがタイムアウトしました。"];
+        [self notifyConnectionFailed:@"リクエストがタイムアウトしました。" error:nil];
     }
 
 #pragma mark - Write value for characteristics
@@ -366,7 +341,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             error:(NSError *)error {
         if (error) {
             // U2F Control Point書込エラー発生時はメッセージを画面表示
-            [self notifyErrorMessageToAppDelegate:@"リクエスト送信が失敗しました。" error:error];
+            [self notifyConnectionFailed:@"リクエスト送信が失敗しました。" error:error];
             return;
         }
 
@@ -377,65 +352,18 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     - (void)peripheral:(CBPeripheral *)peripheral
             didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             error:(NSError *)error {
-        // 受信データおよび長さを保持
-        static NSUInteger     totalLength;
-        static NSMutableData *receivedData;
-
         // タイムアウト監視を停止
         [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
 
         // U2F Status監視エラー発生時はメッセージを画面表示
         if (error) {
-            [self notifyErrorMessageToAppDelegate:@"レスポンスを受信できませんでした。" error:error];
+            [self notifyConnectionFailed:@"レスポンスを受信できませんでした。" error:error];
             return;
         }
 
-        // 受信データ
-        NSData *responseData = characteristic.value;
-        
-        // 後続データの存在有無をチェック
-        NSData *dataBLEHeader = [responseData subdataWithRange:NSMakeRange(0, 3)];
-        unsigned char *bytesBLEHeader = (unsigned char *)[dataBLEHeader bytes];
-        if (bytesBLEHeader[0] == 0x82) {
-            // キープアライブの場合は引き続き次のレスポンスを待つ
-            receivedData = nil;
-
-        } else if (bytesBLEHeader[0] == 0x83) {
-            // ヘッダーから全受信データ長を取得
-            totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
-            // 4バイト目から後ろを切り出して連結
-            NSData *tmp  = [responseData subdataWithRange:NSMakeRange(3, [responseData length] - 3)];
-            receivedData = [[NSMutableData alloc] initWithData:tmp];
-        } else {
-            // 2バイト目から後ろを切り出して連結
-            NSData *tmp  = [responseData subdataWithRange:NSMakeRange(1, [responseData length] - 1)];
-            [receivedData appendData:tmp];
-        }
-        NSLog(@"Received response %@", responseData);
-
-        if (receivedData && ([receivedData length] == totalLength)) {
-            // 全データを受信したら後続の処理を行う
-            [self notifyMessageToAppDelegate:@"レスポンスを受信しました。"];
-            [self doAfterResponseFromCharacteristicWith:receivedData];
-            receivedData = nil;
-
-        } else {
-            // 後続のレスポンス待ち（タイムアウト監視開始）
-            [self startRequestTimeout:self.u2fStatusChar];
-        }
-    }
-
-#pragma mark - Process after response from peripheral
-
-    - (void)doAfterResponseFromCharacteristicWith:(NSData *)responseData {
-        // 後続処理がある場合は主処理に戻る
-        if ([self.toolCommand doAfterResponseFor:[self.toolCommand command] withData:responseData]) {
-            [self executeCommandArray];
-            return;
-        }
-
-        // 後続処理がない場合は切断処理を実行
-        [self disconnect];
+        // 受信データをAppDelegateへ転送
+        [self notifyMessage:@"受信データの監視を開始します。"];
+        [self.delegate bleMessageDidReceive:[characteristic value]];
     }
 
 #pragma mark - Disconnect from peripheral

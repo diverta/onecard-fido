@@ -65,7 +65,7 @@ typedef enum : NSInteger {
         // ペアリング情報削除
         [self enableButtons:false];
         [self.toolCommand setCommand:COMMAND_ERASE_BOND];
-        [self.central doCommand:self.toolCommand];
+        //[self.central doCommand:self.toolCommand];
         [self setMessageWhenSuccess:@"ペアリング情報削除処理が成功しました。"];
     }
 
@@ -73,7 +73,7 @@ typedef enum : NSInteger {
         // 鍵・証明書削除
         [self enableButtons:false];
         [self.toolCommand setCommand:COMMAND_ERASE_SKEY_CERT];
-        [self.central doCommand:self.toolCommand];
+        //[self.central doCommand:self.toolCommand];
         [self setMessageWhenSuccess:@"鍵・証明書削除処理が成功しました。"];
     }
 
@@ -103,7 +103,7 @@ typedef enum : NSInteger {
         [self.toolCommand setCommand:COMMAND_INSTALL_SKEY];
         [self.toolCommand setSkeyFilePath:self.fieldPath1.stringValue];
         [self.toolCommand setCertFilePath:self.fieldPath2.stringValue];
-        [self.central doCommand:self.toolCommand];
+        //[self.central doCommand:self.toolCommand];
         [self setMessageWhenSuccess:@"鍵・証明書インストール処理が成功しました。"];
     }
 
@@ -111,7 +111,7 @@ typedef enum : NSInteger {
         // ヘルスチェック実行
         [self enableButtons:false];
         [self.toolCommand setCommand:COMMAND_TEST_REGISTER];
-        [self.central doCommand:self.toolCommand];
+        //[self.central doCommand:self.toolCommand];
         [self setMessageWhenSuccess:@"ヘルスチェックが成功しました。"];
     }
 
@@ -189,7 +189,11 @@ typedef enum : NSInteger {
         }
     }
 
-    - (void)notifyFailWithMessage:(NSString *)errorMessage {
+    - (void)notifyCentralManagerConnected {
+    }
+
+    - (void)notifyCentralManagerConnectFailed:(NSString *)errorMessage {
+        // ポップアップメッセージを表示する
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setAlertStyle:NSAlertStyleCritical];
         if (errorMessage) {
@@ -201,23 +205,14 @@ typedef enum : NSInteger {
         [self enableButtons:true];
     }
 
-    - (void)notifySuccess {
-        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
-        if ([self messageWhenSuccess]) {
-            [self appendLogMessage:[self messageWhenSuccess]];
-
-            NSAlert *alert = [[NSAlert alloc] init];
-            [alert setAlertStyle:NSAlertStyleInformational];
-            [alert setMessageText:[self messageWhenSuccess]];
-            [alert runModal];
-        }
-        [self enableButtons:true];
-    }
-
-    - (void)notifyMessage:(NSString *)message {
+    - (void)notifyCentralManagerMessage:(NSString *)message {
+        // 画面上のテキストエリアににメッセージを表示する
         if (message) {
             [self appendLogMessage:message];
         }
+    }
+
+    - (void)bleMessageDidReceive:(NSData *)bleMessage {
     }
 
 #pragma mark - Call back from ToolBLEHelper
