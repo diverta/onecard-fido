@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
+#import "ToolBLEHelper.h"
 #import "ToolCommand.h"
 
 typedef enum : NSInteger {
@@ -7,10 +8,11 @@ typedef enum : NSInteger {
     PATH_CERT
 } PathType;
 
-@interface AppDelegate () <ToolBLECentralDelegate>
+@interface AppDelegate () <ToolBLECentralDelegate, ToolBLEHelperDelegate>
 
     @property (nonatomic) ToolCommand    *toolCommand;
     @property (nonatomic) ToolBLECentral *central;
+    @property (nonatomic) ToolBLEHelper  *toolBLEHelper;
 
     @property (nonatomic) PathType  pathType;
     @property (nonatomic) NSString *messageWhenSuccess;
@@ -21,7 +23,7 @@ typedef enum : NSInteger {
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        self.toolCommand = [ToolCommand alloc];
+        self.toolCommand   = [ToolCommand alloc];
 
         self.central = [[ToolBLECentral alloc] initWithDelegate:self];
         self.central.serviceUUIDs = @[
@@ -32,6 +34,8 @@ typedef enum : NSInteger {
             [CBUUID UUIDWithString:@"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"]
         ];
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
+
+        self.toolBLEHelper = [[ToolBLEHelper alloc] initWithDelegate:self];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -41,146 +45,6 @@ typedef enum : NSInteger {
     - (void)appendLogMessage:(NSString *)message {
         self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
         [self.textView performSelector:@selector(scrollPageDown:) withObject:nil afterDelay:0];
-    }
-
-#pragma mark - Functions for communication with chrome extension
-
-    - (void)setCommunicationMode {
-        [self setCommunicateAsChromeNative:false];
-
-        // プログラム起動引数をチェック
-        NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
-        if ([commandLineArgs count] < 2) {
-            return;
-        }
-
-        // ２番目の引数がChromeエクステンションIDになっている場合
-        // Chromeエクステンションから実行されたと判定し、
-        // ネイティブアプリとして動作するようにする
-        NSString *extensionID = [commandLineArgs objectAtIndex:1];
-        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
-            != NSOrderedSame) {
-            return;
-        }
-
-        // ネイティブアプリ動作に固有の処理を実行
-        [self setCommunicateAsChromeNative:true];
-        [self setStandardInputNotification];
-    }
-
-    - (bool)doBLEHelperCommandWith:(NSArray<NSData *> *)bleMessages {
-        NSLog(@"BLE Messages:[%@]", bleMessages);
- 
-        // ヘルスチェック実行（仮コードです）
-        [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_TEST_REGISTER];
-        [self.central doCommand:self.toolCommand];
-        [self setMessageWhenSuccess:@"ヘルスチェックが成功しました。"];
-
-        return true;
-    }
-
-    - (NSData *)extractSegmentDataFrom:(NSData *)stringDataFromChrome {
-        // Chromeエクステンションから受信したメッセージから、
-        // テキスト部分を抽出する。
-        //   受信メッセージ(最初の4バイト分は、テキスト長を表す)
-        //      250000007b2274657874223a223030316433326539....3535616530303030227d
-        //   テキスト長
-        //      25 00 00 00 ---> 0x25(=37バイトを表す)
-        //   抽出されるテキスト(JSON形式テキスト)
-        //      {"text":"001d32e9....55ae0000"}
-
-        //   最初の４バイトから、受信メッセージテキスト長を取得
-        NSData *_lengthData = [stringDataFromChrome subdataWithRange:NSMakeRange(0, 4)];
-        unsigned char *length_char = (unsigned char *)[_lengthData bytes];
-        NSUInteger _length = (length_char[1] * 256 + length_char[0]);
-
-        //   最初の４バイトを除去し、受信メッセージテキストを抽出
-        NSData *_dataString = [stringDataFromChrome subdataWithRange:NSMakeRange(4, _length)];
-        return _dataString;
-    }
-
-    - (NSDictionary *)parseJsonStringFrom:(NSData *)jsonStringData {
-        // JSON文字列データを連想配列に変換
-        NSError *error;
-        NSDictionary *jsonDictionary = [NSJSONSerialization
-                              JSONObjectWithData:jsonStringData
-                              options:NSJSONReadingAllowFragments
-                              error:&error];
-
-        if (!jsonDictionary) {
-            NSLog(@"%@", error);
-        }
-
-        return jsonDictionary;
-    }
-
-    - (NSArray<NSData *> *)extractBLEMessagesFrom:(NSData *)data {
-        // BLEメッセージ配列を初期化
-        NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
-
-        // 1〜n件の受信メッセージを抽出
-        NSUInteger remaining_length = [data length];
-        NSData    *remaining_data   = [data subdataWithRange:NSMakeRange(0, remaining_length)];;
-        while (remaining_length > 0) {
-            // 受信メッセージからテキスト部(JSON文字列)を抽出し、連想配列に変換
-            NSData       *jsonData = [self extractSegmentDataFrom:remaining_data];
-            NSDictionary *jsonDict = [self parseJsonStringFrom:jsonData];
-            if (jsonDict) {
-                // BLEメッセージ部分だけを取り出し、BLEメッセージ配列に追加
-                NSString *_stringData = [jsonDict objectForKey:@"text"];
-                NSData   *_byteData   = [self.toolCommand generateHexBytesFrom:_stringData];
-                [array addObject:_byteData];
-            }
-            
-            // 次の分割メッセージがない場合は終了
-            if (remaining_length == 0) {
-                break;
-            }
-
-            // 次の分割メッセージを取得
-            NSUInteger _processed = 4 + [jsonData length];
-            remaining_length = remaining_length - _processed;
-            remaining_data = [remaining_data subdataWithRange:NSMakeRange(_processed, remaining_length)];
-        }
-
-        // 抽出されたBLEメッセージ配列の参照を戻す
-        return array;
-    }
-
-    - (void)standardInputDidAvailable:(NSFileHandle *)input {
-        // これ以上メッセージを受信できなくなった場合は終了
-        NSData *data = [input availableData];
-        if ([data length] == 0) {
-            NSLog(@"End of message from chrome extension");
-            return;
-        }
-        NSLog(@"Received Data:[%@]", data);
-
-        // Chromeエクステンションから受信したメッセージを、
-        // U2F Raw Messageに変換し、BLEデバイスに転送
-        NSArray<NSData *> *bleMessages = [self extractBLEMessagesFrom:data];
-        [self doBLEHelperCommandWith:bleMessages];
-        
-        // 標準出力にエコーバック（仮コードです）
-        [[NSFileHandle fileHandleWithStandardOutput] writeData:data];
-
-        // 次のメッセージが受信できるよう設定
-        [input waitForDataInBackgroundAndNotify];
-    }
-
-    - (void)setStandardInputNotification {
-        // 標準入力をメッセージとして受信できるよう設定
-        NSFileHandle *_input = [NSFileHandle fileHandleWithStandardInput];
-        [_input waitForDataInBackgroundAndNotify];
-
-        // 標準入力を受信した時の処理
-        NSNotificationCenter *_defaultCenter = [NSNotificationCenter defaultCenter];
-        [_defaultCenter addObserverForName:NSFileHandleDataAvailableNotification
-            object:_input queue:nil
-            usingBlock:^(NSNotification *notification){
-                [self standardInputDidAvailable:_input];
-         }];
     }
 
 #pragma mark - Functions for button handling
@@ -321,7 +185,7 @@ typedef enum : NSInteger {
         if (state == CBCentralManagerStatePoweredOn) {
             // BLEデバイスが有効化された後に、
             // ネイティブアプリ動作モード時に固有な初期化処理を実行する
-            [self setCommunicationMode];
+            [self.toolBLEHelper initCommunication];
         }
     }
 
@@ -354,6 +218,15 @@ typedef enum : NSInteger {
         if (message) {
             [self appendLogMessage:message];
         }
+    }
+
+#pragma mark - Call back from ToolBLEHelper
+
+    - (void)bleHelperMessageDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
+        NSLog(@"bleHelperMessageDidReceive: %@", bleHelperMessages);
+        
+        // (仮コード)受信したJSONデータをエコーバック
+        [self.toolBLEHelper messageWillSent:[bleHelperMessages objectAtIndex:0]];
     }
 
 @end

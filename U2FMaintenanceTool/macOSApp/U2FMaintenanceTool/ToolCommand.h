@@ -32,8 +32,6 @@ typedef enum : NSInteger {
 - (bool)createCommandArrayFor:(Command)command fromData:(NSData *)parameterData;
 - (bool)doAfterResponseFor:(Command)command withData:(NSData *)responseData;
 
-- (NSData *)generateHexBytesFrom:(NSString *)hexString;
-
 @end
 
 #endif /* ToolCommand_h */

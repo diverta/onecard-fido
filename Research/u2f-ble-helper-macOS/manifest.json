@@ -16,13 +16,6 @@
   "background": {
     "persistent": false,
     "scripts": [
-      "main.js",
-      "b64.js",
-      "core-min.js",
-      "enc-base64-min.js",
-      "enc-utf16-min.js",
-      "sha256.js",
-      "u2f.js",
       "background.js"
     ]
   }
