@@ -27,7 +27,7 @@
 
 #pragma mark - Functions for receive messages from chrome extension
 
-    - (void)initCommunication {
+    - (void)bleHelperWillSetStdinNotification {
         // プログラム起動引数をチェック
         NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
         if ([commandLineArgs count] < 2) {
@@ -71,7 +71,7 @@
         NSLog(@"Received Data:[%@]", data);
         
         // Chromeエクステンションから受信したメッセージを、AppDelegateへ転送
-        [self.delegate bleHelperMessageDidReceive:[self extractBLEHelperMessagesFrom:data]];
+        [self.delegate bleHelperDidReceive:[self extractBLEHelperMessagesFrom:data]];
         
         // 次のメッセージが受信できるよう設定
         [input waitForDataInBackgroundAndNotify];
@@ -141,7 +141,7 @@
 
 #pragma mark - Functions for send message to chrome extension
 
-    - (void)messageWillSent:(NSDictionary *)bleHelperMessage {
+    - (void)bleHelperWillSend:(NSDictionary *)bleHelperMessage {
         // 連想配列-->JSON文字列-->Chromeエクステンションの指定形式に変換後、標準出力に書込み
         NSData *jsonStringData = [self createJsonStringFrom:bleHelperMessage];
         NSData *chromeMessageData = [self createCromeMessageFrom:jsonStringData];

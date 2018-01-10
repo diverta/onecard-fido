@@ -12,9 +12,10 @@
     @property (nonatomic, weak)   id<ToolBLECentralDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolBLECentralDelegate>)delegate;
-    - (void)doConnect;
-    - (void)disconnect;
-    - (void)sendBleMessages:(NSArray<NSData *> *)bleMessages;
+    - (void)centralManagerWillConnect;
+    - (void)centralManagerWillDisconnect;
+    - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages;
+    - (void)centralManagerWillStartResponseTimeout;
 
 @end
 
@@ -25,5 +26,6 @@
     - (void)notifyCentralManagerConnectFailed:(NSString *)message;
     - (void)notifyCentralManagerMessage:(NSString *)message;
 
-    - (void)bleMessageDidReceive:(NSData *)bleMessage;
+    - (void)centralManagerDidReceive:(NSData *)bleMessage;
+
 @end

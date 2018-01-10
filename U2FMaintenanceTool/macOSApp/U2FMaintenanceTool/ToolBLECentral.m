@@ -56,7 +56,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
 #pragma mark - Entry for process
 
-    - (void)doConnect {
+    - (void)centralManagerWillConnect {
         NSAssert(self.serviceUUIDs.count > 0, @"Need to specify services");
         NSAssert(self.characteristicUUIDs.count > 0, @"Need to specify characteristics UUID");
 
@@ -253,7 +253,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         // サービスにキャラクタリスティックがない場合は終了
         if (service.characteristics.count < 1) {
-            [self disconnect];
+            [self centralManagerWillDisconnect];
             return;
         }
 
@@ -287,7 +287,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         if (error) {
             // エラーメッセージを画面表示し切断処理実行
             [self notifyConnectionFailed:@"FIDO BLE U2Fサービスからデータを受信できません。" error:error];
-            [self disconnect];
+            [self centralManagerWillDisconnect];
             return;
         }
 
@@ -298,13 +298,13 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         } else {
             // 切断処理
             [self notifyMessage:@"受信データの監視を停止します。"];
-            [self disconnect];
+            [self centralManagerWillDisconnect];
         }
     }
 
 #pragma mark - Do main process
 
-    - (void)sendBleMessages:(NSArray<NSData *> *)bleMessages {
+    - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages {
         // U2F Control Pointに、実行するコマンドを書き込み
         for (NSData *data in bleMessages) {
             [NSThread sleepForTimeInterval:0.25];
@@ -318,6 +318,11 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
 #pragma mark - Request timeout monitor
 
+    - (void)centralManagerWillStartResponseTimeout {
+        // U2F Status経由のレスポンス待ち（タイムアウト監視開始）
+        [self startRequestTimeout:self.u2fStatusChar];
+    }
+
     - (void)startRequestTimeout:(CBCharacteristic *)characteristic {
         [self cancelRequestTimeoutMonitor:characteristic];
         [self performSelector:@selector(requestDidTimeout:)
@@ -330,7 +335,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     }
 
     - (void)requestDidTimeout:(CBCharacteristic *)characteristic {
-        [self disconnect];
+        [self centralManagerWillDisconnect];
         [self notifyConnectionFailed:@"リクエストがタイムアウトしました。" error:nil];
     }
 
@@ -363,12 +368,12 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         // 受信データをAppDelegateへ転送
         [self notifyMessage:@"受信データの監視を開始します。"];
-        [self.delegate bleMessageDidReceive:[characteristic value]];
+        [self.delegate centralManagerDidReceive:[characteristic value]];
     }
 
 #pragma mark - Disconnect from peripheral
 
-    - (void)disconnect {
+    - (void)centralManagerWillDisconnect {
         // ペリフェラル接続を切断
         if (self.connectedPeripheral) {
             [self cancelScanForPeripherals];

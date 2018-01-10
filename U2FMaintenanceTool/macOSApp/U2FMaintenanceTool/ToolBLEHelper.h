@@ -14,14 +14,14 @@
     @property (nonatomic, weak) id<ToolBLEHelperDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolBLEHelperDelegate>)delegate;
-    - (void)initCommunication;
-    - (void)messageWillSent:(NSDictionary *)bleHelperMessage;
+    - (void)bleHelperWillSetStdinNotification;
+    - (void)bleHelperWillSend:(NSDictionary *)bleHelperMessage;
 
 @end
 
 @protocol ToolBLEHelperDelegate <NSObject>
 
-    - (void)bleHelperMessageDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages;
+    - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages;
 
 @end
 
