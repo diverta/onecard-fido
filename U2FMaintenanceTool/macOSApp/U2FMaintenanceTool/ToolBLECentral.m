@@ -51,12 +51,17 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             NSLog(@"%@", message);
         }
         [self.delegate notifyCentralManagerMessage:message];
-        [self.delegate notifyCentralManagerConnectFailed:message];
+        [self.delegate centralManagerDidFailConnection:message];
     }
 
 #pragma mark - Entry for process
 
     - (void)centralManagerWillConnect {
+        // すでに接続が確立されている場合は終了
+        if (self.connectedPeripheral) {
+            return;
+        }
+
         NSAssert(self.serviceUUIDs.count > 0, @"Need to specify services");
         NSAssert(self.characteristicUUIDs.count > 0, @"Need to specify characteristics UUID");
 
@@ -294,7 +299,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         if (characteristic.isNotifying) {
             // 接続完了をAppDelegateに通知
             [self notifyMessage:@"受信データの監視を開始します。"];
-            [self.delegate notifyCentralManagerConnected];
+            [self.delegate centralManagerDidConnect];
         } else {
             // 切断処理
             [self notifyMessage:@"受信データの監視を停止します。"];

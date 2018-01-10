@@ -22,10 +22,10 @@
 @protocol ToolBLECentralDelegate <NSObject>
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
-    - (void)notifyCentralManagerConnected;
-    - (void)notifyCentralManagerConnectFailed:(NSString *)message;
     - (void)notifyCentralManagerMessage:(NSString *)message;
 
+    - (void)centralManagerDidConnect;
+    - (void)centralManagerDidFailConnection:(NSString *)message;
     - (void)centralManagerDidReceive:(NSData *)bleMessage;
 
 @end
