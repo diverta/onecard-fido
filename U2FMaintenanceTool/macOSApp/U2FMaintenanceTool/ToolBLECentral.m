@@ -26,6 +26,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         if (self) {
             self.delegate = delegate;
             self.manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+            self.connectedPeripheral = nil;
         }
         return self;
     }
@@ -50,15 +51,15 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         } else {
             NSLog(@"%@", message);
         }
-        [self.delegate notifyCentralManagerMessage:message];
         [self.delegate centralManagerDidFailConnection:message];
     }
 
 #pragma mark - Entry for process
 
     - (void)centralManagerWillConnect {
-        // すでに接続が確立されている場合は終了
         if (self.connectedPeripheral) {
+            // すでに接続が確立されている場合はAppDelegateに通知
+            [self.delegate centralManagerDidConnect];
             return;
         }
 
@@ -356,7 +357,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
 
         // U2F Status経由のレスポンス待ち（タイムアウト監視開始）
-        [self startRequestTimeout:self.u2fStatusChar];
+        [self centralManagerWillStartResponseTimeout];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral

@@ -8,14 +8,14 @@ typedef enum : NSInteger {
     PATH_CERT
 } PathType;
 
-@interface AppDelegate () <ToolBLECentralDelegate, ToolBLEHelperDelegate>
+@interface AppDelegate ()
+    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate>
 
     @property (nonatomic) ToolCommand    *toolCommand;
     @property (nonatomic) ToolBLECentral *central;
     @property (nonatomic) ToolBLEHelper  *toolBLEHelper;
 
     @property (nonatomic) PathType  pathType;
-    @property (nonatomic) NSString *messageWhenSuccess;
     @property (nonatomic) bool      communicateAsChromeNative;
 
 @end
@@ -23,9 +23,10 @@ typedef enum : NSInteger {
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        self.toolCommand   = [ToolCommand alloc];
+        self.central       = [[ToolBLECentral alloc] initWithDelegate:self];
+        self.toolBLEHelper = [[ToolBLEHelper alloc]  initWithDelegate:self];
+        self.toolCommand   = [[ToolCommand alloc]    initWithDelegate:self];
 
-        self.central = [[ToolBLECentral alloc] initWithDelegate:self];
         self.central.serviceUUIDs = @[
             [CBUUID UUIDWithString:@"0000FFFD-0000-1000-8000-00805F9B34FB"]
         ];
@@ -34,12 +35,10 @@ typedef enum : NSInteger {
             [CBUUID UUIDWithString:@"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"]
         ];
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
-
-        self.toolBLEHelper = [[ToolBLEHelper alloc] initWithDelegate:self];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
-        [self.central disconnect];
+        [self.central centralManagerWillDisconnect];
     }
 
     - (void)appendLogMessage:(NSString *)message {
@@ -64,17 +63,13 @@ typedef enum : NSInteger {
     - (IBAction)button1DidPress:(id)sender {
         // ペアリング情報削除
         [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_ERASE_BOND];
-        //[self.central doCommand:self.toolCommand];
-        [self setMessageWhenSuccess:@"ペアリング情報削除処理が成功しました。"];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_BOND];
     }
 
     - (IBAction)button2DidPress:(id)sender {
         // 鍵・証明書削除
         [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_ERASE_SKEY_CERT];
-        //[self.central doCommand:self.toolCommand];
-        [self setMessageWhenSuccess:@"鍵・証明書削除処理が成功しました。"];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
     }
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
@@ -100,19 +95,16 @@ typedef enum : NSInteger {
         }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_INSTALL_SKEY];
-        [self.toolCommand setSkeyFilePath:self.fieldPath1.stringValue];
-        [self.toolCommand setCertFilePath:self.fieldPath2.stringValue];
-        //[self.central doCommand:self.toolCommand];
-        [self setMessageWhenSuccess:@"鍵・証明書インストール処理が成功しました。"];
+        [self.toolCommand setKeyFilePath:COMMAND_INSTALL_SKEY
+                            skeyFilePath:self.fieldPath1.stringValue
+                            certFilePath:self.fieldPath2.stringValue];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
     }
 
     - (IBAction)button4DidPress:(id)sender {
         // ヘルスチェック実行
         [self enableButtons:false];
-        [self.toolCommand setCommand:COMMAND_TEST_REGISTER];
-        //[self.central doCommand:self.toolCommand];
-        [self setMessageWhenSuccess:@"ヘルスチェックが成功しました。"];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -177,6 +169,40 @@ typedef enum : NSInteger {
         }
     }
 
+#pragma mark - Call back from ToolCommand
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        // 画面上のテキストエリアにメッセージを表示する
+        if (message) {
+            [self appendLogMessage:message];
+        }
+    }
+
+    - (void)toolCommandDidCreateBleRequest {
+        // BLEデバイス接続処理に移る
+        [self.central centralManagerWillConnect];
+    }
+
+    - (void)toolCommandDidFail:(NSString *)errorMessage {
+        // エラーメッセージを画面表示
+        if (errorMessage) {
+            [self appendLogMessage:errorMessage];
+        }
+        // デバイス接続を切断
+        [self.central centralManagerWillDisconnect];
+        // 失敗メッセージを表示
+        [self displayEndMessage:false];
+        [self enableButtons:true];
+    }
+
+    - (void)toolCommandDidSuccess {
+        // デバイス接続を切断
+        [self.central centralManagerWillDisconnect];
+        // 成功メッセージを表示
+        [self displayEndMessage:true];
+        [self enableButtons:true];
+    }
+
 #pragma mark - Call back from ToolBLECentral
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
@@ -185,15 +211,89 @@ typedef enum : NSInteger {
         if (state == CBCentralManagerStatePoweredOn) {
             // BLEデバイスが有効化された後に、
             // ネイティブアプリ動作モード時に固有な初期化処理を実行する
-            [self.toolBLEHelper initCommunication];
+            [self.toolBLEHelper bleHelperWillSetStdinNotification];
         }
     }
 
-    - (void)notifyCentralManagerConnected {
+    - (void)centralManagerDidConnect {
+        // U2F Control Pointに実行コマンドを書込
+        [self.central centralManagerWillSend:[self.toolCommand bleRequestArray]];
     }
 
-    - (void)notifyCentralManagerConnectFailed:(NSString *)errorMessage {
-        // ポップアップメッセージを表示する
+    - (void)centralManagerDidFailConnection:(NSString *)errorMessage {
+        // エラーメッセージを画面表示
+        if (errorMessage) {
+            [self appendLogMessage:errorMessage];
+        }
+        // 失敗メッセージを表示
+        [self displayEndMessage:false];
+        [self enableButtons:true];
+    }
+
+    - (void)notifyCentralManagerMessage:(NSString *)message {
+        // 画面上のテキストエリアにメッセージを表示する
+        if (message) {
+            [self appendLogMessage:message];
+        }
+    }
+
+    - (void)centralManagerDidReceive:(NSData *)bleResponse {
+        if ([self.toolCommand isResponseCompleted:bleResponse]) {
+            // 後続レスポンスがあれば、タイムアウト監視を再開させ、後続レスポンスを待つ
+            [self.central centralManagerWillStartResponseTimeout];
+        } else {
+            // 後続レスポンスがなければ、レスポンスを次処理に引き渡す
+            [self.toolCommand toolCommandWillProcessBleResponse];
+        }
+    }
+
+    - (void)displayEndMessage:(bool)success {
+        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
+        NSString *processName;
+        switch ([self.toolCommand command]) {
+            case COMMAND_ERASE_BOND:
+                processName = @"ペアリング情報削除処理";
+                break;
+            case COMMAND_ERASE_SKEY_CERT:
+                processName = @"鍵・証明書削除処理";
+                break;
+            case COMMAND_INSTALL_SKEY:
+            case COMMAND_INSTALL_CERT:
+                processName = @"鍵・証明書インストール処理";
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                processName = @"ヘルスチェック";
+                break;
+            default:
+                processName = nil;
+                break;
+        }
+        if (processName) {
+            NSString *str = [NSString stringWithFormat:@"%1$@が%2$@しました。",
+                             processName, success? @"成功":@"失敗"];
+            [self appendLogMessage:str];
+            if (success) {
+                [self displaySuccessPopupMessage:str];
+            } else {
+                [self displayErrorPopupMessage:str];
+            }
+        }
+    }
+
+    - (void)displaySuccessPopupMessage:(NSString *)successMessage {
+        if (!successMessage) {
+            return;
+        }
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSAlertStyleInformational];
+        [alert setMessageText:successMessage];
+        [alert runModal];
+    }
+
+    - (void)displayErrorPopupMessage:(NSString *)errorMessage {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setAlertStyle:NSAlertStyleCritical];
         if (errorMessage) {
@@ -202,26 +302,15 @@ typedef enum : NSInteger {
             [alert setMessageText:@"不明なエラーが発生しました。"];
         }
         [alert runModal];
-        [self enableButtons:true];
-    }
-
-    - (void)notifyCentralManagerMessage:(NSString *)message {
-        // 画面上のテキストエリアににメッセージを表示する
-        if (message) {
-            [self appendLogMessage:message];
-        }
-    }
-
-    - (void)bleMessageDidReceive:(NSData *)bleMessage {
     }
 
 #pragma mark - Call back from ToolBLEHelper
 
-    - (void)bleHelperMessageDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
+    - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
         NSLog(@"bleHelperMessageDidReceive: %@", bleHelperMessages);
         
         // (仮コード)受信したJSONデータをエコーバック
-        [self.toolBLEHelper messageWillSent:[bleHelperMessages objectAtIndex:0]];
+        [self.toolBLEHelper bleHelperWillSend:[bleHelperMessages objectAtIndex:0]];
     }
 
 @end

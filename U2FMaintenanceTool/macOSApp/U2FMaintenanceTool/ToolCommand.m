@@ -7,7 +7,27 @@
 #import <Foundation/Foundation.h>
 #import "ToolCommand.h"
 
+@interface ToolCommand ()
+
+    @property (nonatomic) NSData   *bleResponseData;
+    @property (nonatomic) NSString *skeyFilePath;
+    @property (nonatomic) NSString *certFilePath;
+
+@end
+
 @implementation ToolCommand
+
+    - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate {
+        self = [super init];
+        if (self) {
+            self.delegate = delegate;
+        }
+        return self;
+    }
 
 #pragma mark - Private methods
 
@@ -17,7 +37,7 @@
     // 書き込むコマンドを編集
     unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x40, 0x01, 0x00};
     NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-    [self setCommandArray:[NSArray arrayWithObject:commandData]];
+    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
 
 - (void)createCommandEraseSkeyCert {
@@ -26,7 +46,7 @@
     // 書き込むコマンドを編集
     unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x40, 0x02, 0x00};
     NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-    [self setCommandArray:[NSArray arrayWithObject:commandData]];
+    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
 
 - (NSData *)convertSkeyPem:(NSString *)skeyPemContents {
@@ -38,7 +58,7 @@
     // デコードされたデータが39バイト未満の場合はエラー
     if ([decodedPemData length] < 39) {
         NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
-        [self setLastOccuredErrorMessage:@"鍵ファイルに格納された秘密鍵の長さが不正です。"];
+        [self.delegate toolCommandDidFail:@"鍵ファイルに格納された秘密鍵の長さが不正です。"];
         return nil;
     }
 
@@ -46,7 +66,7 @@
     const char *decodedPem = [decodedPemData bytes];
     if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
         NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
-        [self setLastOccuredErrorMessage:@"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"];
+        [self.delegate toolCommandDidFail:@"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"];
         return nil;
     }
     
@@ -71,7 +91,7 @@
                      error:&err];
     if (err.code) {
         NSLog(@"Secure key file read error: %@", err.description);
-        [self setLastOccuredErrorMessage:@"鍵ファイルを読み込むことができません。"];
+        [self.delegate toolCommandDidFail:@"鍵ファイルを読み込むことができません。"];
         return nil;
     }
     
@@ -98,7 +118,7 @@
     // ヘッダーが見つからない場合はエラー
     if (headerFound == false) {
         NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
-        [self setLastOccuredErrorMessage:@"鍵ファイルの内容が不正です。"];
+        [self.delegate toolCommandDidFail:@"鍵ファイルの内容が不正です。"];
         return nil;
     }
 
@@ -113,27 +133,27 @@
     // 鍵ファイルから秘密鍵（32バイト）を取得
     NSData *dataSkey = [self readSkeyFromFile:self.skeyFilePath];
     if (dataSkey == nil) {
-        [self setCommandArray:nil];
+        [self setBleRequestArray:nil];
         return;
     }
 
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:dataSkey INS:0x40 P1:0x03];
-    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
 - (NSData *)readCertFromFile:(NSString *)certFilePath {
     // 証明書ファイルから読み込み
     NSData *data = [NSData dataWithContentsOfFile:certFilePath];
     if (data == nil || [data length] == 0) {
-        [self setLastOccuredErrorMessage:@"証明書ファイルを読み込むことができません。"];
+        [self.delegate toolCommandDidFail:@"証明書ファイルを読み込むことができません。"];
         return nil;
     }
 
     // 証明書ファイルの長さが68バイト未満の場合はエラー
     NSUInteger dataCertLength = [data length];
     if (dataCertLength < 68) {
-        [self setLastOccuredErrorMessage:@"証明書ファイルに格納されたデータの長さが不正です。"];
+        [self.delegate toolCommandDidFail:@"証明書ファイルに格納されたデータの長さが不正です。"];
         return nil;
     }
 
@@ -212,13 +232,13 @@
     // 証明書ファイルから内容を取得
     NSData *dataCert = [self readCertFromFile:self.certFilePath];
     if (dataCert == nil) {
-        [self setCommandArray:nil];
+        [self setBleRequestArray:nil];
         return;
     }
 
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:dataCert INS:0x40 P1:0x04];
-    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
 - (NSData *)generateHexBytesFrom:(NSString *)hexString {
@@ -257,7 +277,7 @@
     
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
-    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
 - (NSData *)getKeyHandleDataFrom:(NSData *)registerResponse {
@@ -272,27 +292,30 @@
     
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:p1];
-    [self setCommandArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
 - (bool)commandArrayIsBlank {
-    if (self.commandArray) {
-        return false;
-    }
-    if ([self.commandArray count]) {
-        return false;
+    if ([self bleRequestArray]) {
+        if ([[self bleRequestArray] count]) {
+            return false;
+        }
     }
     return true;
 }
 
 #pragma mark - Public methods
 
-- (bool)createCommandArrayFor:(Command)command fromData:(NSData *)parameterData {
-    [self setLastOccuredErrorMessage:nil];
-    [self setCommandSuccess:false];
-    [self setCommand:command];
-    
+- (void)setKeyFilePath:(Command)command
+          skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath {
+    // インストール対象の鍵・証明書ファイルパスを保持
+    [self setSkeyFilePath:skeyFilePath];
+    [self setCertFilePath:certFilePath];
+}
+
+- (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
+    [self setCommand:command];
     switch (command) {
         case COMMAND_ERASE_BOND:
             [self createCommandEraseBond];
@@ -303,48 +326,76 @@
         case COMMAND_INSTALL_SKEY:
             [self createCommandInstallSkey];
             break;
-        case COMMAND_INSTALL_CERT:
-            [self createCommandInstallCert];
-            break;
         case COMMAND_TEST_REGISTER:
             [self createCommandTestRegister];
             break;
-        case COMMAND_TEST_AUTH_CHECK:
-            // Registerレスポンスを引数指定
-            [self createCommandTestAuthFrom:parameterData P1:0x07];
-            break;
-        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            // Registerレスポンスを引数指定
-            [self createCommandTestAuthFrom:parameterData P1:0x08];
-            break;
-        case COMMAND_TEST_AUTH_USER_PRESENCE:
-            // Registerレスポンスを引数指定
-            [self createCommandTestAuthFrom:parameterData P1:0x03];
-            break;
         default:
-            [self setCommandArray:nil];
+            [self setBleRequestArray:nil];
             break;
     }
-
-    // コマンド生成失敗時は処理中止
-    if ([self commandArrayIsBlank]) {
-        return false;
+    // コマンド生成時
+    if ([self commandArrayIsBlank] == false) {
+        [self.delegate toolCommandDidCreateBleRequest];
     }
-    
-    return true;
 }
 
-- (bool)doAfterResponseFor:(Command)command withData:(NSData *)responseData {
+- (bool)isResponseCompleted:(NSData *)responseData {
+    // 受信データおよび長さを保持
+    static NSUInteger     totalLength;
+    static NSMutableData *receivedData;
+    
+    // 後続データの存在有無をチェック
+    NSData *dataBLEHeader = [responseData subdataWithRange:NSMakeRange(0, 3)];
+    unsigned char *bytesBLEHeader = (unsigned char *)[dataBLEHeader bytes];
+    if (bytesBLEHeader[0] == 0x82) {
+        // キープアライブの場合は引き続き次のレスポンスを待つ
+        receivedData = nil;
+        
+    } else if (bytesBLEHeader[0] == 0x83) {
+        // ヘッダーから全受信データ長を取得
+        totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
+        // 4バイト目から後ろを切り出して連結
+        NSData *tmp  = [responseData subdataWithRange:NSMakeRange(3, [responseData length] - 3)];
+        receivedData = [[NSMutableData alloc] initWithData:tmp];
+        
+    } else {
+        // 2バイト目から後ろを切り出して連結
+        NSData *tmp  = [responseData subdataWithRange:NSMakeRange(1, [responseData length] - 1)];
+        [receivedData appendData:tmp];
+    }
+    NSLog(@"Received response %@", responseData);
+    
+    if (receivedData && ([receivedData length] == totalLength)) {
+        // 全受信データを保持
+        [self setBleResponseData:[[NSData alloc] initWithData:receivedData]];
+        [self.delegate notifyToolCommandMessage:@"レスポンスを受信しました。"];
+        receivedData = nil;
+        // 後続レスポンスがない
+        return false;
+        
+    } else {
+        // 後続レスポンスがある
+        [self setBleResponseData:nil];
+        return true;
+    }
+}
+
+- (void)toolCommandWillProcessBleResponse {
+    // レスポンスデータが揃っていない場合は終了
+    if (![self bleResponseData]) {
+        return;
+    }
+    
     // Registerレスポンスは、３件のテストケースで共通使用するため、
     // ここで保持しておく必要がある
     static NSData *registerReponseData;
     
     // レスポンスの末尾２バイトが0x9000でなければエラー扱い
-    NSUInteger length = [responseData length];
-    NSData *responseBytes = [responseData subdataWithRange:NSMakeRange(length-2, 2)];
+    NSUInteger length = [[self bleResponseData] length];
+    NSData *responseBytes = [[self bleResponseData] subdataWithRange:NSMakeRange(length-2, 2)];
 
     char successChars[] = {0x90, 0x00};
-    switch (command) {
+    switch ([self command]) {
         case COMMAND_TEST_AUTH_CHECK:
             // キーハンドルチェックの場合は成功判定バイトを差替
             successChars[0] = 0x69;
@@ -353,59 +404,64 @@
             break;
     }
     NSData *successBytes = [NSData dataWithBytes:successChars length:sizeof(successChars)];
-    bool compare = [responseBytes isEqualToData:successBytes];
-
-    if (compare == false) {
-        [self setLastOccuredErrorMessage:@"BLEエラーが発生しました。処理を再試行してください。"];
-        [self setCommandSuccess:false];
-        return false;
-    } else {
-        [self setCommandSuccess:true];
+    if ([responseBytes isEqualToData:successBytes] == false) {
+        [self.delegate toolCommandDidFail:@"BLEエラーが発生しました。処理を再試行してください。"];
+        return;
     }
 
     // コマンドに応じ、以下の処理に分岐
-    bool doNextCommand = false;
-    switch (command) {
+    switch ([self command]) {
         case COMMAND_ERASE_BOND:
-            NSLog(@"Erase bonding information end");
+            [self notifySuccess:@"Erase bonding information end"];
             break;
         case COMMAND_ERASE_SKEY_CERT:
-            NSLog(@"Erase secure key and certificate end");
+            [self notifySuccess:@"Erase secure key and certificate end"];
             break;
         case COMMAND_INSTALL_SKEY:
             NSLog(@"Install secure key end");
-            doNextCommand = [self createCommandArrayFor:COMMAND_INSTALL_CERT
-                                               fromData:nil];
+            [self setCommand:COMMAND_INSTALL_CERT];
+            [self createCommandInstallCert];
             break;
         case COMMAND_INSTALL_CERT:
-            NSLog(@"Install certificate end");
+            [self notifySuccess:@"Install certificate end"];
             break;
         case COMMAND_TEST_REGISTER:
             NSLog(@"Register test success");
-            registerReponseData = responseData;
-            doNextCommand = [self createCommandArrayFor:COMMAND_TEST_AUTH_CHECK
-                                               fromData:registerReponseData];
+            // Registerレスポンスを内部で保持して後続処理を実行
+            registerReponseData = [[NSData alloc] initWithData:[self bleResponseData]];
+            [self setCommand:COMMAND_TEST_AUTH_CHECK];
+            [self createCommandTestAuthFrom:registerReponseData P1:0x07];
             break;
         case COMMAND_TEST_AUTH_CHECK:
             NSLog(@"Authenticate test (check) success");
-            doNextCommand = [self createCommandArrayFor:COMMAND_TEST_AUTH_NO_USER_PRESENCE
-                                               fromData:registerReponseData];
+            [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
+            [self createCommandTestAuthFrom:registerReponseData P1:0x08];
             break;
         case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
             NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
-            doNextCommand = [self createCommandArrayFor:COMMAND_TEST_AUTH_USER_PRESENCE
-                                               fromData:registerReponseData];
+            [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
+            [self createCommandTestAuthFrom:registerReponseData P1:0x03];
             break;
         case COMMAND_TEST_AUTH_USER_PRESENCE:
-            NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
-            NSLog(@"Health check end");
             registerReponseData = nil;
+            NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
+            [self notifySuccess:@"Health check end"];
             break;
         default:
             break;
     }
+    // コマンド生成時は後続処理を実行させる
+    if ([self commandArrayIsBlank] == false) {
+        [self.delegate toolCommandDidCreateBleRequest];
+    }
+}
 
-    return doNextCommand;
+- (void)notifySuccess:(NSString *)successMessage {
+    // コマンド配列をブランクにして、処理正常終了をAppDelegateに通知
+    [self setBleRequestArray:nil];
+    [self.delegate toolCommandDidSuccess];
+
+    NSLog(@"%@", successMessage);
 }
 
 @end

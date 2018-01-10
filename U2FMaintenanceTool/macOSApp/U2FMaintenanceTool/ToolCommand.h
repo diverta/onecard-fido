@@ -19,18 +19,33 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_USER_PRESENCE
 } Command;
 
-@interface ToolCommand : NSObject
+@protocol ToolCommandDelegate;
 
-@property (nonatomic) NSArray<NSData *> *commandArray;
-@property (nonatomic) NSString *lastOccuredErrorMessage;
+    @interface ToolCommand : NSObject
 
-@property (nonatomic) Command   command;
-@property (nonatomic) NSString *skeyFilePath;
-@property (nonatomic) NSString *certFilePath;
-@property (nonatomic) bool      commandSuccess;
+    @property (nonatomic, weak) id<ToolCommandDelegate> delegate;
 
-- (bool)createCommandArrayFor:(Command)command fromData:(NSData *)parameterData;
-- (bool)doAfterResponseFor:(Command)command withData:(NSData *)responseData;
+    @property (nonatomic) Command command;
+    @property (nonatomic) NSArray<NSData *> *bleRequestArray;
+
+    - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate;
+    - (void)toolCommandWillCreateBleRequest:(Command)command;
+    - (void)toolCommandWillProcessBleResponse;
+    - (bool)isResponseCompleted:(NSData *)responseData;
+
+    - (void)setKeyFilePath:(Command)command
+              skeyFilePath:(NSString *)skeyFilePath
+              certFilePath:(NSString *)certFilePath;
+
+@end
+
+@protocol ToolCommandDelegate <NSObject>
+
+    - (void)notifyToolCommandMessage:(NSString *)message;
+
+    - (void)toolCommandDidCreateBleRequest;
+    - (void)toolCommandDidFail:(NSString *)errorMessage;
+    - (void)toolCommandDidSuccess;
 
 @end
 
