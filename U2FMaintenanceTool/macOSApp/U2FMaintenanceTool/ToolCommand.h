@@ -37,6 +37,8 @@ typedef enum : NSInteger {
               skeyFilePath:(NSString *)skeyFilePath
               certFilePath:(NSString *)certFilePath;
 
+    - (NSString *)processNameOfCommand;
+
 @end
 
 @protocol ToolCommandDelegate <NSObject>

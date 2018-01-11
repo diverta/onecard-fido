@@ -4,6 +4,10 @@ static const NSTimeInterval kScanningTimeout   = 10.0;
 static const NSTimeInterval kConnectingTimeout = 10.0;
 static const NSTimeInterval kRequestTimeout    = 20.0;
 
+#define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
+#define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
+
 @interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
     @property(nonatomic) CBCentralManager *manager;
@@ -27,6 +31,9 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             self.delegate = delegate;
             self.manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
             self.connectedPeripheral = nil;
+            self.serviceUUIDs = @[[CBUUID UUIDWithString:U2FServiceUUID]];
+            self.characteristicUUIDs = @[[CBUUID UUIDWithString:U2FControlPointCharUUID],
+                                         [CBUUID UUIDWithString:U2FStatusCharUUID]];
         }
         return self;
     }
@@ -373,7 +380,6 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
 
         // 受信データをAppDelegateへ転送
-        [self notifyMessage:@"受信データの監視を開始します。"];
         [self.delegate centralManagerDidReceive:[characteristic value]];
     }
 

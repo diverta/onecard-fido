@@ -313,6 +313,33 @@
     [self setCertFilePath:certFilePath];
 }
 
+- (NSString *)processNameOfCommand {
+    // 現在実行中のコマンドに対応する名称を戻す
+    NSString *processName;
+    switch ([self command]) {
+        case COMMAND_ERASE_BOND:
+            processName = @"ペアリング情報削除処理";
+            break;
+        case COMMAND_ERASE_SKEY_CERT:
+            processName = @"鍵・証明書削除処理";
+            break;
+        case COMMAND_INSTALL_SKEY:
+        case COMMAND_INSTALL_CERT:
+            processName = @"鍵・証明書インストール";
+            break;
+        case COMMAND_TEST_REGISTER:
+        case COMMAND_TEST_AUTH_CHECK:
+        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+        case COMMAND_TEST_AUTH_USER_PRESENCE:
+            processName = @"ヘルスチェック";
+            break;
+        default:
+            processName = nil;
+            break;
+    }
+    return processName;
+}
+
 - (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
@@ -380,32 +407,57 @@
     }
 }
 
-- (void)toolCommandWillProcessBleResponse {
+- (NSData *)statusWordWhenSuccess {
+    char _statusWord[] = {0x90, 0x00};
+    switch ([self command]) {
+        case COMMAND_TEST_AUTH_CHECK:
+            // キーハンドルチェックの場合は成功判定バイト=0x6985
+            _statusWord[0] = 0x69;
+            _statusWord[1] = 0x85;
+        default:
+            // その他の場合は成功判定バイト=0x9000
+            break;
+    }
+    return [NSData dataWithBytes:_statusWord length:sizeof(_statusWord)];
+}
+
+- (NSData *)statusWordWhenFlashROMFull {
+    char _statusWord[] = {0x9e, 0x01};
+    return [NSData dataWithBytes:_statusWord length:sizeof(_statusWord)];
+}
+
+- (bool)checkStatusWordOfResponse {
     // レスポンスデータが揃っていない場合は終了
     if (![self bleResponseData]) {
-        return;
+        return false;
     }
     
+    // レスポンスの末尾２バイト(ステータスワード)をチェック
+    NSUInteger length = [[self bleResponseData] length];
+    NSData *responseStatusWord = [[self bleResponseData] subdataWithRange:NSMakeRange(length-2, 2)];
+    if ([responseStatusWord isEqualToData:[self statusWordWhenSuccess]]) {
+        return true;
+    }
+    
+    // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
+    if ([responseStatusWord isEqualToData:[self statusWordWhenFlashROMFull]]) {
+        [self.delegate toolCommandDidFail:
+         @"One CardのFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"];
+        return false;
+    }
+
+    // ステータスワードチェックがNGの場合
+    [self.delegate toolCommandDidFail:@"BLEエラーが発生しました。処理を再試行してください。"];
+    return false;
+}
+
+- (void)toolCommandWillProcessBleResponse {
     // Registerレスポンスは、３件のテストケースで共通使用するため、
     // ここで保持しておく必要がある
     static NSData *registerReponseData;
     
-    // レスポンスの末尾２バイトが0x9000でなければエラー扱い
-    NSUInteger length = [[self bleResponseData] length];
-    NSData *responseBytes = [[self bleResponseData] subdataWithRange:NSMakeRange(length-2, 2)];
-
-    char successChars[] = {0x90, 0x00};
-    switch ([self command]) {
-        case COMMAND_TEST_AUTH_CHECK:
-            // キーハンドルチェックの場合は成功判定バイトを差替
-            successChars[0] = 0x69;
-            successChars[1] = 0x85;
-        default:
-            break;
-    }
-    NSData *successBytes = [NSData dataWithBytes:successChars length:sizeof(successChars)];
-    if ([responseBytes isEqualToData:successBytes] == false) {
-        [self.delegate toolCommandDidFail:@"BLEエラーが発生しました。処理を再試行してください。"];
+    // レスポンスをチェックし、内容がNGであれば処理終了
+    if ([self checkStatusWordOfResponse] == false) {
         return;
     }
 

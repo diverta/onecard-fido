@@ -27,13 +27,6 @@ typedef enum : NSInteger {
         self.toolBLEHelper = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand   = [[ToolCommand alloc]    initWithDelegate:self];
 
-        self.central.serviceUUIDs = @[
-            [CBUUID UUIDWithString:@"0000FFFD-0000-1000-8000-00805F9B34FB"]
-        ];
-        self.central.characteristicUUIDs = @[
-            [CBUUID UUIDWithString:@"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"],
-            [CBUUID UUIDWithString:@"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"]
-        ];
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
     }
 
@@ -42,8 +35,9 @@ typedef enum : NSInteger {
     }
 
     - (void)appendLogMessage:(NSString *)message {
+        // テキストフィールドにメッセージを追加し、末尾に移動
         self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
-        [self.textView performSelector:@selector(scrollPageDown:) withObject:nil afterDelay:0];
+        [self.textView performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
     }
 
 #pragma mark - Functions for button handling
@@ -209,8 +203,8 @@ typedef enum : NSInteger {
         NSLog(@"centralManagerDidUpdateState: %ld", state);
 
         if (state == CBCentralManagerStatePoweredOn) {
-            // BLEデバイスが有効化された後に、
-            // ネイティブアプリ動作モード時に固有な初期化処理を実行する
+            // BLEデバイスが有効化された後に
+            // Chromeエクステンションからのメッセージ受信を有効化
             [self.toolBLEHelper bleHelperWillSetStdinNotification];
         }
     }
@@ -248,38 +242,20 @@ typedef enum : NSInteger {
     }
 
     - (void)displayEndMessage:(bool)success {
-        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
-        NSString *processName;
-        switch ([self.toolCommand command]) {
-            case COMMAND_ERASE_BOND:
-                processName = @"ペアリング情報削除処理";
-                break;
-            case COMMAND_ERASE_SKEY_CERT:
-                processName = @"鍵・証明書削除処理";
-                break;
-            case COMMAND_INSTALL_SKEY:
-            case COMMAND_INSTALL_CERT:
-                processName = @"鍵・証明書インストール処理";
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                processName = @"ヘルスチェック";
-                break;
-            default:
-                processName = nil;
-                break;
+        // 実行中のコマンドに対応する処理名を取得
+        NSString *processName = [self.toolCommand processNameOfCommand];
+        if (!processName) {
+            return;
         }
-        if (processName) {
-            NSString *str = [NSString stringWithFormat:@"%1$@が%2$@しました。",
-                             processName, success? @"成功":@"失敗"];
-            [self appendLogMessage:str];
-            if (success) {
-                [self displaySuccessPopupMessage:str];
-            } else {
-                [self displayErrorPopupMessage:str];
-            }
+        
+        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
+        NSString *str = [NSString stringWithFormat:
+                         @"%1$@が%2$@しました。", processName, success? @"成功":@"失敗"];
+        [self appendLogMessage:str];
+        if (success) {
+            [self displaySuccessPopupMessage:str];
+        } else {
+            [self displayErrorPopupMessage:str];
         }
     }
 
