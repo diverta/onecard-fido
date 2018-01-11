@@ -12,7 +12,7 @@ typedef enum : NSInteger {
     <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate>
 
     @property (nonatomic) ToolCommand    *toolCommand;
-    @property (nonatomic) ToolBLECentral *central;
+    @property (nonatomic) ToolBLECentral *toolBLECentral;
     @property (nonatomic) ToolBLEHelper  *toolBLEHelper;
 
     @property (nonatomic) PathType  pathType;
@@ -23,15 +23,15 @@ typedef enum : NSInteger {
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        self.central       = [[ToolBLECentral alloc] initWithDelegate:self];
-        self.toolBLEHelper = [[ToolBLEHelper alloc]  initWithDelegate:self];
-        self.toolCommand   = [[ToolCommand alloc]    initWithDelegate:self];
+        self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
+        self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
+        self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
-        [self.central centralManagerWillDisconnect];
+        [self.toolBLECentral centralManagerWillDisconnect];
     }
 
     - (void)appendLogMessage:(NSString *)message {
@@ -112,23 +112,27 @@ typedef enum : NSInteger {
     }
 
     - (IBAction)buttonPath1DidPress:(id)sender {
-        self.pathType = PATH_SKEY;
-        [self buttonPathDidPress:sender];
+        [self buttonPathDidPress:sender pathType:PATH_SKEY];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
-        self.pathType = PATH_CERT;
-        [self buttonPathDidPress:sender];
+        [self buttonPathDidPress:sender pathType:PATH_CERT];
     }
 
-    - (void)buttonPathDidPress:(id)sender {
+    - (void)buttonPathDidPress:(id)sender pathType:(PathType)pathType {
+        // ファイル選択パネルをモーダル表示
+        [self setPathType:pathType];
+        [self panelWillSelectPath:[self preparePanelForSelectPath]];
+    }
+
+    - (NSOpenPanel *)preparePanelForSelectPath {
         // ファイル選択パネルの設定
         NSOpenPanel *panel = [NSOpenPanel openPanel];
         [panel setAllowsMultipleSelection:NO];
         [panel setCanChooseDirectories:NO];
         [panel setCanChooseFiles:YES];
         [panel setResolvesAliases:NO];
-
+        
         // 鍵=pem、証明書=crtのみ指定可能とする
         if (self.pathType == PATH_SKEY) {
             [panel setMessage:@"秘密鍵ファイル(PEM)を選択してください"];
@@ -138,7 +142,11 @@ typedef enum : NSInteger {
             [panel setAllowedFileTypes:@[@"crt"]];
         }
         [panel setPrompt:@"選択"];
+        
+        return panel;
+    }
 
+    - (void)panelWillSelectPath:(NSOpenPanel *)panel {
         // ファイル選択パネルをモーダル表示
         AppDelegate * __weak weakSelf = self;
         [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
@@ -146,15 +154,17 @@ typedef enum : NSInteger {
             if (result != NSFileHandlingPanelOKButton) {
                 return;
             }
-            // 選択されたファイルパスを、テキストフィールドに設定
-            NSURL *url = [[panel URLs] objectAtIndex:0];
-            [weakSelf setPathField:[url path]];
+            // ファイルが選択された時の処理
+            [weakSelf panelDidSelectPath:panel];
         }];
     }
 
-    - (void)setPathField:(NSString *)filePath {
+    - (void)panelDidSelectPath:(NSOpenPanel *)panel {
+        // ファイル選択パネルで選択されたファイルパスを取得
+        NSURL *url = [[panel URLs] objectAtIndex:0];
+        NSString *filePath = [url path];
         // ファイル選択パネルで選択されたファイルパスを表示する
-        if (self.pathType == PATH_SKEY) {
+        if ([self pathType] == PATH_SKEY) {
             [self.fieldPath1 setStringValue:filePath];
             [self.fieldPath1 becomeFirstResponder];
         } else {
@@ -174,7 +184,7 @@ typedef enum : NSInteger {
 
     - (void)toolCommandDidCreateBleRequest {
         // BLEデバイス接続処理に移る
-        [self.central centralManagerWillConnect];
+        [self.toolBLECentral centralManagerWillConnect];
     }
 
     - (void)toolCommandDidFail:(NSString *)errorMessage {
@@ -183,7 +193,7 @@ typedef enum : NSInteger {
             [self appendLogMessage:errorMessage];
         }
         // デバイス接続を切断
-        [self.central centralManagerWillDisconnect];
+        [self.toolBLECentral centralManagerWillDisconnect];
         // 失敗メッセージを表示
         [self displayEndMessage:false];
         [self enableButtons:true];
@@ -191,7 +201,7 @@ typedef enum : NSInteger {
 
     - (void)toolCommandDidSuccess {
         // デバイス接続を切断
-        [self.central centralManagerWillDisconnect];
+        [self.toolBLECentral centralManagerWillDisconnect];
         // 成功メッセージを表示
         [self displayEndMessage:true];
         [self enableButtons:true];
@@ -211,7 +221,7 @@ typedef enum : NSInteger {
 
     - (void)centralManagerDidConnect {
         // U2F Control Pointに実行コマンドを書込
-        [self.central centralManagerWillSend:[self.toolCommand bleRequestArray]];
+        [self.toolBLECentral centralManagerWillSend:[self.toolCommand bleRequestArray]];
     }
 
     - (void)centralManagerDidFailConnection:(NSString *)errorMessage {
@@ -234,7 +244,7 @@ typedef enum : NSInteger {
     - (void)centralManagerDidReceive:(NSData *)bleResponse {
         if ([self.toolCommand isResponseCompleted:bleResponse]) {
             // 後続レスポンスがあれば、タイムアウト監視を再開させ、後続レスポンスを待つ
-            [self.central centralManagerWillStartResponseTimeout];
+            [self.toolBLECentral centralManagerWillStartResponseTimeout];
         } else {
             // 後続レスポンスがなければ、レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
