@@ -16,7 +16,8 @@ typedef enum : NSInteger {
     COMMAND_TEST_REGISTER,
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
-    COMMAND_TEST_AUTH_USER_PRESENCE
+    COMMAND_TEST_AUTH_USER_PRESENCE,
+    COMMAND_U2F_PROCESS
 } Command;
 
 @protocol ToolCommandDelegate;
@@ -33,9 +34,11 @@ typedef enum : NSInteger {
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
 
-    - (void)setKeyFilePath:(Command)command
-              skeyFilePath:(NSString *)skeyFilePath
-              certFilePath:(NSString *)certFilePath;
+    - (void)setInstallParameter:(Command)command
+                   skeyFilePath:(NSString *)skeyFilePath
+                   certFilePath:(NSString *)certFilePath;
+    - (void)setU2FProcessParameter:(Command)command
+                 bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
 
     - (NSString *)processNameOfCommand;
 
@@ -48,6 +51,8 @@ typedef enum : NSInteger {
     - (void)toolCommandDidCreateBleRequest;
     - (void)toolCommandDidFail:(NSString *)errorMessage;
     - (void)toolCommandDidSuccess;
+
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
 
 @end
 
