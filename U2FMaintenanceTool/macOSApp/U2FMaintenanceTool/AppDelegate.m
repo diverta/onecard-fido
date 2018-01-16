@@ -89,7 +89,7 @@ typedef enum : NSInteger {
         }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [self.toolCommand setKeyFilePath:COMMAND_INSTALL_SKEY
+        [self.toolCommand setInstallParameter:COMMAND_INSTALL_SKEY
                             skeyFilePath:self.fieldPath1.stringValue
                             certFilePath:self.fieldPath2.stringValue];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
@@ -207,6 +207,11 @@ typedef enum : NSInteger {
         [self enableButtons:true];
     }
 
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
+        // U2F処理実行結果をChromeエクステンションに戻す
+        [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
+    }
+
 #pragma mark - Call back from ToolBLECentral
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
@@ -293,50 +298,10 @@ typedef enum : NSInteger {
 #pragma mark - Call back from ToolBLEHelper
 
     - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
-        // 受信データを取得(１件以外の場合は何もしない)
-        if ([bleHelperMessages count] != 1) {
-            return;
-        }
-        NSDictionary *bleHelperMessage = [bleHelperMessages objectAtIndex:0];
-        NSLog(@"bleHelperMessageDidReceive: %@", bleHelperMessage);
-        
-        // 受信データのリクエスト種別を取得
-        NSString *type = [bleHelperMessage objectForKey:@"type"];
-        NSLog(@"Request type[%@]", type);
-
-        // 受信データから各項目を取得
-        if ([type isEqualToString:@"enroll_helper_request"]) {
-            NSArray *array = [bleHelperMessage objectForKey:@"enrollChallenges"];
-            if (array && [array count]) {
-                NSDictionary *dict = [array objectAtIndex:0];
-                if (dict) {
-                    NSString *appIdHashWebSafeB64 = [dict objectForKey:@"appIdHash"];
-                    NSString *challengeWebSafeB64 = [dict objectForKey:@"challengeHash"];
-                    NSString *version             = [dict objectForKey:@"version"];
-                    NSLog(@"appIdHashWebSafeB64[%@]", appIdHashWebSafeB64);
-                    NSLog(@"challengeWebSafeB64[%@]", challengeWebSafeB64);
-                    NSLog(@"ver[%@]",                 version);
-                }
-            }
-        } else if ([type isEqualToString:@"sign_helper_request"]) {
-            NSArray *array = [bleHelperMessage objectForKey:@"signData"];
-            if (array && [array count]) {
-                NSDictionary *dict = [array objectAtIndex:0];
-                if (dict) {
-                    NSString *appIdHashWebSafeB64 = [dict objectForKey:@"appIdHash"];
-                    NSString *challengeWebSafeB64 = [dict objectForKey:@"challengeHash"];
-                    NSString *keyhandleWebSafeB64 = [dict objectForKey:@"keyHandle"];
-                    NSString *version             = [dict objectForKey:@"version"];
-                    NSLog(@"appIdHashWebSafeB64[%@]", appIdHashWebSafeB64);
-                    NSLog(@"challengeWebSafeB64[%@]", challengeWebSafeB64);
-                    NSLog(@"keyHandle[%@]",           keyhandleWebSafeB64);
-                    NSLog(@"ver[%@]",                 version);
-                }
-            }
-        }
-        
-        // (仮コード)受信したJSONデータをエコーバック
-        [self.toolBLEHelper bleHelperWillSend:bleHelperMessage];
+        // Chromeエクステンションからの受信データによりU2F処理を実行
+        [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
+                               bleHelperMessages:bleHelperMessages];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
     }
 
 @end
