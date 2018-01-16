@@ -423,7 +423,7 @@
                        challengeWebSafeB64:[dict objectForKey:@"challengeHash"]
                                    version:[dict objectForKey:@"version"]];
         }
-    } else if ([self isEnrollHelperRequest]) {
+    } else if ([self isSignHelperRequest]) {
         NSDictionary *dict = [self getU2FRequestDictForKey:@"signData"];
         if (dict) {
             [self createCommandU2FAuthentication:COMMAND_U2F_PROCESS
@@ -470,7 +470,7 @@
         [dict setValue:statusWordNumber       forKey:@"code"];
         [dict setValue:encodedResponse        forKey:@"enrollData"];
         
-    } else if ([self isEnrollHelperRequest]) {
+    } else if ([self isSignHelperRequest]) {
         // レスポンスするappIdHash、challenge、keyHandle、versionはリクエストと同値を戻す
         NSDictionary *reqDict = [self getU2FRequestDictForKey:@"signData"];
         NSString *appIdHashWebSafeB64 = [reqDict objectForKey:@"appIdHash"];
