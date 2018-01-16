@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "ToolCommand.h"
 
 @protocol ToolBLECentralDelegate;
 
@@ -13,15 +12,20 @@
     @property (nonatomic, weak)   id<ToolBLECentralDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolBLECentralDelegate>)delegate;
-    - (void)doCommand:(ToolCommand *)toolCommand;
-    - (void)disconnect;
+    - (void)centralManagerWillConnect;
+    - (void)centralManagerWillDisconnect;
+    - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages;
+    - (void)centralManagerWillStartResponseTimeout;
 
 @end
 
 @protocol ToolBLECentralDelegate <NSObject>
 
-    - (void)notifyFailWithMessage:(NSString *)errorMessage;
-    - (void)notifySuccess;
-    - (void)notifyMessage:(NSString *)message;
+    - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
+    - (void)notifyCentralManagerMessage:(NSString *)message;
+
+    - (void)centralManagerDidConnect;
+    - (void)centralManagerDidFailConnection:(NSString *)message;
+    - (void)centralManagerDidReceive:(NSData *)bleMessage;
 
 @end

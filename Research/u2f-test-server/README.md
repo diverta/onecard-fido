@@ -41,15 +41,17 @@ U2F Register/Authenticationの処理を実行するため、YubiKey NEOをPCに�
 
 ### U2Fローカルテストサーバーの始動
 
-このプロジェクト（u2f-test-server）を丸ごと、Eclipse IDE (for Java) にインポートします。<br>
-その後、U2fHttpServerクラスのmain関数を実行します。
+このプロジェクト（u2f-test-server）の配下に移動し、実行可能JARファイル（U2FTestServer.jar）をjavaコマンドで実行します。<br>
 
-<img src="../assets/0002.png" width="900">
+```
+cd <GitHubチェックアウト先ディレクトリー>/onecard-fido/Research/u2f-test-server/
+java -jar U2FTestServer.jar
+```
 
-U2Fローカルテストサーバーが起動します。<br>
-（下図のように、コンソールにU2fHttpServerが起動した旨が表示されます）
+実行例は以下になります。<br>
+（プロセス名表示部に「java -jar U2FTestServer.jar」と表示され、実行中の状態となります）
 
-<img src="../assets/0003.png" width="900">
+<img src="../assets/0029.png" width="800">
 
 ### U2Fデバイスの登録
 
@@ -89,3 +91,41 @@ YubiKeyにタッチすると、U2F Register処理完了--->YubiKeyからのレ�
 <img src="../assets/0010.png" width="750">
 
 これで、U2FデバイスによるU2F認証は完了です。
+
+## U2Fローカルテストサーバーのメンテナンス
+
+U2Fローカルテストサーバーをメンテナンスする場合は、Eclipse IDE (for Java) にプロジェクトを取り込み、実行可能JARファイルを再作成する必要があります。
+
+### プロジェクト作成
+
+このプロジェクト（u2f-test-server）を丸ごと、Eclipse IDEにインポートします。<br>
+その後、U2fHttpServerクラスのmain関数を実行します。
+
+<img src="../assets/0002.png" width="900">
+
+ソースコードをメンテナンス後、U2Fローカルテストサーバーを起動し、動作確認を行います。<br>
+（下図は、コンソールにU2fHttpServerが起動した旨が表示されたところです）
+
+<img src="../assets/0003.png" width="900">
+
+### 実行可能JARファイル作成
+
+動作確認が完了したら、実行可能JARファイルを作成します。<br>
+プロジェクトを右クリックして「Export」を実行します。
+
+<img src="../assets/0025.png" width="900">
+
+表示されたExportダイアログで、実行可能JARファイルのエクスポートウィザードを選択して「Next >」を実行します。
+
+<img src="../assets/0026.png" width="500">
+
+作成先パス（Export destination）をプロジェクトディレクトリー直下に指定します。<br>
+（これにより、実行可能JARファイルからhtml、jsサブフォルダーを参照することが可能となります）
+
+<img src="../assets/0027.png" width="500">
+
+実行可能JARファイルが、プロジェクトディレクトリー直下に作成されたことを確認します。
+
+<img src="../assets/0028.png" width="900">
+
+これで、U2Fローカルテストサーバーのメンテナンスは完了です。

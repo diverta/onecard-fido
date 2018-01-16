@@ -16,21 +16,43 @@ typedef enum : NSInteger {
     COMMAND_TEST_REGISTER,
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
-    COMMAND_TEST_AUTH_USER_PRESENCE
+    COMMAND_TEST_AUTH_USER_PRESENCE,
+    COMMAND_U2F_PROCESS
 } Command;
 
-@interface ToolCommand : NSObject
+@protocol ToolCommandDelegate;
 
-@property (nonatomic) NSArray<NSData *> *commandArray;
-@property (nonatomic) NSString *lastOccuredErrorMessage;
+    @interface ToolCommand : NSObject
 
-@property (nonatomic) Command   command;
-@property (nonatomic) NSString *skeyFilePath;
-@property (nonatomic) NSString *certFilePath;
-@property (nonatomic) bool      commandSuccess;
+    @property (nonatomic, weak) id<ToolCommandDelegate> delegate;
 
-- (bool)createCommandArrayFor:(Command)command fromData:(NSData *)parameterData;
-- (bool)doAfterResponseFor:(Command)command withData:(NSData *)responseData;
+    @property (nonatomic) Command command;
+    @property (nonatomic) NSArray<NSData *> *bleRequestArray;
+
+    - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate;
+    - (void)toolCommandWillCreateBleRequest:(Command)command;
+    - (void)toolCommandWillProcessBleResponse;
+    - (bool)isResponseCompleted:(NSData *)responseData;
+
+    - (void)setInstallParameter:(Command)command
+                   skeyFilePath:(NSString *)skeyFilePath
+                   certFilePath:(NSString *)certFilePath;
+    - (void)setU2FProcessParameter:(Command)command
+                 bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
+
+    - (NSString *)processNameOfCommand;
+
+@end
+
+@protocol ToolCommandDelegate <NSObject>
+
+    - (void)notifyToolCommandMessage:(NSString *)message;
+
+    - (void)toolCommandDidCreateBleRequest;
+    - (void)toolCommandDidFail:(NSString *)errorMessage;
+    - (void)toolCommandDidSuccess;
+
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
 
 @end
 

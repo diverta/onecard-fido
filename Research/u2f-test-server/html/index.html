@@ -150,6 +150,11 @@
        });
     }
 
+    function doHealthCheck() {
+        // BLE U2F Health Checkボタン押下時の処理
+        // 以下は仮コードです
+        doProcessEnroll();
+    }
 
     function doProcess(processType) {
         document.getElementById('status').innerHTML = "";
@@ -159,6 +164,8 @@
             doProcessEnroll();
         } else if (processType == 'sign') {
             doProcessSign();
+        } else {
+            doHealthCheck();
         }
     }
     </script>
@@ -169,6 +176,8 @@
         <input type="button" value="Register U2F Authenticator" onClick="doProcess('enroll');"/>
         <div>&nbsp;</div>
         <input type="button" value="Test Authentication" onClick="doProcess('sign');"/>
+        <div>&nbsp;</div>
+        <input type="button" value="BLE U2F Health Check" onClick="doProcess('healthcheck');"/>
     </div>
     <div>&nbsp;</div>
     <div id="status"></div>
