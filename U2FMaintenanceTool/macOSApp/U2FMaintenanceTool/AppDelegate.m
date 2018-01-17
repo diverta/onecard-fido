@@ -27,6 +27,11 @@ typedef enum : NSInteger {
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
+        
+        // Chromeエクステンションから起動した時はボタンを押下不可とする
+        if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
+            [self enableButtons:false];
+        }
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -51,6 +56,7 @@ typedef enum : NSInteger {
         [self.fieldPath2 setEnabled:enabled];
         [self.buttonPath1 setEnabled:enabled];
         [self.buttonPath2 setEnabled:enabled];
+        [self.buttonQuit setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {

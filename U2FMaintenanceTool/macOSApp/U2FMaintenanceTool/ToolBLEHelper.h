@@ -17,6 +17,8 @@
     - (void)bleHelperWillSetStdinNotification;
     - (void)bleHelperWillSend:(NSDictionary *)bleHelperMessage;
 
+    - (bool) bleHelperCommunicateAsChromeNative;
+
 @end
 
 @protocol ToolBLEHelperDelegate <NSObject>

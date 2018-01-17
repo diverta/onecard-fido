@@ -48,11 +48,15 @@
         }
     }
 
+    - (bool) bleHelperCommunicateAsChromeNative {
+        return [self communicateAsChromeNative];
+    }
+
 #pragma mark - Functions for receive messages from chrome extension
 
     - (void)bleHelperWillSetStdinNotification {
         // Chromeからの標準入力を受信できるよう設定
-        if ([self communicateAsChromeNative]) {
+        if ([self bleHelperCommunicateAsChromeNative]) {
             [self setStandardInputNotification];
         }
     }
