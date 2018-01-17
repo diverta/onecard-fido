@@ -6,6 +6,7 @@
   "manifest_version": 2,
   "minimum_chrome_version": "36.0.1985.18",
   "permissions": [
+    "nativeMessaging",
     "hid",
     "u2fDevices",
     "usb",
