@@ -38,7 +38,7 @@
         // Chromeエクステンションから実行されたと判定し、
         // ネイティブアプリとして動作するようにする
         NSString *extensionID = [commandLineArgs objectAtIndex:1];
-        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
+        if ([extensionID compare:@"chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/"]
             != NSOrderedSame) {
             return;
         }
