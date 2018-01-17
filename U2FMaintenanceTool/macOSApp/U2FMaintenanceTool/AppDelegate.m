@@ -16,7 +16,6 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolBLEHelper  *toolBLEHelper;
 
     @property (nonatomic) PathType  pathType;
-    @property (nonatomic) bool      communicateAsChromeNative;
 
 @end
 
