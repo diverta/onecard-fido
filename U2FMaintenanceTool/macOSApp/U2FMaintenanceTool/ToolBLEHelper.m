@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolBLEHelper.h"
+#import "ToolCommon.h"
 
 @interface ToolBLEHelper ()
 
@@ -40,8 +41,7 @@
         // Chromeエクステンションから実行されたと判定し、
         // ネイティブアプリとして動作するようにする
         NSString *extensionID = [commandLineArgs objectAtIndex:1];
-        if ([extensionID compare:@"chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/"]
-            == NSOrderedSame) {
+        if ([extensionID compare:CHROME_EXTENSION_ID_URL] == NSOrderedSame) {
             [self setCommunicateAsChromeNative:true];
         } else {
             [self setCommunicateAsChromeNative:false];
