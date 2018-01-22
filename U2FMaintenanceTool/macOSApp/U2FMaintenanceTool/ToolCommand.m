@@ -494,6 +494,13 @@
     [self setU2FResponseDict:dict];
 }
 
+#pragma mark - Private methods for setup
+
+- (void)setupChromeNativeMessaging {
+    // 処理正常終了をAppDelegateに通知
+    [self.delegate toolCommandDidSetup:true];
+}
+
 #pragma mark - Public methods
 
 - (void)setInstallParameter:(Command)command
@@ -531,6 +538,9 @@
         case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             processName = @"ヘルスチェック";
+            break;
+        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
+            processName = @"Chrome Native Messaging有効化設定";
             break;
         default:
             processName = nil;
@@ -706,6 +716,19 @@
     [self.delegate toolCommandDidSuccess];
 
     NSLog(@"%@", successMessage);
+}
+
+- (void)toolCommandWillSetup:(Command)command {
+    // コマンドに応じ、以下の処理に分岐
+    [self setCommand:command];
+    switch (command) {
+        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
+            [self setupChromeNativeMessaging];
+            break;
+        default:
+            [self setBleRequestArray:nil];
+            break;
+    }
 }
 
 @end

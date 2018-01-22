@@ -17,7 +17,8 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_PROCESS
+    COMMAND_U2F_PROCESS,
+    COMMAND_SETUP_CHROME_NATIVE_MESSAGING
 } Command;
 
 @protocol ToolCommandDelegate;
@@ -33,6 +34,7 @@ typedef enum : NSInteger {
     - (void)toolCommandWillCreateBleRequest:(Command)command;
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
+    - (void)toolCommandWillSetup:(Command)command;
 
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath
@@ -53,6 +55,7 @@ typedef enum : NSInteger {
     - (void)toolCommandDidSuccess;
 
     - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
+    - (void)toolCommandDidSetup:(bool)result;
 
 @end
 

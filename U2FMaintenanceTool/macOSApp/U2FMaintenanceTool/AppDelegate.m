@@ -52,6 +52,7 @@ typedef enum : NSInteger {
         [self.button2 setEnabled:enabled];
         [self.button3 setEnabled:enabled];
         [self.button4 setEnabled:enabled];
+        [self.button5 setEnabled:enabled];
         [self.fieldPath1 setEnabled:enabled];
         [self.fieldPath2 setEnabled:enabled];
         [self.buttonPath1 setEnabled:enabled];
@@ -104,6 +105,31 @@ typedef enum : NSInteger {
         // ヘルスチェック実行
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
+    }
+
+    - (IBAction)button5DidPress:(id)sender {
+        if ([self displayPromptPopup:@"ChromeでBLE U2Fトークンが使用できるよう設定します。"
+                         informative:@"ChromeでBLE U2Fトークンを使用時、このU2F管理ツールがChromeのサブプロセスとして起動します。\n設定を実行しますか？"]) {
+            NSLog(@"OK Clicked");
+            // Chrome Native Messaging有効化設定
+            [self enableButtons:false];
+            [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
+        }
+    }
+
+    - (bool)displayPromptPopup:(NSString *)prompt informative:(NSString *)informative {
+        if (!prompt) {
+            return false;
+        }
+        // ダイアログを作成
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSAlertStyleInformational];
+        [alert setMessageText:prompt];
+        [alert setInformativeText:informative];
+        [alert addButtonWithTitle:@"Yes"];
+        [alert addButtonWithTitle:@"No"];
+        // ダイアログを表示しYesボタンクリックを判定
+        return ([alert runModal] == NSAlertFirstButtonReturn);
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -307,6 +333,17 @@ typedef enum : NSInteger {
         [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
                                bleHelperMessages:bleHelperMessages];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
+    }
+
+    - (void)toolCommandDidSetup:(bool)result {
+        [self enableButtons:true];
+        if (!result) {
+            // 失敗メッセージを表示
+            [self displayEndMessage:false];
+            return;
+        }
+        // 成功メッセージを表示
+        [self displayEndMessage:true];
     }
 
 @end
