@@ -110,7 +110,6 @@ typedef enum : NSInteger {
     - (IBAction)button5DidPress:(id)sender {
         if ([self displayPromptPopup:@"ChromeでBLE U2Fトークンが使用できるよう設定します。"
                          informative:@"ChromeでBLE U2Fトークンを使用時、このU2F管理ツールがChromeのサブプロセスとして起動します。\n設定を実行しますか？"]) {
-            NSLog(@"OK Clicked");
             // Chrome Native Messaging有効化設定
             [self enableButtons:false];
             [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
