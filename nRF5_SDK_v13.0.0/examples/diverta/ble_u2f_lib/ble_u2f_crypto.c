@@ -132,17 +132,18 @@ bool ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature)
     // 署名データのr部、s部の先頭バイトが
     // 0b80 以上であれば、
     // その直前に 0x00 を挿入する必要がある
+    // (MSBを参照して判定)
     int part_length = 32;
     uint8_t *rbytes = signature.p_value;
     uint8_t *sbytes = signature.p_value + part_length;
     
     int rbytes_leading = 0;
-    if (rbytes[0] & 0x80) {
+    if (rbytes[part_length-1] & 0x80) {
         rbytes_leading = 1;
     }
 
     int sbytes_leading = 0;
-    if (sbytes[0] & 0x80) {
+    if (sbytes[part_length-1] & 0x80) {
         sbytes_leading = 1;
     }
 
