@@ -10,8 +10,8 @@ U2Fローカルテストサーバーについて、概要説明や、利用手�
 テスト用のChromeエクステンションを使用し、[U2F認証テストサイト](https://crxjs-dot-u2fdemo.appspot.com/)でU2F認証ができることを確認しました。<br>
 その時の手順および結果を掲載しております。
 
-* <b>[\[WIP\] Chrome(macOS版)でのBLE U2F対応調査](CHROMEBLEEXT.md)</b><br>
-PC環境で動作するFIDO U2F BLEエクステンションの調査です。
+* <b>[Chrome(macOS版)でのBLE U2F対応調査](CHROMEBLEEXT.md)</b><br>
+macOS版Chromeブラウザーで、BLE U2F対応ができるかどうかの調査です。
 
 * <b>[\[調査中止\] Web Bluetooth APIによるBLE U2F対応調査](CHROMEWBAPI.md)</b><br>
 macOSでサポートされている「Web Bluetooth API」を使用して、BLE U2Fクライアントが実現できるかどうか調査しました<br>

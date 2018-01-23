@@ -156,7 +156,7 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 [U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
 
-macOS環境の場合は [こちらのパッケージファイル](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
+macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
 
 Windows環境の場合は [U2FMaintenanceTool.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceTool.exe) をダウンロードします。
 
