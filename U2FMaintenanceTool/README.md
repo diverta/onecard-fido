@@ -14,6 +14,7 @@ GUIをもつmacOS版と、簡易CUIをもつWindows版を用意しました。
 * 鍵・証明書削除
 * 鍵・証明書インストール
 * ヘルスチェック実行
+* Chrome Native Messaging有効化設定
 
 ### 動作環境
 macOS Sierra (Version 10.12.6)
