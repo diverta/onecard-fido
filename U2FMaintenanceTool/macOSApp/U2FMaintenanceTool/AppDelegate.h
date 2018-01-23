@@ -7,6 +7,7 @@
     @property (assign) IBOutlet NSButton   *button2;
     @property (assign) IBOutlet NSButton   *button3;
     @property (assign) IBOutlet NSButton   *button4;
+    @property (assign) IBOutlet NSButton   *button5;
     @property (assign) IBOutlet NSButton   *buttonQuit;
     @property (assign) IBOutlet NSTextView *textView;
 
@@ -19,6 +20,7 @@
     - (IBAction)button2DidPress:(id)sender;
     - (IBAction)button3DidPress:(id)sender;
     - (IBAction)button4DidPress:(id)sender;
+    - (IBAction)button5DidPress:(id)sender;
     - (IBAction)buttonQuitDidPress:(id)sender;
 
     - (IBAction)buttonPath1DidPress:(id)sender;

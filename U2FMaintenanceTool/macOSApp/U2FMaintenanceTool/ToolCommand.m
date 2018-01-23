@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolCommand.h"
+#import "ToolCommon.h"
 
 // for web safe B64 encode & decode
 #import "NSData+Base64.h"
@@ -490,8 +491,105 @@
     }
     
     // レスポンスデータを保持
-    NSLog(@"dict[%@]", dict);
     [self setU2FResponseDict:dict];
+}
+
+#pragma mark - Private methods for setup
+
+- (NSString *)createChromeSettingJsonString {
+    // Native Messagingの相手となるエクステンションIDを列挙
+    NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:CHROME_EXTENSION_ID_URL, nil];
+    
+    // 実行可能ファイルのパスを取得
+    NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
+    NSString *pathString = [commandLineArgs objectAtIndex:0];
+    
+    // 項目設定
+    NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
+    [jsonDictionary setValue:CHROME_NMHOST_NAME forKey:@"name"];
+    [jsonDictionary setValue:CHROME_NMHOST_DESC forKey:@"description"];
+    [jsonDictionary setValue:CHROME_NMHOST_TYPE forKey:@"type"];
+    [jsonDictionary setValue:pathString         forKey:@"path"];
+    [jsonDictionary setValue:array              forKey:@"allowed_origins"];
+    
+    // 文字列に変換
+    NSError *error;
+    NSData *jsonStringData = [NSJSONSerialization
+                              dataWithJSONObject:jsonDictionary
+                              options:NSJSONWritingPrettyPrinted
+                              error:&error];
+    if (jsonStringData) {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonStringData encoding:NSUTF8StringEncoding];
+        return [jsonString stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+    } else {
+        NSLog(@"Chrome Native Messaging Host JSON string create failed: %@", error);
+        return nil;
+    }
+}
+
+- (NSString *)prepareChromeSettingJsonDirectory {
+    // JSONインストール先ディレクトリーを取得
+    NSString *username = NSUserName();
+    NSString *targetPath = CHROME_NMHOST_JSON_DIR;
+    if ([username isEqualToString:@"root"] == false) {
+        targetPath = [NSString stringWithFormat:@"%1$@%2$@", NSHomeDirectory(), CHROME_NMHOST_JSON_DIR];
+    }
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:targetPath isDirectory:nil]) {
+        NSLog(@"Chrome Native Messaging Host JSON Path exist: %@", targetPath);
+    } else {
+        // インストール先ディレクトリーがない場合は生成
+        NSError *error;
+        if ([[NSFileManager defaultManager] createDirectoryAtPath:targetPath
+                withIntermediateDirectories:NO attributes:nil error:&error]) {
+            NSLog(@"Chrome Native Messaging Host JSON Path created: %@", targetPath);
+        } else {
+            NSLog(@"Chrome Native Messaging Host JSON Path create failed: %@", error);
+            return nil;
+        }
+    }
+
+    return targetPath;
+}
+
+- (bool)writeChromeSettingJsonFileTo:(NSString *)targetPath jsonString:(NSString *)jsonString {
+    // インストール先パスを編集し、JSONファイルを出力
+    NSString *jsonFilePath = [NSString stringWithFormat:@"%1$@/%2$@.json", targetPath, CHROME_NMHOST_NAME];
+    NSError *error;
+    if ([jsonString writeToFile:jsonFilePath atomically:true
+            encoding:NSUTF8StringEncoding error:&error]) {
+        NSLog(@"Chrome Native Messaging Host JSON File created: %@", jsonFilePath);
+    } else {
+        NSLog(@"Chrome Native Messaging Host JSON File create failed: %@", error);
+        return false;
+    }
+
+    return true;
+}
+
+- (void)setupChromeNativeMessaging {
+    // 設定用のJSON文字列を生成
+    NSString *jsonString = [self createChromeSettingJsonString];
+    if (jsonString == nil) {
+        [self.delegate toolCommandDidSetup:false];
+        return;
+    }
+
+    // JSONインストール先ディレクトリーを取得
+    NSString *targetPath = [self prepareChromeSettingJsonDirectory];
+    if (targetPath == nil) {
+        [self.delegate toolCommandDidSetup:false];
+        return;
+    }
+    
+    // インストール先パスを編集し、JSONファイルを出力
+    if ([self writeChromeSettingJsonFileTo:targetPath jsonString:jsonString] == false) {
+        [self.delegate toolCommandDidSetup:false];
+        return;
+    }
+    
+    // 処理正常終了をAppDelegateに通知
+    [self.delegate toolCommandDidSetup:true];
 }
 
 #pragma mark - Public methods
@@ -531,6 +629,9 @@
         case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             processName = @"ヘルスチェック";
+            break;
+        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
+            processName = @"Chrome Native Messaging有効化設定";
             break;
         default:
             processName = nil;
@@ -706,6 +807,18 @@
     [self.delegate toolCommandDidSuccess];
 
     NSLog(@"%@", successMessage);
+}
+
+- (void)toolCommandWillSetup:(Command)command {
+    // コマンドに応じ、以下の処理に分岐
+    [self setCommand:command];
+    switch (command) {
+        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
+            [self setupChromeNativeMessaging];
+            break;
+        default:
+            break;
+    }
 }
 
 @end

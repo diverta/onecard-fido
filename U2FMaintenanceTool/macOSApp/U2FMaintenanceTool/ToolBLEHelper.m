@@ -6,8 +6,11 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolBLEHelper.h"
+#import "ToolCommon.h"
 
 @interface ToolBLEHelper ()
+
+    @property (nonatomic) bool communicateAsChromeNative;
 
 @end
 
@@ -21,16 +24,16 @@
         self = [super init];
         if (self) {
             self.delegate = delegate;
+            [self initProcessMode];
         }
         return self;
     }
 
-#pragma mark - Functions for receive messages from chrome extension
-
-    - (void)bleHelperWillSetStdinNotification {
+    - (void)initProcessMode {
         // プログラム起動引数をチェック
         NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
         if ([commandLineArgs count] < 2) {
+            [self setCommunicateAsChromeNative:false];
             return;
         }
         
@@ -38,13 +41,24 @@
         // Chromeエクステンションから実行されたと判定し、
         // ネイティブアプリとして動作するようにする
         NSString *extensionID = [commandLineArgs objectAtIndex:1];
-        if ([extensionID compare:@"chrome-extension://mmafjllbfijjcejkmnaoioihhfnelodd/"]
-            != NSOrderedSame) {
-            return;
+        if ([extensionID compare:CHROME_EXTENSION_ID_URL] == NSOrderedSame) {
+            [self setCommunicateAsChromeNative:true];
+        } else {
+            [self setCommunicateAsChromeNative:false];
         }
-        
+    }
+
+    - (bool) bleHelperCommunicateAsChromeNative {
+        return [self communicateAsChromeNative];
+    }
+
+#pragma mark - Functions for receive messages from chrome extension
+
+    - (void)bleHelperWillSetStdinNotification {
         // Chromeからの標準入力を受信できるよう設定
-        [self setStandardInputNotification];
+        if ([self bleHelperCommunicateAsChromeNative]) {
+            [self setStandardInputNotification];
+        }
     }
 
     - (void)setStandardInputNotification {
