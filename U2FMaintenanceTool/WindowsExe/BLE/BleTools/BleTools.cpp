@@ -16,6 +16,7 @@ bool  arg_erase_skey_cert   = false;
 bool  arg_install_skey_cert = false;
 char *arg_skey_file_path    = NULL;
 char *arg_cert_file_path    = NULL;
+bool  arg_chrome_nm_setup   = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -352,6 +353,63 @@ static bool processInstallSkeyCert(BleApiConfiguration &configuration, pBleDevic
 	return true;
 }
 
+static bool getExecutableDirectory(char *executableFilePath, int executableFilePathMaxLen)
+{
+	// 実行可能ファイルの絶対パスを取得
+	if (GetModuleFileName(NULL, executableFilePath, executableFilePathMaxLen) == 0) {
+		// 取得ができないときはエラー
+		std::cout << "processChromeNativeMessagingSetup: GetModuleFileName failed" << std::endl;
+		return false;
+	}
+
+	// 実行可能ファイルが配置されているディレクトリーを取得
+	int endPos;
+	int size_ = strnlen(executableFilePath, executableFilePathMaxLen);
+	for (int i = 0; i < size_; i++) {
+		endPos = size_ - i - 1;
+		if (executableFilePath[endPos] == 0x5c) {
+			// \ マーク（0x5c）が見つかったら
+			// 終端文字（0x00）に変えてファイル名部分を切り落とす
+			executableFilePath[endPos] = 0x00;
+			break;
+		}
+	}
+
+	if (endPos == 0) {
+		// ディレクトリーが取得できない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Executable directory get failed" << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+static bool processChromeNativeMessagingSetup(void)
+{
+	// Chrome Native Messagingを有効化するため
+	// 設定用JSONファイルパスをレジストリーに登録
+	const char *registryKey  = "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\jp.co.diverta.chrome.helper.ble.u2f";
+	const char *jsonFileName = "jp.co.diverta.chrome.helper.ble.u2f.json";
+
+	// 実行可能ファイルの絶対パスを取得
+	char executableFilePath[256];
+	if (getExecutableDirectory(executableFilePath, sizeof(executableFilePath) - 1) == false) {
+		// 取得ができないときはエラー
+		return false;
+	}
+
+	// JSONファイルパスを編集
+	char jsonFileFullPath[255];
+	sprintf_s(jsonFileFullPath, "%s\\%s", executableFilePath, jsonFileName);
+
+	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
+	std::cout << "レジストリーキー: " << registryKey      << std::endl;
+	std::cout << "JSONファイルパス: " << jsonFileFullPath << std::endl;
+	std::cout << std::endl;
+
+	return true;
+}
+
 int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 {
 	if (!dev->NotificationsRegistered()) {
@@ -381,6 +439,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_install_skey_cert) {
 		// 鍵・証明書をインストール
 		if (processInstallSkeyCert(configuration, dev) == false) {
+			return -1;
+		}
+	}
+
+	if (arg_chrome_nm_setup) {
+		// Chrome Native Messaging有効化設定
+		if (processChromeNativeMessagingSetup() == false) {
 			return -1;
 		}
 	}
@@ -479,6 +544,10 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			}
 			// 鍵・証明書ファイルをインストール
 			arg_install_skey_cert = true;
+		}
+		if (!strncmp(argv[count], "-R", 2)) {
+			// Chrome Native Messaging有効化設定
+			arg_chrome_nm_setup = true;
 		}
 		++count;
 	}
