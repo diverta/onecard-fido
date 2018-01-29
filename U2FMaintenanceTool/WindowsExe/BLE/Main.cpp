@@ -21,6 +21,8 @@ static void promptPairing(void)
 
 static int prepareBLEDevice(BleApiConfiguration &configuration)
 {
+	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
+
 	// BLE APIの準備
 	pBleApi api = BleApi::CreateAPI(configuration);
 	if (!api->IsEnabled()) {

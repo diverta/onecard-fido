@@ -384,11 +384,51 @@ static bool getExecutableDirectory(char *executableFilePath, int executableFileP
 	return true;
 }
 
+static bool createRegistryEntry(char *jsonFileFullPath)
+{
+	const char *registryKey = "Software\\Google\\Chrome\\NativeMessagingHosts\\jp.co.diverta.chrome.helper.ble.u2f";
+
+	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
+	std::cout << "レジストリーキー: " << registryKey        << std::endl;
+	std::cout << "JSONファイルパス: " << jsonFileFullPath   << std::endl;
+	std::cout << std::endl;
+
+	HKEY hKey;
+	DWORD dwDisposition;
+	if (RegCreateKeyEx(HKEY_CURRENT_USER,
+		registryKey,
+		0,
+		NULL,
+		REG_OPTION_NON_VOLATILE,
+		KEY_ALL_ACCESS,
+		NULL,
+		&hKey,
+		&dwDisposition) != ERROR_SUCCESS) {
+		// レジストリーキーが生成できない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Registry key create failed" << std::endl;
+		return false;
+	}
+
+	if (RegSetValueEx(
+		hKey,
+		"",
+		0,
+		REG_SZ,
+		(CONST BYTE*)(LPCTSTR)jsonFileFullPath,
+		(int)strlen(jsonFileFullPath)
+	)) {
+		// レジストリーキーに値がセットできない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Registry value set failed" << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
 static bool processChromeNativeMessagingSetup(void)
 {
 	// Chrome Native Messagingを有効化するため
 	// 設定用JSONファイルパスをレジストリーに登録
-	const char *registryKey  = "HKCU\\Software\\Google\\Chrome\\NativeMessagingHosts\\jp.co.diverta.chrome.helper.ble.u2f";
 	const char *jsonFileName = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
 	// 実行可能ファイルの絶対パスを取得
@@ -402,10 +442,11 @@ static bool processChromeNativeMessagingSetup(void)
 	char jsonFileFullPath[255];
 	sprintf_s(jsonFileFullPath, "%s\\%s", executableFilePath, jsonFileName);
 
-	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
-	std::cout << "レジストリーキー: " << registryKey      << std::endl;
-	std::cout << "JSONファイルパス: " << jsonFileFullPath << std::endl;
-	std::cout << std::endl;
+	// 設定用JSONファイルパスをレジストリーに登録
+	if (createRegistryEntry(jsonFileFullPath) == false) {
+		// 登録ができないときはエラー
+		return false;
+	}
 
 	return true;
 }
@@ -474,6 +515,53 @@ static bool checkSkeyCertPath(char *skey_file_path, char *cert_file_path)
 		return false;
 	}
 	return true;
+}
+
+void BleTools_ChromeNativeMessageReceived(unsigned char *headerBuf, unsigned char *chromeMessage, unsigned int dataLen)
+{
+	// Echo back
+	for (size_t i = 0; i < 4; i++)
+		putchar(headerBuf[i]);
+
+	for (size_t i = 0; i < dataLen; i++)
+		putchar(chromeMessage[i]);
+}
+
+void BleTools_ProcessChromeNativeMessage(void)
+{
+	// Chromeエクステンションと標準入出力によりやりとりを行う
+	unsigned char ch;
+	unsigned char headerBuf[4];
+	unsigned int  dataLen;
+	unsigned char dataBuf[512];
+
+	// カウンターをリセット
+	unsigned int headerReadCnt = 0;
+	unsigned int dataReadCnt   = 0;
+
+	// 標準入力から文字を読込
+	while (std::cin >> ch) {
+		// ヘッダーバイトを読込
+		if (headerReadCnt < sizeof(headerBuf)) {
+			headerBuf[headerReadCnt++] = ch;
+			continue;
+		}
+		// ヘッダーバイトで指示された長さを保持
+		if (dataReadCnt == 0) {
+			dataLen = (unsigned int)headerBuf[1] * 256 + (unsigned int)headerBuf[0];
+			memset(dataBuf, 0x00, sizeof(dataBuf));
+
+		}
+		// 標準入力からメッセージ本体を読込
+		dataBuf[dataReadCnt++] = ch;
+		if (dataReadCnt == dataLen) {
+			// データを処理
+			BleTools_ChromeNativeMessageReceived(headerBuf, dataBuf, dataLen);
+			// カウンターをリセット
+			headerReadCnt = 0;
+			dataReadCnt = 0;
+		}
+	}
 }
 
 int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configuration)
@@ -549,9 +637,13 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			// Chrome Native Messaging有効化設定
 			arg_chrome_nm_setup = true;
 		}
+		if (!strncmp(argv[count], "chrome-extension://", 19)) {
+			// Chromeのサブプロセスとして起動
+			BleTools_ProcessChromeNativeMessage();
+			return 0;
+		}
 		++count;
 	}
 
-	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
 	return 0;
 }

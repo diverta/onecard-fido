@@ -36,7 +36,7 @@ CFLAGS_WINRT = -ZW -Gm- -AI"C:/Program Files/Microsoft Visual Studio 14.0/VC/vcp
 CFLAGS_WINRT =
 !ENDIF
 
-LDFLAGS = setupapi.lib ws2_32.lib
+LDFLAGS = setupapi.lib ws2_32.lib advapi32.lib
 
 #
 ## Crypto code.
