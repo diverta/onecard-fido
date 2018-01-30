@@ -35,7 +35,9 @@
     <ClCompile Include="BleApi\BleDevice.cpp" />
     <ClCompile Include="BleApi\BleDeviceWindows.cpp" />
     <ClCompile Include="BleApi\BleDeviceWinRT.cpp" />
+    <ClCompile Include="BleTools\BleChromeHelper.cpp" />
     <ClCompile Include="BleTools\BleTools.cpp" />
+    <ClCompile Include="BleTools\BleToolsUtil.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="BLETest\BLETransportTests.cpp" />
     <ClCompile Include="BLETest\U2FTests.cpp" />
@@ -56,7 +58,10 @@
     <ClInclude Include="BleApi\fido_ble.h" />
     <ClInclude Include="BLETest\BLETransportTests.h" />
     <ClInclude Include="BLETest\U2FTests.h" />
+    <ClInclude Include="BleTools\BleChromeHelper.h" />
     <ClInclude Include="BleTools\BleTools.h" />
+    <ClInclude Include="BleTools\BleToolsUtil.h" />
+    <ClInclude Include="BleTools\picojson.h" />
     <ClInclude Include="ble_util\ble_util.h" />
     <ClInclude Include="ble_util\date.h" />
     <ClInclude Include="ble_util\u2f.h" />

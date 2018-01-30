@@ -7,6 +7,8 @@
 #include "ble_util.h"
 
 #include "BleTools.h"
+#include "BleToolsUtil.h"
+#include "BleChromeHelper.h"
 
 //
 // 実行させるコマンド／引数を保持
@@ -157,44 +159,6 @@ static int readFile(char *file_path, char *buffer)
 	return readSize;
 }
 
-static inline int convertBase64CharTo6bitValue(int c)
-{
-	// base64の1文字を6bitの値に変換する
-	if (c == '=')
-		return 0;
-	if (c == '/')
-		return 63;
-	if (c == '+')
-		return 62;
-	if (c <= '9')
-		return (c - '0') + 52;
-	if ('a' <= c)
-		return (c - 'a') + 26;
-	return (c - 'A');
-}
-
-static int base64Decode(const char* src, unsigned char* dest) 
-{
-	// base64の文字列srcをデコードしてdestに格納
-	unsigned char  o0, o1, o2, o3;
-	unsigned char *p = dest;
-	for (int n = 0; src[n];) {
-		o0 = convertBase64CharTo6bitValue(src[n]);
-		o1 = convertBase64CharTo6bitValue(src[n + 1]);
-		o2 = convertBase64CharTo6bitValue(src[n + 2]);
-		o3 = convertBase64CharTo6bitValue(src[n + 3]);
-
-		*p++ = (o0 << 2) | ((o1 & 0x30) >> 4);
-		*p++ = ((o1 & 0xf) << 4) | ((o2 & 0x3c) >> 2);
-		*p++ = ((o2 & 0x3) << 6) | o3 & 0x3f;
-		n += 4;
-	}
-	*p = 0;
-
-	// 変換後のバイト数を返す
-	return int(p - dest);
-}
-
 static bool readPemFile(char *file_path, unsigned char *key_buffer)
 {
 	// PEMファイルデータ格納領域を確保
@@ -230,7 +194,7 @@ static bool readPemFile(char *file_path, unsigned char *key_buffer)
 
 		// 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
 		// 先頭からリトルエンディアン形式で配置しなおす。
-		int len = base64Decode(strPem.c_str(), pem_buffer);
+		int len = BleToolsUtil_base64Decode(strPem.c_str(), strlen(strPem.c_str()), pem_buffer);
 		for (int i = 0; i < 32; i++) {
 			key_buffer[31 - i] = pem_buffer[7 + i];
 		}
@@ -517,53 +481,6 @@ static bool checkSkeyCertPath(char *skey_file_path, char *cert_file_path)
 	return true;
 }
 
-void BleTools_ChromeNativeMessageReceived(unsigned char *headerBuf, unsigned char *chromeMessage, unsigned int dataLen)
-{
-	// Echo back
-	for (size_t i = 0; i < 4; i++)
-		putchar(headerBuf[i]);
-
-	for (size_t i = 0; i < dataLen; i++)
-		putchar(chromeMessage[i]);
-}
-
-void BleTools_ProcessChromeNativeMessage(void)
-{
-	// Chromeエクステンションと標準入出力によりやりとりを行う
-	unsigned char ch;
-	unsigned char headerBuf[4];
-	unsigned int  dataLen;
-	unsigned char dataBuf[512];
-
-	// カウンターをリセット
-	unsigned int headerReadCnt = 0;
-	unsigned int dataReadCnt   = 0;
-
-	// 標準入力から文字を読込
-	while (std::cin >> ch) {
-		// ヘッダーバイトを読込
-		if (headerReadCnt < sizeof(headerBuf)) {
-			headerBuf[headerReadCnt++] = ch;
-			continue;
-		}
-		// ヘッダーバイトで指示された長さを保持
-		if (dataReadCnt == 0) {
-			dataLen = (unsigned int)headerBuf[1] * 256 + (unsigned int)headerBuf[0];
-			memset(dataBuf, 0x00, sizeof(dataBuf));
-
-		}
-		// 標準入力からメッセージ本体を読込
-		dataBuf[dataReadCnt++] = ch;
-		if (dataReadCnt == dataLen) {
-			// データを処理
-			BleTools_ChromeNativeMessageReceived(headerBuf, dataBuf, dataLen);
-			// カウンターをリセット
-			headerReadCnt = 0;
-			dataReadCnt = 0;
-		}
-	}
-}
-
 int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configuration)
 {
 	int count = 1;
@@ -639,7 +556,9 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		}
 		if (!strncmp(argv[count], "chrome-extension://", 19)) {
 			// Chromeのサブプロセスとして起動
-			BleTools_ProcessChromeNativeMessage();
+			if (BleChromeHelper_ProcessNativeMessage() == false) {
+				return -1;
+			}
 			return 0;
 		}
 		++count;
