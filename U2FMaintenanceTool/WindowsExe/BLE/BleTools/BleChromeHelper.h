@@ -3,6 +3,6 @@
 
 #include "BleApi.h"
 
-extern bool BleChromeHelper_ProcessNativeMessage(void);
+extern bool BleChromeHelper_ProcessNativeMessage(pBleDevice dev);
 
 #endif /* _BLE_CHROME_HELPER_H_ */
