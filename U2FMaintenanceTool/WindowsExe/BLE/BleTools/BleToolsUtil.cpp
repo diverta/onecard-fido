@@ -40,6 +40,63 @@ int BleToolsUtil_base64Decode(const char* src, size_t src_len, unsigned char* de
 	return int(p - dest);
 }
 
+int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* dest)
+{
+	// 文字列srcをbase64エンコードしてdestに格納
+	static char base64_digits[] =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+
+	int dest_len = 0;
+	while (src_len > 0) {
+		// read three source bytes (24 bits) 
+		unsigned char s1 = src[0];
+		unsigned char s2 = 0; if (src_len>1) s2 = src[1];
+		unsigned char s3 = 0; if (src_len>2) s3 = src[2];
+
+		unsigned int n;
+		n  = s1;    // xxx1
+		n <<= 8;    // xx1x
+		n |= s2;    // xx12  
+		n <<= 8;    // x12x
+		n |= s3;    // x123  
+
+		// get four 6-bit values for lookups
+		unsigned char m4 = n & 0x3f;  n >>= 6;
+		unsigned char m3 = n & 0x3f;  n >>= 6;
+		unsigned char m2 = n & 0x3f;  n >>= 6;
+		unsigned char m1 = n & 0x3f;
+
+		// lookup the right digits for output
+		unsigned char b1 = base64_digits[m1];
+		unsigned char b2 = base64_digits[m2];
+		unsigned char b3 = base64_digits[m3];
+		unsigned char b4 = base64_digits[m4];
+
+		// end of input handling
+		*dest++ = b1;
+		*dest++ = b2;
+		if (src_len >= 3) {  // 24 src bits left to encode, output xxxx
+			*dest++ = b3;
+			*dest++ = b4;
+		}
+		if (src_len == 2) {  // 16 src bits left to encode, output xxx=
+			*dest++ = b3;
+			*dest++ = '=';
+		}
+		if (src_len == 1) {  // 8 src bits left to encode, output xx==
+			*dest++ = '=';
+			*dest++ = '=';
+		}
+		src += 3;
+		src_len -= 3;
+		dest_len += 4;
+	}
+	*dest = 0x00;
+
+	// 変換後のバイト数を返す
+	return dest_len;
+}
+
 //
 // for debug use
 //

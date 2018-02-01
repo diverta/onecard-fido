@@ -2,6 +2,7 @@
 #define _BLE_TOOLS_UTIL_H_
 
 extern int BleToolsUtil_base64Decode(const char* src, size_t src_len, unsigned char* dest);
+extern int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* dest);
 
 // for debug
 extern void BleToolsUtil_outputLog(const char *msg);
