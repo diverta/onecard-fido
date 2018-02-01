@@ -19,6 +19,7 @@ bool  arg_install_skey_cert = false;
 char *arg_skey_file_path    = NULL;
 char *arg_cert_file_path    = NULL;
 bool  arg_chrome_nm_setup   = false;
+bool  arg_chrome_subprocess = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -422,9 +423,27 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		// 受信通知を有効化
 		ReturnValue retval = dev->RegisterNotifications(BleToolsEventHandler);
 		if (retval != ReturnValue::BLEAPI_ERROR_SUCCESS) {
+			BleToolsUtil_outputLog("BleTools_ProcessCommand: Register notification failed");
 			throw std::runtime_error(__FILE__ ":" + std::to_string(__LINE__) + ": could not register notification although we are connected.");
 		}
+		BleToolsUtil_outputLog("BleTools_ProcessCommand: Register notification success");
 	}
+
+	if (arg_chrome_subprocess) {
+		// Chromeのサブプロセスとして起動
+		if (BleChromeHelper_ProcessNativeMessage(dev) == false) {
+			return -1;
+		}
+		return 0;
+	}
+
+	// Chromeサブプロセスとして起動されていない場合は
+	// 画面にデバイス名を表示
+	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
+	std::cout << "==== 選択されたFIDO BLE U2Fデバイス ====" << std::endl;
+	dev->Report();
+	dev->Verify();
+	std::cout << std::endl;
 
 	if (arg_erase_bonding) {
 		// ペアリング情報をFlash ROMから削除
@@ -556,10 +575,7 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		}
 		if (!strncmp(argv[count], "chrome-extension://", 19)) {
 			// Chromeのサブプロセスとして起動
-			if (BleChromeHelper_ProcessNativeMessage() == false) {
-				return -1;
-			}
-			return 0;
+			arg_chrome_subprocess = true;
 		}
 		++count;
 	}
