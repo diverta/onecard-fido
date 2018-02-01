@@ -46,7 +46,7 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 	static char base64_digits[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
 
-	int dest_len = 0;
+	unsigned char *p = dest;
 	while (src_len > 0) {
 		// read three source bytes (24 bits) 
 		unsigned char s1 = src[0];
@@ -73,28 +73,27 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 		unsigned char b4 = base64_digits[m4];
 
 		// end of input handling
-		*dest++ = b1;
-		*dest++ = b2;
+		*p++ = b1;
+		*p++ = b2;
 		if (src_len >= 3) {  // 24 src bits left to encode, output xxxx
-			*dest++ = b3;
-			*dest++ = b4;
+			*p++ = b3;
+			*p++ = b4;
 		}
 		if (src_len == 2) {  // 16 src bits left to encode, output xxx=
-			*dest++ = b3;
-			*dest++ = '=';
+			*p++ = b3;
+			*p++ = '=';
 		}
 		if (src_len == 1) {  // 8 src bits left to encode, output xx==
-			*dest++ = '=';
-			*dest++ = '=';
+			*p++ = '=';
+			*p++ = '=';
 		}
 		src += 3;
 		src_len -= 3;
-		dest_len += 4;
 	}
-	*dest = 0x00;
+	*p = 0x00;
 
 	// 変換後のバイト数を返す
-	return dest_len;
+	return int(p - dest);
 }
 
 //
