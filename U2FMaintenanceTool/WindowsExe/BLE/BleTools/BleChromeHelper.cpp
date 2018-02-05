@@ -115,6 +115,8 @@ static bool extractU2FRequestFromChrome(unsigned char *headerBuf, unsigned char 
 		decodeWebsafeB64EncodeString(chromeU2FMessage.challengeHash, authRequest.nonce, sizeof(authRequest.nonce));
 		decodeWebsafeB64EncodeString(chromeU2FMessage.appIdHash, authRequest.appId, sizeof(authRequest.appId));
 		decodeWebsafeB64EncodeString(chromeU2FMessage.keyHandle, authRequest.keyHandle, sizeof(authRequest.keyHandle));
+		// キーハンドル長を設定（固定長：64バイト）
+		authRequest.keyHandleLen = 64;
 	}
 
 	return true;
@@ -240,6 +242,18 @@ static std::string serializeChromeJSONMessage(void)
 		obj.insert(std::make_pair("version",    picojson::value(chromeU2FMessage.version)));
 		obj.insert(std::make_pair("code",       picojson::value(0.0)));
 		obj.insert(std::make_pair("enrollData", picojson::value((char *)encodedBuf)));
+	}
+	if (chromeU2FMessage.sign) {
+		picojson::object objSub;
+		objSub.insert(std::make_pair("version",       picojson::value(chromeU2FMessage.version)));
+		objSub.insert(std::make_pair("appIdHash",     picojson::value(chromeU2FMessage.appIdHash)));
+		objSub.insert(std::make_pair("challengeHash", picojson::value(chromeU2FMessage.challengeHash)));
+		objSub.insert(std::make_pair("keyHandle",     picojson::value(chromeU2FMessage.keyHandle)));
+		objSub.insert(std::make_pair("signatureData", picojson::value((char *)encodedBuf)));
+
+		obj.insert(std::make_pair("type",         picojson::value("sign_helper_reply")));
+		obj.insert(std::make_pair("code",         picojson::value(0.0)));
+		obj.insert(std::make_pair("responseData", picojson::value(objSub)));
 	}
 
 	// シリアライズされたデータを文字列化
