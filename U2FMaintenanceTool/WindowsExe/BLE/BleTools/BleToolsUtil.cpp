@@ -47,11 +47,13 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 	unsigned char *p = dest;
-	while (src_len > 0) {
+	unsigned char *s = (unsigned char *)src;
+	size_t remaining = src_len;
+	while (remaining > 0) {
 		// read three source bytes (24 bits) 
-		unsigned char s1 = src[0];
-		unsigned char s2 = 0; if (src_len>1) s2 = src[1];
-		unsigned char s3 = 0; if (src_len>2) s3 = src[2];
+		unsigned char s1 = s[0];
+		unsigned char s2 = 0; if (remaining>1) s2 = s[1];
+		unsigned char s3 = 0; if (remaining>2) s3 = s[2];
 
 		unsigned int n;
 		n  = s1;    // xxx1
@@ -75,20 +77,20 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 		// end of input handling
 		*p++ = b1;
 		*p++ = b2;
-		if (src_len >= 3) {  // 24 src bits left to encode, output xxxx
+		if (remaining >= 3) {  // 24 src bits left to encode, output xxxx
 			*p++ = b3;
 			*p++ = b4;
 		}
-		if (src_len == 2) {  // 16 src bits left to encode, output xxx=
+		if (remaining == 2) {  // 16 src bits left to encode, output xxx=
 			*p++ = b3;
 			*p++ = '=';
 		}
-		if (src_len == 1) {  // 8 src bits left to encode, output xx==
+		if (remaining == 1) {  // 8 src bits left to encode, output xx==
 			*p++ = '=';
 			*p++ = '=';
 		}
-		src += 3;
-		src_len -= 3;
+		s += 3;
+		remaining -= 3;
 	}
 	*p = 0x00;
 
