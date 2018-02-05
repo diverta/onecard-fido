@@ -326,9 +326,8 @@ bool BleChromeHelper_ProcessNativeMessage(pBleDevice dev)
 				echoBack(headerBuf, dataBuf, dataLen);
 				return false;
 			}
-			// カウンターをリセット
-			headerReadCnt = 0;
-			dataReadCnt = 0;
+			// 正常終了時
+			break;
 		}
 	}
 
