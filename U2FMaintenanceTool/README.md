@@ -27,6 +27,7 @@ macOS Sierra (Version 10.12.6)
 * ペアリング情報削除
 * 鍵・証明書削除
 * 鍵・証明書インストール
+* [WIP] Chrome Native Messaging有効化設定
 
 ### 動作環境
 Windows 10 (32bit版)

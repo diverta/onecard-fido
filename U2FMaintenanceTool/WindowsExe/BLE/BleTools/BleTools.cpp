@@ -7,6 +7,8 @@
 #include "ble_util.h"
 
 #include "BleTools.h"
+#include "BleToolsUtil.h"
+#include "BleChromeHelper.h"
 
 //
 // 実行させるコマンド／引数を保持
@@ -16,6 +18,8 @@ bool  arg_erase_skey_cert   = false;
 bool  arg_install_skey_cert = false;
 char *arg_skey_file_path    = NULL;
 char *arg_cert_file_path    = NULL;
+bool  arg_chrome_nm_setup   = false;
+bool  arg_chrome_subprocess = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -156,44 +160,6 @@ static int readFile(char *file_path, char *buffer)
 	return readSize;
 }
 
-static inline int convertBase64CharTo6bitValue(int c)
-{
-	// base64の1文字を6bitの値に変換する
-	if (c == '=')
-		return 0;
-	if (c == '/')
-		return 63;
-	if (c == '+')
-		return 62;
-	if (c <= '9')
-		return (c - '0') + 52;
-	if ('a' <= c)
-		return (c - 'a') + 26;
-	return (c - 'A');
-}
-
-static int base64Decode(const char* src, unsigned char* dest) 
-{
-	// base64の文字列srcをデコードしてdestに格納
-	unsigned char  o0, o1, o2, o3;
-	unsigned char *p = dest;
-	for (int n = 0; src[n];) {
-		o0 = convertBase64CharTo6bitValue(src[n]);
-		o1 = convertBase64CharTo6bitValue(src[n + 1]);
-		o2 = convertBase64CharTo6bitValue(src[n + 2]);
-		o3 = convertBase64CharTo6bitValue(src[n + 3]);
-
-		*p++ = (o0 << 2) | ((o1 & 0x30) >> 4);
-		*p++ = ((o1 & 0xf) << 4) | ((o2 & 0x3c) >> 2);
-		*p++ = ((o2 & 0x3) << 6) | o3 & 0x3f;
-		n += 4;
-	}
-	*p = 0;
-
-	// 変換後のバイト数を返す
-	return int(p - dest);
-}
-
 static bool readPemFile(char *file_path, unsigned char *key_buffer)
 {
 	// PEMファイルデータ格納領域を確保
@@ -229,7 +195,7 @@ static bool readPemFile(char *file_path, unsigned char *key_buffer)
 
 		// 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
 		// 先頭からリトルエンディアン形式で配置しなおす。
-		int len = base64Decode(strPem.c_str(), pem_buffer);
+		int len = BleToolsUtil_base64Decode(strPem.c_str(), strlen(strPem.c_str()), pem_buffer);
 		for (int i = 0; i < 32; i++) {
 			key_buffer[31 - i] = pem_buffer[7 + i];
 		}
@@ -352,6 +318,104 @@ static bool processInstallSkeyCert(BleApiConfiguration &configuration, pBleDevic
 	return true;
 }
 
+static bool getExecutableDirectory(char *executableFilePath, int executableFilePathMaxLen)
+{
+	// 実行可能ファイルの絶対パスを取得
+	if (GetModuleFileName(NULL, executableFilePath, executableFilePathMaxLen) == 0) {
+		// 取得ができないときはエラー
+		std::cout << "processChromeNativeMessagingSetup: GetModuleFileName failed" << std::endl;
+		return false;
+	}
+
+	// 実行可能ファイルが配置されているディレクトリーを取得
+	int endPos;
+	int size_ = strnlen(executableFilePath, executableFilePathMaxLen);
+	for (int i = 0; i < size_; i++) {
+		endPos = size_ - i - 1;
+		if (executableFilePath[endPos] == 0x5c) {
+			// \ マーク（0x5c）が見つかったら
+			// 終端文字（0x00）に変えてファイル名部分を切り落とす
+			executableFilePath[endPos] = 0x00;
+			break;
+		}
+	}
+
+	if (endPos == 0) {
+		// ディレクトリーが取得できない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Executable directory get failed" << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+static bool createRegistryEntry(char *jsonFileFullPath)
+{
+	const char *registryKey = "Software\\Google\\Chrome\\NativeMessagingHosts\\jp.co.diverta.chrome.helper.ble.u2f";
+
+	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
+	std::cout << "レジストリーキー: " << registryKey        << std::endl;
+	std::cout << "JSONファイルパス: " << jsonFileFullPath   << std::endl;
+	std::cout << std::endl;
+
+	HKEY hKey;
+	DWORD dwDisposition;
+	if (RegCreateKeyEx(HKEY_CURRENT_USER,
+		registryKey,
+		0,
+		NULL,
+		REG_OPTION_NON_VOLATILE,
+		KEY_ALL_ACCESS,
+		NULL,
+		&hKey,
+		&dwDisposition) != ERROR_SUCCESS) {
+		// レジストリーキーが生成できない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Registry key create failed" << std::endl;
+		return false;
+	}
+
+	if (RegSetValueEx(
+		hKey,
+		"",
+		0,
+		REG_SZ,
+		(CONST BYTE*)(LPCTSTR)jsonFileFullPath,
+		(int)strlen(jsonFileFullPath)
+	)) {
+		// レジストリーキーに値がセットできない場合はエラー
+		std::cout << "processChromeNativeMessagingSetup: Registry value set failed" << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+static bool processChromeNativeMessagingSetup(void)
+{
+	// Chrome Native Messagingを有効化するため
+	// 設定用JSONファイルパスをレジストリーに登録
+	const char *jsonFileName = "jp.co.diverta.chrome.helper.ble.u2f.json";
+
+	// 実行可能ファイルの絶対パスを取得
+	char executableFilePath[256];
+	if (getExecutableDirectory(executableFilePath, sizeof(executableFilePath) - 1) == false) {
+		// 取得ができないときはエラー
+		return false;
+	}
+
+	// JSONファイルパスを編集
+	char jsonFileFullPath[255];
+	sprintf_s(jsonFileFullPath, "%s\\%s", executableFilePath, jsonFileName);
+
+	// 設定用JSONファイルパスをレジストリーに登録
+	if (createRegistryEntry(jsonFileFullPath) == false) {
+		// 登録ができないときはエラー
+		return false;
+	}
+
+	return true;
+}
+
 int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 {
 	if (!dev->NotificationsRegistered()) {
@@ -359,9 +423,27 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		// 受信通知を有効化
 		ReturnValue retval = dev->RegisterNotifications(BleToolsEventHandler);
 		if (retval != ReturnValue::BLEAPI_ERROR_SUCCESS) {
+			BleToolsUtil_outputLog("BleTools_ProcessCommand: Register notification failed");
 			throw std::runtime_error(__FILE__ ":" + std::to_string(__LINE__) + ": could not register notification although we are connected.");
 		}
+		BleToolsUtil_outputLog("BleTools_ProcessCommand: Register notification success");
 	}
+
+	if (arg_chrome_subprocess) {
+		// Chromeのサブプロセスとして起動
+		if (BleChromeHelper_ProcessNativeMessage(dev) == false) {
+			return -1;
+		}
+		return 0;
+	}
+
+	// Chromeサブプロセスとして起動されていない場合は
+	// 画面にデバイス名を表示
+	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
+	std::cout << "==== 選択されたFIDO BLE U2Fデバイス ====" << std::endl;
+	dev->Report();
+	dev->Verify();
+	std::cout << std::endl;
 
 	if (arg_erase_bonding) {
 		// ペアリング情報をFlash ROMから削除
@@ -381,6 +463,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_install_skey_cert) {
 		// 鍵・証明書をインストール
 		if (processInstallSkeyCert(configuration, dev) == false) {
+			return -1;
+		}
+	}
+
+	if (arg_chrome_nm_setup) {
+		// Chrome Native Messaging有効化設定
+		if (processChromeNativeMessagingSetup() == false) {
 			return -1;
 		}
 	}
@@ -480,9 +569,16 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			// 鍵・証明書ファイルをインストール
 			arg_install_skey_cert = true;
 		}
+		if (!strncmp(argv[count], "-R", 2)) {
+			// Chrome Native Messaging有効化設定
+			arg_chrome_nm_setup = true;
+		}
+		if (!strncmp(argv[count], "chrome-extension://", 19)) {
+			// Chromeのサブプロセスとして起動
+			arg_chrome_subprocess = true;
+		}
 		++count;
 	}
 
-	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
 	return 0;
 }

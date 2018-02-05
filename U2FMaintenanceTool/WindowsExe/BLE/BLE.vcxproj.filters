@@ -54,6 +54,12 @@
     <ClCompile Include="BleTools\BleTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BleTools\BleChromeHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BleTools\BleToolsUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ble_util\ble_util.h">
@@ -108,6 +114,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BleTools\BleTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BleTools\picojson.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BleTools\BleChromeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BleTools\BleToolsUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

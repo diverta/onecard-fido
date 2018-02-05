@@ -36,7 +36,7 @@ CFLAGS_WINRT = -ZW -Gm- -AI"C:/Program Files/Microsoft Visual Studio 14.0/VC/vcp
 CFLAGS_WINRT =
 !ENDIF
 
-LDFLAGS = setupapi.lib ws2_32.lib
+LDFLAGS = setupapi.lib ws2_32.lib advapi32.lib
 
 #
 ## Crypto code.
@@ -127,10 +127,15 @@ BLETransportTests.obj: BLETest/BLETransportTests.cpp BLETest/U2FTests.h $(BLEAPI
 #
 ##  BLE Tools
 #
-BLETOOLS=BleTools.obj
-BleTools.obj: BleTools/BleTools.cpp BleTools/BleTools.h $(BLEAPI_HEADER) $(LIBMINCRYPT)
+BLETOOLS=BleTools.obj BleToolsUtil.obj BleChromeHelper.obj
+BleTools.obj: BleTools/BleTools.cpp BleTools/BleTools.h BleTools/BleToolsUtil.h $(BLEAPI_HEADER) $(LIBMINCRYPT)
 	$(CXX) -c $(CFLAGS) BleTools/BleTools.cpp -Fo$@
 
+BleToolsUtil.obj: BleTools/BleToolsUtil.cpp BleTools/BleToolsUtil.h $(BLEAPI_HEADER)
+	$(CXX) -c $(CFLAGS) BleTools/BleToolsUtil.cpp -Fo$@
+
+BleChromeHelper.obj: BleTools/BleChromeHelper.cpp BleTools/BleChromeHelper.h BleTools/BleToolsUtil.h $(BLEAPI_HEADER)
+	$(CXX) -c $(CFLAGS) BleTools/BleChromeHelper.cpp -Fo$@
 
 #
 ## Actual BLE maintenance tool executable

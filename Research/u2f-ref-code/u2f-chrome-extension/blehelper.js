@@ -30,11 +30,14 @@ function onNativeMessage(messageJson) {
 }
 
 function onDisconnected() {
-    console.log("Failed to connect:", chrome.runtime.lastError.message);
+    console.log("Disconnected from chrome native messaging host");
     port = null;
 }
 
 function initNativeHelper() {
+    if (port) {
+        return;
+    }
     port = chrome.runtime.connectNative(hostName);
     port.onMessage.addListener(onNativeMessage);
     port.onDisconnect.addListener(onDisconnected);
@@ -48,7 +51,6 @@ function initNativeHelper() {
  */
 function BleHelper() {
   GenericRequestHelper.apply(this, arguments);
-  initNativeHelper();
 
   var self = this;
   this.registerHandlerFactory('enroll_helper_request', function(request) {
@@ -64,6 +66,7 @@ inherits(BleHelper, GenericRequestHelper);
 function BleEnrollHandler(request) {
   this.request_  = request;
   this.callback_ = null;
+  initNativeHelper();
 }
 
 BleEnrollHandler.prototype.run = function(callback) {
@@ -103,6 +106,7 @@ BleEnrollHandler.prototype.close = function() {
 function BleSignHandler(request) {
   this.request_  = request;
   this.callback_ = null;
+  initNativeHelper();
 }
 
 BleSignHandler.prototype.run = function(callback) {
