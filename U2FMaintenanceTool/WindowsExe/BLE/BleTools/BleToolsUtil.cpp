@@ -40,62 +40,64 @@ int BleToolsUtil_base64Decode(const char* src, size_t src_len, unsigned char* de
 	return int(p - dest);
 }
 
+//
+// For websafe B64 encoding
+//
+#define BINARY_UNIT_SIZE 3
+#define BASE64_UNIT_SIZE 4
+
 int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* dest)
 {
 	// 文字列srcをbase64エンコードしてdestに格納
 	static char base64_digits[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+	const unsigned char *inputBuffer = (const unsigned char *)src;
 
-	unsigned char *p = dest;
-	unsigned char *s = (unsigned char *)src;
-	size_t remaining = src_len;
-	while (remaining > 0) {
-		// read three source bytes (24 bits) 
-		unsigned char s1 = s[0];
-		unsigned char s2 = 0; if (remaining>1) s2 = s[1];
-		unsigned char s3 = 0; if (remaining>2) s3 = s[2];
+	char *outputBuffer = (char *)dest;
+	size_t outputBufferSize =
+		((src_len / BINARY_UNIT_SIZE)
+			+ ((src_len % BINARY_UNIT_SIZE) ? 1 : 0))
+		* BASE64_UNIT_SIZE;
+	outputBufferSize += 1;
 
-		unsigned int n;
-		n  = s1;    // xxx1
-		n <<= 8;    // xx1x
-		n |= s2;    // xx12  
-		n <<= 8;    // x12x
-		n |= s3;    // x123  
-
-		// get four 6-bit values for lookups
-		unsigned char m4 = n & 0x3f;  n >>= 6;
-		unsigned char m3 = n & 0x3f;  n >>= 6;
-		unsigned char m2 = n & 0x3f;  n >>= 6;
-		unsigned char m1 = n & 0x3f;
-
-		// lookup the right digits for output
-		unsigned char b1 = base64_digits[m1];
-		unsigned char b2 = base64_digits[m2];
-		unsigned char b3 = base64_digits[m3];
-		unsigned char b4 = base64_digits[m4];
-
-		// end of input handling
-		*p++ = b1;
-		*p++ = b2;
-		if (remaining >= 3) {  // 24 src bits left to encode, output xxxx
-			*p++ = b3;
-			*p++ = b4;
-		}
-		if (remaining == 2) {  // 16 src bits left to encode, output xxx=
-			*p++ = b3;
-			*p++ = '=';
-		}
-		if (remaining == 1) {  // 8 src bits left to encode, output xx==
-			*p++ = '=';
-			*p++ = '=';
-		}
-		s += 3;
-		remaining -= 3;
+	size_t i = 0;
+	size_t j = 0;
+	for (; i + BINARY_UNIT_SIZE - 1 < src_len; i += BINARY_UNIT_SIZE) {
+		//
+		// Inner loop: turn 48 bytes into 64 base64 characters
+		//
+		outputBuffer[j++] = base64_digits[(inputBuffer[i] & 0xFC) >> 2];
+		outputBuffer[j++] = base64_digits[((inputBuffer[i] & 0x03) << 4)
+			| ((inputBuffer[i + 1] & 0xF0) >> 4)];
+		outputBuffer[j++] = base64_digits[((inputBuffer[i + 1] & 0x0F) << 2)
+			| ((inputBuffer[i + 2] & 0xC0) >> 6)];
+		outputBuffer[j++] = base64_digits[inputBuffer[i + 2] & 0x3F];
 	}
-	*p = 0x00;
+
+	if (i + 1 < src_len)
+	{
+		//
+		// Handle the single '=' case
+		//
+		outputBuffer[j++] = base64_digits[(inputBuffer[i] & 0xFC) >> 2];
+		outputBuffer[j++] = base64_digits[((inputBuffer[i] & 0x03) << 4)
+			| ((inputBuffer[i + 1] & 0xF0) >> 4)];
+		outputBuffer[j++] = base64_digits[(inputBuffer[i + 1] & 0x0F) << 2];
+		outputBuffer[j++] = '=';
+
+	} else if (i < src_len) {
+		//
+		// Handle the double '=' case
+		//
+		outputBuffer[j++] = base64_digits[(inputBuffer[i] & 0xFC) >> 2];
+		outputBuffer[j++] = base64_digits[(inputBuffer[i] & 0x03) << 4];
+		outputBuffer[j++] = '=';
+		outputBuffer[j++] = '=';
+	}
+	outputBuffer[j] = 0;
 
 	// 変換後のバイト数を返す
-	return int(p - dest);
+	return j;
 }
 
 //

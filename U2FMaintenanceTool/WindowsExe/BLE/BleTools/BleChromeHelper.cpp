@@ -197,12 +197,18 @@ static bool sendBleU2fRequest(pBleDevice dev, unsigned char *requestBuf, size_t 
 
 static void encodeWebsafeB64String(unsigned char *src, size_t srcLength)
 {
+	// ログ出力
+	char buf[64];
+	sprintf_s(buf, "encodeWebsafeB64String: source length=%lu", srcLength);
+	BleToolsUtil_outputLog(buf);
+
 	// B64エンコードを実行
 	memset(encodedBuf, 0x00, sizeof(encodedBuf));
 	int len = BleToolsUtil_base64Encode((char *)src, srcLength, encodedBuf);
 
 	// ログ出力
-	BleToolsUtil_outputLog("encodeWebsafeB64String");
+	sprintf_s(buf, "encodeWebsafeB64String: encoded length=%d", len);
+	BleToolsUtil_outputLog(buf);
 	BleToolsUtil_outputLog((char *)encodedBuf);
 }
 
