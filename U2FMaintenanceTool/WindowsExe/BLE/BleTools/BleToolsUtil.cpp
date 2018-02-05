@@ -5,9 +5,9 @@ const char *TOOL_LOGFILE_NAME = "U2FMaintenanceTool.txt";
 static inline int convertBase64CharTo6bitValue(int c)
 {
 	// base64の1文字を6bitの値に変換する
-	if (c == '/' || c == '-')
+	if (c == '/' || c == '_')
 		return 63;
-	if (c == '+' || c == '_')
+	if (c == '+' || c == '-')
 		return 62;
 	if ('0' <= c && c <= '9')
 		return (c - '0') + 52;
@@ -44,7 +44,7 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 {
 	// 文字列srcをbase64エンコードしてdestに格納
 	static char base64_digits[] =
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 	unsigned char *p = dest;
 	while (src_len > 0) {
