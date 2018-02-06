@@ -11,6 +11,9 @@ BLE U2Fサービスで使用する暗号化ライブラリー「micro-ecc」の�
 * [FIDO U2F認証テストツールビルド手順](../Research/BLECertificationTool.BUILD.md) <br>
 FIDO U2F認証テストツール（BLECertificationTool.exe）のビルド手順を掲載しています。
 
+* [Qtプラットフォーム導入手順](QTSETUP.md) <br>
+Windows版U2F管理ツールのGUI化作業で使用するQtプラットフォームの導入手順を掲載しています。
+
 ## 補足説明
 
 （未作成）
