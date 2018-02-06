@@ -13,6 +13,9 @@ U2Fローカルテストサーバーについて、概要説明や、利用手�
 * <b>[Chrome(macOS版)でのBLE U2F対応調査](CHROMEBLEEXT.md)</b><br>
 macOS版Chromeブラウザーで、BLE U2F対応ができるかどうかの調査です。
 
+* <b>[Chrome(Windows版)でのBLE U2F対応調査](CHROMEBLEEXTWIN.md)</b><br>
+Windows版Chromeブラウザーで、BLE U2F対応ができるかどうかの調査です。
+
 * <b>[\[調査中止\] Web Bluetooth APIによるBLE U2F対応調査](CHROMEWBAPI.md)</b><br>
 macOSでサポートされている「Web Bluetooth API」を使用して、BLE U2Fクライアントが実現できるかどうか調査しました<br>
 結果としては、実現不可能という判断となりました。<br>
