@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace U2FMaintenanceToolGUI
@@ -31,7 +24,7 @@ namespace U2FMaintenanceToolGUI
             // ペアリング情報削除
             enableButtons(false);
             bool ret = app.doEraseBond();
-            popupResultMessage("ペアリング情報削除処理", ret);
+            displayResultMessage("ペアリング情報削除処理", ret);
             enableButtons(true);
         }
 
@@ -40,16 +33,40 @@ namespace U2FMaintenanceToolGUI
             // 鍵・証明書削除
             enableButtons(false);
             bool ret = app.doEraseSkeyCert();
-            popupResultMessage("鍵・証明書削除処理", ret);
+            displayResultMessage("鍵・証明書削除処理", ret);
             enableButtons(true);            
+        }
+
+        private bool checkPathEntry(TextBox textBox, string errorMessage)
+        {
+            // 入力済みの場合はチェックOK
+            if (textBox.Text.Length > 0) {
+                return true;
+            }
+
+            // 未入力の場合はポップアップメッセージを表示して
+            // テキストボックスにフォーカスを移す
+            MessageBox.Show(errorMessage, AppMain.U2FMaintenanceToolTitle, 
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            textBox.Focus();
+
+            return false;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // ファイルパス入力チェック
+            if (checkPathEntry(textPath1, "鍵ファイルのパスを選択してください") == false) {
+                return;
+            }
+            if (checkPathEntry(textPath2, "証明書ファイルのパスを選択してください") == false) {
+                return;
+            }
+
             // 鍵・証明書インストール
             enableButtons(false);
             bool ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
-            popupResultMessage("鍵・証明書インストール", ret);
+            displayResultMessage("鍵・証明書インストール", ret);
             enableButtons(true);
 
         }
@@ -59,7 +76,7 @@ namespace U2FMaintenanceToolGUI
             // ヘルスチェック実行
             enableButtons(false);
             bool ret = app.doHealthCheck();
-            popupResultMessage("ヘルスチェック", ret);
+            displayResultMessage("ヘルスチェック", ret);
             enableButtons(true);
         }
 
@@ -76,19 +93,40 @@ namespace U2FMaintenanceToolGUI
             enableButtons(false);
             if (displayPromptPopup(message)) {
                 bool ret = app.doSetupChromeNativeMessaging();
-                popupResultMessage("Chrome Native Messaging有効化設定", ret);
+                displayResultMessage("Chrome Native Messaging有効化設定", ret);
             }
             enableButtons(true);
         }
 
         private void buttonPath1_Click(object sender, EventArgs e)
         {
-
+            selectFilePath(
+                "秘密鍵ファイル(PEM)を選択してください",
+                "秘密鍵ファイル (*.pem)|*.pem",
+                textPath1);
         }
 
         private void buttonPath2_Click(object sender, EventArgs e)
         {
+            selectFilePath(
+                "証明書ファイル(CRT)を選択してください", 
+                "証明書ファイル (*.crt)|*.crt", 
+                textPath2);
+        }
 
+        private void selectFilePath(string title, string filter, TextBox textBox)
+        {
+            // ファイル選択ダイアログで選択されたパスを
+            // 指定のテキストボックスにセット
+            openFileDialog1.FileName = "";
+            openFileDialog1.Title = title;
+            openFileDialog1.Filter = filter;
+            openFileDialog1.FilterIndex = 0;
+            openFileDialog1.RestoreDirectory = true;
+            DialogResult dr = openFileDialog1.ShowDialog();
+            if (dr == DialogResult.OK) {
+                textBox.Text = openFileDialog1.FileName;
+            }
         }
 
         private void enableButtons(bool enabled)
@@ -105,10 +143,11 @@ namespace U2FMaintenanceToolGUI
             buttonQuit.Enabled = enabled;
         }
 
-        private void popupResultMessage(string message, bool success)
+        private void displayResultMessage(string message, bool success)
         {
             string formatted = string.Format("{0}が{1}しました。",
                 message, success ? "成功" : "失敗");
+            textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(formatted, AppMain.U2FMaintenanceToolTitle);
         }
 

@@ -86,10 +86,7 @@ namespace U2FMaintenanceToolGUI
 
         public bool doHealthCheck()
         {
-            //
-            // FIXME:
-            // ヘルスチェックを実行する（Windows版では未実装）
-            //
+            // U2FMaintenanceTool.exe -Hを実行する
             return doCommandWithExecutable(U2FMaintenanceToolExe, "-H");
         }
 
