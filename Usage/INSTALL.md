@@ -158,7 +158,7 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
 
-Windows環境の場合は [U2FMaintenanceTool.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceTool.exe) をダウンロードします。
+Windows環境の場合は [U2FMaintenanceToolGUI.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceToolGUI.exe) をダウンロードします。
 
 ## 鍵・証明書のインストール
 
@@ -191,21 +191,26 @@ One Card側の処理が成功すると「鍵・証明書インストール処理
 
 ### Windows環境の場合
 
-コマンド「U2FMaintenanceTool.exe -E」を実行します。
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
+表示された画面の「鍵・証明書消去／AES暗号生成」ボタンをクリックします。
 
-<img src="../assets/0023.png" width="750">
+<img src="../assets/0023.png" width="550">
 
-One Card側の処理が成功すると「鍵・証明書をFlash ROMから削除しました。」というメッセージが表示されます。
+One Card側の処理が成功すると「鍵・証明書削除処理が成功しました。」と表示されます。
 
-<img src="../assets/0024.png" width="750">
+<img src="../assets/0024.png" width="550">
 
-続いて、コマンド「U2FMaintenanceTool.exe -I <秘密鍵ファイルのパス> <証明書ファイルのパス>」を実行します。
+続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
 
-<img src="../assets/0025.png" width="750">
+<img src="../assets/0025.png" width="550">
 
-One Card側の処理が成功すると「秘密鍵をFlash ROMにインストールしました。」「証明書をFlash ROMにインストールしました。」というメッセージが表示されます。
+U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
 
-<img src="../assets/0026.png" width="750">
+<img src="../assets/0026.png" width="550">
+
+One Card側の処理が成功すると「鍵・証明書インストール処理が成功しました。」と表示されます。
+
+<img src="../assets/0067.png" width="550">
 
 これで、鍵・証明書のインストールは完了です。
 
