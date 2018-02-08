@@ -11,13 +11,13 @@ Chromeブラウザー上のWebページから呼び出されたChromeエクス�
 
 確認手順／結果は以下の通りです。
 
-### U2F管理コマンド（U2FMaintenanceTool.exe）のインストール
+### U2F管理ツールのインストール
 
-[Windows版U2FMaintenanceTool](../U2FMaintenanceTool/WindowsExe/BLE/) をGitHubからチェックアウトして取得します。
+[Windows版U2F管理ツール](../U2FMaintenanceTool/WindowsExe/BLE/) をGitHubからチェックアウトして取得します。
 
 <img src="assets/0052.png" width="700">
 
-Chromeブラウザーで使用するのは、上図の「U2FMaintenanceTool.exe」と「jp.co.diverta.chrome.helper.ble.u2f.json」の２ファイルです。<br>
+Chromeブラウザーで使用するのは、U2F管理コマンド（上図のU2FMaintenanceTool.exe）とJSONファイル（上図のjp.co.diverta.chrome.helper.ble.u2f.json）の２ファイルです。<br>
 「U2FMaintenanceTool.exe」は、単体の実行可能ファイルですので、任意のフォルダーに配置すれば使用できます。
 
 その後、[One Cardとのペアリング](../Usage/PAIRING.md)を済ませておきます。<br>
@@ -29,14 +29,22 @@ Chromeブラウザーで使用するのは、上図の「U2FMaintenanceTool.exe�
 
 U2F管理コマンドが、Chromeブラウザーのサブプロセスとして起動できるよう、Chromeに設定します。
 
-下図のようにコマンドプロンプトから、U2F管理コマンド（U2FMaintenanceTool.exe）を引数「-R」付きで実行します。
+U2F管理ツール（下図のU2FMaintenanceToolGUI.exe）をダブルクリックして実行します。
 
-<img src="assets/0049.png" width="650">
+<img src="assets/0049.png" width="700">
+
+起動された画面の「Chrome設定」ボタンをクリックします。
+
+<img src="assets/0050.png" width="500">
+
+表示されたポップアップで「はい」ボタンをクリックします。
+
+<img src="assets/0063.png" width="500">
 
 Chrome Native Messagingの有効化設定処理がスタートします。<br>
 処理が成功すると、メッセージが表示されます。
 
-<img src="assets/0050.png" width="650">
+<img src="assets/0064.png" width="500">
 
 Chromeブラウザーの設定用レジストリー（下図ご参照）に、JSONファイルのパスが登録され、Chromeから参照できるようになります。<br>
 JSONファイルの設定内容により、U2F管理コマンドが、Chromeのサブプロセスとして動作し、ChromeエクステンションからNative MessagingによりU2F管理コマンドの機能を実行することができるようになります。
