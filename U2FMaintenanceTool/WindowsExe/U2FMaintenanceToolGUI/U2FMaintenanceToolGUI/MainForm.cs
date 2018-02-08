@@ -145,6 +145,13 @@ namespace U2FMaintenanceToolGUI
 
         private void displayResultMessage(string message, bool success)
         {
+            // U2F管理コマンドの実行時出力内容を表示
+            textBox1.AppendText(app.getProcessOutputData());
+            if (success == false) {
+                textBox1.AppendText(app.getProcessErrorData());
+            }
+
+            // U2F管理コマンドの実行結果を表示
             string formatted = string.Format("{0}が{1}しました。",
                 message, success ? "成功" : "失敗");
             textBox1.AppendText(formatted + "\r\n");

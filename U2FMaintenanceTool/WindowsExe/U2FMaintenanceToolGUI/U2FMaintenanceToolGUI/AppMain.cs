@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace U2FMaintenanceToolGUI
 {
     class AppMain
     {
+        // U2F管理プロセスの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
         private const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
         private bool commandAvailable;
+
+        // U2F管理プロセスからの出力を保持
+        private static StringBuilder standardOutputs;
+        private static StringBuilder standardErrors;
 
         public AppMain()
         {
@@ -44,25 +50,64 @@ namespace U2FMaintenanceToolGUI
                 return false;
             }
 
+            // プロセス出力情報をクリア
+            standardOutputs = new StringBuilder();
+            standardErrors = new StringBuilder();
+
             // MS-DOSコマンドプロンプト画面が表示されないように
             // プロセスを実行する
-            ProcessStartInfo psInfo = new ProcessStartInfo() {
-                FileName = executable,
-                Arguments = arguments,
-                CreateNoWindow = true,
-                UseShellExecute = false
-            };
+            Process p = new Process();
+            p.OutputDataReceived += processOutputDataReceived;
+            p.ErrorDataReceived += processErrorDataReceived;
+
+            p.StartInfo.FileName = executable;
+            p.StartInfo.Arguments = arguments;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
 
             // プロセス実行が完了するまで待つ
-            Process p = Process.Start(psInfo);
+            p.Start();
+            p.BeginOutputReadLine();
+            p.BeginErrorReadLine();
             p.WaitForExit();
 
-            // 実行結果をログ出力
+            // 実行結果を取得
             bool ret = (p.ExitCode == 0);
+            p.Close();
+
+            // 実行結果をログ出力
             outputLogToFile(string.Format(
                 "コマンドの実行が{0}しました: {1} {2}",
                 ret ? "成功" : "失敗", executable, arguments));
             return ret;
+        }
+
+        private static void processOutputDataReceived(object sender, DataReceivedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(args.Data)) {
+                return;
+            }
+            standardOutputs.AppendLine(args.Data);
+        }
+
+        private static void processErrorDataReceived(object sender, DataReceivedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(args.Data)) {
+                return;
+            }
+            standardErrors.AppendLine(args.Data);
+        }
+
+        public string getProcessOutputData()
+        {
+            return standardOutputs.ToString();
+        }
+
+        public string getProcessErrorData()
+        {
+            return standardErrors.ToString();
         }
 
         public bool doEraseBond()
