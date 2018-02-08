@@ -303,7 +303,6 @@ static bool processInstallSkeyCert(BleApiConfiguration &configuration, pBleDevic
 	std::cout << "以下の鍵・証明書がインストールされます。" << std::endl;
 	std::cout << "鍵ファイルパス    : " << arg_skey_file_path << std::endl;
 	std::cout << "証明書ファイルパス: " << arg_cert_file_path << std::endl;
-	std::cout << std::endl;
 
 	// 鍵ファイルをインストール
 	if (processInstallSkey(configuration, dev) == false) {
@@ -356,7 +355,6 @@ static bool createRegistryEntry(char *jsonFileFullPath)
 	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
 	std::cout << "レジストリーキー: " << registryKey        << std::endl;
 	std::cout << "JSONファイルパス: " << jsonFileFullPath   << std::endl;
-	std::cout << std::endl;
 
 	HKEY hKey;
 	DWORD dwDisposition;
@@ -436,14 +434,6 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		}
 		return 0;
 	}
-
-	// Chromeサブプロセスとして起動されていない場合は
-	// 画面にデバイス名を表示
-	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
-	std::cout << "==== 選択されたFIDO BLE U2Fデバイス ====" << std::endl;
-	dev->Report();
-	dev->Verify();
-	std::cout << std::endl;
 
 	if (arg_erase_bonding) {
 		// ペアリング情報をFlash ROMから削除
