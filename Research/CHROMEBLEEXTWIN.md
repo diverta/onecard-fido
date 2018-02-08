@@ -11,7 +11,7 @@ Chromeブラウザー上のWebページから呼び出されたChromeエクス�
 
 確認手順／結果は以下の通りです。
 
-### U2F管理ツールのインストール
+### U2F管理コマンド（U2FMaintenanceTool.exe）のインストール
 
 [Windows版U2FMaintenanceTool](../U2FMaintenanceTool/WindowsExe/BLE/) をGitHubからチェックアウトして取得します。
 
@@ -27,9 +27,9 @@ Chromeブラウザーで使用するのは、上図の「U2FMaintenanceTool.exe�
 
 ### Chrome Native Messagingの有効化設定
 
-U2F管理ツールが、Chromeブラウザーのサブプロセスとして起動できるよう、Chromeに設定します。
+U2F管理コマンドが、Chromeブラウザーのサブプロセスとして起動できるよう、Chromeに設定します。
 
-下図のようにコマンドプロンプトから、U2F管理ツール（U2FMaintenanceTool.exe）を引数「-R」付きで実行します。
+下図のようにコマンドプロンプトから、U2F管理コマンド（U2FMaintenanceTool.exe）を引数「-R」付きで実行します。
 
 <img src="assets/0049.png" width="650">
 
@@ -39,7 +39,7 @@ Chrome Native Messagingの有効化設定処理がスタートします。<br>
 <img src="assets/0050.png" width="650">
 
 Chromeブラウザーの設定用レジストリー（下図ご参照）に、JSONファイルのパスが登録され、Chromeから参照できるようになります。<br>
-JSONファイルの設定内容により、U2F管理ツールが、Chromeのサブプロセスとして動作し、ChromeエクステンションからNative MessagingによりU2F管理ツールの機能を実行することができるようになります。
+JSONファイルの設定内容により、U2F管理コマンドが、Chromeのサブプロセスとして動作し、ChromeエクステンションからNative MessagingによりU2F管理コマンドの機能を実行することができるようになります。
 
 <img src="assets/0051.png" width="750">
 
@@ -87,7 +87,7 @@ U2F Register処理がスタートします。<br>
 
 <img src="assets/0058.png" width="600">
 
-Chromeエクステンションにより、Windows版U2F管理ツールが、Chromeブラウザーのサブプロセスとして自動的に起動され、U2F管理ツール内に実装されているU2F Register処理がスタートします。<br>
+Chromeエクステンションにより、U2F管理コマンドが、Chromeブラウザーのサブプロセスとして自動的に起動され、U2F管理コマンドに実装されているU2F Register処理がスタートします。<br>
 ほどなくU2F Register処理が完了し、HTMLにRegisterされた証明書等の内容が表示されます。
 
 <img src="assets/0059.png" width="600">
@@ -99,7 +99,7 @@ U2F Authenticate処理がスタートします。
 
 <img src="assets/0060.png" width="600">
 
-U2F管理ツール内に実装されているU2F Authenticate処理がスタートします。<br>
+U2F管理コマンド内に実装されているU2F Authenticate処理がスタートします。<br>
 （HTML上部に黄色いバー「please touch the token」が表示されます）
 
 <img src="assets/0061.png" width="600">
@@ -115,4 +115,4 @@ One Card上のユーザー所在確認LEDが点灯したら、MAIN SWを１回�
 ### テスト終了
 
 テストが終了したら、Chromeブラウザーを閉じます。<br>
-Chromeブラウザーが終了されることにより、U2F管理ツールは自動的に終了し、画面は閉じられます。
+Chromeブラウザーが終了されることにより、U2F管理コマンドは自動的に終了します。
