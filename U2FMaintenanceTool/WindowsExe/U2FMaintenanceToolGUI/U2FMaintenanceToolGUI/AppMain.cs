@@ -7,18 +7,18 @@ namespace U2FMaintenanceToolGUI
 {
     class AppMain
     {
-        // U2F管理プロセスの情報
+        // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
         private const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
         private bool commandAvailable;
 
-        // U2F管理プロセスからの出力を保持
+        // U2F管理コマンドからの出力を保持
         private static StringBuilder standardOutputs;
         private static StringBuilder standardErrors;
 
         public AppMain()
         {
-            // U2F管理ツール（CUI版）が導入されているかチェック
+            // U2F管理コマンドが導入されているかチェック
             commandAvailable = File.Exists(U2FMaintenanceToolExe);
             if (commandAvailable == false) {
                 outputLogToFile(U2FMaintenanceToolExe + "が導入されていません");
