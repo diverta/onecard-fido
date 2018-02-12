@@ -7,6 +7,7 @@
 #include "ble_util.h"
 
 #include "BleTools.h"
+#include "BleToolsU2F.h"
 #include "BleToolsUtil.h"
 #include "BleChromeHelper.h"
 
@@ -18,6 +19,7 @@ bool  arg_erase_skey_cert   = false;
 bool  arg_install_skey_cert = false;
 char *arg_skey_file_path    = NULL;
 char *arg_cert_file_path    = NULL;
+bool  arg_health_check      = false;
 bool  arg_chrome_nm_setup   = false;
 bool  arg_chrome_subprocess = false;
 
@@ -457,6 +459,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		}
 	}
 
+	if (arg_health_check) {
+		// ヘルスチェック実行
+		if (BleToolsU2F_healthCheck(dev) == false) {
+			return -1;
+		}
+	}
+
 	if (arg_chrome_nm_setup) {
 		// Chrome Native Messaging有効化設定
 		if (processChromeNativeMessagingSetup() == false) {
@@ -558,6 +567,10 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			}
 			// 鍵・証明書ファイルをインストール
 			arg_install_skey_cert = true;
+		}
+		if (!strncmp(argv[count], "-H", 2)) {
+			// ヘルスチェック実行
+			arg_health_check = true;
 		}
 		if (!strncmp(argv[count], "-R", 2)) {
 			// Chrome Native Messaging有効化設定

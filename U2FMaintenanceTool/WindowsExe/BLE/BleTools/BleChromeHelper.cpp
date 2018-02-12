@@ -3,16 +3,16 @@
 #include "fido_ble.h"
 #include "fido_apduresponses.h"
 
+#include "BleToolsU2F.h"
 #include "BleToolsUtil.h"
 
 // For JSON parse/serialize
 #include "picojson.h"
 
-static U2F_REGISTER_REQ      registerRequest;
-static U2F_AUTHENTICATE_REQ  authRequest;
-
-static U2F_REGISTER_RESP     registerResponse;
-static U2F_AUTHENTICATE_RESP authResponse;
+// appId、challenge、キーハンドルを保持
+static unsigned char appIdBuf[U2F_APPID_SIZE];
+static unsigned char challengeBuf[U2F_NONCE_SIZE];
+static unsigned char keyHandleBuf[U2F_KEYHANDLE_SIZE];
 
 typedef struct {
 	std::string type;
@@ -27,12 +27,6 @@ typedef struct {
 } CHROME_U2F_MESSAGE;
 static CHROME_U2F_MESSAGE chromeU2FMessage;
 
-//
-// BLEデバイスに対するリクエスト、レスポンスを保持
-//
-static unsigned char request[256];
-static unsigned char reply[2048];
-static size_t        replyLength = sizeof(reply);
 //
 // エンコード、デコード用作業領域
 //
@@ -106,128 +100,41 @@ static bool extractU2FRequestFromChrome(unsigned char *headerBuf, unsigned char 
 
 	if (chromeU2FMessage.enroll) {
 		// Web-safe base64エンコードされたChallenge、appIDをデコード
-		decodeWebsafeB64EncodeString(chromeU2FMessage.challengeHash, registerRequest.nonce, sizeof(registerRequest.nonce));
-		decodeWebsafeB64EncodeString(chromeU2FMessage.appIdHash, registerRequest.appId, sizeof(registerRequest.appId));
+		decodeWebsafeB64EncodeString(chromeU2FMessage.challengeHash, challengeBuf, sizeof(challengeBuf));
+		decodeWebsafeB64EncodeString(chromeU2FMessage.appIdHash, appIdBuf, sizeof(appIdBuf));
 	}
 
 	if (chromeU2FMessage.sign) {
 		// Web-safe base64エンコードされたChallenge、appID、keyHandleをデコード
-		decodeWebsafeB64EncodeString(chromeU2FMessage.challengeHash, authRequest.nonce, sizeof(authRequest.nonce));
-		decodeWebsafeB64EncodeString(chromeU2FMessage.appIdHash, authRequest.appId, sizeof(authRequest.appId));
-		decodeWebsafeB64EncodeString(chromeU2FMessage.keyHandle, authRequest.keyHandle, sizeof(authRequest.keyHandle));
-		// キーハンドル長を設定（固定長：64バイト）
-		authRequest.keyHandleLen = 64;
+		decodeWebsafeB64EncodeString(chromeU2FMessage.challengeHash, challengeBuf, sizeof(challengeBuf));
+		decodeWebsafeB64EncodeString(chromeU2FMessage.appIdHash, appIdBuf, sizeof(appIdBuf));
+		decodeWebsafeB64EncodeString(chromeU2FMessage.keyHandle, keyHandleBuf, sizeof(keyHandleBuf));
 	}
 
 	return true;
-}
-
-static size_t prepareBleU2fRequest(unsigned char *requestBuf)
-{
-	size_t pos = 0;
-
-	// リクエストデータを配列にセット
-	if (chromeU2FMessage.enroll) {
-		requestBuf[0] = 0x00;
-		requestBuf[1] = U2F_INS_REGISTER;
-		requestBuf[2] = 0x00;
-		requestBuf[3] = 0x00;
-		requestBuf[4] = 0x00;
-		requestBuf[5] = 0x00;
-		requestBuf[6] = U2F_NONCE_SIZE + U2F_APPID_SIZE;
-
-		pos = 7;
-		memcpy(requestBuf + pos, reinterpret_cast<char *>(&registerRequest), requestBuf[6]);
-		pos += requestBuf[6];
-		requestBuf[pos++] = 0x00;
-		requestBuf[pos++] = 0x00;
-	}
-
-	if (chromeU2FMessage.sign) {
-		requestBuf[0] = 0x00;
-		requestBuf[1] = U2F_INS_AUTHENTICATE;
-		requestBuf[2] = U2F_AUTH_ENFORCE;
-		requestBuf[3] = 0x00;
-		requestBuf[4] = 0x00;
-		requestBuf[5] = 0x00;
-		requestBuf[6] = U2F_NONCE_SIZE + U2F_APPID_SIZE + 1 + authRequest.keyHandleLen;
-
-		pos = 7;
-		memcpy(requestBuf + pos, reinterpret_cast<char *>(&authRequest), requestBuf[6]);
-		pos += requestBuf[6];
-		requestBuf[pos++] = 0x00;
-		requestBuf[pos++] = 0x00;
-	}
-
-	return pos;
-}
-
-static bool sendBleU2fRequest(pBleDevice dev, unsigned char *requestBuf, size_t requestLen)
-{
-	// ログ出力
-	BleToolsUtil_outputLog("sendBleU2fRequest: Message to BLE");
-	BleToolsUtil_outputDumpLog(requestBuf, requestLen);
-
-	unsigned char replyCmd;
-	memset(reply, 0x00, sizeof(reply));
-	ReturnValue retval = dev->CommandWrite(FIDO_BLE_CMD_MSG, requestBuf, requestLen,
-		&replyCmd, reply, &replyLength);
-	if (retval != ReturnValue::BLEAPI_ERROR_SUCCESS) {
-		BleToolsUtil_outputLog("sendBleU2fRequest: Command write failed");
-		return false;
-	}
-
-	// 戻りのコマンドをチェック
-	if (replyCmd != FIDO_BLE_CMD_MSG) {
-		BleToolsUtil_outputLog("sendBleU2fRequest: reply command != FIDO_BLE_CMD_MSG");
-		return false;
-	}
-
-	// 戻りのステータスワードをチェック
-	chromeU2FMessage.statusWordNumber = bytes2short(reply, replyLength - 2);
-	if (chromeU2FMessage.statusWordNumber != FIDO_RESP_SUCCESS) {
-		BleToolsUtil_outputLog("sendBleU2fRequest: status word != FIDO_RESP_SUCCESS");
-		return false;
-	}
-
-	// ログ出力
-	BleToolsUtil_outputLog("sendBleU2fRequest: Message from BLE");
-	BleToolsUtil_outputDumpLog(reply, replyLength);
-
-	return true;
-}
-
-static void encodeWebsafeB64String(unsigned char *src, size_t srcLength)
-{
-	// ログ出力
-	char buf[64];
-	sprintf_s(buf, "encodeWebsafeB64String: source length=%lu", srcLength);
-	BleToolsUtil_outputLog(buf);
-
-	// B64エンコードを実行
-	memset(encodedBuf, 0x00, sizeof(encodedBuf));
-	int len = BleToolsUtil_base64Encode((char *)src, srcLength, encodedBuf);
-
-	// ログ出力
-	sprintf_s(buf, "encodeWebsafeB64String: encoded length=%d", len);
-	BleToolsUtil_outputLog(buf);
-	BleToolsUtil_outputLog((char *)encodedBuf);
 }
 
 static bool sendU2FRequestToBleDevice(pBleDevice dev)
 {
-	// BLE U2Fリクエストを生成
-	size_t requestlen = prepareBleU2fRequest(request);
-
-	// BLE U2Fリクエストを転送
-	if (sendBleU2fRequest(dev, request, requestlen) == false) {
-		return false;
+	// U2F Registerリクエストを転送
+	if (chromeU2FMessage.enroll) {
+		if (sendU2FRegisterRequest(dev, challengeBuf, appIdBuf) == false) {
+			return false;
+		}
 	}
 
+	// U2F Authenticateリクエストを転送
+	if (chromeU2FMessage.sign) {
+		if (sendU2FAuthenticateRequest(dev, challengeBuf, appIdBuf, keyHandleBuf) == false) {
+			return false;
+		}
+	}
+
+	// BLEレスポンスのステータスワードを取得
+	chromeU2FMessage.statusWordNumber = BleToolsU2F_replyStatusWord();
+
 	// BLEからのレスポンスからステータスワードを除去し、Web Safe Base64エンコード
-	reply[replyLength - 1] = 0x00;
-	reply[replyLength - 2] = 0x00;
-	encodeWebsafeB64String(reply, replyLength - 2);
+	BleToolsU2F_encodeB64Reply(encodedBuf, sizeof(encodedBuf));
 
 	// レスポンスデータ編集完了
 	return true;
@@ -269,7 +176,7 @@ bool returnU2FResponseToChrome(void)
 	const char *jsonStringBytes = jsonString.c_str();
 
 	// ログ出力
-	BleToolsUtil_outputLog("returnU2FResponseToChrome");
+	BleToolsUtil_outputLog("returnU2FResponseToChrome: response native message");
 	BleToolsUtil_outputLog(jsonStringBytes);
 
 	// ヘッダーを標準出力
