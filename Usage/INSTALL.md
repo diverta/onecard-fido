@@ -218,9 +218,7 @@ One Card側の処理が成功すると「鍵・証明書インストール処理
 
 One Cardにインストールされた秘密鍵と署名済み証明書を使用し、U2F管理ツールを使用して動作確認（ヘルスチェック）を実行することができます。
 
-<b>macOS環境のみサポート</b>となります。
-
-### 実行方法
+### macOS環境の場合
 
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
 表示された画面の「ヘルスチェック実行」ボタンをクリックします。
@@ -237,5 +235,25 @@ One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<fon
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
 <img src="../assets/0034.png" width="550">
+
+これでヘルスチェックは完了です。
+
+### windows環境の場合
+
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
+表示された画面の「ヘルスチェック実行」ボタンをクリックします。
+
+<img src="../assets/0068.png" width="550">
+
+One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
+（ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
+
+ここでMAIN SWを１回押しますと、再びOne Card側の処理が再開されます。
+
+<img src="../assets/0033.png" width="550">
+
+One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
+
+<img src="../assets/0069.png" width="550">
 
 これでヘルスチェックは完了です。
