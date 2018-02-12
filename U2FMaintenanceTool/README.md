@@ -21,7 +21,7 @@ macOS Sierra (Version 10.12.6)
 
 ## Windows版
 
-<img src="../assets/0002.png" width="600">
+<img src="../assets/0002.png" width="500">
 
 ### 機能
 * ペアリング情報削除
