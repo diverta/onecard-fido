@@ -18,23 +18,75 @@ namespace U2FMaintenanceToolGUI
             // このアプリケーションを終了する
             app.doExit();
         }
+        
+        private bool checkCommandAvailable()
+        {
+            // U2F管理コマンドがある場合はOK
+            if (app.commandAvailable) {
+                return true;
+            }
+
+            // U2F管理コマンドがない旨の表示
+            string message = "U2F管理コマンドを実行できません。";
+            textBox1.AppendText(message + "\r\n");
+            textBox1.AppendText(AppMain.U2FMaintenanceToolExe + "をインストールしてください。\r\n");
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            enableButtons(true);
+            return false;
+        }
+
+        private void doCommand(object sender)
+        {
+            string commandTitle = "";
+            bool ret = false;
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // U2F管理コマンドが存在しない場合は終了
+            if (checkCommandAvailable() == false) {
+                return;
+            }
+
+            // ボタンに対応する処理を実行
+            if (sender.Equals(button1)) {
+                commandTitle = "ペアリング情報削除処理";
+                ret = app.doEraseBond();
+
+            } else if (sender.Equals(button2)) {
+                commandTitle = "鍵・証明書削除処理";
+                ret = app.doEraseSkeyCert();
+
+            } else if (sender.Equals(button3)) {
+                commandTitle = "鍵・証明書インストール";
+                ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
+
+            } else if (sender.Equals(button4)) {
+                commandTitle = "ヘルスチェック";
+                ret = app.doHealthCheck();
+
+            } else if (sender.Equals(button5)) {
+                commandTitle = "Chrome Native Messaging有効化設定";
+                ret = app.doSetupChromeNativeMessaging();
+            }
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            displayResultMessage(commandTitle, ret);
+            enableButtons(true);
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
             // ペアリング情報削除
-            enableButtons(false);
-            bool ret = app.doEraseBond();
-            displayResultMessage("ペアリング情報削除処理", ret);
-            enableButtons(true);
+            doCommand(sender);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             // 鍵・証明書削除
-            enableButtons(false);
-            bool ret = app.doEraseSkeyCert();
-            displayResultMessage("鍵・証明書削除処理", ret);
-            enableButtons(true);            
+            doCommand(sender);
         }
 
         private bool checkPathEntry(TextBox textBox, string errorMessage)
@@ -64,20 +116,13 @@ namespace U2FMaintenanceToolGUI
             }
 
             // 鍵・証明書インストール
-            enableButtons(false);
-            bool ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
-            displayResultMessage("鍵・証明書インストール", ret);
-            enableButtons(true);
-
+            doCommand(sender);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             // ヘルスチェック実行
-            enableButtons(false);
-            bool ret = app.doHealthCheck();
-            displayResultMessage("ヘルスチェック", ret);
-            enableButtons(true);
+            doCommand(sender);
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -90,12 +135,9 @@ namespace U2FMaintenanceToolGUI
 
             // Chrome Native Messaging有効化設定
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            enableButtons(false);
             if (displayPromptPopup(message)) {
-                bool ret = app.doSetupChromeNativeMessaging();
-                displayResultMessage("Chrome Native Messaging有効化設定", ret);
+                doCommand(sender);
             }
-            enableButtons(true);
         }
 
         private void buttonPath1_Click(object sender, EventArgs e)

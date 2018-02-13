@@ -9,8 +9,8 @@ namespace U2FMaintenanceToolGUI
     {
         // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
-        private const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
-        private bool commandAvailable;
+        public const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
+        public bool commandAvailable;
 
         // U2F管理コマンドからの出力を保持
         private static StringBuilder standardOutputs;
@@ -102,12 +102,20 @@ namespace U2FMaintenanceToolGUI
 
         public string getProcessOutputData()
         {
-            return standardOutputs.ToString();
+            if (commandAvailable) {
+                return standardOutputs.ToString();
+            } else {
+                return "";
+            }
         }
 
         public string getProcessErrorData()
         {
-            return standardErrors.ToString();
+            if (commandAvailable) {
+                return standardErrors.ToString();
+            } else {
+                return "";
+            }
         }
 
         public bool doEraseBond()
