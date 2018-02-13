@@ -158,7 +158,7 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
 
-Windows環境の場合は [U2FMaintenanceTool.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceTool.exe) をダウンロードします。
+Windows環境の場合は [U2FMaintenanceToolGUI.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceToolGUI.exe) をダウンロードします。
 
 ## 鍵・証明書のインストール
 
@@ -191,21 +191,26 @@ One Card側の処理が成功すると「鍵・証明書インストール処理
 
 ### Windows環境の場合
 
-コマンド「U2FMaintenanceTool.exe -E」を実行します。
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
+表示された画面の「鍵・証明書消去／AES暗号生成」ボタンをクリックします。
 
-<img src="../assets/0023.png" width="750">
+<img src="../assets/0023.png" width="550">
 
-One Card側の処理が成功すると「鍵・証明書をFlash ROMから削除しました。」というメッセージが表示されます。
+One Card側の処理が成功すると「鍵・証明書削除処理が成功しました。」と表示されます。
 
-<img src="../assets/0024.png" width="750">
+<img src="../assets/0024.png" width="550">
 
-続いて、コマンド「U2FMaintenanceTool.exe -I <秘密鍵ファイルのパス> <証明書ファイルのパス>」を実行します。
+続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
 
-<img src="../assets/0025.png" width="750">
+<img src="../assets/0025.png" width="550">
 
-One Card側の処理が成功すると「秘密鍵をFlash ROMにインストールしました。」「証明書をFlash ROMにインストールしました。」というメッセージが表示されます。
+U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
 
-<img src="../assets/0026.png" width="750">
+<img src="../assets/0026.png" width="550">
+
+One Card側の処理が成功すると「鍵・証明書インストール処理が成功しました。」と表示されます。
+
+<img src="../assets/0067.png" width="550">
 
 これで、鍵・証明書のインストールは完了です。
 
@@ -213,9 +218,7 @@ One Card側の処理が成功すると「秘密鍵をFlash ROMにインストー
 
 One Cardにインストールされた秘密鍵と署名済み証明書を使用し、U2F管理ツールを使用して動作確認（ヘルスチェック）を実行することができます。
 
-<b>macOS環境のみサポート</b>となります。
-
-### 実行方法
+### macOS環境の場合
 
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
 表示された画面の「ヘルスチェック実行」ボタンをクリックします。
@@ -232,5 +235,25 @@ One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<fon
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
 <img src="../assets/0034.png" width="550">
+
+これでヘルスチェックは完了です。
+
+### windows環境の場合
+
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
+表示された画面の「ヘルスチェック実行」ボタンをクリックします。
+
+<img src="../assets/0068.png" width="550">
+
+One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
+（ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
+
+ここでMAIN SWを１回押しますと、再びOne Card側の処理が再開されます。
+
+<img src="../assets/0033.png" width="550">
+
+One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
+
+<img src="../assets/0069.png" width="550">
 
 これでヘルスチェックは完了です。

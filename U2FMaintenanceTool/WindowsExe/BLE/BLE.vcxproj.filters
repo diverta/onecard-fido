@@ -60,6 +60,9 @@
     <ClCompile Include="BleTools\BleToolsUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BleTools\BleToolsU2F.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ble_util\ble_util.h">
@@ -123,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BleTools\BleToolsUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BleTools\BleToolsU2F.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

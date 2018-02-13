@@ -1,6 +1,10 @@
 ﻿#include <stdio.h>
 
-const char *TOOL_LOGFILE_NAME = "U2FMaintenanceTool.txt";
+// for SYSTEMTIME, GetLocalTime
+#include <Windows.h>
+
+// ログファイル名
+const char *TOOL_LOGFILE_NAME = "U2FMaintenanceTool.log";
 
 static inline int convertBase64CharTo6bitValue(int c)
 {
@@ -105,9 +109,17 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 //
 void BleToolsUtil_outputLog(const char *msg)
 {
+	// 現在時刻を取得
+	SYSTEMTIME t;
+	GetLocalTime(&t);
+
+	// ファイルにログ出力
 	FILE *file_;
 	fopen_s(&file_, TOOL_LOGFILE_NAME, "a");
-	fprintf(file_, "%s\n", msg);
+	fprintf(file_, "%04d/%02d/%02d %02d:%02d:%02d %s\n", 
+		t.wYear, t.wMonth, t.wDay,
+		t.wHour, t.wMinute, t.wSecond,
+		msg);
 	fclose(file_);
 }
 

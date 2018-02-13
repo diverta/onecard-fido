@@ -7,6 +7,7 @@
 #include "ble_util.h"
 
 #include "BleTools.h"
+#include "BleToolsU2F.h"
 #include "BleToolsUtil.h"
 #include "BleChromeHelper.h"
 
@@ -18,6 +19,7 @@ bool  arg_erase_skey_cert   = false;
 bool  arg_install_skey_cert = false;
 char *arg_skey_file_path    = NULL;
 char *arg_cert_file_path    = NULL;
+bool  arg_health_check      = false;
 bool  arg_chrome_nm_setup   = false;
 bool  arg_chrome_subprocess = false;
 
@@ -303,7 +305,6 @@ static bool processInstallSkeyCert(BleApiConfiguration &configuration, pBleDevic
 	std::cout << "以下の鍵・証明書がインストールされます。" << std::endl;
 	std::cout << "鍵ファイルパス    : " << arg_skey_file_path << std::endl;
 	std::cout << "証明書ファイルパス: " << arg_cert_file_path << std::endl;
-	std::cout << std::endl;
 
 	// 鍵ファイルをインストール
 	if (processInstallSkey(configuration, dev) == false) {
@@ -356,7 +357,6 @@ static bool createRegistryEntry(char *jsonFileFullPath)
 	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
 	std::cout << "レジストリーキー: " << registryKey        << std::endl;
 	std::cout << "JSONファイルパス: " << jsonFileFullPath   << std::endl;
-	std::cout << std::endl;
 
 	HKEY hKey;
 	DWORD dwDisposition;
@@ -437,14 +437,6 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		return 0;
 	}
 
-	// Chromeサブプロセスとして起動されていない場合は
-	// 画面にデバイス名を表示
-	std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
-	std::cout << "==== 選択されたFIDO BLE U2Fデバイス ====" << std::endl;
-	dev->Report();
-	dev->Verify();
-	std::cout << std::endl;
-
 	if (arg_erase_bonding) {
 		// ペアリング情報をFlash ROMから削除
 		if (processEraseBonding(configuration, dev) == false) {
@@ -463,6 +455,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_install_skey_cert) {
 		// 鍵・証明書をインストール
 		if (processInstallSkeyCert(configuration, dev) == false) {
+			return -1;
+		}
+	}
+
+	if (arg_health_check) {
+		// ヘルスチェック実行
+		if (BleToolsU2F_healthCheck(dev) == false) {
 			return -1;
 		}
 	}
@@ -568,6 +567,10 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			}
 			// 鍵・証明書ファイルをインストール
 			arg_install_skey_cert = true;
+		}
+		if (!strncmp(argv[count], "-H", 2)) {
+			// ヘルスチェック実行
+			arg_health_check = true;
 		}
 		if (!strncmp(argv[count], "-R", 2)) {
 			// Chrome Native Messaging有効化設定

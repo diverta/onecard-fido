@@ -59,6 +59,11 @@ static int prepareBLEDevice(BleApiConfiguration &configuration)
 		return -1;
 	}
 
+	// 選択されたデバイスを検証
+	if (dev->Verify() != ReturnValue::BLEAPI_ERROR_SUCCESS) {
+		return -1;
+	}
+
 	// デバイスのタイムアウトを30秒に設定
 	dev->SetTimeout(30000);
 	BleToolsUtil_outputLog("prepareBLEDevice success");
@@ -84,6 +89,14 @@ int __cdecl main(int argc, char *argv[])
 		// BLEデバイスを選択
 		if (prepareBLEDevice(configuration) != 0) {
 			return -1;
+		}
+
+		// 引数なしで起動された場合は
+		// 画面にデバイス名を表示
+		if (argc == 1) {
+			std::cout << "FIDO BLE U2F Maintenance Tool " << std::endl << std::endl;
+			std::cout << "==== 選択されたFIDO BLE U2Fデバイス ====" << std::endl;
+			dev->Report();
 		}
 
 		// コマンドラインで指定されたコマンドを実行

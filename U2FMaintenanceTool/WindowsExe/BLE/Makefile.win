@@ -127,12 +127,15 @@ BLETransportTests.obj: BLETest/BLETransportTests.cpp BLETest/U2FTests.h $(BLEAPI
 #
 ##  BLE Tools
 #
-BLETOOLS=BleTools.obj BleToolsUtil.obj BleChromeHelper.obj
+BLETOOLS=BleTools.obj BleToolsUtil.obj BleToolsU2F.obj BleChromeHelper.obj
 BleTools.obj: BleTools/BleTools.cpp BleTools/BleTools.h BleTools/BleToolsUtil.h $(BLEAPI_HEADER) $(LIBMINCRYPT)
 	$(CXX) -c $(CFLAGS) BleTools/BleTools.cpp -Fo$@
 
 BleToolsUtil.obj: BleTools/BleToolsUtil.cpp BleTools/BleToolsUtil.h $(BLEAPI_HEADER)
 	$(CXX) -c $(CFLAGS) BleTools/BleToolsUtil.cpp -Fo$@
+
+BleToolsU2F.obj: BleTools/BleToolsU2F.cpp BleTools/BleToolsU2F.h $(BLEAPI_HEADER)
+	$(CXX) -c $(CFLAGS) BleTools/BleToolsU2F.cpp -Fo$@
 
 BleChromeHelper.obj: BleTools/BleChromeHelper.cpp BleTools/BleChromeHelper.h BleTools/BleToolsUtil.h $(BLEAPI_HEADER)
 	$(CXX) -c $(CFLAGS) BleTools/BleChromeHelper.cpp -Fo$@
