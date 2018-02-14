@@ -5,7 +5,8 @@
 
 typedef enum : NSInteger {
     PATH_SKEY = 1,
-    PATH_CERT
+    PATH_CERT,
+    PATH_CSR
 } PathType;
 
 @interface AppDelegate ()
@@ -204,18 +205,75 @@ typedef enum : NSInteger {
     }
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
-        // 仮コード
-        [self displaySuccessPopupMessage:@"menuItemFile1DidSelect"];
+        // ファイル保存パネルをモーダル表示
+        [self setPathType:PATH_SKEY];
+        [self panelWillCreatePath:[self preparePanelForCreatePath]];
     }
 
     - (IBAction)menuItemFile2DidSelect:(id)sender {
-        // 仮コード
-        [self displaySuccessPopupMessage:@"menuItemFile2DidSelect"];
+        // ファイル保存パネルをモーダル表示
+        [self setPathType:PATH_CSR];
+        [self panelWillCreatePath:[self preparePanelForCreatePath]];
     }
 
     - (IBAction)menuItemFile3DidSelect:(id)sender {
-        // 仮コード
-        [self displaySuccessPopupMessage:@"menuItemFile3DidSelect"];
+        // ファイル保存パネルをモーダル表示
+        [self setPathType:PATH_CERT];
+        [self panelWillCreatePath:[self preparePanelForCreatePath]];
+    }
+
+    - (NSSavePanel *)preparePanelForCreatePath {
+        // ファイル保存パネルの設定
+        NSSavePanel *panel = [NSSavePanel savePanel];
+        [panel setCanCreateDirectories:NO];
+        [panel setShowsTagField:NO];
+        // 鍵=pem、証明書=crtのみ指定可能とする
+        if (self.pathType == PATH_SKEY) {
+            [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
+            [panel setNameFieldStringValue:@"U2FPrivKey"];
+            [panel setAllowedFileTypes:@[@"pem"]];
+            
+        } else if (self.pathType == PATH_CSR) {
+            [panel setMessage:@"作成する証明書要求ファイル(CSR)名を指定してください"];
+            [panel setNameFieldStringValue:@"U2FCertReq"];
+            [panel setAllowedFileTypes:@[@"csr"]];
+            
+        } else if (self.pathType == PATH_CERT) {
+            [panel setMessage:@"作成する自己署名証明書ファイル(CRT)名を指定してください"];
+            [panel setNameFieldStringValue:@"U2FSelfCer"];
+            [panel setAllowedFileTypes:@[@"crt"]];
+        }
+        [panel setPrompt:@"作成"];
+        
+        return panel;
+    }
+
+    - (void)panelWillCreatePath:(NSSavePanel *)panel {
+        // ファイル保存パネルをモーダル表示
+        AppDelegate * __weak weakSelf = self;
+        [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+            [panel orderOut:self];
+            if (result != NSFileHandlingPanelOKButton) {
+                return;
+            }
+            // ファイルパスが作成された時の処理
+            [weakSelf panelDidCreatePath:panel];
+        }];
+    }
+
+    - (void)panelDidCreatePath:(NSSavePanel *)panel {
+        // ファイル保存パネルで作成されたファイルパスを取得
+        NSString *filePath = [[panel URL] path];
+        // 仮コード：ファイル保存パネルで選択されたファイルパスを表示する
+        if (self.pathType == PATH_SKEY) {
+            [self displaySuccessPopupMessage:filePath];
+            
+        } else if (self.pathType == PATH_CSR) {
+            [self displaySuccessPopupMessage:filePath];
+            
+        } else if (self.pathType == PATH_CERT) {
+            [self displaySuccessPopupMessage:filePath];
+        }
     }
 
 #pragma mark - Call back from ToolCommand
