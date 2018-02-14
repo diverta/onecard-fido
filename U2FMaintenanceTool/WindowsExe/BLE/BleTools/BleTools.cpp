@@ -14,14 +14,17 @@
 //
 // 実行させるコマンド／引数を保持
 //
-bool  arg_erase_bonding     = false;
-bool  arg_erase_skey_cert   = false;
-bool  arg_install_skey_cert = false;
-char *arg_skey_file_path    = NULL;
-char *arg_cert_file_path    = NULL;
-bool  arg_health_check      = false;
-bool  arg_chrome_nm_setup   = false;
-bool  arg_chrome_subprocess = false;
+bool  arg_erase_bonding          = false;
+bool  arg_erase_skey_cert        = false;
+bool  arg_install_skey_cert      = false;
+char *arg_skey_file_path         = NULL;
+char *arg_cert_file_path         = NULL;
+bool  arg_health_check           = false;
+bool  arg_chrome_nm_setup        = false;
+char *arg_chrome_nm_registry_key = NULL;
+char *arg_chrome_nm_setting_file = NULL;
+bool  arg_chrome_subprocess      = false;
+bool  arg_need_ble               = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -350,10 +353,8 @@ static bool getExecutableDirectory(char *executableFilePath, int executableFileP
 	return true;
 }
 
-static bool createRegistryEntry(char *jsonFileFullPath)
+static bool createRegistryEntry(const char *jsonFileFullPath, const char *registryKey)
 {
-	const char *registryKey = "Software\\Google\\Chrome\\NativeMessagingHosts\\jp.co.diverta.chrome.helper.ble.u2f";
-
 	std::cout << "以下の項目がレジストリーに登録されます。" << std::endl;
 	std::cout << "レジストリーキー: " << registryKey        << std::endl;
 	std::cout << "JSONファイルパス: " << jsonFileFullPath   << std::endl;
@@ -390,12 +391,12 @@ static bool createRegistryEntry(char *jsonFileFullPath)
 	return true;
 }
 
+// レジストリーキー、JSONファイルの
+// フルパス編集用領域（LPCSTR）
+static char m_registryKey[256];
+static char m_jsonFileFullPath[256];
 static bool processChromeNativeMessagingSetup(void)
 {
-	// Chrome Native Messagingを有効化するため
-	// 設定用JSONファイルパスをレジストリーに登録
-	const char *jsonFileName = "jp.co.diverta.chrome.helper.ble.u2f.json";
-
 	// 実行可能ファイルの絶対パスを取得
 	char executableFilePath[256];
 	if (getExecutableDirectory(executableFilePath, sizeof(executableFilePath) - 1) == false) {
@@ -404,11 +405,15 @@ static bool processChromeNativeMessagingSetup(void)
 	}
 
 	// JSONファイルパスを編集
-	char jsonFileFullPath[255];
-	sprintf_s(jsonFileFullPath, "%s\\%s", executableFilePath, jsonFileName);
+	sprintf_s(m_jsonFileFullPath, "%s\\%s", executableFilePath, arg_chrome_nm_setting_file);
 
+	// レジストリーキーのフルパスを編集
+	// Software\\Google\\Chrome\\NativeMessagingHosts\\<レジストリーキー名>
+	sprintf_s(m_registryKey, "Software\\Google\\Chrome\\NativeMessagingHosts\\%s", arg_chrome_nm_registry_key);
+
+	// Chrome Native Messagingを有効化するため
 	// 設定用JSONファイルパスをレジストリーに登録
-	if (createRegistryEntry(jsonFileFullPath) == false) {
+	if (createRegistryEntry(m_jsonFileFullPath, m_registryKey) == false) {
 		// 登録ができないときはエラー
 		return false;
 	}
@@ -418,6 +423,15 @@ static bool processChromeNativeMessagingSetup(void)
 
 int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 {
+	if (arg_chrome_nm_setup) {
+		// Chrome Native Messaging有効化設定
+		// BLE受信通知が不要なため、ここで実行
+		if (processChromeNativeMessagingSetup() == false) {
+			return -1;
+		}
+		return 0;
+	}
+
 	if (!dev->NotificationsRegistered()) {
 		// BLE U2Fからデータ受信時の処理を登録し、
 		// 受信通知を有効化
@@ -466,13 +480,6 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		}
 	}
 
-	if (arg_chrome_nm_setup) {
-		// Chrome Native Messaging有効化設定
-		if (processChromeNativeMessagingSetup() == false) {
-			return -1;
-		}
-	}
-
 	return 0;
 }
 
@@ -501,6 +508,9 @@ static bool checkSkeyCertPath(char *skey_file_path, char *cert_file_path)
 
 int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configuration)
 {
+	// BLE通信が必要である旨のフラグを初期化
+	arg_need_ble = true;
+
 	int count = 1;
 	while (count < argc) {
 		if (!strncmp(argv[count], "-v", 2)) {
@@ -573,7 +583,23 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 			arg_health_check = true;
 		}
 		if (!strncmp(argv[count], "-R", 2)) {
-			// Chrome Native Messaging有効化設定
+			if (++count == argc) {
+				// あとに引数が続かない場合はエラー
+				std::cerr << "-R の後に[レジストリーキー名]を指定してください。" << std::endl;
+				return -1;
+			}
+			// レジストリーキー名
+			arg_chrome_nm_registry_key = argv[count];
+			if (++count == argc) {
+				// あとに引数が続かない場合はエラー
+				std::cerr << "-R [レジストリーキー名]の後に[設定用ファイル名]を指定してください。" << std::endl;
+				return -1;
+			}
+			// 設定用ファイル名
+			arg_chrome_nm_setting_file = argv[count];
+			// BLE通信が不要である旨のフラグを設定
+			arg_need_ble = false;
+			// Chrome Native Messaging有効化設定を実行
 			arg_chrome_nm_setup = true;
 		}
 		if (!strncmp(argv[count], "chrome-extension://", 19)) {

@@ -9,12 +9,17 @@ namespace U2FMaintenanceToolGUI
     {
         // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
-        private const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
-        private bool commandAvailable;
+        public const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
+        public bool commandAvailable;
 
         // U2F管理コマンドからの出力を保持
         private static StringBuilder standardOutputs;
         private static StringBuilder standardErrors;
+
+        // Chrome Native Messaging設定用の
+        // レジストリーキー名、JSONファイル名
+        public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
+        public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
         public AppMain()
         {
@@ -102,12 +107,31 @@ namespace U2FMaintenanceToolGUI
 
         public string getProcessOutputData()
         {
-            return standardOutputs.ToString();
+            if (commandAvailable) {
+                return standardOutputs.ToString();
+            } else {
+                return "";
+            }
         }
 
         public string getProcessErrorData()
         {
-            return standardErrors.ToString();
+            if (commandAvailable) {
+                return standardErrors.ToString();
+            } else {
+                return "";
+            }
+        }
+
+        public bool checkChromeNMSettingFileIsExist() {
+            // Chrome Native Messaging設定用のJSONファイルが
+            // 導入されているかチェック
+            if (File.Exists(ChromeNMSettingFile)) {
+                return true;
+            }
+
+            outputLogToFile(ChromeNMSettingFile + "が導入されていません");
+            return false;
         }
 
         public bool doEraseBond()
@@ -137,8 +161,9 @@ namespace U2FMaintenanceToolGUI
 
         public bool doSetupChromeNativeMessaging()
         {
-            // U2FMaintenanceTool.exe -Rを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-R");
+            // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
+            string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
+            return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
         public void doExit()

@@ -22,6 +22,11 @@ static void promptPairing(void)
 
 static int prepareBLEDevice(BleApiConfiguration &configuration)
 {
+	// BLE通信が不要の場合は終了
+	if (arg_need_ble == false) {
+		return 0;
+	}
+
 	// BLE APIの準備
 	pBleApi api = BleApi::CreateAPI(configuration);
 	if (!api->IsEnabled()) {
