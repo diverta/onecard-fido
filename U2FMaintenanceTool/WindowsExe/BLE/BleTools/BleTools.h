@@ -3,6 +3,10 @@
 
 #include "BleApi.h"
 
+//
+// BLE通信が必要である旨のフラグ
+//
+extern bool arg_need_ble;
 extern char *arg_DeviceIdentifier;
 
 extern int  BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev);

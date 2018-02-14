@@ -161,8 +161,9 @@ namespace U2FMaintenanceToolGUI
 
         public bool doSetupChromeNativeMessaging()
         {
-            // U2FMaintenanceTool.exe -Rを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-R");
+            // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
+            string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
+            return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
         public void doExit()
