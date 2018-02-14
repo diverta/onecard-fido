@@ -236,20 +236,67 @@ namespace U2FMaintenanceToolGUI
 
         private void 鍵ファイル作成KToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 仮コード
-            MessageBox.Show("鍵ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            doCreateFile(sender);
         }
 
         private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 仮コード
-            MessageBox.Show("証明書要求ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            doCreateFile(sender);
         }
 
         private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            doCreateFile(sender);
+        }
+
+        private void doCreateFile(object sender)
+        {
+            // ボタンに対応する処理を実行
+            string filePath = string.Empty;
+            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
+                filePath = createFilePath(
+                    "作成する秘密鍵ファイル(PEM)名を指定してください",
+                    "U2FPrivKey",
+                    "秘密鍵ファイル (*.pem)|*.pem"
+                    );
+
+            } else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
+                filePath = createFilePath(
+                    "作成する証明書要求ファイル(CSR)名を指定してください",
+                    "U2FCertReq",
+                    "証明書要求ファイル (*.csr)|*.csr"
+                    );
+
+            } else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
+                filePath = createFilePath(
+                    "作成する自己署名証明書ファイル(CRT)名を指定してください",
+                    "U2FSelfCer",
+                    "証明書ファイル (*.crt)|*.crt"
+                    );
+            }
+
+            // ファイルが生成されていない場合は終了
+            if (filePath.Equals(string.Empty)) {
+                return;
+            }
+
             // 仮コード
-            MessageBox.Show("自己署名証明書ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(filePath, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private string createFilePath(string title, string fileName, string filter)
+        {
+            // ファイル保存ダイアログで生成されたパスを戻す
+            saveFileDialog1.FileName = fileName;
+            saveFileDialog1.Title = title;
+            saveFileDialog1.Filter = filter;
+            saveFileDialog1.FilterIndex = 0;
+            saveFileDialog1.RestoreDirectory = true;
+            DialogResult dr = saveFileDialog1.ShowDialog();
+            if (dr != DialogResult.OK) {
+                return string.Empty;
+            }
+            return saveFileDialog1.FileName;
         }
     }
 }
