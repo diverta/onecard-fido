@@ -203,6 +203,21 @@ typedef enum : NSInteger {
         }
     }
 
+    - (IBAction)menuItemFile1DidSelect:(id)sender {
+        // 仮コード
+        [self displaySuccessPopupMessage:@"menuItemFile1DidSelect"];
+    }
+
+    - (IBAction)menuItemFile2DidSelect:(id)sender {
+        // 仮コード
+        [self displaySuccessPopupMessage:@"menuItemFile2DidSelect"];
+    }
+
+    - (IBAction)menuItemFile3DidSelect:(id)sender {
+        // 仮コード
+        [self displaySuccessPopupMessage:@"menuItemFile3DidSelect"];
+    }
+
 #pragma mark - Call back from ToolCommand
 
     - (void)notifyToolCommandMessage:(NSString *)message {
