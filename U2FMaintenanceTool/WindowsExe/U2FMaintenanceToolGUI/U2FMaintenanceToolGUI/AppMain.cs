@@ -16,6 +16,11 @@ namespace U2FMaintenanceToolGUI
         private static StringBuilder standardOutputs;
         private static StringBuilder standardErrors;
 
+        // Chrome Native Messaging設定用の
+        // レジストリーキー名、JSONファイル名
+        public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
+        public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
+
         public AppMain()
         {
             // U2F管理コマンドが導入されているかチェック
@@ -116,6 +121,17 @@ namespace U2FMaintenanceToolGUI
             } else {
                 return "";
             }
+        }
+
+        public bool checkChromeNMSettingFileIsExist() {
+            // Chrome Native Messaging設定用のJSONファイルが
+            // 導入されているかチェック
+            if (File.Exists(ChromeNMSettingFile)) {
+                return true;
+            }
+
+            outputLogToFile(ChromeNMSettingFile + "が導入されていません");
+            return false;
         }
 
         public bool doEraseBond()

@@ -125,8 +125,32 @@ namespace U2FMaintenanceToolGUI
             doCommand(sender);
         }
 
+        private bool checkSettingJsonIsExist()
+        {
+            // Chrome Native Messaging設定用の
+            // JSONファイルが導入済みの場合はOK
+            if (app.checkChromeNMSettingFileIsExist()) {
+                return true;
+            }
+
+            // JSONファイルがない旨の表示
+            string message = "Chrome Native Messagingの設定ができません。";
+            textBox1.AppendText(message + "\r\n");
+            textBox1.AppendText(AppMain.ChromeNMSettingFile + "をインストールしてください。\r\n");
+
+            // メッセージをポップアップ表示
+            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
         private void button5_Click(object sender, EventArgs e)
         {
+            // Chrome Native Messaging設定用の
+            // JSONファイルがない場合は終了
+            if (checkSettingJsonIsExist() == false) {
+                return;
+            }
+
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}\n{2}",
                 "ChromeでBLE U2Fトークンが使用できるよう設定します。",
