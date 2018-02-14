@@ -233,5 +233,23 @@ namespace U2FMaintenanceToolGUI
             // Yesがクリックされた場合 true を戻す
             return (dialogResult == DialogResult.Yes);
         }
+
+        private void 鍵ファイル作成KToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 仮コード
+            MessageBox.Show("鍵ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 仮コード
+            MessageBox.Show("証明書要求ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 仮コード
+            MessageBox.Show("自己署名証明書ファイル作成", AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
