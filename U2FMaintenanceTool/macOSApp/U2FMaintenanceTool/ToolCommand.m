@@ -633,6 +633,15 @@
         case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
             processName = @"Chrome Native Messaging有効化設定";
             break;
+        case COMMAND_CREATE_KEYPAIR_PEM:
+            processName = @"鍵ファイル作成";
+            break;
+        case COMMAND_CREATE_CERTREQ_CSR:
+            processName = @"証明書要求ファイル作成";
+            break;
+        case COMMAND_CREATE_SELFCRT_CRT:
+            processName = @"自己署名証明書ファイル作成";
+            break;
         default:
             processName = nil;
             break;
@@ -819,6 +828,28 @@
         default:
             break;
     }
+}
+
+- (void)toolCommandWillCreateFile:(Command)command toolCommandCrypto:(ToolCommandCrypto *)toolCommandCrypto {
+    // コマンドに応じ、以下の処理に分岐
+    [self setCommand:command];
+    switch (command) {
+        case COMMAND_CREATE_KEYPAIR_PEM:
+            if ([toolCommandCrypto createKeypairPemFile] == false) {
+                [self.delegate toolCommandDidFail:@"秘密鍵ファイルの生成に失敗しました。"];
+                return;
+            }
+            break;
+        case COMMAND_CREATE_CERTREQ_CSR:
+            break;
+        case COMMAND_CREATE_SELFCRT_CRT:
+            break;
+        default:
+            break;
+    }
+    // 処理成功時
+    [self.delegate notifyToolCommandMessage:[toolCommandCrypto processMessage]];
+    [self.delegate toolCommandDidSuccess];
 }
 
 @end

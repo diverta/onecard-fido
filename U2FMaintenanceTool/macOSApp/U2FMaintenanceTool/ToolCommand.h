@@ -7,6 +7,9 @@
 #ifndef ToolCommand_h
 #define ToolCommand_h
 
+// for OpenSSL
+#import "ToolCommandCrypto.h"
+
 typedef enum : NSInteger {
     COMMAND_NONE = 1,
     COMMAND_ERASE_BOND,
@@ -18,7 +21,10 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
     COMMAND_U2F_PROCESS,
-    COMMAND_SETUP_CHROME_NATIVE_MESSAGING
+    COMMAND_SETUP_CHROME_NATIVE_MESSAGING,
+    COMMAND_CREATE_KEYPAIR_PEM,
+    COMMAND_CREATE_CERTREQ_CSR,
+    COMMAND_CREATE_SELFCRT_CRT
 } Command;
 
 @protocol ToolCommandDelegate;
@@ -35,6 +41,8 @@ typedef enum : NSInteger {
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
     - (void)toolCommandWillSetup:(Command)command;
+    - (void)toolCommandWillCreateFile:(Command)command
+                    toolCommandCrypto:(ToolCommandCrypto *)toolCommandCrypto;
 
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath

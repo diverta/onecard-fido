@@ -2,6 +2,7 @@
 #import "ToolBLECentral.h"
 #import "ToolBLEHelper.h"
 #import "ToolCommand.h"
+#import "ToolCommandCrypto.h"
 
 typedef enum : NSInteger {
     PATH_SKEY = 1,
@@ -12,9 +13,10 @@ typedef enum : NSInteger {
 @interface AppDelegate ()
     <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate>
 
-    @property (nonatomic) ToolCommand    *toolCommand;
-    @property (nonatomic) ToolBLECentral *toolBLECentral;
-    @property (nonatomic) ToolBLEHelper  *toolBLEHelper;
+    @property (nonatomic) ToolCommand       *toolCommand;
+    @property (nonatomic) ToolBLECentral    *toolBLECentral;
+    @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
+    @property (nonatomic) ToolCommandCrypto *toolCommandCrypto;
 
     @property (nonatomic) PathType  pathType;
 
@@ -26,13 +28,16 @@ typedef enum : NSInteger {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
-
+        
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
         
         // Chromeエクステンションから起動した時はボタンを押下不可とする
         if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
             [self enableButtons:false];
         }
+        
+        // OpenSSL利用前の初期化処理を実行
+        self.toolCommandCrypto = [[ToolCommandCrypto alloc] init];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -264,9 +269,12 @@ typedef enum : NSInteger {
     - (void)panelDidCreatePath:(NSSavePanel *)panel {
         // ファイル保存パネルで作成されたファイルパスを取得
         NSString *filePath = [[panel URL] path];
-        // 仮コード：ファイル保存パネルで選択されたファイルパスを表示する
         if (self.pathType == PATH_SKEY) {
-            [self displaySuccessPopupMessage:filePath];
+            // 秘密鍵ファイル作成処理に移る
+            [self enableButtons:false];
+            [self.toolCommandCrypto setOutputFilePath:filePath];
+            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
+                                      toolCommandCrypto:self.toolCommandCrypto];
             
         } else if (self.pathType == PATH_CSR) {
             [self displaySuccessPopupMessage:filePath];
