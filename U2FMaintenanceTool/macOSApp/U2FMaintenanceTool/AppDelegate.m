@@ -4,6 +4,9 @@
 #import "ToolCommand.h"
 #import "ToolCommandCrypto.h"
 
+// 個別実装ダイアログ
+#import "CertreqParamWindow.h"
+
 typedef enum : NSInteger {
     PATH_SKEY = 1,
     PATH_CERT,
@@ -19,6 +22,8 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolCommandCrypto *toolCommandCrypto;
 
     @property (nonatomic) PathType  pathType;
+
+    @property (nonatomic) CertreqParamWindow *certreqParamWindow;
 
 @end
 
@@ -215,10 +220,36 @@ typedef enum : NSInteger {
         [self panelWillCreatePath:[self preparePanelForCreatePath]];
     }
 
+    - (NSWindow *)prepareKeypairPemWindow {
+        if ([self certreqParamWindow] == nil) {
+            [self setCertreqParamWindow:[
+                [CertreqParamWindow alloc]
+                initWithWindowNibName:@"CertreqParamWindow"]];
+        }
+        if ([self certreqParamWindow]) {
+            return [[self certreqParamWindow] window];
+        }
+        return nil;
+    }
+
+    - (void)displayParamWindowAsDialog:(NSWindow *)window {
+        if (window == nil) {
+            return;
+        }
+        // ダイアログをモーダルで表示
+        [NSApp runModalForWindow:window];
+        [NSApp endSheet:window];
+        [window orderOut:self];
+    }
+    
     - (IBAction)menuItemFile2DidSelect:(id)sender {
+        // ダイアログを表示
+        [self displayParamWindowAsDialog:[self prepareKeypairPemWindow]];
+        /*
         // ファイル保存パネルをモーダル表示
         [self setPathType:PATH_CSR];
         [self panelWillCreatePath:[self preparePanelForCreatePath]];
+         */
     }
 
     - (IBAction)menuItemFile3DidSelect:(id)sender {
