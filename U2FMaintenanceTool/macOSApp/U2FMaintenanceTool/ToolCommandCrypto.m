@@ -43,14 +43,14 @@ bool create_keypair_pem_file(const char *output_file_path) {
     int eccgrp = OBJ_txt2nid(SN_X9_62_prime256v1);
     EC_KEY *eckey = EC_KEY_new_by_curve_name(eccgrp);
     if (eckey == NULL) {
-        sprintf(openssl_message, "EC_KEY_new_by_curve_name failed");
+        sprintf(openssl_message, "create_keypair_pem_file: EC_KEY_new_by_curve_name failed");
         return false;
     }
 
     // 新規のキーペアを生成
     EC_KEY_set_asn1_flag(eckey, OPENSSL_EC_NAMED_CURVE);
     if (EC_KEY_generate_key(eckey) == 0) {
-        sprintf(openssl_message, "EC_KEY_generate_key failed");
+        sprintf(openssl_message, "create_keypair_pem_file: EC_KEY_generate_key failed");
         free_resources(eckey, NULL, NULL);
         return false;
     }
@@ -58,7 +58,7 @@ bool create_keypair_pem_file(const char *output_file_path) {
     // EC鍵の格納領域を生成
     EVP_PKEY *pkey = EVP_PKEY_new();
     if (EVP_PKEY_assign_EC_KEY(pkey, eckey) == 0) {
-        sprintf(openssl_message, "EVP_PKEY_assign_EC_KEY failed");
+        sprintf(openssl_message, "create_keypair_pem_file: EVP_PKEY_assign_EC_KEY failed");
         free_resources(eckey, pkey, NULL);
         return false;
     }
@@ -66,7 +66,7 @@ bool create_keypair_pem_file(const char *output_file_path) {
     // EC鍵を生成
     eckey = EVP_PKEY_get1_EC_KEY(pkey);
     if (eckey == NULL) {
-        sprintf(openssl_message, "EVP_PKEY_get1_EC_KEY failed");
+        sprintf(openssl_message, "create_keypair_pem_file: EVP_PKEY_get1_EC_KEY failed");
         free_resources(eckey, pkey, NULL);
         return false;
     }
@@ -74,14 +74,14 @@ bool create_keypair_pem_file(const char *output_file_path) {
     // EC鍵ファイルを開く
     FILE *fp = fopen(output_file_path, "w");
     if (fp == NULL) {
-        sprintf(openssl_message, "fopen failed: %s", output_file_path);
+        sprintf(openssl_message, "create_keypair_pem_file: fopen failed: %s", output_file_path);
         free_resources(eckey, pkey, fp);
         return false;
     }
     
     // EC鍵をファイルに書き出し
     if (PEM_write_ECPrivateKey(fp, eckey, NULL, NULL, 0, 0, NULL) == 0) {
-        sprintf(openssl_message, "PEM_write_ECPrivateKey failed");
+        sprintf(openssl_message, "create_keypair_pem_file: PEM_write_ECPrivateKey failed");
         free_resources(eckey, pkey, fp);
         return false;
     }
@@ -90,6 +90,16 @@ bool create_keypair_pem_file(const char *output_file_path) {
     sprintf(openssl_message, "鍵ファイルを作成しました: %s", output_file_path);
     free_resources(eckey, pkey, fp);
     return true;
+}
+
+bool create_certreq_csr_file(const char *output_file_path) {
+    sprintf(openssl_message, "create_certreq_csr_file: under construction");
+    return false;
+}
+
+bool create_selfcrt_crt_file(const char *output_file_path) {
+    sprintf(openssl_message, "create_selfcrt_crt_file: under construction");
+    return false;
 }
 
 #pragma mark OpenSSL関連処理を実行するためのクラス
@@ -102,22 +112,28 @@ bool create_keypair_pem_file(const char *output_file_path) {
     return self;
 }
 
-- (void)setOpenSSLMessage {
+- (NSString *)getProcessMessage {
     // OpenSSL処理結果のメッセージを格納
-    NSString *message = [NSString alloc];
-    [self setProcessMessage:[message initWithBytes:get_openssl_message()
-                                            length:get_openssl_message_length()
-                                          encoding:(NSUTF8StringEncoding)]];
+    NSString *message = [[NSString alloc] initWithBytes:get_openssl_message()
+                                                 length:get_openssl_message_length()
+                                               encoding:(NSUTF8StringEncoding)];
+    NSLog(@"%s", get_openssl_message());
+    return message;
 }
 
 - (bool)createKeypairPemFile {
     // 指定のパスに、EC鍵ファイルをPEM形式で生成
-    bool ret = create_keypair_pem_file([[self outputFilePath] UTF8String]);
-    
-    // メッセージを出力
-    [self setOpenSSLMessage];
-    NSLog(@"createKeypairPemFile %@: %s", ret ? @"success" : @"failed", get_openssl_message());
-    return ret;
+    return create_keypair_pem_file([[self outputFilePath] UTF8String]);
+}
+
+- (bool)createCertreqCsrFile {
+    // 指定のパスに、証明書要求ファイルをPEM形式で生成
+    return create_certreq_csr_file([[self outputFilePath] UTF8String]);
+}
+
+- (bool)createSelfcrtCrtFile {
+    // 指定のパスに、自己署名証明書ファイルをDER形式で生成
+    return create_selfcrt_crt_file([[self outputFilePath] UTF8String]);
 }
 
 @end

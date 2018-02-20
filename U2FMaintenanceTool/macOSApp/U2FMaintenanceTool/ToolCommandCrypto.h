@@ -10,9 +10,12 @@
 @interface ToolCommandCrypto : NSObject
 
 @property (nonatomic) NSString *outputFilePath;
-@property (nonatomic) NSString *processMessage;
+
+- (NSString *)getProcessMessage;
 
 - (bool)createKeypairPemFile;
+- (bool)createCertreqCsrFile;
+- (bool)createSelfcrtCrtFile;
 
 @end
 

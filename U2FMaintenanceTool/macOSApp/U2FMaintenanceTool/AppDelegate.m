@@ -267,20 +267,28 @@ typedef enum : NSInteger {
     }
 
     - (void)panelDidCreatePath:(NSSavePanel *)panel {
-        // ファイル保存パネルで作成されたファイルパスを取得
+        // ファイル保存パネルで作成されたファイルパスを、出力先パスとして設定
         NSString *filePath = [[panel URL] path];
+        [self.toolCommandCrypto setOutputFilePath:filePath];
+
+        // 各処理に移る
         if (self.pathType == PATH_SKEY) {
-            // 秘密鍵ファイル作成処理に移る
+            // 秘密鍵ファイル作成処理
             [self enableButtons:false];
-            [self.toolCommandCrypto setOutputFilePath:filePath];
             [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
                                       toolCommandCrypto:self.toolCommandCrypto];
             
         } else if (self.pathType == PATH_CSR) {
-            [self displaySuccessPopupMessage:filePath];
-            
+            // 証明書要求ファイル作成処理
+            [self enableButtons:false];
+            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR
+                                      toolCommandCrypto:self.toolCommandCrypto];
+
         } else if (self.pathType == PATH_CERT) {
-            [self displaySuccessPopupMessage:filePath];
+            // 自己署名証明書ファイル作成処理
+            [self enableButtons:false];
+            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT
+                                      toolCommandCrypto:self.toolCommandCrypto];
         }
     }
 

@@ -831,25 +831,34 @@
 }
 
 - (void)toolCommandWillCreateFile:(Command)command toolCommandCrypto:(ToolCommandCrypto *)toolCommandCrypto {
+    // 処理結果を保持
+    bool ret = false;
+    
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
     switch (command) {
         case COMMAND_CREATE_KEYPAIR_PEM:
-            if ([toolCommandCrypto createKeypairPemFile] == false) {
-                [self.delegate toolCommandDidFail:@"秘密鍵ファイルの生成に失敗しました。"];
-                return;
-            }
+            ret = [toolCommandCrypto createKeypairPemFile];
             break;
         case COMMAND_CREATE_CERTREQ_CSR:
+            ret = [toolCommandCrypto createCertreqCsrFile];
             break;
         case COMMAND_CREATE_SELFCRT_CRT:
+            ret = [toolCommandCrypto createSelfcrtCrtFile];
             break;
         default:
             break;
     }
-    // 処理成功時
-    [self.delegate notifyToolCommandMessage:[toolCommandCrypto processMessage]];
-    [self.delegate toolCommandDidSuccess];
+    
+    if (ret) {
+        // 処理成功時
+        [self.delegate notifyToolCommandMessage:[toolCommandCrypto getProcessMessage]];
+        [self.delegate toolCommandDidSuccess];
+        
+    } else {
+        // 処理失敗時
+        [self.delegate toolCommandDidFail:[toolCommandCrypto getProcessMessage]];
+    }
 }
 
 @end
