@@ -2,7 +2,7 @@
 #import "ToolBLECentral.h"
 #import "ToolBLEHelper.h"
 #import "ToolCommand.h"
-#import "ToolCommandCrypto.h"
+#import "ToolFileMenu.h"
 
 // 個別実装ダイアログ
 #import "CertreqParamWindow.h"
@@ -19,7 +19,7 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
-    @property (nonatomic) ToolCommandCrypto *toolCommandCrypto;
+    @property (nonatomic) ToolFileMenu *toolCommandCrypto;
 
     @property (nonatomic) PathType  pathType;
 
@@ -42,7 +42,7 @@ typedef enum : NSInteger {
         }
         
         // OpenSSL利用前の初期化処理を実行
-        self.toolCommandCrypto = [[ToolCommandCrypto alloc] init];
+        self.toolCommandCrypto = [[ToolFileMenu alloc] init];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -307,19 +307,19 @@ typedef enum : NSInteger {
             // 秘密鍵ファイル作成処理
             [self enableButtons:false];
             [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
-                                      toolCommandCrypto:self.toolCommandCrypto];
+                                      toolFileMenu:self.toolCommandCrypto];
             
         } else if (self.pathType == PATH_CSR) {
             // 証明書要求ファイル作成処理
             [self enableButtons:false];
             [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR
-                                      toolCommandCrypto:self.toolCommandCrypto];
+                                      toolFileMenu:self.toolCommandCrypto];
 
         } else if (self.pathType == PATH_CERT) {
             // 自己署名証明書ファイル作成処理
             [self enableButtons:false];
             [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT
-                                      toolCommandCrypto:self.toolCommandCrypto];
+                                      toolFileMenu:self.toolCommandCrypto];
         }
     }
 

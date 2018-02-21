@@ -8,7 +8,7 @@
 #define ToolCommand_h
 
 // for OpenSSL
-#import "ToolCommandCrypto.h"
+#import "ToolFileMenu.h"
 
 typedef enum : NSInteger {
     COMMAND_NONE = 1,
@@ -42,7 +42,7 @@ typedef enum : NSInteger {
     - (bool)isResponseCompleted:(NSData *)responseData;
     - (void)toolCommandWillSetup:(Command)command;
     - (void)toolCommandWillCreateFile:(Command)command
-                    toolCommandCrypto:(ToolCommandCrypto *)toolCommandCrypto;
+                    toolFileMenu:(ToolFileMenu *)toolCommandCrypto;
 
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath

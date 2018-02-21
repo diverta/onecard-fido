@@ -1,13 +1,13 @@
 //
-//  ToolCommandCrypto.h
+//  ToolFileMenu.h
 //  U2FMaintenanceTool
 //
 //  Created by Makoto Morita on 2018/02/19.
 //
-#ifndef ToolCommandCrypto_h
-#define ToolCommandCrypto_h
+#ifndef ToolFileMenu_h
+#define ToolFileMenu_h
 
-@interface ToolCommandCrypto : NSObject
+@interface ToolFileMenu : NSObject
 
 @property (nonatomic) NSString *outputFilePath;
 
@@ -19,4 +19,4 @@
 
 @end
 
-#endif /* ToolCommandCrypto_h */
+#endif /* ToolFileMenu_h */

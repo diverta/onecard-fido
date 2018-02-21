@@ -1,14 +1,12 @@
 //
-//  ToolCommandCrypto.m
+//  OpenSSL.c
 //  U2FMaintenanceTool
 //
-//  Created by Makoto Morita on 2018/02/19.
+//  Created by Makoto Morita on 2018/02/21.
 //
-#import <Foundation/Foundation.h>
-#import "ToolCommandCrypto.h"
+#include "OpenSSL.h"
 
-#pragma mark OpenSSL関連処理群
-
+#include <string.h>
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
@@ -29,7 +27,7 @@ void init_openssl(void) {
     ERR_load_crypto_strings();
 }
 
-void free_resources(EC_KEY *eckey, EVP_PKEY *pkey, FILE *output_file) {
+static void free_resources(EC_KEY *eckey, EVP_PKEY *pkey, FILE *output_file) {
     // 作業領域を解放し、ファイルを閉じる
     EVP_PKEY_free(pkey);
     EC_KEY_free(eckey);
@@ -46,7 +44,7 @@ bool create_keypair_pem_file(const char *output_file_path) {
         sprintf(openssl_message, "create_keypair_pem_file: EC_KEY_new_by_curve_name failed");
         return false;
     }
-
+    
     // 新規のキーペアを生成
     EC_KEY_set_asn1_flag(eckey, OPENSSL_EC_NAMED_CURVE);
     if (EC_KEY_generate_key(eckey) == 0) {
@@ -101,39 +99,3 @@ bool create_selfcrt_crt_file(const char *output_file_path) {
     sprintf(openssl_message, "create_selfcrt_crt_file: under construction");
     return false;
 }
-
-#pragma mark OpenSSL関連処理を実行するためのクラス
-
-@implementation ToolCommandCrypto
-
-- (id)init {
-    // OpenSSL初期化処理を実行
-    init_openssl();
-    return self;
-}
-
-- (NSString *)getProcessMessage {
-    // OpenSSL処理結果のメッセージを格納
-    NSString *message = [[NSString alloc] initWithBytes:get_openssl_message()
-                                                 length:get_openssl_message_length()
-                                               encoding:(NSUTF8StringEncoding)];
-    NSLog(@"%s", get_openssl_message());
-    return message;
-}
-
-- (bool)createKeypairPemFile {
-    // 指定のパスに、EC鍵ファイルをPEM形式で生成
-    return create_keypair_pem_file([[self outputFilePath] UTF8String]);
-}
-
-- (bool)createCertreqCsrFile {
-    // 指定のパスに、証明書要求ファイルをPEM形式で生成
-    return create_certreq_csr_file([[self outputFilePath] UTF8String]);
-}
-
-- (bool)createSelfcrtCrtFile {
-    // 指定のパスに、自己署名証明書ファイルをDER形式で生成
-    return create_selfcrt_crt_file([[self outputFilePath] UTF8String]);
-}
-
-@end

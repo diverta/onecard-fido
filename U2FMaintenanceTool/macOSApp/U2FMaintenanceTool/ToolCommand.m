@@ -830,7 +830,7 @@
     }
 }
 
-- (void)toolCommandWillCreateFile:(Command)command toolCommandCrypto:(ToolCommandCrypto *)toolCommandCrypto {
+- (void)toolCommandWillCreateFile:(Command)command toolFileMenu:(ToolFileMenu *)toolFileMenu {
     // 処理結果を保持
     bool ret = false;
     
@@ -838,13 +838,13 @@
     [self setCommand:command];
     switch (command) {
         case COMMAND_CREATE_KEYPAIR_PEM:
-            ret = [toolCommandCrypto createKeypairPemFile];
+            ret = [toolFileMenu createKeypairPemFile];
             break;
         case COMMAND_CREATE_CERTREQ_CSR:
-            ret = [toolCommandCrypto createCertreqCsrFile];
+            ret = [toolFileMenu createCertreqCsrFile];
             break;
         case COMMAND_CREATE_SELFCRT_CRT:
-            ret = [toolCommandCrypto createSelfcrtCrtFile];
+            ret = [toolFileMenu createSelfcrtCrtFile];
             break;
         default:
             break;
@@ -852,12 +852,12 @@
     
     if (ret) {
         // 処理成功時
-        [self.delegate notifyToolCommandMessage:[toolCommandCrypto getProcessMessage]];
+        [self.delegate notifyToolCommandMessage:[toolFileMenu getProcessMessage]];
         [self.delegate toolCommandDidSuccess];
         
     } else {
         // 処理失敗時
-        [self.delegate toolCommandDidFail:[toolCommandCrypto getProcessMessage]];
+        [self.delegate toolCommandDidFail:[toolFileMenu getProcessMessage]];
     }
 }
 
