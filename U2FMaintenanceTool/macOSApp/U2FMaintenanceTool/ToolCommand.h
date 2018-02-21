@@ -25,8 +25,6 @@
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
     - (void)toolCommandWillSetup:(Command)command;
-    - (void)toolCommandWillCreateFile:(Command)command
-                    toolFileMenu:(ToolFileMenu *)toolCommandCrypto;
 
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath
@@ -34,6 +32,7 @@
     - (void)setU2FProcessParameter:(Command)command
                  bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
 
+    // ToolXxxxDelegate 共通インターフェース
     - (NSString *)processNameOfCommand;
 
 @end

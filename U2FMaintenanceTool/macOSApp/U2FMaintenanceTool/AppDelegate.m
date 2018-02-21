@@ -14,7 +14,7 @@ typedef enum : NSInteger {
 } PathType;
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate>
+    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate>
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
@@ -33,7 +33,7 @@ typedef enum : NSInteger {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
-        self.toolFileMenu   = [[ToolFileMenu alloc]   init];
+        self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
         
@@ -214,7 +214,7 @@ typedef enum : NSInteger {
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
         // ファイル保存パネルをモーダル表示
-        [[self toolFileMenu] setCommand:COMMAND_CREATE_KEYPAIR_PEM];
+        [[self toolFileMenu] setupCommand:COMMAND_CREATE_KEYPAIR_PEM];
         [self panelWillCreatePath:[self preparePanelForCreatePath]];
     }
 
@@ -262,7 +262,7 @@ typedef enum : NSInteger {
         [panel setCanCreateDirectories:NO];
         [panel setShowsTagField:NO];
         // コマンド種別ごとに設定値を変える
-        switch ([[self toolFileMenu] command]) {
+        switch ([[self toolFileMenu] getCommand]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
                 [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
                 [panel setNameFieldStringValue:@"U2FPrivKey"];
@@ -302,24 +302,22 @@ typedef enum : NSInteger {
     - (void)panelDidCreatePath:(NSSavePanel *)panel {
         // ファイル保存パネルで作成されたファイルパスを、出力先パスとして設定
         NSString *filePath = [[panel URL] path];
-        [self.toolFileMenu setOutputFilePath:filePath];
+        [self.toolFileMenu setupOutputFilePath:filePath];
 
         // コマンド種別に対応した処理に移行
         [self enableButtons:false];
-        switch ([[self toolFileMenu] command]) {
+        switch ([[self toolFileMenu] getCommand]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
-                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
-                                               toolFileMenu:self.toolFileMenu];
+                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
-                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR
-                                               toolFileMenu:self.toolFileMenu];
+                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR];
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
-                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT
-                                               toolFileMenu:self.toolFileMenu];
+                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT];
                 break;
             default:
+                NSLog(@"filePath: %@", filePath);
                 [self enableButtons:true];
                 break;
         }
@@ -410,9 +408,12 @@ typedef enum : NSInteger {
 
     - (void)displayEndMessage:(bool)success {
         // 実行中のコマンドに対応する処理名を取得
-        NSString *processName = [self.toolCommand processNameOfCommand];
+        NSString *processName = [[self toolCommand] processNameOfCommand];
         if (!processName) {
-            return;
+            processName = [[self toolFileMenu] processNameOfCommand];
+            if (!processName) {
+                return;
+            }
         }
         
         // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる

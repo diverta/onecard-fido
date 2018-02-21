@@ -632,15 +632,6 @@
         case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
             processName = @"Chrome Native Messaging有効化設定";
             break;
-        case COMMAND_CREATE_KEYPAIR_PEM:
-            processName = @"鍵ファイル作成";
-            break;
-        case COMMAND_CREATE_CERTREQ_CSR:
-            processName = @"証明書要求ファイル作成";
-            break;
-        case COMMAND_CREATE_SELFCRT_CRT:
-            processName = @"自己署名証明書ファイル作成";
-            break;
         default:
             processName = nil;
             break;
@@ -826,37 +817,6 @@
             break;
         default:
             break;
-    }
-}
-
-- (void)toolCommandWillCreateFile:(Command)command toolFileMenu:(ToolFileMenu *)toolFileMenu {
-    // 処理結果を保持
-    bool ret = false;
-    
-    // コマンドに応じ、以下の処理に分岐
-    [self setCommand:command];
-    switch (command) {
-        case COMMAND_CREATE_KEYPAIR_PEM:
-            ret = [toolFileMenu createKeypairPemFile];
-            break;
-        case COMMAND_CREATE_CERTREQ_CSR:
-            ret = [toolFileMenu createCertreqCsrFile];
-            break;
-        case COMMAND_CREATE_SELFCRT_CRT:
-            ret = [toolFileMenu createSelfcrtCrtFile];
-            break;
-        default:
-            break;
-    }
-    
-    if (ret) {
-        // 処理成功時
-        [self.delegate notifyToolCommandMessage:[toolFileMenu getProcessMessage]];
-        [self.delegate toolCommandDidSuccess];
-        
-    } else {
-        // 処理失敗時
-        [self.delegate toolCommandDidFail:[toolFileMenu getProcessMessage]];
     }
 }
 

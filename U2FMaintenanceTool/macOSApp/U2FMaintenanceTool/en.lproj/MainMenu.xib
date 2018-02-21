@@ -69,7 +69,7 @@
                         <items>
                             <menuItem title="鍵ファイル作成..." keyEquivalent="k" id="cCk-nh-aaI">
                                 <connections>
-                                    <action selector="menuItemFile1DidSelect:" target="494" id="bT6-WD-9Yq"/>
+                                    <action selector="menuItemFile1DidSelect:" target="494" id="2dT-SE-YKf"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="証明書要求ファイル作成..." keyEquivalent="r" id="XNy-QP-mqi">
@@ -843,7 +843,7 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
-                <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="2ew-kT-jLj"/>
+                <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="0ZH-et-dd3"/>
                 <outlet property="menuItemFile2" destination="XNy-QP-mqi" id="KOG-yy-QOa"/>
                 <outlet property="menuItemFile3" destination="DKu-Wo-Se1" id="Yt2-8A-bre"/>
                 <outlet property="textView" destination="541" id="558"/>

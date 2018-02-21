@@ -9,16 +9,30 @@
 
 #import "ToolCommon.h"
 
-@interface ToolFileMenu : NSObject
+@protocol ToolFileMenuDelegate;
 
-@property (nonatomic) NSString *outputFilePath;
-@property (nonatomic) Command   command;
+    @interface ToolFileMenu : NSObject
 
-- (NSString *)getProcessMessage;
+    @property (nonatomic, weak) id<ToolFileMenuDelegate> delegate;
 
-- (bool)createKeypairPemFile;
-- (bool)createCertreqCsrFile;
-- (bool)createSelfcrtCrtFile;
+    - (id)initWithDelegate:(id<ToolFileMenuDelegate>)delegate;
+    - (void)toolCommandWillCreateFile:(Command)command;
+
+    // クラス変数アクセス用
+    - (void)setupCommand:(Command)command;
+    - (Command)getCommand;
+    - (void)setupOutputFilePath:(NSString *)outputFilePath;
+
+    // ToolXxxxDelegate 共通インターフェース
+    - (NSString *)processNameOfCommand;
+
+@end
+
+@protocol ToolFileMenuDelegate <NSObject>
+    // ToolXxxxDelegate 共通インターフェース
+    - (void)notifyToolCommandMessage:(NSString *)message;
+    - (void)toolCommandDidFail:(NSString *)errorMessage;
+    - (void)toolCommandDidSuccess;
 
 @end
 
