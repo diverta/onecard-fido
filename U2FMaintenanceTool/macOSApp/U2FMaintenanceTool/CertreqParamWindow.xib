@@ -8,7 +8,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CertreqParamWindow">
             <connections>
-                <outlet property="fieldCN" destination="HF5-96-Iea" id="xcz-bT-QAN"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>

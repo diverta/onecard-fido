@@ -16,15 +16,11 @@
     @property (nonatomic, weak) id<ToolFileMenuDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolFileMenuDelegate>)delegate;
-    - (void)toolCommandWillCreateFile:(Command)command;
-
-    // クラス変数アクセス用
-    - (void)setupCommand:(Command)command;
-    - (Command)getCommand;
-    - (void)setupOutputFilePath:(NSString *)outputFilePath;
+    - (void)toolFileMenuWillCreateFile:(id)sender;
 
     // ToolXxxxDelegate 共通インターフェース
     - (NSString *)processNameOfCommand;
+    - (bool)panelDidCreatePath:(NSString*)filePath;
 
 @end
 
@@ -33,6 +29,7 @@
     - (void)notifyToolCommandMessage:(NSString *)message;
     - (void)toolCommandDidFail:(NSString *)errorMessage;
     - (void)toolCommandDidSuccess;
+    - (void)panelWillCreatePath:(NSSavePanel *)panel sender:(id)sender;
 
 @end
 

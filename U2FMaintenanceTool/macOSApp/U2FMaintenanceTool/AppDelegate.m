@@ -4,9 +4,6 @@
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 
-// 個別実装ダイアログ
-#import "CertreqParamWindow.h"
-
 typedef enum : NSInteger {
     PATH_SKEY = 1,
     PATH_CERT,
@@ -22,8 +19,6 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
 
     @property (nonatomic) PathType  pathType;
-
-    @property (nonatomic) CertreqParamWindow *certreqParamWindow;
 
 @end
 
@@ -213,81 +208,21 @@ typedef enum : NSInteger {
     }
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
-        // ファイル保存パネルをモーダル表示
-        [[self toolFileMenu] setupCommand:COMMAND_CREATE_KEYPAIR_PEM];
-        [self panelWillCreatePath:[self preparePanelForCreatePath]];
+        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
     }
 
-    - (NSWindow *)prepareKeypairPemWindow {
-        if ([self certreqParamWindow] == nil) {
-            [self setCertreqParamWindow:[
-                [CertreqParamWindow alloc]
-                initWithWindowNibName:@"CertreqParamWindow"]];
-        }
-        if ([self certreqParamWindow]) {
-            return [[self certreqParamWindow] window];
-        }
-        return nil;
-    }
-
-    - (void)displayParamWindowAsDialog:(NSWindow *)window {
-        if (window == nil) {
-            return;
-        }
-        // ダイアログをモーダルで表示
-        [NSApp runModalForWindow:window];
-        [NSApp endSheet:window];
-        [window orderOut:self];
-    }
-    
     - (IBAction)menuItemFile2DidSelect:(id)sender {
-        // ダイアログを表示（仮コード）
-        [self displayParamWindowAsDialog:[self prepareKeypairPemWindow]];
-        /*
-        // ファイル保存パネルをモーダル表示
-        [self setPathType:PATH_CSR];
-        [self panelWillCreatePath:[self preparePanelForCreatePath]];
-         */
+        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
     }
 
     - (IBAction)menuItemFile3DidSelect:(id)sender {
-        // ファイル保存パネルをモーダル表示
-        [self setPathType:PATH_CERT];
-        [self panelWillCreatePath:[self preparePanelForCreatePath]];
+        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
     }
 
-    - (NSSavePanel *)preparePanelForCreatePath {
-        // ファイル保存パネルの設定
-        NSSavePanel *panel = [NSSavePanel savePanel];
-        [panel setCanCreateDirectories:NO];
-        [panel setShowsTagField:NO];
-        // コマンド種別ごとに設定値を変える
-        switch ([[self toolFileMenu] getCommand]) {
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FPrivKey"];
-                [panel setAllowedFileTypes:@[@"pem"]];
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                [panel setMessage:@"作成する証明書要求ファイル(CSR)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FCertReq"];
-                [panel setAllowedFileTypes:@[@"csr"]];
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                [panel setMessage:@"作成する自己署名証明書ファイル(CRT)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FSelfCer"];
-                [panel setAllowedFileTypes:@[@"crt"]];
-                break;
-            default:
-                break;
-        }
-        [panel setPrompt:@"作成"];
-        
-        return panel;
-    }
+#pragma mark - Call back from ToolCommand/ToolFileMenu
 
-    - (void)panelWillCreatePath:(NSSavePanel *)panel {
-        // ファイル保存パネルをモーダル表示
+    - (void)panelWillCreatePath:(NSSavePanel *)panel sender:(id)sender {
+        // ファイル保存パネルをアプリケーション・デリゲートにモーダル表示してもらう
         AppDelegate * __weak weakSelf = self;
         [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
             [panel orderOut:self];
@@ -295,31 +230,20 @@ typedef enum : NSInteger {
                 return;
             }
             // ファイルパスが作成された時の処理
-            [weakSelf panelDidCreatePath:panel];
+            [weakSelf panelDidCreatePath:panel sender:sender];
         }];
     }
 
-    - (void)panelDidCreatePath:(NSSavePanel *)panel {
+    - (void)panelDidCreatePath:(NSSavePanel *)panel sender:(id)sender {
         // ファイル保存パネルで作成されたファイルパスを、出力先パスとして設定
         NSString *filePath = [[panel URL] path];
-        [self.toolFileMenu setupOutputFilePath:filePath];
-
+        
         // コマンド種別に対応した処理に移行
         [self enableButtons:false];
-        switch ([[self toolFileMenu] getCommand]) {
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM];
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR];
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                [[self toolFileMenu] toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT];
-                break;
-            default:
-                NSLog(@"filePath: %@", filePath);
-                [self enableButtons:true];
-                break;
+        if (sender == [self toolFileMenu]) {
+            [[self toolFileMenu] panelDidCreatePath:filePath];
+        } else {
+            [self enableButtons:true];
         }
     }
 
