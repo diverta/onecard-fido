@@ -7,9 +7,12 @@
 #ifndef ToolFileMenu_h
 #define ToolFileMenu_h
 
+#import "ToolCommon.h"
+
 @interface ToolFileMenu : NSObject
 
 @property (nonatomic) NSString *outputFilePath;
+@property (nonatomic) Command   command;
 
 - (NSString *)getProcessMessage;
 

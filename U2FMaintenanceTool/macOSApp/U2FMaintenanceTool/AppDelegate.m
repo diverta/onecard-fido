@@ -19,7 +19,7 @@ typedef enum : NSInteger {
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
-    @property (nonatomic) ToolFileMenu *toolCommandCrypto;
+    @property (nonatomic) ToolFileMenu      *toolFileMenu;
 
     @property (nonatomic) PathType  pathType;
 
@@ -33,16 +33,14 @@ typedef enum : NSInteger {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
-        
+        self.toolFileMenu   = [[ToolFileMenu alloc]   init];
+
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
         
         // Chromeエクステンションから起動した時はボタンを押下不可とする
         if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
             [self enableButtons:false];
         }
-        
-        // OpenSSL利用前の初期化処理を実行
-        self.toolCommandCrypto = [[ToolFileMenu alloc] init];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -216,7 +214,7 @@ typedef enum : NSInteger {
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
         // ファイル保存パネルをモーダル表示
-        [self setPathType:PATH_SKEY];
+        [[self toolFileMenu] setCommand:COMMAND_CREATE_KEYPAIR_PEM];
         [self panelWillCreatePath:[self preparePanelForCreatePath]];
     }
 
@@ -243,7 +241,7 @@ typedef enum : NSInteger {
     }
     
     - (IBAction)menuItemFile2DidSelect:(id)sender {
-        // ダイアログを表示
+        // ダイアログを表示（仮コード）
         [self displayParamWindowAsDialog:[self prepareKeypairPemWindow]];
         /*
         // ファイル保存パネルをモーダル表示
@@ -263,21 +261,25 @@ typedef enum : NSInteger {
         NSSavePanel *panel = [NSSavePanel savePanel];
         [panel setCanCreateDirectories:NO];
         [panel setShowsTagField:NO];
-        // 鍵=pem、証明書=crtのみ指定可能とする
-        if (self.pathType == PATH_SKEY) {
-            [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
-            [panel setNameFieldStringValue:@"U2FPrivKey"];
-            [panel setAllowedFileTypes:@[@"pem"]];
-            
-        } else if (self.pathType == PATH_CSR) {
-            [panel setMessage:@"作成する証明書要求ファイル(CSR)名を指定してください"];
-            [panel setNameFieldStringValue:@"U2FCertReq"];
-            [panel setAllowedFileTypes:@[@"csr"]];
-            
-        } else if (self.pathType == PATH_CERT) {
-            [panel setMessage:@"作成する自己署名証明書ファイル(CRT)名を指定してください"];
-            [panel setNameFieldStringValue:@"U2FSelfCer"];
-            [panel setAllowedFileTypes:@[@"crt"]];
+        // コマンド種別ごとに設定値を変える
+        switch ([[self toolFileMenu] command]) {
+            case COMMAND_CREATE_KEYPAIR_PEM:
+                [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
+                [panel setNameFieldStringValue:@"U2FPrivKey"];
+                [panel setAllowedFileTypes:@[@"pem"]];
+                break;
+            case COMMAND_CREATE_CERTREQ_CSR:
+                [panel setMessage:@"作成する証明書要求ファイル(CSR)名を指定してください"];
+                [panel setNameFieldStringValue:@"U2FCertReq"];
+                [panel setAllowedFileTypes:@[@"csr"]];
+                break;
+            case COMMAND_CREATE_SELFCRT_CRT:
+                [panel setMessage:@"作成する自己署名証明書ファイル(CRT)名を指定してください"];
+                [panel setNameFieldStringValue:@"U2FSelfCer"];
+                [panel setAllowedFileTypes:@[@"crt"]];
+                break;
+            default:
+                break;
         }
         [panel setPrompt:@"作成"];
         
@@ -300,26 +302,26 @@ typedef enum : NSInteger {
     - (void)panelDidCreatePath:(NSSavePanel *)panel {
         // ファイル保存パネルで作成されたファイルパスを、出力先パスとして設定
         NSString *filePath = [[panel URL] path];
-        [self.toolCommandCrypto setOutputFilePath:filePath];
+        [self.toolFileMenu setOutputFilePath:filePath];
 
-        // 各処理に移る
-        if (self.pathType == PATH_SKEY) {
-            // 秘密鍵ファイル作成処理
-            [self enableButtons:false];
-            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
-                                      toolFileMenu:self.toolCommandCrypto];
-            
-        } else if (self.pathType == PATH_CSR) {
-            // 証明書要求ファイル作成処理
-            [self enableButtons:false];
-            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR
-                                      toolFileMenu:self.toolCommandCrypto];
-
-        } else if (self.pathType == PATH_CERT) {
-            // 自己署名証明書ファイル作成処理
-            [self enableButtons:false];
-            [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT
-                                      toolFileMenu:self.toolCommandCrypto];
+        // コマンド種別に対応した処理に移行
+        [self enableButtons:false];
+        switch ([[self toolFileMenu] command]) {
+            case COMMAND_CREATE_KEYPAIR_PEM:
+                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_KEYPAIR_PEM
+                                               toolFileMenu:self.toolFileMenu];
+                break;
+            case COMMAND_CREATE_CERTREQ_CSR:
+                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_CERTREQ_CSR
+                                               toolFileMenu:self.toolFileMenu];
+                break;
+            case COMMAND_CREATE_SELFCRT_CRT:
+                [self.toolCommand toolCommandWillCreateFile:COMMAND_CREATE_SELFCRT_CRT
+                                               toolFileMenu:self.toolFileMenu];
+                break;
+            default:
+                [self enableButtons:true];
+                break;
         }
     }
 

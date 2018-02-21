@@ -9,23 +9,7 @@
 
 // for OpenSSL
 #import "ToolFileMenu.h"
-
-typedef enum : NSInteger {
-    COMMAND_NONE = 1,
-    COMMAND_ERASE_BOND,
-    COMMAND_ERASE_SKEY_CERT,
-    COMMAND_INSTALL_SKEY,
-    COMMAND_INSTALL_CERT,
-    COMMAND_TEST_REGISTER,
-    COMMAND_TEST_AUTH_CHECK,
-    COMMAND_TEST_AUTH_NO_USER_PRESENCE,
-    COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_PROCESS,
-    COMMAND_SETUP_CHROME_NATIVE_MESSAGING,
-    COMMAND_CREATE_KEYPAIR_PEM,
-    COMMAND_CREATE_CERTREQ_CSR,
-    COMMAND_CREATE_SELFCRT_CRT
-} Command;
+#import "ToolCommon.h"
 
 @protocol ToolCommandDelegate;
 
@@ -55,12 +39,12 @@ typedef enum : NSInteger {
 @end
 
 @protocol ToolCommandDelegate <NSObject>
-
+    // ToolXxxxDelegate 共通インターフェース
     - (void)notifyToolCommandMessage:(NSString *)message;
-
-    - (void)toolCommandDidCreateBleRequest;
     - (void)toolCommandDidFail:(NSString *)errorMessage;
     - (void)toolCommandDidSuccess;
+
+    - (void)toolCommandDidCreateBleRequest;
 
     - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
     - (void)toolCommandDidSetup:(bool)result;
