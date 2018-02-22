@@ -20,7 +20,6 @@
 
     // ToolXxxxDelegate 共通インターフェース
     - (NSString *)processNameOfCommand;
-    - (bool)panelDidCreatePath:(NSString*)filePath;
 
 @end
 
@@ -29,7 +28,6 @@
     - (void)notifyToolCommandMessage:(NSString *)message;
     - (void)toolCommandDidFail:(NSString *)errorMessage;
     - (void)toolCommandDidSuccess;
-    - (void)panelWillCreatePath:(NSSavePanel *)panel sender:(id)sender;
 
 @end
 

@@ -5,8 +5,9 @@
 //  Created by Makoto Morita on 2018/02/19.
 //
 #import <Foundation/Foundation.h>
-#import "ToolFileMenu.h"
 #import "AppDelegate.h"
+#import "ToolFileMenu.h"
+#import "ToolFilePanel.h"
 
 // 個別実装ダイアログ
 #import "CertreqParamWindow.h"
@@ -14,11 +15,10 @@
 // OpenSSL関連処理
 #include "OpenSSL.h"
 
-@interface ToolFileMenu ()
+@interface ToolFileMenu () <ToolFilePanelDelegate>
 
-    @property (nonatomic) NSString *outputFilePath;
-    @property (nonatomic) Command   command;
-
+    @property (nonatomic) Command             command;
+    @property (nonatomic) ToolFilePanel      *toolFilePanel;
     @property (nonatomic) CertreqParamWindow *certreqParamWindow;
 
     - (NSString *)getProcessMessage;
@@ -36,6 +36,8 @@
         if (self) {
             [self setDelegate:delegate];
         }
+        // ファイル保存／選択パネルを使用
+        [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
         // OpenSSL初期化処理を実行
         init_openssl();
         return self;
@@ -50,49 +52,19 @@
         return message;
     }
 
-    - (bool)createKeypairPemFile {
+    - (bool)createKeypairPemFile:(NSString *)outputFilePath {
         // 指定のパスに、EC鍵ファイルをPEM形式で生成
-        return create_keypair_pem_file([[self outputFilePath] UTF8String]);
+        return create_keypair_pem_file([outputFilePath UTF8String]);
     }
 
-    - (bool)createCertreqCsrFile {
+    - (bool)createCertreqCsrFile:(NSString *)outputFilePath {
         // 指定のパスに、証明書要求ファイルをPEM形式で生成
-        return create_certreq_csr_file([[self outputFilePath] UTF8String]);
+        return create_certreq_csr_file([outputFilePath UTF8String]);
     }
 
-    - (bool)createSelfcrtCrtFile {
+    - (bool)createSelfcrtCrtFile:(NSString *)outputFilePath {
         // 指定のパスに、自己署名証明書ファイルをDER形式で生成
-        return create_selfcrt_crt_file([[self outputFilePath] UTF8String]);
-    }
-
-    - (NSSavePanel *)preparePanelForCreatePath {
-        // ファイル保存パネルの設定
-        NSSavePanel *panel = [NSSavePanel savePanel];
-        [panel setCanCreateDirectories:NO];
-        [panel setShowsTagField:NO];
-        // コマンド種別ごとに設定値を変える
-        switch ([self command]) {
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                [panel setMessage:@"作成する秘密鍵ファイル(PEM)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FPrivKey"];
-                [panel setAllowedFileTypes:@[@"pem"]];
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                [panel setMessage:@"作成する証明書要求ファイル(CSR)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FCertReq"];
-                [panel setAllowedFileTypes:@[@"csr"]];
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                [panel setMessage:@"作成する自己署名証明書ファイル(CRT)名を指定してください"];
-                [panel setNameFieldStringValue:@"U2FSelfCer"];
-                [panel setAllowedFileTypes:@[@"crt"]];
-                break;
-            default:
-                break;
-        }
-        [panel setPrompt:@"作成"];
-        
-        return panel;
+        return create_selfcrt_crt_file([outputFilePath UTF8String]);
     }
 
     - (NSWindow *)prepareKeypairPemWindow {
@@ -133,8 +105,10 @@
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
-                // ファイル保存パネルをモーダル表示
-                [[self delegate] panelWillCreatePath:[self preparePanelForCreatePath] sender:self];
+                // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
+                [[self toolFilePanel] prepareSavePanel:@"作成" message:@"作成する秘密鍵ファイル(PEM)名を指定してください"
+                                              fileName:@"U2FPrivKey" fileTypes:@[@"pem"]];
+                [[self toolFilePanel] panelWillCreatePath:appDelegate parentWindow:[appDelegate window]];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
                 // ダイアログを表示
@@ -145,23 +119,23 @@
         }
     }
 
-    - (bool)panelDidCreatePath:(NSString*)filePath {
-        // 作成された出力先パスを保持
-        [self setOutputFilePath:filePath];
-        
-        // 処理結果を保持
-        bool ret = false;
-        
+#pragma mark - Call back from ToolFilePanel
+
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
+    }
+
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
         // コマンドに応じ、以下の処理に分岐
+        bool ret = false;
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
-                ret = [self createKeypairPemFile];
+                ret = [self createKeypairPemFile:filePath];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
-                ret = [self createCertreqCsrFile];
+                ret = [self createCertreqCsrFile:filePath];
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
-                ret = [self createSelfcrtCrtFile];
+                ret = [self createSelfcrtCrtFile:filePath];
                 break;
             default:
                 break;
@@ -176,7 +150,6 @@
             // 処理失敗時
             [self.delegate toolCommandDidFail:[self getProcessMessage]];
         }
-        return ret;
     }
 
     - (NSString *)processNameOfCommand {

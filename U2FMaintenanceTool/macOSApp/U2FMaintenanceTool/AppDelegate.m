@@ -3,22 +3,16 @@
 #import "ToolBLEHelper.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
-
-typedef enum : NSInteger {
-    PATH_SKEY = 1,
-    PATH_CERT,
-    PATH_CSR
-} PathType;
+#import "ToolFilePanel.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate>
+    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
-
-    @property (nonatomic) PathType  pathType;
+    @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
 @end
 
@@ -29,6 +23,7 @@ typedef enum : NSInteger {
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
+        self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
         
@@ -146,65 +141,15 @@ typedef enum : NSInteger {
     }
 
     - (IBAction)buttonPath1DidPress:(id)sender {
-        [self buttonPathDidPress:sender pathType:PATH_SKEY];
+        [[self toolFilePanel] prepareOpenPanel:@"選択" message:@"秘密鍵ファイル(PEM)を選択してください"
+                                     fileTypes:@[@"pem"]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
-        [self buttonPathDidPress:sender pathType:PATH_CERT];
-    }
-
-    - (void)buttonPathDidPress:(id)sender pathType:(PathType)pathType {
-        // ファイル選択パネルをモーダル表示
-        [self setPathType:pathType];
-        [self panelWillSelectPath:[self preparePanelForSelectPath]];
-    }
-
-    - (NSOpenPanel *)preparePanelForSelectPath {
-        // ファイル選択パネルの設定
-        NSOpenPanel *panel = [NSOpenPanel openPanel];
-        [panel setAllowsMultipleSelection:NO];
-        [panel setCanChooseDirectories:NO];
-        [panel setCanChooseFiles:YES];
-        [panel setResolvesAliases:NO];
-        
-        // 鍵=pem、証明書=crtのみ指定可能とする
-        if (self.pathType == PATH_SKEY) {
-            [panel setMessage:@"秘密鍵ファイル(PEM)を選択してください"];
-            [panel setAllowedFileTypes:@[@"pem"]];
-        } else {
-            [panel setMessage:@"証明書ファイル(CRT)を選択してください"];
-            [panel setAllowedFileTypes:@[@"crt"]];
-        }
-        [panel setPrompt:@"選択"];
-        
-        return panel;
-    }
-
-    - (void)panelWillSelectPath:(NSOpenPanel *)panel {
-        // ファイル選択パネルをモーダル表示
-        AppDelegate * __weak weakSelf = self;
-        [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-            [panel orderOut:self];
-            if (result != NSFileHandlingPanelOKButton) {
-                return;
-            }
-            // ファイルが選択された時の処理
-            [weakSelf panelDidSelectPath:panel];
-        }];
-    }
-
-    - (void)panelDidSelectPath:(NSOpenPanel *)panel {
-        // ファイル選択パネルで選択されたファイルパスを取得
-        NSURL *url = [[panel URLs] objectAtIndex:0];
-        NSString *filePath = [url path];
-        // ファイル選択パネルで選択されたファイルパスを表示する
-        if ([self pathType] == PATH_SKEY) {
-            [self.fieldPath1 setStringValue:filePath];
-            [self.fieldPath1 becomeFirstResponder];
-        } else {
-            [self.fieldPath2 setStringValue:filePath];
-            [self.fieldPath2 becomeFirstResponder];
-        }
+        [[self toolFilePanel] prepareOpenPanel:@"選択" message:@"証明書ファイル(CRT)を選択してください"
+                                     fileTypes:@[@"crt"]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
@@ -219,46 +164,42 @@ typedef enum : NSInteger {
         [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
     }
 
-#pragma mark - Call back from ToolCommand/ToolFileMenu
+#pragma mark - Call back from ToolFilePanel
 
-    - (void)panelWillCreatePath:(NSSavePanel *)panel sender:(id)sender {
-        // ファイル保存パネルをアプリケーション・デリゲートにモーダル表示してもらう
-        AppDelegate * __weak weakSelf = self;
-        [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-            [panel orderOut:self];
-            if (result != NSFileHandlingPanelOKButton) {
-                return;
-            }
-            // ファイルパスが作成された時の処理
-            [weakSelf panelDidCreatePath:panel sender:sender];
-        }];
-    }
-
-    - (void)panelDidCreatePath:(NSSavePanel *)panel sender:(id)sender {
-        // ファイル保存パネルで作成されたファイルパスを、出力先パスとして設定
-        NSString *filePath = [[panel URL] path];
-        
-        // コマンド種別に対応した処理に移行
-        [self enableButtons:false];
-        if (sender == [self toolFileMenu]) {
-            [[self toolFileMenu] panelDidCreatePath:filePath];
-        } else {
-            [self enableButtons:true];
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
+        // ファイル選択パネルで選択されたファイルパスを表示する
+        if ([self buttonPath1] == sender) {
+            [[self fieldPath1] setStringValue:filePath];
+            [[self fieldPath1] becomeFirstResponder];
+        }
+        if ([self buttonPath2] == sender) {
+            [[self fieldPath2] setStringValue:filePath];
+            [[self fieldPath2] becomeFirstResponder];
         }
     }
 
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
+    }
+
 #pragma mark - Call back from ToolCommand
+
+    - (void)toolCommandDidCreateBleRequest {
+        // BLEデバイス接続処理に移る
+        [self.toolBLECentral centralManagerWillConnect];
+    }
+
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
+        // U2F処理実行結果をChromeエクステンションに戻す
+        [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
+    }
+
+#pragma mark - Call back from ToolCommand/ToolFileMenu
 
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         if (message) {
             [self appendLogMessage:message];
         }
-    }
-
-    - (void)toolCommandDidCreateBleRequest {
-        // BLEデバイス接続処理に移る
-        [self.toolBLECentral centralManagerWillConnect];
     }
 
     - (void)toolCommandDidFail:(NSString *)errorMessage {
@@ -279,11 +220,6 @@ typedef enum : NSInteger {
         // 成功メッセージを表示
         [self displayEndMessage:true];
         [self enableButtons:true];
-    }
-
-    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
-        // U2F処理実行結果をChromeエクステンションに戻す
-        [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
     }
 
 #pragma mark - Call back from ToolBLECentral
