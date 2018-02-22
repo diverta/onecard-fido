@@ -19,7 +19,7 @@
 
 #pragma mark for CertreqParamWindow
     - (void)prepareCertreqParamWindow;
-    - (void)certreqParamWindowWillSetup:(id)sender;
+    - (void)certreqParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
 
 @end
 

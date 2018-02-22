@@ -25,38 +25,48 @@
         if (self) {
             [self setDelegate:delegate];
         }
+        
+        // 使用するダイアログを生成
+        [self setCertreqParamWindow:[[CertreqParamWindow alloc]
+                                     initWithWindowNibName:@"CertreqParamWindow"]];
+        NSLog(@"ToolParamWindow: new CertreqParamWindow created");
+        
         return self;
     }
 
 #pragma mark for CertreqParamWindow
 
     - (void)prepareCertreqParamWindow {
-        // ダイアログ画面の参照を取得
-        if ([self certreqParamWindow] == nil) {
-            [self setCertreqParamWindow:[[CertreqParamWindow alloc]
-                                         initWithWindowNibName:@"CertreqParamWindow"]];
-            NSLog(@"ToolParamWindow: new CertreqParamWindow created");
-        }
     }
 
-    - (void)certreqParamWindowWillSetup:(id)sender {
+    - (void)certreqParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ダイアログが準備されていない場合は終了
         if ([self certreqParamWindow] == nil) {
             return;
         }
-        // ダイアログをモーダルで表示
-        NSWindow *dialog = [[self certreqParamWindow] window];
-        NSModalResponse response = [NSApp runModalForWindow:dialog];
-        [NSApp endSheet:dialog];
-        // 親のウィンドウを表示させないようにする
-        [dialog orderOut:sender];
-        // ダイアログからの戻りがCancelの場合は処理中止
-        if (response == NSModalResponseCancel) {
-            NSLog(@"ToolParamWindow: CertreqParamWindow canceled");
+        if ([[self certreqParamWindow] window] == nil) {
             return;
         }
-        // ダイアログからの戻りがOKの場合は処理続行
-        NSLog(@"ToolParamWindow: CertreqParamWindow OK");
+        
+        // ダイアログの親ウィンドウを保持
+        [[self certreqParamWindow] setParentWindow:parentWindow];
+        
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [[self certreqParamWindow] window];
+        ToolParamWindow * __weak weakSelf = self;
+        [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
+            if (response == NSModalResponseCancel) {
+                NSLog(@"ToolParamWindow: CertreqParamWindow canceled");
+                return;
+            }
+            // ファイルが選択された時の処理
+            NSLog(@"ToolParamWindow: CertreqParamWindow OK");
+            [weakSelf certreqParamWindowDidSetup:sender];
+        }];
+    }
+
+    - (void)certreqParamWindowDidSetup:(id)sender {
+        // ダイアログで入力されたパラメーターを引き渡す
         [[self delegate] certreqParamWindowDidSetup:sender];
     }
 

@@ -8,4 +8,8 @@
 
 @interface CertreqParamWindow : NSWindowController
 
+    @property (assign) IBOutlet NSTextField *fieldPath;
+
+    @property (nonatomic) NSWindow *parentWindow;
+
 @end

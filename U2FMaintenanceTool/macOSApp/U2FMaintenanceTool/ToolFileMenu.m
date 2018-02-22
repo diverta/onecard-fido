@@ -90,7 +90,7 @@
             case COMMAND_CREATE_CERTREQ_CSR:
                 // 証明書要求ファイル作成ダイアログをモーダル表示
                 [[self toolParamWindow] prepareCertreqParamWindow];
-                [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate];
+                [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
                 break;
             default:
                 break;
