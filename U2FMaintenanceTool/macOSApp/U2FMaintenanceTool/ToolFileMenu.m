@@ -8,18 +8,16 @@
 #import "AppDelegate.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
-
-// 個別実装ダイアログ
-#import "CertreqParamWindow.h"
+#import "ToolParamWindow.h"
 
 // OpenSSL関連処理
 #include "OpenSSL.h"
 
-@interface ToolFileMenu () <ToolFilePanelDelegate>
+@interface ToolFileMenu () <ToolFilePanelDelegate, ToolParamWindowDelegate>
 
-    @property (nonatomic) Command             command;
-    @property (nonatomic) ToolFilePanel      *toolFilePanel;
-    @property (nonatomic) CertreqParamWindow *certreqParamWindow;
+    @property (nonatomic) Command          command;
+    @property (nonatomic) ToolFilePanel   *toolFilePanel;
+    @property (nonatomic) ToolParamWindow *toolParamWindow;
 
     - (NSString *)getProcessMessage;
 
@@ -36,8 +34,9 @@
         if (self) {
             [self setDelegate:delegate];
         }
-        // ファイル保存／選択パネルを使用
+        // ファイル保存／選択パネル、パラメーター入力ウィンドウを使用
         [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+        [self setToolParamWindow:[[ToolParamWindow alloc] initWithDelegate:self]];
         // OpenSSL初期化処理を実行
         init_openssl();
         return self;
@@ -67,28 +66,6 @@
         return create_selfcrt_crt_file([outputFilePath UTF8String]);
     }
 
-    - (NSWindow *)prepareKeypairPemWindow {
-        if ([self certreqParamWindow] == nil) {
-            [self setCertreqParamWindow:[[CertreqParamWindow alloc]
-                                         initWithWindowNibName:@"CertreqParamWindow"]];
-        }
-        if ([self certreqParamWindow]) {
-            return [[self certreqParamWindow] window];
-        }
-        return nil;
-    }
-
-    - (void)displayParamWindowAsDialog:(NSWindow *)window parent:(id)parent {
-        if (window == nil) {
-            return;
-        }
-        // ダイアログをモーダルで表示
-        [NSApp runModalForWindow:window];
-        [NSApp endSheet:window];
-        // 親のウィンドウを表示させないようにする
-        [window orderOut:parent];
-    }
-
     - (void)toolFileMenuWillCreateFile:(id)sender {
         // メニューアイテムからコマンドを判定
         AppDelegate *appDelegate = (AppDelegate *)[self delegate];
@@ -111,12 +88,20 @@
                 [[self toolFilePanel] panelWillCreatePath:appDelegate parentWindow:[appDelegate window]];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
-                // ダイアログを表示
-                [self displayParamWindowAsDialog:[self prepareKeypairPemWindow] parent:appDelegate];
+                // 証明書要求ファイル作成ダイアログをモーダル表示
+                [[self toolParamWindow] prepareCertreqParamWindow];
+                [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate];
                 break;
             default:
                 break;
         }
+    }
+
+#pragma mark - Call back from ToolParamWindow
+
+    - (void)certreqParamWindowDidSetup:(id)sender {
+        // 仮コード
+        NSLog(@"certreqParamWindowDidSetup called.");
     }
 
 #pragma mark - Call back from ToolFilePanel
