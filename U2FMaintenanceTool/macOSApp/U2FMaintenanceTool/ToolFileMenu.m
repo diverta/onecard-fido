@@ -89,7 +89,6 @@
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
                 // 証明書要求ファイル作成ダイアログをモーダル表示
-                [[self toolParamWindow] prepareCertreqParamWindow];
                 [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
                 break;
             default:
@@ -101,7 +100,18 @@
 
     - (void)certreqParamWindowDidSetup:(id)sender {
         // 仮コード
-        NSLog(@"certreqParamWindowDidSetup called.");
+        NSLog(@"certreqParamWindowDidSetup called");
+        NSLog(@"Pem=%@" , [[self toolParamWindow] certreqParamPemPath]);
+        NSLog(@"CN[%@] OU[%@] O[%@] L[%@] ST[%@] C[%@]",
+              [[self toolParamWindow] certreqParamCN],
+              [[self toolParamWindow] certreqParamOU],
+              [[self toolParamWindow] certreqParamO],
+              [[self toolParamWindow] certreqParamL],
+              [[self toolParamWindow] certreqParamST],
+              [[self toolParamWindow] certreqParamC]);
+        NSLog(@"Path=%@", [[self toolParamWindow] certreqParamOutPath]);
+        // 証明書要求ファイル作成処理を実行
+        [self processCommand:sender filePath:[[self toolParamWindow] certreqParamOutPath]];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -110,6 +120,13 @@
     }
 
     - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
+        // 秘密鍵ファイル作成処理を実行
+        [self processCommand:sender filePath:filePath];
+    }
+
+#pragma mark - Call back from ToolFilePanel
+
+    - (void)processCommand:(id)sender filePath:(NSString*)filePath {
         // コマンドに応じ、以下の処理に分岐
         bool ret = false;
         switch ([self command]) {

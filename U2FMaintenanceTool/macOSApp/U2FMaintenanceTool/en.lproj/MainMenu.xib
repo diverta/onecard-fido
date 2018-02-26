@@ -143,7 +143,7 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Edit" hidden="YES" id="217">
+                <menuItem title="Edit" id="217">
                     <menu key="submenu" title="Edit" id="205">
                         <items>
                             <menuItem title="Undo" keyEquivalent="z" id="207">

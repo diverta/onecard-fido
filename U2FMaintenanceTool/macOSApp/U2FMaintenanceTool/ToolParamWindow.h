@@ -17,8 +17,16 @@
 
     - (id)initWithDelegate:(id<ToolParamWindowDelegate>)delegate;
 
-#pragma mark for CertreqParamWindow
-    - (void)prepareCertreqParamWindow;
+#pragma mark for certreq parameters
+    @property (nonatomic) NSString *certreqParamPemPath;
+    @property (nonatomic) NSString *certreqParamCN;
+    @property (nonatomic) NSString *certreqParamOU;
+    @property (nonatomic) NSString *certreqParamO;
+    @property (nonatomic) NSString *certreqParamL;
+    @property (nonatomic) NSString *certreqParamST;
+    @property (nonatomic) NSString *certreqParamC;
+    @property (nonatomic) NSString *certreqParamOutPath;
+
     - (void)certreqParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
 
 @end
