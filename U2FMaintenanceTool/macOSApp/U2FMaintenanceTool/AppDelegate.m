@@ -4,6 +4,8 @@
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
+#import "ToolPopupWindow.h"
+#import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
     <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
@@ -39,8 +41,10 @@
 
     - (void)appendLogMessage:(NSString *)message {
         // テキストフィールドにメッセージを追加し、末尾に移動
-        self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
-        [self.textView performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
+        if (message) {
+            self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
+            [self.textView performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
+        }
     }
 
 #pragma mark - Functions for button handling
@@ -77,19 +81,16 @@
             return true;
         }
         // 未入力の場合はポップアップメッセージを表示
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleWarning];
-        [alert setMessageText:message];
-        [alert runModal];
+        [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:message];
         [field becomeFirstResponder];
         return false;
     }
 
     - (IBAction)button3DidPress:(id)sender {
-        if ([self checkPathEntry:self.fieldPath1 messageIfError:@"鍵ファイルのパスを選択してください"] == false) {
+        if ([self checkPathEntry:self.fieldPath1 messageIfError:MSG_PROMPT_SELECT_PKEY_PATH] == false) {
             return;
         }
-        if ([self checkPathEntry:self.fieldPath2 messageIfError:@"証明書ファイルのパスを選択してください"] == false) {
+        if ([self checkPathEntry:self.fieldPath2 messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
             return;
         }
         // 鍵・証明書インストール
@@ -107,27 +108,13 @@
     }
 
     - (IBAction)button5DidPress:(id)sender {
-        if ([self displayPromptPopup:@"ChromeでBLE U2Fトークンが使用できるよう設定します。"
-                         informative:@"ChromeでBLE U2Fトークンを使用時、このU2F管理ツールがChromeのサブプロセスとして起動します。\n設定を実行しますか？"]) {
-            // Chrome Native Messaging有効化設定
-            [self enableButtons:false];
-            [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
+        if ([ToolPopupWindow promptYesNo:MSG_SETUP_CHROME
+                         informativeText:MSG_PROMPT_SETUP_CHROME] == false) {
+            return;
         }
-    }
-
-    - (bool)displayPromptPopup:(NSString *)prompt informative:(NSString *)informative {
-        if (!prompt) {
-            return false;
-        }
-        // ダイアログを作成
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleInformational];
-        [alert setMessageText:prompt];
-        [alert setInformativeText:informative];
-        [alert addButtonWithTitle:@"Yes"];
-        [alert addButtonWithTitle:@"No"];
-        // ダイアログを表示しYesボタンクリックを判定
-        return ([alert runModal] == NSAlertFirstButtonReturn);
+        // Chrome Native Messaging有効化設定
+        [self enableButtons:false];
+        [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -141,13 +128,15 @@
     }
 
     - (IBAction)buttonPath1DidPress:(id)sender {
-        [[self toolFilePanel] prepareOpenPanel:@"選択" message:@"秘密鍵ファイル(PEM)を選択してください"
+        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
+                                       message:MSG_PROMPT_SELECT_PEM_PATH
                                      fileTypes:@[@"pem"]];
         [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
-        [[self toolFilePanel] prepareOpenPanel:@"選択" message:@"証明書ファイル(CRT)を選択してください"
+        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
+                                       message:MSG_PROMPT_SELECT_CRT_PATH
                                      fileTypes:@[@"crt"]];
         [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
@@ -193,32 +182,26 @@
         [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
     }
 
-#pragma mark - Call back from ToolCommand/ToolFileMenu
-
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
-        if (message) {
-            [self appendLogMessage:message];
-        }
+        [self appendLogMessage:message];
     }
 
-    - (void)toolCommandDidFail:(NSString *)errorMessage {
-        // エラーメッセージを画面表示
-        if (errorMessage) {
-            [self appendLogMessage:errorMessage];
-        }
-        // デバイス接続を切断
+    - (void)notifyToolCommandEnd {
+        // デバイス接続を切断し、ボタンを活性化
         [self.toolBLECentral centralManagerWillDisconnect];
-        // 失敗メッセージを表示
-        [self displayEndMessage:false];
         [self enableButtons:true];
     }
 
-    - (void)toolCommandDidSuccess {
-        // デバイス接続を切断
-        [self.toolBLECentral centralManagerWillDisconnect];
-        // 成功メッセージを表示
-        [self displayEndMessage:true];
+#pragma mark - Call back from ToolFileMenu
+
+    - (void)notifyToolFileMenuMessage:(NSString *)message {
+        // 画面上のテキストエリアにメッセージを表示する
+        [self appendLogMessage:message];
+    }
+
+    - (void)notifyToolFileMenuEnd {
+        // ボタンを活性化
         [self enableButtons:true];
     }
 
@@ -241,19 +224,16 @@
 
     - (void)centralManagerDidFailConnection:(NSString *)errorMessage {
         // エラーメッセージを画面表示
-        if (errorMessage) {
-            [self appendLogMessage:errorMessage];
-        }
+        [self appendLogMessage:errorMessage];
+        [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
         // 失敗メッセージを表示
-        [self displayEndMessage:false];
+        [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
         [self enableButtons:true];
     }
 
     - (void)notifyCentralManagerMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
-        if (message) {
-            [self appendLogMessage:message];
-        }
+        [self appendLogMessage:message];
     }
 
     - (void)centralManagerDidReceive:(NSData *)bleResponse {
@@ -266,48 +246,6 @@
         }
     }
 
-    - (void)displayEndMessage:(bool)success {
-        // 実行中のコマンドに対応する処理名を取得
-        NSString *processName = [[self toolCommand] processNameOfCommand];
-        if (!processName) {
-            processName = [[self toolFileMenu] processNameOfCommand];
-            if (!processName) {
-                return;
-            }
-        }
-        
-        // 正常終了時のメッセージを、テキストエリアとメッセージボックスの両方に表示させる
-        NSString *str = [NSString stringWithFormat:
-                         @"%1$@が%2$@しました。", processName, success? @"成功":@"失敗"];
-        [self appendLogMessage:str];
-        if (success) {
-            [self displaySuccessPopupMessage:str];
-        } else {
-            [self displayErrorPopupMessage:str];
-        }
-    }
-
-    - (void)displaySuccessPopupMessage:(NSString *)successMessage {
-        if (!successMessage) {
-            return;
-        }
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleInformational];
-        [alert setMessageText:successMessage];
-        [alert runModal];
-    }
-
-    - (void)displayErrorPopupMessage:(NSString *)errorMessage {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleCritical];
-        if (errorMessage) {
-            [alert setMessageText:errorMessage];
-        } else {
-            [alert setMessageText:@"不明なエラーが発生しました。"];
-        }
-        [alert runModal];
-    }
-
 #pragma mark - Call back from ToolBLEHelper
 
     - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
@@ -315,17 +253,6 @@
         [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
                                bleHelperMessages:bleHelperMessages];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
-    }
-
-    - (void)toolCommandDidSetup:(bool)result {
-        [self enableButtons:true];
-        if (!result) {
-            // 失敗メッセージを表示
-            [self displayEndMessage:false];
-            return;
-        }
-        // 成功メッセージを表示
-        [self displayEndMessage:true];
     }
 
 @end

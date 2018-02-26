@@ -26,6 +26,7 @@
 #pragma mark - 証明書要求ファイル作成画面
 #define MSG_PROMPT_SELECT_PEM_PATH  @"証明書要求時に使用する秘密鍵ファイル(PEM)を選択してください。"
 #define MSG_PROMPT_CREATE_CSR_PATH  @"作成する証明書要求ファイル(CSR)名を指定してください。"
+#define MSG_PROMPT_CREATE_PEM_PATH  @"作成する秘密鍵ファイル(PEM)名を指定してください。"
 #define MSG_PROMPT_INPUT_CN         @"実際に接続されるURLのFQDN（例：www.diverta.co.jp）を入力してください。"
 #define MSG_PROMPT_INPUT_O          @"申請組織の名称（例：Diverta Inc.）を入力してください。"
 #define MSG_PROMPT_INPUT_L          @"申請組織の事業所住所の市区町村名（例：Shinjuku-ku、Yokohama-shi等）を入力してください。"

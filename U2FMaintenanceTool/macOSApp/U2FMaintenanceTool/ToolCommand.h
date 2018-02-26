@@ -32,21 +32,15 @@
     - (void)setU2FProcessParameter:(Command)command
                  bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
 
-    // ToolXxxxDelegate 共通インターフェース
-    - (NSString *)processNameOfCommand;
-
 @end
 
 @protocol ToolCommandDelegate <NSObject>
-    // ToolXxxxDelegate 共通インターフェース
+
     - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)toolCommandDidFail:(NSString *)errorMessage;
-    - (void)toolCommandDidSuccess;
+    - (void)notifyToolCommandEnd;
 
     - (void)toolCommandDidCreateBleRequest;
-
     - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
-    - (void)toolCommandDidSetup:(bool)result;
 
 @end
 

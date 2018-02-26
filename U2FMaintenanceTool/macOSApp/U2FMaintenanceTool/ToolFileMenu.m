@@ -9,6 +9,9 @@
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
 #import "ToolParamWindow.h"
+#import "ToolPopupWindow.h"
+#import "ToolCommon.h"
+#import "ToolCommonMessage.h"
 
 // OpenSSL関連処理
 #include "OpenSSL.h"
@@ -57,6 +60,21 @@
     }
 
     - (bool)createCertreqCsrFile:(NSString *)outputFilePath {
+        // パラメーターをログ出力
+        NSString *logMessage = [NSString
+                                stringWithFormat:@"createCertreqCsrFile: CN[%1$@] OU[%2$@] O[%3$@] L[%4$@] ST[%5$@] C[%6$@] keyfile[%7$@] --> output[%8$@]",
+                                [[self toolParamWindow] certreqParamCN],
+                                [[self toolParamWindow] certreqParamOU],
+                                [[self toolParamWindow] certreqParamO],
+                                [[self toolParamWindow] certreqParamL],
+                                [[self toolParamWindow] certreqParamST],
+                                [[self toolParamWindow] certreqParamC],
+                                [[self toolParamWindow] certreqParamPemPath],
+                                outputFilePath
+                                ];
+        NSLog(@"%@", logMessage);
+        [self.delegate notifyToolFileMenuMessage:logMessage];
+
         // 指定のパスに、証明書要求ファイルをPEM形式で生成
         return create_certreq_csr_file([outputFilePath UTF8String]);
     }
@@ -83,7 +101,8 @@
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
                 // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
-                [[self toolFilePanel] prepareSavePanel:@"作成" message:@"作成する秘密鍵ファイル(PEM)名を指定してください"
+                [[self toolFilePanel] prepareSavePanel:MSG_BUTTON_CREATE
+                                               message:MSG_PROMPT_CREATE_PEM_PATH
                                               fileName:@"U2FPrivKey" fileTypes:@[@"pem"]];
                 [[self toolFilePanel] panelWillCreatePath:appDelegate parentWindow:[appDelegate window]];
                 break;
@@ -99,17 +118,6 @@
 #pragma mark - Call back from ToolParamWindow
 
     - (void)certreqParamWindowDidSetup:(id)sender {
-        // 仮コード
-        NSLog(@"certreqParamWindowDidSetup called");
-        NSLog(@"Pem=%@" , [[self toolParamWindow] certreqParamPemPath]);
-        NSLog(@"CN[%@] OU[%@] O[%@] L[%@] ST[%@] C[%@]",
-              [[self toolParamWindow] certreqParamCN],
-              [[self toolParamWindow] certreqParamOU],
-              [[self toolParamWindow] certreqParamO],
-              [[self toolParamWindow] certreqParamL],
-              [[self toolParamWindow] certreqParamST],
-              [[self toolParamWindow] certreqParamC]);
-        NSLog(@"Path=%@", [[self toolParamWindow] certreqParamOutPath]);
         // 証明書要求ファイル作成処理を実行
         [self processCommand:sender filePath:[[self toolParamWindow] certreqParamOutPath]];
     }
@@ -124,7 +132,7 @@
         [self processCommand:sender filePath:filePath];
     }
 
-#pragma mark - Call back from ToolFilePanel
+#pragma mark - Main process
 
     - (void)processCommand:(id)sender filePath:(NSString*)filePath {
         // コマンドに応じ、以下の処理に分岐
@@ -143,15 +151,22 @@
                 break;
         }
         
+        // 処理結果メッセージを画面表示
+        [self.delegate notifyToolFileMenuMessage:[self getProcessMessage]];
+
+        // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [self processNameOfCommand],
+                         ret? MSG_SUCCESS:MSG_FAILURE];
+        [[self delegate] notifyToolFileMenuMessage:str];
         if (ret) {
-            // 処理成功時
-            [self.delegate notifyToolCommandMessage:[self getProcessMessage]];
-            [self.delegate toolCommandDidSuccess];
-            
+            [ToolPopupWindow informational:str informativeText:nil];
         } else {
-            // 処理失敗時
-            [self.delegate toolCommandDidFail:[self getProcessMessage]];
+            [ToolPopupWindow critical:str informativeText:nil];
         }
+        
+        // 処理終了をAppDelegateに通知
+        [self.delegate notifyToolFileMenuEnd];
     }
 
     - (NSString *)processNameOfCommand {

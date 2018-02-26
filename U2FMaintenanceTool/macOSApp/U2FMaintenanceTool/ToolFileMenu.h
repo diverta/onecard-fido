@@ -7,8 +7,6 @@
 #ifndef ToolFileMenu_h
 #define ToolFileMenu_h
 
-#import "ToolCommon.h"
-
 @protocol ToolFileMenuDelegate;
 
     @interface ToolFileMenu : NSObject
@@ -18,16 +16,12 @@
     - (id)initWithDelegate:(id<ToolFileMenuDelegate>)delegate;
     - (void)toolFileMenuWillCreateFile:(id)sender;
 
-    // ToolXxxxDelegate 共通インターフェース
-    - (NSString *)processNameOfCommand;
-
 @end
 
 @protocol ToolFileMenuDelegate <NSObject>
-    // ToolXxxxDelegate 共通インターフェース
-    - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)toolCommandDidFail:(NSString *)errorMessage;
-    - (void)toolCommandDidSuccess;
+
+    - (void)notifyToolFileMenuMessage:(NSString *)message;
+    - (void)notifyToolFileMenuEnd;
 
 @end
 
