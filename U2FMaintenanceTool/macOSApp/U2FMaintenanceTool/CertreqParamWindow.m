@@ -6,18 +6,8 @@
 //
 #import "CertreqParamWindow.h"
 #import "ToolFilePanel.h"
-
-// 画面で使用する文言
-#define MSG_INVALID_FIELD       @"入力項目が不正です。"
-#define MSG_PROMPT_SELECT_PEM   @"証明書要求時に使用する秘密鍵ファイル(PEM)を選択してください。"
-#define MSG_PROMPT_CREATE_CSR   @"作成する証明書要求ファイル(CSR)名を指定してください。"
-#define MSG_BUTTON_SELECT       @"選択"
-#define MSG_BUTTON_CREATE       @"作成"
-#define MSG_PROMPT_INPUT_CN     @"実際に接続されるURLのFQDN（例：www.diverta.co.jp）を入力してください。"
-#define MSG_PROMPT_INPUT_O      @"申請組織の名称（例：Diverta Inc.）を入力してください。"
-#define MSG_PROMPT_INPUT_L      @"申請組織の事業所住所の市区町村名（例：Shinjuku-ku、Yokohama-shi等）を入力してください。"
-#define MSG_PROMPT_INPUT_ST     @"申請組織の事業所住所の都道府県名（例：Tokyo、Kanagawa）を入力してください。"
-#define MSG_PROMPT_INPUT_C      @"申請組織の事業所住所の国名（例：JP）を入力してください。"
+#import "ToolPopupWindow.h"
+#import "ToolCommonMessage.h"
 
 @interface CertreqParamWindow () <ToolFilePanelDelegate>
 
@@ -36,7 +26,8 @@
 
     - (IBAction)buttonFieldPathPress:(id)sender {
         // ファイル選択パネルをモーダル表示
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT message:MSG_PROMPT_SELECT_PEM
+        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
+                                       message:MSG_PROMPT_SELECT_PEM_PATH
                                      fileTypes:@[@"pem"]];
         [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
@@ -60,14 +51,15 @@
         if ([self checkEntries] == false) {
             return;
         }
-        [[self toolFilePanel] prepareSavePanel:MSG_BUTTON_CREATE message:MSG_PROMPT_CREATE_CSR
+        [[self toolFilePanel] prepareSavePanel:MSG_BUTTON_CREATE
+                                       message:MSG_PROMPT_CREATE_CSR_PATH
                                       fileName:@"U2FCertReq" fileTypes:@[@"csr"]];
         [[self toolFilePanel] panelWillCreatePath:sender parentWindow:[self window]];
     }
 
     - (bool) checkEntries {
         // 入力項目が正しく指定されていない場合は終了
-        if ([self checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_PEM] == false) {
+        if ([self checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_PEM_PATH] == false) {
             return false;
         }
         if ([self checkMustEntry:[self fieldCN] informativeText:MSG_PROMPT_INPUT_CN] == false) {
@@ -91,19 +83,11 @@
     - (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
         // 入力項目が正しく指定されていない場合はfalseを戻す
         if ([[textField stringValue] length] == 0) {
-            [self popupMessage:MSG_INVALID_FIELD informativeText:informativeText];
+            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
             [textField becomeFirstResponder];
             return false;
         }
         return true;
-    }
-
-    - (void) popupMessage:(NSString *)message informativeText:(NSString *)subMessage {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSAlertStyleWarning];
-        [alert setMessageText:message];
-        [alert setInformativeText:subMessage];
-        [alert runModal];
     }
 
 #pragma mark - Call back from ToolFilePanel
