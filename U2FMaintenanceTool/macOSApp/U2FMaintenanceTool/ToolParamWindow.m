@@ -44,6 +44,24 @@
         return self;
     }
 
+#pragma mark - Entry point
+
+    - (void)paramWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command {
+        switch (command) {
+            case COMMAND_CREATE_KEYPAIR_PEM:
+                [self keypairParamWindowWillSetup:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_CREATE_CERTREQ_CSR:
+                [self certreqParamWindowWillSetup:sender parentWindow:parentWindow];
+                break;
+            case COMMAND_CREATE_SELFCRT_CRT:
+                [self selfcrtParamWindowWillSetup:sender parentWindow:parentWindow];
+                break;
+            default:
+                break;
+        }
+    }
+
 #pragma mark for KeypairParamWindow
 
     - (void)keypairParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -62,7 +80,7 @@
     - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
         // ダイアログで入力されたファイルパスを引き渡し、画面を閉じる
         [[self keyPairParameter] setOutPath:filePath];
-        [[self delegate] keypairParamWindowDidSetup:sender];
+        [[self delegate] paramWindowDidSetup:sender];
     }
 
 #pragma mark for CertreqParamWindow
@@ -95,7 +113,7 @@
         // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
         [self setCertReqParameter:[[self certreqParamWindow] parameter]];
         [[self certreqParamWindow] close];
-        [[self delegate] certreqParamWindowDidSetup:sender];
+        [[self delegate] paramWindowDidSetup:sender];
     }
 
 #pragma mark for SelfcrtParamWindow
@@ -129,7 +147,7 @@
         // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
         [self setSelfCertParameter:[[self selfcrtParamWindow] parameter]];
         [[self selfcrtParamWindow] close];
-        [[self delegate] selfcrtParamWindowDidSetup:sender];
+        [[self delegate] paramWindowDidSetup:sender];
     }
 
 @end

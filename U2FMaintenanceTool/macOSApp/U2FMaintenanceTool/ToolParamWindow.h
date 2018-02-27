@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ToolCommon.h"
 #import "ToolParameters.h"
 
 @protocol ToolParamWindowDelegate;
@@ -23,17 +24,13 @@
     @property (nonatomic) CertReqParameter  *certReqParameter;
     @property (nonatomic) SelfCertParameter *selfCertParameter;
 
-    - (void)keypairParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)certreqParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)selfcrtParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
-
+    - (void)paramWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command;
+    
 @end
 
 @protocol ToolParamWindowDelegate <NSObject>
 
-    - (void)keypairParamWindowDidSetup:(id)sender;
-    - (void)certreqParamWindowDidSetup:(id)sender;
-    - (void)selfcrtParamWindowDidSetup:(id)sender;
+    - (void)paramWindowDidSetup:(id)sender;
 
 @end
 

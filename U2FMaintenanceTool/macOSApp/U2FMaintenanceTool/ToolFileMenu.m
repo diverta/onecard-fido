@@ -99,47 +99,15 @@
         return create_selfcrt_crt_file([[parameter outPath] UTF8String]);
     }
 
-- (void)toolFileMenuWillCreateFile:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command {
-        // コマンドに応じ、以下の処理に分岐
+    - (void)toolFileMenuWillCreateFile:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command {
+        // パラメーター入力画面をモーダル表示
         [self setCommand:command];
-        switch ([self command]) {
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
-                [[self toolParamWindow] keypairParamWindowWillSetup:sender parentWindow:parentWindow];
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                // 証明書要求ファイル作成ダイアログをモーダル表示
-                [[self toolParamWindow] certreqParamWindowWillSetup:sender parentWindow:parentWindow];
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                // 自己署名証明書ファイル作成ダイアログをモーダル表示
-                [[self toolParamWindow] selfcrtParamWindowWillSetup:sender parentWindow:parentWindow];
-                break;
-            default:
-                break;
-        }
+        [[self toolParamWindow] paramWindowWillSetup:sender parentWindow:parentWindow command:command];
     }
 
 #pragma mark - Call back from ToolParamWindow
 
-    - (void)keypairParamWindowDidSetup:(id)sender {
-        // 秘密鍵ファイル作成処理を実行
-        [self processCommand:sender];
-    }
-
-    - (void)certreqParamWindowDidSetup:(id)sender {
-        // 証明書要求ファイル作成処理を実行
-        [self processCommand:sender];
-    }
-
-    - (void)selfcrtParamWindowDidSetup:(id)sender {
-        // 自己署名証明書ファイル作成処理を実行
-        [self processCommand:sender];
-    }
-
-#pragma mark - Main process
-
-    - (void)processCommand:(id)sender {
+    - (void)paramWindowDidSetup:(id)sender {
         // コマンドに応じ、以下の処理に分岐
         bool ret = false;
         switch ([self command]) {
