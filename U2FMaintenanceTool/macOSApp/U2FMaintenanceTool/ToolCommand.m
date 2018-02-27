@@ -616,23 +616,23 @@
     NSString *processName;
     switch ([self command]) {
         case COMMAND_ERASE_BOND:
-            processName = @"ペアリング情報削除処理";
+            processName = PROCESS_NAME_ERASE_BOND;
             break;
         case COMMAND_ERASE_SKEY_CERT:
-            processName = @"鍵・証明書削除処理";
+            processName = PROCESS_NAME_ERASE_KEYCRT;
             break;
         case COMMAND_INSTALL_SKEY:
         case COMMAND_INSTALL_CERT:
-            processName = @"鍵・証明書インストール";
+            processName = PROCESS_NAME_INSTALL_KEYCRT;
             break;
         case COMMAND_TEST_REGISTER:
         case COMMAND_TEST_AUTH_CHECK:
         case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
         case COMMAND_TEST_AUTH_USER_PRESENCE:
-            processName = @"ヘルスチェック";
+            processName = PROCESS_NAME_HEALTHCHECK;
             break;
         case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
-            processName = @"Chrome Native Messaging有効化設定";
+            processName = PROCESS_NAME_SETUP_CHROME;
             break;
         default:
             processName = nil;

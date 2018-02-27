@@ -174,13 +174,13 @@
         NSString *processName;
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
-                processName = @"鍵ファイル作成";
+                processName = PROCESS_NAME_CREATE_KEYPAIR;
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
-                processName = @"証明書要求ファイル作成";
+                processName = PROCESS_NAME_CREATE_CERTREQ;
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
-                processName = @"自己署名証明書ファイル作成";
+                processName = PROCESS_NAME_CREATE_SELFCRT;
                 break;
             default:
                 processName = nil;

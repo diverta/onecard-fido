@@ -34,6 +34,13 @@
 #define MSG_PROMPT_INPUT_C          @"申請組織の事業所住所の国名（例：JP）を入力してください。"
 
 #pragma mark - プロセス名称
+#define PROCESS_NAME_ERASE_BOND     @"ペアリング情報削除処理"
+#define PROCESS_NAME_ERASE_KEYCRT   @"鍵・証明書削除処理"
+#define PROCESS_NAME_INSTALL_KEYCRT @"鍵・証明書インストール"
+#define PROCESS_NAME_HEALTHCHECK    @"ヘルスチェック"
 #define PROCESS_NAME_SETUP_CHROME   @"Chrome Native Messaging有効化設定"
+#define PROCESS_NAME_CREATE_KEYPAIR @"鍵ファイル作成"
+#define PROCESS_NAME_CREATE_CERTREQ @"証明書要求ファイル作成"
+#define PROCESS_NAME_CREATE_SELFCRT @"自己署名証明書ファイル作成"
 
 #endif /* ToolCommonMessage_h */

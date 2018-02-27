@@ -85,7 +85,7 @@ bool create_keypair_pem_file(const char *output_file_path) {
     }
     
     // 正常終了
-    sprintf(openssl_message, "鍵ファイルを作成しました: %s", output_file_path);
+    sprintf(openssl_message, "create_keypair_pem_file: EC private key file created [%s]", output_file_path);
     free_resources(eckey, pkey, fp);
     return true;
 }
