@@ -6,11 +6,14 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolParamWindow.h"
+#import "ToolFilePanel.h"
+#import "ToolCommonMessage.h"
 #import "CertreqParamWindow.h"
 #import "SelfcrtParamWindow.h"
 
-@interface ToolParamWindow ()
+@interface ToolParamWindow () <ToolFilePanelDelegate>
 
+    @property (nonatomic) ToolFilePanel      *toolFilePanel;
     @property (nonatomic) CertreqParamWindow *certreqParamWindow;
     @property (nonatomic) SelfcrtParamWindow *selfcrtParamWindow;
 
@@ -28,6 +31,10 @@
             [self setDelegate:delegate];
         }
         
+        // 秘密鍵ファイル生成はファイル保存パネルを使用（パラメーターはここで生成）
+        [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+        [self setKeyPairParameter:[KeyPairParameter alloc]];
+
         // 使用するダイアログを生成
         [self setCertreqParamWindow:[[CertreqParamWindow alloc]
                                      initWithWindowNibName:@"CertreqParamWindow"]];
@@ -35,6 +42,27 @@
                                      initWithWindowNibName:@"SelfcrtParamWindow"]];
         
         return self;
+    }
+
+#pragma mark for KeypairParamWindow
+
+    - (void)keypairParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
+        [[self toolFilePanel] prepareSavePanel:MSG_BUTTON_CREATE
+                                       message:MSG_PROMPT_CREATE_PEM_PATH
+                                      fileName:@"U2FPrivKey" fileTypes:@[@"pem"]];
+        [[self toolFilePanel] panelWillCreatePath:sender parentWindow:parentWindow];
+    }
+
+#pragma mark - Call back from ToolFilePanel
+
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
+    }
+
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
+        // ダイアログで入力されたファイルパスを引き渡し、画面を閉じる
+        [[self keyPairParameter] setOutPath:filePath];
+        [[self delegate] keypairParamWindowDidSetup:sender];
     }
 
 #pragma mark for CertreqParamWindow

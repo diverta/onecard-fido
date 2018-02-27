@@ -19,9 +19,11 @@
 
     - (id)initWithDelegate:(id<ToolParamWindowDelegate>)delegate;
 
+    @property (nonatomic) KeyPairParameter  *keyPairParameter;
     @property (nonatomic) CertReqParameter  *certReqParameter;
     @property (nonatomic) SelfCertParameter *selfCertParameter;
 
+    - (void)keypairParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)certreqParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)selfcrtParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow;
 
@@ -29,6 +31,7 @@
 
 @protocol ToolParamWindowDelegate <NSObject>
 
+    - (void)keypairParamWindowDidSetup:(id)sender;
     - (void)certreqParamWindowDidSetup:(id)sender;
     - (void)selfcrtParamWindowDidSetup:(id)sender;
 

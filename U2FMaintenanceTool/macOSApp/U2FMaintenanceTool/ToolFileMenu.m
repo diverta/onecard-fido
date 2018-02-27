@@ -7,7 +7,6 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "ToolFileMenu.h"
-#import "ToolFilePanel.h"
 #import "ToolParamWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommon.h"
@@ -16,10 +15,9 @@
 // OpenSSL関連処理
 #include "OpenSSL.h"
 
-@interface ToolFileMenu () <ToolFilePanelDelegate, ToolParamWindowDelegate>
+@interface ToolFileMenu () <ToolParamWindowDelegate>
 
     @property (nonatomic) Command          command;
-    @property (nonatomic) ToolFilePanel   *toolFilePanel;
     @property (nonatomic) ToolParamWindow *toolParamWindow;
 
     - (NSString *)getProcessMessage;
@@ -37,8 +35,7 @@
         if (self) {
             [self setDelegate:delegate];
         }
-        // ファイル保存／選択パネル、パラメーター入力ウィンドウを使用
-        [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+        // パラメーター入力ウィンドウを使用
         [self setToolParamWindow:[[ToolParamWindow alloc] initWithDelegate:self]];
         // OpenSSL初期化処理を実行
         init_openssl();
@@ -54,9 +51,18 @@
         return message;
     }
 
-    - (bool)createKeypairPemFile:(NSString *)outputFilePath {
+    - (bool)createKeypairPemFile {
+        // パラメーターをログ出力
+        KeyPairParameter *parameter = [[self toolParamWindow] keyPairParameter];
+        NSString *logMessage = [NSString
+                                stringWithFormat:@"createKeypairPemFile: output[%1$@]",
+                                [parameter outPath]
+                                ];
+        NSLog(@"%@", logMessage);
+        [self.delegate notifyToolFileMenuMessage:logMessage];
+        
         // 指定のパスに、EC鍵ファイルをPEM形式で生成
-        return create_keypair_pem_file([outputFilePath UTF8String]);
+        return create_keypair_pem_file([[parameter outPath] UTF8String]);
     }
 
     - (bool)createCertreqCsrFile {
@@ -112,10 +118,7 @@
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
                 // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
-                [[self toolFilePanel] prepareSavePanel:MSG_BUTTON_CREATE
-                                               message:MSG_PROMPT_CREATE_PEM_PATH
-                                              fileName:@"U2FPrivKey" fileTypes:@[@"pem"]];
-                [[self toolFilePanel] panelWillCreatePath:appDelegate parentWindow:[appDelegate window]];
+                [[self toolParamWindow] keypairParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
                 // 証明書要求ファイル作成ダイアログをモーダル表示
@@ -132,34 +135,29 @@
 
 #pragma mark - Call back from ToolParamWindow
 
+    - (void)keypairParamWindowDidSetup:(id)sender {
+        // 秘密鍵ファイル作成処理を実行
+        [self processCommand:sender];
+    }
+
     - (void)certreqParamWindowDidSetup:(id)sender {
         // 証明書要求ファイル作成処理を実行
-        [self processCommand:sender filePath:nil];
+        [self processCommand:sender];
     }
 
     - (void)selfcrtParamWindowDidSetup:(id)sender {
         // 自己署名証明書ファイル作成処理を実行
-        [self processCommand:sender filePath:nil];
-    }
-
-#pragma mark - Call back from ToolFilePanel
-
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
-    }
-
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
-        // 秘密鍵ファイル作成処理を実行
-        [self processCommand:sender filePath:filePath];
+        [self processCommand:sender];
     }
 
 #pragma mark - Main process
 
-    - (void)processCommand:(id)sender filePath:(NSString*)filePath {
+    - (void)processCommand:(id)sender {
         // コマンドに応じ、以下の処理に分岐
         bool ret = false;
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
-                ret = [self createKeypairPemFile:filePath];
+                ret = [self createKeypairPemFile];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
                 ret = [self createCertreqCsrFile];
