@@ -59,24 +59,25 @@
         return create_keypair_pem_file([outputFilePath UTF8String]);
     }
 
-    - (bool)createCertreqCsrFile:(NSString *)outputFilePath {
+    - (bool)createCertreqCsrFile {
         // パラメーターをログ出力
+        CertReqParameter *parameter = [[self toolParamWindow] certReqParameter];
         NSString *logMessage = [NSString
                                 stringWithFormat:@"createCertreqCsrFile: CN[%1$@] OU[%2$@] O[%3$@] L[%4$@] ST[%5$@] C[%6$@] keyfile[%7$@] --> output[%8$@]",
-                                [[self toolParamWindow] certreqParamCN],
-                                [[self toolParamWindow] certreqParamOU],
-                                [[self toolParamWindow] certreqParamO],
-                                [[self toolParamWindow] certreqParamL],
-                                [[self toolParamWindow] certreqParamST],
-                                [[self toolParamWindow] certreqParamC],
-                                [[self toolParamWindow] certreqParamPemPath],
-                                outputFilePath
+                                [parameter CN],
+                                [parameter OU],
+                                [parameter O],
+                                [parameter L],
+                                [parameter ST],
+                                [parameter C],
+                                [parameter pemPath],
+                                [parameter outPath]
                                 ];
         NSLog(@"%@", logMessage);
         [self.delegate notifyToolFileMenuMessage:logMessage];
 
         // 指定のパスに、証明書要求ファイルをPEM形式で生成
-        return create_certreq_csr_file([outputFilePath UTF8String]);
+        return create_certreq_csr_file([[parameter outPath] UTF8String]);
     }
 
     - (bool)createSelfcrtCrtFile {
@@ -133,7 +134,7 @@
 
     - (void)certreqParamWindowDidSetup:(id)sender {
         // 証明書要求ファイル作成処理を実行
-        [self processCommand:sender filePath:[[self toolParamWindow] certreqParamOutPath]];
+        [self processCommand:sender filePath:nil];
     }
 
     - (void)selfcrtParamWindowDidSetup:(id)sender {
@@ -161,7 +162,7 @@
                 ret = [self createKeypairPemFile:filePath];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
-                ret = [self createCertreqCsrFile:filePath];
+                ret = [self createCertreqCsrFile];
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
                 ret = [self createSelfcrtCrtFile];

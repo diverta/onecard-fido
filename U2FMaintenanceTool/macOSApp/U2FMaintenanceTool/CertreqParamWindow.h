@@ -6,6 +6,8 @@
 //
 #import <Cocoa/Cocoa.h>
 
+#import "ToolParameters.h"
+
 @interface CertreqParamWindow : NSWindowController
 
     @property (assign) IBOutlet NSTextField *fieldPath;
@@ -16,7 +18,7 @@
     @property (assign) IBOutlet NSTextField *fieldST;
     @property (assign) IBOutlet NSTextField *fieldC;
 
-    @property (nonatomic) NSWindow *parentWindow;
-    @property (nonatomic) NSString *outputPath;
+    @property (nonatomic) NSWindow         *parentWindow;
+    @property (nonatomic) CertReqParameter *parameter;
 
 @end

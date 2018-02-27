@@ -8,6 +8,14 @@
 
 #import "ToolParameters.h"
 
+@implementation KeyPairParameter
+
+@end
+
+@implementation CertReqParameter
+
+@end
+
 @implementation SelfCertParameter
 
 @end

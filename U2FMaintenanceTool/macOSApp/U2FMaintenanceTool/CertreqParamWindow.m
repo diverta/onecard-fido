@@ -21,6 +21,7 @@
         [super windowDidLoad];
         
         [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+        [self setParameter:[[CertReqParameter alloc] init]];
         [[self fieldC] setStringValue:@"JP"];
     }
 
@@ -41,6 +42,28 @@
     }
 
     - (void)terminateWindow:(NSModalResponse)response {
+        // 画面入力値をパラメーターに保持
+        [[self parameter] setPemPath:[[self fieldPath] stringValue]];
+        [[self parameter] setCN:     [[self fieldCN]   stringValue]];
+        [[self parameter] setOU:     [[self fieldOU]   stringValue]];
+        [[self parameter] setO:      [[self fieldO]    stringValue]];
+        [[self parameter] setL:      [[self fieldL]    stringValue]];
+        [[self parameter] setST:     [[self fieldST]   stringValue]];
+        [[self parameter] setC:      [[self fieldC]    stringValue]];
+
+        // パラメーターに保持した入力項目を初期化
+        [[self fieldPath] setStringValue:@""];
+        [[self fieldCN]   setStringValue:@""];
+        [[self fieldOU]   setStringValue:@""];
+        [[self fieldO]    setStringValue:@""];
+        [[self fieldL]    setStringValue:@""];
+        [[self fieldST]   setStringValue:@""];
+        [[self fieldC]    setStringValue:@""];
+        
+        // 最初の項目にフォーカス
+        [[self fieldPath] becomeFirstResponder];
+
+        // この画面を閉じる
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
@@ -77,6 +100,9 @@
         if ([self checkMustEntry:[self fieldC] informativeText:MSG_PROMPT_INPUT_C] == false) {
             return false;
         }
+        // FIXME:
+        // 入力されたファイルパスが存在しない場合は終了
+        //
         return true;
     }
 
@@ -100,7 +126,7 @@
 
     - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
         // ファイル保存パネルで選択された出力先ファイルパスを保持し、画面を閉じる
-        [self setOutputPath:filePath];
+        [[self parameter] setOutPath:filePath];
         [self terminateWindow:NSModalResponseOK];
     }
 

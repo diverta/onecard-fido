@@ -63,22 +63,10 @@
         }];
     }
 
-    - (void)getCertreqParams {
-        // 画面項目値を各プロパティーに保持
-        CertreqParamWindow *window = [self certreqParamWindow];
-        [self setCertreqParamPemPath:[[window fieldPath] stringValue]];
-        [self setCertreqParamCN:[[window fieldCN] stringValue]];
-        [self setCertreqParamOU:[[window fieldOU] stringValue]];
-        [self setCertreqParamO:[[window fieldO] stringValue]];
-        [self setCertreqParamL:[[window fieldL] stringValue]];
-        [self setCertreqParamST:[[window fieldST] stringValue]];
-        [self setCertreqParamC:[[window fieldC] stringValue]];
-        [self setCertreqParamOutPath:[[self certreqParamWindow] outputPath]];
-    }
-
     - (void)certreqParamWindowDidSetup:(id)sender {
-        // ダイアログで入力されたパラメーターを引き渡す
-        [self getCertreqParams];
+        // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
+        [self setCertReqParameter:[[self certreqParamWindow] parameter]];
+        [[self certreqParamWindow] close];
         [[self delegate] certreqParamWindowDidSetup:sender];
     }
 
@@ -110,8 +98,9 @@
     }
 
     - (void)selfcrtParamWindowDidSetup:(id)sender {
-        // ダイアログで入力されたパラメーターを引き渡す
+        // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
         [self setSelfCertParameter:[[self selfcrtParamWindow] parameter]];
+        [[self selfcrtParamWindow] close];
         [[self delegate] selfcrtParamWindowDidSetup:sender];
     }
 
