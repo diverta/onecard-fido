@@ -24,7 +24,7 @@
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
 
 #pragma mark - 証明書要求ファイル作成画面
-#define MSG_PROMPT_SELECT_PEM_PATH  @"証明書要求時に使用する秘密鍵ファイル(PEM)を選択してください。"
+#define MSG_PROMPT_SELECT_PEM_PATH  @"使用する秘密鍵ファイル(PEM)を選択してください。"
 #define MSG_PROMPT_CREATE_CSR_PATH  @"作成する証明書要求ファイル(CSR)名を指定してください。"
 #define MSG_PROMPT_CREATE_PEM_PATH  @"作成する秘密鍵ファイル(PEM)名を指定してください。"
 #define MSG_PROMPT_INPUT_CN         @"実際に接続されるURLのFQDN（例：www.diverta.co.jp）を入力してください。"
@@ -32,6 +32,10 @@
 #define MSG_PROMPT_INPUT_L          @"申請組織の事業所住所の市区町村名（例：Shinjuku-ku、Yokohama-shi等）を入力してください。"
 #define MSG_PROMPT_INPUT_ST         @"申請組織の事業所住所の都道府県名（例：Tokyo、Kanagawa）を入力してください。"
 #define MSG_PROMPT_INPUT_C          @"申請組織の事業所住所の国名（例：JP）を入力してください。"
+
+#pragma mark - 自己署名証明書ファイル作成画面
+#define MSG_PROMPT_SELECT_CSR_PATH  @"使用する証明書要求ファイル(CSR)を選択してください。"
+#define MSG_PROMPT_CREATE_CRT_PATH  @"作成する自己署名証明書ファイル(CRT)名を指定してください。"
 
 #pragma mark - プロセス名称
 #define PROCESS_NAME_ERASE_BOND     @"ペアリング情報削除処理"

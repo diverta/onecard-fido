@@ -79,9 +79,19 @@
         return create_certreq_csr_file([outputFilePath UTF8String]);
     }
 
-    - (bool)createSelfcrtCrtFile:(NSString *)outputFilePath {
+    - (bool)createSelfcrtCrtFile {
+        // パラメーターをログ出力
+        SelfCertParameter *parameter = [[self toolParamWindow] selfCertParameter];
+        NSString *logMessage = [NSString
+                                stringWithFormat:@"createSelfcrtCrtFile: csrfile[%1$@] --> output[%2$@]",
+                                [parameter csrPath],
+                                [parameter outPath]
+                                ];
+        NSLog(@"%@", logMessage);
+        [self.delegate notifyToolFileMenuMessage:logMessage];
+        
         // 指定のパスに、自己署名証明書ファイルをDER形式で生成
-        return create_selfcrt_crt_file([outputFilePath UTF8String]);
+        return create_selfcrt_crt_file([[parameter outPath] UTF8String]);
     }
 
     - (void)toolFileMenuWillCreateFile:(id)sender {
@@ -110,6 +120,10 @@
                 // 証明書要求ファイル作成ダイアログをモーダル表示
                 [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
                 break;
+            case COMMAND_CREATE_SELFCRT_CRT:
+                // 自己署名証明書ファイル作成ダイアログをモーダル表示
+                [[self toolParamWindow] selfcrtParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
+                break;
             default:
                 break;
         }
@@ -120,6 +134,11 @@
     - (void)certreqParamWindowDidSetup:(id)sender {
         // 証明書要求ファイル作成処理を実行
         [self processCommand:sender filePath:[[self toolParamWindow] certreqParamOutPath]];
+    }
+
+    - (void)selfcrtParamWindowDidSetup:(id)sender {
+        // 自己署名証明書ファイル作成処理を実行
+        [self processCommand:sender filePath:nil];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -145,7 +164,7 @@
                 ret = [self createCertreqCsrFile:filePath];
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
-                ret = [self createSelfcrtCrtFile:filePath];
+                ret = [self createSelfcrtCrtFile];
                 break;
             default:
                 break;

@@ -7,10 +7,12 @@
 #import <Foundation/Foundation.h>
 #import "ToolParamWindow.h"
 #import "CertreqParamWindow.h"
+#import "SelfcrtParamWindow.h"
 
 @interface ToolParamWindow ()
 
     @property (nonatomic) CertreqParamWindow *certreqParamWindow;
+    @property (nonatomic) SelfcrtParamWindow *selfcrtParamWindow;
 
 @end
 
@@ -29,7 +31,8 @@
         // 使用するダイアログを生成
         [self setCertreqParamWindow:[[CertreqParamWindow alloc]
                                      initWithWindowNibName:@"CertreqParamWindow"]];
-        NSLog(@"ToolParamWindow: new CertreqParamWindow created");
+        [self setSelfcrtParamWindow:[[SelfcrtParamWindow alloc]
+                                     initWithWindowNibName:@"SelfcrtParamWindow"]];
         
         return self;
     }
@@ -77,6 +80,39 @@
         // ダイアログで入力されたパラメーターを引き渡す
         [self getCertreqParams];
         [[self delegate] certreqParamWindowDidSetup:sender];
+    }
+
+#pragma mark for SelfcrtParamWindow
+
+    - (void)selfcrtParamWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログが準備されていない場合は終了
+        if ([self selfcrtParamWindow] == nil) {
+            NSLog(@"selfcrtParamWindowWillSetup: SelfcrtParamWindow == nil");
+            return;
+        }
+        if ([[self selfcrtParamWindow] window] == nil) {
+            return;
+        }
+        
+        // ダイアログの親ウィンドウを保持
+        [[self selfcrtParamWindow] setParentWindow:parentWindow];
+        
+        // ダイアログをモーダルで表示
+        NSWindow *dialog = [[self selfcrtParamWindow] window];
+        ToolParamWindow * __weak weakSelf = self;
+        [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
+            if (response == NSModalResponseCancel) {
+                return;
+            }
+            // ダイアログで作成ボタンが押された時
+            [weakSelf selfcrtParamWindowDidSetup:sender];
+        }];
+    }
+
+    - (void)selfcrtParamWindowDidSetup:(id)sender {
+        // ダイアログで入力されたパラメーターを引き渡す
+        [self setSelfCertParameter:[[self selfcrtParamWindow] parameter]];
+        [[self delegate] selfcrtParamWindowDidSetup:sender];
     }
 
 @end
