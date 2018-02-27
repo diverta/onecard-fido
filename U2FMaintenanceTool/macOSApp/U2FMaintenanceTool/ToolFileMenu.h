@@ -7,6 +7,8 @@
 #ifndef ToolFileMenu_h
 #define ToolFileMenu_h
 
+#import "ToolCommon.h"
+
 @protocol ToolFileMenuDelegate;
 
     @interface ToolFileMenu : NSObject
@@ -14,7 +16,7 @@
     @property (nonatomic, weak) id<ToolFileMenuDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolFileMenuDelegate>)delegate;
-    - (void)toolFileMenuWillCreateFile:(id)sender;
+    - (void)toolFileMenuWillCreateFile:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command;
 
 @end
 

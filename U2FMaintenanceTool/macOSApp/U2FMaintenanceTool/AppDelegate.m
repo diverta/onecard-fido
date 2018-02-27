@@ -10,6 +10,24 @@
 @interface AppDelegate ()
     <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
+    @property (assign) IBOutlet NSWindow   *window;
+    @property (assign) IBOutlet NSButton   *button1;
+    @property (assign) IBOutlet NSButton   *button2;
+    @property (assign) IBOutlet NSButton   *button3;
+    @property (assign) IBOutlet NSButton   *button4;
+    @property (assign) IBOutlet NSButton   *button5;
+    @property (assign) IBOutlet NSButton   *buttonQuit;
+    @property (assign) IBOutlet NSTextView *textView;
+
+    @property (assign) IBOutlet NSTextField *fieldPath1;
+    @property (assign) IBOutlet NSTextField *fieldPath2;
+    @property (assign) IBOutlet NSButton    *buttonPath1;
+    @property (assign) IBOutlet NSButton    *buttonPath2;
+
+    @property (assign) IBOutlet NSMenuItem  *menuItemFile1;
+    @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
+    @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
+
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
@@ -61,6 +79,9 @@
         [self.buttonPath1 setEnabled:enabled];
         [self.buttonPath2 setEnabled:enabled];
         [self.buttonQuit setEnabled:enabled];
+        [self.menuItemFile1 setEnabled:enabled];
+        [self.menuItemFile2 setEnabled:enabled];
+        [self.menuItemFile3 setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -142,15 +163,18 @@
     }
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
-        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
+        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
+                                                command:COMMAND_CREATE_KEYPAIR_PEM];
     }
 
     - (IBAction)menuItemFile2DidSelect:(id)sender {
-        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
+        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
+                                                command:COMMAND_CREATE_CERTREQ_CSR];
     }
 
     - (IBAction)menuItemFile3DidSelect:(id)sender {
-        [[self toolFileMenu] toolFileMenuWillCreateFile:sender];
+        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
+                                                command:COMMAND_CREATE_SELFCRT_CRT];
     }
 
 #pragma mark - Call back from ToolFilePanel

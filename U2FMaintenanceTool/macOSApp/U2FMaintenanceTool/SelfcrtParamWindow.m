@@ -11,6 +11,8 @@
 
 @interface SelfcrtParamWindow () <ToolFilePanelDelegate>
 
+    @property (assign) IBOutlet NSTextField *fieldPath;
+
     @property (nonatomic) ToolFilePanel *toolFilePanel;
 
 @end

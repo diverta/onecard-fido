@@ -10,8 +10,6 @@
 
 @interface SelfcrtParamWindow : NSWindowController
 
-    @property (assign) IBOutlet NSTextField *fieldPath;
-
     @property (nonatomic) NSWindow          *parentWindow;
     @property (nonatomic) SelfCertParameter *parameter;
 

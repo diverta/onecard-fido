@@ -5,11 +5,9 @@
 //  Created by Makoto Morita on 2018/02/19.
 //
 #import <Foundation/Foundation.h>
-#import "AppDelegate.h"
 #import "ToolFileMenu.h"
 #import "ToolParamWindow.h"
 #import "ToolPopupWindow.h"
-#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 
 // OpenSSL関連処理
@@ -101,32 +99,21 @@
         return create_selfcrt_crt_file([[parameter outPath] UTF8String]);
     }
 
-    - (void)toolFileMenuWillCreateFile:(id)sender {
-        // メニューアイテムからコマンドを判定
-        AppDelegate *appDelegate = (AppDelegate *)[self delegate];
-        if (sender == [appDelegate menuItemFile1]) {
-            [self setCommand:COMMAND_CREATE_KEYPAIR_PEM];
-            
-        } else if (sender == [appDelegate menuItemFile2]) {
-            [self setCommand:COMMAND_CREATE_CERTREQ_CSR];
-            
-        } else if (sender == [appDelegate menuItemFile3]) {
-            [self setCommand:COMMAND_CREATE_SELFCRT_CRT];
-        }
-        
+- (void)toolFileMenuWillCreateFile:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command {
         // コマンドに応じ、以下の処理に分岐
+        [self setCommand:command];
         switch ([self command]) {
             case COMMAND_CREATE_KEYPAIR_PEM:
                 // ファイル保存パネルをモーダル表示（親画面＝メインウィンドウ）
-                [[self toolParamWindow] keypairParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
+                [[self toolParamWindow] keypairParamWindowWillSetup:sender parentWindow:parentWindow];
                 break;
             case COMMAND_CREATE_CERTREQ_CSR:
                 // 証明書要求ファイル作成ダイアログをモーダル表示
-                [[self toolParamWindow] certreqParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
+                [[self toolParamWindow] certreqParamWindowWillSetup:sender parentWindow:parentWindow];
                 break;
             case COMMAND_CREATE_SELFCRT_CRT:
                 // 自己署名証明書ファイル作成ダイアログをモーダル表示
-                [[self toolParamWindow] selfcrtParamWindowWillSetup:appDelegate parentWindow:[appDelegate window]];
+                [[self toolParamWindow] selfcrtParamWindowWillSetup:sender parentWindow:parentWindow];
                 break;
             default:
                 break;

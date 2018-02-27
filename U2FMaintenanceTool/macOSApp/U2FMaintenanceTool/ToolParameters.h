@@ -7,7 +7,6 @@
 #ifndef ToolParameters_h
 #define ToolParameters_h
 
-
 @interface KeyPairParameter : NSObject
 
     @property (nonatomic) NSString *outPath;
