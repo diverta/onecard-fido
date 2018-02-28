@@ -25,7 +25,11 @@
     @property (nonatomic) SelfCertParameter *selfCertParameter;
 
     - (void)paramWindowWillSetup:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command;
-    
+
+#pragma mark - Utilities for check entry
+    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
+
 @end
 
 @protocol ToolParamWindowDelegate <NSObject>

@@ -8,6 +8,7 @@
 #import "ToolFilePanel.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
+#import "ToolParamWindow.h"
 
 @interface SelfcrtParamWindow () <ToolFilePanelDelegate>
 
@@ -68,20 +69,11 @@
 
     - (bool) checkEntries {
         // 入力項目が正しく指定されていない場合は終了
-        if ([self checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_CSR_PATH] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_CSR_PATH] == false) {
             return false;
         }
-        // FIXME:
         // 入力されたファイルパスが存在しない場合は終了
-        //
-        return true;
-    }
-
-    - (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
-        // 入力項目が正しく指定されていない場合はfalseを戻す
-        if ([[textField stringValue] length] == 0) {
-            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
-            [textField becomeFirstResponder];
+        if ([ToolParamWindow checkFileExist:[self fieldPath] informativeText:MSG_PROMPT_EXIST_CSR_PATH] == false) {
             return false;
         }
         return true;

@@ -9,6 +9,7 @@
 
 #pragma mark - 共通
 #define MSG_INVALID_FIELD           @"入力項目が不正です。"
+#define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
 #define MSG_SUCCESS                 @"成功"
@@ -32,10 +33,12 @@
 #define MSG_PROMPT_INPUT_L          @"申請組織の事業所住所の市区町村名（例：Shinjuku-ku、Yokohama-shi等）を入力してください。"
 #define MSG_PROMPT_INPUT_ST         @"申請組織の事業所住所の都道府県名（例：Tokyo、Kanagawa）を入力してください。"
 #define MSG_PROMPT_INPUT_C          @"申請組織の事業所住所の国名（例：JP）を入力してください。"
+#define MSG_PROMPT_EXIST_PEM_PATH   @"実在する秘密鍵ファイル(PEM)のパスを指定してください。"
 
 #pragma mark - 自己署名証明書ファイル作成画面
 #define MSG_PROMPT_SELECT_CSR_PATH  @"使用する証明書要求ファイル(CSR)を選択してください。"
 #define MSG_PROMPT_CREATE_CRT_PATH  @"作成する自己署名証明書ファイル(CRT)名を指定してください。"
+#define MSG_PROMPT_EXIST_CSR_PATH   @"実在する証明書要求ファイル(CSR)のパスを指定してください。"
 
 #pragma mark - プロセス名称
 #define PROCESS_NAME_ERASE_BOND     @"ペアリング情報削除処理"

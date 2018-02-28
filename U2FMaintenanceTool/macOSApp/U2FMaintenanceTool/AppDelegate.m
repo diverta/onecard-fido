@@ -4,6 +4,7 @@
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
+#import "ToolParamWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 
@@ -97,14 +98,15 @@
     }
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
-        // 入力済みの場合はチェックOK
-        if ([field.stringValue length]) {
-            return true;
+        // 入力項目が正しく指定されていない場合は終了
+        if ([ToolParamWindow checkMustEntry:field informativeText:message] == false) {
+            return false;
         }
-        // 未入力の場合はポップアップメッセージを表示
-        [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:message];
-        [field becomeFirstResponder];
-        return false;
+        // 入力されたファイルパスが存在しない場合は終了
+        if ([ToolParamWindow checkFileExist:field informativeText:message] == false) {
+            return false;
+        }
+        return true;
     }
 
     - (IBAction)button3DidPress:(id)sender {

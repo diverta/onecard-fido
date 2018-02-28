@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolParamWindow.h"
+#import "ToolPopupWindow.h"
 #import "ToolFilePanel.h"
 #import "ToolCommonMessage.h"
 #import "CertreqParamWindow.h"
@@ -148,6 +149,28 @@
         [self setSelfCertParameter:[[self selfcrtParamWindow] parameter]];
         [[self selfcrtParamWindow] close];
         [[self delegate] paramWindowDidSetup:sender];
+    }
+
+#pragma mark - Utilities for check entry
+
+    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        if ([[textField stringValue] length] == 0) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText {
+        // 入力されたファイルパスが存在しない場合はfalseを戻す
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[textField stringValue]] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_FILE_PATH informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
     }
 
 @end

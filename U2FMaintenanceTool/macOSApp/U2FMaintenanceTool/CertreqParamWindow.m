@@ -8,6 +8,7 @@
 #import "ToolFilePanel.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
+#import "ToolParamWindow.h"
 
 @interface CertreqParamWindow () <ToolFilePanelDelegate>
 
@@ -90,35 +91,26 @@
 
     - (bool) checkEntries {
         // 入力項目が正しく指定されていない場合は終了
-        if ([self checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_PEM_PATH] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldPath] informativeText:MSG_PROMPT_SELECT_PEM_PATH] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self fieldCN] informativeText:MSG_PROMPT_INPUT_CN] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldCN] informativeText:MSG_PROMPT_INPUT_CN] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self fieldO] informativeText:MSG_PROMPT_INPUT_O] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldO] informativeText:MSG_PROMPT_INPUT_O] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self fieldL] informativeText:MSG_PROMPT_INPUT_L] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldL] informativeText:MSG_PROMPT_INPUT_L] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self fieldST] informativeText:MSG_PROMPT_INPUT_ST] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldST] informativeText:MSG_PROMPT_INPUT_ST] == false) {
             return false;
         }
-        if ([self checkMustEntry:[self fieldC] informativeText:MSG_PROMPT_INPUT_C] == false) {
+        if ([ToolParamWindow checkMustEntry:[self fieldC] informativeText:MSG_PROMPT_INPUT_C] == false) {
             return false;
         }
-        // FIXME:
         // 入力されたファイルパスが存在しない場合は終了
-        //
-        return true;
-    }
-
-    - (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
-        // 入力項目が正しく指定されていない場合はfalseを戻す
-        if ([[textField stringValue] length] == 0) {
-            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
-            [textField becomeFirstResponder];
+        if ([ToolParamWindow checkFileExist:[self fieldPath] informativeText:MSG_PROMPT_EXIST_PEM_PATH] == false) {
             return false;
         }
         return true;
