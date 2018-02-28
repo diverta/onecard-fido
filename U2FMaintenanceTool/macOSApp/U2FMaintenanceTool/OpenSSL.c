@@ -10,6 +10,7 @@
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
+#include <openssl/x509v3.h>
 
 static char openssl_message[1024];
 
@@ -120,8 +121,10 @@ static bool X509_NAME_add_entries_for_csr(X509_NAME *x509_name,
     if (X509_NAME_add_entry_for_csr(x509_name, "CN", CN) == false) {
         return false;
     }
-    if (X509_NAME_add_entry_for_csr(x509_name, "OU", OU) == false) {
-        return false;
+    if (strlen(OU) > 0) {
+        if (X509_NAME_add_entry_for_csr(x509_name, "OU", OU) == false) {
+            return false;
+        }
     }
     if (X509_NAME_add_entry_for_csr(x509_name, "O", O) == false) {
         return false;
@@ -135,6 +138,27 @@ static bool X509_NAME_add_entries_for_csr(X509_NAME *x509_name,
     if (X509_NAME_add_entry_for_csr(x509_name, "C", C) == false) {
         return false;
     }
+    return true;
+}
+
+bool add_x509_v3_extension(X509_REQ *x509_req) {
+    // BLEトランスポートサポートに関する拡張属性を付与（bluetoothLowEnergyRadio）
+    STACK_OF(X509_EXTENSION) *exts = sk_X509_EXTENSION_new_null();
+    int nid = OBJ_create("1.3.6.1.4.1.45724.2.1.1",
+                         "U2F Extension",
+                         "FIDO U2F Authenticator Transports Extension");
+    const char *value = "DER:03:02:06:40";
+    
+    X509_EXTENSION *ex = X509V3_EXT_conf_nid(NULL, NULL, nid, value);
+    if (ex == NULL) {
+        sprintf(openssl_message, "create_certreq_csr_file: X509V3_EXT_conf_nid failed");
+        return false;
+    }
+    
+    sk_X509_EXTENSION_push(exts, ex);
+    X509_REQ_add_extensions(x509_req, exts);
+    
+    sk_X509_EXTENSION_pop_free(exts, X509_EXTENSION_free);
     return true;
 }
 
@@ -162,7 +186,7 @@ bool create_certreq_csr_file(const char *output_file_path, const char *privkey_f
     }
     
     // CSRの格納領域を生成
-    int n_version = 1;
+    int n_version = 0;
     X509_REQ *x509_req = X509_REQ_new();
     if (X509_REQ_set_version(x509_req, n_version) == 0) {
         sprintf(openssl_message, "create_certreq_csr_file: X509_REQ_set_version failed");
@@ -178,6 +202,12 @@ bool create_certreq_csr_file(const char *output_file_path, const char *privkey_f
         return false;
     }
     if (X509_NAME_add_entries_for_csr(x509_name, CN, OU, O, L, ST, C) == false) {
+        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        return false;
+    }
+    
+    // BLEトランスポートサポートに関する拡張属性を付与
+    if (add_x509_v3_extension(x509_req) == false) {
         free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
         return false;
     }
