@@ -81,7 +81,15 @@
         [self.delegate notifyToolFileMenuMessage:logMessage];
 
         // 指定のパスに、証明書要求ファイルをPEM形式で生成
-        return create_certreq_csr_file([[parameter outPath] UTF8String]);
+        return create_certreq_csr_file([[parameter outPath] UTF8String],
+                                       [[parameter pemPath] UTF8String],
+                                       [[parameter CN] UTF8String],
+                                       [[parameter OU] UTF8String],
+                                       [[parameter O] UTF8String],
+                                       [[parameter L] UTF8String],
+                                       [[parameter ST] UTF8String],
+                                       [[parameter C] UTF8String]
+                                       );
     }
 
     - (bool)createSelfcrtCrtFile {
