@@ -29,6 +29,7 @@
 #pragma mark - Utilities for check entry
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText;
 
 @end
 

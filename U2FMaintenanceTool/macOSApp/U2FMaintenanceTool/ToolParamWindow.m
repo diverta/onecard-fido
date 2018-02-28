@@ -173,4 +173,16 @@
         return true;
     }
 
+    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText{
+        // 入力値が数字だけで構成されていない場合はfalseを戻す
+        NSString *string = [textField stringValue];
+        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
+        if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_NUMBER informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
 @end

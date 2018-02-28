@@ -29,6 +29,8 @@
 @interface SelfCertParameter : NSObject
 
     @property (nonatomic) NSString *csrPath;
+    @property (nonatomic) NSString *pemPath;
+    @property (nonatomic) NSString *days;
     @property (nonatomic) NSString *outPath;
 
 @end

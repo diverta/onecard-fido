@@ -96,15 +96,21 @@
         // パラメーターをログ出力
         SelfCertParameter *parameter = [[self toolParamWindow] selfCertParameter];
         NSString *logMessage = [NSString
-                                stringWithFormat:@"createSelfcrtCrtFile: csrfile[%1$@] --> output[%2$@]",
+                                stringWithFormat:@"createSelfcrtCrtFile: csrfile[%1$@] keyfile[%2$@] days[%3$@] --> output[%4$@]",
                                 [parameter csrPath],
+                                [parameter pemPath],
+                                [parameter days],
                                 [parameter outPath]
                                 ];
         NSLog(@"%@", logMessage);
         [self.delegate notifyToolFileMenuMessage:logMessage];
         
         // 指定のパスに、自己署名証明書ファイルをDER形式で生成
-        return create_selfcrt_crt_file([[parameter outPath] UTF8String]);
+        return create_selfcrt_crt_file([[parameter outPath] UTF8String],
+                                       [[parameter csrPath] UTF8String],
+                                       [[parameter pemPath] UTF8String],
+                                       [[parameter days] UTF8String]
+                                       );
     }
 
     - (void)toolFileMenuWillCreateFile:(id)sender parentWindow:(NSWindow *)parentWindow command:(Command)command {

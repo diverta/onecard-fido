@@ -19,6 +19,7 @@ bool create_keypair_pem_file(const char *output_file_path);
 bool create_certreq_csr_file(const char *output_file_path, const char *privkey_file_path,
                              const char *CN, const char *OU, const char *O,
                              const char *L, const char *ST, const char *C);
-bool create_selfcrt_crt_file(const char *output_file_path);
+bool create_selfcrt_crt_file(const char *output_file_path, const char *csr_file_path,
+                             const char *privkey_file_path, const char *available_days);
 
 #endif /* OpenSSL_h */

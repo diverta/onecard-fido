@@ -246,7 +246,8 @@ bool create_certreq_csr_file(const char *output_file_path, const char *privkey_f
     return true;
 }
 
-bool create_selfcrt_crt_file(const char *output_file_path) {
+bool create_selfcrt_crt_file(const char *output_file_path, const char *csr_file_path,
+                             const char *privkey_file_path, const char *available_days) {
     sprintf(openssl_message, "create_selfcrt_crt_file: under construction");
     return false;
 }
