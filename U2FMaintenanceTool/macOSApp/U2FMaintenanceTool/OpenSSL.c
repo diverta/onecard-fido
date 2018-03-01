@@ -10,6 +10,7 @@
 #include <openssl/err.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
+#include <openssl/asn1.h>
 #include <openssl/x509v3.h>
 
 static char openssl_message[1024];
@@ -376,15 +377,15 @@ bool x509_cert_setpkey_and_sign(const char *function_name, X509 *x509_cert, EVP_
 
 int x509_cert_write(const char *function_name, X509 *x509_cert, const char *output_file_path) {
     // 証明書ファイルを開く
-    FILE *outfp = fopen(output_file_path, "w");
+    FILE *outfp = fopen(output_file_path, "wb");
     if (outfp == NULL) {
         sprintf(openssl_message, "%s: fopen failed: %s", function_name, output_file_path);
         return 0;
     }
     // 証明書をファイルに書き出し
-    int ret = PEM_write_X509(outfp, x509_cert);
+    int ret = i2d_X509_fp(outfp, x509_cert);
     if (ret == 0) {
-        sprintf(openssl_message, "%s: PEM_write_X509 failed", function_name);
+        sprintf(openssl_message, "%s: i2d_X509_fp failed", function_name);
     }
     // ファイルを閉じる
     fclose(outfp);
