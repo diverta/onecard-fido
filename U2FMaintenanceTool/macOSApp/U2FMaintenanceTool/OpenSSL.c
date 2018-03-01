@@ -149,7 +149,6 @@ static bool add_x509_v3_extension(const char *function_name, X509_REQ *x509_req)
     X509_REQ_add_extensions(x509_req, exts);
     // リソースを解放
     sk_X509_EXTENSION_pop_free(exts, X509_EXTENSION_free);
-    X509_EXTENSION_free(ex);
     return true;
 }
 
