@@ -91,7 +91,7 @@ bool create_keypair_pem_file(const char *output_file_path) {
     return true;
 }
 
-static void free_resources_for_csr(FILE *input_file, EVP_PKEY *pkey, EC_KEY *eckey,
+static void free_resources_for_csr(FILE *input_file, EVP_PKEY *pkey,
                                    X509_REQ *x509_req, FILE *output_file) {
     // 作業領域を解放し、ファイルを閉じる
     if (input_file) {
@@ -100,7 +100,6 @@ static void free_resources_for_csr(FILE *input_file, EVP_PKEY *pkey, EC_KEY *eck
     if (output_file) {
         fclose(output_file);
     }
-    EC_KEY_free(eckey);
     EVP_PKEY_free(pkey);
     X509_REQ_free(x509_req);
 }
@@ -141,7 +140,7 @@ static bool X509_NAME_add_entries_for_csr(X509_NAME *x509_name,
     return true;
 }
 
-bool add_x509_v3_extension(X509_REQ *x509_req) {
+static bool add_x509_v3_extension(X509_REQ *x509_req) {
     // BLEトランスポートサポートに関する拡張属性を付与（bluetoothLowEnergyRadio）
     STACK_OF(X509_EXTENSION) *exts = sk_X509_EXTENSION_new_null();
     int nid = OBJ_create("1.3.6.1.4.1.45724.2.1.1",
@@ -164,33 +163,12 @@ bool add_x509_v3_extension(X509_REQ *x509_req) {
 
 bool create_certreq_csr_file(const char *output_file_path, const char *privkey_file_path,
     const char *CN, const char *OU, const char *O, const char *L, const char *ST, const char *C) {
-    // EC鍵ファイルを開く
-    FILE *fp = fopen(privkey_file_path, "r");
-    if (fp == NULL) {
-        sprintf(openssl_message, "create_certreq_csr_file: fopen failed: %s", privkey_file_path);
-        return false;
-    }
-
-    // EC鍵ファイルからEC鍵を取得
-    EVP_PKEY *pkey = PEM_read_PrivateKey(fp, NULL, NULL, NULL);
-    if (pkey == NULL) {
-        sprintf(openssl_message, "create_certreq_csr_file: PEM_read_PrivateKey failed");
-        free_resources_for_csr(fp, pkey, NULL, NULL, NULL);
-        return false;
-    }
-    EC_KEY *eckey = EVP_PKEY_get1_EC_KEY(pkey);
-    if (eckey == NULL) {
-        sprintf(openssl_message, "create_certreq_csr_file: EVP_PKEY_get1_EC_KEY failed");
-        free_resources_for_csr(fp, pkey, eckey, NULL, NULL);
-        return false;
-    }
-    
     // CSRの格納領域を生成
     int n_version = 0;
     X509_REQ *x509_req = X509_REQ_new();
     if (X509_REQ_set_version(x509_req, n_version) == 0) {
         sprintf(openssl_message, "create_certreq_csr_file: X509_REQ_set_version failed");
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(NULL, NULL, x509_req, NULL);
         return false;
     }
     
@@ -198,31 +176,47 @@ bool create_certreq_csr_file(const char *output_file_path, const char *privkey_f
     X509_NAME *x509_name = X509_REQ_get_subject_name(x509_req);
     if (x509_name == NULL) {
         sprintf(openssl_message, "create_certreq_csr_file: X509_REQ_get_subject_name failed");
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(NULL, NULL, x509_req, NULL);
         return false;
     }
     if (X509_NAME_add_entries_for_csr(x509_name, CN, OU, O, L, ST, C) == false) {
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(NULL, NULL, x509_req, NULL);
         return false;
     }
     
     // BLEトランスポートサポートに関する拡張属性を付与
     if (add_x509_v3_extension(x509_req) == false) {
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(NULL, NULL, x509_req, NULL);
+        return false;
+    }
+    
+    // EC鍵ファイルを開く
+    FILE *fp = fopen(privkey_file_path, "r");
+    if (fp == NULL) {
+        sprintf(openssl_message, "create_certreq_csr_file: fopen failed: %s", privkey_file_path);
+        free_resources_for_csr(fp, NULL, x509_req, NULL);
+        return false;
+    }
+    
+    // EC鍵ファイルの内容を取得
+    EVP_PKEY *pkey = PEM_read_PrivateKey(fp, NULL, NULL, NULL);
+    if (pkey == NULL) {
+        sprintf(openssl_message, "create_certreq_csr_file: PEM_read_PrivateKey failed");
+        free_resources_for_csr(fp, pkey, x509_req, NULL);
         return false;
     }
     
     // CSRに公開鍵を設定
     if (X509_REQ_set_pubkey(x509_req, pkey) == 0) {
         sprintf(openssl_message, "create_certreq_csr_file: X509_REQ_set_pubkey failed");
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(fp, pkey, x509_req, NULL);
         return false;
     }
 
     // CSRに署名
     if (X509_REQ_sign(x509_req, pkey, EVP_sha1()) < 1) {
         sprintf(openssl_message, "create_certreq_csr_file: X509_REQ_sign failed");
-        free_resources_for_csr(fp, pkey, eckey, x509_req, NULL);
+        free_resources_for_csr(fp, pkey, x509_req, NULL);
         return false;
     }
     
@@ -230,19 +224,19 @@ bool create_certreq_csr_file(const char *output_file_path, const char *privkey_f
     FILE *outfp = fopen(output_file_path, "w");
     if (outfp == NULL) {
         sprintf(openssl_message, "create_certreq_csr_file: fopen failed: %s", output_file_path);
-        free_resources_for_csr(fp, pkey, eckey, x509_req, outfp);
+        free_resources_for_csr(fp, pkey, x509_req, outfp);
         return false;
     }
     
     // CSRをファイルに書き出し
     if (PEM_write_X509_REQ(outfp, x509_req) == 0) {
         sprintf(openssl_message, "create_certreq_csr_file: PEM_write_X509_REQ failed");
-        free_resources_for_csr(fp, pkey, eckey, x509_req, outfp);
+        free_resources_for_csr(fp, pkey, x509_req, outfp);
         return false;
     }
 
     sprintf(openssl_message, "create_certreq_csr_file: CSR file created successfully.");
-    free_resources_for_csr(fp, pkey, eckey, x509_req, outfp);
+    free_resources_for_csr(fp, pkey, x509_req, outfp);
     return true;
 }
 

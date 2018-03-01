@@ -31,7 +31,23 @@
         
         [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
         [self setParameter:[[CertReqParameter alloc] init]];
-        [[self fieldC] setStringValue:@"JP"];
+        
+        // 画面項目を初期化
+        [self initFieldValue];
+    }
+
+    - (void)initFieldValue {
+        // 画面項目を初期値に設定
+        [[self fieldPath] setStringValue:@""];
+        [[self fieldCN]   setStringValue:@""];
+        [[self fieldOU]   setStringValue:@""];
+        [[self fieldO]    setStringValue:@""];
+        [[self fieldL]    setStringValue:@""];
+        [[self fieldST]   setStringValue:@""];
+        [[self fieldC]    setStringValue:@"JP"];
+        
+        // 最初の項目にフォーカス
+        [[self fieldPath] becomeFirstResponder];
     }
 
     - (IBAction)buttonFieldPathPress:(id)sender {
@@ -59,20 +75,9 @@
         [[self parameter] setL:      [[self fieldL]    stringValue]];
         [[self parameter] setST:     [[self fieldST]   stringValue]];
         [[self parameter] setC:      [[self fieldC]    stringValue]];
-
-        // パラメーターに保持した入力項目を初期化
-        [[self fieldPath] setStringValue:@""];
-        [[self fieldCN]   setStringValue:@""];
-        [[self fieldOU]   setStringValue:@""];
-        [[self fieldO]    setStringValue:@""];
-        [[self fieldL]    setStringValue:@""];
-        [[self fieldST]   setStringValue:@""];
-        [[self fieldC]    setStringValue:@""];
         
-        // 最初の項目にフォーカス
-        [[self fieldPath] becomeFirstResponder];
-
-        // この画面を閉じる
+        // 画面項目を初期化し、この画面を閉じる
+        [self initFieldValue];
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 

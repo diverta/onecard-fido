@@ -30,8 +30,18 @@
         [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
         [self setParameter:[[SelfCertParameter alloc] init]];
         
-        // 入力項目を初期化
-        [[self fieldDays] setStringValue:@"365"];
+        // 画面項目を初期化
+        [self initFieldValue];
+    }
+
+    - (void)initFieldValue {
+        // 画面項目を初期値に設定
+        [[self fieldPath]    setStringValue:@""];
+        [[self fieldPemPath] setStringValue:@""];
+        [[self fieldDays]    setStringValue:@"365"];
+
+        // 最初の項目にフォーカス
+        [[self fieldPath] becomeFirstResponder];
     }
 
     - (IBAction)buttonFieldPathPress:(id)sender {
@@ -63,13 +73,9 @@
         [[self parameter] setCsrPath:[[self fieldPath] stringValue]];
         [[self parameter] setPemPath:[[self fieldPemPath] stringValue]];
         [[self parameter] setDays:   [[self fieldDays] stringValue]];
-
-        // パラメーターに保持した入力項目を初期化
-        [[self fieldPath]    setStringValue:@""];
-        [[self fieldPemPath] setStringValue:@""];
-        [[self fieldDays]    setStringValue:@"365"];
-
-        // この画面を閉じる
+        
+        // 画面項目を初期化し、この画面を閉じる
+        [self initFieldValue];
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
