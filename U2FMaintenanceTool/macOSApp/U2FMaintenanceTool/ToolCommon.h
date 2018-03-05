@@ -33,4 +33,12 @@ typedef enum : NSInteger {
     COMMAND_CREATE_SELFCRT_CRT
 } Command;
 
+// ツールで共通利用する関数群
+@interface ToolCommon : NSObject
+
+    + (NSString *)processNameOfCommand:(Command)command;
+
+@end
+
+
 #endif /* ToolCommon_h */

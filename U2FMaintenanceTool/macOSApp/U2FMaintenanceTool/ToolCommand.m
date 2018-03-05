@@ -611,36 +611,6 @@
     }
 }
 
-- (NSString *)processNameOfCommand {
-    // 現在実行中のコマンドに対応する名称を戻す
-    NSString *processName;
-    switch ([self command]) {
-        case COMMAND_ERASE_BOND:
-            processName = PROCESS_NAME_ERASE_BOND;
-            break;
-        case COMMAND_ERASE_SKEY_CERT:
-            processName = PROCESS_NAME_ERASE_KEYCRT;
-            break;
-        case COMMAND_INSTALL_SKEY:
-        case COMMAND_INSTALL_CERT:
-            processName = PROCESS_NAME_INSTALL_KEYCRT;
-            break;
-        case COMMAND_TEST_REGISTER:
-        case COMMAND_TEST_AUTH_CHECK:
-        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-        case COMMAND_TEST_AUTH_USER_PRESENCE:
-            processName = PROCESS_NAME_HEALTHCHECK;
-            break;
-        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
-            processName = PROCESS_NAME_SETUP_CHROME;
-            break;
-        default:
-            processName = nil;
-            break;
-    }
-    return processName;
-}
-
 - (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
@@ -826,7 +796,7 @@
 
     // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
     NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                     [self processNameOfCommand],
+                     [ToolCommon processNameOfCommand:[self command]],
                      result? MSG_SUCCESS:MSG_FAILURE];
     [[self delegate] notifyToolCommandMessage:str];
     if (result) {

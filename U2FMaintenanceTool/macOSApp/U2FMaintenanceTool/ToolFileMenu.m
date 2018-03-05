@@ -149,7 +149,7 @@
 
         // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
         NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                         [self processNameOfCommand],
+                         [ToolCommon processNameOfCommand:[self command]],
                          ret? MSG_SUCCESS:MSG_FAILURE];
         [[self delegate] notifyToolFileMenuMessage:str];
         if (ret) {
@@ -160,26 +160,6 @@
         
         // 処理終了をAppDelegateに通知
         [self.delegate notifyToolFileMenuEnd];
-    }
-
-    - (NSString *)processNameOfCommand {
-        // 現在実行中のコマンドに対応する名称を戻す
-        NSString *processName;
-        switch ([self command]) {
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                processName = PROCESS_NAME_CREATE_KEYPAIR;
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                processName = PROCESS_NAME_CREATE_CERTREQ;
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                processName = PROCESS_NAME_CREATE_SELFCRT;
-                break;
-            default:
-                processName = nil;
-                break;
-        }
-        return processName;
     }
 
 @end
