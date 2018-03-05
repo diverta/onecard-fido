@@ -121,7 +121,13 @@
 
 #pragma mark - Call back from ToolParamWindow
 
-    - (void)paramWindowDidSetup:(id)sender {
+    - (void)paramWindowDidSetup:(id)sender modalResponse:(NSInteger)modalResponse {
+        // キャンセルボタン押下時は処理終了
+        if (modalResponse == NSFileHandlingPanelCancelButton) {
+            [self.delegate notifyToolFileMenuEnd];
+            return;
+        }
+        
         // コマンドに応じ、以下の処理に分岐
         bool ret = false;
         switch ([self command]) {

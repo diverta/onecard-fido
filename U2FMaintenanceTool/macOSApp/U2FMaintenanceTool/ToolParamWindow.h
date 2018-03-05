@@ -35,7 +35,7 @@
 
 @protocol ToolParamWindowDelegate <NSObject>
 
-    - (void)paramWindowDidSetup:(id)sender;
+    - (void)paramWindowDidSetup:(id)sender modalResponse:(NSInteger)modalResponse;
 
 @end
 

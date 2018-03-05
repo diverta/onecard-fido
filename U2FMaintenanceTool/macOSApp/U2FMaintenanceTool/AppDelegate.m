@@ -167,16 +167,19 @@
     }
 
     - (IBAction)menuItemFile1DidSelect:(id)sender {
+        [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_KEYPAIR_PEM];
     }
 
     - (IBAction)menuItemFile2DidSelect:(id)sender {
+        [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_CERTREQ_CSR];
     }
 
     - (IBAction)menuItemFile3DidSelect:(id)sender {
+        [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
     }

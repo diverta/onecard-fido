@@ -84,8 +84,8 @@
         // ファイル保存パネルで選択された出力先ファイルパスを引き渡し、画面を閉じる
         if (modalResponse == NSFileHandlingPanelOKButton) {
             [[self keyPairParameter] setOutPath:filePath];
-            [[self delegate] paramWindowDidSetup:sender];
         }
+        [[self delegate] paramWindowDidSetup:sender modalResponse:modalResponse];
     }
 
 #pragma mark for CertreqParamWindow
@@ -106,19 +106,16 @@
         NSWindow *dialog = [[self certreqParamWindow] window];
         ToolParamWindow * __weak weakSelf = self;
         [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
-            if (response == NSModalResponseCancel) {
-                return;
-            }
-            // ダイアログで作成ボタンが押された時
-            [weakSelf certreqParamWindowDidSetup:sender];
+            // ダイアログでボタンが押された時
+            [weakSelf certreqParamWindowDidSetup:sender modalResponse:response];
         }];
     }
 
-    - (void)certreqParamWindowDidSetup:(id)sender {
+    - (void)certreqParamWindowDidSetup:(id)sender modalResponse:(NSInteger)modalResponse {
         // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
         [self setCertReqParameter:[[self certreqParamWindow] parameter]];
         [[self certreqParamWindow] close];
-        [[self delegate] paramWindowDidSetup:sender];
+        [[self delegate] paramWindowDidSetup:sender modalResponse:modalResponse];
     }
 
 #pragma mark for SelfcrtParamWindow
@@ -140,19 +137,16 @@
         NSWindow *dialog = [[self selfcrtParamWindow] window];
         ToolParamWindow * __weak weakSelf = self;
         [parentWindow beginSheet:dialog completionHandler:^(NSModalResponse response){
-            if (response == NSModalResponseCancel) {
-                return;
-            }
-            // ダイアログで作成ボタンが押された時
-            [weakSelf selfcrtParamWindowDidSetup:sender];
+            // ダイアログでボタンが押された時
+            [weakSelf selfcrtParamWindowDidSetup:sender modalResponse:response];
         }];
     }
 
-    - (void)selfcrtParamWindowDidSetup:(id)sender {
+    - (void)selfcrtParamWindowDidSetup:(id)sender modalResponse:(NSInteger)modalResponse {
         // ダイアログで入力されたパラメーターを引き渡し、画面を閉じる
         [self setSelfCertParameter:[[self selfcrtParamWindow] parameter]];
         [[self selfcrtParamWindow] close];
-        [[self delegate] paramWindowDidSetup:sender];
+        [[self delegate] paramWindowDidSetup:sender modalResponse:modalResponse];
     }
 
 #pragma mark - Utilities for check entry
