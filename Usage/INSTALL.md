@@ -4,6 +4,14 @@ BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証�
 
 秘密鍵と署名済み証明書を、U2F管理ツールを使用してインストールし、動作確認（ヘルスチェック）を実行するまでの手順を、以下に掲載いたします。
 
+## U2F管理ツールの準備
+
+[U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
+
+macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
+
+Windows環境の場合は [U2FMaintenanceToolGUI.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceToolGUI.exe) をダウンロードします。
+
 ## 鍵・証明書の作成
 
 以下の手順で、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を作成します。
@@ -86,14 +94,6 @@ U2F管理ツールのファイル作成メニューから「自己署名証明�
 <img src="assets/0012.png" width="500">
 
 以上で、鍵・証明書の作成は完了です。
-
-## U2F管理ツールの準備
-
-[U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
-
-macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
-
-Windows環境の場合は [U2FMaintenanceToolGUI.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceToolGUI.exe) をダウンロードします。
 
 ## 鍵・証明書のインストール
 
