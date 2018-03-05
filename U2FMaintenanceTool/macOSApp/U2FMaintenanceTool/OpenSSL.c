@@ -15,6 +15,13 @@
 
 static char openssl_message[1024];
 
+// BLEトランスポートサポートに関するV3拡張属性（bluetoothLowEnergyRadio）
+#define U2F_TRANS_EXT_BLE_OBJSN "U2F BLE Transports"
+#define U2F_TRANS_EXT_BLE_OBJLN "FIDO U2F certificate transports extension, bluetoothLowEnergyRadio"
+#define U2F_TRANS_EXT_BLE_OBJID "1.3.6.1.4.1.45724.2.1.1"
+#define U2F_TRANS_EXT_BLE_VALUE "DER:03:02:06:40"
+static int u2f_trans_ext_ble_obj_id;
+
 const char *get_openssl_message(void) {
     return openssl_message;
 }
@@ -27,6 +34,10 @@ void init_openssl(void) {
     // OpenSSLの実行に必要な初期化処理を実行
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();
+    // BLEトランスポートサポートに関する拡張属性を付与（bluetoothLowEnergyRadio）
+    u2f_trans_ext_ble_obj_id = OBJ_create(U2F_TRANS_EXT_BLE_OBJID,
+                                          U2F_TRANS_EXT_BLE_OBJSN,
+                                          U2F_TRANS_EXT_BLE_OBJLN);
 }
 
 EC_KEY *create_eckey_new(const char *function_name) {
@@ -124,20 +135,10 @@ static bool X509_NAME_add_entries_for_csr(const char *function_name, X509_NAME *
     return true;
 }
 
-#define U2F_TRANS_EXT_BLE_VALUE "DER:03:02:06:40"
-
-static int get_u2f_trans_ext_ble_oid(void) {
-    // BLEトランスポートサポートに関する拡張属性を付与（bluetoothLowEnergyRadio）
-    int nid = OBJ_create("1.3.6.1.4.1.45724.2.1.1",
-                         "U2F Extension",
-                         "FIDO U2F Authenticator Transports Extension");
-    return nid;
-}
-
 static bool add_x509_v3_extension(const char *function_name, X509_REQ *x509_req) {
     // BLEトランスポートサポートに関する拡張属性を付与
     X509_EXTENSION *ex = X509V3_EXT_conf_nid(NULL, NULL,
-                                             get_u2f_trans_ext_ble_oid(),
+                                             u2f_trans_ext_ble_obj_id,
                                              U2F_TRANS_EXT_BLE_VALUE);
     if (ex == NULL) {
         sprintf(openssl_message, "%s: X509V3_EXT_conf_nid failed", function_name);
@@ -345,7 +346,7 @@ bool x509_cert_add_v3_extension(const char *function_name, X509 *x509_cert) {
     X509V3_set_ctx(&ctx, x509_cert, x509_cert, NULL, NULL, 0);
     // 追加する拡張属性を生成
     X509_EXTENSION *ex = X509V3_EXT_conf_nid(NULL, &ctx,
-                                             get_u2f_trans_ext_ble_oid(),
+                                             u2f_trans_ext_ble_obj_id,
                                              U2F_TRANS_EXT_BLE_VALUE);
     if (ex == NULL) {
         sprintf(openssl_message, "%s: X509V3_EXT_conf_nid failed", function_name);
