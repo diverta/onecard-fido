@@ -151,6 +151,7 @@
     }
 
     - (IBAction)buttonPath1DidPress:(id)sender {
+        [self enableButtons:false];
         [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
                                        message:MSG_PROMPT_SELECT_PEM_PATH
                                      fileTypes:@[@"pem"]];
@@ -158,6 +159,7 @@
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
+        [self enableButtons:false];
         [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
                                        message:MSG_PROMPT_SELECT_CRT_PATH
                                      fileTypes:@[@"crt"]];
@@ -181,19 +183,25 @@
 
 #pragma mark - Call back from ToolFilePanel
 
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
-        // ファイル選択パネルで選択されたファイルパスを表示する
-        if ([self buttonPath1] == sender) {
-            [[self fieldPath1] setStringValue:filePath];
-            [[self fieldPath1] becomeFirstResponder];
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
+        // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示する
+        if (modalResponse == NSFileHandlingPanelOKButton) {
+            if ([self buttonPath1] == sender) {
+                [[self fieldPath1] setStringValue:filePath];
+                [[self fieldPath1] becomeFirstResponder];
+            }
+            if ([self buttonPath2] == sender) {
+                [[self fieldPath2] setStringValue:filePath];
+                [[self fieldPath2] becomeFirstResponder];
+            }
         }
-        if ([self buttonPath2] == sender) {
-            [[self fieldPath2] setStringValue:filePath];
-            [[self fieldPath2] becomeFirstResponder];
-        }
+        // メニューを活性化
+        [self enableButtons:true];
     }
 
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
     }
 
 #pragma mark - Call back from ToolCommand

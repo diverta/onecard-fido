@@ -51,18 +51,16 @@
         [[self openPanel] beginSheetModalForWindow:parentWindow completionHandler:^(NSInteger result) {
             // 呼出元のウィンドウを表示させないようにする
             [weakPanel orderOut:sender];
-            if (result != NSFileHandlingPanelOKButton) {
-                return;
-            }
             // ファイルが選択された時の処理
-            [weakSelf panelDidSelectPath:sender];
+            [weakSelf panelDidSelectPath:sender modalResponse:result];
         }];
     }
 
-    - (void)panelDidSelectPath:(id)sender {
+    - (void)panelDidSelectPath:(id)sender modalResponse:(NSInteger)modalResponse {
         // ファイル選択パネルで作成されたファイルパスを引き渡す
         NSString *filePath = [[[self openPanel] URL] path];
-        [[self delegate] panelDidSelectPath:sender filePath:filePath];
+        [[self delegate] panelDidSelectPath:sender filePath:filePath
+                              modalResponse:modalResponse];
     }
 
 #pragma mark for NSSavePanel
@@ -87,18 +85,16 @@
         [[self savePanel] beginSheetModalForWindow:parentWindow completionHandler:^(NSInteger result) {
             // 呼出元のウィンドウを表示させないようにする
             [weakPanel orderOut:sender];
-            if (result != NSFileHandlingPanelOKButton) {
-                return;
-            }
             // ファイルパスが作成された時の処理
-            [weakSelf panelDidCreatePath:sender];
+            [weakSelf panelDidCreatePath:sender modalResponse:result];
         }];
     }
 
-    - (void)panelDidCreatePath:(id)sender {
+    - (void)panelDidCreatePath:(id)sender modalResponse:(NSInteger)modalResponse {
         // ファイル保存パネルで作成されたファイルパスを引き渡す
         NSString *filePath = [[[self savePanel] URL] path];
-        [[self delegate] panelDidCreatePath:sender filePath:filePath];
+        [[self delegate] panelDidCreatePath:sender filePath:filePath
+                              modalResponse:modalResponse];
     }
 
 @end

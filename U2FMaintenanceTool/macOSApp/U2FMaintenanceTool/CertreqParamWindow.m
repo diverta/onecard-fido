@@ -123,16 +123,22 @@
 
 #pragma mark - Call back from ToolFilePanel
 
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
-        // ファイル選択パネルで選択されたファイルパスを表示する
-        [[self fieldPath] setStringValue:filePath];
-        [[self fieldPath] becomeFirstResponder];
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
+        // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示
+        if (modalResponse == NSFileHandlingPanelOKButton) {
+            [[self fieldPath] setStringValue:filePath];
+            [[self fieldPath] becomeFirstResponder];
+        }
     }
 
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
-        // ファイル保存パネルで選択された出力先ファイルパスを保持し、画面を閉じる
-        [[self parameter] setOutPath:filePath];
-        [self terminateWindow:NSModalResponseOK];
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
+        // OKボタン押下時は、ファイル保存パネルで選択された出力先ファイルパスを保持
+        if (modalResponse == NSFileHandlingPanelOKButton) {
+            [[self parameter] setOutPath:filePath];
+            [self terminateWindow:modalResponse];
+        }
     }
 
 @end

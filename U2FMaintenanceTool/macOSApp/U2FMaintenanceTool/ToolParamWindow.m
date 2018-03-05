@@ -75,13 +75,17 @@
 
 #pragma mark - Call back from ToolFilePanel
 
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath {
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
     }
 
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath {
-        // ダイアログで入力されたファイルパスを引き渡し、画面を閉じる
-        [[self keyPairParameter] setOutPath:filePath];
-        [[self delegate] paramWindowDidSetup:sender];
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse {
+        // ファイル保存パネルで選択された出力先ファイルパスを引き渡し、画面を閉じる
+        if (modalResponse == NSFileHandlingPanelOKButton) {
+            [[self keyPairParameter] setOutPath:filePath];
+            [[self delegate] paramWindowDidSetup:sender];
+        }
     }
 
 #pragma mark for CertreqParamWindow

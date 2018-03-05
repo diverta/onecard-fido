@@ -30,8 +30,10 @@
 
 @protocol ToolFilePanelDelegate <NSObject>
 
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath;
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath;
+    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse;
+    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
+                 modalResponse:(NSInteger)modalResponse;
 
 @end
 
