@@ -42,4 +42,15 @@
 #define MSG_PROMPT_EXIST_CSR_PATH   @"実在する証明書要求ファイル(CSR)のパスを指定してください。"
 #define MSG_PROMPT_INPUT_CRT_DAYS   @"自己署名証明書の有効期間（日数）を数値で入力してください。"
 
+#pragma mark - コマンド種別に対応する処理名称
+#define PROCESS_NAME_ERASE_BOND                     @"ペアリング情報削除処理"
+#define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書削除処理"
+#define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
+#define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
+#define PROCESS_NAME_U2F_PROCESS                    @"Chromeブラウザから要求された処理"
+#define PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING  @"Chrome Native Messaging有効化設定"
+#define PROCESS_NAME_CREATE_KEYPAIR_PEM             @"鍵ファイル作成"
+#define PROCESS_NAME_CREATE_CERTREQ_CSR             @"証明書要求ファイル作成"
+#define PROCESS_NAME_CREATE_SELFCRT_CRT             @"自己署名証明書ファイル作成"
+
 #endif /* ToolCommonMessage_h */
