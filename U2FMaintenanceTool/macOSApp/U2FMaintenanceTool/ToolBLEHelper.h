@@ -24,6 +24,7 @@
 @protocol ToolBLEHelperDelegate <NSObject>
 
     - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages;
+    - (void)bleHelperDidSend:(NSData *)chromeMessageData;
 
 @end
 

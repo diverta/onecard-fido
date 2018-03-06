@@ -93,6 +93,10 @@
 
     - (IBAction)button2DidPress:(id)sender {
         // 鍵・証明書削除
+        if ([ToolPopupWindow promptYesNo:MSG_ERASE_SKEY_CERT
+                         informativeText:MSG_PROMPT_ERASE_SKEY_CERT] == false) {
+            return;
+        }
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
     }
@@ -219,15 +223,27 @@
         [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
     }
 
+    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
+        // このアプリケーションを終了させる
+        if (chromeMessageData) {
+            NSLog(@"Sent response to chrome: %@", chromeMessageData);
+        }
+        NSLog(@"Chrome native messaging host will terminate");
+        [NSApp terminate:self];
+    }
+
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:message];
     }
 
     - (void)notifyToolCommandEnd {
-        // デバイス接続を切断し、ボタンを活性化
+        // デバイス接続を切断
         [self.toolBLECentral centralManagerWillDisconnect];
-        [self enableButtons:true];
+        // Chrome native messaging時以外はボタンを活性化
+        if ([[self toolCommand] command] != COMMAND_U2F_PROCESS) {
+            [self enableButtons:true];
+        }
     }
 
 #pragma mark - Call back from ToolFileMenu

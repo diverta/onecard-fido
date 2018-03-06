@@ -88,7 +88,7 @@
     // デコードされたデータが39バイト未満の場合はエラー
     if ([decodedPemData length] < 39) {
         NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
-        [self toolCommandDidProcess:false message:@"鍵ファイルに格納された秘密鍵の長さが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_LENGTH_IN_PEM];
         return nil;
     }
 
@@ -96,7 +96,7 @@
     const char *decodedPem = [decodedPemData bytes];
     if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
         NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
-        [self toolCommandDidProcess:false message:@"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_HEADER_IN_PEM];
         return nil;
     }
     
@@ -121,7 +121,7 @@
                      error:&err];
     if (err.code) {
         NSLog(@"Secure key file read error: %@", err.description);
-        [self toolCommandDidProcess:false message:@"鍵ファイルを読み込むことができません。"];
+        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_SKEY_PEM_FILE];
         return nil;
     }
     
@@ -148,7 +148,7 @@
     // ヘッダーが見つからない場合はエラー
     if (headerFound == false) {
         NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
-        [self toolCommandDidProcess:false message:@"鍵ファイルの内容が不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_CONTENT_IN_PEM];
         return nil;
     }
 
@@ -176,18 +176,18 @@
     // 証明書ファイルから読み込み
     NSData *data = [NSData dataWithContentsOfFile:certFilePath];
     if (data == nil || [data length] == 0) {
-        [self toolCommandDidProcess:false message:@"証明書ファイルを読み込むことができません。"];
+        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_CERT_CRT_FILE];
         return nil;
     }
 
     // 証明書ファイルの長さが68バイト未満の場合はエラー
     NSUInteger dataCertLength = [data length];
     if (dataCertLength < 68) {
-        [self toolCommandDidProcess:false message:@"証明書ファイルに格納されたデータの長さが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_CERT_LENGTH_IN_CRT];
         return nil;
     }
 
-    NSLog(@"証明書ファイル(%ldバイト)を読込みました。%@", dataCertLength, data);
+    NSLog(MSG_READ_NBYTES_FROM_CRT_FILE, dataCertLength, data);
     return data;
 }
 
@@ -572,20 +572,20 @@
     // 設定用のJSON文字列を生成
     NSString *jsonString = [self createChromeSettingJsonString];
     if (jsonString == nil) {
-        [self toolCommandDidProcess:false message:@"設定用JSON文字列生成に失敗しました。処理を再試行してください。"];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_STRING_ERROR];
         return;
     }
 
     // JSONインストール先ディレクトリーを取得
     NSString *targetPath = [self prepareChromeSettingJsonDirectory];
     if (targetPath == nil) {
-        [self toolCommandDidProcess:false message:@"設定用JSONファイルインストール先ディレクトリー取得に失敗しました。処理を再試行してください。"];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_DIRGET_ERROR];
         return;
     }
     
     // インストール先パスを編集し、JSONファイルを出力
     if ([self writeChromeSettingJsonFileTo:targetPath jsonString:jsonString] == false) {
-        [self toolCommandDidProcess:false message:@"設定用JSONファイルの出力に失敗しました。処理を再試行してください。"];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_OUTPUT_ERROR];
         return;
     }
     
@@ -669,7 +669,7 @@
     if (receivedData && ([receivedData length] == totalLength)) {
         // 全受信データを保持
         [self setBleResponseData:[[NSData alloc] initWithData:receivedData]];
-        [self.delegate notifyToolCommandMessage:@"レスポンスを受信しました。"];
+        [self.delegate notifyToolCommandMessage:MSG_RESPONSE_RECEIVED];
         receivedData = nil;
         // 後続レスポンスがない
         return false;
@@ -697,14 +697,31 @@
         return true;
     }
     
-    // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
-    if (statusWord == 0x9e01) {
-        [self toolCommandDidProcess:false message:@"One CardのFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"];
+    // invalid keyhandleエラーである場合はその旨を通知
+    if (statusWord == 0x6a80) {
+        [self toolCommandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
         return false;
     }
-    
+
+    //
+    // FIXME
+    // 以下のようなU2Fプロトコル以外のエラーは、
+    // nRF52側に専用の事前チェック処理を作成して、
+    // そこで検知／レスポンスさせるよう修正すべきです。
+    //
+    if ([self isEnrollHelperRequest] && statusWord == 0x0002) {
+        // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+        [self toolCommandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
+        return false;
+    }
+    if (statusWord == 0x9e01) {
+        // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
+        [self toolCommandDidProcess:false message:MSG_OCCUR_FDS_GC_ERROR];
+        return false;
+    }
+
     // ステータスワードチェックがNGの場合
-    [self toolCommandDidProcess:false message:@"BLEエラーが発生しました。処理を再試行してください。"];
+    [self toolCommandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
     return false;
 }
 
