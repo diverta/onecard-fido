@@ -72,4 +72,25 @@
 #define MSG_OCCUR_JSON_OUTPUT_ERROR         @"設定用JSONファイルの出力に失敗しました。処理を再試行してください。"
 #define MSG_RESPONSE_RECEIVED               @"レスポンスを受信しました。"
 
+#pragma mark - ToolBLECentralクラス専用メッセージ
+#define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"
+#define MSG_U2F_DEVICE_SCAN_START           @"FIDO U2Fデバイスのスキャンを開始します"
+#define MSG_U2F_DEVICE_SCAN_END             @"FIDO U2Fデバイスのスキャンを完了しました"
+#define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO U2Fデバイスのスキャンがタイムアウトしました。"
+#define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO U2Fデバイスの接続要求がタイムアウトしました。"
+#define MSG_U2F_DEVICE_CONNECTED            @"FIDO U2Fデバイスに接続しました。"
+#define MSG_U2F_DEVICE_CONNECT_FAILED       @"FIDO U2Fデバイスの接続に失敗しました。"
+#define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO U2Fデバイスの接続を切断しました。"
+#define MSG_BLE_SERVICE_NOT_DISCOVERED      @"BLEサービスが見つかりません。"
+#define MSG_BLE_U2F_SERVICE_FOUND           @"FIDO BLE U2Fサービスが見つかりました。"
+#define MSG_BLE_U2F_SERVICE_NOT_FOUND       @"FIDO BLE U2Fサービスが見つかりません。"
+#define MSG_BLE_CHARACT_NOT_DISCOVERED      @"FIDO BLE U2Fサービスと通信できません。"
+#define MSG_BLE_NOTIFICATION_FAILED         @"FIDO BLE U2Fサービスからデータを受信できません。"
+#define MSG_BLE_NOTIFICATION_START          @"受信データの監視を開始します。"
+#define MSG_BLE_NOTIFICATION_STOP           @"受信データの監視を停止します。"
+#define MSG_REQUEST_SENT                    @"リクエストを送信しました。"
+#define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
+#define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
+#define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
+
 #endif /* ToolCommonMessage_h */
