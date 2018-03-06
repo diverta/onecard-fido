@@ -219,6 +219,15 @@
         [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
     }
 
+    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
+        // このアプリケーションを終了させる
+        if (chromeMessageData) {
+            NSLog(@"Sent response to chrome: %@", chromeMessageData);
+        }
+        NSLog(@"Chrome native messaging host will terminate");
+        [NSApp terminate:self];
+    }
+
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:message];
