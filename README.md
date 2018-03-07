@@ -2,6 +2,20 @@
 
 One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
+## What's new
+
+#### 2018/02/07
+
+[macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を更新しました。<br>
+秘密鍵・自己署名証明書の作成から、One Cardへのインストールまでの作業を、macOS版U2F管理ツールを使って出来るようになりました。<br>
+手順書は以下になります。
+- [One Cardペアリング手順](Usage/PAIRING.md)<br>
+One Cardに、BLEを使用して秘密鍵・証明書をインストールするためには、まず最初にペアリングが必要になります。
+
+- [鍵・証明書インストール手順](Usage/INSTALL.md)<br>
+秘密鍵・自己署名証明書の作成およびインストール手順についての説明になります。<br>
+（以前の手順書にあった、nrfutilやOpenSSL等の追加インストールは、不要になりました）
+
 ## BLE U2Fサービス
 
 One CardのBLE上で稼働するFIDO U2F機能です。<br>

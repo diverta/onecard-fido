@@ -7,19 +7,9 @@
 #ifndef ToolCommand_h
 #define ToolCommand_h
 
-typedef enum : NSInteger {
-    COMMAND_NONE = 1,
-    COMMAND_ERASE_BOND,
-    COMMAND_ERASE_SKEY_CERT,
-    COMMAND_INSTALL_SKEY,
-    COMMAND_INSTALL_CERT,
-    COMMAND_TEST_REGISTER,
-    COMMAND_TEST_AUTH_CHECK,
-    COMMAND_TEST_AUTH_NO_USER_PRESENCE,
-    COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_PROCESS,
-    COMMAND_SETUP_CHROME_NATIVE_MESSAGING
-} Command;
+// for OpenSSL
+#import "ToolFileMenu.h"
+#import "ToolCommon.h"
 
 @protocol ToolCommandDelegate;
 
@@ -42,20 +32,15 @@ typedef enum : NSInteger {
     - (void)setU2FProcessParameter:(Command)command
                  bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
 
-    - (NSString *)processNameOfCommand;
-
 @end
 
 @protocol ToolCommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
+    - (void)notifyToolCommandEnd;
 
     - (void)toolCommandDidCreateBleRequest;
-    - (void)toolCommandDidFail:(NSString *)errorMessage;
-    - (void)toolCommandDidSuccess;
-
     - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
-    - (void)toolCommandDidSetup:(bool)result;
 
 @end
 

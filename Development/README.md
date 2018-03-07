@@ -13,6 +13,9 @@ FIDO U2F認証テストツール（BLECertificationTool.exe）のビルド手順
 
 ## 補足説明
 
+* [OpenSSL C言語ライブラリー導入手順](OPENSSLC.md) <br>
+U2F管理ツール内で秘密鍵ファイル生成などを行うために必要な、OpenSSL C言語ライブラリーの導入手順を掲載しています。
+
 * [Qtプラットフォーム導入手順](QTSETUP.md) <br>
 Windows版U2F管理ツールのGUI化調査時に使用した、Qtプラットフォームの導入手順を掲載しています。<br>
 （今回は、採用を見送っています）

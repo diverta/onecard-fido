@@ -64,23 +64,42 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="File" hidden="YES" id="83">
-                    <menu key="submenu" title="File" showsStateColumn="NO" autoenablesItems="NO" id="81">
+                <menuItem title="File" id="83">
+                    <menu key="submenu" title="File" autoenablesItems="NO" id="81">
                         <items>
-                            <menuItem title="New" keyEquivalent="n" id="82">
+                            <menuItem title="鍵ファイル作成..." keyEquivalent="k" id="cCk-nh-aaI">
+                                <connections>
+                                    <action selector="menuItemFile1DidSelect:" target="494" id="2dT-SE-YKf"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="証明書要求ファイル作成..." keyEquivalent="r" id="XNy-QP-mqi">
+                                <connections>
+                                    <action selector="menuItemFile2DidSelect:" target="494" id="p0g-6q-Uri"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" enabled="YES" id="8UF-J7-ozH">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="自己署名証明書ファイル作成..." keyEquivalent="s" id="DKu-Wo-Se1">
+                                <connections>
+                                    <action selector="menuItemFile3DidSelect:" target="494" id="MWZ-gz-SCe"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
+                            <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="373"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open…" keyEquivalent="o" id="72">
+                            <menuItem title="Open…" hidden="YES" keyEquivalent="o" id="72">
                                 <connections>
                                     <action selector="openDocument:" target="-1" id="374"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Recent" id="124">
+                            <menuItem title="Open Recent" hidden="YES" id="124">
                                 <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="125">
                                     <items>
-                                        <menuItem title="Clear Menu" id="126">
+                                        <menuItem title="Clear Menu" hidden="YES" id="126">
                                             <connections>
                                                 <action selector="clearRecentDocuments:" target="-1" id="127"/>
                                             </connections>
@@ -96,12 +115,12 @@
                                     <action selector="performClose:" target="-1" id="193"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save…" keyEquivalent="s" id="75">
+                            <menuItem title="Save…" hidden="YES" keyEquivalent="s" id="75">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="362"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Revert to Saved" id="112">
+                            <menuItem title="Revert to Saved" hidden="YES" id="112">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="364"/>
@@ -110,13 +129,13 @@
                             <menuItem isSeparatorItem="YES" id="74">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Page Setup..." keyEquivalent="P" id="77">
+                            <menuItem title="Page Setup..." hidden="YES" keyEquivalent="P" id="77">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
                                     <action selector="runPageLayout:" target="-1" id="87"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Print…" keyEquivalent="p" id="78">
+                            <menuItem title="Print…" hidden="YES" keyEquivalent="p" id="78">
                                 <connections>
                                     <action selector="print:" target="-1" id="86"/>
                                 </connections>
@@ -124,7 +143,7 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Edit" hidden="YES" id="217">
+                <menuItem title="Edit" id="217">
                     <menu key="submenu" title="Edit" id="205">
                         <items>
                             <menuItem title="Undo" keyEquivalent="z" id="207">
@@ -618,7 +637,7 @@
                                     <action selector="performMiniaturize:" target="-1" id="37"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Zoom" id="239">
+                            <menuItem title="Zoom" hidden="YES" enabled="NO" id="239">
                                 <connections>
                                     <action selector="performZoom:" target="-1" id="240"/>
                                 </connections>
@@ -650,8 +669,7 @@
             <point key="canvasLocation" x="125" y="-149"/>
         </menu>
         <window title="U2F Maintenance Tool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="564" height="356"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="372">
@@ -661,7 +679,7 @@
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq">
                         <rect key="frame" x="14" y="290" width="233" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="鍵・証明書消去／AES暗号生成" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
+                        <buttonCell key="cell" type="push" title="鍵・証明書・キーハンドル消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                         </buttonCell>
@@ -825,6 +843,9 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
+                <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="0ZH-et-dd3"/>
+                <outlet property="menuItemFile2" destination="XNy-QP-mqi" id="KOG-yy-QOa"/>
+                <outlet property="menuItemFile3" destination="DKu-Wo-Se1" id="Yt2-8A-bre"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>

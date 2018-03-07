@@ -160,8 +160,8 @@
         NSData *jsonStringData = [self createJsonStringFrom:bleHelperMessage];
         NSData *chromeMessageData = [self createCromeMessageFrom:jsonStringData];
         [[NSFileHandle fileHandleWithStandardOutput] writeData:chromeMessageData];
-
-        NSLog(@"Sent Data: %@", chromeMessageData);
+        // アプリケーションに制御を戻す
+        [[self delegate] bleHelperDidSend:chromeMessageData];
     }
 
     - (NSData *)createJsonStringFrom:(NSDictionary *)jsonDictionary {

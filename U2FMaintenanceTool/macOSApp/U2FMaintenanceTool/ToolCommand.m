@@ -6,7 +6,8 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolCommand.h"
-#import "ToolCommon.h"
+#import "ToolCommonMessage.h"
+#import "ToolPopupWindow.h"
 
 // for web safe B64 encode & decode
 #import "NSData+Base64.h"
@@ -87,7 +88,7 @@
     // デコードされたデータが39バイト未満の場合はエラー
     if ([decodedPemData length] < 39) {
         NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
-        [self.delegate toolCommandDidFail:@"鍵ファイルに格納された秘密鍵の長さが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_LENGTH_IN_PEM];
         return nil;
     }
 
@@ -95,7 +96,7 @@
     const char *decodedPem = [decodedPemData bytes];
     if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
         NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
-        [self.delegate toolCommandDidFail:@"鍵ファイルに格納された秘密鍵のヘッダーが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_HEADER_IN_PEM];
         return nil;
     }
     
@@ -120,7 +121,7 @@
                      error:&err];
     if (err.code) {
         NSLog(@"Secure key file read error: %@", err.description);
-        [self.delegate toolCommandDidFail:@"鍵ファイルを読み込むことができません。"];
+        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_SKEY_PEM_FILE];
         return nil;
     }
     
@@ -147,7 +148,7 @@
     // ヘッダーが見つからない場合はエラー
     if (headerFound == false) {
         NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
-        [self.delegate toolCommandDidFail:@"鍵ファイルの内容が不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_CONTENT_IN_PEM];
         return nil;
     }
 
@@ -175,18 +176,18 @@
     // 証明書ファイルから読み込み
     NSData *data = [NSData dataWithContentsOfFile:certFilePath];
     if (data == nil || [data length] == 0) {
-        [self.delegate toolCommandDidFail:@"証明書ファイルを読み込むことができません。"];
+        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_CERT_CRT_FILE];
         return nil;
     }
 
     // 証明書ファイルの長さが68バイト未満の場合はエラー
     NSUInteger dataCertLength = [data length];
     if (dataCertLength < 68) {
-        [self.delegate toolCommandDidFail:@"証明書ファイルに格納されたデータの長さが不正です。"];
+        [self toolCommandDidProcess:false message:MSG_INVALID_CERT_LENGTH_IN_CRT];
         return nil;
     }
 
-    NSLog(@"証明書ファイル(%ldバイト)を読込みました。%@", dataCertLength, data);
+    NSLog(MSG_READ_NBYTES_FROM_CRT_FILE, dataCertLength, data);
     return data;
 }
 
@@ -571,25 +572,25 @@
     // 設定用のJSON文字列を生成
     NSString *jsonString = [self createChromeSettingJsonString];
     if (jsonString == nil) {
-        [self.delegate toolCommandDidSetup:false];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_STRING_ERROR];
         return;
     }
 
     // JSONインストール先ディレクトリーを取得
     NSString *targetPath = [self prepareChromeSettingJsonDirectory];
     if (targetPath == nil) {
-        [self.delegate toolCommandDidSetup:false];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_DIRGET_ERROR];
         return;
     }
     
     // インストール先パスを編集し、JSONファイルを出力
     if ([self writeChromeSettingJsonFileTo:targetPath jsonString:jsonString] == false) {
-        [self.delegate toolCommandDidSetup:false];
+        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_OUTPUT_ERROR];
         return;
     }
     
     // 処理正常終了をAppDelegateに通知
-    [self.delegate toolCommandDidSetup:true];
+    [self toolCommandDidProcess:true message:@"Setup chrome native messaging end."];
 }
 
 #pragma mark - Public methods
@@ -608,36 +609,6 @@
         [self setU2FRequestDict:[bleHelperMessages objectAtIndex:0]];
         NSLog(@"setU2FProcessParameter: %@", [self U2FRequestDict]);
     }
-}
-
-- (NSString *)processNameOfCommand {
-    // 現在実行中のコマンドに対応する名称を戻す
-    NSString *processName;
-    switch ([self command]) {
-        case COMMAND_ERASE_BOND:
-            processName = @"ペアリング情報削除処理";
-            break;
-        case COMMAND_ERASE_SKEY_CERT:
-            processName = @"鍵・証明書削除処理";
-            break;
-        case COMMAND_INSTALL_SKEY:
-        case COMMAND_INSTALL_CERT:
-            processName = @"鍵・証明書インストール";
-            break;
-        case COMMAND_TEST_REGISTER:
-        case COMMAND_TEST_AUTH_CHECK:
-        case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-        case COMMAND_TEST_AUTH_USER_PRESENCE:
-            processName = @"ヘルスチェック";
-            break;
-        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
-            processName = @"Chrome Native Messaging有効化設定";
-            break;
-        default:
-            processName = nil;
-            break;
-    }
-    return processName;
 }
 
 - (void)toolCommandWillCreateBleRequest:(Command)command {
@@ -698,7 +669,7 @@
     if (receivedData && ([receivedData length] == totalLength)) {
         // 全受信データを保持
         [self setBleResponseData:[[NSData alloc] initWithData:receivedData]];
-        [self.delegate notifyToolCommandMessage:@"レスポンスを受信しました。"];
+        [self.delegate notifyToolCommandMessage:MSG_RESPONSE_RECEIVED];
         receivedData = nil;
         // 後続レスポンスがない
         return false;
@@ -726,15 +697,31 @@
         return true;
     }
     
-    // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
-    if (statusWord == 0x9e01) {
-        [self.delegate toolCommandDidFail:
-         @"One CardのFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"];
+    // invalid keyhandleエラーである場合はその旨を通知
+    if (statusWord == 0x6a80) {
+        [self toolCommandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
         return false;
     }
-    
+
+    //
+    // FIXME
+    // 以下のようなU2Fプロトコル以外のエラーは、
+    // nRF52側に専用の事前チェック処理を作成して、
+    // そこで検知／レスポンスさせるよう修正すべきです。
+    //
+    if ([self isEnrollHelperRequest] && statusWord == 0x0002) {
+        // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+        [self toolCommandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
+        return false;
+    }
+    if (statusWord == 0x9e01) {
+        // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
+        [self toolCommandDidProcess:false message:MSG_OCCUR_FDS_GC_ERROR];
+        return false;
+    }
+
     // ステータスワードチェックがNGの場合
-    [self.delegate toolCommandDidFail:@"BLEエラーが発生しました。処理を再試行してください。"];
+    [self toolCommandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
     return false;
 }
 
@@ -751,10 +738,10 @@
     // コマンドに応じ、以下の処理に分岐
     switch ([self command]) {
         case COMMAND_ERASE_BOND:
-            [self notifySuccess:@"Erase bonding information end"];
+            [self toolCommandDidProcess:true message:@"Erase bonding information end"];
             break;
         case COMMAND_ERASE_SKEY_CERT:
-            [self notifySuccess:@"Erase secure key and certificate end"];
+            [self toolCommandDidProcess:true message:@"Erase secure key and certificate end"];
             break;
         case COMMAND_INSTALL_SKEY:
             NSLog(@"Install secure key end");
@@ -762,7 +749,7 @@
             [self createCommandInstallCert];
             break;
         case COMMAND_INSTALL_CERT:
-            [self notifySuccess:@"Install certificate end"];
+            [self toolCommandDidProcess:true message:@"Install certificate end"];
             break;
         case COMMAND_TEST_REGISTER:
             NSLog(@"Register test success");
@@ -784,7 +771,7 @@
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             registerReponseData = nil;
             NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
-            [self notifySuccess:@"Health check end"];
+            [self toolCommandDidProcess:true message:@"Health check end"];
             break;
         case COMMAND_U2F_PROCESS:
             NSLog(@"U2F response received");
@@ -801,14 +788,6 @@
     }
 }
 
-- (void)notifySuccess:(NSString *)successMessage {
-    // コマンド配列をブランクにして、処理正常終了をAppDelegateに通知
-    [self setBleRequestArray:nil];
-    [self.delegate toolCommandDidSuccess];
-
-    NSLog(@"%@", successMessage);
-}
-
 - (void)toolCommandWillSetup:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
@@ -819,6 +798,32 @@
         default:
             break;
     }
+}
+
+- (void)toolCommandDidProcess:(bool)result message:(NSString *)message {
+    // コマンド配列をブランクに初期化
+    [self setBleRequestArray:nil];
+    
+    // 引数のメッセージを、処理成功時はコンソール出力、処理失敗時は画面出力
+    if (result) {
+        NSLog(@"%@", message);
+    } else {
+        [[self delegate] notifyToolCommandMessage:message];
+    }
+
+    // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
+    NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                     [ToolCommon processNameOfCommand:[self command]],
+                     result? MSG_SUCCESS:MSG_FAILURE];
+    [[self delegate] notifyToolCommandMessage:str];
+    if (result) {
+        [ToolPopupWindow informational:str informativeText:nil];
+    } else {
+        [ToolPopupWindow critical:str informativeText:nil];
+    }
+    
+    // 処理終了をAppDelegateに通知
+    [[self delegate] notifyToolCommandEnd];
 }
 
 @end
