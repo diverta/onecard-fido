@@ -102,25 +102,29 @@ U2F管理ツールを使用して、秘密鍵ファイル(.pem)、証明書フ�
 ### macOS環境の場合
 
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
-表示された画面の「鍵・証明書消去／AES暗号生成」ボタンをクリックします。
+表示された画面の「鍵・証明書・キーハンドル消去」ボタンをクリックします。
 
-<img src="../assets/0027.png" width="550">
+<img src="../assets/0027.png" width="500">
 
-One Card側の処理が成功すると「鍵・証明書削除処理が成功しました。」と表示されます。
+確認ダイアログが表示されますので「はい」をクリックします。
 
-<img src="../assets/0028.png" width="550">
+<img src="../assets/0077.png" width="500">
+
+One Card側の処理が成功すると「鍵・証明書・キーハンドル削除処理が成功しました。」と表示されます。
+
+<img src="../assets/0028.png" width="500">
 
 続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
 
-<img src="../assets/0029.png" width="550">
+<img src="../assets/0029.png" width="500">
 
 U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
 
-<img src="../assets/0030.png" width="550">
+<img src="../assets/0030.png" width="500">
 
-One Card側の処理が成功すると「鍵・証明書インストール処理が成功しました。」と表示されます。
+One Card側の処理が成功すると「鍵・証明書インストールが成功しました。」と表示されます。
 
-<img src="../assets/0031.png" width="550">
+<img src="../assets/0031.png" width="500">
 
 これで、鍵・証明書のインストールは完了です。
 
@@ -158,18 +162,22 @@ One Cardにインストールされた秘密鍵と署名済み証明書を使用
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
 表示された画面の「ヘルスチェック実行」ボタンをクリックします。
 
-<img src="../assets/0032.png" width="550">
+<img src="../assets/0032.png" width="500">
 
-One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
+One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 
-ここでMAIN SWを１回押しますと、再びOne Card側の処理が再開されます。
+ここでMAIN SWを１回押します。
 
-<img src="../assets/0033.png" width="550">
+<img src="../assets/0078.png" width="500">
+
+点灯していたLEDが<b>消灯</b>し、One Card側のヘルスチェック処理が再開されます。
+
+<img src="../assets/0079.png" width="500">
 
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
-<img src="../assets/0034.png" width="550">
+<img src="../assets/0034.png" width="500">
 
 これでヘルスチェックは完了です。
 
@@ -180,12 +188,16 @@ U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
 
 <img src="../assets/0068.png" width="550">
 
-One Card側で処理が進み、ほどなくOne Card上の３番目のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
+One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 
-ここでMAIN SWを１回押しますと、再びOne Card側の処理が再開されます。
+ここでMAIN SWを１回押します。
 
-<img src="../assets/0033.png" width="550">
+<img src="../assets/0078.png" width="500">
+
+点灯していたLEDが<b>消灯</b>し、One Card側のヘルスチェック処理が再開されます。
+
+<img src="../assets/0079.png" width="500">
 
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
