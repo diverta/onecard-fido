@@ -43,9 +43,9 @@ static bool sendBleU2fRequest(pBleDevice dev)
 	}
 
 	// 戻りのステータスワードをチェック
-	replyStatusWord = bytes2short(reply, replyLength - 2);
-	if (replyStatusWord != FIDO_RESP_SUCCESS) {
+	if (BleToolsUtil_checkStatusWord(request, reply, replyLength) == false) {
 		BleToolsUtil_outputLog("sendBleU2fRequest: status word != FIDO_RESP_SUCCESS");
+		BleToolsUtil_outputLog(BleToolsUtil_checkStatusWordMessage());
 		return false;
 	}
 
@@ -193,6 +193,8 @@ static bool processTestRegister(pBleDevice dev)
 
 	// BLE U2Fリクエストを転送
 	if (sendU2FRegisterRequest(dev, nonceForCheck, appIdForCheck) == false) {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("sendU2FRegisterRequest");
 		return false;
 	}
 
@@ -214,6 +216,8 @@ static bool processTestAuthenticate(pBleDevice dev)
 
 	// BLE U2Fリクエストを転送
 	if (sendU2FAuthenticateRequest(dev, nonceForCheck, appIdForCheck, keyHandleForCheck) == false) {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("sendU2FAuthenticateRequest");
 		return false;
 	}
 

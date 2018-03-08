@@ -105,6 +105,80 @@ int BleToolsUtil_base64Encode(const char* src, size_t src_len, unsigned char* de
 }
 
 //
+// for checking status word
+//
+#include <string>
+#include <iostream>
+#include "ble_util.h"
+#include "fido_apduresponses.h"
+
+static char checkStatusWordMessage[256];
+
+const char *BleToolsUtil_checkStatusWordMessage(void)
+{
+	return checkStatusWordMessage;
+}
+
+void BleToolsUtil_checkStatusWordMessagePrint(const char *functionName)
+{
+	// エラーメッセージがあれば画面表示
+	if (strlen(checkStatusWordMessage)) {
+		std::cerr << "[" << std::string(functionName) << "] " << checkStatusWordMessage << std::endl;
+	}
+}
+
+bool BleToolsUtil_checkStatusWord(unsigned char *request, unsigned char *reply, size_t replyLength)
+{
+	// 内部バッファを初期化
+	memset(checkStatusWordMessage, 0x00, sizeof(checkStatusWordMessage));
+
+	// リクエストタイプをチェック
+	char INS = request[1];
+	char P1  = request[2];
+	// ステータスワードをチェック
+	uint16_t statusWord = bytes2short(reply, replyLength - 2);
+
+	if (statusWord == 0x6a80) {
+		// invalid keyhandleエラーである場合はその旨を通知
+		sprintf_s(checkStatusWordMessage,
+			"キーハンドルが存在しません。再度U2F Register(Enroll)を実行してください。"
+		);
+		return false;
+	}
+
+	//
+	// FIXME
+	// 以下のようなU2Fプロトコル以外のエラーは、
+	// nRF52側に専用の事前チェック処理を作成して、
+	// そこで検知／レスポンスさせるよう修正すべきです。
+	//
+	if (INS == U2F_INS_REGISTER && P1 == 0x00 && statusWord == 0x0002) {
+		// 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+		sprintf_s(checkStatusWordMessage,
+			"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
+		);
+		return false;
+	}
+	if (statusWord == 0x9e01) {
+		// nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
+		sprintf_s(checkStatusWordMessage,
+			"One CardのFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。処理を再試行してください。"
+		);
+		return false;
+	}
+
+	if (statusWord != FIDO_RESP_SUCCESS) {
+		// U2Fサービスの戻りコマンドが不正の場合はエラー
+		sprintf_s(checkStatusWordMessage,
+			"不明なエラーが発生しました。"
+		);
+		return false;
+	}
+
+	return true;
+}
+
+//
 // for debug use
 //
 void BleToolsUtil_outputLog(const char *msg)

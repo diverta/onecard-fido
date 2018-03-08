@@ -56,7 +56,7 @@ namespace U2FMaintenanceToolGUI
                 ret = app.doEraseBond();
 
             } else if (sender.Equals(button2)) {
-                commandTitle = "鍵・証明書削除処理";
+                commandTitle = "鍵・証明書・キーハンドル削除処理";
                 ret = app.doEraseSkeyCert();
 
             } else if (sender.Equals(button3)) {
@@ -85,8 +85,17 @@ namespace U2FMaintenanceToolGUI
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}\n{2}",
+                "One Cardから鍵・証明書・キーハンドルをすべて削除します。",
+                "削除後はOne CardによるU2F認証ができなくなります。",
+                "削除処理を実行しますか？");
+
             // 鍵・証明書削除
-            doCommand(sender);
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (displayPromptPopup(message)) {
+                doCommand(sender);
+            }
         }
 
         private bool checkPathEntry(TextBox textBox, string errorMessage)
