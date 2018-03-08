@@ -4,6 +4,10 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
+#### 2018/02/08
+
+[OpenSSL未導入のmacOSで、U2F管理ツールが起動時にクラッシュしてしまう障害](https://github.com/diverta/onecard-fido/issues/20)を解消いたしました。
+
 #### 2018/02/07
 
 [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を更新しました。<br>
