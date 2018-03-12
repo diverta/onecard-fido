@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace U2FMaintenanceToolGUI
@@ -21,6 +22,10 @@ namespace U2FMaintenanceToolGUI
         public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
         public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
+        // U2F管理コマンドライブラリーの関数をインポート
+        [DllImport("U2FMaintenanceToolCMD.dll")]
+        static extern int ToolCMD_Hello(StringBuilder sb, int len);
+
         public AppMain()
         {
             // U2F管理コマンドが導入されているかチェック
@@ -29,6 +34,16 @@ namespace U2FMaintenanceToolGUI
                 outputLogToFile(U2FMaintenanceToolExe + "が導入されていません");
             }
             outputLogToFile("U2F管理ツールを起動しました");
+
+            // U2F管理コマンドライブラリーのロードテスト
+            try {
+                StringBuilder sb = new StringBuilder(512);
+                ToolCMD_Hello(sb, sb.MaxCapacity);
+                outputLogToFile(sb.ToString());
+            } catch (Exception e) {
+                outputLogToFile(e.Message);
+            }
+
         }
 
         private void outputLogToFile(string message)
