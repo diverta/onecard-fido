@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace U2FMaintenanceToolGUI
@@ -22,9 +21,9 @@ namespace U2FMaintenanceToolGUI
         public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
         public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
-        // U2F管理コマンドライブラリーの関数をインポート
-        [DllImport("U2FMaintenanceToolCMD.dll")]
-        static extern int ToolCMD_Hello(StringBuilder sb, int len);
+        // OpenSSLコマンドの情報
+        public const string OpenSSLExe = "openssl.exe";
+        public bool opensslAvailable;
 
         public AppMain()
         {
@@ -33,17 +32,13 @@ namespace U2FMaintenanceToolGUI
             if (commandAvailable == false) {
                 outputLogToFile(U2FMaintenanceToolExe + "が導入されていません");
             }
-            outputLogToFile("U2F管理ツールを起動しました");
-
-            // U2F管理コマンドライブラリーのロードテスト
-            try {
-                StringBuilder sb = new StringBuilder(512);
-                ToolCMD_Hello(sb, sb.MaxCapacity);
-                outputLogToFile(sb.ToString());
-            } catch (Exception e) {
-                outputLogToFile(e.Message);
+            // OpenSSLコマンドが導入されているかチェック
+            opensslAvailable = File.Exists(OpenSSLExe);
+            if (opensslAvailable == false)
+            {
+                outputLogToFile(OpenSSLExe + "が導入されていません");
             }
-
+            outputLogToFile("U2F管理ツールを起動しました");
         }
 
         private void outputLogToFile(string message)
@@ -179,6 +174,13 @@ namespace U2FMaintenanceToolGUI
             // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
             string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
             return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
+        }
+
+        public bool doCreatePrivateKey(string filePath)
+        {
+            // openssl.exe ecparam -out <filePath> -name prime256v1 -genkey -noout を実行する
+            string arguments = string.Format("ecparam -out {0} -name prime256v1 -genkey -noout", filePath);
+            return doCommandWithExecutable("openssl.exe", arguments);
         }
 
         public void doExit()

@@ -245,52 +245,83 @@ namespace U2FMaintenanceToolGUI
 
         private void 鍵ファイル作成KToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doCreateFile(sender);
+            doCreatePrivateKeyFile(sender);
         }
 
         private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doCreateFile(sender);
+            // TODO:後日実装
         }
 
         private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            doCreateFile(sender);
+            // TODO:後日実装
         }
 
-        private void doCreateFile(object sender)
+        private void doCreatePrivateKeyFile(object sender)
         {
-            // ボタンに対応する処理を実行
-            string filePath = string.Empty;
-            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
-                filePath = createFilePath(
+            string filePath = createFilePath(
                     "作成する秘密鍵ファイル(PEM)名を指定してください",
                     "U2FPrivKey",
                     "秘密鍵ファイル (*.pem)|*.pem"
                     );
+            doCreateFile(sender, filePath);
+        }
 
-            } else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
-                filePath = createFilePath(
-                    "作成する証明書要求ファイル(CSR)名を指定してください",
-                    "U2FCertReq",
-                    "証明書要求ファイル (*.csr)|*.csr"
-                    );
-
-            } else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
-                filePath = createFilePath(
-                    "作成する自己署名証明書ファイル(CRT)名を指定してください",
-                    "U2FSelfCer",
-                    "証明書ファイル (*.crt)|*.crt"
-                    );
+        private bool checkOpensslAvailable()
+        {
+            // OpenSSLコマンドがある場合はOK
+            if (app.opensslAvailable) {
+                return true;
             }
+
+            // OpenSSLコマンドがない旨の表示
+            string message = "OpenSSLコマンドを実行できません。";
+            textBox1.AppendText(message + "\r\n");
+            textBox1.AppendText(AppMain.OpenSSLExe + "をインストールしてください。\r\n");
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            enableButtons(true);
+            return false;
+        }
+
+        private void doCreateFile(object sender, string filePath)
+        {
+            string commandTitle = "";
+            bool ret = false;
 
             // ファイルが生成されていない場合は終了
             if (filePath.Equals(string.Empty)) {
                 return;
             }
 
-            // 仮コード
-            MessageBox.Show(filePath, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // OpenSSLコマンドが存在しない場合は終了
+            if (checkOpensslAvailable() == false) {
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // ボタンに対応する処理を実行
+            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
+                commandTitle = "鍵ファイル作成処理";
+                ret = app.doCreatePrivateKey(filePath);
+
+            }
+            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
+                commandTitle = "証明書要求ファイル作成処理";
+
+            }
+            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
+                commandTitle = "自己署名証明書ファイル作成処理";
+
+            }
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            displayResultMessage(commandTitle, ret);
+            enableButtons(true);
         }
 
         private string createFilePath(string title, string fileName, string filter)
