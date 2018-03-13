@@ -250,12 +250,12 @@ namespace U2FMaintenanceToolGUI
 
         private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO:後日実装
+            doCreateCertReqFile(sender);
         }
 
         private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO:後日実装
+            doCreateSelfCertFile(sender);
         }
 
         private void doCreatePrivateKeyFile(object sender)
@@ -265,6 +265,35 @@ namespace U2FMaintenanceToolGUI
                     "U2FPrivKey",
                     "秘密鍵ファイル (*.pem)|*.pem"
                     );
+            doCreateFile(sender, filePath);
+        }
+
+        // TODO: パラメーター入力画面は後日実装
+        private string certReqParamSubject = "/C=JP/ST=Tokyo/L=Shinjuku/O=Diverta inc./OU=Dev/CN=www.diverta.co.jp";
+        private string certReqParamKeyFile = "U2FPrivKey.pem";
+
+        private void doCreateCertReqFile(object sender)
+        {
+            string filePath = createFilePath(
+                "作成する証明書要求ファイル(CSR)名を指定してください",
+                "U2FCertReq",
+                "証明書要求ファイル (*.csr)|*.csr"
+                );
+            doCreateFile(sender, filePath);
+        }
+
+        // TODO: パラメーター入力画面は後日実装
+        private string selfCertParamKeyFile = "U2FPrivKey.pem";
+        private string selfCertParamCsrFile = "U2FCertReq.csr";
+        private string selfCertParamDays = "365";
+
+        private void doCreateSelfCertFile(object sender)
+        {
+            string filePath = createFilePath(
+                "作成する自己署名証明書ファイル(CRT)名を指定してください",
+                "U2FSelfCer",
+                "証明書ファイル (*.crt)|*.crt"
+                );
             doCreateFile(sender, filePath);
         }
 
@@ -312,11 +341,12 @@ namespace U2FMaintenanceToolGUI
             }
             else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
                 commandTitle = "証明書要求ファイル作成処理";
+                ret = app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
 
             }
             else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
                 commandTitle = "自己署名証明書ファイル作成処理";
-
+                ret = app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
             }
 
             // 処理結果を画面表示し、ボタンを押下可能とする
