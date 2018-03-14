@@ -60,7 +60,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppCommon.cs" />
     <Compile Include="AppMain.cs" />
+    <Compile Include="CertReqParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CertReqParamForm.Designer.cs">
+      <DependentUpon>CertReqParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormUtil.cs" />
+    <Compile Include="SelfCertParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelfCertParamForm.Designer.cs">
+      <DependentUpon>SelfCertParamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +83,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CertReqParamForm.resx">
+      <DependentUpon>CertReqParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelfCertParamForm.resx">
+      <DependentUpon>SelfCertParamForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -100,7 +100,7 @@ namespace U2FMaintenanceToolGUI
             // 実行結果をログ出力
             outputLogToFile(string.Format(
                 "コマンドの実行が{0}しました: {1} {2}",
-                ret ? "成功" : "失敗", executable, arguments));
+                ret ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE, executable, arguments));
             return ret;
         }
 
