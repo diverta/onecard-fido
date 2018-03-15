@@ -144,7 +144,7 @@
             this.label4.TabIndex = 10;
             this.label4.Text = "日間";
             // 
-            // Form1
+            // SelfCertParamForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -160,7 +160,10 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.Name = "Form1";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SelfCertParamForm";
             this.Text = "自己署名証明書ファイル(CRT)作成";
             this.ResumeLayout(false);
             this.PerformLayout();

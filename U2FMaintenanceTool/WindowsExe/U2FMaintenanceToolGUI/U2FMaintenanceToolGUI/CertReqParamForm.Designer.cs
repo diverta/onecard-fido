@@ -217,6 +217,9 @@
             this.Controls.Add(this.buttonPemPath);
             this.Controls.Add(this.textPemPath);
             this.Controls.Add(this.label2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CertReqParamForm";
             this.Text = "証明書要求ファイル(CSR)作成";
             this.ResumeLayout(false);
