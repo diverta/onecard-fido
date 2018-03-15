@@ -6,7 +6,7 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 #### 2018/02/15
 
-[Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceTool.zip)を更新しました。<br>
+[Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)を更新しました。<br>
 秘密鍵・自己署名証明書の作成から、One Cardへのインストールまでの作業を、Windows版U2F管理ツールを使って出来るようになりました。<br>
 手順書は以下になります。
 - [One Cardペアリング手順](Usage/PAIRING.md)<br>
