@@ -5,7 +5,8 @@
 * [One Cardペアリング手順](PAIRING.md) <br>
 ペアリングモード変更／ペアリング実行の手順を掲載しています。
 
-* [鍵・証明書インストール手順](INSTALL.md) <br>
+* [鍵・証明書インストール手順（macOS版）](INSTALL.md) <br>
+* [鍵・証明書インストール手順（Windows版）](INSTALL_WINDOWS.md) <br>
 鍵・証明書インストールなどの手順を掲載しています。
 
 * [FIDO U2F認証テスト手順](CERTTEST.md) <br>

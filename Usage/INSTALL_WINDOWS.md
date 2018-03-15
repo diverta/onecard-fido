@@ -1,4 +1,4 @@
-# 鍵・証明書インストール手順（macOS版）
+# 鍵・証明書インストール手順（Windows版）
 
 BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証明書が必要になります。
 
@@ -6,9 +6,24 @@ BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証�
 
 ## U2F管理ツールの準備
 
-[U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をGitHubからダウンロード後、インストールを実行します。
+[U2FMaintenanceToolWin.zip](../U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip) を、GitHubからダウンロードして取得します。
 
-インストール後、アプリケーション・フォルダーに作成された「U2FMaintenanceTool.app」をダブルクリックすると、U2F管理ツール画面が起動します。
+U2FMaintenanceToolWin.zipを展開すると、下図のように「U2FMaintenanceToolWin」というフォルダーができるので、任意の場所に配置します。<br>
+その後、フォルダー内の実行ファイル「U2FMaintenanceToolGUI.exe」をダブルクリックします。
+
+<img src="assets/0013.png" width="550">
+
+
+2018/03/15現在、アプリに署名がされていないため、ダウンロードしたプログラムを実行できない旨のダイアログが表示されます。<br>
+「詳細情報」をクリックして、実行ボタンを表示させます。
+
+<img src="assets/0014.png" width="550">
+
+表示された実行ボタンをクリックして、U2F管理ツールを実行させます。
+
+<img src="assets/0015.png" width="550">
+
+U2F管理ツールの画面が起動すれば、準備は完了です。
 
 ## 鍵・証明書の作成
 
@@ -18,17 +33,17 @@ U2F管理ツールを使用して、以下の手順で、秘密鍵ファイル(.
 
 U2F管理ツールのファイル作成メニューから「鍵ファイル作成」を実行します。
 
-<img src="assets/0001.png" width="450">
+<img src="assets/0016.png" width="450">
 
-ファイル作成ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「作成」をクリックします。
+ファイル保存ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「保存」をクリックします。
 
-<img src="assets/0002.png" width="600">
+<img src="assets/0017.png" width="450">
 
 秘密鍵ファイル作成処理がスタートします。
 
 「鍵ファイル作成が成功しました。」というメッセージが表示されれば、秘密鍵ファイル(.pem)作成は完了です。
 
-<img src="assets/0003.png" width="450">
+<img src="assets/0018.png" width="450">
 
 ### 証明書ファイル(.crt)の作成
 
@@ -42,22 +57,22 @@ U2F管理ツールのファイル作成メニューから「鍵ファイル作�
 
 U2F管理ツールのファイル作成メニューから「証明書要求ファイル作成」を実行します。
 
-<img src="assets/0004.png" width="450">
+<img src="assets/0019.png" width="450">
 
 証明書要求ファイル(CSR)作成ダイアログが表示されます。<br>
 画面上の項目に、使用する鍵ファイル、Webサイトや事業者に関する情報を入力して「作成」をクリックします。
 
-<img src="assets/0005.png" width="500">
+<img src="assets/0020.png" width="450">
 
-ファイル作成ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「作成」をクリックします。
+ファイル保存ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「保存」をクリックします。
 
-<img src="assets/0006.png" width="600">
+<img src="assets/0021.png" width="450">
 
 証明書要求ファイル作成処理がスタートします。
 
 「証明書要求ファイル作成が成功しました。」というメッセージが表示されれば、証明書要求ファイル(.csr)作成は完了です。
 
-<img src="assets/0007.png" width="450">
+<img src="assets/0022.png" width="450">
 
 #### 証明書要求ファイルから、自己署名証明書を作成
 
@@ -66,26 +81,26 @@ U2F管理ツールのファイル作成メニューから「証明書要求フ�
 
 U2F管理ツールのファイル作成メニューから「自己署名証明書ファイル作成」を実行します。
 
-<img src="assets/0008.png" width="450">
+<img src="assets/0023.png" width="450">
 
 自己署名証明書ファイル(CRT)作成ダイアログが表示されます。<br>
 画面上の項目に、使用する証明書要求ファイル、鍵ファイル、証明書有効期間（日数）を入力して「作成」をクリックします。
 
-<img src="assets/0009.png" width="500">
+<img src="assets/0024.png" width="450">
 
-ファイル作成ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「作成」をクリックします。
+ファイル保存ダイアログが表示されますので、出力先のディレクトリー、ファイル名を指定して「保存」をクリックします。
 
-<img src="assets/0010.png" width="600">
+<img src="assets/0025.png" width="450">
 
 自己署名証明書ファイル作成処理がスタートします。
 
 「自己署名証明書ファイル作成が成功しました。」というメッセージが表示されれば、自己署名証明書ファイル(.csr)作成は完了です。
 
-<img src="assets/0011.png" width="450">
+<img src="assets/0026.png" width="450">
 
 以下の図のように作成された鍵ファイル、証明書ファイルを、One Cardにインストールして使用することになります。
 
-<img src="assets/0012.png" width="500">
+<img src="assets/0027.png" width="550">
 
 以上で、鍵・証明書の作成は完了です。
 
@@ -93,30 +108,30 @@ U2F管理ツールのファイル作成メニューから「自己署名証明�
 
 U2F管理ツールを使用して、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を、One Cardにインストールします。
 
-U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
 表示された画面の「鍵・証明書・キーハンドル消去」ボタンをクリックします。
 
-<img src="../assets/0027.png" width="500">
+<img src="assets/0028.png" width="450">
 
 確認ダイアログが表示されますので「はい」をクリックします。
 
-<img src="../assets/0077.png" width="500">
+<img src="assets/0029.png" width="450">
 
 One Card側の処理が成功すると「鍵・証明書・キーハンドル削除処理が成功しました。」と表示されます。
 
-<img src="../assets/0028.png" width="500">
+<img src="assets/0030.png" width="450">
 
 続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
 
-<img src="../assets/0029.png" width="500">
+<img src="assets/0031.png" width="450">
 
 U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
 
-<img src="../assets/0030.png" width="500">
+<img src="assets/0032.png" width="450">
 
 One Card側の処理が成功すると「鍵・証明書インストールが成功しました。」と表示されます。
 
-<img src="../assets/0031.png" width="500">
+<img src="assets/0033.png" width="450">
 
 これで、鍵・証明書のインストールは完了です。
 
@@ -124,10 +139,10 @@ One Card側の処理が成功すると「鍵・証明書インストールが成
 
 One Cardにインストールされた秘密鍵と署名済み証明書を使用し、U2F管理ツールを使用して動作確認（ヘルスチェック）を実行することができます。
 
-U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
+U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
 表示された画面の「ヘルスチェック実行」ボタンをクリックします。
 
-<img src="../assets/0032.png" width="500">
+<img src="assets/0034.png" width="450">
 
 One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
@@ -142,6 +157,6 @@ One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font c
 
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
-<img src="../assets/0034.png" width="500">
+<img src="assets/0035.png" width="450">
 
 これでヘルスチェックは完了です。

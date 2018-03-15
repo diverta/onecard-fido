@@ -4,8 +4,6 @@
 
 U2F管理ツール内で秘密鍵ファイル生成などを行うために必要な、OpenSSL C言語ライブラリーの導入手順を、下記に掲載いたします。
 
-macOSとWindowsでは、導入手順が異なるため、個別に手順を掲載することとします。
-
 ## インストール媒体の取得
 
 ブラウザーで[OpenSSLのサイト](https://www.openssl.org/source/)を開きます。
@@ -106,7 +104,11 @@ XcodeのLibrary Search Pathsに、（libcrypto.aが配置されている）OpenS
 
 ## Windowsへの導入
 
-windowsにOpenSSLを導入し、VS2015プロジェクトに組み込むまでの手順は以下になります。
+windows環境にOpenSSLを導入する手順は以下になります。
+
+注：<br>
+Windows版 OpenSSLライブラリーのファイル作成機能（＝fopenなどの関数を使用する機能）が、VS2015のC++で作成したアプリから実行できないことが判明したため、ライブラリーファイルは、本件開発では使用していません。<br>
+このため、Windows版U2F管理ツールでは、下記手順によりビルドしたOpenSSLコマンド（openssl.exe）を利用し、ファイル作成機能を実行しております。
 
 ### perlの導入
 
@@ -228,13 +230,5 @@ C:\Users\user\openssl-1.1.0g>
 エラー等がなければ、０が戻ります（%ERRORLEVEL% で確認できます）。
 
 <img src="assets/0030.png" width="600">
-
-macOS版と同様、インストール先のディレクトリーに、インクルードファイル、ライブラリーファイル（libcrypto.lib）が作成されているのを確認します。
-
-- インクルードファイル<br>
-<img src="assets/0031.png" width="500">
-
-- ライブラリーファイル<br>
-<img src="assets/0032.png" width="500">
 
 これでインストールは完了です。
