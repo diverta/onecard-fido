@@ -1,24 +1,18 @@
-# 鍵・証明書インストール手順
+# 鍵・証明書インストール手順（macOS版）
 
 BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証明書が必要になります。
 
-秘密鍵と署名済み証明書を、U2F管理ツールを使用してインストールし、動作確認（ヘルスチェック）を実行するまでの手順を、以下に掲載いたします。
+秘密鍵と署名済み証明書を、[U2F管理ツール](../U2FMaintenanceTool/)を使用してインストールし、動作確認（ヘルスチェック）を実行するまでの手順を、以下に掲載いたします。
 
 ## U2F管理ツールの準備
 
-[U2F管理ツール](../U2FMaintenanceTool/) をGitHubから取得します。
+[U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をGitHubからダウンロード後、インストールを実行します。
 
-macOS環境の場合は [U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をダウンロード後、インストールを実行します。
-
-Windows環境の場合は [U2FMaintenanceToolGUI.exe](../U2FMaintenanceTool/WindowsExe/BLE/U2FMaintenanceToolGUI.exe) をダウンロードします。
+インストール後、アプリケーション・フォルダーに作成された「U2FMaintenanceTool.app」をダブルクリックすると、U2F管理ツール画面が起動します。
 
 ## 鍵・証明書の作成
 
-以下の手順で、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を作成します。
-
-注意：macOS版U2F管理ツールのファイル作成メニューを使用しての手順となります。
-
-（2018/03/05現在、Windows版U2F管理ツールにはファイル作成メニューがありません。後日、実装予定となっております）
+U2F管理ツールを使用して、以下の手順で、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を作成します。
 
 ### 秘密鍵ファイル(.pem)の作成
 
@@ -99,8 +93,6 @@ U2F管理ツールのファイル作成メニューから「自己署名証明�
 
 U2F管理ツールを使用して、秘密鍵ファイル(.pem)、証明書ファイル(.crt)を、One Cardにインストールします。
 
-### macOS環境の場合
-
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
 表示された画面の「鍵・証明書・キーハンドル消去」ボタンをクリックします。
 
@@ -128,36 +120,9 @@ One Card側の処理が成功すると「鍵・証明書インストールが成
 
 これで、鍵・証明書のインストールは完了です。
 
-### Windows環境の場合
-
-U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
-表示された画面の「鍵・証明書消去／AES暗号生成」ボタンをクリックします。
-
-<img src="../assets/0023.png" width="550">
-
-One Card側の処理が成功すると「鍵・証明書削除処理が成功しました。」と表示されます。
-
-<img src="../assets/0024.png" width="550">
-
-続いて、秘密鍵ファイル(.pem)、証明書ファイル(.crt)をそれぞれ「参照」ボタンをクリックして選択します。
-
-<img src="../assets/0025.png" width="550">
-
-U2F管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
-
-<img src="../assets/0026.png" width="550">
-
-One Card側の処理が成功すると「鍵・証明書インストール処理が成功しました。」と表示されます。
-
-<img src="../assets/0067.png" width="550">
-
-これで、鍵・証明書のインストールは完了です。
-
 ## U2F管理ツールによる動作確認（ヘルスチェック）
 
 One Cardにインストールされた秘密鍵と署名済み証明書を使用し、U2F管理ツールを使用して動作確認（ヘルスチェック）を実行することができます。
-
-### macOS環境の場合
 
 U2F管理ツール（U2FMaintenanceTool.app）を起動します。<br>
 表示された画面の「ヘルスチェック実行」ボタンをクリックします。
@@ -178,29 +143,5 @@ One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font c
 One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
 
 <img src="../assets/0034.png" width="500">
-
-これでヘルスチェックは完了です。
-
-### windows環境の場合
-
-U2F管理ツール（U2FMaintenanceToolGUI.exe）を起動します。<br>
-表示された画面の「ヘルスチェック実行」ボタンをクリックします。
-
-<img src="../assets/0068.png" width="550">
-
-One Card側で処理が進み、ほどなくOne Card上の右端のLEDが<font color=ff0000><b>点灯</b></font>します。<br>
-（ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
-
-ここでMAIN SWを１回押します。
-
-<img src="../assets/0078.png" width="500">
-
-点灯していたLEDが<b>消灯</b>し、One Card側のヘルスチェック処理が再開されます。
-
-<img src="../assets/0079.png" width="500">
-
-One Card側の処理が成功すると「ヘルスチェックが成功しました。」と表示されます。
-
-<img src="../assets/0069.png" width="550">
 
 これでヘルスチェックは完了です。

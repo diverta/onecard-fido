@@ -52,23 +52,23 @@ namespace U2FMaintenanceToolGUI
 
             // ボタンに対応する処理を実行
             if (sender.Equals(button1)) {
-                commandTitle = "ペアリング情報削除処理";
+                commandTitle = AppCommon.PROCESS_NAME_ERASE_BOND;
                 ret = app.doEraseBond();
 
             } else if (sender.Equals(button2)) {
-                commandTitle = "鍵・証明書削除処理";
+                commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 ret = app.doEraseSkeyCert();
 
             } else if (sender.Equals(button3)) {
-                commandTitle = "鍵・証明書インストール";
+                commandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
                 ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             } else if (sender.Equals(button4)) {
-                commandTitle = "ヘルスチェック";
+                commandTitle = AppCommon.PROCESS_NAME_HEALTHCHECK;
                 ret = app.doHealthCheck();
 
             } else if (sender.Equals(button5)) {
-                commandTitle = "Chrome Native Messaging有効化設定";
+                commandTitle = AppCommon.PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING;
                 ret = app.doSetupChromeNativeMessaging();
             }
 
@@ -85,8 +85,16 @@ namespace U2FMaintenanceToolGUI
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_ERASE_SKEY_CERT,
+                AppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
+
             // 鍵・証明書削除
-            doCommand(sender);
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (displayPromptPopup(message)) {
+                doCommand(sender);
+            }
         }
 
         private bool checkPathEntry(TextBox textBox, string errorMessage)
@@ -108,10 +116,10 @@ namespace U2FMaintenanceToolGUI
         private void button3_Click(object sender, EventArgs e)
         {
             // ファイルパス入力チェック
-            if (checkPathEntry(textPath1, "鍵ファイルのパスを選択してください") == false) {
+            if (checkPathEntry(textPath1, AppCommon.MSG_PROMPT_SELECT_PKEY_PATH) == false) {
                 return;
             }
-            if (checkPathEntry(textPath2, "証明書ファイルのパスを選択してください") == false) {
+            if (checkPathEntry(textPath2, AppCommon.MSG_PROMPT_SELECT_CRT_PATH) == false) {
                 return;
             }
 
@@ -152,10 +160,9 @@ namespace U2FMaintenanceToolGUI
             }
 
             // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}\n{2}",
-                "ChromeでBLE U2Fトークンが使用できるよう設定します。",
-                "ChromeでBLE U2Fトークンを使用時、U2FMaintenanceTool.exeが、Chromeのサブプロセスとしてバックグラウンド起動されます。",
-                "設定を実行しますか？");
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_SETUP_CHROME,
+                AppCommon.MSG_PROMPT_SETUP_CHROME);
 
             // Chrome Native Messaging有効化設定
             // プロンプトを表示し、Yesの場合だけ処理を行う
@@ -166,33 +173,18 @@ namespace U2FMaintenanceToolGUI
 
         private void buttonPath1_Click(object sender, EventArgs e)
         {
-            selectFilePath(
-                "秘密鍵ファイル(PEM)を選択してください",
-                "秘密鍵ファイル (*.pem)|*.pem",
+            FormUtil.selectFilePath(openFileDialog1,
+                AppCommon.MSG_PROMPT_SELECT_PKEY_PATH,
+                AppCommon.FILTER_SELECT_PEM_PATH,
                 textPath1);
         }
 
         private void buttonPath2_Click(object sender, EventArgs e)
         {
-            selectFilePath(
-                "証明書ファイル(CRT)を選択してください", 
-                "証明書ファイル (*.crt)|*.crt", 
+            FormUtil.selectFilePath(openFileDialog1,
+                AppCommon.MSG_PROMPT_SELECT_CRT_PATH, 
+                AppCommon.FILTER_SELECT_CRT_PATH,
                 textPath2);
-        }
-
-        private void selectFilePath(string title, string filter, TextBox textBox)
-        {
-            // ファイル選択ダイアログで選択されたパスを
-            // 指定のテキストボックスにセット
-            openFileDialog1.FileName = "";
-            openFileDialog1.Title = title;
-            openFileDialog1.Filter = filter;
-            openFileDialog1.FilterIndex = 0;
-            openFileDialog1.RestoreDirectory = true;
-            DialogResult dr = openFileDialog1.ShowDialog();
-            if (dr == DialogResult.OK) {
-                textBox.Text = openFileDialog1.FileName;
-            }
         }
 
         private void enableButtons(bool enabled)
@@ -218,8 +210,8 @@ namespace U2FMaintenanceToolGUI
             }
 
             // U2F管理コマンドの実行結果を表示
-            string formatted = string.Format("{0}が{1}しました。",
-                message, success ? "成功" : "失敗");
+            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
+                message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(formatted, AppMain.U2FMaintenanceToolTitle);
         }
@@ -232,6 +224,121 @@ namespace U2FMaintenanceToolGUI
 
             // Yesがクリックされた場合 true を戻す
             return (dialogResult == DialogResult.Yes);
+        }
+
+        private void 鍵ファイル作成KToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doCreatePrivateKeyFile(sender);
+        }
+
+        private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doCreateCertReqFile(sender);
+        }
+
+        private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doCreateSelfCertFile(sender);
+        }
+
+        private void doCreatePrivateKeyFile(object sender)
+        {
+            string filePath = FormUtil.createFilePath(saveFileDialog1,
+                    AppCommon.MSG_PROMPT_CREATE_PEM_PATH,
+                    AppCommon.DEFAULT_PEM_NAME,
+                    AppCommon.FILTER_SELECT_PEM_PATH
+                    );
+            doCreateFile(sender, filePath);
+        }
+
+        // パラメーター入力画面での入力項目
+        public string certReqParamSubject;
+        public string certReqParamKeyFile;
+        public string certReqParamOutFile;
+
+        private void doCreateCertReqFile(object sender)
+        {
+            // パラメーター入力画面を表示
+            CertReqParamForm f = new CertReqParamForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
+            }
+            doCreateFile(sender, certReqParamOutFile);
+        }
+
+        // パラメーター入力画面での入力項目
+        public string selfCertParamKeyFile;
+        public string selfCertParamCsrFile;
+        public string selfCertParamDays;
+        public string selfCertParamOutFile;
+
+        private void doCreateSelfCertFile(object sender)
+        {
+            // パラメーター入力画面を表示
+            SelfCertParamForm f = new SelfCertParamForm(this);
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
+            }
+            doCreateFile(sender, selfCertParamOutFile);
+        }
+
+        private bool checkOpensslAvailable()
+        {
+            // OpenSSLコマンドがある場合はOK
+            if (app.opensslAvailable) {
+                return true;
+            }
+
+            // OpenSSLコマンドがない旨の表示
+            string message = "OpenSSLコマンドを実行できません。";
+            textBox1.AppendText(message + "\r\n");
+            textBox1.AppendText(AppMain.OpenSSLExe + "をインストールしてください。\r\n");
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            enableButtons(true);
+            return false;
+        }
+
+        private void doCreateFile(object sender, string filePath)
+        {
+            string commandTitle = "";
+            bool ret = false;
+
+            // ファイルが生成されていない場合は終了
+            if (filePath.Equals(string.Empty)) {
+                return;
+            }
+
+            // OpenSSLコマンドが存在しない場合は終了
+            if (checkOpensslAvailable() == false) {
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // ボタンに対応する処理を実行
+            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
+                commandTitle = AppCommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
+                ret = app.doCreatePrivateKey(filePath);
+
+            }
+            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
+                commandTitle = AppCommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
+                ret = app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
+
+            }
+            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
+                commandTitle = AppCommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
+                ret = app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
+            }
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            displayResultMessage(commandTitle, ret);
+            enableButtons(true);
         }
     }
 }

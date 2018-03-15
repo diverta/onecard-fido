@@ -83,9 +83,10 @@ static bool doCommandWrite(pBleDevice dev, unsigned char *request, unsigned int 
 		return false;
 	}
 
-	if (bytes2short(reply, replyLength - 2) != FIDO_RESP_SUCCESS) {
-		// U2Fサービスの戻りコマンドが不正の場合はエラー
-		std::cerr << "[doCommandWrite] Status code is not FIDO_RESP_SUCCESS (0x9000)" << std::endl;
+	// ステータスワードをチェック
+	if (BleToolsUtil_checkStatusWord(request, reply, replyLength) == false) {
+		BleToolsUtil_outputLog("doCommandWrite: status word != FIDO_RESP_SUCCESS");
+		BleToolsUtil_outputLog(BleToolsUtil_checkStatusWordMessage());
 		return false;
 	}
 
@@ -105,6 +106,8 @@ static bool processEraseBonding(BleApiConfiguration &configuration, pBleDevice d
 
 	// コマンド（FIDO_BLE_CMD_MSG）を実行
 	if (doCommandWrite(dev, request, sizeof(request)) == false) {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("processEraseBonding");
 		return false;
 	}
 
@@ -125,6 +128,8 @@ static bool processEraseSkeyCert(BleApiConfiguration &configuration, pBleDevice 
 
 	// コマンド（FIDO_BLE_CMD_MSG）を実行
 	if (doCommandWrite(dev, request, sizeof(request)) == false) {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("processEraseSkeyCert");
 		return false;
 	}
 
@@ -255,6 +260,9 @@ static bool processInstallSkey(BleApiConfiguration &configuration, pBleDevice de
 	bool ret = doCommandWrite(dev, request, requestLength);
 	if (ret == true) {
 		std::cout << "秘密鍵をFlash ROMにインストールしました。" << std::endl;
+	} else {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("processInstallSkey");
 	}
 
 	free(request);
@@ -297,6 +305,9 @@ static bool processInstallCert(BleApiConfiguration &configuration, pBleDevice de
 	bool ret = doCommandWrite(dev, request, certBufferSize + 9);
 	if (ret == true) {
 		std::cout << "証明書をFlash ROMにインストールしました。" << std::endl;
+	} else {
+		// エラーメッセージがあれば画面表示
+		BleToolsUtil_checkStatusWordMessagePrint("processInstallCert");
 	}
 
 	free(request);

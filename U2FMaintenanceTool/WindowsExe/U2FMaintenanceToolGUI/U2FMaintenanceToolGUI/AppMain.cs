@@ -21,12 +21,27 @@ namespace U2FMaintenanceToolGUI
         public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
         public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
+        // OpenSSLコマンドの情報
+        public const string OpenSSLExe = "openssl.exe";
+        public const string OpenSSLCacertV3Ext = "cacertV3.ext";
+        public bool opensslAvailable;
+
         public AppMain()
         {
             // U2F管理コマンドが導入されているかチェック
             commandAvailable = File.Exists(U2FMaintenanceToolExe);
             if (commandAvailable == false) {
                 outputLogToFile(U2FMaintenanceToolExe + "が導入されていません");
+            }
+            // OpenSSLコマンドが導入されているかチェック
+            if (File.Exists(OpenSSLExe) == false) {
+                outputLogToFile(OpenSSLExe + "が導入されていません");
+                opensslAvailable = false;
+            } else if (File.Exists(OpenSSLCacertV3Ext) == false) {
+                outputLogToFile(OpenSSLCacertV3Ext + "が導入されていません");
+                opensslAvailable = false;
+            } else {
+                opensslAvailable = true;
             }
             outputLogToFile("U2F管理ツールを起動しました");
         }
@@ -85,7 +100,7 @@ namespace U2FMaintenanceToolGUI
             // 実行結果をログ出力
             outputLogToFile(string.Format(
                 "コマンドの実行が{0}しました: {1} {2}",
-                ret ? "成功" : "失敗", executable, arguments));
+                ret ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE, executable, arguments));
             return ret;
         }
 
@@ -164,6 +179,29 @@ namespace U2FMaintenanceToolGUI
             // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
             string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
             return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
+        }
+
+        public bool doCreatePrivateKey(string filePath)
+        {
+            // openssl.exe ecparam -out <filePath> -name prime256v1 -genkey -noout を実行する
+            string arguments = string.Format("ecparam -out {0} -name prime256v1 -genkey -noout", filePath);
+            return doCommandWithExecutable("openssl.exe", arguments);
+        }
+
+        public bool doCreateCertReq(string filePath, string certReqParamKeyFile, string certReqParamSubject)
+        {
+            // openssl.exe req -new -key <certReqParamKeyFile> -subj "<certReqParamSubject>" -out <filePath> を実行する
+            string arguments = string.Format("req -new -key {0} -subj \"{1}\" -out {2}", 
+                certReqParamKeyFile, certReqParamSubject, filePath);
+            return doCommandWithExecutable("openssl.exe", arguments);
+        }
+
+        public bool doCreateSelfCert(string filePath, string selfCertParamKeyFile, string selfCertParamCsrFile, string selfCertParamDays)
+        {
+            // openssl.exe x509 -in <selfCertParamCsrFile> -days <selfCertParamDays> -req -signkey <selfCertParamKeyFile> -out <filePath> -outform der -extfile cacertV3.ext を実行する
+            string arguments = string.Format("x509 -in {0} -days {1} -req -signkey {2} -out {3} -outform der -extfile {4}",
+                selfCertParamCsrFile, selfCertParamDays, selfCertParamKeyFile, filePath, OpenSSLCacertV3Ext);
+            return doCommandWithExecutable("openssl.exe", arguments);
         }
 
         public void doExit()
