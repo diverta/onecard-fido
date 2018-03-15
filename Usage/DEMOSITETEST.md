@@ -2,6 +2,8 @@
 
 [U2Fデモサイト](https://crxjs-dot-u2fdemo.appspot.com/)を使用して、One CardのU2F機能（Register/Authenticate）をテストする手順を、以下に掲載いたします。
 
+なお、本手順に掲載している画面イメージは、Windows環境のものですが、手順自体はmacOS環境でも同様になります。
+
 ## テスト実行前の確認
 
 ### Chromeブラウザーについて
@@ -49,8 +51,7 @@ MAIN SWを１回プッシュし、スリープ状態を解除してください�
 
 ### Chrome Native Messaging有効化設定
 
-U2F管理ツールを起動し、画面上の「Chrome設定」をクリックします。<br>
-（下図はWindows版のものですが、macOS版でも同様になります）
+U2F管理ツールを起動し、画面上の「Chrome設定」をクリックします。
 
 <img src="assets/0038.png" width="450">
 
