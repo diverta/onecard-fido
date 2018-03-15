@@ -4,7 +4,7 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
-#### 2018/02/15
+#### 2018/03/15
 
 [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)を更新しました。<br>
 秘密鍵・自己署名証明書の作成から、One Cardへのインストールまでの作業を、Windows版U2F管理ツールを使って出来るようになりました。<br>
@@ -18,11 +18,11 @@ One Cardに、BLEを使用して秘密鍵・証明書をインストールする
 - [U2Fデモサイトを使ったテスト手順](Usage/DEMOSITETEST.md)<br>
 [U2Fデモサイト](https://crxjs-dot-u2fdemo.appspot.com/)を使用して、One CardのU2F機能をテストする手順です。
 
-#### 2018/02/08
+#### 2018/03/08
 
 [OpenSSL未導入のmacOSで、U2F管理ツールが起動時にクラッシュしてしまう障害](https://github.com/diverta/onecard-fido/issues/20)を解消いたしました。
 
-#### 2018/02/07
+#### 2018/03/07
 
 [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を更新しました。<br>
 秘密鍵・自己署名証明書の作成から、One Cardへのインストールまでの作業を、macOS版U2F管理ツールを使って出来るようになりました。<br>
