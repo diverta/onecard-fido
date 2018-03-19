@@ -288,10 +288,6 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
-        case COMMAND_INITBOND:
-            ble_u2f_pairing_delete_bonds_response(&m_u2f_context, p_evt);
-            break;
-
         case COMMAND_INITFSTR:
             ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
             break;

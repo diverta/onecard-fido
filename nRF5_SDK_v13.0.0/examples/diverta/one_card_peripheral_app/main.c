@@ -62,6 +62,7 @@
 #include "ble_u2f_pairing_lesc.h"
 #include "ble_u2f_util.h"
 #include "ble_dis.h"
+#include "ble_u2f_flash.h"
 
 /*******************************************************************************
  * constant definition.
@@ -407,10 +408,10 @@ static void on_pm_evt(pm_evt_t const * p_evt)
     if (ble_u2f_pairing_allow_repairing(p_evt) == true) {
         return;
     }
-
-    ret_code_t err_code;
-
-    //NRF_LOG_INFO("[APP]on_pm_evt(%d).\r\n", p_evt->evt_id);
+    // ペアリング情報の削除が完了したときの処理を行う
+    if (ble_u2f_pairing_delete_bonds_response(p_evt) == true) {
+        return;
+    }
 
     switch (p_evt->evt_id) {
         case PM_EVT_BONDED_PEER_CONNECTED:
@@ -449,20 +450,8 @@ static void on_pm_evt(pm_evt_t const * p_evt)
 
         case PM_EVT_STORAGE_FULL:
         {
-            // Run garbage collection on the flash.
-            err_code = fds_gc();
-            if (err_code == FDS_ERR_BUSY || err_code == FDS_ERR_NO_SPACE_IN_QUEUES) {
-                // Retry.
-            }
-            else {
-                APP_ERROR_CHECK(err_code);
-            }
-        }
-		break;
-
-        case PM_EVT_PEERS_DELETE_SUCCEEDED:
-        {
-            NRF_LOG_ERROR("[APP]Bonding information has deleted. \r\n");
+            // FDS GCを実行
+            ble_u2f_flash_force_fdc_gc();
         }
 		break;
 
@@ -504,6 +493,7 @@ static void on_pm_evt(pm_evt_t const * p_evt)
         case PM_EVT_CONN_SEC_START:
         case PM_EVT_PEER_DATA_UPDATE_SUCCEEDED:
         case PM_EVT_PEER_DELETE_SUCCEEDED:
+        case PM_EVT_PEERS_DELETE_SUCCEEDED:
         case PM_EVT_LOCAL_DB_CACHE_APPLIED:
         case PM_EVT_SERVICE_CHANGED_IND_SENT:
         case PM_EVT_SERVICE_CHANGED_IND_CONFIRMED:
