@@ -324,4 +324,18 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
     return true;
 }
 
+static fds_stat_t fds_stat_info;
+void ble_u2f_flash_get_fds_stat(void)
+{
+    // FDSの統計情報を取得
+    memset(&fds_stat_info, 0x00, sizeof(fds_stat_t));
+    if (fds_stat(&fds_stat_info) != FDS_SUCCESS) {
+        return;
+    }
+    
+    // FDSの統計情報をログ出力
+    NRF_LOG_DEBUG("ble_u2f_flash_get_fds_stat: words_used=%d \r\n", 
+        fds_stat_info.words_used);
+}
+
 #endif // NRF_MODULE_ENABLED(BLE_U2F)

@@ -19,12 +19,15 @@
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
+    // 開始ログとFDS統計ログを出力
+    NRF_LOG_DEBUG("add_token_counter start \r\n");
+    ble_u2f_flash_get_fds_stat();
+
     // appIdHashをキーとして、
     // トークンカウンターレコードを追加する
     //   appIdHashの開始位置は
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
-    NRF_LOG_DEBUG("add_token_counter start \r\n");
     U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
     uint32_t token_counter = 0;
@@ -37,7 +40,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("add_token_counter success \r\n");
+    NRF_LOG_DEBUG("add_token_counter end \r\n");
 }
 
 static uint16_t copy_apdu_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
