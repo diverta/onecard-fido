@@ -32,6 +32,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
         ble_u2f_send_error_response(p_u2f_context, 0x03);
+        return;
     }
 
     // 後続のレスポンス生成・送信は、
