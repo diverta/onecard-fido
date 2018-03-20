@@ -36,7 +36,6 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context);
 bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t *p_appid_hash, uint32_t token_counter, uint32_t reserve_word);
 bool ble_u2f_flash_token_counter_read(uint8_t *p_appid_hash);
 uint32_t ble_u2f_flash_token_counter_value(void);
-void ble_u2f_flash_get_fds_stat(void);
 
 #ifdef __cplusplus
 }

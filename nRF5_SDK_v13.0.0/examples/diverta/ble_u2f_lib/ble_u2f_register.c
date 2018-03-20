@@ -19,9 +19,8 @@
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
-    // 開始ログとFDS統計ログを出力
+    // 開始ログを出力
     NRF_LOG_DEBUG("add_token_counter start \r\n");
-    ble_u2f_flash_get_fds_stat();
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを追加する

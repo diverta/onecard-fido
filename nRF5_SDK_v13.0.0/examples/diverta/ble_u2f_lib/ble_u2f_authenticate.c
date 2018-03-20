@@ -54,9 +54,8 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
 
 static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 {
-    // 開始ログとFDS統計ログを出力
+    // 開始ログを出力
     NRF_LOG_DEBUG("update_token_counter start \r\n");
-    ble_u2f_flash_get_fds_stat();
 
     // appIdHash、トークンカウンターを共有情報から取得
     // （トークンカウンターは現在値＋１とする）
