@@ -17,7 +17,7 @@
 #include "nrf_log.h"
 
 
-static bool add_token_counter(ble_u2f_context_t *p_u2f_context)
+static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
     // appIdHashをキーとして、
     // トークンカウンターレコードを追加する
@@ -29,12 +29,12 @@ static bool add_token_counter(ble_u2f_context_t *p_u2f_context)
     uint32_t token_counter = 0;
     uint32_t reserve_word = 0xffffffff;
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
-        return false;
+        // 処理NGの場合、エラーレスポンスを生成して終了
+        ble_u2f_send_error_response(p_u2f_context, 0x03);
     }
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    return true;
 }
 
 static uint16_t copy_apdu_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
@@ -238,13 +238,9 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
-    if (add_token_counter(p_u2f_context) == false) {
-        // トークンカウンターレコードを追加し、
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        // 処理NGの場合、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
-        return;
-    }
+    // トークンカウンターレコードを追加
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    add_token_counter(p_u2f_context);
 }
 
 static void send_register_response(ble_u2f_context_t *p_u2f_context)
@@ -272,7 +268,7 @@ void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t 
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("ble_u2f_register retry: FDS GC done \r\n");
-        ble_u2f_register_do_process(p_u2f_context);
+        add_token_counter(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
