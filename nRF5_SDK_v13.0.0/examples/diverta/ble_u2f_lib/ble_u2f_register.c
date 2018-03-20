@@ -270,9 +270,9 @@ void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t 
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
-        // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
-        NRF_LOG_ERROR("ble_u2f_register abend: FDS GC done \r\n");
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("ble_u2f_register retry: FDS GC done \r\n");
+        ble_u2f_register_do_process(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
