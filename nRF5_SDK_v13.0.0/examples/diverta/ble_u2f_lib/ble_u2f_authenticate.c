@@ -56,6 +56,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 {
     // appIdHash、トークンカウンターを共有情報から取得
     // （トークンカウンターは現在値＋１とする）
+    NRF_LOG_DEBUG("update_token_counter start \r\n");
     uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
     uint32_t token_counter = p_u2f_context->token_counter + 1;
 
@@ -69,6 +70,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
+    NRF_LOG_DEBUG("update_token_counter success \r\n");
 }
 
 static uint16_t copy_appIdHash_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
