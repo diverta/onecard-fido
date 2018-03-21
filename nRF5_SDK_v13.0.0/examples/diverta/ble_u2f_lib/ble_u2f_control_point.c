@@ -1,6 +1,5 @@
 #include "sdk_common.h"
 #if NRF_MODULE_ENABLED(BLE_U2F)
-#include "ble_u2f.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_control_point_apdu.h"
 
@@ -22,6 +21,15 @@ static uint16_t control_point_buffer_length;
 static BLE_HEADER_T ble_header_t;
 static U2F_APDU_T   apdu_t;
 
+
+void ble_u2f_control_point_initialize(void)
+{
+    // コマンド／リクエストデータ格納領域を初期化
+    memset(control_point_buffer, 0x00, BLE_U2F_MAX_RECV_CHAR_LEN);
+    control_point_buffer_length = 0;
+    memset(&ble_header_t, 0x00, sizeof(BLE_HEADER_T));
+    memset(&apdu_t, 0x00, sizeof(U2F_APDU_T));
+}
 
 static bool is_valid_command(uint8_t command)
 {
