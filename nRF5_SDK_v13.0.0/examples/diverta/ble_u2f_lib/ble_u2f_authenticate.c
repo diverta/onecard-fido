@@ -52,23 +52,28 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-static bool update_token_counter(ble_u2f_context_t *p_u2f_context)
+static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 {
-    // appIdHash、トークンカウンターを
-    // 共有情報から取得
+    // 開始ログを出力
+    NRF_LOG_DEBUG("update_token_counter start \r\n");
+
+    // appIdHash、トークンカウンターを共有情報から取得
+    // （トークンカウンターは現在値＋１とする）
     uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
-    uint32_t token_counter = p_u2f_context->token_counter;
+    uint32_t token_counter = p_u2f_context->token_counter + 1;
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
     uint32_t reserve_word = 0xffffffff;
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
-        return false;
+        // NGであれば、エラーレスポンスを生成して終了
+        ble_u2f_send_error_response(p_u2f_context, 0x03);
+        return;
     }
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    return true;
+    NRF_LOG_DEBUG("update_token_counter end \r\n");
 }
 
 static uint16_t copy_appIdHash_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
@@ -180,9 +185,9 @@ static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_cont
 
 static bool create_response_message(ble_u2f_context_t *p_u2f_context)
 {
-    // 署名ベースを生成
+    // 署名ベースを生成（トークンカウンターは現在値＋１とする）
     uint8_t user_presence = p_u2f_context->user_presence_byte;
-    uint32_t token_counter = p_u2f_context->token_counter;
+    uint32_t token_counter = p_u2f_context->token_counter + 1;
     if (create_signature_base(p_u2f_context, user_presence, token_counter) == false) {
         return false;
     }
@@ -217,23 +222,18 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
 {
-    p_u2f_context->token_counter++;
+    // U2Fのリクエストデータを取得し、
+    // レスポンス・メッセージを生成
     if (create_response_message(p_u2f_context) == false) {
-        // U2Fのリクエストデータを取得し、
-        // レスポンス・メッセージを生成
         // NGであれば、エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, p_u2f_context->p_ble_header->STATUS_WORD);
         return;
     }
     
     // appIdHashをキーとして、
-    // トークンカウンターレコードを更新する
+    // トークンカウンターレコードを更新
     // (fds_record_update/writeまたはfds_gcが実行される)
-    if (update_token_counter(p_u2f_context) == false) {
-        // エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
-        return;
-    }
+    update_token_counter(p_u2f_context);
 }
 
 void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
@@ -319,9 +319,9 @@ void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_ev
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
-        // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
-        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS GC done \r\n");
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("ble_u2f_authenticate retry: FDS GC done \r\n");
+        update_token_counter(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す

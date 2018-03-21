@@ -38,20 +38,21 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、AES秘密鍵の初期化処理を行う
+        // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
         // (fds_record_update/writeまたはfds_gcが実行される)
         if (ble_u2f_crypto_ecb_init() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x04);
+            ble_u2f_send_error_response(p_u2f_context, 0x03);
         }
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
-        // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
-        NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS GC done \r\n");
+        // GC実行直前の処理を再実行
+        if (ble_u2f_crypto_ecb_init() == false) {
+            ble_u2f_send_error_response(p_u2f_context, 0x04);
+        }
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
-        // fds_record_update/write完了の場合
+        // AES秘密鍵生成(fds_record_update/write)完了の場合
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_securekey_erase end \r\n");
@@ -141,9 +142,9 @@ void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, f
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
-        // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
-        NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS GC done \r\n");
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("ble_u2f_securekey_install_skey retry: FDS GC done \r\n");
+        ble_u2f_securekey_install_skey(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
@@ -234,9 +235,9 @@ void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, f
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
-        // ここでエラーレスポンスを戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_FDS_GC_DONE);
-        NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS GC done \r\n");
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("ble_u2f_securekey_install_cert retry: FDS GC done \r\n");
+        ble_u2f_securekey_install_cert(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す

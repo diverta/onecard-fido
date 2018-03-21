@@ -21,11 +21,16 @@ static uint32_t m_pairing_mode;
 // ペアリングモードを保持
 static bool run_as_pairing_mode;
 
+// 接続情報を保持
+static ble_u2f_context_t *m_u2f_context;
 
 void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
 {
     ret_code_t err_code;
     NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds start \r\n");
+    
+    // 接続情報を保持
+    m_u2f_context = p_u2f_context;
 
     // ボンディング情報を削除
     err_code = pm_peers_delete();
@@ -35,31 +40,27 @@ void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
         ble_u2f_send_error_response(p_u2f_context, 0x01);
         return;
     }
-
-    // ガベージコレクションを実行
-    // (fds_gcが実行される。NGであればエラー扱い)
-    NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds: calling FDS GC \r\n");
-    if (ble_u2f_flash_force_fdc_gc() == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x02);
-        return;
-    }
 }
 
-void ble_u2f_pairing_delete_bonds_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
+bool ble_u2f_pairing_delete_bonds_response(pm_evt_t const *p_evt)
 {
-    if (p_evt->result != FDS_SUCCESS) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
-        NRF_LOG_ERROR("ble_u2f_pairing_delete_bonds abend: FDS EVENT=%d \r\n", p_evt->id);
-        return;
-    }
-
-    if (p_evt->id == FDS_EVT_GC) {
-        // fds_gc正常完了時は、
-        // レスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_success_response(p_u2f_context);
+    // pm_peers_deleteが完了したときの処理。
+    //   PM_EVT_PEERS_DELETE_SUCCEEDED、または
+    //   PM_EVT_PEERS_DELETE_FAILEDの
+    //   いずれかのイベントが発生する
+    // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
+        ble_u2f_send_success_response(m_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds end \r\n");
+        return true;
     }
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
+        ble_u2f_send_error_response(m_u2f_context, 0x03);
+        NRF_LOG_ERROR("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d \r\n", p_evt->evt_id);
+        return true;
+    }
+    
+    return false;
 }
 
 uint8_t ble_u2f_pairing_advertising_flag(void)

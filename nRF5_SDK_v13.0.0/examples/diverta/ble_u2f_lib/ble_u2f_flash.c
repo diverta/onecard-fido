@@ -27,7 +27,7 @@ bool ble_u2f_flash_force_fdc_gc(void)
     err_code = fds_gc();
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_gc returns 0x%02x \r\n", err_code);
-        return false;
+        APP_ERROR_CHECK(err_code);
     }
 
     return true;
