@@ -275,9 +275,8 @@
         [self.toolBLECentral centralManagerWillSend:[self.toolCommand bleRequestArray]];
     }
 
-    - (void)centralManagerDidFailConnection:(NSString *)errorMessage {
-        // エラーメッセージを画面表示
-        [self appendLogMessage:errorMessage];
+    - (void)centralManagerDidFailConnection {
+        // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
         // 失敗メッセージを表示
         [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
@@ -285,6 +284,25 @@
     }
 
     - (void)notifyCentralManagerMessage:(NSString *)message {
+        if (message == nil) {
+            return;
+        }
+        // コンソールログを出力
+        NSLog(@"%@", message);
+        // 画面上のテキストエリアにメッセージを表示する
+        [self appendLogMessage:message];
+    }
+
+    - (void)notifyCentralManagerErrorMessage:(NSString *)message error:(NSError *)error {
+        if (message == nil) {
+            return;
+        }
+        // コンソールログを出力
+        if (error) {
+            NSLog(@"%@ %@", message, [error description]);
+        } else {
+            NSLog(@"%@", message);
+        }
         // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:message];
     }
