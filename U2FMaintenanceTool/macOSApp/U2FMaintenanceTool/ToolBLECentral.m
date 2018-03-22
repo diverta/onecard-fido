@@ -48,6 +48,8 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)centralManagerWillConnect {
         if (self.connectedPeripheral) {
+            // FIXME: これは必要？？？　デッドロジックであれば、紛らわしいので削除してください
+            NSLog(@"centralManagerWillConnect: already connected to peripheral");
             // すでに接続が確立されている場合はAppDelegateに通知
             [self.delegate centralManagerDidConnect];
             return;
@@ -72,6 +74,8 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)scanForPeripherals {
         if (self.manager.state != CBCentralManagerStatePoweredOn) {
+            // FIXME: これは必要？？？　デッドロジックであれば、紛らわしいので削除してください
+            NSLog(@"scanForPeripherals: BLE not powered on");
             return;
         }
         [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
@@ -164,6 +168,8 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             didConnectPeripheral:(CBPeripheral *)peripheral {
         // すでに接続されている状態の場合は終了
         if (self.connectedPeripheral) {
+            // FIXME: これは必要？？？　デッドロジックであれば削除してください
+            NSLog(@"didConnectPeripheral: already connected to peripheral");
             return;
         }
         // 接続されたペリフェラルの参照を保持
@@ -268,8 +274,11 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         // サービスの参照を保持
         self.connectedService = service;
 
-        // サービスにキャラクタリスティックがない場合は終了
         if (service.characteristics.count < 1) {
+            // サービスにキャラクタリスティックがない旨をAppDelegateに通知
+            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_CHARACT_NOT_EXIST
+                                                        error:nil];
+            [[self delegate] centralManagerDidFailConnection];
             // FIXME: 切断処理実行は、本来centralManagerDidFailConnectionの中でやるべき。
             [self centralManagerWillDisconnect];
             return;

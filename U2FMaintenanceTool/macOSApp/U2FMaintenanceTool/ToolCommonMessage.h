@@ -85,6 +85,7 @@
 #define MSG_BLE_U2F_SERVICE_FOUND           @"FIDO BLE U2Fサービスが見つかりました。"
 #define MSG_BLE_U2F_SERVICE_NOT_FOUND       @"FIDO BLE U2Fサービスが見つかりません。"
 #define MSG_BLE_CHARACT_NOT_DISCOVERED      @"FIDO BLE U2Fサービスと通信できません。"
+#define MSG_BLE_CHARACT_NOT_EXIST           @"FIDO BLE U2Fサービスからデータを受信できる項目が存在しません。"
 #define MSG_BLE_NOTIFICATION_FAILED         @"FIDO BLE U2Fサービスからデータを受信できません。"
 #define MSG_BLE_NOTIFICATION_START          @"受信データの監視を開始します。"
 #define MSG_BLE_NOTIFICATION_STOP           @"受信データの監視を停止します。"
