@@ -158,9 +158,10 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)centralManager:(CBCentralManager *)central
             didConnectPeripheral:(CBPeripheral *)peripheral {
+        // 接続タイムアウト監視を停止
+        [self cancelConnectionTimeoutMonitor:peripheral];
         // すでに接続されている状態の場合は終了
         if (self.connectedPeripheral) {
-            // FIXME: これは必要？？？　デッドロジックであれば削除してください
             NSLog(@"didConnectPeripheral: already connected to peripheral");
             return;
         }
@@ -169,7 +170,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_CONNECTED];
 
         // FIDO BLE U2Fサービスのディスカバーを開始
-        [self cancelConnectionTimeoutMonitor:peripheral];
         [self discoverServices:peripheral];
     }
 
@@ -195,6 +195,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         // 切断完了
         [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_DISCONNECTED];
+        [[self delegate] centralManagerDidDisconnect];
     }
 
 #pragma mark - Discover services
@@ -271,8 +272,6 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_CHARACT_NOT_EXIST
                                                         error:nil];
             [[self delegate] centralManagerDidFailConnection];
-            // FIXME: 切断処理実行は、本来centralManagerDidFailConnectionの中でやるべき。
-            [self centralManagerWillDisconnect];
             return;
         }
 
@@ -308,19 +307,19 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_FAILED
                                                         error:error];
             [[self delegate] centralManagerDidFailConnection];
-            // FIXME: 切断処理実行は、本来centralManagerDidFailConnectionの中でやるべき。
-            [self centralManagerWillDisconnect];
             return;
         }
 
         if (characteristic.isNotifying) {
-            // 接続完了をAppDelegateに通知
+            // 一連の接続処理が完了したことをAppDelegateに通知
             [[self delegate] notifyCentralManagerMessage:MSG_BLE_NOTIFICATION_START];
             [self.delegate centralManagerDidConnect];
         } else {
-            // FIXME: 切断処理実行は、本来centralManagerDidFailConnectionの中でやるべき。
-            [[self delegate] notifyCentralManagerMessage:MSG_BLE_NOTIFICATION_STOP];
-            [self centralManagerWillDisconnect];
+            // 監視が停止している旨をAppDelegateに通知
+            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_STOP
+                                                        error:nil];
+            [[self delegate] centralManagerDidFailConnection];
+
         }
     }
 
@@ -357,8 +356,6 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     }
 
     - (void)requestDidTimeout:(CBCharacteristic *)characteristic {
-        // FIXME: 切断処理実行は、本来centralManagerDidFailConnectionの中でやるべき。
-        [self centralManagerWillDisconnect];
         // リクエストタイムアウト発生の旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_REQUEST_TIMEOUT
                                                     error:nil];
@@ -407,6 +404,8 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         if (self.connectedPeripheral) {
             [self cancelScanForPeripherals];
             [self.manager cancelPeripheralConnection:self.connectedPeripheral];
+        } else {
+            [[self delegate] centralManagerDidDisconnect];
         }
     }
 

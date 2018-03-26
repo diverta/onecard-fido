@@ -55,7 +55,6 @@
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
-        [self.toolBLECentral centralManagerWillDisconnect];
     }
 
     - (void)appendLogMessage:(NSString *)message {
@@ -224,12 +223,11 @@
     }
 
     - (void)bleHelperDidSend:(NSData *)chromeMessageData {
-        // このアプリケーションを終了させる
+        // デバイス接続を切断
         if (chromeMessageData) {
             NSLog(@"Sent response to chrome: %@", chromeMessageData);
         }
-        NSLog(@"Chrome native messaging host will terminate");
-        [NSApp terminate:self];
+        [self.toolBLECentral centralManagerWillDisconnect];
     }
 
     - (void)notifyToolCommandMessage:(NSString *)message {
@@ -240,10 +238,6 @@
     - (void)notifyToolCommandEnd {
         // デバイス接続を切断
         [self.toolBLECentral centralManagerWillDisconnect];
-        // Chrome native messaging時以外はボタンを活性化
-        if ([[self toolCommand] command] != COMMAND_U2F_PROCESS) {
-            [self enableButtons:true];
-        }
     }
 
 #pragma mark - Call back from ToolFileMenu
@@ -280,7 +274,19 @@
         [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
         // 失敗メッセージを表示
         [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
-        [self enableButtons:true];
+        // デバイス接続を切断
+        [self.toolBLECentral centralManagerWillDisconnect];
+    }
+
+    - (void)centralManagerDidDisconnect {
+        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
+            // Chrome native messaging時は、このアプリケーションを終了させる
+            NSLog(@"Chrome native messaging host will terminate");
+            [NSApp terminate:self];
+        } else {
+            // ボタンを活性化
+            [self enableButtons:true];
+        }
     }
 
     - (void)notifyCentralManagerMessage:(NSString *)message {

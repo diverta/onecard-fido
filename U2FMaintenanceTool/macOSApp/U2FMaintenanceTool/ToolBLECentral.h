@@ -28,5 +28,6 @@
     - (void)centralManagerDidConnect;
     - (void)centralManagerDidFailConnection;
     - (void)centralManagerDidReceive:(NSData *)bleMessage;
+    - (void)centralManagerDidDisconnect;
 
 @end
