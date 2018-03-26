@@ -48,8 +48,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)centralManagerWillConnect {
         if (self.connectedPeripheral) {
-            // FIXME: これは必要？？？　デッドロジックであれば、紛らわしいので削除してください
-            NSLog(@"centralManagerWillConnect: already connected to peripheral");
             // すでに接続が確立されている場合はAppDelegateに通知
             [self.delegate centralManagerDidConnect];
             return;
@@ -73,13 +71,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 #pragma mark - Scan for peripherals
 
     - (void)scanForPeripherals {
-        if (self.manager.state != CBCentralManagerStatePoweredOn) {
-            // FIXME: これは必要？？？　デッドロジックであれば、紛らわしいので削除してください
-            NSLog(@"scanForPeripherals: BLE not powered on");
-            return;
-        }
-        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
-
         // スキャン設定
         [self startScanningTimeoutMonitor];
         NSDictionary *scanningOptions = @{CBCentralManagerScanOptionAllowDuplicatesKey : @NO};
@@ -87,6 +78,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         // FIDO BLE U2Fサービスを持つペリフェラルをスキャン
         self.connectedPeripheral = nil;
         [self.manager scanForPeripheralsWithServices:nil options:scanningOptions];
+        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
     }
 
     - (void)cancelScanForPeripherals {
@@ -104,10 +96,10 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
                 continue;
             }
             // スキャンを停止し、ペリフェラルに接続
-            [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_END];
             [self cancelScanForPeripherals];
             [self cancelScanningTimeoutMonitor];
             [self connectPeripheral:peripheral];
+            [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_END];
             break;
         }
     }
