@@ -292,13 +292,6 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
     }
 
-    - (void)unsubscribeCharacteristic:(CBService *)service {
-         // U2F Statusキャラクタリスティックに対する監視を停止
-         if (self.u2fStatusChar) {
-             [self.connectedPeripheral setNotifyValue:NO forCharacteristic:self.u2fStatusChar];
-         }
-    }
-
     - (void)peripheral:(CBPeripheral *)peripheral
         didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
         error:(NSError *)error {
