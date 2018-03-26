@@ -176,7 +176,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         [self cancelConnectionTimeoutMonitor:peripheral];
         // 接続失敗の旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNECT_FAILED
-                                                    error:nil];
+                                                    error:error];
         [[self delegate] centralManagerDidFailConnection];
     }
 
@@ -188,9 +188,9 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         self.connectedService    = nil;
         self.u2fControlPointChar = nil;
         self.u2fStatusChar       = nil;
-
         // 切断完了
-        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_DISCONNECTED];
+        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_DISCONNECTED
+                                                    error:error];
         [[self delegate] centralManagerDidDisconnect];
     }
 
