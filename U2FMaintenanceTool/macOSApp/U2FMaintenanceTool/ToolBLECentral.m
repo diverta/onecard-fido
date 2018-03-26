@@ -116,8 +116,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     }
 
     - (void)scanningDidTimeout {
-        // スキャンを停止
-        [self cancelScanForPeripherals];
         // スキャンタイムアウトの旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_SCAN_TIMEOUT
                                                     error:nil];
@@ -140,8 +138,6 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     }
 
     - (void)connectionDidTimeout:(CBPeripheral *)peripheral {
-        // ペリフェラル接続を中止
-        [self.manager cancelPeripheralConnection:peripheral];
         // 接続タイムアウトの旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNREQ_TIMEOUT
                                                     error:nil];
@@ -151,7 +147,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 #pragma mark - Connect peripheral
 
     - (void)connectPeripheral:(CBPeripheral *)peripheral {
-        // ペリフェラルに接続
+        // ペリフェラルに接続し、接続タイムアウト監視を開始
         [self.manager connectPeripheral:peripheral options:nil];
         [self startConnectionTimeoutMonitor:peripheral];
     }
@@ -393,8 +389,8 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 #pragma mark - Disconnect from peripheral
 
     - (void)centralManagerWillDisconnect {
-        // ペリフェラル接続を切断
         if (self.connectedPeripheral) {
+            // スキャンを停止し、ペリフェラル接続を切断
             [self cancelScanForPeripherals];
             [self.manager cancelPeripheralConnection:self.connectedPeripheral];
         } else {
