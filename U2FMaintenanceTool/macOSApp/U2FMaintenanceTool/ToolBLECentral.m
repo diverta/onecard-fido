@@ -292,7 +292,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
         error:(NSError *)error {
         if (error) {
-            // U2F Control Point書込エラー発生の旨をAppDelegateに通知
+            // U2F Status監視開始エラー発生の旨をAppDelegateに通知
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_FAILED
                                                         error:error];
             [[self delegate] centralManagerDidFailConnection];
@@ -375,7 +375,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
 
         if (error) {
-            // U2F Status監視エラー発生の旨をAppDelegateに通知
+            // U2F Status取得エラー発生の旨をAppDelegateに通知
             [[self delegate] notifyCentralManagerErrorMessage:MSG_RESPONSE_RECEIVE_FAILED
                                                         error:error];
             [[self delegate] centralManagerDidFailConnection];
