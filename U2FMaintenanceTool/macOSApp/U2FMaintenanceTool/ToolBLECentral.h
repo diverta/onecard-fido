@@ -23,9 +23,11 @@
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)notifyCentralManagerMessage:(NSString *)message;
+    - (void)notifyCentralManagerErrorMessage:(NSString *)message error:(NSError *)error;
 
     - (void)centralManagerDidConnect;
-    - (void)centralManagerDidFailConnection:(NSString *)message;
+    - (void)centralManagerDidFailConnection;
     - (void)centralManagerDidReceive:(NSData *)bleMessage;
+    - (void)centralManagerDidDisconnect;
 
 @end
