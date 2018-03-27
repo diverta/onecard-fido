@@ -222,14 +222,6 @@
         [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
     }
 
-    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
-        // デバイス接続を切断
-        if (chromeMessageData) {
-            NSLog(@"Sent response to chrome: %@", chromeMessageData);
-        }
-        [self.toolBLECentral centralManagerWillDisconnect];
-    }
-
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:message];
@@ -272,10 +264,14 @@
     - (void)centralManagerDidFailConnection {
         // 画面上のテキストエリアにメッセージを表示する
         [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
-        // 失敗メッセージを表示
-        [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
-        // デバイス接続を切断
-        [self.toolBLECentral centralManagerWillDisconnect];
+        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
+            // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
+            [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
+        } else {
+            // 失敗メッセージをポップアップ表示し、デバイス接続を切断
+            [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
+            [[self toolBLECentral] centralManagerWillDisconnect];
+        }
     }
 
     - (void)centralManagerDidDisconnect {
@@ -330,6 +326,14 @@
         [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
                                bleHelperMessages:bleHelperMessages];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
+    }
+
+    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
+        // デバイス接続を切断
+        if (chromeMessageData) {
+            NSLog(@"Sent response to chrome: %@", chromeMessageData);
+        }
+        [self.toolBLECentral centralManagerWillDisconnect];
     }
 
 @end
