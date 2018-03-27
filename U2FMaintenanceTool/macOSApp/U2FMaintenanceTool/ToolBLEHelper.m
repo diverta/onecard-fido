@@ -11,6 +11,7 @@
 @interface ToolBLEHelper ()
 
     @property (nonatomic) bool communicateAsChromeNative;
+    @property (nonatomic) bool hasSentMessageToChrome;
 
 @end
 
@@ -84,6 +85,9 @@
         }
         NSLog(@"Received Data:[%@]", data);
         
+        // Chromeエクステンションにメッセージを返信した旨のフラグを初期化
+        [self setHasSentMessageToChrome:false];
+
         // Chromeエクステンションから受信したメッセージを、AppDelegateへ転送
         [self.delegate bleHelperDidReceive:[self extractBLEHelperMessagesFrom:data]];
         
@@ -162,6 +166,12 @@
         [[NSFileHandle fileHandleWithStandardOutput] writeData:chromeMessageData];
         // アプリケーションに制御を戻す
         [[self delegate] bleHelperDidSend:chromeMessageData];
+        // Chromeエクステンションにメッセージを返信した旨のフラグを設定
+        [self setHasSentMessageToChrome:true];
+    }
+
+    - (bool) bleHelperHasSentMessageToChrome {
+        return [self hasSentMessageToChrome];
     }
 
     - (NSData *)createJsonStringFrom:(NSDictionary *)jsonDictionary {
