@@ -23,7 +23,7 @@ static void command_timer_handler(void *p_context)
     ble_u2f_send_keepalive_response(p_u2f_context);
 }
 
-void ble_u2f_user_presence_init(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_user_presence_init(void)
 {
     uint32_t err_code;
     if (app_timer_created == false) {

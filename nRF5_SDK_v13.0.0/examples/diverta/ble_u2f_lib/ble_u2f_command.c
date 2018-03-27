@@ -78,9 +78,6 @@ void ble_u2f_command_initialize_context(void)
     // 共有情報をゼロクリアする
     memset(&m_u2f_context, 0, sizeof(ble_u2f_context_t));
     NRF_LOG_DEBUG("ble_u2f_command_initialize_context done \r\n");
-
-    // ユーザー所在確認のためのタイマーを起動する
-    ble_u2f_user_presence_init(&m_u2f_context);
     
     // コマンド／リクエストデータ格納領域を初期化する
     ble_u2f_control_point_initialize();
