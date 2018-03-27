@@ -3,9 +3,6 @@
 #include "ble_u2f_util.h"
 #include "ble_u2f_control_point_apdu.h"
 
-// 無通信タイマー
-#include "ble_u2f_comm_interval_timer.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_control_point"
 #include "nrf_log.h"
@@ -189,9 +186,6 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F
 
 void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_context_t *p_u2f_context)
 {
-    // 無通信タイマーが既にスタートしている場合は停止させる
-    ble_u2f_comm_interval_timer_stop(p_u2f_context->p_u2f);
-
     // U2Fクライアントから受信したリクエストデータを、
     // 内部バッファに保持
     memset(control_point_buffer, 0, sizeof(control_point_buffer));

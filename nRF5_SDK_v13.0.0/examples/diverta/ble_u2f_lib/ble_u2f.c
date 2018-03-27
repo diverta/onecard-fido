@@ -4,6 +4,12 @@
 #include "ble_u2f_command.h"
 #include "ble_u2f_util.h"
 
+// 無通信タイマー
+#include "ble_u2f_comm_interval_timer.h"
+
+// キープアライブタイマー
+#include "ble_u2f_user_presence.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f"
 #include "nrf_log.h"
@@ -16,6 +22,12 @@ static void ble_u2f_on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を初期化する
     ble_u2f_command_initialize_context();
+
+    // ユーザー所在確認のためのキープアライブタイマーを生成する
+    ble_u2f_user_presence_init();
+
+    // 無通信タイマーが既にスタートしている場合は停止させる
+    ble_u2f_comm_interval_timer_stop(p_u2f);
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
