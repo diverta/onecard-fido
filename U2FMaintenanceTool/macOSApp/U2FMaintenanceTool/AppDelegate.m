@@ -276,15 +276,9 @@
 
     - (void)centralManagerDidDisconnect {
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時
-            if ([[self toolBLEHelper] bleHelperHasSentMessageToChrome] == false) {
-                // Chromeエクステンションにメッセージが未送信の場合は、ブランクメッセージを送信
-                [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
-            } else {
-                // このアプリケーションを終了させる
-                NSLog(@"Chrome native messaging host will terminate");
-                [NSApp terminate:self];
-            }
+            // Chrome native messaging時は、このアプリケーションを終了させる
+            NSLog(@"Chrome native messaging host will terminate");
+            [NSApp terminate:self];
         } else {
             // ボタンを活性化
             [self enableButtons:true];

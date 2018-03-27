@@ -18,7 +18,6 @@
     - (void)bleHelperWillSend:(NSDictionary *)bleHelperMessage;
 
     - (bool) bleHelperCommunicateAsChromeNative;
-    - (bool) bleHelperHasSentMessageToChrome;
 
 @end
 
