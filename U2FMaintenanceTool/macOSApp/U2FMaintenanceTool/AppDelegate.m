@@ -249,11 +249,9 @@
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
         NSLog(@"centralManagerDidUpdateState: %ld", state);
 
-        if (state == CBCentralManagerStatePoweredOn) {
-            // BLEデバイスが有効化された後に
-            // Chromeエクステンションからのメッセージ受信を有効化
-            [self.toolBLEHelper bleHelperWillSetStdinNotification];
-        }
+        // CBCentralManagerが使用可能になったと判断し、
+        // Chromeエクステンションからのメッセージ受信を有効化
+        [self.toolBLEHelper bleHelperWillSetStdinNotification];
     }
 
     - (void)centralManagerDidConnect {
