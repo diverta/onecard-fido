@@ -18,6 +18,10 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     @property(nonatomic) CBCharacteristic *u2fControlPointChar;
     @property(nonatomic) CBCharacteristic *u2fStatusChar;
 
+    // 送信フレームデータ／フレーム数を保持
+    @property(nonatomic) NSArray<NSData *> *bleRequestFrames;
+    @property(nonatomic) NSUInteger         bleRequestFrameNumber;
+
 @end
 
 @implementation ToolBLECentral
@@ -315,15 +319,26 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 #pragma mark - Do main process
 
     - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages {
-        // U2F Control Pointに、実行するコマンドを書き込み
-        for (NSData *data in bleMessages) {
-            [NSThread sleepForTimeInterval:0.25];
-            [self.connectedPeripheral writeValue:data
-                               forCharacteristic:self.u2fControlPointChar
-                                            type:CBCharacteristicWriteWithResponse];
-            NSLog(@"Sent request %@", data);
+        // U2F Control Pointへの書き込みを開始
+        [self connectedPeripheral:[self connectedPeripheral]
+                      writeValues:bleMessages
+                forCharacteristic:[self u2fControlPointChar]];
+    }
+
+    - (void)connectedPeripheral:(CBPeripheral *)connectedPeripheral
+                    writeValues:(NSArray<NSData *> *)valueArray
+              forCharacteristic:(CBCharacteristic *)characteristic {
+        if (valueArray) {
+            // U2F Control Pointへの書込データを保持し、送信済フレーム数をクリア
+            [self setBleRequestFrames:valueArray];
+            [self setBleRequestFrameNumber:0];
         }
-        [[self delegate] notifyCentralManagerMessage:MSG_REQUEST_SENT];
+        // U2F Control Pointに、実行するコマンドを書き込み
+        NSData *value = [[self bleRequestFrames]
+                         objectAtIndex:[self bleRequestFrameNumber]];
+        [connectedPeripheral writeValue:value
+                      forCharacteristic:characteristic
+                                   type:CBCharacteristicWriteWithResponse];
     }
 
 #pragma mark - Request timeout monitor
@@ -363,9 +378,23 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [[self delegate] centralManagerDidFailConnection];
             return;
         }
-
-        // U2F Status経由のレスポンス待ち（タイムアウト監視開始）
-        [self centralManagerWillStartResponseTimeout];
+        
+        // 送信済みフレーム数を設定
+        NSLog(@"Sent request [frame=%lu] %@",
+              (unsigned long)[self bleRequestFrameNumber],
+              [[self bleRequestFrames] objectAtIndex:[self bleRequestFrameNumber]]
+              );
+        [self setBleRequestFrameNumber:([self bleRequestFrameNumber] + 1)];
+        
+        if ([self bleRequestFrameNumber] == [[self bleRequestFrames] count]) {
+            // 全フレームが送信済であれば、U2F Status経由のレスポンス待ち（タイムアウト監視開始）
+            [self centralManagerWillStartResponseTimeout];
+            [[self delegate] notifyCentralManagerMessage:MSG_REQUEST_SENT];
+        } else {
+            // U2F Control Pointへ、後続フレームの書き込みを実行
+            [self connectedPeripheral:peripheral writeValues:nil
+                    forCharacteristic:characteristic];
+        }
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
