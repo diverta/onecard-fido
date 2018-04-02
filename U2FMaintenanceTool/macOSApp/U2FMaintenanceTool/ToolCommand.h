@@ -40,7 +40,7 @@
     - (void)notifyToolCommandEnd;
 
     - (void)toolCommandDidCreateBleRequest;
-    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict;
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict result:(bool)result;
 
 @end
 

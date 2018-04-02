@@ -774,10 +774,7 @@
             [self toolCommandDidProcess:true message:@"Health check end"];
             break;
         case COMMAND_U2F_PROCESS:
-            NSLog(@"U2F response received");
-            [self setBleRequestArray:nil];
-            [self createU2FResponseDictFrom:[self bleResponseData]];
-            [self.delegate toolCommandDidReceive:[self U2FResponseDict]];
+            [self toolCommandDidProcess:true message:@"U2F response received"];
             break;
         default:
             break;
@@ -804,10 +801,20 @@
     // コマンド配列をブランクに初期化
     [self setBleRequestArray:nil];
     
-    // 引数のメッセージを、処理成功時はコンソール出力、処理失敗時は画面出力
-    if (result) {
+    // 引数のメッセージをコンソール出力
+    if (message) {
         NSLog(@"%@", message);
-    } else {
+    }
+    
+    // Chrome Native Messaging時は画面処理を行わないようにする
+    if ([self command] == COMMAND_U2F_PROCESS) {
+        [self createU2FResponseDictFrom:[self bleResponseData]];
+        [self.delegate toolCommandDidReceive:[self U2FResponseDict] result:result];
+        return;
+    }
+    
+    // 処理失敗時は、引数のメッセージを画面出力
+    if (result == false) {
         [[self delegate] notifyToolCommandMessage:message];
     }
 

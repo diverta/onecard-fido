@@ -217,9 +217,13 @@
         [self.toolBLECentral centralManagerWillConnect];
     }
 
-    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
-        // U2F処理実行結果をChromeエクステンションに戻す
-        [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
+    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict result:(bool)result {
+        // U2F処理実行結果をChromeエクステンションに戻す（失敗時はブランクメッセージを戻す）
+        if (result) {
+            [[self toolBLEHelper] bleHelperWillSend:u2fResponseDict];
+        } else {
+            [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
+        }
     }
 
     - (void)notifyToolCommandMessage:(NSString *)message {
