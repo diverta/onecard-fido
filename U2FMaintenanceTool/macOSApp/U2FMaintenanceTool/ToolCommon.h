@@ -15,6 +15,9 @@
 #define CHROME_NMHOST_TYPE     @"stdio"
 #define CHROME_NMHOST_JSON_DIR @"/Library/Application Support/Google/Chrome/NativeMessagingHosts"
 
+// BLE接続再試行の上限回数
+#define BLE_CONNECTION_RETRY_MAX_COUNT 3
+
 // コマンド種別
 typedef enum : NSInteger {
     COMMAND_NONE = 1,

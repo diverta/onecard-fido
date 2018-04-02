@@ -35,6 +35,9 @@
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
+    @property (nonatomic) NSUInteger         bleConnectionRetryCount;
+    @property (nonatomic) bool               bleTransactionStarted;
+
 @end
 
 @implementation AppDelegate
@@ -213,8 +216,15 @@
 #pragma mark - Call back from ToolCommand
 
     - (void)toolCommandDidCreateBleRequest {
-        // BLEデバイス接続処理に移る
-        [self.toolBLECentral centralManagerWillConnect];
+        // 再試行回数をゼロクリアし、BLEデバイス接続処理に移る
+        [self setBleConnectionRetryCount:0];
+        [self startBleConnection];
+    }
+
+    - (void)startBleConnection {
+        // BLEデバイス接続処理を開始する
+        [self setBleTransactionStarted:false];
+        [[self toolBLECentral] centralManagerWillConnect];
     }
 
     - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
@@ -257,6 +267,7 @@
     - (void)centralManagerDidConnect {
         // U2F Control Pointに実行コマンドを書込
         [self.toolBLECentral centralManagerWillSend:[self.toolCommand bleRequestArray]];
+        [self setBleTransactionStarted:true];
     }
 
     - (void)centralManagerDidFailConnection {
@@ -273,6 +284,11 @@
     }
 
     - (void)centralManagerDidDisconnect {
+        // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
+        if ([self retryBLEConnection]) {
+            return;
+        }
+        
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時
             if ([[self toolBLEHelper] bleHelperHasSentMessageToChrome] == false) {
@@ -286,6 +302,28 @@
         } else {
             // ボタンを活性化
             [self enableButtons:true];
+        }
+    }
+
+    - (bool)retryBLEConnection {
+        // 処理が開始されていない場合はfalseを戻す
+        if ([self bleTransactionStarted] == false) {
+            return false;
+        }
+        
+        if ([self bleConnectionRetryCount] < BLE_CONNECTION_RETRY_MAX_COUNT) {
+            // 再試行回数をカウントアップ
+            [self setBleConnectionRetryCount:([self bleConnectionRetryCount] + 1)];
+            NSLog(MSG_BLE_CONNECTION_RETRY_WITH_CNT,
+                  (unsigned long)[self bleConnectionRetryCount]);
+            // BLEデバイス接続処理に移る
+            [self startBleConnection];
+            return true;
+            
+        } else {
+            // 再試行上限回数に達している場合は、そのまま終了させる
+            NSLog(MSG_BLE_CONNECTION_RETRY_END);
+            return false;
         }
     }
 
@@ -318,7 +356,9 @@
             // 後続レスポンスがあれば、タイムアウト監視を再開させ、後続レスポンスを待つ
             [self.toolBLECentral centralManagerWillStartResponseTimeout];
         } else {
-            // 後続レスポンスがなければ、レスポンスを次処理に引き渡す
+            // 後続レスポンスがなければ、トランザクション完了と判断
+            [self setBleTransactionStarted:false];
+            // レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
         }
     }

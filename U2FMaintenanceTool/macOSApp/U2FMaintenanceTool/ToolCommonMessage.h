@@ -94,4 +94,8 @@
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
 
+#pragma mark - 接続再試行関連メッセージ
+#define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"
+#define MSG_BLE_CONNECTION_RETRY_END        @"処理中にBLE接続が消失しましたが、接続再試行の上限回数に達したため終了します。"
+
 #endif /* ToolCommonMessage_h */
