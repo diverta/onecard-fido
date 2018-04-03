@@ -110,7 +110,7 @@ DelegatingRequestHandler.prototype.helperComplete_ =
   if (reply.code) {
     if (!this.stillRunningHelpers_) {
       console.error('Wtf? helperComplete has no helper left.');
-    } else if (!--this.stillRunningHelpers_) {
+    } else {
       this.close();
       console.log(UTIL_fmt('last delegated helper completed, returning ' +
           reply.code.toString(16)));

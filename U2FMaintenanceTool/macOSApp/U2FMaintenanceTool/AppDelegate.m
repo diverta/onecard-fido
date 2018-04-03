@@ -224,12 +224,8 @@
 
     - (void)toolCommandDidReceive:(Command)command result:(bool)result
                          response:(NSDictionary *)u2fResponseDict {
-        // U2F処理実行結果をChromeエクステンションに戻す（失敗時はブランクメッセージを戻す）
-        if (result) {
-            [[self toolBLEHelper] bleHelperWillSend:u2fResponseDict];
-        } else {
-            [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
-        }
+        // U2F処理実行結果をChromeエクステンションに戻す
+        [[self toolBLEHelper] bleHelperWillSend:u2fResponseDict];
     }
 
     - (void)toolCommandDidProcess:(Command)command result:(bool)result
