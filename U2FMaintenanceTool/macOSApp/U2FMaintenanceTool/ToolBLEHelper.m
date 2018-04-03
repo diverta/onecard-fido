@@ -185,6 +185,11 @@
         if (!jsonStringData) {
             NSLog(@"%@", error);
         }
+        
+        // JSON文字列をログ出力
+        NSLog(@"Response json string to chrome: %@",
+              [[NSString alloc] initWithData:jsonStringData
+                                    encoding:NSUTF8StringEncoding]);
 
         return jsonStringData;
     }

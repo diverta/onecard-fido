@@ -774,10 +774,7 @@
             [self toolCommandDidProcess:true message:@"Health check end"];
             break;
         case COMMAND_U2F_PROCESS:
-            NSLog(@"U2F response received");
-            [self setBleRequestArray:nil];
-            [self createU2FResponseDictFrom:[self bleResponseData]];
-            [self.delegate toolCommandDidReceive:[self U2FResponseDict]];
+            [self toolCommandDidProcess:true message:@"U2F response received"];
             break;
         default:
             break;
@@ -804,26 +801,21 @@
     // コマンド配列をブランクに初期化
     [self setBleRequestArray:nil];
     
-    // 引数のメッセージを、処理成功時はコンソール出力、処理失敗時は画面出力
-    if (result) {
+    // 引数のメッセージをコンソール出力
+    if (message) {
         NSLog(@"%@", message);
-    } else {
-        [[self delegate] notifyToolCommandMessage:message];
-    }
-
-    // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
-    NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                     [ToolCommon processNameOfCommand:[self command]],
-                     result? MSG_SUCCESS:MSG_FAILURE];
-    [[self delegate] notifyToolCommandMessage:str];
-    if (result) {
-        [ToolPopupWindow informational:str informativeText:nil];
-    } else {
-        [ToolPopupWindow critical:str informativeText:nil];
     }
     
-    // 処理終了をAppDelegateに通知
-    [[self delegate] notifyToolCommandEnd];
+    if ([self command] == COMMAND_U2F_PROCESS) {
+        // Chrome Native Messaging時はメッセージを連想配列に変換して戻す
+        [self createU2FResponseDictFrom:[self bleResponseData]];
+        [[self delegate] toolCommandDidReceive:[self command] result:result
+                                      response:[self U2FResponseDict]];
+    } else {
+        // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
+        [[self delegate] toolCommandDidProcess:[self command] result:result
+                                       message:message];
+    }
 }
 
 @end
