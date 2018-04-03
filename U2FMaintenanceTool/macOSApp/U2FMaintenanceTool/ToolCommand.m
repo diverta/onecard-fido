@@ -806,31 +806,16 @@
         NSLog(@"%@", message);
     }
     
-    // Chrome Native Messaging時は画面処理を行わないようにする
     if ([self command] == COMMAND_U2F_PROCESS) {
+        // Chrome Native Messaging時はメッセージを連想配列に変換して戻す
         [self createU2FResponseDictFrom:[self bleResponseData]];
-        [self.delegate toolCommandDidReceive:[self U2FResponseDict] result:result];
-        return;
-    }
-    
-    // 処理失敗時は、引数のメッセージを画面出力
-    if (result == false) {
-        [[self delegate] notifyToolCommandMessage:message];
-    }
-
-    // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
-    NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                     [ToolCommon processNameOfCommand:[self command]],
-                     result? MSG_SUCCESS:MSG_FAILURE];
-    [[self delegate] notifyToolCommandMessage:str];
-    if (result) {
-        [ToolPopupWindow informational:str informativeText:nil];
+        [[self delegate] toolCommandDidReceive:[self command] result:result
+                                      response:[self U2FResponseDict]];
     } else {
-        [ToolPopupWindow critical:str informativeText:nil];
+        // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
+        [[self delegate] toolCommandDidProcess:[self command] result:result
+                                       message:message];
     }
-    
-    // 処理終了をAppDelegateに通知
-    [[self delegate] notifyToolCommandEnd];
 }
 
 @end

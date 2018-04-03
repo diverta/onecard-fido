@@ -37,10 +37,12 @@
 @protocol ToolCommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)notifyToolCommandEnd;
 
     - (void)toolCommandDidCreateBleRequest;
-    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict result:(bool)result;
+    - (void)toolCommandDidReceive:(Command)command result:(bool)result
+                         response:(NSDictionary *)u2fResponseDict;
+    - (void)toolCommandDidProcess:(Command)command result:(bool)result
+                          message:(NSString *)message;
 
 @end
 
