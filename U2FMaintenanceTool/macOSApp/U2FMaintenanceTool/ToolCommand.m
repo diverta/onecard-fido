@@ -416,6 +416,9 @@
 }
 
 - (void)createCommandU2FProcess {
+    // U2Fレスポンスデータをクリア
+    [self setU2FResponseDict:nil];
+    
     // 受信データから各項目を取得し、リクエスト種別に応じた処理を実行
     if ([self isEnrollHelperRequest]) {
         NSDictionary *dict = [self getU2FRequestDictForKey:@"enrollChallenges"];
@@ -809,12 +812,19 @@
     if ([self command] == COMMAND_U2F_PROCESS) {
         // Chrome Native Messaging時はメッセージを連想配列に変換して戻す
         [self createU2FResponseDictFrom:[self bleResponseData]];
-        [[self delegate] toolCommandDidReceive:[self command] result:result
-                                      response:[self U2FResponseDict]];
+        [[self delegate] toolCommandDidReceive:[self command] result:result];
     } else {
         // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
         [[self delegate] toolCommandDidProcess:[self command] result:result
                                        message:message];
+    }
+}
+
+- (NSDictionary *)getU2FResponseDict {
+    if ([self U2FResponseDict]) {
+        return [self U2FResponseDict];
+    } else {
+        return [[NSDictionary alloc] init];
     }
 }
 

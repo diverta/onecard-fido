@@ -31,6 +31,7 @@
                    certFilePath:(NSString *)certFilePath;
     - (void)setU2FProcessParameter:(Command)command
                  bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
+    - (NSDictionary *)getU2FResponseDict;
 
 @end
 
@@ -39,8 +40,7 @@
     - (void)notifyToolCommandMessage:(NSString *)message;
 
     - (void)toolCommandDidCreateBleRequest;
-    - (void)toolCommandDidReceive:(Command)command result:(bool)result
-                         response:(NSDictionary *)u2fResponseDict;
+    - (void)toolCommandDidReceive:(Command)command result:(bool)result;
     - (void)toolCommandDidProcess:(Command)command result:(bool)result
                           message:(NSString *)message;
 
