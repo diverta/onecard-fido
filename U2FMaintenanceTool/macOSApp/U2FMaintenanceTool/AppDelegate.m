@@ -215,6 +215,11 @@
 
 #pragma mark - Call back from ToolCommand
 
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        // 画面上のテキストエリアにメッセージを表示する
+        [self appendLogMessage:message];
+    }
+
     - (void)toolCommandDidCreateBleRequest {
         // 再試行回数をゼロクリアし、BLEデバイス接続処理に移る
         [self setBleConnectionRetryCount:0];
@@ -227,19 +232,30 @@
         [[self toolBLECentral] centralManagerWillConnect];
     }
 
-    - (void)toolCommandDidReceive:(NSDictionary *)u2fResponseDict {
+    - (void)toolCommandDidReceive:(Command)command result:(bool)result
+                         response:(NSDictionary *)u2fResponseDict {
         // U2F処理実行結果をChromeエクステンションに戻す
-        [self.toolBLEHelper bleHelperWillSend:u2fResponseDict];
+        [[self toolBLEHelper] bleHelperWillSend:u2fResponseDict];
     }
 
-    - (void)notifyToolCommandMessage:(NSString *)message {
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
-    }
-
-    - (void)notifyToolCommandEnd {
+    - (void)toolCommandDidProcess:(Command)command result:(bool)result
+                          message:(NSString *)message {
+        // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
+        if (result == false) {
+            [self notifyToolCommandMessage:message];
+        }
+        // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:command],
+                         result? MSG_SUCCESS:MSG_FAILURE];
+        [self notifyToolCommandMessage:str];
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:str informativeText:nil];
+        }
         // デバイス接続を切断
-        [self.toolBLECentral centralManagerWillDisconnect];
+        [[self toolBLECentral] centralManagerWillDisconnect];
     }
 
 #pragma mark - Call back from ToolFileMenu
