@@ -232,10 +232,9 @@
         [[self toolBLECentral] centralManagerWillConnect];
     }
 
-    - (void)toolCommandDidReceive:(Command)command result:(bool)result
-                         response:(NSDictionary *)u2fResponseDict {
-        // U2F処理実行結果をChromeエクステンションに戻す
-        [[self toolBLEHelper] bleHelperWillSend:u2fResponseDict];
+    - (void)toolCommandDidReceive:(Command)command result:(bool)result {
+        // デバイス接続を切断
+        [[self toolBLECentral] centralManagerWillDisconnect];
     }
 
     - (void)toolCommandDidProcess:(Command)command result:(bool)result
@@ -291,7 +290,7 @@
         [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
-            [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
+            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
             // 失敗メッセージをポップアップ表示し、デバイス接続を切断
             [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
@@ -306,15 +305,8 @@
         }
         
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時
-            if ([[self toolBLEHelper] bleHelperHasSentMessageToChrome] == false) {
-                // Chromeエクステンションにメッセージが未送信の場合は、ブランクメッセージを送信
-                [[self toolBLEHelper] bleHelperWillSend:[[NSDictionary alloc] init]];
-            } else {
-                // このアプリケーションを終了させる
-                NSLog(@"Chrome native messaging host will terminate");
-                [NSApp terminate:self];
-            }
+            // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
+            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
             // ボタンを活性化
             [self enableButtons:true];
@@ -389,11 +381,12 @@
     }
 
     - (void)bleHelperDidSend:(NSData *)chromeMessageData {
-        // デバイス接続を切断
+        // このアプリケーションを終了させる
         if (chromeMessageData) {
             NSLog(@"Sent response to chrome: %@", chromeMessageData);
         }
-        [self.toolBLECentral centralManagerWillDisconnect];
+        NSLog(@"Chrome native messaging host will terminate");
+        [NSApp terminate:self];
     }
 
 @end
