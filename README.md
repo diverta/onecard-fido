@@ -8,12 +8,12 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を更新しました。<br>
 以下の不具合を修正しております。
-- [U2F Authenticate実行後、Chromeブラウザーがハング](#25)
-- [再起動したChromeブラウザーで、U2F Authenticateが再度失敗](#26)
-- [BLEリクエストが送信されないことがある](#27)
-- [BLEリクエストは送信されるが、２件目以降のフレームが受信されないことがある](#28)
-- [macOSで「Bluetooth: Off」時にChromeブラウザーがハング](#30)
-- [U2F Registerでエラーレスポンスを受信時、Chromeブラウザーがハング](#32)
+- U2F Authenticate実行後、Chromeブラウザーがハング (Issue #25)
+- 再起動したChromeブラウザーで、U2F Authenticateが再度失敗 (Issue #26)
+- BLEリクエストが送信されないことがある (Issue #27)
+- BLEリクエストは送信されるが、２件目以降のフレームが受信されないことがある (Issue #28)
+- macOSで「Bluetooth: Off」時にChromeブラウザーがハング (Issue #30)
+- U2F Registerでエラーレスポンスを受信時、Chromeブラウザーがハング (Issue #32)
 
 これに伴い、[U2Fデモサイト用のChromeエクステンション](U2FMaintenanceTool/u2f-chrome-extension.zip)も同時に更新しました。
 
