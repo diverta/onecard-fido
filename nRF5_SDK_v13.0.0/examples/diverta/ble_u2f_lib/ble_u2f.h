@@ -103,6 +103,7 @@ struct ble_u2f_s
     ble_u2f_data_handler_t   data_handler;
 
     // BLE U2Fで使用するLEDのピン番号を保持
+    uint32_t                 led_for_processing_fido;
     uint32_t                 led_for_pairing_mode;
     uint32_t                 led_for_user_presence;
 };

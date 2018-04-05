@@ -10,6 +10,9 @@
 // キープアライブタイマー
 #include "ble_u2f_user_presence.h"
 
+// FIDO機能実行中LED点滅タイマー
+#include "ble_u2f_processing_led.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f"
 #include "nrf_log.h"
@@ -28,6 +31,9 @@ static void ble_u2f_on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     ble_u2f_comm_interval_timer_stop(p_u2f);
+
+    // FIDO機能実行中LEDの点滅を開始
+    ble_u2f_processing_led_on(p_u2f);
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
@@ -39,6 +45,9 @@ static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を消去する
     ble_u2f_command_finalize_context();
+
+    // FIDO機能実行中LEDの点滅を開始
+    ble_u2f_processing_led_off(p_u2f);
 }
 
 

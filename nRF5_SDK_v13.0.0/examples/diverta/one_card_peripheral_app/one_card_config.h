@@ -50,6 +50,7 @@
 //#define PIN_EPD_POWER_EN_OUT				17
 //#define PIN_EPD_RESET_OUT					19
 
+#define PIN_LED1			    		25
 #define PIN_LED2			    		27
 #define PIN_LED3				    	31
 
