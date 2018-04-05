@@ -134,7 +134,7 @@ One CardでのU2F Authenticate機能が実行されます。<br>
 
 <img src="assets/0051.png" width="600">
 
-One Cardを見ると、一番右側のLEDが<font color=ff0000><b>点灯</b></font>しているのが確認できます。<br>
+One Cardを見ると、一番右側のLEDが<font color=ff0000><b>点滅</b></font>しているのが確認できます。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 
 <img src="../assets/0078.png" width="450">
