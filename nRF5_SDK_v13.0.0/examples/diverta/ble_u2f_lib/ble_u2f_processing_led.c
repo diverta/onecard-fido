@@ -15,12 +15,15 @@ APP_TIMER_DEF(m_ble_u2f_led_on_off_timer_id);
 static bool app_timer_created = false;
 static bool led_state = false;
 
+// 点滅対象のLEDを保持
+// BLE U2Fで使用するLEDのピン番号を指定
+static uint32_t m_led_for_processing;
+
 static void command_timer_handler(void *p_context)
 {
     // LEDを点滅させる
-    ble_u2f_t *p_u2f = (ble_u2f_t *)p_context;
     led_state = !led_state;
-    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, led_state);
+    ble_u2f_led_light_LED(m_led_for_processing, led_state);
 }
 
 static void ble_u2f_processing_led_init()
@@ -36,14 +39,14 @@ static void ble_u2f_processing_led_init()
     }
 }
 
-static void ble_u2f_processing_led_start(ble_u2f_t *p_u2f)
+static void ble_u2f_processing_led_start()
 {
     if (app_timer_created == false) {
         return;
     }
 
     // タイマーを開始する
-    uint32_t err_code = app_timer_start(m_ble_u2f_led_on_off_timer_id, APP_TIMER_TICKS(LED_ON_OFF_INTERVAL_MSEC), p_u2f);
+    uint32_t err_code = app_timer_start(m_ble_u2f_led_on_off_timer_id, APP_TIMER_TICKS(LED_ON_OFF_INTERVAL_MSEC), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_ble_u2f_led_on_off_timer_id) returns %d \r\n", err_code);
         return;
@@ -64,19 +67,22 @@ static void ble_u2f_processing_led_terminate()
     }
 }
 
-void ble_u2f_processing_led_on(ble_u2f_t *p_u2f)
+void ble_u2f_processing_led_on(uint32_t led_for_processing)
 {
+    // 点滅対象のLEDを保持
+    m_led_for_processing = led_for_processing;
+    
     // タイマーが生成されていない場合は生成
     ble_u2f_processing_led_init();
 
     // タイマーを開始する
-    ble_u2f_processing_led_start(p_u2f);
+    ble_u2f_processing_led_start();
 }
 
-void ble_u2f_processing_led_off(ble_u2f_t *p_u2f)
+void ble_u2f_processing_led_off(void)
 {
     // LEDを消灯させる
-    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
+    ble_u2f_led_light_LED(m_led_for_processing, false);
 
     // タイマーを停止する
     ble_u2f_processing_led_terminate();

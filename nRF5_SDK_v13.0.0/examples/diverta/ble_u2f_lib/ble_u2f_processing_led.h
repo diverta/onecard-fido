@@ -3,15 +3,13 @@
 
 #include <stdint.h>
 
-#include "ble_u2f.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-void ble_u2f_processing_led_on(ble_u2f_t *p_u2f);
-void ble_u2f_processing_led_off(ble_u2f_t *p_u2f);
+void ble_u2f_processing_led_on(uint32_t led_for_processing);
+void ble_u2f_processing_led_off(void);
 
 
 #ifdef __cplusplus
