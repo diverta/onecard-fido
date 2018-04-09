@@ -37,7 +37,7 @@ void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
     if (err_code != FDS_SUCCESS) {
         // 失敗した場合はエラーレスポンスを戻す
         NRF_LOG_ERROR("pm_peers_delete returns 0x%02x \r\n", err_code);
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9101);
         return;
     }
 }
@@ -55,7 +55,7 @@ bool ble_u2f_pairing_delete_bonds_response(pm_evt_t const *p_evt)
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        ble_u2f_send_error_response(m_u2f_context, 0x03);
+        ble_u2f_send_error_response(m_u2f_context, 0x9102);
         NRF_LOG_ERROR("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d \r\n", p_evt->evt_id);
         return true;
     }
