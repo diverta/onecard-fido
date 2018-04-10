@@ -28,6 +28,9 @@ static void ble_u2f_on_connect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     ble_u2f_comm_interval_timer_stop(p_u2f);
+
+    // FIDO機能実行中LEDを点灯
+    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, true);
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
@@ -39,6 +42,9 @@ static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を消去する
     ble_u2f_command_finalize_context();
+
+    // FIDO機能実行中LEDを消灯
+    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
 }
 
 

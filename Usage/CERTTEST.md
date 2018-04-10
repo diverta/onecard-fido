@@ -74,14 +74,14 @@ Windows 10のみサポートされています。
 
 <img src="../assets/0044.png" width="700">
 
-One Cardを見ると、３番目のLEDが<font color=ff0000><b>点灯</b></font>しているのが確認できます。<br>
+One Cardを見ると、３番目のLEDが<font color=ff0000><b>点滅</b></font>しているのが確認できます。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 
-<img src="../assets/0033.png" width="550">
+<img src="../assets/0078.png" width="500">
 
 ここでMAIN SWを１回押しますと、テストが再開されます。
 
-<img src="../assets/0012.png" width="500">
+<img src="../assets/0079.png" width="500">
 
 <b><u>ユーザー所在確認は、テスト内で５回行われます。</b></u><br>
 その都度、MAIN SWを押すようにしてください。

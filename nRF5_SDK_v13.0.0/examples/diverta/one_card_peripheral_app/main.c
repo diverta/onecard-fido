@@ -1082,8 +1082,9 @@ static void buttons_init(void)
     APP_ERROR_CHECK(err_code);
 
     // BLE U2Fで使用するLEDのピン番号を設定
-    m_u2f.led_for_pairing_mode  = PIN_LED2;
-    m_u2f.led_for_user_presence = PIN_LED3;
+    m_u2f.led_for_processing_fido = PIN_LED1;
+    m_u2f.led_for_pairing_mode    = PIN_LED2;
+    m_u2f.led_for_user_presence   = PIN_LED3;
 }
 
 /**@brief Function for starting timers.

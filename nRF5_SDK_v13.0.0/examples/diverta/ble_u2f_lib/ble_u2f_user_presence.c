@@ -9,6 +9,9 @@
 #define NRF_LOG_MODULE_NAME "ble_u2f_user_presence"
 #include "nrf_log.h"
 
+// 機能実行中LED点滅処理
+#include "ble_u2f_processing_led.h"
+
 // キープアライブ・タイマー
 #include "app_timer.h"
 #define KEEPALIVE_INTERVAL_MSEC 500
@@ -63,8 +66,8 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
-    // LEDを点灯させる
-    ble_u2f_led_light_LED(p_u2f_context->p_u2f->led_for_user_presence, true);
+    // LED点滅を開始
+    ble_u2f_processing_led_on(p_u2f_context->p_u2f->led_for_user_presence);
     
     NRF_LOG_INFO("User presence verify start \r\n");
 }
@@ -72,7 +75,7 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
 void ble_u2f_user_presence_verify_end(ble_u2f_context_t *p_u2f_context)
 {
     // LEDを消灯させる
-    ble_u2f_led_light_LED(p_u2f_context->p_u2f->led_for_user_presence, false);
+    ble_u2f_processing_led_off();
 
     // タイマーを停止する
     ble_u2f_user_presence_terminate(p_u2f_context);
