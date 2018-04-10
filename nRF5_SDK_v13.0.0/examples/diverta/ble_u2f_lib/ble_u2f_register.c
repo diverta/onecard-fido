@@ -33,7 +33,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     uint32_t reserve_word = 0xffffffff;
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
+        ble_u2f_send_error_response(p_u2f_context, 0x9403);
         return;
     }
 
@@ -172,6 +172,9 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
 
 static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
 {
+    // エラー時のレスポンスを「予期しないエラー」に設定
+    p_u2f_context->p_ble_header->STATUS_WORD = 0x9405;
+    
     // 署名ベースを生成
     if (create_register_signature_base(p_u2f_context) == false) {
         return false;
@@ -221,14 +224,14 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9401);
         return;
     }
 
     if (ble_u2f_flash_keydata_available(p_u2f_context) == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        ble_u2f_send_error_response(p_u2f_context, 0x9402);
         return;
     }
     
@@ -264,7 +267,7 @@ void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t 
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x04);
+        ble_u2f_send_error_response(p_u2f_context, 0x9404);
         NRF_LOG_ERROR("ble_u2f_register abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }

@@ -67,7 +67,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
     uint32_t reserve_word = 0xffffffff;
     if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
         // NGであれば、エラーレスポンスを生成して終了
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
+        ble_u2f_send_error_response(p_u2f_context, 0x9502);
         return;
     }
 
@@ -185,6 +185,9 @@ static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_cont
 
 static bool create_response_message(ble_u2f_context_t *p_u2f_context)
 {
+    // エラー時のレスポンスを「予期しないエラー」に設定
+    p_u2f_context->p_ble_header->STATUS_WORD = 0x9504;
+    
     // 署名ベースを生成（トークンカウンターは現在値＋１とする）
     uint8_t user_presence = p_u2f_context->user_presence_byte;
     uint32_t token_counter = p_u2f_context->token_counter + 1;
@@ -243,7 +246,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9501);
         return;
     }
 
@@ -312,7 +315,7 @@ void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_ev
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        ble_u2f_send_error_response(p_u2f_context, 0x9503);
         NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }

@@ -23,7 +23,7 @@ void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
     // (fds_file_deleteが実行される)
     NRF_LOG_DEBUG("ble_u2f_securekey_erase start \r\n");
     if (ble_u2f_flash_keydata_delete() == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9201);
         return;
     }
 }
@@ -32,7 +32,7 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
 {
     if (p_evt->result != FDS_SUCCESS) {
         // エラーレスポンスを生成してU2Fクライアントに戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        ble_u2f_send_error_response(p_u2f_context, 0x9202);
         NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
@@ -41,14 +41,14 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
         // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
         // (fds_record_update/writeまたはfds_gcが実行される)
         if (ble_u2f_crypto_ecb_init() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x03);
+            ble_u2f_send_error_response(p_u2f_context, 0x9203);
         }
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         if (ble_u2f_crypto_ecb_init() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x04);
+            ble_u2f_send_error_response(p_u2f_context, 0x9204);
         }
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
@@ -105,7 +105,7 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
 
     // 元データチェック
     if (data == NULL || length == 0) {
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9311);
         return;
     }
 
@@ -113,21 +113,21 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
 
     // Flash ROMに登録済みのデータがあれば領域に読込
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        ble_u2f_send_error_response(p_u2f_context, 0x9312);
         return;
     }
     uint32_t *securekey_buffer = p_u2f_context->securekey_buffer;
 
     // リクエストデータのバイト変換を行う
     if (convert_skey_bytes_to_word(data, length, securekey_buffer) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
+        ble_u2f_send_error_response(p_u2f_context, 0x9313);
         return;
     }
 
     // 秘密鍵をFlash ROMに格納する
     // (fds_record_update/writeまたはfds_gcが実行される)
     if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x04);
+        ble_u2f_send_error_response(p_u2f_context, 0x9314);
     }
 }
 
@@ -135,7 +135,7 @@ void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, f
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        ble_u2f_send_error_response(p_u2f_context, 0x9315);
         NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
@@ -186,7 +186,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
 
     // 元データチェック
     if (data == NULL || length == 0) {
-        ble_u2f_send_error_response(p_u2f_context, 0x01);
+        ble_u2f_send_error_response(p_u2f_context, 0x9321);
         return;
     }
 
@@ -194,7 +194,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
 
     // 登録済みのデータがあれば領域に読込
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x02);
+        ble_u2f_send_error_response(p_u2f_context, 0x9322);
         return;
     }
 
@@ -207,7 +207,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
     if (cert_buffer_length > CERT_WORD_NUM) {
         NRF_LOG_ERROR("cert data words(%d) exceeds max words(%d) \r\n",
             cert_buffer_length, CERT_WORD_NUM);
-        ble_u2f_send_error_response(p_u2f_context, 0x03);
+        ble_u2f_send_error_response(p_u2f_context, 0x9323);
         return;
     }
     
@@ -220,7 +220,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
     // 証明書データをFlash ROMへ書込
     // (fds_record_update/writeまたはfds_gcが実行される)
     if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
-        ble_u2f_send_error_response(p_u2f_context, 0x04);
+        ble_u2f_send_error_response(p_u2f_context, 0x9324);
     }
 }
 
@@ -228,7 +228,7 @@ void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, f
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x05);
+        ble_u2f_send_error_response(p_u2f_context, 0x9325);
         NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS EVENT=%d \r\n", p_evt->id);
         return;
     }
