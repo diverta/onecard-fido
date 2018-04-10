@@ -36,6 +36,10 @@ static bool sendBleU2fRequest(pBleDevice dev)
 		return false;
 	}
 
+	// ログ出力
+	BleToolsUtil_outputLog("sendBleU2fRequest: Message from BLE");
+	BleToolsUtil_outputDumpLog(reply, replyLength);
+
 	// 戻りのコマンドをチェック
 	if (replyCmd != FIDO_BLE_CMD_MSG) {
 		BleToolsUtil_outputLog("sendBleU2fRequest: reply command != FIDO_BLE_CMD_MSG");
