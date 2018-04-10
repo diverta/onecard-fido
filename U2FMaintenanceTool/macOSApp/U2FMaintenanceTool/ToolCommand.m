@@ -705,21 +705,10 @@
         [self toolCommandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
         return false;
     }
-
-    //
-    // FIXME
-    // 以下のようなU2Fプロトコル以外のエラーは、
-    // nRF52側に専用の事前チェック処理を作成して、
-    // そこで検知／レスポンスさせるよう修正すべきです。
-    //
-    if ([self isEnrollHelperRequest] && statusWord == 0x0002) {
-        // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+    
+    // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+    if (statusWord == 0x9402) {
         [self toolCommandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
-        return false;
-    }
-    if (statusWord == 0x9e01) {
-        // nRF52側のFlash ROMがいっぱいになった場合のエラーである場合はその旨を通知
-        [self toolCommandDidProcess:false message:MSG_OCCUR_FDS_GC_ERROR];
         return false;
     }
 
