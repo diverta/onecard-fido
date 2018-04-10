@@ -4,6 +4,17 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
+#### 2018/04/10
+
+nRF52側のFIDO機能でエラー発生時、発生箇所／原因がU2F管理ツールのログを参照して特定できるよう、以下のプログラムを修正しました。
+
+- [BLE U2Fサービス](nRF5_SDK_v13.0.0)
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+あわせて、FIDO機能のステータスワード一覧を、下記URLにまとめました。
+　https://github.com/diverta/onecard-fido/blob/impl-onecard-fido-unique-statusword/nRF5_SDK_v13.0.0/FIDOSWLIST.md
+
 #### 2018/04/03
 
 [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を更新しました。<br>
