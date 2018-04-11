@@ -6,6 +6,9 @@
 // 無通信タイマー
 #include "ble_u2f_comm_interval_timer.h"
 
+// 送信リトライ（３秒後）タイマー
+#include "ble_u2f_status_retry.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME "ble_u2f_status"
 #include "nrf_log.h"
@@ -178,10 +181,12 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
                 // イベントBLE_GATTS_EVT_HVN_TX_COMPLETEが
                 // 通知されたら、本関数を再度呼び出して再送させる。
                 send_info_t.busy = true;
+            } else {
+                // その他のエラー発生時では、エラーコードを戻すため、
+                // 送信処理を１回だけリトライ
+                ble_u2f_status_retry_on(p_u2f);
             }
 
-            // その他のエラー発生時でもエラーコードを戻して
-            // 送信処理を継続させないようにする
             break;
         }
 
