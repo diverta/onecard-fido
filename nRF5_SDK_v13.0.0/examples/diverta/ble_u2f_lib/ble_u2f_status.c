@@ -184,7 +184,7 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
             } else {
                 // その他のエラー発生時では、エラーコードを戻すため、
                 // 送信処理を１回だけリトライ
-                ble_u2f_status_retry_on(p_u2f);
+                ble_u2f_status_retry_error_response(p_u2f, err_code);
             }
 
             break;

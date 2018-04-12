@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 
-void ble_u2f_status_retry_on(ble_u2f_t *p_u2f);
+void ble_u2f_status_retry_error_response(ble_u2f_t *p_u2f, uint16_t err_status_word);
 
 
 #ifdef __cplusplus
