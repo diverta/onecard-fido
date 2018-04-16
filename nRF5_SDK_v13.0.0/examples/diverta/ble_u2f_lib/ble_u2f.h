@@ -99,7 +99,6 @@ struct ble_u2f_s
     ble_gatts_char_handles_t u2f_service_revision_handles;
 
     uint16_t                 conn_handle;
-    bool                     is_notification_enabled;
     ble_u2f_data_handler_t   data_handler;
 
     // BLE U2Fで使用するLEDのピン番号を保持

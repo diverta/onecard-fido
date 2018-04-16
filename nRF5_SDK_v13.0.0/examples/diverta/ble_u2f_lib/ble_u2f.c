@@ -50,22 +50,8 @@ static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
 static bool ble_u2f_on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
-    ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
-
-    if ((p_evt_write->handle == p_u2f->u2f_status_handles.cccd_handle)
-     && (p_evt_write->len == 2)) {
-        // U2F Statusについて、CCCD（2バイト）が書き込まれた場合は
-        // Notificationステータスを更新する。
-        if (ble_srv_is_notification_enabled(p_evt_write->data)) {
-            p_u2f->is_notification_enabled = true;
-            NRF_LOG_DEBUG("on_cccd_write: Notification status changed to enabled \r\n");
-        } else {
-            p_u2f->is_notification_enabled = false;
-            NRF_LOG_DEBUG("on_cccd_write: Notification status changed to disabled \r\n");
-        }
-        return true;
-
-    } else if (p_evt_write->handle == p_u2f->u2f_control_point_handles.value_handle) {
+    ble_gatts_evt_write_t *p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    if (p_evt_write->handle == p_u2f->u2f_control_point_handles.value_handle) {
         // Control Point（コマンドバッファ）の内容更新時の処理
         // コマンドバッファに入力されたリクエストデータを取得し、
         // その内容を判定し処理を実行
