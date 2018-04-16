@@ -37,9 +37,6 @@ extern "C" {
 #define U2F_SW_WRONG_LENGTH             0x6700
 #define U2F_SW_CLA_NOT_SUPPORTED        0x6E00
 
-// 独自定義のステータスワード
-#define U2F_SW_FDS_GC_DONE              0x9E01
-
 // BLEパケット項目のサイズ
 #define OPCODE_LENGTH 1
 #define HANDLE_LENGTH 2
@@ -99,7 +96,6 @@ struct ble_u2f_s
     ble_gatts_char_handles_t u2f_service_revision_handles;
 
     uint16_t                 conn_handle;
-    bool                     is_notification_enabled;
     ble_u2f_data_handler_t   data_handler;
 
     // BLE U2Fで使用するLEDのピン番号を保持

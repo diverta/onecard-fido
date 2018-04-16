@@ -269,7 +269,6 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
 
     p_u2f->conn_handle             = BLE_CONN_HANDLE_INVALID;
     p_u2f->data_handler            = NULL;
-    p_u2f->is_notification_enabled = false;
 
     ble_uuid.type = BLE_UUID_TYPE_BLE;
     ble_uuid.uuid = BLE_UUID_U2F_SERVICE;
