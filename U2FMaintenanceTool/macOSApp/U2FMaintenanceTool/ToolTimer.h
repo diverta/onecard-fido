@@ -21,12 +21,16 @@
     - (void)startConnectionTimeoutMonitor:(CBPeripheral *)peripheral;
     - (void)cancelConnectionTimeoutMonitor:(CBPeripheral *)peripheral;
 
+    - (void)startResponseTimeoutMonitor:(CBCharacteristic *)characteristic;
+    - (void)cancelResponseTimeoutMonitor:(CBCharacteristic *)characteristic;
+
 @end
 
 @protocol ToolTimerDelegate <NSObject>
 
     - (void)scanningDidTimeout;
     - (void)connectionDidTimeout;
+    - (void)responseDidTimeout;
 
 @end
 

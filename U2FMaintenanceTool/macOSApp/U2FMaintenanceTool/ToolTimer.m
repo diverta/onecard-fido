@@ -77,4 +77,23 @@
         [[self delegate] connectionDidTimeout];
     }
 
+#pragma mark - Response Timeout Monitor
+
+    - (void)startResponseTimeoutMonitor:(CBCharacteristic *)characteristic {
+        // 接続タイムアウト監視を開始（10秒後にタイムアウト）
+        [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
+                                  withObject:characteristic afterDelay:10.0];
+    }
+
+    - (void)cancelResponseTimeoutMonitor:(CBCharacteristic *)characteristic {
+        // 接続タイムアウト監視を停止
+        [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
+                                   withObject:characteristic];
+    }
+
+    - (void)responseTimeoutMonitorDidTimeout {
+        // 接続タイムアウト時の処理を実行
+        [[self delegate] connectionDidTimeout];
+    }
+
 @end
