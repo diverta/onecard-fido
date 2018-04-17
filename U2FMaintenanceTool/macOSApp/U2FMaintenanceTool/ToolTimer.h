@@ -18,8 +18,8 @@
     - (void)startScanningTimeoutMonitor;
     - (void)cancelScanningTimeoutMonitor;
 
-    - (void)startConnectionTimeoutMonitor;
-    - (void)cancelConnectionTimeoutMonitor;
+    - (void)startConnectionTimeoutMonitor:(CBPeripheral *)peripheral;
+    - (void)cancelConnectionTimeoutMonitor:(CBPeripheral *)peripheral;
 
 @end
 
