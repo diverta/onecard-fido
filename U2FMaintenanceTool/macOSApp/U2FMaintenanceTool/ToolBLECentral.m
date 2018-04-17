@@ -1,7 +1,7 @@
 #import "ToolBLECentral.h"
 #import "ToolCommonMessage.h"
+#import "ToolTimer.h"
 
-static const NSTimeInterval kScanningTimeout   = 10.0;
 static const NSTimeInterval kConnectingTimeout = 10.0;
 static const NSTimeInterval kRequestTimeout    = 20.0;
 
@@ -9,7 +9,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
 #define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
 
-@interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate>
+@interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate, ToolTimerDelegate>
 
     @property(nonatomic) CBCentralManager *manager;
     @property(nonatomic) CBPeripheral     *connectedPeripheral;
@@ -21,6 +21,9 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     // 送信フレームデータ／フレーム数を保持
     @property(nonatomic) NSArray<NSData *> *bleRequestFrames;
     @property(nonatomic) NSUInteger         bleRequestFrameNumber;
+
+    // タイムアウトモニター
+    @property(nonatomic) ToolTimer         *toolTimer;
 
 @end
 
@@ -39,6 +42,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             self.serviceUUIDs = @[[CBUUID UUIDWithString:U2FServiceUUID]];
             self.characteristicUUIDs = @[[CBUUID UUIDWithString:U2FControlPointCharUUID],
                                          [CBUUID UUIDWithString:U2FStatusCharUUID]];
+            self.toolTimer = [[ToolTimer alloc] initWithDelegate:self];
         }
         return self;
     }
@@ -76,16 +80,19 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)scanForPeripherals {
         // スキャン設定
-        [self startScanningTimeoutMonitor];
         NSDictionary *scanningOptions = @{CBCentralManagerScanOptionAllowDuplicatesKey : @NO};
 
         // FIDO BLE U2Fサービスを持つペリフェラルをスキャン
         self.connectedPeripheral = nil;
         [self.manager scanForPeripheralsWithServices:nil options:scanningOptions];
         [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
+        
+        // スキャンタイムアウト監視を開始
+        [[self toolTimer] startScanningTimeoutMonitor];
     }
 
     - (void)cancelScanForPeripherals {
+        // スキャンを停止
         [self.manager stopScan];
     }
 
@@ -99,24 +106,14 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             if (![self.serviceUUIDs containsObject:foundServiceUUIDs]) {
                 continue;
             }
+            // スキャンタイムアウト監視を停止
+            [[self toolTimer] cancelScanningTimeoutMonitor];
             // スキャンを停止し、ペリフェラルに接続
             [self cancelScanForPeripherals];
-            [self cancelScanningTimeoutMonitor];
             [self connectPeripheral:peripheral];
             [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_END];
             break;
         }
-    }
-
-#pragma mark - Scanning timeout monitor
-
-    - (void)startScanningTimeoutMonitor {
-        [self cancelScanningTimeoutMonitor];
-        [self performSelector:@selector(scanningDidTimeout) withObject:nil afterDelay:kScanningTimeout];
-    }
-
-    - (void)cancelScanningTimeoutMonitor {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scanningDidTimeout) object:nil];
     }
 
     - (void)scanningDidTimeout {
