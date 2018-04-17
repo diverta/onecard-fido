@@ -18,11 +18,15 @@
     - (void)startScanningTimeoutMonitor;
     - (void)cancelScanningTimeoutMonitor;
 
+    - (void)startConnectionTimeoutMonitor;
+    - (void)cancelConnectionTimeoutMonitor;
+
 @end
 
 @protocol ToolTimerDelegate <NSObject>
 
     - (void)scanningDidTimeout;
+    - (void)connectionDidTimeout;
 
 @end
 

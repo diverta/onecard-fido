@@ -2,7 +2,6 @@
 #import "ToolCommonMessage.h"
 #import "ToolTimer.h"
 
-static const NSTimeInterval kConnectingTimeout = 10.0;
 static const NSTimeInterval kRequestTimeout    = 20.0;
 
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
@@ -123,22 +122,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         [[self delegate] centralManagerDidFailConnection];
     }
 
-#pragma mark - Connection timeout monitor
-
-    - (void)startConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
-        [self cancelConnectionTimeoutMonitor:peripheral];
-        [self performSelector:@selector(connectionDidTimeout:)
-                   withObject:peripheral
-                   afterDelay:kConnectingTimeout];
-    }
-
-    - (void)cancelConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                                 selector:@selector(connectionDidTimeout:)
-                                                   object:peripheral];
-    }
-
-    - (void)connectionDidTimeout:(CBPeripheral *)peripheral {
+    - (void)connectionDidTimeout {
         // 接続タイムアウトの旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNREQ_TIMEOUT
                                                     error:nil];
@@ -150,13 +134,13 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     - (void)connectPeripheral:(CBPeripheral *)peripheral {
         // ペリフェラルに接続し、接続タイムアウト監視を開始
         [self.manager connectPeripheral:peripheral options:nil];
-        [self startConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] startConnectionTimeoutMonitor];
     }
 
     - (void)centralManager:(CBCentralManager *)central
             didConnectPeripheral:(CBPeripheral *)peripheral {
         // 接続タイムアウト監視を停止
-        [self cancelConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] cancelConnectionTimeoutMonitor];
         // すでに接続されている状態の場合は終了
         if (self.connectedPeripheral) {
             NSLog(@"didConnectPeripheral: already connected to peripheral");
@@ -174,7 +158,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
         // 接続タイムアウト監視を停止
-        [self cancelConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] cancelConnectionTimeoutMonitor];
         // 接続失敗の旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNECT_FAILED
                                                     error:error];

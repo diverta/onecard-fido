@@ -53,4 +53,23 @@
         [[self delegate] scanningDidTimeout];
     }
 
+#pragma mark - Connecting Timeout Monitor
+
+    - (void)startConnectionTimeoutMonitor {
+        // 接続タイムアウト監視を開始（10秒後にタイムアウト）
+        [self startTimeoutMonitorForSelector:@selector(connectionTimeoutMonitorDidTimeout) afterDelay:10.0];
+        NSLog(@"ConnectionTimeoutMonitor started");
+    }
+
+    - (void)cancelConnectionTimeoutMonitor {
+        // 接続タイムアウト監視を停止
+        [self cancelTimeoutMonitorForSelector:@selector(connectionTimeoutMonitorDidTimeout)];
+        NSLog(@"ConnectionTimeoutMonitor canceled");
+    }
+
+    - (void)connectionTimeoutMonitorDidTimeout {
+        // 接続タイムアウト時の処理を実行
+        [[self delegate] connectionDidTimeout];
+    }
+
 @end
