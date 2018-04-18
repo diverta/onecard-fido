@@ -378,7 +378,7 @@ static void on_ble_evt_dispatch(ble_evt_t * p_ble_evt)
 
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
-    if (ble_u2f_pairing_reject_request(m_conn_handle, p_ble_evt) == true) {
+    if (ble_u2f_pairing_reject_request(&m_u2f, p_ble_evt) == true) {
         return;
     }
 
@@ -412,6 +412,9 @@ static void on_pm_evt(pm_evt_t const * p_evt)
     if (ble_u2f_pairing_delete_bonds_response(p_evt) == true) {
         return;
     }
+    // ペアリングが無効になってしまった場合
+    // ペアリングモードLED点滅を開始させる
+    ble_u2f_pairing_notify_unavailable(&m_u2f, p_evt);
 
     switch (p_evt->evt_id) {
         case PM_EVT_BONDED_PEER_CONNECTED:
