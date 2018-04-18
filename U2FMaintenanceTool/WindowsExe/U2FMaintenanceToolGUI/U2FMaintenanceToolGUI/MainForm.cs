@@ -18,11 +18,12 @@ namespace U2FMaintenanceToolGUI
             // このアプリケーションを終了する
             app.doExit();
         }
-        
+
         private bool checkCommandAvailable()
         {
             // U2F管理コマンドがある場合はOK
-            if (app.commandAvailable) {
+            if (app.commandAvailable)
+            {
                 return true;
             }
 
@@ -46,28 +47,38 @@ namespace U2FMaintenanceToolGUI
             enableButtons(false);
 
             // U2F管理コマンドが存在しない場合は終了
-            if (checkCommandAvailable() == false) {
+            if (checkCommandAvailable() == false)
+            {
                 return;
             }
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(button1)) {
+            if (sender.Equals(button1))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_BOND;
                 ret = app.doEraseBond();
 
-            } else if (sender.Equals(button2)) {
+            }
+            else if (sender.Equals(button2))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 ret = app.doEraseSkeyCert();
 
-            } else if (sender.Equals(button3)) {
+            }
+            else if (sender.Equals(button3))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
                 ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
 
-            } else if (sender.Equals(button4)) {
+            }
+            else if (sender.Equals(button4))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_HEALTHCHECK;
                 ret = app.doHealthCheck();
 
-            } else if (sender.Equals(button5)) {
+            }
+            else if (sender.Equals(button5))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING;
                 ret = app.doSetupChromeNativeMessaging();
             }
@@ -92,7 +103,8 @@ namespace U2FMaintenanceToolGUI
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message)) {
+            if (displayPromptPopup(message))
+            {
                 doCommand(sender);
             }
         }
@@ -100,13 +112,14 @@ namespace U2FMaintenanceToolGUI
         private bool checkPathEntry(TextBox textBox, string errorMessage)
         {
             // 入力済みの場合はチェックOK
-            if (textBox.Text.Length > 0) {
+            if (textBox.Text.Length > 0)
+            {
                 return true;
             }
 
             // 未入力の場合はポップアップメッセージを表示して
             // テキストボックスにフォーカスを移す
-            MessageBox.Show(errorMessage, AppMain.U2FMaintenanceToolTitle, 
+            MessageBox.Show(errorMessage, AppMain.U2FMaintenanceToolTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             textBox.Focus();
 
@@ -116,10 +129,12 @@ namespace U2FMaintenanceToolGUI
         private void button3_Click(object sender, EventArgs e)
         {
             // ファイルパス入力チェック
-            if (checkPathEntry(textPath1, AppCommon.MSG_PROMPT_SELECT_PKEY_PATH) == false) {
+            if (checkPathEntry(textPath1, AppCommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
+            {
                 return;
             }
-            if (checkPathEntry(textPath2, AppCommon.MSG_PROMPT_SELECT_CRT_PATH) == false) {
+            if (checkPathEntry(textPath2, AppCommon.MSG_PROMPT_SELECT_CRT_PATH) == false)
+            {
                 return;
             }
 
@@ -137,7 +152,8 @@ namespace U2FMaintenanceToolGUI
         {
             // Chrome Native Messaging設定用の
             // JSONファイルが導入済みの場合はOK
-            if (app.checkChromeNMSettingFileIsExist()) {
+            if (app.checkChromeNMSettingFileIsExist())
+            {
                 return true;
             }
 
@@ -155,7 +171,8 @@ namespace U2FMaintenanceToolGUI
         {
             // Chrome Native Messaging設定用の
             // JSONファイルがない場合は終了
-            if (checkSettingJsonIsExist() == false) {
+            if (checkSettingJsonIsExist() == false)
+            {
                 return;
             }
 
@@ -166,7 +183,8 @@ namespace U2FMaintenanceToolGUI
 
             // Chrome Native Messaging有効化設定
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message)) {
+            if (displayPromptPopup(message))
+            {
                 doCommand(sender);
             }
         }
@@ -182,7 +200,7 @@ namespace U2FMaintenanceToolGUI
         private void buttonPath2_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_CRT_PATH, 
+                AppCommon.MSG_PROMPT_SELECT_CRT_PATH,
                 AppCommon.FILTER_SELECT_CRT_PATH,
                 textPath2);
         }
@@ -205,7 +223,8 @@ namespace U2FMaintenanceToolGUI
         {
             // U2F管理コマンドの実行時出力内容を表示
             textBox1.AppendText(app.getProcessOutputData());
-            if (success == false) {
+            if (success == false)
+            {
                 textBox1.AppendText(app.getProcessErrorData());
             }
 
@@ -219,7 +238,7 @@ namespace U2FMaintenanceToolGUI
         private bool displayPromptPopup(string message)
         {
             DialogResult dialogResult = MessageBox.Show(
-                message, AppMain.U2FMaintenanceToolTitle, 
+                message, AppMain.U2FMaintenanceToolTitle,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             // Yesがクリックされた場合 true を戻す
@@ -260,7 +279,8 @@ namespace U2FMaintenanceToolGUI
         {
             // パラメーター入力画面を表示
             CertReqParamForm f = new CertReqParamForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel) {
+            if (f.ShowDialog() == DialogResult.Cancel)
+            {
                 // パラメーター入力画面でCancelの場合は終了
                 return;
             }
@@ -277,7 +297,8 @@ namespace U2FMaintenanceToolGUI
         {
             // パラメーター入力画面を表示
             SelfCertParamForm f = new SelfCertParamForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel) {
+            if (f.ShowDialog() == DialogResult.Cancel)
+            {
                 // パラメーター入力画面でCancelの場合は終了
                 return;
             }
@@ -287,7 +308,8 @@ namespace U2FMaintenanceToolGUI
         private bool checkOpensslAvailable()
         {
             // OpenSSLコマンドがある場合はOK
-            if (app.opensslAvailable) {
+            if (app.opensslAvailable)
+            {
                 return true;
             }
 
@@ -308,12 +330,14 @@ namespace U2FMaintenanceToolGUI
             bool ret = false;
 
             // ファイルが生成されていない場合は終了
-            if (filePath.Equals(string.Empty)) {
+            if (filePath.Equals(string.Empty))
+            {
                 return;
             }
 
             // OpenSSLコマンドが存在しない場合は終了
-            if (checkOpensslAvailable() == false) {
+            if (checkOpensslAvailable() == false)
+            {
                 return;
             }
 
@@ -321,17 +345,20 @@ namespace U2FMaintenanceToolGUI
             enableButtons(false);
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
+            if (sender.Equals(鍵ファイル作成KToolStripMenuItem))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
                 ret = app.doCreatePrivateKey(filePath);
 
             }
-            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
+            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
                 ret = app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
 
             }
-            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
+            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem))
+            {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
                 ret = app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
             }
@@ -339,6 +366,13 @@ namespace U2FMaintenanceToolGUI
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
             enableButtons(true);
+        }
+
+        private void u2F管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // バージョン表示画面を表示
+            AboutForm f = new AboutForm();
+            f.ShowDialog();
         }
     }
 }
