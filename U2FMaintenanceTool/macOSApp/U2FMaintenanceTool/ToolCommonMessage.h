@@ -93,6 +93,9 @@
 #define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
+#define MSG_DISCOVER_U2F_SERVICES_TIMEOUT   @"FIDO BLE U2Fサービスの検索がタイムアウトしました。"
+#define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLE U2Fサービス送受信項目の検索がタイムアウトしました。"
+#define MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT    @"FIDO BLE U2Fサービス受信項目の監視ステータス更新がタイムアウトしました。"
 
 #pragma mark - 接続再試行関連メッセージ
 #define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"

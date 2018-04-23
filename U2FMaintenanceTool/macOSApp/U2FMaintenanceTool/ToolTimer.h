@@ -24,6 +24,15 @@
     - (void)startResponseTimeoutMonitor:(CBCharacteristic *)characteristic;
     - (void)cancelResponseTimeoutMonitor:(CBCharacteristic *)characteristic;
 
+    - (void)startDiscoverServicesTimeoutMonitor:(CBPeripheral *)peripheral;
+    - (void)cancelDiscoverServicesTimeoutMonitor:(CBPeripheral *)peripheral;
+
+    - (void)startDiscoverCharacteristicsTimeoutMonitor:(CBService *)service;
+    - (void)cancelDiscoverCharacteristicsTimeoutMonitor:(CBService *)service;
+
+    - (void)startSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic;
+    - (void)cancelSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic;
+
 @end
 
 @protocol ToolTimerDelegate <NSObject>
@@ -31,6 +40,9 @@
     - (void)scanningDidTimeout;
     - (void)connectionDidTimeout;
     - (void)responseDidTimeout;
+    - (void)discoverServicesDidTimeout;
+    - (void)discoverCharacteristicsDidTimeout;
+    - (void)subscribeCharacteristicDidTimeout;
 
 @end
 
