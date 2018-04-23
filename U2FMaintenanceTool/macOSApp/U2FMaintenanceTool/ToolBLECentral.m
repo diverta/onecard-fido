@@ -1,15 +1,12 @@
 #import "ToolBLECentral.h"
 #import "ToolCommonMessage.h"
-
-static const NSTimeInterval kScanningTimeout   = 10.0;
-static const NSTimeInterval kConnectingTimeout = 10.0;
-static const NSTimeInterval kRequestTimeout    = 20.0;
+#import "ToolTimer.h"
 
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
 #define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
 
-@interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate>
+@interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate, ToolTimerDelegate>
 
     @property(nonatomic) CBCentralManager *manager;
     @property(nonatomic) CBPeripheral     *connectedPeripheral;
@@ -21,6 +18,9 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     // 送信フレームデータ／フレーム数を保持
     @property(nonatomic) NSArray<NSData *> *bleRequestFrames;
     @property(nonatomic) NSUInteger         bleRequestFrameNumber;
+
+    // タイムアウトモニター
+    @property(nonatomic) ToolTimer         *toolTimer;
 
 @end
 
@@ -39,6 +39,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             self.serviceUUIDs = @[[CBUUID UUIDWithString:U2FServiceUUID]];
             self.characteristicUUIDs = @[[CBUUID UUIDWithString:U2FControlPointCharUUID],
                                          [CBUUID UUIDWithString:U2FStatusCharUUID]];
+            self.toolTimer = [[ToolTimer alloc] initWithDelegate:self];
         }
         return self;
     }
@@ -76,16 +77,19 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 
     - (void)scanForPeripherals {
         // スキャン設定
-        [self startScanningTimeoutMonitor];
         NSDictionary *scanningOptions = @{CBCentralManagerScanOptionAllowDuplicatesKey : @NO};
 
         // FIDO BLE U2Fサービスを持つペリフェラルをスキャン
         self.connectedPeripheral = nil;
         [self.manager scanForPeripheralsWithServices:nil options:scanningOptions];
         [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
+        
+        // スキャンタイムアウト監視を開始
+        [[self toolTimer] startScanningTimeoutMonitor];
     }
 
     - (void)cancelScanForPeripherals {
+        // スキャンを停止
         [self.manager stopScan];
     }
 
@@ -99,24 +103,14 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
             if (![self.serviceUUIDs containsObject:foundServiceUUIDs]) {
                 continue;
             }
+            // スキャンタイムアウト監視を停止
+            [[self toolTimer] cancelScanningTimeoutMonitor];
             // スキャンを停止し、ペリフェラルに接続
             [self cancelScanForPeripherals];
-            [self cancelScanningTimeoutMonitor];
-            [self connectPeripheral:peripheral];
             [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_END];
+            [self connectPeripheral:peripheral];
             break;
         }
-    }
-
-#pragma mark - Scanning timeout monitor
-
-    - (void)startScanningTimeoutMonitor {
-        [self cancelScanningTimeoutMonitor];
-        [self performSelector:@selector(scanningDidTimeout) withObject:nil afterDelay:kScanningTimeout];
-    }
-
-    - (void)cancelScanningTimeoutMonitor {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(scanningDidTimeout) object:nil];
     }
 
     - (void)scanningDidTimeout {
@@ -126,22 +120,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
         [[self delegate] centralManagerDidFailConnection];
     }
 
-#pragma mark - Connection timeout monitor
-
-    - (void)startConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
-        [self cancelConnectionTimeoutMonitor:peripheral];
-        [self performSelector:@selector(connectionDidTimeout:)
-                   withObject:peripheral
-                   afterDelay:kConnectingTimeout];
-    }
-
-    - (void)cancelConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                                 selector:@selector(connectionDidTimeout:)
-                                                   object:peripheral];
-    }
-
-    - (void)connectionDidTimeout:(CBPeripheral *)peripheral {
+    - (void)connectionDidTimeout {
         // 接続タイムアウトの旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNREQ_TIMEOUT
                                                     error:nil];
@@ -153,13 +132,13 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
     - (void)connectPeripheral:(CBPeripheral *)peripheral {
         // ペリフェラルに接続し、接続タイムアウト監視を開始
         [self.manager connectPeripheral:peripheral options:nil];
-        [self startConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] startConnectionTimeoutMonitor:peripheral];
     }
 
     - (void)centralManager:(CBCentralManager *)central
             didConnectPeripheral:(CBPeripheral *)peripheral {
         // 接続タイムアウト監視を停止
-        [self cancelConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] cancelConnectionTimeoutMonitor:peripheral];
         // すでに接続されている状態の場合は終了
         if (self.connectedPeripheral) {
             NSLog(@"didConnectPeripheral: already connected to peripheral");
@@ -177,7 +156,7 @@ static const NSTimeInterval kRequestTimeout    = 20.0;
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
         // 接続タイムアウト監視を停止
-        [self cancelConnectionTimeoutMonitor:peripheral];
+        [[self toolTimer] cancelConnectionTimeoutMonitor:peripheral];
         // 接続失敗の旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNECT_FAILED
                                                     error:error];
@@ -204,10 +183,22 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         // FIDO BLE U2Fサービスのディスカバーを開始
         [peripheral setDelegate:self];
         [peripheral discoverServices:nil];
+        // サービス・ディスカバーのタイムアウト監視を開始
+        [[self toolTimer] startDiscoverServicesTimeoutMonitor:peripheral];
+    }
+
+    - (void)discoverServicesDidTimeout {
+        // サービスディスカバータイムアウトの旨をAppDelegateに通知
+        [[self delegate] notifyCentralManagerErrorMessage:MSG_DISCOVER_U2F_SERVICES_TIMEOUT
+                                                    error:nil];
+        [[self delegate] centralManagerDidFailConnection];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
    didDiscoverServices:(NSError *)error {
+        // サービス・ディスカバーのタイムアウト監視を停止
+        [[self toolTimer] cancelDiscoverServicesTimeoutMonitor:peripheral];
+        
         if (error) {
             // BLEサービスディスカバーに失敗の旨をAppDelegateに通知
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_SERVICE_NOT_DISCOVERED
@@ -244,11 +235,23 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         // サービス内のキャラクタリスティックをディスカバー
         [self.connectedPeripheral discoverCharacteristics:self.characteristicUUIDs
                                                forService:service];
+        // キャラクタリスティック・ディスカバーのタイムアウト監視を開始
+        [[self toolTimer] startDiscoverCharacteristicsTimeoutMonitor:service];
+    }
+
+    - (void)discoverCharacteristicsDidTimeout {
+        // キャラクタリスティック・ディスカバータイムアウトの旨をAppDelegateに通知
+        [[self delegate] notifyCentralManagerErrorMessage:MSG_DISCOVER_U2F_CHARAS_TIMEOUT
+                                                    error:nil];
+        [[self delegate] centralManagerDidFailConnection];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
             didDiscoverCharacteristicsForService:(CBService *)service
             error:(NSError *)error {
+        // キャラクタリスティック・ディスカバーのタイムアウト監視を停止
+        [[self toolTimer] cancelDiscoverCharacteristicsTimeoutMonitor:service];
+        
         if (error) {
             // キャラクタリスティックのディスカバーエラー発生の旨をAppDelegateに通知
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_CHARACT_NOT_DISCOVERED
@@ -290,11 +293,24 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         if (self.u2fStatusChar) {
             [self.connectedPeripheral setNotifyValue:YES forCharacteristic:self.u2fStatusChar];
         }
+        
+        // 監視ステータス更新のタイムアウト監視を開始
+        [[self toolTimer] startSubscribeCharacteristicTimeoutMonitor:[self u2fStatusChar]];
+    }
+
+    - (void)subscribeCharacteristicDidTimeout {
+        // 監視ステータス更新タイムアウトの旨をAppDelegateに通知
+        [[self delegate] notifyCentralManagerErrorMessage:MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT
+                                                    error:nil];
+        [[self delegate] centralManagerDidFailConnection];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
         didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
         error:(NSError *)error {
+        // 監視ステータス更新のタイムアウト監視を停止
+        [[self toolTimer] cancelSubscribeCharacteristicTimeoutMonitor:characteristic];
+        
         if (error) {
             // U2F Status監視開始エラー発生の旨をAppDelegateに通知
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_FAILED
@@ -312,7 +328,6 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_STOP
                                                         error:nil];
             [[self delegate] centralManagerDidFailConnection];
-
         }
     }
 
@@ -341,26 +356,15 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
                                    type:CBCharacteristicWriteWithResponse];
     }
 
-#pragma mark - Request timeout monitor
+#pragma mark - Response timeout monitor
 
     - (void)centralManagerWillStartResponseTimeout {
-        // U2F Status経由のレスポンス待ち（タイムアウト監視開始）
-        [self startRequestTimeout:self.u2fStatusChar];
+        // U2F Status経由のレスポンス待ち（レスポンスタイムアウト監視開始）
+        [[self toolTimer] startResponseTimeoutMonitor:[self u2fStatusChar]];
     }
 
-    - (void)startRequestTimeout:(CBCharacteristic *)characteristic {
-        [self cancelRequestTimeoutMonitor:characteristic];
-        [self performSelector:@selector(requestDidTimeout:)
-            withObject:characteristic afterDelay:kRequestTimeout];
-    }
-
-    - (void)cancelRequestTimeoutMonitor:(CBCharacteristic *)characteristic {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self
-            selector:@selector(requestDidTimeout:) object:characteristic];
-    }
-
-    - (void)requestDidTimeout:(CBCharacteristic *)characteristic {
-        // リクエストタイムアウト発生の旨をAppDelegateに通知
+    - (void)responseDidTimeout {
+        // レスポンスタイムアウト発生の旨をAppDelegateに通知
         [[self delegate] notifyCentralManagerErrorMessage:MSG_REQUEST_TIMEOUT
                                                     error:nil];
         [[self delegate] centralManagerDidFailConnection];
@@ -387,7 +391,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         [self setBleRequestFrameNumber:([self bleRequestFrameNumber] + 1)];
         
         if ([self bleRequestFrameNumber] == [[self bleRequestFrames] count]) {
-            // 全フレームが送信済であれば、U2F Status経由のレスポンス待ち（タイムアウト監視開始）
+            // 全フレームが送信済であれば、U2F Status経由のレスポンス待ち（レスポンスタイムアウト監視開始）
             [self centralManagerWillStartResponseTimeout];
             [[self delegate] notifyCentralManagerMessage:MSG_REQUEST_SENT];
         } else {
@@ -400,8 +404,8 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     - (void)peripheral:(CBPeripheral *)peripheral
             didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             error:(NSError *)error {
-        // タイムアウト監視を停止
-        [self cancelRequestTimeoutMonitor:self.u2fStatusChar];
+        // レスポンスタイムアウト監視を停止
+        [[self toolTimer] cancelResponseTimeoutMonitor:[self u2fStatusChar]];
 
         if (error) {
             // U2F Status取得エラー発生の旨をAppDelegateに通知
