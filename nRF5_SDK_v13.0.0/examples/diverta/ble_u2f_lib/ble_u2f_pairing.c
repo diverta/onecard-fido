@@ -5,6 +5,7 @@
 #include "ble_u2f.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
+#include "ble_u2f_processing_led.h"
 #include "peer_manager.h"
 #include "fds.h"
 
@@ -78,13 +79,16 @@ uint8_t ble_u2f_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
-bool ble_u2f_pairing_reject_request(uint16_t ble_conn_handle, ble_evt_t *p_ble_evt)
+bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
     if (run_as_pairing_mode == false) {
         if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
             // ペアリングモードでない場合は、
             // ペアリング要求に応じないようにする
             NRF_LOG_ERROR("Reject pairing request from an already bonded peer. \r\n");
+            // ペアリングモードLED点滅を開始し、
+            // 再度ペアリングが必要であることを通知
+            ble_u2f_processing_led_on(p_u2f->led_for_pairing_mode);
             return true;
         }
     }
@@ -280,6 +284,22 @@ void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
         // 指定のLEDを消灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, false);
         NRF_LOG_INFO("Run as non-pairing mode \r\n");
+    }
+}
+
+void ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt)
+{
+    if (run_as_pairing_mode == true) {
+        // ペアリングモードの場合は何もしない
+        return;
+    }
+    
+    if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
+        // ペアリングが無効である場合、ペアリングモードLED点滅を開始
+        ble_u2f_processing_led_on(p_u2f->led_for_pairing_mode);
+    } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
+        // ペアリングが有効である場合、ペアリングモードLED点滅を停止
+        ble_u2f_processing_led_off();
     }
 }
 
