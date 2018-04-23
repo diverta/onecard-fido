@@ -292,6 +292,8 @@
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
+            // トランザクション完了済とし、接続再試行を回避
+            [self setBleTransactionStarted:false];
             // 失敗メッセージをポップアップ表示し、デバイス接続を切断
             [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
             [[self toolBLECentral] centralManagerWillDisconnect];
