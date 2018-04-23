@@ -166,6 +166,8 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     - (void)centralManager:(CBCentralManager *)central
    didDisconnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
+        // レスポンスタイムアウト監視を停止
+        [[self toolTimer] cancelResponseTimeoutMonitor:[self u2fStatusChar]];
         // ペリフェラル、サービス、キャラクタリスティックの参照を解除
         self.connectedPeripheral = nil;
         self.connectedService    = nil;
