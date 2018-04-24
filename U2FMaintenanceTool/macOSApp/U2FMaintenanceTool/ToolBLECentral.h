@@ -26,7 +26,7 @@
     - (void)notifyCentralManagerErrorMessage:(NSString *)message error:(NSError *)error;
 
     - (void)centralManagerDidConnect;
-    - (void)centralManagerDidFailConnection;
+    - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error;
     - (void)centralManagerDidReceive:(NSData *)bleMessage;
     - (void)centralManagerDidDisconnect;
 

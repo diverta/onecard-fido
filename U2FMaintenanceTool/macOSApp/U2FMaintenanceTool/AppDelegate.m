@@ -288,7 +288,10 @@
         [self setBleTransactionStarted:true];
     }
 
-    - (void)centralManagerDidFailConnection {
+    - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
+        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        [self notifyCentralManagerErrorMessage:message error:error];
+        
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
