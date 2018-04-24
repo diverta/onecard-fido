@@ -249,12 +249,11 @@
         if (result == false) {
             [self notifyToolCommandMessage:message];
         }
-        // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
         NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
                          [ToolCommon processNameOfCommand:command],
                          result? MSG_SUCCESS:MSG_FAILURE];
-        [self notifyToolCommandMessage:str];
-        // ポップアップ表示させる処理終了メッセージとリザルトを保持
+        // 処理終了メッセージとリザルトを保持
         [self setLastCommandMessage:str];
         [self setLastCommandSuccess:result];
         // デバイス接続を切断
@@ -290,8 +289,6 @@
     }
 
     - (void)centralManagerDidFailConnection {
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
@@ -328,6 +325,8 @@
         if ([self lastCommandMessage] == nil || [[self lastCommandMessage] length] == 0) {
             return;
         }
+        // メッセージを画面のテキストエリアに表示
+        [self notifyToolCommandMessage:[self lastCommandMessage]];
         // ポップアップを表示
         if ([self lastCommandSuccess]) {
             [ToolPopupWindow informational:[self lastCommandMessage] informativeText:nil];
