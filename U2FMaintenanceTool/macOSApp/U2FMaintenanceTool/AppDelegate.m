@@ -357,8 +357,11 @@
             return true;
             
         } else {
-            // 再試行上限回数に達している場合は、そのまま終了させる
+            // 再試行上限回数に達している場合は、その旨コンソールログに出力
             NSLog(MSG_BLE_CONNECTION_RETRY_END);
+            // ポップアップ表示させる失敗メッセージとリザルトを保持
+            [self setLastCommandMessage: MSG_BLE_CONNECTION_RETRY_END];
+            [self setLastCommandSuccess:false];
             return false;
         }
     }
