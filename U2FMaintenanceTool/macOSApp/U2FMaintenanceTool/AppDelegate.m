@@ -38,6 +38,9 @@
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
 
+    @property (nonatomic) NSString          *lastCommandMessage;
+    @property (nonatomic) bool               lastCommandSuccess;
+
 @end
 
 @implementation AppDelegate
@@ -227,6 +230,9 @@
     }
 
     - (void)startBleConnection {
+        // メッセージ表示用変数を初期化
+        [self setLastCommandMessage:nil];
+        [self setLastCommandSuccess:false];
         // BLEデバイス接続処理を開始する
         [self setBleTransactionStarted:false];
         [[self toolBLECentral] centralManagerWillConnect];
@@ -243,16 +249,13 @@
         if (result == false) {
             [self notifyToolCommandMessage:message];
         }
-        // 処理終了メッセージを、テキストエリアとポップアップの両方に表示させる
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
         NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
                          [ToolCommon processNameOfCommand:command],
                          result? MSG_SUCCESS:MSG_FAILURE];
-        [self notifyToolCommandMessage:str];
-        if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:str informativeText:nil];
-        }
+        // 処理終了メッセージとリザルトを保持
+        [self setLastCommandMessage:str];
+        [self setLastCommandSuccess:result];
         // デバイス接続を切断
         [[self toolBLECentral] centralManagerWillDisconnect];
     }
@@ -285,22 +288,28 @@
         [self setBleTransactionStarted:true];
     }
 
-    - (void)centralManagerDidFailConnection {
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:MSG_OCCUR_BLECONN_ERROR];
+    - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
+        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        [self displayErrorMessage:message error:error];
+        
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
             // トランザクション完了済とし、接続再試行を回避
             [self setBleTransactionStarted:false];
-            // 失敗メッセージをポップアップ表示し、デバイス接続を切断
-            [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
+            // ポップアップ表示させる失敗メッセージとリザルトを保持
+            [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+            [self setLastCommandSuccess:false];
+            // デバイス接続を切断
             [[self toolBLECentral] centralManagerWillDisconnect];
         }
     }
 
-    - (void)centralManagerDidDisconnect {
+    - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
+        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        [self displayErrorMessage:message error:error];
+        
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;
@@ -310,8 +319,25 @@
             // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
-            // ボタンを活性化
-            [self enableButtons:true];
+            // ボタンを活性化し、ポップアップメッセージを表示
+            [self terminateProcessOnWindow];
+        }
+    }
+
+    - (void)terminateProcessOnWindow {
+        // ボタンを活性化
+        [self enableButtons:true];
+        // メッセージが設定されていない場合は何もしない
+        if ([self lastCommandMessage] == nil || [[self lastCommandMessage] length] == 0) {
+            return;
+        }
+        // メッセージを画面のテキストエリアに表示
+        [self notifyToolCommandMessage:[self lastCommandMessage]];
+        // ポップアップを表示
+        if ([self lastCommandSuccess]) {
+            [ToolPopupWindow informational:[self lastCommandMessage] informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:[self lastCommandMessage] informativeText:nil];
         }
     }
 
@@ -347,7 +373,7 @@
         [self appendLogMessage:message];
     }
 
-    - (void)notifyCentralManagerErrorMessage:(NSString *)message error:(NSError *)error {
+    - (void)displayErrorMessage:(NSString *)message error:(NSError *)error {
         if (message == nil) {
             return;
         }

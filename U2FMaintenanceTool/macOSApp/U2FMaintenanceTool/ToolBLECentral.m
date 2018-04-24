@@ -63,9 +63,7 @@
 
         if (self.manager.state != CBCentralManagerStatePoweredOn) {
             // BLEが無効化されている旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_INVALID_BLE_PERIPHERAL
-                                                        error:nil];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_INVALID_BLE_PERIPHERAL error:nil];
             return;
         }
 
@@ -115,16 +113,12 @@
 
     - (void)scanningDidTimeout {
         // スキャンタイムアウトの旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_SCAN_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_U2F_DEVICE_SCAN_TIMEOUT error:nil];
     }
 
     - (void)connectionDidTimeout {
         // 接続タイムアウトの旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNREQ_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_U2F_DEVICE_CONNREQ_TIMEOUT error:nil];
     }
 
 #pragma mark - Connect peripheral
@@ -158,9 +152,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         // 接続タイムアウト監視を停止
         [[self toolTimer] cancelConnectionTimeoutMonitor:peripheral];
         // 接続失敗の旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_CONNECT_FAILED
-                                                    error:error];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_U2F_DEVICE_CONNECT_FAILED error:error];
     }
 
     - (void)centralManager:(CBCentralManager *)central
@@ -174,9 +166,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         self.u2fControlPointChar = nil;
         self.u2fStatusChar       = nil;
         // 切断完了
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_DISCONNECTED
-                                                    error:error];
-        [[self delegate] centralManagerDidDisconnect];
+        [[self delegate] centralManagerDidDisconnectWith:MSG_U2F_DEVICE_DISCONNECTED error:error];
     }
 
 #pragma mark - Discover services
@@ -191,9 +181,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)discoverServicesDidTimeout {
         // サービスディスカバータイムアウトの旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_DISCOVER_U2F_SERVICES_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_DISCOVER_U2F_SERVICES_TIMEOUT error:nil];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
@@ -203,9 +191,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         
         if (error) {
             // BLEサービスディスカバーに失敗の旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_SERVICE_NOT_DISCOVERED
-                                                        error:error];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_SERVICE_NOT_DISCOVERED error:error];
             return;
         }
 
@@ -221,9 +207,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         if (!self.connectedService) {
             // FIDO BLE U2Fサービスがない旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_U2F_SERVICE_NOT_FOUND
-                                                        error:nil];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_U2F_SERVICE_NOT_FOUND error:nil];
             return;
         }
 
@@ -243,9 +227,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)discoverCharacteristicsDidTimeout {
         // キャラクタリスティック・ディスカバータイムアウトの旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_DISCOVER_U2F_CHARAS_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_DISCOVER_U2F_CHARAS_TIMEOUT error:nil];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
@@ -256,9 +238,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         
         if (error) {
             // キャラクタリスティックのディスカバーエラー発生の旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_CHARACT_NOT_DISCOVERED
-                                                        error:error];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_CHARACT_NOT_DISCOVERED error:error];
             return;
         }
 
@@ -274,9 +254,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         if (service.characteristics.count < 1) {
             // サービスにキャラクタリスティックがない旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_CHARACT_NOT_EXIST
-                                                        error:nil];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_CHARACT_NOT_EXIST error:nil];
             return;
         }
 
@@ -302,9 +280,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)subscribeCharacteristicDidTimeout {
         // 監視ステータス更新タイムアウトの旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT error:nil];
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral
@@ -315,9 +291,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         
         if (error) {
             // U2F Status監視開始エラー発生の旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_FAILED
-                                                        error:error];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_NOTIFICATION_FAILED error:error];
             return;
         }
 
@@ -327,9 +301,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [self.delegate centralManagerDidConnect];
         } else {
             // 監視が停止している旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_BLE_NOTIFICATION_STOP
-                                                        error:nil];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_NOTIFICATION_STOP error:nil];
         }
     }
 
@@ -367,9 +339,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)responseDidTimeout {
         // レスポンスタイムアウト発生の旨をAppDelegateに通知
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_REQUEST_TIMEOUT
-                                                    error:nil];
-        [[self delegate] centralManagerDidFailConnection];
+        [[self delegate] centralManagerDidFailConnectionWith:MSG_REQUEST_TIMEOUT error:nil];
     }
 
 #pragma mark - Write value for characteristics
@@ -379,9 +349,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             error:(NSError *)error {
         if (error) {
             // U2F Control Point書込エラー発生の旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_REQUEST_SEND_FAILED
-                                                        error:error];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_REQUEST_SEND_FAILED error:error];
             return;
         }
         
@@ -411,9 +379,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         if (error) {
             // U2F Status取得エラー発生の旨をAppDelegateに通知
-            [[self delegate] notifyCentralManagerErrorMessage:MSG_RESPONSE_RECEIVE_FAILED
-                                                        error:error];
-            [[self delegate] centralManagerDidFailConnection];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_RESPONSE_RECEIVE_FAILED error:error];
             return;
         }
 
@@ -429,7 +395,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [self cancelScanForPeripherals];
             [self.manager cancelPeripheralConnection:self.connectedPeripheral];
         } else {
-            [[self delegate] centralManagerDidDisconnect];
+            [[self delegate] centralManagerDidDisconnectWith:nil error:nil];
         }
     }
 
