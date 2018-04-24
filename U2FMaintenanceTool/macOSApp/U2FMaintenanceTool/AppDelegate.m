@@ -290,7 +290,7 @@
 
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
         // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
-        [self notifyCentralManagerErrorMessage:message error:error];
+        [self displayErrorMessage:message error:error];
         
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
@@ -306,7 +306,10 @@
         }
     }
 
-    - (void)centralManagerDidDisconnect {
+    - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
+        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        [self displayErrorMessage:message error:error];
+        
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;
@@ -370,7 +373,7 @@
         [self appendLogMessage:message];
     }
 
-    - (void)notifyCentralManagerErrorMessage:(NSString *)message error:(NSError *)error {
+    - (void)displayErrorMessage:(NSString *)message error:(NSError *)error {
         if (message == nil) {
             return;
         }

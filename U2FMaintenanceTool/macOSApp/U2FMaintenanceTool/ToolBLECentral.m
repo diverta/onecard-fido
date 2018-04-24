@@ -166,9 +166,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         self.u2fControlPointChar = nil;
         self.u2fStatusChar       = nil;
         // 切断完了
-        [[self delegate] notifyCentralManagerErrorMessage:MSG_U2F_DEVICE_DISCONNECTED
-                                                    error:error];
-        [[self delegate] centralManagerDidDisconnect];
+        [[self delegate] centralManagerDidDisconnectWith:MSG_U2F_DEVICE_DISCONNECTED error:error];
     }
 
 #pragma mark - Discover services
@@ -397,7 +395,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             [self cancelScanForPeripherals];
             [self.manager cancelPeripheralConnection:self.connectedPeripheral];
         } else {
-            [[self delegate] centralManagerDidDisconnect];
+            [[self delegate] centralManagerDidDisconnectWith:nil error:nil];
         }
     }
 
