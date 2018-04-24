@@ -74,8 +74,8 @@
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"
-#define MSG_U2F_DEVICE_SCAN_START           @"FIDO U2Fデバイスのスキャンを開始します"
-#define MSG_U2F_DEVICE_SCAN_END             @"FIDO U2Fデバイスのスキャンを完了しました"
+#define MSG_U2F_DEVICE_SCAN_START           @"FIDO U2Fデバイスのスキャンを開始します。"
+#define MSG_U2F_DEVICE_SCAN_STOPPED         @"FIDO U2Fデバイスのスキャンを停止しました。"
 #define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO U2Fデバイスのスキャンがタイムアウトしました。"
 #define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO U2Fデバイスの接続要求がタイムアウトしました。"
 #define MSG_U2F_DEVICE_CONNECTED            @"FIDO U2Fデバイスに接続しました。"

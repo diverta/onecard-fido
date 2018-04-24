@@ -89,6 +89,7 @@
     - (void)cancelScanForPeripherals {
         // スキャンを停止
         [self.manager stopScan];
+        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_STOPPED];
     }
 
     - (void)centralManager:(CBCentralManager *)central
@@ -105,13 +106,14 @@
             [[self toolTimer] cancelScanningTimeoutMonitor];
             // スキャンを停止し、ペリフェラルに接続
             [self cancelScanForPeripherals];
-            [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_END];
             [self connectPeripheral:peripheral];
             break;
         }
     }
 
     - (void)scanningDidTimeout {
+        // スキャンを停止
+        [self cancelScanForPeripherals];
         // スキャンタイムアウトの旨をAppDelegateに通知
         [[self delegate] centralManagerDidFailConnectionWith:MSG_U2F_DEVICE_SCAN_TIMEOUT error:nil];
     }
@@ -391,8 +393,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)centralManagerWillDisconnect {
         if (self.connectedPeripheral) {
-            // スキャンを停止し、ペリフェラル接続を切断
-            [self cancelScanForPeripherals];
+            // ペリフェラル接続を切断
             [self.manager cancelPeripheralConnection:self.connectedPeripheral];
         } else {
             [[self delegate] centralManagerDidDisconnectWith:nil error:nil];
