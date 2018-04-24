@@ -38,6 +38,9 @@
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
 
+    @property (nonatomic) NSString          *lastCommandMessage;
+    @property (nonatomic) bool               lastCommandSuccess;
+
 @end
 
 @implementation AppDelegate
@@ -227,6 +230,9 @@
     }
 
     - (void)startBleConnection {
+        // メッセージ表示用変数を初期化
+        [self setLastCommandMessage:nil];
+        [self setLastCommandSuccess:false];
         // BLEデバイス接続処理を開始する
         [self setBleTransactionStarted:false];
         [[self toolBLECentral] centralManagerWillConnect];
@@ -248,11 +254,9 @@
                          [ToolCommon processNameOfCommand:command],
                          result? MSG_SUCCESS:MSG_FAILURE];
         [self notifyToolCommandMessage:str];
-        if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:str informativeText:nil];
-        }
+        // ポップアップ表示させる処理終了メッセージとリザルトを保持
+        [self setLastCommandMessage:str];
+        [self setLastCommandSuccess:result];
         // デバイス接続を切断
         [[self toolBLECentral] centralManagerWillDisconnect];
     }
@@ -294,8 +298,10 @@
         } else {
             // トランザクション完了済とし、接続再試行を回避
             [self setBleTransactionStarted:false];
-            // 失敗メッセージをポップアップ表示し、デバイス接続を切断
-            [ToolPopupWindow critical:MSG_OCCUR_BLECONN_ERROR informativeText:nil];
+            // ポップアップ表示させる失敗メッセージとリザルトを保持
+            [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+            [self setLastCommandSuccess:false];
+            // デバイス接続を切断
             [[self toolBLECentral] centralManagerWillDisconnect];
         }
     }
@@ -310,8 +316,23 @@
             // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
         } else {
-            // ボタンを活性化
-            [self enableButtons:true];
+            // ボタンを活性化し、ポップアップメッセージを表示
+            [self terminateProcessOnWindow];
+        }
+    }
+
+    - (void)terminateProcessOnWindow {
+        // ボタンを活性化
+        [self enableButtons:true];
+        // メッセージが設定されていない場合は何もしない
+        if ([self lastCommandMessage] == nil || [[self lastCommandMessage] length] == 0) {
+            return;
+        }
+        // ポップアップを表示
+        if ([self lastCommandSuccess]) {
+            [ToolPopupWindow informational:[self lastCommandMessage] informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:[self lastCommandMessage] informativeText:nil];
         }
     }
 
