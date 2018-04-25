@@ -37,12 +37,6 @@
                                     <action selector="menuItemPairing1DidSelect:" target="494" id="ehb-0W-klH"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ペアリング解除..." id="NKt-RI-Qca">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemPairing2DidSelect:" target="494" id="pwR-K8-EcN"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="CZb-aO-SIH"/>
                             <menuItem title="Services" id="131">
                                 <menu key="submenu" title="Services" systemMenu="services" id="130"/>

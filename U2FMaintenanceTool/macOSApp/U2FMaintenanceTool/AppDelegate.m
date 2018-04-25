@@ -92,7 +92,8 @@
 
     - (IBAction)button1DidPress:(id)sender {
         // ペアリング実行
-        [ToolPopupWindow informational:@"ただいま作成中です..." informativeText:nil];
+        [self enableButtons:false];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_PAIRING];
     }
 
     - (IBAction)button2DidPress:(id)sender {
@@ -200,15 +201,6 @@
         // ペアリング情報消去
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_BOND];
-    }
-
-    - (IBAction)menuItemPairing2DidSelect:(id)sender {
-        if ([ToolPopupWindow promptYesNo:MSG_DELETE_PAIRING_INFO
-                         informativeText:MSG_PROMPT_DELETE_PAIRING_INFO] == false) {
-            return;
-        }
-        // ペアリング解除
-        [ToolPopupWindow informational:@"ただいま作成中です..." informativeText:nil];
     }
 
 #pragma mark - Call back from ToolFilePanel
