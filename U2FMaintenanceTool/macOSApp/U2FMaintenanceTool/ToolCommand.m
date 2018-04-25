@@ -61,6 +61,15 @@
 
 #pragma mark - Private methods
 
+- (void)createCommandPing {
+    NSLog(@"Ping for pairing start");
+    
+    // 書き込むコマンドを編集
+    unsigned char arr[] = {0x81, 0x00, 0x04, 0x70, 0x69, 0x6e, 0x67};
+    NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
+}
+
 - (void)createCommandEraseBond {
     NSLog(@"Erase bonding information start");
     
@@ -633,6 +642,9 @@
         case COMMAND_U2F_PROCESS:
             [self createCommandU2FProcess];
             break;
+        case COMMAND_PAIRING:
+            [self createCommandPing];
+            break;
         default:
             [self setBleRequestArray:nil];
             break;
@@ -655,7 +667,7 @@
         // キープアライブの場合は引き続き次のレスポンスを待つ
         receivedData = nil;
         
-    } else if (bytesBLEHeader[0] == 0x83) {
+    } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83) {
         // ヘッダーから全受信データ長を取得
         totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
         // 4バイト目から後ろを切り出して連結
@@ -688,6 +700,11 @@
     // レスポンスデータが揃っていない場合は終了
     if (![self bleResponseData]) {
         return false;
+    }
+    
+    // PINGコマンドの場合はレスポンスがあった時点でOKとする
+    if ([self command] == COMMAND_PAIRING) {
+        return true;
     }
     
     // ステータスワード(レスポンスの末尾２バイト)を取得
@@ -729,6 +746,9 @@
     
     // コマンドに応じ、以下の処理に分岐
     switch ([self command]) {
+        case COMMAND_PAIRING:
+            [self toolCommandDidProcess:true message:@"Ping for pairing end"];
+            break;
         case COMMAND_ERASE_BOND:
             [self toolCommandDidProcess:true message:@"Erase bonding information end"];
             break;

@@ -19,6 +19,9 @@
         // コマンド種別に対応する処理名称を戻す
         NSString *processName;
         switch (command) {
+            case COMMAND_PAIRING:
+                processName = PROCESS_NAME_PAIRING;
+                break;
             case COMMAND_ERASE_BOND:
                 processName = PROCESS_NAME_ERASE_BOND;
                 break;
