@@ -49,7 +49,7 @@
 #define MSG_PROMPT_INPUT_CRT_DAYS   @"自己署名証明書の有効期間（日数）を数値で入力してください。"
 
 #pragma mark - コマンド種別に対応する処理名称
-#define PROCESS_NAME_ERASE_BOND                     @"ペアリング情報削除処理"
+#define PROCESS_NAME_ERASE_BOND                     @"ペアリング情報消去処理"
 #define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書・キーハンドル削除処理"
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
@@ -58,6 +58,7 @@
 #define PROCESS_NAME_CREATE_KEYPAIR_PEM             @"鍵ファイル作成"
 #define PROCESS_NAME_CREATE_CERTREQ_CSR             @"証明書要求ファイル作成"
 #define PROCESS_NAME_CREATE_SELFCRT_CRT             @"自己署名証明書ファイル作成"
+#define PROCESS_NAME_PAIRING                        @"ペアリング"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -100,5 +101,9 @@
 #pragma mark - 接続再試行関連メッセージ
 #define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"
 #define MSG_BLE_CONNECTION_RETRY_END        @"処理中にBLE接続が消失しましたが、接続再試行の上限回数に達したため終了します。"
+
+#pragma mark - ペアリング情報消去関連メッセージ
+#define MSG_ERASE_BONDING_INFO              @"One Cardからペアリング情報をすべて消去します。"
+#define MSG_PROMPT_ERASE_BONDING_INFO       @"消去後は、すべてのPCでOne Cardとの通信ができなくなります。\n消去処理を実行しますか？"
 
 #endif /* ToolCommonMessage_h */
