@@ -49,7 +49,7 @@
 #define MSG_PROMPT_INPUT_CRT_DAYS   @"自己署名証明書の有効期間（日数）を数値で入力してください。"
 
 #pragma mark - コマンド種別に対応する処理名称
-#define PROCESS_NAME_ERASE_BOND                     @"ペアリング情報削除処理"
+#define PROCESS_NAME_ERASE_BOND                     @"ペアリング情報消去処理"
 #define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書・キーハンドル削除処理"
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
