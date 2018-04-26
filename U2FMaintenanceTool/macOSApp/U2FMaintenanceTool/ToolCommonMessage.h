@@ -102,10 +102,8 @@
 #define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"
 #define MSG_BLE_CONNECTION_RETRY_END        @"処理中にBLE接続が消失しましたが、接続再試行の上限回数に達したため終了します。"
 
-#pragma mark - ペアリング関連メッセージ
-#define MSG_ERASE_BONDING_INFO              @"One Cardからペアリング情報をすべて削除します。"
-#define MSG_PROMPT_ERASE_BONDING_INFO       @"削除後は、すべてのPCでOne Cardとの通信ができなくなります。\n削除処理を実行しますか？"
-#define MSG_DELETE_PAIRING_INFO             @"One Cardとのペアリングを解除します。"
-#define MSG_PROMPT_DELETE_PAIRING_INFO      @"解除後は、このPCでOne Cardとの通信ができなくなります。\n（他のPCからの通信は引き続き可能です）\n解除処理を実行しますか？"
+#pragma mark - ペアリング情報消去関連メッセージ
+#define MSG_ERASE_BONDING_INFO              @"One Cardからペアリング情報をすべて消去します。"
+#define MSG_PROMPT_ERASE_BONDING_INFO       @"消去後は、すべてのPCでOne Cardとの通信ができなくなります。\n消去処理を実行しますか？"
 
 #endif /* ToolCommonMessage_h */
