@@ -59,6 +59,12 @@ namespace U2FMaintenanceToolGUI
                 ret = app.doEraseBond();
 
             }
+            else if (sender.Equals(button1))
+            {
+                commandTitle = AppCommon.PROCESS_NAME_PAIRING;
+                ret = app.doPairing();
+
+            }
             else if (sender.Equals(button2))
             {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
