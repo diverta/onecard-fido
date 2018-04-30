@@ -114,7 +114,9 @@ std::vector<BleDevice*> BleApiWinRT::findDevices()
         continue;
 
       // create a new device.
-      BleDevice *ourdev = static_cast<BleDevice *>(new BleDeviceWinRT(this, id, dev, mConfiguration));
+	  BleDeviceWinRT *d = new BleDeviceWinRT(this, id, dev, mConfiguration);
+	  d->Initialize();
+      BleDevice *ourdev = static_cast<BleDevice *>(d);
       if (!ourdev)
         continue;
 
@@ -202,4 +204,62 @@ bool BleApiWinRT::IsEnabled()
   catch (...) {
     return false;
   }
+}
+
+BleDevice *BleApiWinRT::bondWithUnpairedDevice() 
+{
+	try {
+		std::vector < BleDevice * >list;
+		using convert_type = std::codecvt_utf8<wchar_t>;
+		std::wstring_convert<convert_type, wchar_t> converter;
+
+		Vector<String ^> properties(1);
+		properties.SetAt(0, ref new String(L"System.Devices.ContainerId"));
+
+		String ^deviceSelector = BluetoothLEDevice::GetDeviceSelectorFromPairingState(false);
+		DeviceInformationCollection ^devices = create_task(DeviceInformation::FindAllAsync(deviceSelector, %properties)).get();
+		std::cout << "Unpaired devices = " << devices->Size << std::endl;
+
+		for (unsigned int i = 0; i < devices->Size; i++) {
+			DeviceInformation ^devInfo = devices->GetAt(i);
+			std::cout << "DeviceInformation::Name = " << devInfo->Name->Data() << std::endl;
+
+			BluetoothLEDevice ^dev;
+			try {
+				dev = create_task(BluetoothLEDevice::FromIdAsync(devInfo->Id)).get();
+				std::cout << "  BluetoothLEDevice::Name = " << dev->Name->Data() << std::endl;
+			} catch (...) {
+				continue;
+			}
+
+			std::string id = converter.to_bytes(dev->DeviceId->Data());
+			std::cout << "  DeviceId = " << id << std::endl;
+
+			// create a new device.
+			BleDeviceWinRT *d = new BleDeviceWinRT(this, id, dev, mConfiguration);
+			if (!d) continue;
+			std::cout << "  BluetoothLEDevice created " << std::endl;
+
+			// ペアリングの実行
+			if (d->Pair() != ReturnValue::BLEAPI_ERROR_SUCCESS) {
+				std::cout << "  BluetoothLEDevice pairing failure " << std::endl;
+				return nullptr;
+			}
+			std::cout << "  BluetoothLEDevice pairing success " << std::endl;
+
+			// デバイスの参照を戻す
+			BleDevice *ourdev = static_cast<BleDevice *>(d);
+			return ourdev;
+		}
+
+		// デバイスが探索できなかった場合はNULL
+		return nullptr;
+
+	} catch (std::exception &e) {
+		throw STRING_RUNTIME_EXCEPTION(e.what());
+	} catch (Exception ^e) {
+		throw CX_EXCEPTION(e);
+	} catch (...) {
+		throw STRING_RUNTIME_EXCEPTION("Unknown error pairing.");
+	}
 }

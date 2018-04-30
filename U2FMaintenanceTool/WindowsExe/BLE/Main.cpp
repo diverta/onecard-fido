@@ -3,6 +3,7 @@
 
 #include "BleApi.h"
 #include "ble_util.h"
+#include "BleApiWinRT.h"
 
 #include "BleTools.h"
 #include "BleToolsUtil.h"
@@ -18,6 +19,40 @@ static void promptPairing(void)
 	std::cout << "One Cardが見つかりません. " << std::endl;
 	std::cout << "まず最初に、One Cardをペアリングモードに変更し、ペアリングを実施してください." << std::endl;
 	std::cout << "  One CardのMAIN SWを５秒以上押し続けると、ペアリングモードに変更できます." << std::endl;
+}
+
+static pBleDevice selectPairedBLEDevice(std::vector<pBleDevice> devices)
+{
+	if (arg_DeviceIdentifier) {
+		// パラメーターで指定されたU2Fデバイスを選択
+		std::string id(arg_DeviceIdentifier);
+		std::vector<pBleDevice>::iterator i;
+		for (i = devices.begin(); i != devices.end(); i++) {
+			if (((*i)->Identifier() == id)
+				&& ((*i)->Identifier().length() == id.length()))
+				return (*i);
+		}
+
+	} else {
+		// 指定されていない場合は、先頭のU2Fデバイスを選択
+		return devices[0];
+	}
+
+	return NULL;
+}
+
+static pBleDevice pairingBLEDevice(pBleApi api)
+{
+	if (arg_pairing == false) {
+		// デバイスが検索できない場合はペアリングを要求
+		promptPairing();
+		BleToolsUtil_outputLog("prepareBLEDevice: BLE device not found");
+		return NULL;
+	}
+
+	// ペアリングされていないデバイスとペアリングを実行
+	BleApiWinRT *apiWinRT = (BleApiWinRT *)api;
+	return apiWinRT->bondWithUnpairedDevice();
 }
 
 static int prepareBLEDevice(BleApiConfiguration &configuration)
@@ -36,26 +71,12 @@ static int prepareBLEDevice(BleApiConfiguration &configuration)
 
 	// U2Fデバイスを探索
 	std::vector<pBleDevice> devices = api->findDevices();
-	if (!devices.size()) {
-		// デバイスが検索できない場合はペアリングを要求
-		promptPairing();
-		BleToolsUtil_outputLog("prepareBLEDevice: BLE device not found");
-		return -1;
-	}
-
-	if (arg_DeviceIdentifier) {
-		// パラメーターで指定されたU2Fデバイスを選択
-		std::string id(arg_DeviceIdentifier);
-		std::vector<pBleDevice>::iterator i;
-		for (i = devices.begin(); i != devices.end(); i++) {
-			if (((*i)->Identifier() == id)
-				&& ((*i)->Identifier().length() == id.length()))
-				dev = (*i);
-		}
-
+	if (devices.size() > 0) {
+		// 探索したU2Fデバイスを選択
+		dev = selectPairedBLEDevice(devices);
 	} else {
-		// 指定されていない場合は、先頭のU2Fデバイスを選択
-		dev = devices[0];
+		// デバイスが検索できない場合はペアリング実行
+		dev = pairingBLEDevice(api);
 	}
 
 	if (!dev) {

@@ -33,6 +33,8 @@ public:
 
   bool hasPath(std::string path);
 
+  void Initialize();
+
 public:
   virtual ReturnValue Verify();
 
@@ -84,8 +86,6 @@ protected:
   virtual void OnCustomPairing(Windows::Devices::Enumeration::DeviceInformationCustomPairing ^pairing, Windows::Devices::Enumeration::DevicePairingRequestedEventArgs ^eventArgs);
 
   friend ref class BleDeviceEventhandlerProxy;
-
-  void Initialize();
 protected:
   std::string mDeviceInstanceId;
   uint64_t  mBluetoothAddress; /* used by WaitForDevice, even while mDevice is not valid */

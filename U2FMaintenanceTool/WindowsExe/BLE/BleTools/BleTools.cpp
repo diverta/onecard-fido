@@ -25,6 +25,7 @@ char *arg_chrome_nm_registry_key = NULL;
 char *arg_chrome_nm_setting_file = NULL;
 bool  arg_chrome_subprocess      = false;
 bool  arg_need_ble               = false;
+bool  arg_pairing                = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -432,6 +433,12 @@ static bool processChromeNativeMessagingSetup(void)
 	return true;
 }
 
+static bool processPairing(BleApiConfiguration &configuration, pBleDevice dev)
+{
+	std::cout << "ペアリングを完了しました。" << std::endl;
+	return true;
+}
+
 int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 {
 	if (arg_chrome_nm_setup) {
@@ -487,6 +494,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_health_check) {
 		// ヘルスチェック実行
 		if (BleToolsU2F_healthCheck(dev) == false) {
+			return -1;
+		}
+	}
+
+	if (arg_pairing) {
+		// ペアリング後の確認処理を実行
+		if (processPairing(configuration, dev) == false) {
 			return -1;
 		}
 	}
@@ -557,6 +571,10 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		}
 		if (!strncmp(argv[count], "-D", 2)) {
 			configuration.alwaysconnected = true;
+		}
+		if (!strncmp(argv[count], "-P", 2)) {
+			// ペアリング実行
+			arg_pairing = true;
 		}
 		if (!strncmp(argv[count], "-B", 2)) {
 			// ペアリング情報をFlash ROMから削除
