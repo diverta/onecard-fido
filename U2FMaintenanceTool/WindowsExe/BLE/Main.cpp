@@ -21,8 +21,14 @@ static void promptPairing(void)
 	std::cout << "  One CardのMAIN SWを５秒以上押し続けると、ペアリングモードに変更できます." << std::endl;
 }
 
-static pBleDevice selectPairedBLEDevice(std::vector<pBleDevice> devices)
+static pBleDevice selectPairedBLEDevice(pBleApi api)
 {
+	// U2Fデバイスを探索
+	std::vector<pBleDevice> devices = api->findDevices();
+	if (devices.size() == 0) {
+		return nullptr;
+	}
+
 	if (arg_DeviceIdentifier) {
 		// パラメーターで指定されたU2Fデバイスを選択
 		std::string id(arg_DeviceIdentifier);
@@ -38,7 +44,7 @@ static pBleDevice selectPairedBLEDevice(std::vector<pBleDevice> devices)
 		return devices[0];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static pBleDevice pairingBLEDevice(pBleApi api)
@@ -69,17 +75,16 @@ static int prepareBLEDevice(BleApiConfiguration &configuration)
 		return -1;
 	}
 
-	// U2Fデバイスを探索
-	std::vector<pBleDevice> devices = api->findDevices();
-	if (devices.size() > 0) {
-		// 探索したU2Fデバイスを選択
-		dev = selectPairedBLEDevice(devices);
-	} else {
-		// デバイスが検索できない場合はペアリング実行
+	// ペアリング済みU2Fデバイスを探索
+	dev = selectPairedBLEDevice(api);
+
+	// ペアリング済みU2Fデバイスがない場合はペアリング実行
+	if (dev == nullptr) {
 		dev = pairingBLEDevice(api);
 	}
 
-	if (!dev) {
+	// ペアリング済みU2Fデバイスがない場合は以降の処理を行わない
+	if (dev == nullptr) {
 		std::cout << "使用できるFIDO BLE U2Fデバイスがありません." << std::endl;
 		BleToolsUtil_outputLog("prepareBLEDevice: No BLE device available");
 		return -1;

@@ -206,6 +206,23 @@ bool BleApiWinRT::IsEnabled()
   }
 }
 
+bool hasBleDeviceFIDOService(DeviceInformation ^devInfo)
+{
+	BluetoothLEDevice ^device = create_task(BluetoothLEDevice::FromIdAsync(devInfo->Id)).get();
+
+	// check all services for FIDO service.
+	unsigned int j, n;
+	auto services = device->GattServices;
+	for (j = 0, n = services->Size; j < n; j++) {
+		if (services->GetAt(j)->Uuid == FIDO_SERVICE_GUID) {
+			std::cout << "  FIDO U2F service found" << std::endl;
+			return true;
+		}
+	}
+	std::cout << "  FIDO U2F service not found" << std::endl;
+	return false;
+}
+
 BleDevice *BleApiWinRT::bondWithUnpairedDevice() 
 {
 	try {
@@ -218,7 +235,7 @@ BleDevice *BleApiWinRT::bondWithUnpairedDevice()
 
 		String ^deviceSelector = BluetoothLEDevice::GetDeviceSelectorFromPairingState(false);
 		DeviceInformationCollection ^devices = create_task(DeviceInformation::FindAllAsync(deviceSelector, %properties)).get();
-		std::cout << "Unpaired devices = " << devices->Size << std::endl;
+		std::cout << "Unpaired device count = " << devices->Size << std::endl;
 
 		for (unsigned int i = 0; i < devices->Size; i++) {
 			DeviceInformation ^devInfo = devices->GetAt(i);
@@ -231,12 +248,12 @@ BleDevice *BleApiWinRT::bondWithUnpairedDevice()
 				id = converter.to_bytes(dev->DeviceId->Data());
 				std::cout << "  BluetoothLEDevice found " << std::endl;
 			} catch (...) {
+				// デバイスがBLEでない場合は探索続行
 				continue;
 			}
 
-			// create a new device.
+			// BLEデバイスを生成
 			BleDeviceWinRT *d = new BleDeviceWinRT(this, id, dev, mConfiguration);
-			if (!d) continue;
 			std::cout << "  BluetoothLEDevice created " << std::endl;
 
 			// ペアリングの実行
@@ -245,6 +262,13 @@ BleDevice *BleApiWinRT::bondWithUnpairedDevice()
 				return nullptr;
 			}
 			std::cout << "  BluetoothLEDevice pairing success " << std::endl;
+
+			if (hasBleDeviceFIDOService(devInfo) == false) {
+				// ペアリングしたデバイスにFIDOサービスがない場合は
+				// ペアリング解除し探索続行
+				d->Unpair();
+				continue;
+			}
 
 			// デバイスの参照を戻す
 			BleDevice *ourdev = static_cast<BleDevice *>(d);

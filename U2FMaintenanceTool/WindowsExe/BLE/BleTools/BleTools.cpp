@@ -433,12 +433,6 @@ static bool processChromeNativeMessagingSetup(void)
 	return true;
 }
 
-static bool processPairing(BleApiConfiguration &configuration, pBleDevice dev)
-{
-	std::cout << "ペアリングを完了しました。" << std::endl;
-	return true;
-}
-
 int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 {
 	if (arg_chrome_nm_setup) {
@@ -494,13 +488,6 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_health_check) {
 		// ヘルスチェック実行
 		if (BleToolsU2F_healthCheck(dev) == false) {
-			return -1;
-		}
-	}
-
-	if (arg_pairing) {
-		// ペアリング後の確認処理を実行
-		if (processPairing(configuration, dev) == false) {
 			return -1;
 		}
 	}
