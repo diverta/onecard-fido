@@ -222,18 +222,17 @@ BleDevice *BleApiWinRT::bondWithUnpairedDevice()
 
 		for (unsigned int i = 0; i < devices->Size; i++) {
 			DeviceInformation ^devInfo = devices->GetAt(i);
-			std::cout << "DeviceInformation::Name = " << devInfo->Name->Data() << std::endl;
+			std::cout << "DeviceInformation found " << std::endl;
 
 			BluetoothLEDevice ^dev;
+			std::string id;
 			try {
 				dev = create_task(BluetoothLEDevice::FromIdAsync(devInfo->Id)).get();
-				std::cout << "  BluetoothLEDevice::Name = " << dev->Name->Data() << std::endl;
+				id = converter.to_bytes(dev->DeviceId->Data());
+				std::cout << "  BluetoothLEDevice found " << std::endl;
 			} catch (...) {
 				continue;
 			}
-
-			std::string id = converter.to_bytes(dev->DeviceId->Data());
-			std::cout << "  DeviceId = " << id << std::endl;
 
 			// create a new device.
 			BleDeviceWinRT *d = new BleDeviceWinRT(this, id, dev, mConfiguration);
