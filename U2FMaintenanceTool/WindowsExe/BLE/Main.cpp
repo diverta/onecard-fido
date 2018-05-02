@@ -29,6 +29,11 @@ static pBleDevice selectPairedBLEDevice(pBleApi api)
 		return nullptr;
 	}
 
+	// デバイスが検索できた場合はペアリング済のメッセージを表示
+	if (arg_pairing == true) {
+		std::cout << "既にOne Cardとペアリング済みです. " << std::endl;
+	}
+
 	if (arg_DeviceIdentifier) {
 		// パラメーターで指定されたU2Fデバイスを選択
 		std::string id(arg_DeviceIdentifier);
