@@ -22,62 +22,47 @@ One Card上の２番目のLEDが<font color=ff0000><b>点灯</b></font>したら
 
 ### Windowsの場合
 
-スタートメニューから設定を実行し、デバイスをクリックします。
+U2F管理ツールの「ペアリング実行」ボタンをクリックします。
 
-<img src="../assets/0014.png" width="500">
+<img src="assets/0054.png" width="500">
 
-Bluetoothをクリックします。<br>OneCard_Peripheralが表示されますので、「ペアリング」をクリックします。
+約30秒ほど、ペアリング先の探索処理のため画面がクリックできない状態となります。
 
-<img src="../assets/0015.png" width="500">
+<img src="assets/0055.png" width="500">
 
-しばらくすると「ペアリングの準備完了」の表示が「接続済み」に変わります。
+ペアリングが成功すると、ポップアップ画面が表示されます。
 
-<img src="../assets/0016.png" width="500">
+<img src="assets/0056.png" width="500">
+
+Windowsの設定画面からBluetooth設定を参照すると、下図のように「OneCard_Peripheral」がペアリング済みであることが確認できます。
+
+<img src="assets/0057.png" width="500">
 
 これで、Windowsとのペアリングは完了です。
 
 ### macOSの場合
 
-[U2F管理ツール](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)をGitHubからダウンロード／解凍します。<br>
+U2F管理ツールの「ペアリング実行」ボタンをクリックします。
 
-<img src="../assets/0070.png" width="600">
+<img src="assets/0058.png" width="500">
 
-ダウンロードされたファイルを右クリックし「開く」を実行してください。<br>
-（アイコンをダブルクリックしても、実行することができないための措置になります）
+ペアリングが成功すると、ポップアップ画面が表示されます。
 
-<img src="../assets/0021.png" width="500">
+<img src="assets/0059.png" width="500">
 
-警告画面が表示されますが、続いて「開く」を実行します。
+macOSの設定画面からBluetooth設定を参照すると、下図のように「OneCard_Peripheral」がペアリング済みであることが確認できます。
 
-<img src="../assets/0022.png" width="500">
-
-インストーラーが起動しますので、指示に従いインストールを進めます。
-
-<img src="../assets/0071.png" width="500">
-
-インストールが完了すると、アプリケーションフォルダーに、U2F管理ツールのアイコンができます。<br>
-アイコンをダブルクリックして実行します。
-
-<img src="../assets/0072.png" width="500">
-
-U2F管理ツールが起動しますので、画面上の「ヘルスチェック実行」ボタンをクリックします。
-
-<img src="../assets/0073.png" width="500">
-
-後述<b>「鍵・証明書のインストール」</b>が行われていないため、下図のようなダイアログが表示されます。<br>
-ただし異常ではないので、OKボタンを押してダイアログを閉じます。
-
-<img src="../assets/0018.png" width="500">
-
-その後「終了」ボタンをクリックして、U2F管理画面を終了させます。
-
-<img src="../assets/0074.png" width="500">
-
-macOSの設定画面からBluetooth設定を参照すると、下図のように、ペアリングが自動的に行われていることが確認できます。
-
-<img src="../assets/0019.png" width="500">
+<img src="assets/0060.png" width="500">
 
 これで、macOSとのペアリングは完了です。
+
+
+### ご参考
+ペアリングが正常完了すると、One Cardは自動的に非ペアリングモードに移行します。<br>
+非ペアリングモードに移行すると、One Card上の２番目のLEDが消灯します。
+
+<img src="../assets/0076.png" width="500">
+
 
 ## ペアリングモード--->非ペアリングモードへの変更
 
@@ -91,5 +76,5 @@ One Card上の２番目のLEDが<font color=ff0000><b>消灯</b></font>したら
 
 これで非ペアリングモードに変更されました。
 
-【ご参考】<br>
+### ご参考
 One Cardは、電源Off状態から電源投入時は、常に非ペアリングモードで起動します。

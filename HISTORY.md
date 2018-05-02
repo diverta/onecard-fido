@@ -2,6 +2,20 @@
 
 ## プログラム更新履歴
 
+#### 2018/04/25（Version 0.1.1）
+
+以下のプログラムを修正しました。<br>
+
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+
+修正点は以下になります。
+- ディスカバー・タイムアウトを検知できるようにする（[Issue #29](https://github.com/diverta/onecard-fido/issues/29)）
+- 完了通知前にBLE接続を切断させるようにする（[Issue #36](https://github.com/diverta/onecard-fido/issues/36)）
+- アプリ自身による切断時、接続リトライが行われないようにする（[Issue #37](https://github.com/diverta/onecard-fido/issues/37)）
+- 予期しない切断発生時のタイムアウト誤検知を抑止する（[Issue #46](https://github.com/diverta/onecard-fido/issues/46)）
+- スキャンタイムアウト時にスキャンを停止させるようにする（[Issue #47](https://github.com/diverta/onecard-fido/issues/47)）
+- 接続リトライ上限到達時にメッセージを表示させるようにする（[Issue #48](https://github.com/diverta/onecard-fido/issues/48)）
+
 #### 2018/04/18（Version 0.1.0）
 
 以下のプログラムを修正しました。<br>

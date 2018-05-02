@@ -6,24 +6,9 @@ BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証�
 
 ## U2F管理ツールの準備
 
-[U2FMaintenanceToolWin.zip](../U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip) を、GitHubからダウンロードして取得します。
+[U2F管理ツールインストール手順](TOOL_INSTALL.md) を参照し、U2F管理ツールをインストールします。
 
-U2FMaintenanceToolWin.zipを展開すると、下図のように「U2FMaintenanceToolWin」というフォルダーができるので、任意の場所に配置します。<br>
-その後、フォルダー内の実行ファイル「U2FMaintenanceToolGUI.exe」をダブルクリックします。
-
-<img src="assets/0013.png" width="550">
-
-
-2018/03/15現在、アプリに署名がされていないため、ダウンロードしたプログラムを実行できない旨のダイアログが表示されます。<br>
-「詳細情報」をクリックして、実行ボタンを表示させます。
-
-<img src="assets/0014.png" width="550">
-
-表示された実行ボタンをクリックして、U2F管理ツールを実行させます。
-
-<img src="assets/0015.png" width="550">
-
-U2F管理ツールの画面が起動すれば、準備は完了です。
+インストール後、フォルダー内の実行ファイル「U2FMaintenanceToolGUI.exe」をダブルクリックすると、U2F管理ツール画面が起動します。
 
 ## 鍵・証明書の作成
 
