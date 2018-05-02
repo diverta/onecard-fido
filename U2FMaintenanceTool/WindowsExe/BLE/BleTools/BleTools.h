@@ -8,6 +8,7 @@
 //
 extern bool arg_need_ble;
 extern char *arg_DeviceIdentifier;
+extern bool arg_pairing;
 
 extern int  BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev);
 extern int  BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configuration);

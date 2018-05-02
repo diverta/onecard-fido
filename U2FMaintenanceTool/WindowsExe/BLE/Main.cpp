@@ -3,6 +3,7 @@
 
 #include "BleApi.h"
 #include "ble_util.h"
+#include "BleApiWinRT.h"
 
 #include "BleTools.h"
 #include "BleToolsUtil.h"
@@ -20,6 +21,51 @@ static void promptPairing(void)
 	std::cout << "  One CardのMAIN SWを５秒以上押し続けると、ペアリングモードに変更できます." << std::endl;
 }
 
+static pBleDevice selectPairedBLEDevice(pBleApi api)
+{
+	// U2Fデバイスを探索
+	std::vector<pBleDevice> devices = api->findDevices();
+	if (devices.size() == 0) {
+		return nullptr;
+	}
+
+	// デバイスが検索できた場合はペアリング済のメッセージを表示
+	if (arg_pairing == true) {
+		std::cout << "既にOne Cardとペアリング済みです. " << std::endl;
+	}
+
+	if (arg_DeviceIdentifier) {
+		// パラメーターで指定されたU2Fデバイスを選択
+		std::string id(arg_DeviceIdentifier);
+		std::vector<pBleDevice>::iterator i;
+		for (i = devices.begin(); i != devices.end(); i++) {
+			if (((*i)->Identifier() == id)
+				&& ((*i)->Identifier().length() == id.length()))
+				return (*i);
+		}
+
+	} else {
+		// 指定されていない場合は、先頭のU2Fデバイスを選択
+		return devices[0];
+	}
+
+	return nullptr;
+}
+
+static pBleDevice pairingBLEDevice(pBleApi api)
+{
+	if (arg_pairing == false) {
+		// デバイスが検索できない場合はペアリングを要求
+		promptPairing();
+		BleToolsUtil_outputLog("prepareBLEDevice: BLE device not found");
+		return NULL;
+	}
+
+	// ペアリングされていないデバイスとペアリングを実行
+	BleApiWinRT *apiWinRT = (BleApiWinRT *)api;
+	return apiWinRT->bondWithUnpairedDevice();
+}
+
 static int prepareBLEDevice(BleApiConfiguration &configuration)
 {
 	// BLE通信が不要の場合は終了
@@ -34,31 +80,16 @@ static int prepareBLEDevice(BleApiConfiguration &configuration)
 		return -1;
 	}
 
-	// U2Fデバイスを探索
-	std::vector<pBleDevice> devices = api->findDevices();
-	if (!devices.size()) {
-		// デバイスが検索できない場合はペアリングを要求
-		promptPairing();
-		BleToolsUtil_outputLog("prepareBLEDevice: BLE device not found");
-		return -1;
+	// ペアリング済みU2Fデバイスを探索
+	dev = selectPairedBLEDevice(api);
+
+	// ペアリング済みU2Fデバイスがない場合はペアリング実行
+	if (dev == nullptr) {
+		dev = pairingBLEDevice(api);
 	}
 
-	if (arg_DeviceIdentifier) {
-		// パラメーターで指定されたU2Fデバイスを選択
-		std::string id(arg_DeviceIdentifier);
-		std::vector<pBleDevice>::iterator i;
-		for (i = devices.begin(); i != devices.end(); i++) {
-			if (((*i)->Identifier() == id)
-				&& ((*i)->Identifier().length() == id.length()))
-				dev = (*i);
-		}
-
-	} else {
-		// 指定されていない場合は、先頭のU2Fデバイスを選択
-		dev = devices[0];
-	}
-
-	if (!dev) {
+	// ペアリング済みU2Fデバイスがない場合は以降の処理を行わない
+	if (dev == nullptr) {
 		std::cout << "使用できるFIDO BLE U2Fデバイスがありません." << std::endl;
 		BleToolsUtil_outputLog("prepareBLEDevice: No BLE device available");
 		return -1;

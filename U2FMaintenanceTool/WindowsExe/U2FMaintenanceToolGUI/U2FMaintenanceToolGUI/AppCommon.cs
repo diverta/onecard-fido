@@ -18,7 +18,8 @@
         public const string MSG_ERASE_SKEY_CERT = "One Cardから鍵・証明書・キーハンドルをすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はOne CardによるU2F認証ができなくなります。\n削除処理を実行しますか？";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
-
+        public const string MSG_ERASE_BONDING_INFO = "One Cardからペアリング情報をすべて消去します。";
+        public const string MSG_PROMPT_ERASE_BONDING_INFO = "消去後は、すべてのPCでOne Cardとの通信ができなくなります。\n消去処理を実行しますか？";
         // 証明書要求ファイル作成画面
         public const string MSG_PROMPT_SELECT_PEM_PATH = "使用する秘密鍵ファイル(PEM)を選択してください。";
         public const string MSG_PROMPT_CREATE_CSR_PATH = "作成する証明書要求ファイル(CSR)名を指定してください。";
@@ -37,7 +38,7 @@
         public const string MSG_PROMPT_INPUT_CRT_DAYS = "自己署名証明書の有効期間（日数）を数値で入力してください。";
 
         // コマンド種別に対応する処理名称
-        public const string PROCESS_NAME_ERASE_BOND = "ペアリング情報削除処理";
+        public const string PROCESS_NAME_ERASE_BOND = "ペアリング情報消去処理";
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
         public const string PROCESS_NAME_HEALTHCHECK = "ヘルスチェック";
@@ -46,6 +47,7 @@
         public const string PROCESS_NAME_CREATE_KEYPAIR_PEM = "鍵ファイル作成";
         public const string PROCESS_NAME_CREATE_CERTREQ_CSR = "証明書要求ファイル作成";
         public const string PROCESS_NAME_CREATE_SELFCRT_CRT = "自己署名証明書ファイル作成";
+        public const string PROCESS_NAME_PAIRING = "ペアリング";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
