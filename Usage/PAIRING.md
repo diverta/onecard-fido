@@ -44,16 +44,15 @@ Windowsの設定画面からBluetooth設定を参照すると、下図のよう�
 
 U2F管理ツールの「ペアリング実行」ボタンをクリックします。
 
-
-約30秒ほど、ペアリング先の探索処理のため画面がクリックできない状態となります。
-
+<img src="assets/0058.png" width="500">
 
 ペアリングが成功すると、ポップアップ画面が表示されます。
 
+<img src="assets/0059.png" width="500">
 
 macOSの設定画面からBluetooth設定を参照すると、下図のように「OneCard_Peripheral」がペアリング済みであることが確認できます。
 
-<img src="../assets/0019.png" width="500">
+<img src="assets/0060.png" width="500">
 
 これで、macOSとのペアリングは完了です。
 
