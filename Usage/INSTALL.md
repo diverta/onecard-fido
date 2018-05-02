@@ -6,7 +6,7 @@ BLE U2Fサービスを動作させるためには、秘密鍵と署名済み証�
 
 ## U2F管理ツールの準備
 
-[U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg) をGitHubからダウンロード後、インストールを実行します。
+[U2F管理ツールインストール手順](TOOL_INSTALL.md) を参照し、U2F管理ツールをインストールします。
 
 インストール後、アプリケーション・フォルダーに作成された「U2FMaintenanceTool.app」をダブルクリックすると、U2F管理ツール画面が起動します。
 
