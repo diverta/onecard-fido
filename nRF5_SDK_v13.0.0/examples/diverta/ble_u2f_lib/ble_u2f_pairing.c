@@ -25,6 +25,9 @@ static bool run_as_pairing_mode;
 // 接続情報を保持
 static ble_u2f_context_t *m_u2f_context;
 
+// ペアリング完了フラグ（ペアリングモードで、ペアリング完了時にtrueが設定される）
+static bool pairing_completed;
+
 void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
 {
     ret_code_t err_code;
@@ -291,6 +294,9 @@ void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
     // run_as_pairing_mode==trueが保持される
     m_pairing_mode = NON_PAIRING_MODE;
     write_pairing_mode();
+    
+    // ペアリング完了フラグを初期化
+    pairing_completed = false;
 }
 
 void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
@@ -300,9 +306,20 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
     NRF_LOG_INFO("Authorization status: 0x%02x \r\n", auth_status);
 
     // ペアリング成功時はペアリングモードをキャンセル
+    // （ペアリングキャンセルのためのソフトデバイス再起動は、disconnect時に実行される）
     if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
         NRF_LOG_INFO("Pairing completed with success \r\n");
-        alternate_pairing_mode(p_u2f, false);
+        pairing_completed = true;
+    }
+}
+
+void ble_u2f_pairing_on_disconnect(void)
+{
+    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+    // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
+    if (run_as_pairing_mode == true && pairing_completed == true) {
+        NRF_LOG_INFO("ble_u2f_pairing_on_disconnect called. \r\n");
+        NVIC_SystemReset();
     }
 }
 
