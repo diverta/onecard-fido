@@ -6,6 +6,7 @@
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_processing_led.h"
+#include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
 
@@ -310,6 +311,10 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
     if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
         NRF_LOG_INFO("Pairing completed with success \r\n");
         pairing_completed = true;
+        
+        // ペアリング先から切断されない可能性があるため、
+        // 無通信タイムアウトのタイマー（10秒）をスタートさせる
+        ble_u2f_comm_interval_timer_start(p_u2f);
     }
 }
 
