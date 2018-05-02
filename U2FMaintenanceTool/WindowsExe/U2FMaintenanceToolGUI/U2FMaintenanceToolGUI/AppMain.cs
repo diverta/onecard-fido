@@ -197,7 +197,7 @@ namespace U2FMaintenanceToolGUI
         public bool doCreateCertReq(string filePath, string certReqParamKeyFile, string certReqParamSubject)
         {
             // openssl.exe req -new -key <certReqParamKeyFile> -subj "<certReqParamSubject>" -out <filePath> を実行する
-            string arguments = string.Format("req -new -key {0} -subj \"{1}\" -out {2}", 
+            string arguments = string.Format("req -new -key {0} -subj \"{1}\" -out {2} -config openssl.cnf", 
                 certReqParamKeyFile, certReqParamSubject, filePath);
             return doCommandWithExecutable("openssl.exe", arguments);
         }
