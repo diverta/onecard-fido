@@ -31,6 +31,8 @@ public:
 public:
   virtual std::vector < BleDevice * >findDevices();
   virtual bool IsEnabled();
+
+  BleDevice *bondWithUnpairedDevice();
 } *pBleApiWinRT;
 
 #endif				/* _BLEAPI_BLEAPIWINDOWS_H_ */

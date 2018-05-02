@@ -149,6 +149,12 @@ namespace U2FMaintenanceToolGUI
             return false;
         }
 
+        public bool doPairing()
+        {
+            // U2FMaintenanceTool.exe -Pを実行する
+            return doCommandWithExecutable(U2FMaintenanceToolExe, "-P");
+        }
+
         public bool doEraseBond()
         {
             // U2FMaintenanceTool.exe -Bを実行する

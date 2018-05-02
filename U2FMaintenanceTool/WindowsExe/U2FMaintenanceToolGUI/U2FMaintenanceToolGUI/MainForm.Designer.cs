@@ -48,9 +48,10 @@
             this.証明書要求ファイル作成RToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.自己署名証明書ファイル作成SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.ペアリング情報消去ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,7 +71,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(200, 25);
             this.button1.TabIndex = 1;
-            this.button1.Text = "ペアリング情報消去";
+            this.button1.Text = "ペアリング実行";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -226,6 +227,7 @@
             // その他OToolStripMenuItem
             // 
             this.その他OToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ペアリング情報消去ToolStripMenuItem,
             this.u2F管理ツールについてToolStripMenuItem});
             this.その他OToolStripMenuItem.Name = "その他OToolStripMenuItem";
             this.その他OToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
@@ -237,6 +239,13 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "U2F管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.u2F管理ツールについてToolStripMenuItem_Click);
+            // 
+            // ペアリング情報消去ToolStripMenuItem
+            // 
+            this.ペアリング情報消去ToolStripMenuItem.Name = "ペアリング情報消去ToolStripMenuItem";
+            this.ペアリング情報消去ToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.ペアリング情報消去ToolStripMenuItem.Text = "ペアリング情報消去...";
+            this.ペアリング情報消去ToolStripMenuItem.Click += new System.EventHandler(this.ペアリング情報消去ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -294,6 +303,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem その他OToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ペアリング情報消去ToolStripMenuItem;
     }
 }
 

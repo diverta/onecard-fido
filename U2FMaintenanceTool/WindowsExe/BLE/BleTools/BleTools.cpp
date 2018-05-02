@@ -25,6 +25,7 @@ char *arg_chrome_nm_registry_key = NULL;
 char *arg_chrome_nm_setting_file = NULL;
 bool  arg_chrome_subprocess      = false;
 bool  arg_need_ble               = false;
+bool  arg_pairing                = false;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -557,6 +558,10 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		}
 		if (!strncmp(argv[count], "-D", 2)) {
 			configuration.alwaysconnected = true;
+		}
+		if (!strncmp(argv[count], "-P", 2)) {
+			// ペアリング実行
+			arg_pairing = true;
 		}
 		if (!strncmp(argv[count], "-B", 2)) {
 			// ペアリング情報をFlash ROMから削除

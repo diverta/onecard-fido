@@ -237,6 +237,7 @@ private:
 
 void BleDeviceWinRT::Initialize()
 {
+  // fetch all internally used pointers.
   mService = mDevice->GetGattService(FIDO_SERVICE_GUID);
   if (!mService)
     STRING_RUNTIME_EXCEPTION("Could not get FIDO Service.");
@@ -287,9 +288,6 @@ BleDeviceWinRT::BleDeviceWinRT(pBleApi pBleApi, std::string deviceInstanceId, Wi
   , mCharacteristicVersion(nullptr)
   , mCharacteristicVersionBitfield(nullptr)
 {
-  // fetch all internally used pointers.
-  Initialize();
-
   // mutex init
   mMutex = CreateMutex(NULL, false, NULL);
   if (mMutex == NULL)
