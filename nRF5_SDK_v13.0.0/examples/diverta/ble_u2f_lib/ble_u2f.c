@@ -3,6 +3,7 @@
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_util.h"
+#include "ble_u2f_pairing.h"
 
 // 無通信タイマー
 #include "ble_u2f_comm_interval_timer.h"
@@ -45,6 +46,9 @@ static void ble_u2f_on_disconnect(ble_u2f_t * p_u2f, ble_evt_t *p_ble_evt)
 
     // FIDO機能実行中LEDを消灯
     ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
+    
+    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+    ble_u2f_pairing_on_disconnect();
 }
 
 

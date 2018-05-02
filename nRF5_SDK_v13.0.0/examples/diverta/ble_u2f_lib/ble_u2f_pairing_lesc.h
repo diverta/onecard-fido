@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "ble.h"
+#include "ble_u2f.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,8 +12,7 @@ extern "C" {
 
 
 uint32_t ble_u2f_pairing_lesc_generate_key_pair(void);
-bool     ble_u2f_pairing_lesc_on_ble_evt(ble_evt_t * p_ble_evt);
-
+bool     ble_u2f_pairing_lesc_on_ble_evt(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt);
 
 #ifdef __cplusplus
 }

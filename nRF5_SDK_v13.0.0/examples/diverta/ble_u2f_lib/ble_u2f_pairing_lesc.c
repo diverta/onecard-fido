@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ble_u2f.h"
 #include "ble_u2f_crypto.h"
+#include "ble_u2f_pairing.h"
 
 // for pm_lesc_public_key_set
 #include "peer_manager.h"
@@ -48,7 +49,7 @@ uint32_t ble_u2f_pairing_lesc_generate_key_pair(void)
     return err_code;
 }
 
-bool ble_u2f_pairing_lesc_on_ble_evt(ble_evt_t * p_ble_evt)
+bool ble_u2f_pairing_lesc_on_ble_evt(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
 {
     bool ret = true;
     ret_code_t err_code;
@@ -93,9 +94,8 @@ bool ble_u2f_pairing_lesc_on_ble_evt(ble_evt_t * p_ble_evt)
             break;
 
         case BLE_GAP_EVT_AUTH_STATUS:
-            // LESCペアリング完了時のステータスを確認
-            tmp0 = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
-            NRF_LOG_INFO("Authorization status: 0x%02x \r\n", tmp0);
+            // ペアリングが成功したかどうかを判定
+            ble_u2f_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
             break;
 
         default:

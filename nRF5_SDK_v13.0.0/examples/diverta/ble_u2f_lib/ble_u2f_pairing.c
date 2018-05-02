@@ -6,6 +6,7 @@
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_processing_led.h"
+#include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
 
@@ -24,6 +25,9 @@ static bool run_as_pairing_mode;
 
 // 接続情報を保持
 static ble_u2f_context_t *m_u2f_context;
+
+// ペアリング完了フラグ（ペアリングモードで、ペアリング完了時にtrueが設定される）
+static bool pairing_completed;
 
 void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
 {
@@ -260,22 +264,13 @@ static bool read_pairing_mode(void)
     }
 }
 
-void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
+static void alternate_pairing_mode(ble_u2f_t *p_u2f, bool pairing_mode)
 {
-    // ペアリングモードがFlash ROMに設定されていれば
-    // それを取得して設定
-    run_as_pairing_mode = read_pairing_mode();
-
+    // 引数の値をペアリングモードに設定
+    run_as_pairing_mode = pairing_mode;
+    
     // ペアリングモードとして動作するか否かを設定
     if (run_as_pairing_mode == true) {
-        // Flash ROM上は非ペアリングモードに設定
-        //   (SoftDevice再起動時に
-        //   非ペアリングモードで起動させるための措置)
-        // SoftDeviceが起動中は、
-        // run_as_pairing_mode==trueが保持される
-        m_pairing_mode = NON_PAIRING_MODE;
-        write_pairing_mode();
-
         // 指定のLEDを点灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, true);
         NRF_LOG_INFO("Run as pairing mode \r\n");
@@ -284,6 +279,52 @@ void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
         // 指定のLEDを消灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, false);
         NRF_LOG_INFO("Run as non-pairing mode \r\n");
+    }
+}
+
+void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
+{
+    // ペアリングモードがFlash ROMに設定されていれば
+    // それを取得して設定
+    alternate_pairing_mode(p_u2f, read_pairing_mode());
+    
+    // Flash ROM上は非ペアリングモードに設定
+    //   (SoftDevice再起動時に
+    //   非ペアリングモードで起動させるための措置)
+    // SoftDeviceが起動中は、
+    // run_as_pairing_mode==trueが保持される
+    m_pairing_mode = NON_PAIRING_MODE;
+    write_pairing_mode();
+    
+    // ペアリング完了フラグを初期化
+    pairing_completed = false;
+}
+
+void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
+{
+    // LESCペアリング完了時のステータスを確認
+    uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
+    NRF_LOG_INFO("Authorization status: 0x%02x \r\n", auth_status);
+
+    // ペアリング成功時はペアリングモードをキャンセル
+    // （ペアリングキャンセルのためのソフトデバイス再起動は、disconnect時に実行される）
+    if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
+        NRF_LOG_INFO("Pairing completed with success \r\n");
+        pairing_completed = true;
+        
+        // ペアリング先から切断されない可能性があるため、
+        // 無通信タイムアウトのタイマー（10秒）をスタートさせる
+        ble_u2f_comm_interval_timer_start(p_u2f);
+    }
+}
+
+void ble_u2f_pairing_on_disconnect(void)
+{
+    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+    // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
+    if (run_as_pairing_mode == true && pairing_completed == true) {
+        NRF_LOG_INFO("ble_u2f_pairing_on_disconnect called. \r\n");
+        NVIC_SystemReset();
     }
 }
 
