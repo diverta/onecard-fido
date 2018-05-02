@@ -9,6 +9,9 @@
 // for pm_evt_t
 #include "peer_manager.h"
 
+// for fds_evt_t
+#include "fds.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,6 +26,7 @@ void    ble_u2f_pairing_change_mode(ble_u2f_context_t *p_u2f_context);
 void    ble_u2f_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt);
 void    ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f);
 void    ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt);
+void    ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt);
 
 
 #ifdef __cplusplus

@@ -565,7 +565,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 static void on_ble_evt(ble_evt_t * p_ble_evt)
 {
     // LESCペアリングによる鍵交換処理
-    if (ble_u2f_pairing_lesc_on_ble_evt(p_ble_evt) == true) {
+    if (ble_u2f_pairing_lesc_on_ble_evt(&m_u2f, p_ble_evt) == true) {
         return;
     }
 

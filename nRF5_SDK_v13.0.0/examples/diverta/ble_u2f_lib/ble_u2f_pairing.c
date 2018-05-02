@@ -260,22 +260,13 @@ static bool read_pairing_mode(void)
     }
 }
 
-void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
+static void alternate_pairing_mode(ble_u2f_t *p_u2f, bool pairing_mode)
 {
-    // ペアリングモードがFlash ROMに設定されていれば
-    // それを取得して設定
-    run_as_pairing_mode = read_pairing_mode();
-
+    // 引数の値をペアリングモードに設定
+    run_as_pairing_mode = pairing_mode;
+    
     // ペアリングモードとして動作するか否かを設定
     if (run_as_pairing_mode == true) {
-        // Flash ROM上は非ペアリングモードに設定
-        //   (SoftDevice再起動時に
-        //   非ペアリングモードで起動させるための措置)
-        // SoftDeviceが起動中は、
-        // run_as_pairing_mode==trueが保持される
-        m_pairing_mode = NON_PAIRING_MODE;
-        write_pairing_mode();
-
         // 指定のLEDを点灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, true);
         NRF_LOG_INFO("Run as pairing mode \r\n");
@@ -284,6 +275,34 @@ void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
         // 指定のLEDを消灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, false);
         NRF_LOG_INFO("Run as non-pairing mode \r\n");
+    }
+}
+
+void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
+{
+    // ペアリングモードがFlash ROMに設定されていれば
+    // それを取得して設定
+    alternate_pairing_mode(p_u2f, read_pairing_mode());
+    
+    // Flash ROM上は非ペアリングモードに設定
+    //   (SoftDevice再起動時に
+    //   非ペアリングモードで起動させるための措置)
+    // SoftDeviceが起動中は、
+    // run_as_pairing_mode==trueが保持される
+    m_pairing_mode = NON_PAIRING_MODE;
+    write_pairing_mode();
+}
+
+void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
+{
+    // LESCペアリング完了時のステータスを確認
+    uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
+    NRF_LOG_INFO("Authorization status: 0x%02x \r\n", auth_status);
+
+    // ペアリング成功時はペアリングモードをキャンセル
+    if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
+        NRF_LOG_INFO("Pairing completed with success \r\n");
+        alternate_pairing_mode(p_u2f, false);
     }
 }
 
