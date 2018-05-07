@@ -22,7 +22,7 @@ U2F管理ツール画面（U2FMaintenanceToolGUI.exe）、U2F管理コマンド�
 コマンドラインオプションのプレビューは下記の通りです。
 
 ```
-/GS /GL /analyze- /W3 /Gy /Zc:wchar_t /I"BleApi" /I"ble_util" /I"BleTools" /Gm- /O2 /sdl /Fd"Release\vc140.pdb" /Zc:inline /fp:precise /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WINDOWS" /D "__OS_WIN" /D "FEATURE_WINRT" /D "VERSION=\\"1.1.3\\"" /errorReport:prompt /WX- /Zc:forScope /ZW /Gz /Oy- /Oi /MD /Fa"Release\" /EHsc /nologo /Fo"Release\" /AI"C:/Program Files/Microsoft Visual Studio 14.0/VC/vcpackages" /AI"C:/Program Files/Windows Kits/10/References/" /AI"C:/Program Files/Windows Kits/10/UnionMetaData/"
+/GS /GL /analyze- /W3 /Gy /Zc:wchar_t /I"BleApi" /I"ble_util" /I"BleTools" /Gm- /O2 /sdl /Fd"Release\vc140.pdb" /Zc:inline /fp:precise /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "PLATFORM_WINDOWS" /D "__OS_WIN" /D "FEATURE_WINRT" /errorReport:prompt /WX- /Zc:forScope /ZW /Gz /Oy- /Oi /MD /Fa"Release\" /EHsc /nologo /Fo"Release\" /AI"C:/Program Files/Microsoft Visual Studio 14.0/VC/vcpackages" /AI"C:/Program Files/Windows Kits/10/References/" /AI"C:/Program Files/Windows Kits/10/UnionMetaData/"
 ```
 
 #### C/C++ - 全般
@@ -48,7 +48,7 @@ C:/Program Files/Microsoft Visual Studio 14.0/VC/vcpackages;C:/Program Files/Win
 
 - プリプロセッサの定義
 ```
-WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);PLATFORM_WINDOWS;__OS_WIN;FEATURE_WINRT;VERSION=\"1.1.3\"
+WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);PLATFORM_WINDOWS;__OS_WIN;FEATURE_WINRT
 ```
 
 #### C/C++ - コード生成
