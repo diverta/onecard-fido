@@ -16,9 +16,17 @@ pBleDevice           dev = NULL;
 
 static void promptPairing(void)
 {
-	std::cout << "One Cardが見つかりません. " << std::endl;
-	std::cout << "まず最初に、One Cardをペアリングモードに変更し、ペアリングを実施してください." << std::endl;
-	std::cout << "  One CardのMAIN SWを５秒以上押し続けると、ペアリングモードに変更できます." << std::endl;
+	if (arg_pairing == true) {
+		// ペアリング実行時のメッセージを表示
+		std::cout << "One Cardとのペアリングを実行します. " << std::endl;
+		std::cout << "  One Cardをペアリングモードに変更してください." << std::endl;
+		std::cout << "  One CardのMAIN SWを５秒以上押し続けると、ペアリングモードに変更できます." << std::endl;
+		std::cout << "30秒ほど待機します. しばらくお待ちください..." << std::endl;
+	} else {
+		// ペアリング実行時でない場合は、ペアリングを要求する旨のメッセージを表示
+		std::cout << "One Cardが見つかりません. " << std::endl;
+		std::cout << "まず最初に、One Cardとのペアリングを実行してください." << std::endl;
+	}
 }
 
 static pBleDevice selectPairedBLEDevice(pBleApi api)
@@ -54,9 +62,10 @@ static pBleDevice selectPairedBLEDevice(pBleApi api)
 
 static pBleDevice pairingBLEDevice(pBleApi api)
 {
+	// プロンプトを表示
+	promptPairing();
+
 	if (arg_pairing == false) {
-		// デバイスが検索できない場合はペアリングを要求
-		promptPairing();
 		BleToolsUtil_outputLog("prepareBLEDevice: BLE device not found");
 		return NULL;
 	}
