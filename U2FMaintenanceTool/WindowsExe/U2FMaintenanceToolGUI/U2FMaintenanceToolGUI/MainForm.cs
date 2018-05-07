@@ -217,6 +217,7 @@ namespace U2FMaintenanceToolGUI
             textPath1.Enabled = enabled;
             textPath2.Enabled = enabled;
             buttonQuit.Enabled = enabled;
+            menuStrip1.Enabled = enabled;
         }
 
         private void displayResultMessage(string message, bool success)
