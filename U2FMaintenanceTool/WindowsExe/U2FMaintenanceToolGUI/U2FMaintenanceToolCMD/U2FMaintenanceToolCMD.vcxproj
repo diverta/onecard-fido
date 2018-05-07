@@ -150,7 +150,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);PLATFORM_WINDOWS;__OS_WIN;FEATURE_WINRT;VERSION=\"1.1.3\"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);PLATFORM_WINDOWS;__OS_WIN;FEATURE_WINRT</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>BleApi;ble_util;BleTools</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>C:/Program Files/Microsoft Visual Studio 14.0/VC/vcpackages;C:/Program Files/Windows Kits/10/References/;C:/Program Files/Windows Kits/10/UnionMetaData/</AdditionalUsingDirectories>
