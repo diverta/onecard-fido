@@ -12,10 +12,6 @@ namespace U2FMaintenanceToolGUI
         public const string U2FMaintenanceToolExe = "U2FMaintenanceToolCMD.exe";
         public bool commandAvailable;
 
-        // U2F管理コマンドからの出力を保持
-        private static StringBuilder standardOutputs;
-        private static StringBuilder standardErrors;
-
         // Chrome Native Messaging設定用の
         // レジストリーキー名、JSONファイル名
         public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
@@ -76,10 +72,6 @@ namespace U2FMaintenanceToolGUI
                 return;
             }
 
-            // プロセス出力情報をクリア
-            standardOutputs = new StringBuilder();
-            standardErrors = new StringBuilder();
-
             // MS-DOSコマンドプロンプト画面が表示されないように
             // プロセスを実行する
             p = new Process();
@@ -126,38 +118,22 @@ namespace U2FMaintenanceToolGUI
             mainForm.onAppMainProcessExited(ret);
         }
 
-        private static void processOutputDataReceived(object sender, DataReceivedEventArgs args)
+        private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
         {
             if (string.IsNullOrEmpty(args.Data)) {
                 return;
             }
-            standardOutputs.AppendLine(args.Data);
+            // メイン画面の参照を経由し処理を実行
+            mainForm.onAppMainProcessOutputData(args.Data);
         }
 
-        private static void processErrorDataReceived(object sender, DataReceivedEventArgs args)
+        private void processErrorDataReceived(object sender, DataReceivedEventArgs args)
         {
             if (string.IsNullOrEmpty(args.Data)) {
                 return;
             }
-            standardErrors.AppendLine(args.Data);
-        }
-
-        public string getProcessOutputData()
-        {
-            if (commandAvailable) {
-                return standardOutputs.ToString();
-            } else {
-                return "";
-            }
-        }
-
-        public string getProcessErrorData()
-        {
-            if (commandAvailable) {
-                return standardErrors.ToString();
-            } else {
-                return "";
-            }
+            // メイン画面の参照を経由し処理を実行
+            mainForm.onAppMainProcessErrorData(args.Data);
         }
 
         public bool checkChromeNMSettingFileIsExist() {

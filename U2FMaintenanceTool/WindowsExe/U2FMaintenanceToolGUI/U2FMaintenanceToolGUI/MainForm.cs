@@ -220,15 +220,20 @@ namespace U2FMaintenanceToolGUI
             menuStrip1.Enabled = enabled;
         }
 
+        public void onAppMainProcessOutputData(string outputData)
+        {
+            // U2F管理コマンド実行時の標準出力内容を表示
+            textBox1.AppendText(outputData + "\r\n");
+        }
+
+        public void onAppMainProcessErrorData(string errorData)
+        {
+            // U2F管理コマンド実行時の標準エラー出力内容を表示
+            textBox1.AppendText(errorData + "\r\n");
+        }
+
         private void displayResultMessage(string message, bool success)
         {
-            // U2F管理コマンドの実行時出力内容を表示
-            textBox1.AppendText(app.getProcessOutputData());
-            if (success == false)
-            {
-                textBox1.AppendText(app.getProcessErrorData());
-            }
-
             // U2F管理コマンドの実行結果を表示
             string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
