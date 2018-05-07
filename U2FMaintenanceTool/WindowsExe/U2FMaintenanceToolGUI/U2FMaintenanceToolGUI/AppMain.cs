@@ -9,7 +9,7 @@ namespace U2FMaintenanceToolGUI
     {
         // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
-        public const string U2FMaintenanceToolExe = "U2FMaintenanceTool.exe";
+        public const string U2FMaintenanceToolExe = "U2FMaintenanceToolCMD.exe";
         public bool commandAvailable;
 
         // U2F管理コマンドからの出力を保持

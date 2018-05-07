@@ -13,6 +13,9 @@ FIDO U2F認証テストツール（BLECertificationTool.exe）のビルド手順
 
 ## 補足説明
 
+* [VS2015プロジェクトの諸設定](VS2015CPROJ.md) <br>
+U2F管理ツール画面（U2FMaintenanceToolGUI.exe）、U2F管理コマンド（U2FMaintenanceToolCMD.exe）のビルドに必要な、Visual Studio 2015プロジェクトの詳細設定情報について掲載しています。
+
 * [OpenSSL C言語ライブラリー導入手順](OPENSSLC.md) <br>
 U2F管理ツール内で秘密鍵ファイル生成などを行うために必要な、OpenSSL C言語ライブラリーの導入手順を掲載しています。
 
