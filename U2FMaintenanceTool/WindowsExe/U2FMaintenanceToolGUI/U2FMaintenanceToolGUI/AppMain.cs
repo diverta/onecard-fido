@@ -12,10 +12,6 @@ namespace U2FMaintenanceToolGUI
         public const string U2FMaintenanceToolExe = "U2FMaintenanceToolCMD.exe";
         public bool commandAvailable;
 
-        // U2F管理コマンドからの出力を保持
-        private static StringBuilder standardOutputs;
-        private static StringBuilder standardErrors;
-
         // Chrome Native Messaging設定用の
         // レジストリーキー名、JSONファイル名
         public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
@@ -26,8 +22,17 @@ namespace U2FMaintenanceToolGUI
         public const string OpenSSLCacertV3Ext = "cacertV3.ext";
         public bool opensslAvailable;
 
-        public AppMain()
+        // メイン画面の参照を保持
+        private MainForm mainForm;
+
+        // 実行中の外部プロセスを保持
+        private Process p;
+
+        public AppMain(MainForm f)
         {
+            // メイン画面の参照を保持
+            mainForm = f;
+
             // U2F管理コマンドが導入されているかチェック
             commandAvailable = File.Exists(U2FMaintenanceToolExe);
             if (commandAvailable == false) {
@@ -60,23 +65,16 @@ namespace U2FMaintenanceToolGUI
             sr.Close();
         }
 
-        private bool doCommandWithExecutable(string executable, string arguments)
+        private void doCommandWithExecutable(string executable, string arguments)
         {
             // 実行対象プロセスの実行可能ファイルがない場合は終了
             if (commandAvailable == false) {
-                outputLogToFile(string.Format(
-                    "コマンドの実行が出来ません: {0} {1}",
-                    executable, arguments));
-                return false;
+                return;
             }
-
-            // プロセス出力情報をクリア
-            standardOutputs = new StringBuilder();
-            standardErrors = new StringBuilder();
 
             // MS-DOSコマンドプロンプト画面が表示されないように
             // プロセスを実行する
-            Process p = new Process();
+            p = new Process();
             p.OutputDataReceived += processOutputDataReceived;
             p.ErrorDataReceived += processErrorDataReceived;
 
@@ -87,55 +85,69 @@ namespace U2FMaintenanceToolGUI
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
 
+            // イベントハンドラーがフォームを作成したスレッドで実行されるようにする
+            p.SynchronizingObject = mainForm;
+            // イベントハンドラー追加
+            p.Exited += new EventHandler(onProcessExited);
+            // プロセスが終了したときにExitedイベントを発生させる
+            p.EnableRaisingEvents = true;
+
             // プロセス実行が完了するまで待つ
             p.Start();
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-            p.WaitForExit();
 
-            // 実行結果を取得
+            // 実行開始ログ出力
+            outputLogToFile(string.Format(
+                "コマンドの実行を開始しました: {0} {1}", 
+                p.StartInfo.FileName, p.StartInfo.Arguments));
+        }
+
+        public bool commandProcessRunning()
+        {
+            // プロセスがない場合
+            if (p == null) {
+                return false;
+            }
+            // プロセスが既に停止している場合
+            if (p.HasExited == true) {
+                return false;
+            }
+            // プロセスが走行中と判定
+            return true;
+        }
+
+        private void onProcessExited(object sender, EventArgs e)
+        {
+            // プロセスのリターンコードを取得
             bool ret = (p.ExitCode == 0);
-            p.Close();
 
             // 実行結果をログ出力
             outputLogToFile(string.Format(
                 "コマンドの実行が{0}しました: {1} {2}",
-                ret ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE, executable, arguments));
-            return ret;
+                ret ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE,
+                p.StartInfo.FileName, p.StartInfo.Arguments));
+
+            // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
+            mainForm.onAppMainProcessExited(ret);
         }
 
-        private static void processOutputDataReceived(object sender, DataReceivedEventArgs args)
+        private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
         {
             if (string.IsNullOrEmpty(args.Data)) {
                 return;
             }
-            standardOutputs.AppendLine(args.Data);
+            // メイン画面の参照を経由し処理を実行
+            mainForm.onAppMainProcessOutputData(args.Data);
         }
 
-        private static void processErrorDataReceived(object sender, DataReceivedEventArgs args)
+        private void processErrorDataReceived(object sender, DataReceivedEventArgs args)
         {
             if (string.IsNullOrEmpty(args.Data)) {
                 return;
             }
-            standardErrors.AppendLine(args.Data);
-        }
-
-        public string getProcessOutputData()
-        {
-            if (commandAvailable) {
-                return standardOutputs.ToString();
-            } else {
-                return "";
-            }
-        }
-
-        public string getProcessErrorData()
-        {
-            if (commandAvailable) {
-                return standardErrors.ToString();
-            } else {
-                return "";
-            }
+            // メイン画面の参照を経由し処理を実行
+            mainForm.onAppMainProcessErrorData(args.Data);
         }
 
         public bool checkChromeNMSettingFileIsExist() {
@@ -149,65 +161,65 @@ namespace U2FMaintenanceToolGUI
             return false;
         }
 
-        public bool doPairing()
+        public void doPairing()
         {
             // U2FMaintenanceTool.exe -Pを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-P");
+            doCommandWithExecutable(U2FMaintenanceToolExe, "-P");
         }
 
-        public bool doEraseBond()
+        public void doEraseBond()
         {
             // U2FMaintenanceTool.exe -Bを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-B");
+            doCommandWithExecutable(U2FMaintenanceToolExe, "-B");
         }
 
-        public bool doEraseSkeyCert()
+        public void doEraseSkeyCert()
         {
             // U2FMaintenanceTool.exe -Eを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-E");
+            doCommandWithExecutable(U2FMaintenanceToolExe, "-E");
         }
 
-        public bool doInstallSkeyCert(string skeyFilePath, string certFilePath)
+        public void doInstallSkeyCert(string skeyFilePath, string certFilePath)
         {
             // U2FMaintenanceTool.exe -I <skeyFilePath> <certFilePath> を実行する
             string arguments = string.Format("-I {0} {1}", skeyFilePath, certFilePath);
-            return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
+            doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
-        public bool doHealthCheck()
+        public void doHealthCheck()
         {
             // U2FMaintenanceTool.exe -Hを実行する
-            return doCommandWithExecutable(U2FMaintenanceToolExe, "-H");
+            doCommandWithExecutable(U2FMaintenanceToolExe, "-H");
         }
 
-        public bool doSetupChromeNativeMessaging()
+        public void doSetupChromeNativeMessaging()
         {
             // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
             string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
-            return doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
+            doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
-        public bool doCreatePrivateKey(string filePath)
+        public void doCreatePrivateKey(string filePath)
         {
             // openssl.exe ecparam -out <filePath> -name prime256v1 -genkey -noout を実行する
             string arguments = string.Format("ecparam -out {0} -name prime256v1 -genkey -noout", filePath);
-            return doCommandWithExecutable("openssl.exe", arguments);
+            doCommandWithExecutable("openssl.exe", arguments);
         }
 
-        public bool doCreateCertReq(string filePath, string certReqParamKeyFile, string certReqParamSubject)
+        public void doCreateCertReq(string filePath, string certReqParamKeyFile, string certReqParamSubject)
         {
             // openssl.exe req -new -key <certReqParamKeyFile> -subj "<certReqParamSubject>" -out <filePath> を実行する
             string arguments = string.Format("req -new -key {0} -subj \"{1}\" -out {2} -config openssl.cnf", 
                 certReqParamKeyFile, certReqParamSubject, filePath);
-            return doCommandWithExecutable("openssl.exe", arguments);
+            doCommandWithExecutable("openssl.exe", arguments);
         }
 
-        public bool doCreateSelfCert(string filePath, string selfCertParamKeyFile, string selfCertParamCsrFile, string selfCertParamDays)
+        public void doCreateSelfCert(string filePath, string selfCertParamKeyFile, string selfCertParamCsrFile, string selfCertParamDays)
         {
             // openssl.exe x509 -in <selfCertParamCsrFile> -days <selfCertParamDays> -req -signkey <selfCertParamKeyFile> -out <filePath> -outform der -extfile cacertV3.ext を実行する
             string arguments = string.Format("x509 -in {0} -days {1} -req -signkey {2} -out {3} -outform der -extfile {4}",
                 selfCertParamCsrFile, selfCertParamDays, selfCertParamKeyFile, filePath, OpenSSLCacertV3Ext);
-            return doCommandWithExecutable("openssl.exe", arguments);
+            doCommandWithExecutable("openssl.exe", arguments);
         }
 
         public void doExit()

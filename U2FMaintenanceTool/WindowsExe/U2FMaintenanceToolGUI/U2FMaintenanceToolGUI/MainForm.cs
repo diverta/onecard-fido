@@ -6,11 +6,12 @@ namespace U2FMaintenanceToolGUI
     public partial class MainForm : Form
     {
         private AppMain app;
+        private string commandTitle = "";
 
         public MainForm()
         {
             InitializeComponent();
-            app = new AppMain();
+            app = new AppMain(this);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
@@ -40,55 +41,48 @@ namespace U2FMaintenanceToolGUI
 
         private void doCommand(object sender)
         {
-            string commandTitle = "";
-            bool ret = false;
-
             // ボタンを押下不可とする
             enableButtons(false);
 
             // U2F管理コマンドが存在しない場合は終了
-            if (checkCommandAvailable() == false)
-            {
+            if (checkCommandAvailable() == false) {
                 return;
             }
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(ペアリング情報消去ToolStripMenuItem))
-            {
+            if (sender.Equals(ペアリング情報消去ToolStripMenuItem)) {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_BOND;
-                ret = app.doEraseBond();
+                app.doEraseBond();
 
             }
-            else if (sender.Equals(button1))
-            {
+            else if (sender.Equals(button1)) {
                 commandTitle = AppCommon.PROCESS_NAME_PAIRING;
-                ret = app.doPairing();
+                app.doPairing();
 
             }
-            else if (sender.Equals(button2))
-            {
+            else if (sender.Equals(button2)) {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
-                ret = app.doEraseSkeyCert();
+                app.doEraseSkeyCert();
 
             }
-            else if (sender.Equals(button3))
-            {
+            else if (sender.Equals(button3)) {
                 commandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
-                ret = app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
+                app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
-            else if (sender.Equals(button4))
-            {
+            else if (sender.Equals(button4)) {
                 commandTitle = AppCommon.PROCESS_NAME_HEALTHCHECK;
-                ret = app.doHealthCheck();
+                app.doHealthCheck();
 
             }
-            else if (sender.Equals(button5))
-            {
+            else if (sender.Equals(button5)) {
                 commandTitle = AppCommon.PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING;
-                ret = app.doSetupChromeNativeMessaging();
+                app.doSetupChromeNativeMessaging();
             }
+        }
 
+        public void onAppMainProcessExited(bool ret)
+        {
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
             enableButtons(true);
@@ -223,17 +217,23 @@ namespace U2FMaintenanceToolGUI
             textPath1.Enabled = enabled;
             textPath2.Enabled = enabled;
             buttonQuit.Enabled = enabled;
+            menuStrip1.Enabled = enabled;
+        }
+
+        public void onAppMainProcessOutputData(string outputData)
+        {
+            // U2F管理コマンド実行時の標準出力内容を表示
+            textBox1.AppendText(outputData + "\r\n");
+        }
+
+        public void onAppMainProcessErrorData(string errorData)
+        {
+            // U2F管理コマンド実行時の標準エラー出力内容を表示
+            textBox1.AppendText(errorData + "\r\n");
         }
 
         private void displayResultMessage(string message, bool success)
         {
-            // U2F管理コマンドの実行時出力内容を表示
-            textBox1.AppendText(app.getProcessOutputData());
-            if (success == false)
-            {
-                textBox1.AppendText(app.getProcessErrorData());
-            }
-
             // U2F管理コマンドの実行結果を表示
             string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
@@ -332,18 +332,13 @@ namespace U2FMaintenanceToolGUI
 
         private void doCreateFile(object sender, string filePath)
         {
-            string commandTitle = "";
-            bool ret = false;
-
             // ファイルが生成されていない場合は終了
-            if (filePath.Equals(string.Empty))
-            {
+            if (filePath.Equals(string.Empty)) {
                 return;
             }
 
             // OpenSSLコマンドが存在しない場合は終了
-            if (checkOpensslAvailable() == false)
-            {
+            if (checkOpensslAvailable() == false) {
                 return;
             }
 
@@ -351,27 +346,20 @@ namespace U2FMaintenanceToolGUI
             enableButtons(false);
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(鍵ファイル作成KToolStripMenuItem))
-            {
+            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
-                ret = app.doCreatePrivateKey(filePath);
+                app.doCreatePrivateKey(filePath);
 
             }
-            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem))
-            {
+            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
-                ret = app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
+                app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
 
             }
-            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem))
-            {
+            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
                 commandTitle = AppCommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
-                ret = app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
+                app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
             }
-
-            // 処理結果を画面表示し、ボタンを押下可能とする
-            displayResultMessage(commandTitle, ret);
-            enableButtons(true);
         }
 
         private void u2F管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
@@ -392,6 +380,18 @@ namespace U2FMaintenanceToolGUI
             // プロンプトを表示し、Yesの場合だけ処理を行う
             if (displayPromptPopup(message)) {
                 doCommand(sender);
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 走行中のコマンドがある場合は画面を閉じないようにする
+            if (app.commandProcessRunning()) {
+                e.Cancel = true;
+                MessageBox.Show(
+                    "コマンドが実行中です.\n画面を閉じることはできません.", 
+                    AppMain.U2FMaintenanceToolTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
     }
