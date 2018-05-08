@@ -382,5 +382,17 @@ namespace U2FMaintenanceToolGUI
                 doCommand(sender);
             }
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 走行中のコマンドがある場合は画面を閉じないようにする
+            if (app.commandProcessRunning()) {
+                e.Cancel = true;
+                MessageBox.Show(
+                    "コマンドが実行中です.\n画面を閉じることはできません.", 
+                    AppMain.U2FMaintenanceToolTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
     }
 }

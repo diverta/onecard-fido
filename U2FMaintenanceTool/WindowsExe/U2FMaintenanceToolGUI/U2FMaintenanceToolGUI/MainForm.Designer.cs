@@ -271,6 +271,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "U2F Maintenance Tool";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

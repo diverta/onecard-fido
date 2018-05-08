@@ -103,6 +103,20 @@ namespace U2FMaintenanceToolGUI
                 p.StartInfo.FileName, p.StartInfo.Arguments));
         }
 
+        public bool commandProcessRunning()
+        {
+            // プロセスがない場合
+            if (p == null) {
+                return false;
+            }
+            // プロセスが既に停止している場合
+            if (p.HasExited == true) {
+                return false;
+            }
+            // プロセスが走行中と判定
+            return true;
+        }
+
         private void onProcessExited(object sender, EventArgs e)
         {
             // プロセスのリターンコードを取得
