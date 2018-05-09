@@ -299,9 +299,12 @@
     }
 
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
-        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        // コンソールにエラーメッセージを出力
         [self displayErrorMessage:message error:error];
         
+        // 画面上のテキストエリアにもメッセージを表示する
+        [self appendLogMessage:message];
+
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
@@ -317,7 +320,7 @@
     }
 
     - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
-        // 画面上のテキストエリアとコンソールに、エラーメッセージを出力
+        // コンソールにエラーメッセージを出力
         [self displayErrorMessage:message error:error];
         
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
@@ -382,8 +385,6 @@
         }
         // コンソールログを出力
         NSLog(@"%@", message);
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
     }
 
     - (void)displayErrorMessage:(NSString *)message error:(NSError *)error {
@@ -396,8 +397,6 @@
         } else {
             NSLog(@"%@", message);
         }
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
     }
 
     - (void)centralManagerDidReceive:(NSData *)bleResponse {
