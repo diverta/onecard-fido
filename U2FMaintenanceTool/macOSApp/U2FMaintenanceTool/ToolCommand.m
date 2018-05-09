@@ -651,7 +651,11 @@
     }
     // コマンド生成時
     if ([self commandArrayIsBlank] == false) {
-        [self.delegate toolCommandDidCreateBleRequest];
+        // コマンド開始メッセージを画面表示し、デリゲートに制御を戻す
+        NSString *message = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                             [ToolCommon processNameOfCommand:command]];
+        [[self delegate] notifyToolCommandMessage:message];
+        [[self delegate] toolCommandDidCreateBleRequest];
     }
 }
 
@@ -684,7 +688,6 @@
     if (receivedData && ([receivedData length] == totalLength)) {
         // 全受信データを保持
         [self setBleResponseData:[[NSData alloc] initWithData:receivedData]];
-        [self.delegate notifyToolCommandMessage:MSG_RESPONSE_RECEIVED];
         receivedData = nil;
         // 後続レスポンスがない
         return false;
@@ -764,11 +767,18 @@
             [self toolCommandDidProcess:true message:@"Install certificate end"];
             break;
         case COMMAND_TEST_REGISTER:
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
             NSLog(@"Register test success");
             // Registerレスポンスを内部で保持して後続処理を実行
             registerReponseData = [[NSData alloc] initWithData:[self bleResponseData]];
             [self setCommand:COMMAND_TEST_AUTH_CHECK];
             [self createCommandTestAuthFrom:registerReponseData P1:0x07];
+            // 後続のU2F Authenticateを開始する前に、
+            // One CardのMAIN SWを押してもらうように促すメッセージを表示
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
             break;
         case COMMAND_TEST_AUTH_CHECK:
             NSLog(@"Authenticate test (check) success");
@@ -781,6 +791,7 @@
             [self createCommandTestAuthFrom:registerReponseData P1:0x03];
             break;
         case COMMAND_TEST_AUTH_USER_PRESENCE:
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
             registerReponseData = nil;
             NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
             [self toolCommandDidProcess:true message:@"Health check end"];

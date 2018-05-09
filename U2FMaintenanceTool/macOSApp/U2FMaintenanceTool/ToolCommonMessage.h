@@ -29,6 +29,7 @@
 #define MSG_OCCUR_UNKNOWN_BLE_ERROR @"BLEエラーが発生しました。処理を再試行してください。"
 #define MSG_OCCUR_SKEYNOEXIST_ERROR @"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
 #define MSG_OCCUR_UNKNOWN_ERROR     @"不明なエラーが発生しました。"
+#define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
 
 #pragma mark - 証明書要求ファイル作成画面
@@ -71,7 +72,6 @@
 #define MSG_OCCUR_JSON_STRING_ERROR         @"設定用JSON文字列生成に失敗しました。処理を再試行してください。"
 #define MSG_OCCUR_JSON_DIRGET_ERROR         @"設定用JSONファイルインストール先ディレクトリー取得に失敗しました。処理を再試行してください。"
 #define MSG_OCCUR_JSON_OUTPUT_ERROR         @"設定用JSONファイルの出力に失敗しました。処理を再試行してください。"
-#define MSG_RESPONSE_RECEIVED               @"レスポンスを受信しました。"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"
@@ -81,7 +81,7 @@
 #define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO U2Fデバイスの接続要求がタイムアウトしました。"
 #define MSG_U2F_DEVICE_CONNECTED            @"FIDO U2Fデバイスに接続しました。"
 #define MSG_U2F_DEVICE_CONNECT_FAILED       @"FIDO U2Fデバイスの接続に失敗しました。"
-#define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO U2Fデバイスの接続を切断しました。"
+#define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO U2Fデバイスの接続が切断されました。"
 #define MSG_BLE_SERVICE_NOT_DISCOVERED      @"BLEサービスが見つかりません。"
 #define MSG_BLE_U2F_SERVICE_FOUND           @"FIDO BLE U2Fサービスが見つかりました。"
 #define MSG_BLE_U2F_SERVICE_NOT_FOUND       @"FIDO BLE U2Fサービスが見つかりません。"
@@ -105,5 +105,13 @@
 #pragma mark - ペアリング情報消去関連メッセージ
 #define MSG_ERASE_BONDING_INFO              @"One Cardからペアリング情報をすべて消去します。"
 #define MSG_PROMPT_ERASE_BONDING_INFO       @"消去後は、すべてのPCでOne Cardとの通信ができなくなります。\n消去処理を実行しますか？"
+
+#pragma mark - ヘルスチェック関連メッセージ
+#define MSG_HCHK_U2F_REGISTER_SUCCESS       @"U2F Registerが成功しました。"
+#define MSG_HCHK_U2F_AUTHENTICATE_START     @"U2F Authenticateを開始します."
+#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
+#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  One Card上のユーザー所在確認LEDが点滅したら、"
+#define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
+#define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 
 #endif /* ToolCommonMessage_h */

@@ -218,6 +218,14 @@ static bool processTestAuthenticate(pBleDevice dev)
 		nonceForCheck[i] = (rand() & 0xFF);
 	}
 
+	// BLE U2Fリクエスト転送の前に、
+	// One CardのMAIN SWを押してもらうように促す
+	// メッセージを表示
+	std::cout << "U2F Authenticateを開始します." << std::endl;
+	std::cout << "  ユーザー所在確認が必要となりますので、" << std::endl;
+	std::cout << "  One Card上のユーザー所在確認LEDが点滅したら、" << std::endl;
+	std::cout << "  MAIN SWを１回押してください." << std::endl;
+
 	// BLE U2Fリクエストを転送
 	if (sendU2FAuthenticateRequest(dev, nonceForCheck, appIdForCheck, keyHandleForCheck) == false) {
 		// エラーメッセージがあれば画面表示
