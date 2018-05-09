@@ -31,13 +31,6 @@
                             <menuItem isSeparatorItem="YES" id="143">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="ペアリング情報消去..." id="wHy-2Y-uZM">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemPairing1DidSelect:" target="494" id="ehb-0W-klH"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="CZb-aO-SIH"/>
                             <menuItem title="Services" id="131">
                                 <menu key="submenu" title="Services" systemMenu="services" id="130"/>
                             </menuItem>

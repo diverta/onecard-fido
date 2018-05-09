@@ -21,7 +21,6 @@
 // コマンド種別
 typedef enum : NSInteger {
     COMMAND_NONE = 1,
-    COMMAND_ERASE_BOND,
     COMMAND_ERASE_SKEY_CERT,
     COMMAND_INSTALL_SKEY,
     COMMAND_INSTALL_CERT,

@@ -193,16 +193,6 @@
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
     }
 
-    - (IBAction)menuItemPairing1DidSelect:(id)sender {
-        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDING_INFO
-                         informativeText:MSG_PROMPT_ERASE_BONDING_INFO] == false) {
-            return;
-        }
-        // ペアリング情報消去
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_BOND];
-    }
-
 #pragma mark - Call back from ToolFilePanel
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath

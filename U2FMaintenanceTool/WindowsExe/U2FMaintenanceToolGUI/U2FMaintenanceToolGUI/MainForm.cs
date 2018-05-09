@@ -50,12 +50,7 @@ namespace U2FMaintenanceToolGUI
             }
 
             // ボタンに対応する処理を実行
-            if (sender.Equals(ペアリング情報消去ToolStripMenuItem)) {
-                commandTitle = AppCommon.PROCESS_NAME_ERASE_BOND;
-                app.doEraseBond();
-
-            }
-            else if (sender.Equals(button1)) {
+            if (sender.Equals(button1)) {
                 commandTitle = AppCommon.PROCESS_NAME_PAIRING;
                 app.doPairing();
 
@@ -367,20 +362,6 @@ namespace U2FMaintenanceToolGUI
             // バージョン表示画面を表示
             AboutForm f = new AboutForm();
             f.ShowDialog();
-        }
-
-        private void ペアリング情報消去ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_ERASE_BONDING_INFO,
-                AppCommon.MSG_PROMPT_ERASE_BONDING_INFO);
-
-            // ペアリング情報消去
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message)) {
-                doCommand(sender);
-            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
