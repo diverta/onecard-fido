@@ -22,9 +22,6 @@
             case COMMAND_PAIRING:
                 processName = PROCESS_NAME_PAIRING;
                 break;
-            case COMMAND_ERASE_BOND:
-                processName = PROCESS_NAME_ERASE_BOND;
-                break;
             case COMMAND_ERASE_SKEY_CERT:
                 processName = PROCESS_NAME_ERASE_SKEY_CERT;
                 break;

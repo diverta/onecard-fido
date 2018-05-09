@@ -70,15 +70,6 @@
     [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
 
-- (void)createCommandEraseBond {
-    NSLog(@"Erase bonding information start");
-    
-    // 書き込むコマンドを編集
-    unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x40, 0x01, 0x00};
-    NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
-}
-
 - (void)createCommandEraseSkeyCert {
     NSLog(@"Erase secure key and certificate start");
     
@@ -627,9 +618,6 @@
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
     switch (command) {
-        case COMMAND_ERASE_BOND:
-            [self createCommandEraseBond];
-            break;
         case COMMAND_ERASE_SKEY_CERT:
             [self createCommandEraseSkeyCert];
             break;
@@ -751,9 +739,6 @@
     switch ([self command]) {
         case COMMAND_PAIRING:
             [self toolCommandDidProcess:true message:@"Ping for pairing end"];
-            break;
-        case COMMAND_ERASE_BOND:
-            [self toolCommandDidProcess:true message:@"Erase bonding information end"];
             break;
         case COMMAND_ERASE_SKEY_CERT:
             [self toolCommandDidProcess:true message:@"Erase secure key and certificate end"];
