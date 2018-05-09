@@ -14,7 +14,6 @@
 //
 // 実行させるコマンド／引数を保持
 //
-bool  arg_erase_bonding          = false;
 bool  arg_erase_skey_cert        = false;
 bool  arg_install_skey_cert      = false;
 char *arg_skey_file_path         = NULL;
@@ -91,28 +90,6 @@ static bool doCommandWrite(pBleDevice dev, unsigned char *request, unsigned int 
 		return false;
 	}
 
-	return true;
-}
-
-static bool processEraseBonding(BleApiConfiguration &configuration, pBleDevice dev)
-{
-	unsigned char request[4];
-
-	// リクエストデータ（APDU）を編集し request に格納
-	// INS=0x40, P1=0x01
-	request[0] = 0x00;
-	request[1] = 0x40;
-	request[2] = 0x01;
-	request[3] = 0x00;
-
-	// コマンド（FIDO_BLE_CMD_MSG）を実行
-	if (doCommandWrite(dev, request, sizeof(request)) == false) {
-		// エラーメッセージがあれば画面表示
-		BleToolsUtil_checkStatusWordMessagePrint("processEraseBonding");
-		return false;
-	}
-
-	std::cout << "ペアリング情報をFlash ROMから削除しました。" << std::endl;
 	return true;
 }
 
@@ -463,13 +440,6 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		return 0;
 	}
 
-	if (arg_erase_bonding) {
-		// ペアリング情報をFlash ROMから削除
-		if (processEraseBonding(configuration, dev) == false) {
-			return -1;
-		}
-	}
-
 	if (arg_erase_skey_cert) {
 		// 鍵・証明書をFlash ROMから削除し、
 		// AES鍵を自動生成
@@ -562,10 +532,6 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		if (!strncmp(argv[count], "-P", 2)) {
 			// ペアリング実行
 			arg_pairing = true;
-		}
-		if (!strncmp(argv[count], "-B", 2)) {
-			// ペアリング情報をFlash ROMから削除
-			arg_erase_bonding = true;
 		}
 		if (!strncmp(argv[count], "-E", 2)) {
 			// 鍵・証明書をFlash ROMから削除し、

@@ -167,12 +167,6 @@ namespace U2FMaintenanceToolGUI
             doCommandWithExecutable(U2FMaintenanceToolExe, "-P");
         }
 
-        public void doEraseBond()
-        {
-            // U2FMaintenanceTool.exe -Bを実行する
-            doCommandWithExecutable(U2FMaintenanceToolExe, "-B");
-        }
-
         public void doEraseSkeyCert()
         {
             // U2FMaintenanceTool.exe -Eを実行する
