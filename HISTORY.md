@@ -2,6 +2,17 @@
 
 ## プログラム更新履歴
 
+#### 2018/05/02（Version 0.1.2）
+
+以下のプログラムを修正しました。<br>
+
+- [BLE U2Fサービス](nRF5_SDK_v13.0.0)
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+修正点は以下になります。
+- U2F管理ツールからペアリングができるようにする（[Issue #23](https://github.com/diverta/onecard-fido/issues/23)）
+
 #### 2018/04/25（Version 0.1.1）
 
 以下のプログラムを修正しました。<br>
