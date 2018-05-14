@@ -13,6 +13,23 @@ U2F関連の旧い設定と思しき「security.webauth.U2F」はデフォルト
 そのうえで、Yubikey NEOをはじめとするUSB HIDトークンが「security.webauth.webauthn_enable_usbtoken」の設定により使用可能となっているようです。<br>
 こちらもデフォルトでtrue（使用可能）に設定されております。
 
+ただし残念ながら、上記設定一覧からも確認できる通り、BLEトークンのサポートはないようです。
+
+#### ご参考：BLEトークン・サポートについてのFIDO見解
+
+複数デスクトップからのマルチセッション・サポートができない限り、BLEトークンをサポートすべきではないとの見解のようです。<br>
+https://github.com/w3c/webauthn/issues/649<br>
+https://github.com/w3c/webauthn/pull/688<br>
+2018/05/14現在、こちらの状況は変わっていない様子です。
+
+他方、上記スレッド主であるVASCO社では、BLEトークンをリリースしているようです。<br>
+https://www.amazon.com/DIGIPASS-SecureClick-FIDO-U2F-Security/dp/B01M0DPK3K<br>
+ただしよく見ると、PCでの利用は（おそらく独自制作の）USBドングルとセットになっている様子です。<br>
+これであれば確かに、現状のFIDOのブラウザーサポート内容の範囲内、すなわち<br>
+・デフォルトでサポートされる「USB HIDデバイス」として動作する<br>
+・制御の仕方次第ではマルチセッション・サポートの考慮なしで動作する<br>
+ことが可能になっているのかと存じます。<br>
+
 ## デモサイトとYubikey NEOを使った確認
 
 Firefox 60でデモサイトとYubikey NEOを使い、WebAuthnによるユーザー登録と認証ができることを確認しました。
