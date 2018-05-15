@@ -1,14 +1,19 @@
 # WebAuthn実装の内部調査
 
-FirefoxのWebAuthn実装について、デモサイトやGeckoエンジンのソースコードを参照しながら詳細調査してみました。
+FirefoxのWebAuthn実装について、デモサイトやFirefoxのソースコードを参照しながら詳細調査してみました。
 
 調査の結果、やはり使用できるハードウェアは、現在のところUSBトークンのみのようです。
 
 なお、調査内容は2018/05/15時点でのものです。
 
-## JavaScript API
+#### 補足：Firefoxのソースコードについて
 
-下記画面のHTML/JavaScriptソースコードを参照します。<BR>
+FirefoxのAuthenticate関連実装については、Geckoエンジンのコードを調査しました。<br>
+最近置換えが進んでいるというServoエンジンの方も確認しましたが、Authenticate関連のコードはなかったので、Geckoエンジンに実装されているものを使用しているという判断のもと、調査を行なっております。
+
+## JavaScript APIの調査
+
+WebAuthnデモサイト（[webauthn.io](https://webauthn.io/)）の、下記画面のHTML/JavaScriptソースコードを参照します。<BR>
 https://github.com/duo-labs/webauthn/blob/master/templates/login.html <br>
 https://github.com/duo-labs/webauthn/blob/master/static/js/webauthn.js
 
@@ -164,9 +169,9 @@ function verifyAssertion(assertedCredential) {
 
 
 
-## ブラウザー側の実装
+## ブラウザー側実装の調査
 
-前述、JavaScript APIから呼び出される以下のインターフェースは、ブラウザー側に実装されています。
+前述、JavaScript APIから呼び出される以下のインターフェースは、ブラウザー側（Geckoエンジン）に実装されています。
 
 - navigator.credentials.create() <br>
 ユーザー登録（Register）で使用します。
