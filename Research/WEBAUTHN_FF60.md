@@ -51,22 +51,22 @@ Yubikey NEOをUSBポートに挿したのち、Firefoxを起動します。<br>
 
 「Registering...」というガイダンスが出たら、あらかじめUSBポートに挿しておいたYubikey NEOを指でタッチします。
 
-<img src="assets01/0002.png" width="500">
+<img src="assets01/0004.png" width="500">
 
 「You're logged in!」という画面に遷移すれば、ユーザー登録は成功です。
 
-<img src="assets01/0003.png" width="500">
+<img src="assets01/0005.png" width="500">
 
 ### 認証
 
 画面中央のテキストボックスに、先ほど登録したユーザー名（半角英数文字）を入力してから「Login with Credential」ボタンをクリックします。
 
-<img src="assets01/0004.png" width="500">
+<img src="assets01/0006.png" width="500">
 
 「Logging In...」というガイダンスが出たら、あらかじめUSBポートに挿しておいたYubikey NEOを指でタッチします。
 
-<img src="assets01/0005.png" width="500">
+<img src="assets01/0007.png" width="500">
 
 「You're logged in!」という画面に遷移すれば、認証は成功です。
 
-<img src="assets01/0006.png" width="500">
+<img src="assets01/0008.png" width="500">
