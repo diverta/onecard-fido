@@ -1,6 +1,6 @@
-# Apacheローカルテストサーバー
+# Apache ローカルSSLサーバー構築手順
 
-FIDOサーバーをローカルPCでテストするために必要となる、Webサーバー（Apache）を立ち上げる手順を掲載しております。
+HTTPSプロトコルをローカルPCでテストするために必要となる、Webサーバー（Apache SSLサーバー）を立ち上げる手順を掲載しております。
 
 PCはMacBook Pro（macOS）を使用します。
 
