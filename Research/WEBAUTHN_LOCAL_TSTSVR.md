@@ -1,13 +1,9 @@
-# [WIP] WebAuthnローカルテストサーバー
+# WebAuthnローカルテストサーバー構築手順
 
 GitHubで公開されている、WebAuthnのローカルテストサーバーをPC上に構築する手順を掲載しています。
 
 手順は以下のページを参考にしております。<br>
 https://github.com/duo-labs/webauthn#webauthn-demo
-
-2018/05/14：<br>
-こちらで紹介されているGOのサーバーソフトだけでなく、Webサーバー（ApacheのHTTPSサーバー等）が追加で必要なようです。<br>
-調査に時間を要しそうなので、一時的に調査をストップいたします。
 
 ## GO環境の導入
 
@@ -114,7 +110,7 @@ MacBookPro-makmorit-jp:webauthn makmorit$ ls -al *.json
 MacBookPro-makmorit-jp:webauthn makmorit$
 ```
 
-内容を適宜確認し、下記のように修正します。
+内容を確認し、下記のように修正します。
 
 ```
 {
@@ -127,24 +123,51 @@ MacBookPro-makmorit-jp:webauthn makmorit$
 }
 ```
 
-このファイルを、binディレクトリー内に配置しておきます。
+次に、binディレクトリー内の`webauthn`という実行可能ファイルを、`config.json`と同じディレクトリー（`src/webauthn`ディレクトリー）にコピーします。
 
-次に、同じくbinディレクトリー内の`webauthn`という実行可能ファイルを実行します。
+下記のように実行します。
 
 ```
-MacBookPro-makmorit-jp:bin makmorit$ ./webauthn
-Config: {DBName:sqlite3 DBPath:webauthn.db MigrationsPath:db/db_sqlite3 HostAddress:127.0.0.1 HostPort::9005 HasProxy:false}
+MacBookPro-makmorit-jp:webauthn makmorit$ pwd
+/Users/makmorit/go/src/webauthn
+MacBookPro-makmorit-jp:webauthn makmorit$ ./webauthn
+Config: {DBName:sqlite3 DBPath:webauthn.db MigrationsPath:db/db_sqlite3 HostAddress:localhost HostPort::9005 HasProxy:true}
 ```
 
 実行がスタートします。
 
 ## 動作確認
 
-Firefox 60を起動し、`https://localhost:9005/`を実行してみます。<br>
-下記のようなエラーが発生してしまいます。
+Firefox 60を起動し、`http://localhost:9005/`を実行してみます。<br>
+デモサイトとまったくおなじインデックスページが表示されます。
 
 <img src="assets01/0013.png" width="500">
 
-おそらくですが、webサーバー（バーチャルホスト）を追加で仕込まないと、サーバー証明書が発行されず、結果ブラウザー側でエラーになってしまうものと考えられます。
+あとは[こちらの手順書](WEBAUTHN_FF60.md)に従って操作します。<br>
+（「デモサイトとYubikey NEOを使った確認」をご参照）
 
-調査に時間を要しそうなので、一時的にこの調査はストップすることといたします。
+## 採取したログ
+
+ご参考までに、以下に掲載させていただきます。
+
+### ユーザー登録（Register）時のサーバーログ
+
+```
+Adding new Session Data
+Decoded Client Data: &{RawClientData:{"challenge":"v6D8vaoRfwY4dkmZEKznRQ","clientExtensions":{},"hashAlgorithm":"SHA-256","origin":"http://127.0.0.1:9005","type":"webauthn.create"} Challenge:v6D8vaoRfwY4dkmZEKznRQ HashAlgorithm:SHA-256 Origin:http://127.0.0.1:9005 ActionType:webauthn.create}
+Auth Data: &{Flags:[48 49 48 48 48 48 48 49] Counter:[0 0 0 0 0] RPIDHash:12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0 AAGUID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] CredID:[146 199 20 102 139 156 48 2 124 180 52 223 66 148 71 115 96 67 131 85 128 25 146 148 80 9 181 30 234 155 115 61 104 210 235 219 88 43 148 99 39 13 107 70 166 117 211 185 161 72 232 31 43 23 32 212 106 98 37 38 222 81 72 229] PubKey:{Model:{ID:0 CreatedAt:0001-01-01 00:00:00 +0000 UTC UpdatedAt:0001-01-01 00:00:00 +0000 UTC DeletedAt:<nil>} _struct:false KeyType:2 Type:-7 XCoord:[129 133 252 212 40 155 254 58 205 22 151 183 178 12 119 11 37 164 249 91 39 132 27 110 155 4 1 167 16 98 22 220] YCoord:[148 197 241 2 25 133 127 23 216 85 165 192 221 2 10 224 51 10 84 124 61 102 156 191 220 88 113 36 143 131 136 227] Curve:1 CredentialID:0} Format:none AttStatement:{Certificate:<nil> Signature:[]}}
+Hash Alg: SHA-256
+Client data hash is dca6243ecae80cd7966dba2e4e4ed1bd128621d4b1afbd00651b84921b1416f3
+Creating Credential
+{Model:{ID:1 CreatedAt:2018-05-16 04:24:37.443256696 +0000 UTC UpdatedAt:2018-05-16 04:24:37.443256696 +0000 UTC DeletedAt:<nil>} Counter:[0 0 0 0 0] RelyingParty:{ID:127.0.0.1 DisplayName:Acme, Inc Icon:lol.catpics.png Users:[]} RelyingPartyID:127.0.0.1 User:{Model:{ID:3 CreatedAt:2018-05-16 04:21:46.000113758 +0000 UTC UpdatedAt:2018-05-16 04:24:37.443067412 +0000 UTC DeletedAt:<nil>} Name:makmorittest@example.com DisplayName:makmorittest Icon: Credentials:[] RelyingParties:[]} UserID:3 Type:public-key Format:none Flags:[48 49 48 48 48 48 48 49] CredID:kscUZoucMAJ8tDTfQpRHc2BDg1WAGZKUUAm1Huqbcz1o0uvbWCuUYycNa0amddO5oUjoHysXINRqYiUm3lFI5Q PublicKey:{Model:{ID:1 CreatedAt:2018-05-16 04:24:37.443381293 +0000 UTC UpdatedAt:2018-05-16 04:24:37.443381293 +0000 UTC DeletedAt:<nil>} _struct:false KeyType:2 Type:-7 XCoord:[129 133 252 212 40 155 254 58 205 22 151 183 178 12 119 11 37 164 249 91 39 132 27 110 155 4 1 167 16 98 22 220] YCoord:[148 197 241 2 25 133 127 23 216 85 165 192 221 2 10 224 51 10 84 124 61 102 156 191 220 88 113 36 143 131 136 227] Curve:1 CredentialID:1}}
+```
+
+
+### 認証（Login）時のサーバーログ
+
+```
+Adding new Session Data
+Decoded Client Data: &{RawClientData:{"challenge":"FnI_-3iGbCGmVpZwEe5q9Q","clientExtensions":{},"hashAlgorithm":"SHA-256","origin":"http://127.0.0.1:9005","type":"webauthn.get"} Challenge:FnI_-3iGbCGmVpZwEe5q9Q HashAlgorithm:SHA-256 Origin:http://127.0.0.1:9005 ActionType:webauthn.get}
+Auth Data: &{Flags:1 Counter:[0 0 0 23] RawAssertionData:[18 202 23 180 154 242 40 148 54 243 3 224 22 96 48 162 30 82 93 38 110 32 146 103 67 56 1 168 253 64 113 160 1 0 0 0 23] RPIDHash:12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0 Signature:[48 69 2 32 3 41 245 87 244 244 90 81 210 134 232 137 193 189 157 56 70 224 182 176 126 137 3 149 58 108 97 23 25 219 43 245 2 33 0 203 124 209 130 8 67 60 110 147 42 253 237 218 154 198 98 252 200 75 41 195 158 137 230 95 40 255 108 226 109 87 241]}
+Client data hash is 8ae5995d5c2383e8382ba44ebff1a71b445e52d5e79d6323d363cfc348302ab6
+```
