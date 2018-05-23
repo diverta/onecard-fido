@@ -1,8 +1,8 @@
-# U2Fサーバーライブラリー導入手順
+# U2Fライブラリーサーバー導入手順
 
 ## 概要
 
-Yubikeyの製造元であるYubico社が、無償で公開している、PythonベースのU2Fサーバーライブラリーの導入手順を掲載します。
+Yubikeyの製造元であるYubico社が、無償で公開している、PythonベースのU2Fライブラリーサーバーの導入手順を掲載します。
 
 以下のドキュメントを参考にいたしました。<br>
 [Python based U2F server library](https://developers.yubico.com/python-u2flib-server/)
@@ -70,7 +70,7 @@ MacBookPro-makmorit-jp:python-u2flib-server makmorit$ echo 'export PATH="$HOME/L
 MacBookPro-makmorit-jp:python-u2flib-server makmorit$
 ```
 
-## U2Fサーバーライブラリーの導入
+## U2Fライブラリーサーバーの導入
 
 #### ソースコード取得
 
@@ -126,9 +126,9 @@ Successfully installed webob-1.8.1
 MacBookPro-makmorit-jp:python-u2flib-server makmorit$
 ```
 
-## U2Fサーバーライブラリーの実行確認
+## U2Fライブラリーサーバーの実行確認
 
-#### U2Fサーバーライブラリーの起動
+#### U2Fライブラリーサーバーの起動
 先述`~/GitHub/python-u2flib-server`のexamplesフォルダーに格納されている`u2f_server.py`を、リポジトリーのルートディレクトリーにコピーし、Pythonで実行すれば、U2Fサーバーが動作します。
 
 ```
@@ -139,7 +139,7 @@ MacBookPro-makmorit-jp:python-u2flib-server makmorit$ python ./u2f_server.py
 [23/May/2018 10:01:17] Starting server on http://localhost:8081
 ```
 
-U2Fサーバーはポート8081でHTTPリクエストを待機します。
+U2Fライブラリーサーバーはポート8081でHTTPリクエストを待機します。
 
 #### enrollコマンドで動作確認
 
@@ -157,4 +157,4 @@ MacBookPro-makmorit-jp:~ makmorit$ curl http://localhost:8081/enroll
 127.0.0.1 - - [23/May/2018 10:02:16] "GET /enroll HTTP/1.1" 200 161
 ```
 
-以上で、U2Fサーバーライブラリー導入は完了です。
+以上で、U2Fライブラリーサーバー導入は完了です。
