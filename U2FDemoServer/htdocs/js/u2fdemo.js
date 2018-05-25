@@ -151,15 +151,14 @@ function sendRemoveTokenRequest(publicKey) {
 }
 
 function sendBeginEnrollRequest() {
-  $.post('/BeginEnroll', {
-        'reregistration' : document.querySelector('#reregistration').checked
-      }, null, 'json')
+  $.post('/python-u2flib-server/enroll', {}, null, 'json')
    .done(function(beginEnrollResponse) {
+      beginEnrollResponse.registerRequests[0].appId = beginEnrollResponse.appId;
       console.log(beginEnrollResponse);
-      showMessage("please touch the token");
+      showMessage("One Cardから認証器登録情報を取得しています。しばらくお待ちください。");
       u2f.register(
         beginEnrollResponse.appId,
-        [beginEnrollResponse.registerRequests],
+        beginEnrollResponse.registerRequests,
         beginEnrollResponse.registeredKeys,
         function (response) {
           if (response.errorCode) {
@@ -171,7 +170,10 @@ function sendBeginEnrollRequest() {
         },
         600 /* timeout of 10 minutes */
       );
-    });
+    })
+   .fail(function(xhr, status) {
+      showError("エラー発生のため、登録処理を実行できません。");
+   });
 }
 
 function sendBeginSignRequest() {
@@ -208,9 +210,13 @@ function sendBeginSignRequest() {
 
 function onTokenEnrollSuccess(finishEnrollData) {
   hideMessage();
-  console.log(finishEnrollData);
-  $.post('/FinishEnroll', finishEnrollData, null, 'json')
-   .done(addTokenInfoToPage)
+  stringJsonMessage = JSON.stringify(finishEnrollData);
+  console.log(stringJsonMessage);
+  $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
+   .done(function(signResponse) {
+      showMessage("One CardをU2F認証器として登録しました。");
+      addTokenInfoToPage(signResponse);
+   })
    .fail(function(xhr, status) { 
       showError(status); 
    });
