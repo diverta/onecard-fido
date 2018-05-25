@@ -1,18 +1,6 @@
-// Copyright 2014 Google Inc. All rights reserved.
-//
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file or at
-// https://developers.google.com/open-source/licenses/bsd
-
-{namespace u2fdemo}
-
-/**
- * Says hello to the world.
- * @param username the name of the person
- */
-{template .main}
 <html>
   <head>    
+  <meta charset="UTF-8" />
   <link href="/jquery/css/custom-theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
   <script src="/jquery/js/jquery-1.10.2.js"></script>
   <script src="/jquery/js/jquery-ui-1.10.4.custom.js"></script>
@@ -23,25 +11,34 @@
   
   </head>
   <body onload="fetchAllUserTokens();">
+  <!--
   {call .cardTemplate data="all"/}
   {call .sandbar data="all"/}
-  
-  <div id='sidebar'>
-    <div id="addToken" style="-webkit-user-select: none;">Register U2F Authenticator</div>
-    <label><input id="reregistration" type="checkbox" />allow re-registration</label> 
-    <div id="testAuth" style="-webkit-user-select: none;">Test Authentication</div>
-    <div id="downloadCrx">
-      <a href="https://chrome.google.com/webstore/detail/fido-u2f-universal-2nd-fa/pfboblefjcgdjicmnffhdgionmgcdmne">install the Chrome extension</a>
-      <a href="https://github.com/google/u2f-ref-code/">source on github</a>
+  -->
+  <div id="header">
+    <div id="sandbar">
+      <header id="gc-googlebar">
+          <div class="title">BLE U2Fデモページ</div>
+      </header>      
+    </div>
+    <div id="errorbox" class="invisible">
+      <div id="errormessage" >
+      </div>
+      <div id="dismissErrorButton" class="goog-inline-block goog-css3-button" title="" role="button" tabindex="0" style="-webkit-user-select: none;">
+      </div>
+    </div>
+    <div id="infobox" class="invisible">
+      <div id="infomessage" >
+      </div>
     </div>
   </div>
+  <div id='sidebar'>
+    <div id="addToken" style="-webkit-user-select: none;">認証器を登録する</div>
+    <div id="testAuth" style="-webkit-user-select: none;">認証器を使って認証する</div>
+  </div>
   <div id='main'>
-    
-    <h1>Registered U2F authenticators for {$username}:</h1>
-
     <div id="tokens">
     </div>
-    
     <div class="spacer" style="height: 50px;"></div>    
   </div>
   <script>
