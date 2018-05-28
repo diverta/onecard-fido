@@ -192,6 +192,10 @@ function sendBeginSignRequest() {
    .done(function(signResponse) {
      console.log(signResponse);
      var registeredKeys = signResponse.registeredKeys;
+     if (registeredKeys.length > 1) {
+       showError("U2F認証器が複数件登録されています。認証処理を中止します。");
+       return;
+     }
      showMessage("ユーザーの所在を確認します。One CardのMAIN SWを１回押してください。");
      // Store sessionIds
      var sessionIds = {};
@@ -224,6 +228,7 @@ function sendBeginSignRequest() {
 ///////////////////////////////////////////////////////////////////////////////
 
 function onTokenEnrollSuccess(finishEnrollData) {
+  showMessage("One CardをU2F認証器として登録しています。しばらくお待ちください。");
   stringJsonMessage = JSON.stringify(finishEnrollData);
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
@@ -241,6 +246,7 @@ function onTokenEnrollSuccess(finishEnrollData) {
 }
 
 function onTokenSignSuccess(responseData) {
+  showMessage("One CardによるU2F認証の処理中です。しばらくお待ちください。");
   stringJsonMessage = JSON.stringify(responseData);
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/verify', {"data" : stringJsonMessage}, null, 'json')

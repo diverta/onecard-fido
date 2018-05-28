@@ -55,6 +55,9 @@ import argparse
 
 
 def get_origin(environ):
+    if environ.get('HTTP_ORIGIN'):
+        return environ['HTTP_ORIGIN']
+
     if environ.get('HTTP_HOST'):
         host = environ['HTTP_HOST']
     else:
