@@ -228,8 +228,12 @@ function onTokenEnrollSuccess(finishEnrollData) {
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
-     showSuccess("One CardをU2F認証器として登録しました。");
-     addTokenInfoToPage(signResponse);
+     if (signResponse == true) {
+       showSuccess("One CardをU2F認証器として登録しました。");
+       addTokenInfoToPage(signResponse);
+     } else {
+       showError("U2F認証器の登録処理が失敗しました。");
+     }
    })
    .fail(function(xhr, status) { 
      showError(status); 
@@ -241,8 +245,12 @@ function onTokenSignSuccess(responseData) {
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/verify', {"data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
-     showSuccess("One CardによるU2F認証が成功しました。");
-     highlightTokenCardOnPage(signResponse);
+     if (signResponse.touch == 1) {
+       showSuccess("One CardによるU2F認証が成功しました。");
+       highlightTokenCardOnPage(signResponse);
+     } else {
+       showError("One CardによるU2F認証が失敗しました。");
+     }
    })
    .fail(function(xhr, status) {
      showError(status);
