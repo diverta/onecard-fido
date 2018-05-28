@@ -153,37 +153,37 @@ function sendRemoveTokenRequest(publicKey) {
   $.post('/RemoveToken', {
       'public_key' : publicKey
     }, null, 'json')
-    .done(function(e) {
+   .done(function(e) {
       removeTokenInfoFromPage(publicKey);
-    })
-    .fail(function(xhr, status) {
-      showError("couldn't remove token: " + status);
-    });
+   })
+   .fail(function(xhr, status) {
+     showError("couldn't remove token: " + status);
+   });
 }
 
 function sendBeginEnrollRequest() {
   $.post('/python-u2flib-server/enroll', {}, null, 'json')
    .done(function(beginEnrollResponse) {
-      beginEnrollResponse.registerRequests[0].appId = beginEnrollResponse.appId;
-      console.log(beginEnrollResponse);
-      showMessage("One Cardから認証器登録情報を取得しています。しばらくお待ちください。");
-      u2f.register(
-        beginEnrollResponse.appId,
-        beginEnrollResponse.registerRequests,
-        beginEnrollResponse.registeredKeys,
-        function (response) {
-          if (response.errorCode) {
-            onError(response.errorCode, true);
-          } else {
-            response['sessionId'] = beginEnrollResponse.sessionId;
-            onTokenEnrollSuccess(response);
-          }
-        },
-        600 /* timeout of 10 minutes */
-      );
-    })
+     beginEnrollResponse.registerRequests[0].appId = beginEnrollResponse.appId;
+     console.log(beginEnrollResponse);
+     showMessage("One Cardから認証器登録情報を取得しています。しばらくお待ちください。");
+     u2f.register(
+       beginEnrollResponse.appId,
+       beginEnrollResponse.registerRequests,
+       beginEnrollResponse.registeredKeys,
+       function (response) {
+         if (response.errorCode) {
+           onError(response.errorCode, true);
+         } else {
+           response['sessionId'] = beginEnrollResponse.sessionId;
+           onTokenEnrollSuccess(response);
+         }
+       },
+       600 /* timeout of 10 minutes */
+     );
+   })
    .fail(function(xhr, status) {
-      showError("エラー発生のため、登録処理を実行できません。");
+     showError("エラー発生のため、登録処理を実行できません。");
    });
 }
 
@@ -192,26 +192,30 @@ function sendBeginSignRequest() {
    .done(function(signResponse) {
      console.log(signResponse);
      var registeredKeys = signResponse.registeredKeys;
-      showMessage("please touch the token");
-      // Store sessionIds
-      var sessionIds = {};
-      for (var i = 0; i < registeredKeys.length; i++) {
-        sessionIds[registeredKeys[i].keyHandle] = registeredKeys[i].sessionId;
-        delete registeredKeys[i]['sessionId'];
-      }
-      u2f.sign(signResponse.appId, signResponse.challenge, registeredKeys, function (response) {
-          if (response.errorCode) {
-            onError(response.errorCode, false);
-          } else {
-            response['sessionId'] = sessionIds[response.keyHandle];
-            onTokenSignSuccess(response);
-          }
-        },
-        600 /* timeout of 10 minutes */
-      );
+     showMessage("please touch the token");
+     // Store sessionIds
+     var sessionIds = {};
+     for (var i = 0; i < registeredKeys.length; i++) {
+       sessionIds[registeredKeys[i].keyHandle] = registeredKeys[i].sessionId;
+       delete registeredKeys[i]['sessionId'];
+     }
+     u2f.sign(
+       signResponse.appId, 
+       signResponse.challenge, 
+       registeredKeys, 
+       function (response) {
+         if (response.errorCode) {
+           onError(response.errorCode, false);
+         } else {
+           response['sessionId'] = sessionIds[response.keyHandle];
+           onTokenSignSuccess(response);
+         }
+       },
+       600 /* timeout of 10 minutes */
+     );
    }) 
    .fail(function(xhr, status) {
-      showError("can't authenticate: " + status);
+     showError("can't authenticate: " + status);
    });
 }
 
@@ -224,21 +228,21 @@ function onTokenEnrollSuccess(finishEnrollData) {
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
-      showSuccess("One CardをU2F認証器として登録しました。");
-      addTokenInfoToPage(signResponse);
+     showSuccess("One CardをU2F認証器として登録しました。");
+     addTokenInfoToPage(signResponse);
    })
    .fail(function(xhr, status) { 
-      showError(status); 
+     showError(status); 
    });
 }
 
 function onTokenSignSuccess(responseData) {
   console.log(responseData);
   $.post('/FinishSign', responseData, null, 'json')
-    .done(highlightTokenCardOnPage)
-    .fail(function(xhr, status) {
-      showError(status);
-    });
+   .done(highlightTokenCardOnPage)
+   .fail(function(xhr, status) {
+     showError(status);
+   });
 }
 
 function onError(code, enrolling) {
