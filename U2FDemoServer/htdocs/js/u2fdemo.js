@@ -161,8 +161,21 @@ function sendRemoveTokenRequest(publicKey) {
    });
 }
 
+function getUserName() {
+  var userName = $('#userName').val();
+  if (userName == "") {
+    showError("ユーザー名を入力してください。");
+    return undefined;
+  }
+  return userName;
+}
+
 function sendBeginEnrollRequest() {
-  $.post('/python-u2flib-server/enroll', {}, null, 'json')
+  var userName = getUserName();
+  if (userName === undefined) {
+    return;
+  }
+  $.post('/python-u2flib-server/enroll', {"username" : userName}, null, 'json')
    .done(function(beginEnrollResponse) {
      beginEnrollResponse.registerRequests[0].appId = beginEnrollResponse.appId;
      console.log(beginEnrollResponse);
@@ -188,7 +201,11 @@ function sendBeginEnrollRequest() {
 }
 
 function sendBeginSignRequest() {
-  $.post('/python-u2flib-server/sign', {}, null, 'json')
+  var userName = getUserName();
+  if (userName === undefined) {
+    return;
+  }
+  $.post('/python-u2flib-server/sign', {"username" : userName}, null, 'json')
    .done(function(signResponse) {
      console.log(signResponse);
      var registeredKeys = signResponse.registeredKeys;
@@ -231,7 +248,8 @@ function onTokenEnrollSuccess(finishEnrollData) {
   showMessage("One CardをU2F認証器として登録しています。しばらくお待ちください。");
   stringJsonMessage = JSON.stringify(finishEnrollData);
   console.log(stringJsonMessage);
-  $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
+  var userName = getUserName();
+  $.post('/python-u2flib-server/bind', {"username" : userName, "data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
      if (signResponse == true) {
        showSuccess("One CardをU2F認証器として登録しました。");
@@ -249,7 +267,8 @@ function onTokenSignSuccess(responseData) {
   showMessage("One CardによるU2F認証の処理中です。しばらくお待ちください。");
   stringJsonMessage = JSON.stringify(responseData);
   console.log(stringJsonMessage);
-  $.post('/python-u2flib-server/verify', {"data" : stringJsonMessage}, null, 'json')
+  var userName = getUserName();
+  $.post('/python-u2flib-server/verify', {"username" : userName, "data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
      if (signResponse.touch == 1) {
        showSuccess("One CardによるU2F認証が成功しました。");

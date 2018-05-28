@@ -33,6 +33,7 @@
     </div>
   </div>
   <div id='sidebar'>
+    <input type="text" id="userName" placeholder="ユーザー名を入力" class="textbox">
     <div id="addToken" style="-webkit-user-select: none;">認証器を登録する</div>
     <div id="testAuth" style="-webkit-user-select: none;">認証器を使って認証する</div>
   </div>
@@ -45,7 +46,6 @@
     $('#addToken').button().click(sendBeginEnrollRequest); 
     $('#testAuth').button().click(sendBeginSignRequest); 
     $('#dismissErrorButton').button().click(hideError); 
-    $('#dismissSuccessButton').button().click(hideSuccess); 
   </script>
   </body>
 </html>
