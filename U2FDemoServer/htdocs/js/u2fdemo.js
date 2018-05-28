@@ -81,7 +81,7 @@ function removeTokenInfoFromPage(publicKey) {
   $("#" + publicKey).remove();
 }
 
-function showError(message) {
+function showResult(message) {
   hideMessage();
   console.log(message);
   $('#errormessage').empty();
@@ -89,11 +89,22 @@ function showError(message) {
   $('#errorbox').addClass('visible').removeClass('invisible');
 } 
 
+function showError(message) {
+  $('#errormessage').removeClass('success');
+  showResult(message);
+}
+
+function showSuccess(message) {
+  $('#errormessage').addClass('success');
+  showResult(message);
+}
+
 function hideError() {
   $('#errorbox').addClass('invisible').removeClass('visible');
 }
 
 function showMessage(message) {
+  hideError();
   console.log(message);
   $('#infomessage').empty();
   $('#infomessage').text(message);
@@ -209,12 +220,11 @@ function sendBeginSignRequest() {
 ///////////////////////////////////////////////////////////////////////////////
 
 function onTokenEnrollSuccess(finishEnrollData) {
-  hideMessage();
   stringJsonMessage = JSON.stringify(finishEnrollData);
   console.log(stringJsonMessage);
   $.post('/python-u2flib-server/bind', {"data" : stringJsonMessage}, null, 'json')
    .done(function(signResponse) {
-      showMessage("One CardをU2F認証器として登録しました。");
+      showSuccess("One CardをU2F認証器として登録しました。");
       addTokenInfoToPage(signResponse);
    })
    .fail(function(xhr, status) { 
@@ -224,7 +234,6 @@ function onTokenEnrollSuccess(finishEnrollData) {
 
 function onTokenSignSuccess(responseData) {
   console.log(responseData);
-  hideMessage();
   $.post('/FinishSign', responseData, null, 'json')
     .done(highlightTokenCardOnPage)
     .fail(function(xhr, status) {

@@ -222,6 +222,13 @@ h1 {
   padding: 10px 40px 0px 40px;
 }
 
+#errormessage.success {
+  height: 30px;
+  width: 100%;
+  background: rgb(131, 255, 131);
+  padding: 10px 40px 0px 40px;
+}
+
 #errorbox {
   height: 40px;
   overflow: hidden;
