@@ -188,11 +188,11 @@ function sendBeginEnrollRequest() {
 }
 
 function sendBeginSignRequest() {
-  $.post('/BeginSign', {}, null, 'json')
+  $.post('/python-u2flib-server/sign', {}, null, 'json')
    .done(function(signResponse) {
      console.log(signResponse);
      var registeredKeys = signResponse.registeredKeys;
-     showMessage("please touch the token");
+     showMessage("ユーザーの所在を確認します。One CardのMAIN SWを１回押してください。");
      // Store sessionIds
      var sessionIds = {};
      for (var i = 0; i < registeredKeys.length; i++) {
@@ -237,9 +237,13 @@ function onTokenEnrollSuccess(finishEnrollData) {
 }
 
 function onTokenSignSuccess(responseData) {
-  console.log(responseData);
-  $.post('/FinishSign', responseData, null, 'json')
-   .done(highlightTokenCardOnPage)
+  stringJsonMessage = JSON.stringify(responseData);
+  console.log(stringJsonMessage);
+  $.post('/python-u2flib-server/verify', {"data" : stringJsonMessage}, null, 'json')
+   .done(function(signResponse) {
+     showSuccess("One CardによるU2F認証が成功しました。");
+     highlightTokenCardOnPage(signResponse);
+   })
    .fail(function(xhr, status) {
      showError(status);
    });
