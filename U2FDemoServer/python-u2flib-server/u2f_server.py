@@ -53,7 +53,8 @@ import logging as log
 import json
 import traceback
 import argparse
-
+import pickle
+import os
 
 def get_origin(environ):
     if environ.get('HTTP_ORIGIN'):
@@ -87,7 +88,17 @@ class U2FServer(object):
     """
 
     def __init__(self):
+        '''
+        永続化されたデバイス情報をファイルからロード
+        '''
         self.users = {}
+        self.dbpath = 'u2f_server.db'
+        try:
+            if os.path.exists(self.dbpath):
+                with open(self.dbpath, mode='rb') as f:
+                    self.users = pickle.load(f)
+        except Exception:
+            log.exception("Exception in deserialize from '%s'", self.dbpath)
 
     @wsgify
     def __call__(self, request):
@@ -154,6 +165,13 @@ class U2FServer(object):
         enroll = user.pop('_u2f_enroll_')
         device, cert = complete_registration(enroll, data, [self.facet])
         user['_u2f_devices_'] = [device.json]
+
+        '''
+        デバイス情報を永続化するために、
+        self.usersをシリアライズしてファイル保存
+        '''
+        with open(self.dbpath, mode='wb') as f:
+            pickle.dump(self.users, f)
 
         log.info("U2F device enrolled. Username: %s", username)
         cert = x509.load_der_x509_certificate(cert, default_backend())
