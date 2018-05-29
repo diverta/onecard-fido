@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # Copyright (c) 2013 Yubico AB
 # All rights reserved.
 #
@@ -126,10 +127,33 @@ class U2FServer(object):
         return json.dumps(enroll.data_for_client)
 
     def bind(self, username, data):
+        '''
+        enroll時に生成されたデータを取り出し、デバイス情報を生成
+        すでに同一ユーザーのデバイス情報が存在している場合は上書き
+
+        enroll時に生成されたデータ
+          {'_u2f_enroll_': '{
+            "registeredKeys": [], 
+            "registerRequests": [{
+              "challenge": "n9ksSga_r6CxGwPkO6kJPN6iV4aPID0V-oSrUivYr54", 
+              "version": "U2F_V2"
+            }], 
+            "appId": "https://www.makmorit.jp"
+          }'}
+
+        デバイス情報
+          {'_u2f_devices_': ['{
+            "publicKey": "BKt_6FeJsCpDt6wQkXor8Zld376CQ0bEkhIstg_8qv3t-vRmHy7IGKvrOVXO7iIjXRxeQm3KBA7rwHoWWBr00Ng",
+            "keyHandle": "Fec_pbKsFAZUW8-YIVQRBPfWpphikkcUQ1gPkxFFQIgvvx94uOVDFAdUa7VinvXJdqCVPp-fPPKzuPREgiKCHQ",
+            "version": "U2F_V2",
+            "transports": ["ble"],
+            "appId": "https://www.makmorit.jp"
+          }']}
+        '''
         user = self.users[username]
         enroll = user.pop('_u2f_enroll_')
         device, cert = complete_registration(enroll, data, [self.facet])
-        user.setdefault('_u2f_devices_', []).append(device.json)
+        user['_u2f_devices_'] = [device.json]
 
         log.info("U2F device enrolled. Username: %s", username)
         cert = x509.load_der_x509_certificate(cert, default_backend())
