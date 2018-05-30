@@ -234,10 +234,6 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
 {
     ret_code_t ret;
     
-    // for debug
-    NRF_LOG_DEBUG("token_counter_record_find: p_appid_hash \r\n");
-    dump_octets((uint8_t *)p_appid_hash, U2F_APPID_SIZE);
-
     // Flash ROMから既存データを走査
     bool found = false;
     fds_find_token_t  ftok = {0};
@@ -246,11 +242,6 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
         if (ret == FDS_SUCCESS) {
             // 同じappIdHashのレコードかどうか判定 (先頭32バイトを比較)
             token_counter_record_get(record_desc, m_token_counter_record_buffer);
-    
-            // for debug
-            NRF_LOG_DEBUG("token_counter_record_get: m_token_counter_record_buffer \r\n");
-            dump_octets((uint8_t *)m_token_counter_record_buffer, 40);
-
             if (strncmp((char *)p_appid_hash, (char *)m_token_counter_record_buffer, 32) == 0) {
                 found = true;
             }
