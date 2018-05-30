@@ -18,8 +18,11 @@ macOS Sierra (Version 10.12.6)
 
 ## 手順書
 
+- <b>[U2Fテスト用ローカルサーバー構築手順](../Research/U2F_LOCAL_TSTSVR.md) </b><br>
+macOS上のApacheで稼働するローカルWebサーバーに、U2Fライブラリーサーバーを組み込む手順を掲載いたします。
+
 - <b>[Chrome U2Fエクステンションのパッケージ手順](documents/CHROMEEXTPACK.md) </b><br>
 `u2f-chrome-extension.crx`をパッケージする方法について掲載いたします。
 
 - <b>[U2F管理ツールの修正手順](documents/U2FMTBUILD.md) </b><br>
-U2F管理ツール（エクステンションID修正版）のインストール媒体修正手順を、以下に掲載いたします。
+U2F管理ツール（エクステンションID修正版）のインストール媒体修正手順について掲載いたします。
