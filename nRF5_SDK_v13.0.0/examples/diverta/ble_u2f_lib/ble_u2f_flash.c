@@ -233,7 +233,7 @@ static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *t
 static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *record_desc)
 {
     ret_code_t ret;
-
+    
     // Flash ROMから既存データを走査
     bool found = false;
     fds_find_token_t  ftok = {0};
@@ -246,7 +246,7 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
                 found = true;
             }
         }
-    } while (ret == FDS_SUCCESS);
+    } while (ret == FDS_SUCCESS && found == false);
 
     return found;
 }
