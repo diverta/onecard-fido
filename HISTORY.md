@@ -2,6 +2,19 @@
 
 ## プログラム更新履歴
 
+#### 2018/05/09（Version 0.1.3）
+
+以下のプログラムを修正しました。<br>
+
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+修正点は以下になります。
+- Windows版U2F管理コマンドのコードを整理し、Visual Studio 2015ソリューションを再構築しました。（[Pull request #51](https://github.com/diverta/onecard-fido/pull/51)）
+- Windows版U2F管理ツールの処理中、画面がフリーズしないようにしました。（[Issue #52](https://github.com/diverta/onecard-fido/issues/52)）
+- ヘルスチェック時、U2F Authenticateの所在確認待ちである旨をガイダンスさせるようにしました。（[Issue #55](https://github.com/diverta/onecard-fido/issues/55)）
+- U2F管理ツールから、One Card側のペアリング情報を消去できないようにしました。（[Issue #56](https://github.com/diverta/onecard-fido/issues/56)）
+
 #### 2018/05/02（Version 0.1.2）
 
 以下のプログラムを修正しました。<br>

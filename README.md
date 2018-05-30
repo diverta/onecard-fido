@@ -4,18 +4,25 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
-#### 2018/05/09（Version 0.1.3）
+#### 2018/05/30
 
-以下のプログラムを修正しました。<br>
+U2Fローカルテストサーバーを約半年ぶりにアップデートしました。<br>
 
-- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
-- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+- [U2FDemoServer](U2FDemoServer)
+- [手順書などのドキュメント](U2FDemoServer/README.md)
 
-修正点は以下になります。
-- Windows版U2F管理コマンドのコードを整理し、Visual Studio 2015ソリューションを再構築しました。（[Pull request #51](https://github.com/diverta/onecard-fido/pull/51)）
-- Windows版U2F管理ツールの処理中、画面がフリーズしないようにしました。（[Issue #52](https://github.com/diverta/onecard-fido/issues/52)）
-- ヘルスチェック時、U2F Authenticateの所在確認待ちである旨をガイダンスさせるようにしました。（[Issue #55](https://github.com/diverta/onecard-fido/issues/55)）
-- U2F管理ツールから、One Card側のペアリング情報を消去できないようにしました。（[Issue #56](https://github.com/diverta/onecard-fido/issues/56)）
+下記の通り、大幅にアップデートしています。
+
+- 従来の[Javaベースのライブラリーサーバー](Research/u2f-test-server)から、[Pythonベースのライブラリーサーバー](U2FDemoServer/python-u2flib-server)に変更<br>
+[Yubico社提供のPythonライブラリーサーバー](https://developers.yubico.com/python-u2flib-server/)を使用し、[サンプル](https://github.com/Yubico/python-u2flib-server/blob/master/examples/u2f_server.py)を若干拡張して[サーバープログラム](U2FDemoServer/python-u2flib-server/u2f_server.py)を作成しました。<br>
+
+- [Chrome U2Fエクステンション](U2FDemoServer/u2f-chrome-extension.crx)をパッケージ化<br>
+この結果、エクステンションIDが以前のものから変更になっております。
+
+- 上記変更後のエクステンションIDを反映した、[専用のU2F管理ツール](U2FDemoServer/U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を用意<br>
+ただし機能上の変更がない為、バージョンは、0.1.3のままとしております。
+
+- 関連トピックス<br>[Issue #22](https://github.com/diverta/onecard-fido/issues/22), [Pull request #62](https://github.com/diverta/onecard-fido/pull/62) ご参照
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
