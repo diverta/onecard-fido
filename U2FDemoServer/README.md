@@ -26,3 +26,6 @@ macOS上のApacheで稼働するローカルWebサーバーに、U2Fライブラ
 
 - <b>[U2F管理ツールの修正手順](documents/U2FMTBUILD.md) </b><br>
 U2F管理ツール（エクステンションID修正版）のインストール媒体修正手順について掲載いたします。
+
+- <b>[Chromeブラウザーを使用したデモ手順](documents/CHROMEDEMO.md) </b><br>
+パッケージ化されたChrome U2Fエクステンションを使用し、U2F管理ツール（エクステンションID修正版）、One Cardを使用して、U2F Register／Authenticateを実行するまでの手順を掲載しております。
