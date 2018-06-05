@@ -33,7 +33,7 @@ var js_api_version;
 // The U2F Chrome extension ID.
 // Uncomment this if you want to deploy a server instance that uses
 // the U2F Chrome extension to authenticate.
-u2f.EXTENSION_ID = 'jgomidmeajgnpflcklfhcbpamnbdfmoo';
+u2f.EXTENSION_ID = 'pfboblefjcgdjicmnffhdgionmgcdmne';
 
 
 /**
