@@ -556,6 +556,8 @@ ReturnValue BleDeviceWinRT::UnregisterNotifications(pEventHandler eventHandler)
   {
     throw STRING_RUNTIME_EXCEPTION("Unknown error writing Client Characteristic Configuration Descriptor");
   }
+
+  return ReturnValue::BLEAPI_ERROR_SUCCESS;
 }
 
 ReturnValue BleDeviceWinRT::RegisterNotifications(pEventHandler eventHandler)
