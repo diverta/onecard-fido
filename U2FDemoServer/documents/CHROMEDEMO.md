@@ -1,6 +1,6 @@
 # Chromeブラウザーを使用したデモ手順
 
-パッケージ化されたChrome U2Fエクステンションを使用し、U2F管理ツール（エクステンションID修正版）、One Cardを使用して、U2F Register／Authenticateを実行するまでの手順を、以下に掲載いたします。
+ChromeおよびU2Fエクステンションを使用し、U2F管理ツール、One Cardを使用して、U2F Register／Authenticateを実行するまでの手順を、以下に掲載いたします。
 
 ## U2Fローカルテストサーバーの準備
 
@@ -15,42 +15,39 @@ MacBookPro-makmorit-jp:python-u2flib-server makmorit$ python ./u2f_server.py -i 
 
 ## デモ用プログラムのインストール
 
-本件デモでは、マスターブランチでリリース済みのプログラムは使用できないので、U2Fローカルテストサーバーでの動作に特化した、以下のデモ用プログラムをインストールする必要があります。
+U2Fローカルテストサーバーでの動作確認時は、以下のプログラムをインストールする必要があります。
 
-- パッケージ化されたChrome U2Fエクステンション
-- U2F管理ツール（エクステンションID修正版）
+- パッケージ化されていないChrome U2Fエクステンション
+- U2F管理ツール
 
 ### ファイルのダウンロード
 
-本件デモで使用する、パッケージ化されたChrome U2Fエクステンション、U2F管理ツール（エクステンションID修正版）を、下記場所からダウンロードします。
+本件デモで使用する、パッケージ化されていないChrome U2Fエクステンション、U2F管理ツール（エクステンションID修正版）を、下記場所からダウンロードします。
 
-- パッケージ化されたChrome U2Fエクステンション<br>
-[u2f-chrome-extension.crx](../u2f-chrome-extension.crx)
+- パッケージ化されていないChrome U2Fエクステンション（圧縮ファイル）<br>
+[u2f-chrome-extension.zip](../../U2FMaintenanceTool/u2f-chrome-extension.zip)
 
-- U2F管理ツール（エクステンションID修正版）<br>
-[U2FMaintenanceTool.pkg](../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- U2F管理ツール<br>
+[U2FMaintenanceTool.pkg](../../U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
 
 ダウンロードしたファイルはそれぞれインストールします。
 
 ### エクステンションのインストール
 
-ダウンロードした`u2f-chrome-extension.crx`を、Chromeブラウザーの「拡張機能ページ」（`chrome://extensions/`）にドラッグ＆ドロップします。
+Chromeブラウザーを起動し、デベロッパーモードに切り替えます。
 
 <img src="assets/0004.png" width="600">
 
-確認メッセージが表示されるので「拡張機能を追加」をクリックします。
+ダウンロードした`u2f-chrome-extension.zip`を任意のフォルダーで解凍後、Chromeブラウザーの「拡張機能ページ」（`chrome://extensions/`）にドラッグ＆ドロップします。
 
 <img src="assets/0005.png" width="600">
 
-エクステンションがChromeに追加された旨のメッセージが表示されます。
+エクステンションがChromeに追加表示されます。<br>
+インストールしたエクステンションがID`pfboblefjcgdjicmnffhdgionmgcdmne`であることを確認します。
 
 <img src="assets/0006.png" width="600">
 
-デベロッパーモードに変更すると、新しくインストールしたエクステンションのID`jgomidmeajgnpflcklfhcbpamnbdfmoo`が確認できます。
-
-<img src="assets/0007.png" width="600">
-
-確認後は、デベロッパーモードを無効にしておくようにします。
+確認後は、デベロッパーモードをOffにしておきます。
 
 <img src="assets/0008.png" width="600">
 
