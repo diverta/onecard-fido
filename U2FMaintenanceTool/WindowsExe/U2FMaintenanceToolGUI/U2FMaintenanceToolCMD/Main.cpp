@@ -183,6 +183,7 @@ int __cdecl main(Platform::Array<Platform::String^>^ args)
 		// char型配列を別領域に格納
 		size_t slen = strlen(char_str);
 		char *sp = (char *)malloc(slen + 1);
+		memset(sp, 0, slen + 1);
 		memcpy_s(sp, slen, char_str, slen);
 
 		// 格納先のアドレスポインターを保持
