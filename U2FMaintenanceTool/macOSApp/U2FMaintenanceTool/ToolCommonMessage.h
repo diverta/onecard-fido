@@ -109,4 +109,16 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 
+#pragma mark - Chrome設定画面
+#define MSG_CHROMEEXT_TYPE_NONE             @"(設定されていません)"
+#define MSG_CHROMEEXT_ID_NONE               @""
+#define MSG_CHROMEEXT_DESC_NONE             @""
+#define MSG_CHROMEEXT_TYPE_GOOGLEDEMOSITE   @"Google U2Fテストサーバー用エクステンション"
+#define MSG_CHROMEEXT_ID_GOOGLEDEMOSITE     @"pfboblefjcgdjicmnffhdgionmgcdmne"
+#define MSG_CHROMEEXT_DESC_GOOGLEDEMOSITE   @"デモサイト 'https://crxjs-dot-u2fdemo.appspot.com' で、U2F機能を使用するために必要なエクステンションです。\n[ご参照] https://github.com/diverta/onecard-fido/blob/master/U2FMaintenanceTool/u2f-chrome-extension.zip"
+#define MSG_CHROMEEXT_TYPE_LOCALTESTSERVER  @"U2Fローカルテストサーバー用エクステンション"
+#define MSG_CHROMEEXT_ID_LOCALTESTSERVER    @"jgomidmeajgnpflcklfhcbpamnbdfmoo"
+#define MSG_CHROMEEXT_DESC_LOCALTESTSERVER  @"U2Fローカルテストサーバーを立ち上げて、U2F機能を使用するために必要なエクステンションです。\n[ご参照] https://github.com/diverta/onecard-fido/blob/master/U2FDemoServer/u2f-chrome-extension.crx"
+
+
 #endif /* ToolCommonMessage_h */
