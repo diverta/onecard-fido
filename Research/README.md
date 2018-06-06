@@ -5,8 +5,8 @@
 * <b>[WebAuthn関連調査](WEBAUTHN_INDEX.md)</b><br>
 FIDO 2.0のWeb認証技術である、WebAuthnについて、各種調査を行っています。
 
-* <b>[U2Fローカルテストサーバー](u2f-test-server/README.md)</b><br>
-ChromeでBLE U2F対応調査／開発を行う際に使用する、ローカルテスト用のU2Fサーバーを構築しました。<br>
+* <b>[U2Fローカルテストサーバー](../U2FDemoServer/README.md)</b><br>
+ChromeでBLE U2F対応調査／開発を行う際に使用する、PC環境ローカルテスト用のU2Fサーバーを構築しました。<br>
 U2Fローカルテストサーバーについて、概要説明や、利用手順を掲載しております。
 
 * <b>[Chrome OSでのU2F認証テスト](CHROMEOSTEST.md)</b><br>
@@ -26,9 +26,9 @@ macOSでサポートされている「Web Bluetooth API」を使用して、BLE 
 
 ## 補足説明
 
-（未作成）
-
-後日、随時追加していく予定です。
+* <b>[（旧バージョン）U2Fローカルテストサーバー](u2f-test-server/README.md)</b><br>
+かつて使用していた、U2Fローカルテストサーバーについて掲載しています。<br>
+Javaベースのライブラリーサーバーを中核としています。
 
 ## TODO
 

@@ -22,10 +22,34 @@ MacBookPro-makmorit-jp:~ makmorit$ cat /etc/hosts
 
 ## U2FライブラリーサーバーをApacheに組込
 
-#### バーチャルホスト設定ファイルの変更
+Apacheに対し、以下の設定変更を行い、U2FライブラリーサーバーをApacheに組み込みます。
 
-`/private/etc/apache2/extra/httpd-ssl.conf`を変更します。<br>
-具体的には`ProxyPass`に、U2Fライブラリーサーバーの稼働パスを指定します。
+- ドキュメントルート・ディレクトリーを、GitHubチェックアウト・ディレクトリーと整合させる
+- U2Fライブラリーサーバーの稼働パスを設定
+
+#### ドキュメントルート・ディレクトリー変更
+
+`/private/etc/apache2/httpd.conf`を変更し、GitHubでチェックアウトした静的Webコンテンツディレクトリーを、ドキュメントルート・ディレクトリーとして指定します。<br>
+（これによってGitHubの登録内容と容易に整合できます）
+
+以下、変更前とのdiffになります。<br>
+下記例では`/Users/makmorit/GitHub/onecard-fido/U2FDemoServer/htdocs`が、静的Webコンテンツディレクトリーになっております。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ diff /private/etc/apache2/httpd.conf.original /private/etc/apache2/httpd.conf
+：
+237,238c237,238
+< DocumentRoot "/Library/WebServer/Documents"
+< <Directory "/Library/WebServer/Documents">
+---
+> DocumentRoot "/Users/makmorit/GitHub/onecard-fido/U2FDemoServer/htdocs"
+> <Directory "/Users/makmorit/GitHub/onecard-fido/U2FDemoServer/htdocs">
+：
+```
+
+#### U2Fライブラリーサーバーの稼働パス指定
+
+`/private/etc/apache2/extra/httpd-ssl.conf`を変更し、`ProxyPass`に、U2Fライブラリーサーバーの稼働パスを指定します。
 
 ```
 MacBookPro-makmorit-jp:~ makmorit$ diff /private/etc/apache2/extra/httpd-ssl.conf.original /private/etc/apache2/extra/httpd-ssl.conf
@@ -43,8 +67,10 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 #### U2Fライブラリーサーバーを始動
 
-U2Fライブラリーサーバーを、上記で設定したパスで稼働するようにします。
+U2Fライブラリーサーバーを、上記で設定したパスで稼働するようにします。<br>
 具体的には`u2f_server.py`に、引数`-i www.makmorit.jp`を与えて起動させるようにします。
+
+起動メッセージの`Starting server on`に続いて表示されるサーバーパス（下記例では`http://www.makmorit.jp:8081`）が、前述の`ProxyPass`に指定したパスと同じになることを必ず確認してください。
 
 ```
 MacBookPro-makmorit-jp:python-u2flib-server makmorit$ python ./u2f_server.py -i www.makmorit.jp
