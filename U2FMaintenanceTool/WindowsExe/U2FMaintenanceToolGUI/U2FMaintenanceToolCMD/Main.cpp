@@ -123,7 +123,7 @@ static void flushAndClose(void)
 	std::wcerr.flush();
 }
 
-int __cdecl main(int argc, char *argv[])
+int __main(int argc, char *argv[])
 {
 	try {
 		// コマンドライン引数を取得
@@ -159,4 +159,45 @@ int __cdecl main(int argc, char *argv[])
 
 	flushAndClose();
 	return 0;
+}
+
+int __cdecl main(Platform::Array<Platform::String^>^ args)
+{
+	// 引数の数を取得
+	int argc = args->Length;
+
+	// 引数格納する領域を確保
+	char **argv = (char **)malloc(sizeof(char *) * argc);
+	if (argv == nullptr) {
+		std::cout << "コマンド引数の格納領域確保に失敗しました." << std::endl;
+		return -1;
+	}
+
+	int i = 0;
+	for (Platform::String^ arg : args) {
+		// アドレスポインターwchar型をchar型に変換
+		std::wstring wstr(arg->Begin());
+		std::string  cstr(wstr.begin(), wstr.end());
+		const char  *char_str = cstr.c_str();
+
+		// char型配列を別領域に格納
+		size_t slen = strlen(char_str);
+		char *sp = (char *)malloc(slen + 1);
+		memset(sp, 0, slen + 1);
+		memcpy_s(sp, slen, char_str, slen);
+
+		// 格納先のアドレスポインターを保持
+		argv[i++] = sp;
+	}
+
+	// メイン処理を実行
+	int ret = __main(argc, argv);
+
+	// 確保した引数格納領域を解放
+	for (i = 0; i < argc; i++) {
+		free(argv[i]);
+	}
+	free(argv);
+
+	return ret;
 }
