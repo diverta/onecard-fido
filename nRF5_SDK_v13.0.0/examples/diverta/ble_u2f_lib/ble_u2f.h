@@ -94,6 +94,7 @@ struct ble_u2f_s
     ble_gatts_char_handles_t u2f_control_point_length_handles;
     ble_gatts_char_handles_t u2f_service_revision_bitfield_handles;
     ble_gatts_char_handles_t u2f_service_revision_handles;
+    ble_gatts_char_handles_t pairing_mode_sign_handles;
 
     uint16_t                 conn_handle;
     ble_u2f_data_handler_t   data_handler;
