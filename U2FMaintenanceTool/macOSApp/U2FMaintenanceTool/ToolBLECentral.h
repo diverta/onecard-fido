@@ -7,8 +7,6 @@
 
     @property (nonatomic, strong) NSString *serviceName;
     @property (nonatomic, strong) NSArray  *serviceUUIDs;
-    @property (nonatomic, strong) NSArray  *characteristicUUIDs;
-    @property (nonatomic, strong) NSArray  *pairingModeSignCharUUIDs;
 
     @property (nonatomic, weak)   id<ToolBLECentralDelegate> delegate;
 

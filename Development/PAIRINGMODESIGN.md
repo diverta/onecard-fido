@@ -225,3 +225,36 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
     }
     :
 ```
+
+## [WIP] macOS版U2F管理ツール側の対応内容
+
+ペアリングモードに移行している時は、U2F管理ツールからペアリング実行以外の処理を禁止するようにします。
+
+### ペアリングモードの判定
+
+通常業務のキャラクタリスティックに加え、ペアリングモード標識キャラクタリスティックも含め、ディスカバーを行うようにします。<br>
+ペアリングモード標識がディスカバーされた場合は、ペアリングモードに移行中であると判定します。
+
+```
+#define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define PairingModeSignCharUUID @"98439EE6-776B-401C-880C-682FBDDD8E32"
+:
+#define MSG_PAIRING_MODE_SIGN_EXIST @"ペアリングモード標識が存在します。One Cardはペアリングモードに移行中です。"
+:
+@implementation ToolBLECentral
+:
+- (void)subscribeCharacteristic:(CBService *)service {
+    :
+    for (CBCharacteristic *characteristic in service.characteristics) {
+        if (characteristic.properties & CBCharacteristicPropertyWrite) {
+            self.u2fControlPointChar = characteristic;
+        } else if (characteristic.properties & CBCharacteristicPropertyNotify) {
+            self.u2fStatusChar = characteristic;
+        } else if ([[[characteristic UUID] UUIDString] isEqualToString:PairingModeSignCharUUID]) {
+            // ペアリングモード標識がディスカバーされた場合はペアリングモードと判定
+            [[self delegate] notifyCentralManagerMessage:MSG_PAIRING_MODE_SIGN_EXIST];
+        }
+    }
+    :
+```

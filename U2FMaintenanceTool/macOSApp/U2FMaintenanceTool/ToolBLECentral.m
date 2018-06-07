@@ -39,13 +39,6 @@
             self.connectedPeripheral = nil;
             self.serviceUUIDs = @[[CBUUID UUIDWithString:U2FServiceUUID]];
             self.toolTimer = [[ToolTimer alloc] initWithDelegate:self];
-            
-            // 非ペアリングモード時に（通常業務で）使用するキャラクタリスティックUUID
-            [self setCharacteristicUUIDs:@[[CBUUID UUIDWithString:U2FControlPointCharUUID],
-                                           [CBUUID UUIDWithString:U2FStatusCharUUID]]];
-            // ペアリングモード時に使用するキャラクタリスティックUUID
-            [self setPairingModeSignCharUUIDs:@[
-                                           [CBUUID UUIDWithString:PairingModeSignCharUUID]]];
         }
         return self;
     }
@@ -65,7 +58,6 @@
         }
 
         NSAssert(self.serviceUUIDs.count > 0, @"Need to specify services");
-        NSAssert(self.characteristicUUIDs.count > 0, @"Need to specify characteristics UUID");
 
         if (self.manager.state != CBCentralManagerStatePoweredOn) {
             // BLEが無効化されている旨をAppDelegateに通知
@@ -227,7 +219,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
     - (void)discoverServiceCharacteristics:(CBService *)service {
         // サービス内のキャラクタリスティックをディスカバー
-        [self.connectedPeripheral discoverCharacteristics:self.characteristicUUIDs
+        [self.connectedPeripheral discoverCharacteristics:nil
                                                forService:service];
         // キャラクタリスティック・ディスカバーのタイムアウト監視を開始
         [[self toolTimer] startDiscoverCharacteristicsTimeoutMonitor:service];
@@ -274,6 +266,9 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
                 self.u2fControlPointChar = characteristic;
             } else if (characteristic.properties & CBCharacteristicPropertyNotify) {
                 self.u2fStatusChar = characteristic;
+            } else if ([[[characteristic UUID] UUIDString] isEqualToString:PairingModeSignCharUUID]) {
+                // ペアリングモード標識がディスカバーされた場合はペアリングモードと判定
+                [[self delegate] notifyCentralManagerMessage:MSG_PAIRING_MODE_SIGN_EXIST];
             }
         }
 
