@@ -99,10 +99,13 @@ bool ble_u2f_pairing_mode_get(void) {
 ### キャラクタリスティックの設定
 
 `ble_u2f_pairing_get_mode`の後に実行される`ble_u2f_init_services`の中で、ペアリングモード標識の設定を追加します。<br>
-ペアリング標識モードの設定追加は、新設関数`u2f_pairing_mode_char_add `を実行して行います。
+ペアリング標識モードの設定追加は、新設した関数`pairing_mode_sign_char_add `を実行して行います。
 ```
 int main(void) {
     :
+    // ペアリングモードをFDSから取得
+    ble_u2f_pairing_get_mode(&m_u2f);
+
     // initialize ble services.
     :
     ble_services_init();
@@ -120,14 +123,14 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
                                         &ble_uuid,
                                         &p_u2f->service_handle);
     :
-    err_code = u2f_pairing_mode_char_add(p_u2f);
+    err_code = pairing_mode_sign_char_add(p_u2f);
     :
 
 ```
 
 ### キャラクタリスティックをサービスに追加
 
-関数`u2f_pairing_mode_char_add`により、U2Fサービスにペアリングモード標識を追加します。<br>
+U2Fサービスにペアリングモード標識を追加します。<br>
 ペアリングモード標識の仕様は以下になります。
 
 - 長さ１バイトの属性
@@ -138,28 +141,26 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
 FIDOのUUIDと同様、オリジナルUUIDは以下のように定義しておきます。
 
 ```
-// Original UUID (98439EE6-776B-401C-880C-682FBDDD8E32)
+// ペアリング標識はオリジナルUUIDを採用
+// (98439EE6-776B-401C-880C-682FBDDD8E32)
 #define BLE_UUID_U2F_PAIRING_MODE_CHAR 0x9EE6
 static ble_uuid128_t original_base_uuid = {
     0x32, 0x8E, 0xDD, 0xBD, 0x2F, 0x68, 0x0C, 0x88, 0x1C, 0x40, 0x6B, 0x77, 0x00, 0x00, 0x43, 0x98
 };
+static uint8_t pairing_mode_sign = 0x01;
 ```
 
-関数`u2f_pairing_mode_char_add`では、ペアリングモード標識にオリジナルUUIDを設定し、U2Fサービス内に追加しています。
+関数`pairing_mode_sign_char_add`では、ペアリングモード標識にオリジナルUUIDを設定し、U2Fサービス内に追加しています。
 
 ```
-static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f) {
+static uint32_t pairing_mode_sign_char_add(ble_u2f_t *p_u2f) {
     :
-    //
-    // オリジナルUUID(128bit)を採用
-    //
+    // オリジナルUUID(128bit)を設定
     uint8_t  uuid_type_;
     uint32_t err_code = sd_ble_uuid_vs_add(&original_base_uuid, &uuid_type_);
     VERIFY_SUCCESS(err_code);
     ble_uuid.type = uuid_type_;
     ble_uuid.uuid = BLE_UUID_U2F_PAIRING_MODE_CHAR;
-
-    memset(&attr_md, 0, sizeof(attr_md));
     :
     attr_char_value.p_uuid    = &ble_uuid;
     :
@@ -167,11 +168,11 @@ static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f) {
     return sd_ble_gatts_characteristic_add(p_u2f->service_handle,
                                            &char_md,
                                            &attr_char_value,
-                                           &p_u2f->u2f_pairing_mode_handles);
+                                           &p_u2f->pairing_mode_sign_handles);
 }
 ```
 
-キャラクタリスティック追加時に取得したハンドルは、接続共有情報`ble_u2f_t`に追加したフィールド`u2f_pairing_mode_handles`で保持されます。
+キャラクタリスティック追加時に取得したハンドルは、接続共有情報`ble_u2f_t`に追加したフィールド`pairing_mode_sign_handles`で保持されます。
 
 ```
 struct ble_u2f_s
@@ -182,7 +183,7 @@ struct ble_u2f_s
     ble_gatts_char_handles_t u2f_control_point_length_handles;
     ble_gatts_char_handles_t u2f_service_revision_bitfield_handles;
     ble_gatts_char_handles_t u2f_service_revision_handles;
-    ble_gatts_char_handles_t u2f_pairing_mode_handles;
+    ble_gatts_char_handles_t pairing_mode_sign_handles;
     :
 };
 
@@ -202,7 +203,7 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
     :
     if (ble_u2f_pairing_mode_get()) {
         // ペアリングモードの場合はペアリングモード標識を追加
-        err_code = u2f_control_point_char_add(p_u2f);
+        err_code = pairing_mode_sign_char_add(p_u2f);
         VERIFY_SUCCESS(err_code);
 
     } else {
