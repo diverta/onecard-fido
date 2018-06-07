@@ -51,14 +51,55 @@ MacBookPro-makmorit-jp:~ makmorit$ uuidgen
 98439EE6-776B-401C-880C-682FBDDD8E32
 ```
 
-## nRF52側の改修案
+## nRF52側の対応内容
 
 ペアリングモードに移行している時は、ペアリングモード標識を、BLE U2Fサービスに追加するようにします。
 
-### キャラクタリスティック設定の追加
+### ペアリングモードの判定
 
-下記の流れで実行される`ble_u2f_init_services`の中で、ペアリングモード標識の設定を追加します。<br>
-具体的には関数`u2f_pairing_mode_char_add `を新設します。
+まずは、main関数の冒頭で、ペアリングモードに移行しているかどうかの判定をおこないます。<br>
+`ble_stack_init` ---> `peer_manager_init` ---> `ble_u2f_pairing_get_mode` の順番で呼び出されるようにします。<br>
+（後述しますが、ペアリングモード判定時にFDSを使用するための措置）
+
+```
+int main(void) {
+  :
+  // initialize ble stack.
+  ble_stack_init();
+  :
+  // initialize peer manager.
+  peer_manager_init();
+  :
+  // ペアリングモードをFDSから取得
+  // (FDS初期化はpeer_manager_initの中で行われる)
+  ble_u2f_pairing_get_mode(&m_u2f);
+  :
+```
+
+#### ご参考：ペアリングモード判定時のFDSアクセスについて
+
+MAIN SW長押しによりペアリングモードに移行させる場合は、FDS（Flash ROM）にペアリングモードデータを書き込んでからソフトデバイスを再起動させるようにしています。<br>
+再起動完了時、FDSからペアリングモードデータがあれば、ペアリングモードに移行中であると判定するロジックとなっております。
+
+ペアリング移行中は、BLEサービス開始前に、ディスカバリーを不可能とする設定を行う必要がありますが、この設定はソフトデバイス起動時でしか行うことができません（サービス開始後に設定変更はできません）。<br>
+ディスカバリー可能／不可能の設定を切り替えるためには、ソフトデバイスの再起動が必要となってしまうため、前述のようなソフトデバイス再起動＋FDSアクセスを伴う実装としております。
+
+ペアリングモード移行中は、`ble_u2f_pairing.c`内のモジュール変数`run_as_pairing_mode`の値が`true`に変化しています。<br>
+これは`ble_u2f_pairing_mode_get`関数により、外部からアクセスできます。
+
+```
+// ペアリングモードを保持
+static bool run_as_pairing_mode;
+
+bool ble_u2f_pairing_mode_get(void) {
+    return run_as_pairing_mode;
+}
+```
+
+### キャラクタリスティックの設定
+
+`ble_u2f_pairing_get_mode`の後に実行される`ble_u2f_init_services`の中で、ペアリングモード標識の設定を追加します。<br>
+ペアリング標識モードの設定追加は、新設関数`u2f_pairing_mode_char_add `を実行して行います。
 ```
 int main(void) {
     :
@@ -104,26 +145,11 @@ static ble_uuid128_t original_base_uuid = {
 };
 ```
 
-関数`u2f_pairing_mode_char_add`の内容は以下になります。
+関数`u2f_pairing_mode_char_add`では、ペアリングモード標識にオリジナルUUIDを設定し、U2Fサービス内に追加しています。
 
 ```
-static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f)
-{
-    // 'OneCardPairingMode' characteristicを登録する。
-    ble_gatts_char_md_t char_md;
-    ble_gatts_attr_t    attr_char_value;
-    ble_uuid_t          ble_uuid;
-    ble_gatts_attr_md_t attr_md;
-
-    memset(&char_md, 0, sizeof(char_md));
-
-    char_md.char_props.read          = 1;
-    char_md.p_char_user_desc         = NULL;
-    char_md.p_char_pf                = NULL;
-    char_md.p_user_desc_md           = NULL;
-    char_md.p_cccd_md                = NULL;
-    char_md.p_sccd_md                = NULL;
-
+static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f) {
+    :
     //
     // オリジナルUUID(128bit)を採用
     //
@@ -134,24 +160,9 @@ static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f)
     ble_uuid.uuid = BLE_UUID_U2F_PAIRING_MODE_CHAR;
 
     memset(&attr_md, 0, sizeof(attr_md));
-
-    BLE_GAP_CONN_SEC_MODE_SET_ENC_NO_MITM(&attr_md.read_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attr_md.write_perm);
-
-    attr_md.vloc    = BLE_GATTS_VLOC_STACK;
-    attr_md.rd_auth = 0;
-    attr_md.wr_auth = 0;
-    attr_md.vlen    = 0;
-
-    memset(&attr_char_value, 0, sizeof(attr_char_value));
-
+    :
     attr_char_value.p_uuid    = &ble_uuid;
-    attr_char_value.p_attr_md = &attr_md;
-    attr_char_value.init_len  = 1;
-    attr_char_value.init_offs = 0;
-    attr_char_value.max_len   = 1;
-    attr_char_value.p_value   = 0x00;
-
+    :
     // U2Fサービス内に追加
     return sd_ble_gatts_characteristic_add(p_u2f->service_handle,
                                            &char_md,
@@ -160,7 +171,7 @@ static uint32_t u2f_pairing_mode_char_add(ble_u2f_t *p_u2f)
 }
 ```
 
-接続共有情報`ble_u2f_t`に`u2f_pairing_mode_handles`を追加し、キャラクタリスティック追加時に取得したハンドルを保持します。
+キャラクタリスティック追加時に取得したハンドルは、接続共有情報`ble_u2f_t`に追加したフィールド`u2f_pairing_mode_handles`で保持されます。
 
 ```
 struct ble_u2f_s
@@ -180,9 +191,7 @@ typedef struct ble_u2f_s ble_u2f_t;
 
 ### キャラクタリスティックの制御
 
-ペアリングモードに移行時は、ペアリングモード標識を見せるようにする一方、U2F関連のキャラクタリスティックは見せないようにします。<br>
-そのための制御は、関数`ble_u2f_init_services`内で実行する必要があります。
-
+ペアリングモードに移行中は、ペアリングモード標識を見せるようにする一方、U2F関連のキャラクタリスティックは見せないよう、関数`ble_u2f_init_services`内で制御します。
 
 ```
 uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
@@ -214,15 +223,4 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
         VERIFY_SUCCESS(err_code);
     }
     :
-```
-
-ペアリングモードは`ble_u2f_pairing.c`内のモジュール変数`run_as_pairing_mode`で保持しているので、これを外部からアクセスできるようにします。
-
-```
-// ペアリングモードを保持
-static bool run_as_pairing_mode;
-
-bool ble_u2f_pairing_mode_get(void) {
-    return run_as_pairing_mode;
-}
 ```
