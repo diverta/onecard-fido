@@ -5,6 +5,7 @@
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
 #define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define PairingModeSignCharUUID @"98439EE6-776B-401C-880C-682FBDDD8E32"
 
 @interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate, ToolTimerDelegate>
 
@@ -37,9 +38,14 @@
             self.manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
             self.connectedPeripheral = nil;
             self.serviceUUIDs = @[[CBUUID UUIDWithString:U2FServiceUUID]];
-            self.characteristicUUIDs = @[[CBUUID UUIDWithString:U2FControlPointCharUUID],
-                                         [CBUUID UUIDWithString:U2FStatusCharUUID]];
             self.toolTimer = [[ToolTimer alloc] initWithDelegate:self];
+            
+            // 非ペアリングモード時に（通常業務で）使用するキャラクタリスティックUUID
+            [self setCharacteristicUUIDs:@[[CBUUID UUIDWithString:U2FControlPointCharUUID],
+                                           [CBUUID UUIDWithString:U2FStatusCharUUID]]];
+            // ペアリングモード時に使用するキャラクタリスティックUUID
+            [self setPairingModeSignCharUUIDs:@[
+                                           [CBUUID UUIDWithString:PairingModeSignCharUUID]]];
         }
         return self;
     }
