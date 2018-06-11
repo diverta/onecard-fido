@@ -97,6 +97,10 @@
 #define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLE U2Fサービス送受信項目の検索がタイムアウトしました。"
 #define MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT    @"FIDO BLE U2Fサービス受信項目の監視ステータス更新がタイムアウトしました。"
 #define MSG_PAIRING_MODE_SIGN_EXIST         @"ペアリングモード標識が存在します。One Cardはペアリングモードに移行中です。"
+#define MSG_ERROR_IN_PAIRING_MODE           @"非ペアリングモードでは、ペアリング実行ができません。"
+#define MSG_ERROR_GUIDE_IN_PAIRING_MODE     @"One Cardをペアリングモードに移行させてから、再度実行してください。"
+#define MSG_ERROR_IN_NON_PAIRING_MODE       @"ペアリングモードでは、ペアリング実行以外の機能は使用できません。"
+#define MSG_ERROR_GUIDE_IN_NON_PAIRING_MODE @"One Cardでペアリングモードを解除させてから、再度実行してください。"
 
 #pragma mark - 接続再試行関連メッセージ
 #define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"

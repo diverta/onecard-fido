@@ -288,7 +288,8 @@
                 // ペアリングモード標識がある場合はOK
                 return true;
             } else {
-                [self setLastCommandMessage:@"One Cardをペアリングモードに移行させてください。"];
+                [self notifyToolCommandMessage:MSG_ERROR_IN_PAIRING_MODE];
+                [self setLastCommandMessage:MSG_ERROR_GUIDE_IN_PAIRING_MODE];
                 [self setLastCommandSuccess:false];
                 return false;
             }
@@ -298,7 +299,8 @@
                 // ペアリングモード標識がない場合はOK
                 return true;
             } else {
-                [self setLastCommandMessage:@"One Cardを非ペアリングモードに移行させてください。"];
+                [self notifyToolCommandMessage:MSG_ERROR_IN_NON_PAIRING_MODE];
+                [self setLastCommandMessage:MSG_ERROR_GUIDE_IN_NON_PAIRING_MODE];
                 [self setLastCommandSuccess:false];
                 return false;
             }
