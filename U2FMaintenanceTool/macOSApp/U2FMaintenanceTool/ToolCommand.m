@@ -648,6 +648,12 @@
 }
 
 - (bool)isResponseCompleted:(NSData *)responseData {
+    // ペアリング実行の場合は後続レスポンスなし
+    if ([self command] == COMMAND_PAIRING) {
+        [self setBleResponseData:[[NSData alloc] initWithData:responseData]];
+        return false;
+    }
+    
     // 受信データおよび長さを保持
     static NSUInteger     totalLength;
     static NSMutableData *receivedData;
@@ -693,9 +699,14 @@
         return false;
     }
     
-    // PINGコマンドの場合はレスポンスがあった時点でOKとする
+    // ペアリング実行の場合はレスポンスを参照のうえOKとする
     if ([self command] == COMMAND_PAIRING) {
-        return true;
+        char *pairingModeSign = (char *)[[self bleResponseData] bytes];
+        if (pairingModeSign[0] == 0x01) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     // ステータスワード(レスポンスの末尾２バイト)を取得
