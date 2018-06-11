@@ -301,7 +301,7 @@ static uint32_t pairing_mode_sign_char_add(ble_u2f_t *p_u2f)
     attr_md.vloc    = BLE_GATTS_VLOC_STACK;
     attr_md.rd_auth = 0;
     attr_md.wr_auth = 0;
-    attr_md.vlen    = 0;
+    attr_md.vlen    = 1;
 
     memset(&attr_char_value, 0, sizeof(attr_char_value));
 
