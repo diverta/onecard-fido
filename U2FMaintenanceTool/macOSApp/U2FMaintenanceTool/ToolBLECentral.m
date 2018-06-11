@@ -15,6 +15,7 @@
 
     @property(nonatomic) CBCharacteristic *u2fControlPointChar;
     @property(nonatomic) CBCharacteristic *u2fStatusChar;
+    @property(nonatomic) CBCharacteristic *pairingModeSignChar;
 
     // 送信フレームデータ／フレーム数を保持
     @property(nonatomic) NSArray<NSData *> *bleRequestFrames;
@@ -159,12 +160,18 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
    didDisconnectPeripheral:(CBPeripheral *)peripheral
                      error:(NSError *)error {
         // レスポンスタイムアウト監視を停止
-        [[self toolTimer] cancelResponseTimeoutMonitor:[self u2fStatusChar]];
+        if ([self u2fStatusChar]) {
+            [[self toolTimer] cancelResponseTimeoutMonitor:[self u2fStatusChar]];
+        }
+        if ([self pairingModeSignChar]) {
+            [[self toolTimer] cancelResponseTimeoutMonitor:[self pairingModeSignChar]];
+        }
         // ペリフェラル、サービス、キャラクタリスティックの参照を解除
-        self.connectedPeripheral = nil;
-        self.connectedService    = nil;
-        self.u2fControlPointChar = nil;
-        self.u2fStatusChar       = nil;
+        [self setConnectedPeripheral:nil];
+        [self setConnectedService:nil];
+        [self setU2fControlPointChar:nil];
+        [self setU2fStatusChar:nil];
+        [self setPairingModeSignChar:nil];
         // 切断完了
         [[self delegate] centralManagerDidDisconnectWith:MSG_U2F_DEVICE_DISCONNECTED error:error];
     }
@@ -242,43 +249,48 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             return;
         }
 
-        // U2F Statusキャラクタリスティックに対する監視を開始
-        [self subscribeCharacteristic:service];
-    }
-
-#pragma mark - Subscribe characteristic
-
-    - (void)subscribeCharacteristic:(CBService *)service {
         // サービスの参照を保持
-        self.connectedService = service;
-
-        if (service.characteristics.count < 1) {
+        [self setConnectedService:service];
+        if ([[service characteristics] count] < 1) {
             // サービスにキャラクタリスティックがない旨をAppDelegateに通知
             [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_CHARACT_NOT_EXIST error:nil];
             return;
         }
-
-        // FIDO U2Fキャラクタリスティックの参照を保持
-        self.u2fControlPointChar = nil;
-        self.u2fStatusChar       = nil;
+        // キャラクタリスティックの参照を保持
+        [self setU2fControlPointChar:nil];
+        [self setU2fStatusChar:nil];
+        [self setPairingModeSignChar:nil];
         for (CBCharacteristic *characteristic in service.characteristics) {
-            if (characteristic.properties & CBCharacteristicPropertyWrite) {
-                self.u2fControlPointChar = characteristic;
-            } else if (characteristic.properties & CBCharacteristicPropertyNotify) {
-                self.u2fStatusChar = characteristic;
-            } else if ([[[characteristic UUID] UUIDString] isEqualToString:PairingModeSignCharUUID]) {
-                // ペアリングモード標識がディスカバーされた場合はペアリングモードと判定
-                [[self delegate] notifyCentralManagerMessage:MSG_PAIRING_MODE_SIGN_EXIST];
+            NSString *uuidString = [[characteristic UUID] UUIDString];
+            if ([uuidString isEqualToString:U2FControlPointCharUUID]) {
+                NSLog(@"U2F control point characteristic discovered.");
+                [self setU2fControlPointChar:characteristic];
+                
+            } else if ([uuidString isEqualToString:U2FStatusCharUUID]) {
+                NSLog(@"U2F status characteristic discovered.");
+                [self setU2fStatusChar:characteristic];
+                
+            } else if ([uuidString isEqualToString:PairingModeSignCharUUID]) {
+                NSLog(@"Pairing mode sign characteristic discovered.");
+                [self setPairingModeSignChar:characteristic];
             }
         }
+        // 一連の接続処理が完了したことをAppDelegateに通知
+        [[self delegate] centralManagerDidConnect];
+    }
 
-        // U2F Statusキャラクタリスティックに対する監視を開始
-        if (self.u2fStatusChar) {
-            [self.connectedPeripheral setNotifyValue:YES forCharacteristic:self.u2fStatusChar];
+#pragma mark - Subscribe characteristic
+
+    - (void)centralManagerWillStartSubscribe {
+        // U2F statusに対する監視を開始する
+        if ([self u2fStatusChar]) {
+            if ([[self u2fStatusChar] isNotifying]) {
+                [[self delegate] centralManagerDidStartSubscribe];
+            } else {
+                [[self connectedPeripheral] setNotifyValue:YES forCharacteristic:[self u2fStatusChar]];
+                [[self toolTimer] startSubscribeCharacteristicTimeoutMonitor:[self u2fStatusChar]];
+            }
         }
-        
-        // 監視ステータス更新のタイムアウト監視を開始
-        [[self toolTimer] startSubscribeCharacteristicTimeoutMonitor:[self u2fStatusChar]];
     }
 
     - (void)subscribeCharacteristicDidTimeout {
@@ -299,9 +311,9 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
 
         if (characteristic.isNotifying) {
-            // 一連の接続処理が完了したことをAppDelegateに通知
+            // U2F status監視開始処理が完了したことをAppDelegateに通知
             [[self delegate] notifyCentralManagerMessage:MSG_BLE_NOTIFICATION_START];
-            [self.delegate centralManagerDidConnect];
+            [[self delegate] centralManagerDidStartSubscribe];
         } else {
             // 監視が停止している旨をAppDelegateに通知
             [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_NOTIFICATION_STOP error:nil];
@@ -309,6 +321,18 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
     }
 
 #pragma mark - Do main process
+
+    - (void)centralManagerWillReadParingModeSign {
+        // ペアリングモード標識の値を読み込む（レスポンスタイムアウト監視開始）
+        if ([self centralManagerHasParingModeSign]) {
+            [[self connectedPeripheral] readValueForCharacteristic:[self pairingModeSignChar]];
+            [[self toolTimer] startResponseTimeoutMonitor:[self pairingModeSignChar]];
+        }
+    }
+
+    - (bool)centralManagerHasParingModeSign {
+        return ([self pairingModeSignChar] != nil);
+    }
 
     - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages {
         // U2F Control Pointへの書き込みを開始
@@ -378,7 +402,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
             didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             error:(NSError *)error {
         // レスポンスタイムアウト監視を停止
-        [[self toolTimer] cancelResponseTimeoutMonitor:[self u2fStatusChar]];
+        [[self toolTimer] cancelResponseTimeoutMonitor:characteristic];
 
         if (error) {
             // U2F Status取得エラー発生の旨をAppDelegateに通知

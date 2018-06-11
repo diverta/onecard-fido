@@ -13,8 +13,11 @@
     - (id)initWithDelegate:(id<ToolBLECentralDelegate>)delegate;
     - (void)centralManagerWillConnect;
     - (void)centralManagerWillDisconnect;
+    - (void)centralManagerWillStartSubscribe;
     - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages;
     - (void)centralManagerWillStartResponseTimeout;
+    - (void)centralManagerWillReadParingModeSign;
+    - (bool)centralManagerHasParingModeSign;
 
 @end
 
@@ -23,6 +26,7 @@
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)notifyCentralManagerMessage:(NSString *)message;
 
+    - (void)centralManagerDidStartSubscribe;
     - (void)centralManagerDidConnect;
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error;
     - (void)centralManagerDidReceive:(NSData *)bleMessage;
