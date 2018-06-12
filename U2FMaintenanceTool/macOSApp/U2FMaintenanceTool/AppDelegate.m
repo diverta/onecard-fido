@@ -282,10 +282,50 @@
         [self.toolBLEHelper bleHelperWillSetStdinNotification];
     }
 
+    - (bool)checkPairingModeSign {
+        if ([[self toolCommand] command] == COMMAND_PAIRING) {
+            if ([[self toolBLECentral] centralManagerHasParingModeSign] == true) {
+                // ペアリングモード標識がある場合はOK
+                return true;
+            } else {
+                [self notifyToolCommandMessage:MSG_ERROR_IN_PAIRING_MODE];
+                [self setLastCommandMessage:MSG_ERROR_GUIDE_IN_PAIRING_MODE];
+                [self setLastCommandSuccess:false];
+                return false;
+            }
+
+        } else {
+            if ([[self toolBLECentral] centralManagerHasParingModeSign] == false) {
+                // ペアリングモード標識がない場合はOK
+                return true;
+            } else {
+                [self notifyToolCommandMessage:MSG_ERROR_IN_NON_PAIRING_MODE];
+                [self setLastCommandMessage:MSG_ERROR_GUIDE_IN_NON_PAIRING_MODE];
+                [self setLastCommandSuccess:false];
+                return false;
+            }
+        }
+    }
+
     - (void)centralManagerDidConnect {
-        // U2F Control Pointに実行コマンドを書込
-        [self.toolBLECentral centralManagerWillSend:[self.toolCommand bleRequestArray]];
+        if ([self checkPairingModeSign] == false) {
+            // ペアリングモード標識と実行コマンドとの関連チェックがNGの場合、デバイス接続を切断
+            [[self toolBLECentral] centralManagerWillDisconnect];
+            return;
+        }
+        if ([[self toolCommand] command] == COMMAND_PAIRING) {
+            // ペアリングモード標識の値を参照
+            [[self toolBLECentral] centralManagerWillReadParingModeSign];
+        } else {
+            // U2F Statusの監視を開始
+            [[self toolBLECentral] centralManagerWillStartSubscribe];
+        }
         [self setBleTransactionStarted:true];
+    }
+
+    - (void)centralManagerDidStartSubscribe {
+        // U2F Statusの監視が開始したら、U2F Control Pointに実行コマンドを書込
+        [[self toolBLECentral] centralManagerWillSend:[[self toolCommand] bleRequestArray]];
     }
 
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {

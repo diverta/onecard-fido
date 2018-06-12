@@ -225,3 +225,80 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f) {
     }
     :
 ```
+
+## macOS版U2F管理ツール側の対応内容
+
+ペアリングモードに移行している時は、U2F管理ツールからペアリング実行以外の処理を禁止するようにします。
+
+### ペアリングモード標識の取得
+
+U2F関連のキャラクタリスティックに加え、ペアリングモード標識も含め、ディスカバーを行うようにします。
+
+```
+#define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define PairingModeSignCharUUID @"98439EE6-776B-401C-880C-682FBDDD8E32"
+:
+#define MSG_PAIRING_MODE_SIGN_EXIST @"ペアリングモード標識が存在します。One Cardはペアリングモードに移行中です。"
+:
+@implementation ToolBLECentral
+:
+- (void)peripheral:(CBPeripheral *)peripheral
+        didDiscoverCharacteristicsForService:(CBService *)service
+        error:(NSError *)error {
+    :
+    // キャラクタリスティックの参照を保持
+    for (CBCharacteristic *characteristic in service.characteristics) {
+        NSString *uuidString = [[characteristic UUID] UUIDString];
+        if ([uuidString isEqualToString:U2FControlPointCharUUID]) {
+            [self setU2fControlPointChar:characteristic];
+
+        } else if ([uuidString isEqualToString:U2FStatusCharUUID]) {
+            [self setU2fStatusChar:characteristic];
+
+        } else if ([uuidString isEqualToString:PairingModeSignCharUUID]) {
+            [self setPairingModeSignChar:characteristic];
+        }
+    }
+    // 一連の接続処理が完了したことをAppDelegateに通知
+    [[self delegate] centralManagerDidConnect];
+}
+```
+
+### ペアリングモード標識と実行機能の関連チェック
+
+ペアリングモード標識がディスカバーされた場合は、ペアリングモードに移行中であると判定し、ペアリング実行以外の機能について、実行を禁止するようにします。<br>
+逆に、ペアリングモード標識がない場合は、非ペアリングモードであると判定し、ペアリング機能を実行させないようにします。
+
+```
+- (void)centralManagerDidConnect {
+    if ([self checkPairingModeSign] == false) {
+        // ペアリングモード標識と実行コマンドとの関連チェックがNGの場合、デバイス接続を切断
+        [[self toolBLECentral] centralManagerWillDisconnect];
+        return;
+    }
+    :
+}
+
+- (bool)checkPairingModeSign {
+    if ([[self toolCommand] command] == COMMAND_PAIRING) {
+        if ([[self toolBLECentral] centralManagerHasParingModeSign] == true) {
+            // ペアリングモード標識がある場合はOK
+            return true;
+        } else {
+            // ペアリングモード標識がない場合はペアリング機能を実行できないようにする
+            return false;
+        }
+
+    } else {
+        if ([[self toolBLECentral] centralManagerHasParingModeSign] == false) {
+            // ペアリングモード標識がない場合はOK
+            return true;
+        } else {
+            // ペアリングモード標識がある場合はペアリング以外の機能を実行できないようにする
+            return false;
+        }
+    }
+}
+
+```
