@@ -61,15 +61,6 @@
 
 #pragma mark - Private methods
 
-- (void)createCommandPing {
-    NSLog(@"Ping for pairing start");
-    
-    // 書き込むコマンドを編集
-    unsigned char arr[] = {0x81, 0x00, 0x04, 0x70, 0x69, 0x6e, 0x67};
-    NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
-}
-
 - (void)createCommandEraseSkeyCert {
     NSLog(@"Erase secure key and certificate start");
     
@@ -614,9 +605,18 @@
     }
 }
 
+- (void)commandDidCreateBleRequest:(Command)command {
+    // コマンド開始メッセージを画面表示し、デリゲートに制御を戻す
+    NSString *message = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                         [ToolCommon processNameOfCommand:command]];
+    [[self delegate] notifyToolCommandMessage:message];
+    [[self delegate] toolCommandDidCreateBleRequest];
+}
+
 - (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
+    [self setBleRequestArray:nil];
     switch (command) {
         case COMMAND_ERASE_SKEY_CERT:
             [self createCommandEraseSkeyCert];
@@ -631,19 +631,15 @@
             [self createCommandU2FProcess];
             break;
         case COMMAND_PAIRING:
-            [self createCommandPing];
+            NSLog(@"Pairing start");
+            [self commandDidCreateBleRequest:command];
             break;
         default:
-            [self setBleRequestArray:nil];
             break;
     }
-    // コマンド生成時
     if ([self commandArrayIsBlank] == false) {
-        // コマンド開始メッセージを画面表示し、デリゲートに制御を戻す
-        NSString *message = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                             [ToolCommon processNameOfCommand:command]];
-        [[self delegate] notifyToolCommandMessage:message];
-        [[self delegate] toolCommandDidCreateBleRequest];
+        // コマンド生成時は、コマンド開始メッセージを画面表示し、デリゲートに制御を戻す
+        [self commandDidCreateBleRequest:command];
     }
 }
 
@@ -749,7 +745,7 @@
     // コマンドに応じ、以下の処理に分岐
     switch ([self command]) {
         case COMMAND_PAIRING:
-            [self toolCommandDidProcess:true message:@"Ping for pairing end"];
+            [self toolCommandDidProcess:true message:@"Pairing end"];
             break;
         case COMMAND_ERASE_SKEY_CERT:
             [self toolCommandDidProcess:true message:@"Erase secure key and certificate end"];
@@ -769,12 +765,6 @@
             registerReponseData = [[NSData alloc] initWithData:[self bleResponseData]];
             [self setCommand:COMMAND_TEST_AUTH_CHECK];
             [self createCommandTestAuthFrom:registerReponseData P1:0x07];
-            // 後続のU2F Authenticateを開始する前に、
-            // One CardのMAIN SWを押してもらうように促すメッセージを表示
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
             break;
         case COMMAND_TEST_AUTH_CHECK:
             NSLog(@"Authenticate test (check) success");
@@ -785,6 +775,12 @@
             NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
             [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
             [self createCommandTestAuthFrom:registerReponseData P1:0x03];
+            // 後続のU2F Authenticateを開始する前に、
+            // One CardのMAIN SWを押してもらうように促すメッセージを表示
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
             break;
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
