@@ -232,6 +232,13 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
 
     // データ受信後に実行すべき処理を判定
     m_u2f_context.command = get_command_type();
+    
+    // ペアリングモード時はペアリング以外の機能を実行できないようにするため
+    // エラーステータスワード (0x9601) を戻す
+    if (ble_u2f_pairing_mode_get() == true && m_u2f_context.command != COMMAND_U2F_PING) {
+        ble_u2f_send_error_response(&m_u2f_context, 0x9601);
+        return;
+    }
 
     switch (m_u2f_context.command) {
         case COMMAND_INITBOND:
