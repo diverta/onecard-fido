@@ -28,6 +28,7 @@ void    ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f);
 void    ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt);
 void    ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt);
 void    ble_u2f_pairing_on_disconnect(void);
+bool    ble_u2f_pairing_mode_get(void);
 
 
 #ifdef __cplusplus
