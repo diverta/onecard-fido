@@ -720,6 +720,12 @@
         return false;
     }
 
+    // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
+    if (statusWord == 0x9601) {
+        [self toolCommandDidProcess:false message:MSG_OCCUR_PAIRINGMODE_ERROR];
+        return false;
+    }
+    
     // ステータスワードチェックがNGの場合
     [self toolCommandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
     return false;
