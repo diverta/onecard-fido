@@ -287,22 +287,21 @@ int main(void)
     ble_stack_init();
     NRF_LOG_INFO("[APP]BLE stack initialized.\r\n");
 
+    // initialize peer manager.
+    peer_manager_init();
+    NRF_LOG_INFO("[APP]Peer manager initialized.\r\n");
+
+    // ペアリングモードをFDSから取得
+    // (FDS初期化はpeer_manager_initの中で行われる)
+    ble_u2f_pairing_get_mode(&m_u2f);
+
     // initialize ble services.
     ble_gap_init();
     ble_gatt_init();
     ble_conn_init();
     ble_services_init();
-    NRF_LOG_INFO("[APP]BLE services initialized.\r\n");
-
-    // initialize peer manager.
-    peer_manager_init();
-    NRF_LOG_INFO("[APP]Peer manager initialized.\r\n");
-    
-    // アドバタイジング設定の前に、
-    // ペアリングモードをFDSから取得
-    ble_u2f_pairing_get_mode(&m_u2f);
     ble_adv_init();
-    NRF_LOG_INFO("[APP]BLE connection initialized.\r\n");
+    NRF_LOG_INFO("[APP]BLE services initialized.\r\n");
 
     // Magstripe Data.
     magstripedata_init();
@@ -312,7 +311,7 @@ int main(void)
     serial_code_generate();
     ble_one_card_set_serial_code(m_ble_one_card, (uint8_t*)SERIAL_CODE_BLANK, SERIAL_CODE_LEN);
 
-// start execution.
+    // start execution.
     timers_start();
     ble_adv_start();
     NRF_LOG_INFO("[APP]BLE advertising started.\r\n");
@@ -1346,7 +1345,6 @@ static void ble_adv_init(void)
  */
 static void ble_adv_start(void)
 {
-    NRF_LOG_INFO("ble_adv_start \r\n");
     ret_code_t err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
 
     APP_ERROR_CHECK(err_code);
