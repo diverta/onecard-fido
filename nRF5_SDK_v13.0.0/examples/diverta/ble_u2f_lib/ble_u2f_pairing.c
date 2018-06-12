@@ -344,4 +344,10 @@ void ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt)
     }
 }
 
+bool ble_u2f_pairing_mode_get(void)
+{
+    // ペアリングモードであればtrueを戻す
+    return run_as_pairing_mode;
+}
+
 #endif // NRF_MODULE_ENABLED(BLE_U2F)

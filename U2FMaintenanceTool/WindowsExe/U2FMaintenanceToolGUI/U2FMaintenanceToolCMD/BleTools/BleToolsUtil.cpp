@@ -154,6 +154,14 @@ bool BleToolsUtil_checkStatusWord(unsigned char *request, unsigned char *reply, 
 		return false;
 	}
 
+	if (statusWord == 0x9601) {
+		// ペアリングモード時はペアリング以外の機能を実行できない旨を通知
+		sprintf_s(checkStatusWordMessage,
+			"ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。"
+		);
+		return false;
+	}
+
 	if (statusWord != FIDO_RESP_SUCCESS) {
 		// U2Fサービスの戻りコマンドが不正の場合はエラー
 		sprintf_s(checkStatusWordMessage,

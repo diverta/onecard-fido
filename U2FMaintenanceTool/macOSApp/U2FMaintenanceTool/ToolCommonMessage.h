@@ -28,6 +28,7 @@
 #define MSG_OCCUR_FDS_GC_ERROR      @"One CardのFlash ROM領域が一杯になり処理が中断されました(領域は自動再編成されます)。\n処理を再試行してください。"
 #define MSG_OCCUR_UNKNOWN_BLE_ERROR @"BLEエラーが発生しました。処理を再試行してください。"
 #define MSG_OCCUR_SKEYNOEXIST_ERROR @"鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。"
+#define MSG_OCCUR_PAIRINGMODE_ERROR @"ペアリングモードでは、ペアリング実行以外の機能は使用できません。\nペアリングモードを解除してから、機能を再度実行してください。"
 #define MSG_OCCUR_UNKNOWN_ERROR     @"不明なエラーが発生しました。"
 #define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
