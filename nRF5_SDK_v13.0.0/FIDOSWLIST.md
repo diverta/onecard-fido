@@ -63,6 +63,7 @@ FIDO機能で設定しているステータスワードの一覧を掲載いた�
 |ble_u2f_authenticate |0x9502  |U2F Authenticateでのトークンカウンター更新時に、FDSの呼出が失敗 |
 |ble_u2f_authenticate |0x9503  |U2F Authenticateでのトークンカウンター更新時に、FDSでエラー発生 |
 |ble_u2f_authenticate |0x9504  |U2F Authenticateでのレスポンスメッセージ生成時に、予期しないエラーが発生 |
+|Common |0x9601  |One Cardがペアリングモード中に、U2F管理ツールからペアリング以外の処理を実行しようとした |
 
 #### エラーコードの命名規約
 
@@ -75,5 +76,6 @@ FIDO機能で設定しているステータスワードの一覧を掲載いた�
 |鍵・証明書ファイルのインストール |0x93  | |
 |U2F Register |0x94  | Chromeエクステンション、ヘルスチェック処理から呼び出されます |
 |U2F Authenticate |0x95  | Chromeエクステンション、ヘルスチェック処理から呼び出されます |
+|Common |0x96  | 全ての処理において共通のもの |
 
 また、エラーコードの末尾バイトは、処理単位ごとの連番とします。
