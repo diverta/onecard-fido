@@ -74,7 +74,7 @@
     NSLog(@"Erase secure key and certificate start");
     
     // 書き込むコマンドを編集
-    unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x40, 0x02, 0x00};
+    unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x42, 0x00, 0x00};
     NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
     [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
@@ -168,7 +168,7 @@
     }
 
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:dataSkey INS:0x40 P1:0x03];
+    NSData *dataForRequest = [self generateAPDUDataFrom:dataSkey INS:0x43 P1:0x00];
     [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
@@ -267,7 +267,7 @@
     }
 
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:dataCert INS:0x40 P1:0x04];
+    NSData *dataForRequest = [self generateAPDUDataFrom:dataCert INS:0x44 P1:0x00];
     [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
 }
 
