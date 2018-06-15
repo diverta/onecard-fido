@@ -2,6 +2,34 @@
 
 ## プログラム更新履歴
 
+#### 2018/06/05
+
+Chrome 67以降、パッケージ済みエクステンションが、Chromeウェブストアで取得したもの以外インストールできなくなってしまったようです。<br>
+そのため、（パッケージ済みエクステンション導入を前提とした）[U2Fローカルテストサーバーの手順](U2FDemoServer/README.md)等を更新しております。
+
+具体的には従来通り、パッケージ化されていないエクステンションを使用するように、実装および手順を修正しております。<br>
+何卒ご容赦ください。
+
+#### 2018/05/30
+
+U2Fローカルテストサーバーを約半年ぶりにアップデートしました。<br>
+
+- [U2FDemoServer](U2FDemoServer)
+- [手順書などのドキュメント](U2FDemoServer/README.md)
+
+下記の通り、大幅にアップデートしています。
+
+- 従来の[Javaベースのライブラリーサーバー](Research/u2f-test-server)から、[Pythonベースのライブラリーサーバー](U2FDemoServer/python-u2flib-server)に変更<br>
+[Yubico社提供のPythonライブラリーサーバー](https://developers.yubico.com/python-u2flib-server/)を使用し、[サンプル](https://github.com/Yubico/python-u2flib-server/blob/master/examples/u2f_server.py)を若干拡張して[サーバープログラム](U2FDemoServer/python-u2flib-server/u2f_server.py)を作成しました。<br>
+
+- [Chrome U2Fエクステンション](U2FDemoServer/u2f-chrome-extension.crx)をパッケージ化<br>
+この結果、エクステンションIDが以前のものから変更になっております。
+
+- 上記変更後のエクステンションIDを反映した、[専用のU2F管理ツール](U2FDemoServer/U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)を用意<br>
+ただし機能上の変更がない為、バージョンは、0.1.3のままとしております。
+
+- 関連トピックス<br>[Issue #22](https://github.com/diverta/onecard-fido/issues/22), [Pull request #62](https://github.com/diverta/onecard-fido/pull/62) ご参照
+
 #### 2018/05/09（Version 0.1.3）
 
 以下のプログラムを修正しました。<br>
