@@ -140,32 +140,27 @@ static enum COMMAND_TYPE get_command_type(void)
                 NRF_LOG_DEBUG("get_command_type: GetVersion Request Message received \r\n");
                 current_command = COMMAND_U2F_VERSION;
 
-            } else if (p_apdu->INS == U2F_INS_INSTALL) {
-                // 初期導入関連コマンドの場合
-                // (vendor defined command)
-                if (p_apdu->P1 == U2F_INS_INSTALL_INITBOND) {
-                    // ボンディング情報削除コマンド
-                    NRF_LOG_DEBUG("get_command_type: initialize bonding information \r\n");
-                    current_command = COMMAND_INITBOND;
+            // 初期導入関連コマンドの場合
+            // (vendor defined command)
+            } else if (p_apdu->INS == U2F_INS_INSTALL_INITBOND) {
+                // ボンディング情報削除コマンド
+                NRF_LOG_DEBUG("get_command_type: initialize bonding information \r\n");
+                current_command = COMMAND_INITBOND;
 
-                } else if (p_apdu->P1 == U2F_INS_INSTALL_INITFSTR) {
-                    // 秘密鍵／証明書削除コマンド
-                    NRF_LOG_DEBUG("get_command_type: initialize fstorage \r\n");
-                    current_command = COMMAND_INITFSTR;
+            } else if (p_apdu->INS == U2F_INS_INSTALL_INITFSTR) {
+                // 秘密鍵／証明書削除コマンド
+                NRF_LOG_DEBUG("get_command_type: initialize fstorage \r\n");
+                current_command = COMMAND_INITFSTR;
 
-                } else if (p_apdu->P1 == U2F_INS_INSTALL_INITSKEY) {
-                    // 秘密鍵導入コマンド
-                    NRF_LOG_DEBUG("get_command_type: initial skey data received \r\n");
-                    current_command = COMMAND_INITSKEY;
+            } else if (p_apdu->INS == U2F_INS_INSTALL_INITSKEY) {
+                // 秘密鍵導入コマンド
+                NRF_LOG_DEBUG("get_command_type: initial skey data received \r\n");
+                current_command = COMMAND_INITSKEY;
 
-                } else if (p_apdu->P1 == U2F_INS_INSTALL_INITCERT) {
-                    // データが完成していれば、証明書導入用コマンドを実行
-                    NRF_LOG_DEBUG("get_command_type: initial cert data received \r\n");
-                    current_command = COMMAND_INITCERT;
-
-                } else {
-                    current_command = COMMAND_NONE;
-                }
+            } else if (p_apdu->INS == U2F_INS_INSTALL_INITCERT) {
+                // データが完成していれば、証明書導入用コマンドを実行
+                NRF_LOG_DEBUG("get_command_type: initial cert data received \r\n");
+                current_command = COMMAND_INITCERT;
                 
             } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
                 // ペアリングのためのレスポンスを実行
