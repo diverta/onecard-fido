@@ -98,10 +98,10 @@ static bool processEraseSkeyCert(BleApiConfiguration &configuration, pBleDevice 
 	unsigned char request[4];
 
 	// リクエストデータ（APDU）を編集し request に格納
-	// INS=0x40, P1=0x02
+	// INS=0x42, P1=0x00
 	request[0] = 0x00;
-	request[1] = 0x40;
-	request[2] = 0x02;
+	request[1] = 0x42;
+	request[2] = 0x00;
 	request[3] = 0x00;
 
 	// コマンド（FIDO_BLE_CMD_MSG）を実行
@@ -219,10 +219,10 @@ static bool processInstallSkey(BleApiConfiguration &configuration, pBleDevice de
 	}
 
 	// リクエストデータ（APDU）を編集し request に格納
-	//   INS=0x40, P1=0x03
+	//   INS=0x43, P1=0x00
 	request[0] = 0x00;
-	request[1] = 0x40;
-	request[2] = 0x03;
+	request[1] = 0x43;
+	request[2] = 0x00;
 	request[3] = 0x00;
 	request[4] = 0x00;
 	//   データ長さ(32バイト)を設定
@@ -264,10 +264,10 @@ static bool processInstallCert(BleApiConfiguration &configuration, pBleDevice de
 	}
 
 	// リクエストデータ（APDU）を編集し request に格納
-	//   INS=0x40, P1=0x04
+	//   INS=0x44, P1=0x00
 	request[0] = 0x00;
-	request[1] = 0x40;
-	request[2] = 0x04;
+	request[1] = 0x44;
+	request[2] = 0x00;
 	request[3] = 0x00;
 	request[4] = 0x00;
 	//   データ長さを設定
