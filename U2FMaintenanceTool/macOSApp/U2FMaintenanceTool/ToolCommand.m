@@ -61,11 +61,11 @@
 
 #pragma mark - Private methods
 
-- (void)createCommandPing {
-    NSLog(@"Ping for pairing start");
+- (void)createCommandPairing {
+    NSLog(@"Pairing start");
     
     // 書き込むコマンドを編集
-    unsigned char arr[] = {0x81, 0x00, 0x04, 0x70, 0x69, 0x6e, 0x67};
+    unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x45, 0x00, 0x00};
     NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
     [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
@@ -631,7 +631,7 @@
             [self createCommandU2FProcess];
             break;
         case COMMAND_PAIRING:
-            [self createCommandPing];
+            [self createCommandPairing];
             break;
         default:
             [self setBleRequestArray:nil];
@@ -693,11 +693,6 @@
         return false;
     }
     
-    // PINGコマンドの場合はレスポンスがあった時点でOKとする
-    if ([self command] == COMMAND_PAIRING) {
-        return true;
-    }
-    
     // ステータスワード(レスポンスの末尾２バイト)を取得
     NSUInteger statusWord = [self getStatusWordFrom:[self bleResponseData]];
     
@@ -744,7 +739,7 @@
     // コマンドに応じ、以下の処理に分岐
     switch ([self command]) {
         case COMMAND_PAIRING:
-            [self toolCommandDidProcess:true message:@"Ping for pairing end"];
+            [self toolCommandDidProcess:true message:@"Pairing end"];
             break;
         case COMMAND_ERASE_SKEY_CERT:
             [self toolCommandDidProcess:true message:@"Erase secure key and certificate end"];
