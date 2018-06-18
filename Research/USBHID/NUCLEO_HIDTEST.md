@@ -10,16 +10,16 @@ Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを�
 まずは手始めに、NUCLEO（STM32開発環境）＋mbedサンプルアプリにより、HIDマウスデバイスを試しました。
 
 - <b>[HID U2Fデバイス開発の準備](NUCLEO_HID_U2F_PREPARE.md)</b><br>
-[WIP] 前項テストで使用したハードウェアを、HID U2Fデバイスとして認識させるところまで試します。
+前項テストで使用したハードウェアを、HID U2Fデバイスとして認識させるところまで試します。
 
-- <b>[HID U2Fデバイスにコマンドを実装](NUCLEO_HID_U2F_COMMAND.md)</b><br>
-[WIP] 前項HID U2Fデバイスに、U2F Versionを実行させるためのコマンドを実装するところまで試します。
+- <b>[WIP] [HID U2Fデバイスにコマンドを実装](NUCLEO_HID_U2F_COMMAND.md)</b><br>
+前述のHID U2Fデバイスに、U2F Versionを実行させるためのコマンドを実装するところまで試します。
 
-- <b>[HID U2FデバイスとU2F管理ツールの連携](NUCLEO_HID_U2F_MNTTOOL.md)</b><br>
-[WIP] 前項HID U2Fデバイスを、既存のU2F管理ツールと連携させるところまで試します。
+- <b>[WIP] [HID U2FデバイスとU2F管理ツールの連携](NUCLEO_HID_U2F_MNTTOOL.md)</b><br>
+前述のHID U2Fデバイスを、既存のU2F管理ツールと連携させるところまで試します。
 
-- <b>[HID U2FデバイスからU2F Versionを実行](NUCLEO_HID_U2F_VERSION.md)</b><br>
-[WIP] 前項HID U2Fデバイスから、U2F管理ツールを経て、One CardのU2F Versionコマンドを実行させるところまで試します。
+- <b>[WIP] [HID U2FデバイスからU2F Versionを実行](NUCLEO_HID_U2F_VERSION.md)</b><br>
+前述のHID U2Fデバイスから、U2F管理ツールを経て、One CardのU2F Versionコマンドを実行させるところまで試します。
 
 ## 調査が完了したら
 
