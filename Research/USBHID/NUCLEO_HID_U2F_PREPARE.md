@@ -66,9 +66,9 @@ class USBU2FAuthenticator: public USBHID {
 
 このサンプルでは、勝手に製造元ID（=0xf055）、製品ID（=0x0001）を付与していますが、本来はUSB-IFが管理する製造元ID／製品ID（ベンダーID／プロダクトIDと呼ばれる）を付与する必要があります。
 
-ベンダーIDの取得は有償のようです。<br>
-具体的には「USB Implementers Forum」に、年会費 $4,000 を支払いのうえ入会すると、未使用のベンダーIDが使用できるようになります。<br>
-　See: https://www.usb.org/members_landing <br>
+ベンダーID取得は有償のようです。<br>
+具体的には「USB Implementers Forum」に、$5,000（A one-time processing fee）を支払いのうえ申請すると、未使用のベンダーIDが使用できるようになるとのことです。<br>
+　See: http://www.usb.org/developers/vendor/VID_Only_Form_030917.pdf <br>
 USB-IFからベンダーIDを１件取得すれば、65,535点のプロダクトIDが付与できます。
 
 今回は調査目的なので、仮のベンダーID（=0xf055）を使用するものとします。
