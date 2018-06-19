@@ -10,7 +10,7 @@ int main(void) {
     printf("----- U2F Authenticator sample start -----\r\n");
     
     //
-    // これはダミーです。
+    // １バイトのメッセージを出力
     //
     HID_REPORT report;
     report.data[0] = 0x01;

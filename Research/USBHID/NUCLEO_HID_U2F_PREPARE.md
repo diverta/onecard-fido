@@ -14,22 +14,22 @@
 
 ### クラスヘッダー
 
-コンストラクター`USBU2FAuthenticator`では製造元ID（=0x8888）、製品ID（=0x0001）、バージョンといった情報を仮設定しています。
+コンストラクター`USBU2FAuthenticator`では製造元ID（=0xf055）、製品ID（=0x0001）、バージョンといった情報を仮設定しています。
 
 そのほかに、HIDデバイスの定義に必要な、`configurationDesc`と`reportDesc`を実装します。
+
+製造元名、製品名、シリアル番号はそれぞれ仮想関数`stringImanufacturerDesc`、`stringIproductDesc`、`stringIserialDesc`の実装により、置き換えることができます。
 
 ```
 #include "USBHID.h"
 
-class USBU2FAuthenticator: public USBHID
-{
+class USBU2FAuthenticator: public USBHID {
     public:
         //
         // Constructor
         //
-        USBU2FAuthenticator(bool debug, uint16_t vendor_id = 0x8888, uint16_t product_id = 0x0001, uint16_t product_release = 0x0001)
-        : USBHID(0, 0, vendor_id, product_id, product_release, false)
-        {
+        USBU2FAuthenticator(bool debug, uint16_t vendor_id=0xf055, uint16_t product_id=0x0001, uint16_t product_release=0x0001)
+        : USBHID(0, 0, vendor_id, product_id, product_release, false) {
             this->debug = debug;
             connect();
         };
@@ -38,6 +38,15 @@ class USBU2FAuthenticator: public USBHID
         // To define the report descriptor.
         //
         virtual uint8_t * reportDesc();
+        //
+        // Get string manufacturer/product descriptor
+        //
+        virtual uint8_t * stringImanufacturerDesc();
+        virtual uint8_t * stringIproductDesc();
+        //
+        // Get string serial descriptor
+        //
+        virtual uint8_t * stringIserialDesc();
 
     protected:
         //
@@ -49,6 +58,15 @@ class USBU2FAuthenticator: public USBHID
         bool debug;
 };
 ```
+
+#### 【重要】製造元ID／製品IDについて
+
+このサンプルでは、勝手に製造元ID（=0xf055）、製品ID（=0x0001）を付与していますが、本来はUSB-IFが管理する製造元ID／製品ID（ベンダーID／プロダクトIDと呼ばれる）を付与する必要があります。
+
+ベンダーIDは有償で、取得料金は約50万円ほどのようです。<br>
+USB-IFからベンダーIDを１件取得すれば、65,535点のプロダクトIDが付与できます。
+
+今回は調査目的なので、仮のベンダーID（=0xf055）を使用するものとします。
 
 ### ディスクリプターの実装
 
@@ -91,20 +109,20 @@ uint8_t *USBU2FAuthenticator::reportDesc() {
     static uint8_t reportDescriptor[] =
     {
         0x06, 0xd0, 0xf1,   // USAGE_PAGE (FIDO Alliance)
-        0x09, 0x01,         // USAGE (Keyboard)
+        0x09, 0x01,         // USAGE (FIDO U2F HID)
         0xa1, 0x01,         // COLLECTION (Application)
         0x09, 0x20,         //   USAGE (Input Report Data)
         0x15, 0x00,         //   LOGICAL_MINIMUM (0)
         0x26, 0xff, 0x00,   //   LOGICAL_MAXIMUM (255)
         0x75, 0x08,         //   REPORT_SIZE (8)
         0x95, 64,           //   REPORT_COUNT (64)
-        0x81, 0x02,         //   INPUT (Data,Var,Abs)
-        0x09, 0x21,         //   USAGE(Output Report Data)
+        0x81, 0x02,         //   INPUT (Data | Absolute | Variable)
+        0x09, 0x21,         //   USAGE (Output Report Data)
         0x15, 0x00,         //   LOGICAL_MINIMUM (0)
         0x26, 0xff, 0x00,   //   LOGICAL_MAXIMUM (255)
         0x75, 0x08,         //   REPORT_SIZE (8)
         0x95, 64,           //   REPORT_COUNT (64)
-        0x91, 0x02,         //   OUTPUT (Data,Var,Abs)
+        0x91, 0x02,         //   OUTPUT (Data | Absolute | Variable)
         0xc0,               // END_COLLECTION
     };
     reportLength = sizeof(reportDescriptor);
@@ -164,6 +182,6 @@ NUCLEOからのデバッグプリントは、コンソールに下図のよう�
 
 ### システムレポートによる確認
 
-macOSのシステムレポート画面で「USB装置ツリー」を開くと、先ほど疎通確認させたハードウェア（製造元ID=0x8888、製品ID=0x0001）が、HIDデバイスとして下図のように認識されることが確認できます。
+macOSのシステムレポート画面で「USB装置ツリー」を開くと、先ほど疎通確認させたハードウェア（製造元ID=0xf055、製品ID=0x0001）が、USB HIDのU2Fデバイスとして下図のように認識されることが確認できます。
 
 <img src="assets/0014.png" width="600">
