@@ -9,10 +9,10 @@ class USBU2FAuthenticator: public USBHID
         //
         // Constructor
         //
-        USBU2FAuthenticator(bool debug, uint16_t vendor_id=0xf055, uint16_t product_id=0x0001, uint16_t product_release=0x0001)
-        : USBHID(0, 0, vendor_id, product_id, product_release, false)
-        {
-            this->debug = debug;
+        USBU2FAuthenticator(uint8_t output_report_length, uint8_t input_report_length, uint16_t vendor_id=0xf055, uint16_t product_id=0x0001, uint16_t product_release=0x0001)
+        : USBHID(0, 0, vendor_id, product_id, product_release, false) {
+            output_length = output_report_length;
+            input_length = input_report_length;
             connect();
         };
 
@@ -37,7 +37,8 @@ class USBU2FAuthenticator: public USBHID
         virtual uint8_t * configurationDesc();
 
     private:
-        bool debug;
+        uint8_t output_length;
+        uint8_t input_length;
 };
 
 #endif
