@@ -12,8 +12,8 @@ Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを�
 - <b>[HID U2Fデバイス開発の準備](NUCLEO_HID_U2F_PREPARE.md)</b><br>
 前項テストで使用したハードウェアを、HID U2Fデバイスとして認識させるところまで試します。
 
-- <b>[WIP] [HID U2Fデバイスにコマンドを実装](NUCLEO_HID_U2F_COMMAND.md)</b><br>
-前述のHID U2Fデバイスに、U2F Versionを実行させるためのコマンドを実装するところまで試します。
+- <b>[HID U2Fデバイスにコマンドを実装](NUCLEO_HID_U2F_COMMAND.md)</b><br>
+前述のHID U2Fデバイスに、U2F HID Init／U2F Versionを実行させるためのコマンドを実装するところまで試します。
 
 - <b>[WIP] [HID U2FデバイスとU2F管理ツールの連携](NUCLEO_HID_U2F_MNTTOOL.md)</b><br>
 前述のHID U2Fデバイスを、既存のU2F管理ツールと連携させるところまで試します。
