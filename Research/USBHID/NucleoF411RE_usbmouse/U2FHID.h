@@ -56,6 +56,8 @@ typedef struct u2f_hid_msg {
 // U2Fリクエスト／レスポンスデータ格納領域
 //
 extern uint8_t u2f_request_buffer[128];
+extern size_t  u2f_request_length;
+
 extern uint8_t u2f_response_buffer[128];
 extern size_t  u2f_response_length;
 

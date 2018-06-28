@@ -8,6 +8,8 @@
 // （コマンド共通）
 //
 uint8_t u2f_request_buffer[128];
+size_t  u2f_request_length;
+
 uint8_t u2f_response_buffer[128];
 size_t  u2f_response_length;
 

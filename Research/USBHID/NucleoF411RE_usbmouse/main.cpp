@@ -90,6 +90,45 @@ bool send_hid_report()
     return true;
 }
 
+bool send_xfer_report()
+{
+    size_t xfer_data_max = 25;
+    size_t xfer_data_len;
+    size_t remaining;
+    
+    for (size_t i = 0; i < u2f_request_length; i += xfer_data_max) {
+        // 送信パケット格納領域を初期化
+        memset(&send_report, 0x00, sizeof(send_report));
+        send_report.length = 32;
+
+        // パケット格納領域を取得
+        U2F_HID_MSG *res = (U2F_HID_MSG *)send_report.data;
+
+        // データ長
+        remaining = u2f_request_length - i;
+        xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
+
+        // パケットヘッダーを編集 （7 bytes)
+        // U2F管理ツールのチャネルIDは 0x00 とする
+        set_CID(res->cid, 0x00);
+        res->pkt.init.cmd   = 0x00;
+        res->pkt.init.bcnth = (xfer_data_len >> 8) & 0x00ff;
+        res->pkt.init.bcntl = xfer_data_len & 0x00ff;
+    
+        // パケットデータを設定
+        memcpy(res->pkt.init.payload, u2f_request_buffer + i, xfer_data_len);
+
+        // パケットをU2F管理ツールへ転送
+        if (u2fAuthenticator.send(&send_report) == false) {
+            printf("u2fAuthenticator.send failed. \r\n");
+            return false;
+        }
+        dump_hid_init_packet("Xfer ", send_report.length, res);
+    }
+
+    return true;
+}
+
 bool send_response_packet()
 {
     if (CMD == U2FHID_INIT) {
@@ -113,6 +152,13 @@ bool send_response_packet()
                 return false;
             }
         }
+        if (ins == U2F_REGISTER) {
+            // TODO: 
+            // リクエストデータをU2F管理ツールに転送
+            if (send_xfer_report() == false) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -122,6 +168,7 @@ bool receive_request_data()
 {
     static size_t pos;
     static size_t payload_len;
+    u2f_request_length = 0;
 
     if (recv_report.length == 0) {
         return false;
@@ -145,6 +192,7 @@ bool receive_request_data()
 
         // リクエストデータ領域に格納
         pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
+        memset(&u2f_request_buffer, 0, sizeof(HID_REPORT));
         memcpy(u2f_request_buffer, req->pkt.init.payload, pos);
 
         // CID、CMDを保持
@@ -163,6 +211,7 @@ bool receive_request_data()
 
     // リクエストデータを全て受信したらtrueを戻す
     if (pos == payload_len) {
+        u2f_request_length = payload_len;
         return true;
     } else {
         return false;
