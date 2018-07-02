@@ -95,6 +95,7 @@ bool send_xfer_report()
     size_t xfer_data_max = 25;
     size_t xfer_data_len;
     size_t remaining;
+    uint8_t seq = 0;
     
     for (size_t i = 0; i < u2f_request_length; i += xfer_data_max) {
         // 送信パケット格納領域を初期化
@@ -111,7 +112,7 @@ bool send_xfer_report()
         // パケットヘッダーを編集 （7 bytes)
         // U2F管理ツールのチャネルIDは 0x00 とする
         set_CID(res->cid, 0x00);
-        res->pkt.init.cmd   = 0x00;
+        res->pkt.init.cmd   = seq++;
         res->pkt.init.bcnth = (xfer_data_len >> 8) & 0x00ff;
         res->pkt.init.bcntl = xfer_data_len & 0x00ff;
     
