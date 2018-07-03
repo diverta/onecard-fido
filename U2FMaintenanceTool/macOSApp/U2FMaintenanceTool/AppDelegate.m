@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
 #import "ToolBLEHelper.h"
+#import "ToolHIDHelper.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
@@ -8,11 +9,8 @@
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 
-// for IOHIDManager
-#import "IOKit/hid/IOHIDManager.h"
-
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolHIDHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -35,6 +33,7 @@
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
+    @property (nonatomic) ToolHIDHelper     *toolHIDHelper;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -44,7 +43,6 @@
     @property (nonatomic) NSString          *lastCommandMessage;
     @property (nonatomic) bool               lastCommandSuccess;
 
-    @property (nonatomic) IOHIDManagerRef    toolHIDManager;
 @end
 
 @implementation AppDelegate
@@ -52,6 +50,7 @@
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
+        self.toolHIDHelper  = [[ToolHIDHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
@@ -62,9 +61,6 @@
         if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
             [self enableButtons:false];
         }
-        
-        // HIDデバイスマネージャー初期化
-        [self toolHIDInitialize];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -76,45 +72,6 @@
             self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
             [self.textView performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
         }
-    }
-
-#pragma mark - HID device management
-
-    - (void)toolHIDInitialize {
-        // IOHIDManagerをデフォルトの設定で作成
-        [self setToolHIDManager:IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDManagerOptionNone)];
-        // マッチングするデバイスの条件を設定
-        NSDictionary* criteria = @{
-            @kIOHIDDeviceUsagePageKey: @(0xf1d0),
-            @kIOHIDDeviceUsageKey: @(0x01),
-            @kIOHIDVendorIDKey: @(0xf055),
-            @kIOHIDProductIDKey: @(0x0001),
-        };
-        IOHIDManagerSetDeviceMatching([self toolHIDManager], (__bridge CFDictionaryRef)criteria);
-        IOHIDManagerScheduleWithRunLoop([self toolHIDManager], CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        IOReturn ret = IOHIDManagerOpen([self toolHIDManager], kIOHIDOptionsTypeNone);
-        if (ret != kIOReturnSuccess) {
-            NSLog(@"toolHIDInitialize: IOHIDManagerOpen failed");
-            return;
-        }
-        // ハンドラー定義
-        IOHIDManagerRegisterDeviceMatchingCallback([self toolHIDManager], &handleDeviceMatching, NULL);
-        IOHIDManagerRegisterDeviceRemovalCallback([self toolHIDManager], &handleDeviceRemoval, NULL);
-        IOHIDManagerRegisterInputReportCallback([self toolHIDManager], &handleInputReport, NULL);
-        NSLog(@"toolHIDInitialize done");
-    }
-
-    void handleDeviceMatching(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        NSLog(@"handleDeviceMatching");
-    }
-    void handleDeviceRemoval(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        NSLog(@"handleDeviceRemoval");
-    }
-    void handleInputReport(void *context, IOReturn result, void *sender, IOHIDReportType type,
-                           uint32_t reportID, uint8_t *report, CFIndex reportLength) {
-        NSData *reportData = [[NSData alloc] initWithBytes:report length:reportLength];
-        NSLog(@"handleInputReport: reportID(%u) reportLength(%ld) report(%@)",
-              reportID, reportLength, reportData);
     }
 
 #pragma mark - Functions for button handling
@@ -463,6 +420,13 @@
         }
         NSLog(@"Chrome native messaging host will terminate");
         [NSApp terminate:self];
+    }
+
+#pragma mark - Call back from ToolHIDHelper
+
+    - (void)hidHelperDidReceive:(NSData *)hidHelperMessages {
+        // HIDデバイスから受信したメッセージをエコーバック（仮の実装です）
+        [[self toolHIDHelper] hidHelperWillSend:hidHelperMessages];
     }
 
 @end
