@@ -1,73 +1,31 @@
-#ifndef U2F_HID_H_
-#define U2F_HID_H_
+#ifndef U2FHID_H_
+#define U2FHID_H_
 
-#include <stdint.h>
+#include "USBU2FAuthenticator.h"
+#include "U2F.h"
 
-#define HID_PACKET_SIZE 64
-
-//
-// U2F HID関連の定義群
-//
-#define TYPE_MASK           0x80    // Frame type mask
-#define TYPE_INIT           0x80    // Initial frame identifier
-#define TYPE_CONT           0x00    // Continuation frame identifier
-
-#define U2FHID_PING         (TYPE_INIT | 0x01)  // Echo data through local processor only
-#define U2FHID_MSG          (TYPE_INIT | 0x03)  // Send U2F message frame
-#define U2FHID_LOCK         (TYPE_INIT | 0x04)  // Send lock channel command
-#define U2FHID_INIT         (TYPE_INIT | 0x06)  // Channel initialization
-#define U2FHID_WINK         (TYPE_INIT | 0x08)  // Send device identification wink
-#define U2FHID_ERROR        (TYPE_INIT | 0x3f)  // Error response
-
-#define U2FHID_BROADCAST    0xffffffff
-#define U2FHID_RESERVED_CID 0xfffffffe
-
-#define U2FHID_INIT_PAYLOAD_SIZE  (HID_PACKET_SIZE-7)
-#define U2FHID_CONT_PAYLOAD_SIZE  (HID_PACKET_SIZE-5)
-#define U2FHID_MAX_PAYLOAD_SIZE   (7609)
-
-#define U2FHID_IS_INIT(cmd) ((cmd) & 0x80)
-
-// U2F native commands
-#define U2F_REGISTER        0x01
-#define U2F_AUTHENTICATE    0x02
-#define U2F_VERSION         0x03
-
-// Command status responses
-#define U2F_SW_NO_ERROR     0x9000
-
-typedef struct u2f_hid_msg {
-    uint8_t cid[4];
-    union {
-        struct {
-            uint8_t cmd;
-            uint8_t bcnth;
-            uint8_t bcntl;
-            uint8_t payload[U2FHID_INIT_PAYLOAD_SIZE];
-        } init;
-        struct {
-            uint8_t seq;
-            uint8_t payload[U2FHID_CONT_PAYLOAD_SIZE];
-        } cont;
-    } pkt;
-} U2F_HID_MSG;
+extern USBU2FAuthenticator u2fAuthenticator;
 
 //
-// U2Fリクエスト／レスポンスデータ格納領域
+// HID送信／受信パケット格納領域
 //
-extern uint8_t u2f_request_buffer[128];
-extern size_t  u2f_request_length;
+extern HID_REPORT send_report;
+extern HID_REPORT recv_report;
 
-extern uint8_t u2f_response_buffer[128];
-extern size_t  u2f_response_length;
+//
+// 現在処理中のチャネルID、コマンドを保持
+//
+extern uint8_t  CMD;
+extern uint32_t CID;
 
 //
 // 関数群
 //
-uint32_t get_CID(uint8_t *cid);
-void     set_CID(uint8_t *cid, uint32_t _CID);
+size_t get_payload_length(U2F_HID_MSG *recv_msg);
+void   dump_hid_init_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, size_t remain);
+void   dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, size_t remain);
 
-void     generate_hid_init_response(void);
-void     generate_u2f_version_response(void);
+bool   receive_request_data(void);
+bool   send_response_packet(void);
 
-#endif // U2F_HID_H_
+#endif // U2FHID_H_
