@@ -38,7 +38,7 @@
         [self setToolHIDManager:IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDManagerOptionNone)];
         // マッチングするデバイスの条件を設定
         NSDictionary* criteria = @{
-                                   @kIOHIDDeviceUsagePageKey: @(0xf1d0),
+                                   @kIOHIDDeviceUsagePageKey: @(0xff00),
                                     @kIOHIDDeviceUsageKey: @(0x01),
                                     @kIOHIDVendorIDKey: @(0xf055),
                                     @kIOHIDProductIDKey: @(0x0001),
