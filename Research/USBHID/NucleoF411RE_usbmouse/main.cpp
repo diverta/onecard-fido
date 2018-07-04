@@ -30,9 +30,9 @@ int main(void)
             }
         }
         if (u2fAuthenticator.readNB2(&recv_report)) {
-            if (receive_request_data() == true) {
+            if (receive_xfer_response_data() == true) {
                 // リクエストを全て受領したらレスポンス
-                send_response_packet();
+                send_xfer_response_packet();
             }
         }
         wait(0.01);

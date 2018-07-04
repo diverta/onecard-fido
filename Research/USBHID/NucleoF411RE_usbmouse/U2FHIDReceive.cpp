@@ -6,10 +6,15 @@
 //
 // 受信関連処理
 //
-static bool receive_xfer_response_data()
+bool receive_xfer_response_data(void)
 {
     static size_t pos;
     static size_t payload_len;
+    u2f_request_length = 0;
+
+    if (recv_report.length == 0) {
+        return false;
+    }
 
     size_t init_payload_size = 25;
     size_t cont_payload_size = 27;
@@ -24,8 +29,6 @@ static bool receive_xfer_response_data()
         memset(&u2f_request_buffer, 0, sizeof(HID_REPORT));
         memcpy(u2f_request_buffer, req->pkt.init.payload, pos);
 
-        // CMDを設定
-        CMD = U2F_VENDOR_LAST;
         dump_hid_init_packet("Recv ", recv_report.length, req, pos);
         
    } else {
@@ -58,12 +61,7 @@ bool receive_request_data(void)
         return false;
     }
     
-    // チャネルIDを判定する
     U2F_HID_MSG *req = (U2F_HID_MSG *)recv_report.data;
-    if (get_CID(req->cid) == U2FHID_RESERVED_CID) {
-        //   U2F管理ツールからの転送レスポンスを処理
-        return receive_xfer_response_data();
-    }
 
     if (U2FHID_IS_INIT(req->pkt.init.cmd)) {
         // payload長を取得

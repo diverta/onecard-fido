@@ -8,7 +8,7 @@
 //
 static void generate_hid_input_report(uint8_t *payload_data, size_t payload_length, 
                                size_t offset, size_t xfer_data_len, 
-                               uint32_t cid, uint8_t cmd, bool init)
+                               uint32_t cid, uint8_t cmd)
 {
     static uint8_t seq;
 
@@ -19,7 +19,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
     // パケット格納領域を取得
     U2F_HID_MSG *res = (U2F_HID_MSG *)send_report.data;
 
-    if (init) {
+    if (offset == 0) {
         // チャネルID、CMD、データ長を設定
         set_CID(res->cid, cid);
         res->pkt.init.cmd   = cmd;
@@ -56,8 +56,8 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
         xfer_data_max = (i == 0) ? 25 : 27;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
-        // パケットを生成（i==0ならinitフレーム、それ以外はcontフレームとして生成）
-        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, CID, CMD, (i == 0));
+        // パケットを生成
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, CID, CMD);
 
         // パケットをU2Fクライアントへ転送
         if (u2fAuthenticator.send(&send_report) == false) {
@@ -71,18 +71,18 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
 
 static bool send_xfer_report(uint8_t *payload_data, size_t payload_length)
 {
-    size_t  xfer_data_max = 25;
+    size_t  xfer_data_max;
     size_t  xfer_data_len;
     size_t  remaining;
-    uint8_t seq = 0;
     
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
         // データ長
         remaining = payload_length - i;
+        xfer_data_max = (i == 0) ? 25 : 27;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
-        // パケットを生成（常にinitフレームとして生成）
-        generate_hid_input_report(payload_data, xfer_data_len, i, xfer_data_len, 0x00, seq++, true);
+        // パケットを生成（CIDを0x00000000に設定）
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, 0x00, CMD);
 
         // パケットをU2F管理ツールへ転送
         if (u2fAuthenticator.send2(&send_report) == false) {
@@ -123,9 +123,13 @@ bool send_response_packet(void)
         }
     }
 
-    if (CMD == U2F_VENDOR_LAST) {
+    return true;
+}
+
+bool send_xfer_response_packet(void)
+{
+    if (CMD == U2FHID_MSG) {
         // レスポンスデータを送信パケットに設定
-        CMD = U2FHID_MSG;
         generate_u2f_register_response();
         if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
             return false;
