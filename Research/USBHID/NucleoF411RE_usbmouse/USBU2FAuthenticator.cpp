@@ -27,9 +27,9 @@ uint8_t *USBU2FAuthenticator::reportDesc() {
 }
 
 #define TOTAL_DESCRIPTOR_LENGTH ((1 * CONFIGURATION_DESCRIPTOR_LENGTH) \
-                               + (1 * INTERFACE_DESCRIPTOR_LENGTH) \
-                               + (1 * HID_DESCRIPTOR_LENGTH) \
-                               + (2 * ENDPOINT_DESCRIPTOR_LENGTH))
+                               + (2 * INTERFACE_DESCRIPTOR_LENGTH) \
+                               + (2 * HID_DESCRIPTOR_LENGTH) \
+                               + (4 * ENDPOINT_DESCRIPTOR_LENGTH))
 
 uint8_t *USBU2FAuthenticator::configurationDesc() {
     static uint8_t configurationDescriptor[] = {
@@ -37,7 +37,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         CONFIGURATION_DESCRIPTOR,       // bDescriptorType
         LSB(TOTAL_DESCRIPTOR_LENGTH),   // wTotalLength (LSB)
         MSB(TOTAL_DESCRIPTOR_LENGTH),   // wTotalLength (MSB)
-        0x01,                           // bNumInterfaces
+        0x02,                           // bNumInterfaces
         0x01,                           // bConfigurationValue (DEFAULT_CONFIGURATION)
         0x00,                           // iConfiguration
         C_RESERVED,                     // bmAttributes (C_RESERVED | C_SELF_POWERED)
@@ -51,7 +51,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         0x03,                           // bInterfaceClass (HID Class)
         0x00,                           // bInterfaceSubClass (No interface subclass)
         0x00,                           // bInterfaceProtocol (No interface protocol)
-        0x04,                           // iInterface
+        0x00,                           // iInterface
 
         HID_DESCRIPTOR_LENGTH,          // bLength
         HID_DESCRIPTOR,                 // bDescriptorType
@@ -74,6 +74,43 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
         ENDPOINT_DESCRIPTOR,            // bDescriptorType
         0x81,                           // bEndpointAddress (Endpoint 1, IN)
+        0x03,                           // bmAttributes     (Interrupt transfer)
+        LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
+        MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
+        5,                              // bInterval        (milliseconds)
+
+
+        INTERFACE_DESCRIPTOR_LENGTH,    // bLength
+        INTERFACE_DESCRIPTOR,           // bDescriptorType
+        0x01,                           // bInterfaceNumber
+        0x00,                           // bAlternateSetting
+        0x02,                           // bNumEndpoints (One IN- and one OUT endpoint)
+        0x03,                           // bInterfaceClass (HID Class)
+        0x00,                           // bInterfaceSubClass (No interface subclass)
+        0x00,                           // bInterfaceProtocol (No interface protocol)
+        0x01,                           // iInterface
+
+        HID_DESCRIPTOR_LENGTH,          // bLength
+        HID_DESCRIPTOR,                 // bDescriptorType
+        LSB(0x0111),                    // bcdHID (LSB) HID_VERSION_1_11
+        MSB(0x0111),                    // bcdHID (MSB) HID_VERSION_1_11
+        0x00,                           // bCountryCode
+        0x01,                           // bNumDescriptors
+        0x22,                           // bDescriptorType (USB_HID_REPORT_DESCRIPTOR)
+        (uint8_t)(LSB(reportDescLength())), // wDescriptorLength (LSB)
+        (uint8_t)(MSB(reportDescLength())), // wDescriptorLength (MSB)
+
+        ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
+        ENDPOINT_DESCRIPTOR,            // bDescriptorType
+        0x02,                           // bEndpointAddress (Endpoint 2, OUT)
+        0x03,                           // bmAttributes     (Interrupt transfer)
+        LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
+        MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
+        5,                              // bInterval        (milliseconds)
+
+        ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
+        ENDPOINT_DESCRIPTOR,            // bDescriptorType
+        0x82,                           // bEndpointAddress (Endpoint 2, IN)
         0x03,                           // bmAttributes     (Interrupt transfer)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
@@ -144,4 +181,27 @@ uint8_t * USBU2FAuthenticator::stringIserialDesc() {
         '1',0
     };                      /*bString iSerial*/
     return stringIserialDescriptor;
+}
+
+
+//
+// U2F管理ツールへのメッセージ転送用
+// 
+bool USBU2FAuthenticator::readNB2(HID_REPORT *report)
+{
+    uint32_t bytesRead = 0;
+    bool result;
+    result = USBDevice::readEP_NB(EPBULK_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
+    // if readEP_NB did not succeed, does not issue a readStart
+    if (!result)
+        return false;
+    report->length = bytesRead;
+    if(!readStart(EPBULK_OUT, MAX_HID_REPORT_SIZE))
+        return false;
+    return result;
+}
+
+bool USBU2FAuthenticator::send2(HID_REPORT *report)
+{
+    return write(EPBULK_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
 }

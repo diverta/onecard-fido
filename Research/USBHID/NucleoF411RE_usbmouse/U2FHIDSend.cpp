@@ -85,7 +85,7 @@ static bool send_xfer_report(uint8_t *payload_data, size_t payload_length)
         generate_hid_input_report(payload_data, xfer_data_len, i, xfer_data_len, 0x00, seq++, true);
 
         // パケットをU2F管理ツールへ転送
-        if (u2fAuthenticator.send(&send_report) == false) {
+        if (u2fAuthenticator.send2(&send_report) == false) {
             printf("u2fAuthenticator.send failed. \r\n");
             return false;
         }

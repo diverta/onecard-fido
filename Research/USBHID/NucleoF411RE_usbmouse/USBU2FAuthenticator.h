@@ -30,6 +30,9 @@ class USBU2FAuthenticator: public USBHID
         //
         virtual uint8_t * stringIserialDesc();
 
+        bool readNB2(HID_REPORT *report);
+        bool send2(HID_REPORT *report);
+
     protected:
         //
         // Get configuration descriptor
