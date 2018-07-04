@@ -64,7 +64,8 @@
 
     - (void)HIDManagerDidReceiveMessage:(uint8_t *)message length:(long)length {
         static uint16_t remaining;
-        
+        uint16_t        datalen;
+
         // チャネルID（先頭４バイト）が0x00でない場合は無視
         for (int i = 0; i < 4; i++) {
             if (message[i] != 0x00) {
@@ -74,21 +75,20 @@
         NSData *reportData = [[NSData alloc] initWithBytes:message length:length];
         NSLog(@"ToolHIDHelper receive: reportLength(%ld) report(%@)", length, reportData);
         
-        // シーケンスは先頭から５バイト目を参照
-        uint8_t  seq = message[4];
-        uint16_t len = ((message[5] << 8) & 0xff00) | (message[6] & 0x00ff);
-        uint16_t datalen;
-        if (seq == 0x00) {
-            // データ長を取得（先頭から13,14バイト目を参照）
-            remaining = ((message[12] << 8) & 0xff00) | (message[13] & 0x00ff);
-            // APDU長を算出（ヘッダー長＋データ長＋フッター長）
-            remaining = 7 + remaining + 2;
+        // コマンド／シーケンスは先頭から５バイト目を参照
+        if (message[4] == 0x83) {
             // リクエストデータ格納領域を初期化
             [self setHidU2FRequest:[NSMutableData alloc]];
+            // INITフレームから、８バイト目以降のデータを連結（最大25バイト）
+            remaining = ((message[5] << 8) & 0xff00) | (message[6] & 0x00ff);
+            datalen = (remaining < 25) ? remaining : 25;
+            [[self hidU2FRequest] appendData:[reportData subdataWithRange:NSMakeRange(7, datalen)]];
+
+        } else {
+            // CONTフレームから、６バイト目以降のデータを連結（最大27バイト）
+            datalen = (remaining < 27) ? remaining : 27;
+            [[self hidU2FRequest] appendData:[reportData subdataWithRange:NSMakeRange(5, datalen)]];
         }
-        // ８バイト目以降のデータを連結
-        datalen = (remaining < len) ? remaining : len;
-        [[self hidU2FRequest] appendData:[reportData subdataWithRange:NSMakeRange(7, len)]];
         // パケットをすべて受信したら、U2Fリクエスト（APDUヘッダー＋データ）をアプリケーションに引き渡す
         remaining -= datalen;
         if (remaining == 0) {
