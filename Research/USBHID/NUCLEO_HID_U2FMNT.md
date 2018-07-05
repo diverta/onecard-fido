@@ -17,8 +17,8 @@ NUCLEO（STM32開発環境）＋mbed OSにより、U2F HID Init／U2F Versionを
 
 U2F RegisterリクエストがHIDデバイスに送信されたら、HIDデバイスで受信したリクエストデータを、無編集でU2F管理ツールに転送します。
 
-ただし、HIDデバイスから１度に送信できるデータは32バイトであるため、ヘッダー（7バイト）を除く25バイトずつに分割した上で、U2F管理ツールに送信します。<br>
-ヘッダーでは、U2F管理ツールのチャネルIDを0x00と設定し、他のチャネル（U2Fクライアント等）によって重複して処理されないように工夫しています。
+ただし、HIDデバイスから１度に送信できるデータは32バイトであるため、ヘッダーを除くデータを分割した上で、U2F管理ツールに送信します。<br>
+ヘッダーでは、U2F管理ツールのチャネルIDを0x00と設定します。
 
 ```
 bool send_response_packet() {
@@ -27,55 +27,48 @@ bool send_response_packet() {
         :
         if (ins == U2F_REGISTER) {
             // リクエストデータをU2F管理ツールに転送
-            if (send_xfer_report() == false) {
+            if (send_xfer_report(u2f_request_buffer, u2f_request_length) == false) {
                 return false;
             }
             :
 
 static bool send_xfer_report(uint8_t *payload_data, size_t payload_length) {
-    size_t  xfer_data_max = 25;
-    size_t  xfer_data_len;
-    size_t  remaining;
-    uint8_t seq = 0;
-
+    :
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
         // データ長
         remaining = payload_length - i;
+        xfer_data_max = (i == 0) ? 25 : 27;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
-        // パケットを生成（常にinitフレームとして生成）
-        generate_hid_input_report(payload_data, xfer_data_len, i, xfer_data_len, 0x00, seq++, true);
+        // パケットを生成（CIDを0x00000000に設定）
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, 0x00, CMD);
 
         // パケットをU2F管理ツールへ転送
-        if (u2fAuthenticator.send(&send_report) == false) {
+        if (u2fAuthenticator.send2(&send_report) == false) {
             printf("u2fAuthenticator.send failed. \r\n");
             return false;
         }
-    }
-
-    return true;
-}
+        :
 ```
 
 ### U2F管理ツールからのデータを受信
 
 U2F RegisterレスポンスがU2F管理ツールから送信されたら、これをHIDデバイスで受信します。<br>
-受信時にチャネルID=0x00であれば、U2F管理ツールからのメッセージと判断し、処理を行います。
-
-ここで、U2F管理ツールからのメッセージを処理するためのコマンドとして`U2F_VENDOR_LAST`を定義し、メッセージデータを抽出する処理の中で、CMDを`U2F_VENDOR_LAST`に差替えしております。
+U2F管理ツールからのレスポンス受信には、後述の`readNB2`関数を使用します。
 
 ```
-bool receive_request_data(void) {
+int main(void) {
     :
-    // チャネルIDを判定する
-    U2F_HID_MSG *req = (U2F_HID_MSG *)recv_report.data;
-    if (get_CID(req->cid) == U2FHID_RESERVED_CID) {
-        //   U2F管理ツールからの転送レスポンスを処理
-        return receive_xfer_response_data();
-    }
-    :
+    while (true) {
+        :
+        if (u2fAuthenticator.readNB2(&recv_report)) {
+            if (receive_xfer_response_data() == true) {
+                // リクエストを全て受領したらレスポンス
+                send_xfer_response_packet();
+            }
+            :
 
-static bool receive_xfer_response_data() {
+bool receive_xfer_response_data(void) {
     :
     if (U2FHID_IS_INIT(req->pkt.init.cmd)) {
         // payload長を取得
@@ -86,31 +79,175 @@ static bool receive_xfer_response_data() {
         memset(&u2f_request_buffer, 0, sizeof(HID_REPORT));
         memcpy(u2f_request_buffer, req->pkt.init.payload, pos);
 
-        // CMDを設定
-        CMD = U2F_VENDOR_LAST;
         dump_hid_init_packet("Recv ", recv_report.length, req, pos);
-        :
-```
 
-受信したメッセージは、そのまま無編集でU2Fクライアントに送信します。<br>
-ただし、CMDが`U2F_VENDOR_LAST`のままではU2Fエラーになってしまうため、CMDを本来の`U2FHID_MSG`に戻してからU2Fクライアントに送信しています。
+   } else {
+        // リクエストデータ領域に格納
+        size_t remain = payload_len - pos;
+        size_t cnt = (remain < cont_payload_size) ? remain : cont_payload_size;
+        memcpy(u2f_request_buffer + pos, req->pkt.cont.payload, cnt);
+        pos += cnt;
 
-```
-bool send_response_packet(void) {
+        dump_hid_cont_packet("Recv ", recv_report.length, req, cnt);
+    }
     :
-    if (CMD == U2F_VENDOR_LAST) {
+```
+
+受信したメッセージは、そのまま無編集でU2Fクライアントに送信します。
+
+```
+bool send_xfer_response_packet(void) {
+    if (CMD == U2FHID_MSG) {
         // レスポンスデータを送信パケットに設定
-        CMD = U2FHID_MSG;
         generate_u2f_register_response();
         if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
             return false;
         }
-    :
+        :
 
 void generate_u2f_register_response(void) {
     // U2F管理ツールから転送されたレスポンスデータを設定
     u2f_response_length = u2f_request_length;
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
+}
+
+static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length) {
+    :
+    for (size_t i = 0; i < payload_length; i += xfer_data_len) {
+        :
+        // パケットを生成
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, CID, CMD);
+
+        // パケットをU2Fクライアントへ転送
+        if (u2fAuthenticator.send(&send_report) == false) {
+            printf("u2fAuthenticator.send failed. \r\n");
+            return false;
+        }
+        :
+```
+
+## HIDインターフェースを２件実装
+
+USBデバイスにHIDインターフェースを１点で実装すると、デバイス（mbedアプリケーション）からU2F管理ツール向けに転送したデータが、ChromeのU2Fクライアントで受信されてしまう問題が確認されました。
+
+こういった不具合は、将来的な本格開発やFIDOアライアンス認証取得のために回避したいので、USBデバイスに、HIDインターフェースを２点実装します。<br>
+具体的には、HIDインターフェース＃１をChrome U2Fクライアント通信専用、HIDインターフェース＃２をU2Fクライアント通信専用とします。
+
+この対応により、U2F管理ツールに送信したメッセージ（HID Report）が、U2Fクライアントでは受信されないようになります。
+
+### mbedライブラリーの一部修正
+
+HIDインターフェースの複数実装はmbedの`USBDEVICE`ライブラリーでは想定されていない仕様ですので、ライブラリー・ファイルを直接修正する必要があります。<br>
+修正点は以下の通りです。
+
+#### USBDEVICE/USBDevice/USBHAL_STM32F4.cpp
+
+インターフェース＃２のエンドポイントとして使用する`EPBULK_IN`、`EPBULK_OUT`は、mbedではバルク通信に割り当てられていますが、これを`EPINT_IN`、`EPINT_OUT`と同様、割込み通信に割り当てるため、下記のようにtype変数を3に設定するよう修正します。
+```
+bool USBHAL::realiseEndpoint(uint8_t endpoint, uint32_t maxPacket,
+                             uint32_t flags) {
+    uint32_t epIndex = endpoint >> 1;
+
+    uint32_t type;
+    switch (endpoint) {
+        case EP0IN:
+        case EP0OUT:
+            type = 0;
+            break;
+        case EPISO_IN:
+        case EPISO_OUT:
+            type = 1;
+        case EPBULK_IN:
+        case EPBULK_OUT:
+            //
+            // mbed original から変更:
+            //  EP2を使用するインターフェースの
+            //  type を 3 に設定
+            //
+            // type = 2;
+            // break;
+        case EPINT_IN:
+        case EPINT_OUT:
+            type = 3;
+            break;
+    }
+```
+
+#### USBDEVICE/USBHID/USBHID.cpp
+
+HIDインタフェースを２件実装するため、`USBCallback_setConfiguration`関数により、エンドポイントを２件追加します。<br>
+前述の通り、mbedでバルク通信用として割り当てられている`EPBULK_IN`、`EPBULK_OUT`をエンドポイントとして使用するものとします。
+
+```
+bool USBHID::USBCallback_setConfiguration(uint8_t configuration) {
+    :
+    addEndpoint(EPINT_IN, MAX_PACKET_SIZE_EPINT);
+    addEndpoint(EPINT_OUT, MAX_PACKET_SIZE_EPINT);
+
+    addEndpoint(EPBULK_IN, MAX_PACKET_SIZE_EPINT);  // EP2_IN
+    addEndpoint(EPBULK_OUT, MAX_PACKET_SIZE_EPINT); // EP2_OUT
+
+    // We activate the endpoint to be able to recceive data
+    readStart(EPINT_OUT, MAX_PACKET_SIZE_EPINT);
+    return true;
+}
+```
+
+前述で追加したインターフェース＃２に対応するReportDescを取得／設定するロジックがないため、インターフェース＃２用のReportDesc内容（USAGE_PAGE／USAGE）を直接書き換えるようにします。
+
+```
+bool USBHID::USBCallback_request() {
+        :
+        case REPORT_DESCRIPTOR:
+            if ((reportDesc() != NULL)  && (reportDescLength() != 0)) {
+                transfer->remaining = reportDescLength();
+                transfer->ptr = reportDesc();
+
+                //
+                // mbed original から変更:
+                //  EP2を使用するインターフェースの
+                //  USAGE_PAGEを
+                //  0xff00 に設定
+                //
+                if (transfer->setup.wIndex == 1) {
+                    transfer->ptr[1] = 0x00;
+                    transfer->ptr[2] = 0xff;
+                }
+
+                transfer->direction = DEVICE_TO_HOST;
+                success = true;
+            }
+            break;
+        :
+```
+
+USAGE_PAGE = 0xff00 というのは、Vendor Defined Page として知られているものになります。<br>
+https://www.itf.co.jp/tech/road-to-usb-master/hid_class
+
+### サンプルアプリでの修正
+
+追加実装したエンドポイントを使用し、U2F管理ツールとの通信を行うための関数を追加します。
+
+受信用の関数です。
+```
+bool USBU2FAuthenticator::readNB2(HID_REPORT *report) {
+    uint32_t bytesRead = 0;
+    bool result;
+    result = USBDevice::readEP_NB(EPBULK_OUT, report->data, &bytesRead, MAX_HID_REPORT_SIZE);
+    // if readEP_NB did not succeed, does not issue a readStart
+    if (!result)
+        return false;
+    report->length = bytesRead;
+    if(!readStart(EPBULK_OUT, MAX_HID_REPORT_SIZE))
+        return false;
+    return result;
+}
+```
+
+こちらは送信用の関数になります。
+```
+bool USBU2FAuthenticator::send2(HID_REPORT *report) {
+    return write(EPBULK_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
 }
 ```
 
@@ -192,51 +329,58 @@ Googleアカウントの２段階認証設定ページを表示させます。<b
 ### mbedアプリケーションのデバッグプリント
 
 U2Fクライアント上でU2F Registerが起動すると、mbedアプリケーションにチャネルID`0x00003301`でU2Fリクエストが送信されます。<br>
+
+```
+Recv ( 64 bytes) CID: 0x00003301, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 a5 68 cc bb 4d b3 5b 66 21 c4 d0 e1 8c 0d 82 3c b6 f3 f6 f9 e3 1a 12 c1 a2 d7 84 b1 02 a0 d7 21 a5 46 72 b2 22 c4 cf 95 e1 51 ed 8d 4d 3c 76 7a 6c c3
+Recv ( 64 bytes) CID: 0x00003301, SEQ: 0x00, 49 43 59 43 79 4e 88 4f 3d 02 3a 82 29 fd 00 00
+```
+
 mbedアプリケーションは、そのU2Fリクエストを、チャネルID`0x00000000`でU2F管理ツールに転送します。
 
 ```
-Recv ( 64 bytes) CID: 0x00003301, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 ee 90 42 c1 41 81 0f b2 b0 88 c4 7c cc b9 6c 1c 92 b1 bd 41 96 6d 19 61 cf 36 7b e1 61 ee 33 4d 31 e9 dc 66 f2 88 e5 fa 45 eb 1b a5 a6 2b d2 3f df 64
-Recv ( 64 bytes) CID: 0x00003301, SEQ: 0x00, fb d6 af 72 24 32 d0 cd c1 99 4b f5 79 ad 00 00
-Send ( 32 bytes) CID: 0x00000000, CMD: 0x00, Payload( 25 bytes): 00 01 03 00 00 00 40 ee 90 42 c1 41 81 0f b2 b0 88 c4 7c cc b9 6c 1c 92 b1
-Send ( 32 bytes) CID: 0x00000000, CMD: 0x01, Payload( 25 bytes): bd 41 96 6d 19 61 cf 36 7b e1 61 ee 33 4d 31 e9 dc 66 f2 88 e5 fa 45 eb 1b
-Send ( 32 bytes) CID: 0x00000000, CMD: 0x02, Payload( 23 bytes): a5 a6 2b d2 3f df 64 fb d6 af 72 24 32 d0 cd c1 99 4b f5 79 ad 00 00
+Send ( 32 bytes) CID: 0x00000000, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 a5 68 cc bb 4d b3 5b 66 21 c4 d0 e1 8c 0d 82 3c b6 f3
+Send ( 32 bytes) CID: 0x00000000, SEQ: 0x00, f6 f9 e3 1a 12 c1 a2 d7 84 b1 02 a0 d7 21 a5 46 72 b2 22 c4 cf 95 e1 51 ed 8d 4d
+Send ( 32 bytes) CID: 0x00000000, SEQ: 0x01, 3c 76 7a 6c c3 49 43 59 43 79 4e 88 4f 3d 02 3a 82 29 fd 00 00
 ```
 
 U2F管理ツールからは、チャネルID`0x00000000`で、ECHOバックがレスポンスされます。<br>
 （こちらは後日、正式な処理に置き換える予定です）
 
+```
+Recv ( 32 bytes) CID: 0x00000000, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 a5 68 cc bb 4d b3 5b 66 21 c4 d0 e1 8c 0d 82 3c b6 f3
+Recv ( 32 bytes) CID: 0x00000000, SEQ: 0x00, f6 f9 e3 1a 12 c1 a2 d7 84 b1 02 a0 d7 21 a5 46 72 b2 22 c4 cf 95 e1 51 ed 8d 4d
+Recv ( 32 bytes) CID: 0x00000000, SEQ: 0x01, 3c 76 7a 6c c3 49 43 59 43 79 4e 88 4f 3d 02 3a 82 29 fd 00 00
+```
+
 U2F管理ツールからのレスポンスは、さらにmbedアプリケーションから、チャネルID`0x00003301`を使いU2Fクライアントに転送されます。
 
 ```
-Recv ( 32 bytes) CID: 0x00000000, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 ee 90 42 c1 41 81 0f b2 b0 88 c4 7c cc b9 6c 1c 92 b1
-Recv ( 32 bytes) CID: 0x00000000, SEQ: 0x00, bd 41 96 6d 19 61 cf 36 7b e1 61 ee 33 4d 31 e9 dc 66 f2 88 e5 fa 45 eb 1b a5 a6
-Recv ( 32 bytes) CID: 0x00000000, SEQ: 0x01, 2b d2 3f df 64 fb d6 af 72 24 32 d0 cd c1 99 4b f5 79 ad 00 00
-Send ( 32 bytes) CID: 0x00003301, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 ee 90 42 c1 41 81 0f b2 b0 88 c4 7c cc b9 6c 1c 92 b1
-Send ( 32 bytes) CID: 0x00003301, SEQ: 0x00, bd 41 96 6d 19 61 cf 36 7b e1 61 ee 33 4d 31 e9 dc 66 f2 88 e5 fa 45 eb 1b a5 a6
-Send ( 32 bytes) CID: 0x00003301, SEQ: 0x01, 2b d2 3f df 64 fb d6 af 72 24 32 d0 cd c1 99 4b f5 79 ad 00 00
+Send ( 32 bytes) CID: 0x00003301, CMD: 0x83, Payload( 73 bytes): 00 01 03 00 00 00 40 a5 68 cc bb 4d b3 5b 66 21 c4 d0 e1 8c 0d 82 3c b6 f3
+Send ( 32 bytes) CID: 0x00003301, SEQ: 0x00, f6 f9 e3 1a 12 c1 a2 d7 84 b1 02 a0 d7 21 a5 46 72 b2 22 c4 cf 95 e1 51 ed 8d 4d
+Send ( 32 bytes) CID: 0x00003301, SEQ: 0x01, 3c 76 7a 6c c3 49 43 59 43 79 4e 88 4f 3d 02 3a 82 29 fd 00 00
 ```
 
 
 ### U2F管理ツールのデバッグプリント
 
 mbedアプリケーションからU2F管理ツールに、U2F Registerリクエストが転送されると、下記のようなデバッグプリントが出力されます。<br>
-U2F Registerリクエストが最大25バイトずつ、３分割されて受信されることが確認できます。
+U2F Registerリクエストが、３分割されて受信されることが確認できます。
 
 ```
-デフォルト	15:38:23.163701 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 00001900 01030000 0040ee90 42c14181 0fb2b088 c47cccb9 6c1c92b1>)
-デフォルト	15:38:23.311617 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 010019bd 41966d19 61cf367b e161ee33 4d31e9dc 66f288e5 fa45eb1b>)
-デフォルト	15:38:23.451621 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 020017a5 a62bd23f df64fbd6 af722432 d0cdc199 4bf579ad 00000000>)
-デフォルト	15:38:23.451746 +0900	U2FMaintenanceTool	hidHelperDidReceive(73 bytes): <00010300 000040ee 9042c141 810fb2b0 88c47ccc b96c1c92 b1bd4196 6d1961cf 367be161 ee334d31 e9dc66f2 88e5fa45 eb1ba5a6 2bd23fdf 64fbd6af 722432d0 cdc1994b f579ad00 00>
+デフォルト	10:53:17.233576 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 83004900 01030000 0040a568 ccbb4db3 5b6621c4 d0e18c0d 823cb6f3>)
+デフォルト	10:53:17.365483 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 00f6f9e3 1a12c1a2 d784b102 a0d721a5 4672b222 c4cf95e1 51ed8d4d>)
+デフォルト	10:53:17.481541 +0900	U2FMaintenanceTool	ToolHIDHelper receive: reportLength(32) report(<00000000 013c767a 6cc34943 5943794e 884f3d02 3a8229fd 00000000 00000000>)
+デフォルト	10:53:17.481666 +0900	U2FMaintenanceTool	hidHelperDidReceive(73 bytes): <00010300 000040a5 68ccbb4d b35b6621 c4d0e18c 0d823cb6 f3f6f9e3 1a12c1a2 d784b102 a0d721a5 4672b222 c4cf95e1 51ed8d4d 3c767a6c c3494359 43794e88 4f3d023a 8229fd00 00>
 ```
 
 現時点では、U2F Registerリクエストに対しては、ECHOバックでレスポンスするようにしています。<br>
 （こちらは後日、正式な処理に置き換える予定です）
 
 ```
-デフォルト	15:38:23.451803 +0900	U2FMaintenanceTool	hidHelperWillSend(73 bytes): <00010300 000040ee 9042c141 810fb2b0 88c47ccc b96c1c92 b1bd4196 6d1961cf 367be161 ee334d31 e9dc66f2 88e5fa45 eb1ba5a6 2bd23fdf 64fbd6af 722432d0 cdc1994b f579ad00 00>
-デフォルト	15:38:23.455439 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 83004900 01030000 0040ee90 42c14181 0fb2b088 c47cccb9 6c1c92b1>)
-デフォルト	15:38:23.463547 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 00bd4196 6d1961cf 367be161 ee334d31 e9dc66f2 88e5fa45 eb1ba5a6>)
-デフォルト	15:38:23.619638 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 012bd23f df64fbd6 af722432 d0cdc199 4bf579ad 00000000 00000000>)
+デフォルト	10:53:17.481731 +0900	U2FMaintenanceTool	hidHelperWillSend(73 bytes): <00010300 000040a5 68ccbb4d b35b6621 c4d0e18c 0d823cb6 f3f6f9e3 1a12c1a2 d784b102 a0d721a5 4672b222 c4cf95e1 51ed8d4d 3c767a6c c3494359 43794e88 4f3d023a 8229fd00 00>
+デフォルト	10:53:17.485404 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 83004900 01030000 0040a568 ccbb4db3 5b6621c4 d0e18c0d 823cb6f3>)
+デフォルト	10:53:17.493388 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 00f6f9e3 1a12c1a2 d784b102 a0d721a5 4672b222 c4cf95e1 51ed8d4d>)
+デフォルト	10:53:17.649414 +0900	U2FMaintenanceTool	ToolHIDHelper send: messageLength(32) message(<00000000 013c767a 6cc34943 5943794e 884f3d02 3a8229fd 00000000 00000000>)
 ```
 
 
