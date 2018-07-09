@@ -114,16 +114,16 @@
         // メッセージをバイト配列に変換
         char    *apduBytes = (char *)[message bytes];
         uint16_t apduLength = (uint16_t)[message length];
-        // 25バイトずつ分割送信する
-        char     xfer_data[32];
+        // 分割送信
+        char     xfer_data[64];
         uint16_t xfer_data_max;
         uint16_t xfer_data_len;
         uint16_t remaining;
         uint16_t seq = 0;
         for (uint16_t i = 0; i < apduLength; i += xfer_data_len) {
-            // データ長
+            // データ長（INIT=57バイト、CONT=59バイト）
             remaining = apduLength - i;
-            xfer_data_max = (i == 0) ? 25 : 27;
+            xfer_data_max = (i == 0) ? 57 : 59;
             xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
             // 送信パケットを編集
             memset(xfer_data, 0x00, sizeof(xfer_data));

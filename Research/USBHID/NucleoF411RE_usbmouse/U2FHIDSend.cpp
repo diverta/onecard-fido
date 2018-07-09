@@ -81,8 +81,8 @@ static bool send_xfer_report(uint8_t *payload_data, size_t payload_length)
         xfer_data_max = (i == 0) ? 25 : 27;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
-        // パケットを生成（CIDを0x00000000に設定）
-        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, 0x00, CMD);
+        // パケットを生成（CIDをU2FHID_RESERVED_CIDに設定）
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, U2FHID_RESERVED_CID, CMD);
 
         // パケットをU2F管理ツールへ転送
         if (u2fAuthenticator.send2(&send_report) == false) {
