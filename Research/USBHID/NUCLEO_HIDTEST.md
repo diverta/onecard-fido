@@ -4,6 +4,8 @@
 
 Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について、初期段階調査を行います。
 
+結果としては、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できました。
+
 ## 調査内容
 
 - <b>[HIDマウスデバイスを試す](NUCLEO_HID_MOUSE.md)</b><br>
@@ -18,7 +20,7 @@ Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを�
 - <b>[HID U2FデバイスとU2F管理ツールの連携](NUCLEO_HID_U2FMNT.md)</b><br>
 前述のHID U2Fデバイスを、既存のU2F管理ツールと連携させるところまで試します。
 
-- <b>[WIP] [HID U2FデバイスからU2F Registerを実行](NUCLEO_HID_U2F_REGISTER.md)</b><br>
+- <b>[HID U2FデバイスからU2F Registerを実行](NUCLEO_HID_U2F_REGISTER.md)</b><br>
 前述のHID U2Fデバイスから、U2F管理ツールを経て、One CardのU2F Registerコマンドを実行させるところまで試します。
 
 ## 参考調査
