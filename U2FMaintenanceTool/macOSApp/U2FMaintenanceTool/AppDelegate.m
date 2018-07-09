@@ -324,6 +324,10 @@
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
+        } else if ([[self toolCommand] command] == COMMAND_U2F_HID_PROCESS) {
+            // U2FレスポンスをHIDデバイスに転送し、ボタンを活性化
+            [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
+            [self enableButtons:true];
         } else {
             // ボタンを活性化し、ポップアップメッセージを表示
             [self terminateProcessOnWindow];
@@ -425,8 +429,12 @@
 #pragma mark - Call back from ToolHIDHelper
 
     - (void)hidHelperDidReceive:(NSData *)hidHelperMessages {
-        // HIDデバイスから受信したメッセージをエコーバック（仮の実装です）
-        [[self toolHIDHelper] hidHelperWillSend:hidHelperMessages];
+        // HIDデバイスから受信したメッセージをToolCommandに引き渡し
+        [[self toolCommand] setU2FHIDProcessParameter:COMMAND_U2F_HID_PROCESS
+                                     hidHelperMessage:hidHelperMessages];
+        // ToolCommandの該当コマンドを実行する
+        [self enableButtons:false];
+        [[self toolCommand] toolCommandWillCreateBleRequest:COMMAND_U2F_HID_PROCESS];
     }
 
 @end

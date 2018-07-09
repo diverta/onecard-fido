@@ -19,6 +19,7 @@
 
     @property (nonatomic) Command command;
     @property (nonatomic) NSArray<NSData *> *bleRequestArray;
+    @property (nonatomic) NSData            *bleResponseData;
 
     - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate;
     - (void)toolCommandWillCreateBleRequest:(Command)command;
@@ -31,6 +32,8 @@
                    certFilePath:(NSString *)certFilePath;
     - (void)setU2FProcessParameter:(Command)command
                  bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
+    - (void)setU2FHIDProcessParameter:(Command)command
+                     hidHelperMessage:(NSData *)hidHelperMessage;
     - (NSDictionary *)getU2FResponseDict;
 
 @end
