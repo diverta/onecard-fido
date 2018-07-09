@@ -35,7 +35,7 @@ void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, 
 {
     printf("%s(%3d bytes) ", msg_header, size);
     printf("CID: 0x%08x, ",  get_CID(recv_msg->cid));
-    printf("SEQ: 0x%02d, ",  recv_msg->pkt.cont.seq);
+    printf("SEQ: 0x%02x, ",  recv_msg->pkt.cont.seq);
     
     size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
     for(size_t i = 0; i < cnt; i++) {

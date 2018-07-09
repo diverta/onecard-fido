@@ -69,7 +69,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         0x03,                           // bmAttributes     (Interrupt transfer)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
-        5,                              // bInterval        (milliseconds)
+        1,                              // bInterval        (milliseconds)
 
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
         ENDPOINT_DESCRIPTOR,            // bDescriptorType
@@ -77,7 +77,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         0x03,                           // bmAttributes     (Interrupt transfer)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
-        5,                              // bInterval        (milliseconds)
+        1,                              // bInterval        (milliseconds)
 
 
         INTERFACE_DESCRIPTOR_LENGTH,    // bLength
@@ -106,7 +106,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         0x03,                           // bmAttributes     (Interrupt transfer)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
-        5,                              // bInterval        (milliseconds)
+        1,                              // bInterval        (milliseconds)
 
         ENDPOINT_DESCRIPTOR_LENGTH,     // bLength
         ENDPOINT_DESCRIPTOR,            // bDescriptorType
@@ -114,7 +114,7 @@ uint8_t *USBU2FAuthenticator::configurationDesc() {
         0x03,                           // bmAttributes     (Interrupt transfer)
         LSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (LSB)
         MSB(MAX_PACKET_SIZE_EPINT),     // wMaxPacketSize   (MSB)
-        5                               // bInterval        (milliseconds)
+        1                               // bInterval        (milliseconds)
     };
     return configurationDescriptor;
 }
