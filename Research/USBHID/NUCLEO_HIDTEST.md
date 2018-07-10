@@ -4,7 +4,14 @@
 
 Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について調査を行います。
 
-2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できております。
+2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Register／Authenticateが実行できたことが確認できております。
+
+（確認時は、カスタマイズされたエクステンション等は一切使用せず、Chromeブラウザー標準サポート機能だけを使用しております）
+
+## 確認手順／結果
+
+- <b>[AndroidスマートフォンからU2F Authenticateを実行](NUCLEO_HID_U2F_AUTHENTICATE.md)</b><br>
+One Cardを使用し、PCでU2F RegisterしたGoogleアカウントで、AndroidスマートフォンからU2F Authenticateを実行させる手順と結果になります。
 
 ## 調査内容
 
