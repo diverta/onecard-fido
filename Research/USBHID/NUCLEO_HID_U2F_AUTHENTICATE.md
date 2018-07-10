@@ -4,8 +4,6 @@
 
 HID U2FデバイスによりOne Cardと紐付け登録されたGoogleアカウントを使用し、Androidスマートフォン（以降、単にAndroidと称します。）からOne CardのU2F Authenticateを実行します。
 
-確認にあたっては、[こちらの検証作業](NUCLEO_HID_U2F_REGISTER.md)で用意した、NUCLEOのHID U2Fデバイスを使用します。
-
 ### 操作の概要
 
 #### U2F Register
@@ -23,6 +21,12 @@ Googleアカウントをスマートフォンで使用する際、それと紐�
 
 U2F Authenticate作業は、スマートフォンと、One Cardのみで行うことができます。<br>
 （Android設定アプリが、BLEによるU2F Authenticateをサポートしているため）
+
+### 確認時に使用した物件
+
+確認にあたっては、[こちらの検証作業](NUCLEO_HID_U2F_REGISTER.md)で用意した、NUCLEOのHID U2Fデバイスを使用します。<br>
+また、カスタマイズされたエクステンション等は一切使用せず、PC版Chromeブラウザー/Android設定アプリの標準サポート機能だけを使用しております。<br>
+（Chrome／Androidの開発者モードも無効化したうえで確認しております）
 
 ## U2F Register
 
