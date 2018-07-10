@@ -1,10 +1,10 @@
-# USB HIDデバイス初期調査
+# USB HIDデバイス関連調査
 
 ## 概要
 
-Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について、初期段階調査を行います。
+Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について調査を行います。
 
-結果としては、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できました。
+2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できております。
 
 ## 調査内容
 
