@@ -14,9 +14,9 @@
 
 @interface ToolCommand ()
 
-    @property (nonatomic) NSData   *bleResponseData;
     @property (nonatomic) NSString *skeyFilePath;
     @property (nonatomic) NSString *certFilePath;
+    @property (nonatomic) NSData   *hidHelperMessage;
 
     @property (nonatomic) NSDictionary *U2FRequestDict;
     @property (nonatomic) NSDictionary *U2FResponseDict;
@@ -440,6 +440,11 @@
     }
 }
 
+- (void)createCommandU2FHIDProcess {
+    // HIDデバイスから転送されたAPDUより、分割送信のために64バイトごとのコマンド配列を作成
+    [self setBleRequestArray:[self generateCommandArrayFrom:[self hidHelperMessage]]];
+}
+
 - (NSUInteger)getStatusWordFrom:(NSData *)bleResponseData {
     // BLEレスポンスデータから、ステータスワードを取得する
     NSUInteger length = [bleResponseData length];
@@ -614,6 +619,13 @@
     }
 }
 
+- (void)setU2FHIDProcessParameter:(Command)command
+                 hidHelperMessage:(NSData *)hidHelperMessage {
+    // HIDデバイスからの受信データを保持
+    [self setHidHelperMessage:hidHelperMessage];
+    NSLog(@"setU2FHIDProcessParameter: %@", [self hidHelperMessage]);
+}
+
 - (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
@@ -629,6 +641,9 @@
             break;
         case COMMAND_U2F_PROCESS:
             [self createCommandU2FProcess];
+            break;
+        case COMMAND_U2F_HID_PROCESS:
+            [self createCommandU2FHIDProcess];
             break;
         case COMMAND_PAIRING:
             [self createCommandPairing];
@@ -783,6 +798,7 @@
             [self toolCommandDidProcess:true message:@"Health check end"];
             break;
         case COMMAND_U2F_PROCESS:
+        case COMMAND_U2F_HID_PROCESS:
             [self toolCommandDidProcess:true message:@"U2F response received"];
             break;
         default:

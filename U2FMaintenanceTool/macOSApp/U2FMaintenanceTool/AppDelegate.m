@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
 #import "ToolBLEHelper.h"
+#import "ToolHIDHelper.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
@@ -9,7 +10,7 @@
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolHIDHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -32,6 +33,7 @@
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
+    @property (nonatomic) ToolHIDHelper     *toolHIDHelper;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -48,6 +50,7 @@
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
+        self.toolHIDHelper  = [[ToolHIDHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
@@ -321,6 +324,10 @@
         if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
             // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
             [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
+        } else if ([[self toolCommand] command] == COMMAND_U2F_HID_PROCESS) {
+            // U2FレスポンスをHIDデバイスに転送し、ボタンを活性化
+            [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
+            [self enableButtons:true];
         } else {
             // ボタンを活性化し、ポップアップメッセージを表示
             [self terminateProcessOnWindow];
@@ -417,6 +424,17 @@
         }
         NSLog(@"Chrome native messaging host will terminate");
         [NSApp terminate:self];
+    }
+
+#pragma mark - Call back from ToolHIDHelper
+
+    - (void)hidHelperDidReceive:(NSData *)hidHelperMessages {
+        // HIDデバイスから受信したメッセージをToolCommandに引き渡し
+        [[self toolCommand] setU2FHIDProcessParameter:COMMAND_U2F_HID_PROCESS
+                                     hidHelperMessage:hidHelperMessages];
+        // ToolCommandの該当コマンドを実行する
+        [self enableButtons:false];
+        [[self toolCommand] toolCommandWillCreateBleRequest:COMMAND_U2F_HID_PROCESS];
     }
 
 @end

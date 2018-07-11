@@ -38,6 +38,9 @@
             case COMMAND_U2F_PROCESS:
                 processName = PROCESS_NAME_U2F_PROCESS;
                 break;
+            case COMMAND_U2F_HID_PROCESS:
+                processName = PROCESS_NAME_U2F_HID_PROCESS;
+                break;
             case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
                 processName = PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING;
                 break;

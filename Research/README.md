@@ -5,6 +5,10 @@
 * <b>[WebAuthn関連調査](WEBAUTHN_INDEX.md)</b><br>
 FIDO 2.0のWeb認証技術である、WebAuthnについて、各種調査を行っています。
 
+* <b>[USB HIDデバイス関連調査](USBHID/NUCLEO_HIDTEST.md)</b><br>
+Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について調査を行います。<br>
+2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できております。
+
 * <b>[U2Fローカルテストサーバー](../U2FDemoServer/README.md)</b><br>
 ChromeでBLE U2F対応調査／開発を行う際に使用する、PC環境ローカルテスト用のU2Fサーバーを構築しました。<br>
 U2Fローカルテストサーバーについて、概要説明や、利用手順を掲載しております。
