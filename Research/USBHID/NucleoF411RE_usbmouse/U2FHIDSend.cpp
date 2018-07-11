@@ -115,7 +115,7 @@ bool send_response_packet(void)
                 return false;
             }
         }
-        if (ins == U2F_REGISTER) {
+        if (ins == U2F_REGISTER || ins == U2F_AUTHENTICATE) {
             // リクエストデータをU2F管理ツールに転送
             if (send_xfer_report(u2f_request_buffer, u2f_request_length) == false) {
                 return false;
