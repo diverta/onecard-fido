@@ -36,7 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = U2FMaintenanceTool.app; path = U2FHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		64ED9A751647439300F39EAE /* U2FHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = U2FHelper.app; path = U2FHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64ED9A791647439300F39EAE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		64ED9A7C1647439300F39EAE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		64ED9A7D1647439300F39EAE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -114,7 +114,7 @@
 		64ED9A761647439300F39EAE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */,
+				64ED9A751647439300F39EAE /* U2FHelper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -214,7 +214,7 @@
 			);
 			name = U2FHelper;
 			productName = CoreBluetoothOSXCentral;
-			productReference = 64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */;
+			productReference = 64ED9A751647439300F39EAE /* U2FHelper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -405,7 +405,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FMaintenanceTool;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -426,7 +426,7 @@
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FMaintenanceTool;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
