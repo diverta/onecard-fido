@@ -26,9 +26,15 @@
     @property (assign) IBOutlet NSButton    *buttonPath1;
     @property (assign) IBOutlet NSButton    *buttonPath2;
 
+    @property (assign) IBOutlet NSMenu      *menuStatus;
+    @property (assign) IBOutlet NSMenuItem  *menuItemOpen;
+    @property (assign) IBOutlet NSMenuItem  *menuItemQuit;
+
     @property (assign) IBOutlet NSMenuItem  *menuItemFile1;
     @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
     @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
+
+    @property (nonatomic) NSStatusItem      *statusItem;
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
@@ -61,6 +67,19 @@
         if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
             [self enableButtons:false];
         }
+        
+        // アプリケーションをステータスバーに表示する
+        [self setupStatusItem];
+    }
+
+    - (void)setupStatusItem {
+        // アプリケーションをステータスバーに表示する
+        NSStatusBar *systemStatusBar = [NSStatusBar systemStatusBar];
+        [self setStatusItem:
+            [systemStatusBar statusItemWithLength:NSVariableStatusItemLength]];
+        [[self statusItem] setHighlightMode:YES];
+        [[self statusItem] setImage:[NSImage imageNamed:@"StatusBarIconTemplate"]];
+        [[self statusItem] setMenu:[self menuStatus]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -195,6 +214,17 @@
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
     }
+
+    - (IBAction)menuItemOpenDidSelect:(id)sender {
+        // 画面を再表示する
+        [[self window] setIsVisible:true];
+    }
+
+    - (IBAction)menuItemQuitDidSelect:(id)sender {
+        // このアプリケーションを終了する
+        [NSApp terminate:sender];
+    }
+
 
 #pragma mark - Call back from ToolFilePanel
 

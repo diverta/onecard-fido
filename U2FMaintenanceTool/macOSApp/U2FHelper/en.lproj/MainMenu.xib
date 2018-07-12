@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,7 +18,7 @@
                 <menuItem title="U2F Maintenance Tool" id="56">
                     <menu key="submenu" title="U2F Maintenance Tool" systemMenu="apple" id="57">
                         <items>
-                            <menuItem title="About U2FHelper" id="58">
+                            <menuItem title="About U2FMaintenanceTool" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
@@ -36,7 +37,7 @@
                             <menuItem isSeparatorItem="YES" id="144">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide U2FHelper" keyEquivalent="h" id="134">
+                            <menuItem title="Hide U2FMaintenanceTool" keyEquivalent="h" id="134">
                                 <connections>
                                     <action selector="hide:" target="-1" id="367"/>
                                 </connections>
@@ -55,7 +56,7 @@
                             <menuItem isSeparatorItem="YES" id="149">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit U2FHelper" keyEquivalent="q" id="136">
+                            <menuItem title="Quit U2FMaintenanceTool" keyEquivalent="q" id="136">
                                 <connections>
                                     <action selector="terminate:" target="-3" id="449"/>
                                 </connections>
@@ -656,7 +657,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="491">
                         <items>
-                            <menuItem title="U2FHelper Help" keyEquivalent="?" id="492">
+                            <menuItem title="U2FMaintenanceTool Help" keyEquivalent="?" id="492">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="493"/>
                                 </connections>
@@ -667,7 +668,7 @@
             </items>
             <point key="canvasLocation" x="125" y="-149"/>
         </menu>
-        <window title="U2F Maintenance Tool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
+        <window title="U2F Maintenance Tool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="564" height="356"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
@@ -713,7 +714,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" id="izZ-0Q-JSq">
                             <rect key="frame" x="1" y="1" width="549" height="148"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="541">
                                     <rect key="frame" x="0.0" y="0.0" width="549" height="148"/>
@@ -731,7 +732,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="543">
-                            <rect key="frame" x="1" y="1" width="15" height="0.0"/>
+                            <rect key="frame" x="550" y="1" width="15" height="148"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
@@ -845,10 +846,30 @@
                 <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="0ZH-et-dd3"/>
                 <outlet property="menuItemFile2" destination="XNy-QP-mqi" id="KOG-yy-QOa"/>
                 <outlet property="menuItemFile3" destination="DKu-Wo-Se1" id="Yt2-8A-bre"/>
+                <outlet property="menuItemOpen" destination="D64-PH-4oY" id="aZj-hN-gIc"/>
+                <outlet property="menuItemQuit" destination="XUW-1o-hcK" id="hkt-aw-J9j"/>
+                <outlet property="menuStatus" destination="57M-cm-Q4O" id="VSF-Pc-XG5"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
+        <menu id="57M-cm-Q4O">
+            <items>
+                <menuItem title="U2F Helperについて..." id="D64-PH-4oY">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="menuItemOpenDidSelect:" target="494" id="0Cq-8R-eLW"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="終了" id="XUW-1o-hcK">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="menuItemQuitDidSelect:" target="494" id="PjB-gM-1RV"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-86.5" y="-243.5"/>
+        </menu>
     </objects>
 </document>

@@ -16,6 +16,7 @@
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
 		7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */; };
 		7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */; };
+		7A2E3D9220F6FEB20036F807 /* StatusBarIconTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */; };
 		7A3625871FC2A2BA00002CC4 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A3625861FC2A2BA00002CC4 /* ToolCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50CBED2045051900BDE52F /* ToolParameters.m */; };
@@ -36,7 +37,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		64ED9A751647439300F39EAE /* U2FHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = U2FHelper.app; path = U2FHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		64ED9A751647439300F39EAE /* U2FHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = U2FHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64ED9A791647439300F39EAE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		64ED9A7C1647439300F39EAE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		64ED9A7D1647439300F39EAE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -54,6 +55,7 @@
 		7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertreqParamWindow.h; sourceTree = "<group>"; };
 		7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertreqParamWindow.m; sourceTree = "<group>"; };
 		7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CertreqParamWindow.xib; sourceTree = "<group>"; };
+		7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StatusBarIconTemplate.png; sourceTree = "<group>"; };
 		7A3625861FC2A2BA00002CC4 /* ToolCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 		64ED9A7F1647439300F39EAE /* U2FHelper */ = {
 			isa = PBXGroup;
 			children = (
+				7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */,
 				7AE73FBC208D651200AD5ADB /* ToolTimer.h */,
 				7AE73FBD208D651200AD5ADB /* ToolTimer.m */,
 				7A95A07420159BC3000457F2 /* ToolCommon.h */,
@@ -248,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A2E3D9220F6FEB20036F807 /* StatusBarIconTemplate.png in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */,
