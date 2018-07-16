@@ -32,5 +32,9 @@ One Cardを使用し、PCでU2F RegisterしたGoogleアカウントで、Android
 
 ## 参考調査
 
+- <b>[NUCLEOのダウンサイジングに関する調査](NUCLEO_DOWNSIZE)</b><br>
+上記動作確認時に使用した「NUCLEO-F411RE」を「NUCLEO-F103RB」にダウンサイズ可能かどうか調査しました。<br>
+結果としては、mbedによるダウンサイジングは不可能と判断しました。
+
 - <b>[USBドングルに関する調査](USBDONGLE.md)</b><br>
 チップメーカーからリリースされている、USBドングルの評価基板を、U2F Registerで必須要件の「HIDデバイス」として利用できるかどうかの調査です。
