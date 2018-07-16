@@ -32,7 +32,7 @@ One Cardを使用し、PCでU2F RegisterしたGoogleアカウントで、Android
 
 ## 参考調査
 
-- <b>[NUCLEOのダウンサイジングに関する調査](NUCLEO_DOWNSIZE)</b><br>
+- <b>[NUCLEOのダウンサイジングに関する調査](NUCLEO_DOWNSIZE.md)</b><br>
 上記動作確認時に使用した「NUCLEO-F411RE」を「NUCLEO-F103RB」にダウンサイズ可能かどうか調査しました。<br>
 結果としては、mbedによるダウンサイジングは不可能と判断しました。
 

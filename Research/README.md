@@ -5,7 +5,7 @@
 * <b>[WebAuthn関連調査](WEBAUTHN_INDEX.md)</b><br>
 FIDO 2.0のWeb認証技術である、WebAuthnについて、各種調査を行っています。
 
-* <b>[USB HIDデバイス関連調査](USBHID/NUCLEO_HIDTEST.md)</b><br>
+* <b>[USB HIDデバイス関連調査](USBHID/README.md)</b><br>
 Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について調査を行います。<br>
 2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できております。
 
