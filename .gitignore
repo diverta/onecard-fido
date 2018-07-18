@@ -19,3 +19,5 @@ core
 # ignore sub directories for Xcode
 U2FMaintenanceTool.xcodeproj
 
+# ignore Eclipse metadata
+.metadata
