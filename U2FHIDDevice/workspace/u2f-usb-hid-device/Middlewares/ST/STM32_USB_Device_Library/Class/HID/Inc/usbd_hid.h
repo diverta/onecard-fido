@@ -50,11 +50,16 @@
   * @{
   */ 
 #define HID_EPIN_ADDR                 0x81
-#define HID_EPIN_SIZE                 0x04
+#define HID_EPIN2_ADDR                0x82
+#define HID_EPIN_SIZE                 32
 
-#define USB_HID_CONFIG_DESC_SIZ       34
+#define HID_EPOUT_ADDR                0x01
+#define HID_EPOUT2_ADDR               0x02
+#define HID_EPOUT_SIZE                64
+
+#define USB_HID_CONFIG_DESC_SIZ       73
 #define USB_HID_DESC_SIZ              9
-#define HID_MOUSE_REPORT_DESC_SIZE    74
+#define HID_REPORT_DESC_SIZE    34
 
 #define HID_DESCRIPTOR_TYPE           0x21
 #define HID_REPORT_DESC               0x22
