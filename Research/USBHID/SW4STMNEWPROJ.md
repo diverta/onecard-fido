@@ -89,10 +89,18 @@ USB HIDデバイスとしてPCに認識させるため、別途治具を使用�
 
 <img src="assets01/0041.png" width="700">
 
-この操作により、プログラムがNUCLEOに書き込まれるようです。<br>
-コンソールには以下のように表示されます。
+書き込むバイナリーファイルを選択し「OK」ボタンをクリックします。
 
-<img src="assets01/0042.png" width="700">
+<img src="assets01/0042.png" width="250">
+
+この操作により、プログラムがNUCLEOに書き込まれます。<br>
+下図のようなダイアログが表示されますが、閉じずにそのままにしておきます。
+
+<img src="assets01/0043.png" width="350">
+
+上図のダイアログが自動的に閉じられると、コンソールには以下のように表示されます。
+
+<img src="assets01/0044.png" width="700">
 
 ```
 Info : clock speed 950 kHz
@@ -136,7 +144,7 @@ shutdown command invoked
 
 macOSのシステムレポート画面を起動し、USB装置ツリーを表示させます。
 
-<img src="assets01/0043.png" width="600">
+<img src="assets01/0045.png" width="600">
 
 
 上図のように「STM32 Human interface」というデバイス名が表示されれば、動作はOKです。
