@@ -1,47 +1,26 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
-#import "ToolBLEHelper.h"
 #import "ToolHIDHelper.h"
 #import "ToolCommand.h"
-#import "ToolFileMenu.h"
-#import "ToolFilePanel.h"
-#import "ToolParamWindow.h"
-#import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolHIDHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolHIDHelperDelegate, ToolCommandDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
-    @property (assign) IBOutlet NSButton   *button1;
-    @property (assign) IBOutlet NSButton   *button2;
-    @property (assign) IBOutlet NSButton   *button3;
-    @property (assign) IBOutlet NSButton   *button4;
-    @property (assign) IBOutlet NSButton   *button5;
+    @property (assign) IBOutlet NSButton   *buttonHide;
     @property (assign) IBOutlet NSButton   *buttonQuit;
     @property (assign) IBOutlet NSTextView *textView;
-
-    @property (assign) IBOutlet NSTextField *fieldPath1;
-    @property (assign) IBOutlet NSTextField *fieldPath2;
-    @property (assign) IBOutlet NSButton    *buttonPath1;
-    @property (assign) IBOutlet NSButton    *buttonPath2;
 
     @property (assign) IBOutlet NSMenu      *menuStatus;
     @property (assign) IBOutlet NSMenuItem  *menuItemOpen;
     @property (assign) IBOutlet NSMenuItem  *menuItemQuit;
 
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile1;
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
-
     @property (nonatomic) NSStatusItem      *statusItem;
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
-    @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
     @property (nonatomic) ToolHIDHelper     *toolHIDHelper;
-    @property (nonatomic) ToolFileMenu      *toolFileMenu;
-    @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
@@ -55,19 +34,11 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
-        self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolHIDHelper  = [[ToolHIDHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
-        self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
-        self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
-        
-        // Chromeエクステンションから起動した時はボタンを押下不可とする
-        if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
-            [self enableButtons:false];
-        }
-        
+
         // アプリケーションをステータスバーに表示する
         [self setupStatusItem];
     }
@@ -97,79 +68,10 @@
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [self.button1 setEnabled:enabled];
-        [self.button2 setEnabled:enabled];
-        [self.button3 setEnabled:enabled];
-        [self.button4 setEnabled:enabled];
-        [self.button5 setEnabled:enabled];
-        [self.fieldPath1 setEnabled:enabled];
-        [self.fieldPath2 setEnabled:enabled];
-        [self.buttonPath1 setEnabled:enabled];
-        [self.buttonPath2 setEnabled:enabled];
+        [self.buttonHide setEnabled:enabled];
         [self.buttonQuit setEnabled:enabled];
-        [self.menuItemFile1 setEnabled:enabled];
-        [self.menuItemFile2 setEnabled:enabled];
-        [self.menuItemFile3 setEnabled:enabled];
     }
 
-    - (IBAction)button1DidPress:(id)sender {
-        // ペアリング実行
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_PAIRING];
-    }
-
-    - (IBAction)button2DidPress:(id)sender {
-        // 鍵・証明書削除
-        if ([ToolPopupWindow promptYesNo:MSG_ERASE_SKEY_CERT
-                         informativeText:MSG_PROMPT_ERASE_SKEY_CERT] == false) {
-            return;
-        }
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
-    }
-
-    - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
-        // 入力項目が正しく指定されていない場合は終了
-        if ([ToolParamWindow checkMustEntry:field informativeText:message] == false) {
-            return false;
-        }
-        // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolParamWindow checkFileExist:field informativeText:message] == false) {
-            return false;
-        }
-        return true;
-    }
-
-    - (IBAction)button3DidPress:(id)sender {
-        if ([self checkPathEntry:self.fieldPath1 messageIfError:MSG_PROMPT_SELECT_PKEY_PATH] == false) {
-            return;
-        }
-        if ([self checkPathEntry:self.fieldPath2 messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
-            return;
-        }
-        // 鍵・証明書インストール
-        [self enableButtons:false];
-        [self.toolCommand setInstallParameter:COMMAND_INSTALL_SKEY
-                            skeyFilePath:self.fieldPath1.stringValue
-                            certFilePath:self.fieldPath2.stringValue];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
-    }
-
-    - (IBAction)button4DidPress:(id)sender {
-        // ヘルスチェック実行
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
-    }
-
-    - (IBAction)button5DidPress:(id)sender {
-        if ([ToolPopupWindow promptYesNo:MSG_SETUP_CHROME
-                         informativeText:MSG_PROMPT_SETUP_CHROME] == false) {
-            return;
-        }
-        // Chrome Native Messaging有効化設定
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
-    }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
         // このアプリケーションを終了する
@@ -181,72 +83,21 @@
         return YES;
     }
 
-    - (IBAction)buttonPath1DidPress:(id)sender {
-        [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_PEM_PATH
-                                     fileTypes:@[@"pem"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
-    }
-
-    - (IBAction)buttonPath2DidPress:(id)sender {
-        [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_CRT_PATH
-                                     fileTypes:@[@"crt"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
-    }
-
-    - (IBAction)menuItemFile1DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_KEYPAIR_PEM];
-    }
-
-    - (IBAction)menuItemFile2DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_CERTREQ_CSR];
-    }
-
-    - (IBAction)menuItemFile3DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_SELFCRT_CRT];
+    - (IBAction)buttonHideDidPress:(id)sender {
+        // 画面を隠す
+        [[self window] setAlphaValue:0.0];
     }
 
     - (IBAction)menuItemOpenDidSelect:(id)sender {
-        // 画面を再表示する
+        // 画面を再表示し、他のアプリよりも全面に表示させる
         [[self window] setIsVisible:true];
+        [[self window] setAlphaValue:1.0];
+        [NSApp activateIgnoringOtherApps:YES];
     }
 
     - (IBAction)menuItemQuitDidSelect:(id)sender {
         // このアプリケーションを終了する
         [NSApp terminate:sender];
-    }
-
-
-#pragma mark - Call back from ToolFilePanel
-
-    - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
-                 modalResponse:(NSInteger)modalResponse {
-        // OKボタン押下時は、ファイル選択パネルで選択されたファイルパスを表示する
-        if (modalResponse == NSFileHandlingPanelOKButton) {
-            if ([self buttonPath1] == sender) {
-                [[self fieldPath1] setStringValue:filePath];
-                [[self fieldPath1] becomeFirstResponder];
-            }
-            if ([self buttonPath2] == sender) {
-                [[self fieldPath2] setStringValue:filePath];
-                [[self fieldPath2] becomeFirstResponder];
-            }
-        }
-        // メニューを活性化
-        [self enableButtons:true];
-    }
-
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
-                 modalResponse:(NSInteger)modalResponse {
     }
 
 #pragma mark - Call back from ToolCommand
@@ -293,26 +144,10 @@
         [[self toolBLECentral] centralManagerWillDisconnect];
     }
 
-#pragma mark - Call back from ToolFileMenu
-
-    - (void)notifyToolFileMenuMessage:(NSString *)message {
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
-    }
-
-    - (void)notifyToolFileMenuEnd {
-        // ボタンを活性化
-        [self enableButtons:true];
-    }
-
 #pragma mark - Call back from ToolBLECentral
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
         NSLog(@"centralManagerDidUpdateState: %ld", state);
-
-        // CBCentralManagerが使用可能になったと判断し、
-        // Chromeエクステンションからのメッセージ受信を有効化
-        [self.toolBLEHelper bleHelperWillSetStdinNotification];
     }
 
     - (void)centralManagerDidConnect {
@@ -328,18 +163,13 @@
         // 画面上のテキストエリアにもメッセージを表示する
         [self appendLogMessage:message];
 
-        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
-            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
-        } else {
-            // トランザクション完了済とし、接続再試行を回避
-            [self setBleTransactionStarted:false];
-            // ポップアップ表示させる失敗メッセージとリザルトを保持
-            [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
-            [self setLastCommandSuccess:false];
-            // デバイス接続を切断
-            [[self toolBLECentral] centralManagerWillDisconnect];
-        }
+        // トランザクション完了済とし、接続再試行を回避
+        [self setBleTransactionStarted:false];
+        // ポップアップ表示させる失敗メッセージとリザルトを保持
+        [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+        [self setLastCommandSuccess:false];
+        // デバイス接続を切断
+        [[self toolBLECentral] centralManagerWillDisconnect];
     }
 
     - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
@@ -351,10 +181,7 @@
             return;
         }
         
-        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
-            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
-        } else if ([[self toolCommand] command] == COMMAND_U2F_HID_PROCESS) {
+        if ([[self toolCommand] command] == COMMAND_U2F_HID_PROCESS) {
             // U2FレスポンスをHIDデバイスに転送し、ボタンを活性化
             [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
             [self enableButtons:true];
@@ -373,12 +200,6 @@
         }
         // メッセージを画面のテキストエリアに表示
         [self notifyToolCommandMessage:[self lastCommandMessage]];
-        // ポップアップを表示
-        if ([self lastCommandSuccess]) {
-            [ToolPopupWindow informational:[self lastCommandMessage] informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:[self lastCommandMessage] informativeText:nil];
-        }
     }
 
     - (bool)retryBLEConnection {
@@ -436,24 +257,6 @@
             // レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
         }
-    }
-
-#pragma mark - Call back from ToolBLEHelper
-
-    - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
-        // Chromeエクステンションからの受信データによりU2F処理を実行
-        [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
-                               bleHelperMessages:bleHelperMessages];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
-    }
-
-    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
-        // このアプリケーションを終了させる
-        if (chromeMessageData) {
-            NSLog(@"Sent response to chrome: %@", chromeMessageData);
-        }
-        NSLog(@"Chrome native messaging host will terminate");
-        [NSApp terminate:self];
     }
 
 #pragma mark - Call back from ToolHIDHelper

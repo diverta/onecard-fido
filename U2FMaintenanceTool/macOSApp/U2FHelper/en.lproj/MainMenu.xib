@@ -15,8 +15,8 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <menu title="AMainMenu" systemMenu="main" id="29">
             <items>
-                <menuItem title="U2F Maintenance Tool" id="56">
-                    <menu key="submenu" title="U2F Maintenance Tool" systemMenu="apple" id="57">
+                <menuItem title="U2F Helper" id="56">
+                    <menu key="submenu" title="U2F Helper" systemMenu="apple" id="57">
                         <items>
                             <menuItem title="About U2FMaintenanceTool" id="58">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -67,25 +67,6 @@
                 <menuItem title="File" id="83">
                     <menu key="submenu" title="File" autoenablesItems="NO" id="81">
                         <items>
-                            <menuItem title="鍵ファイル作成..." keyEquivalent="k" id="cCk-nh-aaI">
-                                <connections>
-                                    <action selector="menuItemFile1DidSelect:" target="494" id="2dT-SE-YKf"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="証明書要求ファイル作成..." keyEquivalent="r" id="XNy-QP-mqi">
-                                <connections>
-                                    <action selector="menuItemFile2DidSelect:" target="494" id="p0g-6q-Uri"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" enabled="YES" id="8UF-J7-ozH">
-                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                            </menuItem>
-                            <menuItem title="自己署名証明書ファイル作成..." keyEquivalent="s" id="DKu-Wo-Se1">
-                                <connections>
-                                    <action selector="menuItemFile3DidSelect:" target="494" id="MWZ-gz-SCe"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
                                     <action selector="newDocument:" target="-1" id="373"/>
@@ -668,25 +649,14 @@
             </items>
             <point key="canvasLocation" x="125" y="-149"/>
         </menu>
-        <window title="U2F Maintenance Tool" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+        <window title="U2F Helper" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="371">
+            <windowStyleMask key="styleMask" titled="YES"/>
             <rect key="contentRect" x="335" y="390" width="564" height="356"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="564" height="356"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq">
-                        <rect key="frame" x="14" y="290" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="鍵・証明書・キーハンドル消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button2DidPress:" target="494" id="17E-xy-wWB"/>
-                        </connections>
-                    </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U">
                         <rect key="frame" x="438" y="319" width="112" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -698,29 +668,18 @@
                             <action selector="buttonQuitDidPress:" target="494" id="1js-lz-oHm"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="536">
-                        <rect key="frame" x="14" y="319" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="ペアリング実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="537">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button1DidPress:" target="494" id="vnW-jf-j2y"/>
-                        </connections>
-                    </button>
                     <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="540">
-                        <rect key="frame" x="-1" y="20" width="566" height="150"/>
+                        <rect key="frame" x="-1" y="20" width="566" height="294"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" id="izZ-0Q-JSq">
-                            <rect key="frame" x="1" y="1" width="549" height="148"/>
+                            <rect key="frame" x="1" y="1" width="549" height="292"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="541">
-                                    <rect key="frame" x="0.0" y="0.0" width="549" height="148"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="549" height="292"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="549" height="148"/>
+                                    <size key="minSize" width="549" height="292"/>
                                     <size key="maxSize" width="566" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -732,99 +691,28 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="543">
-                            <rect key="frame" x="550" y="1" width="15" height="148"/>
+                            <rect key="frame" x="550" y="1" width="15" height="292"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
-                        <rect key="frame" x="18" y="271" width="141" height="13"/>
+                        <rect key="frame" x="18" y="323" width="141" height="13"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="鍵ファイルのパス" id="3zX-NM-1d4">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="メッセージ" id="3zX-NM-1d4">
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L9Q-dT-I7g">
-                        <rect key="frame" x="18" y="243" width="141" height="13"/>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rit-84-JkX">
+                        <rect key="frame" x="326" y="319" width="112" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="証明書ファイルのパス" id="rdn-8H-nvR">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IXA-ys-cwj">
-                        <rect key="frame" x="153" y="267" width="330" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="xlq-YR-14K">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-Gc-dtE">
-                        <rect key="frame" x="153" y="239" width="330" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="iad-TY-nd8">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kCs-qC-oYa">
-                        <rect key="frame" x="485" y="260" width="65" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9z5-dM-Usy">
+                        <buttonCell key="cell" type="push" title="隠す" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="a6E-q4-6lF">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonPath1DidPress:" target="494" id="D5E-na-4EW"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IeA-Jn-tVn">
-                        <rect key="frame" x="485" y="232" width="65" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9WC-Ex-0Jp">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonPath2DidPress:" target="494" id="Cba-yX-w4G"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qlP-Sb-BZf">
-                        <rect key="frame" x="14" y="203" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="鍵・証明書ファイルのインストール" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="s8B-lQ-fxh">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button3DidPress:" target="494" id="hBn-ux-B4h"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb">
-                        <rect key="frame" x="14" y="174" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="ヘルスチェック実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button4DidPress:" target="494" id="Xob-qI-0Wc"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m6X-Ke-o0Z">
-                        <rect key="frame" x="438" y="174" width="112" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Chrome設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edT-Bt-v8B">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button5DidPress:" target="494" id="wgS-D0-X1d"/>
+                            <action selector="buttonHideDidPress:" target="494" id="SE9-8P-cug"/>
                         </connections>
                     </button>
                 </subviews>
@@ -833,19 +721,8 @@
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
-                <outlet property="button1" destination="536" id="RkR-Me-ncU"/>
-                <outlet property="button2" destination="IdI-T9-vnq" id="eHo-AV-qxi"/>
-                <outlet property="button3" destination="qlP-Sb-BZf" id="2la-lX-12I"/>
-                <outlet property="button4" destination="FlF-Id-KYb" id="4mr-1t-iOo"/>
-                <outlet property="button5" destination="m6X-Ke-o0Z" id="iNV-6c-bNV"/>
-                <outlet property="buttonPath1" destination="kCs-qC-oYa" id="iUs-xa-8ku"/>
-                <outlet property="buttonPath2" destination="IeA-Jn-tVn" id="XE6-hO-HQE"/>
+                <outlet property="buttonHide" destination="rit-84-JkX" id="LNW-RX-Cyf"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
-                <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
-                <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
-                <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="0ZH-et-dd3"/>
-                <outlet property="menuItemFile2" destination="XNy-QP-mqi" id="KOG-yy-QOa"/>
-                <outlet property="menuItemFile3" destination="DKu-Wo-Se1" id="Yt2-8A-bre"/>
                 <outlet property="menuItemOpen" destination="D64-PH-4oY" id="aZj-hN-gIc"/>
                 <outlet property="menuItemQuit" destination="XUW-1o-hcK" id="hkt-aw-J9j"/>
                 <outlet property="menuStatus" destination="57M-cm-Q4O" id="VSF-Pc-XG5"/>
@@ -856,10 +733,10 @@
         <customObject id="420" customClass="NSFontManager"/>
         <menu id="57M-cm-Q4O">
             <items>
-                <menuItem title="U2F Helperについて..." id="D64-PH-4oY">
+                <menuItem title="画面を表示する..." id="D64-PH-4oY">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="menuItemOpenDidSelect:" target="494" id="0Cq-8R-eLW"/>
+                        <action selector="menuItemOpenDidSelect:" target="494" id="9op-6T-iGD"/>
                     </connections>
                 </menuItem>
                 <menuItem title="終了" id="XUW-1o-hcK">
