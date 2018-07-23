@@ -13,44 +13,71 @@
 		64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
 		64ED9A901647439300F39EAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
-		7A2E3D9220F6FEB20036F807 /* StatusBarIconTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */; };
-		7A50992C2105AADA0096C363 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5099242105AADA0096C363 /* ToolCommand.m */; };
-		7A50992D2105AADA0096C363 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5099252105AADA0096C363 /* ToolBLECentral.m */; };
-		7A50992E2105AADA0096C363 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50992A2105AADA0096C363 /* ToolTimer.m */; };
-		7A50992F2105AADA0096C363 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50992B2105AADA0096C363 /* ToolCommon.m */; };
-		7A5F886120E21676001AC8CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5F886020E2165D001AC8CF /* IOKit.framework */; };
-		7AD38DA820EB47E600246A13 /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AD38DA720EB47E600246A13 /* ToolHIDHelper.m */; };
+		7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */; };
+		7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */; };
+		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
+		7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50CBED2045051900BDE52F /* ToolParameters.m */; };
+		7A5269FC20045FB40033152B /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5269FA20045FB40033152B /* ToolBLEHelper.m */; };
+		7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A537918203E483E0062E9E2 /* ToolFilePanel.m */; };
+		7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A84811C203CF6FE00380005 /* OpenSSL.c */; };
+		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
+		7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolCommand.m */; };
+		7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLECentral.m */; };
+		7A92740E2105AB960062FA89 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274082105AB960062FA89 /* NSData+Base64.m */; };
+		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
+		7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA55A98203A69C80043C893 /* ToolFileMenu.m */; };
+		7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */; };
+		7AAAEDCB2044E2DC004F5B11 /* SelfcrtParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */; };
+		7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		64ED9A751647439300F39EAE /* U2FHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = U2FHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = U2FMaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64ED9A791647439300F39EAE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		64ED9A7C1647439300F39EAE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		64ED9A7D1647439300F39EAE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		64ED9A7E1647439300F39EAE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		64ED9A811647439300F39EAE /* U2FHelper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "U2FHelper-Info.plist"; sourceTree = "<group>"; };
+		64ED9A811647439300F39EAE /* U2FMaintenanceTool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "U2FMaintenanceTool-Info.plist"; sourceTree = "<group>"; };
 		64ED9A831647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		64ED9A851647439300F39EAE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		64ED9A871647439300F39EAE /* U2FHelper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "U2FHelper-Prefix.pch"; sourceTree = "<group>"; };
+		64ED9A871647439300F39EAE /* U2FMaintenanceTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "U2FMaintenanceTool-Prefix.pch"; sourceTree = "<group>"; };
 		64ED9A8B1647439300F39EAE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		64ED9A8C1647439300F39EAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		64ED9A8F1647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		64ED9A9C164752C800F39EAE /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
-		7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StatusBarIconTemplate.png; sourceTree = "<group>"; };
-		7A5099232105AADA0096C363 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
-		7A5099242105AADA0096C363 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
-		7A5099252105AADA0096C363 /* ToolBLECentral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLECentral.m; sourceTree = "<group>"; };
-		7A5099262105AADA0096C363 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
-		7A5099272105AADA0096C363 /* ToolBLECentral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECentral.h; sourceTree = "<group>"; };
-		7A5099282105AADA0096C363 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
-		7A5099292105AADA0096C363 /* ToolTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTimer.h; sourceTree = "<group>"; };
-		7A50992A2105AADA0096C363 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
-		7A50992B2105AADA0096C363 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
-		7A5F886020E2165D001AC8CF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		7AD38DA620EB465F00246A13 /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
-		7AD38DA720EB47E600246A13 /* ToolHIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
+		7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertreqParamWindow.h; sourceTree = "<group>"; };
+		7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertreqParamWindow.m; sourceTree = "<group>"; };
+		7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CertreqParamWindow.xib; sourceTree = "<group>"; };
+		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
+		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
+		7A50CBEC2044FBE600BDE52F /* ToolParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolParameters.h; sourceTree = "<group>"; };
+		7A50CBED2045051900BDE52F /* ToolParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParameters.m; sourceTree = "<group>"; };
+		7A5269FA20045FB40033152B /* ToolBLEHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
+		7A5269FB20045FB40033152B /* ToolBLEHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
+		7A537918203E483E0062E9E2 /* ToolFilePanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
+		7A53791A203E48630062E9E2 /* ToolFilePanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
+		7A84811C203CF6FE00380005 /* OpenSSL.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSSL.c; sourceTree = "<group>"; };
+		7A84811D203CF6FE00380005 /* OpenSSL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenSSL.h; sourceTree = "<group>"; };
+		7A9274002105AB950062FA89 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
+		7A9274022105AB950062FA89 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
+		7A9274032105AB950062FA89 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
+		7A9274042105AB950062FA89 /* ToolBLECentral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLECentral.m; sourceTree = "<group>"; };
+		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
+		7A9274062105AB950062FA89 /* ToolBLECentral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECentral.h; sourceTree = "<group>"; };
+		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
+		7A9274082105AB960062FA89 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		7A9274092105AB960062FA89 /* ToolTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTimer.h; sourceTree = "<group>"; };
+		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
+		7AA55A98203A69C80043C893 /* ToolFileMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFileMenu.m; sourceTree = "<group>"; };
+		7AA55A9A203A6EA00043C893 /* ToolFileMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFileMenu.h; sourceTree = "<group>"; };
+		7AAAEDC72044E2DC004F5B11 /* SelfcrtParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfcrtParamWindow.h; sourceTree = "<group>"; };
+		7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelfcrtParamWindow.m; sourceTree = "<group>"; };
+		7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelfcrtParamWindow.xib; sourceTree = "<group>"; };
+		7AB325D5203E710800FBE97B /* ToolParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolParamWindow.h; sourceTree = "<group>"; };
+		7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParamWindow.m; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -60,7 +87,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A5F886120E21676001AC8CF /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
 				7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */,
@@ -73,8 +99,8 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
-				7A5099222105AAA20096C363 /* U2FToolCommon */,
-				64ED9A7F1647439300F39EAE /* U2FHelper */,
+				7A9273FF2105AB590062FA89 /* U2FToolCommon */,
+				64ED9A7F1647439300F39EAE /* U2FMaintenanceTool */,
 				64ED9A781647439300F39EAE /* Frameworks */,
 				64ED9A761647439300F39EAE /* Products */,
 			);
@@ -83,7 +109,7 @@
 		64ED9A761647439300F39EAE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				64ED9A751647439300F39EAE /* U2FHelper.app */,
+				64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,7 +117,6 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7A5F886020E2165D001AC8CF /* IOKit.framework */,
 				64ED9A9C164752C800F39EAE /* IOBluetooth.framework */,
 				64ED9A791647439300F39EAE /* Cocoa.framework */,
 				64ED9A7B1647439300F39EAE /* Other Frameworks */,
@@ -110,44 +135,63 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		64ED9A7F1647439300F39EAE /* U2FHelper */ = {
+		64ED9A7F1647439300F39EAE /* U2FMaintenanceTool */ = {
 			isa = PBXGroup;
 			children = (
+				7A5269FB20045FB40033152B /* ToolBLEHelper.h */,
+				7A5269FA20045FB40033152B /* ToolBLEHelper.m */,
+				7ADA84631FE36E6D00879CB4 /* Images.xcassets */,
 				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
 				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
-				7ADA84631FE36E6D00879CB4 /* Images.xcassets */,
 				64ED9A8E1647439300F39EAE /* MainMenu.xib */,
-				7A2E3D9120F6FEB20036F807 /* StatusBarIconTemplate.png */,
 				64ED9A801647439300F39EAE /* Supporting Files */,
-				7AD38DA620EB465F00246A13 /* ToolHIDHelper.h */,
-				7AD38DA720EB47E600246A13 /* ToolHIDHelper.m */,
+				7AA55A9A203A6EA00043C893 /* ToolFileMenu.h */,
+				7AA55A98203A69C80043C893 /* ToolFileMenu.m */,
+				7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */,
+				7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */,
+				7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */,
+				7AAAEDC72044E2DC004F5B11 /* SelfcrtParamWindow.h */,
+				7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */,
+				7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */,
+				7A84811D203CF6FE00380005 /* OpenSSL.h */,
+				7A84811C203CF6FE00380005 /* OpenSSL.c */,
+				7A53791A203E48630062E9E2 /* ToolFilePanel.h */,
+				7A537918203E483E0062E9E2 /* ToolFilePanel.m */,
+				7A50CBEC2044FBE600BDE52F /* ToolParameters.h */,
+				7A50CBED2045051900BDE52F /* ToolParameters.m */,
+				7AB325D5203E710800FBE97B /* ToolParamWindow.h */,
+				7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */,
+				7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */,
+				7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */,
 			);
-			path = U2FHelper;
+			path = U2FMaintenanceTool;
 			sourceTree = "<group>";
 		};
 		64ED9A801647439300F39EAE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				64ED9A811647439300F39EAE /* U2FHelper-Info.plist */,
+				64ED9A811647439300F39EAE /* U2FMaintenanceTool-Info.plist */,
 				64ED9A821647439300F39EAE /* InfoPlist.strings */,
 				64ED9A851647439300F39EAE /* main.m */,
-				64ED9A871647439300F39EAE /* U2FHelper-Prefix.pch */,
+				64ED9A871647439300F39EAE /* U2FMaintenanceTool-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		7A5099222105AAA20096C363 /* U2FToolCommon */ = {
+		7A9273FF2105AB590062FA89 /* U2FToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A5099272105AADA0096C363 /* ToolBLECentral.h */,
-				7A5099252105AADA0096C363 /* ToolBLECentral.m */,
-				7A5099232105AADA0096C363 /* ToolCommand.h */,
-				7A5099242105AADA0096C363 /* ToolCommand.m */,
-				7A5099262105AADA0096C363 /* ToolCommon.h */,
-				7A50992B2105AADA0096C363 /* ToolCommon.m */,
-				7A5099282105AADA0096C363 /* ToolCommonMessage.h */,
-				7A5099292105AADA0096C363 /* ToolTimer.h */,
-				7A50992A2105AADA0096C363 /* ToolTimer.m */,
+				7A9274002105AB950062FA89 /* NSData+Base64.h */,
+				7A9274082105AB960062FA89 /* NSData+Base64.m */,
+				7A9274062105AB950062FA89 /* ToolBLECentral.h */,
+				7A9274042105AB950062FA89 /* ToolBLECentral.m */,
+				7A9274022105AB950062FA89 /* ToolCommand.h */,
+				7A9274032105AB950062FA89 /* ToolCommand.m */,
+				7A9274052105AB950062FA89 /* ToolCommon.h */,
+				7A92740A2105AB960062FA89 /* ToolCommon.m */,
+				7A9274072105AB960062FA89 /* ToolCommonMessage.h */,
+				7A9274092105AB960062FA89 /* ToolTimer.h */,
+				7A9274012105AB950062FA89 /* ToolTimer.m */,
 			);
 			path = U2FToolCommon;
 			sourceTree = "<group>";
@@ -155,9 +199,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		64ED9A741647439300F39EAE /* U2FHelper */ = {
+		64ED9A741647439300F39EAE /* U2FMaintenanceTool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 64ED9A931647439300F39EAE /* Build configuration list for PBXNativeTarget "U2FHelper" */;
+			buildConfigurationList = 64ED9A931647439300F39EAE /* Build configuration list for PBXNativeTarget "U2FMaintenanceTool" */;
 			buildPhases = (
 				64ED9A711647439300F39EAE /* Sources */,
 				64ED9A721647439300F39EAE /* Frameworks */,
@@ -167,9 +211,9 @@
 			);
 			dependencies = (
 			);
-			name = U2FHelper;
+			name = U2FMaintenanceTool;
 			productName = CoreBluetoothOSXCentral;
-			productReference = 64ED9A751647439300F39EAE /* U2FHelper.app */;
+			productReference = 64ED9A751647439300F39EAE /* U2FMaintenanceTool.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -181,7 +225,7 @@
 				CLASSPREFIX = U2FTool;
 				LastUpgradeCheck = 0910;
 			};
-			buildConfigurationList = 64ED9A6F1647439300F39EAE /* Build configuration list for PBXProject "U2FHelper" */;
+			buildConfigurationList = 64ED9A6F1647439300F39EAE /* Build configuration list for PBXProject "U2FMaintenanceTool" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -193,7 +237,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				64ED9A741647439300F39EAE /* U2FHelper */,
+				64ED9A741647439300F39EAE /* U2FMaintenanceTool */,
 			);
 		};
 /* End PBXProject section */
@@ -203,9 +247,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A2E3D9220F6FEB20036F807 /* StatusBarIconTemplate.png in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
+				7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */,
+				7AAAEDCB2044E2DC004F5B11 /* SelfcrtParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,13 +262,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A50992D2105AADA0096C363 /* ToolBLECentral.m in Sources */,
-				7A50992E2105AADA0096C363 /* ToolTimer.m in Sources */,
+				7A5269FC20045FB40033152B /* ToolBLEHelper.m in Sources */,
+				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
+				7A92740E2105AB960062FA89 /* NSData+Base64.m in Sources */,
+				7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */,
+				7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */,
+				7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
-				7A50992C2105AADA0096C363 /* ToolCommand.m in Sources */,
-				7AD38DA820EB47E600246A13 /* ToolHIDHelper.m in Sources */,
-				7A50992F2105AADA0096C363 /* ToolCommon.m in Sources */,
+				7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */,
+				7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */,
+				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
+				7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */,
+				7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
+				7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */,
+				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
+				7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,13 +397,13 @@
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "U2FHelper/U2FHelper-Prefix.pch";
+				GCC_PREFIX_HEADER = "U2FMaintenanceTool/U2FMaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = "${HOME}/openssl/include";
-				INFOPLIST_FILE = "$(SRCROOT)/U2FHelper/U2FHelper-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/U2FMaintenanceTool/U2FMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -364,13 +418,13 @@
 				DYLIB_INSTALL_NAME_BASE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "U2FHelper/U2FHelper-Prefix.pch";
+				GCC_PREFIX_HEADER = "U2FMaintenanceTool/U2FMaintenanceTool-Prefix.pch";
 				HEADER_SEARCH_PATHS = "${HOME}/openssl/include";
-				INFOPLIST_FILE = "$(SRCROOT)/U2FHelper/U2FHelper-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/U2FMaintenanceTool/U2FMaintenanceTool-Info.plist";
 				LD_DYLIB_INSTALL_NAME = "";
 				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.makmorit.tools.U2FMaintenanceTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
@@ -380,7 +434,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		64ED9A6F1647439300F39EAE /* Build configuration list for PBXProject "U2FHelper" */ = {
+		64ED9A6F1647439300F39EAE /* Build configuration list for PBXProject "U2FMaintenanceTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				64ED9A911647439300F39EAE /* Debug */,
@@ -389,7 +443,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		64ED9A931647439300F39EAE /* Build configuration list for PBXNativeTarget "U2FHelper" */ = {
+		64ED9A931647439300F39EAE /* Build configuration list for PBXNativeTarget "U2FMaintenanceTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				64ED9A941647439300F39EAE /* Debug */,
