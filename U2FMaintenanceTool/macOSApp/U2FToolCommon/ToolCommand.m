@@ -7,7 +7,6 @@
 #import <Foundation/Foundation.h>
 #import "ToolCommand.h"
 #import "ToolCommonMessage.h"
-#import "ToolPopupWindow.h"
 
 // for web safe B64 encode & decode
 #import "NSData+Base64.h"

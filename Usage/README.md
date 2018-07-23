@@ -3,7 +3,7 @@
 ## 各種手順
 
 * [U2F管理ツールインストール手順](TOOL_INSTALL.md) <br>
-U2F管理ツールインストールの手順を掲載しています。
+U2F管理ツールのインストール手順を掲載しています。
 
 * [One Cardペアリング手順](PAIRING.md) <br>
 ペアリングモード変更／ペアリング実行の手順を掲載しています。
@@ -13,6 +13,12 @@ macOS環境での、鍵・証明書作成／インストール手順を掲載し
 
 * [鍵・証明書インストール手順（Windows版）](INSTALL_WINDOWS.md) <br>
 Windows環境での、鍵・証明書作成／インストール手順を掲載しています。
+
+* [U2F Helperインストール手順](HELPER_INSTALL.md) <br>
+U2F Helperのインストール手順を掲載しています。
+
+* [Googleアカウントを使ったテスト手順](GOOGLEACCTEST.md)<br>
+[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を使用して、One CardのU2F機能（Register/Authenticate）をテストする手順を掲載しています。
 
 * [U2Fデモサイトを使ったテスト手順](DEMOSITETEST.md)<br>
 [U2Fデモサイト](https://crxjs-dot-u2fdemo.appspot.com/)を使用して、One CardのU2F機能（Register/Authenticate）をテストする手順を掲載しています。
