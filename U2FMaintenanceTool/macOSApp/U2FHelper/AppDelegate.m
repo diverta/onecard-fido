@@ -7,10 +7,11 @@
 @interface AppDelegate ()
     <ToolBLECentralDelegate, ToolHIDHelperDelegate, ToolCommandDelegate>
 
-    @property (assign) IBOutlet NSWindow   *window;
-    @property (assign) IBOutlet NSButton   *buttonHide;
-    @property (assign) IBOutlet NSButton   *buttonQuit;
-    @property (assign) IBOutlet NSTextView *textView;
+    @property (assign) IBOutlet NSWindow    *window;
+    @property (assign) IBOutlet NSButton    *buttonHide;
+    @property (assign) IBOutlet NSButton    *buttonQuit;
+    @property (assign) IBOutlet NSTextView  *textView;
+    @property (assign) IBOutlet NSTextField *textVersion;
 
     @property (assign) IBOutlet NSMenu      *menuStatus;
     @property (assign) IBOutlet NSMenuItem  *menuItemOpen;
@@ -41,6 +42,12 @@
 
         // アプリケーションをステータスバーに表示する
         [self setupStatusItem];
+        
+        // アプリケーションのバージョンを表示する
+        NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSString *build = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+        NSString *versionString = [NSString stringWithFormat:@"Version %1$@ (%2$@)", version, build];
+        [[self textVersion] setStringValue:versionString];
     }
 
     - (void)setupStatusItem {
@@ -180,15 +187,10 @@
         if ([self retryBLEConnection]) {
             return;
         }
-        
-        if ([[self toolCommand] command] == COMMAND_U2F_HID_PROCESS) {
-            // U2FレスポンスをHIDデバイスに転送し、ボタンを活性化
-            [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
-            [self enableButtons:true];
-        } else {
-            // ボタンを活性化し、ポップアップメッセージを表示
-            [self terminateProcessOnWindow];
-        }
+        // U2FレスポンスをHIDデバイスに転送
+        [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
+        // ボタンを活性化し、メッセージを表示
+        [self terminateProcessOnWindow];
     }
 
     - (void)terminateProcessOnWindow {

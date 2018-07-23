@@ -695,15 +695,6 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
-                        <rect key="frame" x="18" y="323" width="141" height="13"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="メッセージ" id="3zX-NM-1d4">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rit-84-JkX">
                         <rect key="frame" x="326" y="319" width="112" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -715,6 +706,15 @@
                             <action selector="buttonHideDidPress:" target="494" id="SE9-8P-cug"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
+                        <rect key="frame" x="156" y="330" width="164" height="13"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Version" id="3zX-NM-1d4">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <point key="canvasLocation" x="132" y="107"/>
@@ -726,6 +726,7 @@
                 <outlet property="menuItemOpen" destination="D64-PH-4oY" id="aZj-hN-gIc"/>
                 <outlet property="menuItemQuit" destination="XUW-1o-hcK" id="hkt-aw-J9j"/>
                 <outlet property="menuStatus" destination="57M-cm-Q4O" id="VSF-Pc-XG5"/>
+                <outlet property="textVersion" destination="M1A-69-z9C" id="3S2-0m-egn"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
