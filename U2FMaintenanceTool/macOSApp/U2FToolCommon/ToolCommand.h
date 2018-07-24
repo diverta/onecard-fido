@@ -7,8 +7,6 @@
 #ifndef ToolCommand_h
 #define ToolCommand_h
 
-// for OpenSSL
-#import "ToolFileMenu.h"
 #import "ToolCommon.h"
 
 @protocol ToolCommandDelegate;
