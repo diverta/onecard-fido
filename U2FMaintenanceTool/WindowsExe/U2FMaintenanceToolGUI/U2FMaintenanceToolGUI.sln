@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "U2FMaintenanceToolGUI", "U2FMaintenanceToolGUI\U2FMaintenanceToolGUI.csproj", "{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}"
 EndProject
@@ -22,8 +22,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|x64.Build.0 = Debug|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -41,7 +41,7 @@ Global
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x64.Build.0 = Release|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x86.ActiveCfg = Release|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x86.Build.0 = Release|Any CPU
-		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Debug|Any CPU.ActiveCfg = Release|Win32
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Debug|x64.ActiveCfg = Debug|x64
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Debug|x64.Build.0 = Debug|x64
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Debug|x86.ActiveCfg = Debug|Win32
@@ -53,12 +53,13 @@ Global
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Deploy|x86.ActiveCfg = Debug|Win32
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Deploy|x86.Build.0 = Debug|Win32
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|Any CPU.Build.0 = Release|Win32
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|x64.ActiveCfg = Release|x64
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|x64.Build.0 = Release|x64
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|x86.ActiveCfg = Release|Win32
 		{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}.Release|x86.Build.0 = Release|Win32
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x64.Build.0 = Debug|Any CPU
 		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -78,5 +79,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3BF67606-57E2-40F4-8C9E-91ECC68AD82C}
 	EndGlobalSection
 EndGlobal
