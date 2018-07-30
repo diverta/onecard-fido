@@ -35,8 +35,8 @@
             this.画面を表示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.buttonQuit = new System.Windows.Forms.Button();
-            this.buttonHide = new System.Windows.Forms.Button();
+            this.ButtonQuit = new System.Windows.Forms.Button();
+            this.ButtonHide = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -79,25 +79,25 @@
             this.textBox1.Size = new System.Drawing.Size(560, 326);
             this.textBox1.TabIndex = 13;
             // 
-            // buttonQuit
+            // ButtonQuit
             // 
-            this.buttonQuit.Location = new System.Drawing.Point(462, 12);
-            this.buttonQuit.Name = "buttonQuit";
-            this.buttonQuit.Size = new System.Drawing.Size(110, 25);
-            this.buttonQuit.TabIndex = 14;
-            this.buttonQuit.Text = "終了";
-            this.buttonQuit.UseVisualStyleBackColor = true;
-            this.buttonQuit.Click += new System.EventHandler(this.buttonQuit_Click);
+            this.ButtonQuit.Location = new System.Drawing.Point(462, 12);
+            this.ButtonQuit.Name = "ButtonQuit";
+            this.ButtonQuit.Size = new System.Drawing.Size(110, 25);
+            this.ButtonQuit.TabIndex = 14;
+            this.ButtonQuit.Text = "終了";
+            this.ButtonQuit.UseVisualStyleBackColor = true;
+            this.ButtonQuit.Click += new System.EventHandler(this.ButtonQuit_Click);
             // 
-            // buttonHide
+            // ButtonHide
             // 
-            this.buttonHide.Location = new System.Drawing.Point(346, 12);
-            this.buttonHide.Name = "buttonHide";
-            this.buttonHide.Size = new System.Drawing.Size(110, 25);
-            this.buttonHide.TabIndex = 15;
-            this.buttonHide.Text = "隠す";
-            this.buttonHide.UseVisualStyleBackColor = true;
-            this.buttonHide.Click += new System.EventHandler(this.buttonHide_Click);
+            this.ButtonHide.Location = new System.Drawing.Point(346, 12);
+            this.ButtonHide.Name = "ButtonHide";
+            this.ButtonHide.Size = new System.Drawing.Size(110, 25);
+            this.ButtonHide.TabIndex = 15;
+            this.ButtonHide.Text = "隠す";
+            this.ButtonHide.UseVisualStyleBackColor = true;
+            this.ButtonHide.Click += new System.EventHandler(this.ButtonHide_Click);
             // 
             // label2
             // 
@@ -116,8 +116,8 @@
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.ControlBox = false;
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.buttonHide);
-            this.Controls.Add(this.buttonQuit);
+            this.Controls.Add(this.ButtonHide);
+            this.Controls.Add(this.ButtonQuit);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -139,8 +139,8 @@
         private System.Windows.Forms.ToolStripMenuItem 終了ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 画面を表示ToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button buttonQuit;
-        private System.Windows.Forms.Button buttonHide;
+        private System.Windows.Forms.Button ButtonQuit;
+        private System.Windows.Forms.Button ButtonHide;
         private System.Windows.Forms.Label label2;
     }
 }
