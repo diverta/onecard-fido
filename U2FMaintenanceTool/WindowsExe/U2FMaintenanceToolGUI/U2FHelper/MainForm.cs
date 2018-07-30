@@ -29,6 +29,9 @@ namespace U2FHelper
             TopMost = true;
             Visible = true;
             TopMost = false;
+
+            // テキストボックスのエリアを一番最後に下げる
+            textBox1.ScrollToCaret();
         }
 
         private void ButtonQuit_Click(object sender, EventArgs e)
