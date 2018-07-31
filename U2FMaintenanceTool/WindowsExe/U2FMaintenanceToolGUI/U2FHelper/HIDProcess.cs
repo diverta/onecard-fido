@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace U2FHelper
@@ -56,7 +58,10 @@ namespace U2FHelper
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
                 MessageTextEvent("USBデバイス検知の開始に失敗しました.\r\n");
+                OutputLogToFile("USBデバイス検知の開始に失敗しました.");
+                return;
             }
+            OutputLogToFile("USBデバイス検知を開始しました.");
 
             // U2F HIDデバイスに自動接続
             StartAsyncOperation();
@@ -70,6 +75,7 @@ namespace U2FHelper
             // USBデバイス検知を終了
             if (notificationHandle != null) {
                 UnregisterDeviceNotification(notificationHandle);
+                OutputLogToFile("USBデバイス検知を終了しました.");
             }
         }
 
@@ -116,13 +122,13 @@ namespace U2FHelper
             // デバイスを初期化し、イベントを登録
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
-            MessageTextEvent(string.Format("U2F HIDデバイスに接続されました: {0}\r\n", devicePath));
+            MessageTextEvent("U2F HIDデバイスに接続されました. \r\n");
+            OutputLogToFile(string.Format("U2F HIDデバイスに接続されました: {0}", devicePath));
         }
 
         // 受信データを保持
         private byte[] receivedMessage = new byte[1024];
         private int receivedMessageLen = 0;
-        //private int remaining = 0;
         private int received = 0;
 
         private void Device_dataReceived(byte[] message)
@@ -160,9 +166,9 @@ namespace U2FHelper
                     receivedMessage[received++] = message[8 + i];
                 }
 
-                MessageTextEvent(string.Format(
-                    "INIT frame: length={0} datalen={1} {2}\r\n",
-                    receivedMessageLen, dataLenInFrame, received));
+                OutputLogToFile(string.Format(
+                    "INIT frame: data size={0} length={1}",
+                    receivedMessageLen, dataLenInFrame));
 
             } else {
                 // CONTフレームであると判断
@@ -175,17 +181,19 @@ namespace U2FHelper
                     receivedMessage[received++] = message[6 + i];
                 }
 
-                MessageTextEvent(string.Format(
-                    "CONT frame: seq={0} datalen={1} {2}\r\n", 
-                    seq, dataLenInFrame, received));
+                OutputLogToFile(string.Format(
+                    "CONT frame: seq={0} length={1}", 
+                    seq, dataLenInFrame));
             }
 
             // メッセージをダンプ
             DumpMessage(message, message.Length);
 
             if (received == receivedMessageLen) {
+                OutputLogToFile("U2F HIDデバイスからメッセージが転送されました.");
+
                 // メッセージをダンプ
-                MessageTextEvent("All data received. \r\n");
+                OutputLogToFile(string.Format("All data received: size={0}", receivedMessageLen));
                 DumpMessage(receivedMessage, receivedMessageLen);
 
                 // for research
@@ -200,13 +208,15 @@ namespace U2FHelper
 
         private void DumpMessage(byte[] message, int length)
         {
+            StringBuilder sb = new StringBuilder();
+            ;
             for (int i = 0; i < length; i++) {
-                MessageTextEvent(string.Format("{0:x2} ", message[i]));
+                sb.Append(string.Format("{0:x2} ", message[i]));
                 if (i % 16 == 15) {
-                    MessageTextEvent("\r\n");
+                    sb.Append("\r\n");
                 }
             }
-            MessageTextEvent("\r\n");
+            OutputLogToFile(sb.ToString(), false);
         }
 
         private void CloseDevice()
@@ -216,6 +226,30 @@ namespace U2FHelper
             }
             device.Close();
             device = null;
+        }
+
+        private void OutputLogToFile(string message)
+        {
+            OutputLogToFile(message, true);
+        }
+
+        private void OutputLogToFile(string message, bool printTimeStamp)
+        {
+            // メッセージに現在時刻を付加する
+            string formatted;
+            if (printTimeStamp) {
+                formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
+            } else {
+                formatted = string.Format("{0}", message);
+            }
+
+            // ログファイルにメッセージを出力する
+            string fname = "U2FHelper.log";
+            StreamWriter sr = new StreamWriter(
+                (new FileStream(fname, FileMode.Append)),
+                System.Text.Encoding.Default);
+            sr.WriteLine(formatted);
+            sr.Close();
         }
     }
 }
