@@ -11,11 +11,20 @@ namespace U2FHelper
         {
             InitializeComponent();
 
+            // イベントの登録
+            p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
+
             // バージョン表示
             label2.Text = "Version 0.1.0";
 
             // U2F HIDデバイスに接続
-            p.OnFormCreate(this);
+            //  このウィンドウのハンドルを引き渡す
+            p.OnFormCreate(Handle);
+        }
+
+        private void PrintMessageText(string messageText)
+        {
+            textBox1.AppendText(messageText);
         }
 
         private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -54,11 +63,6 @@ namespace U2FHelper
             // 画面を非表示にする
             TopMost = false;
             Visible = false;
-        }
-
-        public void PrintText(string s)
-        {
-            textBox1.AppendText(s);
         }
 
         protected override void WndProc(ref Message m)

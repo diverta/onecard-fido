@@ -6,8 +6,7 @@ namespace U2FHelper
 {
     internal class HIDProcess
     {
-        // メイン画面の参照を保持
-        private MainForm mainForm;
+        // HIDデバイス管理
         private HIDDevice device = null;
 
         // デバイス管理関連
@@ -33,15 +32,16 @@ namespace U2FHelper
             internal short Name;
         }
 
+        // メッセージテキスト送信用のイベント
+        public delegate void MessageTextEventHandler(string messageText);
+        public event MessageTextEventHandler MessageTextEvent;
+
         public HIDProcess()
         {
         }
 
-        public void OnFormCreate(MainForm f)
+        public void OnFormCreate(IntPtr handle)
         {
-            // メイン画面の参照を保持
-            mainForm = f;
-
             DevBroadcastDeviceinterface dbi = new DevBroadcastDeviceinterface {
                 DeviceType = DbtDevtypDeviceinterface,
                 Reserved = 0,
@@ -53,9 +53,9 @@ namespace U2FHelper
             IntPtr buffer = Marshal.AllocHGlobal(dbi.Size);
             Marshal.StructureToPtr(dbi, buffer, true);
 
-            notificationHandle = RegisterDeviceNotification(f.Handle, buffer, 0);
+            notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
-                mainForm.PrintText("USBデバイス検知の開始に失敗しました.\r\n");
+                MessageTextEvent("USBデバイス検知の開始に失敗しました.\r\n");
             }
 
             // U2F HIDデバイスに自動接続
@@ -84,7 +84,7 @@ namespace U2FHelper
             if (GetHIDDevicePath().Equals("")) {
                 // U2F HIDデバイスが切断されてしまった場合
                 CloseDevice();
-                mainForm.PrintText("U2F HIDデバイスが取り外されました. \r\n");
+                MessageTextEvent("U2F HIDデバイスが取り外されました. \r\n");
             }
         }
 
@@ -116,29 +116,97 @@ namespace U2FHelper
             // デバイスを初期化し、イベントを登録
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
-            mainForm.PrintText(string.Format("U2F HIDデバイスに接続されました: {0}\r\n", devicePath));
+            MessageTextEvent(string.Format("U2F HIDデバイスに接続されました: {0}\r\n", devicePath));
         }
+
+        // 受信データを保持
+        private byte[] receivedMessage = new byte[1024];
+        private int receivedMessageLen = 0;
+        //private int remaining = 0;
+        private int received = 0;
 
         private void Device_dataReceived(byte[] message)
         {
             if (message == null) {
                 return;
             }
-            for (int i = 0; i < message.Length; i++) {
-                mainForm.PrintText(string.Format("{0:x2} ", message[i]));
-                if (i % 16 == 15) {
-                    mainForm.PrintText("\r\n");
-                }
-            }
-            mainForm.PrintText("\r\n");
+            // 
+            // 受信したデータをバッファにコピー
+            // 
+            //  INITフレーム
+            //  1     バイト目: レポートID
+            //  2 - 5 バイト目: CID
+            //  6     バイト目: コマンド
+            //  7 - 8 バイト目: データ長
+            //  残りのバイト  : データ部（33 - 8 = 25）
+            //
+            //  CONTフレーム
+            //  1     バイト目: レポートID
+            //  2 - 5 バイト目: CID
+            //  6     バイト目: シーケンス
+            //  残りのバイト  : データ部（33 - 6 = 27）
+            // 
+            byte cmd = message[5];
+            if (cmd > 127) {
+                // INITフレームであると判断
+                byte cnth = message[6];
+                byte cntl = message[7];
+                receivedMessageLen = cnth * 256 + cntl;
+                received = 0;
 
-            // for research
-            byte[] writeData = {
+                // データをコピー
+                int dataLenInFrame = (receivedMessageLen < 25) ? receivedMessageLen : 25;
+                for (int i = 0; i < dataLenInFrame; i++) {
+                    receivedMessage[received++] = message[8 + i];
+                }
+
+                MessageTextEvent(string.Format(
+                    "INIT frame: length={0} datalen={1} {2}\r\n",
+                    receivedMessageLen, dataLenInFrame, received));
+
+            } else {
+                // CONTフレームであると判断
+                int seq = message[5];
+
+                // データをコピー
+                int remaining = receivedMessageLen - received;
+                int dataLenInFrame = (remaining < 27) ? remaining : 27;
+                for (int i = 0; i < dataLenInFrame; i++) {
+                    receivedMessage[received++] = message[6 + i];
+                }
+
+                MessageTextEvent(string.Format(
+                    "CONT frame: seq={0} datalen={1} {2}\r\n", 
+                    seq, dataLenInFrame, received));
+            }
+
+            // メッセージをダンプ
+            DumpMessage(message, message.Length);
+
+            if (received == receivedMessageLen) {
+                // メッセージをダンプ
+                MessageTextEvent("All data received. \r\n");
+                DumpMessage(receivedMessage, receivedMessageLen);
+
+                // for research
+                byte[] writeData = {
                 0x00, 0x00, 0x00, 0x00,
                 0x83, 0x00, 0x01,
                 0xff,
                 0x90, 0x00};
-            device.Write(writeData);
+                device.Write(writeData);
+            }
+        }
+
+        private void DumpMessage(byte[] message, int length)
+        {
+            for (int i = 0; i < length; i++) {
+                MessageTextEvent(string.Format("{0:x2} ", message[i]));
+                if (i % 16 == 15) {
+                    MessageTextEvent("\r\n");
+                }
+            }
+            MessageTextEvent("\r\n");
         }
 
         private void CloseDevice()
