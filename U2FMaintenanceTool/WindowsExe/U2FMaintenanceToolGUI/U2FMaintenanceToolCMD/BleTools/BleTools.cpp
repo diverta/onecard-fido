@@ -25,6 +25,8 @@ char *arg_chrome_nm_setting_file = NULL;
 bool  arg_chrome_subprocess      = false;
 bool  arg_need_ble               = false;
 bool  arg_pairing                = false;
+bool  arg_xfer_hid_message       = false;
+char *arg_recv_hid_message       = NULL;
 
 //
 // U2Fサービスからの返信データを受領するための領域とフラグ
@@ -440,6 +442,13 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 		return 0;
 	}
 
+	if (arg_xfer_hid_message) {
+		// U2F Helperのサブプロセスとして起動
+		// （これは仮コードです）
+		std::cerr << arg_recv_hid_message << std::endl;
+		return 0;
+	}
+
 	if (arg_erase_skey_cert) {
 		// 鍵・証明書をFlash ROMから削除し、
 		// AES鍵を自動生成
@@ -587,6 +596,18 @@ int BleTools_ParseArguments(int argc, char *argv[], BleApiConfiguration &configu
 		if (!strncmp(argv[count], "chrome-extension://", 19)) {
 			// Chromeのサブプロセスとして起動
 			arg_chrome_subprocess = true;
+		}
+		if (!strncmp(argv[count], "-X", 2)) {
+			if (++count == argc) {
+				// あとに引数が続かない場合はエラー
+				std::cerr << "-X の後に[転送メッセージ]を指定してください。" << std::endl;
+				return -1;
+			}
+			// HIDデバイスから転送されたメッセージ
+			// （base64エンコードされたテキストデータ）
+			arg_recv_hid_message = argv[count];
+			// HIDデバイスメッセージ転送を実行
+			arg_xfer_hid_message = true;
 		}
 		++count;
 	}
