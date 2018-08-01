@@ -25,6 +25,7 @@
         public const string MSG_HID_REMOVED = "U2F HIDデバイスが取り外されました。";
         public const string MSG_HID_CONNECTED = "U2F HIDデバイスに接続されました。";
         public const string MSG_HID_MESSAGE_TRANSFERRED = "U2F HIDデバイスからメッセージが転送されました。";
+        public const string MSG_BLE_MESSAGE_TRANSFERRED = "U2F BLEデバイスからメッセージが転送されました。";
         public const string MSG_FORMAT_NOT_INSTALLED = "{0}が導入されていません。";
         public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";

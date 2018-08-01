@@ -220,18 +220,92 @@ namespace U2FHelper
             }
         }
 
-        public bool XferMessage()
+        public bool XferMessage(string responseFromBLE)
         {
-            // BLEから送信されたメッセージを
-            // HIDデバイスに転送する処理
+            // BLEデバイスから転送されたメッセージを
+            // base64デコード
+            byte[] transferMessage = Convert.FromBase64String(responseFromBLE);
 
-            // for research
-            byte[] frameData = {
-                0x00, 0x00, 0x00, 0x00,
-                0x83, 0x00, 0x01,
-                0xff,
-                0x90, 0x00};
-            device.Write(frameData);
+            // メッセージをダンプ
+            //  APDU または エラーコード（この場合は 1 byte)
+            OutputLogToFile(string.Format(
+                AppCommon.MSG_BLE_MESSAGE_TRANSFERRED + "size={0}", transferMessage.Length));
+            DumpMessage(transferMessage, transferMessage.Length);
+
+            if (transferMessage.Length == 1) {
+                // エラーリターンの場合は U2FHID_ERROR を戻す
+                byte[] dummyFrameData = {
+                    0x00, 0x00, 0x00, 0x00,
+                    0xbf, 0x00, 0x01,
+                    transferMessage[0]
+                };
+                device.Write(dummyFrameData);
+                return false;
+            }
+
+            // 
+            // 送信データをフレーム分割
+            // 
+            //  INITフレーム
+            //  1 - 4 バイト目: CID
+            //  5     バイト目: コマンド
+            //  6 - 7 バイト目: データ長
+            //  残りのバイト  : データ部（64 - 7 = 57）
+            //
+            //  CONTフレーム
+            //  1 - 4 バイト目: CID
+            //  5     バイト目: シーケンス
+            //  残りのバイト  : データ部（64 - 5 = 59）
+            // 
+            byte[] frameData = new byte[64];
+            int transferMessageLen = transferMessage.Length;
+            int transferred = 0;
+            int seq = 0;
+            while (transferred < transferMessageLen) {
+                for (int j = 0; j < frameData.Length; j++) {
+                    // フレームデータを初期化
+                    frameData[j] = 0;
+                }
+
+                if (transferred == 0) {
+                    // INITフレーム
+                    // ヘッダーをコピー
+                    frameData[4] = receivedHeader[0];
+                    frameData[5] = (byte)(transferMessage.Length / 256);
+                    frameData[6] = (byte)transferMessage.Length;
+
+                    // データをコピー
+                    int dataLenInFrame = (transferMessageLen < 57) ? transferMessageLen : 57;
+                    for (int i = 0; i < dataLenInFrame; i++) {
+                        frameData[7 + i] = transferMessage[transferred++];
+                    }
+
+                    OutputLogToFile(string.Format(
+                        "INIT frame: data size={0} length={1}",
+                        transferMessageLen, dataLenInFrame));
+                    DumpMessage(frameData, 7 + dataLenInFrame);
+
+                } else {
+                    // CONTフレーム
+                    // ヘッダーをコピー
+                    frameData[4] = (byte)seq++;
+
+                    // データをコピー
+                    int remaining = transferMessageLen - transferred;
+                    int dataLenInFrame = (remaining < 59) ? remaining : 59;
+                    for (int i = 0; i < dataLenInFrame; i++) {
+                        frameData[5 + i] = transferMessage[transferred++];
+                    }
+
+                    OutputLogToFile(string.Format(
+                        "CONT frame: data seq={0} length={1}",
+                        seq, dataLenInFrame));
+                    DumpMessage(frameData, 5 + dataLenInFrame);
+                }
+
+                // フレームデータを転送
+                device.Write(frameData);
+            }
 
             return true;
         }
@@ -277,7 +351,7 @@ namespace U2FHelper
             string fname = AppCommon.FILENAME_U2FHELPER_LOG;
             StreamWriter sr = new StreamWriter(
                 (new FileStream(fname, FileMode.Append)),
-                System.Text.Encoding.Default);
+                Encoding.Default);
             sr.WriteLine(formatted);
             sr.Close();
         }

@@ -445,7 +445,7 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 	if (arg_xfer_hid_message) {
 		// U2F Helperのサブプロセスとして起動
 		// （これは仮コードです）
-		std::cerr << arg_recv_hid_message << std::endl;
+		std::cout << arg_recv_hid_message << std::endl;
 		return 0;
 	}
 

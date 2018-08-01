@@ -10,6 +10,7 @@ namespace U2FHelper
 
         // U2F管理コマンド関連
         private U2FMaintenanceCommand U2FCommand;
+        private string U2FCommandResponse;
 
         public MainForm()
         {
@@ -62,17 +63,20 @@ namespace U2FHelper
 
             // U2F管理コマンドを実行し、メッセージを転送
             U2FCommand.DoXferMessage(message, length);
+            U2FCommandResponse = "";
         }
 
         public void OnU2FCommandProcessOutputData(string outputData)
         {
-            // U2F管理コマンド実行時の標準出力内容を表示
-            textBox1.AppendText(outputData + "\r\n");
+            // U2F管理コマンド実行時の標準出力
+            // --> base64エンコードされたレスポンスデータとして扱う
+            U2FCommandResponse = outputData;
         }
 
         public void OnU2FCommandProcessErrorData(string errorData)
         {
-            // U2F管理コマンド実行時の標準エラー出力内容を表示
+            // U2F管理コマンド実行時の標準エラー出力
+            // --> コマンドが出力したメッセージとして扱う
             textBox1.AppendText(errorData + "\r\n");
         }
 
@@ -81,7 +85,7 @@ namespace U2FHelper
             if (ret) {
                 // BLEメッセージが返送されて来たら、
                 // HIDデバイスにBLEメッセージを転送
-                bool retXfer = p.XferMessage();
+                bool retXfer = p.XferMessage(U2FCommandResponse);
                 displayResultMessage(retXfer, AppCommon.MSG_HID_BLE_CONNECTION);
 
             } else {
