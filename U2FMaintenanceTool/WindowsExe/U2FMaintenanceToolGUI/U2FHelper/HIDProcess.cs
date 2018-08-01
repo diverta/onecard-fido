@@ -38,6 +38,10 @@ namespace U2FHelper
         public delegate void MessageTextEventHandler(string messageText);
         public event MessageTextEventHandler MessageTextEvent;
 
+        // HIDメッセージ受信時のイベント
+        public delegate void ReceiveHIDMessageEventHandler(byte[] message, int length);
+        public event ReceiveHIDMessageEventHandler ReceiveHIDMessageEvent;
+
         public HIDProcess()
         {
         }
@@ -57,11 +61,11 @@ namespace U2FHelper
 
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
-                MessageTextEvent("USBデバイス検知の開始に失敗しました.\r\n");
-                OutputLogToFile("USBデバイス検知の開始に失敗しました.");
+                MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED + "\r\n");
+                OutputLogToFile(AppCommon.MSG_USB_DETECT_FAILED);
                 return;
             }
-            OutputLogToFile("USBデバイス検知を開始しました.");
+            OutputLogToFile(AppCommon.MSG_USB_DETECT_STARTED);
 
             // U2F HIDデバイスに自動接続
             StartAsyncOperation();
@@ -75,7 +79,7 @@ namespace U2FHelper
             // USBデバイス検知を終了
             if (notificationHandle != null) {
                 UnregisterDeviceNotification(notificationHandle);
-                OutputLogToFile("USBデバイス検知を終了しました.");
+                OutputLogToFile(AppCommon.MSG_USB_DETECT_END);
             }
         }
 
@@ -87,10 +91,15 @@ namespace U2FHelper
 
         public void OnUSBDeviceRemoveComplete()
         {
+            // デバイスが既に切断されている場合は終了
+            if (device == null) {
+                return;
+            }
+
             if (GetHIDDevicePath().Equals("")) {
                 // U2F HIDデバイスが切断されてしまった場合
                 CloseDevice();
-                MessageTextEvent("U2F HIDデバイスが取り外されました. \r\n");
+                MessageTextEvent(AppCommon.MSG_HID_REMOVED + "\r\n");
             }
         }
 
@@ -112,21 +121,27 @@ namespace U2FHelper
 
         private async void StartAsyncOperation()
         {
-            // 0.5秒待機後に、もう一度U2F HIDデバイスの有無を確認
-            await Task.Run(() => System.Threading.Thread.Sleep(500));
+            // 0.25秒待機後に、もう一度U2F HIDデバイスの有無を確認
+            await Task.Run(() => System.Threading.Thread.Sleep(250));
             string devicePath = GetHIDDevicePath();
             if (devicePath.Equals("")) {
+                return;
+            }
+
+            // デバイスが既に初期化されている場合は終了
+            if (device != null) {
                 return;
             }
 
             // デバイスを初期化し、イベントを登録
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
-            MessageTextEvent("U2F HIDデバイスに接続されました. \r\n");
-            OutputLogToFile(string.Format("U2F HIDデバイスに接続されました: {0}", devicePath));
+            MessageTextEvent(AppCommon.MSG_HID_CONNECTED + "\r\n");
+            OutputLogToFile(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
         }
 
         // 受信データを保持
+        private byte[] receivedHeader = new byte[3];
         private byte[] receivedMessage = new byte[1024];
         private int receivedMessageLen = 0;
         private int received = 0;
@@ -160,6 +175,11 @@ namespace U2FHelper
                 receivedMessageLen = cnth * 256 + cntl;
                 received = 0;
 
+                // ヘッダーをコピー
+                for (int i = 0; i < receivedHeader.Length; i++) {
+                    receivedHeader[i] = message[5 + i];
+                }
+
                 // データをコピー
                 int dataLenInFrame = (receivedMessageLen < 25) ? receivedMessageLen : 25;
                 for (int i = 0; i < dataLenInFrame; i++) {
@@ -190,20 +210,30 @@ namespace U2FHelper
             DumpMessage(message, message.Length);
 
             if (received == receivedMessageLen) {
-                OutputLogToFile("U2F HIDデバイスからメッセージが転送されました.");
-
                 // メッセージをダンプ
-                OutputLogToFile(string.Format("All data received: size={0}", receivedMessageLen));
+                OutputLogToFile(string.Format(AppCommon.MSG_HID_MESSAGE_TRANSFERRED + "size={0}", receivedMessageLen));
                 DumpMessage(receivedMessage, receivedMessageLen);
 
-                // for research
-                byte[] writeData = {
+                // U2F管理コマンドを別プロセスで起動し、
+                // HIDデバイスからのデータを標準出力経由で転送
+                ReceiveHIDMessageEvent(receivedMessage, receivedMessageLen);
+            }
+        }
+
+        public bool XferMessage()
+        {
+            // BLEから送信されたメッセージを
+            // HIDデバイスに転送する処理
+
+            // for research
+            byte[] frameData = {
                 0x00, 0x00, 0x00, 0x00,
                 0x83, 0x00, 0x01,
                 0xff,
                 0x90, 0x00};
-                device.Write(writeData);
-            }
+            device.Write(frameData);
+
+            return true;
         }
 
         private void DumpMessage(byte[] message, int length)
@@ -244,7 +274,7 @@ namespace U2FHelper
             }
 
             // ログファイルにメッセージを出力する
-            string fname = "U2FHelper.log";
+            string fname = AppCommon.FILENAME_U2FHELPER_LOG;
             StreamWriter sr = new StreamWriter(
                 (new FileStream(fname, FileMode.Append)),
                 System.Text.Encoding.Default);

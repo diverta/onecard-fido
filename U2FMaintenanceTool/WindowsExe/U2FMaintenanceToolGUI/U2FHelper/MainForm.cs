@@ -5,7 +5,11 @@ namespace U2FHelper
 {
     public partial class MainForm : Form
     {
+        // HIDデバイス関連
         private HIDProcess p = new HIDProcess();
+
+        // U2F管理コマンド関連
+        private U2FMaintenanceCommand U2FCommand;
 
         public MainForm()
         {
@@ -13,6 +17,7 @@ namespace U2FHelper
 
             // イベントの登録
             p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
+            p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
 
             // バージョン表示
             label2.Text = "Version 0.1.0";
@@ -20,10 +25,76 @@ namespace U2FHelper
             // U2F HIDデバイスに接続
             //  このウィンドウのハンドルを引き渡す
             p.OnFormCreate(Handle);
+
+            // U2F管理コマンドを初期化
+            //  このフォームの参照を引き渡すことにより、
+            //  U2F管理コマンドの実行が完了時、
+            //  このフォームのスレッドで処理が継続されます
+            U2FCommand = new U2FMaintenanceCommand(this);
+        }
+
+        private void enableButtons(bool enabled)
+        {
+            ButtonHide.Enabled = enabled;
+            ButtonQuit.Enabled = enabled;
+        }
+
+        private void displayResultMessage(bool success, string processName)
+        {
+            // 処理の実行結果を表示
+            string formatted = string.Format(
+                AppCommon.MSG_FORMAT_END_MESSAGE,
+                processName, 
+                success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
+            textBox1.AppendText(formatted + "\r\n");
+        }
+
+        private void ReceiveHIDMessage(byte[] message, int length)
+        {
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // 実行開始メッセージ
+            string formatted = string.Format(
+                AppCommon.MSG_FORMAT_START_MESSAGE,
+                AppCommon.MSG_HID_BLE_CONNECTION);
+            textBox1.AppendText(formatted + "\r\n");
+
+            // U2F管理コマンドを実行し、メッセージを転送
+            U2FCommand.DoXferMessage(message, length);
+        }
+
+        public void OnU2FCommandProcessOutputData(string outputData)
+        {
+            // U2F管理コマンド実行時の標準出力内容を表示
+            textBox1.AppendText(outputData + "\r\n");
+        }
+
+        public void OnU2FCommandProcessErrorData(string errorData)
+        {
+            // U2F管理コマンド実行時の標準エラー出力内容を表示
+            textBox1.AppendText(errorData + "\r\n");
+        }
+
+        public void OnU2FCommandProcessExited(bool ret)
+        {
+            if (ret) {
+                // BLEメッセージが返送されて来たら、
+                // HIDデバイスにBLEメッセージを転送
+                bool retXfer = p.XferMessage();
+                displayResultMessage(retXfer, AppCommon.MSG_HID_BLE_CONNECTION);
+
+            } else {
+                displayResultMessage(ret, AppCommon.MSG_U2FCOMMAND_PROCESS);
+            }
+
+            // ボタンを押下可能とする
+            enableButtons(true);
         }
 
         private void PrintMessageText(string messageText)
         {
+            // 画面のテキストエリアにメッセージを表示
             textBox1.AppendText(messageText);
         }
 
