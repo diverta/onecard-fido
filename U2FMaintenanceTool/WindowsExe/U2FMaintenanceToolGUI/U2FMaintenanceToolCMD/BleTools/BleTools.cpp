@@ -10,6 +10,7 @@
 #include "BleToolsU2F.h"
 #include "BleToolsUtil.h"
 #include "BleChromeHelper.h"
+#include "BleU2FHidHelper.h"
 
 //
 // 実行させるコマンド／引数を保持
@@ -444,8 +445,9 @@ int BleTools_ProcessCommand(BleApiConfiguration &configuration, pBleDevice dev)
 
 	if (arg_xfer_hid_message) {
 		// U2F Helperのサブプロセスとして起動
-		// （これは仮コードです）
-		std::cout << arg_recv_hid_message << std::endl;
+		if (BleU2FHidHelper_ProcessXferMessage(arg_recv_hid_message, dev) == false) {
+			return -1;
+		}
 		return 0;
 	}
 

@@ -29,6 +29,7 @@
     <ClCompile Include="BleTools\BleTools.cpp" />
     <ClCompile Include="BleTools\BleToolsU2F.cpp" />
     <ClCompile Include="BleTools\BleToolsUtil.cpp" />
+    <ClCompile Include="BleTools\BleU2FHidHelper.cpp" />
     <ClCompile Include="ble_util\ble_util.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -47,6 +48,7 @@
     <ClInclude Include="BleTools\BleTools.h" />
     <ClInclude Include="BleTools\BleToolsU2F.h" />
     <ClInclude Include="BleTools\BleToolsUtil.h" />
+    <ClInclude Include="BleTools\BleU2FHidHelper.h" />
     <ClInclude Include="BleTools\picojson.h" />
     <ClInclude Include="ble_util\ble_util.h" />
     <ClInclude Include="ble_util\date.h" />
