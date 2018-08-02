@@ -4,8 +4,18 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace U2FHelper
 {
+    internal static class Const
+    {
+        public const int MSG_HEADER_LEN = 3;
+        public const int INIT_HEADER_LEN = 7;
+        public const int CONT_HEADER_LEN = 5;
+        public const int HID_FRAME_LEN = 64;
+    }
+
     internal class HIDProcess
     {
         // HIDデバイス管理
@@ -141,7 +151,7 @@ namespace U2FHelper
         }
 
         // 受信データを保持
-        private byte[] receivedHeader = new byte[3];
+        private byte[] receivedHeader = new byte[Const.MSG_HEADER_LEN];
         private byte[] receivedMessage = new byte[1024];
         private int receivedMessageLen = 0;
         private int received = 0;
@@ -210,34 +220,65 @@ namespace U2FHelper
             DumpMessage(message, message.Length);
 
             if (received == receivedMessageLen) {
-                // メッセージをダンプ
-                OutputLogToFile(string.Format(AppCommon.MSG_HID_MESSAGE_TRANSFERRED + "size={0}", receivedMessageLen));
-                DumpMessage(receivedMessage, receivedMessageLen);
-
+                // 全フレームを受信できたら、
                 // U2F管理コマンドを別プロセスで起動し、
                 // HIDデバイスからのデータを標準出力経由で転送
-                ReceiveHIDMessageEvent(receivedMessage, receivedMessageLen);
+                TransferMessageToU2FCommand();
             }
+        }
+
+        private void TransferMessageToU2FCommand()
+        {
+            byte[] transferMessage = new byte[1024];
+
+            // ヘッダーとデータをマージ
+            int transferLength = 0;
+            for (int j = 0; j < Const.MSG_HEADER_LEN; j++) {
+                transferMessage[transferLength++] = receivedHeader[j];
+            }
+            for (int j = 0; j < received; j++) {
+                transferMessage[transferLength++] = receivedMessage[j];
+            }
+
+            // メッセージをダンプ
+            OutputLogToFile(string.Format(AppCommon.MSG_HID_MESSAGE_TRANSFERRED + "size={0}", transferLength));
+            DumpMessage(transferMessage, transferLength);
+
+            // U2F管理コマンドを別プロセスで起動し、
+            // HIDデバイスからのデータを標準出力経由で転送
+            ReceiveHIDMessageEvent(transferMessage, transferLength);
         }
 
         public bool XferMessage(string responseFromBLE)
         {
+            // non web-safe形式に変換
+            string encodedText = responseFromBLE;
+            encodedText = encodedText.Replace('_', '/');
+            encodedText = encodedText.Replace('-', '+');
+
             // BLEデバイスから転送されたメッセージを
             // base64デコード
-            byte[] transferMessage = Convert.FromBase64String(responseFromBLE);
+            byte[] transferMessage = Convert.FromBase64String(encodedText);
+
+            // 正しいAPDUの長さをメッセージ・ヘッダーから取得
+            int transferMessageLen = transferMessage[1] * 256 + transferMessage[2];
 
             // メッセージをダンプ
+            //  ヘッダー: 3 bytes
             //  APDU または エラーコード（この場合は 1 byte)
+            int dumpLength = transferMessageLen + Const.MSG_HEADER_LEN;
             OutputLogToFile(string.Format(
-                AppCommon.MSG_BLE_MESSAGE_TRANSFERRED + "size={0}", transferMessage.Length));
-            DumpMessage(transferMessage, transferMessage.Length);
+                AppCommon.MSG_BLE_MESSAGE_TRANSFERRED + "size={0}", dumpLength));
+            DumpMessage(transferMessage, dumpLength);
 
-            if (transferMessage.Length == 1) {
+            if (transferMessageLen == 1) {
                 // エラーリターンの場合は U2FHID_ERROR を戻す
+                // エラーコードは、ヘッダー（3 bytes）直後の 1 byteから取り出す
+                // （すなわち転送メッセージの 4 バイト目）
                 byte[] dummyFrameData = {
                     0x00, 0x00, 0x00, 0x00,
                     0xbf, 0x00, 0x01,
-                    transferMessage[0]
+                    transferMessage[3]
                 };
                 device.Write(dummyFrameData);
                 return false;
@@ -257,8 +298,7 @@ namespace U2FHelper
             //  5     バイト目: シーケンス
             //  残りのバイト  : データ部（64 - 5 = 59）
             // 
-            byte[] frameData = new byte[64];
-            int transferMessageLen = transferMessage.Length;
+            byte[] frameData = new byte[Const.HID_FRAME_LEN];
             int transferred = 0;
             int seq = 0;
             while (transferred < transferMessageLen) {
@@ -270,37 +310,41 @@ namespace U2FHelper
                 if (transferred == 0) {
                     // INITフレーム
                     // ヘッダーをコピー
-                    frameData[4] = receivedHeader[0];
-                    frameData[5] = (byte)(transferMessage.Length / 256);
-                    frameData[6] = (byte)transferMessage.Length;
+                    frameData[4] = transferMessage[0];
+                    frameData[5] = transferMessage[1];
+                    frameData[6] = transferMessage[2];
 
                     // データをコピー
-                    int dataLenInFrame = (transferMessageLen < 57) ? transferMessageLen : 57;
+                    int maxLen = Const.HID_FRAME_LEN - Const.INIT_HEADER_LEN;
+                    int dataLenInFrame = (transferMessageLen < maxLen) ? transferMessageLen : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[7 + i] = transferMessage[transferred++];
+                        frameData[Const.INIT_HEADER_LEN + i] = 
+                            transferMessage[Const.MSG_HEADER_LEN + transferred++];
                     }
 
                     OutputLogToFile(string.Format(
                         "INIT frame: data size={0} length={1}",
                         transferMessageLen, dataLenInFrame));
-                    DumpMessage(frameData, 7 + dataLenInFrame);
+                    DumpMessage(frameData, Const.INIT_HEADER_LEN + dataLenInFrame);
 
                 } else {
                     // CONTフレーム
                     // ヘッダーをコピー
-                    frameData[4] = (byte)seq++;
+                    frameData[4] = (byte)seq;
 
                     // データをコピー
                     int remaining = transferMessageLen - transferred;
-                    int dataLenInFrame = (remaining < 59) ? remaining : 59;
+                    int maxLen = Const.HID_FRAME_LEN - Const.CONT_HEADER_LEN;
+                    int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
-                        frameData[5 + i] = transferMessage[transferred++];
+                        frameData[Const.CONT_HEADER_LEN + i] = 
+                            transferMessage[Const.MSG_HEADER_LEN + transferred++];
                     }
 
                     OutputLogToFile(string.Format(
                         "CONT frame: data seq={0} length={1}",
-                        seq, dataLenInFrame));
-                    DumpMessage(frameData, 5 + dataLenInFrame);
+                        seq++, dataLenInFrame));
+                    DumpMessage(frameData, Const.CONT_HEADER_LEN + dataLenInFrame);
                 }
 
                 // フレームデータを転送
@@ -348,12 +392,7 @@ namespace U2FHelper
             }
 
             // ログファイルにメッセージを出力する
-            string fname = AppCommon.FILENAME_U2FHELPER_LOG;
-            StreamWriter sr = new StreamWriter(
-                (new FileStream(fname, FileMode.Append)),
-                Encoding.Default);
-            sr.WriteLine(formatted);
-            sr.Close();
+            AppCommon.OutputLogText(formatted);
         }
     }
 }

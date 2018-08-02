@@ -1,4 +1,7 @@
-﻿namespace U2FHelper
+﻿using System.IO;
+using System.Text;
+
+namespace U2FHelper
 {
     static class AppCommon
     {
@@ -33,5 +36,15 @@
         // ファイル名
         public const string FILENAME_U2FHELPER_LOG = "U2FHelper.log";
         public const string FILENAME_U2FCOMMAND_EXE = "U2FHelper.log";
+
+        public static void OutputLogText(string logText)
+        {
+            // ログファイルにメッセージを出力する
+            string fname = FILENAME_U2FHELPER_LOG;
+            StreamWriter sr = new StreamWriter(
+                (new FileStream(fname, FileMode.Append)), Encoding.Default);
+            sr.WriteLine(logText);
+            sr.Close();
+        }
     }
 }

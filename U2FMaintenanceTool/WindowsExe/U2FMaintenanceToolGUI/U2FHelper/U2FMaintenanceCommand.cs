@@ -34,12 +34,7 @@ namespace U2FHelper
             string formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
 
             // ログファイルにメッセージを出力する
-            string fname = AppCommon.FILENAME_U2FHELPER_LOG;
-            StreamWriter sr = new StreamWriter(
-                (new FileStream(fname, FileMode.Append)), 
-                System.Text.Encoding.Default);
-            sr.WriteLine(formatted);
-            sr.Close();
+            AppCommon.OutputLogText(formatted);
         }
 
         private void doCommandWithExecutable(string executable, string arguments)
@@ -137,6 +132,10 @@ namespace U2FHelper
                 xferMessage[i] = message[i];
             }
             string encodedText = Convert.ToBase64String(xferMessage);
+
+            // web-safe形式に変換
+            encodedText = encodedText.Replace('/', '_');
+            encodedText = encodedText.Replace('+', '-');
 
             // U2FMaintenanceTool.exe -Xを実行する
             string arguments = string.Format("-X \"{0}\"", encodedText);
