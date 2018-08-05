@@ -273,11 +273,13 @@ namespace U2FHelper
 
             if (transferMessageLen == 1) {
                 // エラーリターンの場合は U2FHID_ERROR を戻す
-                // エラーコードは、ヘッダー（3 bytes）直後の 1 byteから取り出す
-                // （すなわち転送メッセージの 4 バイト目）
+                //   エラーコード／データは
+                //   転送メッセージの 4 バイトから取り出す
                 byte[] dummyFrameData = {
                     0x00, 0x00, 0x00, 0x00,
-                    0xbf, 0x00, 0x01,
+                    transferMessage[0],
+                    transferMessage[1],
+                    transferMessage[2],
                     transferMessage[3]
                 };
                 device.Write(dummyFrameData);
