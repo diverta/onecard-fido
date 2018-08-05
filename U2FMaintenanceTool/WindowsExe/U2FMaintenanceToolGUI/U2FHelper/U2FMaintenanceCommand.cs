@@ -7,7 +7,7 @@ namespace U2FHelper
     class U2FMaintenanceCommand
     {
         // U2F管理コマンドの情報
-        public const string U2FMaintenanceCmdExe = "U2FMaintenanceToolCMD.exe";
+        public const string U2FMaintenanceCmdExe = AppCommon.FILENAME_U2FCOMMAND_EXE;
         public bool commandAvailable;
 
         // メイン画面の参照を保持

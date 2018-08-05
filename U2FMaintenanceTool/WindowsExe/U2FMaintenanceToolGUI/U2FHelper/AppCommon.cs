@@ -35,7 +35,7 @@ namespace U2FHelper
 
         // ファイル名
         public const string FILENAME_U2FHELPER_LOG = "U2FHelper.log";
-        public const string FILENAME_U2FCOMMAND_EXE = "U2FHelper.log";
+        public const string FILENAME_U2FCOMMAND_EXE = "U2FMaintenanceToolCMD.exe";
 
         public static void OutputLogText(string logText)
         {
