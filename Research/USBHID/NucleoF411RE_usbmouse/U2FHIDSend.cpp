@@ -128,7 +128,7 @@ bool send_response_packet(void)
 
 bool send_xfer_response_packet(void)
 {
-    if (CMD == U2FHID_MSG) {
+    if (CMD == U2FHID_MSG || CMD == U2FHID_ERROR) {
         // レスポンスデータを送信パケットに設定
         generate_u2f_register_response();
         if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
