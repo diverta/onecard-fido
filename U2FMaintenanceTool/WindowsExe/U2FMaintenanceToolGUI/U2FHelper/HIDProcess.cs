@@ -271,7 +271,7 @@ namespace U2FHelper
                 AppCommon.MSG_BLE_MESSAGE_TRANSFERRED + "size={0}", dumpLength));
             DumpMessage(transferMessage, dumpLength);
 
-            if (transferMessageLen == 1) {
+            if (transferMessageLen == 4) {
                 // エラーリターンの場合は U2FHID_ERROR を戻す
                 //   エラーコード／データは
                 //   転送メッセージの 4 バイトから取り出す
@@ -359,7 +359,6 @@ namespace U2FHelper
         private void DumpMessage(byte[] message, int length)
         {
             StringBuilder sb = new StringBuilder();
-            ;
             for (int i = 0; i < length; i++) {
                 sb.Append(string.Format("{0:x2} ", message[i]));
                 if (i % 16 == 15) {
