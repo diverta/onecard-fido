@@ -187,8 +187,15 @@
         if ([self retryBLEConnection]) {
             return;
         }
-        // U2FレスポンスをHIDデバイスに転送
-        [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
+        
+        if ([self lastCommandSuccess] == false) {
+            // リザルト失敗時はU2FHID_ERRORレスポンスをHIDデバイスに転送
+            [[self toolHIDHelper] hidHelperWillSendErrorResponse:0x7f];
+        } else {
+            // U2FレスポンスをHIDデバイスに転送
+            [[self toolHIDHelper] hidHelperWillSend:[[self toolCommand] bleResponseData]];
+        }
+        
         // ボタンを活性化し、メッセージを表示
         [self terminateProcessOnWindow];
     }
