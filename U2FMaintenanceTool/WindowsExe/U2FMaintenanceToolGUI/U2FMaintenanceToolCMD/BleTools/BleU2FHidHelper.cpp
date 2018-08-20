@@ -9,7 +9,7 @@
 //
 // ì‹Æ—Ìˆæ
 //
-static unsigned char requestBuf[128];
+static unsigned char requestBuf[256];
 static unsigned char responseBuf[1024];
 static unsigned char encodedResponse[1024];
 
