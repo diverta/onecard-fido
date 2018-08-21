@@ -48,6 +48,13 @@ static bool xferBleU2fRequest(pBleDevice dev)
 
 	// 受信に失敗した場合
 	if (retval != ReturnValue::BLEAPI_ERROR_SUCCESS) {
+		// ERRORフレームを生成
+		//  CMD:   0xbf (ERROR)
+		//  VALUE: 0x7f (ERR_OTHER)
+		responseBuf[0] = 0xbf;
+		responseBuf[1] = 0;
+		responseBuf[2] = 1;
+		responseBuf[3] = 0x7f;
 		// ログ出力
 		BleToolsUtil_outputLog("xferBleU2fRequest: Command write failed");
 		return false;
@@ -93,9 +100,7 @@ bool BleU2FHidHelper_ProcessXferMessage(char *recv_hid_message, pBleDevice dev)
 	// 取得したメッセージをBLEへリクエスト
 	//  BLEからのレスポンスデータは、
 	//  ヘッダーとAPDUを同一のバイト配列に格納
-	if (xferBleU2fRequest(dev) == false) {
-		return false;
-	}
+	bool ret = xferBleU2fRequest(dev);
 
 	// メッセージ・ヘッダーから、バイト配列の正しい長さを取得（APDU長＋３）
 	int responseLen = responseBuf[1] * 256 + responseBuf[2] + 3;
@@ -114,5 +119,5 @@ bool BleU2FHidHelper_ProcessXferMessage(char *recv_hid_message, pBleDevice dev)
 	}
 
 	BleToolsUtil_outputLog("BleU2FHidHelper_ProcessXferMessage end");
-	return true;
+	return ret;
 }
