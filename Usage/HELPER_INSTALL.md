@@ -54,4 +54,48 @@ U2F HIDデバイスを使用し、ChromeブラウザーのU2Fクライアント�
 
 ## U2F Helperのインストール（Windows版）
 
-Windows版は、後日作成予定です。
+### ダウンロードと実行確認
+
+[U2FMaintenanceToolWin.zip](../U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip) を、GitHubからダウンロードして取得します。
+
+<img src="assets/0053.png" width="600">
+
+U2FMaintenanceToolWin.zipを展開すると、下図のように「U2FMaintenanceToolWin」というフォルダーができるので、任意の場所に配置します。<br>
+その後、フォルダー内の実行ファイル「U2FHelper.exe」をダブルクリックします。
+
+<img src="assets_hlp/0012.png" width="500" border="1">
+
+2018/08/21現在、アプリに署名がされていないため、ダウンロードしたプログラムを実行できない旨のダイアログが表示されます。<br>
+「詳細情報」をクリックして、実行ボタンを表示させます。
+
+<img src="assets_hlp/0013.png" width="350">
+
+表示された実行ボタンをクリックして、U2F Helperを実行させます。
+
+<img src="assets_hlp/0014.png" width="350">
+
+U2F Helperが起動し、タスクトレイに入っていることを確認します。
+
+<img src="assets_hlp/0015.png" width="350">
+
+### タスクトレイ常駐設定
+
+「ファイル名を指定して実行」で `shell:startup`を実行します。
+
+<img src="assets_hlp/0016.png" width="350">
+
+スタートアップフォルダーが開くので、ダウンロードフォルダー「U2FMaintenanceToolWin」に展開されたインストール媒体のうち、ショートカットをスタートアップフォルダーにコピーまたは移動します。
+
+<img src="assets_hlp/0017.png" width="550" border="1">
+
+その後、PCを再起動します。
+
+<img src="assets_hlp/0018.png" width="250">
+
+PCが再起動すると、約30秒ほどでU2F Helperがスタートアップ起動します。
+
+下図のようなポップアップが表示されることがありますが、その場合は「このファイルを開く前に常に確認する(W)」のチェックを外した上で、「開く(O)」ボタンをクリックして、起動処理を続行させてください。
+
+<img src="assets_hlp/0019.png" width="350">
+
+これでU2F Helperのインストールは完了です。
