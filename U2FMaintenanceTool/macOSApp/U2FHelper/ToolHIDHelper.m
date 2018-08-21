@@ -142,6 +142,22 @@
         return array;
     }
 
+    - (void)hidHelperWillSendErrorResponse:(uint8_t)error_value {
+        NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
+        
+        // 転送データ= [00 00 00 00 bf 00 01 xx] 形式
+        // xx にはエラーコードを指定します
+        char xfer_data[8];
+        memset(xfer_data, 0x00, sizeof(xfer_data));
+        xfer_data[4] = 0xbf;
+        xfer_data[6] = 0x01;
+        xfer_data[7] = error_value;
+        
+        NSData *xferMessage = [[NSData alloc] initWithBytes:xfer_data length:sizeof(xfer_data)];
+        [array addObject:xferMessage];
+        [self HIDManagerWillSendU2FResponseFrames:array];
+    }
+
     - (void)HIDManagerWillSendU2FResponseFrames:(NSArray<NSData *> *)frames {
         // レスポンスの各フレームをHIDデバイスに送信
         for (NSData *frame in frames) {

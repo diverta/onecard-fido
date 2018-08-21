@@ -79,11 +79,13 @@ namespace U2FHelper
 
         public void OnU2FCommandProcessExited(bool ret)
         {
+            // BLEメッセージが返送されて来たら、
+            // HIDデバイスにBLEメッセージを転送
+            if (U2FCommandResponse.Length > 0) {
+                p.XferMessage(U2FCommandResponse);
+            }
             if (ret) {
-                // BLEメッセージが返送されて来たら、
-                // HIDデバイスにBLEメッセージを転送
-                bool retXfer = p.XferMessage(U2FCommandResponse);
-                displayResultMessage(retXfer, AppCommon.MSG_HID_BLE_CONNECTION);
+                displayResultMessage(ret, AppCommon.MSG_HID_BLE_CONNECTION);
 
             } else {
                 displayResultMessage(ret, AppCommon.MSG_U2FCOMMAND_PROCESS);

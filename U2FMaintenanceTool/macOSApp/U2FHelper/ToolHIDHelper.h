@@ -15,6 +15,7 @@
 
     - (id)initWithDelegate:(id<ToolHIDHelperDelegate>)delegate;
     - (void)hidHelperWillSend:(NSData *)hidHelperMessage;
+    - (void)hidHelperWillSendErrorResponse:(uint8_t)error_value;
 
 @end
 
