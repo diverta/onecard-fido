@@ -180,10 +180,13 @@ function sendBeginEnrollRequest() {
      beginEnrollResponse.registerRequests[0].appId = beginEnrollResponse.appId;
      console.log(beginEnrollResponse);
      showMessage("One Cardから認証器登録情報を取得しています。しばらくお待ちください。");
+     // サーバー側から取得されたregisteredKeysは、
+     // 新規のU2F Registerには不要なため、
+     // ブランクの配列をu2f.registerに引き渡す
      u2f.register(
        beginEnrollResponse.appId,
        beginEnrollResponse.registerRequests,
-       beginEnrollResponse.registeredKeys,
+       [],
        function (response) {
          if (response.errorCode) {
            onError(response.errorCode, true);
