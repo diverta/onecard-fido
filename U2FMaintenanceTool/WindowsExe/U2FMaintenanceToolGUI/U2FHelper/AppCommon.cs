@@ -21,7 +21,7 @@ namespace U2FHelper
         // Windows版固有のメッセージ文言
         // USB管理
         public const string MSG_U2FCOMMAND_PROCESS = "U2F管理コマンドの実行";
-        public const string MSG_HID_BLE_CONNECTION = "U2F HIDデバイス～BLEデバイス間の連携処理";
+        public const string MSG_HID_BLE_CONNECTION = "U2F HIDデバイスから要求された処理";
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
         public const string MSG_USB_DETECT_STARTED = "USBデバイス検知を開始しました。";
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";

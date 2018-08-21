@@ -105,7 +105,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 25);
             this.label2.TabIndex = 16;
-            this.label2.Text = "(Version)";
+            this.label2.Text = "Version 0.1.0";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainForm

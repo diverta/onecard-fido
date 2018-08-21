@@ -21,7 +21,7 @@ static unsigned char replyCmd;
 static size_t        replyLength;
 static uint16_t      replyStatusWord;
 
-static void xferBleU2fRequest(pBleDevice dev)
+static bool xferBleU2fRequest(pBleDevice dev)
 {
 	// メッセージ・ヘッダーから、バイト配列の正しい長さを取得（APDU長＋３）
 
@@ -48,17 +48,9 @@ static void xferBleU2fRequest(pBleDevice dev)
 
 	// 受信に失敗した場合
 	if (retval != ReturnValue::BLEAPI_ERROR_SUCCESS) {
-		// ERRORフレームを生成
-		//  CMD:   0xbf (ERROR)
-		//  VALUE: 0x7f (ERR_OTHER)
-		responseBuf[0] = 0xbf;
-		responseBuf[1] = 0;
-		responseBuf[2] = 1;
-		responseBuf[3] = 0x7f;
-
 		// ログ出力
 		BleToolsUtil_outputLog("xferBleU2fRequest: Command write failed");
-		return;
+		return false;
 	}
 
 	// ログ出力
@@ -72,6 +64,8 @@ static void xferBleU2fRequest(pBleDevice dev)
 	for (size_t i = 0; i < replyLength; i++) {
 		responseBuf[3 + i] = reply[i];
 	}
+
+	return true;
 }
 
 static int decodeWebsafeB64String(char *src, unsigned char *dest, size_t destLen)
@@ -99,7 +93,9 @@ bool BleU2FHidHelper_ProcessXferMessage(char *recv_hid_message, pBleDevice dev)
 	// 取得したメッセージをBLEへリクエスト
 	//  BLEからのレスポンスデータは、
 	//  ヘッダーとAPDUを同一のバイト配列に格納
-	xferBleU2fRequest(dev);
+	if (xferBleU2fRequest(dev) == false) {
+		return false;
+	}
 
 	// メッセージ・ヘッダーから、バイト配列の正しい長さを取得（APDU長＋３）
 	int responseLen = responseBuf[1] * 256 + responseBuf[2] + 3;
@@ -112,6 +108,9 @@ bool BleU2FHidHelper_ProcessXferMessage(char *recv_hid_message, pBleDevice dev)
 	// web-save base64文字列に変換し、U2F Helperに転送
 	if (BleToolsUtil_base64Encode((char *)responseBuf, responseLen, encodedResponse) > 0) {
 		std::cout << encodedResponse << std::endl;
+	} else {
+		BleToolsUtil_outputLog("BleU2FHidHelper_ProcessXferMessage: Base-64 encoding failed");
+		return false;
 	}
 
 	BleToolsUtil_outputLog("BleU2FHidHelper_ProcessXferMessage end");

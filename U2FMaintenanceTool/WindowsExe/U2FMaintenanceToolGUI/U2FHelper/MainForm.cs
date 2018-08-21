@@ -20,9 +20,6 @@ namespace U2FHelper
             p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
 
-            // バージョン表示
-            label2.Text = "Version 0.1.0";
-
             // U2F HIDデバイスに接続
             //  このウィンドウのハンドルを引き渡す
             p.OnFormCreate(Handle);
