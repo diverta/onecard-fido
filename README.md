@@ -4,18 +4,20 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
-#### 2018/06/15（Version 0.1.4）
+#### 2018/08/21（Version 0.1.5）
 
 以下のプログラムを修正しました。<br>
 
-- [BLE U2Fサービス](nRF5_SDK_v13.0.0)
 - [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
 - [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
 
 修正点は以下になります。
-- U2F管理ツールのヘルスチェックにより、以前の認証に成功したサイトのトークンカウンターが上書きされてしまう不具合を解消（[Issue #63](https://github.com/diverta/onecard-fido/issues/63)）
-- VS2015でビルド時の警告を解消（[Issue #57](https://github.com/diverta/onecard-fido/issues/57)）
-- macOS版U2F管理ツールのペアリング時、U2F_PINGを使用しないよう修正（[Issue #59](https://github.com/diverta/onecard-fido/issues/59)）
+- U2F Helperの新規制作（[Issue #72](https://github.com/diverta/onecard-fido/issues/72)）に伴う機能追加／修正
+
+U2F Helper（ヘルパーアプリ）は、現在製作中のU2F HIDデバイス（ヘルパーデバイス）と連携し、One Cardを使ったU2F認証を、Chromeブラウザーの標準機能で実行するために必要なプログラムです。
+
+- [macOS版U2F Helper](U2FMaintenanceTool/macOSApp/U2FHelper.pkg)
+- [Windows版U2F Helper](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

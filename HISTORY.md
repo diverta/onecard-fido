@@ -2,6 +2,19 @@
 
 ## プログラム更新履歴
 
+#### 2018/06/15（Version 0.1.4）
+
+以下のプログラムを修正しました。<br>
+
+- [BLE U2Fサービス](nRF5_SDK_v13.0.0)
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+修正点は以下になります。
+- U2F管理ツールのヘルスチェックにより、以前の認証に成功したサイトのトークンカウンターが上書きされてしまう不具合を解消（[Issue #63](https://github.com/diverta/onecard-fido/issues/63)）
+- VS2015でビルド時の警告を解消（[Issue #57](https://github.com/diverta/onecard-fido/issues/57)）
+- macOS版U2F管理ツールのペアリング時、U2F_PINGを使用しないよう修正（[Issue #59](https://github.com/diverta/onecard-fido/issues/59)）
+
 #### 2018/06/05
 
 Chrome 67以降、パッケージ済みエクステンションが、Chromeウェブストアで取得したもの以外インストールできなくなってしまったようです。<br>
