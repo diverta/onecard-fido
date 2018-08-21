@@ -80,11 +80,15 @@ U2F Helperが起動し、タスクトレイに入っていることを確認し�
 
 ### タスクトレイ常駐設定
 
-「ファイル名を指定して実行」で `shell:startup`を実行します。
+前述手順で配置したインストール媒体「U2FMaintenanceToolWin」内の「U2FHelper.exe」に対して、ショートカットを作成します。
+
+<img src="assets_hlp/0020.png" width="500" border="1">
+
+その後「ファイル名を指定して実行」で `shell:startup`を実行します。
 
 <img src="assets_hlp/0016.png" width="350">
 
-スタートアップフォルダーが開くので、ダウンロードフォルダー「U2FMaintenanceToolWin」に展開されたインストール媒体のうち、ショートカットをスタートアップフォルダーにコピーまたは移動します。
+スタートアップフォルダーが開くので、先ほど作成したショートカットを、スタートアップフォルダーに移動します。
 
 <img src="assets_hlp/0017.png" width="550" border="1">
 
