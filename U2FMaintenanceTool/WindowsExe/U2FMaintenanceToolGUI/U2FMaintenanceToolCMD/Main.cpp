@@ -84,10 +84,6 @@ static int prepareBLEDevice(BleApiConfiguration &configuration)
 
 	// BLE APIの準備
 	pBleApi api = BleApi::CreateAPI(configuration);
-	if (!api->IsEnabled()) {
-		BleToolsUtil_outputLog("prepareBLEDevice: BLE API is disabled");
-		return -1;
-	}
 
 	// ペアリング済みU2Fデバイスを探索
 	dev = selectPairedBLEDevice(api);
