@@ -120,7 +120,21 @@
 __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DESC_SIZE] __ALIGN_END =
 {
   /* USER CODE BEGIN 0 */
-  0x00,
+  0x06, 0xd0, 0xf1,            // USAGE_PAGE (FIDO Alliance)
+  0x09, 0x01,                  // USAGE (FIDO U2F HID)
+  0xa1, 0x01,                  // COLLECTION (Application)
+  0x09, 0x20,                  //   USAGE (Input Report Data)
+  0x15, 0x00,                  //   LOGICAL_MINIMUM (0)
+  0x26, 0xff, 0x00,            //   LOGICAL_MAXIMUM (255)
+  0x75, 0x08,                  //   REPORT_SIZE (8)
+  0x95, CUSTOM_HID_EPIN_SIZE,  //   REPORT_COUNT (input=32)
+  0x81, 0x02,                  //   INPUT (Data | Absolute | Variable)
+  0x09, 0x21,                  //   USAGE (Output Report Data)
+  0x15, 0x00,                  //   LOGICAL_MINIMUM (0)
+  0x26, 0xff, 0x00,            //   LOGICAL_MAXIMUM (255)
+  0x75, 0x08,                  //   REPORT_SIZE (8)
+  0x95, CUSTOM_HID_EPOUT_SIZE, //   REPORT_COUNT (output=64)
+  0x91, 0x02,                  //   OUTPUT (Data | Absolute | Variable)
   /* USER CODE END 0 */
   0xC0    /*     END_COLLECTION	             */
 };
