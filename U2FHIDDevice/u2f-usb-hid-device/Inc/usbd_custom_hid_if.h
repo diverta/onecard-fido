@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file           : usb_device.c
+  * @file           : usbd_custom_hid_if.h
   * @version        : v2.0_Cube
-  * @brief          : This file implements the USB Device
+  * @brief          : Header for usbd_custom_hid_if.c file.
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -47,75 +47,111 @@
   ******************************************************************************
   */
 
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __USBD_CUSTOM_HID_IF_H__
+#define __USBD_CUSTOM_HID_IF_H__
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 /* Includes ------------------------------------------------------------------*/
-
-#include "usb_device.h"
-#include "usbd_core.h"
-#include "usbd_desc.h"
 #include "usbd_customhid.h"
-#include "usbd_custom_hid_if.h"
 
-/* USER CODE BEGIN Includes */
+/* USER CODE BEGIN INCLUDE */
 
-/* USER CODE END Includes */
+/* USER CODE END INCLUDE */
 
-/* USER CODE BEGIN PV */
-/* Private variables ---------------------------------------------------------*/
+/** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
+  * @brief For Usb device.
+  * @{
+  */
 
-/* USER CODE END PV */
+/** @defgroup USBD_CUSTOM_HID USBD_CUSTOM_HID
+  * @brief Usb custom human interface device module.
+  * @{
+  */
 
-/* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
+/** @defgroup USBD_CUSTOM_HID_Exported_Defines USBD_CUSTOM_HID_Exported_Defines
+  * @brief Defines.
+  * @{
+  */
 
-/* USER CODE END PFP */
+/* USER CODE BEGIN EXPORTED_DEFINES */
 
-/* USB Device Core handle declaration. */
-USBD_HandleTypeDef hUsbDeviceFS;
-
-/*
- * -- Insert your variables declaration here --
- */
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/*
- * -- Insert your external function declaration here --
- */
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
+/* USER CODE END EXPORTED_DEFINES */
 
 /**
-  * Init USB device Library, add supported class and start the library
-  * @retval None
+  * @}
   */
-void MX_USB_DEVICE_Init(void)
-{
-  /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
-  
-  /* USER CODE END USB_DEVICE_Init_PreTreatment */
-  
-  /* Init Device Library, add supported class and start the library. */
-  USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
 
-  USBD_RegisterClass(&hUsbDeviceFS, &USBD_CUSTOM_HID);
+/** @defgroup USBD_CUSTOM_HID_Exported_Types USBD_CUSTOM_HID_Exported_Types
+  * @brief Types.
+  * @{
+  */
 
-  USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_fops_FS);
+/* USER CODE BEGIN EXPORTED_TYPES */
 
-  USBD_Start(&hUsbDeviceFS);
+/* USER CODE END EXPORTED_TYPES */
 
-  /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-  
-  /* USER CODE END USB_DEVICE_Init_PostTreatment */
+/**
+  * @}
+  */
+
+/** @defgroup USBD_CUSTOM_HID_Exported_Macros USBD_CUSTOM_HID_Exported_Macros
+  * @brief Aliases.
+  * @{
+  */
+
+/* USER CODE BEGIN EXPORTED_MACRO */
+
+/* USER CODE END EXPORTED_MACRO */
+
+/**
+  * @}
+  */
+
+/** @defgroup USBD_CUSTOM_HID_Exported_Variables USBD_CUSTOM_HID_Exported_Variables
+  * @brief Public variables.
+  * @{
+  */
+
+/** CUSTOMHID Interface callback. */
+extern USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_fops_FS;
+
+/* USER CODE BEGIN EXPORTED_VARIABLES */
+
+/* USER CODE END EXPORTED_VARIABLES */
+
+/**
+  * @}
+  */
+
+/** @defgroup USBD_CUSTOM_HID_Exported_FunctionsPrototype USBD_CUSTOM_HID_Exported_FunctionsPrototype
+  * @brief Public functions declaration.
+  * @{
+  */
+
+/* USER CODE BEGIN EXPORTED_FUNCTIONS */
+
+/* USER CODE END EXPORTED_FUNCTIONS */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
+
+#ifdef __cplusplus
 }
+#endif
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
+#endif /* __USBD_CUSTOM_HID_IF_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
