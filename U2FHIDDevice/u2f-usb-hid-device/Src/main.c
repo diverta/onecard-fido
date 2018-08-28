@@ -75,6 +75,12 @@ static void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN 0 */
 
+int _write(int file, uint8_t *ptr, int len)
+{
+  HAL_UART_Transmit(&huart2, ptr, len, 1000);
+  return len;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -110,6 +116,8 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
+  printf("----- U2F USB HID Authenticator start -----\r\n");
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,6 +130,7 @@ int main(void)
   /* USER CODE BEGIN 3 */
 
   }
+  printf("----- U2F USB HID Authenticator end -----\r\n");
   /* USER CODE END 3 */
 
 }
