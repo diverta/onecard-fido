@@ -570,6 +570,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
 { 
   if (__HAL_PCD_GET_FLAG (hpcd, USB_ISTR_CTR))
   {
+	printf("(__HAL_PCD_GET_FLAG (hpcd, USB_ISTR_CTR))\r\n");
     /* servicing of the endpoint correct transfer interrupt */
     /* clear of the CTR flag into the sub */
     PCD_EP_ISR_Handler(hpcd);
