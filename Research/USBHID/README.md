@@ -35,7 +35,7 @@ One Cardを使用し、PCでU2F RegisterしたGoogleアカウントで、Android
 - <b>[NUCLEOのダウンサイジングに関する調査](NUCLEO_DOWNSIZE.md)</b><br>
 上記動作確認時に使用した「NUCLEO-F411RE」を「NUCLEO-F103RB」にダウンサイズ可能かどうか調査しました。<br>
 結果としては、mbedによるダウンサイジングは不可能と判断しました。<br>
-代替えとして、Eclipse開発環境である「System Workbench for STM32F」を導入し、調査を継続中です。
+代替えとして、Eclipse開発環境である「System Workbench for STM32F」を導入し、調査を継続しましたが、こちらも不調に終わりました。
 
 - <b>[System Workbench for STM32F セットアップ手順](SW4STM_README.md)</b><br>
 「System Workbench for STM32F」の開発環境をセットアップする手順を掲載しています。
