@@ -93,3 +93,4 @@ void generate_u2f_register_response(void)
     u2f_response_length = u2f_request_length;
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
 }
+

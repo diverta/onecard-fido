@@ -205,3 +205,4 @@ bool USBU2FAuthenticator::send2(HID_REPORT *report)
 {
     return write(EPBULK_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
 }
+

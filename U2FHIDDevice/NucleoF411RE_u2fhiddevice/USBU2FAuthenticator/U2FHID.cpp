@@ -43,3 +43,4 @@ void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, 
     }
     printf("\r\n");
 }
+

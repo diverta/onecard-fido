@@ -74,3 +74,4 @@ void     generate_u2f_version_response(void);
 void     generate_u2f_register_response(void);
 
 #endif // U2F_H_
+

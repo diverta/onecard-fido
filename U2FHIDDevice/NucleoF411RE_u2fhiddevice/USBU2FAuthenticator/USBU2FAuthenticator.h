@@ -45,3 +45,4 @@ class USBU2FAuthenticator: public USBHID
 };
 
 #endif
+

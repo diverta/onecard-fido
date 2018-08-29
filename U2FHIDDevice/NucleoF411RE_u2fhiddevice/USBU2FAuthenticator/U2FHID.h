@@ -30,3 +30,4 @@ bool   send_response_packet(void);
 bool   send_xfer_response_packet(void);
 
 #endif // U2FHID_H_
+

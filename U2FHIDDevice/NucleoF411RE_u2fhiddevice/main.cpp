@@ -2,6 +2,7 @@
 
 #include "mbed.h"
 #include "U2FHID.h"
+#include "U2FProcessState.h"
 
 //
 // PC-->mbed: 64バイト
@@ -20,7 +21,7 @@ HID_REPORT recv_report;
 int main(void) 
 {
     wait(1);
-    printf("----- U2F Authenticator sample start -----\r\n");
+    printf("----- U2F Authenticator start -----\r\n");
 
     while (true) {
         if (u2fAuthenticator.readNB(&recv_report)) {
@@ -35,6 +36,8 @@ int main(void)
                 send_xfer_response_packet();
             }
         }
+        // ステータスに応じた処理をメインスレッドで実行
+        u2f_process_state_main();
         wait(0.01);
     }
 }

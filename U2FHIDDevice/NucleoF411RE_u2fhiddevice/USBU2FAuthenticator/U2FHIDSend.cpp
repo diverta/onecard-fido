@@ -2,6 +2,7 @@
 
 #include "mbed.h"
 #include "U2FHID.h"
+#include "U2FProcessState.h"
 
 //
 // 送信関連処理
@@ -120,6 +121,8 @@ bool send_response_packet(void)
             if (send_xfer_report(u2f_request_buffer, u2f_request_length) == false) {
                 return false;
             }
+            // ステータスを設定（リクエスト転送完了）
+            u2f_process_state_set(U2FPS_XFER_REQ);
         }
     }
 
@@ -128,13 +131,14 @@ bool send_response_packet(void)
 
 bool send_xfer_response_packet(void)
 {
+    bool ret = true;
     if (CMD == U2FHID_MSG || CMD == U2FHID_ERROR) {
         // レスポンスデータを送信パケットに設定
         generate_u2f_register_response();
-        if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
-            return false;
-        }
+        ret = send_hid_input_report(u2f_response_buffer, u2f_response_length);
     }
 
-    return true;
+    // ステータスを設定（レスポンス転送完了）
+    u2f_process_state_set(U2FPS_XFER_RES);
+    return ret;
 }
