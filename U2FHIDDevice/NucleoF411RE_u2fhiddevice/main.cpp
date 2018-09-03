@@ -20,8 +20,8 @@ HID_REPORT recv_report;
 
 int main(void) 
 {
-    wait(1);
-    printf("----- U2F Authenticator start -----\r\n");
+    // 初期処理
+    u2f_process_state_init();
 
     while (true) {
         if (u2fAuthenticator.readNB(&recv_report)) {

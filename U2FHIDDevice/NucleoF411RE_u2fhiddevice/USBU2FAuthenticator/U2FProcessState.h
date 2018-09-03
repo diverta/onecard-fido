@@ -15,6 +15,7 @@ typedef enum {
 } U2F_PROCESS_STATE;
 
 void u2f_process_state_set(U2F_PROCESS_STATE _state);
+void u2f_process_state_init(void);
 void u2f_process_state_main(void);
 void u2f_process_state_on_receive_response(void);
 

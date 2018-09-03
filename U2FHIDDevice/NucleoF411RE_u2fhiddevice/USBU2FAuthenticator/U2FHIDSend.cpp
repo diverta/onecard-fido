@@ -85,7 +85,7 @@ static bool send_xfer_report(uint8_t *payload_data, size_t payload_length)
         // パケットを生成（CIDをU2FHID_RESERVED_CIDに設定）
         generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, U2FHID_RESERVED_CID, CMD);
 
-        // パケットをU2F管理ツールへ転送
+        // パケットをU2F Helperへ転送
         if (u2fAuthenticator.send2(&send_report) == false) {
             printf("u2fAuthenticator.send failed. \r\n");
             return false;
@@ -127,6 +127,27 @@ bool send_response_packet(void)
     }
 
     return true;
+}
+
+void send_error_response_packet(uint8_t error_code)
+{
+    // 送信パケット格納領域を初期化
+    memset(&send_report, 0x00, sizeof(send_report));
+    send_report.length = 32;
+
+    // パケット格納領域を取得
+    U2F_HID_MSG *res = (U2F_HID_MSG *)send_report.data;
+
+    // チャネルID、CMD、データ長を設定
+    set_CID(res->cid, CID);
+    res->pkt.init.cmd   = 0xbf;
+    res->pkt.init.bcnth = 0x00;
+    res->pkt.init.bcntl = 0x01;
+    res->pkt.init.payload[0] = error_code;
+
+    
+    // パケットをU2Fクライアントへ転送
+    u2fAuthenticator.send(&send_report);
 }
 
 bool send_xfer_response_packet(void)

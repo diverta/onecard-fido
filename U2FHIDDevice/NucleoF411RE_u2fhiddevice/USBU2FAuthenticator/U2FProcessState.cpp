@@ -1,6 +1,8 @@
 #define __STDC_FORMAT_MACROS
 #include <stdio.h>
 #include "mbed.h"
+
+#include "U2FHID.h"
 #include "U2FProcessState.h"
 
 // LEDを接続するピンを指定
@@ -19,7 +21,7 @@ static void onU2FHelperTimeout()
 static void u2f_process_state_start_timer()
 {
     // タイムアウト判定用のタイマーを開始
-    U2FHelperTimer.attach(&onU2FHelperTimeout, 30);
+    U2FHelperTimer.attach(&onU2FHelperTimeout, 20);
 }
 
 static void u2f_process_state_stop_timer()
@@ -35,6 +37,23 @@ U2F_PROCESS_STATE u2f_process_state;
 void u2f_process_state_set(U2F_PROCESS_STATE _state)
 {
     u2f_process_state = _state;
+}
+
+//
+// 初期処理
+//
+void u2f_process_state_init(void)
+{
+    // デバイス稼働が始まったら全LEDを点灯
+    LED_BLUE = 1;
+    LED_GREEN = 1;
+
+    // ２秒経過したら全LEDを消灯
+    wait(2);
+    LED_BLUE = 0;
+    LED_GREEN = 0;
+
+    printf("----- U2F Authenticator start -----\r\n");
 }
 
 //
@@ -57,7 +76,9 @@ void u2f_process_state_main(void)
         u2f_process_state = U2FPS_XFER_REQ_DONE;
         break;
     case U2FPS_HELPER_TIMEOUT:
-        // TODO: エラーレスポンスデータを送信
+        // エラーレスポンスデータを送信
+        // 0x7f = ERROR_OTHER
+        send_error_response_packet(0x7f);
         printf("U2F Helper timed out\r\n");
         // LEDを消灯
         LED_BLUE = 0;

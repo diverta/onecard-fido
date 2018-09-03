@@ -185,7 +185,7 @@ uint8_t * USBU2FAuthenticator::stringIserialDesc() {
 
 
 //
-// U2F管理ツールへのメッセージ転送用
+// U2F Helperへのメッセージ転送用
 // 
 bool USBU2FAuthenticator::readNB2(HID_REPORT *report)
 {
@@ -205,4 +205,3 @@ bool USBU2FAuthenticator::send2(HID_REPORT *report)
 {
     return write(EPBULK_IN, report->data, report->length, MAX_HID_REPORT_SIZE);
 }
-

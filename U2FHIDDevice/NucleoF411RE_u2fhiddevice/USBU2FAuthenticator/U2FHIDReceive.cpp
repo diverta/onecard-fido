@@ -38,7 +38,7 @@ bool receive_request_data(void)
         
         // U2Fクライアントからの最初のリクエスト受領時は
         // ステータスを設定（リクエスト受領開始）
-        if (cid == U2FHID_BROADCAST) {
+        if ((cid != U2FHID_BROADCAST) && (cid != U2FHID_RESERVED_CID)) {
             u2f_process_state_set(U2FPS_RECV_REQ);
         }
 
@@ -68,4 +68,3 @@ bool receive_request_data(void)
         return false;
     }
 }
-

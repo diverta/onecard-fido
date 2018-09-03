@@ -27,7 +27,7 @@ void   dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg
 
 bool   receive_request_data(void);
 bool   send_response_packet(void);
+void   send_error_response_packet(uint8_t error_code);
 bool   send_xfer_response_packet(void);
 
 #endif // U2FHID_H_
-
