@@ -19,7 +19,7 @@
 
 Googleアカウントの２段階認証テストは、Chromeブラウザーで標準サポートされるU2F機能を使用しますので、別段のエクステンションは不要です。
 
-その代わりとして、[ヘルパーデバイス（U2F USB HIDデバイス）](../U2FHIDDevice)が必要となります。
+その代わりとして、[ヘルパーデバイス（U2F USB HIDデバイス）](../U2FHIDDevice/readme.md)が必要となります。
 
 <img src="../U2FHIDDevice/assets/0001.png" width="400">
 
@@ -53,7 +53,15 @@ MAIN SWを１回プッシュし、スリープ状態を解除してください�
 - U2F Registerの実行
 - U2F Authenticateの実行
 
-いずれの場合も、事前にヘルパーデバイス（U2F USB HIDデバイス）がPCに挿してあり、かつヘルパーアプリ（U2F Helper）が起動していることを確認してください。
+### 事前準備
+
+事前にヘルパーデバイス（U2F USB HIDデバイス）がPCに挿してあることをご確認ください。
+
+<img src="assets_gat/0019.png" width="500">
+
+また、ヘルパーアプリ（U2F Helper）が起動していることをご確認ください。
+
+<img src="assets_gat/0020.png" width="500">
 
 ### U2F Registerの実行
 

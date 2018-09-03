@@ -18,9 +18,9 @@ PCが、本デバイスをUSB HIDデバイスとして認識するために、�
 
 ## プログラム
 
-U2F USB HIDデバイスは、mbedを使用して制作したプログラムにより動作します。<br>
+U2F USB HIDデバイスは、mbedを使用して制作したファームウェアにより動作します。<br>
 
-- [ソースコード](NucleoF411RE_u2fhiddevice) - [mbedオンラインコンパイラー](https://os.mbed.com/compiler/)でビルドできます。
+- [U2F USB HIDデバイス用ファームウェア](NucleoF411RE_u2fhiddevice/readme.md) - [mbedオンラインコンパイラー](https://os.mbed.com/compiler/)でビルドできます。
 - [バイナリーファイル](NucleoF411RE_usbmouse.NUCLEO_F411RE.bin) - NUCLEOに付属のST-LINK V2-1により書き込みできます。
 
 ## 基板
