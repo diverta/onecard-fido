@@ -4,38 +4,31 @@
 
 なお、本手順に掲載している画面イメージは、macOS環境のものですが、手順自体はWindows環境でも同様になります。
 
-## テスト実行前の確認
+## テスト実行前の準備
 
 ### Chromeブラウザーについて
 
-テスト事前に、Chromeブラウザーがインストールされているかどうか確認します。<br>
-また、Chromeブラウザー上でGoogleアカウントによりログインされているかどうかも確認します。
+テスト事前に、Chromeブラウザーをインストールします。<br>
+（インストール済みの場合は不要です）
 
-ブラウザー右上のユーザーアイコンをクリックすると、Chromeブラウザー上でログインされているかどうか確認できます。
+Googleアカウントの２段階認証は、Chromeブラウザーで標準サポートされるU2F機能を使用しますので、別段のエクステンションは不要です。
 
-<img src="assets_gat/0001.png" width="700" border="1">
+### ヘルパーデバイス／ヘルパーアプリについて
 
-### U2F HIDデバイスとU2F Helperについて
+Googleアカウントの２段階認証を実行させるためには、[ヘルパーデバイス（U2F USB HIDデバイス）](../U2FHIDDevice/readme.md)が必要となります。
 
-Googleアカウントの２段階認証テストは、Chromeブラウザーで標準サポートされるU2F機能を使用しますので、別段のエクステンションは不要です。
-
-その代わりとして、U2F HIDデバイス（2018/07/23現在、開発途上）が必要となります。
-
-<img src="assets_gat/0012.png" width="400">
+<img src="../U2FHIDDevice/assets/0001.png" width="400">
 
 
-また、ChromeブラウザーとU2F HIDデバイス間連携のため、U2F Helper（ヘルパーアプリ）も必要となります。<br>
-U2F Helperのインストール手順は下記のページに掲載しております。
+また、Chromeブラウザーとヘルパーデバイス間連携のため、[ヘルパーアプリ（U2F Helper）](HELPER_INSTALL.md)も必要となります。<br>
+ヘルパーアプリのインストール手順は下記のページに掲載しております。
 
 - [U2F Helperインストール手順](HELPER_INSTALL.md)
 
 ### One Cardについて
 
-テスト事前に、One Cardがシステム（macOS／Windows）とペアリングされていることを確認してください。<br>
+テスト事前に、One Cardをシステム（macOS／Windows）とペアリングさせてください。<br>
 ペアリングの手順は、[こちらのページ（One Cardペアリング手順）](PAIRING.md)に掲載しております。
-
-また、One Cardがスリープ状態になっている場合、U2F機能の実行が失敗します。<br>
-MAIN SWを１回プッシュし、スリープ状態を解除してください。
 
 ### U2F管理ツールと鍵・証明書について
 
@@ -50,12 +43,33 @@ MAIN SWを１回プッシュし、スリープ状態を解除してください�
 
 以下の順番で実行します。
 
-- U2F Registerの実行
-- U2F Authenticateの実行
+- <b>U2F Registerの実行</b> - Googleアカウントにログインし、セキュリティキーを追加登録します。
+
+- <b>U2F Authenticateの実行</b> - Googleアカウントからログアウト-->再ログインし、登録したセキュリティキーによりU2F認証を行います。
+
+### 事前確認
+
+事前にヘルパーデバイス（U2F USB HIDデバイス）がPCに挿してあることをご確認ください。
+
+<img src="assets_gat/0019.png" width="500">
+
+また、ヘルパーアプリ（U2F Helper）が起動していることをご確認ください。
+
+<img src="assets_gat/0020.png" width="500">
+
+One Cardがスリープ状態になっている場合、U2F機能の実行が失敗します。<br>
+MAIN SWを１回プッシュし、スリープ状態を解除してください。
+
+<img src="assets_gat/0021.png" width="500">
 
 ### U2F Registerの実行
 
-Chromeブラウザーで[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を表示させます。<br>
+まず、Chromeブラウザー上で、Googleアカウントによりログインします。<br>
+ブラウザー右上のユーザーアイコンをクリックすると、Chromeブラウザー上でログインされているかどうか確認できます。
+
+<img src="assets_gat/0001.png" width="700" border="1">
+
+Googleアカウントにログインしたら、[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を表示させます。<br>
 下図のような画面に遷移しますので、画面右下部の「開始」をクリックします。
 
 <img src="assets_gat/0002.png" width="600">
@@ -72,7 +86,7 @@ Chromeブラウザーで[Googleアカウントの２段階認証ページ](https
 
 <img src="assets_gat/0005.png" width="360">
 
-下図のような画面に遷移しますので、手元にOne Card、U2F HIDデバイスを用意し「次へ」をクリックします。
+下図のような画面に遷移しますので、手元に（電源が投入されスリープ解除されている）One Cardを用意し「次へ」をクリックします。
 
 <img src="assets_gat/0006.png" width="350">
 
@@ -80,15 +94,15 @@ U2Fクライアントが起動し、下図のような画面に遷移します�
 
 <img src="assets_gat/0007.png" width="350">
 
-ここで、U2F HIDデバイスを、PCのUSBポートに接続します。
-
-<img src="assets_gat/0013.png" width="400">
-
-U2F HIDデバイスとOne Cardが連携し、One Card上で、U2F Register機能が実行されます。<br>
+ヘルパーデバイス／ヘルパーアプリとOne Cardが連携し、One Card上で、U2F Register機能が実行されます。<br>
 One Card上では、LEDが点灯してRegister処理中であることが表示されます。
 
-
 <img src="assets_gat/0011.png" width="400">
+
+Chromeのバージョンによっては、下図のようなポップアップが表示されますが、ここでは「許可」をクリックしてください。
+
+<img src="assets_gat/0022.png" width="300">
+
 
 しばらくすると、下図のような画面に遷移します。<br>
 
@@ -104,15 +118,20 @@ One Card上では、LEDが点灯してRegister処理中であることが表示�
 
 これでU2F Registerは完了です。
 
-後述のU2F Authenticateテストのため、Chromeブラウザーからはログアウトしてください。<br>
-設定ページからGoogleアカウント右横の「ログアウト」をクリックすると、ログアウトできます。
-
-<img src="assets_gat/0014.png" width="600">
-
-
 ### U2F Authenticateの実行
 
-先ほど使用したGoogleアカウントにより、Chromeブラウザーにログインします。<br>
+まず、Chromeブラウザーからログアウト、およびChromeに保存されているユーザー情報をクリアします。<br>
+[設定ページ](chrome://settings/)を開きます。
+
+<img src="assets_gat/0023.png" width="700">
+
+「同期の無効化」というポップアップが表示されます。<br>
+画面下部の「ブックマーク、履歴、パスワード、その他の設定情報をこの端末から削除する」をチェックし「続行」をクリックすると、ログアウトが完了します。
+
+<img src="assets_gat/0024.png" width="400">
+
+
+ログアウトが完了したら、先ほど使用したGoogleアカウントにより、Chromeブラウザーにログインします。<br>
 下図画面で「Chromeにログイン」をクリックします。
 
 <img src="assets_gat/0015.png" width="700">
@@ -121,12 +140,7 @@ One Card上では、LEDが点灯してRegister処理中であることが表示�
 
 <img src="assets_gat/0016.png" width="300">
 
-
-ここで、U2F HIDデバイスを、PCのUSBポートに接続します。
-
-<img src="assets_gat/0013.png" width="400">
-
-U2F HIDデバイスとOne Cardが連携し、One Card上で、U2F Authenticate機能が実行されます。<br>
+ヘルパーデバイス／ヘルパーアプリとOne Cardが連携し、One Card上で、U2F Authenticate機能が実行されます。<br>
 One Cardを見ると、一番右側のLEDが<font color=ff0000><b>点滅</b></font>しているのが確認できます。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 

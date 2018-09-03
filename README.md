@@ -4,6 +4,13 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
+#### 2018/09/03
+
+[ヘルパーデバイス（U2F USB HIDデバイス）](U2FHIDDevice/readme.md)を制作しました。<br>
+ヘルパーアプリ（U2F Helper）との組み合わせで、One Cardを使用したChromeブラウザーでのU2F認証が可能となりました。
+
+具体的な使用方法は、別途手順書[「Googleアカウントを使ったテスト手順」](Usage/GOOGLEACCTEST.md)をご参照ください。
+
 #### 2018/08/21（Version 0.1.5）
 
 以下のプログラムを修正しました。<br>
