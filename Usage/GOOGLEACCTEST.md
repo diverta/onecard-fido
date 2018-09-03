@@ -15,17 +15,17 @@
 
 <img src="assets_gat/0001.png" width="700" border="1">
 
-### U2F HIDデバイスとU2F Helperについて
+### ヘルパーデバイス／ヘルパーアプリについて
 
 Googleアカウントの２段階認証テストは、Chromeブラウザーで標準サポートされるU2F機能を使用しますので、別段のエクステンションは不要です。
 
-その代わりとして、U2F HIDデバイス（2018/07/23現在、開発途上）が必要となります。
+その代わりとして、[ヘルパーデバイス（U2F USB HIDデバイス）](../U2FHIDDevice)が必要となります。
 
-<img src="assets_gat/0012.png" width="400">
+<img src="../U2FHIDDevice/assets/0001.png" width="400">
 
 
-また、ChromeブラウザーとU2F HIDデバイス間連携のため、U2F Helper（ヘルパーアプリ）も必要となります。<br>
-U2F Helperのインストール手順は下記のページに掲載しております。
+また、Chromeブラウザーとヘルパーデバイス間連携のため、[ヘルパーアプリ（U2F Helper）](HELPER_INSTALL.md)も必要となります。<br>
+ヘルパーアプリのインストール手順は下記のページに掲載しております。
 
 - [U2F Helperインストール手順](HELPER_INSTALL.md)
 
@@ -53,6 +53,8 @@ MAIN SWを１回プッシュし、スリープ状態を解除してください�
 - U2F Registerの実行
 - U2F Authenticateの実行
 
+いずれの場合も、事前にヘルパーデバイス（U2F USB HIDデバイス）がPCに挿してあり、かつヘルパーアプリ（U2F Helper）が起動していることを確認してください。
+
 ### U2F Registerの実行
 
 Chromeブラウザーで[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を表示させます。<br>
@@ -72,7 +74,7 @@ Chromeブラウザーで[Googleアカウントの２段階認証ページ](https
 
 <img src="assets_gat/0005.png" width="360">
 
-下図のような画面に遷移しますので、手元にOne Card、U2F HIDデバイスを用意し「次へ」をクリックします。
+下図のような画面に遷移しますので、手元に（電源が投入されスリープ解除されている）One Cardを用意し「次へ」をクリックします。
 
 <img src="assets_gat/0006.png" width="350">
 
@@ -80,11 +82,7 @@ U2Fクライアントが起動し、下図のような画面に遷移します�
 
 <img src="assets_gat/0007.png" width="350">
 
-ここで、U2F HIDデバイスを、PCのUSBポートに接続します。
-
-<img src="assets_gat/0013.png" width="400">
-
-U2F HIDデバイスとOne Cardが連携し、One Card上で、U2F Register機能が実行されます。<br>
+ヘルパーデバイス／ヘルパーアプリとOne Cardが連携し、One Card上で、U2F Register機能が実行されます。<br>
 One Card上では、LEDが点灯してRegister処理中であることが表示されます。
 
 
@@ -121,12 +119,7 @@ One Card上では、LEDが点灯してRegister処理中であることが表示�
 
 <img src="assets_gat/0016.png" width="300">
 
-
-ここで、U2F HIDデバイスを、PCのUSBポートに接続します。
-
-<img src="assets_gat/0013.png" width="400">
-
-U2F HIDデバイスとOne Cardが連携し、One Card上で、U2F Authenticate機能が実行されます。<br>
+ヘルパーデバイス／ヘルパーアプリとOne Cardが連携し、One Card上で、U2F Authenticate機能が実行されます。<br>
 One Cardを見ると、一番右側のLEDが<font color=ff0000><b>点滅</b></font>しているのが確認できます。<br>
 （ユーザー所在確認を求めるため、One Card側の処理が一時的に中断されます）
 
