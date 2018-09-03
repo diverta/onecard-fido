@@ -16,3 +16,6 @@ Release
 core
 .vs
 
+# ignore backup files
+*.b#*
+*.s#*
