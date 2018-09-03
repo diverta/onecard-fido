@@ -43,8 +43,9 @@ Googleアカウントの２段階認証を実行させるためには、[ヘル�
 
 以下の順番で実行します。
 
-- U2F Registerの実行
-- U2F Authenticateの実行
+- <b>U2F Registerの実行</b> - Googleアカウントにログインし、セキュリティキーを追加登録します。
+
+- <b>U2F Authenticateの実行</b> - Googleアカウントからログアウト-->再ログインし、登録したセキュリティキーによりU2F認証を行います。
 
 ### 事前確認
 
@@ -63,7 +64,12 @@ MAIN SWを１回プッシュし、スリープ状態を解除してください�
 
 ### U2F Registerの実行
 
-Chromeブラウザーで[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を表示させます。<br>
+まず、Chromeブラウザー上で、Googleアカウントによりログインします。<br>
+ブラウザー右上のユーザーアイコンをクリックすると、Chromeブラウザー上でログインされているかどうか確認できます。
+
+<img src="assets_gat/0001.png" width="700" border="1">
+
+Googleアカウントにログインしたら、[Googleアカウントの２段階認証ページ](https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome)を表示させます。<br>
 下図のような画面に遷移しますので、画面右下部の「開始」をクリックします。
 
 <img src="assets_gat/0002.png" width="600">
@@ -91,8 +97,12 @@ U2Fクライアントが起動し、下図のような画面に遷移します�
 ヘルパーデバイス／ヘルパーアプリとOne Cardが連携し、One Card上で、U2F Register機能が実行されます。<br>
 One Card上では、LEDが点灯してRegister処理中であることが表示されます。
 
-
 <img src="assets_gat/0011.png" width="400">
+
+Chromeのバージョンによっては、下図のようなポップアップが表示されますが、ここでは「許可」をクリックしてください。
+
+<img src="assets_gat/0022.png" width="300">
+
 
 しばらくすると、下図のような画面に遷移します。<br>
 
@@ -108,15 +118,20 @@ One Card上では、LEDが点灯してRegister処理中であることが表示�
 
 これでU2F Registerは完了です。
 
-後述のU2F Authenticateテストのため、Chromeブラウザーからはログアウトしてください。<br>
-設定ページからGoogleアカウント右横の「ログアウト」をクリックすると、ログアウトできます。
-
-<img src="assets_gat/0014.png" width="600">
-
-
 ### U2F Authenticateの実行
 
-先ほど使用したGoogleアカウントにより、Chromeブラウザーにログインします。<br>
+まず、Chromeブラウザーからログアウト、およびChromeに保存されているユーザー情報をクリアします。<br>
+[設定ページ](chrome://settings/)を開きます。
+
+<img src="assets_gat/0023.png" width="700">
+
+「同期の無効化」というポップアップが表示されます。<br>
+画面下部の「ブックマーク、履歴、パスワード、その他の設定情報をこの端末から削除する」をチェックし「続行」をクリックすると、ログアウトが完了します。
+
+<img src="assets_gat/0024.png" width="400">
+
+
+ログアウトが完了したら、先ほど使用したGoogleアカウントにより、Chromeブラウザーにログインします。<br>
 下図画面で「Chromeにログイン」をクリックします。
 
 <img src="assets_gat/0015.png" width="700">
