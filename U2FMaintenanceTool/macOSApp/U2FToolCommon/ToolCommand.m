@@ -711,7 +711,7 @@
     NSUInteger statusWord = [self getStatusWordFrom:[self bleResponseData]];
     
     // 成功判定は、キーハンドルチェックの場合0x6985、それ以外は0x9000
-    if ([self command] == COMMAND_TEST_AUTH_CHECK && statusWord == 0x6985) {
+    if (statusWord == 0x6985) {
         return true;
     } else if (statusWord == 0x9000) {
         return true;

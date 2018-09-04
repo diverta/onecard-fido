@@ -10,6 +10,12 @@
 #import "ToolHIDHelper.h"
 #import "ToolCommon.h"
 
+#define HID_PACKET_SIZE          64
+#define U2FHID_INIT_HEADER_SIZE  7
+#define U2FHID_CONT_HEADER_SIZE  5
+#define U2FHID_INIT_PAYLOAD_SIZE (HID_PACKET_SIZE - U2FHID_INIT_HEADER_SIZE)
+#define U2FHID_CONT_PAYLOAD_SIZE (HID_PACKET_SIZE - U2FHID_CONT_HEADER_SIZE)
+
 @interface ToolHIDHelper ()
 
     @property (nonatomic) IOHIDManagerRef   toolHIDManager;
@@ -79,15 +85,17 @@
         if (message[4] == 0x83) {
             // リクエストデータ格納領域を初期化
             [self setHidU2FRequest:[NSMutableData alloc]];
-            // INITフレームから、８バイト目以降のデータを連結（最大25バイト）
+            // INITフレームから、８バイト目以降のデータを連結（最大57バイト）
             remaining = ((message[5] << 8) & 0xff00) | (message[6] & 0x00ff);
-            datalen = (remaining < 25) ? remaining : 25;
-            [[self hidU2FRequest] appendData:[reportData subdataWithRange:NSMakeRange(7, datalen)]];
+            datalen = (remaining < U2FHID_INIT_PAYLOAD_SIZE) ? remaining : U2FHID_INIT_PAYLOAD_SIZE;
+            [[self hidU2FRequest]
+             appendData:[reportData subdataWithRange:NSMakeRange(U2FHID_INIT_HEADER_SIZE, datalen)]];
 
         } else {
-            // CONTフレームから、６バイト目以降のデータを連結（最大27バイト）
-            datalen = (remaining < 27) ? remaining : 27;
-            [[self hidU2FRequest] appendData:[reportData subdataWithRange:NSMakeRange(5, datalen)]];
+            // CONTフレームから、６バイト目以降のデータを連結（最大59バイト）
+            datalen = (remaining < U2FHID_CONT_PAYLOAD_SIZE) ? remaining : U2FHID_CONT_PAYLOAD_SIZE;
+            [[self hidU2FRequest]
+             appendData:[reportData subdataWithRange:NSMakeRange(U2FHID_CONT_HEADER_SIZE, datalen)]];
         }
         // パケットをすべて受信したら、U2Fリクエスト（APDUヘッダー＋データ）をアプリケーションに引き渡す
         remaining -= datalen;
@@ -115,7 +123,7 @@
         char    *apduBytes = (char *)[message bytes];
         uint16_t apduLength = (uint16_t)[message length];
         // 分割送信
-        char     xfer_data[64];
+        char     xfer_data[HID_PACKET_SIZE];
         uint16_t xfer_data_max;
         uint16_t xfer_data_len;
         uint16_t remaining;
@@ -123,7 +131,7 @@
         for (uint16_t i = 0; i < apduLength; i += xfer_data_len) {
             // データ長（INIT=57バイト、CONT=59バイト）
             remaining = apduLength - i;
-            xfer_data_max = (i == 0) ? 57 : 59;
+            xfer_data_max = (i == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
             xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
             // 送信パケットを編集
             memset(xfer_data, 0x00, sizeof(xfer_data));
@@ -131,10 +139,10 @@
                 xfer_data[4] = 0x83;  // CMD
                 xfer_data[5] = (apduLength >> 8) & 0x00ff; // MSB(messageLength)
                 xfer_data[6] = apduLength & 0x00ff;        // LSB(messageLength)
-                memcpy(xfer_data + 7, apduBytes + i, xfer_data_len);
+                memcpy(xfer_data + U2FHID_INIT_HEADER_SIZE, apduBytes + i, xfer_data_len);
             } else {
                 xfer_data[4] = seq++; // SEQ
-                memcpy(xfer_data + 5, apduBytes + i, xfer_data_len);
+                memcpy(xfer_data + U2FHID_CONT_HEADER_SIZE, apduBytes + i, xfer_data_len);
             }
             NSData *xferMessage = [[NSData alloc] initWithBytes:xfer_data length:sizeof(xfer_data)];
             [array addObject:xferMessage];
