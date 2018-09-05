@@ -16,6 +16,9 @@ namespace U2FHelper
         {
             InitializeComponent();
 
+            // バージョン表示
+            labelVersion.Text = "Version 0.1.6";
+
             // イベントの登録
             p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);

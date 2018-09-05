@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -169,14 +168,16 @@ namespace U2FHelper
             //  2 - 5 バイト目: CID
             //  6     バイト目: コマンド
             //  7 - 8 バイト目: データ長
-            //  残りのバイト  : データ部（33 - 8 = 25）
+            //  残りのバイト  : データ部（65 - 8 = 57）
             //
             //  CONTフレーム
             //  1     バイト目: レポートID
             //  2 - 5 バイト目: CID
             //  6     バイト目: シーケンス
-            //  残りのバイト  : データ部（33 - 6 = 27）
+            //  残りのバイト  : データ部（65 - 6 = 59）
             // 
+            int hid_init_data_len = 57;
+            int hid_cont_data_len = 59;
             byte cmd = message[5];
             if (cmd > 127) {
                 // INITフレームであると判断
@@ -191,7 +192,7 @@ namespace U2FHelper
                 }
 
                 // データをコピー
-                int dataLenInFrame = (receivedMessageLen < 25) ? receivedMessageLen : 25;
+                int dataLenInFrame = (receivedMessageLen < hid_init_data_len) ? receivedMessageLen : hid_init_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
                     receivedMessage[received++] = message[8 + i];
                 }
@@ -206,7 +207,7 @@ namespace U2FHelper
 
                 // データをコピー
                 int remaining = receivedMessageLen - received;
-                int dataLenInFrame = (remaining < 27) ? remaining : 27;
+                int dataLenInFrame = (remaining < hid_cont_data_len) ? remaining : hid_cont_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
                     receivedMessage[received++] = message[6 + i];
                 }
@@ -249,16 +250,40 @@ namespace U2FHelper
             ReceiveHIDMessageEvent(transferMessage, transferLength);
         }
 
+        private byte[] getTransferMessage(string strMessage)
+        {
+            try {
+                // non web-safe形式に変換
+                string encodedText = strMessage;
+                encodedText = encodedText.Replace('_', '/');
+                encodedText = encodedText.Replace('-', '+');
+
+                // メッセージをbase64デコード
+                byte[] transferMessage = Convert.FromBase64String(encodedText);
+                return transferMessage;
+
+            } catch {
+                // 引数をログファイルに出力
+                OutputLogToFile(string.Format(
+                    "Convert.FromBase64String failed: {0}", strMessage));
+            }
+            return null;
+        }
+
         public bool XferMessage(string responseFromBLE)
         {
-            // non web-safe形式に変換
-            string encodedText = responseFromBLE;
-            encodedText = encodedText.Replace('_', '/');
-            encodedText = encodedText.Replace('-', '+');
-
             // BLEデバイスから転送されたメッセージを
             // base64デコード
-            byte[] transferMessage = Convert.FromBase64String(encodedText);
+            byte[] transferMessage = getTransferMessage(responseFromBLE);
+            if (transferMessage == null) {
+                // エラーリターンの場合は U2FHID_ERROR を戻す
+                byte[] dummyFrameData = {
+                    0x00, 0x00, 0x00, 0x00,
+                    0xbf, 0x00, 0x01, 0x7f
+                };
+                device.Write(dummyFrameData);
+                return false;
+            }
 
             // 正しいAPDUの長さをメッセージ・ヘッダーから取得
             int transferMessageLen = transferMessage[1] * 256 + transferMessage[2];

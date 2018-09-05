@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelVersion = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -53,13 +53,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "U2F管理ツール";
             // 
-            // label2
+            // labelVersion
             // 
-            this.label2.Location = new System.Drawing.Point(110, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 12);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Version 0.1.5";
+            this.labelVersion.Location = new System.Drawing.Point(110, 64);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(80, 12);
+            this.labelVersion.TabIndex = 2;
+            this.labelVersion.Text = "Version 0.0.0";
             // 
             // label3
             // 
@@ -75,7 +75,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 141);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -93,7 +93,7 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.Label label3;
     }
 }

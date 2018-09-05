@@ -15,7 +15,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
     // 送信パケット格納領域を初期化
     memset(&send_report, 0x00, sizeof(send_report));
-    send_report.length = 32;
+    send_report.length = HID_PACKET_SIZE;
 
     // パケット格納領域を取得
     U2F_HID_MSG *res = (U2F_HID_MSG *)send_report.data;
@@ -54,7 +54,7 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
         // データ長
         remaining = payload_length - i;
-        xfer_data_max = (i == 0) ? 25 : 27;
+        xfer_data_max = (i == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
         // パケットを生成
@@ -79,7 +79,7 @@ static bool send_xfer_report(uint8_t *payload_data, size_t payload_length)
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
         // データ長
         remaining = payload_length - i;
-        xfer_data_max = (i == 0) ? 25 : 27;
+        xfer_data_max = (i == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
         // パケットを生成（CIDをU2FHID_RESERVED_CIDに設定）
@@ -133,7 +133,7 @@ void send_error_response_packet(uint8_t error_code)
 {
     // 送信パケット格納領域を初期化
     memset(&send_report, 0x00, sizeof(send_report));
-    send_report.length = 32;
+    send_report.length = HID_PACKET_SIZE;
 
     // パケット格納領域を取得
     U2F_HID_MSG *res = (U2F_HID_MSG *)send_report.data;

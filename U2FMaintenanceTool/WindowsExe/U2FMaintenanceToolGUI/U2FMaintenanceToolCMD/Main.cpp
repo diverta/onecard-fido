@@ -189,6 +189,14 @@ int __cdecl main(Platform::Array<Platform::String^>^ args)
 	// メイン処理を実行
 	int ret = __main(argc, argv);
 
+	// BLE接続が切断されるまで待つ
+	if (dev != nullptr) {
+		while (dev->IsConnected()) {
+			dev->Sleep(100);
+		}
+		BleToolsUtil_outputLog("BLE device disconnected");
+	}
+
 	// 確保した引数格納領域を解放
 	for (i = 0; i < argc; i++) {
 		free(argv[i]);

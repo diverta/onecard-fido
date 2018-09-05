@@ -138,6 +138,11 @@ bool BleToolsUtil_checkStatusWord(unsigned char *request, unsigned char *reply, 
 	// ステータスワードをチェック
 	uint16_t statusWord = bytes2short(reply, replyLength - 2);
 
+	if (statusWord == FIDO_RESP_USERPRESENCE_REQUIRED) {
+		// キーハンドルチェックの場合は成功とみなす
+		return true;
+	}
+
 	if (statusWord == 0x6a80) {
 		// invalid keyhandleエラーである場合はその旨を通知
 		sprintf_s(checkStatusWordMessage,

@@ -62,12 +62,12 @@ void generate_hid_init_response(void)
 {
     // レスポンスデータを編集 (17 bytes)
     memcpy(init_res.nonce, u2f_request_buffer, 8);
-    set_CID(init_res.cid, 0x00003301);
+    set_CID(init_res.cid, 0x01003301);
     init_res.version_id    = 2;
     init_res.version_major = 1;
     init_res.version_minor = 1;
     init_res.version_build = 0;
-    init_res.cflags        = 1;
+    init_res.cflags        = 0;
     
     // レスポンスを格納
     u2f_response_length = sizeof(U2F_HID_INIT_RES);

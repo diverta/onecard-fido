@@ -1,16 +1,11 @@
-#include <stdio.h>
-
 #include "mbed.h"
 #include "U2FHID.h"
 #include "U2FProcessState.h"
 
 //
 // PC-->mbed: 64バイト
-// mbed-->PC: 32バイト
-//   割込み処理関連の不具合があり、
-//   mbedから64バイト送信するとハングするため
-//
-USBU2FAuthenticator u2fAuthenticator(64, 32);
+// mbed-->PC: 64バイト
+USBU2FAuthenticator u2fAuthenticator(HID_PACKET_SIZE, HID_PACKET_SIZE);
 
 //
 // HID送信／受信パケット格納領域
