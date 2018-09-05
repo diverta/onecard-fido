@@ -169,14 +169,16 @@ namespace U2FHelper
             //  2 - 5 バイト目: CID
             //  6     バイト目: コマンド
             //  7 - 8 バイト目: データ長
-            //  残りのバイト  : データ部（33 - 8 = 25）
+            //  残りのバイト  : データ部（65 - 8 = 57）
             //
             //  CONTフレーム
             //  1     バイト目: レポートID
             //  2 - 5 バイト目: CID
             //  6     バイト目: シーケンス
-            //  残りのバイト  : データ部（33 - 6 = 27）
+            //  残りのバイト  : データ部（65 - 6 = 59）
             // 
+            int hid_init_data_len = 57;
+            int hid_cont_data_len = 59;
             byte cmd = message[5];
             if (cmd > 127) {
                 // INITフレームであると判断
@@ -191,7 +193,7 @@ namespace U2FHelper
                 }
 
                 // データをコピー
-                int dataLenInFrame = (receivedMessageLen < 25) ? receivedMessageLen : 25;
+                int dataLenInFrame = (receivedMessageLen < hid_init_data_len) ? receivedMessageLen : hid_init_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
                     receivedMessage[received++] = message[8 + i];
                 }
@@ -206,7 +208,7 @@ namespace U2FHelper
 
                 // データをコピー
                 int remaining = receivedMessageLen - received;
-                int dataLenInFrame = (remaining < 27) ? remaining : 27;
+                int dataLenInFrame = (remaining < hid_cont_data_len) ? remaining : hid_cont_data_len;
                 for (int i = 0; i < dataLenInFrame; i++) {
                     receivedMessage[received++] = message[6 + i];
                 }
