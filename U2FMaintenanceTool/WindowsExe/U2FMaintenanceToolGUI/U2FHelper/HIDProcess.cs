@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -251,16 +250,40 @@ namespace U2FHelper
             ReceiveHIDMessageEvent(transferMessage, transferLength);
         }
 
+        private byte[] getTransferMessage(string strMessage)
+        {
+            try {
+                // non web-safe形式に変換
+                string encodedText = strMessage;
+                encodedText = encodedText.Replace('_', '/');
+                encodedText = encodedText.Replace('-', '+');
+
+                // メッセージをbase64デコード
+                byte[] transferMessage = Convert.FromBase64String(encodedText);
+                return transferMessage;
+
+            } catch {
+                // 引数をログファイルに出力
+                OutputLogToFile(string.Format(
+                    "Convert.FromBase64String failed: {0}", strMessage));
+            }
+            return null;
+        }
+
         public bool XferMessage(string responseFromBLE)
         {
-            // non web-safe形式に変換
-            string encodedText = responseFromBLE;
-            encodedText = encodedText.Replace('_', '/');
-            encodedText = encodedText.Replace('-', '+');
-
             // BLEデバイスから転送されたメッセージを
             // base64デコード
-            byte[] transferMessage = Convert.FromBase64String(encodedText);
+            byte[] transferMessage = getTransferMessage(responseFromBLE);
+            if (transferMessage == null) {
+                // エラーリターンの場合は U2FHID_ERROR を戻す
+                byte[] dummyFrameData = {
+                    0x00, 0x00, 0x00, 0x00,
+                    0xbf, 0x00, 0x01, 0x7f
+                };
+                device.Write(dummyFrameData);
+                return false;
+            }
 
             // 正しいAPDUの長さをメッセージ・ヘッダーから取得
             int transferMessageLen = transferMessage[1] * 256 + transferMessage[2];
