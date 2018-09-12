@@ -17,9 +17,8 @@ namespace U2FHelper
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
         private Guid U2F_STATUS_CHAR_UUID = new Guid("F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB");
 
-        // メッセージテキスト送信用のイベント
-        public delegate void MessageTextEventHandler(string messageText);
-        public event MessageTextEventHandler MessageTextEvent;
+        public delegate void dataReceivedEvent(byte[] message, int length);
+        public event dataReceivedEvent DataReceived;
 
         public void SetMainForm(MainForm f)
         {
@@ -27,39 +26,43 @@ namespace U2FHelper
             mainForm = f;
         }
 
-        public async Task GetU2FVersionAsync(object sender, EventArgs e)
+        public async Task<bool> Connect()
         {
             // One CardとのBLE通信を開始
-            await StartCommunicate();
-            if (service == null) {
-                // 接続失敗時は画面表示も行う
+            if (await StartCommunicate() == false) {
                 OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED + "\r\n");
-                return;
+                return false;
             }
             OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+            return true;
+        }
 
+        public void Disconnect()
+        {
+            // 切断
+            StopCommunicate();
+            OutputLogToFile(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
+        }
+
+        public async Task<bool> Send(byte[] u2fVersionFrameData)
+        {
             // リクエストデータを生成
             DataWriter writer = new DataWriter();
-            byte[] u2fVersionFrameData = {
-                    0x83, 0x00, 0x07,
-                    0x00, 0x03, 0x00, 0x00,
-                    0x00, 0x00, 0x00
-                };
             writer.WriteBytes(u2fVersionFrameData);
 
             // リクエストを実行（U2F Control Pointに書込）
             GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
             if (result != GattCommunicationStatus.Success) {
                 OutputLogToFile(AppCommon.MSG_REQUEST_SEND_FAILED);
-                MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED + "\r\n");
                 StopCommunicate();
-                return;
+                return false;
             }
+
             OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
+            return true;
         }
 
-        public async Task StartCommunicate()
+        private async Task<bool> StartCommunicate()
         {
             string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
             DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
@@ -71,7 +74,7 @@ namespace U2FHelper
             }
             if (infoBLE == null) {
                 OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
-                return;
+                return false;
             }
             OutputLogToFile(string.Format("{0} (name={1} isEnabled={2})",
                 AppCommon.MSG_BLE_U2F_SERVICE_FOUND, infoBLE.Name, infoBLE.IsEnabled));
@@ -81,7 +84,7 @@ namespace U2FHelper
                 service = await GattDeviceService.FromIdAsync(infoBLE.Id);
                 if (service == null) {
                     OutputLogToFile(AppCommon.MSG_BLE_CHARACT_NOT_DISCOVERED);
-                    return;
+                    return false;
                 }
 
                 U2FControlPointChar = service.GetCharacteristics(U2F_CONTROL_POINT_CHAR_UUID)[0];
@@ -92,16 +95,29 @@ namespace U2FHelper
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (result != GattCommunicationStatus.Success) {
                     OutputLogToFile(AppCommon.MSG_BLE_NOTIFICATION_FAILED);
-                    MessageTextEvent(AppCommon.MSG_BLE_NOTIFICATION_FAILED + "\r\n");
                     StopCommunicate();
-                    return;
+                    return false;
                 }
+
                 OutputLogToFile(AppCommon.MSG_BLE_NOTIFICATION_START);
+                return true;
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("StartCommunicate: {0}", e.Message));
                 StopCommunicate();
+                return false;
             }
+        }
+
+        private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
+        {
+            // レスポンスを受領（U2F Statusを読込）
+            uint len = eventArgs.CharacteristicValue.Length;
+            byte[] responseBytes = new byte[len];
+            DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
+
+            // レスポンスを転送
+            DataReceived(responseBytes, (int)len);
         }
 
         private void StopCommunicate()
@@ -115,26 +131,6 @@ namespace U2FHelper
             } finally {
                 service = null;
             }
-        }
-
-        private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
-        {
-            // レスポンスを受領（U2F Statusを読込）
-            uint len = eventArgs.CharacteristicValue.Length;
-            byte[] responseBytes = new byte[len];
-            DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
-
-            // 受信したデータをHexダンプ
-            string dump = AppCommon.DumpMessage(responseBytes, (int)len);
-            OutputLogToFile(string.Format("Received {0} bytes: \r\n{1}",
-                len, dump));
-
-            // 切断
-            StopCommunicate();
-            OutputLogToFile(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
-
-            // テスト終了
-            MessageTextEvent("One CardからU2F Versionを取得しました。\r\n");
         }
 
         private void OutputLogToFile(string message)
