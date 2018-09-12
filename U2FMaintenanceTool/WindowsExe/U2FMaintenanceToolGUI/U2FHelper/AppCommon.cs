@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace U2FHelper
@@ -45,6 +46,32 @@ namespace U2FHelper
                 (new FileStream(fname, FileMode.Append)), Encoding.Default);
             sr.WriteLine(logText);
             sr.Close();
+        }
+
+        public static void OutputLogToFile(string message, bool printTimeStamp)
+        {
+            // メッセージに現在時刻を付加する
+            string formatted;
+            if (printTimeStamp) {
+                formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
+            } else {
+                formatted = string.Format("{0}", message);
+            }
+
+            // ログファイルにメッセージを出力する
+            OutputLogText(formatted);
+        }
+
+        public static string DumpMessage(byte[] message, int length)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                sb.Append(string.Format("{0:x2} ", message[i]));
+                if ((i % 16 == 15) && (i < length - 1)) {
+                    sb.Append("\r\n");
+                }
+            }
+            return sb.ToString();
         }
     }
 }

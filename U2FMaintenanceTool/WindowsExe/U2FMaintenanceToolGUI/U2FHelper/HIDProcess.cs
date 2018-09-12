@@ -383,14 +383,7 @@ namespace U2FHelper
 
         private void DumpMessage(byte[] message, int length)
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                sb.Append(string.Format("{0:x2} ", message[i]));
-                if (i % 16 == 15) {
-                    sb.Append("\r\n");
-                }
-            }
-            OutputLogToFile(sb.ToString(), false);
+            OutputLogToFile(AppCommon.DumpMessage(message, length), false);
         }
 
         private void CloseDevice()
@@ -404,21 +397,15 @@ namespace U2FHelper
 
         private void OutputLogToFile(string message)
         {
+            // メッセージに現在時刻を付加し、ログファイルに出力する
             OutputLogToFile(message, true);
         }
 
         private void OutputLogToFile(string message, bool printTimeStamp)
         {
-            // メッセージに現在時刻を付加する
-            string formatted;
-            if (printTimeStamp) {
-                formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
-            } else {
-                formatted = string.Format("{0}", message);
-            }
-
-            // ログファイルにメッセージを出力する
-            AppCommon.OutputLogText(formatted);
+            // メッセージにログファイルに出力する
+            // printTimeStampがfalse時は、現在時刻を付加しない
+            AppCommon.OutputLogToFile(message, printTimeStamp);
         }
     }
 }
