@@ -7,6 +7,8 @@ namespace U2FHelper
     {
         // HIDデバイス関連
         private HIDProcess p = new HIDProcess();
+        // BLEデバイス関連
+        private BLEService bleService = new BLEService();
 
         // U2F管理コマンド関連
         private U2FMaintenanceCommand U2FCommand;
@@ -22,6 +24,7 @@ namespace U2FHelper
             // イベントの登録
             p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
+            bleService.MessageTextEvent += new BLEService.MessageTextEventHandler(PrintMessageText);
 
             // U2F HIDデバイスに接続
             //  このウィンドウのハンドルを引き渡す
@@ -161,5 +164,14 @@ namespace U2FHelper
         public const int WmDevicechange = 0x0219;
         public const int DbtDevicearrival = 0x8000;
         public const int DbtDeviceremovecomplete = 0x8004;
+
+        //
+        // テストのための仮実装です
+        //
+        private async void button1_ClickAsync(object sender, EventArgs e)
+        {
+            bleService.SetMainForm(this);
+            await bleService.GetU2FVersionAsync(sender, e);
+        }
     }
 }
