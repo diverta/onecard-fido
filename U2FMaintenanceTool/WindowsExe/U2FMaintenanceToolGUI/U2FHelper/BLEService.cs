@@ -44,22 +44,31 @@ namespace U2FHelper
             OutputLogToFile(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
         }
 
-        public async Task<bool> Send(byte[] u2fVersionFrameData)
+        public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
         {
-            // リクエストデータを生成
-            DataWriter writer = new DataWriter();
-            writer.WriteBytes(u2fVersionFrameData);
+            try {
+                // リクエストデータを生成
+                DataWriter writer = new DataWriter();
+                for (int i = 0; i < frameLen; i++) {
+                    writer.WriteByte(u2fRequestFrameData[i]);
+                }
 
-            // リクエストを実行（U2F Control Pointに書込）
-            GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
-            if (result != GattCommunicationStatus.Success) {
-                OutputLogToFile(AppCommon.MSG_REQUEST_SEND_FAILED);
+                // リクエストを実行（U2F Control Pointに書込）
+                GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
+                if (result != GattCommunicationStatus.Success) {
+                    OutputLogToFile(AppCommon.MSG_REQUEST_SEND_FAILED);
+                    StopCommunicate();
+                    return false;
+                }
+
+                OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
+                return true;
+
+            } catch (Exception e) {
+                OutputLogToFile(string.Format("BLEService.Send: {0}", e.Message));
                 StopCommunicate();
                 return false;
             }
-
-            OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
-            return true;
         }
 
         private async Task<bool> StartCommunicate()
@@ -103,7 +112,7 @@ namespace U2FHelper
                 return true;
 
             } catch (Exception e) {
-                OutputLogToFile(string.Format("StartCommunicate: {0}", e.Message));
+                OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
                 StopCommunicate();
                 return false;
             }
@@ -127,7 +136,7 @@ namespace U2FHelper
                 service.Dispose();
 
             } catch (Exception e) {
-                OutputLogToFile(string.Format("StopCommunicate: {0}", e.Message));
+                OutputLogToFile(string.Format("BLEService.StopCommunicate: {0}", e.Message));
             } finally {
                 service = null;
             }

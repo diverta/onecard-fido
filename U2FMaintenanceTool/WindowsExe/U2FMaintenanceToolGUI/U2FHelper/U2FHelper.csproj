@@ -55,7 +55,6 @@
     <Compile Include="AppCommon.cs" />
     <Compile Include="BLEProcess.cs" />
     <Compile Include="BLEService.cs" />
-    <Compile Include="U2FMaintenanceCommand.cs" />
     <Compile Include="HIDDevice.cs" />
     <Compile Include="HIDProcess.cs" />
     <Compile Include="MainForm.cs">
