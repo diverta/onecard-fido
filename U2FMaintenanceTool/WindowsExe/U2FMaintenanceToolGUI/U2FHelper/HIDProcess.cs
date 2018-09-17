@@ -218,44 +218,10 @@ namespace U2FHelper
 
             if (received == receivedMessageLen) {
                 // 全フレームを受信できたら、
-                // U2F管理コマンドを別プロセスで起動し、
-                // HIDデバイスからのデータを標準出力経由で転送
-                TransferMessageToU2FCommand();
+                // HIDデバイスからのデータをBLE経由で転送
+                OutputLogToFile(AppCommon.MSG_HID_REQUEST_TRANSFERRED);
+                ReceiveHIDMessageEvent(receivedMessage, Const.MSG_HEADER_LEN + receivedMessageLen);
             }
-        }
-
-        private void TransferMessageToU2FCommand()
-        {
-            byte[] transferMessage = receivedMessage;
-            int transferLength = Const.MSG_HEADER_LEN + receivedMessageLen;
-
-            // メッセージをダンプ
-            OutputLogToFile(string.Format(AppCommon.MSG_HID_MESSAGE_TRANSFERRED + "size={0}", transferLength));
-            DumpMessage(transferMessage, transferLength);
-
-            // U2F管理コマンドを別プロセスで起動し、
-            // HIDデバイスからのデータを標準出力経由で転送
-            ReceiveHIDMessageEvent(transferMessage, transferLength);
-        }
-
-        private byte[] getTransferMessage(string strMessage)
-        {
-            try {
-                // non web-safe形式に変換
-                string encodedText = strMessage;
-                encodedText = encodedText.Replace('_', '/');
-                encodedText = encodedText.Replace('-', '+');
-
-                // メッセージをbase64デコード
-                byte[] transferMessage = Convert.FromBase64String(encodedText);
-                return transferMessage;
-
-            } catch {
-                // 引数をログファイルに出力
-                OutputLogToFile(string.Format(
-                    "Convert.FromBase64String failed: {0}", strMessage));
-            }
-            return null;
         }
 
         public void XferBLEMessage(byte[] bleMessage, int messageLen)
@@ -267,14 +233,6 @@ namespace U2FHelper
 
             // 正しいAPDUの長さをメッセージ・ヘッダーから取得
             int transferMessageLen = bleMessage[1] * 256 + bleMessage[2];
-
-            // メッセージをダンプ
-            //  ヘッダー: 3 bytes
-            //  APDU または エラーコード（この場合は 1 byte)
-            OutputLogToFile(string.Format(
-                AppCommon.MSG_BLE_MESSAGE_TRANSFERRED + "size={0}", transferMessageLen));
-            DumpMessage(bleMessage, messageLen);
-
             if (transferMessageLen == 4 && bleMessage[0] == 0xbf) {
                 // エラーリターンの場合は U2FHID_ERROR を戻す
                 //   エラーコード／データは
@@ -356,6 +314,9 @@ namespace U2FHelper
                 // フレームデータを転送
                 device.Write(frameData);
             }
+
+            // 転送完了メッセージ
+            OutputLogToFile(string.Format(AppCommon.MSG_HID_RESPONSE_TRANSFERRED));
         }
 
         private void DumpMessage(byte[] message, int length)

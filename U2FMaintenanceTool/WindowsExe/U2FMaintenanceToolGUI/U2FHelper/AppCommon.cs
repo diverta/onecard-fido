@@ -28,8 +28,8 @@ namespace U2FHelper
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
         public const string MSG_HID_REMOVED = "U2F HIDデバイスが取り外されました。";
         public const string MSG_HID_CONNECTED = "U2F HIDデバイスに接続されました。";
-        public const string MSG_HID_MESSAGE_TRANSFERRED = "U2F HIDデバイスからメッセージが転送されました。";
-        public const string MSG_BLE_MESSAGE_TRANSFERRED = "U2F BLEデバイスからメッセージが転送されました。";
+        public const string MSG_HID_REQUEST_TRANSFERRED = "U2F HIDデバイスからU2Fリクエストが転送されました。";
+        public const string MSG_HID_RESPONSE_TRANSFERRED = "U2F HIDデバイスへU2Fレスポンスを転送しました。";
         public const string MSG_FORMAT_NOT_INSTALLED = "{0}が導入されていません。";
         public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
@@ -45,6 +45,7 @@ namespace U2FHelper
         public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
+        public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
 
         // ファイル名
         public const string FILENAME_U2FHELPER_LOG = "U2FHelper.log";

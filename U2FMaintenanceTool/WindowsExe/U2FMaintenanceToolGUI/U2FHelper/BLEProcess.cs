@@ -200,6 +200,7 @@
 
                 // 全フレームがそろった場合は切断し、
                 // 受信データを転送
+                AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED, true);
                 bleService.Disconnect();
                 ReceiveBLEMessageEvent(true, receivedMessage, Const.INIT_HEADER_LEN + receivedMessageLen);
             }
