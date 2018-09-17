@@ -61,7 +61,6 @@ namespace U2FHelper
                     return false;
                 }
 
-                OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
                 return true;
 
             } catch (Exception e) {

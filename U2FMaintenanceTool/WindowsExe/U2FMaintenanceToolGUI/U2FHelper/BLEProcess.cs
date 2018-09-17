@@ -119,6 +119,9 @@
                     return;
                 }
             }
+
+            // リクエスト送信完了メッセージを出力
+            AppCommon.OutputLogToFile(AppCommon.MSG_REQUEST_SENT, true);
         }
 
         // 受信データを保持
@@ -190,6 +193,11 @@
             AppCommon.OutputLogToFile(AppCommon.DumpMessage(message, message.Length), false);
 
             if (received == receivedMessageLen) {
+                if (receivedMessage[0] == 0x82) {
+                    // キープアライブの場合は引き続き次のレスポンスを待つ
+                    return;
+                }
+
                 // 全フレームがそろった場合は切断し、
                 // 受信データを転送
                 bleService.Disconnect();

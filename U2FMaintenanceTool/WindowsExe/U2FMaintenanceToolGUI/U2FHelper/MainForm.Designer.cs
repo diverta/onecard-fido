@@ -38,7 +38,6 @@
             this.ButtonQuit = new System.Windows.Forms.Button();
             this.ButtonHide = new System.Windows.Forms.Button();
             this.labelVersion = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -109,16 +108,6 @@
             this.labelVersion.Text = "Version 0.0.0";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(194, 25);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "One CardからU2F Versionを取得";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -126,7 +115,6 @@
             this.ClientSize = new System.Drawing.Size(584, 386);
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.ControlBox = false;
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.ButtonHide);
             this.Controls.Add(this.ButtonQuit);
@@ -154,7 +142,6 @@
         private System.Windows.Forms.Button ButtonQuit;
         private System.Windows.Forms.Button ButtonHide;
         private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.Button button1;
     }
 }
 
