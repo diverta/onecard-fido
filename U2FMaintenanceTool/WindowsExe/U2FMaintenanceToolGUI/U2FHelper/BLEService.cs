@@ -46,6 +46,11 @@ namespace U2FHelper
 
         public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
         {
+            if (service == null) {
+                OutputLogToFile(string.Format("BLEService.Send: service is null"));
+                return false;
+            }
+
             try {
                 // リクエストデータを生成
                 DataWriter writer = new DataWriter();
@@ -119,13 +124,18 @@ namespace U2FHelper
 
         private void OnCharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs eventArgs)
         {
-            // レスポンスを受領（U2F Statusを読込）
-            uint len = eventArgs.CharacteristicValue.Length;
-            byte[] responseBytes = new byte[len];
-            DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
+            try {
+                // レスポンスを受領（U2F Statusを読込）
+                uint len = eventArgs.CharacteristicValue.Length;
+                byte[] responseBytes = new byte[len];
+                DataReader.FromBuffer(eventArgs.CharacteristicValue).ReadBytes(responseBytes);
 
-            // レスポンスを転送
-            DataReceived(responseBytes, (int)len);
+                // レスポンスを転送
+                DataReceived(responseBytes, (int)len);
+
+            } catch (Exception e) {
+                OutputLogToFile(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
+            }
         }
 
         private void StopCommunicate()
