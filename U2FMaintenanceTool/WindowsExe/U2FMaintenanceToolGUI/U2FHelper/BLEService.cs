@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
 
 namespace U2FHelper
 {
-    class BLEService
+    public class BLEService
     {
         private GattDeviceService service;
         private GattCharacteristic U2FControlPointChar;
@@ -19,6 +22,12 @@ namespace U2FHelper
 
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
+
+        public delegate void oneCardPeripheralPairedEvent(bool success);
+        public event oneCardPeripheralPairedEvent OneCardPeripheralPaired;
+
+        public delegate void oneCardPeripheralFoundEvent();
+        public event oneCardPeripheralFoundEvent OneCardPeripheralFound;
 
         public void SetMainForm(MainForm f)
         {
@@ -73,6 +82,85 @@ namespace U2FHelper
                 StopCommunicate();
                 return false;
             }
+        }
+
+        private DeviceWatcher deviceWatcher;
+        private DeviceInformation deviceInfoForPair;
+
+        public void Pair()
+        {
+            OutputLogToFile("One Cardとのペアリングを開始します。");
+
+            string[] requestedProperties = {
+                "System.Devices.Aep.DeviceAddress",
+                "System.Devices.Aep.IsConnected"
+            };
+            deviceWatcher = DeviceInformation.CreateWatcher(
+                                    "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")",
+                                    requestedProperties,
+                                    DeviceInformationKind.AssociationEndpoint);
+            deviceWatcher.Added += DeviceWatcherAdded;
+            deviceWatcher.Start();
+            OutputLogToFile("One Cardからのアドバタイズ監視を開始します。");
+        }
+
+        private void DeviceWatcherAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
+        {
+            if (sender == deviceWatcher) {
+                // One Cardが見つかったら、
+                // デバイス情報を保持し、画面スレッドに通知
+                if (deviceInfo.Name == "OneCard_Peripheral") {
+                    deviceInfoForPair = deviceInfo;
+                    DeviceWatcherStop();
+                    OneCardPeripheralFound();
+                }
+            }
+        }
+
+        private void DeviceWatcherStop()
+        {
+            deviceWatcher.Added -= DeviceWatcherAdded;
+            deviceWatcher.Stop();
+            OutputLogToFile("One Cardからのアドバタイズ監視を終了しました。");
+        }
+
+        private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
+        {
+            OutputLogToFile("One Cardとのペアリングが自動的に実行されます。");
+            args.Accept();
+        }
+
+        public async void PairWithOneCardPeripheral()
+        {
+            bool success = false;
+            try {
+                // リトライは３回まで
+                for (int i = 0; i < 3; i++) {
+                    // ペアリング実行
+                    deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
+                    DevicePairingResult result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                                 DevicePairingKinds.ConfirmOnly, 
+                                 DevicePairingProtectionLevel.Encryption);
+                    deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
+
+                    // ペアリングが正常終了したら処理完了
+                    if (result.Status == DevicePairingResultStatus.Paired ||
+                        result.Status == DevicePairingResultStatus.AlreadyPaired) {
+                        success = true;
+                        OutputLogToFile("One Cardとのペアリングが成功しました。");
+                        break;
+                    }
+
+                    OutputLogToFile("One Cardとのペアリングが失敗しました。１秒後に再試行されます。");
+                    await Task.Run(() => System.Threading.Thread.Sleep(1000));
+                }
+
+            } catch (Exception e) {
+                OutputLogToFile(string.Format("BLEService.PairWithOneCardPeripheral: {0}", e.Message));
+            }
+
+            // 画面スレッドに成否を通知
+            OneCardPeripheralPaired(success);
         }
 
         private async Task<bool> StartCommunicate()

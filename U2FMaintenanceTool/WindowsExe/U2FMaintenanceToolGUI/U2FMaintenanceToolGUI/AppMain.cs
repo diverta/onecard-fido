@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using U2FHelper;
 
 namespace U2FMaintenanceToolGUI
 {
@@ -28,6 +28,9 @@ namespace U2FMaintenanceToolGUI
         // 実行中の外部プロセスを保持
         private Process p;
 
+        // BLEデバイス関連
+        private BLEService bleService = new BLEService();
+
         public AppMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -48,6 +51,11 @@ namespace U2FMaintenanceToolGUI
             } else {
                 opensslAvailable = true;
             }
+
+            // BLEデバイス関連
+            bleService.OneCardPeripheralFound += OnFoundDevice;
+            bleService.OneCardPeripheralPaired += OnPairedDevice;
+
             outputLogToFile("U2F管理ツールを起動しました");
         }
 
@@ -163,8 +171,18 @@ namespace U2FMaintenanceToolGUI
 
         public void doPairing()
         {
-            // U2FMaintenanceTool.exe -Pを実行する
-            doCommandWithExecutable(U2FMaintenanceToolExe, "-P");
+            bleService.Pair();
+        }
+
+        public void OnFoundDevice()
+        {
+            bleService.PairWithOneCardPeripheral();
+        }
+
+        public void OnPairedDevice(bool success)
+        {
+            // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
+            mainForm.onAppMainProcessExited(success);
         }
 
         public void doEraseSkeyCert()

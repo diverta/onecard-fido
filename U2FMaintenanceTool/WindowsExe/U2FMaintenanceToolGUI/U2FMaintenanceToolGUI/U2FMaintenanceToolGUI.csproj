@@ -135,6 +135,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\U2FHelper\U2FHelper.csproj">
+      <Project>{38828edd-c5ad-4e4b-ad6c-1f1cd1358a19}</Project>
+      <Name>U2FHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

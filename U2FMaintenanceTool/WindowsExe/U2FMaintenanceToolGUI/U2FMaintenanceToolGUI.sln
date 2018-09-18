@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "U2FMaintenanceToolGUI", "U2FMaintenanceToolGUI\U2FMaintenanceToolGUI.csproj", "{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19} = {38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "U2FMaintenanceToolCMD", "U2FMaintenanceToolCMD\U2FMaintenanceToolCMD.vcxproj", "{DCAAE6ED-4F34-4B85-B241-7A2DB8EC0C31}"
 EndProject
