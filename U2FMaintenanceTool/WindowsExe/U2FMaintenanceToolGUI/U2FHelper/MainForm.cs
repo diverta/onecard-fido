@@ -62,8 +62,10 @@ namespace U2FHelper
 
         private void ReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
         {
-            // BLEメッセージが返送されて来たら、
+            // BLEメッセージが返送されて来たら
+            // 先にBLEを切断し、
             // HIDデバイスにBLEメッセージを転送
+            bleProcess.DisconnectBLE();
             p.XferBLEMessage(receivedMessage, receivedLen);
 
             // 終了メッセージ

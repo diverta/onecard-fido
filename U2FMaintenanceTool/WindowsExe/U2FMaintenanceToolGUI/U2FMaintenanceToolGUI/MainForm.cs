@@ -12,12 +12,20 @@ namespace U2FMaintenanceToolGUI
         {
             InitializeComponent();
             app = new AppMain(this);
+            
+            app.PrintMessageText += new AppMain.printMessageTextEvent(OnPrintMessageText);
+            app.ProcessExited += new AppMain.processExitedEvent(onAppMainProcessExited);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
         {
             // このアプリケーションを終了する
             app.doExit();
+        }
+
+        private void OnPrintMessageText(string messageText)
+        {
+            textBox1.AppendText(messageText + "\r\n");
         }
 
         private bool checkCommandAvailable()
