@@ -7,6 +7,13 @@ namespace U2FMaintenanceToolGUI
 {
     class AppMain
     {
+        private enum BLERequestType
+        {   
+            None = 0,
+            EraseSkeyCert,
+        };
+        private BLERequestType bleRequestType = BLERequestType.None;
+
         // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
         public const string U2FMaintenanceToolExe = "U2FMaintenanceToolCMD.exe";
@@ -22,6 +29,14 @@ namespace U2FMaintenanceToolGUI
         public const string OpenSSLCacertV3Ext = "cacertV3.ext";
         public bool opensslAvailable;
 
+        // メッセージテキスト送信用のイベント
+        public delegate void printMessageTextEvent(string messageText);
+        public event printMessageTextEvent PrintMessageText;
+
+        // 処理完了時のイベント
+        public delegate void processExitedEvent(bool success);
+        public event processExitedEvent ProcessExited;
+
         // メイン画面の参照を保持
         private MainForm mainForm;
 
@@ -29,7 +44,7 @@ namespace U2FMaintenanceToolGUI
         private Process p;
 
         // BLEデバイス関連
-        private BLEService bleService = new BLEService();
+        private BLEProcess bleProcess = new BLEProcess();
 
         public AppMain(MainForm f)
         {
@@ -53,12 +68,19 @@ namespace U2FMaintenanceToolGUI
             }
 
             // BLEデバイス関連
-            bleService.OneCardPeripheralFound += OnFoundDevice;
-            bleService.OneCardPeripheralPaired += OnPairedDevice;
+            bleProcess.OneCardPeripheralPaired += new BLEProcess.oneCardPeripheralPairedEvent(OnPairedDevice);
+            bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
+            bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
 
             outputLogToFile("U2F管理ツールを起動しました");
         }
 
+        private void OnPrintMessageText(string message)
+        {
+            // メッセージを画面表示させる
+            PrintMessageText(message);
+        }
+        
         private void outputLogToFile(string message)
         {
             // メッセージに現在時刻を付加する
@@ -137,7 +159,7 @@ namespace U2FMaintenanceToolGUI
                 p.StartInfo.FileName, p.StartInfo.Arguments));
 
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
-            mainForm.onAppMainProcessExited(ret);
+            ProcessExited(ret);
         }
 
         private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
@@ -171,24 +193,52 @@ namespace U2FMaintenanceToolGUI
 
         public void doPairing()
         {
-            bleService.Pair();
-        }
-
-        public void OnFoundDevice()
-        {
-            bleService.PairWithOneCardPeripheral();
+            bleProcess.PairWithOneCardPeripheral();
         }
 
         public void OnPairedDevice(bool success)
         {
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
-            mainForm.onAppMainProcessExited(success);
+            ProcessExited(success);
+        }
+
+        private void OnReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
+        {
+            if (ret == false) {
+                // 処理結果が不正の場合は画面に制御を戻す
+                ProcessExited(false);
+                return;
+            }
+
+            switch (bleRequestType) {
+            case BLERequestType.EraseSkeyCert:
+                DoResponse(ret, receivedMessage, receivedLen);
+                break;
+            default:
+                break;
+            }
         }
 
         public void doEraseSkeyCert()
         {
-            // U2FMaintenanceTool.exe -Eを実行する
-            doCommandWithExecutable(U2FMaintenanceToolExe, "-E");
+            // リクエストデータ（APDU）を編集し request に格納
+            // INS=0x42, P1=0x00
+            byte[] u2fVersionFrameData = {
+                    0x83, 0x00, 0x04,
+                    0x00, 0x42, 0x00, 0x00
+                };
+
+            // BLE処理を実行し、メッセージを転送
+            bleRequestType = BLERequestType.EraseSkeyCert;
+            bleProcess.DoXferMessage(u2fVersionFrameData, u2fVersionFrameData.Length);
+        }
+
+        private void DoResponse(bool ret, byte[] receivedMessage, int receivedLen)
+        {
+            // BLEメッセージが返送されて来たら
+            // BLEを切断し画面に制御を戻す
+            bleProcess.DisconnectBLE();
+            ProcessExited(ret);
         }
 
         public void doInstallSkeyCert(string skeyFilePath, string certFilePath)
