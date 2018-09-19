@@ -20,6 +20,9 @@ namespace U2FHelper
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
         private Guid U2F_STATUS_CHAR_UUID = new Guid("F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB");
 
+        private BluetoothLEAdvertisementWatcher watcher;
+        private ulong BluetoothAddress;
+
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
 
@@ -28,6 +31,12 @@ namespace U2FHelper
 
         public delegate void oneCardPeripheralFoundEvent();
         public event oneCardPeripheralFoundEvent OneCardPeripheralFound;
+
+        public BLEService()
+        {
+            watcher = new BluetoothLEAdvertisementWatcher();
+            watcher.Received += OnAdvertisementReceived;
+        }
 
         public void SetMainForm(MainForm f)
         {
@@ -84,44 +93,39 @@ namespace U2FHelper
             }
         }
 
-        private DeviceWatcher deviceWatcher;
-        private DeviceInformation deviceInfoForPair;
-
-        public void Pair()
+        public async void Pair()
         {
             OutputLogToFile("One Cardとのペアリングを開始します。");
+            BluetoothAddress = 0;
+            watcher.Start();
 
-            string[] requestedProperties = {
-                "System.Devices.Aep.DeviceAddress",
-                "System.Devices.Aep.IsConnected"
-            };
-            deviceWatcher = DeviceInformation.CreateWatcher(
-                                    "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")",
-                                    requestedProperties,
-                                    DeviceInformationKind.AssociationEndpoint);
-            deviceWatcher.Added += DeviceWatcherAdded;
-            deviceWatcher.Start();
+            // One Cardがみつかるまで待機（最大10秒）
             OutputLogToFile("One Cardからのアドバタイズ監視を開始します。");
-        }
+            for (int i = 0; i < 10 && BluetoothAddress == 0; i++) {
+                await Task.Run(() => System.Threading.Thread.Sleep(1000));
+            }
 
-        private void DeviceWatcherAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
-        {
-            if (sender == deviceWatcher) {
-                // One Cardが見つかったら、
-                // デバイス情報を保持し、画面スレッドに通知
-                if (deviceInfo.Name == "OneCard_Peripheral") {
-                    deviceInfoForPair = deviceInfo;
-                    DeviceWatcherStop();
-                    OneCardPeripheralFound();
-                }
+            watcher.Stop();
+            OutputLogToFile("One Cardからのアドバタイズ監視を終了しました。");
+
+            if (BluetoothAddress != 0) {
+                // One Cardが見つかった場合はペアリング実行
+                OneCardPeripheralFound();
+            } else {
+                // 画面スレッドに失敗を通知
+                OneCardPeripheralPaired(false);
             }
         }
 
-        private void DeviceWatcherStop()
+        private void OnAdvertisementReceived(BluetoothLEAdvertisementWatcher watcher, BluetoothLEAdvertisementReceivedEventArgs eventArgs)
         {
-            deviceWatcher.Added -= DeviceWatcherAdded;
-            deviceWatcher.Stop();
-            OutputLogToFile("One Cardからのアドバタイズ監視を終了しました。");
+            // One Cardが見つかったら、
+            // アドレス情報を保持し、画面スレッドに通知
+            string name = eventArgs.Advertisement.LocalName;
+            if (name == "OneCard_Peripheral") {
+                BluetoothAddress = eventArgs.BluetoothAddress;
+                OutputLogToFile(string.Format("One Cardが見つかりました: BluetoothAddress={0}", BluetoothAddress));
+            }
         }
 
         private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
@@ -134,26 +138,30 @@ namespace U2FHelper
         {
             bool success = false;
             try {
-                // リトライは３回まで
-                for (int i = 0; i < 3; i++) {
-                    // ペアリング実行
-                    deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
-                    DevicePairingResult result = await deviceInfoForPair.Pairing.Custom.PairAsync(
-                                 DevicePairingKinds.ConfirmOnly, 
-                                 DevicePairingProtectionLevel.Encryption);
-                    deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
+                // デバイス情報を取得
+                BluetoothLEDevice device = await BluetoothLEDevice.FromBluetoothAddressAsync(BluetoothAddress);
+                DeviceInformation deviceInfoForPair = device.DeviceInformation;
 
-                    // ペアリングが正常終了したら処理完了
-                    if (result.Status == DevicePairingResultStatus.Paired ||
-                        result.Status == DevicePairingResultStatus.AlreadyPaired) {
-                        success = true;
-                        OutputLogToFile("One Cardとのペアリングが成功しました。");
-                        break;
-                    }
+                // ペアリング実行
+                deviceInfoForPair.Pairing.Custom.PairingRequested += CustomOnPairingRequested;
+                DevicePairingResult result = await deviceInfoForPair.Pairing.Custom.PairAsync(
+                                DevicePairingKinds.ConfirmOnly, 
+                                DevicePairingProtectionLevel.Encryption);
+                deviceInfoForPair.Pairing.Custom.PairingRequested -= CustomOnPairingRequested;
 
-                    OutputLogToFile("One Cardとのペアリングが失敗しました。１秒後に再試行されます。");
-                    await Task.Run(() => System.Threading.Thread.Sleep(1000));
+                // ペアリングが正常終了したら処理完了
+                if (result.Status == DevicePairingResultStatus.Paired ||
+                    result.Status == DevicePairingResultStatus.AlreadyPaired) {
+                    success = true;
+                    OutputLogToFile("One Cardとのペアリングが成功しました。");
+                } else {
+                    success = false;
+                    OutputLogToFile("One Cardとのペアリングが失敗しました。");
                 }
+
+                // BLEデバイスを解放
+                device.Dispose();
+                device = null;
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("BLEService.PairWithOneCardPeripheral: {0}", e.Message));
