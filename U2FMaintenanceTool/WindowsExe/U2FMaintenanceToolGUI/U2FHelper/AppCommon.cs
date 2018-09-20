@@ -4,7 +4,7 @@ using System.Text;
 
 namespace U2FHelper
 {
-    static class AppCommon
+    public static class AppCommon
     {
         // macOS版と共通のメッセージ文言を使用
         // 共通
