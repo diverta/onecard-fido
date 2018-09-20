@@ -11,8 +11,22 @@ namespace U2FMaintenanceToolGUI
         {   
             None = 0,
             EraseSkeyCert,
+            TestRegister,
         };
         private BLERequestType bleRequestType = BLERequestType.None;
+
+        internal static class Const
+        {
+            public const int MSG_HEADER_LEN = 3;
+            public const int U2F_INS_REGISTER = 0x01;
+            public const int U2F_INS_AUTHENTICATE = 0x02;
+            public const int U2F_INS_VERSION = 0x03;
+            public const int U2F_AUTH_ENFORCE = 0x03;
+            public const int U2F_AUTH_CHECK_ONLY = 0x07;
+            public const int U2F_APPID_SIZE = 32;
+            public const int U2F_NONCE_SIZE = 32;
+            public const int U2F_KEYHANDLE_SIZE = 64;
+        };
 
         // U2F管理コマンドの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
@@ -28,6 +42,16 @@ namespace U2FMaintenanceToolGUI
         public const string OpenSSLExe = "openssl.exe";
         public const string OpenSSLCacertV3Ext = "cacertV3.ext";
         public bool opensslAvailable;
+
+        // U2Fキーハンドルデータを保持
+        // (ヘルスチェック処理で使用)
+        private byte[] u2FKeyhandleData = new byte[128];
+
+        // 生成されたランダムなチャレンジ、AppIDを保持
+        // (ヘルスチェック処理で使用)
+        private byte[] nonce = new byte[Const.U2F_NONCE_SIZE];
+        private byte[] appid = new byte[Const.U2F_APPID_SIZE];
+        private Random random = new Random();
 
         // メッセージテキスト送信用のイベント
         public delegate void printMessageTextEvent(string messageText);
@@ -214,6 +238,9 @@ namespace U2FMaintenanceToolGUI
             case BLERequestType.EraseSkeyCert:
                 DoResponse(ret, receivedMessage, receivedLen);
                 break;
+            case BLERequestType.TestRegister:
+                DoResponse(ret, receivedMessage, receivedLen);
+                break;
             default:
                 break;
             }
@@ -248,10 +275,75 @@ namespace U2FMaintenanceToolGUI
             doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
+        private void GenerateNonceBytes()
+        {
+            // チャレンジにランダム値を設定
+            random.NextBytes(nonce);
+
+            // 生成されたランダム値をダンプ
+            string dumpNonce = U2FHelper.AppCommon.DumpMessage(nonce, nonce.Length);
+            U2FHelper.AppCommon.OutputLogToFile(string.Format("doHealthCheck: Challenge\r\n{0}", dumpNonce), true);
+        }
+
+        private void GenerateAppIDBytes()
+        {
+            // AppIDにランダム値を設定
+            random.NextBytes(appid);
+
+            // 生成されたランダム値をダンプ
+            string dumpAppid = U2FHelper.AppCommon.DumpMessage(appid, appid.Length);
+            U2FHelper.AppCommon.OutputLogToFile(string.Format("doHealthCheck: AppId\r\n{0}", dumpAppid), true);
+        }
+
+        private int GenerateU2FRegisterBytes(byte[] u2fRequestData)
+        {
+            int pos;
+
+            // ヘッダーにコマンドをセット
+            u2fRequestData[0] = 0x83;
+
+            // リクエストデータを配列にセット
+            u2fRequestData[Const.MSG_HEADER_LEN + 0] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 1] = Const.U2F_INS_REGISTER;
+            u2fRequestData[Const.MSG_HEADER_LEN + 2] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 3] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 4] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 5] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 6] = Const.U2F_NONCE_SIZE + Const.U2F_APPID_SIZE;
+
+            // challengeを設定
+            pos = 7;
+            Array.Copy(nonce, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, Const.U2F_NONCE_SIZE);
+            pos += Const.U2F_NONCE_SIZE;
+
+            // appIdを設定
+            Array.Copy(appid, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, Const.U2F_APPID_SIZE);
+            pos += Const.U2F_APPID_SIZE;
+
+            // Leを設定
+            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
+
+            // ヘッダーにデータ長をセット
+            u2fRequestData[1] = (byte)(pos / 256);
+            u2fRequestData[2] = (byte)(pos % 256);
+
+            return Const.MSG_HEADER_LEN + pos;
+        }
+
         public void doHealthCheck()
         {
-            // U2FMaintenanceTool.exe -Hを実行する
-            doCommandWithExecutable(U2FMaintenanceToolExe, "-H");
+            // ランダムなチャレンジデータを生成
+            GenerateNonceBytes();
+            GenerateAppIDBytes();
+
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+            byte[] U2FRequestData = new byte[128];
+            int length = GenerateU2FRegisterBytes(U2FRequestData);
+
+            // BLE処理を実行し、メッセージを転送
+            bleRequestType = BLERequestType.TestRegister;
+            bleProcess.DoXferMessage(U2FRequestData, length);
         }
 
         public void doSetupChromeNativeMessaging()
