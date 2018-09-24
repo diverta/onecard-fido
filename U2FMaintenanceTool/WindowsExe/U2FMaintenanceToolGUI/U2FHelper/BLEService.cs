@@ -43,17 +43,6 @@ namespace U2FHelper
             mainForm = f;
         }
 
-        public async Task<bool> Connect()
-        {
-            // One CardとのBLE通信を開始
-            if (await StartCommunicate() == false) {
-                OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                return false;
-            }
-            OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED);
-            return true;
-        }
-
         public void Disconnect()
         {
             // 切断
@@ -170,22 +159,29 @@ namespace U2FHelper
             OneCardPeripheralPaired(success);
         }
 
-        private async Task<bool> StartCommunicate()
+        public async Task<bool> StartCommunicate()
         {
-            string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
-            DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
-
             DeviceInformation infoBLE = null;
-            foreach (DeviceInformation info in collection) {
-                infoBLE = info;
-                break;
-            }
-            if (infoBLE == null) {
-                OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
+            try {
+                OutputLogToFile(string.Format("U2Fサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
+                string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
+                DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
+
+                foreach (DeviceInformation info in collection) {
+                    infoBLE = info;
+                    break;
+                }
+                if (infoBLE == null) {
+                    OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
+                    return false;
+                }
+                OutputLogToFile(string.Format("{0} (name={1} isEnabled={2})",
+                    AppCommon.MSG_BLE_U2F_SERVICE_FOUND, infoBLE.Name, infoBLE.IsEnabled));
+
+            } catch (Exception e) {
+                OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
                 return false;
             }
-            OutputLogToFile(string.Format("{0} (name={1} isEnabled={2})",
-                AppCommon.MSG_BLE_U2F_SERVICE_FOUND, infoBLE.Name, infoBLE.IsEnabled));
 
             service = null;
             try {

@@ -58,16 +58,19 @@ namespace U2FHelper
         {
             // メッセージがない場合は終了
             if (message == null || length == 0) {
+                ReceiveBLEMessageEvent(false, null, 0);
                 return;
             }
 
             if (isConnected == false) {
-                // 未接続の場合はBLEデバイスに接続
-                if (await bleService.Connect() == false) {
+                // 未接続の場合はOne CardとのBLE通信を開始
+                if (await bleService.StartCommunicate() == false) {
+                    AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED, true);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     ReceiveBLEMessageEvent(false, null, 0);
                     return;
                 }
+                AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED, true);
                 isConnected = true;
             }
 
