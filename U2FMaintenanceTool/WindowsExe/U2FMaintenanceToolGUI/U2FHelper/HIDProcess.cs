@@ -67,7 +67,7 @@ namespace U2FHelper
 
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
-                MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED + "\r\n");
+                MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED);
                 OutputLogToFile(AppCommon.MSG_USB_DETECT_FAILED);
                 return;
             }
@@ -105,7 +105,7 @@ namespace U2FHelper
             if (GetHIDDevicePath().Equals("")) {
                 // U2F HIDデバイスが切断されてしまった場合
                 CloseDevice();
-                MessageTextEvent(AppCommon.MSG_HID_REMOVED + "\r\n");
+                MessageTextEvent(AppCommon.MSG_HID_REMOVED);
             }
         }
 
@@ -142,7 +142,7 @@ namespace U2FHelper
             // デバイスを初期化し、イベントを登録
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
-            MessageTextEvent(AppCommon.MSG_HID_CONNECTED + "\r\n");
+            MessageTextEvent(AppCommon.MSG_HID_CONNECTED);
             OutputLogToFile(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
         }
 

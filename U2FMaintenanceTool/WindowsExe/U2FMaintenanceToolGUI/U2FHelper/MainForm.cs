@@ -19,9 +19,9 @@ namespace U2FHelper
             labelVersion.Text = "Version 0.1.6";
 
             // イベントの登録
-            p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
+            p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(OnPrintMessageText);
             p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
-            bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(PrintMessageText);
+            bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(ReceiveBLEMessage);
 
             // U2F HIDデバイスに接続
@@ -75,10 +75,10 @@ namespace U2FHelper
             enableButtons(true);
         }
 
-        private void PrintMessageText(string messageText)
+        private void OnPrintMessageText(string messageText)
         {
             // 画面のテキストエリアにメッセージを表示
-            textBox1.AppendText(messageText);
+            textBox1.AppendText(messageText + "\r\n");
         }
 
         private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)
