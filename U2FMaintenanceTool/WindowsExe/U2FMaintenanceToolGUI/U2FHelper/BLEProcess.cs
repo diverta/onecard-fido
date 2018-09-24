@@ -13,6 +13,9 @@ namespace U2FHelper
             public const int BLE_FRAME_LEN = 64;
         }
 
+        // BLE接続状態を保持
+        private bool isConnected = false;
+
         // BLEデバイス関連
         private BLEService bleService = new BLEService();
 
@@ -58,11 +61,14 @@ namespace U2FHelper
                 return;
             }
 
-            // BLEデバイスに接続
-            if (await bleService.Connect() == false) {
-                MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED + "\r\n");
-                ReceiveBLEMessageEvent(false, null, 0);
-                return;
+            if (isConnected == false) {
+                // 未接続の場合はBLEデバイスに接続
+                if (await bleService.Connect() == false) {
+                    MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED + "\r\n");
+                    ReceiveBLEMessageEvent(false, null, 0);
+                    return;
+                }
+                isConnected = true;
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
@@ -290,7 +296,11 @@ namespace U2FHelper
 
         public void DisconnectBLE()
         {
-            bleService.Disconnect();
+            if (isConnected) {
+                // 接続ずみの場合はBLEデバイスを切断
+                bleService.Disconnect();
+                isConnected = false;
+            }
         }
     }
 }
