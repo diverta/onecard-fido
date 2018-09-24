@@ -12,6 +12,8 @@ namespace U2FMaintenanceToolGUI
             None = 0,
             EraseSkeyCert,
             TestRegister,
+            TestAuthenticateCheck,
+            TestAuthenticate,
         };
         private BLERequestType bleRequestType = BLERequestType.None;
 
@@ -239,11 +241,32 @@ namespace U2FMaintenanceToolGUI
                 DoResponse(ret, receivedMessage, receivedLen);
                 break;
             case BLERequestType.TestRegister:
+                DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticateCheck);
+                break;
+            case BLERequestType.TestAuthenticateCheck:
+                DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticate);
+                break;
+            case BLERequestType.TestAuthenticate:
                 DoResponse(ret, receivedMessage, receivedLen);
                 break;
             default:
                 break;
             }
+        }
+
+        private void DoRequest(byte[] requestBytes, int requestLen, BLERequestType type)
+        {
+            // BLE処理を実行し、メッセージを転送
+            bleRequestType = type;
+            bleProcess.DoXferMessage(requestBytes, requestLen);
+        }
+
+        private void DoResponse(bool ret, byte[] receivedMessage, int receivedLen)
+        {
+            // BLEメッセージが返送されて来たら
+            // BLEを切断し画面に制御を戻す
+            bleProcess.DisconnectBLE();
+            ProcessExited(ret);
         }
 
         public void doEraseSkeyCert()
@@ -256,16 +279,7 @@ namespace U2FMaintenanceToolGUI
                 };
 
             // BLE処理を実行し、メッセージを転送
-            bleRequestType = BLERequestType.EraseSkeyCert;
-            bleProcess.DoXferMessage(u2fVersionFrameData, u2fVersionFrameData.Length);
-        }
-
-        private void DoResponse(bool ret, byte[] receivedMessage, int receivedLen)
-        {
-            // BLEメッセージが返送されて来たら
-            // BLEを切断し画面に制御を戻す
-            bleProcess.DisconnectBLE();
-            ProcessExited(ret);
+            DoRequest(u2fVersionFrameData, u2fVersionFrameData.Length, BLERequestType.EraseSkeyCert);
         }
 
         public void doInstallSkeyCert(string skeyFilePath, string certFilePath)
@@ -342,8 +356,92 @@ namespace U2FMaintenanceToolGUI
             int length = GenerateU2FRegisterBytes(U2FRequestData);
 
             // BLE処理を実行し、メッセージを転送
-            bleRequestType = BLERequestType.TestRegister;
-            bleProcess.DoXferMessage(U2FRequestData, length);
+            DoRequest(U2FRequestData, length, BLERequestType.TestRegister);
+        }
+
+        private int GenerateU2FAuthenticateBytes(byte[] u2fRequestData, byte authOption)
+        {
+            int pos;
+
+            // ヘッダーにコマンドをセット
+            u2fRequestData[0] = 0x83;
+
+            // リクエストデータを配列にセット
+            u2fRequestData[Const.MSG_HEADER_LEN + 0] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 1] = Const.U2F_INS_AUTHENTICATE;
+            u2fRequestData[Const.MSG_HEADER_LEN + 2] = authOption;
+            u2fRequestData[Const.MSG_HEADER_LEN + 3] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 4] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 5] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + 6] = Const.U2F_NONCE_SIZE + Const.U2F_APPID_SIZE + Const.U2F_KEYHANDLE_SIZE + 1;
+
+            // challengeを設定
+            pos = 7;
+            Array.Copy(nonce, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, Const.U2F_NONCE_SIZE);
+            pos += Const.U2F_NONCE_SIZE;
+
+            // appIdを設定
+            Array.Copy(appid, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, Const.U2F_APPID_SIZE);
+            pos += Const.U2F_APPID_SIZE;
+
+            // キーハンドル長を設定
+            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = Const.U2F_KEYHANDLE_SIZE;
+
+            // キーハンドルを設定
+            Array.Copy(u2FKeyhandleData, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, Const.U2F_KEYHANDLE_SIZE);
+            pos += Const.U2F_KEYHANDLE_SIZE;
+
+            // Leを設定
+            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
+            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
+
+            // ヘッダーにデータ長をセット
+            u2fRequestData[1] = (byte)(pos / 256);
+            u2fRequestData[2] = (byte)(pos % 256);
+
+            return Const.MSG_HEADER_LEN + pos;
+        }
+
+        private byte getAuthOption(BLERequestType type)
+        {
+            // 処理区分からオプションを設定
+            if (type == BLERequestType.TestAuthenticateCheck) {
+                return Const.U2F_AUTH_CHECK_ONLY;
+            } else {
+                return Const.U2F_AUTH_ENFORCE;
+            }
+        }
+
+        private void DoTestAuthenticate(bool ret, byte[] receivedMessage, int receivedLen, BLERequestType type)
+        {
+            // 先行のRegister処理が失敗時は以降の処理を行わない
+            if (ret == false) {
+                ProcessExited(ret);
+            }
+
+            // Registerレスポンスからキーハンドル
+            // (71バイト目から64バイト)を切り出して保持
+            Array.Copy(receivedMessage, 70, u2FKeyhandleData, 0, Const.U2F_KEYHANDLE_SIZE);
+
+            // ランダムなチャレンジデータを生成
+            GenerateNonceBytes();
+
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+	        byte[] U2FRequestData = new byte[256];
+            int length = GenerateU2FAuthenticateBytes(U2FRequestData, getAuthOption(type));
+
+            if (type == BLERequestType.TestAuthenticate) {
+                // BLE U2Fリクエスト転送の前に、
+                // One CardのMAIN SWを押してもらうように促す
+                // メッセージを画面表示
+                PrintMessageText("U2F Authenticateを開始します.");
+                PrintMessageText("  ユーザー所在確認が必要となりますので、");
+                PrintMessageText("  One Card上のユーザー所在確認LEDが点滅したら、");
+                PrintMessageText("  MAIN SWを１回押してください.");
+            }
+
+            // BLE処理を実行し、メッセージを転送
+            DoRequest(U2FRequestData, length, type);
         }
 
         public void doSetupChromeNativeMessaging()
