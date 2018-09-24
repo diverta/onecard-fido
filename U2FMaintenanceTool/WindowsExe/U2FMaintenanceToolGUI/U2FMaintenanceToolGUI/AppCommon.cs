@@ -17,6 +17,7 @@
         public const string MSG_PROMPT_SETUP_CHROME = "ChromeでBLE U2Fトークンを使用時、このU2F管理ツールがChromeのサブプロセスとして起動します。\n設定を実行しますか？";
         public const string MSG_ERASE_SKEY_CERT = "One Cardから鍵・証明書・キーハンドルをすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はOne CardによるU2F認証ができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         // 証明書要求ファイル作成画面
         public const string MSG_PROMPT_SELECT_PEM_PATH = "使用する秘密鍵ファイル(PEM)を選択してください。";

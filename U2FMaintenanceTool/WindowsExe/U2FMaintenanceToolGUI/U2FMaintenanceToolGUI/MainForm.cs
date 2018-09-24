@@ -60,21 +60,25 @@ namespace U2FMaintenanceToolGUI
             // ボタンに対応する処理を実行
             if (sender.Equals(button1)) {
                 commandTitle = AppCommon.PROCESS_NAME_PAIRING;
+                DisplayStartMessage(commandTitle);
                 app.doPairing();
 
             }
             else if (sender.Equals(button2)) {
                 commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
+                DisplayStartMessage(commandTitle);
                 app.doEraseSkeyCert();
 
             }
             else if (sender.Equals(button3)) {
                 commandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
+                DisplayStartMessage(commandTitle);
                 app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
             else if (sender.Equals(button4)) {
                 commandTitle = AppCommon.PROCESS_NAME_HEALTHCHECK;
+                DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
             }
@@ -233,6 +237,13 @@ namespace U2FMaintenanceToolGUI
         {
             // U2F管理コマンド実行時の標準エラー出力内容を表示
             textBox1.AppendText(errorData + "\r\n");
+        }
+
+        private void DisplayStartMessage(string message)
+        {
+            // 処理開始メッセージを表示
+            string formatted = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, message);
+            textBox1.AppendText(formatted + "\r\n");
         }
 
         private void displayResultMessage(string message, bool success)
