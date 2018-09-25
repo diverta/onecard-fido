@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Windows.Storage.Streams;
 
 namespace U2FHelper
 {
@@ -138,22 +137,5 @@ namespace U2FHelper
         public const int WmDevicechange = 0x0219;
         public const int DbtDevicearrival = 0x8000;
         public const int DbtDeviceremovecomplete = 0x8004;
-
-        //
-        // テストのための仮実装です
-        //
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // テスト用のメッセージを生成
-            DataWriter writer = new DataWriter();
-            byte[] u2fVersionFrameData = {
-                    0x83, 0x00, 0x07,
-                    0x00, 0x03, 0x00, 0x00,
-                    0x00, 0x00, 0x00
-                };
-
-            // BLE処理を実行し、メッセージを転送
-            bleProcess.DoXferMessage(u2fVersionFrameData, u2fVersionFrameData.Length);
-        }
     }
 }

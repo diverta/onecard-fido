@@ -13,7 +13,6 @@ namespace U2FHelper
         private GattDeviceService service;
         private GattCharacteristic U2FControlPointChar;
         private GattCharacteristic U2FStatusChar;
-        private MainForm mainForm;
 
         private Guid U2F_BLE_SERVICE_UUID = new Guid("0000FFFD-0000-1000-8000-00805f9b34fb");
         private Guid U2F_CONTROL_POINT_CHAR_UUID = new Guid("F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB");
@@ -35,12 +34,6 @@ namespace U2FHelper
         {
             watcher = new BluetoothLEAdvertisementWatcher();
             watcher.Received += OnAdvertisementReceived;
-        }
-
-        public void SetMainForm(MainForm f)
-        {
-            // メインフォームの参照を保持
-            mainForm = f;
         }
 
         public void Disconnect()
