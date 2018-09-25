@@ -64,14 +64,6 @@ namespace U2FMaintenanceToolGUI
         private byte[] appid = new byte[Const.U2F_APPID_SIZE];
         private Random random = new Random();
 
-        // メッセージテキスト送信用のイベント
-        public delegate void printMessageTextEvent(string messageText);
-        public event printMessageTextEvent PrintMessageText;
-
-        // 処理完了時のイベント
-        public delegate void processExitedEvent(bool success);
-        public event processExitedEvent ProcessExited;
-
         // メイン画面の参照を保持
         private MainForm mainForm;
 
@@ -113,7 +105,7 @@ namespace U2FMaintenanceToolGUI
         private void OnPrintMessageText(string message)
         {
             // メッセージを画面表示させる
-            PrintMessageText(message);
+            mainForm.OnPrintMessageText(message);
         }
         
         private void outputLogToFile(string message)
@@ -194,7 +186,7 @@ namespace U2FMaintenanceToolGUI
                 p.StartInfo.FileName, p.StartInfo.Arguments));
 
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
-            ProcessExited(ret);
+            mainForm.OnAppMainProcessExited(ret);
         }
 
         private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
@@ -234,14 +226,14 @@ namespace U2FMaintenanceToolGUI
         public void OnPairedDevice(bool success)
         {
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
-            ProcessExited(success);
+            mainForm.OnAppMainProcessExited(success);
         }
 
         private void OnReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
         {
             if (ret == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
-                ProcessExited(false);
+                mainForm.OnAppMainProcessExited(false);
                 return;
             }
 
@@ -281,7 +273,7 @@ namespace U2FMaintenanceToolGUI
             // BLEメッセージが返送されて来たら
             // BLEを切断し画面に制御を戻す
             bleProcess.DisconnectBLE();
-            ProcessExited(ret);
+            mainForm.OnAppMainProcessExited(ret);
         }
 
         public void doEraseSkeyCert()
@@ -403,7 +395,7 @@ namespace U2FMaintenanceToolGUI
             //   リトルエンディアン形式で格納される
             byte[] skeyBytes = new byte[32];
             if (ReadPemFile(skeyFilePath, skeyBytes) == false) {
-                ProcessExited(false);
+                mainForm.OnAppMainProcessExited(false);
                 return;
             }
 
@@ -466,7 +458,7 @@ namespace U2FMaintenanceToolGUI
             // 証明書ファイルを読込む
             byte[] certBytes = ReadCertFile(CertFilePath);
             if (certBytes == null) {
-                ProcessExited(false);
+                mainForm.OnAppMainProcessExited(false);
                 return;
             }
 
@@ -603,7 +595,7 @@ namespace U2FMaintenanceToolGUI
         {
             // 先行のRegister処理が失敗時は以降の処理を行わない
             if (ret == false) {
-                ProcessExited(ret);
+                mainForm.OnAppMainProcessExited(ret);
             }
 
             // Registerレスポンスからキーハンドル
@@ -620,10 +612,10 @@ namespace U2FMaintenanceToolGUI
                 // BLE U2Fリクエスト転送の前に、
                 // One CardのMAIN SWを押してもらうように促す
                 // メッセージを画面表示
-                PrintMessageText("U2F Authenticateを開始します.");
-                PrintMessageText("  ユーザー所在確認が必要となりますので、");
-                PrintMessageText("  One Card上のユーザー所在確認LEDが点滅したら、");
-                PrintMessageText("  MAIN SWを１回押してください.");
+                mainForm.OnPrintMessageText("U2F Authenticateを開始します.");
+                mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
+                mainForm.OnPrintMessageText("  One Card上のユーザー所在確認LEDが点滅したら、");
+                mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
             }
 
             // BLE処理を実行し、メッセージを転送

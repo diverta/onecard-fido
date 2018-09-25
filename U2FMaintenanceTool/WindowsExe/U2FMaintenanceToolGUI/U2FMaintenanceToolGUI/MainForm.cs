@@ -12,9 +12,6 @@ namespace U2FMaintenanceToolGUI
         {
             InitializeComponent();
             app = new AppMain(this);
-            
-            app.PrintMessageText += new AppMain.printMessageTextEvent(OnPrintMessageText);
-            app.ProcessExited += new AppMain.processExitedEvent(onAppMainProcessExited);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
@@ -23,7 +20,7 @@ namespace U2FMaintenanceToolGUI
             app.doExit();
         }
 
-        private void OnPrintMessageText(string messageText)
+        public void OnPrintMessageText(string messageText)
         {
             textBox1.AppendText(messageText + "\r\n");
         }
@@ -88,7 +85,7 @@ namespace U2FMaintenanceToolGUI
             }
         }
 
-        public void onAppMainProcessExited(bool ret)
+        public void OnAppMainProcessExited(bool ret)
         {
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
