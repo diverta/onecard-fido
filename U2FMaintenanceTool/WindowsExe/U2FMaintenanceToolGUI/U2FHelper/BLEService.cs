@@ -20,6 +20,7 @@ namespace U2FHelper
 
         private BluetoothLEAdvertisementWatcher watcher;
         private ulong BluetoothAddress;
+        private DeviceInformation infoBLE;
 
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
@@ -154,12 +155,12 @@ namespace U2FHelper
 
         public async Task<bool> StartCommunicate()
         {
-            DeviceInformation infoBLE = null;
             try {
                 OutputLogToFile(string.Format("U2Fサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
+                infoBLE = null;
                 foreach (DeviceInformation info in collection) {
                     infoBLE = info;
                     break;
@@ -232,6 +233,7 @@ namespace U2FHelper
                 OutputLogToFile(string.Format("BLEService.StopCommunicate: {0}", e.Message));
             } finally {
                 service = null;
+                infoBLE = null;
             }
         }
 

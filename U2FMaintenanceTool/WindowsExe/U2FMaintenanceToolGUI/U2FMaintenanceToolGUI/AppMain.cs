@@ -271,8 +271,7 @@ namespace U2FMaintenanceToolGUI
         private void DoResponse(bool ret, byte[] receivedMessage, int receivedLen)
         {
             // BLEメッセージが返送されて来たら
-            // BLEを切断し画面に制御を戻す
-            bleProcess.DisconnectBLE();
+            // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(ret);
         }
 
@@ -654,6 +653,7 @@ namespace U2FMaintenanceToolGUI
 
         public void doExit()
         {
+            bleProcess.DisconnectBLE();
             System.Windows.Forms.Application.Exit();
             outputLogToFile("U2F管理ツールを終了しました");
         }
