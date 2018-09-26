@@ -47,14 +47,13 @@ namespace U2FHelper
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
 
-        // ファイル名
-        public const string FILENAME_U2FHELPER_LOG = "U2FHelper.log";
-        public const string FILENAME_U2FCOMMAND_EXE = "U2FMaintenanceToolCMD.exe";
+        // ログファイル名称のデフォルト
+        public static string logFileName = "U2FMaintenanceToolCommon.log";
 
         public static void OutputLogText(string logText)
         {
             // ログファイルにメッセージを出力する
-            string fname = FILENAME_U2FHELPER_LOG;
+            string fname = logFileName;
             StreamWriter sr = new StreamWriter(
                 (new FileStream(fname, FileMode.Append)), Encoding.Default);
             sr.WriteLine(logText);
