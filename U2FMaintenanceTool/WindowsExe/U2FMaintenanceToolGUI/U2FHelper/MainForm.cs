@@ -78,7 +78,7 @@ namespace U2FHelper
         private void PrintMessageText(string messageText)
         {
             // 画面のテキストエリアにメッセージを表示
-            textBox1.AppendText(messageText);
+            textBox1.AppendText(messageText + "\r\n");
         }
 
         private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)

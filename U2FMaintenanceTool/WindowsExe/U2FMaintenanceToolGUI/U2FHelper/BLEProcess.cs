@@ -38,7 +38,7 @@ namespace U2FHelper
 
             // BLEデバイスに接続
             if (await bleService.Connect() == false) {
-                MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED + "\r\n");
+                MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                 ReceiveBLEMessageEvent(false, null, 0);
                 return;
             }
@@ -116,7 +116,7 @@ namespace U2FHelper
                 if (await bleService.Send(frameData, frameLen) == false) {
                     // 送信失敗時は切断
                     bleService.Disconnect();
-                    MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED + "\r\n");
+                    MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
                     ReceiveBLEMessageEvent(false, null, 0);
                     return;
                 }
