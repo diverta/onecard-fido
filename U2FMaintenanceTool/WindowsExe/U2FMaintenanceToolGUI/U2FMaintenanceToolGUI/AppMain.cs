@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using U2FHelper;
+using U2FMaintenanceToolCommon;
 
 namespace U2FMaintenanceToolGUI
 {
@@ -285,7 +285,7 @@ namespace U2FMaintenanceToolGUI
                     }
                 }
             } catch (Exception e) {
-                U2FHelper.AppCommon.OutputLogToFile(string.Format("ReadLine failed: {0}", e.Message), true);
+                AppCommon.OutputLogToFile(string.Format("ReadLine failed: {0}", e.Message), true);
             }
             return text;
         }
@@ -303,7 +303,7 @@ namespace U2FMaintenanceToolGUI
                 return transferMessage;
 
             } catch (Exception e) {
-                U2FHelper.AppCommon.OutputLogToFile(string.Format("Convert.FromBase64String failed: {0}", e.Message), true);
+                AppCommon.OutputLogToFile(string.Format("Convert.FromBase64String failed: {0}", e.Message), true);
             }
             return null;
         }
@@ -391,7 +391,7 @@ namespace U2FMaintenanceToolGUI
                 return certBytes;
 
             } catch (Exception e) {
-                U2FHelper.AppCommon.OutputLogToFile(string.Format("File.ReadAllBytes failed: {0}", e.Message), true);
+                AppCommon.OutputLogToFile(string.Format("File.ReadAllBytes failed: {0}", e.Message), true);
             }
 
             return null;
@@ -452,8 +452,8 @@ namespace U2FMaintenanceToolGUI
             random.NextBytes(nonce);
 
             // 生成されたランダム値をダンプ
-            string dumpNonce = U2FHelper.AppCommon.DumpMessage(nonce, nonce.Length);
-            U2FHelper.AppCommon.OutputLogToFile(string.Format("doHealthCheck: Challenge\r\n{0}", dumpNonce), true);
+            string dumpNonce = AppCommon.DumpMessage(nonce, nonce.Length);
+            AppCommon.OutputLogToFile(string.Format("doHealthCheck: Challenge\r\n{0}", dumpNonce), true);
         }
 
         private void GenerateAppIDBytes()
@@ -462,8 +462,8 @@ namespace U2FMaintenanceToolGUI
             random.NextBytes(appid);
 
             // 生成されたランダム値をダンプ
-            string dumpAppid = U2FHelper.AppCommon.DumpMessage(appid, appid.Length);
-            U2FHelper.AppCommon.OutputLogToFile(string.Format("doHealthCheck: AppId\r\n{0}", dumpAppid), true);
+            string dumpAppid = AppCommon.DumpMessage(appid, appid.Length);
+            AppCommon.OutputLogToFile(string.Format("doHealthCheck: AppId\r\n{0}", dumpAppid), true);
         }
 
         private int GenerateU2FRegisterBytes(byte[] u2fRequestData)
