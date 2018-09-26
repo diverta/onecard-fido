@@ -33,15 +33,8 @@ namespace U2FMaintenanceToolGUI
             public const int U2F_KEYHANDLE_SIZE = 64;
         };
 
-        // U2F管理コマンドの情報
+        // U2F管理ツールの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
-        public const string U2FMaintenanceToolExe = "U2FMaintenanceToolCMD.exe";
-        public bool commandAvailable;
-
-        // Chrome Native Messaging設定用の
-        // レジストリーキー名、JSONファイル名
-        public const string ChromeNMRegistryKey = "jp.co.diverta.chrome.helper.ble.u2f";
-        public const string ChromeNMSettingFile = "jp.co.diverta.chrome.helper.ble.u2f.json";
 
         // OpenSSLコマンドの情報
         public const string OpenSSLExe = "openssl.exe";
@@ -77,12 +70,8 @@ namespace U2FMaintenanceToolGUI
         {
             // メイン画面の参照を保持
             mainForm = f;
+            AppCommon.logFileName = "U2FMaintenanceToolGUI.log";
 
-            // U2F管理コマンドが導入されているかチェック
-            commandAvailable = File.Exists(U2FMaintenanceToolExe);
-            if (commandAvailable == false) {
-                outputLogToFile(U2FMaintenanceToolExe + "が導入されていません");
-            }
             // OpenSSLコマンドが導入されているかチェック
             if (File.Exists(OpenSSLExe) == false) {
                 outputLogToFile(OpenSSLExe + "が導入されていません");
@@ -125,7 +114,7 @@ namespace U2FMaintenanceToolGUI
         private void doCommandWithExecutable(string executable, string arguments)
         {
             // 実行対象プロセスの実行可能ファイルがない場合は終了
-            if (commandAvailable == false) {
+            if (opensslAvailable == false) {
                 return;
             }
 
@@ -182,7 +171,7 @@ namespace U2FMaintenanceToolGUI
             // 実行結果をログ出力
             outputLogToFile(string.Format(
                 "コマンドの実行が{0}しました: {1} {2}",
-                ret ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE,
+                ret ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE,
                 p.StartInfo.FileName, p.StartInfo.Arguments));
 
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
@@ -205,17 +194,6 @@ namespace U2FMaintenanceToolGUI
             }
             // メイン画面の参照を経由し処理を実行
             mainForm.onAppMainProcessErrorData(args.Data);
-        }
-
-        public bool checkChromeNMSettingFileIsExist() {
-            // Chrome Native Messaging設定用のJSONファイルが
-            // 導入されているかチェック
-            if (File.Exists(ChromeNMSettingFile)) {
-                return true;
-            }
-
-            outputLogToFile(ChromeNMSettingFile + "が導入されていません");
-            return false;
         }
 
         public void doPairing()
@@ -619,13 +597,6 @@ namespace U2FMaintenanceToolGUI
 
             // BLE処理を実行し、メッセージを転送
             DoRequest(U2FRequestData, length, type);
-        }
-
-        public void doSetupChromeNativeMessaging()
-        {
-            // U2FMaintenanceTool.exe -R <ChromeNMRegistryKey> <ChromeNMSettingFile> を実行する
-            string arguments = string.Format("-R {0} {1}", ChromeNMRegistryKey, ChromeNMSettingFile);
-            doCommandWithExecutable(U2FMaintenanceToolExe, arguments);
         }
 
         public void doCreatePrivateKey(string filePath)

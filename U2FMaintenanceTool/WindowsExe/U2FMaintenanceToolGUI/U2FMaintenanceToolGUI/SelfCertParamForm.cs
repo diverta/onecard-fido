@@ -40,9 +40,9 @@ namespace U2FMaintenanceToolGUI
 
             // 出力先のファイルを選択
             string filePath = FormUtil.createFilePath(saveFileDialog1,
-                AppCommon.MSG_PROMPT_CREATE_CRT_PATH,
-                AppCommon.DEFAULT_CRT_NAME,
-                AppCommon.FILTER_SELECT_CRT_PATH
+                ToolGUICommon.MSG_PROMPT_CREATE_CRT_PATH,
+                ToolGUICommon.DEFAULT_CRT_NAME,
+                ToolGUICommon.FILTER_SELECT_CRT_PATH
                 );
             if (filePath.Equals(string.Empty)) {
                 return;
@@ -69,24 +69,24 @@ namespace U2FMaintenanceToolGUI
         private bool checkEntries()
         {
             // 入力項目が正しく指定されていない場合は終了
-            if (FormUtil.checkMustEntry(textCsrPath, AppCommon.MSG_PROMPT_SELECT_CSR_PATH) == false) {
+            if (FormUtil.checkMustEntry(textCsrPath, ToolGUICommon.MSG_PROMPT_SELECT_CSR_PATH) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textPemPath, AppCommon.MSG_PROMPT_SELECT_PEM_PATH) == false) {
+            if (FormUtil.checkMustEntry(textPemPath, ToolGUICommon.MSG_PROMPT_SELECT_PEM_PATH) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textDays, AppCommon.MSG_PROMPT_INPUT_CRT_DAYS) == false) {
+            if (FormUtil.checkMustEntry(textDays, ToolGUICommon.MSG_PROMPT_INPUT_CRT_DAYS) == false) {
                 return false;
             }
-            if (FormUtil.checkIsNumber(textDays, AppCommon.MSG_PROMPT_INPUT_CRT_DAYS) == false) {
+            if (FormUtil.checkIsNumber(textDays, ToolGUICommon.MSG_PROMPT_INPUT_CRT_DAYS) == false) {
                 return false;
             }
 
             // 入力されたファイルパスが存在しない場合は終了
-            if (FormUtil.checkFileExist(textCsrPath, AppCommon.MSG_PROMPT_EXIST_CSR_PATH) == false) {
+            if (FormUtil.checkFileExist(textCsrPath, ToolGUICommon.MSG_PROMPT_EXIST_CSR_PATH) == false) {
                 return false;
             }
-            if (FormUtil.checkFileExist(textPemPath, AppCommon.MSG_PROMPT_EXIST_PEM_PATH) == false) {
+            if (FormUtil.checkFileExist(textPemPath, ToolGUICommon.MSG_PROMPT_EXIST_PEM_PATH) == false) {
                 return false;
             }
 
@@ -96,16 +96,16 @@ namespace U2FMaintenanceToolGUI
         private void buttonCsrPath_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_CSR_PATH,
-                AppCommon.FILTER_SELECT_CSR_PATH,
+                ToolGUICommon.MSG_PROMPT_SELECT_CSR_PATH,
+                ToolGUICommon.FILTER_SELECT_CSR_PATH,
                 textCsrPath);
         }
 
         private void buttonPemPath_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_PEM_PATH,
-                AppCommon.FILTER_SELECT_PEM_PATH,
+                ToolGUICommon.MSG_PROMPT_SELECT_PEM_PATH,
+                ToolGUICommon.FILTER_SELECT_PEM_PATH,
                 textPemPath);
         }
     }

@@ -25,63 +25,35 @@ namespace U2FMaintenanceToolGUI
             textBox1.AppendText(messageText + "\r\n");
         }
 
-        private bool checkCommandAvailable()
-        {
-            // U2F管理コマンドがある場合はOK
-            if (app.commandAvailable)
-            {
-                return true;
-            }
-
-            // U2F管理コマンドがない旨の表示
-            string message = "U2F管理コマンドを実行できません。";
-            textBox1.AppendText(message + "\r\n");
-            textBox1.AppendText(AppMain.U2FMaintenanceToolExe + "をインストールしてください。\r\n");
-
-            // 処理結果を画面表示し、ボタンを押下可能とする
-            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            enableButtons(true);
-            return false;
-        }
-
         private void doCommand(object sender)
         {
             // ボタンを押下不可とする
             enableButtons(false);
 
-            // U2F管理コマンドが存在しない場合は終了
-            if (checkCommandAvailable() == false) {
-                return;
-            }
-
             // ボタンに対応する処理を実行
             if (sender.Equals(button1)) {
-                commandTitle = AppCommon.PROCESS_NAME_PAIRING;
+                commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
                 app.doPairing();
 
             }
             else if (sender.Equals(button2)) {
-                commandTitle = AppCommon.PROCESS_NAME_ERASE_SKEY_CERT;
+                commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
                 app.doEraseSkeyCert();
 
             }
             else if (sender.Equals(button3)) {
-                commandTitle = AppCommon.PROCESS_NAME_INSTALL_SKEY_CERT;
+                commandTitle = ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
                 app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
             else if (sender.Equals(button4)) {
-                commandTitle = AppCommon.PROCESS_NAME_HEALTHCHECK;
+                commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
-            }
-            else if (sender.Equals(button5)) {
-                commandTitle = AppCommon.PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING;
-                app.doSetupChromeNativeMessaging();
             }
         }
 
@@ -102,8 +74,8 @@ namespace U2FMaintenanceToolGUI
         {
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_ERASE_SKEY_CERT,
-                AppCommon.MSG_PROMPT_ERASE_SKEY_CERT);
+                ToolGUICommon.MSG_ERASE_SKEY_CERT,
+                ToolGUICommon.MSG_PROMPT_ERASE_SKEY_CERT);
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
@@ -133,11 +105,11 @@ namespace U2FMaintenanceToolGUI
         private void button3_Click(object sender, EventArgs e)
         {
             // ファイルパス入力チェック
-            if (checkPathEntry(textPath1, AppCommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
+            if (checkPathEntry(textPath1, ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
             {
                 return;
             }
-            if (checkPathEntry(textPath2, AppCommon.MSG_PROMPT_SELECT_CRT_PATH) == false)
+            if (checkPathEntry(textPath2, ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH) == false)
             {
                 return;
             }
@@ -152,60 +124,19 @@ namespace U2FMaintenanceToolGUI
             doCommand(sender);
         }
 
-        private bool checkSettingJsonIsExist()
-        {
-            // Chrome Native Messaging設定用の
-            // JSONファイルが導入済みの場合はOK
-            if (app.checkChromeNMSettingFileIsExist())
-            {
-                return true;
-            }
-
-            // JSONファイルがない旨の表示
-            string message = "Chrome Native Messagingの設定ができません。";
-            textBox1.AppendText(message + "\r\n");
-            textBox1.AppendText(AppMain.ChromeNMSettingFile + "をインストールしてください。\r\n");
-
-            // メッセージをポップアップ表示
-            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            // Chrome Native Messaging設定用の
-            // JSONファイルがない場合は終了
-            if (checkSettingJsonIsExist() == false)
-            {
-                return;
-            }
-
-            // プロンプトで表示されるメッセージ
-            string message = string.Format("{0}\n\n{1}",
-                AppCommon.MSG_SETUP_CHROME,
-                AppCommon.MSG_PROMPT_SETUP_CHROME);
-
-            // Chrome Native Messaging有効化設定
-            // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message))
-            {
-                doCommand(sender);
-            }
-        }
-
         private void buttonPath1_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_PKEY_PATH,
-                AppCommon.FILTER_SELECT_PEM_PATH,
+                ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH,
+                ToolGUICommon.FILTER_SELECT_PEM_PATH,
                 textPath1);
         }
 
         private void buttonPath2_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_CRT_PATH,
-                AppCommon.FILTER_SELECT_CRT_PATH,
+                ToolGUICommon.MSG_PROMPT_SELECT_CRT_PATH,
+                ToolGUICommon.FILTER_SELECT_CRT_PATH,
                 textPath2);
         }
 
@@ -215,7 +146,6 @@ namespace U2FMaintenanceToolGUI
             button2.Enabled = enabled;
             button3.Enabled = enabled;
             button4.Enabled = enabled;
-            button5.Enabled = enabled;
             buttonPath1.Enabled = enabled;
             buttonPath2.Enabled = enabled;
             textPath1.Enabled = enabled;
@@ -239,15 +169,15 @@ namespace U2FMaintenanceToolGUI
         private void DisplayStartMessage(string message)
         {
             // 処理開始メッセージを表示
-            string formatted = string.Format(AppCommon.MSG_FORMAT_START_MESSAGE, message);
+            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
         }
 
         private void displayResultMessage(string message, bool success)
         {
             // U2F管理コマンドの実行結果を表示
-            string formatted = string.Format(AppCommon.MSG_FORMAT_END_MESSAGE,
-                message, success ? AppCommon.MSG_SUCCESS : AppCommon.MSG_FAILURE);
+            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+                message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(formatted, AppMain.U2FMaintenanceToolTitle);
         }
@@ -280,9 +210,9 @@ namespace U2FMaintenanceToolGUI
         private void doCreatePrivateKeyFile(object sender)
         {
             string filePath = FormUtil.createFilePath(saveFileDialog1,
-                    AppCommon.MSG_PROMPT_CREATE_PEM_PATH,
-                    AppCommon.DEFAULT_PEM_NAME,
-                    AppCommon.FILTER_SELECT_PEM_PATH
+                    ToolGUICommon.MSG_PROMPT_CREATE_PEM_PATH,
+                    ToolGUICommon.DEFAULT_PEM_NAME,
+                    ToolGUICommon.FILTER_SELECT_PEM_PATH
                     );
             doCreateFile(sender, filePath);
         }
@@ -358,17 +288,17 @@ namespace U2FMaintenanceToolGUI
 
             // ボタンに対応する処理を実行
             if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
-                commandTitle = AppCommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
+                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
                 app.doCreatePrivateKey(filePath);
 
             }
             else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
-                commandTitle = AppCommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
+                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
                 app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
 
             }
             else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
-                commandTitle = AppCommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
+                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
                 app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
             }
         }

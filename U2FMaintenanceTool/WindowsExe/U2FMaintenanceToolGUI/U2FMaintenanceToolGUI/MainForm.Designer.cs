@@ -39,7 +39,6 @@
             this.buttonPath2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -156,16 +155,6 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(462, 179);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(110, 25);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Chrome設定";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(12, 210);
@@ -194,32 +183,32 @@
             this.toolStripMenuItem1,
             this.自己署名証明書ファイル作成SToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
             // 
             // 鍵ファイル作成KToolStripMenuItem
             // 
             this.鍵ファイル作成KToolStripMenuItem.Name = "鍵ファイル作成KToolStripMenuItem";
-            this.鍵ファイル作成KToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.鍵ファイル作成KToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.鍵ファイル作成KToolStripMenuItem.Text = "鍵ファイル作成(&K)...";
             this.鍵ファイル作成KToolStripMenuItem.Click += new System.EventHandler(this.鍵ファイル作成KToolStripMenuItem_Click);
             // 
             // 証明書要求ファイル作成RToolStripMenuItem
             // 
             this.証明書要求ファイル作成RToolStripMenuItem.Name = "証明書要求ファイル作成RToolStripMenuItem";
-            this.証明書要求ファイル作成RToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.証明書要求ファイル作成RToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.証明書要求ファイル作成RToolStripMenuItem.Text = "証明書要求ファイル作成(&R)...";
             this.証明書要求ファイル作成RToolStripMenuItem.Click += new System.EventHandler(this.証明書要求ファイル作成RToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(235, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(236, 6);
             // 
             // 自己署名証明書ファイル作成SToolStripMenuItem
             // 
             this.自己署名証明書ファイル作成SToolStripMenuItem.Name = "自己署名証明書ファイル作成SToolStripMenuItem";
-            this.自己署名証明書ファイル作成SToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.自己署名証明書ファイル作成SToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.自己署名証明書ファイル作成SToolStripMenuItem.Text = "自己署名証明書ファイル作成(&S)...";
             this.自己署名証明書ファイル作成SToolStripMenuItem.Click += new System.EventHandler(this.自己署名証明書ファイル作成SToolStripMenuItem_Click);
             // 
@@ -244,7 +233,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 386);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.buttonPath2);
@@ -283,7 +271,6 @@
         private System.Windows.Forms.Button buttonPath2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.MenuStrip menuStrip1;

@@ -40,7 +40,7 @@ namespace U2FMaintenanceToolGUI
         {
             if (textBox.Text.Equals(string.Empty))
             {
-                MessageBox.Show(informativeText, AppCommon.MSG_INVALID_FIELD,
+                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -52,7 +52,7 @@ namespace U2FMaintenanceToolGUI
         {
             if (File.Exists(textBox.Text) == false)
             {
-                MessageBox.Show(informativeText, AppCommon.MSG_INVALID_FILE_PATH,
+                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FILE_PATH,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -64,7 +64,7 @@ namespace U2FMaintenanceToolGUI
         {
             if (Regex.IsMatch(textBox.Text, "^[1-9]{1}[0-9]*$") == false)
             {
-                MessageBox.Show(informativeText, AppCommon.MSG_INVALID_NUMBER,
+                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_NUMBER,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
