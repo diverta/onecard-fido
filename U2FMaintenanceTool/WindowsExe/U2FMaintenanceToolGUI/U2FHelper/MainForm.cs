@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Windows.Storage.Streams;
 using U2FMaintenanceToolCommon;
 
 namespace U2FHelper
@@ -17,11 +18,12 @@ namespace U2FHelper
 
             // バージョン表示
             labelVersion.Text = "Version 0.1.6";
+            AppCommon.logFileName = "U2FHelper.log";
 
             // イベントの登録
-            p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(OnPrintMessageText);
+            p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             p.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
-            bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
+            bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(PrintMessageText);
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(ReceiveBLEMessage);
 
             // U2F HIDデバイスに接続
@@ -62,10 +64,8 @@ namespace U2FHelper
 
         private void ReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
         {
-            // BLEメッセージが返送されて来たら
-            // 先にBLEを切断し、
+            // BLEメッセージが返送されて来たら、
             // HIDデバイスにBLEメッセージを転送
-            bleProcess.DisconnectBLE();
             p.XferBLEMessage(receivedMessage, receivedLen);
 
             // 終了メッセージ
@@ -75,10 +75,10 @@ namespace U2FHelper
             enableButtons(true);
         }
 
-        private void OnPrintMessageText(string messageText)
+        private void PrintMessageText(string messageText)
         {
             // 画面のテキストエリアにメッセージを表示
-            textBox1.AppendText(messageText + "\r\n");
+            textBox1.AppendText(messageText);
         }
 
         private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)
