@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using U2FMaintenanceToolCommon;
 
 namespace U2FHelper
 {

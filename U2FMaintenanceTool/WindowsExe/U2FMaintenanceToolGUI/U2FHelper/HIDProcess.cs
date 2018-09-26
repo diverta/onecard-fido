@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using U2FMaintenanceToolCommon;
 
 namespace U2FHelper
 {

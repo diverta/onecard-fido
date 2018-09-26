@@ -52,7 +52,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppCommon.cs" />
+    <Compile Include="..\U2FMaintenanceToolCommon\AppCommon.cs">
+      <Link>AppCommon.cs</Link>
+    </Compile>
     <Compile Include="BLEProcess.cs" />
     <Compile Include="BLEService.cs" />
     <Compile Include="HIDDevice.cs" />

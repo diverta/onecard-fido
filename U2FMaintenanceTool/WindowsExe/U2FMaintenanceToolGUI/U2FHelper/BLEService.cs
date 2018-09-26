@@ -5,6 +5,7 @@ using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
+using U2FMaintenanceToolCommon;
 
 namespace U2FHelper
 {
