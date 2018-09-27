@@ -53,7 +53,6 @@
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
 #define PROCESS_NAME_U2F_HID_PROCESS                @"U2F HIDデバイスから要求された処理"
-#define PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING  @"Chrome Native Messaging有効化設定"
 #define PROCESS_NAME_CREATE_KEYPAIR_PEM             @"鍵ファイル作成"
 #define PROCESS_NAME_CREATE_CERTREQ_CSR             @"証明書要求ファイル作成"
 #define PROCESS_NAME_CREATE_SELFCRT_CRT             @"自己署名証明書ファイル作成"
