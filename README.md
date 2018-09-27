@@ -4,14 +4,7 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 ## What's new
 
-#### 2018/09/03
-
-[ヘルパーデバイス（U2F USB HIDデバイス）](U2FHIDDevice/readme.md)を制作しました。<br>
-ヘルパーアプリ（U2F Helper）との組み合わせで、One Cardを使用したChromeブラウザーでのU2F認証が可能となりました。
-
-具体的な使用方法は、別途手順書[「Googleアカウントを使ったテスト手順」](Usage/GOOGLEACCTEST.md)をご参照ください。
-
-#### 2018/08/21（Version 0.1.5）
+#### 2018/09/27（Version 0.1.6）
 
 以下のプログラムを修正しました。<br>
 
@@ -19,12 +12,15 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 - [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
 
 修正点は以下になります。
-- U2F Helperの新規制作（[Issue #72](https://github.com/diverta/onecard-fido/issues/72)）に伴う機能追加／修正
+- U2F Helper制作にともない、不要となった機能「Chrome設定」(Chrome Native Messaging) を、U2F管理ツール画面から削除
+- C++で制作したWIndows版U2F管理コマンド（U2FMaintenanceToolCMD.exe）を、C#の画面アプリ内に移植しました（Issue #72）
 
-U2F Helper（ヘルパーアプリ）は、現在製作中のU2F HIDデバイス（ヘルパーデバイス）と連携し、One Cardを使ったU2F認証を、Chromeブラウザーの標準機能で実行するために必要なプログラムです。
+U2F Helper（ヘルパーアプリ）は、別途製作した[U2F USB HIDデバイス（ヘルパーデバイス）](U2FHIDDevice/readme.md)と連携し、One Cardを使ったU2F認証を、Chromeブラウザーの標準機能で実行するために必要なプログラムです。
 
 - [macOS版U2F Helper](U2FMaintenanceTool/macOSApp/U2FHelper.pkg)
 - [Windows版U2F Helper](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+具体的な使用方法は、別途手順書[「Googleアカウントを使ったテスト手順」](Usage/GOOGLEACCTEST.md)をご参照ください。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
