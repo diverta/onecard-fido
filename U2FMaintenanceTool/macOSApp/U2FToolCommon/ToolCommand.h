@@ -23,7 +23,6 @@
     - (void)toolCommandWillCreateBleRequest:(Command)command;
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
-    - (void)toolCommandWillSetup:(Command)command;
 
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath

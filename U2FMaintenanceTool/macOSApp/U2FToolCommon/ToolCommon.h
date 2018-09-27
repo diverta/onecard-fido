@@ -7,14 +7,6 @@
 #ifndef ToolCommon_h
 #define ToolCommon_h
 
-#define CHROME_EXTENSION_ID_URL @"chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/"
-
-// Defines for Chrome Native Messaging Host
-#define CHROME_NMHOST_NAME     @"jp.co.diverta.chrome.helper.ble.u2f"
-#define CHROME_NMHOST_DESC     @"BLE U2F Helper - Chrome Native Messaging Host"
-#define CHROME_NMHOST_TYPE     @"stdio"
-#define CHROME_NMHOST_JSON_DIR @"/Library/Application Support/Google/Chrome/NativeMessagingHosts"
-
 // BLE接続再試行の上限回数
 #define BLE_CONNECTION_RETRY_MAX_COUNT 3
 
@@ -28,9 +20,7 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_PROCESS,
     COMMAND_U2F_HID_PROCESS,
-    COMMAND_SETUP_CHROME_NATIVE_MESSAGING,
     COMMAND_CREATE_KEYPAIR_PEM,
     COMMAND_CREATE_CERTREQ_CSR,
     COMMAND_CREATE_SELFCRT_CRT,
