@@ -1,9 +1,0 @@
-{
-  "name": "jp.co.diverta.chrome.helper.ble.u2f",
-  "description": "BLE U2F Helper - Chrome Native Messaging Host",
-  "path": "U2FMaintenanceToolCMD.exe",
-  "type": "stdio",
-  "allowed_origins": [
-    "chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/"
-  ]
-}

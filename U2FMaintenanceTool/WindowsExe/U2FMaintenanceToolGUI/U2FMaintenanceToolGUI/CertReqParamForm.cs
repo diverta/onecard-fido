@@ -45,9 +45,9 @@ namespace U2FMaintenanceToolGUI
 
             // 出力先のファイルを選択
             string filePath = FormUtil.createFilePath(saveFileDialog1,
-                AppCommon.MSG_PROMPT_CREATE_CSR_PATH,
-                AppCommon.DEFAULT_CSR_NAME,
-                AppCommon.FILTER_SELECT_CSR_PATH
+                ToolGUICommon.MSG_PROMPT_CREATE_CSR_PATH,
+                ToolGUICommon.DEFAULT_CSR_NAME,
+                ToolGUICommon.FILTER_SELECT_CSR_PATH
                 );
             if (filePath.Equals(string.Empty)) {
                 return;
@@ -73,27 +73,27 @@ namespace U2FMaintenanceToolGUI
         private bool checkEntries()
         {
             // 入力項目が正しく指定されていない場合は終了
-            if (FormUtil.checkMustEntry(textPemPath, AppCommon.MSG_PROMPT_SELECT_PEM_PATH) == false) {
+            if (FormUtil.checkMustEntry(textPemPath, ToolGUICommon.MSG_PROMPT_SELECT_PEM_PATH) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textCN, AppCommon.MSG_PROMPT_INPUT_CN) == false) {
+            if (FormUtil.checkMustEntry(textCN, ToolGUICommon.MSG_PROMPT_INPUT_CN) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textO, AppCommon.MSG_PROMPT_INPUT_O) == false) {
+            if (FormUtil.checkMustEntry(textO, ToolGUICommon.MSG_PROMPT_INPUT_O) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textL, AppCommon.MSG_PROMPT_INPUT_L) == false) {
+            if (FormUtil.checkMustEntry(textL, ToolGUICommon.MSG_PROMPT_INPUT_L) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textST, AppCommon.MSG_PROMPT_INPUT_ST) == false) {
+            if (FormUtil.checkMustEntry(textST, ToolGUICommon.MSG_PROMPT_INPUT_ST) == false) {
                 return false;
             }
-            if (FormUtil.checkMustEntry(textC, AppCommon.MSG_PROMPT_INPUT_C) == false) {
+            if (FormUtil.checkMustEntry(textC, ToolGUICommon.MSG_PROMPT_INPUT_C) == false) {
                 return false;
             }
 
             // 入力されたファイルパスが存在しない場合は終了
-            if (FormUtil.checkFileExist(textPemPath, AppCommon.MSG_PROMPT_EXIST_PEM_PATH) == false) {
+            if (FormUtil.checkFileExist(textPemPath, ToolGUICommon.MSG_PROMPT_EXIST_PEM_PATH) == false) {
                 return false;
             }
 
@@ -119,8 +119,8 @@ namespace U2FMaintenanceToolGUI
         private void buttonPemPath_Click(object sender, EventArgs e)
         {
             FormUtil.selectFilePath(openFileDialog1,
-                AppCommon.MSG_PROMPT_SELECT_PEM_PATH,
-                AppCommon.FILTER_SELECT_PEM_PATH,
+                ToolGUICommon.MSG_PROMPT_SELECT_PEM_PATH,
+                ToolGUICommon.FILTER_SELECT_PEM_PATH,
                 textPemPath);
         }
     }

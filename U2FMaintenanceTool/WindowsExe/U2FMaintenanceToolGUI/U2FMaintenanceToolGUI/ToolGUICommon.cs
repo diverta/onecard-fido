@@ -1,6 +1,6 @@
 ﻿namespace U2FMaintenanceToolGUI
 {
-    static class AppCommon
+    static class ToolGUICommon
     {
         // macOS版と共通のメッセージ文言を使用
         // 共通
@@ -13,10 +13,9 @@
         // ホーム画面
         public const string MSG_PROMPT_SELECT_PKEY_PATH = "秘密鍵ファイル(PEM)のパスを選択してください";
         public const string MSG_PROMPT_SELECT_CRT_PATH = "証明書ファイル(CRT)のパスを選択してください";
-        public const string MSG_SETUP_CHROME = "ChromeでBLE U2Fトークンが使用できるよう設定します。";
-        public const string MSG_PROMPT_SETUP_CHROME = "ChromeでBLE U2Fトークンを使用時、このU2F管理ツールがChromeのサブプロセスとして起動します。\n設定を実行しますか？";
         public const string MSG_ERASE_SKEY_CERT = "One Cardから鍵・証明書・キーハンドルをすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はOne CardによるU2F認証ができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
         // 証明書要求ファイル作成画面
         public const string MSG_PROMPT_SELECT_PEM_PATH = "使用する秘密鍵ファイル(PEM)を選択してください。";
@@ -39,8 +38,6 @@
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
         public const string PROCESS_NAME_HEALTHCHECK = "ヘルスチェック";
-        public const string PROCESS_NAME_U2F_PROCESS = "Chromeブラウザから要求された処理";
-        public const string PROCESS_NAME_SETUP_CHROME_NATIVE_MESSAGING = "Chrome Native Messaging有効化設定";
         public const string PROCESS_NAME_CREATE_KEYPAIR_PEM = "鍵ファイル作成";
         public const string PROCESS_NAME_CREATE_CERTREQ_CSR = "証明書要求ファイル作成";
         public const string PROCESS_NAME_CREATE_SELFCRT_CRT = "自己署名証明書ファイル作成";

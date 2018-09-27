@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace U2FHelper
+namespace U2FMaintenanceToolCommon
 {
-    static class AppCommon
+    public static class AppCommon
     {
         // macOS版と共通のメッセージ文言を使用
         // 共通
@@ -47,18 +47,22 @@ namespace U2FHelper
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
 
-        // ファイル名
-        public const string FILENAME_U2FHELPER_LOG = "U2FHelper.log";
-        public const string FILENAME_U2FCOMMAND_EXE = "U2FMaintenanceToolCMD.exe";
+        // ログファイル名称のデフォルト
+        public static string logFileName = "U2FMaintenanceToolCommon.log";
 
         public static void OutputLogText(string logText)
         {
-            // ログファイルにメッセージを出力する
-            string fname = FILENAME_U2FHELPER_LOG;
-            StreamWriter sr = new StreamWriter(
-                (new FileStream(fname, FileMode.Append)), Encoding.Default);
-            sr.WriteLine(logText);
-            sr.Close();
+            try {
+                // ログファイルにメッセージを出力する
+                string fname = logFileName;
+                StreamWriter sr = new StreamWriter(
+                    (new FileStream(fname, FileMode.Append)), Encoding.Default);
+                sr.WriteLine(logText);
+                sr.Close();
+
+            } catch (Exception e) {
+                Console.Write(e.Message);
+            }
         }
 
         public static void OutputLogToFile(string message, bool printTimeStamp)

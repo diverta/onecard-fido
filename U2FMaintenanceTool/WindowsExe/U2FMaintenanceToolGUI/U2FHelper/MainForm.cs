@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Windows.Storage.Streams;
+using U2FMaintenanceToolCommon;
 
 namespace U2FHelper
 {
@@ -17,6 +18,7 @@ namespace U2FHelper
 
             // バージョン表示
             labelVersion.Text = "Version 0.1.6";
+            AppCommon.logFileName = "U2FHelper.log";
 
             // イベントの登録
             p.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
@@ -64,6 +66,7 @@ namespace U2FHelper
         {
             // BLEメッセージが返送されて来たら、
             // HIDデバイスにBLEメッセージを転送
+            bleProcess.DisconnectBLE();
             p.XferBLEMessage(receivedMessage, receivedLen);
 
             // 終了メッセージ
@@ -76,7 +79,7 @@ namespace U2FHelper
         private void PrintMessageText(string messageText)
         {
             // 画面のテキストエリアにメッセージを表示
-            textBox1.AppendText(messageText);
+            textBox1.AppendText(messageText + "\r\n");
         }
 
         private void 終了ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -136,22 +139,5 @@ namespace U2FHelper
         public const int WmDevicechange = 0x0219;
         public const int DbtDevicearrival = 0x8000;
         public const int DbtDeviceremovecomplete = 0x8004;
-
-        //
-        // テストのための仮実装です
-        //
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // テスト用のメッセージを生成
-            DataWriter writer = new DataWriter();
-            byte[] u2fVersionFrameData = {
-                    0x83, 0x00, 0x07,
-                    0x00, 0x03, 0x00, 0x00,
-                    0x00, 0x00, 0x00
-                };
-
-            // BLE処理を実行し、メッセージを転送
-            bleProcess.DoXferMessage(u2fVersionFrameData, u2fVersionFrameData.Length);
-        }
     }
 }
