@@ -55,8 +55,12 @@
     <Compile Include="..\U2FMaintenanceToolCommon\AppCommon.cs">
       <Link>AppCommon.cs</Link>
     </Compile>
-    <Compile Include="BLEProcess.cs" />
-    <Compile Include="BLEService.cs" />
+    <Compile Include="..\U2FMaintenanceToolCommon\BLEProcess.cs">
+      <Link>BLEProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\U2FMaintenanceToolCommon\BLEService.cs">
+      <Link>BLEService.cs</Link>
+    </Compile>
     <Compile Include="HIDDevice.cs" />
     <Compile Include="HIDProcess.cs" />
     <Compile Include="MainForm.cs">

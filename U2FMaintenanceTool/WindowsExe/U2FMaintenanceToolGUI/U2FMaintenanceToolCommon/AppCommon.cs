@@ -52,12 +52,17 @@ namespace U2FMaintenanceToolCommon
 
         public static void OutputLogText(string logText)
         {
-            // ログファイルにメッセージを出力する
-            string fname = logFileName;
-            StreamWriter sr = new StreamWriter(
-                (new FileStream(fname, FileMode.Append)), Encoding.Default);
-            sr.WriteLine(logText);
-            sr.Close();
+            try {
+                // ログファイルにメッセージを出力する
+                string fname = logFileName;
+                StreamWriter sr = new StreamWriter(
+                    (new FileStream(fname, FileMode.Append)), Encoding.Default);
+                sr.WriteLine(logText);
+                sr.Close();
+
+            } catch (Exception e) {
+                Console.Write(e.Message);
+            }
         }
 
         public static void OutputLogToFile(string message, bool printTimeStamp)

@@ -66,6 +66,7 @@ namespace U2FHelper
         {
             // BLEメッセージが返送されて来たら、
             // HIDデバイスにBLEメッセージを転送
+            bleProcess.DisconnectBLE();
             p.XferBLEMessage(receivedMessage, receivedLen);
 
             // 終了メッセージ
