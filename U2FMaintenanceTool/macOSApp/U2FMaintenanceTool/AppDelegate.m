@@ -1,6 +1,5 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
-#import "ToolBLEHelper.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
@@ -9,14 +8,13 @@
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolBLEHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
     @property (assign) IBOutlet NSButton   *button2;
     @property (assign) IBOutlet NSButton   *button3;
     @property (assign) IBOutlet NSButton   *button4;
-    @property (assign) IBOutlet NSButton   *button5;
     @property (assign) IBOutlet NSButton   *buttonQuit;
     @property (assign) IBOutlet NSTextView *textView;
 
@@ -31,7 +29,6 @@
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
-    @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -47,17 +44,11 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
-        self.toolBLEHelper  = [[ToolBLEHelper alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
-        
-        // Chromeエクステンションから起動した時はボタンを押下不可とする
-        if ([self.toolBLEHelper bleHelperCommunicateAsChromeNative]) {
-            [self enableButtons:false];
-        }
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -79,7 +70,6 @@
         [self.button2 setEnabled:enabled];
         [self.button3 setEnabled:enabled];
         [self.button4 setEnabled:enabled];
-        [self.button5 setEnabled:enabled];
         [self.fieldPath1 setEnabled:enabled];
         [self.fieldPath2 setEnabled:enabled];
         [self.buttonPath1 setEnabled:enabled];
@@ -137,16 +127,6 @@
         // ヘルスチェック実行
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
-    }
-
-    - (IBAction)button5DidPress:(id)sender {
-        if ([ToolPopupWindow promptYesNo:MSG_SETUP_CHROME
-                         informativeText:MSG_PROMPT_SETUP_CHROME] == false) {
-            return;
-        }
-        // Chrome Native Messaging有効化設定
-        [self enableButtons:false];
-        [self.toolCommand toolCommandWillSetup:COMMAND_SETUP_CHROME_NATIVE_MESSAGING];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -276,10 +256,6 @@
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
         NSLog(@"centralManagerDidUpdateState: %ld", state);
-
-        // CBCentralManagerが使用可能になったと判断し、
-        // Chromeエクステンションからのメッセージ受信を有効化
-        [self.toolBLEHelper bleHelperWillSetStdinNotification];
     }
 
     - (void)centralManagerDidConnect {
@@ -295,18 +271,13 @@
         // 画面上のテキストエリアにもメッセージを表示する
         [self appendLogMessage:message];
 
-        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時は、ブランクメッセージをChromeエクステンションに戻す
-            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
-        } else {
-            // トランザクション完了済とし、接続再試行を回避
-            [self setBleTransactionStarted:false];
-            // ポップアップ表示させる失敗メッセージとリザルトを保持
-            [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
-            [self setLastCommandSuccess:false];
-            // デバイス接続を切断
-            [[self toolBLECentral] centralManagerWillDisconnect];
-        }
+        // トランザクション完了済とし、接続再試行を回避
+        [self setBleTransactionStarted:false];
+        // ポップアップ表示させる失敗メッセージとリザルトを保持
+        [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+        [self setLastCommandSuccess:false];
+        // デバイス接続を切断
+        [[self toolBLECentral] centralManagerWillDisconnect];
     }
 
     - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
@@ -318,13 +289,8 @@
             return;
         }
         
-        if ([[self toolCommand] command] == COMMAND_U2F_PROCESS) {
-            // Chrome native messaging時は、Chromeエクステンションにメッセージを送信
-            [[self toolBLEHelper] bleHelperWillSend:[[self toolCommand] getU2FResponseDict]];
-        } else {
-            // ボタンを活性化し、ポップアップメッセージを表示
-            [self terminateProcessOnWindow];
-        }
+        // ボタンを活性化し、ポップアップメッセージを表示
+        [self terminateProcessOnWindow];
     }
 
     - (void)terminateProcessOnWindow {
@@ -399,24 +365,6 @@
             // レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
         }
-    }
-
-#pragma mark - Call back from ToolBLEHelper
-
-    - (void)bleHelperDidReceive:(NSArray<NSDictionary *> *)bleHelperMessages {
-        // Chromeエクステンションからの受信データによりU2F処理を実行
-        [self.toolCommand setU2FProcessParameter:COMMAND_U2F_PROCESS
-                               bleHelperMessages:bleHelperMessages];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_U2F_PROCESS];
-    }
-
-    - (void)bleHelperDidSend:(NSData *)chromeMessageData {
-        // このアプリケーションを終了させる
-        if (chromeMessageData) {
-            NSLog(@"Sent response to chrome: %@", chromeMessageData);
-        }
-        NSLog(@"Chrome native messaging host will terminate");
-        [NSApp terminate:self];
     }
 
 @end

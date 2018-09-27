@@ -816,17 +816,6 @@
                             <action selector="button4DidPress:" target="494" id="Xob-qI-0Wc"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m6X-Ke-o0Z">
-                        <rect key="frame" x="438" y="174" width="112" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Chrome設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="edT-Bt-v8B">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="button5DidPress:" target="494" id="wgS-D0-X1d"/>
-                        </connections>
-                    </button>
                 </subviews>
             </view>
             <point key="canvasLocation" x="132" y="107"/>
@@ -837,7 +826,6 @@
                 <outlet property="button2" destination="IdI-T9-vnq" id="eHo-AV-qxi"/>
                 <outlet property="button3" destination="qlP-Sb-BZf" id="2la-lX-12I"/>
                 <outlet property="button4" destination="FlF-Id-KYb" id="4mr-1t-iOo"/>
-                <outlet property="button5" destination="m6X-Ke-o0Z" id="iNV-6c-bNV"/>
                 <outlet property="buttonPath1" destination="kCs-qC-oYa" id="iUs-xa-8ku"/>
                 <outlet property="buttonPath2" destination="IeA-Jn-tVn" id="XE6-hO-HQE"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>

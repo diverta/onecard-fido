@@ -414,31 +414,6 @@
     return nil;
 }
 
-- (void)createCommandU2FProcess {
-    // U2Fレスポンスデータをクリア
-    [self setU2FResponseDict:nil];
-    
-    // 受信データから各項目を取得し、リクエスト種別に応じた処理を実行
-    if ([self isEnrollHelperRequest]) {
-        NSDictionary *dict = [self getU2FRequestDictForKey:@"enrollChallenges"];
-        if (dict) {
-            [self createCommandU2FRegister:COMMAND_U2F_PROCESS
-                       appIdHashWebSafeB64:[dict objectForKey:@"appIdHash"]
-                       challengeWebSafeB64:[dict objectForKey:@"challengeHash"]
-                                   version:[dict objectForKey:@"version"]];
-        }
-    } else if ([self isSignHelperRequest]) {
-        NSDictionary *dict = [self getU2FRequestDictForKey:@"signData"];
-        if (dict) {
-            [self createCommandU2FAuthentication:COMMAND_U2F_PROCESS
-                             appIdHashWebSafeB64:[dict objectForKey:@"appIdHash"]
-                             challengeWebSafeB64:[dict objectForKey:@"challengeHash"]
-                             keyHandleWebSafeB64:[dict objectForKey:@"keyHandle"]
-                                         version:[dict objectForKey:@"version"]];
-        }
-    }
-}
-
 - (void)createCommandU2FHIDProcess {
     // HIDデバイスから転送されたAPDUより、分割送信のために64バイトごとのコマンド配列を作成
     [self setBleRequestArray:[self generateCommandArrayFrom:[self hidHelperMessage]]];
@@ -502,104 +477,6 @@
     [self setU2FResponseDict:dict];
 }
 
-#pragma mark - Private methods for setup
-
-- (NSString *)createChromeSettingJsonString {
-    // Native Messagingの相手となるエクステンションIDを列挙
-    NSMutableArray *array = [[NSMutableArray alloc] initWithObjects:CHROME_EXTENSION_ID_URL, nil];
-    
-    // 実行可能ファイルのパスを取得
-    NSArray *commandLineArgs = [[NSProcessInfo processInfo] arguments];
-    NSString *pathString = [commandLineArgs objectAtIndex:0];
-    
-    // 項目設定
-    NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
-    [jsonDictionary setValue:CHROME_NMHOST_NAME forKey:@"name"];
-    [jsonDictionary setValue:CHROME_NMHOST_DESC forKey:@"description"];
-    [jsonDictionary setValue:CHROME_NMHOST_TYPE forKey:@"type"];
-    [jsonDictionary setValue:pathString         forKey:@"path"];
-    [jsonDictionary setValue:array              forKey:@"allowed_origins"];
-    
-    // 文字列に変換
-    NSError *error;
-    NSData *jsonStringData = [NSJSONSerialization
-                              dataWithJSONObject:jsonDictionary
-                              options:NSJSONWritingPrettyPrinted
-                              error:&error];
-    if (jsonStringData) {
-        NSString *jsonString = [[NSString alloc] initWithData:jsonStringData encoding:NSUTF8StringEncoding];
-        return [jsonString stringByReplacingOccurrencesOfString:@"\\" withString:@""];
-    } else {
-        NSLog(@"Chrome Native Messaging Host JSON string create failed: %@", error);
-        return nil;
-    }
-}
-
-- (NSString *)prepareChromeSettingJsonDirectory {
-    // JSONインストール先ディレクトリーを取得
-    NSString *username = NSUserName();
-    NSString *targetPath = CHROME_NMHOST_JSON_DIR;
-    if ([username isEqualToString:@"root"] == false) {
-        targetPath = [NSString stringWithFormat:@"%1$@%2$@", NSHomeDirectory(), CHROME_NMHOST_JSON_DIR];
-    }
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:targetPath isDirectory:nil]) {
-        NSLog(@"Chrome Native Messaging Host JSON Path exist: %@", targetPath);
-    } else {
-        // インストール先ディレクトリーがない場合は生成
-        NSError *error;
-        if ([[NSFileManager defaultManager] createDirectoryAtPath:targetPath
-                withIntermediateDirectories:NO attributes:nil error:&error]) {
-            NSLog(@"Chrome Native Messaging Host JSON Path created: %@", targetPath);
-        } else {
-            NSLog(@"Chrome Native Messaging Host JSON Path create failed: %@", error);
-            return nil;
-        }
-    }
-
-    return targetPath;
-}
-
-- (bool)writeChromeSettingJsonFileTo:(NSString *)targetPath jsonString:(NSString *)jsonString {
-    // インストール先パスを編集し、JSONファイルを出力
-    NSString *jsonFilePath = [NSString stringWithFormat:@"%1$@/%2$@.json", targetPath, CHROME_NMHOST_NAME];
-    NSError *error;
-    if ([jsonString writeToFile:jsonFilePath atomically:true
-            encoding:NSUTF8StringEncoding error:&error]) {
-        NSLog(@"Chrome Native Messaging Host JSON File created: %@", jsonFilePath);
-    } else {
-        NSLog(@"Chrome Native Messaging Host JSON File create failed: %@", error);
-        return false;
-    }
-
-    return true;
-}
-
-- (void)setupChromeNativeMessaging {
-    // 設定用のJSON文字列を生成
-    NSString *jsonString = [self createChromeSettingJsonString];
-    if (jsonString == nil) {
-        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_STRING_ERROR];
-        return;
-    }
-
-    // JSONインストール先ディレクトリーを取得
-    NSString *targetPath = [self prepareChromeSettingJsonDirectory];
-    if (targetPath == nil) {
-        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_DIRGET_ERROR];
-        return;
-    }
-    
-    // インストール先パスを編集し、JSONファイルを出力
-    if ([self writeChromeSettingJsonFileTo:targetPath jsonString:jsonString] == false) {
-        [self toolCommandDidProcess:false message:MSG_OCCUR_JSON_OUTPUT_ERROR];
-        return;
-    }
-    
-    // 処理正常終了をAppDelegateに通知
-    [self toolCommandDidProcess:true message:@"Setup chrome native messaging end."];
-}
-
 #pragma mark - Public methods
 
 - (void)setInstallParameter:(Command)command
@@ -637,9 +514,6 @@
             break;
         case COMMAND_TEST_REGISTER:
             [self createCommandTestRegister];
-            break;
-        case COMMAND_U2F_PROCESS:
-            [self createCommandU2FProcess];
             break;
         case COMMAND_U2F_HID_PROCESS:
             [self createCommandU2FHIDProcess];
@@ -796,7 +670,6 @@
             NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
             [self toolCommandDidProcess:true message:@"Health check end"];
             break;
-        case COMMAND_U2F_PROCESS:
         case COMMAND_U2F_HID_PROCESS:
             [self toolCommandDidProcess:true message:@"U2F response received"];
             break;
@@ -809,18 +682,6 @@
     }
 }
 
-- (void)toolCommandWillSetup:(Command)command {
-    // コマンドに応じ、以下の処理に分岐
-    [self setCommand:command];
-    switch (command) {
-        case COMMAND_SETUP_CHROME_NATIVE_MESSAGING:
-            [self setupChromeNativeMessaging];
-            break;
-        default:
-            break;
-    }
-}
-
 - (void)toolCommandDidProcess:(bool)result message:(NSString *)message {
     // コマンド配列をブランクに初期化
     [self setBleRequestArray:nil];
@@ -830,15 +691,9 @@
         NSLog(@"%@", message);
     }
     
-    if ([self command] == COMMAND_U2F_PROCESS) {
-        // Chrome Native Messaging時はメッセージを連想配列に変換して戻す
-        [self createU2FResponseDictFrom:[self bleResponseData]];
-        [[self delegate] toolCommandDidReceive:[self command] result:result];
-    } else {
-        // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
-        [[self delegate] toolCommandDidProcess:[self command] result:result
-                                       message:message];
-    }
+    // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
+    [[self delegate] toolCommandDidProcess:[self command] result:result
+                                   message:message];
 }
 
 - (NSDictionary *)getU2FResponseDict {

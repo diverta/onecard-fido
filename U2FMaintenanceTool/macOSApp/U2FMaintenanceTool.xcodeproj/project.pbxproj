@@ -17,7 +17,6 @@
 		7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50CBED2045051900BDE52F /* ToolParameters.m */; };
-		7A5269FC20045FB40033152B /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5269FA20045FB40033152B /* ToolBLEHelper.m */; };
 		7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A537918203E483E0062E9E2 /* ToolFilePanel.m */; };
 		7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A84811C203CF6FE00380005 /* OpenSSL.c */; };
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
@@ -54,8 +53,6 @@
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A50CBEC2044FBE600BDE52F /* ToolParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolParameters.h; sourceTree = "<group>"; };
 		7A50CBED2045051900BDE52F /* ToolParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParameters.m; sourceTree = "<group>"; };
-		7A5269FA20045FB40033152B /* ToolBLEHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
-		7A5269FB20045FB40033152B /* ToolBLEHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
 		7A537918203E483E0062E9E2 /* ToolFilePanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
 		7A53791A203E48630062E9E2 /* ToolFilePanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
 		7A84811C203CF6FE00380005 /* OpenSSL.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSSL.c; sourceTree = "<group>"; };
@@ -138,8 +135,6 @@
 		64ED9A7F1647439300F39EAE /* U2FMaintenanceTool */ = {
 			isa = PBXGroup;
 			children = (
-				7A5269FB20045FB40033152B /* ToolBLEHelper.h */,
-				7A5269FA20045FB40033152B /* ToolBLEHelper.m */,
 				7ADA84631FE36E6D00879CB4 /* Images.xcassets */,
 				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
 				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
@@ -262,7 +257,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A5269FC20045FB40033152B /* ToolBLEHelper.m in Sources */,
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
 				7A92740E2105AB960062FA89 /* NSData+Base64.m in Sources */,
 				7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */,
