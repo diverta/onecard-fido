@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace U2FMaintenanceToolGUI
@@ -14,9 +12,25 @@ namespace U2FMaintenanceToolGUI
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            // Mutexを生成し、プログラムの多重起動を抑止
+            string mutexName = "U2FMaintenanceToolGUI.exe";
+            bool createdNew;
+            Mutex mutex = new Mutex(true, mutexName, out createdNew);
+            if (createdNew == false) {
+                MessageBox.Show("U2F管理ツールは既に起動されています.");
+                mutex.Close();
+                return;
+            }
+
+            try {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                new MainForm();
+                Application.Run();
+            } finally {
+                mutex.ReleaseMutex();
+                mutex.Close();
+            }
         }
     }
 }
