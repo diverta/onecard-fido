@@ -25,8 +25,7 @@ namespace U2FMaintenanceToolGUI
             try {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                new MainForm();
-                Application.Run();
+                Application.Run(new MainForm());
             } finally {
                 mutex.ReleaseMutex();
                 mutex.Close();
