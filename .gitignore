@@ -19,3 +19,5 @@ core
 # ignore backup files
 *.b#*
 *.s#*
+
+nRF5_SDK_v15.2.0/external/micro-ecc/micro-ecc/

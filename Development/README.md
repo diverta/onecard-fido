@@ -1,15 +1,18 @@
 # 開発情報
 
-## 各種手順
+## 各種手順・情報
 
 * [One Cardアプリケーションビルド手順](../nRF5_SDK_v13.0.0/BUILD.md) <br>
 ソースチェックアウトからμVisionによるビルド／書込みまでの手順を掲載しています。
 
-* [micro-eccビルド手順](../nRF5_SDK_v13.0.0/BUILDMECC.md) <br>
+* [micro-eccビルド手順 (Windows版)](../nRF5_SDK_v13.0.0/BUILDMECC.md) <br>
 BLE U2Fサービスで使用する暗号化ライブラリー「micro-ecc」のビルド手順を掲載しています。
 
 * [FIDO U2F認証テストツールビルド手順](../Research/BLECertificationTool.BUILD.md) <br>
 FIDO U2F認証テストツール（BLECertificationTool.exe）のビルド手順を掲載しています。
+
+* [nRF52840関連情報](nRF52840/README.md)<br>
+nRF52840で動作するアプリの開発に関する各種情報を掲載しています。
 
 ## 補足説明
 
