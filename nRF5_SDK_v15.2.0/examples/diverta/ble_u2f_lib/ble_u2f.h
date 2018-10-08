@@ -2,7 +2,6 @@
 #define BLE_U2F_H__
 
 #include "sdk_config.h"
-#include "ble_stack_handler_types.h"
 
 #include "ble.h"
 #include "ble_srv_common.h"
@@ -50,7 +49,6 @@ extern "C" {
 #else
     #define BLE_U2F_MAX_DATA_LEN (BLE_GATT_MTU_SIZE_DEFAULT - OPCODE_LENGTH - HANDLE_LENGTH)
     #define BLE_GATT_ATT_MTU_PERIPH_SIZE BLE_GATT_MTU_SIZE_DEFAULT
-    #warning NRF_BLE_GATT_MAX_MTU_SIZE is not defined.
 #endif
 
 #define BLE_U2F_MAX_RECV_CHAR_LEN BLE_U2F_MAX_DATA_LEN

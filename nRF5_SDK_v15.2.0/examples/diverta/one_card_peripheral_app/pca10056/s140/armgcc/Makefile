@@ -4,6 +4,7 @@ OUTPUT_DIRECTORY := _build
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
+U2FLIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := gcc_nrf52.ld
@@ -78,7 +79,6 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_init.c \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_rng.c \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_shared.c \
-  $(PROJ_DIR)/main.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_ble.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_soc.c \
@@ -131,6 +131,8 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_eddsa.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hash.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c \
+  $(PROJ_DIR)/main.c \
+  $(PROJ_DIR)/one_card_main.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -281,6 +283,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/nfc/ndef/conn_hand_parser/ac_rec_parser \
   $(SDK_ROOT)/components/libraries/stack_guard \
   $(SDK_ROOT)/components/libraries/log/src \
+  $(U2FLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \

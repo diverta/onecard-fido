@@ -16,6 +16,8 @@
         </df>
       </df>
       <in>main.c</in>
+      <in>one_card_main.c</in>
+      <in>one_card_main.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
