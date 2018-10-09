@@ -1,11 +1,12 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_processing_led"
+#define NRF_LOG_MODULE_NAME ble_u2f_processing_led
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // タイマー
 #include "app_timer.h"
@@ -87,5 +88,3 @@ void ble_u2f_processing_led_off(void)
     // タイマーを停止する
     ble_u2f_processing_led_terminate();
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

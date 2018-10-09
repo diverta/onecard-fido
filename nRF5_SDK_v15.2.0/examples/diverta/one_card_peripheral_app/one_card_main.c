@@ -5,11 +5,6 @@
  * Created on 2018/10/08, 10:37
  */
 
-//
-// One Card固有の定義
-//
-#define NRF_BLE_GATT_MAX_MTU_SIZE   67
-
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_dis.h"

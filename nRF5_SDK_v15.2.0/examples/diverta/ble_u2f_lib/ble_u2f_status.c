@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 
@@ -10,8 +10,9 @@
 #include "ble_u2f_status_retry.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_status"
+#define NRF_LOG_MODULE_NAME ble_u2f_status
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // u2f_status（レスポンスバッファ）には、
 // 64バイトまで書込み可能とします
@@ -228,5 +229,3 @@ void ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context)
     ble_u2f_status_setup(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
     ble_u2f_status_response_send(p_u2f);
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

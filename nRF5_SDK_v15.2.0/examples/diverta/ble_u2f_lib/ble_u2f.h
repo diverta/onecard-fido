@@ -10,6 +10,11 @@
 extern "C" {
 #endif
 
+//
+// One Card固有の定義
+//
+#define NRF_BLE_GATT_MAX_MTU_SIZE   67
+
 // FIDOアライアンス提供の共通ヘッダー
 // "u2f.h"より抜粋
 #define U2F_APPID_SIZE          32

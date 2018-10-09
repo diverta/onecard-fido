@@ -1,12 +1,13 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f.h"
 #include "ble_hci.h"
 #include "app_timer.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_comm_interval_timer"
+#define NRF_LOG_MODULE_NAME ble_u2f_comm_interval_timer
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 #define COMMUNICATION_INTERVAL_MSEC 10000
 
@@ -81,5 +82,3 @@ void ble_u2f_comm_interval_timer_start(ble_u2f_t *p_u2f)
     }
     app_timer_started = true;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

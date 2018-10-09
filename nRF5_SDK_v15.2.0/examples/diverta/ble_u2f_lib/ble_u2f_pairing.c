@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
@@ -11,11 +11,12 @@
 #include "fds.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_pairing"
+#define NRF_LOG_MODULE_NAME ble_u2f_pairing
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
-static fds_record_chunk_t  m_fds_record_chunks[1];
+static fds_record_t m_fds_record;
 static uint32_t m_pairing_mode;
 #define PAIRING_MODE     0x00000001
 #define NON_PAIRING_MODE 0x00000000
@@ -117,21 +118,17 @@ static bool write_pairing_mode(void)
     ret_code_t ret;
 
     // 一時領域（確保済み）のアドレスを取得
-    m_fds_record_chunks[0].p_data       = &m_pairing_mode;
-    m_fds_record_chunks[0].length_words = 1;
-
-    fds_record_t record;
-    record.file_id         = U2F_PAIRING_FILE_ID;
-    record.key             = U2F_PAIRING_MODE_RECORD_KEY;
-    record.data.p_chunks   = m_fds_record_chunks;
-    record.data.num_chunks = 1;
+    m_fds_record.data.p_data       = &m_pairing_mode;
+    m_fds_record.data.length_words = 1;
+    m_fds_record.file_id           = U2F_PAIRING_FILE_ID;
+    m_fds_record.key               = U2F_PAIRING_MODE_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret = fds_record_find(U2F_PAIRING_FILE_ID, U2F_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
-        ret = fds_record_update(&record_desc, &record);
+        ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("write_pairing_mode: fds_record_update returns 0x%02x \r\n", ret);
             return false;
@@ -139,7 +136,7 @@ static bool write_pairing_mode(void)
 
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
-        ret = fds_record_write(&record_desc, &record);
+        ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("write_pairing_mode: fds_record_write returns 0x%02x \r\n", ret);
             return false;
@@ -221,7 +218,7 @@ static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_b
     }
 
     data = (uint32_t *)flash_record.p_data;
-    data_length = flash_record.p_header->tl.length_words;
+    data_length = flash_record.p_header->length_words;
     memcpy(data_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
@@ -349,5 +346,3 @@ bool ble_u2f_pairing_mode_get(void)
     // ペアリングモードであればtrueを戻す
     return run_as_pairing_mode;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

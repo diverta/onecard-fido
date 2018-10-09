@@ -18,6 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f.h"
 #include "one_card_main.h"
 #include "ble_u2f_util.h"
+#include "ble_u2f_pairing.h"
 
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
@@ -55,10 +56,10 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     //ble_u2f_pairing_on_disconnect();
 }
 
-void one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
     if (p_ble_evt == NULL) {
-        return;
+        return false;
     }
     NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
@@ -75,4 +76,27 @@ void one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
         default:
             break;
     }
+    
+    return false;
+}
+
+bool one_card_pm_evt_handler(pm_evt_t *p_evt)
+{
+    // ペアリング済みである端末からの
+    // 再ペアリング要求を受入れるようにする
+    if (ble_u2f_pairing_allow_repairing(p_evt)) {
+        return true;
+    }
+    
+    // ペアリング情報の削除が完了したときの処理を行う
+    if (ble_u2f_pairing_delete_bonds_response(p_evt)) {
+        return true;
+    }
+    
+    // ペアリングが無効になってしまった場合
+    // ペアリングモードLED点滅を開始させる
+    ble_u2f_t *p_u2f = one_card_get_U2F_context();
+    ble_u2f_pairing_notify_unavailable(p_u2f, p_evt);
+    
+    return false;
 }

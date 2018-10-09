@@ -1,11 +1,12 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f.h"
 #include "ble_u2f_status.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_status_retry"
+#define NRF_LOG_MODULE_NAME ble_u2f_status_retry
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // タイマー
 #include "app_timer.h"
@@ -85,5 +86,3 @@ void ble_u2f_status_retry_timer_start(ble_u2f_t *p_u2f)
     // タイマーを開始する
     ble_u2f_status_retry_start(p_u2f);
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)
