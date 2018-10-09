@@ -474,6 +474,7 @@
     </logicalFolder>
     <df root="../one_card_peripheral_app" name="0">
       <in>main.c</in>
+      <in>one_card_event.c</in>
       <in>one_card_main.c</in>
     </df>
     <logicalFolder name="opt"
@@ -738,6 +739,7 @@
         <element flagsID="0" commonFlags="-O3 -std=c99"/>
       </flagsDictionary>
       <codeAssistance>
+        <buildAnalyzer>false</buildAnalyzer>
       </codeAssistance>
       <makefileType>
         <makeTool>
@@ -745,6 +747,11 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
+          <cTool>
+            <preprocessorList>
+              <Elem>NRF52840_XXAA</Elem>
+            </preprocessorList>
+          </cTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>../one_card_peripheral_app/pca10056/s140/armgcc</preBuildCommandWorkingDir>
@@ -2697,75 +2704,238 @@
         </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_comm_interval_timer.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_control_point.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_control_point_apdu.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_crypto_ecb.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_flash.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_pairing_lesc.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_processing_led.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_status_retry.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_user_presence.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_util.c" ex="false" tool="0" flavor2="2">
+      <item path="../ble_u2f_lib/ble_u2f_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../ble_u2f_lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <preprocessorList>
+            <Elem>BOARD_PCA10056</Elem>
+            <Elem>NRF52840_XXAA</Elem>
+            <Elem>S140</Elem>
+          </preprocessorList>
+        </cTool>
       </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
           <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../one_card_peripheral_app</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
@@ -2789,12 +2959,41 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../one_card_peripheral_app/one_card_event.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../one_card_peripheral_app</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_u2f_lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../one_card_peripheral_app/one_card_main.c"
             ex="false"
             tool="0"
             flavor2="3">
         <cTool flags="0">
           <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../one_card_peripheral_app</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
@@ -2804,6 +3003,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../ble_u2f_lib</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
@@ -2818,30 +3018,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../ble_u2f_lib</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
-      <folder path="0">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="ble_u2f_lib">
-        <cTool>
-          <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </folder>
       <folder path="nRF5_SDK_15.2.0/components">
         <cTool>
           <incDir>

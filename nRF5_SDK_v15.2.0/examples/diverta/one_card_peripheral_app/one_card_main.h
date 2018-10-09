@@ -19,6 +19,7 @@ void one_card_gatt_init(nrf_ble_gatt_t *p_gatt);
 void one_card_advertising_init(ble_advertising_init_t *p_init);
 void one_card_services_init(void);
 void one_card_peer_manager_init(void);
+ble_u2f_t *one_card_get_U2F_context(void);
 
 #ifdef __cplusplus
 }

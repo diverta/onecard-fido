@@ -36,6 +36,11 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f.h"
 
 //
+// U2F関連の共有情報
+//
+static ble_u2f_t m_u2f;
+
+//
 // アドバタイズ用設定
 //   APP_ADV_INTERVAL 0.625ms*300=187.5ms
 //   APP_ADV_TIMEOUT_IN_SECONDS 180sec
@@ -43,7 +48,14 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_ADV_INTERVAL                300
 #define APP_ADV_TIMEOUT_IN_SECONDS      180
 
-#define PIN_MAIN_SW_IN                  BSP_BUTTON_0
+//
+// ボタン、LEDのピン番号
+//
+#define PIN_MAIN_SW_IN                  BUTTON_1
+#define PIN_MAIN_SW_PULL                BUTTON_PULL
+#define PIN_LED1                        LED_1
+#define PIN_LED2                        LED_2
+#define PIN_LED3                        LED_3
 
 #define APP_BUTTON_NUM                  2
 #define APP_BUTTON_DELAY                APP_TIMER_TICKS(100)
@@ -123,7 +135,7 @@ void one_card_timers_init(void)
 }
 
 static const app_button_cfg_t m_app_buttons[APP_BUTTON_NUM] = {
-    {PIN_MAIN_SW_IN, false, BUTTON_PULL, on_button_evt}
+    {PIN_MAIN_SW_IN, false, PIN_MAIN_SW_PULL, on_button_evt}
 };
 
 //
@@ -139,13 +151,10 @@ void one_card_buttons_init(void)
     err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
 
-    // 
-    // TODO:
     // BLE U2Fで使用するLEDのピン番号を設定
-    //m_u2f.led_for_processing_fido = PIN_LED1;
-    //m_u2f.led_for_pairing_mode    = PIN_LED2;
-    //m_u2f.led_for_user_presence   = PIN_LED3;
-    // 
+    m_u2f.led_for_processing_fido = PIN_LED1;
+    m_u2f.led_for_pairing_mode    = PIN_LED2;
+    m_u2f.led_for_user_presence   = PIN_LED3;
 }
 
 //
@@ -220,4 +229,10 @@ void one_card_peer_manager_init(void)
     APP_ERROR_CHECK(err_code);
      * 
      */
+}
+
+ble_u2f_t *one_card_get_U2F_context(void)
+{
+    // U2F関連の共有情報
+    return &m_u2f;
 }

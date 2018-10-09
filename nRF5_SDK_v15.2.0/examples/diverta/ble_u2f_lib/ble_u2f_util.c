@@ -1,11 +1,13 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_util"
+#define NRF_LOG_MODULE_NAME ble_u2f_util
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // for send ble response
 #include "ble_u2f.h"
@@ -152,7 +154,7 @@ void ble_u2f_led_light_LED(uint32_t pin_number, bool led_on)
 {
     // LEDを出力設定
     nrf_gpio_cfg_output(pin_number);
-    if (led_on == true) {
+    if (led_on == false) {
         // LEDを点灯させる
         nrf_gpio_pin_set(pin_number);
     } else {
@@ -173,5 +175,3 @@ void dump_octets(uint8_t * data, uint16_t length)
         NRF_LOG_DEBUG("%s\r\n", (uint32_t)buf);
     }
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

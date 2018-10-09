@@ -16,6 +16,8 @@
         </df>
       </df>
       <in>main.c</in>
+      <in>one_card_event.c</in>
+      <in>one_card_event.h</in>
       <in>one_card_main.c</in>
       <in>one_card_main.h</in>
     </df>

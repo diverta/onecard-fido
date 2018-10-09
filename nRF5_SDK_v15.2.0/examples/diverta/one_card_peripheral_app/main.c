@@ -32,6 +32,7 @@
 // One Card固有の処理
 #include "ble_u2f.h"
 #include "one_card_main.h"
+#include "one_card_event.h"
 
 
 #define DEVICE_NAME                         "OneCard_Peripheral"                    /**< Name of device. Will be included in the advertising data. */
@@ -456,6 +457,9 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             // No implementation needed.
             break;
     }
+    
+    // One Card固有の処理
+    one_card_ble_evt_handler(p_ble_evt, p_context);
 }
 
 

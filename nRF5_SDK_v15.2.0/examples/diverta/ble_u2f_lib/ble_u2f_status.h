@@ -2,7 +2,6 @@
 #define BLE_U2F_STATUS_H__
 
 #include "sdk_config.h"
-#include "ble_stack_handler_types.h"
 
 #include "ble.h"
 #include "ble_u2f.h"

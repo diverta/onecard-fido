@@ -133,6 +133,8 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
+  $(PROJ_DIR)/one_card_event.c \
+  $(U2FLIB_DIR)/ble_u2f_util.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

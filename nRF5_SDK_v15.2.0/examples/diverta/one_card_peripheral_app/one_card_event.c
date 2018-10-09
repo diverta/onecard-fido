@@ -1,0 +1,78 @@
+/* 
+ * File:   one_card_event.c
+ * Author: makmorit
+ *
+ * Created on 2018/10/09, 11:59
+ */
+
+#include "nrf_ble_gatt.h"
+#include "ble_srv_common.h"
+#include "ble_advertising.h"
+
+// for logging informations
+#define NRF_LOG_MODULE_NAME one_card_event
+#include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
+
+// for FIDO
+#include "ble_u2f.h"
+#include "one_card_main.h"
+#include "ble_u2f_util.h"
+
+static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+{
+    // U2Fクライアントとの接続が行われた時は、
+    // 接続ハンドルを保持する
+    p_u2f->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+
+    // 共有情報を初期化する
+    //ble_u2f_command_initialize_context();
+
+    // ユーザー所在確認のためのキープアライブタイマーを生成する
+    //ble_u2f_user_presence_init();
+
+    // 無通信タイマーが既にスタートしている場合は停止させる
+    //ble_u2f_comm_interval_timer_stop(p_u2f);
+
+    // FIDO機能実行中LEDを点灯
+    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, true);
+}
+
+static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+{
+    // U2Fクライアントとの接続が切り離された時は、
+    // 接続ハンドルをクリアする
+    UNUSED_PARAMETER(p_ble_evt);
+    p_u2f->conn_handle = BLE_CONN_HANDLE_INVALID;
+
+    // 共有情報を消去する
+    //ble_u2f_command_finalize_context();
+
+    // FIDO機能実行中LEDを消灯
+    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
+    
+    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+    //ble_u2f_pairing_on_disconnect();
+}
+
+void one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+{
+    if (p_ble_evt == NULL) {
+        return;
+    }
+    NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
+    
+    ble_u2f_t *p_u2f = one_card_get_U2F_context();
+    switch (p_ble_evt->header.evt_id) {
+        case BLE_GAP_EVT_CONNECTED:
+            ble_u2f_on_connect(p_u2f, p_ble_evt);
+            break;
+
+        case BLE_GAP_EVT_DISCONNECTED:
+            ble_u2f_on_disconnect(p_u2f, p_ble_evt);
+            break;
+
+        default:
+            break;
+    }
+}
