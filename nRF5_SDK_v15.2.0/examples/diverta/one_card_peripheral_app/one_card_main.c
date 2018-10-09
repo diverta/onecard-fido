@@ -8,7 +8,7 @@
 //
 // One Card固有の定義
 //
-#define NRF_BLE_GATT_MAX_MTU_SIZE 67
+#define NRF_BLE_GATT_MAX_MTU_SIZE   67
 
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
@@ -25,8 +25,10 @@
 #include "app_button.h"
 
 // for logging informations
-//#define NRF_LOG_MODULE_NAME "one_card_main"
+#define NRF_LOG_MODULE_NAME one_card_main
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
+
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
@@ -147,9 +149,75 @@ void one_card_buttons_init(void)
 }
 
 //
+// BLEスタック初期化
+//
+void one_card_ble_stack_init(uint8_t conn_cfg_tag, uint32_t p_ram_start)
+{
+    ret_code_t err_code;
+    ble_cfg_t  ble_cfg;
+
+    // FIDO機能に対応できるようにするため、
+    // デフォルトのBLE設定を変更する
+    // Configure the maximum number of connections.
+    memset(&ble_cfg, 0, sizeof(ble_cfg));
+    ble_cfg.gap_cfg.role_count_cfg.periph_role_count  = BLE_GAP_ROLE_COUNT_PERIPH_DEFAULT;
+    ble_cfg.gap_cfg.role_count_cfg.central_role_count = 0;
+    ble_cfg.gap_cfg.role_count_cfg.central_sec_count  = 0;
+    err_code = sd_ble_cfg_set(BLE_GAP_CFG_ROLE_COUNT, &ble_cfg, p_ram_start);
+    APP_ERROR_CHECK(err_code);
+    
+    // Configure the maximum ATT MTU.
+    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
+    ble_cfg.conn_cfg.conn_cfg_tag                 = conn_cfg_tag;
+    ble_cfg.conn_cfg.params.gatt_conn_cfg.att_mtu = NRF_BLE_GATT_MAX_MTU_SIZE;
+    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GATT, &ble_cfg, p_ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // Configure the maximum event length.
+    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
+    ble_cfg.conn_cfg.conn_cfg_tag                     = conn_cfg_tag;
+    ble_cfg.conn_cfg.params.gap_conn_cfg.event_length = 320;
+    ble_cfg.conn_cfg.params.gap_conn_cfg.conn_count   = BLE_GAP_CONN_COUNT_DEFAULT;
+    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GAP, &ble_cfg, p_ram_start);
+    APP_ERROR_CHECK(err_code);
+}
+
+void one_card_gatt_init(nrf_ble_gatt_t *p_gatt)
+{
+    ret_code_t err_code = nrf_ble_gatt_att_mtu_periph_set(p_gatt, BLE_GATT_ATT_MTU_PERIPH_SIZE);
+    APP_ERROR_CHECK(err_code);
+}
+
+void one_card_advertising_init(ble_advertising_init_t *p_init)
+{
+    // TODO: 
+    // ペアリングモードでない場合は、
+    // ディスカバリーができないよう設定
+    // p_init->advdata.flags = ble_u2f_pairing_advertising_flag();
+    p_init->advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+}
+
+//
 // BLEサービス初期化
 //
 void one_card_services_init(void)
 {
     // TODO: U2Fサービスを初期化
+}
+
+void one_card_peer_manager_init(void)
+{
+    /* TODO
+     * 
+    ret_code_t err_code;
+
+    // FDS処理完了後のU2F処理を続行させる
+    err_code = fds_register(ble_u2f_command_on_fs_evt);
+    APP_ERROR_CHECK(err_code);
+
+    // LESC用のキーペアを生成する
+    err_code = ble_u2f_pairing_lesc_generate_key_pair();
+    APP_ERROR_CHECK(err_code);
+     * 
+     */
 }

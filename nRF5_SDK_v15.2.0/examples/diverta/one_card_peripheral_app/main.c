@@ -218,6 +218,9 @@ static void gatt_init(void)
 {
     ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
+    
+    // One Card固有の設定
+    one_card_gatt_init(&m_gatt);
 }
 
 
@@ -470,8 +473,14 @@ static void ble_stack_init(void)
     // Configure the BLE stack using the default settings.
     // Fetch the start address of the application RAM.
     uint32_t ram_start = 0;
+    err_code = nrf_sdh_ble_app_ram_start_get(&ram_start);
+    APP_ERROR_CHECK(err_code);
+
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
     APP_ERROR_CHECK(err_code);
+
+    // One Card固有の設定
+    one_card_ble_stack_init(APP_BLE_CONN_CFG_TAG, ram_start);
 
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
@@ -513,6 +522,9 @@ static void peer_manager_init(void)
 
     err_code = pm_register(pm_evt_handler);
     APP_ERROR_CHECK(err_code);
+
+    // One Card固有の処理
+    one_card_peer_manager_init();
 }
 
 
@@ -537,6 +549,9 @@ static void advertising_init(void)
 
     init.evt_handler = on_adv_evt;
 
+    // One Card固有の設定
+    one_card_advertising_init(&init);
+    
     err_code = ble_advertising_init(&m_advertising, &init);
     APP_ERROR_CHECK(err_code);
 
@@ -550,6 +565,7 @@ static void advertising_init(void)
  */
 static void buttons_leds_init(bool * p_erase_bonds)
 {
+    // One Card固有の設定
     one_card_buttons_init();
 }
 
@@ -607,11 +623,17 @@ int main(void)
     ble_stack_init();
     gap_params_init();
     gatt_init();
-    advertising_init();
     services_init();
     sensor_simulator_init();
     conn_params_init();
     peer_manager_init();
+
+    // advertising_initの実行は
+    // peer_manager_init実行後とする
+    //   アドバタイジング設定の前に
+    //   ペアリングモードをFDSから
+    //   取得する必要があるための措置
+    advertising_init();
 
     // Start execution.
     NRF_LOG_INFO("One card peripheral application started.");
