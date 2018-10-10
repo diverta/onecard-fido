@@ -84,9 +84,7 @@ bool one_card_pm_evt_handler(pm_evt_t *p_evt)
 {
     // ペアリング済みである端末からの
     // 再ペアリング要求を受入れるようにする
-    if (ble_u2f_pairing_allow_repairing(p_evt)) {
-        return true;
-    }
+    ble_u2f_pairing_allow_repairing(p_evt);
     
     // ペアリング情報の削除が完了したときの処理を行う
     if (ble_u2f_pairing_delete_bonds_response(p_evt)) {

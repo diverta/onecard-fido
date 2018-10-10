@@ -105,7 +105,7 @@ bool ble_u2f_pairing_allow_repairing(pm_evt_t const *p_evt)
     if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
         // ペアリング済みである端末からの
         // 再ペアリング要求を受入れるようにする
-        NRF_LOG_DEBUG("Accept pairing request from an already bonded peer. \r\n");
+        NRF_LOG_DEBUG("Accept pairing request from an already bonded peer. ");
         pm_conn_sec_config_t conn_sec_config = {.allow_repairing = true};
         pm_conn_sec_config_reply(p_evt->conn_handle, &conn_sec_config);
         return true;

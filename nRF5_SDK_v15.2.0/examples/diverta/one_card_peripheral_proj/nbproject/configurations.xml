@@ -27,8 +27,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_init.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_pairing.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_pairing.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_pairing_lesc.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_pairing_lesc.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_processing_led.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_processing_led.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.c</itemPath>
@@ -2809,18 +2807,6 @@
         </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f_pairing_lesc.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
         <cTool>
           <preprocessorList>
             <Elem>BOARD_PCA10056</Elem>

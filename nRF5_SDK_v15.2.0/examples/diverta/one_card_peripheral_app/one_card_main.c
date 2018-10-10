@@ -169,13 +169,6 @@ void one_card_ble_stack_init(uint8_t conn_cfg_tag, uint32_t p_ram_start)
     ble_cfg.gap_cfg.role_count_cfg.central_sec_count  = 0;
     err_code = sd_ble_cfg_set(BLE_GAP_CFG_ROLE_COUNT, &ble_cfg, p_ram_start);
     APP_ERROR_CHECK(err_code);
-    
-    // Configure the maximum ATT MTU.
-    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
-    ble_cfg.conn_cfg.conn_cfg_tag                 = conn_cfg_tag;
-    ble_cfg.conn_cfg.params.gatt_conn_cfg.att_mtu = NRF_BLE_GATT_MAX_MTU_SIZE;
-    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GATT, &ble_cfg, p_ram_start);
-    APP_ERROR_CHECK(err_code);
 
     // Configure the maximum event length.
     memset(&ble_cfg, 0x00, sizeof(ble_cfg));
@@ -188,8 +181,7 @@ void one_card_ble_stack_init(uint8_t conn_cfg_tag, uint32_t p_ram_start)
 
 void one_card_gatt_init(nrf_ble_gatt_t *p_gatt)
 {
-    ret_code_t err_code = nrf_ble_gatt_att_mtu_periph_set(p_gatt, BLE_GATT_ATT_MTU_PERIPH_SIZE);
-    APP_ERROR_CHECK(err_code);
+    // TODO: U2F固有の処理があれば追加
 }
 
 void one_card_advertising_init(ble_advertising_init_t *p_init)
@@ -211,19 +203,7 @@ void one_card_services_init(void)
 
 void one_card_peer_manager_init(void)
 {
-    /* TODO
-     * 
-    ret_code_t err_code;
-
-    // FDS処理完了後のU2F処理を続行させる
-    err_code = fds_register(ble_u2f_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
-
-    // LESC用のキーペアを生成する
-    err_code = ble_u2f_pairing_lesc_generate_key_pair();
-    APP_ERROR_CHECK(err_code);
-     * 
-     */
+    // TODO: U2F固有の処理があれば追加
 }
 
 ble_u2f_t *one_card_get_U2F_context(void)

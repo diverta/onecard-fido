@@ -46,8 +46,8 @@
 #define APP_BLE_CONN_CFG_TAG                1                                       /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 
-#define MIN_CONN_INTERVAL                   MSEC_TO_UNITS(400, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.4 seconds). */
-#define MAX_CONN_INTERVAL                   MSEC_TO_UNITS(650, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.65 second). */
+#define MIN_CONN_INTERVAL                   MSEC_TO_UNITS( 40, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.05 seconds). */
+#define MAX_CONN_INTERVAL                   MSEC_TO_UNITS(150, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.1875 second). */
 #define SLAVE_LATENCY                       0                                       /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                    MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
 
@@ -268,7 +268,7 @@ static void services_init(void)
     ble_srv_ascii_to_utf8(&dis_init.model_num_str    , (char *)MODEL_NUM);
 	ble_srv_ascii_to_utf8(&dis_init.fw_rev_str       , (char *)FW_REV);
 
-    dis_init.dis_char_rd_sec = SEC_OPEN;
+    dis_init.dis_char_rd_sec = SEC_JUST_WORKS;
 
     err_code = ble_dis_init(&dis_init);
     APP_ERROR_CHECK(err_code);
