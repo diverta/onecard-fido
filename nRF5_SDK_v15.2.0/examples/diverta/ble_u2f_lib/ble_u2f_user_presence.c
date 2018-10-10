@@ -1,13 +1,14 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_user_presence"
+#define NRF_LOG_MODULE_NAME ble_u2f_user_presence
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // 機能実行中LED点滅処理
 #include "ble_u2f_processing_led.h"
@@ -84,5 +85,3 @@ void ble_u2f_user_presence_verify_end(ble_u2f_context_t *p_u2f_context)
     p_u2f_context->user_presence_byte = 0x01;
     NRF_LOG_INFO("User presence verified \r\n");
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

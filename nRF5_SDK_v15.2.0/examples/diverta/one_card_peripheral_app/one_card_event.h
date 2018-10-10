@@ -14,6 +14,7 @@ extern "C" {
 
 bool one_card_ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context);
 bool one_card_pm_evt_handler(pm_evt_t const *p_evt);
+void one_card_sleep_mode_enter(void);
 
 #ifdef __cplusplus
 }

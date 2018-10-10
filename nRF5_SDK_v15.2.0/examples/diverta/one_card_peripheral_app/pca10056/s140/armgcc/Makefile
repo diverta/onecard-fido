@@ -119,11 +119,13 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
+  $(U2FLIB_DIR)/ble_u2f_command.c \
   $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
   $(U2FLIB_DIR)/ble_u2f_pairing.c \
   $(U2FLIB_DIR)/ble_u2f_processing_led.c \
   $(U2FLIB_DIR)/ble_u2f_status.c \
   $(U2FLIB_DIR)/ble_u2f_status_retry.c \
+  $(U2FLIB_DIR)/ble_u2f_user_presence.c \
   $(U2FLIB_DIR)/ble_u2f_util.c \
 
 # Include folders common to all targets
@@ -246,7 +248,6 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310 \
   $(SDK_ROOT)/external/nrf_oberon \
-  $(SDK_ROOT)/external/micro-ecc/micro-ecc \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis \
   $(SDK_ROOT)/components/nfc/ndef/uri \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt \

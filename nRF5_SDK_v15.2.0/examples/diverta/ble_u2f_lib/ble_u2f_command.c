@@ -1,10 +1,15 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "ble_u2f.h"
+
+#if 0
 #include "ble_u2f_control_point.h"
+#endif
+
 #include "ble_u2f_status.h"
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
@@ -16,8 +21,9 @@
 #include "ble_u2f_util.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_command"
+#define NRF_LOG_MODULE_NAME ble_u2f_command
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM更新が完了時、
 // 後続処理が使用するデータを共有
@@ -26,21 +32,22 @@ static ble_u2f_context_t m_u2f_context;
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_INFO("ble_u2f_command_on_mainsw_event \r\n");
+    NRF_LOG_INFO("ble_u2f_command_on_mainsw_event ");
     if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
         // U2Fクライアントと接続中でないときに
         // MAIN SWが押下された場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: BLE_CONN_HANDLE_INVALID \r\n");
+        NRF_LOG_DEBUG("mainsw ignored: BLE_CONN_HANDLE_INVALID ");
         return false;
     }
 
     if (m_u2f_context.p_ble_header == NULL) {
         // BLEリクエスト受信(ble_u2f_control_point_receive)より
         // 前の時点の場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: m_u2f_context.p_ble_header is NULL \r\n");
+        NRF_LOG_DEBUG("mainsw ignored: m_u2f_context.p_ble_header is NULL ");
         return false;
     }
 
+#if 0
     // CMD,INS,P1を参照
     uint8_t cmd = m_u2f_context.p_ble_header->CMD;
     uint8_t ins = m_u2f_context.p_apdu->INS;
@@ -59,14 +66,17 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 
     } else {
         // 他のコマンドの場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: no need to verify user presence \r\n");
+        NRF_LOG_DEBUG("mainsw ignored: no need to verify user presence ");
         return false;
     }
+#else
+    return true;
+#endif
 }
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_INFO("ble_u2f_command_on_mainsw_long_push_event \r\n");
+    NRF_LOG_INFO("ble_u2f_command_on_mainsw_long_push_event");
 
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);
@@ -77,10 +87,11 @@ void ble_u2f_command_initialize_context(void)
 {
     // 共有情報をゼロクリアする
     memset(&m_u2f_context, 0, sizeof(ble_u2f_context_t));
-    NRF_LOG_DEBUG("ble_u2f_command_initialize_context done \r\n");
-    
+    NRF_LOG_DEBUG("ble_u2f_command_initialize_context done ");
+#if 0    
     // コマンド／リクエストデータ格納領域を初期化する
     ble_u2f_control_point_initialize();
+#endif
 }
 
 
@@ -89,24 +100,24 @@ void ble_u2f_command_finalize_context(void)
     // ヒープに確保済みの領域を一括解放する
     if (m_u2f_context.securekey_buffer != NULL) {
         free(m_u2f_context.securekey_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.securekey_buffer freed \r\n");
+        NRF_LOG_DEBUG("m_u2f_context.securekey_buffer freed ");
     }
     if (m_u2f_context.apdu_data_buffer != NULL) {
         free(m_u2f_context.apdu_data_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.apdu_data_buffer freed \r\n");
+        NRF_LOG_DEBUG("m_u2f_context.apdu_data_buffer freed ");
     }
     if (m_u2f_context.response_message_buffer != NULL) {
         free(m_u2f_context.response_message_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.response_message_buffer freed \r\n");
+        NRF_LOG_DEBUG("m_u2f_context.response_message_buffer freed ");
     }
     if (m_u2f_context.signature_data_buffer != NULL) {
         free(m_u2f_context.signature_data_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.signature_data_buffer freed \r\n");
+        NRF_LOG_DEBUG("m_u2f_context.signature_data_buffer freed ");
     }
 
     // ユーザー所在確認を停止(キープアライブを停止)
     ble_u2f_user_presence_terminate(&m_u2f_context);
-    NRF_LOG_DEBUG("ble_u2f_command_finalize_context done \r\n");
+    NRF_LOG_DEBUG("ble_u2f_command_finalize_context done ");
 }
 
 static enum COMMAND_TYPE get_command_type(void)
@@ -129,47 +140,47 @@ static enum COMMAND_TYPE get_command_type(void)
 
             // 受信データをすべて受け取った場合は以下の処理
             if (p_apdu->INS == U2F_REGISTER) {
-                NRF_LOG_DEBUG("get_command_type: Registration Request Message received \r\n");
+                NRF_LOG_DEBUG("get_command_type: Registration Request Message received ");
                 current_command = COMMAND_U2F_REGISTER;
 
             } else if (p_apdu->INS == U2F_AUTHENTICATE) {
-                NRF_LOG_DEBUG("get_command_type: Authentication Request Message received \r\n");
+                NRF_LOG_DEBUG("get_command_type: Authentication Request Message received ");
                 current_command = COMMAND_U2F_AUTHENTICATE;
 
             } else if (p_apdu->INS == U2F_VERSION) {
-                NRF_LOG_DEBUG("get_command_type: GetVersion Request Message received \r\n");
+                NRF_LOG_DEBUG("get_command_type: GetVersion Request Message received ");
                 current_command = COMMAND_U2F_VERSION;
 
             // 初期導入関連コマンドの場合
             // (vendor defined command)
             } else if (p_apdu->INS == U2F_INS_INSTALL_INITBOND) {
                 // ボンディング情報削除コマンド
-                NRF_LOG_DEBUG("get_command_type: initialize bonding information \r\n");
+                NRF_LOG_DEBUG("get_command_type: initialize bonding information ");
                 current_command = COMMAND_INITBOND;
 
             } else if (p_apdu->INS == U2F_INS_INSTALL_INITFSTR) {
                 // 秘密鍵／証明書削除コマンド
-                NRF_LOG_DEBUG("get_command_type: initialize fstorage \r\n");
+                NRF_LOG_DEBUG("get_command_type: initialize fstorage ");
                 current_command = COMMAND_INITFSTR;
 
             } else if (p_apdu->INS == U2F_INS_INSTALL_INITSKEY) {
                 // 秘密鍵導入コマンド
-                NRF_LOG_DEBUG("get_command_type: initial skey data received \r\n");
+                NRF_LOG_DEBUG("get_command_type: initial skey data received ");
                 current_command = COMMAND_INITSKEY;
 
             } else if (p_apdu->INS == U2F_INS_INSTALL_INITCERT) {
                 // データが完成していれば、証明書導入用コマンドを実行
-                NRF_LOG_DEBUG("get_command_type: initial cert data received \r\n");
+                NRF_LOG_DEBUG("get_command_type: initial cert data received ");
                 current_command = COMMAND_INITCERT;
                 
             } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
                 // ペアリングのためのレスポンスを実行
-                NRF_LOG_DEBUG("get_command_type: pairing request received \r\n");
+                NRF_LOG_DEBUG("get_command_type: pairing request received ");
                 current_command = COMMAND_PAIRING;
 
             } else {
                 // INSが不正の場合は終了
-                NRF_LOG_DEBUG("get_command_type: Invalid INS(0x%02x) \r\n", p_apdu->INS);
+                NRF_LOG_DEBUG("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
                 ble_u2f_send_error_response(&m_u2f_context, U2F_SW_INS_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
@@ -177,7 +188,7 @@ static enum COMMAND_TYPE get_command_type(void)
             if (m_u2f_context.p_apdu->CLA != 0x00) {
                 // INSが正しくてもCLAが不正の場合は
                 // エラーレスポンスを送信して終了
-                NRF_LOG_DEBUG("get_command_type: Invalid CLA(0x%02x) \r\n", m_u2f_context.p_apdu->CLA);
+                NRF_LOG_DEBUG("get_command_type: Invalid CLA(0x%02x) ", m_u2f_context.p_apdu->CLA);
                 ble_u2f_send_error_response(&m_u2f_context, U2F_SW_CLA_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
@@ -198,7 +209,7 @@ static enum COMMAND_TYPE get_command_type(void)
     } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
         if (p_apdu->Lc == p_apdu->data_length) {
             // データが完成していれば、PINGレスポンスを実行
-            NRF_LOG_DEBUG("get_command_type: PING Request Message received \r\n");
+            NRF_LOG_DEBUG("get_command_type: PING Request Message received ");
             current_command = COMMAND_U2F_PING;
         } else {
             // データが完成していないのでスルー
@@ -227,8 +238,10 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     // BLE接続情報を共有情報に保持
     m_u2f_context.p_u2f = p_u2f;
 
+#if 0
     // コマンドバッファに入力されたリクエストデータを取得
     ble_u2f_control_point_receive(p_evt_write, &m_u2f_context);
+#endif
 
     // データ受信後に実行すべき処理を判定
     m_u2f_context.command = get_command_type();
@@ -296,7 +309,8 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     if (p_u2f == NULL) {
         return;
     }
-
+    
+#if 0
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
         case COMMAND_INITFSTR:
@@ -322,6 +336,5 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         default:
             break;
     }
+#endif
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

@@ -29,6 +29,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "ble_u2f.h"
+#include "ble_u2f_command.h"
 
 //
 // U2F関連の共有情報
@@ -86,19 +87,20 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 
         if (pin_no == PIN_MAIN_SW_IN) {
             app_timer_stop(m_long_push_timer_id);
-            //
-            // TODO: FIDO U2F固有の処理を実行
-            //
-            NRF_LOG_INFO("PIN_MAIN_SW_IN short pushed(%d).", pin_no);
+            
+            // FIDO U2F固有の処理を実行
+            if (ble_u2f_command_on_mainsw_event(&m_u2f) == true) {
+                break;
+            }
         }
 		break;
 		
 	case APP_BUTTON_ACTION_LONG_PUSH:
         if (pin_no == PIN_MAIN_SW_IN) {
-            // 
-            // TODO: FIDO U2F固有の処理を実行
-            //
-            NRF_LOG_INFO("PIN_MAIN_SW_IN long pushed(%d).", pin_no);
+            // FIDO U2F固有の処理を実行
+            if (ble_u2f_command_on_mainsw_long_push_event(&m_u2f) == true) {
+                break;
+            }
         }
 		break;
 		
@@ -203,7 +205,9 @@ void one_card_services_init(void)
 
 void one_card_peer_manager_init(void)
 {
-    // TODO: U2F固有の処理があれば追加
+    // FDS処理完了後のU2F処理を続行させる
+    ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
+    APP_ERROR_CHECK(err_code);
 }
 
 ble_u2f_t *one_card_get_U2F_context(void)
