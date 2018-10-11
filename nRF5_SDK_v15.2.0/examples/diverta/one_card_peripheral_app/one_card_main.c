@@ -30,6 +30,7 @@ NRF_LOG_MODULE_REGISTER();
 // for FIDO
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
+#include "ble_u2f_pairing.h"
 
 //
 // U2F関連の共有情報
@@ -66,6 +67,7 @@ static ble_u2f_t m_u2f;
 //
 APP_TIMER_DEF(m_long_push_timer_id);
 static bool m_long_pushed = false;
+static bool m_push_initial = true;
 
 static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 {
@@ -73,6 +75,9 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 
 	switch (button_action) {
 	case APP_BUTTON_ACTION_PUSH:
+        if (m_push_initial) {
+            m_push_initial = false;
+        }
         if (pin_no == PIN_MAIN_SW_IN) {
             err_code = app_timer_start(m_long_push_timer_id, LONG_PUSH_TIMEOUT, NULL);
             APP_ERROR_CHECK(err_code);
@@ -80,6 +85,12 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 		break;
 		
 	case APP_BUTTON_ACTION_RELEASE:
+        if (m_push_initial) {
+            // ボタン長押し中にリセット後、
+            // 単独でこのイベントが発生した場合は無視
+            m_push_initial = false;
+            break;
+        }
         if (m_long_pushed) {
             m_long_pushed = false;
             break;
@@ -188,11 +199,13 @@ void one_card_gatt_init(nrf_ble_gatt_t *p_gatt)
 
 void one_card_advertising_init(ble_advertising_init_t *p_init)
 {
-    // TODO: 
+    // アドバタイジング設定の前に、
+    // ペアリングモードをFDSから取得
+    ble_u2f_pairing_get_mode(&m_u2f);
+    
     // ペアリングモードでない場合は、
     // ディスカバリーができないよう設定
-    // p_init->advdata.flags = ble_u2f_pairing_advertising_flag();
-    p_init->advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    p_init->advdata.flags = ble_u2f_pairing_advertising_flag();
 }
 
 //

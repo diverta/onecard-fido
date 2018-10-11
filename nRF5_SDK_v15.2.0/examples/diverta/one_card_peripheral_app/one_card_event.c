@@ -76,6 +76,11 @@ bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
             ble_u2f_on_disconnect(p_u2f, p_ble_evt);
             break;
 
+        case BLE_GAP_EVT_AUTH_STATUS:
+            // ペアリングが成功したかどうかを判定
+            ble_u2f_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
+            break;
+
         default:
             break;
     }

@@ -172,11 +172,11 @@ void ble_u2f_pairing_change_mode(ble_u2f_context_t *p_u2f_context)
         // 非ペアリングモードに移行させる
         m_pairing_mode = NON_PAIRING_MODE;
     }
-#if 1
+    
     // ペアリングモードをFlash ROMへ保存
     // (fds_record_update/writeまたはfds_gcが実行される)
     write_pairing_mode();
-#endif
+    
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
@@ -196,10 +196,7 @@ void ble_u2f_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_e
         // fds_record_update/writeが正常完了の場合、
         // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
         // 変更したペアリングモード設定を反映するため、システムリセットを実行
-        NRF_LOG_INFO("ble_u2f_pairing_reflect_mode_change called. ");
-#if 0
         NVIC_SystemReset();
-#endif
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
