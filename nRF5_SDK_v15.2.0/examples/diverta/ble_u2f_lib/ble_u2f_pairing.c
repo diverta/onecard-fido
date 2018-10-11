@@ -9,6 +9,11 @@
 #include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
+#include "nrf_sdh_ble.h"
+#include "nrf_ble_gatt.h"
+#include "ble_srv_common.h"
+#include "ble_advertising.h"
+#include "one_card_main.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing
@@ -84,13 +89,16 @@ uint8_t ble_u2f_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
-bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t const *p_ble_evt)
 {
     if (run_as_pairing_mode == false) {
         if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
             // ペアリングモードでない場合は、
             // ペアリング要求に応じないようにする
             NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
+            uint16_t conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, NULL);
+            APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
             ble_u2f_processing_led_on(p_u2f->led_for_pairing_mode);
@@ -100,8 +108,22 @@ bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     return false;
 }
 
+static void ble_evt_handler(ble_evt_t const *p_ble_evt, void * p_context)
+{
+    // ペアリングモードでない場合は、
+    // ペアリング要求に応じないようにする
+    ble_u2f_t *p_u2f = one_card_get_U2F_context();
+    ble_u2f_pairing_reject_request(p_u2f, p_ble_evt);
+}
+
+NRF_SDH_BLE_OBSERVER(m_ble_evt_observer, BLE_CONN_STATE_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+
 bool ble_u2f_pairing_allow_repairing(pm_evt_t const *p_evt)
 {
+    if (run_as_pairing_mode == false) {
+        // ペアリングモードでない場合は何もしない
+        return false;
+    }
     if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
         // ペアリング済みである端末からの
         // 再ペアリング要求を受入れるようにする
@@ -312,6 +334,14 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
         
         // ペアリング先から切断されない可能性があるため、
         // 無通信タイムアウトのタイマー（10秒）をスタートさせる
+        ble_u2f_comm_interval_timer_start(p_u2f);
+    }
+    
+    // 非ペアリングモードでペアリング要求があった場合も
+    // ペアリング先から切断されない可能性があるため、
+    // 無通信タイムアウトのタイマー（10秒）をスタートさせる
+    if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
+        NRF_LOG_INFO("Pairing rejected");
         ble_u2f_comm_interval_timer_start(p_u2f);
     }
 }
