@@ -121,6 +121,7 @@ SRC_FILES += \
   $(PROJ_DIR)/one_card_event.c \
   $(U2FLIB_DIR)/ble_u2f_command.c \
   $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
+  $(U2FLIB_DIR)/ble_u2f_init.c \
   $(U2FLIB_DIR)/ble_u2f_pairing.c \
   $(U2FLIB_DIR)/ble_u2f_processing_led.c \
   $(U2FLIB_DIR)/ble_u2f_status.c \

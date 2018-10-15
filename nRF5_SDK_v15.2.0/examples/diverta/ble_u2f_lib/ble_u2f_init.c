@@ -1,10 +1,14 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 
 #include "ble_u2f.h"
+
+// for logging informations
+#define NRF_LOG_MODULE_NAME ble_u2f_init
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 #define BLE_UUID_U2F_CONTROL_POINT_CHAR             0xFFF1
 #define BLE_UUID_U2F_STATUS_CHAR                    0xFFF2
@@ -14,7 +18,7 @@
 
 // U2F vendor defined UUID (F1D00000-DEAA-ECEE-B42F-C9BA7ED623BB)
 static ble_uuid128_t u2f_base_uuid = {
-    0xBB, 0x23, 0xD6, 0x7E, 0xBA, 0xC9, 0x2F, 0xB4, 0xEE, 0xEC, 0xAA, 0xDE, 0x00, 0x00, 0xD0, 0xF1
+    {0xBB, 0x23, 0xD6, 0x7E, 0xBA, 0xC9, 0x2F, 0xB4, 0xEE, 0xEC, 0xAA, 0xDE, 0x00, 0x00, 0xD0, 0xF1}
 };
 
 // Control Pointバイト長、
@@ -299,5 +303,3 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
 
     return NRF_SUCCESS;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

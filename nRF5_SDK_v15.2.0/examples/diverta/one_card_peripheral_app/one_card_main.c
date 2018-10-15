@@ -31,6 +31,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_pairing.h"
+#include "ble_u2f_init.h"
 
 //
 // U2F関連の共有情報
@@ -213,7 +214,8 @@ void one_card_advertising_init(ble_advertising_init_t *p_init)
 //
 void one_card_services_init(void)
 {
-    // TODO: U2Fサービスを初期化
+    // U2Fサービスを初期化
+    ble_u2f_init_services(&m_u2f);
 }
 
 void one_card_peer_manager_init(void)
