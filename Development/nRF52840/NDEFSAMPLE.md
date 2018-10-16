@@ -20,13 +20,13 @@ https://play.google.com/store/apps/details?id=com.wakdev.wdnfc)というアプ�
 
 ## nRF52840の準備
 
-今回の検証では、[nRF52840-DK](https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/)という開発ボードを使用します。
+今回の検証では、[nRF52840 DK](https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/)という開発ボードを使用します。
 
 <img src="assets/0033.png" width="500">
 
 ## サンプルアプリケーションの準備
 
-サンプルアプリ[`Writable NDEF Message Example`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.0.0%2Fnfc_writable_ndef_msg.html&cp=4_0_1_4_7_6)を、[NetBeans](NETBEANS.md)によりビルドし、nRF52840-DKに書込みます。
+サンプルアプリ[`Writable NDEF Message Example`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.0.0%2Fnfc_writable_ndef_msg.html&cp=4_0_1_4_7_6)を、[NetBeans](NETBEANS.md)によりビルドし、nRF52840 DKに書込みます。
 
 ### サンプルアプリソースのコピー／配置
 
@@ -100,8 +100,10 @@ NetBeansを起動して「ファイル(F)--->新規プロジェクト(W)」を�
 
 ## サンプルアプリケーションの導入
 
-事前に、nRF52840-DKを、USBケーブルでPCと接続します。<br>
-その後、nRF52840-DKの電源スイッチ（ボードの左端部）をOnにし、ボードに電源を投入します。
+事前に、nRF52840 DKを、USBケーブルでPCと接続します。<br>
+その後、nRF52840 DKの電源スイッチ（ボードの左端部）をOnにし、ボードに電源を投入します。
+
+<img src="assets/0047.png" width="500">
 
 ### プロジェクト設定の変更
 
@@ -135,9 +137,55 @@ NetBeansの右下部のコンソールには「実行 FINISHED; 終了値0」と
 適宜、ボードからのデバッグ出力（UARTプリント）を確認します。<br>
 nRF52840-DK上で、プログラム実行が開始され、下図のようなデバッグ出力が表示されれば、サンプルアプリケーションの導入は完了です。
 
-<img src="assets/0044.png" width="500">
+<img src="assets/0044.png" width="550">
 
 ## 動作確認
 
 下記URLの情報を参考に、動作確認を実施します。<br>
 [<b>Nordic Semiconductor Infocenter - Writable NDEF Message Example</b>](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.0.0/nfc_writable_ndef_msg.html?cp=4_0_1_4_7_6)
+
+### 読込テスト
+
+NFC対応スマートフォンで、アプリケーションが何も立ち上がっていない状態にします。<br>
+その後、下図のようにスマートフォンをnRF52840 DKのNFCアンテナに近づけます。<br>
+（3cm以内に近づける必要があります）
+
+下図のように、nRF52840 DK上のLED1、LED4が点灯します。
+
+<img src="assets/0049.png" width="500">
+
+スマートフォンではChromeブラウザーが起動され、NFC経由でnRF52840から読込まれたURLにより、Nordicのホームページが表示されます。
+
+<img src="assets/0050.png" width="350">
+
+### 書込テスト
+
+NFC Toolsを使用して、nRF52840に対し「test」という文字列を送信します。<br>
+（NDEFメッセージとして送信します）
+
+<img src="assets/0051.png" width="350">
+
+正常に送信されると、nRF52840 DK上のLED2が点灯します。
+
+<img src="assets/0052.png" width="400">
+
+デバッグ出力を見ると、下図のようなメッセージが表示されます。
+
+<img src="assets/0046.png" width="500">
+
+
+### 再読込テスト
+
+本件で使用するサンプルアプリは、先ほど書き込まれたメッセージをFlash ROMに保持する仕様となっております。
+
+確認のため、nRF52840のリセットボタンを押下します。<br>
+デバッグ出力を見ると、下図のようなメッセージが出力されます。
+
+<img src="assets/0045.png" width="500">
+
+為念で、NFC Toolsにより該当のタグが読込めるか確認します。<br>
+NFC Toolsをあらかじめ立ち上げておいたスマートフォンを、nRF52840 DKに近づけます。
+
+下図のように、先ほど書き込んだ「test」というNDEFメッセージが、タグ一覧の最後に表示されていることが確認できます。
+
+<img src="assets/0048.png" width="600">
