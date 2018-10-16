@@ -1,0 +1,59 @@
+mkdir _build
+cd _build && mkdir nrf52840_xxaa
+Assembling file: gcc_startup_nrf52840.S
+Compiling file: nrf_log_backend_rtt.c
+Compiling file: nrf_log_backend_serial.c
+Compiling file: nrf_log_backend_uart.c
+Compiling file: nrf_log_default_backends.c
+Compiling file: nrf_log_frontend.c
+Compiling file: nrf_log_str_formatter.c
+Compiling file: boards.c
+Compiling file: app_error.c
+Compiling file: app_error_handler_gcc.c
+Compiling file: app_error_weak.c
+Compiling file: app_fifo.c
+Compiling file: app_scheduler.c
+Compiling file: app_uart_fifo.c
+Compiling file: app_util_platform.c
+Compiling file: crc16.c
+Compiling file: fds.c
+Compiling file: hardfault_handler_gcc.c
+Compiling file: hardfault_implementation.c
+Compiling file: nrf_assert.c
+Compiling file: nrf_atfifo.c
+Compiling file: nrf_atomic.c
+Compiling file: nrf_balloc.c
+Compiling file: nrf_fprintf.c
+Compiling file: nrf_fprintf_format.c
+Compiling file: nrf_fstorage.c
+Compiling file: nrf_fstorage_nvmc.c
+Compiling file: nrf_memobj.c
+Compiling file: nrf_ringbuf.c
+Compiling file: nrf_strerror.c
+Compiling file: nrf_drv_clock.c
+Compiling file: nrf_drv_uart.c
+Compiling file: nrf_nvic.c
+Compiling file: nrf_nvmc.c
+Compiling file: nrf_soc.c
+Compiling file: nrfx_clock.c
+Compiling file: nrfx_power_clock.c
+Compiling file: nrfx_prs.c
+Compiling file: nrfx_uart.c
+Compiling file: nrfx_uarte.c
+Compiling file: main.c
+Compiling file: ndef_file_m.c
+Compiling file: SEGGER_RTT.c
+Compiling file: SEGGER_RTT_Syscalls_GCC.c
+Compiling file: SEGGER_RTT_printf.c
+Compiling file: system_nrf52840.c
+Compiling file: hal_nfc_t4t.c
+Compiling file: nfc_ndef_msg.c
+Compiling file: nfc_ndef_record.c
+Compiling file: nfc_uri_msg.c
+Compiling file: nfc_uri_rec.c
+Linking target: _build/nrf52840_xxaa.out
+   text	   data	    bss	    dec	    hex	filename
+  29328	    536	   3800	  33664	   8380	_build/nrf52840_xxaa.out
+Preparing: _build/nrf52840_xxaa.hex
+Preparing: _build/nrf52840_xxaa.bin
+DONE nrf52840_xxaa
