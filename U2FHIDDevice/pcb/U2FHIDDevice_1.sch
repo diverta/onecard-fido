@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1176,6 +1176,32 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-3.875" y1="5.175" x2="-3.625" y2="6.725" layer="31"/>
 <rectangle x1="-3.86" y1="5" x2="-3.64" y2="6" layer="51"/>
 </package>
+<package name="NX3225">
+<description>&lt;b&gt;kHz RANGE CRYSTAL UNIT&lt;/b&gt;&lt;p&gt;
+LOW PROFILE SMD&lt;b&gt;</description>
+<wire x1="-1.6" y1="1.25" x2="1.6" y2="1.25" width="0.2032" layer="51"/>
+<wire x1="1.6" y1="1.25" x2="1.6" y2="-1.25" width="0.2032" layer="51"/>
+<wire x1="1.6" y1="-1.25" x2="-1.6" y2="-1.25" width="0.2032" layer="51"/>
+<wire x1="-1.6" y1="-1.25" x2="-1.6" y2="1.25" width="0.2032" layer="51"/>
+<circle x="0" y="0" radius="0.175" width="0" layer="51"/>
+<smd name="1" x="-1" y="0" dx="1.4" dy="2.7" layer="1"/>
+<smd name="2" x="1" y="0" dx="1.4" dy="2.7" layer="1"/>
+<text x="-1.825" y="1.625" size="0.8128" layer="25">&gt;NAME</text>
+<text x="-1.825" y="-2.45" size="0.8128" layer="27">&gt;VALUE</text>
+</package>
+<package name="NX3225_DEV">
+<description>&lt;b&gt;kHz RANGE CRYSTAL UNIT&lt;/b&gt;&lt;p&gt;
+LOW PROFILE SMD&lt;b&gt;</description>
+<wire x1="-1.6" y1="1.25" x2="1.6" y2="1.25" width="0.2032" layer="51"/>
+<wire x1="1.6" y1="1.25" x2="1.6" y2="-1.25" width="0.2032" layer="51"/>
+<wire x1="1.6" y1="-1.25" x2="-1.6" y2="-1.25" width="0.2032" layer="51"/>
+<wire x1="-1.6" y1="-1.25" x2="-1.6" y2="1.25" width="0.2032" layer="51"/>
+<circle x="0" y="0" radius="0.175" width="0" layer="51"/>
+<smd name="1" x="-1.4" y="0" dx="2.2" dy="2.7" layer="1"/>
+<smd name="2" x="1.4" y="0" dx="2.2" dy="2.7" layer="1"/>
+<text x="-1.825" y="1.625" size="0.8128" layer="25">&gt;NAME</text>
+<text x="-1.825" y="-2.45" size="0.8128" layer="27">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="STM32F411RE">
@@ -1909,6 +1935,39 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 </device>
 </devices>
 </deviceset>
+<deviceset name="NX3225GD" prefix="X">
+<description>&lt;b&gt;水晶振動子&lt;/b&gt;&lt;p&gt;
+周波数	8MHz&lt;br&gt;
+周波数安定性	±150ppm&lt;br&gt;
+周波数公差	±50ppm&lt;br&gt;
+負荷容量	8pF&lt;br&gt;
+ESR（等価直列抵抗）	500 Ohms&lt;br&gt;
+動作温度	-40°C～150°C&lt;br&gt;
+定格	AEC-Q200</description>
+<gates>
+<gate name="G$1" symbol="XTAL" x="2.54" y="0"/>
+</gates>
+<devices>
+<device name="-8MHZ" package="NX3225">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_" package="NX3225_DEV">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="Supply">
@@ -2217,8 +2276,6 @@ TE Connectivity</description>
 <part name="C1" library="Parts" deviceset="CAP" device="_0603" value="2.7pF"/>
 <part name="C2" library="Parts" deviceset="CAP" device="_0603" value="2.7pF"/>
 <part name="GND7" library="Supply" deviceset="0V" device=""/>
-<part name="R1" library="Parts" deviceset="RESISTOR" device="_0603" value="0"/>
-<part name="R2" library="Parts" deviceset="RESISTOR" device="_0603" value="0"/>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0603" value="10k"/>
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
@@ -2250,29 +2307,33 @@ TE Connectivity</description>
 <part name="D2" library="Parts" deviceset="APHD1608" device="LQBC/D"/>
 <part name="GND6" library="Supply" deviceset="0V" device=""/>
 <part name="R7" library="Parts" deviceset="RESISTOR" device="_0603" value="680"/>
+<part name="C16" library="Parts" deviceset="CAP" device="_0603" value="4.3pF"/>
+<part name="C17" library="Parts" deviceset="CAP" device="_0603" value="4.3pF"/>
+<part name="X2" library="Parts" deviceset="NX3225GD" device="_"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="170.18" y="12.7" size="2.54" layer="94">U2F USB HIDデバイス</text>
-<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.0</text>
+<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.1</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="U1" gate="G$1" x="68.58" y="121.92"/>
-<instance part="X1" gate="G$1" x="198.12" y="104.14"/>
-<instance part="C1" gate="G$1" x="190.5" y="96.52"/>
-<instance part="C2" gate="G$1" x="205.74" y="96.52"/>
-<instance part="GND7" gate="1" x="198.12" y="78.74"/>
-<instance part="R1" gate="G$1" x="190.5" y="109.22" rot="R90"/>
-<instance part="R2" gate="G$1" x="205.74" y="109.22" rot="R90"/>
-<instance part="R3" gate="G$1" x="195.58" y="53.34"/>
-<instance part="GND8" gate="1" x="215.9" y="53.34" rot="R90"/>
+<instance part="X1" gate="G$1" x="182.88" y="104.14"/>
+<instance part="C1" gate="G$1" x="175.26" y="96.52"/>
+<instance part="C2" gate="G$1" x="190.5" y="96.52"/>
+<instance part="GND7" gate="1" x="198.12" y="76.2"/>
+<instance part="R3" gate="G$1" x="195.58" y="58.42"/>
+<instance part="GND8" gate="1" x="215.9" y="58.42" rot="R90"/>
 <instance part="GND10" gate="1" x="88.9" y="30.48"/>
 <instance part="GND11" gate="1" x="121.92" y="45.72"/>
 <instance part="GND13" gate="1" x="88.9" y="162.56" rot="R180"/>
 <instance part="GND14" gate="1" x="147.32" y="106.68"/>
 <instance part="R4" gate="G$1" x="195.58" y="43.18"/>
+<instance part="C16" gate="G$1" x="205.74" y="96.52"/>
+<instance part="C17" gate="G$1" x="220.98" y="96.52"/>
+<instance part="X2" gate="G$1" x="213.36" y="104.14"/>
 </instances>
 <busses>
 </busses>
@@ -2326,26 +2387,34 @@ TE Connectivity</description>
 </segment>
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="195.58" y1="53.34" x2="187.96" y2="53.34" width="0.1524" layer="91"/>
-<label x="187.96" y="53.34" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="195.58" y1="58.42" x2="187.96" y2="58.42" width="0.1524" layer="91"/>
+<label x="187.96" y="58.42" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="0V" class="0">
 <segment>
 <pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="190.5" y1="88.9" x2="190.5" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="190.5" y1="83.82" x2="198.12" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="175.26" y1="88.9" x2="175.26" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="175.26" y1="83.82" x2="190.5" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="GND7" gate="1" pin="0V"/>
-<wire x1="198.12" y1="83.82" x2="198.12" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="198.12" y1="83.82" x2="198.12" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="2"/>
-<wire x1="205.74" y1="88.9" x2="205.74" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="83.82" x2="198.12" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="88.9" x2="190.5" y2="83.82" width="0.1524" layer="91"/>
 <junction x="198.12" y="83.82"/>
+<pinref part="C16" gate="G$1" pin="2"/>
+<wire x1="190.5" y1="83.82" x2="198.12" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="198.12" y1="83.82" x2="205.74" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="83.82" x2="205.74" y2="88.9" width="0.1524" layer="91"/>
+<junction x="190.5" y="83.82"/>
+<pinref part="C17" gate="G$1" pin="2"/>
+<wire x1="205.74" y1="83.82" x2="220.98" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="83.82" x2="220.98" y2="88.9" width="0.1524" layer="91"/>
+<junction x="205.74" y="83.82"/>
 </segment>
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
 <pinref part="GND8" gate="1" pin="0V"/>
-<wire x1="205.74" y1="53.34" x2="213.36" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="205.74" y1="58.42" x2="213.36" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="VSS"/>
@@ -2369,28 +2438,6 @@ TE Connectivity</description>
 <wire x1="147.32" y1="119.38" x2="147.32" y2="109.22" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$2" class="0">
-<segment>
-<pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="96.52" x2="190.5" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="X1" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="104.14" x2="195.58" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="R1" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="109.22" x2="190.5" y2="104.14" width="0.1524" layer="91"/>
-<junction x="190.5" y="104.14"/>
-</segment>
-</net>
-<net name="N$3" class="0">
-<segment>
-<pinref part="X1" gate="G$1" pin="2"/>
-<wire x1="200.66" y1="104.14" x2="205.74" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="C2" gate="G$1" pin="1"/>
-<wire x1="205.74" y1="104.14" x2="205.74" y2="96.52" width="0.1524" layer="91"/>
-<pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="205.74" y1="109.22" x2="205.74" y2="104.14" width="0.1524" layer="91"/>
-<junction x="205.74" y="104.14"/>
-</segment>
-</net>
 <net name="VCAP_1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="VCAP_1"/>
@@ -2407,9 +2454,13 @@ TE Connectivity</description>
 <label x="53.34" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="R1" gate="G$1" pin="2"/>
-<wire x1="190.5" y1="119.38" x2="190.5" y2="127" width="0.1524" layer="91"/>
-<label x="190.5" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
+<label x="175.26" y="116.84" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="C1" gate="G$1" pin="1"/>
+<wire x1="175.26" y1="116.84" x2="175.26" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="X1" gate="G$1" pin="1"/>
+<wire x1="175.26" y1="104.14" x2="175.26" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="180.34" y1="104.14" x2="175.26" y2="104.14" width="0.1524" layer="91"/>
+<junction x="175.26" y="104.14"/>
 </segment>
 </net>
 <net name="OSC32_OUT" class="0">
@@ -2420,17 +2471,21 @@ TE Connectivity</description>
 <label x="48.26" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="205.74" y1="119.38" x2="205.74" y2="127" width="0.1524" layer="91"/>
-<label x="205.74" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
+<label x="190.5" y="116.84" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="C2" gate="G$1" pin="1"/>
+<wire x1="190.5" y1="116.84" x2="190.5" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="X1" gate="G$1" pin="2"/>
+<wire x1="190.5" y1="104.14" x2="190.5" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="185.42" y1="104.14" x2="190.5" y2="104.14" width="0.1524" layer="91"/>
+<junction x="190.5" y="104.14"/>
 </segment>
 </net>
 <net name="NRST" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="NRST"/>
-<wire x1="68.58" y1="106.68" x2="43.18" y2="106.68" width="0.1524" layer="91"/>
-<wire x1="43.18" y1="106.68" x2="43.18" y2="127" width="0.1524" layer="91"/>
-<label x="43.18" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="68.58" y1="106.68" x2="33.02" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="106.68" x2="33.02" y2="127" width="0.1524" layer="91"/>
+<label x="33.02" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
 <net name="AVDD" class="0">
@@ -2530,13 +2585,47 @@ TE Connectivity</description>
 <label x="81.28" y="43.18" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
+<net name="OSC_IN" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PH0-OSC_IN"/>
+<wire x1="68.58" y1="111.76" x2="43.18" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="111.76" x2="43.18" y2="127" width="0.1524" layer="91"/>
+<label x="43.18" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<label x="205.74" y="116.84" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="C16" gate="G$1" pin="1"/>
+<wire x1="205.74" y1="116.84" x2="205.74" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="X2" gate="G$1" pin="1"/>
+<wire x1="205.74" y1="104.14" x2="205.74" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="210.82" y1="104.14" x2="205.74" y2="104.14" width="0.1524" layer="91"/>
+<junction x="205.74" y="104.14"/>
+</segment>
+</net>
+<net name="OSC_OUT" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PH1-OSC_OUT"/>
+<wire x1="68.58" y1="109.22" x2="38.1" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="109.22" x2="38.1" y2="127" width="0.1524" layer="91"/>
+<label x="38.1" y="127" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<label x="220.98" y="116.84" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="C17" gate="G$1" pin="1"/>
+<wire x1="220.98" y1="116.84" x2="220.98" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="X2" gate="G$1" pin="2"/>
+<wire x1="220.98" y1="104.14" x2="220.98" y2="96.52" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="104.14" x2="220.98" y2="104.14" width="0.1524" layer="91"/>
+<junction x="220.98" y="104.14"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
 <plain>
 <text x="53.34" y="152.4" size="2.54" layer="97">電源回路</text>
 <text x="170.18" y="12.7" size="2.54" layer="94">U2F USB HIDデバイス</text>
-<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.0</text>
+<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.1</text>
 <text x="116.84" y="55.88" size="2.1844" layer="97" align="top-left">1uFはVBATの
 近傍に配置</text>
 </plain>
@@ -2555,11 +2644,11 @@ TE Connectivity</description>
 <instance part="AGND1" gate="VR1" x="175.26" y="53.34" smashed="yes">
 <attribute name="VALUE" x="172.72" y="49.53" size="1.778" layer="96"/>
 </instance>
-<instance part="R5" gate="G$1" x="190.5" y="60.96" rot="R90"/>
-<instance part="GND5" gate="1" x="190.5" y="53.34"/>
+<instance part="R5" gate="G$1" x="198.12" y="60.96" rot="R90"/>
+<instance part="GND5" gate="1" x="198.12" y="53.34"/>
 <instance part="C11" gate="G$1" x="124.46" y="71.12"/>
-<instance part="AGND2" gate="VR1" x="190.5" y="78.74" smashed="yes" rot="R180">
-<attribute name="VALUE" x="187.96" y="80.01" size="1.778" layer="96"/>
+<instance part="AGND2" gate="VR1" x="198.12" y="78.74" smashed="yes" rot="R180">
+<attribute name="VALUE" x="195.58" y="80.01" size="1.778" layer="96"/>
 </instance>
 <instance part="GND12" gate="1" x="93.98" y="50.8"/>
 <instance part="C8" gate="G$1" x="78.74" y="71.12"/>
@@ -2609,7 +2698,7 @@ TE Connectivity</description>
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
 <pinref part="GND5" gate="1" pin="0V"/>
-<wire x1="190.5" y1="60.96" x2="190.5" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="198.12" y1="60.96" x2="198.12" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C7" gate="G$1" pin="2"/>
@@ -2712,7 +2801,7 @@ TE Connectivity</description>
 <segment>
 <pinref part="R5" gate="G$1" pin="2"/>
 <pinref part="AGND2" gate="VR1" pin="AGND"/>
-<wire x1="190.5" y1="71.12" x2="190.5" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="198.12" y1="71.12" x2="198.12" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="AVDD" class="0">
@@ -2741,7 +2830,7 @@ TE Connectivity</description>
 <text x="154.94" y="45.72" size="2.1844" layer="97" align="top-left">NUCLEOに付属の
 ST-LINK V2-1に接続します</text>
 <text x="170.18" y="12.7" size="2.54" layer="94">U2F USB HIDデバイス</text>
-<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.0</text>
+<text x="217.17" y="20.32" size="2.1844" layer="94">試作基板回路図 Ver. 0.1</text>
 <text x="167.64" y="81.28" size="1.778" layer="91" align="center-right">TCK</text>
 <text x="167.64" y="78.74" size="1.778" layer="91" align="center-right">GND</text>
 <text x="167.64" y="76.2" size="1.778" layer="91" align="center-right">TMS</text>
