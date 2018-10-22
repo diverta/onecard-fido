@@ -39,14 +39,6 @@ NRF_LOG_MODULE_REGISTER();
 static ble_u2f_t m_u2f;
 
 //
-// アドバタイズ用設定
-//   APP_ADV_INTERVAL 0.625ms*300=187.5ms
-//   APP_ADV_TIMEOUT_IN_SECONDS 180sec
-//
-#define APP_ADV_INTERVAL                300
-#define APP_ADV_TIMEOUT_IN_SECONDS      180
-
-//
 // ボタン、LEDのピン番号
 //
 #define PIN_MAIN_SW_IN                  BUTTON_1

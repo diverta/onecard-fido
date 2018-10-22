@@ -6,9 +6,6 @@
 
 #include "ble_u2f_flash.h"
 #include "ble_u2f_securekey.h"
-#if 0
-#include "ble_u2f_crypto.h"
-#endif
 #include "ble_u2f_util.h"
 
 // for ble_u2f_crypto_ecb_init
@@ -61,7 +58,6 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     }
 }
 
-#if 0
 static bool convert_skey_bytes_to_word(uint8_t * data, uint16_t length, uint32_t *keydata_buffer)
 {
     char buf[20];
@@ -247,4 +243,3 @@ void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, f
         NRF_LOG_DEBUG("ble_u2f_securekey_install_cert end ");
     }
 }
-#endif

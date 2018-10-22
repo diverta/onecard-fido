@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_flash.h"
@@ -13,9 +14,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#if 0
 // Flash ROM書込み用データの一時格納領域
-static fds_record_chunk_t  m_fds_record_chunks[3];
+static fds_record_t m_fds_record;
+#if 0
 static uint32_t m_token_counter_record_buffer[10];
 static uint32_t m_token_counter;
 static uint32_t m_reserve_word;
@@ -28,7 +29,7 @@ bool ble_u2f_flash_force_fdc_gc(void)
     // FDSガベージコレクションを強制実行
     err_code = fds_gc();
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_gc returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_gc returns 0x%02x ", err_code);
         APP_ERROR_CHECK(err_code);
     }
 
@@ -42,14 +43,14 @@ bool ble_u2f_flash_keydata_delete(void)
     // 秘密鍵／証明書をFlash ROM領域から削除
     err_code = fds_file_delete(U2F_FILE_ID);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_file_delete returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
         return false;
     }
 
     return true;
 }
 
-#if 0
+
 static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata_buffer)
 {
 	fds_flash_record_t flash_record;
@@ -59,17 +60,17 @@ static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata
 
     err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_open returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
 
     data = (uint32_t *)flash_record.p_data;
-    data_length = flash_record.p_header->tl.length_words;
+    data_length = flash_record.p_header->length_words;
     memcpy(keydata_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_close returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
     return true;
@@ -82,7 +83,7 @@ static uint32_t *keydata_buffer_allocate(ble_u2f_context_t *p_u2f_context)
     uint16_t  keydata_buffer_length = p_u2f_context->securekey_buffer_length;
     if (keydata_buffer != NULL) {
         // 既に確保済みの場合
-        NRF_LOG_DEBUG("securekey_buffer already allocated (%d bytes) \r\n", 
+        NRF_LOG_DEBUG("securekey_buffer already allocated (%d bytes) ", 
             keydata_buffer_length);
         return keydata_buffer;
     }
@@ -92,10 +93,10 @@ static uint32_t *keydata_buffer_allocate(ble_u2f_context_t *p_u2f_context)
     keydata_buffer = (uint32_t *)malloc(keydata_buffer_length);
     if (keydata_buffer == NULL) {
         // 領域が確保出来なかったら終了
-        NRF_LOG_ERROR("securekey_buffer allocation failed \r\n");
+        NRF_LOG_ERROR("securekey_buffer allocation failed ");
         return keydata_buffer;
     }
-    NRF_LOG_DEBUG("securekey_buffer allocated (%d bytes) \r\n", keydata_buffer_length);
+    NRF_LOG_DEBUG("securekey_buffer allocated (%d bytes) ", keydata_buffer_length);
 
     // 確保した領域のアドレスと長さを共有情報に保持
     p_u2f_context->securekey_buffer = keydata_buffer;
@@ -129,7 +130,7 @@ bool ble_u2f_flash_keydata_read(ble_u2f_context_t *p_u2f_context)
     } else if (ret != FDS_ERR_NOT_FOUND) {
         // レコードが存在しないときはOK
         // それ以外の場合はエラー終了
-        NRF_LOG_ERROR("fds_record_find returns 0x%02x \r\n", ret);
+        NRF_LOG_ERROR("fds_record_find returns 0x%02x ", ret);
         return false;
     }
     
@@ -160,43 +161,39 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
     ret_code_t ret;
 
     // 一時領域（確保済み）のアドレスを取得
-    m_fds_record_chunks[0].p_data       = p_u2f_context->securekey_buffer;
-    m_fds_record_chunks[0].length_words = SKEY_CERT_WORD_NUM;
-
-    fds_record_t record;
-    record.file_id         = U2F_FILE_ID;
-    record.key             = U2F_SKEY_CERT_RECORD_KEY;
-    record.data.p_chunks   = m_fds_record_chunks;
-    record.data.num_chunks = 1;
+    m_fds_record.data.p_data       = p_u2f_context->securekey_buffer;
+    m_fds_record.data.length_words = SKEY_CERT_WORD_NUM;
+    m_fds_record.file_id         = U2F_FILE_ID;
+    m_fds_record.key             = U2F_SKEY_CERT_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret = fds_record_find(U2F_FILE_ID, U2F_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
-        ret = fds_record_update(&record_desc, &record);
+        ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_update returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
-        ret = fds_record_write(&record_desc, &record);
+        ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_write returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("ble_u2f_flash_keydata_write: fds_record_write returns 0x%02x ", ret);
             return false;
         }
 
     } else {
-        NRF_LOG_DEBUG("fds_record_find returns 0x%02x \r\n", ret);
+        NRF_LOG_DEBUG("fds_record_find returns 0x%02x ", ret);
         return false;
     }
     
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("ble_u2f_flash_keydata_write: no space in flash, calling FDS GC \r\n");
+        NRF_LOG_ERROR("ble_u2f_flash_keydata_write: no space in flash, calling FDS GC ");
         if (ble_u2f_flash_force_fdc_gc() == false) {
             return false;
         }
@@ -205,7 +202,7 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-
+#if 0
 static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *token_counter_buffer)
 {
 	fds_flash_record_t flash_record;
@@ -215,7 +212,7 @@ static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *t
 
     err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_open returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
 
@@ -225,7 +222,7 @@ static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *t
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_close returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
 
@@ -301,7 +298,7 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: fds_record_update returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
@@ -309,7 +306,7 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: fds_record_write returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: fds_record_write returns 0x%02x ", ret);
             return false;
         }
     }
@@ -317,7 +314,7 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: no space in flash, calling FDS GC \r\n");
+        NRF_LOG_ERROR("ble_u2f_flash_token_counter_write: no space in flash, calling FDS GC ");
         if (ble_u2f_flash_force_fdc_gc() == false) {
             return false;
         }
