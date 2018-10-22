@@ -5,7 +5,6 @@
                    displayName="ble_u2f_lib"
                    projectFiles="true"
                    root="../ble_u2f_lib">
-      <itemPath>../ble_u2f_lib/ble_u2f.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
@@ -748,6 +747,7 @@
           <cTool>
             <preprocessorList>
               <Elem>NRF52840_XXAA</Elem>
+              <Elem>SOFTDEVICE_PRESENT</Elem>
             </preprocessorList>
           </cTool>
         </makeTool>
@@ -2699,15 +2699,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
-            <Elem>S140</Elem>
-          </preprocessorList>
         </cTool>
       </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"

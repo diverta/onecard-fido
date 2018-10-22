@@ -26,7 +26,7 @@ static void command_timer_handler(void *p_context)
     
     // レスポンスを送信
     uint32_t err_code = ble_u2f_status_response_send(p_u2f);
-    NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x \r\n", err_code);
+    NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
 }
 
 static void ble_u2f_status_retry_init()
@@ -35,7 +35,7 @@ static void ble_u2f_status_retry_init()
     if (app_timer_created == false) {
         err_code = app_timer_create(&m_ble_u2f_status_retry_timer_id, APP_TIMER_MODE_SINGLE_SHOT, command_timer_handler);
         if (err_code != NRF_SUCCESS) {
-            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_status_retry_timer_id) returns %d \r\n", err_code);
+            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_status_retry_timer_id) returns %d ", err_code);
             return;
         }
         app_timer_created = true;
@@ -52,7 +52,7 @@ static void ble_u2f_status_retry_terminate()
     app_timer_started = false;
     uint32_t err_code = app_timer_stop(m_ble_u2f_status_retry_timer_id);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_status_retry_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_status_retry_timer_id) returns %d ", err_code);
         return;
     }
 }
@@ -72,7 +72,7 @@ static void ble_u2f_status_retry_start(ble_u2f_t *p_u2f)
     uint32_t timeout_ticks = APP_TIMER_TICKS(RETRY_INTERVAL_MSEC);
     uint32_t err_code = app_timer_start(m_ble_u2f_status_retry_timer_id, timeout_ticks, p_u2f);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_status_retry_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_status_retry_timer_id) returns %d ", err_code);
         return;
     }
     app_timer_started = true;

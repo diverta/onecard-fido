@@ -76,7 +76,8 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;            /**< Handle 
 
 static ble_uuid_t m_adv_uuids[] =                                   /**< Universally unique service identifiers. */
 {
-    {BLE_UUID_DEVICE_INFORMATION_SERVICE,   BLE_UUID_TYPE_BLE}
+    {BLE_UUID_DEVICE_INFORMATION_SERVICE,   BLE_UUID_TYPE_BLE},
+    {BLE_UUID_U2F_SERVICE,                  BLE_UUID_TYPE_BLE}
 };
 
 

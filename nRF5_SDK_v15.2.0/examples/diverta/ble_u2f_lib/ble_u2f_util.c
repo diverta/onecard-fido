@@ -93,7 +93,7 @@ bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context)
     uint8_t *signature_data_buffer = p_u2f_context->signature_data_buffer;
     if (signature_data_buffer != NULL) {
         // 既に確保済みの場合
-        NRF_LOG_DEBUG("signature_data_buffer already allocated (%d bytes) \r\n", 
+        NRF_LOG_DEBUG("signature_data_buffer already allocated (%d bytes) ", 
             p_u2f_context->signature_data_buffer_length);
         memset(signature_data_buffer, 0, SIGNATURE_BASE_BUFFER_LENGTH);
         return true;
@@ -102,7 +102,7 @@ bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context)
     // データ格納領域を、データ全体の長さ分確保
     signature_data_buffer = (uint8_t *)malloc(SIGNATURE_BASE_BUFFER_LENGTH);
     if (signature_data_buffer == NULL) {
-        NRF_LOG_ERROR("signature_data_buffer allocation failed \r\n");
+        NRF_LOG_ERROR("signature_data_buffer allocation failed ");
         return false;
     }
 
@@ -110,7 +110,7 @@ bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context)
     // (Disconnect時に解放されます)
     p_u2f_context->signature_data_buffer        = signature_data_buffer;
     p_u2f_context->signature_data_buffer_length = SIGNATURE_BASE_BUFFER_LENGTH;
-    NRF_LOG_DEBUG("signature_data_buffer allocated (%d bytes) \r\n", SIGNATURE_BASE_BUFFER_LENGTH);
+    NRF_LOG_DEBUG("signature_data_buffer allocated (%d bytes) ", SIGNATURE_BASE_BUFFER_LENGTH);
 
     // 確保領域は0で初期化
     memset(signature_data_buffer, 0, SIGNATURE_BASE_BUFFER_LENGTH);
@@ -125,7 +125,7 @@ bool ble_u2f_response_message_allocate(ble_u2f_context_t *p_u2f_context)
     uint8_t *response_message_buffer = p_u2f_context->response_message_buffer;
     if (response_message_buffer != NULL) {
         // 既に確保済みの場合
-        NRF_LOG_DEBUG("response_message_buffer already allocated (%d bytes) \r\n", 
+        NRF_LOG_DEBUG("response_message_buffer already allocated (%d bytes) ", 
             p_u2f_context->signature_data_buffer_length);
         memset(response_message_buffer, 0, RESPONSE_DATA_BUFFER_LENGTH);
         return true;
@@ -134,7 +134,7 @@ bool ble_u2f_response_message_allocate(ble_u2f_context_t *p_u2f_context)
     // データ格納領域を、データ全体の長さ分確保
     response_message_buffer = (uint8_t *)malloc(RESPONSE_DATA_BUFFER_LENGTH);
     if (response_message_buffer == NULL) {
-        NRF_LOG_ERROR("response_message_buffer allocation failed \r\n");
+        NRF_LOG_ERROR("response_message_buffer allocation failed ");
         return false;
     }
 
@@ -142,7 +142,7 @@ bool ble_u2f_response_message_allocate(ble_u2f_context_t *p_u2f_context)
     // (Disconnect時に解放されます)
     p_u2f_context->response_message_buffer        = response_message_buffer;
     p_u2f_context->response_message_buffer_length = RESPONSE_DATA_BUFFER_LENGTH;
-    NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) \r\n", RESPONSE_DATA_BUFFER_LENGTH);
+    NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", RESPONSE_DATA_BUFFER_LENGTH);
 
     // 確保領域は0で初期化
     memset(response_message_buffer, 0, RESPONSE_DATA_BUFFER_LENGTH);
@@ -172,6 +172,6 @@ void dump_octets(uint8_t * data, uint16_t length)
                 data[i+0], data[i+1], data[i+2], data[i+3],
                 data[i+4], data[i+5], data[i+6], data[i+7]
         );
-        NRF_LOG_DEBUG("%s\r\n", (uint32_t)buf);
+        NRF_LOG_DEBUG("%s", (uint32_t)buf);
     }
 }

@@ -5,11 +5,7 @@
 #include <stdlib.h>
 
 #include "ble_u2f.h"
-
-#if 0
 #include "ble_u2f_control_point.h"
-#endif
-
 #include "ble_u2f_status.h"
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
@@ -88,10 +84,9 @@ void ble_u2f_command_initialize_context(void)
     // 共有情報をゼロクリアする
     memset(&m_u2f_context, 0, sizeof(ble_u2f_context_t));
     NRF_LOG_DEBUG("ble_u2f_command_initialize_context done ");
-#if 0    
+    
     // コマンド／リクエストデータ格納領域を初期化する
     ble_u2f_control_point_initialize();
-#endif
 }
 
 
@@ -238,10 +233,8 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     // BLE接続情報を共有情報に保持
     m_u2f_context.p_u2f = p_u2f;
 
-#if 0
     // コマンドバッファに入力されたリクエストデータを取得
     ble_u2f_control_point_receive(p_evt_write, &m_u2f_context);
-#endif
 
     // データ受信後に実行すべき処理を判定
     m_u2f_context.command = get_command_type();
@@ -257,7 +250,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_INITBOND:
             ble_u2f_pairing_delete_bonds(&m_u2f_context);
             break;
-
+#if 0
         case COMMAND_INITFSTR:
             ble_u2f_securekey_erase(&m_u2f_context);
             break;
@@ -281,7 +274,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_do_process(&m_u2f_context);
             break;
-
+#endif
         case COMMAND_U2F_VERSION:
             ble_u2f_version_do_process(&m_u2f_context);
             break;
@@ -310,9 +303,9 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         return;
     }
     
-#if 0
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
+#if 0
         case COMMAND_INITFSTR:
             ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
             break;
@@ -332,9 +325,8 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_send_response(&m_u2f_context, p_evt);
             break;
-
+#endif
         default:
             break;
     }
-#endif
 }

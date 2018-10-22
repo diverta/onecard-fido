@@ -33,7 +33,7 @@ static void ble_u2f_processing_led_init()
     if (app_timer_created == false) {
         err_code = app_timer_create(&m_ble_u2f_led_on_off_timer_id, APP_TIMER_MODE_REPEATED, command_timer_handler);
         if (err_code != NRF_SUCCESS) {
-            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_led_on_off_timer_id) returns %d \r\n", err_code);
+            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_led_on_off_timer_id) returns %d ", err_code);
             return;
         }
         app_timer_created = true;
@@ -49,7 +49,7 @@ static void ble_u2f_processing_led_start()
     // タイマーを開始する
     uint32_t err_code = app_timer_start(m_ble_u2f_led_on_off_timer_id, APP_TIMER_TICKS(LED_ON_OFF_INTERVAL_MSEC), NULL);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_led_on_off_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_led_on_off_timer_id) returns %d ", err_code);
         return;
     }
 }
@@ -63,7 +63,7 @@ static void ble_u2f_processing_led_terminate()
     // タイマーを停止する
     uint32_t err_code = app_timer_stop(m_ble_u2f_led_on_off_timer_id);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_led_on_off_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_led_on_off_timer_id) returns %d ", err_code);
         return;
     }
 }

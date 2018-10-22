@@ -121,6 +121,8 @@ SRC_FILES += \
   $(PROJ_DIR)/one_card_event.c \
   $(U2FLIB_DIR)/ble_u2f_command.c \
   $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
+  $(U2FLIB_DIR)/ble_u2f_control_point.c \
+  $(U2FLIB_DIR)/ble_u2f_control_point_apdu.c \
   $(U2FLIB_DIR)/ble_u2f_init.c \
   $(U2FLIB_DIR)/ble_u2f_pairing.c \
   $(U2FLIB_DIR)/ble_u2f_processing_led.c \
@@ -128,6 +130,7 @@ SRC_FILES += \
   $(U2FLIB_DIR)/ble_u2f_status_retry.c \
   $(U2FLIB_DIR)/ble_u2f_user_presence.c \
   $(U2FLIB_DIR)/ble_u2f_util.c \
+  $(U2FLIB_DIR)/ble_u2f_version.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

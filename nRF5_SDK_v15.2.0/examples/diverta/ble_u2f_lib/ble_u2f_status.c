@@ -117,16 +117,16 @@ static uint32_t u2f_response_send(ble_u2f_t *p_u2f)
     if (err_code == NRF_SUCCESS) {
         if (hvx_send_length != u2f_status_buffer_length) {
             err_code = NRF_ERROR_DATA_SIZE;
-            NRF_LOG_ERROR("u2f_response_send: invalid send data size \r\n");
+            NRF_LOG_ERROR("u2f_response_send: invalid send data size ");
 
         } else {
-            NRF_LOG_DEBUG("u2f_response_send (%dbytes) \r\n", hvx_send_length);
+            NRF_LOG_DEBUG("u2f_response_send (%dbytes) ", hvx_send_length);
         }
 
     } else if (err_code != NRF_ERROR_RESOURCES) {
         // 未送信データが存在する状態(NRF_ERROR_RESOURCES)の場合は
         // 後ほどビジーと判断して再送させるため、エラー扱いとしない
-        NRF_LOG_ERROR("u2f_response_send: sd_ble_gatts_hvx failed (err_code=%d) \r\n", err_code);
+        NRF_LOG_ERROR("u2f_response_send: sd_ble_gatts_hvx failed (err_code=%d) ", err_code);
     }
 
     return err_code;
@@ -155,14 +155,14 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
 
     // フラグがビジーの場合は異常終了
     if (send_info_t.busy == true) {
-        NRF_LOG_ERROR("ble_u2f_status_response_send: HVX function is busy \r\n");
+        NRF_LOG_ERROR("ble_u2f_status_response_send: HVX function is busy ");
         return NRF_ERROR_INVALID_STATE;
     }
 
     // 保持中の情報をチェックし、
     // 完備していない場合は異常終了
     if (send_info_t.data == NULL) {
-        NRF_LOG_ERROR("ble_u2f_status_response_send: ble_u2f_status_setup incomplete \r\n");
+        NRF_LOG_ERROR("ble_u2f_status_response_send: ble_u2f_status_setup incomplete ");
         return NRF_ERROR_INVALID_DATA;
     }
 

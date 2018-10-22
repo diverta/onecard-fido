@@ -1,11 +1,12 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f_util.h"
 #include "ble_u2f_control_point_apdu.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_control_point"
+#define NRF_LOG_MODULE_NAME ble_u2f_control_point
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // u2f control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
@@ -46,7 +47,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // リクエストとして成立しないので終了
         p_ble_header->CMD = U2F_COMMAND_ERROR;
         p_ble_header->ERROR = U2F_ERR_INVALID_LEN;
-        NRF_LOG_ERROR("u2f_request_receive: invalid request \r\n");
+        NRF_LOG_ERROR("u2f_request_receive: invalid request ");
         return false;
     }
 
@@ -58,13 +59,13 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
                         + control_point_buffer[2]);
     p_ble_header->SEQ = 0xff;
 
-    NRF_LOG_DEBUG("INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) \r\n", 
+    NRF_LOG_DEBUG("INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
     if (is_valid_command(p_ble_header->CMD) == false) {
         // BLEヘッダーに設定されたコマンドが不正の場合、
         // ここで処理を終了
-        NRF_LOG_ERROR("u2f_request_receive: invalid command (0x%02x) \r\n", p_ble_header->CMD);
+        NRF_LOG_ERROR("u2f_request_receive: invalid command (0x%02x) ", p_ble_header->CMD);
         p_ble_header->CMD = U2F_COMMAND_ERROR;
         p_ble_header->ERROR = U2F_ERR_INVALID_CMD;
         return false;
@@ -73,7 +74,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
     if (p_ble_header->LEN > BLE_U2F_MAX_RECV_CHAR_LEN - 3) {
         // BLEヘッダーに設定されたデータ長が
         // 61文字を超える場合、後続データがあると判断
-        NRF_LOG_DEBUG("u2f_request_receive: CONT frame will receive \r\n");
+        NRF_LOG_DEBUG("u2f_request_receive: CONT frame will receive ");
         p_ble_header->CONT = true;
     } else {
         p_ble_header->CONT = false;
@@ -101,7 +102,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {
         // ヘッダーに設定されたデータ長が不正の場合、
         // ここで処理を終了
-        NRF_LOG_ERROR("u2f_request_receive: too long length (%d) \r\n", p_apdu->Lc);
+        NRF_LOG_ERROR("u2f_request_receive: too long length (%d) ", p_apdu->Lc);
         p_ble_header->CMD = U2F_COMMAND_ERROR;
         p_ble_header->ERROR = U2F_ERR_INVALID_LEN;
         return false;
@@ -113,7 +114,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
             // APDUヘッダーの後ろにデータが存在している場合、
             // リクエストとしては不正ではないが、
             // ステータスワード(SW_WRONG_LENGTH)を設定
-            NRF_LOG_ERROR("INIT frame has data (%d bytes) while Lc=0 \r\n", control_point_buffer_length - offset);
+            NRF_LOG_ERROR("INIT frame has data (%d bytes) while Lc=0 ", control_point_buffer_length - offset);
             p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
         }
         // データ長が0の場合は以降の処理を行わない
@@ -137,7 +138,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F
     // CMDが空の場合は先頭レコード未送信とみなし
     // エラーと扱う
     if (p_ble_header->CMD == 0x00) {
-        NRF_LOG_ERROR("INIT frame not received \r\n");
+        NRF_LOG_ERROR("INIT frame not received ");
 
         ble_header_t.CMD = U2F_COMMAND_ERROR;
         ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
@@ -151,7 +152,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F
     // シーケンスチェック
     if (sequence == 0) {
         if (p_ble_header->SEQ != 0xff) {
-            NRF_LOG_ERROR("Irregular 1st sequence %d \r\n", sequence);
+            NRF_LOG_ERROR("Irregular 1st sequence %d ", sequence);
 
             ble_header_t.CMD = U2F_COMMAND_ERROR;
             ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
@@ -159,7 +160,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F
         }
     } else {
         if (sequence != p_ble_header->SEQ+1) {
-            NRF_LOG_ERROR("Bad sequence %d-->%d \r\n", 
+            NRF_LOG_ERROR("Bad sequence %d-->%d ", 
                 p_ble_header->SEQ, sequence);
 
             ble_header_t.CMD = U2F_COMMAND_ERROR;
@@ -171,12 +172,12 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F
     // シーケンスを更新
     p_ble_header->SEQ = sequence;
 
-    NRF_LOG_DEBUG("CONT frame: CMD(0x%02x) LEN(%d) SEQ(%d) \r\n", 
+    NRF_LOG_DEBUG("CONT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
     // コピー先となる領域が初期化されていない場合は終了
     if (p_apdu->data == NULL) {
-        NRF_LOG_ERROR("p_apdu->data is not initialized \r\n");
+        NRF_LOG_ERROR("p_apdu->data is not initialized ");
         return;
     }
 
@@ -192,12 +193,12 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     memcpy(control_point_buffer, p_evt_write->data, p_evt_write->len);
     control_point_buffer_length = p_evt_write->len;
 
-    NRF_LOG_DEBUG("ble_u2f_control_point_receive length=%u \r\n", control_point_buffer_length);
+    NRF_LOG_DEBUG("ble_u2f_control_point_receive length=%u ", control_point_buffer_length);
 
     if (control_point_buffer[0] & 0x80) {
         // 先頭データが２回連続で送信された場合はエラー
         if ((ble_header_t.CMD & 0x80) && ble_header_t.CONT == true) {
-            NRF_LOG_ERROR("INIT frame received again while CONT is expected \r\n");
+            NRF_LOG_ERROR("INIT frame received again while CONT is expected ");
             ble_header_t.CMD = U2F_COMMAND_ERROR;
             ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
 
@@ -220,7 +221,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     if (apdu_t.data_length > apdu_t.Lc) {
         // データヘッダー設定されたデータ長が不正の場合
         // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("apdu data length(%d) exceeds Lc(%d) \r\n", apdu_t.data_length, apdu_t.Lc);
+        NRF_LOG_ERROR("apdu data length(%d) exceeds Lc(%d) ", apdu_t.data_length, apdu_t.Lc);
         ble_header_t.CMD = U2F_COMMAND_ERROR;
         ble_header_t.ERROR = U2F_ERR_INVALID_LEN;
     }
@@ -229,5 +230,3 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     p_u2f_context->p_ble_header = &ble_header_t;
     p_u2f_context->p_apdu = &apdu_t;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

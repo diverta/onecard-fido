@@ -59,6 +59,69 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     ble_u2f_pairing_on_disconnect();
 }
 
+static bool ble_u2f_on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+{
+    ble_gatts_evt_write_t *p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    if (p_evt_write->handle == p_u2f->u2f_control_point_handles.value_handle) {
+        // Control Point（コマンドバッファ）の内容更新時の処理
+        // コマンドバッファに入力されたリクエストデータを取得し、
+        // その内容を判定し処理を実行
+        ble_u2f_command_on_ble_evt_write(p_u2f, p_evt_write);
+        return true;
+
+    } else {
+        // 他のBLEサービスに処理させる
+        return false;
+    }
+}
+
+static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
+{
+    uint32_t err_code;
+    ble_gatts_evt_rw_authorize_request_t  req;
+    ble_gatts_rw_authorize_reply_params_t auth_reply;
+
+    // 書込操作以外は対象外
+    req = p_ble_evt->evt.gatts_evt.params.authorize_request;
+    if (req.type == BLE_GATTS_AUTHORIZE_TYPE_INVALID) {
+        return false;
+    }
+    if (req.request.write.op != BLE_GATTS_OP_WRITE_REQ) {
+        return false;
+    }
+
+    if (req.request.write.handle == p_u2f->u2f_service_revision_bitfield_handles.value_handle) {
+        // U2F Service Revision Bitfieldへの書込時
+        if (req.type != BLE_GATTS_AUTHORIZE_TYPE_WRITE) {
+            return false;
+        }
+        auth_reply.type = BLE_GATTS_AUTHORIZE_TYPE_WRITE;
+
+        uint8_t bitfield = req.request.write.data[0];
+        if (bitfield == 0x80) {
+            // 0x80指定時は書込許可
+            auth_reply.params.write.update = 1;
+            auth_reply.params.write.offset = 0;
+            auth_reply.params.write.len = req.request.write.len;
+            auth_reply.params.write.p_data = req.request.write.data;
+            auth_reply.params.write.gatt_status = BLE_GATT_STATUS_SUCCESS;
+
+        } else {
+            // 0x80以外は書込不許可
+            auth_reply.params.write.gatt_status = BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
+        }
+
+        // レスポンス実行
+        err_code = sd_ble_gatts_rw_authorize_reply(p_ble_evt->evt.gatts_evt.conn_handle, &auth_reply);
+        APP_ERROR_CHECK(err_code);
+        return true;
+
+    } else {
+        // 他のBLEサービスに処理させる
+        return false;
+    }
+}
+
 bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
     if (p_ble_evt == NULL) {
@@ -66,6 +129,7 @@ bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     }
     NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
+    bool ret = false;
     ble_u2f_t *p_u2f = one_card_get_U2F_context();
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
@@ -81,11 +145,19 @@ bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
             ble_u2f_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
             break;
 
+        case BLE_GATTS_EVT_WRITE:
+            ret = ble_u2f_on_write(p_u2f, p_ble_evt);
+            break;
+
+        case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
+            ret = ble_u2f_on_rw_authorize_request(p_u2f, p_ble_evt);
+            break;
+
         default:
             break;
     }
     
-    return false;
+    return ret;
 }
 
 bool one_card_pm_evt_handler(pm_evt_t *p_evt)

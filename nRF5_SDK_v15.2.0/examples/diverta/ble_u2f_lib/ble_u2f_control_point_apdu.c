@@ -1,13 +1,14 @@
+#include <stdlib.h>
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_control_point_apdu.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_control_point_apdu"
+#define NRF_LOG_MODULE_NAME ble_u2f_control_point_apdu
 #include "nrf_log.h"
-
+NRF_LOG_MODULE_REGISTER();
 
 static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
@@ -34,12 +35,12 @@ static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buf
             } else {
                 p_apdu->Le = length;
             }
-            NRF_LOG_DEBUG("Lc(%d bytes) Le(%d bytes) in Extended Length Encoding\r\n", p_apdu->Lc, p_apdu->Le);
+            NRF_LOG_DEBUG("Lc(%d bytes) Le(%d bytes) in Extended Length Encoding", p_apdu->Lc, p_apdu->Le);
         } else {
             // 先頭パケットからはLcの値だけしか取得できない
             // Leの値は最終パケットから取得する
             p_apdu->Lc = length;
-            NRF_LOG_DEBUG("Lc(%d bytes) in Extended Length Encoding\r\n", p_apdu->Lc);
+            NRF_LOG_DEBUG("Lc(%d bytes) in Extended Length Encoding", p_apdu->Lc);
         }
 
     } else {
@@ -60,12 +61,12 @@ static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buf
             } else {
                 p_apdu->Le = length;
             }
-            NRF_LOG_DEBUG("Lc(%d bytes) Le(%d bytes) in Short Encoding\r\n", p_apdu->Lc, p_apdu->Le);
+            NRF_LOG_DEBUG("Lc(%d bytes) Le(%d bytes) in Short Encoding", p_apdu->Lc, p_apdu->Le);
         } else {
             // 先頭パケットからはLcの値だけしか取得できない
             // Leの値は最終パケットから取得する
             p_apdu->Lc = length;
-            NRF_LOG_DEBUG("Lc(%d bytes) in Short Encoding\r\n", p_apdu->Lc);
+            NRF_LOG_DEBUG("Lc(%d bytes) in Short Encoding", p_apdu->Lc);
         }
     }
 
@@ -82,7 +83,7 @@ uint8_t ble_u2f_control_point_apdu_header(U2F_APDU_T *p_apdu, uint8_t *control_p
     p_apdu->P1  = control_point_buffer[offset + 2];
     p_apdu->P2  = control_point_buffer[offset + 3];
 
-    NRF_LOG_DEBUG("CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) \r\n", 
+    NRF_LOG_DEBUG("CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) ", 
         p_apdu->CLA, p_apdu->INS, p_apdu->P1, p_apdu->P2);
 
     // APDUヘッダーだけの場合はここで終了
@@ -105,7 +106,7 @@ bool ble_u2f_control_point_apdu_allocate(ble_u2f_context_t *p_u2f_context, U2F_A
     uint8_t *apdu_data_buffer = p_u2f_context->apdu_data_buffer;
     if (apdu_data_buffer != NULL) {
         // 既に確保済みの場合
-        NRF_LOG_DEBUG("apdu_data_buffer already allocated (%d bytes) \r\n", 
+        NRF_LOG_DEBUG("apdu_data_buffer already allocated (%d bytes) ", 
             p_u2f_context->apdu_data_buffer_length);
         memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
 
@@ -117,7 +118,7 @@ bool ble_u2f_control_point_apdu_allocate(ble_u2f_context_t *p_u2f_context, U2F_A
     // データ格納領域を、データ全体の長さ分確保
     apdu_data_buffer = (uint8_t *)malloc(APDU_DATA_MAX_LENGTH);
     if (apdu_data_buffer == NULL) {
-        NRF_LOG_ERROR("apdu_data_buffer allocation failed \r\n");
+        NRF_LOG_ERROR("apdu_data_buffer allocation failed ");
         return false;
     }
 
@@ -125,7 +126,7 @@ bool ble_u2f_control_point_apdu_allocate(ble_u2f_context_t *p_u2f_context, U2F_A
     // (Disconnect時に解放されます)
     p_u2f_context->apdu_data_buffer        = apdu_data_buffer;
     p_u2f_context->apdu_data_buffer_length = APDU_DATA_MAX_LENGTH;
-    NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) \r\n", APDU_DATA_MAX_LENGTH);
+    NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", APDU_DATA_MAX_LENGTH);
 
     // 確保領域は0で初期化
     memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
@@ -151,7 +152,7 @@ static uint16_t get_apdu_le_value(U2F_APDU_T *p_apdu, uint8_t *received_data, ui
         if (p_apdu->Le == 0) {
             p_apdu->Le = 65536;
         }
-        NRF_LOG_DEBUG("Le(%d bytes) in Extended Length Encoding \r\n", p_apdu->Le);
+        NRF_LOG_DEBUG("Le(%d bytes) in Extended Length Encoding ", p_apdu->Le);
 
     } else if (le_length == 1) {
         // Leバイトが1バイトの場合
@@ -161,11 +162,11 @@ static uint16_t get_apdu_le_value(U2F_APDU_T *p_apdu, uint8_t *received_data, ui
         if (p_apdu->Le == 0) {
             p_apdu->Le = 256;
         }
-        NRF_LOG_DEBUG("Le(%d bytes) in Short Encoding \r\n", p_apdu->Le);
+        NRF_LOG_DEBUG("Le(%d bytes) in Short Encoding ", p_apdu->Le);
 
     } else {
         // エンコーディングルールに反している場合はエラーとして長さ0を戻す
-        NRF_LOG_DEBUG("Le(%d bytes) in Unknown Encoding \r\n", le_length);
+        NRF_LOG_DEBUG("Le(%d bytes) in Unknown Encoding ", le_length);
         le_length = 0;
     }
     
@@ -192,9 +193,9 @@ void ble_u2f_control_point_apdu_from_leading(U2F_APDU_T *p_apdu, uint8_t *contro
     p_apdu->data_length = received_data_length;
 
     if (p_apdu->data_length < p_apdu->Lc) {
-        NRF_LOG_DEBUG("INIT frame: received data (%d of %d) \r\n", p_apdu->data_length, p_apdu->Lc);
+        NRF_LOG_DEBUG("INIT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
-        NRF_LOG_DEBUG("INIT frame: received data (%d bytes) \r\n", p_apdu->data_length);
+        NRF_LOG_DEBUG("INIT frame: received data (%d bytes) ", p_apdu->data_length);
     }
 }
 
@@ -215,8 +216,5 @@ void ble_u2f_control_point_apdu_from_following(BLE_HEADER_T *p_ble_header, U2F_A
     // コピー済みのデータの直後に取得したデータを連結
     memcpy(p_apdu->data + p_apdu->data_length, received_data, received_data_length);
     p_apdu->data_length += received_data_length;
-    NRF_LOG_DEBUG("CONT frame: received data (%d bytes) \r\n", p_apdu->data_length);
+    NRF_LOG_DEBUG("CONT frame: received data (%d bytes) ", p_apdu->data_length);
 }
-
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)
