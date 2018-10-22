@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
@@ -12,8 +12,9 @@
 #include "nrf_drv_rng.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_crypto_ecb"
+#define NRF_LOG_MODULE_NAME ble_u2f_crypto_ecb
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // AES ECBで使用する作業用エリア
 #define ECB_BLOCK_LENGTH 16
@@ -25,7 +26,7 @@ uint8_t *m_initialization_vector;
 uint8_t *m_password;
 
 // Flash ROM書込み用データの一時格納領域
-static fds_record_chunk_t  m_fds_record_chunks[1];
+static fds_record_t        m_fds_record;
 static uint32_t            m_random_vector[8];
 
 // AES CFBモード
@@ -43,43 +44,39 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     ret_code_t ret;
 
     // 一時領域（確保済み）のアドレスを取得
-    m_fds_record_chunks[0].p_data       = p_fds_record_buffer;
-    m_fds_record_chunks[0].length_words = 8;
-
-    fds_record_t record;
-    record.file_id         = U2F_AESKEYS_FILE_ID;
-    record.key             = U2F_AESKEYS_MODE_RECORD_KEY;
-    record.data.p_chunks   = m_fds_record_chunks;
-    record.data.num_chunks = 1;
+    m_fds_record.data.p_data       = p_fds_record_buffer;
+    m_fds_record.data.length_words = 8;
+    m_fds_record.file_id           = U2F_AESKEYS_FILE_ID;
+    m_fds_record.key               = U2F_AESKEYS_MODE_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret = fds_record_find(U2F_AESKEYS_FILE_ID, U2F_AESKEYS_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
-        ret = fds_record_update(&record_desc, &record);
+        ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_random_vector: fds_record_update returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("write_random_vector: fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
-        ret = fds_record_write(&record_desc, &record);
+        ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_random_vector: fds_record_write returns 0x%02x \r\n", ret);
+            NRF_LOG_ERROR("write_random_vector: fds_record_write returns 0x%02x ", ret);
             return false;
         }
 
     } else {
-        NRF_LOG_DEBUG("write_random_vector: fds_record_find returns 0x%02x \r\n", ret);
+        NRF_LOG_DEBUG("write_random_vector: fds_record_find returns 0x%02x ", ret);
         return false;
     }
 
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("write_random_vector: no space in flash, calling FDS GC \r\n");
+        NRF_LOG_ERROR("write_random_vector: no space in flash, calling FDS GC ");
         if (ble_u2f_flash_force_fdc_gc() == false) {
             return false;
         }
@@ -100,7 +97,7 @@ bool ble_u2f_crypto_ecb_init(void)
         return false;
     }
 
-    NRF_LOG_DEBUG("Generated random vector for AES password \r\n");
+    NRF_LOG_DEBUG("Generated random vector for AES password ");
     return true;
 }
 
@@ -114,17 +111,17 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
 
     err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("read_random_vector_record: fds_record_open returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("read_random_vector_record: fds_record_open returns 0x%02x ", err_code);
         return false;
     }
 
     data = (uint32_t *)flash_record.p_data;
-    data_length = flash_record.p_header->tl.length_words;
+    data_length = flash_record.p_header->length_words;
     memcpy(data_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("read_random_vector_record: fds_record_close returns 0x%02x \r\n", err_code);
+        NRF_LOG_ERROR("read_random_vector_record: fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
     return true;
@@ -215,7 +212,7 @@ void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t
     process_aes_cfb_crypto(AES_CFB_MODE_DECRYPTION, packet, packet_length, out_packet);
 }
 
-
+#if 0
 void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, nrf_value_length_t *private_key)
 {
     // Register/Authenticateリクエストから取得した
@@ -245,5 +242,4 @@ void ble_u2f_crypto_ecb_restore_keyhandle_base(nrf_value_length_t *keyhandle)
     uint16_t data_length = 64;
     ble_u2f_crypto_ecb_decrypt(keyhandle_buffer, data_length, keyhandle_base_buffer);
  }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)
+#endif

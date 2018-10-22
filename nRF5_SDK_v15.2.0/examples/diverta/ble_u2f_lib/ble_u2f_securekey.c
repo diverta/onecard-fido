@@ -1,27 +1,29 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "ble_u2f_flash.h"
 #include "ble_u2f_securekey.h"
+#if 0
 #include "ble_u2f_crypto.h"
+#endif
 #include "ble_u2f_util.h"
 
 // for ble_u2f_crypto_ecb_init
 #include "ble_u2f_crypto_ecb.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_securekey"
+#define NRF_LOG_MODULE_NAME ble_u2f_securekey
 #include "nrf_log.h"
-
+NRF_LOG_MODULE_REGISTER();
 
 void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
 {
     // 秘密鍵／証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    NRF_LOG_DEBUG("ble_u2f_securekey_erase start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_securekey_erase start ");
     if (ble_u2f_flash_keydata_delete() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9201);
         return;
@@ -33,7 +35,7 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     if (p_evt->result != FDS_SUCCESS) {
         // エラーレスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_error_response(p_u2f_context, 0x9202);
-        NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS EVENT=%d \r\n", p_evt->id);
+        NRF_LOG_ERROR("ble_u2f_securekey_erase abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
@@ -43,23 +45,23 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
         if (ble_u2f_crypto_ecb_init() == false) {
             ble_u2f_send_error_response(p_u2f_context, 0x9203);
         }
-
+        
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         if (ble_u2f_crypto_ecb_init() == false) {
             ble_u2f_send_error_response(p_u2f_context, 0x9204);
         }
-
+        
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // AES秘密鍵生成(fds_record_update/write)完了の場合
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_securekey_erase end \r\n");
+        NRF_LOG_DEBUG("ble_u2f_securekey_erase end ");
     }
 }
 
-
+#if 0
 static bool convert_skey_bytes_to_word(uint8_t * data, uint16_t length, uint32_t *keydata_buffer)
 {
     char buf[20];
@@ -67,7 +69,7 @@ static bool convert_skey_bytes_to_word(uint8_t * data, uint16_t length, uint32_t
     unsigned long value;
     int index = 0;
 
-    NRF_LOG_DEBUG("convert_skey_bytes_to_word start \r\n");
+    NRF_LOG_DEBUG("convert_skey_bytes_to_word start ");
 
     memset(buf, 0, sizeof(buf));
 
@@ -86,15 +88,15 @@ static bool convert_skey_bytes_to_word(uint8_t * data, uint16_t length, uint32_t
         value = strtoul(buf, &endp, 16);
         if (*endp != 0) { 
             // 変換失敗した場合は処理終了
-            NRF_LOG_DEBUG("convert_skey_bytes_to_word: %s conversion failed \r\n", (uint32_t)buf);
+            NRF_LOG_DEBUG("convert_skey_bytes_to_word: %s conversion failed ", (uint32_t)buf);
             return false;
 
         } else {
             keydata_buffer[index++] = (uint32_t)value;
-            NRF_LOG_DEBUG("Converted to [0x%08x]\r\n", value);
+            NRF_LOG_DEBUG("Converted to [0x%08x]", value);
         }
     }
-    NRF_LOG_DEBUG("convert_skey_bytes_to_word end \r\n");
+    NRF_LOG_DEBUG("convert_skey_bytes_to_word end ");
     return true;
 }
 
@@ -109,7 +111,7 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
-    NRF_LOG_DEBUG("ble_u2f_securekey_install_skey start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_securekey_install_skey start ");
 
     // Flash ROMに登録済みのデータがあれば領域に読込
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
@@ -136,20 +138,20 @@ void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, f
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         ble_u2f_send_error_response(p_u2f_context, 0x9315);
-        NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS EVENT=%d \r\n", p_evt->id);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_skey abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("ble_u2f_securekey_install_skey retry: FDS GC done \r\n");
+        NRF_LOG_WARNING("ble_u2f_securekey_install_skey retry: FDS GC done ");
         ble_u2f_securekey_install_skey(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_securekey_install_skey end \r\n");
+        NRF_LOG_DEBUG("ble_u2f_securekey_install_skey end ");
     }
 }
 
@@ -190,7 +192,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
         return;
     }
 
-    NRF_LOG_DEBUG("ble_u2f_securekey_install_cert start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_securekey_install_cert start ");
 
     // 登録済みのデータがあれば領域に読込
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
@@ -205,7 +207,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
     // 証明書データの格納に必要なワード数をチェックする
     uint32_t cert_buffer_length = (length - 1) / 4 + 2;
     if (cert_buffer_length > CERT_WORD_NUM) {
-        NRF_LOG_ERROR("cert data words(%d) exceeds max words(%d) \r\n",
+        NRF_LOG_ERROR("cert data words(%d) exceeds max words(%d) ",
             cert_buffer_length, CERT_WORD_NUM);
         ble_u2f_send_error_response(p_u2f_context, 0x9323);
         return;
@@ -229,21 +231,20 @@ void ble_u2f_securekey_install_cert_response(ble_u2f_context_t *p_u2f_context, f
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         ble_u2f_send_error_response(p_u2f_context, 0x9325);
-        NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS EVENT=%d \r\n", p_evt->id);
+        NRF_LOG_ERROR("ble_u2f_securekey_install_cert abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("ble_u2f_securekey_install_cert retry: FDS GC done \r\n");
+        NRF_LOG_WARNING("ble_u2f_securekey_install_cert retry: FDS GC done ");
         ble_u2f_securekey_install_cert(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         ble_u2f_send_success_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_securekey_install_cert end \r\n");
+        NRF_LOG_DEBUG("ble_u2f_securekey_install_cert end ");
     }
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)
+#endif

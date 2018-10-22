@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 
@@ -9,15 +9,17 @@
 #include "fds.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_flash"
+#define NRF_LOG_MODULE_NAME ble_u2f_flash
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
+#if 0
 // Flash ROM書込み用データの一時格納領域
 static fds_record_chunk_t  m_fds_record_chunks[3];
 static uint32_t m_token_counter_record_buffer[10];
 static uint32_t m_token_counter;
 static uint32_t m_reserve_word;
-
+#endif
 
 bool ble_u2f_flash_force_fdc_gc(void)
 {
@@ -47,7 +49,7 @@ bool ble_u2f_flash_keydata_delete(void)
     return true;
 }
 
-
+#if 0
 static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata_buffer)
 {
 	fds_flash_record_t flash_record;
@@ -323,5 +325,4 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
 
     return true;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)
+#endif

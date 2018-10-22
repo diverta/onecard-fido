@@ -14,9 +14,10 @@ extern "C" {
 bool ble_u2f_crypto_ecb_init(void);
 void ble_u2f_crypto_ecb_encrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet);
 void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet);
-
+#if 0
 void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, nrf_value_length_t *private_key);
 void ble_u2f_crypto_ecb_restore_keyhandle_base(nrf_value_length_t *keyhandle);
+#endif
 
 // キーハンドル生成・格納用領域
 // Register, Authenticateで共通使用

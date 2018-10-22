@@ -169,7 +169,6 @@ static bool write_pairing_mode(void)
         return false;
     }
 
-#if 0
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
@@ -178,7 +177,6 @@ static bool write_pairing_mode(void)
             return false;
         }
     }
-#endif
     
     return true;
 }

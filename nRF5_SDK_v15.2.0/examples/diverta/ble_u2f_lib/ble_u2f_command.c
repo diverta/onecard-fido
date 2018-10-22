@@ -250,11 +250,11 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_INITBOND:
             ble_u2f_pairing_delete_bonds(&m_u2f_context);
             break;
-#if 0
+
         case COMMAND_INITFSTR:
             ble_u2f_securekey_erase(&m_u2f_context);
             break;
-
+#if 0
         case COMMAND_INITSKEY:
             ble_u2f_securekey_install_skey(&m_u2f_context);
             break;
@@ -262,11 +262,11 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_INITCERT:
             ble_u2f_securekey_install_cert(&m_u2f_context);
             break;
-
+#endif
         case COMMAND_PAIRING:
             ble_u2f_send_success_response(&m_u2f_context);
             break;
-
+#if 0
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_do_process(&m_u2f_context);
             break;
@@ -305,11 +305,10 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
-#if 0
         case COMMAND_INITFSTR:
             ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
             break;
-
+#if 0
         case COMMAND_INITSKEY:
             ble_u2f_securekey_install_skey_response(&m_u2f_context, p_evt);
             break;
