@@ -38,7 +38,7 @@ static void communication_interval_timer_init(ble_u2f_t *p_u2f)
     uint32_t err_code;
     err_code = app_timer_create(&m_ble_u2f_comm_interval_timer_id, APP_TIMER_MODE_SINGLE_SHOT, communication_interval_timeout_handler);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_create(m_ble_u2f_comm_interval_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_create(m_ble_u2f_comm_interval_timer_id) returns %d ", err_code);
         return;
     }
     app_timer_created = true;
@@ -54,7 +54,7 @@ void ble_u2f_comm_interval_timer_stop(ble_u2f_t *p_u2f)
     app_timer_started = false;
     uint32_t err_code = app_timer_stop(m_ble_u2f_comm_interval_timer_id);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_comm_interval_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_comm_interval_timer_id) returns %d ", err_code);
         return;
     }
 }
@@ -77,7 +77,7 @@ void ble_u2f_comm_interval_timer_start(ble_u2f_t *p_u2f)
     // 直近レスポンスからの経過秒数監視を開始
     uint32_t err_code = app_timer_start(m_ble_u2f_comm_interval_timer_id, APP_TIMER_TICKS(COMMUNICATION_INTERVAL_MSEC), p_u2f);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_comm_interval_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_comm_interval_timer_id) returns %d ", err_code);
         return;
     }
     app_timer_started = true;

@@ -163,26 +163,7 @@ void one_card_buttons_init(void)
 //
 void one_card_ble_stack_init(uint8_t conn_cfg_tag, uint32_t p_ram_start)
 {
-    ret_code_t err_code;
-    ble_cfg_t  ble_cfg;
-
-    // FIDO機能に対応できるようにするため、
-    // デフォルトのBLE設定を変更する
-    // Configure the maximum number of connections.
-    memset(&ble_cfg, 0, sizeof(ble_cfg));
-    ble_cfg.gap_cfg.role_count_cfg.periph_role_count  = BLE_GAP_ROLE_COUNT_PERIPH_DEFAULT;
-    ble_cfg.gap_cfg.role_count_cfg.central_role_count = 0;
-    ble_cfg.gap_cfg.role_count_cfg.central_sec_count  = 0;
-    err_code = sd_ble_cfg_set(BLE_GAP_CFG_ROLE_COUNT, &ble_cfg, p_ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    // Configure the maximum event length.
-    memset(&ble_cfg, 0x00, sizeof(ble_cfg));
-    ble_cfg.conn_cfg.conn_cfg_tag                     = conn_cfg_tag;
-    ble_cfg.conn_cfg.params.gap_conn_cfg.event_length = 320;
-    ble_cfg.conn_cfg.params.gap_conn_cfg.conn_count   = BLE_GAP_CONN_COUNT_DEFAULT;
-    err_code = sd_ble_cfg_set(BLE_CONN_CFG_GAP, &ble_cfg, p_ram_start);
-    APP_ERROR_CHECK(err_code);
+    // TODO: U2F固有の処理があれば追加
 }
 
 void one_card_gatt_init(nrf_ble_gatt_t *p_gatt)

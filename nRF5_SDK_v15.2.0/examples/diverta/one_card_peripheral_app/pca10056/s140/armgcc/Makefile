@@ -119,15 +119,18 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
-  $(U2FLIB_DIR)/ble_u2f_command.c \
+  $(U2FLIB_DIR)/ble_u2f_authenticate.c \
   $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
+  $(U2FLIB_DIR)/ble_u2f_command.c \
   $(U2FLIB_DIR)/ble_u2f_control_point.c \
   $(U2FLIB_DIR)/ble_u2f_control_point_apdu.c \
+  $(U2FLIB_DIR)/ble_u2f_crypto.c \
   $(U2FLIB_DIR)/ble_u2f_crypto_ecb.c \
   $(U2FLIB_DIR)/ble_u2f_flash.c \
   $(U2FLIB_DIR)/ble_u2f_init.c \
   $(U2FLIB_DIR)/ble_u2f_pairing.c \
   $(U2FLIB_DIR)/ble_u2f_processing_led.c \
+  $(U2FLIB_DIR)/ble_u2f_register.c \
   $(U2FLIB_DIR)/ble_u2f_securekey.c \
   $(U2FLIB_DIR)/ble_u2f_status.c \
   $(U2FLIB_DIR)/ble_u2f_status_retry.c \

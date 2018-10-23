@@ -22,6 +22,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_util.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_user_presence.h"
+#include "ble_u2f_status.h"
 
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
@@ -151,6 +152,10 @@ bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
         case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
             ret = ble_u2f_on_rw_authorize_request(p_u2f, p_ble_evt);
+            break;
+
+        case BLE_GATTS_EVT_HVN_TX_COMPLETE:
+            ble_u2f_status_on_tx_complete(p_u2f);
             break;
 
         default:

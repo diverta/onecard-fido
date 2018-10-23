@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f_securekey.h"
@@ -9,18 +9,24 @@
 #include "ble_u2f_crypto_ecb.h"
 #include "ble_u2f_util.h"
 
-// for nrf_value_length_t
-#include "nrf_crypto_types.h"
+// for keysize informations
+#include "nrf_crypto_ecdsa.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_register"
+#define NRF_LOG_MODULE_NAME ble_u2f_register
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
+// 鍵ペア情報をRAWデータに変換する領域
+static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
+static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
+static size_t  private_key_raw_data_size;
+static size_t  public_key_raw_data_size;
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
     // 開始ログを出力
-    NRF_LOG_DEBUG("add_token_counter start \r\n");
+    NRF_LOG_DEBUG("add_token_counter start ");
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを追加する
@@ -39,7 +45,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("add_token_counter end \r\n");
+    NRF_LOG_DEBUG("add_token_counter end ");
 }
 
 static uint16_t copy_apdu_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
@@ -60,8 +66,8 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は、ワード単位でリトルエンディアン格納されているので
     // ビッグエンディアンに変換してから格納
-    nrf_value_length_t *public_key = ble_u2f_crypto_public_key();
-    uint8_t *p_publickey = public_key->p_value;
+    ble_u2f_crypto_public_key(public_key_raw_data, &public_key_raw_data_size);
+    uint8_t *p_publickey = public_key_raw_data;
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
@@ -114,7 +120,7 @@ static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-static bool create_registration_response_message(ble_u2f_context_t *p_u2f_context, nrf_value_length_t *p_signature)
+static bool create_registration_response_message(ble_u2f_context_t *p_u2f_context)
 {
     // メッセージを格納する領域を確保
     // 確保した領域は、共有情報に設定します
@@ -149,13 +155,15 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     offset += cert_buffer_length;
 
     // 署名格納領域からコピー
-    memcpy(response_message_buffer + offset, p_signature->p_value, p_signature->length);
-    offset += p_signature->length;
+    memcpy(response_message_buffer + offset, 
+        p_u2f_context->signature_data_buffer, 
+        p_u2f_context->signature_data_buffer_length);
+    offset += p_u2f_context->signature_data_buffer_length;
 
     if (p_u2f_context->p_apdu->Le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
         // エラーレスポンスを送信するよう指示
-        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) \r\n", offset, p_u2f_context->p_apdu->Le);
+        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
         p_u2f_context->p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
         return false;
     }
@@ -181,45 +189,42 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
-    uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
-    if (ble_u2f_crypto_sign(ble_u2f_securekey_skey(p_u2f_context),
-        signature_base_buffer, signature_base_buffer_length) != NRF_SUCCESS) {
+    uint8_t *private_key_be = ble_u2f_securekey_skey(p_u2f_context);
+    if (ble_u2f_crypto_sign(private_key_be, p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }
 
     // ASN.1形式署名を格納する領域を準備
-    nrf_value_length_t signature;
-    signature.p_value = p_u2f_context->signature_data_buffer;
-    if (ble_u2f_crypto_create_asn1_signature(&signature) == false) {
+    if (ble_u2f_crypto_create_asn1_signature(p_u2f_context) == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;
     }
 
-    if (create_registration_response_message(p_u2f_context, &signature) == false) {
+    if (create_registration_response_message(p_u2f_context) == false) {
         // レスポンスメッセージ生成
         return false;
     }
     return true;
 }
 
+
 static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
 {
-    // micro-eccにより、キーペアを新規生成する
+    // nrf_cc310により、キーペアを新規生成する
     ble_u2f_crypto_generate_keypair();
-    nrf_value_length_t *private_key = ble_u2f_crypto_private_key();
+    ble_u2f_crypto_private_key(private_key_raw_data, &private_key_raw_data_size);
 
     // APDUから取得したappIdHash、秘密鍵を使用し、
     // キーハンドルを新規生成する
     uint8_t *p_appid_hash = p_u2f_context->p_apdu->data + U2F_CHAL_SIZE;
-    ble_u2f_crypto_ecb_generate_keyhandle(p_appid_hash, private_key);
+    ble_u2f_crypto_ecb_generate_keyhandle(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
 }
 
 void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
 {
-    NRF_LOG_DEBUG("ble_u2f_register start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_register start ");
 
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -268,21 +273,19 @@ void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t 
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         ble_u2f_send_error_response(p_u2f_context, 0x9404);
-        NRF_LOG_ERROR("ble_u2f_register abend: FDS EVENT=%d \r\n", p_evt->id);
+        NRF_LOG_ERROR("ble_u2f_register abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("ble_u2f_register retry: FDS GC done \r\n");
+        NRF_LOG_WARNING("ble_u2f_register retry: FDS GC done ");
         add_token_counter(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_register_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_register end \r\n");
+        NRF_LOG_DEBUG("ble_u2f_register end ");
     }
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

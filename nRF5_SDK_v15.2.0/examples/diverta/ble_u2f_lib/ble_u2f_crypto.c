@@ -1,41 +1,32 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_securekey.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_crypto"
+#define NRF_LOG_MODULE_NAME ble_u2f_crypto
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 // for generate pkey
 #include "nrf_crypto_init.h"
-#include "nrf_crypto_keys.h"
 #include "nrf_crypto_hash.h"
 #include "nrf_crypto_ecdsa.h"
+#include "app_error.h"
 
-
-// micro-eccで生成される鍵情報
-NRF_CRYPTO_ECC_PRIVATE_KEY_CREATE(private_key, SECP256R1);
-NRF_CRYPTO_ECC_PUBLIC_KEY_CREATE(public_key, SECP256R1);
-
-// micro-eccで生成される署名情報
-NRF_CRYPTO_ECC_PRIVATE_KEY_RAW_CREATE(private_key_for_sign, SECP256R1);
-NRF_CRYPTO_HASH_CREATE(hashed_buffer, SHA256);
-NRF_CRYPTO_ECDSA_SIGNATURE_CREATE(signature, SECP256R1);
+// nrf_cc310で生成される鍵情報
+static nrf_crypto_ecc_key_pair_generate_context_t keygen_context;
+static nrf_crypto_ecc_private_key_t               private_key;
+static nrf_crypto_ecc_public_key_t                public_key;
 
 // ハッシュ化データ、署名データに関する情報
-const nrf_crypto_hash_info_t hash_info_sha256 =
-{
-    .hash_type = NRF_CRYPTO_HASH_TYPE_SHA256,
-    .endian_type = NRF_CRYPTO_ENDIAN_LE
-};
-const nrf_crypto_signature_info_t sig_info_p256 =
-{
-    .curve_type     = NRF_CRYPTO_CURVE_SECP256R1,
-    .hash_type      = NRF_CRYPTO_HASH_TYPE_SHA256,
-    .endian_type    = NRF_CRYPTO_ENDIAN_LE
-};
+static nrf_crypto_hash_context_t       hash_context;
+static nrf_crypto_hash_sha256_digest_t hash_digest;
+static nrf_crypto_ecc_private_key_t    private_key_for_sign;
+static nrf_crypto_ecdsa_sign_context_t sign_context;
+static nrf_crypto_ecdsa_signature_t    signature;
 
 // ASN.1形式に変換された署名を格納する領域の大きさ
 #define ASN1_SIGNATURE_MAXLEN 72
@@ -50,10 +41,10 @@ void ble_u2f_crypto_init(void)
     if (nrf_crypto_is_initialized() == true) {
         return;
     }
-    // micro-eccの初期化が未実行の場合は
+    // 初期化が未実行の場合は
     // nrf_crypto_initを実行する
     err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x \r\n", err_code);
+    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x ", err_code);
     if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
         APP_ERROR_CHECK(err_code);
     }
@@ -62,69 +53,94 @@ void ble_u2f_crypto_init(void)
 void ble_u2f_crypto_generate_keypair(void)
 {
     ret_code_t err_code;
-    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair start ");
 
-    // micro-eccの初期化を実行する
+    // nrf_cryptoの初期化を実行する
     ble_u2f_crypto_init();
 
     // 秘密鍵および公開鍵を生成する
-    err_code = nrf_crypto_ecc_key_pair_generate(BLE_LESC_CURVE_TYPE_INFO, &private_key, &public_key);
-    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair: nrf_crypto_ecc_key_pair_generate() returns 0x%02x \r\n", err_code);
+    err_code = nrf_crypto_ecc_key_pair_generate(
+        &keygen_context, &g_nrf_crypto_ecc_secp256r1_curve_info, &private_key, &public_key);
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair: nrf_crypto_ecc_key_pair_generate() returns 0x%02x ", err_code);
     APP_ERROR_CHECK(err_code);
 
-    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair end \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_generate_keypair end ");
 }
 
-nrf_value_length_t *ble_u2f_crypto_private_key(void)
+void ble_u2f_crypto_private_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
-    return &private_key;
+    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE;
+    ret_code_t err_code = nrf_crypto_ecc_private_key_to_raw(&private_key, p_raw_data, p_raw_data_size);
+    NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
+    APP_ERROR_CHECK(err_code);
 }
 
-nrf_value_length_t *ble_u2f_crypto_public_key(void)
+void ble_u2f_crypto_public_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
-    return &public_key;
+    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE;
+    ret_code_t err_code = nrf_crypto_ecc_public_key_to_raw(&public_key, p_raw_data, p_raw_data_size);
+    NRF_LOG_DEBUG("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);
+    APP_ERROR_CHECK(err_code);
 }
 
-
-uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length)
+uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_context)
 {
     ret_code_t err_code;
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign start ");
 
-    // micro-eccの初期化を実行する
+    // nrf_cryptoの初期化を実行する
     ble_u2f_crypto_init();
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成
-    err_code = nrf_crypto_hash_compute(hash_info_sha256, 
-                    signature_base_buffer, signature_base_buffer_length, 
-                    &hashed_buffer);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_compute() returns 0x%02x \r\n", err_code);
+    uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
+    uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
+    size_t digest_size = sizeof(hash_digest);
+    err_code = nrf_crypto_hash_calculate(
+        &hash_context, 
+        &g_nrf_crypto_hash_sha256_info, 
+        signature_base_buffer, 
+        signature_base_buffer_length, 
+        hash_digest, 
+        &digest_size);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_hash_calculate() returns 0x%02x ", err_code);
     APP_ERROR_CHECK(err_code);
 
-    // 署名用の秘密鍵（32バイト）を設定
-    //   private_key_leは
-    //   リトルエンディアン化された秘密鍵のバイト配列
-    private_key_for_sign.p_value = private_key_le;
-    private_key_for_sign.length = NRF_CRYPTO_ECC_PRIVATE_KEY_SIZE_SECP256R1;
+    // 署名に使用する秘密鍵（32バイト）を取得
+    //   TODO:
+    //   SDK 15以降はビッグエンディアンで引き渡す必要あり
+    err_code = nrf_crypto_ecc_private_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info,
+        &private_key_for_sign, 
+        private_key_be, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecc_private_key_from_raw() returns 0x%02x ", err_code);
+    APP_ERROR_CHECK(err_code);
 
     // ハッシュデータと秘密鍵により、署名データ作成
-    err_code = nrf_crypto_ecdsa_sign_hash(sig_info_p256, &private_key_for_sign, &hashed_buffer, &signature);
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign_hash() returns 0x%02x \r\n", err_code);
+    size_t signature_size = sizeof(signature);
+    err_code = nrf_crypto_ecdsa_sign(
+        &sign_context, 
+        &private_key_for_sign,
+        hash_digest,
+        digest_size,
+        signature, 
+        &signature_size);
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign: nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
 
-    NRF_LOG_DEBUG("ble_u2f_crypto_sign end \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_sign end ");
     return NRF_SUCCESS;
 }
 
-bool ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature)
+bool ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context)
 {
     // 格納領域を確保
-    uint8_t *asn1_signature = p_signature->p_value;
+    uint8_t *asn1_signature = p_u2f_context->signature_data_buffer;
     if (asn1_signature == NULL) {
-        NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature: allocation failed \r\n");
+        NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature: allocation failed ");
         return false;
     }
-    NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature start ");
 
     // 格納領域を初期化
     memset(asn1_signature, 0, ASN1_SIGNATURE_MAXLEN);
@@ -134,8 +150,9 @@ bool ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature)
     // その直前に 0x00 を挿入する必要がある
     // (MSBを参照して判定)
     int part_length = 32;
-    uint8_t *rbytes = signature.p_value;
-    uint8_t *sbytes = signature.p_value + part_length;
+    uint8_t *p_signature_value = signature;
+    uint8_t *rbytes = p_signature_value;
+    uint8_t *sbytes = p_signature_value + part_length;
     
     int rbytes_leading = 0;
     if (rbytes[part_length-1] & 0x80) {
@@ -178,10 +195,8 @@ bool ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature)
 
     // 生成されたASN.1形式署名の
     // サイズを構造体に設定
-    p_signature->length = i;
+    p_u2f_context->signature_data_buffer_length = i;
 
-    NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature end \r\n");
+    NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature end ");
     return true;
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

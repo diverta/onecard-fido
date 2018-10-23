@@ -1,5 +1,5 @@
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_U2F)
+
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f_securekey.h"
@@ -11,12 +11,10 @@
 #include "ble_u2f_crypto_ecb.h"
 #include "ble_u2f_util.h"
 
-// for nrf_value_length_t
-#include "nrf_crypto_types.h"
-
 // for logging informations
-#define NRF_LOG_MODULE_NAME "ble_u2f_authenticate"
+#define NRF_LOG_MODULE_NAME ble_u2f_authenticate
 #include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
 
 
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
@@ -33,14 +31,13 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
     // リクエストデータのキーハンドルを参照
     //   APDUの65バイト目以降
     U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    nrf_value_length_t keyhandle;
-    keyhandle.length = p_apdu->data[64];
-    keyhandle.p_value = p_apdu->data + 65;
+    uint32_t keyhandle_length = p_apdu->data[64];
+    uint8_t *keyhandle_value = p_apdu->data + 65;
 
     // キーハンドルを復号化
     //   keyhandle_base_bufferに
     //   AppIDHash、秘密鍵が格納される
-    ble_u2f_crypto_ecb_restore_keyhandle_base(&keyhandle);
+    ble_u2f_crypto_ecb_restore_keyhandle_base(keyhandle_value, keyhandle_length);
     
     // リクエストデータからappIDHashを取得
     // キーハンドルに含まれているものと異なる場合はエラー
@@ -55,7 +52,7 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
 static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 {
     // 開始ログを出力
-    NRF_LOG_DEBUG("update_token_counter start \r\n");
+    NRF_LOG_DEBUG("update_token_counter start ");
 
     // appIdHash、トークンカウンターを共有情報から取得
     // （トークンカウンターは現在値＋１とする）
@@ -73,7 +70,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("update_token_counter end \r\n");
+    NRF_LOG_DEBUG("update_token_counter end ");
 }
 
 static uint16_t copy_appIdHash_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
@@ -143,7 +140,7 @@ static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user
     return true;
 }
 
-static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_context, nrf_value_length_t *p_signature, uint8_t user_presence, uint32_t token_counter)
+static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_context, uint8_t user_presence, uint32_t token_counter)
 {
     // メッセージを格納する領域を確保
     // 確保した領域は、共有情報に設定します
@@ -162,13 +159,15 @@ static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_cont
     offset += copy_token_counter_data(response_message_buffer + offset, token_counter);
 
     // 署名格納領域からコピー
-    memcpy(response_message_buffer + offset, p_signature->p_value, p_signature->length);
-    offset += p_signature->length;
+    memcpy(response_message_buffer + offset, 
+        p_u2f_context->signature_data_buffer, 
+        p_u2f_context->signature_data_buffer_length);
+    offset += p_u2f_context->signature_data_buffer_length;
 
     if (p_u2f_context->p_apdu->Le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
         // エラーレスポンスを送信するよう指示
-        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) \r\n", offset, p_u2f_context->p_apdu->Le);
+        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
         p_u2f_context->p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
         return false;
     }
@@ -199,27 +198,23 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     uint8_t *private_key_le = keyhandle_base_buffer + U2F_APPID_SIZE;
 
     // キーハンドルから取り出した秘密鍵により署名を生成
-    uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
-    uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
-    if (ble_u2f_crypto_sign(private_key_le, 
-        signature_base_buffer, signature_base_buffer_length) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(private_key_le, p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }
-    
+
     // ASN.1形式署名を格納する領域を準備
-    nrf_value_length_t signature;
-    signature.p_value = p_u2f_context->signature_data_buffer;
-    if (ble_u2f_crypto_create_asn1_signature(&signature) == false) {
+    if (ble_u2f_crypto_create_asn1_signature(p_u2f_context) == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;
     }
 
-    if (create_authentication_response_message(p_u2f_context, &signature, user_presence, token_counter) == false) {
+    if (create_authentication_response_message(p_u2f_context, user_presence, token_counter) == false) {
         // レスポンスメッセージ生成
         return false;
     }
+
     return true;
 }
 
@@ -241,7 +236,7 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
 {
-    NRF_LOG_DEBUG("ble_u2f_authenticate start \r\n");
+    NRF_LOG_DEBUG("ble_u2f_authenticate start ");
 
     if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -254,7 +249,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("ble_u2f_authenticate: invalid keyhandle \r\n");
+        NRF_LOG_ERROR("ble_u2f_authenticate: invalid keyhandle ");
         ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
         return;
     }
@@ -264,14 +259,14 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     if (ble_u2f_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashがトークンカウンターにない場合は
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("ble_u2f_authenticate: token counter not found \r\n");
+        NRF_LOG_ERROR("ble_u2f_authenticate: token counter not found ");
         ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
         return;
     }
 
     // トークンカウンターを取得
     p_u2f_context->token_counter = ble_u2f_flash_token_counter_value();
-    NRF_LOG_DEBUG("token counter value=%d \r\n", p_u2f_context->token_counter);
+    NRF_LOG_DEBUG("token counter value=%d ", p_u2f_context->token_counter);
 
     // control byte (P1) を参照
     uint8_t control_byte = p_u2f_context->p_apdu->P1;
@@ -316,21 +311,19 @@ void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_ev
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         ble_u2f_send_error_response(p_u2f_context, 0x9503);
-        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS EVENT=%d \r\n", p_evt->id);
+        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("ble_u2f_authenticate retry: FDS GC done \r\n");
+        NRF_LOG_WARNING("ble_u2f_authenticate retry: FDS GC done ");
         update_token_counter(p_u2f_context);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_authentication_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_authenticate end \r\n");
+        NRF_LOG_DEBUG("ble_u2f_authenticate end ");
     }
 }
-
-#endif // NRF_MODULE_ENABLED(BLE_U2F)

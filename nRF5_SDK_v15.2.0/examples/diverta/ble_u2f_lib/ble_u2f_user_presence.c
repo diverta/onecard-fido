@@ -33,7 +33,7 @@ void ble_u2f_user_presence_init(void)
     if (app_timer_created == false) {
         err_code = app_timer_create(&m_ble_u2f_command_timer_id, APP_TIMER_MODE_REPEATED, command_timer_handler);
         if (err_code != NRF_SUCCESS) {
-            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_command_timer_id) returns %d \r\n", err_code);
+            NRF_LOG_ERROR("app_timer_create(m_ble_u2f_command_timer_id) returns %d ", err_code);
             return;
         }
         app_timer_created = true;
@@ -49,7 +49,7 @@ void ble_u2f_user_presence_terminate(ble_u2f_context_t *p_u2f_context)
     // タイマーを停止する
     uint32_t err_code = app_timer_stop(m_ble_u2f_command_timer_id);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_command_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_stop(m_ble_u2f_command_timer_id) returns %d ", err_code);
         return;
     }
 }
@@ -63,14 +63,14 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
     // ステータスバイトを設定し、タイマーをスタートする
     uint32_t err_code = app_timer_start(m_ble_u2f_command_timer_id, APP_TIMER_TICKS(KEEPALIVE_INTERVAL_MSEC), p_u2f_context);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_command_timer_id) returns %d \r\n", err_code);
+        NRF_LOG_ERROR("app_timer_start(m_ble_u2f_command_timer_id) returns %d ", err_code);
         return;
     }
 
     // LED点滅を開始
     ble_u2f_processing_led_on(p_u2f_context->p_u2f->led_for_user_presence);
     
-    NRF_LOG_INFO("User presence verify start \r\n");
+    NRF_LOG_INFO("User presence verify start ");
 }
 
 void ble_u2f_user_presence_verify_end(ble_u2f_context_t *p_u2f_context)
@@ -83,5 +83,5 @@ void ble_u2f_user_presence_verify_end(ble_u2f_context_t *p_u2f_context)
     
     // User presence byte(0x01)を生成
     p_u2f_context->user_presence_byte = 0x01;
-    NRF_LOG_INFO("User presence verified \r\n");
+    NRF_LOG_INFO("User presence verified ");
 }

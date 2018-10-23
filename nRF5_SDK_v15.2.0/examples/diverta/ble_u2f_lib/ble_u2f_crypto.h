@@ -6,9 +6,6 @@
 #include "ble.h"
 #include "ble_srv_common.h"
 
-// for nrf_value_length_t
-#include "nrf_crypto_types.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,11 +13,11 @@ extern "C" {
 
 void     ble_u2f_crypto_init(void);
 void     ble_u2f_crypto_generate_keypair(void);
-uint32_t ble_u2f_crypto_sign(uint8_t *private_key_le, uint8_t *signature_base_buffer, uint16_t signature_base_buffer_length);
-bool     ble_u2f_crypto_create_asn1_signature(nrf_value_length_t *p_signature);
+uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_context);
+bool     ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context);
 
-nrf_value_length_t *ble_u2f_crypto_private_key(void);
-nrf_value_length_t *ble_u2f_crypto_public_key(void);
+void     ble_u2f_crypto_private_key(uint8_t *p_raw_data, size_t *p_raw_data_size);
+void     ble_u2f_crypto_public_key(uint8_t *p_raw_data, size_t *p_raw_data_size);
 
 
 #ifdef __cplusplus

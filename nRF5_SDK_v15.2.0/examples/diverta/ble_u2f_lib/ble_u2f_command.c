@@ -266,11 +266,11 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_PAIRING:
             ble_u2f_send_success_response(&m_u2f_context);
             break;
-#if 0
+
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_do_process(&m_u2f_context);
             break;
-
+#if 0
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_do_process(&m_u2f_context);
             break;
@@ -316,11 +316,11 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         case COMMAND_INITCERT:
             ble_u2f_securekey_install_cert_response(&m_u2f_context, p_evt);
             break;
-#if 0
+
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(&m_u2f_context, p_evt);
             break;
-
+#if 0
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_send_response(&m_u2f_context, p_evt);
             break;

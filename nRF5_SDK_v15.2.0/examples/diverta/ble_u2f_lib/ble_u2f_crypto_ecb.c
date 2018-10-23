@@ -212,14 +212,13 @@ void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t
     process_aes_cfb_crypto(AES_CFB_MODE_DECRYPTION, packet, packet_length, out_packet);
 }
 
-#if 0
-void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, nrf_value_length_t *private_key)
+void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length)
 {
     // Register/Authenticateリクエストから取得した
     // appIdHash、秘密鍵(リトルエンディアン)を指定の領域に格納
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     memcpy(keyhandle_base_buffer, p_appid_hash, U2F_APPID_SIZE);
-    memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key->p_value, private_key->length);
+    memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key_value, private_key_length);
 
     // AES ECB暗号対象のバイト配列＆長さを指定し、
     // Cipher Feedback Modeによる暗号化を実行
@@ -229,12 +228,12 @@ void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, nrf_value_leng
 }
 
 
-void ble_u2f_crypto_ecb_restore_keyhandle_base(nrf_value_length_t *keyhandle)
+void ble_u2f_crypto_ecb_restore_keyhandle_base(uint8_t *keyhandle_value, uint32_t keyhandle_length)
 {
     // Authenticateリクエストから取得した
     // キーハンドルを指定の領域に格納
     memset(keyhandle_buffer, 0, sizeof(keyhandle_buffer));
-    memcpy(keyhandle_buffer, keyhandle->p_value, keyhandle->length);
+    memcpy(keyhandle_buffer, keyhandle_value, keyhandle_length);
 
     // Cipher Feedback Modeにより暗号化された
     // バイト配列を、同じ手法により復号化
@@ -242,4 +241,3 @@ void ble_u2f_crypto_ecb_restore_keyhandle_base(nrf_value_length_t *keyhandle)
     uint16_t data_length = 64;
     ble_u2f_crypto_ecb_decrypt(keyhandle_buffer, data_length, keyhandle_base_buffer);
  }
-#endif

@@ -16,11 +16,9 @@ NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
-#if 0
 static uint32_t m_token_counter_record_buffer[10];
 static uint32_t m_token_counter;
 static uint32_t m_reserve_word;
-#endif
 
 bool ble_u2f_flash_force_fdc_gc(void)
 {
@@ -202,7 +200,6 @@ bool ble_u2f_flash_keydata_write(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-#if 0
 static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *token_counter_buffer)
 {
 	fds_flash_record_t flash_record;
@@ -217,7 +214,7 @@ static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *t
     }
 
     data = (uint32_t *)flash_record.p_data;
-    data_length = flash_record.p_header->tl.length_words;
+    data_length = flash_record.p_header->length_words;
     memcpy(token_counter_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
@@ -273,25 +270,22 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
     found = token_counter_record_find(p_appid_hash, &record_desc);
     
     // ユニークキーとなるappIdHash部 (8ワード)
-    m_fds_record_chunks[0].p_data       = p_appid_hash;
-    m_fds_record_chunks[0].length_words = 8;
+    memcpy((uint8_t *)m_token_counter_record_buffer, p_appid_hash, 32);
 
     // トークンカウンター部 (1ワード)
     m_token_counter = token_counter;
-    m_fds_record_chunks[1].p_data       = &m_token_counter;
-    m_fds_record_chunks[1].length_words = 1;
+    m_token_counter_record_buffer[8] = m_token_counter;
 
     // 予備部 (1ワード)
     m_reserve_word = reserve_word;
-    m_fds_record_chunks[2].p_data       = &m_reserve_word;
-    m_fds_record_chunks[2].length_words = 1;
+    m_token_counter_record_buffer[9] = m_reserve_word;
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
-    record.file_id         = U2F_FILE_ID;
-    record.key             = U2F_TOKEN_COUNTER_RECORD_KEY;
-    record.data.p_chunks   = m_fds_record_chunks;
-    record.data.num_chunks = 3;
+    record.file_id           = U2F_FILE_ID;
+    record.key               = U2F_TOKEN_COUNTER_RECORD_KEY;
+    record.data.p_data       = m_token_counter_record_buffer;
+    record.data.length_words = 10;
 
     ret_code_t ret;
     if (found == true) {
@@ -322,4 +316,3 @@ bool ble_u2f_flash_token_counter_write(ble_u2f_context_t *p_u2f_context, uint8_t
 
     return true;
 }
-#endif
