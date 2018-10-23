@@ -43,7 +43,6 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         return false;
     }
 
-#if 0
     // CMD,INS,P1を参照
     uint8_t cmd = m_u2f_context.p_ble_header->CMD;
     uint8_t ins = m_u2f_context.p_apdu->INS;
@@ -65,9 +64,6 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         NRF_LOG_DEBUG("mainsw ignored: no need to verify user presence ");
         return false;
     }
-#else
-    return true;
-#endif
 }
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
@@ -270,11 +266,11 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_do_process(&m_u2f_context);
             break;
-#if 0
+
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_do_process(&m_u2f_context);
             break;
-#endif
+
         case COMMAND_U2F_VERSION:
             ble_u2f_version_do_process(&m_u2f_context);
             break;
@@ -320,11 +316,11 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(&m_u2f_context, p_evt);
             break;
-#if 0
+
         case COMMAND_U2F_AUTHENTICATE:
             ble_u2f_authenticate_send_response(&m_u2f_context, p_evt);
             break;
-#endif
+
         default:
             break;
     }
