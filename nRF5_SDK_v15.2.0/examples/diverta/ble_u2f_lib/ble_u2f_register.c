@@ -18,10 +18,16 @@
 NRF_LOG_MODULE_REGISTER();
 
 // 鍵ペア情報をRAWデータに変換する領域
+//   この領域に格納される鍵は
+//   ビッグエンディアン配列となる
 static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
 static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
 static size_t  private_key_raw_data_size;
 static size_t  public_key_raw_data_size;
+
+// インストール済み秘密鍵のエンディアン変換用配列
+static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
+
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
@@ -64,8 +70,8 @@ static uint16_t copy_apdu_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
 
 static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
-    // 公開鍵は、ワード単位でリトルエンディアン格納されているので
-    // ビッグエンディアンに変換してから格納
+    // 公開鍵は public_key_raw_data に
+    // ビッグエンディアンで格納される
     ble_u2f_crypto_public_key(public_key_raw_data, &public_key_raw_data_size);
     uint8_t *p_publickey = public_key_raw_data;
     uint16_t copied_size = 0;
@@ -74,13 +80,13 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
     p_dest_buffer[copied_size++] = U2F_POINT_UNCOMPRESSED;
 
     // 2-33バイト目＝公開鍵のx部を設定
-    for (uint8_t i = 32; i > 0; i--) {
-        p_dest_buffer[copied_size++] = *(p_publickey + i - 1);
+    for (uint8_t i = 0; i < 32; i++) {
+        p_dest_buffer[copied_size++] = *(p_publickey + i);
     }
 
     // 34-65バイト目＝公開鍵のy部を設定
-    for (uint8_t i = 64; i > 32; i--) {
-        p_dest_buffer[copied_size++] = *(p_publickey + i - 1);
+    for (uint8_t i = 32; i < 64; i++) {
+        p_dest_buffer[copied_size++] = *(p_publickey + i);
     }
 
     // コピーしたサイズを戻す
@@ -178,6 +184,19 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     return true;
 }
 
+static void convert_private_key_endian(ble_u2f_context_t *p_u2f_context)
+{
+    // インストール済み秘密鍵のエンディアンを変換
+    //   private_key_leはリトルエンディアンで格納されている秘密鍵のバイト配列
+    //   private_key_beはビッグエンディアンに変換された配列
+    uint8_t *private_key_le = ble_u2f_securekey_skey(p_u2f_context);
+    size_t key_size = sizeof(private_key_be);
+    
+    for (int i = 0; i < key_size; i++) {
+        private_key_be[i] = private_key_le[key_size - 1 - i];
+    }
+}
+
 static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
 {
     // エラー時のレスポンスを「予期しないエラー」に設定
@@ -189,7 +208,7 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    uint8_t *private_key_be = ble_u2f_securekey_skey(p_u2f_context);
+    convert_private_key_endian(p_u2f_context);
     if (ble_u2f_crypto_sign(private_key_be, p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;

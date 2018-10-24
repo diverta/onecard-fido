@@ -195,10 +195,10 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // キーハンドルから秘密鍵を取り出す(33バイト目以降)
-    uint8_t *private_key_le = keyhandle_base_buffer + U2F_APPID_SIZE;
+    uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
 
     // キーハンドルから取り出した秘密鍵により署名を生成
-    if (ble_u2f_crypto_sign(private_key_le, p_u2f_context) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(private_key_be, p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }

@@ -162,16 +162,3 @@ void ble_u2f_led_light_LED(uint32_t pin_number, bool led_on)
         nrf_gpio_pin_clear(pin_number);
     }
 }
-
-
-void dump_octets(uint8_t * data, uint16_t length)
-{
-    char buf[32];
-    for (int i = 0; i < length; i+=8) {
-        sprintf(buf, " %02x %02x %02x %02x %02x %02x %02x %02x", 
-                data[i+0], data[i+1], data[i+2], data[i+3],
-                data[i+4], data[i+5], data[i+6], data[i+7]
-        );
-        NRF_LOG_DEBUG("%s", (uint32_t)buf);
-    }
-}

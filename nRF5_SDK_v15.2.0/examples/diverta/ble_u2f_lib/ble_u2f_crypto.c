@@ -69,6 +69,7 @@ void ble_u2f_crypto_generate_keypair(void)
 
 void ble_u2f_crypto_private_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
+    // 秘密鍵データをビッグエンディアンでp_raw_data配列に格納
     *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_private_key_to_raw(&private_key, p_raw_data, p_raw_data_size);
     NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
@@ -77,6 +78,7 @@ void ble_u2f_crypto_private_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
 
 void ble_u2f_crypto_public_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
+    // 公開鍵データをビッグエンディアンでp_raw_data配列に格納
     *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_public_key_to_raw(&public_key, p_raw_data, p_raw_data_size);
     NRF_LOG_DEBUG("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);
@@ -107,7 +109,6 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_c
     APP_ERROR_CHECK(err_code);
 
     // 署名に使用する秘密鍵（32バイト）を取得
-    //   TODO:
     //   SDK 15以降はビッグエンディアンで引き渡す必要あり
     err_code = nrf_crypto_ecc_private_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info,
@@ -177,9 +178,8 @@ bool ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context)
     if (rbytes_leading == 1) {
         asn1_signature[i++] = 0x00;
     }
-    // エンディアンを変換
-    for (int j = part_length; j > 0; j--) {
-        asn1_signature[i++] = rbytes[j-1];
+    for (int j = 0; j < part_length; j++) {
+        asn1_signature[i++] = rbytes[j];
     }
 
     // 署名データのs部を格納
@@ -188,9 +188,8 @@ bool ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context)
     if (sbytes_leading == 1) {
         asn1_signature[i++] = 0x00;
     }
-    // エンディアンを変換
-    for (int k = part_length; k > 0; k--) {
-        asn1_signature[i++] = sbytes[k-1];
+    for (int k = 0; k < part_length; k++) {
+        asn1_signature[i++] = sbytes[k];
     }
 
     // 生成されたASN.1形式署名の

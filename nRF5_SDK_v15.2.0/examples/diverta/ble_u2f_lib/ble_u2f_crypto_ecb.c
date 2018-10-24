@@ -215,7 +215,7 @@ void ble_u2f_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t
 void ble_u2f_crypto_ecb_generate_keyhandle(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length)
 {
     // Register/Authenticateリクエストから取得した
-    // appIdHash、秘密鍵(リトルエンディアン)を指定の領域に格納
+    // appIdHash、秘密鍵を指定の領域に格納
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     memcpy(keyhandle_base_buffer, p_appid_hash, U2F_APPID_SIZE);
     memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key_value, private_key_length);
