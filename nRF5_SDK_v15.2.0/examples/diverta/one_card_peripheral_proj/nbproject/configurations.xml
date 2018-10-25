@@ -746,6 +746,7 @@
           <executablePath></executablePath>
           <cTool>
             <preprocessorList>
+              <Elem>ENABLE_VERIFY_SIGN</Elem>
               <Elem>NRF52840_XXAA</Elem>
               <Elem>SOFTDEVICE_PRESENT</Elem>
             </preprocessorList>

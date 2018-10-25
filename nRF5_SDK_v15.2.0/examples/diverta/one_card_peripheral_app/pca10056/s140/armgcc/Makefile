@@ -325,6 +325,9 @@ CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
 
+# for research 
+CFLAGS += -DENABLE_VERIFY_SIGN
+
 # C++ flags common to all targets
 CXXFLAGS += $(OPT)
 
