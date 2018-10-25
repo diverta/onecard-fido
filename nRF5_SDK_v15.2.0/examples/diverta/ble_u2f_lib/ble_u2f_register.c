@@ -307,4 +307,17 @@ void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t 
         send_register_response(p_u2f_context);
         NRF_LOG_DEBUG("ble_u2f_register end ");
     }
+#ifdef ENABLE_VERIFY_SIGN
+    // for debug
+    NRF_LOG_DEBUG("Keyhandle: ");
+    NRF_LOG_HEXDUMP_INFO(keyhandle_buffer, sizeof(keyhandle_buffer));
+
+    NRF_LOG_DEBUG("Public key from keypair: ");
+    NRF_LOG_HEXDUMP_INFO(public_key_raw_data, sizeof(public_key_raw_data));
+
+    NRF_LOG_DEBUG("Signature: ");
+    NRF_LOG_HEXDUMP_INFO(
+        p_u2f_context->signature_data_buffer, 
+        p_u2f_context->signature_data_buffer_length);
+#endif
 }

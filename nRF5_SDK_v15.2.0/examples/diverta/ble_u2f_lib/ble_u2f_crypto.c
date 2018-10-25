@@ -22,10 +22,10 @@ static nrf_crypto_ecc_private_key_t               private_key;
 static nrf_crypto_ecc_public_key_t                public_key;
 
 // ハッシュ化データ、署名データに関する情報
-static nrf_crypto_hash_context_t       hash_context;
+static nrf_crypto_hash_context_t       hash_context = {0};
 static nrf_crypto_hash_sha256_digest_t hash_digest;
 static nrf_crypto_ecc_private_key_t    private_key_for_sign;
-static nrf_crypto_ecdsa_sign_context_t sign_context;
+static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 static nrf_crypto_ecdsa_signature_t    signature;
 static size_t signature_size;
 
@@ -100,7 +100,7 @@ static uint8_t pk[64] = {
 };
 static uint8_t public_key_be[64];
 static nrf_crypto_ecc_public_key_t public_key_for_verify;
-static nrf_crypto_ecdsa_verify_context_t verify_context;
+static nrf_crypto_ecdsa_verify_context_t verify_context = {0};
     
 void verify_sign(void) 
 {
@@ -111,7 +111,7 @@ void verify_sign(void)
     for (int i = 0; i < 64; i++) {
         public_key_be[i] = pk[63 - i];
     }
-        
+
     err_code = nrf_crypto_ecc_public_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info,
         &public_key_for_verify, 
@@ -213,12 +213,12 @@ bool ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context)
     uint8_t *sbytes = p_signature_value + part_length;
     
     int rbytes_leading = 0;
-    if (rbytes[part_length-1] & 0x80) {
+    if (rbytes[0] & 0x80) {
         rbytes_leading = 1;
     }
 
     int sbytes_leading = 0;
-    if (sbytes[part_length-1] & 0x80) {
+    if (sbytes[0] & 0x80) {
         sbytes_leading = 1;
     }
 
