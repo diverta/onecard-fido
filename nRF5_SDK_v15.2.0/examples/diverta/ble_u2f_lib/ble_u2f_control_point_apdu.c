@@ -10,6 +10,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// U2FリクエストAPDU編集用の作業領域（固定長）
+static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
+
 static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Leの先頭バイトの値を参照し
@@ -101,29 +104,7 @@ uint8_t ble_u2f_control_point_apdu_header(U2F_APDU_T *p_apdu, uint8_t *control_p
 
 bool ble_u2f_control_point_apdu_allocate(ble_u2f_context_t *p_u2f_context, U2F_APDU_T *p_apdu)
 {
-    // APDUのリクエストデータ部を
-    // 格納するエリアをヒープに確保する
-    uint8_t *apdu_data_buffer = p_u2f_context->apdu_data_buffer;
-    if (apdu_data_buffer != NULL) {
-        // 既に確保済みの場合
-        NRF_LOG_DEBUG("apdu_data_buffer already allocated (%d bytes) ", 
-            p_u2f_context->apdu_data_buffer_length);
-        memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
-
-        // 確保領域のアドレスをAPDU情報にも保持
-        p_apdu->data = apdu_data_buffer;
-        return true;
-    }
-
-    // データ格納領域を、データ全体の長さ分確保
-    apdu_data_buffer = (uint8_t *)malloc(APDU_DATA_MAX_LENGTH);
-    if (apdu_data_buffer == NULL) {
-        NRF_LOG_ERROR("apdu_data_buffer allocation failed ");
-        return false;
-    }
-
-    // 処理内部で確保したヒープの参照先と確保バイト数を保持
-    // (Disconnect時に解放されます)
+    // U2FリクエストAPDU編集用作業領域の参照先と最大バイト数を保持
     p_u2f_context->apdu_data_buffer        = apdu_data_buffer;
     p_u2f_context->apdu_data_buffer_length = APDU_DATA_MAX_LENGTH;
     NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", APDU_DATA_MAX_LENGTH);

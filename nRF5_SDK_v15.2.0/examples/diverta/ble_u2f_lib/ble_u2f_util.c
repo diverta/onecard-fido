@@ -20,6 +20,14 @@ NRF_LOG_MODULE_REGISTER();
 static uint8_t  data_buffer[2];
 static uint32_t data_buffer_length;
 
+// 署名ベースおよび署名を編集するための作業領域（固定長）
+#define SIGNATURE_BASE_BUFFER_LENGTH 256
+static uint8_t signature_data_buffer[SIGNATURE_BASE_BUFFER_LENGTH];
+
+// U2F Register/Authenticationメッセージを編集するための作業領域（固定長）
+#define RESPONSE_DATA_BUFFER_LENGTH 2048
+static uint8_t response_message_buffer[RESPONSE_DATA_BUFFER_LENGTH];
+
 void ble_u2f_set_status_word(uint8_t *dest_buffer, uint16_t status_word)
 {
     // ステータスワードをビッグエンディアンで格納
@@ -81,33 +89,9 @@ void ble_u2f_send_keepalive_response(ble_u2f_context_t *p_u2f_context)
     ble_u2f_status_response_send(p_u2f_context->p_u2f);
 }
 
-
-// 署名対象、レスポンスデータを格納するバッファ長
-#define SIGNATURE_BASE_BUFFER_LENGTH 162
-#define RESPONSE_DATA_BUFFER_LENGTH 1024
-
 bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context)
 {
-    // 署名ベースおよび署名を編集するための
-    // ワークエリアをヒープに確保する
-    uint8_t *signature_data_buffer = p_u2f_context->signature_data_buffer;
-    if (signature_data_buffer != NULL) {
-        // 既に確保済みの場合
-        NRF_LOG_DEBUG("signature_data_buffer already allocated (%d bytes) ", 
-            p_u2f_context->signature_data_buffer_length);
-        memset(signature_data_buffer, 0, SIGNATURE_BASE_BUFFER_LENGTH);
-        return true;
-    }
-
-    // データ格納領域を、データ全体の長さ分確保
-    signature_data_buffer = (uint8_t *)malloc(SIGNATURE_BASE_BUFFER_LENGTH);
-    if (signature_data_buffer == NULL) {
-        NRF_LOG_ERROR("signature_data_buffer allocation failed ");
-        return false;
-    }
-
-    // 処理内部で確保したヒープの参照先と確保バイト数を保持
-    // (Disconnect時に解放されます)
+    // 署名ベース／署名作業領域の参照先と最大バイト数を保持
     p_u2f_context->signature_data_buffer        = signature_data_buffer;
     p_u2f_context->signature_data_buffer_length = SIGNATURE_BASE_BUFFER_LENGTH;
     NRF_LOG_DEBUG("signature_data_buffer allocated (%d bytes) ", SIGNATURE_BASE_BUFFER_LENGTH);
@@ -120,26 +104,7 @@ bool ble_u2f_signature_data_allocate(ble_u2f_context_t *p_u2f_context)
 
 bool ble_u2f_response_message_allocate(ble_u2f_context_t *p_u2f_context)
 {
-    // Register/Authenticationメッセージを
-    // 編集するためのワークエリアをヒープに確保する
-    uint8_t *response_message_buffer = p_u2f_context->response_message_buffer;
-    if (response_message_buffer != NULL) {
-        // 既に確保済みの場合
-        NRF_LOG_DEBUG("response_message_buffer already allocated (%d bytes) ", 
-            p_u2f_context->signature_data_buffer_length);
-        memset(response_message_buffer, 0, RESPONSE_DATA_BUFFER_LENGTH);
-        return true;
-    }
-
-    // データ格納領域を、データ全体の長さ分確保
-    response_message_buffer = (uint8_t *)malloc(RESPONSE_DATA_BUFFER_LENGTH);
-    if (response_message_buffer == NULL) {
-        NRF_LOG_ERROR("response_message_buffer allocation failed ");
-        return false;
-    }
-
-    // 処理内部で確保したヒープの参照先と確保バイト数を保持
-    // (Disconnect時に解放されます)
+    // U2F Register/Authenticationメッセージ作業領域の参照先と最大バイト数を保持
     p_u2f_context->response_message_buffer        = response_message_buffer;
     p_u2f_context->response_message_buffer_length = RESPONSE_DATA_BUFFER_LENGTH;
     NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", RESPONSE_DATA_BUFFER_LENGTH);

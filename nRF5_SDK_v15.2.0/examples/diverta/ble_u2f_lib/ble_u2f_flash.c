@@ -20,6 +20,9 @@ static uint32_t m_token_counter_record_buffer[10];
 static uint32_t m_token_counter;
 static uint32_t m_reserve_word;
 
+// 鍵・証明書データ読込用の作業領域（固定長）
+static uint32_t keydata_buffer[SKEY_CERT_WORD_NUM];
+
 bool ble_u2f_flash_force_fdc_gc(void)
 {
     ret_code_t err_code;
@@ -77,28 +80,11 @@ static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata
 
 static uint32_t *keydata_buffer_allocate(ble_u2f_context_t *p_u2f_context)
 {
-    uint32_t *keydata_buffer = p_u2f_context->securekey_buffer;
-    uint16_t  keydata_buffer_length = p_u2f_context->securekey_buffer_length;
-    if (keydata_buffer != NULL) {
-        // 既に確保済みの場合
-        NRF_LOG_DEBUG("securekey_buffer already allocated (%d bytes) ", 
-            keydata_buffer_length);
-        return keydata_buffer;
-    }
-
-    // Flash ROM読込用領域の確保
-    keydata_buffer_length = sizeof(uint32_t) * SKEY_CERT_WORD_NUM;
-    keydata_buffer = (uint32_t *)malloc(keydata_buffer_length);
-    if (keydata_buffer == NULL) {
-        // 領域が確保出来なかったら終了
-        NRF_LOG_ERROR("securekey_buffer allocation failed ");
-        return keydata_buffer;
-    }
-    NRF_LOG_DEBUG("securekey_buffer allocated (%d bytes) ", keydata_buffer_length);
-
-    // 確保した領域のアドレスと長さを共有情報に保持
+    // 鍵・証明書データ読込用作業領域のアドレスと長さを共有情報に保持
+    uint16_t keydata_buffer_length = sizeof(uint32_t) * SKEY_CERT_WORD_NUM;
     p_u2f_context->securekey_buffer = keydata_buffer;
     p_u2f_context->securekey_buffer_length = keydata_buffer_length;
+    NRF_LOG_DEBUG("securekey_buffer allocated (%d bytes) ", keydata_buffer_length);
 
     // 確保領域は0xff（Flash ROM未書込状態）で初期化
     memset(keydata_buffer, 0xff, keydata_buffer_length);

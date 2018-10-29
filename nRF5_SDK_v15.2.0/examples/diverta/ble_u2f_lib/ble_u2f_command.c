@@ -88,24 +88,6 @@ void ble_u2f_command_initialize_context(void)
 
 void ble_u2f_command_finalize_context(void)
 {
-    // ヒープに確保済みの領域を一括解放する
-    if (m_u2f_context.securekey_buffer != NULL) {
-        free(m_u2f_context.securekey_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.securekey_buffer freed ");
-    }
-    if (m_u2f_context.apdu_data_buffer != NULL) {
-        free(m_u2f_context.apdu_data_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.apdu_data_buffer freed ");
-    }
-    if (m_u2f_context.response_message_buffer != NULL) {
-        free(m_u2f_context.response_message_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.response_message_buffer freed ");
-    }
-    if (m_u2f_context.signature_data_buffer != NULL) {
-        free(m_u2f_context.signature_data_buffer);
-        NRF_LOG_DEBUG("m_u2f_context.signature_data_buffer freed ");
-    }
-
     // ユーザー所在確認を停止(キープアライブを停止)
     ble_u2f_user_presence_terminate(&m_u2f_context);
     NRF_LOG_DEBUG("ble_u2f_command_finalize_context done ");
