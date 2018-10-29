@@ -16,6 +16,10 @@ Release
 core
 .vs
 
+# ignore for NetBeans
+nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_proj/nbproject/private/private.xml
+nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_proj/nbproject/private/configurations.xml
+
 # ignore backup files
 *.b#*
 *.s#*

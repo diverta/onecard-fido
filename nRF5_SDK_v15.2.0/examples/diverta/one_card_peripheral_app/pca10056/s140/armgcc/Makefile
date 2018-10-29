@@ -4,6 +4,7 @@ OUTPUT_DIRECTORY := _build
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
+U2FLIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := gcc_nrf52.ld
@@ -53,9 +54,6 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rng.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/micro_ecc/micro_ecc_backend_ecc.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/micro_ecc/micro_ecc_backend_ecdh.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/micro_ecc/micro_ecc_backend_ecdsa.c \
   $(SDK_ROOT)/components/boards/boards.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_rtt.c \
@@ -78,7 +76,6 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_init.c \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_rng.c \
   $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_shared.c \
-  $(PROJ_DIR)/main.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_ble.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_soc.c \
@@ -118,19 +115,28 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_rng.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_shared.c \
   $(SDK_ROOT)/external/utf_converter/utf.c \
-  $(SDK_ROOT)/components/ble/ble_services/ble_bas/ble_bas.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis/ble_dis.c \
-  $(SDK_ROOT)/components/ble/ble_services/ble_hrs/ble_hrs.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c \
-  $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_chacha_poly_aead.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecc.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecdh.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecdsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_eddsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hash.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c \
+  $(PROJ_DIR)/main.c \
+  $(PROJ_DIR)/one_card_main.c \
+  $(PROJ_DIR)/one_card_event.c \
+  $(U2FLIB_DIR)/ble_u2f_authenticate.c \
+  $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
+  $(U2FLIB_DIR)/ble_u2f_command.c \
+  $(U2FLIB_DIR)/ble_u2f_control_point.c \
+  $(U2FLIB_DIR)/ble_u2f_control_point_apdu.c \
+  $(U2FLIB_DIR)/ble_u2f_crypto.c \
+  $(U2FLIB_DIR)/ble_u2f_crypto_ecb.c \
+  $(U2FLIB_DIR)/ble_u2f_flash.c \
+  $(U2FLIB_DIR)/ble_u2f_init.c \
+  $(U2FLIB_DIR)/ble_u2f_pairing.c \
+  $(U2FLIB_DIR)/ble_u2f_processing_led.c \
+  $(U2FLIB_DIR)/ble_u2f_register.c \
+  $(U2FLIB_DIR)/ble_u2f_securekey.c \
+  $(U2FLIB_DIR)/ble_u2f_status.c \
+  $(U2FLIB_DIR)/ble_u2f_status_retry.c \
+  $(U2FLIB_DIR)/ble_u2f_user_presence.c \
+  $(U2FLIB_DIR)/ble_u2f_util.c \
+  $(U2FLIB_DIR)/ble_u2f_version.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -252,7 +258,6 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310 \
   $(SDK_ROOT)/external/nrf_oberon \
-  $(SDK_ROOT)/external/micro-ecc/micro-ecc \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis \
   $(SDK_ROOT)/components/nfc/ndef/uri \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt \
@@ -281,6 +286,8 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/nfc/ndef/conn_hand_parser/ac_rec_parser \
   $(SDK_ROOT)/components/libraries/stack_guard \
   $(SDK_ROOT)/components/libraries/log/src \
+  $(PROJ_DIR) \
+  $(U2FLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \

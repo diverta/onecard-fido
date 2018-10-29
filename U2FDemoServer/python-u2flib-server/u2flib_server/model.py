@@ -160,7 +160,8 @@ class RegistrationData(object):
         self.pub_key = _pop_bytes(buf, 65)
         self.key_handle = _pop_bytes(buf, buf.pop(0))
         cert_len = _parse_tlv_size(buf)
-        self.certificate = _fix_cert(_pop_bytes(buf, cert_len))
+        self.cert_byte_array = _pop_bytes(buf, cert_len)
+        self.certificate = _fix_cert(self.cert_byte_array)
         self.signature = bytes(buf)
 
     @property
@@ -175,10 +176,33 @@ class RegistrationData(object):
         cert = x509.load_der_x509_certificate(self.certificate,
                                               default_backend())
         pubkey = cert.public_key()
+        
+        import binascii
+        print "---- Certificate from U2F Client ----"
+        print binascii.hexlify(self.cert_byte_array)
+        print "---- Keyhandle from U2F Client ----"
+        print binascii.hexlify(self.key_handle)
+        print "---- Public key from U2F Client ----"
+        print binascii.hexlify(self.pub_key)
+        print "---- Signature from U2F Client start ----"
+        print binascii.hexlify(self.signature)
+        
         verifier = pubkey.verifier(self.signature, ec.ECDSA(hashes.SHA256()))
+        
+        bytes_for_verifier = b'\0' + app_param + chal_param + self.key_handle + self.pub_key
+        
+        # HASH256 hashed bytes
+        _digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+        _digest.update(bytes_for_verifier)
+        _digest_hash256 = _digest.finalize()
+        
+        print "---- Bytes for HASH256 ----"
+        print binascii.hexlify(bytes_for_verifier)
+        print "---- HASH256 hashed bytes ----"
+        print binascii.hexlify(_digest_hash256)
+        print "---- Debug end ----"
 
-        verifier.update(b'\0' + app_param + chal_param + self.key_handle +
-                        self.pub_key)
+        verifier.update(bytes_for_verifier)
         try:
             verifier.verify()
         except InvalidSignature:

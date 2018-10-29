@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../one_card_peripheral_app</sourceRootElem>
+                <sourceRootElem>../ble_u2f_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
