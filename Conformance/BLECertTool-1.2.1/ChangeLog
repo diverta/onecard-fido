@@ -1,0 +1,86 @@
+
+U2F V1.1:
+
+1.2.1:
+* Workaround for Windows 10 Creators update bug.
+* Improve detection of Windows 10 Kits directories.
+
+1.2.0:
+* add 1.2 version bit.
+
+1.1.4:
+* ask for ENTER between checking pairing mode advertisements.
+* move wait after pairing to BLETransportTests.cpp from BleDeviceWinRT.cpp and
+     only do it for non-continuously connected authenticators (-D)
+* improve features for continuously connected authenticators. (-D)
+	- never wait until device is disconnected.
+	- check if device is connected before trying to trigger connection
+	- improved handling of notification registration.
+	- add support for unregistering notifications (not yet used).
+* fix garbage collector exception when tool exits.
+
+1.1.3:
+* in BleApiTest_AdvertisingNotPairingMode, clarify that the pairing is supposed to fail.
+
+1.1.2:
+* enabled version selection tests.
+
+1.1.1:
+* changing error reply catch wait to 1500ms. Should be well below the 2000 ms kErrorWaitMillies.
+    https://github.com/fido-alliance/jovasco-u2f-ref-code/issues/2
+* Fixed WARN_EQ too many parameters warnings.
+
+1.1.0:
+* release
+
+1.1.0-beta10:
+* update SAMPLELOG
+* add extra messages in the checks to explain why they fail.
+* do some extra checks on the Device Information Service
+* add message to indicate we wait until the device disconnects before we start.
+
+1.1.0-beta9:
+* fix dependencies.
+* fix PASS macro to actually check ReturnValue against SUCCESS
+* add time stamping option -S
+* add file logging.
+
+1.1.0-beta8:
+* fix CHECK macro
+
+1.1.0-beta7:
+* cleanup and improve error handling in WinRT backend
+* Fix LongPing command to validate returned error.
+* added locking in WinRT backend notification handling.
+
+1.1.0-beta6:
+* add support for explanation on CHECK_* macros
+* add extra error handling on exceptions
+
+1.1.0-beta5:
+* add some bluetooth radio diagnostics.
+
+1.1.0-beta4:
+* add support for continuously advertising devices.
+* move more options to configuration class.
+* remove "hasButton" usb leftover.
+* always wait until device disconnects after succesful pairing.
+
+1.1.0-beta3:
+* Verify pairing mode bits and service data
+* Verify advertising data contains FIDO uuid.
+* After pairing, reinitialize all pointers.
+
+1.1.0-beta2:
+* switch to using enum class and !operator for ReturnValue 
+* Increase timeout after transportlimits test.
+* allow for absent DIS on V1.0
+
+1.1.0-beta1
+* Automatically detect if device is connected or not in WinRT backend.
+* Add receiving of Advertisements.
+* Add WinRT backend
+* Add configuration options for U2F version
+* Add Verify() and Report() functions to validate device and display some information.
+* Enable ISO ISO7816-4 by default.
+* No longer support USB behavior. This was default and didn't make sense.
