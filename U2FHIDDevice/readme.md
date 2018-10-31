@@ -29,6 +29,6 @@ EAGLE（Version 7.7.0）というソフトウェアによりデザインした�
 
 <img src="pcb/pcb.png" width="500">
 
-- [回路図（U2FHIDDevice_0.pdf）](pcb/U2FHIDDevice_0.pdf)
+- [回路図（U2FHIDDevice_1.pdf）](pcb/U2FHIDDevice_1.pdf)
 - [部品表（BOM.csv）](pcb/bom/BOM.csv)
-- [ガーバーファイル（U2FHIDDevice_0.zip）](pcb/gerber/U2FHIDDevice_0.zip)
+- [ガーバーファイル（U2FHIDDevice_1.zip）](pcb/gerber/U2FHIDDevice_1.zip)
