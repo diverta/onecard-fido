@@ -97,7 +97,7 @@ bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t const *p_ble_evt
             // ペアリング要求に応じないようにする
             NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
             uint16_t conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, NULL);
+            ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_UNSPECIFIED, NULL, NULL);
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
