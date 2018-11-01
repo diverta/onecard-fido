@@ -10,6 +10,9 @@ NetBeansとARM GCC、nRF5 SDKを使用し、nRF52840の開発環境を構築す�
 * <b>[NFCサンプルアプリ動作確認手順](NDEFSAMPLE.md)</b><br>
 サンプルアプリ[`Writable NDEF Message Example`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.0.0%2Fnfc_writable_ndef_msg.html&cp=4_0_1_4_7_6)を使用して、nRF52840のNFC機能を確認する手順を掲載しています。
 
+* <b>[WIP] [USB HIDサンプルアプリ動作確認手順](HIDSAMPLE.md)</b><br>
+サンプルアプリ[`USB HID Generic Example`](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/usbd_hid_generic_example.html?cp=4_0_0_4_5_50_6)を使用して、nRF52840のUSB HID機能を確認する手順を掲載しています。
+
 ## ご参考
 
 * <b>[micro-eccビルド手順 (macOS版)](BUILDMECC.md) </b><br>
