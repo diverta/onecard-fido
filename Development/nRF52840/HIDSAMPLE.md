@@ -1,10 +1,10 @@
-# [WIP] USB HIDサンプルアプリ動作確認手順
+# USB HIDサンプルアプリ動作確認手順
 
 サンプルアプリ[`USB HID Generic Example`](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/usbd_hid_generic_example.html?cp=4_0_0_4_5_50_6)を使用して、nRF52840のUSB HID機能を確認する手順を掲載しています。
 
 ## 機材の準備
 
-USB HIDデバイスとなるnRF52840を準備します。
+USB HIDデバイスとなるnRF52840を準備します。<br>
 今回の検証では、[nRF52840 DK](https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/)という開発ボードを使用します。
 
 <img src="assets/0033.png" width="500">
@@ -122,6 +122,45 @@ NetBeansの右下部のコンソールには「実行 FINISHED; 終了値0」と
 <img src="assets_hid/0010.png" width="500">
 
 適宜、ボードからのデバッグ出力（UARTプリント）を確認します。<br>
-nRF52840-DK上で、プログラム実行が開始され、下図のようなデバッグ出力が表示されれば、サンプルアプリケーションの導入は完了です。
+nRF52840 DK上で、プログラム実行が開始され、下図のようなデバッグ出力が表示されれば、サンプルアプリケーションの導入は完了です。
 
 <img src="assets_hid/0011.png" width="550">
+
+## 動作確認
+
+下記URLの情報を参考に、動作確認を実施します。<br>
+[<b>Nordic Semiconductor Infocenter - USB HID Generic Example Example</b>](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/usbd_hid_generic_example.html?cp=4_0_0_4_5_50_6)
+
+### PCとの接続
+
+まずはnRF52840 DKとPCを、USBケーブルで接続します。<br>
+すでに接続されている（プログラム書込み用の）J-LINKポートはそのままとし、下図の「nRF USB」というポートに別のUSBケーブルでPCと接続します。
+
+<img src="assets_hid/0012.png" width="350">
+
+ほどなく、基板上のLED1が点灯すれば、接続は成功です。
+
+<img src="assets_hid/0013.png" width="350">
+
+適宜、PCで認識されているかどうかをPC側で確認します。
+
+下図はmacOSのシステムレポート画面で確認した例です。<br>
+USBケーブルで接続されたnRF52840 DKが「nRF52 USB HID generic Demo」という名称で、USB HIDデバイスとして認識されていることが確認できます。
+
+<img src="assets_hid/0014.png" width="550">
+
+### マウスデバイスとしての機能確認
+
+こちらのサンプルは、USB HIDマウスデバイスとして動作します。<br>
+機能としては以下の通りです。
+
+- Button 1 - 右方向にマウスカーソルが移動します。
+- Button 2 - 下方向にマウスカーソルが移動します。
+- Button 3 - マウスクリック（左クリック）が発生します。
+- Button 4 - マウスクリック（右クリック）が発生します。
+
+各々のボタンを押すと、画面上でマウスカーソル移動／マウスクリック発生が確認できます。
+
+また、マウスデバイスとPC間でデータ（Mouse Report）がやりとりされると、下図のようにLED3が点灯／消灯します。
+
+<img src="assets_hid/0015.png" width="350">
