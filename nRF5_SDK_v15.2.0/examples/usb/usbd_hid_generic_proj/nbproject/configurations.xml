@@ -417,6 +417,12 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
+          <cTool>
+            <preprocessorList>
+              <Elem>BOARD_PCA10056</Elem>
+              <Elem>NRF52840_XXAA</Elem>
+            </preprocessorList>
+          </cTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>../usbd_hid_generic/pca10056/blank/armgcc</preBuildCommandWorkingDir>
