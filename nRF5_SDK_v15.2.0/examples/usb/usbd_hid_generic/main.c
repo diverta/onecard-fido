@@ -161,6 +161,50 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
  * or invalidates (by USB reset or suspend event).
  */
 static bool m_report_pending;
+static bool m_report_received;
+
+static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
+{
+    // Output reportが格納されている領域を取得
+    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
+    app_usbd_hid_report_buffer_t const *rep_buf = 
+        app_usbd_hid_rep_buff_out_get(&p_hid->specific.inst.hid_inst);
+
+    NRF_LOG_DEBUG("Output Report: %d bytes", rep_buf->size);
+    NRF_LOG_HEXDUMP_INFO(rep_buf->p_buff, rep_buf->size);
+    m_report_received = true;
+}
+
+static uint8_t test_buffer[64];
+
+static void usbd_input_report_send(void)
+{
+    if (m_report_received == false) {
+        return;
+    }
+    m_report_received = false;
+    
+    // for test
+    test_buffer[4] = 0xf1;
+    test_buffer[5] = 0xd0;
+    test_buffer[6] = 'O';
+    test_buffer[7] = 'K';
+    test_buffer[32] = 'H';
+    test_buffer[33] = 'e';
+    test_buffer[34] = 'l';
+    test_buffer[35] = 'l';
+    test_buffer[36] = 'o';
+    
+    // 64バイトのInput reportを送信
+    app_usbd_class_inst_t const *p_inst = 
+        app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
+    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
+    ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, test_buffer, sizeof(test_buffer));    
+    APP_ERROR_CHECK(ret);
+    
+    NRF_LOG_INFO("Input report: %d bytes", sizeof(test_buffer));
+    NRF_LOG_HEXDUMP_INFO(test_buffer, sizeof(test_buffer));
+}
 
 /**
  * @brief Class specific event handler.
@@ -175,12 +219,8 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
     {
         case APP_USBD_HID_USER_EVT_OUT_REPORT_READY:
         {
-            // Output Reportの内容を取り出す
-            app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
-            app_usbd_hid_report_buffer_t const *rep_buf = 
-                app_usbd_hid_rep_buff_out_get(&p_hid->specific.inst.hid_inst);
-            NRF_LOG_DEBUG("Output Report: %d bytes", rep_buf->size);
-            NRF_LOG_HEXDUMP_INFO(rep_buf->p_buff, rep_buf->size);
+            // Output reportの内容を取り出す
+            usbd_output_report_received(p_inst);
             break;
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
@@ -323,6 +363,9 @@ int main(void)
     while (true) {
         while (app_usbd_event_queue_process());
         UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
+        
+        // Input Reportを送信
+        usbd_input_report_send();
         
         // Sleep CPU only if there was no interrupt since last loop processing
         __WFE();
