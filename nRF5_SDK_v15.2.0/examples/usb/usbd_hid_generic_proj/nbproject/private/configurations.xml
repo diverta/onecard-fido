@@ -16,6 +16,8 @@
         </df>
       </df>
       <in>main.c</in>
+      <in>usbd_hid_u2f.c</in>
+      <in>usbd_hid_u2f.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>../usbd_hid_generic/pca10056/blank/armgcc/Makefile</projectmakefile>
