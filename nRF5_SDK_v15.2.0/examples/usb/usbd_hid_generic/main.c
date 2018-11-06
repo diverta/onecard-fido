@@ -52,14 +52,15 @@
 #include "app_usbd.h"
 #include "app_usbd_core.h"
 #include "app_usbd_hid_generic.h"
-#include "app_usbd_hid_mouse.h"
-#include "app_usbd_hid_kbd.h"
 #include "app_error.h"
 #include "bsp.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+
+/* GPIO used as LED in this example */
+#define LED_USB_START    (BSP_BOARD_LED_0)
 
 /**
  * @brief Enable USB power detection
@@ -130,7 +131,7 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 /**
- * @brief Reuse HID mouse report descriptor for HID generic class
+ * @brief Reuse HID U2F report descriptor for HID generic class
  */
 APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(u2f_desc,APP_USBD_HID_FIDO_U2F_REPORT_DSC_BUTTON(64));
 
@@ -220,25 +221,25 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
             break;
         case APP_USBD_EVT_DRV_SUSPEND:
             m_report_pending = false;
-            app_usbd_suspend_req(); // Allow the library to put the peripheral into sleep mode
-            //bsp_board_leds_off();
+            // Allow the library to put the peripheral into sleep mode
+            app_usbd_suspend_req(); 
+            bsp_board_leds_off();
             break;
         case APP_USBD_EVT_DRV_RESUME:
             m_report_pending = false;
-            //bsp_board_led_on(LED_USB_START);
+            bsp_board_led_on(LED_USB_START);
             break;
         case APP_USBD_EVT_STARTED:
             m_report_pending = false;
-            //bsp_board_led_on(LED_USB_START);
+            bsp_board_led_on(LED_USB_START);
             break;
         case APP_USBD_EVT_STOPPED:
             app_usbd_disable();
-            //bsp_board_leds_off();
+            bsp_board_leds_off();
             break;
         case APP_USBD_EVT_POWER_DETECTED:
             NRF_LOG_INFO("USB power detected");
-            if (!nrf_drv_usbd_is_enabled())
-            {
+            if (!nrf_drv_usbd_is_enabled()) {
                 app_usbd_enable();
             }
             break;
@@ -257,44 +258,35 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
 
 static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
 {
-    switch (report_id)
-    {
+    switch (report_id) {
         case 0:
-        {
             NRF_LOG_INFO("idle_handle(0) called");
-        }
+            break;
         default:
             return NRF_ERROR_NOT_SUPPORTED;
     }
-    
+    return NRF_SUCCESS;
 }
 
-int main(void)
+void usbd_init(void)
 {
     ret_code_t ret;
     static const app_usbd_config_t usbd_config = {
         .ev_state_proc = usbd_user_ev_handler
     };
 
-    ret = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(ret);
-    NRF_LOG_DEFAULT_BACKENDS_INIT();
-
     ret = nrf_drv_clock_init();
     APP_ERROR_CHECK(ret);
 
     nrf_drv_clock_lfclk_request(NULL);
 
-    while(!nrf_drv_clock_lfclk_is_running())
-    {
-        /* Just waiting */
-    }
-    NRF_LOG_INFO("Hello USB!");
+    // Just waiting
+    while(!nrf_drv_clock_lfclk_is_running());
+    NRF_LOG_INFO("Starting USBD HID U2F");
 
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
-
-    NRF_LOG_INFO("USBD HID generic example started.");
+    NRF_LOG_INFO("USBD HID U2F started.");
 
     app_usbd_class_inst_t const * class_inst_generic;
     class_inst_generic = app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
@@ -305,24 +297,34 @@ int main(void)
     ret = app_usbd_class_append(class_inst_generic);
     APP_ERROR_CHECK(ret);
 
-    if (USBD_POWER_DETECTION)
-    {
+    if (USBD_POWER_DETECTION) {
         ret = app_usbd_power_events_enable();
         APP_ERROR_CHECK(ret);
-    }
-    else
-    {
+        
+    } else {
         NRF_LOG_INFO("No USB power detection enabled\r\nStarting USB now");
-
         app_usbd_enable();
         app_usbd_start();
     }
+}
 
-    while (true)
-    {
+int main(void)
+{
+    ret_code_t ret = NRF_LOG_INIT(NULL);
+    APP_ERROR_CHECK(ret);
+    NRF_LOG_DEFAULT_BACKENDS_INIT();
+
+    // LED関連設定
+    bsp_board_init(BSP_INIT_LEDS);
+    
+    // USBD HID U2Fをスタート
+    usbd_init();
+
+    while (true) {
         while (app_usbd_event_queue_process());
         UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
-        /* Sleep CPU only if there was no interrupt since last loop processing */
+        
+        // Sleep CPU only if there was no interrupt since last loop processing
         __WFE();
     }
 }
