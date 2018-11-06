@@ -15,7 +15,7 @@ NetBeansとARM GCC、nRF5 SDKを使用し、nRF52840の開発環境を構築す�
 
 ## サンプルプロジェクト
 
-* <b>[nRF52840 USBサンプル](../../../nRF5_SDK_v15.2.0/examples/usb)</b><br>
+* <b>[nRF52840 USBサンプル](../../nRF5_SDK_v15.2.0/examples/usb)</b><br>
 nRF52840のUSBポート経由でGeneric input/output reportが送受信できるよう、Nordicのサンプルアプリ[`USB HID Generic Example`](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/usbd_hid_generic_example.html?cp=4_0_0_4_5_50_6)を改修したプロジェクトです。
 
 ## ご参考
