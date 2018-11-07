@@ -59,6 +59,8 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>make</runcommandpicklistitem>
+          <runcommandpicklistitem>make flash_softdevice flash</runcommandpicklistitem>
           <runcommandpicklistitem>make flash</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>make flash</runcommand>

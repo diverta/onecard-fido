@@ -31,6 +31,7 @@
 
 // One Card固有の処理
 #include "ble_u2f.h"
+#include "usbd_hid_u2f.h"
 #include "one_card_main.h"
 #include "one_card_event.h"
 
@@ -630,6 +631,7 @@ int main(void)
 
     // Initialize.
     log_init();
+    usbd_init();
     timers_init();
     buttons_leds_init(&erase_bonds);
     power_management_init();
@@ -653,9 +655,14 @@ int main(void)
     application_timers_start();
     advertising_start(erase_bonds);
 
+    // USB HIDデバイスクラスを初期化
+    usbd_hid_init();
+    
     // Enter main loop.
     for (;;)
     {
+        // HID Input Reportを送信
+        usbd_input_report_send();
         idle_state_handle();
     }
 }

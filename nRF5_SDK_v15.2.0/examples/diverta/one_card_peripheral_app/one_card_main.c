@@ -132,7 +132,6 @@ void one_card_timers_init(void)
     err_code = app_timer_create(&m_long_push_timer_id, 
         APP_TIMER_MODE_SINGLE_SHOT, on_long_push_timer_timeout);
     APP_ERROR_CHECK(err_code);
-    NRF_LOG_INFO("app_timer_create() (%d).", err_code);
 }
 
 static const app_button_cfg_t m_app_buttons[APP_BUTTON_NUM] = {

@@ -43,6 +43,51 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="makmorit"
+                   displayName="makmorit"
+                   projectFiles="true"
+                   root="../../../..">
+      <logicalFolder name="GitHub" displayName="GitHub" projectFiles="true">
+        <logicalFolder name="onecard-fido"
+                       displayName="onecard-fido"
+                       projectFiles="true">
+          <logicalFolder name="nRF5_SDK_v15.2.0"
+                         displayName="nRF5_SDK_v15.2.0"
+                         projectFiles="true">
+            <logicalFolder name="examples" displayName="examples" projectFiles="true">
+              <logicalFolder name="usb" displayName="usb" projectFiles="true">
+                <logicalFolder name="usbd_hid_generic"
+                               displayName="usbd_hid_generic"
+                               projectFiles="true">
+                  <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+                    <logicalFolder name="blank" displayName="blank" projectFiles="true">
+                      <logicalFolder name="config" displayName="config" projectFiles="true">
+                        <itemPath>../../usb/usbd_hid_generic/pca10056/blank/config/sdk_config.h</itemPath>
+                      </logicalFolder>
+                    </logicalFolder>
+                  </logicalFolder>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="opt" displayName="opt" projectFiles="true">
+        <logicalFolder name="nRF5_SDK_15.2.0"
+                       displayName="nRF5_SDK_15.2.0"
+                       projectFiles="true">
+          <logicalFolder name="components" displayName="components" projectFiles="true">
+            <logicalFolder name="drivers_nrf" displayName="drivers_nrf" projectFiles="true">
+              <logicalFolder name="nrf_soc_nosd"
+                             displayName="nrf_soc_nosd"
+                             projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/nrf_soc_nosd/nrf_error.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="nRF5_SDK_15.2.0"
                    displayName="nRF5_SDK_15.2.0"
                    projectFiles="true"
@@ -129,6 +174,12 @@
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.c</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.h</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/pca10056.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="drivers_nrf" displayName="drivers_nrf" projectFiles="true">
+          <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd/nrf_drv_usbd.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd/nrf_drv_usbd_errata.h</itemPath>
+          </logicalFolder>
         </logicalFolder>
         <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
           <logicalFolder name="atomic" displayName="atomic" projectFiles="true">
@@ -354,6 +405,31 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
+            <logicalFolder name="class" displayName="class" projectFiles="true">
+              <logicalFolder name="hid" displayName="hid" projectFiles="true">
+                <logicalFolder name="generic" displayName="generic" projectFiles="true">
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_desc.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_internal.h</itemPath>
+                </logicalFolder>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/app_usbd_hid.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/app_usbd_hid_types.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_class_base.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_descriptor.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_langid.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_request.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_types.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="util" displayName="util" projectFiles="true">
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.h</itemPath>
@@ -419,6 +495,8 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_gpiote.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_uart.c</itemPath>
@@ -487,24 +565,33 @@
           <logicalFolder name="include" displayName="include" projectFiles="true">
             <logicalFolder name="machine" displayName="machine" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_default_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/ieeefp.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/malloc.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/stdlib.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/time.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/types.h</itemPath>
             </logicalFolder>
             <logicalFolder name="sys" displayName="sys" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_intsup.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_pthreadtypes.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_sigset.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_stdint.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timespec.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timeval.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/sched.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/select.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stdio.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/string.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/timespec.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/types.h</itemPath>
             </logicalFolder>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_ansi.h</itemPath>
@@ -518,6 +605,9 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdio.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdlib.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/string.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/strings.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/time.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/xlocale.h</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="lib" displayName="lib" projectFiles="true">
@@ -624,8 +714,13 @@
             <logicalFolder name="include" displayName="include" projectFiles="true">
               <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aes.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aesni.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/check_config.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/config.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/ctr_drbg.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/padlock.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform_time.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -701,6 +796,7 @@
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_rng.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uart.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uarte.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_usbd.h</itemPath>
             </logicalFolder>
             <logicalFolder name="soc" displayName="soc" projectFiles="true">
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_coredep.h</itemPath>
@@ -710,6 +806,27 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="usbd"
+                   displayName="usbd"
+                   projectFiles="true"
+                   root="../../../components/libraries/usbd">
+      <logicalFolder name="class" displayName="class" projectFiles="true">
+        <logicalFolder name="hid" displayName="hid" projectFiles="true">
+          <logicalFolder name="generic" displayName="generic" projectFiles="true">
+            <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>../../../components/libraries/usbd/app_usbd.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="usbd_hid_u2f_lib"
+                   displayName="usbd_hid_u2f_lib"
+                   projectFiles="true"
+                   root="../usbd_hid_u2f_lib">
+      <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -723,6 +840,8 @@
   <sourceRootList>
     <Elem>../one_card_peripheral_app</Elem>
     <Elem>../ble_u2f_lib</Elem>
+    <Elem>../usbd_hid_u2f_lib</Elem>
+    <Elem>../../../components/libraries/usbd</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -746,8 +865,9 @@
           <executablePath></executablePath>
           <cTool>
             <preprocessorList>
-              <Elem>ENABLE_VERIFY_SIGN</Elem>
+              <Elem>BOARD_PCA10056</Elem>
               <Elem>NRF52840_XXAA</Elem>
+              <Elem>POWER_ENABLED</Elem>
               <Elem>SOFTDEVICE_PRESENT</Elem>
             </preprocessorList>
           </cTool>
@@ -2253,6 +2373,48 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c"
             ex="false"
             tool="0"
@@ -2478,6 +2640,11 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.c"
             ex="false"
             tool="0"
@@ -2702,14 +2869,32 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../components/libraries/usbd/app_usbd.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
             tool="0"
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2720,8 +2905,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2729,8 +2912,6 @@
       <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2741,8 +2922,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2753,8 +2932,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2762,8 +2939,6 @@
       <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2774,8 +2949,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2783,8 +2956,6 @@
       <item path="../ble_u2f_lib/ble_u2f_flash.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2792,8 +2963,6 @@
       <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2801,8 +2970,6 @@
       <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2813,8 +2980,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2822,8 +2987,6 @@
       <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2831,8 +2994,6 @@
       <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2840,8 +3001,6 @@
       <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2852,8 +3011,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2864,8 +3021,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2900,8 +3055,6 @@
       <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2934,6 +3087,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../ble_u2f_lib</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../usbd_hid_u2f_lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2999,6 +3154,8 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
       </item>
       <folder path="nRF5_SDK_15.2.0/components">
         <cTool>
@@ -3447,6 +3604,19 @@
           </incDir>
         </cTool>
       </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/usbd/class">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+          </incDir>
+        </cTool>
+      </folder>
       <folder path="nRF5_SDK_15.2.0/components/libraries/util">
         <cTool>
           <incDir>
@@ -3539,6 +3709,36 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="usbd/class">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="usbd_hid_u2f_lib">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
           </incDir>
         </cTool>
       </folder>
