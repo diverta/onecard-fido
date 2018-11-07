@@ -245,8 +245,9 @@ ret_code_t app_usbd_hid_generic_idle_report_set(app_usbd_hid_generic_t const * p
 
     NRF_DRV_USBD_TRANSFER_IN(transfer, p_buff, size);
 
+    ret_code_t ret;
     CRITICAL_REGION_ENTER();
-    ret_code_t ret = app_usbd_ep_transfer(ep_addr, &transfer);
+    ret = app_usbd_ep_transfer(ep_addr, &transfer);
     if (ret == NRF_SUCCESS)
     {
         app_usbd_hid_state_flag_set(&p_generic_ctx->hid_ctx,
