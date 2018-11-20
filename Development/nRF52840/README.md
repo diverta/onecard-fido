@@ -7,6 +7,9 @@ nRF52840で動作するアプリの開発に関する各種情報を掲載して
 * <b>[NetBeans開発環境構築手順](NETBEANS.md)</b><br>
 NetBeansとARM GCC、nRF5 SDKを使用し、nRF52840の開発環境を構築する手順を掲載しています。
 
+* <b>[nRF52840 Dongleプログラミング手順](NRFCONNECTINST.md)</b><br>
+ツール「[nRF Connect](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy/nRF-Connect-for-desktop/)」を使用し、nRF52840 Dongleに、プログラム（.hexファイル）を書込む手順を記載します。
+
 * <b>[NFCサンプルアプリ動作確認手順](NDEFSAMPLE.md)</b><br>
 サンプルアプリ[`Writable NDEF Message Example`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.0.0%2Fnfc_writable_ndef_msg.html&cp=4_0_1_4_7_6)を使用して、nRF52840のNFC機能を確認する手順を掲載しています。
 
