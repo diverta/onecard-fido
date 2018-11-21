@@ -1,7 +1,7 @@
 PROJECT_NAME     := one_card_peripheral_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
@@ -149,6 +149,9 @@ SRC_FILES += \
   $(U2FLIB_DIR)/ble_u2f_user_presence.c \
   $(U2FLIB_DIR)/ble_u2f_util.c \
   $(U2FLIB_DIR)/ble_u2f_version.c \
+  $(HIDLIB_DIR)/hid_u2f_common.c \
+  $(HIDLIB_DIR)/hid_u2f_receive.c \
+  $(HIDLIB_DIR)/hid_u2f_send.c \
   $(HIDLIB_DIR)/usbd_hid_u2f.c \
 
 # Include folders common to all targets

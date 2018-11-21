@@ -8,27 +8,19 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "nrf.h"
-#include "app_util_platform.h"
 #include "nrf_drv_usbd.h"
 #include "nrf_drv_clock.h"
-#include "nrf_gpio.h"
 #include "nrf_drv_power.h"
-
-#include "app_timer.h"
-#include "app_usbd.h"
-#include "app_usbd_core.h"
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
-#include "bsp.h"
+
+#include "hid_u2f_receive.h"
+#include "hid_u2f_send.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_hid_u2f
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-/* GPIO used as LED in this example */
-#define LED_USB_START    (BSP_BOARD_LED_0)
 
 /**
  * @brief Enable USB power detection
@@ -138,10 +130,10 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 
     NRF_LOG_DEBUG("Output Report: %d bytes", rep_buf->size);
     NRF_LOG_HEXDUMP_DEBUG(rep_buf->p_buff, rep_buf->size);
-    m_report_received = true;
+    
+    // Output reportから受信フレームを取得し、内部バッファに格納
+    m_report_received = hid_u2f_receive_request_data(rep_buf->p_buff, rep_buf->size);
 }
-
-static uint8_t test_buffer[64];
 
 /**
  * @brief Class specific event handler.
@@ -200,19 +192,15 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
             m_report_pending = false;
             // Allow the library to put the peripheral into sleep mode
             app_usbd_suspend_req(); 
-            bsp_board_leds_off();
             break;
         case APP_USBD_EVT_DRV_RESUME:
             m_report_pending = false;
-            bsp_board_led_on(LED_USB_START);
             break;
         case APP_USBD_EVT_STARTED:
             m_report_pending = false;
-            bsp_board_led_on(LED_USB_START);
             break;
         case APP_USBD_EVT_STOPPED:
             app_usbd_disable();
-            bsp_board_leds_off();
             break;
         case APP_USBD_EVT_POWER_DETECTED:
             NRF_LOG_DEBUG("USB power detected");
@@ -287,6 +275,19 @@ void usbd_hid_init(void)
     NRF_LOG_DEBUG("usbd_hid_init() done");
 }
 
+void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
+{
+    // 64バイトのInput reportを送信
+    app_usbd_class_inst_t const *p_inst = 
+        app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
+    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
+    ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, buffer_for_send, size);    
+    APP_ERROR_CHECK(ret);
+    
+    NRF_LOG_DEBUG("Input report: %d bytes", size);
+    NRF_LOG_HEXDUMP_DEBUG(buffer_for_send, size);
+}
+
 void usbd_input_report_send(void)
 {
     // USBデバイス処理を実行する
@@ -298,24 +299,8 @@ void usbd_input_report_send(void)
     }
     m_report_received = false;
     
-    // for test
-    test_buffer[4] = 0xf1;
-    test_buffer[5] = 0xd0;
-    test_buffer[6] = 'O';
-    test_buffer[7] = 'K';
-    test_buffer[32] = 'H';
-    test_buffer[33] = 'e';
-    test_buffer[34] = 'l';
-    test_buffer[35] = 'l';
-    test_buffer[36] = 'o';
-    
-    // 64バイトのInput reportを送信
-    app_usbd_class_inst_t const *p_inst = 
-        app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
-    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
-    ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, test_buffer, sizeof(test_buffer));    
-    APP_ERROR_CHECK(ret);
-    
-    NRF_LOG_DEBUG("Input report: %d bytes", sizeof(test_buffer));
-    NRF_LOG_HEXDUMP_DEBUG(test_buffer, sizeof(test_buffer));
+    // U2F HIDレスポンスデータを送信
+    //  内部で usbd_hid_u2f_frame_send を
+    //  フレーム数分呼出し
+    hid_u2f_send_response_packet();
 }

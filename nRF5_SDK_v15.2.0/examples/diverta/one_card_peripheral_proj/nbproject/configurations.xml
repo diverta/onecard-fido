@@ -824,6 +824,12 @@
                    projectFiles="true"
                    root="../usbd_hid_u2f_lib">
       <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.h</itemPath>
     </logicalFolder>
@@ -3138,6 +3144,30 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_send.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
       </item>

@@ -36,7 +36,14 @@
 #include "one_card_event.h"
 
 
-#define DEVICE_NAME                         "OneCard_Peripheral"                    /**< Name of device. Will be included in the advertising data. */
+#if   defined(BOARD_PCA10056)
+#define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
+#elif defined(BOARD_PCA10059)
+#define DEVICE_NAME                         "FIDO_Authenticator_dongle"             /**< Name of device. Will be included in the advertising data. */
+#else
+#define DEVICE_NAME                         "Diverta_FIDO_Authenticator"            /**< Name of device. Will be included in the advertising data. */
+#endif
+
 #define MANUFACTURER_NAME                   "Diverta,Inc"                           /**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUM                           "One Card Peripheral"                   /**< Model number. Will be passed to Device Information Service. */
 #define FW_REV                              "15.2.0"                                /**< firmware revision. Will be passed to Device Information Service. */
