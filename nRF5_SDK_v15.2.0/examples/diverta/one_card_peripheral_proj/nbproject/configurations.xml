@@ -818,7 +818,6 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../../../components/libraries/usbd/app_usbd.c</itemPath>
     </logicalFolder>
     <logicalFolder name="usbd_hid_u2f_lib"
                    displayName="usbd_hid_u2f_lib"
@@ -2867,21 +2866,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-        </cTool>
-      </item>
-      <item path="../../../components/libraries/usbd/app_usbd.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
