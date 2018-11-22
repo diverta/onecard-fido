@@ -24,6 +24,7 @@ size_t  u2f_response_length;
 
 //
 // コマンド別のレスポンスデータ編集領域
+//   固定長（64バイト）
 //
 typedef struct u2f_hid_init_response
 {
@@ -34,12 +35,14 @@ typedef struct u2f_hid_init_response
     uint8_t version_minor;
     uint8_t version_build;
     uint8_t cflags;
+    uint8_t filler[47];
 } U2F_HID_INIT_RES;
 
 typedef struct u2f_version_response
 {
     uint8_t  version[6];
     uint8_t  status_word[2];
+    uint8_t filler[56];
 } U2F_VERSION_RES;
 
 U2F_HID_INIT_RES  init_res;
@@ -50,6 +53,11 @@ U2F_VERSION_RES   version_res;
 //
 uint8_t  CMD;
 uint32_t CID;
+
+void init_CID(void)
+{
+    CID = U2FHID_INITIAL_CID;
+}
 
 uint32_t get_CID(uint8_t *cid)
 {
@@ -99,9 +107,14 @@ void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, 
 
 void generate_hid_init_response(void)
 {
+    // 編集領域を初期化
+    u2f_response_length = sizeof(init_res);
+    memset(&init_res, 0x00, u2f_response_length);
+
     // レスポンスデータを編集 (17 bytes)
+    //   CIDはインクリメントされたものを設定
     memcpy(init_res.nonce, u2f_request_buffer, 8);
-    set_CID(init_res.cid, 0x01003301);
+    set_CID(init_res.cid, CID + 1);
     init_res.version_id    = 2;
     init_res.version_major = 1;
     init_res.version_minor = 1;
@@ -109,12 +122,15 @@ void generate_hid_init_response(void)
     init_res.cflags        = 0;
     
     // レスポンスを格納
-    u2f_response_length = sizeof(U2F_HID_INIT_RES);
     memcpy(u2f_response_buffer, &init_res, u2f_response_length);
 }
 
 void generate_u2f_version_response(void)
 {
+    // 編集領域を初期化
+    u2f_response_length = sizeof(version_res);
+    memset(&version_res, 0x00, u2f_response_length);
+
     // レスポンスデータを編集 (8 bytes)
     strcpy((char *)version_res.version, "U2F_V2");
     uint16_t status_word = U2F_SW_NO_ERROR;
@@ -122,7 +138,6 @@ void generate_u2f_version_response(void)
     version_res.status_word[1] = status_word & 0x00ff;
     
     // レスポンスを格納
-    u2f_response_length = sizeof(U2F_VERSION_RES);
     memcpy(u2f_response_buffer, &version_res, u2f_response_length);
 }
 

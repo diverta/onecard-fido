@@ -36,6 +36,7 @@ extern "C" {
 
 #define U2FHID_BROADCAST    0xffffffff
 #define U2FHID_RESERVED_CID 0x00000000
+#define U2FHID_INITIAL_CID  0x01003300
 
 // U2F native commands
 #define U2F_REGISTER        0x01
@@ -48,6 +49,7 @@ extern "C" {
 #define U2F_SW_NO_ERROR     0x9000
 
 // U2F HIDメッセージ構造体
+//   固定長（64バイト）
 typedef struct u2f_hid_msg {
     uint8_t cid[4];
     union {
@@ -81,6 +83,7 @@ extern uint32_t CID;
 //
 // 関数群
 //
+void     init_CID(void);
 uint32_t get_CID(uint8_t *cid);
 void     set_CID(uint8_t *cid, uint32_t _CID);
 size_t   get_payload_length(U2F_HID_MSG *recv_msg);
