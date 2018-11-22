@@ -77,8 +77,8 @@ extern size_t  u2f_response_length;
 //
 // 現在処理中のチャネルID、コマンドを保持
 //
-extern uint8_t  CMD;
-extern uint32_t CID;
+extern uint8_t  CMD_for_session;
+extern uint32_t CID_for_session;
 
 //
 // 関数群

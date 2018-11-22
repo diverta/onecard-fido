@@ -37,9 +37,9 @@ bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size)
         // CID、CMDを保持
         uint32_t cid = get_CID(req->cid);
         if (cid != U2FHID_RESERVED_CID) {
-            CID = cid;
+            CID_for_session = cid;
         }
-        CMD = req->pkt.init.cmd;
+        CMD_for_session = req->pkt.init.cmd;
         
         // U2Fクライアントからの最初のリクエスト受領時は
         // ステータスを設定（リクエスト受領開始）

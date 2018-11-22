@@ -14,6 +14,7 @@
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
 
+#include "hid_u2f_common.h"
 #include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
@@ -246,6 +247,9 @@ void usbd_init(void)
     };
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
+    
+    // アプリケーションで使用するCIDを初期化
+    init_CID();
     
     NRF_LOG_DEBUG("usbd_init() done");
 }

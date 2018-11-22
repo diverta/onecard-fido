@@ -51,12 +51,15 @@ U2F_VERSION_RES   version_res;
 //
 // 現在処理中のチャネルID、コマンドを保持
 //
-uint8_t  CMD;
-uint32_t CID;
+uint8_t  CMD_for_session;
+uint32_t CID_for_session;
+
+// HID INITコマンドで新規発行するHIDを保持
+static uint32_t CID_for_initial;
 
 void init_CID(void)
 {
-    CID = U2FHID_INITIAL_CID;
+    CID_for_initial = U2FHID_INITIAL_CID;
 }
 
 uint32_t get_CID(uint8_t *cid)
@@ -108,13 +111,13 @@ void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, 
 void generate_hid_init_response(void)
 {
     // 編集領域を初期化
-    u2f_response_length = sizeof(init_res);
-    memset(&init_res, 0x00, u2f_response_length);
+    memset(&init_res, 0x00, sizeof(init_res));
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
+    u2f_response_length = 17;
     memcpy(init_res.nonce, u2f_request_buffer, 8);
-    set_CID(init_res.cid, CID + 1);
+    set_CID(init_res.cid, ++CID_for_initial);
     init_res.version_id    = 2;
     init_res.version_major = 1;
     init_res.version_minor = 1;
@@ -128,10 +131,10 @@ void generate_hid_init_response(void)
 void generate_u2f_version_response(void)
 {
     // 編集領域を初期化
-    u2f_response_length = sizeof(version_res);
-    memset(&version_res, 0x00, u2f_response_length);
+    memset(&version_res, 0x00, sizeof(version_res));
 
     // レスポンスデータを編集 (8 bytes)
+    u2f_response_length = 8;
     strcpy((char *)version_res.version, "U2F_V2");
     uint16_t status_word = U2F_SW_NO_ERROR;
     version_res.status_word[0] = (status_word >> 8) & 0x00ff;
