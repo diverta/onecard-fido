@@ -149,6 +149,7 @@ SRC_FILES += \
   $(U2FLIB_DIR)/ble_u2f_user_presence.c \
   $(U2FLIB_DIR)/ble_u2f_util.c \
   $(U2FLIB_DIR)/ble_u2f_version.c \
+  $(HIDLIB_DIR)/hid_u2f_comm_interval_timer.c \
   $(HIDLIB_DIR)/hid_u2f_common.c \
   $(HIDLIB_DIR)/hid_u2f_receive.c \
   $(HIDLIB_DIR)/hid_u2f_send.c \

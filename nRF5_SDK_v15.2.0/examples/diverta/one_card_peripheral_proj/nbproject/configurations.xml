@@ -824,6 +824,8 @@
                    projectFiles="true"
                    root="../usbd_hid_u2f_lib">
       <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
@@ -3144,6 +3146,16 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
             ex="false"

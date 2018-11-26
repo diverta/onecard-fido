@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include "hid_u2f_common.h"
+#include "hid_u2f_comm_interval_timer.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_receive
@@ -41,11 +42,8 @@ bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size)
         }
         CMD_for_session = req->pkt.init.cmd;
         
-        // U2Fクライアントからの最初のリクエスト受領時は
-        // ステータスを設定（リクエスト受領開始）
-        if ((cid != U2FHID_BROADCAST) && (cid != U2FHID_RESERVED_CID)) {
-            //u2f_process_state_set(U2FPS_RECV_REQ);
-        }
+        // 処理タイムアウト監視を開始
+        hid_u2f_comm_interval_timer_start();
 
     } else {
         dump_hid_cont_packet("Recv ", size, req, payload_len - pos);
@@ -61,11 +59,9 @@ bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size)
     if (pos == payload_len) {
         u2f_request_length = payload_len;
         
-        // U2F　Helperからのレスポンス受領時の処理
-        // （タイマーキャンセル、LED消灯）
         uint32_t cid = get_CID(req->cid);
         if (cid == U2FHID_RESERVED_CID) {
-            //u2f_process_state_on_receive_response();
+            // TODO: U2F　Helperからのレスポンス受領時の処理
         }
         
         return true;

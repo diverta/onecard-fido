@@ -45,7 +45,7 @@
 #endif
 
 #define MANUFACTURER_NAME                   "Diverta,Inc"                           /**< Manufacturer. Will be passed to Device Information Service. */
-#define MODEL_NUM                           "One Card Peripheral"                   /**< Model number. Will be passed to Device Information Service. */
+#define MODEL_NUM                           "Diverta FIDO Authenticator"            /**< Model number. Will be passed to Device Information Service. */
 #define FW_REV                              "15.2.0"                                /**< firmware revision. Will be passed to Device Information Service. */
 
 #define APP_ADV_INTERVAL                    300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
@@ -284,20 +284,6 @@ static void services_init(void)
 
     // One Card固有のサービスを追加設定
     one_card_services_init();
-}
-
-
-/**@brief Function for initializing the sensor simulators.
- */
-static void sensor_simulator_init(void)
-{
-}
-
-
-/**@brief Function for starting application timers.
- */
-static void application_timers_start(void)
-{
 }
 
 
@@ -623,8 +609,7 @@ static void idle_state_handle(void)
     err_code = nrf_ble_lesc_request_handler();
     APP_ERROR_CHECK(err_code);
 
-    if (NRF_LOG_PROCESS() == false)
-    {
+    if (NRF_LOG_PROCESS() == false) {
         nrf_pwr_mgmt_run();
     }
 }
@@ -646,7 +631,6 @@ int main(void)
     gap_params_init();
     gatt_init();
     services_init();
-    sensor_simulator_init();
     conn_params_init();
     peer_manager_init();
 
@@ -658,16 +642,14 @@ int main(void)
     advertising_init();
 
     // Start execution.
-    NRF_LOG_INFO("One card peripheral application started.");
-    application_timers_start();
     advertising_start(erase_bonds);
 
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();
+    NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
     
     // Enter main loop.
-    for (;;)
-    {
+    for (;;) {
         // HID Input Reportを送信
         usbd_input_report_send();
         idle_state_handle();

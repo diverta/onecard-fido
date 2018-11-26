@@ -8,6 +8,7 @@
 
 #include "usbd_hid_u2f.h"
 #include "hid_u2f_common.h"
+#include "hid_u2f_comm_interval_timer.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_send
@@ -75,6 +76,8 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
         usbd_hid_u2f_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
     }
 
+    // 処理タイムアウト監視を停止
+    hid_u2f_comm_interval_timer_stop();
     return true;
 }
 
@@ -116,7 +119,12 @@ bool hid_u2f_send_response_packet(void)
         ret = send_hid_input_report(u2f_response_buffer, u2f_response_length);
     }
 
-    // ステータスを設定（レスポンス転送完了）
-    //u2f_process_state_set(U2FPS_XFER_RES);
     return ret;
+}
+
+void hid_u2f_send_error_response_packet(uint8_t error_code)
+{
+    // レスポンスデータを送信パケットに設定して送信
+    generate_u2f_error_response(error_code);
+    send_hid_input_report(u2f_response_buffer, u2f_response_length);
 }

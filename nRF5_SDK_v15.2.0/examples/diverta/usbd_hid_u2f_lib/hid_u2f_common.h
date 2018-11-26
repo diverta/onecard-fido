@@ -94,6 +94,7 @@ void     dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_m
 void     generate_hid_init_response(void);
 void     generate_u2f_version_response(void);
 void     generate_u2f_register_response(void);
+void     generate_u2f_error_response(uint8_t error_code);
 
 #ifdef __cplusplus
 }

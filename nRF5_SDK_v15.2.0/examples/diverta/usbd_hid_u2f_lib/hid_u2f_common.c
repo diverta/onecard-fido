@@ -40,8 +40,8 @@ typedef struct u2f_hid_init_response
 
 typedef struct u2f_version_response
 {
-    uint8_t  version[6];
-    uint8_t  status_word[2];
+    uint8_t version[6];
+    uint8_t status_word[2];
     uint8_t filler[56];
 } U2F_VERSION_RES;
 
@@ -149,4 +149,14 @@ void generate_u2f_register_response(void)
     // U2F Helperから転送されたレスポンスデータを設定
     u2f_response_length = u2f_request_length;
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
+}
+
+void generate_u2f_error_response(uint8_t error_code)
+{
+    // コマンドをU2F ERRORに変更
+    CMD_for_session = U2FHID_ERROR;
+    
+    // レスポンスデータを編集 (1 bytes)
+    u2f_response_length = 1;
+    u2f_response_buffer[0] = error_code;
 }

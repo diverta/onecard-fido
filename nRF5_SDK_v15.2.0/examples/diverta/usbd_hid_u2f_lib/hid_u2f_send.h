@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 bool hid_u2f_send_response_packet(void);
+void hid_u2f_send_error_response_packet(uint8_t error_code);
 
 #ifdef __cplusplus
 }
