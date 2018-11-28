@@ -16,7 +16,7 @@
 
 #include "hid_u2f_common.h"
 #include "hid_u2f_receive.h"
-#include "hid_u2f_send.h"
+#include "hid_u2f_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_hid_u2f
@@ -310,8 +310,6 @@ void usbd_input_report_send(void)
     }
     m_report_received = false;
     
-    // U2F HIDレスポンスデータを送信
-    //  内部で usbd_hid_u2f_frame_send を
-    //  フレーム数分呼出し
-    hid_u2f_send_response_packet();
+    // U2F HIDサービスを実行
+    hid_u2f_command_on_report_received();
 }

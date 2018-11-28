@@ -12,8 +12,7 @@
 extern "C" {
 #endif
 
-bool hid_u2f_send_response_packet(void);
-void hid_u2f_send_error_response_packet(uint8_t error_code);
+void send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length);
 
 #ifdef __cplusplus
 }

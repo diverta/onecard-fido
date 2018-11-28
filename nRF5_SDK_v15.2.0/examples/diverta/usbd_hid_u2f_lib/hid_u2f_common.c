@@ -140,14 +140,14 @@ void generate_u2f_version_response(void)
 
 void generate_u2f_register_response(void)
 {
-    // U2F Helperから転送されたレスポンスデータを設定
+    // これは仮コードです。
     u2f_response_length = u2f_request_length;
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
 }
 
 void generate_u2f_authenticate_response(void)
 {
-    // U2F Helperから転送されたレスポンスデータを設定
+    // これは仮コードです。
     u2f_response_length = u2f_request_length;
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
 }

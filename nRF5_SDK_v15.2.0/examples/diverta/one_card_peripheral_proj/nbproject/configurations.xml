@@ -43,6 +43,12 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="generic"
+                   displayName="generic"
+                   projectFiles="true"
+                   root="../../../components/libraries/usbd/class/hid/generic">
+      <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+    </logicalFolder>
     <logicalFolder name="makmorit"
                    displayName="makmorit"
                    projectFiles="true"
@@ -807,18 +813,6 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="usbd"
-                   displayName="usbd"
-                   projectFiles="true"
-                   root="../../../components/libraries/usbd">
-      <logicalFolder name="class" displayName="class" projectFiles="true">
-        <logicalFolder name="hid" displayName="hid" projectFiles="true">
-          <logicalFolder name="generic" displayName="generic" projectFiles="true">
-            <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
-      </logicalFolder>
-    </logicalFolder>
     <logicalFolder name="usbd_hid_u2f_lib"
                    displayName="usbd_hid_u2f_lib"
                    projectFiles="true"
@@ -826,6 +820,8 @@
       <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
@@ -849,6 +845,7 @@
     <Elem>../ble_u2f_lib</Elem>
     <Elem>../usbd_hid_u2f_lib</Elem>
     <Elem>../../../components/libraries/usbd</Elem>
+    <Elem>../u2f_lib</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -871,6 +868,22 @@
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
           <cTool>
+            <incDir>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+            </incDir>
             <preprocessorList>
               <Elem>BOARD_PCA10056</Elem>
               <Elem>NRF52840_XXAA</Elem>
@@ -3150,9 +3163,14 @@
       <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c"
             ex="false"
             tool="0"
+            flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_command.c"
+            ex="false"
+            tool="0"
             flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h"
+      <item path="../usbd_hid_u2f_lib/hid_u2f_command.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3160,26 +3178,19 @@
       <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_common.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../u2f_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_u2f_lib/hid_u2f_receive.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_receive.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_send.h" ex="false" tool="3" flavor2="0">
+      <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
       </item>
@@ -3735,19 +3746,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="usbd/class">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
           </incDir>
         </cTool>
       </folder>

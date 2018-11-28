@@ -57,7 +57,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
     }
 }
 
-static bool send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
+void send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
 {
     size_t  xfer_data_max;
     size_t  xfer_data_len;
@@ -65,7 +65,7 @@ static bool send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_da
 
     if (payload_length == 0) {
         // レスポンス長が０の場合は何もしない
-        return true;
+        return;
     }
     
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
@@ -83,51 +83,4 @@ static bool send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_da
 
     // 処理タイムアウト監視を停止
     hid_u2f_comm_interval_timer_stop();
-    return true;
-}
-
-bool hid_u2f_send_response_packet(void)
-{
-    uint32_t cid = CID_for_session;
-    uint8_t  cmd = CMD_for_session;
-    uint8_t  ins;
-    
-    // レスポンスデータを送信パケットに設定
-    switch (cmd) {
-        case U2FHID_INIT:
-            generate_hid_init_response();
-            break;
-        case U2FHID_MSG:
-            // u2f_request_buffer の先頭バイトを参照
-            //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = u2f_request_buffer[1];
-            if (ins == U2F_VERSION) {
-                generate_u2f_version_response();
-            } else if (ins == U2F_REGISTER) {
-                generate_u2f_register_response();
-            } else if (ins == U2F_AUTHENTICATE) {
-                generate_u2f_authenticate_response();
-            } else {
-                generate_u2f_none_response();
-            }
-            break;
-        default:
-            generate_u2f_none_response();
-            break;
-    }
-
-    // レスポンスデータを送信
-    if (send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length) == false) {
-        return false;
-    }
-
-    return true;
-}
-
-void hid_u2f_send_error_response_packet(uint8_t error_code)
-{
-    // コマンドをU2F ERRORに変更のうえ、
-    // レスポンスデータを送信パケットに設定し送信
-    generate_u2f_error_response(error_code);
-    send_hid_input_report(CID_for_session, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
 }

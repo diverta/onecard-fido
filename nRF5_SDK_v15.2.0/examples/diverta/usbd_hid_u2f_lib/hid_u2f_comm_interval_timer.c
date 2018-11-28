@@ -7,6 +7,7 @@
 #include "sdk_common.h"
 #include "app_timer.h"
 
+#include "hid_u2f_common.h"
 #include "hid_u2f_send.h"
 
 // for logging informations
@@ -26,7 +27,11 @@ static void hid_u2f_comm_interval_timeout_handler(void *p_context)
     // 直近のレスポンスから10秒を経過した場合、
     // USBポートにタイムアウトを通知する
     NRF_LOG_ERROR("USB HID communication timed out.");
-    hid_u2f_send_error_response_packet(0x7f);
+
+    // コマンドをU2F ERRORに変更のうえ、
+    // レスポンスデータを送信パケットに設定し送信
+    generate_u2f_error_response(0x7f);
+    send_hid_input_report(CID_for_session, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
 }
 
 static void hid_u2f_comm_interval_timer_init(void)

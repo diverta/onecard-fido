@@ -32,6 +32,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_command.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_init.h"
+#include "hid_u2f_command.h"
 
 //
 // U2F関連の共有情報
@@ -198,6 +199,9 @@ void one_card_peer_manager_init(void)
 {
     // FDS処理完了後のU2F処理を続行させる
     ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = fds_register(hid_u2f_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 

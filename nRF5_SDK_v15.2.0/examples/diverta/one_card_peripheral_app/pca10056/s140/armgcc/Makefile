@@ -5,7 +5,8 @@ TARGET_BOARD     := PCA10056
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
-U2FLIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
+U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
+BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_u2f_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
@@ -131,25 +132,26 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
-  $(U2FLIB_DIR)/ble_u2f_authenticate.c \
-  $(U2FLIB_DIR)/ble_u2f_comm_interval_timer.c \
-  $(U2FLIB_DIR)/ble_u2f_command.c \
-  $(U2FLIB_DIR)/ble_u2f_control_point.c \
-  $(U2FLIB_DIR)/ble_u2f_control_point_apdu.c \
-  $(U2FLIB_DIR)/ble_u2f_crypto.c \
-  $(U2FLIB_DIR)/ble_u2f_crypto_ecb.c \
-  $(U2FLIB_DIR)/ble_u2f_flash.c \
-  $(U2FLIB_DIR)/ble_u2f_init.c \
-  $(U2FLIB_DIR)/ble_u2f_pairing.c \
-  $(U2FLIB_DIR)/ble_u2f_processing_led.c \
-  $(U2FLIB_DIR)/ble_u2f_register.c \
-  $(U2FLIB_DIR)/ble_u2f_securekey.c \
-  $(U2FLIB_DIR)/ble_u2f_status.c \
-  $(U2FLIB_DIR)/ble_u2f_status_retry.c \
-  $(U2FLIB_DIR)/ble_u2f_user_presence.c \
-  $(U2FLIB_DIR)/ble_u2f_util.c \
-  $(U2FLIB_DIR)/ble_u2f_version.c \
+  $(BLELIB_DIR)/ble_u2f_authenticate.c \
+  $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \
+  $(BLELIB_DIR)/ble_u2f_command.c \
+  $(BLELIB_DIR)/ble_u2f_control_point.c \
+  $(BLELIB_DIR)/ble_u2f_control_point_apdu.c \
+  $(BLELIB_DIR)/ble_u2f_crypto.c \
+  $(BLELIB_DIR)/ble_u2f_crypto_ecb.c \
+  $(BLELIB_DIR)/ble_u2f_flash.c \
+  $(BLELIB_DIR)/ble_u2f_init.c \
+  $(BLELIB_DIR)/ble_u2f_pairing.c \
+  $(BLELIB_DIR)/ble_u2f_processing_led.c \
+  $(BLELIB_DIR)/ble_u2f_register.c \
+  $(BLELIB_DIR)/ble_u2f_securekey.c \
+  $(BLELIB_DIR)/ble_u2f_status.c \
+  $(BLELIB_DIR)/ble_u2f_status_retry.c \
+  $(BLELIB_DIR)/ble_u2f_user_presence.c \
+  $(BLELIB_DIR)/ble_u2f_util.c \
+  $(BLELIB_DIR)/ble_u2f_version.c \
   $(HIDLIB_DIR)/hid_u2f_comm_interval_timer.c \
+  $(HIDLIB_DIR)/hid_u2f_command.c \
   $(HIDLIB_DIR)/hid_u2f_common.c \
   $(HIDLIB_DIR)/hid_u2f_receive.c \
   $(HIDLIB_DIR)/hid_u2f_send.c \
@@ -305,6 +307,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(PROJ_DIR) \
   $(U2FLIB_DIR) \
+  $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
 
 # Libraries common to all targets
