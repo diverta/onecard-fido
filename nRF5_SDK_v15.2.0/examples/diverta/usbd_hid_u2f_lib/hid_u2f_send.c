@@ -41,7 +41,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
-        dump_hid_init_packet("Send ", hid_u2f_send_buffer_length, res, xfer_data_len);
+        dump_hid_init_packet("Send ", hid_u2f_send_buffer_length, res);
 
         // シーケンスを初期化
         seq = 0;
@@ -53,16 +53,21 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.cont.payload, payload_data + offset, xfer_data_len);
-        dump_hid_cont_packet("Send ", hid_u2f_send_buffer_length, res, xfer_data_len);
+        dump_hid_cont_packet("Send ", hid_u2f_send_buffer_length, res);
     }
 }
 
-static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
+static bool send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
 {
     size_t  xfer_data_max;
     size_t  xfer_data_len;
     size_t  remaining;
 
+    if (payload_length == 0) {
+        // レスポンス長が０の場合は何もしない
+        return true;
+    }
+    
     for (size_t i = 0; i < payload_length; i += xfer_data_len) {
         // データ長
         remaining = payload_length - i;
@@ -70,7 +75,7 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
         xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
         // パケットを生成
-        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, CID_for_session, CMD_for_session);
+        generate_hid_input_report(payload_data, payload_length, i, xfer_data_len, cid, cmd);
 
         // パケットをU2Fクライアントへ転送
         usbd_hid_u2f_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
@@ -83,48 +88,46 @@ static bool send_hid_input_report(uint8_t *payload_data, size_t payload_length)
 
 bool hid_u2f_send_response_packet(void)
 {
-    bool ret = true;
-    if (CMD_for_session == U2FHID_INIT) {
-        // レスポンスデータを送信パケットに設定
-        generate_hid_init_response();
-        if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
-            return false;
-        }
-    }
-
-    if (CMD_for_session == U2FHID_MSG) {
-        // u2f_request_buffer の先頭バイトを参照
-        //   [0]CLA [1]INS [2]P1 3[P2]
-        uint8_t ins = u2f_request_buffer[1];
-        if (ins == U2F_VERSION) {
-            // レスポンスデータを送信パケットに設定
-            generate_u2f_version_response();
-            if (send_hid_input_report(u2f_response_buffer, u2f_response_length) == false) {
-                return false;
-            }
-        }
-        if (ins == U2F_REGISTER || ins == U2F_AUTHENTICATE) {
-            // リクエストデータをU2F管理ツールに転送
-            //if (send_xfer_report(u2f_request_buffer, u2f_request_length) == false) {
-            //    return false;
-            //}
-            // ステータスを設定（リクエスト転送完了）
-            //u2f_process_state_set(U2FPS_XFER_REQ);
-        }
-    }
+    uint32_t cid = CID_for_session;
+    uint8_t  cmd = CMD_for_session;
+    uint8_t  ins;
     
-    if (CMD_for_session == U2FHID_ERROR) {
-        // レスポンスデータを送信パケットに設定
-        generate_u2f_register_response();
-        ret = send_hid_input_report(u2f_response_buffer, u2f_response_length);
+    // レスポンスデータを送信パケットに設定
+    switch (cmd) {
+        case U2FHID_INIT:
+            generate_hid_init_response();
+            break;
+        case U2FHID_MSG:
+            // u2f_request_buffer の先頭バイトを参照
+            //   [0]CLA [1]INS [2]P1 3[P2]
+            ins = u2f_request_buffer[1];
+            if (ins == U2F_VERSION) {
+                generate_u2f_version_response();
+            } else if (ins == U2F_REGISTER) {
+                generate_u2f_register_response();
+            } else if (ins == U2F_AUTHENTICATE) {
+                generate_u2f_authenticate_response();
+            } else {
+                generate_u2f_none_response();
+            }
+            break;
+        default:
+            generate_u2f_none_response();
+            break;
     }
 
-    return ret;
+    // レスポンスデータを送信
+    if (send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length) == false) {
+        return false;
+    }
+
+    return true;
 }
 
 void hid_u2f_send_error_response_packet(uint8_t error_code)
 {
-    // レスポンスデータを送信パケットに設定して送信
+    // コマンドをU2F ERRORに変更のうえ、
+    // レスポンスデータを送信パケットに設定し送信
     generate_u2f_error_response(error_code);
-    send_hid_input_report(u2f_response_buffer, u2f_response_length);
+    send_hid_input_report(CID_for_session, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
 }

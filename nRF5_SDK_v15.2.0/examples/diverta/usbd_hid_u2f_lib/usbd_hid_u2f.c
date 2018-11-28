@@ -23,6 +23,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug hid report
+#define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
+
 /**
  * @brief Enable USB power detection
  */
@@ -129,9 +132,11 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
     app_usbd_hid_report_buffer_t const *rep_buf = 
         app_usbd_hid_rep_buff_out_get(&p_hid->specific.inst.hid_inst);
 
+#if NRF_LOG_HEXDUMP_DEBUG_REPORT
     NRF_LOG_DEBUG("Output Report: %d bytes", rep_buf->size);
     NRF_LOG_HEXDUMP_DEBUG(rep_buf->p_buff, rep_buf->size);
-    
+#endif
+
     // Output reportから受信フレームを取得し、内部バッファに格納
     m_report_received = hid_u2f_receive_request_data(rep_buf->p_buff, rep_buf->size);
 }
@@ -287,9 +292,11 @@ void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
     app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
     ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, buffer_for_send, size);    
     APP_ERROR_CHECK(ret);
-    
+
+#if NRF_LOG_HEXDUMP_DEBUG_REPORT
     NRF_LOG_DEBUG("Input report: %d bytes", size);
     NRF_LOG_HEXDUMP_DEBUG(buffer_for_send, size);
+#endif
 }
 
 void usbd_input_report_send(void)

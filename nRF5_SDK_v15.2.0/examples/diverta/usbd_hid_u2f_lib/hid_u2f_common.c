@@ -88,23 +88,17 @@ size_t get_payload_length(U2F_HID_MSG *recv_msg)
 }
 
 
-void dump_hid_init_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, size_t remain)
+void dump_hid_init_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg)
 {
     size_t len = get_payload_length(recv_msg);
     NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
         msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
-
-    //size_t cnt = (remain < U2FHID_INIT_PAYLOAD_SIZE) ? remain : U2FHID_INIT_PAYLOAD_SIZE;
-    //NRF_LOG_HEXDUMP_DEBUG(recv_msg->pkt.init.payload, cnt);
 }
 
-void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg, size_t remain)
+void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg)
 {
     NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, SEQ: 0x%02x",
         msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
-
-    //size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
-    //NRF_LOG_HEXDUMP_DEBUG(recv_msg->pkt.cont.payload, cnt);
 }
 
 
@@ -151,11 +145,21 @@ void generate_u2f_register_response(void)
     memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
 }
 
+void generate_u2f_authenticate_response(void)
+{
+    // U2F Helperから転送されたレスポンスデータを設定
+    u2f_response_length = u2f_request_length;
+    memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
+}
+
+void generate_u2f_none_response(void)
+{
+    // レスポンスデータを編集 (0 bytes)
+    u2f_response_length = 0;
+}
+
 void generate_u2f_error_response(uint8_t error_code)
 {
-    // コマンドをU2F ERRORに変更
-    CMD_for_session = U2FHID_ERROR;
-    
     // レスポンスデータを編集 (1 bytes)
     u2f_response_length = 1;
     u2f_response_buffer[0] = error_code;
