@@ -35,6 +35,11 @@ static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
 // ステータスワードを保持
 static uint16_t status_word;
 
+uint16_t u2f_register_status_word(void)
+{
+    return status_word;
+}
+
 bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
 {
     // 開始ログを出力
@@ -145,7 +150,7 @@ uint32_t u2f_securekey_cert_length(void)
     return cert_buffer_length;
 }
 
-static bool create_registration_response_message(uint8_t *response_message_buffer, size_t *response_length)
+static bool create_registration_response_message(uint8_t *response_message_buffer, size_t *response_length, uint32_t apdu_le)
 {
     // メッセージを格納する領域を確保
     // 確保領域は0で初期化
@@ -180,13 +185,13 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
         u2f_crypto_signature_data_size());
     offset += u2f_crypto_signature_data_size();
 
-    //if (p_u2f_context->p_apdu->Le < offset) {
-    //    // Leを確認し、メッセージのバイト数がオーバーする場合
-    //    // エラーレスポンスを送信するよう指示
-    //    NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
-    //    p_u2f_context->p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
-    //    return false;
-    //}
+    if (apdu_le < offset) {
+        // Leを確認し、メッセージのバイト数がオーバーする場合
+        // エラーレスポンスを送信するよう指示
+        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, apdu_le);
+        status_word = U2F_SW_WRONG_LENGTH;
+        return false;
+    }
 
     // ステータスワード
     ble_u2f_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
@@ -211,7 +216,7 @@ static void convert_private_key_endian(void)
     }
 }
 
-bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length)
+bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length, uint32_t apdu_le)
 {
     // エラー時のレスポンスを「予期しないエラー」に設定
     status_word = 0x9405;
@@ -235,7 +240,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
         return false;
     }
 
-    if (create_registration_response_message(response_buffer, response_length) == false) {
+    if (create_registration_response_message(response_buffer, response_length, apdu_le) == false) {
         // レスポンスメッセージ生成
         return false;
     }

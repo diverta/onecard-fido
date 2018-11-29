@@ -109,9 +109,56 @@ static void u2f_version_do_process(void)
     send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
 }
 
+static void send_u2f_hid_error_report(uint16_t status_word)
+{
+    // エラーステータスワードをビッグエンディアンで格納
+    u2f_response_buffer[0] = (status_word >> 8) & 0x00ff;
+    u2f_response_buffer[1] = (status_word >> 0) & 0x00ff;
+    u2f_response_length = 2;
+    
+    // エラーステータスワードを送信
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
+}
+
 static void u2f_register_do_process(void)
 {
-    // TODO: これは仮コードです。
+    if (u2f_flash_keydata_read() == false) {
+        // 秘密鍵と証明書をFlash ROMから読込
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_u2f_hid_error_report(0x9401);
+        return;
+    }
+
+    if (u2f_flash_keydata_available() == false) {
+        // 秘密鍵と証明書がFlash ROMに登録されていない場合
+        // エラーレスポンスを生成して戻す
+        send_u2f_hid_error_report(0x9402);
+        return;
+    }
+    
+    // キーハンドルを新規生成
+    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
+    uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
+    u2f_register_generate_keyhandle(p_appid_hash);
+
+    u2f_response_length = sizeof(u2f_response_buffer);
+    if (u2f_register_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
+        // U2Fのリクエストデータを取得し、
+        // レスポンス・メッセージを生成
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_u2f_hid_error_report(u2f_register_status_word());
+        return;
+    }
+
+    // トークンカウンターレコードを追加
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    if (u2f_register_add_token_counter(p_appid_hash) == false) {
+        // 処理NGの場合、エラーレスポンスを生成して終了
+        send_u2f_hid_error_report(0x9403);
+    }
 }
 
 static void u2f_authenticate_do_process(void)
