@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+
 // U2F HIDメッセージ長に関する定義
 #define U2FHID_PACKET_SIZE 64
 #define U2FHID_INIT_PAYLOAD_SIZE (U2FHID_PACKET_SIZE-7)
@@ -38,15 +40,27 @@ extern "C" {
 #define U2FHID_RESERVED_CID 0x00000000
 #define U2FHID_INITIAL_CID  0x01003300
 
-// U2F native commands
-#define U2F_REGISTER        0x01
-#define U2F_AUTHENTICATE    0x02
-#define U2F_VERSION         0x03
-#define U2F_VENDOR_FIRST    0xc0
-#define U2F_VENDOR_LAST     0xff
+// CIDの長さ（4バイト）
+#define CID_LEN 4
 
-// Command status responses
-#define U2F_SW_NO_ERROR     0x9000
+// リクエストデータに含まれるHIDヘッダーを保持
+typedef struct {
+    uint32_t CID;
+    uint8_t  CMD;
+    uint32_t LEN;
+    uint8_t  SEQ;
+
+    // リクエストデータの検査中に
+    // 確認されたエラーを保持
+    uint8_t ERROR;
+
+    // リクエストデータの検査中に
+    // 設定されたステータスワードを保持
+    uint16_t STATUS_WORD;
+
+    // 後続リクエストがあるかどうかを保持
+    bool CONT;
+} HID_HEADER_T;
 
 // U2F HIDメッセージ構造体
 //   固定長（64バイト）
@@ -66,24 +80,15 @@ typedef struct u2f_hid_msg {
     } pkt;
 } U2F_HID_MSG;
 
-// U2F HIDリクエストデータ格納領域
-extern uint8_t u2f_request_buffer[1024];
-extern size_t  u2f_request_length;
-
 // U2F HIDレスポンスデータ格納領域
 extern uint8_t u2f_response_buffer[1024];
 extern size_t  u2f_response_length;
 
 //
-// 現在処理中のチャネルID、コマンドを保持
-//
-extern uint8_t  CMD_for_session;
-extern uint32_t CID_for_session;
-
-//
 // 関数群
 //
 void     init_CID(void);
+uint32_t get_incremented_CID(void);
 uint32_t get_CID(uint8_t *cid);
 void     set_CID(uint8_t *cid, uint32_t _CID);
 size_t   get_payload_length(U2F_HID_MSG *recv_msg);
@@ -91,11 +96,6 @@ size_t   get_payload_length(U2F_HID_MSG *recv_msg);
 void     dump_hid_init_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg);
 void     dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg);
 
-void     generate_hid_init_response(void);
-void     generate_u2f_version_response(void);
-void     generate_u2f_register_response(void);
-void     generate_u2f_authenticate_response(void);
-void     generate_u2f_none_response(void);
 void     generate_u2f_error_response(uint8_t error_code);
 
 #ifdef __cplusplus

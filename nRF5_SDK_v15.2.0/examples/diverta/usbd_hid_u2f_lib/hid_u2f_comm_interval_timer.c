@@ -8,6 +8,7 @@
 #include "app_timer.h"
 
 #include "hid_u2f_common.h"
+#include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
 // for logging informations
@@ -31,7 +32,8 @@ static void hid_u2f_comm_interval_timeout_handler(void *p_context)
     // コマンドをU2F ERRORに変更のうえ、
     // レスポンスデータを送信パケットに設定し送信
     generate_u2f_error_response(0x7f);
-    send_hid_input_report(CID_for_session, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    send_hid_input_report(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
 }
 
 static void hid_u2f_comm_interval_timer_init(void)

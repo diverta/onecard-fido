@@ -17,29 +17,7 @@ extern "C" {
 
 // FIDOアライアンス提供の共通ヘッダー
 // "u2f.h"より抜粋
-#define U2F_APPID_SIZE          32
-#define U2F_CHAL_SIZE           32
-
-#define U2F_POINT_UNCOMPRESSED  0x04
-
-#define U2F_REGISTER            0x01
-#define U2F_AUTHENTICATE        0x02
-#define U2F_VERSION             0x03
-
-#define U2F_VENDOR_FIRST        0x40
-#define U2F_VENDOR_LAST         0xbf
-
-#define U2F_AUTH_ENFORCE        0x03
-#define U2F_AUTH_CHECK_ONLY     0x07
-#define U2F_AUTH_FLAG_TUP       0x01
-
-#define U2F_SW_NO_ERROR                 0x9000
-#define U2F_SW_WRONG_DATA               0x6A80
-#define U2F_SW_CONDITIONS_NOT_SATISFIED 0x6985
-#define U2F_SW_COMMAND_NOT_ALLOWED      0x6986
-#define U2F_SW_INS_NOT_SUPPORTED        0x6D00
-#define U2F_SW_WRONG_LENGTH             0x6700
-#define U2F_SW_CLA_NOT_SUPPORTED        0x6E00
+#include "u2f.h"
 
 // BLEパケット項目のサイズ
 #define OPCODE_LENGTH 1
@@ -62,18 +40,6 @@ extern "C" {
 
 // BLE U2FサービスのUUID
 #define BLE_UUID_U2F_SERVICE 0xFFFD
-
-// U2Fコマンドの識別用
-#define U2F_COMMAND_PING      0x81
-#define U2F_COMMAND_KEEPALIVE 0x82
-#define U2F_COMMAND_MSG       0x83
-#define U2F_COMMAND_ERROR     0xbf
-
-// U2Fエラーステータスの識別用
-#define U2F_ERR_INVALID_CMD 0x01
-#define U2F_ERR_INVALID_LEN 0x03
-#define U2F_ERR_INVALID_SEQ 0x04
-#define U2F_ERR_OTHER       0x7f
 
 // 初期設定コマンド群(鍵・証明書の新規導入用等)
 #define U2F_INS_INSTALL_INITBOND 0x41
@@ -125,17 +91,6 @@ typedef struct {
     bool CONT;
 } BLE_HEADER_T;
 
-// リクエストデータに含まれるAPDU項目を保持
-typedef struct {
-    uint8_t  CLA;
-    uint8_t  INS;
-    uint8_t  P1;
-    uint8_t  P2;
-    uint32_t Lc;
-    uint8_t *data;
-    uint32_t data_length;
-    uint32_t Le;
-} U2F_APDU_T;
 
 // コマンドバッファに書き込まれた
 // 文字列を識別するための定義

@@ -12,6 +12,11 @@
 extern "C" {
 #endif
 
+#include "u2f.h"
+
+HID_HEADER_T *hid_u2f_receive_hid_header(void);
+U2F_APDU_T   *hid_u2f_receive_apdu(void);
+
 bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size);
 
 #ifdef __cplusplus

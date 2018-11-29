@@ -6,53 +6,22 @@
  */
 #include <stdio.h>
 #include "hid_u2f_common.h"
+#include "u2f.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_common
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug request data
+#define NRF_LOG_HEXDUMP_DEBUG_PACKET 0
+
 //
-// U2Fリクエスト／レスポンスデータ格納領域
+// U2Fレスポンスデータ格納領域
 // （コマンド共通）
 //
-uint8_t u2f_request_buffer[1024];
-size_t  u2f_request_length;
-
 uint8_t u2f_response_buffer[1024];
 size_t  u2f_response_length;
-
-//
-// コマンド別のレスポンスデータ編集領域
-//   固定長（64バイト）
-//
-typedef struct u2f_hid_init_response
-{
-    uint8_t nonce[8];
-    uint8_t cid[4];
-    uint8_t version_id;
-    uint8_t version_major;
-    uint8_t version_minor;
-    uint8_t version_build;
-    uint8_t cflags;
-    uint8_t filler[47];
-} U2F_HID_INIT_RES;
-
-typedef struct u2f_version_response
-{
-    uint8_t version[6];
-    uint8_t status_word[2];
-    uint8_t filler[56];
-} U2F_VERSION_RES;
-
-U2F_HID_INIT_RES  init_res;
-U2F_VERSION_RES   version_res;
-
-//
-// 現在処理中のチャネルID、コマンドを保持
-//
-uint8_t  CMD_for_session;
-uint32_t CID_for_session;
 
 // HID INITコマンドで新規発行するHIDを保持
 static uint32_t CID_for_initial;
@@ -60,6 +29,11 @@ static uint32_t CID_for_initial;
 void init_CID(void)
 {
     CID_for_initial = U2FHID_INITIAL_CID;
+}
+
+uint32_t get_incremented_CID(void)
+{
+    return ++CID_for_initial;
 }
 
 uint32_t get_CID(uint8_t *cid)
@@ -93,69 +67,18 @@ void dump_hid_init_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg)
     size_t len = get_payload_length(recv_msg);
     NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
         msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
+#if NRF_LOG_HEXDUMP_DEBUG_PACKET
+    NRF_LOG_HEXDUMP_DEBUG(recv_msg, sizeof(U2F_HID_MSG));
+#endif
 }
 
 void dump_hid_cont_packet(char *msg_header, size_t size, U2F_HID_MSG *recv_msg)
 {
     NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, SEQ: 0x%02x",
         msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
-}
-
-
-void generate_hid_init_response(void)
-{
-    // 編集領域を初期化
-    memset(&init_res, 0x00, sizeof(init_res));
-
-    // レスポンスデータを編集 (17 bytes)
-    //   CIDはインクリメントされたものを設定
-    u2f_response_length = 17;
-    memcpy(init_res.nonce, u2f_request_buffer, 8);
-    set_CID(init_res.cid, ++CID_for_initial);
-    init_res.version_id    = 2;
-    init_res.version_major = 1;
-    init_res.version_minor = 1;
-    init_res.version_build = 0;
-    init_res.cflags        = 0;
-    
-    // レスポンスを格納
-    memcpy(u2f_response_buffer, &init_res, u2f_response_length);
-}
-
-void generate_u2f_version_response(void)
-{
-    // 編集領域を初期化
-    memset(&version_res, 0x00, sizeof(version_res));
-
-    // レスポンスデータを編集 (8 bytes)
-    u2f_response_length = 8;
-    strcpy((char *)version_res.version, "U2F_V2");
-    uint16_t status_word = U2F_SW_NO_ERROR;
-    version_res.status_word[0] = (status_word >> 8) & 0x00ff;
-    version_res.status_word[1] = status_word & 0x00ff;
-    
-    // レスポンスを格納
-    memcpy(u2f_response_buffer, &version_res, u2f_response_length);
-}
-
-void generate_u2f_register_response(void)
-{
-    // これは仮コードです。
-    u2f_response_length = u2f_request_length;
-    memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
-}
-
-void generate_u2f_authenticate_response(void)
-{
-    // これは仮コードです。
-    u2f_response_length = u2f_request_length;
-    memcpy(u2f_response_buffer, u2f_request_buffer, u2f_request_length);
-}
-
-void generate_u2f_none_response(void)
-{
-    // レスポンスデータを編集 (0 bytes)
-    u2f_response_length = 0;
+#if NRF_LOG_HEXDUMP_DEBUG_PACKET
+    NRF_LOG_HEXDUMP_DEBUG(recv_msg, sizeof(U2F_HID_MSG));
+#endif
 }
 
 void generate_u2f_error_response(uint8_t error_code)
