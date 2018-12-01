@@ -122,6 +122,16 @@ static void send_u2f_hid_error_report(uint16_t status_word)
     send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
 }
 
+static uint8_t *get_appid_hash_from_register_apdu(void)
+{
+    // U2F RegisterリクエストAPDUから
+    // appid_hash を取り出す
+    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
+    
+    return p_appid_hash;
+}
+
 static void u2f_register_do_process(void)
 {
     if (u2f_flash_keydata_read() == false) {
@@ -139,11 +149,11 @@ static void u2f_register_do_process(void)
     }
     
     // キーハンドルを新規生成
-    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
-    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
-    uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
+    uint8_t *p_appid_hash = get_appid_hash_from_register_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
 
+    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
     u2f_response_length = sizeof(u2f_response_buffer);
     if (u2f_register_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
@@ -161,7 +171,43 @@ static void u2f_register_do_process(void)
     }
 }
 
+static void send_register_response(void)
+{
+    // U2F Register Responseを送信
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
+}
+
+static void u2f_register_send_response(fds_evt_t const *const p_evt)
+{
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_u2f_hid_error_report(0x9404);
+        NRF_LOG_ERROR("u2f_register abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("u2f_register retry: FDS GC done ");
+        uint8_t *p_appid_hash = get_appid_hash_from_register_apdu();
+        u2f_register_add_token_counter(p_appid_hash);
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // レスポンスを生成してU2Fクライアントに戻す
+        send_register_response();
+        NRF_LOG_DEBUG("u2f_register end ");
+    }
+}
+
 static void u2f_authenticate_do_process(void)
+{
+    // TODO: これは仮コードです。
+}
+
+static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
 {
     // TODO: これは仮コードです。
 }
@@ -198,6 +244,23 @@ void hid_u2f_command_on_report_received(void)
 
 void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
+    uint8_t  ins;
+
     // Flash ROM更新後に行われる後続処理を実行
-    UNUSED_PARAMETER(p_evt);
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    switch (cmd) {
+        case U2FHID_MSG:
+            // u2f_request_buffer の先頭バイトを参照
+            //   [0]CLA [1]INS [2]P1 3[P2]
+            ins = hid_u2f_receive_apdu()->INS;
+            if (ins == U2F_REGISTER) {
+                u2f_register_send_response(p_evt);
+                
+            } else if (ins == U2F_AUTHENTICATE) {
+                u2f_authenticate_send_response(p_evt);
+            }
+            break;
+        default:
+            break;
+    }
 }

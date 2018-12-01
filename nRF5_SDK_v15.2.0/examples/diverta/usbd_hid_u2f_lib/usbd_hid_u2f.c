@@ -293,6 +293,8 @@ void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
     ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, buffer_for_send, size);    
     APP_ERROR_CHECK(ret);
 
+    m_report_pending = true;
+    
 #if NRF_LOG_HEXDUMP_DEBUG_REPORT
     NRF_LOG_DEBUG("Input report: %d bytes", size);
     NRF_LOG_HEXDUMP_DEBUG(buffer_for_send, size);
