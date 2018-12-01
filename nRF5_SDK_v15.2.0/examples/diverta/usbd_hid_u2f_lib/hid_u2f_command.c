@@ -60,6 +60,14 @@ bool hid_u2f_command_on_mainsw_long_push_event(void)
     return true;
 }
 
+static void send_u2f_response(void)
+{
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    hid_u2f_send_setup(cid, cmd, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_input_report();
+}
+
 static void u2f_hid_init_do_process(void)
 {
     // 編集領域を初期化
@@ -83,9 +91,7 @@ static void u2f_hid_init_do_process(void)
     memcpy(u2f_response_buffer, &init_res, u2f_response_length);
 
     // レスポンスを転送
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
+    send_u2f_response();
 }
 
 static void u2f_version_do_process(void)
@@ -104,9 +110,7 @@ static void u2f_version_do_process(void)
     memcpy(u2f_response_buffer, &version_res, u2f_response_length);
 
     // レスポンスを転送
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
+    send_u2f_response();
 }
 
 static void send_u2f_hid_error_report(uint16_t status_word)
@@ -117,9 +121,7 @@ static void send_u2f_hid_error_report(uint16_t status_word)
     u2f_response_length = 2;
     
     // エラーステータスワードを送信
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
+    send_u2f_response();
 }
 
 static uint8_t *get_appid_hash_from_register_apdu(void)
@@ -171,14 +173,6 @@ static void u2f_register_do_process(void)
     }
 }
 
-static void send_register_response(void)
-{
-    // U2F Register Responseを送信
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    send_hid_input_report(cid, cmd, u2f_response_buffer, u2f_response_length);
-}
-
 static void u2f_register_send_response(fds_evt_t const *const p_evt)
 {
     if (p_evt->result != FDS_SUCCESS) {
@@ -197,7 +191,7 @@ static void u2f_register_send_response(fds_evt_t const *const p_evt)
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
-        send_register_response();
+        send_u2f_response();
         NRF_LOG_DEBUG("u2f_register end ");
     }
 }

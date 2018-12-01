@@ -16,6 +16,7 @@
 
 #include "hid_u2f_common.h"
 #include "hid_u2f_receive.h"
+#include "hid_u2f_send.h"
 #include "hid_u2f_command.h"
 
 // for logging informations
@@ -160,6 +161,7 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
         {
+            hid_u2f_send_input_report_complete();
             m_report_pending = false;
             break;
         }

@@ -33,7 +33,8 @@ static void hid_u2f_comm_interval_timeout_handler(void *p_context)
     // レスポンスデータを送信パケットに設定し送信
     generate_u2f_error_response(0x7f);
     uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    send_hid_input_report(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_input_report();
 }
 
 static void hid_u2f_comm_interval_timer_init(void)

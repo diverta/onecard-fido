@@ -12,7 +12,9 @@
 extern "C" {
 #endif
 
-void send_hid_input_report(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length);
+void hid_u2f_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length);
+void hid_u2f_send_input_report();
+void hid_u2f_send_input_report_complete();
 
 #ifdef __cplusplus
 }
