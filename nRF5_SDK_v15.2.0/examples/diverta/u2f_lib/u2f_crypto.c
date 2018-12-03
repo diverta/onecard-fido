@@ -40,6 +40,58 @@ static size_t signature_size;
 static uint8_t signature_data_buffer[SIGNATURE_BASE_BUFFER_LENGTH];
 static size_t  signature_data_size;
 
+//
+// For research 
+//   署名検証不正の件に関する調査用
+//   See: https://github.com/diverta/onecard-fido/pull/95
+//
+#define DEBUG_VERIFY_SIGN false
+#if DEBUG_VERIFY_SIGN
+static uint8_t pk[64] = {
+    0x43, 0xa0, 0xd8, 0xad, 0x68, 0x27, 0x25, 0xc4, 0xec, 0x66, 0xd6, 0xb8, 0x3e, 0x11, 0xcd, 0x00, 
+    0x3c, 0xed, 0x8f, 0x78, 0xd1, 0x48, 0xc7, 0x9d, 0xe4, 0x7f, 0xab, 0x53, 0x2e, 0x0e, 0xbb, 0x1e,
+    0xf4, 0xb3, 0xa8, 0xed, 0x71, 0xd4, 0x2a, 0x39, 0x54, 0x9d, 0x92, 0x84, 0x8d, 0xb9, 0x7e, 0xdf, 
+    0x85, 0xa0, 0x7b, 0xa2, 0x2a, 0x06, 0x93, 0xaa, 0x36, 0xa6, 0xba, 0x41, 0x75, 0x50, 0xed, 0xe8
+};
+static uint8_t public_key_be[64];
+static nrf_crypto_ecc_public_key_t public_key_for_verify;
+static nrf_crypto_ecdsa_verify_context_t verify_context = {0};
+    
+void verify_sign(void) 
+{
+    ret_code_t err_code;
+
+    // 署名に使用する秘密鍵（32バイト）を取得
+    //   SDK 15以降はビッグエンディアンで引き渡す必要あり
+    for (int i = 0; i < 64; i++) {
+        public_key_be[i] = pk[63 - i];
+    }
+
+    err_code = nrf_crypto_ecc_public_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info,
+        &public_key_for_verify, 
+        public_key_be, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
+    NRF_LOG_DEBUG("u2f_crypto_sign: nrf_crypto_ecc_public_key_from_raw() returns 0x%02x ", err_code);
+    APP_ERROR_CHECK(err_code);
+
+    // for debug
+    NRF_LOG_DEBUG("hash_digest: ");
+    NRF_LOG_HEXDUMP_INFO(hash_digest, sizeof(hash_digest));
+
+    // ハッシュデータと秘密鍵により、署名データ作成
+    size_t digest_size = sizeof(hash_digest);
+    err_code = nrf_crypto_ecdsa_verify(
+        &verify_context, 
+        &public_key_for_verify,
+        hash_digest,
+        digest_size,
+        signature, 
+        signature_size);
+    NRF_LOG_DEBUG("u2f_crypto_sign: nrf_crypto_ecdsa_verify() returns 0x%02x ", err_code);
+}
+#endif
+
 uint8_t *u2f_crypto_signature_data_buffer(void)
 {
     return signature_data_buffer;
@@ -116,7 +168,7 @@ uint32_t u2f_crypto_sign(uint8_t *private_key_be)
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成
     uint8_t *signature_base_buffer = signature_data_buffer;
-    uint16_t signature_base_buffer_length = SIGNATURE_BASE_BUFFER_LENGTH;
+    uint16_t signature_base_buffer_length = signature_data_size;
     size_t digest_size = sizeof(hash_digest);
     err_code = nrf_crypto_hash_calculate(
         &hash_context, 
@@ -148,6 +200,11 @@ uint32_t u2f_crypto_sign(uint8_t *private_key_be)
         signature, 
         &signature_size);
     NRF_LOG_DEBUG("u2f_crypto_sign: nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
+
+#if DEBUG_VERIFY_SIGN
+    // 署名の妥当性検証を行う
+    verify_sign();
+#endif
 
     NRF_LOG_DEBUG("u2f_crypto_sign end ");
     return NRF_SUCCESS;
