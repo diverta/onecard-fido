@@ -132,6 +132,7 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
+  $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_control_point_apdu.c \
   $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_crypto_ecb.c \

@@ -1,7 +1,7 @@
 #ifndef U2F_REGISTER_H__
 #define U2F_REGISTER_H__
 
-#include "fds.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

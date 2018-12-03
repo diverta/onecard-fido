@@ -8,6 +8,7 @@
 
 #include "u2f_flash.h"
 #include "u2f_crypto_ecb.h"
+#include "u2f_authenticate.h"
 #include "u2f_register.h"
 #include "usbd_hid_u2f.h"
 #include "hid_u2f_common.h"
@@ -21,6 +22,12 @@ NRF_LOG_MODULE_REGISTER();
 
 // for U2F_CHAL_SIZE
 #include "u2f.h"
+
+// ユーザー所在確認が必要かどうかを保持
+static bool is_tup_needed = false;
+
+// ユーザー所在確認がボタン押下により行われたかどうかを保持
+static bool is_user_presence = false;
 
 //
 // コマンド別のレスポンスデータ編集領域
@@ -47,6 +54,9 @@ typedef struct u2f_version_response
 
 U2F_HID_INIT_RES  init_res;
 U2F_VERSION_RES   version_res;
+
+// 関数プロトタイプ
+static void u2f_authenticate_resume_process(void);
 
 bool hid_u2f_command_on_mainsw_event(void)
 {
@@ -199,8 +209,104 @@ static void u2f_register_send_response(fds_evt_t const *const p_evt)
 
 static void u2f_authenticate_do_process(void)
 {
-    // TODO: これは仮コードです。
+    if (is_tup_needed) {
+        if (is_user_presence) {
+            // ユーザー所在確認が行われていた場合
+            // (＝ユーザーによるボタン押下が行われた場合)
+            // 後続のレスポンス送信処理を実行
+            u2f_authenticate_resume_process();
+            
+        } else {
+            // ユーザー所在確認まちの場合は
+            // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
+            send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
+        }
+        return;
+    }
+    
+    // ユーザー所在確認関連フラグをクリア
+    is_tup_needed = false;
+    is_user_presence = false;
+    
     NRF_LOG_INFO("U2F Authenticate start");
+
+    if (u2f_flash_keydata_read() == false) {
+        // 秘密鍵と証明書をFlash ROMから読込
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_u2f_hid_error_report(0x9501);
+        return;
+    }
+
+    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
+        // リクエストデータのキーハンドルを復号化し、
+        // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
+        // エラーレスポンス(0x6A80)を生成して戻す
+        NRF_LOG_ERROR("U2F Authenticate: invalid keyhandle ");
+        send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
+        return;
+    }
+
+    // appIdHashをリクエストデータから取得し、
+    // それに紐づくトークンカウンターを検索
+    uint8_t *p_appid_hash = u2f_authenticate_get_appid(apdu_data);
+    if (u2f_flash_token_counter_read(p_appid_hash) == false) {
+        // appIdHashに紐づくトークンカウンターがない場合は
+        // エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("U2F Authenticate: token counter not found ");
+        send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
+        return;
+    }
+    NRF_LOG_DEBUG("U2F Authenticate: token counter value=%d ", u2f_flash_token_counter_value());
+
+    // control byte (P1) を参照
+    uint8_t control_byte = hid_u2f_receive_apdu()->P1;
+    if (control_byte == 0x07) {
+        // 0x07 ("check-only") の場合はここで終了し
+        // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
+        send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
+        return;
+    }
+    /*
+    if (control_byte == 0x03) {
+        // 0x03 ("enforce-user-presence-and-sign")
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        is_user_presence = false;
+        send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
+        return;
+    }
+     */
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    u2f_authenticate_resume_process();
+}
+
+static void u2f_authenticate_resume_process(void)
+{
+    // U2Fのリクエストデータを取得し、
+    // レスポンス・メッセージを生成
+    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
+    u2f_response_length = sizeof(u2f_response_buffer);
+    if (u2f_authenticate_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
+        // U2Fのリクエストデータを取得し、
+        // レスポンス・メッセージを生成
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_u2f_hid_error_report(u2f_authenticate_status_word());
+        return;
+    }
+
+    // appIdHash、トークンカウンターを取得
+    uint8_t *p_appid_hash = u2f_authenticate_get_appid(apdu_data);
+    uint32_t token_counter = u2f_flash_token_counter_value();
+    
+    // appIdHashをキーとして、
+    // トークンカウンターレコードを更新
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    if (u2f_authenticate_update_token_counter(p_appid_hash, token_counter) == false) {
+        send_u2f_hid_error_report(0x9502);
+    }
 }
 
 static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)

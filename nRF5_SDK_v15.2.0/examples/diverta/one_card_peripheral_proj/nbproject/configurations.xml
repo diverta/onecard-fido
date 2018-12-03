@@ -819,6 +819,8 @@
                    projectFiles="true"
                    root="../u2f_lib">
       <itemPath>../u2f_lib/u2f.h</itemPath>
+      <itemPath>../u2f_lib/u2f_authenticate.c</itemPath>
+      <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
       <itemPath>../u2f_lib/u2f_control_point_apdu.c</itemPath>
       <itemPath>../u2f_lib/u2f_control_point_apdu.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
@@ -2952,6 +2954,10 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../u2f_lib/u2f_authenticate.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../u2f_lib/u2f_control_point_apdu.c"
             ex="false"
