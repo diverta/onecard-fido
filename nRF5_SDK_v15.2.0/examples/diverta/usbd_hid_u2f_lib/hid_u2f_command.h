@@ -13,6 +13,7 @@ extern "C" {
 
 void hid_u2f_command_on_report_received(void);
 void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt);
+void hid_u2f_command_on_report_sent(void);
 
 bool hid_u2f_command_on_mainsw_event(void);
 bool hid_u2f_command_on_mainsw_long_push_event(void);

@@ -136,6 +136,8 @@ static uint8_t *get_appid_hash_from_register_apdu(void)
 
 static void u2f_register_do_process(void)
 {
+    NRF_LOG_INFO("U2F Register start");
+
     if (u2f_flash_keydata_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
@@ -192,13 +194,13 @@ static void u2f_register_send_response(fds_evt_t const *const p_evt)
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_u2f_response();
-        NRF_LOG_DEBUG("u2f_register end ");
     }
 }
 
 static void u2f_authenticate_do_process(void)
 {
     // TODO: これは仮コードです。
+    NRF_LOG_INFO("U2F Authenticate start");
 }
 
 static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
@@ -252,6 +254,29 @@ void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
                 
             } else if (ins == U2F_AUTHENTICATE) {
                 u2f_authenticate_send_response(p_evt);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void hid_u2f_command_on_report_sent(void)
+{
+    uint8_t  ins;
+
+    // 全フレーム送信後に行われる後続処理を実行
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    switch (cmd) {
+        case U2FHID_MSG:
+            // u2f_request_buffer の先頭バイトを参照
+            //   [0]CLA [1]INS [2]P1 3[P2]
+            ins = hid_u2f_receive_apdu()->INS;
+            if (ins == U2F_REGISTER) {
+                NRF_LOG_INFO("U2F Register end");
+                
+            } else if (ins == U2F_AUTHENTICATE) {
+                NRF_LOG_INFO("U2F Authenticate end");
             }
             break;
         default:

@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "usbd_hid_u2f.h"
+#include "hid_u2f_command.h"
 #include "hid_u2f_common.h"
 #include "hid_u2f_comm_interval_timer.h"
 
@@ -20,19 +21,14 @@ static uint8_t hid_u2f_send_buffer[U2FHID_PACKET_SIZE];
 static size_t  hid_u2f_send_buffer_length;
 
 static struct {
-    // 送信済みバイト数、シーケンスを保持
-    size_t   sent_length;
-    uint8_t  sequence;
-
     // 送信用ヘッダーに格納するコマンド、データ長、
     // 送信データを保持
     uint32_t cid;
     uint8_t  cmd;
     uint8_t *payload_data;
     size_t   payload_length;
-
-    // 送信がビジー状態かどうかを保持するフラグ
-    bool     busy;
+    // 送信済みバイト数を保持
+    size_t   sent_length;
 } send_info_t;
 
 static void generate_hid_input_report(uint8_t *payload_data, size_t payload_length, 
@@ -81,12 +77,8 @@ void hid_u2f_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t
     send_info_t.payload_data = payload_data;
     send_info_t.payload_length = payload_length;
 
-    // 送信済みバイト数、シーケンスをゼロクリア
+    // 送信済みバイト数をゼロクリア
     send_info_t.sent_length = 0;
-    send_info_t.sequence = 0;
-
-    // フラグをクリア
-    send_info_t.busy = false;
 }
 
 void hid_u2f_send_input_report(void)
@@ -95,34 +87,47 @@ void hid_u2f_send_input_report(void)
     size_t  xfer_data_len;
     size_t  remaining;
 
-    if (send_info_t.payload_length == 0) {
-        // レスポンス長が０の場合は何もしない
+    // 保持中の情報をチェックし、
+    // 完備していない場合は異常終了
+    if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
+        NRF_LOG_ERROR("hid_u2f_send_input_report: hid_u2f_send_setup incomplete ");
         return;
     }
     
-    for (size_t i = 0; i < send_info_t.payload_length; i += xfer_data_len) {
-        // データ長
-        remaining = send_info_t.payload_length - i;
-        xfer_data_max = (i == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
-        xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
+    // データ長
+    remaining = send_info_t.payload_length - send_info_t.sent_length;
+    xfer_data_max = (send_info_t.sent_length == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
+    xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
-        // パケットを生成
-        generate_hid_input_report(send_info_t.payload_data, send_info_t.payload_length, i, xfer_data_len, send_info_t.cid, send_info_t.cmd);
+    // パケットを生成
+    generate_hid_input_report(send_info_t.payload_data, send_info_t.payload_length, send_info_t.sent_length, xfer_data_len, send_info_t.cid, send_info_t.cmd);
 
-        // パケットをU2Fクライアントへ転送
-        usbd_hid_u2f_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
-        break;
-    }
+    // パケットをU2Fクライアントへ転送
+    usbd_hid_u2f_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
 
-    // 処理タイムアウト監視を停止
-    hid_u2f_comm_interval_timer_stop();
+    // 送信済みバイト数を更新
+    send_info_t.sent_length += xfer_data_len;
 }
 
 void hid_u2f_send_input_report_complete()
 {
-    // 送信が正常に完了した時の処理
+    // hid_u2f_send_input_report による
+    // フレームの送信が正常に完了した時の処理
     //   hid_user_ev_handlerのイベント
     //   APP_USBD_HID_USER_EVT_IN_REPORT_DONEの
     //   発生でコールバックされる
-    NRF_LOG_DEBUG("APP_USBD_HID_USER_EVT_IN_REPORT_DONE");
+    // 
+    // 最終レコードの場合
+    if (send_info_t.sent_length == send_info_t.payload_length) {
+        // 処理タイムアウト監視を停止
+        hid_u2f_comm_interval_timer_stop();
+        // 送信情報を初期化
+        memset(&send_info_t, 0x00, sizeof(send_info_t));
+        // コールバック
+        hid_u2f_command_on_report_sent();
+        
+    } else {
+        // 次のフレームの送信を実行
+        hid_u2f_send_input_report();
+    }
 }
