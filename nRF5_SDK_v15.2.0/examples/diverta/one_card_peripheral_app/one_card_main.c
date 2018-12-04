@@ -97,6 +97,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             if (ble_u2f_command_on_mainsw_event(&m_u2f) == true) {
                 break;
             }
+            hid_u2f_command_on_mainsw_event();
         }
 		break;
 		

@@ -15,6 +15,10 @@
 #include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
+// for ble_u2f_processing_led_on/off
+#include "ble_u2f_processing_led.h"
+#include "one_card_main.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_command
 #include "nrf_log.h"
@@ -25,9 +29,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
-
-// ユーザー所在確認がボタン押下により行われたかどうかを保持
-static bool is_user_presence = false;
 
 //
 // コマンド別のレスポンスデータ編集領域
@@ -60,7 +61,17 @@ static void u2f_authenticate_resume_process(void);
 
 bool hid_u2f_command_on_mainsw_event(void)
 {
-    // NOP
+    if (is_tup_needed) {
+        // ユーザー所在確認が必要な場合
+        // (＝ユーザーによるボタン押下が行われた場合)
+        is_tup_needed = false;
+        NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
+        // LEDを消灯させる
+        ble_u2f_processing_led_off();
+        // 後続のレスポンス送信処理を実行
+        u2f_authenticate_resume_process();
+    }
+
     return true;
 }
 
@@ -209,24 +220,8 @@ static void u2f_register_send_response(fds_evt_t const *const p_evt)
 
 static void u2f_authenticate_do_process(void)
 {
-    if (is_tup_needed) {
-        if (is_user_presence) {
-            // ユーザー所在確認が行われていた場合
-            // (＝ユーザーによるボタン押下が行われた場合)
-            // 後続のレスポンス送信処理を実行
-            u2f_authenticate_resume_process();
-            
-        } else {
-            // ユーザー所在確認まちの場合は
-            // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
-            send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
-        }
-        return;
-    }
-    
-    // ユーザー所在確認関連フラグをクリア
+    // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
-    is_user_presence = false;
     
     NRF_LOG_INFO("U2F Authenticate start");
 
@@ -267,17 +262,19 @@ static void u2f_authenticate_do_process(void)
         send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
     }
-    /*
+
     if (control_byte == 0x03) {
         // 0x03 ("enforce-user-presence-and-sign")
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
-        is_user_presence = false;
-        send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
+        NRF_LOG_INFO("U2F Authenticate: waiting to complete the test of user presence");
+        // LED点滅を開始
+        uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
+        ble_u2f_processing_led_on(led);
         return;
     }
-     */
+
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
     u2f_authenticate_resume_process();
 }

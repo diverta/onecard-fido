@@ -2955,9 +2955,7 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../u2f_lib/u2f_authenticate.h" ex="false" tool="3" flavor2="0">
+      <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_control_point_apdu.c"
             ex="false"
