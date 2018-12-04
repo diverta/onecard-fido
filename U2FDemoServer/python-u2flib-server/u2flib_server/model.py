@@ -231,11 +231,27 @@ class SignatureData(object):
     def verify(self, app_param, chal_param, der_pubkey):
         pubkey = load_der_public_key(PUB_KEY_DER_PREFIX + der_pubkey,
                                      default_backend())
+        
+        import binascii
+        print "---- Signature from U2F Client ----"
+        print binascii.hexlify(self.signature)
+        
         verifier = pubkey.verifier(self.signature, ec.ECDSA(hashes.SHA256()))
-        verifier.update(app_param +
-                        six.int2byte(self.user_presence) +
-                        struct.pack('>I', self.counter) +
-                        chal_param)
+        
+        bytes_for_verifier = app_param + six.int2byte(self.user_presence) + struct.pack('>I', self.counter) + chal_param
+        
+        # HASH256 hashed bytes
+        _digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+        _digest.update(bytes_for_verifier)
+        _digest_hash256 = _digest.finalize()
+        
+        print "---- Bytes for HASH256 ----"
+        print binascii.hexlify(bytes_for_verifier)
+        print "---- HASH256 hashed bytes ----"
+        print binascii.hexlify(_digest_hash256)
+        print "---- Debug end ----"
+
+        verifier.update(bytes_for_verifier)
         try:
             verifier.verify()
         except InvalidSignature:
