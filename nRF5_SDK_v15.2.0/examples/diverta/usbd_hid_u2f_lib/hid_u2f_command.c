@@ -134,10 +134,10 @@ static void send_u2f_hid_error_report(uint16_t status_word)
     send_u2f_response();
 }
 
-static uint8_t *get_appid_hash_from_register_apdu(void)
+static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 {
-    // U2F RegisterリクエストAPDUから
-    // appid_hash を取り出す
+    // U2F Register／AuthenticateリクエストAPDUから
+    // appid_hash(Application parameter)を取り出す
     uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
     uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
     
@@ -163,7 +163,7 @@ static void u2f_register_do_process(void)
     }
     
     // キーハンドルを新規生成
-    uint8_t *p_appid_hash = get_appid_hash_from_register_apdu();
+    uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
 
     uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
@@ -190,15 +190,15 @@ static void u2f_register_send_response(fds_evt_t const *const p_evt)
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         send_u2f_hid_error_report(0x9404);
-        NRF_LOG_ERROR("u2f_register abend: FDS EVENT=%d ", p_evt->id);
+        NRF_LOG_ERROR("U2F Register abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
     if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("u2f_register retry: FDS GC done ");
-        uint8_t *p_appid_hash = get_appid_hash_from_register_apdu();
+        NRF_LOG_WARNING("U2F Register retry: FDS GC done ");
+        uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
         u2f_register_add_token_counter(p_appid_hash);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
@@ -249,7 +249,7 @@ static void u2f_authenticate_do_process(void)
 
     // appIdHashをリクエストデータから取得し、
     // それに紐づくトークンカウンターを検索
-    uint8_t *p_appid_hash = u2f_authenticate_get_appid(apdu_data);
+    uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     if (u2f_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
@@ -298,7 +298,7 @@ static void u2f_authenticate_resume_process(void)
     }
 
     // appIdHash、トークンカウンターを取得
-    uint8_t *p_appid_hash = u2f_authenticate_get_appid(apdu_data);
+    uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     uint32_t token_counter = u2f_flash_token_counter_value();
     
     // appIdHashをキーとして、
@@ -311,7 +311,25 @@ static void u2f_authenticate_resume_process(void)
 
 static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
 {
-    // TODO: これは仮コードです。
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_u2f_hid_error_report(0x9503);
+        NRF_LOG_ERROR("U2F Authenticate abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("U2F Authenticate retry: FDS GC done ");
+        uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
+        uint32_t token_counter = u2f_flash_token_counter_value();
+        u2f_authenticate_update_token_counter(p_appid_hash, token_counter);
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // レスポンスを生成してU2Fクライアントに戻す
+        send_u2f_response();
+    }
 }
 
 void hid_u2f_command_on_report_received(void)
