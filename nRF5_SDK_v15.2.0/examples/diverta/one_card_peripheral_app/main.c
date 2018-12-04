@@ -35,6 +35,7 @@
 #include "one_card_main.h"
 #include "one_card_event.h"
 
+#define USE_NRF_LOG_PROCESS false
 
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
@@ -609,9 +610,13 @@ static void idle_state_handle(void)
     err_code = nrf_ble_lesc_request_handler();
     APP_ERROR_CHECK(err_code);
 
-    if (NRF_LOG_PROCESS() == false) {
-        nrf_pwr_mgmt_run();
+#if USE_NRF_LOG_PROCESS
+    if (NRF_LOG_PROCESS()) {
+        return;
     }
+#endif
+
+    nrf_pwr_mgmt_run();
 }
 
 
