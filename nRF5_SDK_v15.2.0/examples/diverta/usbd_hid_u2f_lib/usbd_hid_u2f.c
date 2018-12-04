@@ -303,7 +303,7 @@ void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
 #endif
 }
 
-void usbd_input_report_send(void)
+void usbd_hid_u2f_do_process(void)
 {
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());

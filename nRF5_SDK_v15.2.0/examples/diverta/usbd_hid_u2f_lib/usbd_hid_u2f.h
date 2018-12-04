@@ -14,7 +14,7 @@ extern "C" {
 
 void usbd_init(void);
 void usbd_hid_init(void);
-void usbd_input_report_send(void);
+void usbd_hid_u2f_do_process(void);
 void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size);
 
 #ifdef __cplusplus

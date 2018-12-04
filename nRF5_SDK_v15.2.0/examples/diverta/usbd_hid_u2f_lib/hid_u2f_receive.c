@@ -16,7 +16,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for debug request data
 #define NRF_LOG_HEXDUMP_DEBUG_REQUEST 0
-#define NRF_LOG_HEXDUMP_DEBUG_APDU 1
+#define NRF_LOG_HEXDUMP_DEBUG_APDU 0
 
 #if NRF_LOG_HEXDUMP_DEBUG_REQUEST
 uint8_t u2f_request_buffer[1024];

@@ -650,10 +650,8 @@ int main(void)
     
     // Enter main loop.
     for (;;) {
-        // HID Input Reportを送信
-        usbd_input_report_send();
+        // U2F HID Reportを処理
+        usbd_hid_u2f_do_process();
         idle_state_handle();
     }
 }
-
-
