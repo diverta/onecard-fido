@@ -297,14 +297,11 @@ static void u2f_authenticate_resume_process(void)
         return;
     }
 
-    // appIdHash、トークンカウンターを取得
-    uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-    uint32_t token_counter = u2f_flash_token_counter_value();
-    
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新
     // (fds_record_update/writeまたはfds_gcが実行される)
-    if (u2f_authenticate_update_token_counter(p_appid_hash, token_counter) == false) {
+    uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
+    if (u2f_authenticate_update_token_counter(p_appid_hash) == false) {
         send_u2f_hid_error_report(0x9502);
     }
 }
@@ -323,8 +320,7 @@ static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("U2F Authenticate retry: FDS GC done ");
         uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-        uint32_t token_counter = u2f_flash_token_counter_value();
-        u2f_authenticate_update_token_counter(p_appid_hash, token_counter);
+        u2f_authenticate_update_token_counter(p_appid_hash);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す

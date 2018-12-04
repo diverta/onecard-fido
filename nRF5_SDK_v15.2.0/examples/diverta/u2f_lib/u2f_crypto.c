@@ -169,6 +169,13 @@ uint32_t u2f_crypto_sign(uint8_t *private_key_be)
     // ハッシュデータ作成
     uint8_t *signature_base_buffer = signature_data_buffer;
     uint16_t signature_base_buffer_length = signature_data_size;
+
+#if DEBUG_VERIFY_SIGN
+    // for debug
+    NRF_LOG_DEBUG("signature_base_buffer: %d bytes", signature_base_buffer_length);
+    NRF_LOG_HEXDUMP_INFO(signature_base_buffer, signature_base_buffer_length);
+#endif
+
     size_t digest_size = sizeof(hash_digest);
     err_code = nrf_crypto_hash_calculate(
         &hash_context, 

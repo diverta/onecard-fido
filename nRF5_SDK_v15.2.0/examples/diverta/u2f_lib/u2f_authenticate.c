@@ -31,16 +31,19 @@ uint8_t *u2f_authenticate_get_appid(uint8_t *apdu_data)
     return p_appid_hash;
 }
 
-bool u2f_authenticate_update_token_counter(uint8_t *p_appid_hash, uint32_t token_counter)
+bool u2f_authenticate_update_token_counter(uint8_t *p_appid_hash)
 {
     // 開始ログを出力
     NRF_LOG_DEBUG("update_token_counter start ");
 
+    // 現在のトークンカウンターを取得し、＋１する
+    uint32_t token_counter = u2f_flash_token_counter_value();
+    token_counter++;
+
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
-    // （トークンカウンターは現在値＋１とする）
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(p_appid_hash, ++token_counter, reserve_word) == false) {
+    if (u2f_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         return false;
     }
@@ -98,8 +101,8 @@ static bool create_authenticate_signature_base(uint8_t *p_apdu_data, uint8_t use
     // User Presence
     signature_base_buffer[offset++] = user_presence;
 
-    // Counter（トークンカウンターは現在値＋１とする）
-    copied_size = copy_token_counter_data(signature_base_buffer + offset, ++token_counter);
+    // Counter
+    copied_size = copy_token_counter_data(signature_base_buffer + offset, token_counter);
     offset += copied_size;
         
     // APDUからchallengeを取得し格納
@@ -157,9 +160,10 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
     // User presence byte(0x01)を生成
     uint8_t user_presence_byte = 0x01;
 
-    // トークンカウンターを取得
+    // 現在のトークンカウンターを取得し、＋１する
     uint32_t token_counter = u2f_flash_token_counter_value();
-
+    token_counter++;
+    
     // 署名ベースを生成
     if (create_authenticate_signature_base(request_buffer, user_presence_byte, token_counter) == false) {
         return false;
