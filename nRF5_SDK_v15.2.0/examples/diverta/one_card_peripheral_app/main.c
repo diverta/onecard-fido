@@ -35,8 +35,6 @@
 #include "one_card_main.h"
 #include "one_card_event.h"
 
-#define USE_NRF_LOG_PROCESS false
-
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
 #elif defined(BOARD_PCA10059)
@@ -113,7 +111,7 @@ static void delete_bonds(void)
 {
     ret_code_t err_code;
 
-    NRF_LOG_INFO("Erase bonds!");
+    NRF_LOG_INFO("BLE: erased all bonding information");
 
     err_code = pm_peers_delete();
     APP_ERROR_CHECK(err_code);
@@ -221,7 +219,7 @@ static void gatt_evt_handler(nrf_ble_gatt_t * p_gatt, nrf_ble_gatt_evt_t const *
 {
     if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED)
     {
-        NRF_LOG_INFO("GATT ATT MTU on connection 0x%x changed to %d.",
+        NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
                      p_evt->conn_handle,
                      p_evt->params.att_mtu_effective);
     }
@@ -371,7 +369,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     switch (ble_adv_evt)
     {
         case BLE_ADV_EVT_FAST:
-            NRF_LOG_INFO("Fast advertising.");
+            NRF_LOG_INFO("BLE: Fast advertising.");
             break;
 
         case BLE_ADV_EVT_IDLE:
@@ -396,14 +394,14 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            NRF_LOG_INFO("Connected.");
+            NRF_LOG_INFO("BLE: Connected.");
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
             APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            NRF_LOG_INFO("Disconnected, reason %d.",
+            NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             break;
@@ -441,11 +439,11 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             break;
         
         case BLE_GAP_EVT_AUTH_KEY_REQUEST:
-            NRF_LOG_INFO("BLE_GAP_EVT_AUTH_KEY_REQUEST");
+            NRF_LOG_DEBUG("BLE_GAP_EVT_AUTH_KEY_REQUEST");
             break;
 
         case BLE_GAP_EVT_LESC_DHKEY_REQUEST:
-            NRF_LOG_INFO("BLE_GAP_EVT_LESC_DHKEY_REQUEST");
+            NRF_LOG_DEBUG("BLE_GAP_EVT_LESC_DHKEY_REQUEST");
             break;
 
          case BLE_GAP_EVT_AUTH_STATUS:
@@ -610,7 +608,8 @@ static void idle_state_handle(void)
     err_code = nrf_ble_lesc_request_handler();
     APP_ERROR_CHECK(err_code);
 
-#if USE_NRF_LOG_PROCESS
+#ifdef BOARD_PCA10056
+    // nRF52840 DKで開発時のみ、ログが出力されるようにする
     if (NRF_LOG_PROCESS()) {
         return;
     }

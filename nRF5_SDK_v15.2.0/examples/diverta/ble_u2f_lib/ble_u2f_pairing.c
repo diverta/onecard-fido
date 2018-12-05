@@ -349,7 +349,7 @@ void ble_u2f_pairing_on_disconnect(void)
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
     if (run_as_pairing_mode == true && pairing_completed == true) {
-        NRF_LOG_INFO("ble_u2f_pairing_on_disconnect called. ");
+        NRF_LOG_DEBUG("ble_u2f_pairing_on_disconnect called. ");
         NVIC_SystemReset();
     }
 }
