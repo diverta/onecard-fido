@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#include "nrf_ble_gatt.h"
+#include "ble_advertising.h"
+#include "ble_u2f.h"
+
 void one_card_timers_init(void);
 void one_card_buttons_init(void);
 void one_card_ble_stack_init(uint8_t conn_cfg_tag, uint32_t p_ram_start);

@@ -12,6 +12,9 @@
             <sourceRootList>
                 <sourceRootElem>../one_card_peripheral_app</sourceRootElem>
                 <sourceRootElem>../ble_u2f_lib</sourceRootElem>
+                <sourceRootElem>../usbd_hid_u2f_lib</sourceRootElem>
+                <sourceRootElem>../../../components/libraries/usbd</sourceRootElem>
+                <sourceRootElem>../u2f_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

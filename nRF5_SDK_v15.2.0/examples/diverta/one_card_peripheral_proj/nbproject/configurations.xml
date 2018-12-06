@@ -43,6 +43,57 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="generic"
+                   displayName="generic"
+                   projectFiles="true"
+                   root="../../../components/libraries/usbd/class/hid/generic">
+      <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="makmorit"
+                   displayName="makmorit"
+                   projectFiles="true"
+                   root="../../../..">
+      <logicalFolder name="GitHub" displayName="GitHub" projectFiles="true">
+        <logicalFolder name="onecard-fido"
+                       displayName="onecard-fido"
+                       projectFiles="true">
+          <logicalFolder name="nRF5_SDK_v15.2.0"
+                         displayName="nRF5_SDK_v15.2.0"
+                         projectFiles="true">
+            <logicalFolder name="examples" displayName="examples" projectFiles="true">
+              <logicalFolder name="usb" displayName="usb" projectFiles="true">
+                <logicalFolder name="usbd_hid_generic"
+                               displayName="usbd_hid_generic"
+                               projectFiles="true">
+                  <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+                    <logicalFolder name="blank" displayName="blank" projectFiles="true">
+                      <logicalFolder name="config" displayName="config" projectFiles="true">
+                        <itemPath>../../usb/usbd_hid_generic/pca10056/blank/config/sdk_config.h</itemPath>
+                      </logicalFolder>
+                    </logicalFolder>
+                  </logicalFolder>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="opt" displayName="opt" projectFiles="true">
+        <logicalFolder name="nRF5_SDK_15.2.0"
+                       displayName="nRF5_SDK_15.2.0"
+                       projectFiles="true">
+          <logicalFolder name="components" displayName="components" projectFiles="true">
+            <logicalFolder name="drivers_nrf" displayName="drivers_nrf" projectFiles="true">
+              <logicalFolder name="nrf_soc_nosd"
+                             displayName="nrf_soc_nosd"
+                             projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/nrf_soc_nosd/nrf_error.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="nRF5_SDK_15.2.0"
                    displayName="nRF5_SDK_15.2.0"
                    projectFiles="true"
@@ -129,6 +180,12 @@
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.c</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.h</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/pca10056.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="drivers_nrf" displayName="drivers_nrf" projectFiles="true">
+          <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd/nrf_drv_usbd.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd/nrf_drv_usbd_errata.h</itemPath>
+          </logicalFolder>
         </logicalFolder>
         <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
           <logicalFolder name="atomic" displayName="atomic" projectFiles="true">
@@ -354,6 +411,31 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
+            <logicalFolder name="class" displayName="class" projectFiles="true">
+              <logicalFolder name="hid" displayName="hid" projectFiles="true">
+                <logicalFolder name="generic" displayName="generic" projectFiles="true">
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_desc.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic_internal.h</itemPath>
+                </logicalFolder>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/app_usbd_hid.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/app_usbd_hid_types.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_class_base.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_descriptor.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_langid.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_request.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_types.h</itemPath>
+          </logicalFolder>
           <logicalFolder name="util" displayName="util" projectFiles="true">
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.h</itemPath>
@@ -366,6 +448,7 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nordic_common.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_assert.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_assert.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_bitmask.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_alloca.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_common.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_errors.h</itemPath>
@@ -419,6 +502,8 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_gpiote.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.c</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_uart.c</itemPath>
@@ -487,24 +572,33 @@
           <logicalFolder name="include" displayName="include" projectFiles="true">
             <logicalFolder name="machine" displayName="machine" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_default_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/ieeefp.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/malloc.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/stdlib.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/time.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/types.h</itemPath>
             </logicalFolder>
             <logicalFolder name="sys" displayName="sys" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_intsup.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_pthreadtypes.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_sigset.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_stdint.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timespec.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timeval.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/sched.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/select.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stdio.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/string.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/timespec.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/types.h</itemPath>
             </logicalFolder>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_ansi.h</itemPath>
@@ -518,6 +612,9 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdio.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdlib.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/string.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/strings.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/time.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/xlocale.h</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="lib" displayName="lib" projectFiles="true">
@@ -624,8 +721,13 @@
             <logicalFolder name="include" displayName="include" projectFiles="true">
               <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aes.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aesni.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/check_config.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/config.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/ctr_drbg.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/padlock.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform_time.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -701,6 +803,7 @@
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_rng.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uart.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uarte.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_usbd.h</itemPath>
             </logicalFolder>
             <logicalFolder name="soc" displayName="soc" projectFiles="true">
               <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_coredep.h</itemPath>
@@ -710,6 +813,42 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="u2f_lib"
+                   displayName="u2f_lib"
+                   projectFiles="true"
+                   root="../u2f_lib">
+      <itemPath>../u2f_lib/u2f.h</itemPath>
+      <itemPath>../u2f_lib/u2f_authenticate.c</itemPath>
+      <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
+      <itemPath>../u2f_lib/u2f_control_point_apdu.c</itemPath>
+      <itemPath>../u2f_lib/u2f_control_point_apdu.h</itemPath>
+      <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
+      <itemPath>../u2f_lib/u2f_crypto.h</itemPath>
+      <itemPath>../u2f_lib/u2f_crypto_ecb.c</itemPath>
+      <itemPath>../u2f_lib/u2f_crypto_ecb.h</itemPath>
+      <itemPath>../u2f_lib/u2f_flash.c</itemPath>
+      <itemPath>../u2f_lib/u2f_flash.h</itemPath>
+      <itemPath>../u2f_lib/u2f_register.c</itemPath>
+      <itemPath>../u2f_lib/u2f_register.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="usbd_hid_u2f_lib"
+                   displayName="usbd_hid_u2f_lib"
+                   projectFiles="true"
+                   root="../usbd_hid_u2f_lib">
+      <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -723,6 +862,9 @@
   <sourceRootList>
     <Elem>../one_card_peripheral_app</Elem>
     <Elem>../ble_u2f_lib</Elem>
+    <Elem>../usbd_hid_u2f_lib</Elem>
+    <Elem>../../../components/libraries/usbd</Elem>
+    <Elem>../u2f_lib</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -745,9 +887,19 @@
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
           <cTool>
+            <incDir>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
+            </incDir>
             <preprocessorList>
-              <Elem>ENABLE_VERIFY_SIGN</Elem>
+              <Elem>BOARD_PCA10056</Elem>
               <Elem>NRF52840_XXAA</Elem>
+              <Elem>POWER_ENABLED</Elem>
               <Elem>SOFTDEVICE_PRESENT</Elem>
             </preprocessorList>
           </cTool>
@@ -793,9 +945,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -809,13 +959,10 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -830,11 +977,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -849,9 +993,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -877,9 +1019,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -902,10 +1042,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
@@ -925,9 +1062,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -948,15 +1083,12 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
@@ -972,9 +1104,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
@@ -1001,9 +1131,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fds</pElem>
@@ -1025,9 +1153,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
@@ -1050,8 +1176,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1067,9 +1191,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
@@ -1078,7 +1200,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1094,8 +1215,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fds</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -1103,7 +1222,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1118,8 +1236,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1135,16 +1251,13 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1158,9 +1271,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -1168,7 +1279,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1216,10 +1326,7 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
@@ -1242,11 +1349,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1283,11 +1387,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
@@ -1305,11 +1406,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
@@ -1327,9 +1425,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1348,11 +1443,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1372,11 +1464,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1397,10 +1486,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1420,11 +1506,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1446,13 +1529,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -1472,13 +1552,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -1497,11 +1574,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -1517,9 +1591,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1539,11 +1610,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1562,8 +1630,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1622,8 +1688,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1639,7 +1703,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -1652,7 +1715,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -1665,7 +1727,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -1678,7 +1739,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -1690,8 +1750,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1706,8 +1764,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1722,9 +1778,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1743,9 +1797,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1762,9 +1814,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1778,9 +1828,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1800,9 +1848,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -1822,11 +1868,9 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1844,11 +1888,9 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
@@ -1866,9 +1908,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -1882,9 +1922,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1904,9 +1942,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -1924,9 +1960,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
@@ -1948,9 +1982,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -1966,9 +1998,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/stack_info</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
@@ -1990,8 +2020,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2019,9 +2047,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fstorage</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -2040,11 +2066,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fstorage</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -2067,8 +2090,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -2084,8 +2105,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
@@ -2105,14 +2124,11 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -2134,8 +2150,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -2154,12 +2168,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
@@ -2177,8 +2188,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -2253,13 +2262,39 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_core.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c"
             ex="false"
             tool="0"
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -2271,7 +2306,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2284,7 +2318,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -2304,7 +2337,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -2315,7 +2347,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -2327,12 +2358,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2345,12 +2370,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2363,12 +2382,6 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2410,9 +2423,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -2436,9 +2447,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -2460,9 +2469,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -2478,6 +2484,16 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_power.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.c"
             ex="false"
             tool="0"
@@ -2486,20 +2502,16 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -2514,10 +2526,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
@@ -2538,9 +2547,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -2563,11 +2569,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -2589,8 +2592,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
@@ -2600,7 +2601,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -2612,11 +2612,8 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
@@ -2639,11 +2636,8 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
@@ -2667,11 +2661,8 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
@@ -2702,14 +2693,17 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
             tool="0"
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2720,8 +2714,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2729,8 +2721,6 @@
       <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2741,8 +2731,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2753,8 +2741,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2762,8 +2748,6 @@
       <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2773,9 +2757,10 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+          </incDir>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2783,8 +2768,6 @@
       <item path="../ble_u2f_lib/ble_u2f_flash.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2792,8 +2775,6 @@
       <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2801,8 +2782,6 @@
       <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2813,8 +2792,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2822,8 +2799,6 @@
       <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2831,8 +2806,6 @@
       <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2840,8 +2813,6 @@
       <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2852,8 +2823,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2864,8 +2833,6 @@
             flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2874,10 +2841,7 @@
         <cTool flags="0">
           <incDir>
             <pElem>../ble_u2f_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -2900,8 +2864,6 @@
       <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
-            <Elem>BOARD_PCA10056</Elem>
-            <Elem>NRF52840_XXAA</Elem>
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
@@ -2912,8 +2874,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
@@ -2929,11 +2889,12 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../ble_u2f_lib</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../usbd_hid_u2f_lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2946,8 +2907,6 @@
             <pElem>../one_card_peripheral_app</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../ble_u2f_lib</pElem>
@@ -2970,12 +2929,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -2985,7 +2941,6 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
@@ -2997,6 +2952,70 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../u2f_lib/u2f_control_point_apdu.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../u2f_lib/u2f_crypto_ecb.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_command.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../u2f_lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../u2f_lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../u2f_lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3013,9 +3032,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -3038,16 +3055,13 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_bas</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
@@ -3057,9 +3071,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3070,9 +3082,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_hrs</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -3087,9 +3097,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
@@ -3104,9 +3112,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3117,10 +3123,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
@@ -3135,10 +3138,7 @@
       <folder path="nRF5_SDK_15.2.0/components/libraries/atomic">
         <cTool>
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3150,8 +3150,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -3167,9 +3165,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3180,9 +3175,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -3205,10 +3198,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
@@ -3226,8 +3216,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crc16</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3239,7 +3227,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
@@ -3248,8 +3235,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -3262,8 +3247,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3274,11 +3257,8 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fstorage</pElem>
@@ -3292,8 +3272,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
@@ -3306,8 +3284,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mem_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
@@ -3322,13 +3298,10 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3342,11 +3315,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -3366,10 +3335,7 @@
       <folder path="nRF5_SDK_15.2.0/components/libraries/queue">
         <cTool>
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/queue</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -3384,10 +3350,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3399,8 +3362,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3419,9 +3380,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3434,8 +3393,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
@@ -3450,7 +3407,6 @@
       <folder path="nRF5_SDK_15.2.0/components/libraries/util">
         <cTool>
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
           </incDir>
         </cTool>
@@ -3460,6 +3416,10 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3476,8 +3436,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
@@ -3516,9 +3474,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
@@ -3536,9 +3492,18 @@
       <folder path="nRF5_SDK_15.2.0/modules/nrfx/mdk">
         <cTool>
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="usbd_hid_u2f_lib">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
           </incDir>
         </cTool>
       </folder>

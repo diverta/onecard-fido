@@ -28,7 +28,7 @@ static ble_u2f_context_t m_u2f_context;
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_INFO("ble_u2f_command_on_mainsw_event ");
+    NRF_LOG_DEBUG("ble_u2f_command_on_mainsw_event ");
     if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
         // U2Fクライアントと接続中でないときに
         // MAIN SWが押下された場合は無視
@@ -68,7 +68,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_INFO("ble_u2f_command_on_mainsw_long_push_event");
+    NRF_LOG_DEBUG("ble_u2f_command_on_mainsw_long_push_event");
 
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);

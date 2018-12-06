@@ -190,7 +190,4 @@ void one_card_sleep_mode_enter(void)
     ble_u2f_t *p_u2f = one_card_get_U2F_context();
     ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode,  false);
     ble_u2f_led_light_LED(p_u2f->led_for_user_presence, false);
-
-    // スリープモードに入る旨のログ出力
-    NRF_LOG_INFO("Go to system-off mode (wakeup will cause a reset)");
 }
