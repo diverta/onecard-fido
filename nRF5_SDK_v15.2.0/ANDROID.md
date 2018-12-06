@@ -7,11 +7,20 @@ Androidスマートフォンを使用し、nRF52840 DongleでGoogleアカウン�
 
 ### U2F RegisterをPCで実施
 
-現時点では、Androidスマートフォンを使用したU2F Registerができません。
+Androidスマートフォンでは、現状、U2F Registerができない仕様となっております。
 
-ですので、事前にPCを使用し、セキュリティ キーをGoogleアカウントに登録（U2F Register）しておいてください。
+ですので、事前にPCを使用し、nRF52840 Dongleをセキュリティ キーとして、Googleアカウントに登録（U2F Register）しておいてください。
 
 <b>[PCでのU2F Register手順はこちら](README.md)</b>
+
+#### ご参考：AndroidでU2F Registerが実行できない件について
+
+Androidスマートフォンからは、U2F Register（＝BLE経由の「セキュリティ キー追加」）ができない仕様のようです。<br>
+具体的には、Googleアカウントの「セキュリティ キー追加」機能は「モバイル端末以外の端末」だけで使用できるとのことです。
+
+ですので、Android上でU2F Authenticateを使用するためには、USB HIDデバイスを使用し、デスクトップ版Chromeから、U2F Registerを実行する必要があります。<br>
+詳細につきましては下記Issueをご参照いただければ幸いです。<br>
+https://github.com/diverta/onecard-fido/issues/69
 
 ### nRF52840 Dongleとのペアリング
 
@@ -49,7 +58,7 @@ nRF52840 Dongle上の赤いLEDが消灯していることを確認します。
 
 以上でペアリングは完了となります。
 
-## U2F Autnehticate手順
+## U2F Authenticate手順
 
 Googleアカウントを使用して、U2F Authenticateを確認する手順は以下になります。
 
