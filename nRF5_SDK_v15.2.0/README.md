@@ -32,6 +32,8 @@ nRF52840 Dongleでの動作を想定しています。
 
 nRF52840 Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合は、以下の手順で進めるようにします。
 
+<b>[AndroidでのU2F Authenticate確認手順はこちら](ANDROID.md)</b>
+
 ### 事前準備
 
 Googleアカウントが必要になります。<br>
