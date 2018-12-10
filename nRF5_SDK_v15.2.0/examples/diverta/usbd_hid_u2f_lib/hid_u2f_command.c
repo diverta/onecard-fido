@@ -57,7 +57,31 @@ U2F_HID_INIT_RES  init_res;
 U2F_VERSION_RES   version_res;
 
 // 関数プロトタイプ
+static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
+
+static void u2f_resume_response_process(void)
+{
+    uint8_t ins;
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    switch (cmd) {
+        case U2FHID_MSG:
+            // u2f_request_buffer の先頭バイトを参照
+            //   [0]CLA [1]INS [2]P1 3[P2]
+            ins = hid_u2f_receive_apdu()->INS;
+            if (ins == U2F_REGISTER) {
+                NRF_LOG_INFO("U2F Register: completed the test of user presence");
+                u2f_register_resume_process();
+                
+            } else if (ins == U2F_AUTHENTICATE) {
+                NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
+                u2f_authenticate_resume_process();
+            }
+            break;
+        default:
+            break;
+    }
+}
 
 bool hid_u2f_command_on_mainsw_event(void)
 {
@@ -65,11 +89,10 @@ bool hid_u2f_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
-        NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
         // LEDを消灯させる
         ble_u2f_processing_led_off();
         // 後続のレスポンス送信処理を実行
-        u2f_authenticate_resume_process();
+        u2f_resume_response_process();
     }
 
     return true;
@@ -157,6 +180,9 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 
 static void u2f_register_do_process(void)
 {
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+
     NRF_LOG_INFO("U2F Register start");
 
     if (u2f_flash_keydata_read() == false) {
@@ -173,6 +199,26 @@ static void u2f_register_do_process(void)
         return;
     }
     
+    // control byte (P1) を参照
+    uint8_t control_byte = hid_u2f_receive_apdu()->P1;
+    if (control_byte == 0x03) {
+        // 0x03 ("enforce-user-presence-and-sign")
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
+        // LED点滅を開始
+        uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
+        ble_u2f_processing_led_on(led);
+        return;
+    }
+
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    u2f_register_resume_process();
+}
+
+static void u2f_register_resume_process(void)
+{
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
