@@ -137,6 +137,7 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_crypto_ecb.c \
   $(U2FLIB_DIR)/u2f_flash.c \
+  $(U2FLIB_DIR)/u2f_idling_led.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
   $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \
