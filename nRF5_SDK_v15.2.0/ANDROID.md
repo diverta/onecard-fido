@@ -52,9 +52,9 @@ AndroidのBluetooth設定画面に「FIDO_Authenticator_dongle」というデバ
 
 <img src="assets/android/0004.jpg" width="200">
 
-nRF52840 Dongle上の赤いLEDが消灯していることを確認します。
+nRF52840 Dongle上の赤いLEDが消灯し、代わりに青いLEDが点滅を始めていることを確認します。
 
-<img src="assets/0007.png" width="400">
+<img src="assets/android/0015.png" width="400">
 
 以上でペアリングは完了となります。
 
@@ -84,7 +84,7 @@ Googleアカウントを追加したいので「Google」をタップします�
 
 <img src="assets/android/0010.jpg" width="200">
 
-nRF52840 Dongle上の青緑色のLEDが点滅しますので、nRF52840上の白いボタンを１回プッシュします。
+nRF52840 Dongle上の緑色のLEDが点滅しますので、nRF52840上の白いボタンを１回プッシュします。
 
 <img src="assets/android/0011.png" width="400">
 
