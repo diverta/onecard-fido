@@ -14,6 +14,7 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 #include "one_card_main.h"
+#include "u2f_idling_led.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing
@@ -291,11 +292,15 @@ static void alternate_pairing_mode(ble_u2f_t *p_u2f, bool pairing_mode)
     if (run_as_pairing_mode == true) {
         // 指定のLEDを点灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, true);
+        // アイドル時点滅処理を停止
+        u2f_idling_led_off(p_u2f->led_for_processing_fido);
         NRF_LOG_INFO("Run as pairing mode ");
 
     } else {
         // 指定のLEDを消灯させる
         ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, false);
+        // アイドル時点滅処理を開始
+        u2f_idling_led_on(p_u2f->led_for_processing_fido);
         NRF_LOG_INFO("Run as non-pairing mode ");
     }
 }

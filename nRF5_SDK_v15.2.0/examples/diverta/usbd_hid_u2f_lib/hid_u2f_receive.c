@@ -6,8 +6,8 @@
  */
 #include <stdio.h>
 #include "u2f_control_point_apdu.h"
+#include "hid_u2f_command.h"
 #include "hid_u2f_common.h"
-#include "hid_u2f_comm_interval_timer.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_receive
@@ -271,8 +271,8 @@ bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size)
         // （引数にはHIDヘッダーを含まないデータを渡す）
         extract_and_check_request_data(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
-        // 処理タイムアウト監視を開始
-        hid_u2f_comm_interval_timer_start();
+        // U2F処理スタート時の処理を実行
+        hid_u2f_command_on_process_started();
 
     } else {
         dump_hid_cont_packet("Recv ", size, req);

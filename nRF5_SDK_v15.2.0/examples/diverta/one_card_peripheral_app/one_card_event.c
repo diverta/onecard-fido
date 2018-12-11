@@ -23,6 +23,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_user_presence.h"
 #include "ble_u2f_status.h"
+#include "u2f_idling_led.h"
 
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
@@ -38,6 +39,9 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     ble_u2f_comm_interval_timer_stop(p_u2f);
+
+    // アイドル時点滅処理を停止
+    u2f_idling_led_off(p_u2f->led_for_processing_fido);
 
     // FIDO機能実行中LEDを点灯
     ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, true);
@@ -55,6 +59,9 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // FIDO機能実行中LEDを消灯
     ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(p_u2f->led_for_processing_fido);
     
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     ble_u2f_pairing_on_disconnect();
@@ -188,6 +195,7 @@ void one_card_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
     ble_u2f_t *p_u2f = one_card_get_U2F_context();
-    ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode,  false);
+    ble_u2f_led_light_LED(p_u2f->led_for_pairing_mode, false);
     ble_u2f_led_light_LED(p_u2f->led_for_user_presence, false);
+    ble_u2f_led_light_LED(p_u2f->led_for_processing_fido, false);
 }

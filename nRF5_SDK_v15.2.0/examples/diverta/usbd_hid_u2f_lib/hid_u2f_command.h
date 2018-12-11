@@ -18,6 +18,10 @@ void hid_u2f_command_on_report_sent(void);
 bool hid_u2f_command_on_mainsw_event(void);
 bool hid_u2f_command_on_mainsw_long_push_event(void);
 
+void hid_u2f_command_on_process_started(void);
+void hid_u2f_command_on_process_ended(void);
+void hid_u2f_command_on_process_timedout(void);
+
 #ifdef __cplusplus
 }
 #endif

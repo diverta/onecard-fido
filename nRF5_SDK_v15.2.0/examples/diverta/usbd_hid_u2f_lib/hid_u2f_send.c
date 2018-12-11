@@ -9,7 +9,6 @@
 #include "usbd_hid_u2f.h"
 #include "hid_u2f_command.h"
 #include "hid_u2f_common.h"
-#include "hid_u2f_comm_interval_timer.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_send
@@ -119,12 +118,12 @@ void hid_u2f_send_input_report_complete()
     // 
     // 最終レコードの場合
     if (send_info_t.sent_length == send_info_t.payload_length) {
-        // 処理タイムアウト監視を停止
-        hid_u2f_comm_interval_timer_stop();
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // コールバック
         hid_u2f_command_on_report_sent();
+        // U2F処理完了時の処理を実行
+        hid_u2f_command_on_process_ended();
         
     } else {
         // 次のフレームの送信を実行

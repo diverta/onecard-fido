@@ -12,12 +12,14 @@
 #include "u2f_register.h"
 #include "usbd_hid_u2f.h"
 #include "hid_u2f_common.h"
+#include "hid_u2f_comm_interval_timer.h"
 #include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
 // for ble_u2f_processing_led_on/off
 #include "ble_u2f_processing_led.h"
 #include "one_card_main.h"
+#include "u2f_idling_led.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_command
@@ -57,7 +59,31 @@ U2F_HID_INIT_RES  init_res;
 U2F_VERSION_RES   version_res;
 
 // 関数プロトタイプ
+static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
+
+static void u2f_resume_response_process(void)
+{
+    uint8_t ins;
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    switch (cmd) {
+        case U2FHID_MSG:
+            // u2f_request_buffer の先頭バイトを参照
+            //   [0]CLA [1]INS [2]P1 3[P2]
+            ins = hid_u2f_receive_apdu()->INS;
+            if (ins == U2F_REGISTER) {
+                NRF_LOG_INFO("U2F Register: completed the test of user presence");
+                u2f_register_resume_process();
+                
+            } else if (ins == U2F_AUTHENTICATE) {
+                NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
+                u2f_authenticate_resume_process();
+            }
+            break;
+        default:
+            break;
+    }
+}
 
 bool hid_u2f_command_on_mainsw_event(void)
 {
@@ -65,11 +91,10 @@ bool hid_u2f_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
-        NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
         // LEDを消灯させる
         ble_u2f_processing_led_off();
         // 後続のレスポンス送信処理を実行
-        u2f_authenticate_resume_process();
+        u2f_resume_response_process();
     }
 
     return true;
@@ -157,6 +182,9 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 
 static void u2f_register_do_process(void)
 {
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+
     NRF_LOG_INFO("U2F Register start");
 
     if (u2f_flash_keydata_read() == false) {
@@ -173,6 +201,26 @@ static void u2f_register_do_process(void)
         return;
     }
     
+    // control byte (P1) を参照
+    uint8_t control_byte = hid_u2f_receive_apdu()->P1;
+    if (control_byte == 0x03) {
+        // 0x03 ("enforce-user-presence-and-sign")
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
+        // LED点滅を開始
+        uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
+        ble_u2f_processing_led_on(led);
+        return;
+    }
+
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    u2f_register_resume_process();
+}
+
+static void u2f_register_resume_process(void)
+{
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
@@ -399,4 +447,38 @@ void hid_u2f_command_on_report_sent(void)
         default:
             break;
     }
+}
+
+void hid_u2f_command_on_process_started(void) 
+{
+    // 処理タイムアウト監視を開始
+    hid_u2f_comm_interval_timer_start();
+
+    // アイドル時点滅処理を停止
+    u2f_idling_led_off(one_card_get_U2F_context()->led_for_processing_fido);
+}
+
+void hid_u2f_command_on_process_ended(void) 
+{
+    // 処理タイムアウト監視を停止
+    hid_u2f_comm_interval_timer_stop();
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+}
+
+void hid_u2f_command_on_process_timedout(void) 
+{
+    // USBポートにタイムアウトを通知する
+    NRF_LOG_ERROR("USB HID communication timed out.");
+    
+    // コマンドをU2F ERRORに変更のうえ、
+    // レスポンスデータを送信パケットに設定し送信
+    generate_u2f_error_response(0x7f);
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_input_report();
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
