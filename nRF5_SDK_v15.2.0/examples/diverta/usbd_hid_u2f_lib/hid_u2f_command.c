@@ -12,12 +12,14 @@
 #include "u2f_register.h"
 #include "usbd_hid_u2f.h"
 #include "hid_u2f_common.h"
+#include "hid_u2f_comm_interval_timer.h"
 #include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
 // for ble_u2f_processing_led_on/off
 #include "ble_u2f_processing_led.h"
 #include "one_card_main.h"
+#include "u2f_idling_led.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_command
@@ -445,4 +447,38 @@ void hid_u2f_command_on_report_sent(void)
         default:
             break;
     }
+}
+
+void hid_u2f_command_on_process_started(void) 
+{
+    // 処理タイムアウト監視を開始
+    hid_u2f_comm_interval_timer_start();
+
+    // アイドル時点滅処理を停止
+    u2f_idling_led_off(one_card_get_U2F_context()->led_for_processing_fido);
+}
+
+void hid_u2f_command_on_process_ended(void) 
+{
+    // 処理タイムアウト監視を停止
+    hid_u2f_comm_interval_timer_stop();
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+}
+
+void hid_u2f_command_on_process_timedout(void) 
+{
+    // USBポートにタイムアウトを通知する
+    NRF_LOG_ERROR("USB HID communication timed out.");
+    
+    // コマンドをU2F ERRORに変更のうえ、
+    // レスポンスデータを送信パケットに設定し送信
+    generate_u2f_error_response(0x7f);
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_input_report();
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
