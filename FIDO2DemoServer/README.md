@@ -18,9 +18,14 @@ Yubico社が無償公開している[「python-fido2」](https://developers.yubi
 このサーバー機能のテストには、以下の認証器をご利用ください。<br>
 
 - Yubico セキュリティキー<br>
-https://www.amazon.co.jp/Yubico-セキュリティキー-FIDO2-USB-2段階認証/dp/B07BYSB7FK
+https://www.amazon.co.jp/Yubico-セキュリティキー-FIDO2-USB-2段階認証/dp/B07BYSB7FK<br>
+<img src="assets/0001.png" width="400">
 
-現在別途開発中の[「nRF52840 Dongle」](https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/)についても、FIDO 2.0（WebAuthn）対応中ですので、後日使用できるようになるかと存じます。
+後日対応予定
+
+- [「nRF52840 Dongle」](https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/)<br>
+現在、[USB HIDとBLEによるU2F対応](../nRF5_SDK_v15.2.0)が完了しており、今後はFIDO 2.0（WebAuthn）対応に入る予定です。<br>
+<img src="assets/0009.png" width="400">
 
 ### ソフトウェア
 
@@ -37,5 +42,8 @@ Google Chrome（Version 70.0）
 
 ## 手順書
 
-- [WIP] <b>[FIDO2ローカルテストサーバー構築手順](../FIDO2LOCALSVR.md) </b><br>
-Yubico社が無償公開している「python-fido2」をmacOSに導入し、初期動作確認まで実施する手順を掲載しております。
+- <b>[FIDO2ローカルテストサーバー構築手順](FIDO2LOCALSVR.md) </b><br>
+Yubico社が無償公開している「python-fido2」をmacOSに導入する手順を掲載しております。
+
+- <b>[WebAuthn確認手順](WEBAUTHNTEST.md) </b><br>
+FIDO2ローカルテストサーバーとChromeブラウザー、FIDO 2.0認証器を使用し、WebAuthnの動作を確認する手順を掲載しております。

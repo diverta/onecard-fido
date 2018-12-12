@@ -1,8 +1,8 @@
-# [WIP] FIDO2ローカルテストサーバー構築手順
+# FIDO2ローカルテストサーバー構築手順
 
-Yubico社が無償公開している「python-fido2」をmacOSに導入し、初期動作確認まで実施する手順を掲載しております。
+Yubico社が無償公開している「python-fido2」をmacOSに導入する手順を掲載しております。
 
-## ソフトウェアのインストール
+## インストール
 
 ### pipenvの導入
 
@@ -61,7 +61,7 @@ MacBookPro-makmorit-jp:~ makmorit$
 
 `Bash completion has been installed to: /usr/local/etc/bash_completion.d`というメッセージが表示されれば、インストールは完了となります。
 
-### 「python-fido2」のダウンロード
+### 「python-fido2」のダウンロードと配置
 
 GitHubからリポジトリー「python-fido2」を全量チェックアウトして、適宜別のフォルダーにコピーします。
 https://github.com/Yubico/python-fido2
@@ -85,12 +85,15 @@ MacBookPro-makmorit-jp:python-fido2 makmorit$
 - fido2 - Yubico社が制作したFIDO2サーバーライブラリーが格納されています。
 - setup.py - ローカルテストサーバー起動用のvirtualenv作成時に必要となるスクリプト
 
-### virtualenvの作成
+
+## サーバーの作成／始動確認
+
+### サーバーの作成
 
 サブフォルダー `examples/server` に移動し、コマンド `pipenv install` を実行します。
 
 ```
-MacBookPro-makmorit-jp:python-fido2 makmorit$ cd examples/server
+MacBookPro-makmorit-jp:~ makmorit$ cd /Users/makmorit/GitHub/onecard-fido/FIDO2DemoServer/python-fido2/examples/server
 MacBookPro-makmorit-jp:server makmorit$ ls -al
 total 72
 drwxr-xr-x  8 makmorit  staff   272 12 11 14:41 .
@@ -111,11 +114,14 @@ Alternatively, run a command inside the virtualenv with pipenv run.
 MacBookPro-makmorit-jp:server makmorit$
 ```
 
-### サーバーの始動
+上記の通り、正しくvirtualenvが作成できれば、サーバー作成は完了となります。
+
+### サーバーの始動確認
 
 コマンド `pipenv run server` でvirtualenvを起動し、FIDO2ローカルテストサーバーを始動させます。
 
 ```
+MacBookPro-makmorit-jp:~ makmorit$ cd /Users/makmorit/GitHub/onecard-fido/FIDO2DemoServer/python-fido2/examples/server
 MacBookPro-makmorit-jp:server makmorit$ pipenv run server
 
 Example demo server to use a supported web browser to call the WebAuthn APIs
@@ -144,29 +150,4 @@ Navigate to https://localhost:5000 in a supported web browser.
  * Debugger PIN: 258-954-445
 ```
 
-### サーバーの停止
-
-`kill`コマンドでvirtualenvの親プロセスを停止させます。
-
-プロセス番号の若いものが親プロセスになります。
-
-```
-MacBookPro-makmorit-jp:~ makmorit$ ps -ef | grep virtualenvs
-  501 23715  4154   0  3:49PM ttys000    0:00.44 /Users/makmorit/.local/share/virtualenvs/server-PoQD-Aft/bin/python server.py
-  501 23721 23715   0  3:49PM ttys000    0:06.36 /Users/makmorit/.local/share/virtualenvs/server-PoQD-Aft/bin/python server.py
-  501 23852 23672   0  4:01PM ttys001    0:00.00 grep virtualenvs
-MacBookPro-makmorit-jp:~ makmorit$ kill 23715
-MacBookPro-makmorit-jp:~ makmorit$ ps -ef | grep virtualenvs
-  501 23854 23672   0  4:01PM ttys001    0:00.00 grep virtualenvs
-MacBookPro-makmorit-jp:~ makmorit$
-```
-
-## WebAuthnのテスト
-
-### 登録（Register）
-
-（後述）
-
-### ログイン（Authenticate)
-
-（後述）
+正しくサーバーの始動が確認できたら、FIDO2ローカルテストサーバー構築は完了となります。
