@@ -194,6 +194,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     control_point_buffer_length = p_evt_write->len;
 
     NRF_LOG_DEBUG("ble_u2f_control_point_receive length=%u ", control_point_buffer_length);
+    NRF_LOG_HEXDUMP_DEBUG(control_point_buffer, control_point_buffer_length);
 
     if (control_point_buffer[0] & 0x80) {
         // 先頭データが２回連続で送信された場合はエラー

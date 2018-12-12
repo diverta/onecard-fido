@@ -24,7 +24,7 @@ static ble_uuid128_t u2f_base_uuid = {
 // Control Pointバイト長、
 // Service Revisionに関する情報を保持
 static uint8_t control_point_length[2] = {0x00, 0x40};   // 64Bytes
-static uint8_t service_revision_bitfield[1] = {0x80};    // Supports 1.1
+static uint8_t service_revision_bitfield[1] = {0xe0};    // Supports 1.1, 1.2, 2.0
 static uint8_t service_revision[3] = {0x31, 0x2e, 0x31}; // 1.1
 
 
