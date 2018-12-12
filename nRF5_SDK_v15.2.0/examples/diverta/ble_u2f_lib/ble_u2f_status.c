@@ -121,6 +121,7 @@ static uint32_t u2f_response_send(ble_u2f_t *p_u2f)
 
         } else {
             NRF_LOG_DEBUG("u2f_response_send (%dbytes) ", hvx_send_length);
+            NRF_LOG_HEXDUMP_DEBUG(u2f_status_buffer, hvx_send_length);
         }
 
     } else if (err_code != NRF_ERROR_RESOURCES) {
