@@ -15,15 +15,6 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for debug request data
-#define NRF_LOG_HEXDUMP_DEBUG_REQUEST 0
-#define NRF_LOG_HEXDUMP_DEBUG_APDU 0
-
-#if NRF_LOG_HEXDUMP_DEBUG_REQUEST
-uint8_t u2f_request_buffer[1024];
-size_t  u2f_request_length;
-#endif
-
 // u2f control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
 static uint8_t  control_point_buffer[64];
@@ -42,20 +33,6 @@ HID_HEADER_T *hid_u2f_receive_hid_header(void)
 U2F_APDU_T *hid_u2f_receive_apdu(void)
 {
     return &apdu_t;
-}
-
-static bool is_valid_command(uint8_t command)
-{
-    switch (command) {
-        case U2F_COMMAND_PING:
-        case U2F_COMMAND_MSG:
-        case U2F_COMMAND_HID_LOCK:
-        case U2F_COMMAND_HID_INIT:
-        case U2F_COMMAND_HID_WINK:
-            return true;
-        default:
-            return false;
-    }
 }
 
 static bool extract_and_check_init_packet(HID_HEADER_T *p_ble_header, U2F_APDU_T *p_apdu)
@@ -80,7 +57,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_ble_header, U2F_APDU_T
     NRF_LOG_DEBUG("INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
-    if (is_valid_command(p_ble_header->CMD) == false) {
+    if (hid_u2f_command_is_valid(p_ble_header->CMD) == false) {
         // BLEヘッダーに設定されたコマンドが不正の場合、
         // ここで処理を終了
         NRF_LOG_ERROR("u2f_request_receive: invalid command (0x%02x) ", p_ble_header->CMD);

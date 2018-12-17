@@ -22,6 +22,8 @@ void hid_u2f_command_on_process_started(void);
 void hid_u2f_command_on_process_ended(void);
 void hid_u2f_command_on_process_timedout(void);
 
+bool hid_u2f_command_is_valid(uint8_t command);
+
 #ifdef __cplusplus
 }
 #endif

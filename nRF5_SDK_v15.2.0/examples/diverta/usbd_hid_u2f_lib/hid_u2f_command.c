@@ -516,3 +516,17 @@ void hid_u2f_command_on_process_timedout(void)
     // レスポンスデータを送信パケットに設定し送信
     send_error_command_response(0x7f);
 }
+
+bool hid_u2f_command_is_valid(uint8_t command)
+{
+    switch (command) {
+        case U2F_COMMAND_PING:
+        case U2F_COMMAND_MSG:
+        case U2F_COMMAND_HID_LOCK:
+        case U2F_COMMAND_HID_INIT:
+        case U2F_COMMAND_HID_WINK:
+            return true;
+        default:
+            return false;
+    }
+}
