@@ -43,6 +43,9 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
+      <itemPath>../ctap2_lib/ctap2.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="generic"
                    displayName="generic"
                    projectFiles="true"
@@ -834,6 +837,10 @@
       <itemPath>../u2f_lib/u2f_register.c</itemPath>
       <itemPath>../u2f_lib/u2f_register.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="usbd_hid_ctap2_lib"
+                   displayName="usbd_hid_ctap2_lib"
+                   projectFiles="true">
+    </logicalFolder>
     <logicalFolder name="usbd_hid_u2f_lib"
                    displayName="usbd_hid_u2f_lib"
                    projectFiles="true"
@@ -867,6 +874,8 @@
     <Elem>../usbd_hid_u2f_lib</Elem>
     <Elem>../../../components/libraries/usbd</Elem>
     <Elem>../u2f_lib</Elem>
+    <Elem>../ctap2_lib</Elem>
+    <Elem>../usbd_hid_ctap2_lib</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2869,6 +2878,8 @@
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
+      </item>
+      <item path="../ctap2_lib/ctap2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">

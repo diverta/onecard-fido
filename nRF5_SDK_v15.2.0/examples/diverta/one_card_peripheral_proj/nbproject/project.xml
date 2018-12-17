@@ -15,6 +15,8 @@
                 <sourceRootElem>../usbd_hid_u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../components/libraries/usbd</sourceRootElem>
                 <sourceRootElem>../u2f_lib</sourceRootElem>
+                <sourceRootElem>../ctap2_lib</sourceRootElem>
+                <sourceRootElem>../usbd_hid_ctap2_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
