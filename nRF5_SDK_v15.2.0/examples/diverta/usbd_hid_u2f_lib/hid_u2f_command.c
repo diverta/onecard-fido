@@ -373,13 +373,33 @@ static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
     }
 }
 
+static void send_error_command_response(uint8_t error_code) 
+{
+    // U2F ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    generate_u2f_error_response(error_code);
+    uint32_t cid = hid_u2f_receive_hid_header()->CID;
+    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_input_report();
+
+    // アイドル時点滅処理を開始
+    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+}
+
 void hid_u2f_command_on_report_received(void)
 {
     uint8_t  ins;
+    NRF_LOG_INFO("CMD(0x%02x) LEN(%d)", 
+        hid_u2f_receive_hid_header()->CMD, 
+        hid_u2f_receive_hid_header()->LEN);
 
     // データ受信後に実行すべき処理を判定
     uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
     switch (cmd) {
+        case U2FHID_ERROR:
+            send_error_command_response(hid_u2f_receive_hid_header()->ERROR);
+            break;
+            
         case U2FHID_INIT:
             u2f_hid_init_do_process();
             break;
@@ -474,11 +494,5 @@ void hid_u2f_command_on_process_timedout(void)
     
     // コマンドをU2F ERRORに変更のうえ、
     // レスポンスデータを送信パケットに設定し送信
-    generate_u2f_error_response(0x7f);
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
-    hid_u2f_send_input_report();
-
-    // アイドル時点滅処理を開始
-    u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+    send_error_command_response(0x7f);
 }

@@ -195,5 +195,9 @@ void u2f_control_point_apdu_from_following(U2F_APDU_T *p_apdu, uint8_t *control_
     // コピー済みのデータの直後に取得したデータを連結
     memcpy(p_apdu->data + p_apdu->data_length, received_data, received_data_length);
     p_apdu->data_length += received_data_length;
-    NRF_LOG_DEBUG("CONT frame: received data (%d bytes) ", p_apdu->data_length);
+    if (p_apdu->data_length < p_apdu->Lc) {
+        NRF_LOG_DEBUG("CONT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
+    } else {
+        NRF_LOG_DEBUG("CONT frame: received data (%d bytes) ", p_apdu->data_length);
+    }
 }

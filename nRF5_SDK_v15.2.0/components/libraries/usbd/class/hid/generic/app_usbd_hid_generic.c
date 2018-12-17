@@ -529,7 +529,12 @@ static bool hid_generic_feed_descriptors(app_usbd_class_descriptor_ctx_t  * p_ct
             APP_USBD_CLASS_DESCRIPTOR_WRITE(APP_USBD_DESCRIPTOR_EP_ATTR_TYPE_INTERRUPT); // bmAttributes
             APP_USBD_CLASS_DESCRIPTOR_WRITE(LSB_16(NRF_DRV_USBD_EPSIZE)); // wMaxPacketSize LSB
             APP_USBD_CLASS_DESCRIPTOR_WRITE(MSB_16(NRF_DRV_USBD_EPSIZE)); // wMaxPacketSize MSB
-            APP_USBD_CLASS_DESCRIPTOR_WRITE(p_generic->specific.inst.hid_inst.p_ep_interval[j]); // bInterval
+            //
+            // Adjustment for U2F USB HID Authenticator
+            // 1 msec ---> 10 msec
+            //
+            uint8_t ep_interval = p_generic->specific.inst.hid_inst.p_ep_interval[j] * 10;
+            APP_USBD_CLASS_DESCRIPTOR_WRITE(ep_interval); // bInterval
         }
     }
 
