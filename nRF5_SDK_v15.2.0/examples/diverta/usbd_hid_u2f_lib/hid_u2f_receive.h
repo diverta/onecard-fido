@@ -8,11 +8,12 @@
 #ifndef HID_U2F_RECEIVE_H
 #define HID_U2F_RECEIVE_H
 
+#include <stdbool.h>
+#include "u2f.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "u2f.h"
 
 // リクエストデータに含まれるHIDヘッダーを保持
 typedef struct {

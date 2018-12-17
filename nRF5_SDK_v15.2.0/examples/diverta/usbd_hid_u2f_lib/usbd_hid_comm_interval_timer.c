@@ -7,7 +7,7 @@
 #include "sdk_common.h"
 #include "app_timer.h"
 
-#include "hid_u2f_command.h"
+#include "hid_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_hid_comm_interval_timer

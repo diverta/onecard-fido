@@ -43,7 +43,10 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
+    <logicalFolder name="ctap2_lib"
+                   displayName="ctap2_lib"
+                   projectFiles="true"
+                   root="../ctap2_lib">
       <itemPath>../ctap2_lib/ctap2.h</itemPath>
     </logicalFolder>
     <logicalFolder name="generic"
@@ -846,6 +849,8 @@
                    projectFiles="true"
                    root="../usbd_hid_u2f_lib">
       <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_fido_command.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/hid_fido_command.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
@@ -2879,8 +2884,6 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
           <incDir>
@@ -2965,6 +2968,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../usbd_hid_u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2986,11 +2990,14 @@
       </item>
       <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../u2f_lib/u2f_idling_led.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../u2f_lib/u2f_idling_led.h" ex="false" tool="3" flavor2="0">
+      <item path="../u2f_lib/u2f_idling_led.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/hid_fido_command.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
       </item>
       <item path="../usbd_hid_u2f_lib/hid_u2f_command.c"
             ex="false"
@@ -3028,11 +3035,6 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
-      </item>
-      <item path="../usbd_hid_u2f_lib/usbd_hid_common.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../usbd_hid_u2f_lib/usbd_hid_service.c"
             ex="false"

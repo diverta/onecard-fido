@@ -32,7 +32,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_command.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_init.h"
-#include "hid_u2f_command.h"
+#include "hid_fido_command.h"
 
 //
 // U2F関連の共有情報

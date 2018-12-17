@@ -8,7 +8,7 @@
 
 #include "usbd_hid_common.h"
 #include "usbd_hid_service.h"
-#include "hid_u2f_command.h"
+#include "hid_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_send
