@@ -126,6 +126,57 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
 static bool m_report_pending;
 static bool m_report_received;
 
+//
+// リクエストフレーム、およびフレーム数を
+// 一時的に保持する領域
+// (32フレームまで格納が可能)
+//
+static uint8_t request_frame_buffer[2048];
+static size_t  request_frame_number;
+
+static bool usbd_hid_frame_receive(uint8_t *p_buff, size_t size)
+{
+    static size_t pos;
+    static size_t payload_len;
+
+    if (size == 0) {
+        return false;
+    }
+
+    U2F_HID_MSG *req = (U2F_HID_MSG *)p_buff;
+    if (U2FHID_IS_INIT(req->pkt.init.cmd)) {
+        // 先頭フレームであればpayload長を取得
+        payload_len = get_payload_length(req);
+        
+        // フレームが最後かどうかを判定するための受信済みデータ長
+        pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
+
+        // リクエストフレーム全体を一時領域に格納
+        memset(&request_frame_buffer, 0, sizeof(request_frame_buffer));
+        memcpy(request_frame_buffer, p_buff, size);
+        request_frame_number = 1;
+
+    } else {
+        // 後続フレームの場合
+        // フレームが最後かどうかを判定するための受信済みデータ長を更新
+        size_t remain = payload_len - pos;
+        size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
+        pos += cnt;
+
+        // リクエストフレーム全体を一時領域に格納
+        memcpy(request_frame_buffer + request_frame_number * U2FHID_PACKET_SIZE, 
+            p_buff, size);
+        request_frame_number++;
+    }
+
+    // リクエストデータを全て受信したらtrueを戻す
+    if (pos == payload_len) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 {
     // Output reportが格納されている領域を取得
@@ -139,7 +190,7 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 #endif
 
     // Output reportから受信フレームを取得し、内部バッファに格納
-    m_report_received = hid_u2f_receive_request_data(rep_buf->p_buff, rep_buf->size);
+    m_report_received = usbd_hid_frame_receive(rep_buf->p_buff, rep_buf->size);
 }
 
 /**
@@ -315,5 +366,5 @@ void usbd_hid_u2f_do_process(void)
     m_report_received = false;
     
     // U2F HIDサービスを実行
-    hid_u2f_command_on_report_received();
+    hid_u2f_command_on_report_received(request_frame_buffer, request_frame_number);
 }
