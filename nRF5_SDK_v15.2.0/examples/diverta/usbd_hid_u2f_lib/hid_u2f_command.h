@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-void hid_u2f_command_on_report_received(void);
+void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
 void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt);
 void hid_u2f_command_on_report_sent(void);
 

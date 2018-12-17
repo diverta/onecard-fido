@@ -17,7 +17,7 @@ extern "C" {
 HID_HEADER_T *hid_u2f_receive_hid_header(void);
 U2F_APDU_T   *hid_u2f_receive_apdu(void);
 
-bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size);
+void hid_u2f_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
 
 #ifdef __cplusplus
 }

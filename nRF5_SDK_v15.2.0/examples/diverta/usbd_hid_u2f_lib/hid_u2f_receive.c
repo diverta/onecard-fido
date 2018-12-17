@@ -241,69 +241,42 @@ static void extract_and_check_request_data(uint32_t cid, uint8_t *payload, size_
     }
 }
 
-bool hid_u2f_receive_request_data(uint8_t *p_buff, size_t size)
+void hid_u2f_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     static size_t pos;
     static size_t payload_len;
     static uint32_t cid;
 
-    if (size == 0) {
-        return false;
-    }
-    
-    U2F_HID_MSG *req = (U2F_HID_MSG *)p_buff;
-    if (U2FHID_IS_INIT(req->pkt.init.cmd)) {
-        // payload長を取得
-        payload_len = get_payload_length(req);
-        dump_hid_init_packet("Recv ", size, req);
+    for (int n = 0; n < request_frame_number; n++) {
+        U2F_HID_MSG *req = (U2F_HID_MSG *)(request_frame_buffer + n * U2FHID_PACKET_SIZE);
+        if (n == 0) {
+            dump_hid_init_packet("Recv ", U2FHID_PACKET_SIZE, req);
 
-        // リクエストデータ領域に格納
-        pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
-#if NRF_LOG_HEXDUMP_DEBUG_REQUEST
-        memset(&u2f_request_buffer, 0, sizeof(u2f_request_buffer));
-        memcpy(u2f_request_buffer, req->pkt.init.payload, pos);
-#endif
+            // payload長を取得し、リクエストデータ領域に格納
+            payload_len = get_payload_length(req);
+            pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
 
-        // CIDを保持
-        cid = get_CID(req->cid);
+            // CIDを保持
+            cid = get_CID(req->cid);
 
-        // リクエストデータのチェックと格納
-        // （引数にはHIDヘッダーを含まないデータを渡す）
-        extract_and_check_request_data(cid, (uint8_t *)&req->pkt.init, pos + 3);
+            // リクエストデータのチェックと格納
+            // （引数にはHIDヘッダーを含まないデータを渡す）
+            extract_and_check_request_data(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
-        // U2F処理スタート時の処理を実行
-        hid_u2f_command_on_process_started();
+            // U2F処理スタート時の処理を実行
+            hid_u2f_command_on_process_started();
+            
+        } else {
+            dump_hid_cont_packet("Recv ", U2FHID_PACKET_SIZE, req);
 
-    } else {
-        dump_hid_cont_packet("Recv ", size, req);
+            // リクエストデータ領域に格納
+            size_t remain = payload_len - pos;
+            size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
+            pos += cnt;
 
-        // リクエストデータ領域に格納
-        size_t remain = payload_len - pos;
-        size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
-#if NRF_LOG_HEXDUMP_DEBUG_REQUEST
-        memcpy(u2f_request_buffer + pos, req->pkt.cont.payload, cnt);
-#endif
-        pos += cnt;
-
-        // リクエストデータのチェックと格納
-        // （引数にはHIDヘッダーを含まないデータを渡す）
-        extract_and_check_request_data(cid, (uint8_t *)&req->pkt.cont, cnt + 1);
-    }
-
-    // リクエストデータを全て受信したらtrueを戻す
-    if (pos == payload_len) {
-#if NRF_LOG_HEXDUMP_DEBUG_REQUEST
-        NRF_LOG_DEBUG("Request data: %d bytes", payload_len);
-        NRF_LOG_HEXDUMP_DEBUG(u2f_request_buffer, payload_len);
-#endif
-#if NRF_LOG_HEXDUMP_DEBUG_APDU
-        if (apdu_t.data_length > 0) {
-            NRF_LOG_DEBUG("APDU: %d bytes", apdu_t.data_length);
-            NRF_LOG_HEXDUMP_DEBUG(apdu_t.data, apdu_t.data_length);
-        }
-#endif
-        return true;
-    } else {
-        return false;
+            // リクエストデータのチェックと格納
+            // （引数にはHIDヘッダーを含まないデータを渡す）
+            extract_and_check_request_data(cid, (uint8_t *)&req->pkt.cont, cnt + 1);            
+        }        
     }
 }

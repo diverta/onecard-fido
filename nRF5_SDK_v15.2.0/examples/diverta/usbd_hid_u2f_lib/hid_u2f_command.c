@@ -386,20 +386,26 @@ static void send_error_command_response(uint8_t error_code)
     u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
 
-void hid_u2f_command_on_report_received(void)
+void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
-    uint8_t  ins;
+    // 受信したフレームから、リクエストデータを取得し、
+    // 同時に内容をチェックする
+    hid_u2f_receive_request_data(request_frame_buffer, request_frame_number);
+
+    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    if (cmd == U2FHID_ERROR) {
+        // チェック結果がNGの場合はここで処理中止
+        send_error_command_response(hid_u2f_receive_hid_header()->ERROR);
+        return;
+    }
+
+    uint8_t ins;
     NRF_LOG_INFO("CMD(0x%02x) LEN(%d)", 
         hid_u2f_receive_hid_header()->CMD, 
         hid_u2f_receive_hid_header()->LEN);
 
     // データ受信後に実行すべき処理を判定
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
     switch (cmd) {
-        case U2FHID_ERROR:
-            send_error_command_response(hid_u2f_receive_hid_header()->ERROR);
-            break;
-            
         case U2FHID_INIT:
             u2f_hid_init_do_process();
             break;
