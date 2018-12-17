@@ -157,12 +157,12 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_user_presence.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
-  $(HIDLIB_DIR)/hid_u2f_comm_interval_timer.c \
   $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/hid_u2f_common.c \
   $(HIDLIB_DIR)/hid_u2f_receive.c \
   $(HIDLIB_DIR)/hid_u2f_send.c \
-  $(HIDLIB_DIR)/usbd_hid_u2f.c \
+  $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
+  $(HIDLIB_DIR)/usbd_hid_common.c \
+  $(HIDLIB_DIR)/usbd_hid_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

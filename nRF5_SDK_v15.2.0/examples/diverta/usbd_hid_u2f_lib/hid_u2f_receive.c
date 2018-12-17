@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include "u2f_control_point_apdu.h"
 #include "hid_u2f_command.h"
-#include "hid_u2f_common.h"
+#include "hid_u2f_receive.h"
+#include "usbd_hid_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_receive
@@ -46,11 +47,11 @@ U2F_APDU_T *hid_u2f_receive_apdu(void)
 static bool is_valid_command(uint8_t command)
 {
     switch (command) {
-        case U2FHID_PING:
-        case U2FHID_MSG:
-        case U2FHID_LOCK:
-        case U2FHID_INIT:
-        case U2FHID_WINK:
+        case U2F_COMMAND_PING:
+        case U2F_COMMAND_MSG:
+        case U2F_COMMAND_HID_LOCK:
+        case U2F_COMMAND_HID_INIT:
+        case U2F_COMMAND_HID_WINK:
             return true;
         default:
             return false;
@@ -88,7 +89,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_ble_header, U2F_APDU_T
         return false;
     }
 
-    if (p_ble_header->LEN > U2FHID_INIT_PAYLOAD_SIZE) {
+    if (p_ble_header->LEN > USBD_HID_INIT_PAYLOAD_SIZE) {
         // HIDヘッダーに設定されたデータ長が
         // 57文字を超える場合、後続データがあると判断
         NRF_LOG_DEBUG("u2f_request_receive: CONT frame will receive ");
@@ -106,7 +107,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_ble_header, U2F_APDU_T
     // （＝処理済みバイト数）を保持
     int offset = 3;
 
-    if (p_ble_header->CMD == U2FHID_PING || p_ble_header->CMD == U2FHID_INIT) {
+    if (p_ble_header->CMD == U2F_COMMAND_PING || p_ble_header->CMD == U2F_COMMAND_HID_INIT) {
         // コマンドがPING、INITの場合は、APDUではないため
         // データ長だけセットしておく
         p_apdu->Lc = p_ble_header->LEN;
@@ -248,13 +249,13 @@ void hid_u2f_receive_request_data(uint8_t *request_frame_buffer, size_t request_
     static uint32_t cid;
 
     for (int n = 0; n < request_frame_number; n++) {
-        U2F_HID_MSG *req = (U2F_HID_MSG *)(request_frame_buffer + n * U2FHID_PACKET_SIZE);
+        USB_HID_MSG_T *req = (USB_HID_MSG_T *)(request_frame_buffer + n * USBD_HID_PACKET_SIZE);
         if (n == 0) {
-            dump_hid_init_packet("Recv ", U2FHID_PACKET_SIZE, req);
+            dump_hid_init_packet("Recv ", USBD_HID_PACKET_SIZE, req);
 
             // payload長を取得し、リクエストデータ領域に格納
             payload_len = get_payload_length(req);
-            pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
+            pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
 
             // CIDを保持
             cid = get_CID(req->cid);
@@ -267,11 +268,11 @@ void hid_u2f_receive_request_data(uint8_t *request_frame_buffer, size_t request_
             hid_u2f_command_on_process_started();
             
         } else {
-            dump_hid_cont_packet("Recv ", U2FHID_PACKET_SIZE, req);
+            dump_hid_cont_packet("Recv ", USBD_HID_PACKET_SIZE, req);
 
             // リクエストデータ領域に格納
             size_t remain = payload_len - pos;
-            size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
+            size_t cnt = (remain < USBD_HID_CONT_PAYLOAD_SIZE) ? remain : USBD_HID_CONT_PAYLOAD_SIZE;
             pos += cnt;
 
             // リクエストデータのチェックと格納

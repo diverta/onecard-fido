@@ -846,18 +846,18 @@
                    projectFiles="true"
                    root="../usbd_hid_u2f_lib">
       <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.h</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.c</itemPath>
       <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_comm_interval_timer.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_comm_interval_timer.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_common.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_common.h</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_service.c</itemPath>
+      <itemPath>../usbd_hid_u2f_lib/usbd_hid_service.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -2992,22 +2992,7 @@
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-      </item>
       <item path="../usbd_hid_u2f_lib/hid_u2f_command.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../u2f_lib</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
             ex="false"
             tool="0"
             flavor2="2">
@@ -3029,7 +3014,30 @@
       </item>
       <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
+      <item path="../usbd_hid_u2f_lib/usbd_hid_comm_interval_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../usbd_hid_u2f_lib/usbd_hid_common.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../usbd_hid_u2f_lib/usbd_hid_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_u2f_lib/usbd_hid_service.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
         <cTool>
           <incDir>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>

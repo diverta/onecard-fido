@@ -8,7 +8,6 @@
 #include "sdk_common.h"
 
 #include "u2f.h"
-#include "hid_u2f_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME u2f_control_point_apdu

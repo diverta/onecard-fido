@@ -31,7 +31,7 @@
 
 // One Card固有の処理
 #include "ble_u2f.h"
-#include "usbd_hid_u2f.h"
+#include "usbd_hid_service.h"
 #include "one_card_main.h"
 #include "one_card_event.h"
 
@@ -655,7 +655,7 @@ int main(void)
     // Enter main loop.
     for (;;) {
         // U2F HID Reportを処理
-        usbd_hid_u2f_do_process();
+        usbd_hid_do_process();
         idle_state_handle();
     }
 }

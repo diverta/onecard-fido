@@ -10,9 +10,9 @@
 #include "u2f_crypto_ecb.h"
 #include "u2f_authenticate.h"
 #include "u2f_register.h"
-#include "usbd_hid_u2f.h"
-#include "hid_u2f_common.h"
-#include "hid_u2f_comm_interval_timer.h"
+#include "usbd_hid_service.h"
+#include "usbd_hid_common.h"
+#include "usbd_hid_comm_interval_timer.h"
 #include "hid_u2f_receive.h"
 #include "hid_u2f_send.h"
 
@@ -58,6 +58,13 @@ typedef struct u2f_version_response
 U2F_HID_INIT_RES  init_res;
 U2F_VERSION_RES   version_res;
 
+//
+// U2Fレスポンスデータ格納領域
+// （コマンド共通）
+//
+static uint8_t u2f_response_buffer[1024];
+static size_t  u2f_response_length;
+
 // 関数プロトタイプ
 static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
@@ -67,7 +74,7 @@ static void u2f_resume_response_process(void)
     uint8_t ins;
     uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
     switch (cmd) {
-        case U2FHID_MSG:
+        case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = hid_u2f_receive_apdu()->INS;
@@ -373,13 +380,20 @@ static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
     }
 }
 
+static void generate_u2f_error_response(uint8_t error_code)
+{
+    // レスポンスデータを編集 (1 bytes)
+    u2f_response_length = 1;
+    u2f_response_buffer[0] = error_code;
+}
+
 static void send_error_command_response(uint8_t error_code) 
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     generate_u2f_error_response(error_code);
     uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    hid_u2f_send_setup(cid, U2FHID_ERROR, u2f_response_buffer, u2f_response_length);
+    hid_u2f_send_setup(cid, U2F_COMMAND_ERROR, u2f_response_buffer, u2f_response_length);
     hid_u2f_send_input_report();
 
     // アイドル時点滅処理を開始
@@ -393,7 +407,7 @@ void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t re
     hid_u2f_receive_request_data(request_frame_buffer, request_frame_number);
 
     uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    if (cmd == U2FHID_ERROR) {
+    if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
         send_error_command_response(hid_u2f_receive_hid_header()->ERROR);
         return;
@@ -406,11 +420,11 @@ void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t re
 
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
-        case U2FHID_INIT:
+        case U2F_COMMAND_HID_INIT:
             u2f_hid_init_do_process();
             break;
             
-        case U2FHID_MSG:
+        case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = hid_u2f_receive_apdu()->INS;
@@ -436,7 +450,7 @@ void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     // Flash ROM更新後に行われる後続処理を実行
     uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
     switch (cmd) {
-        case U2FHID_MSG:
+        case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = hid_u2f_receive_apdu()->INS;
@@ -459,7 +473,7 @@ void hid_u2f_command_on_report_sent(void)
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
     switch (cmd) {
-        case U2FHID_MSG:
+        case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = hid_u2f_receive_apdu()->INS;
@@ -478,7 +492,7 @@ void hid_u2f_command_on_report_sent(void)
 void hid_u2f_command_on_process_started(void) 
 {
     // 処理タイムアウト監視を開始
-    hid_u2f_comm_interval_timer_start();
+    usbd_hid_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
     u2f_idling_led_off(one_card_get_U2F_context()->led_for_processing_fido);
@@ -487,7 +501,7 @@ void hid_u2f_command_on_process_started(void)
 void hid_u2f_command_on_process_ended(void) 
 {
     // 処理タイムアウト監視を停止
-    hid_u2f_comm_interval_timer_stop();
+    usbd_hid_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
     u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);

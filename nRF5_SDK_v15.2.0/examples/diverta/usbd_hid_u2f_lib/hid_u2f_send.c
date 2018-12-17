@@ -6,9 +6,9 @@
  */
 #include <stdio.h>
 
-#include "usbd_hid_u2f.h"
+#include "usbd_hid_common.h"
+#include "usbd_hid_service.h"
 #include "hid_u2f_command.h"
-#include "hid_u2f_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_send
@@ -16,7 +16,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // U2F HIDリクエストデータ格納領域
-static uint8_t hid_u2f_send_buffer[U2FHID_PACKET_SIZE];
+static uint8_t hid_u2f_send_buffer[USBD_HID_PACKET_SIZE];
 static size_t  hid_u2f_send_buffer_length;
 
 static struct {
@@ -38,10 +38,10 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
     // 送信パケット格納領域を初期化
     memset(&hid_u2f_send_buffer, 0x00, sizeof(hid_u2f_send_buffer));
-    hid_u2f_send_buffer_length = U2FHID_PACKET_SIZE;
+    hid_u2f_send_buffer_length = USBD_HID_PACKET_SIZE;
 
     // パケット格納領域を取得
-    U2F_HID_MSG *res = (U2F_HID_MSG *)hid_u2f_send_buffer;
+    USB_HID_MSG_T *res = (USB_HID_MSG_T *)hid_u2f_send_buffer;
 
     if (offset == 0) {
         // チャネルID、CMD、データ長を設定
@@ -95,14 +95,14 @@ void hid_u2f_send_input_report(void)
     
     // データ長
     remaining = send_info_t.payload_length - send_info_t.sent_length;
-    xfer_data_max = (send_info_t.sent_length == 0) ? U2FHID_INIT_PAYLOAD_SIZE : U2FHID_CONT_PAYLOAD_SIZE;
+    xfer_data_max = (send_info_t.sent_length == 0) ? USBD_HID_INIT_PAYLOAD_SIZE : USBD_HID_CONT_PAYLOAD_SIZE;
     xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
 
     // パケットを生成
     generate_hid_input_report(send_info_t.payload_data, send_info_t.payload_length, send_info_t.sent_length, xfer_data_len, send_info_t.cid, send_info_t.cmd);
 
     // パケットをU2Fクライアントへ転送
-    usbd_hid_u2f_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
+    usbd_hid_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
 
     // 送信済みバイト数を更新
     send_info_t.sent_length += xfer_data_len;

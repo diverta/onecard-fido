@@ -44,6 +44,9 @@ extern "C" {
 #define U2F_COMMAND_PING      0x81
 #define U2F_COMMAND_KEEPALIVE 0x82
 #define U2F_COMMAND_MSG       0x83
+#define U2F_COMMAND_HID_LOCK  0x84
+#define U2F_COMMAND_HID_INIT  0x86
+#define U2F_COMMAND_HID_WINK  0x88
 #define U2F_COMMAND_ERROR     0xbf
 
 // U2Fエラーステータスの識別用

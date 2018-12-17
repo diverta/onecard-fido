@@ -1,5 +1,5 @@
 /* 
- * File:   usbd_hid_u2f.c
+ * File:   usbd_hid_service.c
  * Author: makmorit
  *
  * Created on 2018/11/06, 14:21
@@ -14,13 +14,12 @@
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
 
-#include "hid_u2f_common.h"
-#include "hid_u2f_receive.h"
+#include "usbd_hid_common.h"
 #include "hid_u2f_send.h"
 #include "hid_u2f_command.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME usbd_hid_u2f
+#define NRF_LOG_MODULE_NAME usbd_hid_service
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -142,14 +141,14 @@ static bool usbd_hid_frame_receive(uint8_t *p_buff, size_t size)
     if (size == 0) {
         return false;
     }
-
-    U2F_HID_MSG *req = (U2F_HID_MSG *)p_buff;
-    if (U2FHID_IS_INIT(req->pkt.init.cmd)) {
+    
+    USB_HID_MSG_T *req = (USB_HID_MSG_T *)p_buff;
+    if ((req->pkt.init.cmd) & 0x80) {
         // 先頭フレームであればpayload長を取得
         payload_len = get_payload_length(req);
         
         // フレームが最後かどうかを判定するための受信済みデータ長
-        pos = (payload_len < U2FHID_INIT_PAYLOAD_SIZE) ? payload_len : U2FHID_INIT_PAYLOAD_SIZE;
+        pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
 
         // リクエストフレーム全体を一時領域に格納
         memset(&request_frame_buffer, 0, sizeof(request_frame_buffer));
@@ -160,11 +159,11 @@ static bool usbd_hid_frame_receive(uint8_t *p_buff, size_t size)
         // 後続フレームの場合
         // フレームが最後かどうかを判定するための受信済みデータ長を更新
         size_t remain = payload_len - pos;
-        size_t cnt = (remain < U2FHID_CONT_PAYLOAD_SIZE) ? remain : U2FHID_CONT_PAYLOAD_SIZE;
+        size_t cnt = (remain < USBD_HID_CONT_PAYLOAD_SIZE) ? remain : USBD_HID_CONT_PAYLOAD_SIZE;
         pos += cnt;
 
         // リクエストフレーム全体を一時領域に格納
-        memcpy(request_frame_buffer + request_frame_number * U2FHID_PACKET_SIZE, 
+        memcpy(request_frame_buffer + request_frame_number * USBD_HID_PACKET_SIZE, 
             p_buff, size);
         request_frame_number++;
     }
@@ -337,7 +336,7 @@ void usbd_hid_init(void)
     NRF_LOG_DEBUG("usbd_hid_init() done");
 }
 
-void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
+void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
 {
     // 64バイトのInput reportを送信
     app_usbd_class_inst_t const *p_inst = 
@@ -354,7 +353,7 @@ void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
 #endif
 }
 
-void usbd_hid_u2f_do_process(void)
+void usbd_hid_do_process(void)
 {
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());
