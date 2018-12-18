@@ -3,13 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_common.h"
 #include "u2f.h"
 #include "u2f_crypto.h"
 #include "u2f_crypto_ecb.h"
 #include "u2f_flash.h"
-
-// for ble_u2f_set_status_word
-#include "ble_u2f_util.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME u2f_authenticate
@@ -143,7 +141,7 @@ static bool create_authentication_response_message(uint8_t *response_message_buf
     }
 
     // ステータスワード
-    ble_u2f_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
+    fido_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
     offset += 2;
     
     // メッセージのバイト数をセット

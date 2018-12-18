@@ -49,6 +49,14 @@
                    root="../ctap2_lib">
       <itemPath>../ctap2_lib/ctap2.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="fido_lib" displayName="fido_lib" projectFiles="true">
+      <itemPath>../fido_lib/fido_common.c</itemPath>
+      <itemPath>../fido_lib/fido_common.h</itemPath>
+      <itemPath>../fido_lib/fido_idling_led.c</itemPath>
+      <itemPath>../fido_lib/fido_idling_led.h</itemPath>
+      <itemPath>../fido_lib/fido_request_apdu.c</itemPath>
+      <itemPath>../fido_lib/fido_request_apdu.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="generic"
                    displayName="generic"
                    projectFiles="true"
@@ -827,16 +835,12 @@
       <itemPath>../u2f_lib/u2f.h</itemPath>
       <itemPath>../u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
-      <itemPath>../u2f_lib/u2f_control_point_apdu.c</itemPath>
-      <itemPath>../u2f_lib/u2f_control_point_apdu.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto_ecb.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto_ecb.h</itemPath>
       <itemPath>../u2f_lib/u2f_flash.c</itemPath>
       <itemPath>../u2f_lib/u2f_flash.h</itemPath>
-      <itemPath>../u2f_lib/u2f_idling_led.c</itemPath>
-      <itemPath>../u2f_lib/u2f_idling_led.h</itemPath>
       <itemPath>../u2f_lib/u2f_register.c</itemPath>
       <itemPath>../u2f_lib/u2f_register.h</itemPath>
     </logicalFolder>
@@ -877,6 +881,7 @@
     <Elem>../ctap2_lib</Elem>
     <Elem>../usbd_hid_ctap2_lib</Elem>
     <Elem>../usbd_hid_lib</Elem>
+    <Elem>../fido_lib</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2880,6 +2885,18 @@
           </preprocessorList>
         </cTool>
       </item>
+      <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_idling_led.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_request_apdu.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_request_apdu.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
           <incDir>
@@ -2970,11 +2987,6 @@
       </item>
       <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../u2f_lib/u2f_control_point_apdu.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-      </item>
       <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_crypto_ecb.c" ex="false" tool="0" flavor2="2">
@@ -2985,8 +2997,6 @@
         </cTool>
       </item>
       <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
-      </item>
-      <item path="../u2f_lib/u2f_idling_led.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
       </item>

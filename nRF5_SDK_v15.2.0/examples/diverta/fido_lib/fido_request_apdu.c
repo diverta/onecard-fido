@@ -1,5 +1,5 @@
 /* 
- * File:   u2f_request_apdu.c
+ * File:   fido_request_apdu.c
  * Author: makmorit
  *
  * Created on 2018/11/29, 9:57
@@ -7,14 +7,14 @@
 #include <stdlib.h>
 #include "sdk_common.h"
 
-#include "u2f.h"
+#include "fido_common.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME u2f_control_point_apdu
+#define NRF_LOG_MODULE_NAME fido_request_apdu
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// U2FリクエストAPDU編集用の作業領域（固定長）
+// FIDO機能リクエストAPDU編集用の作業領域（固定長）
 static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
 
 static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
@@ -80,7 +80,7 @@ static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_bu
     return lc_length;
 }
 
-uint8_t u2f_control_point_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+uint8_t fido_request_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     uint8_t apdu_header_length = 4;
     
@@ -106,7 +106,7 @@ uint8_t u2f_control_point_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_poin
     return apdu_header_length + lc_length;
 }
 
-void u2f_control_point_apdu_initialize(FIDO_APDU_T *p_apdu)
+void fido_request_apdu_initialize(FIDO_APDU_T *p_apdu)
 {
     // 確保領域は0で初期化
     memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
@@ -151,7 +151,7 @@ static uint16_t get_apdu_le_value(FIDO_APDU_T *p_apdu, uint8_t *received_data, u
     return le_length;
 }
 
-void u2f_control_point_apdu_from_leading(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+void fido_request_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Control Pointに格納されている
     // 受信データの先頭アドレスとデータ長を取得
@@ -177,7 +177,7 @@ void u2f_control_point_apdu_from_leading(FIDO_APDU_T *p_apdu, uint8_t *control_p
     }
 }
 
-void u2f_control_point_apdu_from_following(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
+void fido_request_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
 {
     // 受信データの先頭アドレスとデータ長を取得
     uint8_t *received_data        = control_point_buffer + 1;

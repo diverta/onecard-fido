@@ -5,10 +5,11 @@
  * Created on 2018/11/21, 14:21
  */
 #include <stdio.h>
-#include "u2f_control_point_apdu.h"
+#include "u2f.h"
+#include "fido_request_apdu.h"
+#include "hid_fido_command.h"
 #include "hid_fido_receive.h"
 #include "usbd_hid_common.h"
-#include "hid_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_receive
@@ -91,7 +92,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     } else {
         // コマンドがPING以外の場合
         // APDUヘッダー項目を編集して保持
-        offset += u2f_control_point_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        offset += fido_request_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
     }
 
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {
@@ -117,10 +118,10 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // データ格納領域を初期化し、アドレスを保持
-    u2f_control_point_apdu_initialize(p_apdu);
+    fido_request_apdu_initialize(p_apdu);
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    u2f_control_point_apdu_from_leading(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+    fido_request_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
 
     return true;
 }
@@ -174,7 +175,7 @@ static void extract_and_check_cont_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    u2f_control_point_apdu_from_following(p_apdu, control_point_buffer, control_point_buffer_length);
+    fido_request_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
 static void extract_and_check_request_data(uint32_t cid, uint8_t *payload, size_t payload_size)

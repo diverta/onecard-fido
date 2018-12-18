@@ -3,6 +3,9 @@
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 
+// for lighting LED
+#include "fido_common.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_processing_led
 #include "nrf_log.h"
@@ -24,7 +27,7 @@ static void command_timer_handler(void *p_context)
 {
     // LEDを点滅させる
     led_state = !led_state;
-    ble_u2f_led_light_LED(m_led_for_processing, led_state);
+    fido_led_light_LED(m_led_for_processing, led_state);
 }
 
 static void ble_u2f_processing_led_init()
@@ -83,7 +86,7 @@ void ble_u2f_processing_led_on(uint32_t led_for_processing)
 void ble_u2f_processing_led_off(void)
 {
     // LEDを消灯させる
-    ble_u2f_led_light_LED(m_led_for_processing, false);
+    fido_led_light_LED(m_led_for_processing, false);
 
     // タイマーを停止する
     ble_u2f_processing_led_terminate();

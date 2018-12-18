@@ -175,7 +175,7 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     }
 
     // ステータスワード
-    ble_u2f_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
+    fido_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
     offset += 2;
     
     // メッセージのバイト数をセット

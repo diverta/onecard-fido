@@ -18,9 +18,6 @@ NRF_LOG_MODULE_REGISTER();
 // for macro (SKEY_WORD_NUM, CERT_WORD_NUM, SKEY_CERT_WORD_NUM)
 #include "ble_u2f_securekey.h"
 
-// for ble_u2f_set_status_word
-#include "ble_u2f_util.h"
-
 // 鍵ペア情報をRAWデータに変換する領域
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
@@ -194,7 +191,7 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     }
 
     // ステータスワード
-    ble_u2f_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
+    fido_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
     offset += 2;
     
     // メッセージのバイト数をセット

@@ -17,6 +17,7 @@ extern "C" {
 
 // FIDOアライアンス提供の共通ヘッダー
 // "u2f.h"より抜粋
+#include "fido_common.h"
 #include "u2f.h"
 
 // BLEパケット項目のサイズ

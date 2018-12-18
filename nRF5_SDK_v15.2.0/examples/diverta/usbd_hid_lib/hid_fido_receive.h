@@ -1,15 +1,15 @@
 /* 
- * File:   hid_u2f_receive.h
+ * File:   hid_fido_receive.h
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
  */
 
-#ifndef HID_U2F_RECEIVE_H
-#define HID_U2F_RECEIVE_H
+#ifndef HID_FIDO_RECEIVE_H
+#define HID_FIDO_RECEIVE_H
 
 #include <stdbool.h>
-#include "u2f.h"
+#include "fido_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +35,7 @@ typedef struct {
 } HID_HEADER_T;
 
 HID_HEADER_T *hid_fido_receive_hid_header(void);
-FIDO_APDU_T   *hid_fido_receive_apdu(void);
+FIDO_APDU_T  *hid_fido_receive_apdu(void);
 
 void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
 
@@ -43,5 +43,5 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
 }
 #endif
 
-#endif /* HID_U2F_RECEIVE_H */
+#endif /* HID_FIDO_RECEIVE_H */
 
