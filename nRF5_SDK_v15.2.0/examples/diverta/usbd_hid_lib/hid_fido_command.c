@@ -12,8 +12,8 @@
 
 #include "fds.h"
 #include "usbd_hid_comm_interval_timer.h"
-#include "hid_u2f_receive.h"
-#include "hid_u2f_send.h"
+#include "hid_fido_receive.h"
+#include "hid_fido_send.h"
 #include "hid_u2f_command.h"
 
 // for ble_u2f_processing_led_on/off
@@ -33,31 +33,31 @@ static void send_error_command_response(uint8_t error_code)
 
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    hid_u2f_send_setup(cid, U2F_COMMAND_ERROR, err_response_buffer, err_response_length);
-    hid_u2f_send_input_report();
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    hid_fido_send_setup(cid, U2F_COMMAND_ERROR, err_response_buffer, err_response_length);
+    hid_fido_send_input_report();
 
     // アイドル時点滅処理を開始
     u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
 
-void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
+void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     // 受信したフレームから、リクエストデータを取得し、
     // 同時に内容をチェックする
-    hid_u2f_receive_request_data(request_frame_buffer, request_frame_number);
+    hid_fido_receive_request_data(request_frame_buffer, request_frame_number);
 
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        send_error_command_response(hid_u2f_receive_hid_header()->ERROR);
+        send_error_command_response(hid_fido_receive_hid_header()->ERROR);
         return;
     }
 
     uint8_t ins;
-    NRF_LOG_INFO("CMD(0x%02x) LEN(%d)", 
-        hid_u2f_receive_hid_header()->CMD, 
-        hid_u2f_receive_hid_header()->LEN);
+    NRF_LOG_DEBUG("CMD(0x%02x) LEN(%d)", 
+        hid_fido_receive_hid_header()->CMD, 
+        hid_fido_receive_hid_header()->LEN);
 
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
@@ -68,7 +68,7 @@ void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t re
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_u2f_receive_apdu()->INS;
+            ins = hid_fido_receive_apdu()->INS;
             if (ins == U2F_VERSION) {
                 u2f_version_do_process();
                 
@@ -84,17 +84,17 @@ void hid_u2f_command_on_report_received(uint8_t *request_frame_buffer, size_t re
     }
 }
 
-void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
+void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     uint8_t  ins;
 
     // Flash ROM更新後に行われる後続処理を実行
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_u2f_receive_apdu()->INS;
+            ins = hid_fido_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
                 u2f_register_send_response(p_evt);
                 
@@ -107,17 +107,17 @@ void hid_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_u2f_command_on_report_sent(void)
+void hid_fido_command_on_report_sent(void)
 {
     uint8_t  ins;
 
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_u2f_receive_apdu()->INS;
+            ins = hid_fido_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
                 NRF_LOG_INFO("U2F Register end");
                 
@@ -130,7 +130,7 @@ void hid_u2f_command_on_report_sent(void)
     }
 }
 
-void hid_u2f_command_on_process_started(void) 
+void hid_fido_command_on_process_started(void) 
 {
     // 処理タイムアウト監視を開始
     usbd_hid_comm_interval_timer_start();
@@ -139,7 +139,7 @@ void hid_u2f_command_on_process_started(void)
     u2f_idling_led_off(one_card_get_U2F_context()->led_for_processing_fido);
 }
 
-void hid_u2f_command_on_process_ended(void) 
+void hid_fido_command_on_process_ended(void) 
 {
     // 処理タイムアウト監視を停止
     usbd_hid_comm_interval_timer_stop();
@@ -148,7 +148,7 @@ void hid_u2f_command_on_process_ended(void)
     u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
 
-void hid_u2f_command_on_process_timedout(void) 
+void hid_fido_command_on_process_timedout(void) 
 {
     // USBポートにタイムアウトを通知する
     NRF_LOG_ERROR("USB HID communication timed out.");
@@ -158,8 +158,10 @@ void hid_u2f_command_on_process_timedout(void)
     send_error_command_response(0x7f);
 }
 
-bool hid_u2f_command_is_valid(uint8_t command)
+bool hid_fido_command_is_valid(uint8_t command)
 {
+    // FIDO機能（U2F、CTAP2）の
+    // コマンドであればtrueを戻す
     switch (command) {
         case U2F_COMMAND_PING:
         case U2F_COMMAND_MSG:

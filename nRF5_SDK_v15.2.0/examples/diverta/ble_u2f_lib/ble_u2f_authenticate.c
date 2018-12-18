@@ -20,7 +20,7 @@ NRF_LOG_MODULE_REGISTER();
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
 {
     // appIdHashを参照し、APDUの33バイト目のアドレスを戻す
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
 
     return p_appid_hash;
@@ -30,7 +30,7 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
 {
     // リクエストデータのキーハンドルを参照
     //   APDUの65バイト目以降
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint32_t keyhandle_length = p_apdu->data[64];
     uint8_t *keyhandle_value = p_apdu->data + 65;
 
@@ -119,7 +119,7 @@ static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user
 
     // APDUからappIdHashを取得し格納
     uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint16_t copied_size = copy_appIdHash_data(signature_base_buffer + offset, p_apdu->data);
     offset += copied_size;
 

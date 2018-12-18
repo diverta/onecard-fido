@@ -1,5 +1,5 @@
 /* 
- * File:   hid_u2f_send.c
+ * File:   hid_fido_send.c
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
@@ -11,13 +11,13 @@
 #include "hid_fido_command.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME hid_u2f_send
+#define NRF_LOG_MODULE_NAME hid_fido_send
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// U2F HIDリクエストデータ格納領域
-static uint8_t hid_u2f_send_buffer[USBD_HID_PACKET_SIZE];
-static size_t  hid_u2f_send_buffer_length;
+// FIDO機能のHIDリクエストデータ格納領域
+static uint8_t hid_fido_send_buffer[USBD_HID_PACKET_SIZE];
+static size_t  hid_fido_send_buffer_length;
 
 static struct {
     // 送信用ヘッダーに格納するコマンド、データ長、
@@ -37,11 +37,11 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
     static uint8_t seq;
 
     // 送信パケット格納領域を初期化
-    memset(&hid_u2f_send_buffer, 0x00, sizeof(hid_u2f_send_buffer));
-    hid_u2f_send_buffer_length = USBD_HID_PACKET_SIZE;
+    memset(&hid_fido_send_buffer, 0x00, sizeof(hid_fido_send_buffer));
+    hid_fido_send_buffer_length = USBD_HID_PACKET_SIZE;
 
     // パケット格納領域を取得
-    USB_HID_MSG_T *res = (USB_HID_MSG_T *)hid_u2f_send_buffer;
+    USB_HID_MSG_T *res = (USB_HID_MSG_T *)hid_fido_send_buffer;
 
     if (offset == 0) {
         // チャネルID、CMD、データ長を設定
@@ -52,7 +52,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
-        dump_hid_init_packet("Send ", hid_u2f_send_buffer_length, res);
+        dump_hid_init_packet("Send ", hid_fido_send_buffer_length, res);
 
         // シーケンスを初期化
         seq = 0;
@@ -64,11 +64,11 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.cont.payload, payload_data + offset, xfer_data_len);
-        dump_hid_cont_packet("Send ", hid_u2f_send_buffer_length, res);
+        dump_hid_cont_packet("Send ", hid_fido_send_buffer_length, res);
     }
 }
 
-void hid_u2f_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
+void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
 {
     // 送信のために必要な情報を保持
     send_info_t.cid = cid;
@@ -80,7 +80,7 @@ void hid_u2f_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t
     send_info_t.sent_length = 0;
 }
 
-void hid_u2f_send_input_report(void)
+void hid_fido_send_input_report(void)
 {
     size_t  xfer_data_max;
     size_t  xfer_data_len;
@@ -89,7 +89,7 @@ void hid_u2f_send_input_report(void)
     // 保持中の情報をチェックし、
     // 完備していない場合は異常終了
     if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
-        NRF_LOG_ERROR("hid_u2f_send_input_report: hid_u2f_send_setup incomplete ");
+        NRF_LOG_ERROR("hid_fido_send_input_report: hid_fido_send_setup incomplete ");
         return;
     }
     
@@ -101,16 +101,16 @@ void hid_u2f_send_input_report(void)
     // パケットを生成
     generate_hid_input_report(send_info_t.payload_data, send_info_t.payload_length, send_info_t.sent_length, xfer_data_len, send_info_t.cid, send_info_t.cmd);
 
-    // パケットをU2Fクライアントへ転送
-    usbd_hid_frame_send(hid_u2f_send_buffer, hid_u2f_send_buffer_length);
+    // パケットをFIDOクライアントへ転送
+    usbd_hid_frame_send(hid_fido_send_buffer, hid_fido_send_buffer_length);
 
     // 送信済みバイト数を更新
     send_info_t.sent_length += xfer_data_len;
 }
 
-void hid_u2f_send_input_report_complete()
+void hid_fido_send_input_report_complete()
 {
-    // hid_u2f_send_input_report による
+    // hid_fido_send_input_report による
     // フレームの送信が正常に完了した時の処理
     //   hid_user_ev_handlerのイベント
     //   APP_USBD_HID_USER_EVT_IN_REPORT_DONEの
@@ -121,12 +121,12 @@ void hid_u2f_send_input_report_complete()
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // コールバック
-        hid_u2f_command_on_report_sent();
-        // U2F処理完了時の処理を実行
-        hid_u2f_command_on_process_ended();
+        hid_fido_command_on_report_sent();
+        // FIDO機能処理完了時の処理を実行
+        hid_fido_command_on_process_ended();
         
     } else {
         // 次のフレームの送信を実行
-        hid_u2f_send_input_report();
+        hid_fido_send_input_report();
     }
 }

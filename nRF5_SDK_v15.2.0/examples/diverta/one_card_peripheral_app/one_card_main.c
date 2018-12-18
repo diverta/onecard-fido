@@ -202,7 +202,7 @@ void one_card_peer_manager_init(void)
     ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 
-    err_code = fds_register(hid_u2f_command_on_fs_evt);
+    err_code = fds_register(hid_fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 

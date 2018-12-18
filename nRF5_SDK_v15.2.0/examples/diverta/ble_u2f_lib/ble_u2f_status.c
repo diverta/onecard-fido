@@ -222,7 +222,7 @@ void ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context)
     // BLE接続情報、BLEヘッダー、APDUの参照を取得
     ble_u2f_t *p_u2f = p_u2f_context->p_u2f;
     BLE_HEADER_T *p_ble_header = p_u2f_context->p_ble_header;
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
 
     // PINGの場合は
     // リクエストのBLEヘッダーとデータを編集せず

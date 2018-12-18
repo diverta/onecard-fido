@@ -17,7 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 // U2FリクエストAPDU編集用の作業領域（固定長）
 static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
 
-static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Leの先頭バイトの値を参照し
     // APDUのエンコード種類を判定
@@ -80,7 +80,7 @@ static uint16_t get_apdu_lc_value(U2F_APDU_T *p_apdu, uint8_t *control_point_buf
     return lc_length;
 }
 
-uint8_t u2f_control_point_apdu_header(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+uint8_t u2f_control_point_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     uint8_t apdu_header_length = 4;
     
@@ -106,7 +106,7 @@ uint8_t u2f_control_point_apdu_header(U2F_APDU_T *p_apdu, uint8_t *control_point
     return apdu_header_length + lc_length;
 }
 
-void u2f_control_point_apdu_initialize(U2F_APDU_T *p_apdu)
+void u2f_control_point_apdu_initialize(FIDO_APDU_T *p_apdu)
 {
     // 確保領域は0で初期化
     memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
@@ -115,7 +115,7 @@ void u2f_control_point_apdu_initialize(U2F_APDU_T *p_apdu)
     p_apdu->data = apdu_data_buffer;
 }
 
-static uint16_t get_apdu_le_value(U2F_APDU_T *p_apdu, uint8_t *received_data, uint16_t received_data_length)
+static uint16_t get_apdu_le_value(FIDO_APDU_T *p_apdu, uint8_t *received_data, uint16_t received_data_length)
 {
     // Leのバイト数を求める
     uint16_t le_length = (p_apdu->data_length + received_data_length) - p_apdu->Lc;
@@ -151,7 +151,7 @@ static uint16_t get_apdu_le_value(U2F_APDU_T *p_apdu, uint8_t *received_data, ui
     return le_length;
 }
 
-void u2f_control_point_apdu_from_leading(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+void u2f_control_point_apdu_from_leading(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Control Pointに格納されている
     // 受信データの先頭アドレスとデータ長を取得
@@ -177,7 +177,7 @@ void u2f_control_point_apdu_from_leading(U2F_APDU_T *p_apdu, uint8_t *control_po
     }
 }
 
-void u2f_control_point_apdu_from_following(U2F_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
+void u2f_control_point_apdu_from_following(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
 {
     // 受信データの先頭アドレスとデータ長を取得
     uint8_t *received_data        = control_point_buffer + 1;

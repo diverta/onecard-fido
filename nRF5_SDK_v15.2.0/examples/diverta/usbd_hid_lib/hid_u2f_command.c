@@ -17,8 +17,8 @@
 #include "u2f_authenticate.h"
 #include "u2f_register.h"
 #include "usbd_hid_common.h"
-#include "hid_u2f_receive.h"
-#include "hid_u2f_send.h"
+#include "hid_fido_receive.h"
+#include "hid_fido_send.h"
 
 // for ble_u2f_processing_led_on/off
 #include "ble_u2f_processing_led.h"
@@ -75,12 +75,12 @@ static void u2f_authenticate_resume_process(void);
 static void u2f_resume_response_process(void)
 {
     uint8_t ins;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
+    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_u2f_receive_apdu()->INS;
+            ins = hid_fido_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
                 NRF_LOG_INFO("U2F Register: completed the test of user presence");
                 u2f_register_resume_process();
@@ -119,10 +119,10 @@ bool hid_u2f_command_on_mainsw_long_push_event(void)
 
 static void send_u2f_response(void)
 {
-    uint32_t cid = hid_u2f_receive_hid_header()->CID;
-    uint8_t cmd = hid_u2f_receive_hid_header()->CMD;
-    hid_u2f_send_setup(cid, cmd, u2f_response_buffer, u2f_response_length);
-    hid_u2f_send_input_report();
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_setup(cid, cmd, u2f_response_buffer, u2f_response_length);
+    hid_fido_send_input_report();
 }
 
 void u2f_hid_init_do_process(void)
@@ -131,7 +131,7 @@ void u2f_hid_init_do_process(void)
     memset(&init_res, 0x00, sizeof(init_res));
     
     // nonce を取得
-    uint8_t *nonce = hid_u2f_receive_apdu()->data;
+    uint8_t *nonce = hid_fido_receive_apdu()->data;
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -185,7 +185,7 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 {
     // U2F Register／AuthenticateリクエストAPDUから
     // appid_hash(Application parameter)を取り出す
-    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
     uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
     
     return p_appid_hash;
@@ -213,7 +213,7 @@ void u2f_register_do_process(void)
     }
     
     // control byte (P1) を参照
-    uint8_t control_byte = hid_u2f_receive_apdu()->P1;
+    uint8_t control_byte = hid_fido_receive_apdu()->P1;
     if (control_byte == 0x03) {
         // 0x03 ("enforce-user-presence-and-sign")
         // ユーザー所在確認が必要な場合は、ここで終了し
@@ -236,8 +236,8 @@ static void u2f_register_resume_process(void)
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
 
-    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
-    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
+    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
+    uint32_t apdu_le = hid_fido_receive_apdu()->Le;
     u2f_response_length = sizeof(u2f_response_buffer);
     if (u2f_register_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
@@ -291,7 +291,7 @@ void u2f_authenticate_do_process(void)
         return;
     }
 
-    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
+    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
     if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
@@ -314,7 +314,7 @@ void u2f_authenticate_do_process(void)
     NRF_LOG_DEBUG("U2F Authenticate: token counter value=%d ", u2f_flash_token_counter_value());
 
     // control byte (P1) を参照
-    uint8_t control_byte = hid_u2f_receive_apdu()->P1;
+    uint8_t control_byte = hid_fido_receive_apdu()->P1;
     if (control_byte == 0x07) {
         // 0x07 ("check-only") の場合はここで終了し
         // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
@@ -342,8 +342,8 @@ static void u2f_authenticate_resume_process(void)
 {
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
-    uint8_t *apdu_data = hid_u2f_receive_apdu()->data;
-    uint32_t apdu_le = hid_u2f_receive_apdu()->Le;
+    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
+    uint32_t apdu_le = hid_fido_receive_apdu()->Le;
     u2f_response_length = sizeof(u2f_response_buffer);
     if (u2f_authenticate_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、

@@ -17,7 +17,7 @@ static uint16_t control_point_buffer_length;
 // BLEヘッダー、APDU項目は
 // このモジュール内で保持
 static BLE_HEADER_T ble_header_t;
-static U2F_APDU_T   apdu_t;
+static FIDO_APDU_T   apdu_t;
 
 
 void ble_u2f_control_point_initialize(void)
@@ -26,7 +26,7 @@ void ble_u2f_control_point_initialize(void)
     memset(control_point_buffer, 0x00, BLE_U2F_MAX_RECV_CHAR_LEN);
     control_point_buffer_length = 0;
     memset(&ble_header_t, 0x00, sizeof(BLE_HEADER_T));
-    memset(&apdu_t, 0x00, sizeof(U2F_APDU_T));
+    memset(&apdu_t, 0x00, sizeof(FIDO_APDU_T));
 }
 
 static bool is_valid_command(uint8_t command)
@@ -40,7 +40,7 @@ static bool is_valid_command(uint8_t command)
     }
 }
 
-static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context, BLE_HEADER_T *p_ble_header, U2F_APDU_T *p_apdu)
+static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context, BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
 {
     if (control_point_buffer_length < 3) {
         // 受取ったバイト数が３バイトに満たない場合は、
@@ -133,7 +133,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
 }
 
 
-static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, U2F_APDU_T *p_apdu)
+static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
 {
     // CMDが空の場合は先頭レコード未送信とみなし
     // エラーと扱う
@@ -206,7 +206,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
         } else {
             // BLEヘッダーとAPDUを初期化
             memset(&ble_header_t, 0, sizeof(BLE_HEADER_T));
-            memset(&apdu_t, 0, sizeof(U2F_APDU_T));
+            memset(&apdu_t, 0, sizeof(FIDO_APDU_T));
 
             // 先頭パケットに対する処理を行う
             u2f_request_receive_leading_packet(

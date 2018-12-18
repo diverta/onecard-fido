@@ -65,7 +65,7 @@ typedef struct {
     uint8_t *data;
     uint32_t data_length;
     uint32_t Le;
-} U2F_APDU_T;
+} FIDO_APDU_T;
 
 // APDUに格納できるデータ長の上限
 #ifndef APDU_DATA_MAX_LENGTH

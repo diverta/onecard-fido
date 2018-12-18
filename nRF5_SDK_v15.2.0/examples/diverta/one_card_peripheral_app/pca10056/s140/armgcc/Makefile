@@ -5,10 +5,11 @@ TARGET_BOARD     := PCA10056
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
+FIDLIB_DIR := $(PROJ_DIR)/../fido_lib
 U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
 CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
-HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_u2f_lib
+HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
@@ -159,9 +160,9 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
+  $(HIDLIB_DIR)/hid_fido_receive.c \
+  $(HIDLIB_DIR)/hid_fido_send.c \
   $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/hid_u2f_receive.c \
-  $(HIDLIB_DIR)/hid_u2f_send.c \
   $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
@@ -315,6 +316,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/hal \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(PROJ_DIR) \
+  $(FIDLIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \

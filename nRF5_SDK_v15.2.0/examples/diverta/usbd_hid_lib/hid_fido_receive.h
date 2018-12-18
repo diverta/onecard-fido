@@ -34,10 +34,10 @@ typedef struct {
     bool CONT;
 } HID_HEADER_T;
 
-HID_HEADER_T *hid_u2f_receive_hid_header(void);
-U2F_APDU_T   *hid_u2f_receive_apdu(void);
+HID_HEADER_T *hid_fido_receive_hid_header(void);
+FIDO_APDU_T   *hid_fido_receive_apdu(void);
 
-void hid_u2f_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
+void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
 
 #ifdef __cplusplus
 }
