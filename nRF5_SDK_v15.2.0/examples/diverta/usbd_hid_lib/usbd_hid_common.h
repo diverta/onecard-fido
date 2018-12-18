@@ -12,8 +12,6 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
-
 // USB HIDサービスのメッセージ長に関する定義
 #define USBD_HID_PACKET_SIZE 64
 #define USBD_HID_INIT_PAYLOAD_SIZE (USBD_HID_PACKET_SIZE-7)

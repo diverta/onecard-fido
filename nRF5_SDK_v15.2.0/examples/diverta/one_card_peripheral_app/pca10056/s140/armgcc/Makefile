@@ -136,6 +136,7 @@ SRC_FILES += \
   $(PROJ_DIR)/one_card_event.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
+  $(FIDLIB_DIR)/fido_processing_led.c \
   $(FIDLIB_DIR)/fido_request_apdu.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_crypto.c \
@@ -152,7 +153,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_flash.c \
   $(BLELIB_DIR)/ble_u2f_init.c \
   $(BLELIB_DIR)/ble_u2f_pairing.c \
-  $(BLELIB_DIR)/ble_u2f_processing_led.c \
   $(BLELIB_DIR)/ble_u2f_register.c \
   $(BLELIB_DIR)/ble_u2f_securekey.c \
   $(BLELIB_DIR)/ble_u2f_status.c \

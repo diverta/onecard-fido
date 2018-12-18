@@ -21,7 +21,7 @@
 #include "hid_fido_send.h"
 
 // for ble_u2f_processing_led_on/off
-#include "ble_u2f_processing_led.h"
+#include "fido_processing_led.h"
 #include "one_card_main.h"
 
 // for logging informations
@@ -103,7 +103,7 @@ bool hid_u2f_command_on_mainsw_event(void)
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
         // LEDを消灯させる
-        ble_u2f_processing_led_off();
+        fido_processing_led_off();
         // 後続のレスポンス送信処理を実行
         u2f_resume_response_process();
     }
@@ -222,7 +222,7 @@ void u2f_register_do_process(void)
         NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
         uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
-        ble_u2f_processing_led_on(led);
+        fido_processing_led_on(led);
         return;
     }
 
@@ -330,7 +330,7 @@ void u2f_authenticate_do_process(void)
         NRF_LOG_INFO("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
         uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
-        ble_u2f_processing_led_on(led);
+        fido_processing_led_on(led);
         return;
     }
 

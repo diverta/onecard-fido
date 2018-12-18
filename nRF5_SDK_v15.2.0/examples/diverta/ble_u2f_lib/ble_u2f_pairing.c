@@ -5,7 +5,7 @@
 #include "ble_u2f.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
-#include "ble_u2f_processing_led.h"
+#include "fido_processing_led.h"
 #include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
@@ -105,7 +105,7 @@ bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t const *p_ble_evt
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            ble_u2f_processing_led_on(p_u2f->led_for_pairing_mode);
+            fido_processing_led_on(p_u2f->led_for_pairing_mode);
             return true;
         }
     }
@@ -371,10 +371,10 @@ void ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        ble_u2f_processing_led_on(p_u2f->led_for_pairing_mode);
+        fido_processing_led_on(p_u2f->led_for_pairing_mode);
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、ペアリングモードLED点滅を停止
-        ble_u2f_processing_led_off();
+        fido_processing_led_off();
     }
 }
 

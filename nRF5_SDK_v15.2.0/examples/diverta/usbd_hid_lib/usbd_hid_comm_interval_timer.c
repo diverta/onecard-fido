@@ -24,7 +24,7 @@ static bool app_timer_started = false;
 static void comm_interval_timeout_handler(void *p_context)
 {
     // 直近のレスポンスから10秒を経過した場合、
-    // U2F処理タイムアウト時の処理を実行
+    // FIDO機能処理タイムアウト時の処理を実行
     hid_fido_command_on_process_timedout();
 }
 

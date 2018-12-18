@@ -5,7 +5,6 @@
  * Created on 2018/11/06, 14:21
  */
 #include <stdio.h>
-#include "u2f.h"
 #include "usbd_hid_common.h"
 
 // for logging informations

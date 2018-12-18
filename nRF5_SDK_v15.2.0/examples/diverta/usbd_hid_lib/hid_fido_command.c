@@ -16,7 +16,7 @@
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
 
-// for ble_u2f_processing_led_on/off
+// for lighting LED on/off
 #include "one_card_main.h"
 #include "fido_idling_led.h"
 

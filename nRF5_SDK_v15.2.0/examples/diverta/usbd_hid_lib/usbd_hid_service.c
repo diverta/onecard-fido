@@ -75,9 +75,9 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
                                 app_usbd_hid_user_event_t event);
 
 
-#define APP_USBD_HID_FIDO_U2F_REPORT_DSC_BUTTON(bcnt) {             \
+#define APP_USBD_HID_FIDO_REPORT_DESC(bcnt) {             \
     0x06, 0xd0, 0xf1, /* Usage Page (FIDO Alliance),         */     \
-    0x09, 0x01,       /* Usage (FIDO U2F HID),               */     \
+    0x09, 0x01,       /* Usage (FIDO USB HID),               */     \
     0xa1, 0x01,       /*  Collection (Application),          */     \
     0x09, 0x20,       /*   Usage (Input Report Data),        */     \
     0x15, 0x00,       /*   Logical Minimum (0),              */     \
@@ -95,11 +95,11 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 /**
- * @brief Reuse HID U2F report descriptor for HID generic class
+ * @brief Reuse USB HID report descriptor for HID generic class
  */
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(u2f_desc,APP_USBD_HID_FIDO_U2F_REPORT_DSC_BUTTON(64));
+APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(report_desc, APP_USBD_HID_FIDO_REPORT_DESC(64));
 
-static const app_usbd_hid_subclass_desc_t * reps[] = {&u2f_desc};
+static const app_usbd_hid_subclass_desc_t * reps[] = {&report_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
@@ -364,6 +364,6 @@ void usbd_hid_do_process(void)
     }
     m_report_received = false;
     
-    // U2F HIDサービスを実行
+    // FIDO USB HIDサービスを実行
     hid_fido_command_on_report_received(request_frame_buffer, request_frame_number);
 }
