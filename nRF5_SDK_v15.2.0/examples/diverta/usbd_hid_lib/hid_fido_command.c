@@ -16,8 +16,10 @@
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
 
+// for U2F command
+#include "u2f.h"
+
 // for lighting LED on/off
-#include "one_card_main.h"
 #include "fido_idling_led.h"
 
 // for logging informations
@@ -38,7 +40,7 @@ static void send_error_command_response(uint8_t error_code)
     hid_fido_send_input_report();
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+    fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
@@ -136,7 +138,7 @@ void hid_fido_command_on_process_started(void)
     usbd_hid_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
-    fido_idling_led_off(one_card_get_U2F_context()->led_for_processing_fido);
+    fido_idling_led_off(LED_FOR_PROCESSING);
 }
 
 void hid_fido_command_on_process_ended(void) 
@@ -145,7 +147,7 @@ void hid_fido_command_on_process_ended(void)
     usbd_hid_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
+    fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
 void hid_fido_command_on_process_timedout(void) 

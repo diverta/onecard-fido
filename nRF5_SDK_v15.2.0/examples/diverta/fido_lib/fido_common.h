@@ -8,10 +8,20 @@
 #define FIDO_COMMON_H
 
 #include <stdbool.h>
+#include "boards.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// FIDO機能で使用するLEDのピン番号を設定
+// nRF52840 Dongleでは以下の割り当てになります。
+//   LED2=Red
+//   LED3=Green
+//   LED4=Blue
+#define LED_FOR_PAIRING_MODE    LED_2
+#define LED_FOR_USER_PRESENCE   LED_3
+#define LED_FOR_PROCESSING      LED_4
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {

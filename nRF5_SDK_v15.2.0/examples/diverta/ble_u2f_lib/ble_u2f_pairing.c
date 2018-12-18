@@ -93,7 +93,7 @@ uint8_t ble_u2f_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
-bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t const *p_ble_evt)
+bool ble_u2f_pairing_reject_request(ble_evt_t const *p_ble_evt)
 {
     if (run_as_pairing_mode == false) {
         if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
@@ -105,7 +105,7 @@ bool ble_u2f_pairing_reject_request(ble_u2f_t *p_u2f, ble_evt_t const *p_ble_evt
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            fido_processing_led_on(p_u2f->led_for_pairing_mode);
+            fido_processing_led_on(LED_FOR_PAIRING_MODE);
             return true;
         }
     }
@@ -116,8 +116,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void * p_context)
 {
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
-    ble_u2f_t *p_u2f = one_card_get_U2F_context();
-    ble_u2f_pairing_reject_request(p_u2f, p_ble_evt);
+    ble_u2f_pairing_reject_request(p_ble_evt);
 }
 
 NRF_SDH_BLE_OBSERVER(m_ble_evt_observer, BLE_CONN_STATE_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
@@ -294,16 +293,16 @@ static void alternate_pairing_mode(ble_u2f_t *p_u2f, bool pairing_mode)
     // ペアリングモードとして動作するか否かを設定
     if (run_as_pairing_mode == true) {
         // 指定のLEDを点灯させる
-        fido_led_light_LED(p_u2f->led_for_pairing_mode, true);
+        fido_led_light_LED(LED_FOR_PAIRING_MODE, true);
         // アイドル時点滅処理を停止
-        fido_idling_led_off(p_u2f->led_for_processing_fido);
+        fido_idling_led_off(LED_FOR_PROCESSING);
         NRF_LOG_INFO("Run as pairing mode ");
 
     } else {
         // 指定のLEDを消灯させる
-        fido_led_light_LED(p_u2f->led_for_pairing_mode, false);
+        fido_led_light_LED(LED_FOR_PAIRING_MODE, false);
         // アイドル時点滅処理を開始
-        fido_idling_led_on(p_u2f->led_for_processing_fido);
+        fido_idling_led_on(LED_FOR_PROCESSING);
         NRF_LOG_INFO("Run as non-pairing mode ");
     }
 }
@@ -362,7 +361,7 @@ void ble_u2f_pairing_on_disconnect(void)
     }
 }
 
-void ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt)
+void ble_u2f_pairing_notify_unavailable(pm_evt_t const *p_evt)
 {
     if (run_as_pairing_mode == true) {
         // ペアリングモードの場合は何もしない
@@ -371,7 +370,7 @@ void ble_u2f_pairing_notify_unavailable(ble_u2f_t *p_u2f, pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_processing_led_on(p_u2f->led_for_pairing_mode);
+        fido_processing_led_on(LED_FOR_PAIRING_MODE);
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、ペアリングモードLED点滅を停止
         fido_processing_led_off();

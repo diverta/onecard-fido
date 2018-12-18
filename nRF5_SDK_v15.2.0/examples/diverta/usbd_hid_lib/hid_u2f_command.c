@@ -20,9 +20,8 @@
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 
-// for ble_u2f_processing_led_on/off
+// for processing LED on/off
 #include "fido_processing_led.h"
-#include "one_card_main.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_u2f_command
@@ -221,8 +220,7 @@ void u2f_register_do_process(void)
         is_tup_needed = true;
         NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
-        fido_processing_led_on(led);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE);
         return;
     }
 
@@ -329,8 +327,7 @@ void u2f_authenticate_do_process(void)
         is_tup_needed = true;
         NRF_LOG_INFO("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        uint32_t led = one_card_get_U2F_context()->led_for_user_presence;
-        fido_processing_led_on(led);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE);
         return;
     }
 
