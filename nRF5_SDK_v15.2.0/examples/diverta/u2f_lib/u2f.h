@@ -49,12 +49,6 @@ extern "C" {
 #define U2F_COMMAND_HID_WINK  0x88
 #define U2F_COMMAND_ERROR     0xbf
 
-// U2Fエラーステータスの識別用
-#define U2F_ERR_INVALID_CMD 0x01
-#define U2F_ERR_INVALID_LEN 0x03
-#define U2F_ERR_INVALID_SEQ 0x04
-#define U2F_ERR_OTHER       0x7f
-
 #ifdef __cplusplus
 }
 #endif

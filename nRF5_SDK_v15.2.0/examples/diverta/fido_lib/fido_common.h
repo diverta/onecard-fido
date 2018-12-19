@@ -23,6 +23,16 @@ extern "C" {
 #define LED_FOR_USER_PRESENCE   LED_3
 #define LED_FOR_PROCESSING      LED_4
 
+// FIDO機能関連エラーステータス
+#define CTAP1_ERR_INVALID_COMMAND   0x01
+#define CTAP1_ERR_INVALID_PARAMETER 0x02
+#define CTAP1_ERR_INVALID_LENGTH    0x03
+#define CTAP1_ERR_INVALID_SEQ       0x04
+#define CTAP1_ERR_TIMEOUT           0x05
+#define CTAP1_ERR_CHANNEL_BUSY      0x06
+#define CTAP1_ERR_LOCK_REQUIRED     0x0a
+#define CTAP1_ERR_OTHER             0x7f
+
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
     uint8_t  CLA;

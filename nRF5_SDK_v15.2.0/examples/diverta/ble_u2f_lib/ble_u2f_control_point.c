@@ -46,7 +46,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // 受取ったバイト数が３バイトに満たない場合は、
         // リクエストとして成立しないので終了
         p_ble_header->CMD = U2F_COMMAND_ERROR;
-        p_ble_header->ERROR = U2F_ERR_INVALID_LEN;
+        p_ble_header->ERROR = CTAP1_ERR_INVALID_LENGTH;
         NRF_LOG_ERROR("u2f_request_receive: invalid request ");
         return false;
     }
@@ -67,7 +67,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // ここで処理を終了
         NRF_LOG_ERROR("u2f_request_receive: invalid command (0x%02x) ", p_ble_header->CMD);
         p_ble_header->CMD = U2F_COMMAND_ERROR;
-        p_ble_header->ERROR = U2F_ERR_INVALID_CMD;
+        p_ble_header->ERROR = CTAP1_ERR_INVALID_COMMAND;
         return false;
     }
 
@@ -104,7 +104,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // ここで処理を終了
         NRF_LOG_ERROR("u2f_request_receive: too long length (%d) ", p_apdu->Lc);
         p_ble_header->CMD = U2F_COMMAND_ERROR;
-        p_ble_header->ERROR = U2F_ERR_INVALID_LEN;
+        p_ble_header->ERROR = CTAP1_ERR_INVALID_LENGTH;
         return false;
     }
 
@@ -141,7 +141,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
         NRF_LOG_ERROR("INIT frame not received ");
 
         ble_header_t.CMD = U2F_COMMAND_ERROR;
-        ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
+        ble_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
         return;
     }
 
@@ -155,7 +155,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
             NRF_LOG_ERROR("Irregular 1st sequence %d ", sequence);
 
             ble_header_t.CMD = U2F_COMMAND_ERROR;
-            ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
+            ble_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
             return;
         }
     } else {
@@ -164,7 +164,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
                 p_ble_header->SEQ, sequence);
 
             ble_header_t.CMD = U2F_COMMAND_ERROR;
-            ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
+            ble_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
             return;
         }
     }
@@ -201,7 +201,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
         if ((ble_header_t.CMD & 0x80) && ble_header_t.CONT == true) {
             NRF_LOG_ERROR("INIT frame received again while CONT is expected ");
             ble_header_t.CMD = U2F_COMMAND_ERROR;
-            ble_header_t.ERROR = U2F_ERR_INVALID_SEQ;
+            ble_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
 
         } else {
             // BLEヘッダーとAPDUを初期化
@@ -224,7 +224,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
         // エラーレスポンスメッセージを作成
         NRF_LOG_ERROR("apdu data length(%d) exceeds Lc(%d) ", apdu_t.data_length, apdu_t.Lc);
         ble_header_t.CMD = U2F_COMMAND_ERROR;
-        ble_header_t.ERROR = U2F_ERR_INVALID_LEN;
+        ble_header_t.ERROR = CTAP1_ERR_INVALID_LENGTH;
     }
 
     // 共有情報にBLEヘッダーとAPDUの参照を引き渡す
