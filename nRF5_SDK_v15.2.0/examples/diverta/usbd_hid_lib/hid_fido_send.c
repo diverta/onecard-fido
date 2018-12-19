@@ -68,7 +68,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
     }
 }
 
-void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
+static void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length)
 {
     // 送信のために必要な情報を保持
     send_info_t.cid = cid;
@@ -80,7 +80,7 @@ void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_
     send_info_t.sent_length = 0;
 }
 
-void hid_fido_send_input_report(void)
+static void hid_fido_send_input_report(void)
 {
     size_t  xfer_data_max;
     size_t  xfer_data_len;
@@ -129,4 +129,22 @@ void hid_fido_send_input_report_complete()
         // 次のフレームの送信を実行
         hid_fido_send_input_report();
     }
+}
+
+void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
+{
+    hid_fido_send_setup(cid, cmd, response_buffer, response_length);
+    hid_fido_send_input_report();
+}
+
+void hid_fido_send_error_command_response(uint32_t cid, uint8_t error_cmd, uint8_t error_code) 
+{
+    // レスポンスデータを編集 (1 bytes)
+    uint8_t err_response_buffer[1] = {error_code};
+    size_t  err_response_length = sizeof(err_response_buffer); 
+
+    // FIDO ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    hid_fido_send_setup(cid, error_cmd, err_response_buffer, err_response_length);
+    hid_fido_send_input_report();
 }

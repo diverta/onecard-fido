@@ -18,6 +18,21 @@
 extern "C" {
 #endif
 
+//
+// INITコマンドのレスポンスデータ編集領域
+//   固定長（17バイト）
+//   U2FHID_INIT、CTAPHID_INITで利用
+//
+typedef struct {
+    uint8_t nonce[8];
+    uint8_t cid[4];
+    uint8_t version_id;
+    uint8_t version_major;
+    uint8_t version_minor;
+    uint8_t version_build;
+    uint8_t cflags;
+} HID_INIT_RES_T;
+
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
 void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
 void hid_fido_command_on_report_sent(void);

@@ -12,9 +12,9 @@
 extern "C" {
 #endif
 
-void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data, size_t payload_length);
-void hid_fido_send_input_report();
 void hid_fido_send_input_report_complete();
+void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length);
+void hid_fido_send_error_command_response(uint32_t cid, uint8_t error_cmd, uint8_t error_code);
 
 #ifdef __cplusplus
 }

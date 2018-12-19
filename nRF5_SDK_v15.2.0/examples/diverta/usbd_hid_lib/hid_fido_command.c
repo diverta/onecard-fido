@@ -15,9 +15,11 @@
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
+#include "hid_ctap2_command.h"
 
 // for U2F command
 #include "u2f.h"
+#include "ctap2.h"
 
 // for lighting LED on/off
 #include "fido_idling_led.h"
@@ -29,15 +31,10 @@ NRF_LOG_MODULE_REGISTER();
 
 static void send_error_command_response(uint8_t error_code) 
 {
-    // レスポンスデータを編集 (1 bytes)
-    uint8_t err_response_buffer[1] = {error_code};
-    size_t  err_response_length = sizeof(err_response_buffer); 
-
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     uint32_t cid = hid_fido_receive_hid_header()->CID;
-    hid_fido_send_setup(cid, U2F_COMMAND_ERROR, err_response_buffer, err_response_length);
-    hid_fido_send_input_report();
+    hid_fido_send_error_command_response(cid, U2F_COMMAND_ERROR, error_code);
 
     // アイドル時点滅処理を開始
     fido_idling_led_on(LED_FOR_PROCESSING);
@@ -56,30 +53,22 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         return;
     }
 
-    uint8_t ins;
-    NRF_LOG_DEBUG("CMD(0x%02x) LEN(%d)", 
-        hid_fido_receive_hid_header()->CMD, 
-        hid_fido_receive_hid_header()->LEN);
-
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
-        case U2F_COMMAND_HID_INIT:
-            u2f_hid_init_do_process();
+#if CTAP2_SUPPORTED
+        case CTAP2_COMMAND_INIT:
+            hid_ctap2_command_init();
             break;
-            
+#else
+        case U2F_COMMAND_HID_INIT:
+            hid_u2f_command_init();
+            break;
+#endif
         case U2F_COMMAND_MSG:
-            // u2f_request_buffer の先頭バイトを参照
-            //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_fido_receive_apdu()->INS;
-            if (ins == U2F_VERSION) {
-                u2f_version_do_process();
-                
-            } else if (ins == U2F_REGISTER) {
-                u2f_register_do_process();
-                
-            } else if (ins == U2F_AUTHENTICATE) {
-                u2f_authenticate_do_process();
-            }
+            hid_u2f_command_msg();
+            break;
+        case CTAP2_COMMAND_CBOR:
+            hid_ctap2_command_cbor();
             break;
         default:
             break;
@@ -88,21 +77,11 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 
 void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
-    uint8_t  ins;
-
     // Flash ROM更新後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            // u2f_request_buffer の先頭バイトを参照
-            //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_fido_receive_apdu()->INS;
-            if (ins == U2F_REGISTER) {
-                u2f_register_send_response(p_evt);
-                
-            } else if (ins == U2F_AUTHENTICATE) {
-                u2f_authenticate_send_response(p_evt);
-            }
+            hid_u2f_command_msg_send_response(p_evt);
             break;
         default:
             break;
@@ -111,21 +90,11 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
 
 void hid_fido_command_on_report_sent(void)
 {
-    uint8_t  ins;
-
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            // u2f_request_buffer の先頭バイトを参照
-            //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_fido_receive_apdu()->INS;
-            if (ins == U2F_REGISTER) {
-                NRF_LOG_INFO("U2F Register end");
-                
-            } else if (ins == U2F_AUTHENTICATE) {
-                NRF_LOG_INFO("U2F Authenticate end");
-            }
+            hid_u2f_command_msg_report_sent();
             break;
         default:
             break;
@@ -165,11 +134,15 @@ bool hid_fido_command_is_valid(uint8_t command)
     // FIDO機能（U2F、CTAP2）の
     // コマンドであればtrueを戻す
     switch (command) {
+        // U2F関連コマンド
         case U2F_COMMAND_PING:
         case U2F_COMMAND_MSG:
         case U2F_COMMAND_HID_LOCK:
         case U2F_COMMAND_HID_INIT:
         case U2F_COMMAND_HID_WINK:
+
+        // CTAP2関連コマンド
+        case CTAP2_COMMAND_CBOR:
             return true;
         default:
             return false;
