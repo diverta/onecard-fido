@@ -848,6 +848,8 @@
                    displayName="usbd_hid_lib"
                    projectFiles="true">
       <itemPath>../usbd_hid_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_lib/hid_ctap2_command.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_ctap2_command.h</itemPath>
       <itemPath>../usbd_hid_lib/hid_fido_command.c</itemPath>
       <itemPath>../usbd_hid_lib/hid_fido_command.h</itemPath>
       <itemPath>../usbd_hid_lib/hid_fido_receive.c</itemPath>
@@ -2995,6 +2997,16 @@
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../usbd_hid_lib/README.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_ctap2_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_ctap2_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../usbd_hid_lib/hid_fido_command.c" ex="false" tool="0" flavor2="0">
       </item>

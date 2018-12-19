@@ -160,6 +160,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_user_presence.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
+  $(HIDLIB_DIR)/hid_ctap2_command.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
