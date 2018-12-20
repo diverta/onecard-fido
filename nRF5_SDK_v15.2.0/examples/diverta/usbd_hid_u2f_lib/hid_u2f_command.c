@@ -386,8 +386,115 @@ static void send_error_command_response(uint8_t error_code)
     u2f_idling_led_on(one_card_get_U2F_context()->led_for_processing_fido);
 }
 
+//
+// CBOR調査用サンプルプログラム
+//
+#include "cbor.h"
+
+#define NUM_OF_CBOR_ELEMENTS 1
+#define NUM_OF_VERSIONS      2
+#define RESP_versions        0x01
+
+static void ctap_get_versions(CborEncoder * encoder)
+{
+    int ret;
+    CborEncoder array;
+    CborEncoder map;
+
+    ret = cbor_encoder_create_map(encoder, &map, NUM_OF_CBOR_ELEMENTS);
+    if (ret == CborNoError) {
+        ret = cbor_encode_uint(&map, RESP_versions);
+        if (ret == CborNoError) {
+            ret = cbor_encoder_create_array(&map, &array, NUM_OF_VERSIONS);
+                ret = cbor_encode_text_stringz(&array, "U2F_V2");
+                ret = cbor_encode_text_stringz(&array, "FIDO_2_0");
+            ret = cbor_encoder_close_container(&map, &array);
+        }
+    }
+    ret = cbor_encoder_close_container(encoder, &map);
+    
+    UNUSED_PARAMETER(ret);
+}
+
+static CborError ctap_verify(CborValue *it)
+{
+    while (!cbor_value_at_end(it)) {
+        CborError err;
+        CborType type = cbor_value_get_type(it);
+
+        switch (type) {
+        case CborArrayType:
+        case CborMapType: {
+            CborValue recursed;
+            assert(cbor_value_is_container(it));
+            err = cbor_value_enter_container(it, &recursed);
+            if (err)
+                return err;
+            err = ctap_verify(&recursed);
+            if (err)
+                return err;
+            err = cbor_value_leave_container(it, &recursed);
+            if (err)
+                return err;
+            continue;
+        }
+        case CborIntegerType: {
+            int64_t val;
+            cbor_value_get_int64(it, &val);
+            NRF_LOG_INFO("Integer value: %d", val);
+            break;
+        }
+        case CborTextStringType: {
+            char *buf;
+            size_t n;
+            err = cbor_value_dup_text_string(it, &buf, &n, it);
+            if (err)
+                return err;
+            NRF_LOG_INFO("String value: %s", buf);
+            free(buf);
+            continue;
+        }
+        default:
+            assert(false);
+            break;
+        }
+        err = cbor_value_advance_fixed(it);
+        if (err)
+            return err;
+    }
+    return CborNoError;
+}
+
+static void test_cbor_encode(void)
+{
+    // 作業領域の初期化
+    uint8_t encoded_buff[64];
+    size_t  encoded_buff_size;
+    encoded_buff_size = sizeof(encoded_buff);
+    memset(encoded_buff, 0x00, encoded_buff_size);
+    
+    // CBORエンコードを実行する
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);    
+    ctap_get_versions(&encoder);
+    NRF_LOG_INFO("===== cbor encoding test =====");
+    NRF_LOG_HEXDUMP_INFO(encoded_buff, encoded_buff_size);
+
+    // CBORデコードを実行する
+    CborParser parser;
+    CborValue it;
+    cbor_parser_init(encoded_buff, encoded_buff_size, CborValidateCanonicalFormat, &parser, &it);
+    NRF_LOG_INFO("===== cbor decoding test =====");
+    ctap_verify(&it);
+
+    NRF_LOG_INFO("===== cbor test end =====");
+}
+
 void hid_u2f_command_on_report_received(void)
 {
+    // for research
+    test_cbor_encode();
+    
     uint8_t  ins;
     NRF_LOG_INFO("CMD(0x%02x) LEN(%d)", 
         hid_u2f_receive_hid_header()->CMD, 
