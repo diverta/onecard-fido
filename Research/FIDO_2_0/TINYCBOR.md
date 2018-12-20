@@ -1,4 +1,4 @@
-# [WIP] tinycbor導入手順
+# tinycbor導入手順
 
 Intel社が無償公開しているCBORライブラリー「<b>[tinycbor](https://github.com/intel/tinycbor)</b>」を、NetBeansプロジェクトに導入する手順について掲載しています。
 
@@ -75,3 +75,47 @@ CBORライブラリーファイル「libtinycbor.a」が、サブディレクト
 
 
 以上で、CBORライブラリーファイル「libtinycbor.a」作成は完了です。
+
+## CBORライブラリーの導入
+
+### メイクファイルの編集
+
+NetBeansを起動して、メイクファイルを開き、以下の２点を追加記述します。
+
+- インクルードファイルディレクトリー `$(TINYCBOR_ROOT)/src` の指定
+- リンクするライブラリーファイル `$(TINYCBOR_ROOT)/lib/libtinycbor.a` の指定
+
+具体的には下記のような記述になります。
+
+```
+PROJECT_NAME     := one_card_peripheral_app_pca10056_s140
+TARGETS          := nrf52840_xxaa
+:
+# tinycbor root directory
+TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor
+:
+# Include folders common to all targets
+INC_FOLDERS += \
+  ../config \
+  :
+  $(TINYCBOR_ROOT)/src \
+
+# Libraries common to all targets
+LIB_FILES += \
+  $(SDK_ROOT)/external/nrf_cc310/lib/libnrf_cc310_0.9.10.a \
+  $(TINYCBOR_ROOT)/lib/libtinycbor.a \
+```
+
+### ビルドの実行
+
+メイクファイルの編集が終わったら、NetBeans上でビルドを実行します。
+
+<img src="assets/0009.png" width="700">
+
+
+下図のように「ビルド SUCCESSFUL」と表示されれば成功です。
+
+<img src="assets/0010.png" width="600">
+
+
+以上で、tinycborのNetBeansプロジェクト導入は完了です。
