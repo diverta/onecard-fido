@@ -10,6 +10,9 @@ BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_u2f_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
+# tinycbor root directory
+TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor
+
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := gcc_nrf52.ld
 
@@ -316,10 +319,12 @@ INC_FOLDERS += \
   $(U2FLIB_DIR) \
   $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
+  $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets
 LIB_FILES += \
   $(SDK_ROOT)/external/nrf_cc310/lib/libnrf_cc310_0.9.10.a \
+  $(TINYCBOR_ROOT)/lib/libtinycbor.a \
 
 # Optimization flags
 OPT = -O3 -g3
