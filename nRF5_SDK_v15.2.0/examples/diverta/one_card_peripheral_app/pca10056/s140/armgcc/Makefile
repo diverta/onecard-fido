@@ -137,6 +137,7 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
+  $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_processing_led.c \

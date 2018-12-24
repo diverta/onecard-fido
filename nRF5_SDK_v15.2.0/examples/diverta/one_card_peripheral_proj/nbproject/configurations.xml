@@ -41,11 +41,10 @@
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="ctap2_lib"
-                   displayName="ctap2_lib"
-                   projectFiles="true"
-                   root="../ctap2_lib">
+    <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
       <itemPath>../ctap2_lib/ctap2.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido_lib" displayName="fido_lib" projectFiles="true">
       <itemPath>../fido_lib/fido_common.c</itemPath>
@@ -2876,6 +2875,18 @@
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
+      </item>
+      <item path="../ctap2_lib/ctap2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_cbor_authgetinfo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_cbor_authgetinfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="0">
       </item>

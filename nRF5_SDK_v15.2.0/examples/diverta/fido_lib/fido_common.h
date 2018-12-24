@@ -24,6 +24,7 @@ extern "C" {
 #define LED_FOR_PROCESSING      LED_4
 
 // FIDO機能関連エラーステータス
+#define CTAP1_ERR_SUCCESS           0x00
 #define CTAP1_ERR_INVALID_COMMAND   0x01
 #define CTAP1_ERR_INVALID_PARAMETER 0x02
 #define CTAP1_ERR_INVALID_LENGTH    0x03
