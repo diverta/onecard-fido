@@ -5,9 +5,11 @@ TARGET_BOARD     := PCA10059
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
+FIDLIB_DIR := $(PROJ_DIR)/../fido_lib
 U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
+CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
-HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_u2f_lib
+HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -135,12 +137,15 @@ SRC_FILES += \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/one_card_main.c \
   $(PROJ_DIR)/one_card_event.c \
+  $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
+  $(FIDLIB_DIR)/fido_common.c \
+  $(FIDLIB_DIR)/fido_idling_led.c \
+  $(FIDLIB_DIR)/fido_processing_led.c \
+  $(FIDLIB_DIR)/fido_request_apdu.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
-  $(U2FLIB_DIR)/u2f_control_point_apdu.c \
   $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_crypto_ecb.c \
   $(U2FLIB_DIR)/u2f_flash.c \
-  $(U2FLIB_DIR)/u2f_idling_led.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
   $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \
@@ -152,7 +157,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_flash.c \
   $(BLELIB_DIR)/ble_u2f_init.c \
   $(BLELIB_DIR)/ble_u2f_pairing.c \
-  $(BLELIB_DIR)/ble_u2f_processing_led.c \
   $(BLELIB_DIR)/ble_u2f_register.c \
   $(BLELIB_DIR)/ble_u2f_securekey.c \
   $(BLELIB_DIR)/ble_u2f_status.c \
@@ -160,12 +164,14 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_user_presence.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
-  $(HIDLIB_DIR)/hid_u2f_comm_interval_timer.c \
+  $(HIDLIB_DIR)/hid_ctap2_command.c \
+  $(HIDLIB_DIR)/hid_fido_command.c \
+  $(HIDLIB_DIR)/hid_fido_receive.c \
+  $(HIDLIB_DIR)/hid_fido_send.c \
   $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/hid_u2f_common.c \
-  $(HIDLIB_DIR)/hid_u2f_receive.c \
-  $(HIDLIB_DIR)/hid_u2f_send.c \
-  $(HIDLIB_DIR)/usbd_hid_u2f.c \
+  $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
+  $(HIDLIB_DIR)/usbd_hid_common.c \
+  $(HIDLIB_DIR)/usbd_hid_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -316,7 +322,9 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/hal \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(PROJ_DIR) \
+  $(FIDLIB_DIR) \
   $(U2FLIB_DIR) \
+  $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
   $(TINYCBOR_ROOT)/src \

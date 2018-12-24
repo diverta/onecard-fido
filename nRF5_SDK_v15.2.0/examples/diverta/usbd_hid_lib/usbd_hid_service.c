@@ -1,5 +1,5 @@
 /* 
- * File:   usbd_hid_u2f.c
+ * File:   usbd_hid_service.c
  * Author: makmorit
  *
  * Created on 2018/11/06, 14:21
@@ -14,13 +14,12 @@
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
 
-#include "hid_u2f_common.h"
-#include "hid_u2f_receive.h"
-#include "hid_u2f_send.h"
-#include "hid_u2f_command.h"
+#include "usbd_hid_common.h"
+#include "hid_fido_send.h"
+#include "hid_fido_command.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME usbd_hid_u2f
+#define NRF_LOG_MODULE_NAME usbd_hid_service
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -76,9 +75,9 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
                                 app_usbd_hid_user_event_t event);
 
 
-#define APP_USBD_HID_FIDO_U2F_REPORT_DSC_BUTTON(bcnt) {             \
+#define APP_USBD_HID_FIDO_REPORT_DESC(bcnt) {             \
     0x06, 0xd0, 0xf1, /* Usage Page (FIDO Alliance),         */     \
-    0x09, 0x01,       /* Usage (FIDO U2F HID),               */     \
+    0x09, 0x01,       /* Usage (FIDO USB HID),               */     \
     0xa1, 0x01,       /*  Collection (Application),          */     \
     0x09, 0x20,       /*   Usage (Input Report Data),        */     \
     0x15, 0x00,       /*   Logical Minimum (0),              */     \
@@ -96,11 +95,11 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
 }
 
 /**
- * @brief Reuse HID U2F report descriptor for HID generic class
+ * @brief Reuse USB HID report descriptor for HID generic class
  */
-APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(u2f_desc,APP_USBD_HID_FIDO_U2F_REPORT_DSC_BUTTON(64));
+APP_USBD_HID_GENERIC_SUBCLASS_REPORT_DESC(report_desc, APP_USBD_HID_FIDO_REPORT_DESC(64));
 
-static const app_usbd_hid_subclass_desc_t * reps[] = {&u2f_desc};
+static const app_usbd_hid_subclass_desc_t * reps[] = {&report_desc};
 
 /*lint -save -e26 -e64 -e123 -e505 -e651*/
 
@@ -126,6 +125,57 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
 static bool m_report_pending;
 static bool m_report_received;
 
+//
+// リクエストフレーム、およびフレーム数を
+// 一時的に保持する領域
+// (32フレームまで格納が可能)
+//
+static uint8_t request_frame_buffer[2048];
+static size_t  request_frame_number;
+
+static bool usbd_hid_frame_receive(uint8_t *p_buff, size_t size)
+{
+    static size_t pos;
+    static size_t payload_len;
+
+    if (size == 0) {
+        return false;
+    }
+    
+    USB_HID_MSG_T *req = (USB_HID_MSG_T *)p_buff;
+    if ((req->pkt.init.cmd) & 0x80) {
+        // 先頭フレームであればpayload長を取得
+        payload_len = get_payload_length(req);
+        
+        // フレームが最後かどうかを判定するための受信済みデータ長
+        pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
+
+        // リクエストフレーム全体を一時領域に格納
+        memset(&request_frame_buffer, 0, sizeof(request_frame_buffer));
+        memcpy(request_frame_buffer, p_buff, size);
+        request_frame_number = 1;
+
+    } else {
+        // 後続フレームの場合
+        // フレームが最後かどうかを判定するための受信済みデータ長を更新
+        size_t remain = payload_len - pos;
+        size_t cnt = (remain < USBD_HID_CONT_PAYLOAD_SIZE) ? remain : USBD_HID_CONT_PAYLOAD_SIZE;
+        pos += cnt;
+
+        // リクエストフレーム全体を一時領域に格納
+        memcpy(request_frame_buffer + request_frame_number * USBD_HID_PACKET_SIZE, 
+            p_buff, size);
+        request_frame_number++;
+    }
+
+    // リクエストデータを全て受信したらtrueを戻す
+    if (pos == payload_len) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 {
     // Output reportが格納されている領域を取得
@@ -139,7 +189,7 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 #endif
 
     // Output reportから受信フレームを取得し、内部バッファに格納
-    m_report_received = hid_u2f_receive_request_data(rep_buf->p_buff, rep_buf->size);
+    m_report_received = usbd_hid_frame_receive(rep_buf->p_buff, rep_buf->size);
 }
 
 /**
@@ -161,7 +211,7 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
         {
-            hid_u2f_send_input_report_complete();
+            hid_fido_send_input_report_complete();
             m_report_pending = false;
             break;
         }
@@ -286,7 +336,7 @@ void usbd_hid_init(void)
     NRF_LOG_DEBUG("usbd_hid_init() done");
 }
 
-void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
+void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
 {
     // 64バイトのInput reportを送信
     app_usbd_class_inst_t const *p_inst = 
@@ -303,7 +353,7 @@ void usbd_hid_u2f_frame_send(uint8_t *buffer_for_send, size_t size)
 #endif
 }
 
-void usbd_hid_u2f_do_process(void)
+void usbd_hid_do_process(void)
 {
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());
@@ -314,6 +364,6 @@ void usbd_hid_u2f_do_process(void)
     }
     m_report_received = false;
     
-    // U2F HIDサービスを実行
-    hid_u2f_command_on_report_received();
+    // FIDO USB HIDサービスを実行
+    hid_fido_command_on_report_received(request_frame_buffer, request_frame_number);
 }

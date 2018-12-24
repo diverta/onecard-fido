@@ -32,7 +32,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_command.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_init.h"
-#include "hid_u2f_command.h"
+#include "hid_fido_command.h"
 
 //
 // U2F関連の共有情報
@@ -40,13 +40,10 @@ NRF_LOG_MODULE_REGISTER();
 static ble_u2f_t m_u2f;
 
 //
-// ボタン、LEDのピン番号
+// ボタンのピン番号
 //
 #define PIN_MAIN_SW_IN                  BUTTON_1
 #define PIN_MAIN_SW_PULL                BUTTON_PULL
-#define PIN_LED2                        LED_2
-#define PIN_LED3                        LED_3
-#define PIN_LED4                        LED_4
 
 #define APP_BUTTON_NUM                  2
 #define APP_BUTTON_DELAY                APP_TIMER_TICKS(100)
@@ -152,15 +149,6 @@ void one_card_buttons_init(void)
 
     err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
-
-    // BLE U2Fで使用するLEDのピン番号を設定
-    // nRF52840 Dongleでは以下の割り当てになります。
-    //   PIN_LED2=Red
-    //   PIN_LED3=Green
-    //   PIN_LED4=Blue
-    m_u2f.led_for_processing_fido = PIN_LED4;
-    m_u2f.led_for_pairing_mode    = PIN_LED2;
-    m_u2f.led_for_user_presence   = PIN_LED3;
 }
 
 //
@@ -202,7 +190,7 @@ void one_card_peer_manager_init(void)
     ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 
-    err_code = fds_register(hid_u2f_command_on_fs_evt);
+    err_code = fds_register(hid_fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 

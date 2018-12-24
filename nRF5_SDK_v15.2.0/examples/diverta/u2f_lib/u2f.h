@@ -44,30 +44,10 @@ extern "C" {
 #define U2F_COMMAND_PING      0x81
 #define U2F_COMMAND_KEEPALIVE 0x82
 #define U2F_COMMAND_MSG       0x83
+#define U2F_COMMAND_HID_LOCK  0x84
+#define U2F_COMMAND_HID_INIT  0x86
+#define U2F_COMMAND_HID_WINK  0x88
 #define U2F_COMMAND_ERROR     0xbf
-
-// U2Fエラーステータスの識別用
-#define U2F_ERR_INVALID_CMD 0x01
-#define U2F_ERR_INVALID_LEN 0x03
-#define U2F_ERR_INVALID_SEQ 0x04
-#define U2F_ERR_OTHER       0x7f
-
-// リクエストデータに含まれるAPDU項目を保持
-typedef struct {
-    uint8_t  CLA;
-    uint8_t  INS;
-    uint8_t  P1;
-    uint8_t  P2;
-    uint32_t Lc;
-    uint8_t *data;
-    uint32_t data_length;
-    uint32_t Le;
-} U2F_APDU_T;
-
-// APDUに格納できるデータ長の上限
-#ifndef APDU_DATA_MAX_LENGTH
-#define APDU_DATA_MAX_LENGTH 1024
-#endif
 
 #ifdef __cplusplus
 }

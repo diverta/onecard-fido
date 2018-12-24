@@ -11,7 +11,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // 機能実行中LED点滅処理
-#include "ble_u2f_processing_led.h"
+#include "fido_processing_led.h"
 
 // キープアライブ・タイマー
 #include "app_timer.h"
@@ -68,7 +68,7 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
     }
 
     // LED点滅を開始
-    ble_u2f_processing_led_on(p_u2f_context->p_u2f->led_for_user_presence);
+    fido_processing_led_on(LED_FOR_USER_PRESENCE);
     
     NRF_LOG_INFO("User presence verify start ");
 }
@@ -76,7 +76,7 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
 void ble_u2f_user_presence_verify_end(ble_u2f_context_t *p_u2f_context)
 {
     // LEDを消灯させる
-    ble_u2f_processing_led_off();
+    fido_processing_led_off();
 
     // タイマーを停止する
     ble_u2f_user_presence_terminate(p_u2f_context);

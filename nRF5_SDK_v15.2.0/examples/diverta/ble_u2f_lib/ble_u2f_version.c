@@ -39,7 +39,7 @@ void ble_u2f_version_do_process(ble_u2f_context_t *p_u2f_context)
     }
     
     // ステータスワードを格納
-    ble_u2f_set_status_word(u2f_version_data_buffer + u2f_version_length, status_word);
+    fido_set_status_word(u2f_version_data_buffer + u2f_version_length, status_word);
 
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, u2f_version_data_buffer, sizeof(u2f_version_data_buffer));

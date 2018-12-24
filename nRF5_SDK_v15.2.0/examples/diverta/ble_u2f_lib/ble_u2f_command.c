@@ -28,18 +28,15 @@ static ble_u2f_context_t m_u2f_context;
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_DEBUG("ble_u2f_command_on_mainsw_event ");
     if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
         // U2Fクライアントと接続中でないときに
         // MAIN SWが押下された場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: BLE_CONN_HANDLE_INVALID ");
         return false;
     }
 
     if (m_u2f_context.p_ble_header == NULL) {
         // BLEリクエスト受信(ble_u2f_control_point_receive)より
         // 前の時点の場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: m_u2f_context.p_ble_header is NULL ");
         return false;
     }
 
@@ -61,15 +58,12 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 
     } else {
         // 他のコマンドの場合は無視
-        NRF_LOG_DEBUG("mainsw ignored: no need to verify user presence ");
         return false;
     }
 }
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
-    NRF_LOG_DEBUG("ble_u2f_command_on_mainsw_long_push_event");
-
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);
     return true;
@@ -99,7 +93,7 @@ static enum COMMAND_TYPE get_command_type(void)
 
     // BLEヘッダー、APDUの参照を取得
     BLE_HEADER_T *p_ble_header = m_u2f_context.p_ble_header;
-    U2F_APDU_T *p_apdu = m_u2f_context.p_apdu;
+    FIDO_APDU_T *p_apdu = m_u2f_context.p_apdu;
 
     // 受信したリクエストデータが、
     // 初期導入データか、リクエストデータの

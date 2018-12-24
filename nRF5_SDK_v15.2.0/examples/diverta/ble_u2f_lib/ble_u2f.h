@@ -17,6 +17,7 @@ extern "C" {
 
 // FIDOアライアンス提供の共通ヘッダー
 // "u2f.h"より抜粋
+#include "fido_common.h"
 #include "u2f.h"
 
 // BLEパケット項目のサイズ
@@ -66,11 +67,6 @@ struct ble_u2f_s
 
     uint16_t                 conn_handle;
     ble_u2f_data_handler_t   data_handler;
-
-    // BLE U2Fで使用するLEDのピン番号を保持
-    uint32_t                 led_for_processing_fido;
-    uint32_t                 led_for_pairing_mode;
-    uint32_t                 led_for_user_presence;
 };
 
 // リクエストデータに含まれるBLEヘッダーを保持
@@ -116,7 +112,7 @@ typedef struct
     enum COMMAND_TYPE command;
     ble_u2f_t        *p_u2f;
     BLE_HEADER_T     *p_ble_header;
-    U2F_APDU_T       *p_apdu;
+    FIDO_APDU_T       *p_apdu;
     uint32_t         *securekey_buffer;
     uint16_t          securekey_buffer_length;
     uint8_t          *apdu_data_buffer;

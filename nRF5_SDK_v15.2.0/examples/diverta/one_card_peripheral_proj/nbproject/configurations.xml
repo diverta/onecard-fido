@@ -26,8 +26,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_init.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_pairing.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_pairing.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_processing_led.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_processing_led.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_securekey.c</itemPath>
@@ -42,6 +40,21 @@
       <itemPath>../ble_u2f_lib/ble_u2f_util.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
+      <itemPath>../ctap2_lib/ctap2.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="fido_lib" displayName="fido_lib" projectFiles="true">
+      <itemPath>../fido_lib/fido_common.c</itemPath>
+      <itemPath>../fido_lib/fido_common.h</itemPath>
+      <itemPath>../fido_lib/fido_idling_led.c</itemPath>
+      <itemPath>../fido_lib/fido_idling_led.h</itemPath>
+      <itemPath>../fido_lib/fido_processing_led.c</itemPath>
+      <itemPath>../fido_lib/fido_processing_led.h</itemPath>
+      <itemPath>../fido_lib/fido_request_apdu.c</itemPath>
+      <itemPath>../fido_lib/fido_request_apdu.h</itemPath>
     </logicalFolder>
     <logicalFolder name="generic"
                    displayName="generic"
@@ -821,36 +834,35 @@
       <itemPath>../u2f_lib/u2f.h</itemPath>
       <itemPath>../u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
-      <itemPath>../u2f_lib/u2f_control_point_apdu.c</itemPath>
-      <itemPath>../u2f_lib/u2f_control_point_apdu.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto_ecb.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto_ecb.h</itemPath>
       <itemPath>../u2f_lib/u2f_flash.c</itemPath>
       <itemPath>../u2f_lib/u2f_flash.h</itemPath>
-      <itemPath>../u2f_lib/u2f_idling_led.c</itemPath>
-      <itemPath>../u2f_lib/u2f_idling_led.h</itemPath>
       <itemPath>../u2f_lib/u2f_register.c</itemPath>
       <itemPath>../u2f_lib/u2f_register.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="usbd_hid_u2f_lib"
-                   displayName="usbd_hid_u2f_lib"
-                   projectFiles="true"
-                   root="../usbd_hid_u2f_lib">
-      <itemPath>../usbd_hid_u2f_lib/README.md</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_command.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_common.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_receive.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/hid_u2f_send.h</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.c</itemPath>
-      <itemPath>../usbd_hid_u2f_lib/usbd_hid_u2f.h</itemPath>
+    <logicalFolder name="usbd_hid_lib"
+                   displayName="usbd_hid_lib"
+                   projectFiles="true">
+      <itemPath>../usbd_hid_lib/README.md</itemPath>
+      <itemPath>../usbd_hid_lib/hid_ctap2_command.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_ctap2_command.h</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_command.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_command.h</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_receive.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_receive.h</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_send.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_fido_send.h</itemPath>
+      <itemPath>../usbd_hid_lib/hid_u2f_command.c</itemPath>
+      <itemPath>../usbd_hid_lib/hid_u2f_command.h</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_comm_interval_timer.c</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_comm_interval_timer.h</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_common.c</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_common.h</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_service.c</itemPath>
+      <itemPath>../usbd_hid_lib/usbd_hid_service.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -867,6 +879,10 @@
     <Elem>../usbd_hid_u2f_lib</Elem>
     <Elem>../../../components/libraries/usbd</Elem>
     <Elem>../u2f_lib</Elem>
+    <Elem>../ctap2_lib</Elem>
+    <Elem>../usbd_hid_ctap2_lib</Elem>
+    <Elem>../usbd_hid_lib</Elem>
+    <Elem>../fido_lib</Elem>
   </sourceRootList>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2788,16 +2804,6 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_processing_led.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
       <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
@@ -2869,6 +2875,34 @@
             <Elem>S140</Elem>
           </preprocessorList>
         </cTool>
+      </item>
+      <item path="../ctap2_lib/ctap2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_cbor_authgetinfo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_cbor_authgetinfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_idling_led.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_processing_led.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_processing_led.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_request_apdu.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_request_apdu.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
@@ -2954,15 +2988,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../usbd_hid_u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
       <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
-      </item>
-      <item path="../u2f_lib/u2f_control_point_apdu.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
       </item>
@@ -2975,55 +3005,53 @@
       </item>
       <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../u2f_lib/u2f_idling_led.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../u2f_lib/u2f_idling_led.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_comm_interval_timer.c"
+      <item path="../usbd_hid_lib/README.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_ctap2_command.c"
             ex="false"
             tool="0"
-            flavor2="2">
+            flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_command.c"
+      <item path="../usbd_hid_lib/hid_ctap2_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_command.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_receive.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_receive.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_send.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_fido_send.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_u2f_command.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/hid_u2f_command.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/usbd_hid_comm_interval_timer.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../u2f_lib</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_common.c"
+      <item path="../usbd_hid_lib/usbd_hid_comm_interval_timer.h"
             ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../u2f_lib</pElem>
-          </incDir>
-        </cTool>
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_receive.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../u2f_lib</pElem>
-          </incDir>
-        </cTool>
+      <item path="../usbd_hid_lib/usbd_hid_common.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/hid_u2f_send.c" ex="false" tool="0" flavor2="2">
+      <item path="../usbd_hid_lib/usbd_hid_common.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../usbd_hid_u2f_lib/usbd_hid_u2f.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-          </incDir>
-        </cTool>
+      <item path="../usbd_hid_lib/usbd_hid_service.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../usbd_hid_lib/usbd_hid_service.h" ex="false" tool="3" flavor2="0">
       </item>
       <folder path="nRF5_SDK_15.2.0/components">
         <cTool>
@@ -3500,16 +3528,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="usbd_hid_u2f_lib">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
           </incDir>
         </cTool>
       </folder>

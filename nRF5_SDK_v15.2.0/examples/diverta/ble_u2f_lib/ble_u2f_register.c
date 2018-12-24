@@ -39,7 +39,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     //   appIdHashの開始位置は
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
     uint32_t token_counter = 0;
     uint32_t reserve_word = 0xffffffff;
@@ -107,7 +107,7 @@ static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
     signature_base_buffer[offset++] = 0x00;
 
     // APDUからappIdHash, challengeを取得し格納
-    U2F_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint16_t copied_size = copy_apdu_data(signature_base_buffer + offset, p_apdu->data);
     offset += copied_size;
 
@@ -175,7 +175,7 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     }
 
     // ステータスワード
-    ble_u2f_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
+    fido_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
     offset += 2;
     
     // メッセージのバイト数をセット
