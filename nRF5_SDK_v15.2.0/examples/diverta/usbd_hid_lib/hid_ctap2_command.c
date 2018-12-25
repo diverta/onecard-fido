@@ -8,6 +8,7 @@
 
 #include "ctap2.h"
 #include "ctap2_cbor_authgetinfo.h"
+#include "ctap2_make_credential.h"
 #include "fido_common.h"
 #include "fido_idling_led.h"
 #include "hid_fido_command.h"
@@ -64,6 +65,15 @@ static void send_ctap2_command_response(void)
     fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
+static void command_authenticator_make_credential(void)
+{
+    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
+    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+
+    // CBORエンコードされたリクエストメッセージをデコード
+    ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
+}
+
 static void command_authenticator_get_info(void)
 {
     response_length = sizeof(response_buffer);
@@ -82,8 +92,18 @@ static void command_authenticator_get_info(void)
 void hid_ctap2_command_cbor(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    uint8_t ctap2_command_byte = hid_fido_receive_apdu()->CLA;
-    if (ctap2_command_byte == CTAP2_CMD_GETINFO) {
-        command_authenticator_get_info();
+    //   最初の１バイト目がCTAP2コマンドバイトで、
+    //   残りは全てCBORデータバイトとなっている
+    uint8_t *ctap2_cbor_buffer = hid_fido_receive_apdu()->data;
+    uint8_t  ctap2_command_byte = ctap2_cbor_buffer[0];
+    switch (ctap2_command_byte) {
+        case CTAP2_CMD_GETINFO:
+            command_authenticator_get_info();
+            break;
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            command_authenticator_make_credential();
+            break;
+        default:
+            break;
     }
 }

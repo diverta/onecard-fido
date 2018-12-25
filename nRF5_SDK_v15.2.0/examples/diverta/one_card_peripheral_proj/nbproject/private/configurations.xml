@@ -5,6 +5,10 @@
       <df name="pca10056">
         <df name="s140">
           <df name="armgcc">
+            <df name="_build">
+              <df name="nrf52840_xxaa">
+              </df>
+            </df>
           </df>
           <df name="config">
             <in>sdk_config.h</in>
