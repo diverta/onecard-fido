@@ -24,15 +24,21 @@ extern "C" {
 #define LED_FOR_PROCESSING      LED_4
 
 // FIDO機能関連エラーステータス
-#define CTAP1_ERR_SUCCESS           0x00
-#define CTAP1_ERR_INVALID_COMMAND   0x01
-#define CTAP1_ERR_INVALID_PARAMETER 0x02
-#define CTAP1_ERR_INVALID_LENGTH    0x03
-#define CTAP1_ERR_INVALID_SEQ       0x04
-#define CTAP1_ERR_TIMEOUT           0x05
-#define CTAP1_ERR_CHANNEL_BUSY      0x06
-#define CTAP1_ERR_LOCK_REQUIRED     0x0a
-#define CTAP1_ERR_OTHER             0x7f
+#define CTAP1_ERR_SUCCESS               0x00
+#define CTAP1_ERR_INVALID_COMMAND       0x01
+#define CTAP1_ERR_INVALID_PARAMETER     0x02
+#define CTAP1_ERR_INVALID_LENGTH        0x03
+#define CTAP1_ERR_INVALID_SEQ           0x04
+#define CTAP1_ERR_TIMEOUT               0x05
+#define CTAP1_ERR_CHANNEL_BUSY          0x06
+#define CTAP1_ERR_LOCK_REQUIRED         0x0a
+#define CTAP2_ERR_CBOR_UNEXPECTED_TYPE  0x11
+#define CTAP2_ERR_INVALID_CBOR          0x12
+#define CTAP2_ERR_INVALID_CBOR_TYPE     0x13
+#define CTAP2_ERR_MISSING_PARAMETER     0x14
+#define CTAP2_ERR_LIMIT_EXCEEDED        0x15
+#define CTAP2_ERR_UNSUPPORTED_ALGORITHM 0x26
+#define CTAP1_ERR_OTHER                 0x7f
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
@@ -60,4 +66,3 @@ void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
 #endif
 
 #endif /* FIDO_COMMON_H */
-

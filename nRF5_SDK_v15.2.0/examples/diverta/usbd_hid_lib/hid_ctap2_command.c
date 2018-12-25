@@ -8,6 +8,7 @@
 
 #include "ctap2.h"
 #include "ctap2_cbor_authgetinfo.h"
+#include "ctap2_make_credential.h"
 #include "fido_common.h"
 #include "fido_idling_led.h"
 #include "hid_fido_command.h"
@@ -69,9 +70,8 @@ static void command_authenticator_make_credential(void)
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
     size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
 
-    // 調査用の仮実装です。
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + 64, cbor_data_length - 64);    
+    // CBORエンコードされたリクエストメッセージをデコード
+    ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
 }
 
 static void command_authenticator_get_info(void)

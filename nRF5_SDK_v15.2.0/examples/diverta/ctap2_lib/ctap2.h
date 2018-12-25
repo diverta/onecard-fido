@@ -39,4 +39,3 @@ extern "C" {
 #endif
 
 #endif /* CTAP2_H */
-
