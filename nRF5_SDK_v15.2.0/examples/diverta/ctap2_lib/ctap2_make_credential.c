@@ -18,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR true
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR false
 
 // デコードされた
 // authenticatorMakeCredential
@@ -55,10 +55,7 @@ struct {
 #define PARAM_rpId              (1 << 9)
 #define PARAM_allowList         (1 << 10)
 
-// 最後に検出されたエラー種別を保持
-static uint8_t error_type;
-
-bool ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
+uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
     CborParser  parser;
     CborValue   it;
@@ -77,38 +74,36 @@ bool ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor
     // CBOR parser初期化
     ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
     if (ret != CborNoError) {
-        return false;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     type = cbor_value_get_type(&it);
     if (type != CborMapType) {
-        error_type = CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
-        return false;
+        return CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
     }
 
     ret = cbor_value_enter_container(&it, &map);
     if (ret != CborNoError) {
-        return false;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     ret = cbor_value_get_map_length(&it, &map_length);
     if (ret != CborNoError) {
-        return false;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     for (i = 0; i < map_length; i++) {
         type = cbor_value_get_type(&map);
         if (type != CborIntegerType) {
-            error_type = CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
-            return false;
+            return CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
         }
         ret = cbor_value_get_int_checked(&map, &key);
         if (ret != CborNoError) {
-            return false;
+            return CTAP2_ERR_CBOR_PARSING;
         }
         ret = cbor_value_advance(&map);
         if (ret != CborNoError) {
-            return false;
+            return CTAP2_ERR_CBOR_PARSING;
         }
 
         ret = 0;
@@ -137,12 +132,12 @@ bool ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor
             }
         }
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
 
         ret = cbor_value_advance(&map);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
     }
 
@@ -157,5 +152,5 @@ bool ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor
         make_credential_request.cred_param.COSEAlgorithmIdentifier);
 #endif
     
-    return true;
+    return CTAP1_ERR_SUCCESS;
 }

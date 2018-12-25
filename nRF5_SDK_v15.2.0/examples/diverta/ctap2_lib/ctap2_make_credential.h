@@ -7,13 +7,11 @@
 #ifndef CTAP2_MAKE_CREDENTIAL_H
 #define CTAP2_MAKE_CREDENTIAL_H
 
-#include <stdbool.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length);
+uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length);
 
 #ifdef __cplusplus
 }

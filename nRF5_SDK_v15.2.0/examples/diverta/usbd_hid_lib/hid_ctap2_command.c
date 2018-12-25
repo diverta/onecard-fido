@@ -67,11 +67,16 @@ static void send_ctap2_command_response(void)
 
 static void command_authenticator_make_credential(void)
 {
+    uint8_t  ctap2_status;
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
     size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
 
     // CBORエンコードされたリクエストメッセージをデコード
-    ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
+    ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        // TODO:
+    }
 }
 
 static void command_authenticator_get_info(void)
