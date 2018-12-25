@@ -23,8 +23,12 @@ extern "C" {
 #define CTAP2_COMMAND_CBOR      0x90
 #define CTAP2_COMMAND_ERROR     0xbf
 
-// CTAP2コマンドオプションの識別用
-#define CTAP2_CMD_GETINFO       0x04
+// CTAP2コマンドバイトの識別用
+#define CTAP2_CMD_MAKE_CREDENTIAL       0x01
+#define CTAP2_CMD_GET_ASSERTION         0x02
+#define CTAP2_CMD_GETINFO               0x04
+#define CTAP2_CMD_CLIENT_PIN            0x06
+#define CTAP2_CMD_GET_NEXT_ASSERTION    0x08
 
 // CTAPHID_INITのオプション識別用
 #define CTAP2_CAPABILITY_CBOR   0x04

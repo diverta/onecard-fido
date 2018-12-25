@@ -27,6 +27,7 @@ NRF_LOG_MODULE_REGISTER();
 #define FIDO_COMMAND_PING    U2F_COMMAND_PING
 #define FIDO_COMMAND_INIT    U2F_COMMAND_HID_INIT
 #endif
+#define FIDO_COMMAND_CBOR    CTAP2_COMMAND_CBOR
 
 // FIDO機能で使用する control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
@@ -98,8 +99,9 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     int offset = 3;
 
     if (p_hid_header->CMD == FIDO_COMMAND_PING || 
-        p_hid_header->CMD == FIDO_COMMAND_INIT) {
-        // コマンドがPING、INITの場合は、APDUではないため
+        p_hid_header->CMD == FIDO_COMMAND_INIT ||
+        p_hid_header->CMD == FIDO_COMMAND_CBOR) {
+        // コマンドがPING、INIT、CBORの場合は、APDUではないため
         // データ長だけセットしておく
         p_apdu->Lc = p_hid_header->LEN;
     } else {
