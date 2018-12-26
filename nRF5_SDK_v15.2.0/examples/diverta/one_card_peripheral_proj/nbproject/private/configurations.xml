@@ -21,6 +21,7 @@
       <in>one_card_main.c</in>
       <in>one_card_main.h</in>
     </df>
+    <itemPath>../fido_lib/fido_crypto.c</itemPath>
   </logicalFolder>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>

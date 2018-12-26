@@ -53,6 +53,7 @@
     <logicalFolder name="fido_lib" displayName="fido_lib" projectFiles="true">
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
+      <itemPath>../fido_lib/fido_crypto.h</itemPath>
       <itemPath>../fido_lib/fido_idling_led.c</itemPath>
       <itemPath>../fido_lib/fido_idling_led.h</itemPath>
       <itemPath>../fido_lib/fido_processing_led.c</itemPath>
@@ -875,6 +876,7 @@
       <itemPath>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
     </logicalFolder>
+    <itemPath>../fido_lib/fido_crypto.c</itemPath>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
@@ -2909,6 +2911,10 @@
       <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../fido_lib/fido_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="0">
       </item>

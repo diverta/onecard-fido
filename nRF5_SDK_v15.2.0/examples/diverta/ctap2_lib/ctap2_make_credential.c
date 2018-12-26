@@ -11,6 +11,7 @@
 #include "ctap2.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
+#include "fido_crypto.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_make_credential
@@ -18,7 +19,8 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR true
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR false
+#define NRF_LOG_DEBUG_CBOR_CONTENT true
 
 // デコードされた
 // authenticatorMakeCredential
@@ -141,7 +143,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         }
     }
 
-#if NRF_LOG_HEXDUMP_DEBUG_CBOR
+#if NRF_LOG_DEBUG_CBOR_CONTENT
     NRF_LOG_DEBUG("clientDataHash:");
     NRF_LOG_HEXDUMP_DEBUG(make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
     NRF_LOG_DEBUG("rp:   id[%s] name[%s]", make_credential_request.rp.id, make_credential_request.rp.name);
@@ -152,5 +154,31 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         make_credential_request.cred_param.COSEAlgorithmIdentifier);
 #endif
     
+    return CTAP1_ERR_SUCCESS;
+}
+
+// RP IDのSHA-256ハッシュデータを保持
+static nrf_crypto_hash_sha256_digest_t rpid_hash;
+static size_t                          rpid_hash_size;
+
+static void generate_rpid_hash(void)
+{
+    // RP IDからSHA-256ハッシュ（32バイト）を生成 
+    uint8_t *rpid = make_credential_request.rp.id;
+    size_t   rpid_size = strlen((char *)rpid);
+    rpid_hash_size = sizeof(rpid_hash);
+    fido_crypto_generate_sha256_hash(rpid, rpid_size, rpid_hash, &rpid_hash_size);
+
+#if NRF_LOG_DEBUG_CBOR_CONTENT
+    NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
+    NRF_LOG_HEXDUMP_DEBUG(rpid_hash, rpid_hash_size);
+#endif
+}
+
+uint8_t ctap2_make_credential_generate_response_items(void)
+{
+    // RP IDからSHA-256ハッシュ（32バイト）を生成 
+    generate_rpid_hash();
+
     return CTAP1_ERR_SUCCESS;
 }

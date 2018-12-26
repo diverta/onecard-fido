@@ -89,8 +89,12 @@ static void command_authenticator_make_credential(void)
         send_ctap2_command_error_response(ctap2_status);
     }
 
-    // authenticatorMakeCredentialレスポンスを生成
-    // TODO:
+    // authenticatorMakeCredentialレスポンスに必要な項目を生成
+    ctap2_status = ctap2_make_credential_generate_response_items();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+    }
 
     // authenticatorMakeCredentialレスポンスをエンコード
     // TODO:
