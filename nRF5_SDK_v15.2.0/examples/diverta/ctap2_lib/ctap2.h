@@ -34,6 +34,9 @@ extern "C" {
 #define CTAP2_CAPABILITY_CBOR   0x04
 #define CTAP2_CAPABILITY_NMSG   0x08
 
+// CTAP2で許容されるメッセージの最大サイズ
+#define CTAP2_MAX_MESSAGE_SIZE  1024
+
 #ifdef __cplusplus
 }
 #endif

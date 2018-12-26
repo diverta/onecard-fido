@@ -26,7 +26,7 @@ NRF_LOG_MODULE_REGISTER();
 // （コマンド共通）
 //
 static HID_INIT_RES_T init_res;
-static uint8_t response_buffer[1024];
+static uint8_t response_buffer[CTAP2_MAX_MESSAGE_SIZE];
 static size_t  response_length;
 
 void hid_ctap2_command_init(void)
@@ -53,16 +53,27 @@ void hid_ctap2_command_init(void)
     hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-static void send_ctap2_command_response(void) 
+static void send_ctap2_command_response(uint8_t ctap2_status, uint8_t length)
 {
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     uint32_t cid = hid_fido_receive_hid_header()->CID;
     uint32_t cmd = hid_fido_receive_hid_header()->CMD;
+    // １バイトめにステータスコードをセット
+    response_buffer[0] = ctap2_status;
+    response_length = length;
     hid_fido_send_command_response(cid, cmd, response_buffer, response_length);
 
     // アイドル時点滅処理を開始
     fido_idling_led_on(LED_FOR_PROCESSING);
+}
+
+static void send_ctap2_command_error_response(uint8_t ctap2_status) 
+{
+    // CTAP2 CBORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    //   エラーなので送信バイト数＝１
+    send_ctap2_command_response(ctap2_status, 1);
 }
 
 static void command_authenticator_make_credential(void)
@@ -75,23 +86,38 @@ static void command_authenticator_make_credential(void)
     ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
-        // TODO:
+        send_ctap2_command_error_response(ctap2_status);
     }
+
+    // authenticatorMakeCredentialレスポンスを生成
+    // TODO:
+
+    // authenticatorMakeCredentialレスポンスをエンコード
+    // TODO:
+
+    // レスポンスデータを転送
+    // TODO: これは仮実装です。
+    send_ctap2_command_response(CTAP1_ERR_INVALID_COMMAND, 1);
 }
 
 static void command_authenticator_get_info(void)
 {
-    response_length = sizeof(response_buffer);
-    if (ctap2_cbor_authgetinfo_response_message(response_buffer, &response_length) == false) {
-        // CBORエンコードされた
-        // authenticatorGetInfoレスポンスを生成
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t  ctap2_status;
+    uint8_t *cbor_data_buffer = response_buffer + 1;
+    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+    
+    // authenticatorGetInfoレスポンスをエンコード
+    ctap2_status = ctap2_cbor_authgetinfo_encode_request(cbor_data_buffer, &cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
-        send_ctap2_command_response();
+        send_ctap2_command_error_response(ctap2_status);
         return;
     }
 
     // レスポンスデータを転送
-    send_ctap2_command_response();
+    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
 }
 
 void hid_ctap2_command_cbor(void)

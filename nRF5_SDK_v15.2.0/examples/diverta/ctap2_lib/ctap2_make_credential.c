@@ -18,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR false
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR true
 
 // デコードされた
 // authenticatorMakeCredential

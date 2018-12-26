@@ -20,7 +20,6 @@ extern "C" {
 #define RP_NAME_LIMIT               32
 #define USER_ID_MAX_SIZE            64
 #define USER_NAME_LIMIT             65
-#define CTAP_MAX_MESSAGE_SIZE       1024
 
 // Public Key Credential Type
 #define PUB_KEY_CRED_PUB_KEY        0x01

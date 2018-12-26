@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-bool ctap2_cbor_authgetinfo_response_message(uint8_t *response_buffer, size_t *response_length);
+uint8_t ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
 }
