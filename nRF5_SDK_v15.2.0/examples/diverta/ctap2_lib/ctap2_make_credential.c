@@ -12,6 +12,7 @@
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
+#include "fido_crypto_keypair.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_make_credential
@@ -32,6 +33,10 @@ struct {
     CTAP_USER_ENTITY_T       user;
     CTAP_PUBKEY_CRED_PARAM_T cred_param;
 } make_credential_request;
+
+// Public Key Credential Sourceを保持
+static uint8_t pubkey_cred_source[256];
+static size_t  pubkey_cred_source_size;
 
 // 項目のキーに対応する変数
 #define MC_clientDataHash       0x01
@@ -175,10 +180,55 @@ static void generate_rpid_hash(void)
 #endif
 }
 
+static void generate_pubkey_cred_source(void)
+{
+    // Public Key Credential Sourceを編集する
+    int offset = 0;
+    memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
+
+    // Public Key Credential Type
+    pubkey_cred_source[offset++] = make_credential_request.cred_param.publicKeyCredentialType;
+
+    // Credential private key
+    // キーペアを新規生成し、秘密鍵を格納
+    fido_crypto_keypair_generate();
+    memcpy(pubkey_cred_source + offset, 
+        fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
+    offset += fido_crypto_keypair_private_key_size();
+
+    // Relying Party Identifier (size & buffer)
+    pubkey_cred_source[offset++] = make_credential_request.rp.id_size;
+    memcpy(pubkey_cred_source + offset, 
+        make_credential_request.rp.id, make_credential_request.rp.id_size);
+    offset += make_credential_request.rp.id_size;
+    
+    // サイズを設定
+    pubkey_cred_source_size = offset;
+
+#if NRF_LOG_DEBUG_CBOR_CONTENT
+    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source_size);
+    NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, pubkey_cred_source_size);
+#endif
+}
+
+static void generate_credential_id(void)
+{
+    // Public Key Credential Sourceを編集する
+    generate_pubkey_cred_source();
+    
+    // TODO:
+    // Public Key Credential Sourceを
+    // AES ECBで暗号化し、
+    // credentialIdを生成する    
+}
+
 uint8_t ctap2_make_credential_generate_response_items(void)
 {
-    // RP IDからSHA-256ハッシュ（32バイト）を生成 
+    // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
     generate_rpid_hash();
+
+    // credentialIdを生成
+    generate_credential_id();
 
     return CTAP1_ERR_SUCCESS;
 }
