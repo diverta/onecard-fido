@@ -38,7 +38,7 @@ uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 
 uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
 {
-    size_t sz = DOMAIN_NAME_MAX_SIZE;
+    size_t sz = RP_ID_MAX_SIZE;
     int ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
     if (ret == CborErrorOutOfMemory) {
         return CTAP2_ERR_LIMIT_EXCEEDED;
@@ -47,7 +47,7 @@ uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
         return ret;
     }
 
-    rp->id[DOMAIN_NAME_MAX_SIZE] = 0;
+    rp->id[RP_ID_MAX_SIZE] = 0;
     rp->id_size = sz;
 
     return CborNoError;
@@ -108,13 +108,13 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
             }
 
         } else if (strcmp(key, "name") == 0) {
-            sz = RP_NAME_LIMIT;
+            sz = RP_NAME_MAX_SIZE;
             ret = cbor_value_copy_text_string(&map, (char*)rp->name, &sz, NULL);
             if (ret != CborErrorOutOfMemory && ret != CborNoError) {
                 // Just truncate the name it's okay
                 return ret;
             }
-            rp->name[RP_NAME_LIMIT - 1] = 0;
+            rp->name[RP_NAME_MAX_SIZE - 1] = 0;
         }
 
         ret = cbor_value_advance(&map);
@@ -190,13 +190,13 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
             }
 
         } else if (strcmp((const char *)key, "name") == 0) {
-            sz = USER_NAME_LIMIT;
+            sz = USER_NAME_MAX_SIZE;
             ret = cbor_value_copy_text_string(&map, (char *)user->name, &sz, NULL);
             if (ret != CborErrorOutOfMemory && ret != CborNoError) {
                 // Just truncate the name it's okay
                 return ret;
             }
-            user->name[USER_NAME_LIMIT - 1] = 0;
+            user->name[USER_NAME_MAX_SIZE - 1] = 0;
         }
 
         ret = cbor_value_advance(&map);

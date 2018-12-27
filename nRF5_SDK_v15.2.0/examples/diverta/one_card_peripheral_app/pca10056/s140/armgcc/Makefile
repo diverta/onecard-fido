@@ -142,6 +142,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
+  $(FIDLIB_DIR)/fido_crypto_keypair.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_processing_led.c \
   $(FIDLIB_DIR)/fido_request_apdu.c \

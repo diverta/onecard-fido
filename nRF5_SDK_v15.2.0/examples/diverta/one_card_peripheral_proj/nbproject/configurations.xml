@@ -54,6 +54,8 @@
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
       <itemPath>../fido_lib/fido_crypto.h</itemPath>
+      <itemPath>../fido_lib/fido_crypto_keypair.c</itemPath>
+      <itemPath>../fido_lib/fido_crypto_keypair.h</itemPath>
       <itemPath>../fido_lib/fido_idling_led.c</itemPath>
       <itemPath>../fido_lib/fido_idling_led.h</itemPath>
       <itemPath>../fido_lib/fido_processing_led.c</itemPath>
@@ -2915,6 +2917,10 @@
       <item path="../fido_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../fido_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto_keypair.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="0">
       </item>

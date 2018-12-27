@@ -6,6 +6,7 @@
 #include "u2f_crypto.h"
 #include "u2f_flash.h"
 #include "u2f_crypto_ecb.h"
+#include "fido_crypto_keypair.h"
 
 // for keysize informations
 #include "nrf_crypto_ecdsa.h"
@@ -17,14 +18,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // for macro (SKEY_WORD_NUM, CERT_WORD_NUM, SKEY_CERT_WORD_NUM)
 #include "ble_u2f_securekey.h"
-
-// 鍵ペア情報をRAWデータに変換する領域
-//   この領域に格納される鍵は
-//   ビッグエンディアン配列となる
-static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
-static size_t  private_key_raw_data_size;
-static size_t  public_key_raw_data_size;
 
 // インストール済み秘密鍵のエンディアン変換用配列
 static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
@@ -77,8 +70,7 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は public_key_raw_data に
     // ビッグエンディアンで格納される
-    u2f_crypto_public_key(public_key_raw_data, &public_key_raw_data_size);
-    uint8_t *p_publickey = public_key_raw_data;
+    uint8_t *p_publickey = fido_crypto_keypair_public_key();
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
@@ -247,8 +239,9 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
 void u2f_register_generate_keyhandle(uint8_t *p_appid_hash)
 {
     // nrf_cc310により、キーペアを新規生成する
-    u2f_crypto_generate_keypair();
-    u2f_crypto_private_key(private_key_raw_data, &private_key_raw_data_size);
+    fido_crypto_keypair_generate();
+    uint8_t *private_key_raw_data = fido_crypto_keypair_private_key();
+    size_t   private_key_raw_data_size = fido_crypto_keypair_private_key_size();
 
     // APDUから取得したappIdHash、秘密鍵を使用し、
     // キーハンドルを新規生成する
