@@ -8,8 +8,8 @@
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_user_presence.h"
-#include "ble_u2f_crypto_ecb.h"
 #include "ble_u2f_util.h"
+#include "u2f_keyhandle.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_authenticate
@@ -37,7 +37,7 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
     // キーハンドルを復号化
     //   keyhandle_base_bufferに
     //   AppIDHash、秘密鍵が格納される
-    ble_u2f_crypto_ecb_restore_keyhandle_base(keyhandle_value, keyhandle_length);
+    u2f_keyhandle_restore(keyhandle_value, keyhandle_length);
     
     // リクエストデータからappIDHashを取得
     // キーハンドルに含まれているものと異なる場合はエラー

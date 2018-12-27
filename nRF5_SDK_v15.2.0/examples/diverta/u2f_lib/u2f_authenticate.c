@@ -6,7 +6,7 @@
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_crypto.h"
-#include "u2f_crypto_ecb.h"
+#include "u2f_keyhandle.h"
 #include "u2f_flash.h"
 
 // for logging informations
@@ -201,7 +201,7 @@ bool u2f_authenticate_restore_keyhandle(uint8_t *apdu_data)
     // キーハンドルを復号化
     //   keyhandle_base_bufferに
     //   AppIDHash、秘密鍵が格納される
-    u2f_crypto_ecb_restore_keyhandle_base(keyhandle_value, keyhandle_length);
+    u2f_keyhandle_restore(keyhandle_value, keyhandle_length);
     
     // リクエストデータからappIDHashを取得
     // キーハンドルに含まれているものと異なる場合はエラー

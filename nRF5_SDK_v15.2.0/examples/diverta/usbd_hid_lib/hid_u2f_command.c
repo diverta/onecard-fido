@@ -13,7 +13,7 @@
 #include "fds.h"
 
 #include "u2f_flash.h"
-#include "u2f_crypto_ecb.h"
+#include "u2f_keyhandle.h"
 #include "u2f_authenticate.h"
 #include "u2f_register.h"
 #include "hid_fido_command.h"

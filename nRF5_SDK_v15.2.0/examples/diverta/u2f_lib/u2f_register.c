@@ -5,7 +5,7 @@
 
 #include "u2f_crypto.h"
 #include "u2f_flash.h"
-#include "u2f_crypto_ecb.h"
+#include "u2f_keyhandle.h"
 #include "fido_crypto_keypair.h"
 
 // for keysize informations
@@ -245,5 +245,5 @@ void u2f_register_generate_keyhandle(uint8_t *p_appid_hash)
 
     // APDUから取得したappIdHash、秘密鍵を使用し、
     // キーハンドルを新規生成する
-    u2f_crypto_ecb_generate_keyhandle(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
+    u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
 }

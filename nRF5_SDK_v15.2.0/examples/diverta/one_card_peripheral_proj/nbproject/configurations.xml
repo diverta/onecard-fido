@@ -18,8 +18,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_control_point_apdu.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_crypto.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_crypto.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_crypto_ecb.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_crypto_ecb.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_flash.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_flash.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_init.c</itemPath>
@@ -54,6 +52,8 @@
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
       <itemPath>../fido_lib/fido_crypto.h</itemPath>
+      <itemPath>../fido_lib/fido_crypto_ecb.c</itemPath>
+      <itemPath>../fido_lib/fido_crypto_ecb.h</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.c</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.h</itemPath>
       <itemPath>../fido_lib/fido_idling_led.c</itemPath>
@@ -843,10 +843,10 @@
       <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.h</itemPath>
-      <itemPath>../u2f_lib/u2f_crypto_ecb.c</itemPath>
-      <itemPath>../u2f_lib/u2f_crypto_ecb.h</itemPath>
       <itemPath>../u2f_lib/u2f_flash.c</itemPath>
       <itemPath>../u2f_lib/u2f_flash.h</itemPath>
+      <itemPath>../u2f_lib/u2f_keyhandle.c</itemPath>
+      <itemPath>../u2f_lib/u2f_keyhandle.h</itemPath>
       <itemPath>../u2f_lib/u2f_register.c</itemPath>
       <itemPath>../u2f_lib/u2f_register.h</itemPath>
     </logicalFolder>
@@ -2778,19 +2778,6 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_crypto_ecb.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
       <item path="../ble_u2f_lib/ble_u2f_flash.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
@@ -2918,6 +2905,10 @@
       </item>
       <item path="../fido_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../fido_lib/fido_crypto_ecb.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto_ecb.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../fido_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../fido_lib/fido_crypto_keypair.h" ex="false" tool="3" flavor2="0">
@@ -3026,14 +3017,14 @@
       </item>
       <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../u2f_lib/u2f_crypto_ecb.c" ex="false" tool="0" flavor2="2">
+      <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../u2f_lib/u2f_keyhandle.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
-      </item>
-      <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
       </item>
