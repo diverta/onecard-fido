@@ -12,6 +12,7 @@
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
+#include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
 // for logging informations
@@ -36,8 +37,12 @@ struct {
 } make_credential_request;
 
 // Public Key Credential Sourceを保持
-static uint8_t pubkey_cred_source[256];
-static size_t  pubkey_cred_source_size;
+static uint8_t pubkey_cred_source[128];
+static size_t  pubkey_cred_source_block_size;
+
+// credentialIdを保持
+static uint8_t credential_id[128];
+static size_t  credential_id_size;
 
 // エンコードされたかどうかを保持するビット
 #define PARAM_clientDataHash    (1 << 0)
@@ -195,7 +200,14 @@ static void generate_rpid_hash(void)
 static void generate_pubkey_cred_source(void)
 {
     // Public Key Credential Sourceを編集する
-    int offset = 0;
+    // 
+    //  0: Public Key Credential Source自体のサイズ
+    //  1: Public Key Credential Type
+    //  2 - 33: Credential private key（秘密鍵）
+    //  34: Relying Party Identifierのサイズ
+    //  35 - n: Relying Party Identifier（文字列）
+    // 
+    int offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
 
     // Public Key Credential Type
@@ -214,24 +226,42 @@ static void generate_pubkey_cred_source(void)
         make_credential_request.rp.id, make_credential_request.rp.id_size);
     offset += make_credential_request.rp.id_size;
     
-    // サイズを設定
-    pubkey_cred_source_size = offset;
+    // Public Key Credential Source自体のサイズを、
+    // バッファの１バイト目に設定
+    pubkey_cred_source[0] = offset;
 
 #if NRF_LOG_DEBUG_CBOR_CONTENT
-    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source_size);
-    NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, pubkey_cred_source_size);
+    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
+    NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, offset);
 #endif
+
+    // 暗号化対象ブロックサイズを設定
+    //   AES ECBの仕様上、16の倍数でなければならない
+    int block_num = offset / 16;
+    int block_sum = block_num * 16;
+    if (offset == block_sum) {
+        pubkey_cred_source_block_size = offset;
+    } else {
+        pubkey_cred_source_block_size = (block_num + 1) * 16;
+    } 
 }
 
 static void generate_credential_id(void)
 {
     // Public Key Credential Sourceを編集する
     generate_pubkey_cred_source();
-    
-    // TODO:
+
     // Public Key Credential Sourceを
     // AES ECBで暗号化し、
-    // credentialIdを生成する    
+    // credentialIdを生成する
+    memset(credential_id, 0x00, sizeof(credential_id));
+    fido_crypto_ecb_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
+    credential_id_size = pubkey_cred_source_block_size;
+
+#if NRF_LOG_DEBUG_CBOR_CONTENT
+    NRF_LOG_DEBUG("credentialId(%d bytes):", credential_id_size);
+    NRF_LOG_HEXDUMP_DEBUG(credential_id, credential_id_size);
+#endif
 }
 
 uint8_t ctap2_make_credential_generate_response_items(void)
