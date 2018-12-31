@@ -25,7 +25,18 @@ extern "C" {
 #define PUB_KEY_CRED_PUB_KEY        0x01
 #define PUB_KEY_CRED_UNKNOWN        0x3F
 
-// COSE Algorithm Identifier
+// Values for COSE_Key format
+//  Key type
+#define COSE_KEY_LABEL_KTY          1
+#define COSE_KEY_KTY_EC2            2
+//  Curve type
+#define COSE_KEY_LABEL_CRV          -1
+#define COSE_KEY_CRV_P256           1
+//  Key coordinate
+#define COSE_KEY_LABEL_X            -2
+#define COSE_KEY_LABEL_Y            -3
+//  Signature algorithm
+#define COSE_KEY_LABEL_ALG          3
 #define COSE_ALG_ES256              -7
 
 // Credential type suppurted or not

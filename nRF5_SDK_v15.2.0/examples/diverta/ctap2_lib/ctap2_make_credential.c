@@ -44,6 +44,10 @@ static size_t  pubkey_cred_source_block_size;
 static uint8_t credential_id[128];
 static size_t  credential_id_size;
 
+// credentialPublicKeyを保持
+static uint8_t credential_pubkey[80];
+static size_t  credential_pubkey_size;
+
 // エンコードされたかどうかを保持するビット
 #define PARAM_clientDataHash    (1 << 0)
 #define PARAM_rp                (1 << 1)
@@ -264,6 +268,101 @@ static void generate_credential_id(void)
 #endif
 }
 
+static uint8_t encode_credential_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
+{
+    uint8_t ret;
+    CborEncoder map;
+
+    ret = cbor_encoder_create_map(encoder, &map, 5);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Key type
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_KTY);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, COSE_KEY_KTY_EC2);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Signature algorithm
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_ALG);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, alg);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Curve type
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_CRV);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, COSE_KEY_CRV_P256);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // x-coordinate
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_X);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_byte_string(&map, x, 32);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // y-coordinate
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_Y);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_byte_string(&map, y, 32);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_encoder_close_container(encoder, &map);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    return CborNoError;
+}
+
+static uint8_t generate_credential_pubkey(void)
+{
+    // CBORエンコーダー初期化
+    CborEncoder encoder;
+    memset(credential_pubkey, 0x00, sizeof(credential_pubkey));
+    cbor_encoder_init(&encoder, credential_pubkey, sizeof(credential_pubkey), 0);
+
+    // CBORエンコード実行
+    uint8_t *x = fido_crypto_keypair_public_key();
+    uint8_t *y = fido_crypto_keypair_public_key() + 32;
+    int32_t alg = make_credential_request.cred_param.COSEAlgorithmIdentifier;
+    uint8_t ret = encode_credential_pubkey(&encoder, x, y, alg);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // CBORエンコードデータ長を取得
+    credential_pubkey_size = cbor_encoder_get_buffer_size(&encoder, credential_pubkey);
+
+#if NRF_LOG_DEBUG_CBOR_CONTENT
+    NRF_LOG_DEBUG("credentialPublicKey CBOR(%d bytes):", credential_pubkey_size);
+    NRF_LOG_HEXDUMP_DEBUG(credential_pubkey, credential_pubkey_size);
+#endif
+
+    return CTAP1_ERR_SUCCESS;
+}
+
 uint8_t ctap2_make_credential_generate_response_items(void)
 {
     // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
@@ -271,6 +370,12 @@ uint8_t ctap2_make_credential_generate_response_items(void)
 
     // credentialIdを生成
     generate_credential_id();
+
+    // credentialPublicKey(CBOR)を生成
+    uint8_t ret = generate_credential_pubkey();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
 
     return CTAP1_ERR_SUCCESS;
 }

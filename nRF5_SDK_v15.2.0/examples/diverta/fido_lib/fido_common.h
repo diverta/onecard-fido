@@ -38,8 +38,11 @@ extern "C" {
 #define CTAP2_ERR_INVALID_CBOR_TYPE     0x13
 #define CTAP2_ERR_MISSING_PARAMETER     0x14
 #define CTAP2_ERR_LIMIT_EXCEEDED        0x15
+#define CTAP2_ERR_PROCESSING            0x21
 #define CTAP2_ERR_UNSUPPORTED_ALGORITHM 0x26
 #define CTAP1_ERR_OTHER                 0x7f
+#define CTAP2_ERR_VENDOR_FIRST          0xf0
+#define CTAP2_ERR_VENDOR_LAST           0xff
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
