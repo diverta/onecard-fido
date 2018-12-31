@@ -16,10 +16,16 @@
 #include "hid_fido_receive.h"
 #include "usbd_hid_common.h"
 
+// for processing LED on/off
+#include "fido_processing_led.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_ctap2_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// ユーザー所在確認が必要かどうかを保持
+static bool is_tup_needed = false;
 
 //
 // CTAP2レスポンスデータ格納領域
@@ -28,6 +34,54 @@ NRF_LOG_MODULE_REGISTER();
 static HID_INIT_RES_T init_res;
 static uint8_t response_buffer[CTAP2_MAX_MESSAGE_SIZE];
 static size_t  response_length;
+
+// 関数プロトタイプ
+static void command_make_credential_resume_process(void);
+
+static uint8_t get_command_byte(void)
+{
+    // CTAP2 CBORコマンドを取得
+    //   最初の１バイト目がCTAP2コマンドバイトで、
+    //   残りは全てCBORデータバイトとなっている
+    uint8_t *ctap2_cbor_buffer = hid_fido_receive_apdu()->data;
+    uint8_t  ctap2_command_byte = ctap2_cbor_buffer[0];
+
+    return ctap2_command_byte;
+}
+
+static void resume_response_process(void)
+{
+    switch (get_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            NRF_LOG_INFO("authenticatorMakeCredential: completed the test of user presence");
+            command_make_credential_resume_process();
+            break;
+        default:
+            break;
+    }
+}
+
+bool hid_ctap2_command_on_mainsw_event(void)
+{
+    if (is_tup_needed) {
+        // ユーザー所在確認が必要な場合
+        // (＝ユーザーによるボタン押下が行われた場合)
+        is_tup_needed = false;
+        // LEDを消灯させる
+        fido_processing_led_off();
+        // 後続のレスポンス送信処理を実行
+        resume_response_process();
+        return true;
+    }
+
+    return false;
+}
+
+bool hid_ctap2_command_on_mainsw_long_push_event(void)
+{
+    // NOP
+    return true;
+}
 
 void hid_ctap2_command_init(void)
 {
@@ -78,19 +132,43 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
 
 static void command_authenticator_make_credential(void)
 {
-    uint8_t  ctap2_status;
-    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
-    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+
+    NRF_LOG_INFO("authenticatorMakeCredential start");
+
+    // 秘密鍵と証明書をFlash ROMから読込
+    // 秘密鍵と証明書がFlash ROMに登録されていない場合
+    // エラーレスポンスを生成して戻す
+    // TODO:
 
     // CBORエンコードされたリクエストメッセージをデコード
-    ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
+    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
+    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
     }
 
+    if (ctap2_make_credential_is_tup_needed()) {
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        NRF_LOG_INFO("authenticatorMakeCredential: waiting to complete the test of user presence");
+        // LED点滅を開始
+        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        return;
+    }
+
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    command_make_credential_resume_process();
+}
+
+static void command_make_credential_resume_process(void)
+{
     // authenticatorMakeCredentialレスポンスに必要な項目を生成
-    ctap2_status = ctap2_make_credential_generate_response_items();
+    uint8_t ctap2_status = ctap2_make_credential_generate_response_items();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
@@ -102,6 +180,7 @@ static void command_authenticator_make_credential(void)
     // レスポンスデータを転送
     // TODO: これは仮実装です。
     send_ctap2_command_response(CTAP1_ERR_INVALID_COMMAND, 1);
+    NRF_LOG_INFO("authenticatorMakeCredential end");
 }
 
 static void command_authenticator_get_info(void)
@@ -129,9 +208,7 @@ void hid_ctap2_command_cbor(void)
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     //   最初の１バイト目がCTAP2コマンドバイトで、
     //   残りは全てCBORデータバイトとなっている
-    uint8_t *ctap2_cbor_buffer = hid_fido_receive_apdu()->data;
-    uint8_t  ctap2_command_byte = ctap2_cbor_buffer[0];
-    switch (ctap2_command_byte) {
+    switch (get_command_byte()) {
         case CTAP2_CMD_GETINFO:
             command_authenticator_get_info();
             break;

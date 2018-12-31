@@ -162,6 +162,12 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     return CTAP1_ERR_SUCCESS;
 }
 
+bool ctap2_make_credential_is_tup_needed(void)
+{
+    // TODO: これは仮の実装です。
+    return true;
+}
+
 // RP IDのSHA-256ハッシュデータを保持
 static nrf_crypto_hash_sha256_digest_t rpid_hash;
 static size_t                          rpid_hash_size;

@@ -90,9 +90,10 @@ bool hid_u2f_command_on_mainsw_event(void)
         fido_processing_led_off();
         // 後続のレスポンス送信処理を実行
         u2f_resume_response_process();
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool hid_u2f_command_on_mainsw_long_push_event(void)

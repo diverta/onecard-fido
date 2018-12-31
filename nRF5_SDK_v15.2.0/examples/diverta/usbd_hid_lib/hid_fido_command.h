@@ -37,9 +37,6 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
 void hid_fido_command_on_report_sent(void);
 
-bool hid_u2f_command_on_mainsw_event(void);
-bool hid_u2f_command_on_mainsw_long_push_event(void);
-
 void hid_fido_command_on_process_started(void);
 void hid_fido_command_on_process_ended(void);
 void hid_fido_command_on_process_timedout(void);

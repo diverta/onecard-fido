@@ -14,6 +14,9 @@ extern "C" {
 void hid_ctap2_command_init(void);
 void hid_ctap2_command_cbor(void);
 
+bool hid_ctap2_command_on_mainsw_event(void);
+bool hid_ctap2_command_on_mainsw_long_push_event(void);
+
 #ifdef __cplusplus
 }
 #endif
