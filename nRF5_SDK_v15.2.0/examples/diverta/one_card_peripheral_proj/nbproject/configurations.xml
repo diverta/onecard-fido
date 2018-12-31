@@ -51,6 +51,7 @@
     <logicalFolder name="fido_lib" displayName="fido_lib" projectFiles="true">
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
+      <itemPath>../fido_lib/fido_crypto.c</itemPath>
       <itemPath>../fido_lib/fido_crypto.h</itemPath>
       <itemPath>../fido_lib/fido_crypto_ecb.c</itemPath>
       <itemPath>../fido_lib/fido_crypto_ecb.h</itemPath>
@@ -878,7 +879,6 @@
       <itemPath>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
     </logicalFolder>
-    <itemPath>../fido_lib/fido_crypto.c</itemPath>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
