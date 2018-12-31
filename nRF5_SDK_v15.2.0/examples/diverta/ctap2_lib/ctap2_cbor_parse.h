@@ -50,11 +50,18 @@ typedef struct {
     int32_t COSEAlgorithmIdentifier;
 } CTAP_PUBKEY_CRED_PARAM_T;
 
+typedef struct {
+    uint8_t rk;
+    uint8_t uv;
+    uint8_t up;
+} CTAP_OPTIONS_T;
+
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len);
 uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val);
 uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val);
 uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val);
 uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *pubkey_cred_param, CborValue *val);
+uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val);
 
 #ifdef __cplusplus
 }
