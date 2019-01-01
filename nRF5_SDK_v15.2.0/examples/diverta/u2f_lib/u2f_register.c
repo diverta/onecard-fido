@@ -205,6 +205,13 @@ static void convert_private_key_endian(void)
     }
 }
 
+uint8_t *u2f_securekey_skey_be(void)
+{
+    // ビッグエンディアンイメージの秘密鍵格納領域の開始アドレスを取得
+    convert_private_key_endian();
+    return private_key_be;
+}
+
 bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length, uint32_t apdu_le)
 {
     // エラー時のレスポンスを「予期しないエラー」に設定
@@ -216,8 +223,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    convert_private_key_endian();
-    if (u2f_crypto_sign(private_key_be) != NRF_SUCCESS) {
+    if (u2f_crypto_sign(u2f_securekey_skey_be()) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }

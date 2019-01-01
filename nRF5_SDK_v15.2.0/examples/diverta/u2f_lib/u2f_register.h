@@ -7,12 +7,12 @@
 extern "C" {
 #endif
 
-
 uint16_t u2f_register_status_word(void);
 void u2f_register_generate_keyhandle(uint8_t *p_appid_hash);
 bool u2f_register_add_token_counter(uint8_t *p_appid_hash);
 bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length, uint32_t apdu_le);
 
+uint8_t *u2f_securekey_skey_be(void);
 
 #ifdef __cplusplus
 }
