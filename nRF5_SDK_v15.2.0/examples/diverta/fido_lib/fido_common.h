@@ -64,6 +64,8 @@ typedef struct {
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
+void fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
+void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
 
 #ifdef __cplusplus
 }

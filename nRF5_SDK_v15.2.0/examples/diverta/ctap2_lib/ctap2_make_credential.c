@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include "cbor.h"
 #include "ctap2.h"
+#include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
@@ -21,8 +22,10 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR false
-#define NRF_LOG_DEBUG_CBOR_CONTENT true
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
+#define NRF_LOG_DEBUG_CBOR_REQUEST      true
+#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   true
+#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    true
 
 // デコードされた
 // authenticatorMakeCredential
@@ -36,6 +39,16 @@ struct {
     CTAP_OPTIONS_T           options;
 } make_credential_request;
 
+// RP IDのSHA-256ハッシュデータを保持
+static nrf_crypto_hash_sha256_digest_t rpid_hash;
+static size_t                          rpid_hash_size;
+
+// flagsを保持
+static uint8_t flags;
+
+// signCountを保持
+static uint32_t sign_count;
+
 // Public Key Credential Sourceを保持
 static uint8_t pubkey_cred_source[128];
 static size_t  pubkey_cred_source_block_size;
@@ -47,6 +60,10 @@ static size_t  credential_id_size;
 // credentialPublicKeyを保持
 static uint8_t credential_pubkey[80];
 static size_t  credential_pubkey_size;
+
+// Authenticator dataを保持
+static uint8_t authenticator_data[256];
+static size_t  authenticator_data_size;
 
 // エンコードされたかどうかを保持するビット
 #define PARAM_clientDataHash    (1 << 0)
@@ -162,7 +179,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         }
     }
 
-#if NRF_LOG_DEBUG_CBOR_CONTENT
+#if NRF_LOG_DEBUG_CBOR_REQUEST
     NRF_LOG_DEBUG("clientDataHash:");
     NRF_LOG_HEXDUMP_DEBUG(make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
     NRF_LOG_DEBUG("rp:   id[%s] name[%s]", make_credential_request.rp.id, make_credential_request.rp.name);
@@ -183,10 +200,6 @@ bool ctap2_make_credential_is_tup_needed(void)
     return (make_credential_request.options.up == 1);
 }
 
-// RP IDのSHA-256ハッシュデータを保持
-static nrf_crypto_hash_sha256_digest_t rpid_hash;
-static size_t                          rpid_hash_size;
-
 static void generate_rpid_hash(void)
 {
     // RP IDからSHA-256ハッシュ（32バイト）を生成 
@@ -195,7 +208,7 @@ static void generate_rpid_hash(void)
     rpid_hash_size = sizeof(rpid_hash);
     fido_crypto_generate_sha256_hash(rpid, rpid_size, rpid_hash, &rpid_hash_size);
 
-#if NRF_LOG_DEBUG_CBOR_CONTENT
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
     NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
     NRF_LOG_HEXDUMP_DEBUG(rpid_hash, rpid_hash_size);
 #endif
@@ -234,7 +247,7 @@ static void generate_pubkey_cred_source(void)
     // バッファの１バイト目に設定
     pubkey_cred_source[0] = offset;
 
-#if NRF_LOG_DEBUG_CBOR_CONTENT
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
     NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
     NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, offset);
 #endif
@@ -262,7 +275,7 @@ static void generate_credential_id(void)
     fido_crypto_ecb_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
-#if NRF_LOG_DEBUG_CBOR_CONTENT
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
     NRF_LOG_DEBUG("credentialId(%d bytes):", credential_id_size);
     NRF_LOG_HEXDUMP_DEBUG(credential_id, credential_id_size);
 #endif
@@ -355,7 +368,7 @@ static uint8_t generate_credential_pubkey(void)
     // CBORエンコードデータ長を取得
     credential_pubkey_size = cbor_encoder_get_buffer_size(&encoder, credential_pubkey);
 
-#if NRF_LOG_DEBUG_CBOR_CONTENT
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
     NRF_LOG_DEBUG("credentialPublicKey CBOR(%d bytes):", credential_pubkey_size);
     NRF_LOG_HEXDUMP_DEBUG(credential_pubkey, credential_pubkey_size);
 #endif
@@ -363,10 +376,57 @@ static uint8_t generate_credential_pubkey(void)
     return CTAP1_ERR_SUCCESS;
 }
 
+void generate_authenticator_data(void)
+{
+    // Authenticator data各項目を
+    // 先頭からバッファにセット
+    //  rpIdHash
+    int offset = 0;
+    memset(authenticator_data, 0x00, sizeof(authenticator_data));
+    memcpy(authenticator_data + offset, rpid_hash, rpid_hash_size);
+    offset += rpid_hash_size;
+    //  flags
+    authenticator_data[offset++] = flags;
+    //  signCount
+    fido_set_uint32_bytes(authenticator_data + offset, sign_count);
+    offset += sizeof(uint32_t);
+    //  attestedCredentialData
+    //   aaguid
+    int aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
+    memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
+    offset += aaguid_size;
+    //   credentialIdLength
+    fido_set_uint16_bytes(authenticator_data + offset, credential_id_size);
+    offset += sizeof(uint16_t);
+    //   credentialId
+    memcpy(authenticator_data + offset, credential_id, credential_id_size);
+    offset += credential_id_size;
+    //   credentialPublicKey
+    memcpy(authenticator_data + offset, credential_pubkey, credential_pubkey_size);
+    offset += credential_pubkey_size;
+        
+#if NRF_LOG_DEBUG_AUTH_DATA_BUFF
+    int j, k;
+    NRF_LOG_DEBUG("Authenticator data(%d bytes):", offset);
+    for (j = 0; j < offset; j += 64) {
+        k = offset - j;
+        NRF_LOG_HEXDUMP_DEBUG(authenticator_data + j, (k < 64) ? k : 64);
+    }
+#endif
+
+    // データ長を設定
+    authenticator_data_size = offset;
+}
+
 uint8_t ctap2_make_credential_generate_response_items(void)
 {
     // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
     generate_rpid_hash();
+    
+    // flags編集
+    //   User Present result (0x01) &
+    //   Attested credential data included (0x40)
+    flags = 0x41;
 
     // credentialIdを生成
     generate_credential_id();
@@ -377,5 +437,8 @@ uint8_t ctap2_make_credential_generate_response_items(void)
         return ret;
     }
 
+    // Authenticator dataを生成
+    generate_authenticator_data();
+    
     return CTAP1_ERR_SUCCESS;
 }
