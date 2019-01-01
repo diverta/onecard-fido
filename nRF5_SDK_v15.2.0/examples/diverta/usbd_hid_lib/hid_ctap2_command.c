@@ -107,7 +107,7 @@ void hid_ctap2_command_init(void)
     hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-static void send_ctap2_command_response(uint8_t ctap2_status, uint8_t length)
+static void send_ctap2_command_response(uint8_t ctap2_status, size_t length)
 {
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
@@ -174,12 +174,21 @@ static void command_make_credential_resume_process(void)
         send_ctap2_command_error_response(ctap2_status);
     }
 
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *cbor_data_buffer = response_buffer + 1;
+    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+
     // authenticatorMakeCredentialレスポンスをエンコード
-    // TODO:
+    ctap2_status = ctap2_make_credential_encode_response(cbor_data_buffer, &cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+    }
 
     // レスポンスデータを転送
     // TODO: これは仮実装です。
-    send_ctap2_command_response(CTAP1_ERR_INVALID_COMMAND, 1);
+    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
     NRF_LOG_INFO("authenticatorMakeCredential end");
 }
 

@@ -36,6 +36,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
+#define NRF_LOG_DEBUG_CBOR_RESPONSE     false
 
 // デコードされた
 // authenticatorMakeCredential
@@ -414,7 +415,7 @@ void generate_authenticator_data(void)
     //   credentialPublicKey
     memcpy(authenticator_data + offset, credential_pubkey, credential_pubkey_size);
     offset += credential_pubkey_size;
-        
+
 #if NRF_LOG_DEBUG_AUTH_DATA_BUFF
     int j, k;
     NRF_LOG_DEBUG("Authenticator data(%d bytes):", offset);
@@ -507,5 +508,117 @@ uint8_t ctap2_make_credential_generate_response_items(void)
         return ret;
     }
     
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+{
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+
+    // Map初期化
+    CborEncoder map;
+    int         ret;
+    ret = cbor_encoder_create_map(&encoder, &map, 3);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // fmt (0x01: RESP_fmt)
+    ret = cbor_encode_int(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    ret = cbor_encode_text_stringz(&map, "packed");
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // authData (0x02: RESP_authData)
+    ret = cbor_encode_int(&map, 0x02);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    ret = cbor_encode_byte_string(&map, authenticator_data, authenticator_data_size);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // attStmt (0x03: RESP_attStmt)
+    ret = cbor_encode_int(&map, 0x03);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // 証明書は入れ子のCBORとなる
+    CborEncoder stmtmap;
+    CborEncoder x5carr;
+    ret = cbor_encoder_create_map(&map, &stmtmap, 3);
+    if (ret == CborNoError) {
+        // alg
+        ret = cbor_encode_text_stringz(&stmtmap,"alg");
+        if (ret != CborNoError) {
+            return CTAP2_ERR_PROCESSING;
+        }
+        ret = cbor_encode_int(&stmtmap,COSE_ALG_ES256);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_PROCESSING;
+        }
+        // sig
+        ret = cbor_encode_text_stringz(&stmtmap,"sig");
+        if (ret != CborNoError) {
+            return CTAP2_ERR_PROCESSING;
+        }
+        ret = cbor_encode_byte_string(&stmtmap,
+            u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+        if (ret != CborNoError) {
+            return CTAP2_ERR_PROCESSING;
+        }
+        // x5c
+        ret = cbor_encode_text_stringz(&stmtmap,"x5c");
+        if (ret != CborNoError) {
+            return CTAP2_ERR_PROCESSING;
+        }
+        ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
+        if (ret == CborNoError) {
+            // 証明書格納領域と長さを取得
+            uint8_t *cert_buffer = u2f_securekey_cert();
+            uint32_t cert_buffer_length = u2f_securekey_cert_length();
+            // 証明書を格納
+            ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
+            if (ret != CborNoError) {
+                return CTAP2_ERR_PROCESSING;
+            }
+            ret = cbor_encoder_close_container(&stmtmap, &x5carr);
+            if (ret != CborNoError) {
+                return CTAP2_ERR_PROCESSING;
+            }
+        }
+    }
+
+    ret = cbor_encoder_close_container(&map, &stmtmap);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // CBORバッファの長さを設定
+    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    NRF_LOG_DEBUG("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
+
+#if NRF_LOG_DEBUG_CBOR_RESPONSE
+    int j, k;
+    int max = 288;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(encoded_buff + j, (k < 64) ? k : 64);
+    }
+#endif
+
     return CTAP1_ERR_SUCCESS;
 }

@@ -13,6 +13,8 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash);
 bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length, uint32_t apdu_le);
 
 uint8_t *u2f_securekey_skey_be(void);
+uint8_t *u2f_securekey_cert(void);
+uint32_t u2f_securekey_cert_length(void);
 
 #ifdef __cplusplus
 }

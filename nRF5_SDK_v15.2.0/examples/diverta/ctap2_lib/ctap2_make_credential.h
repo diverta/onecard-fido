@@ -16,6 +16,7 @@ extern "C" {
 uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length);
 bool    ctap2_make_credential_is_tup_needed(void);
 uint8_t ctap2_make_credential_generate_response_items(void);
+uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
 }
