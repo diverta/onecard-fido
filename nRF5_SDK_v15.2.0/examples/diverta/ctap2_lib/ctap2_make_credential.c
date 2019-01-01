@@ -16,6 +16,15 @@
 #include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
+// for u2f_flash_keydata_read & u2f_flash_keydata_available
+#include "u2f_flash.h"
+
+// for u2f_crypto_sign & other
+#include "u2f_crypto.h"
+
+// for u2f_securekey_skey_be
+#include "u2f_register.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_make_credential
 #include "nrf_log.h"
@@ -23,9 +32,10 @@ NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
-#define NRF_LOG_DEBUG_CBOR_REQUEST      true
-#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   true
-#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    true
+#define NRF_LOG_DEBUG_CBOR_REQUEST      false
+#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
+#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
+#define NRF_LOG_DEBUG_SIGN_BUFF         false
 
 // デコードされた
 // authenticatorMakeCredential
@@ -418,6 +428,56 @@ void generate_authenticator_data(void)
     authenticator_data_size = offset;
 }
 
+uint8_t generate_sign(void)
+{
+    if (u2f_flash_keydata_read() == false) {
+        // 秘密鍵と証明書をFlash ROMから読込
+        // NGであれば、エラーレスポンスを生成して戻す
+        return CTAP2_ERR_VENDOR_FIRST;
+    }
+
+    if (u2f_flash_keydata_available() == false) {
+        // 秘密鍵と証明書がFlash ROMに登録されていない場合
+        // エラーレスポンスを生成して戻す
+        return CTAP2_ERR_VENDOR_FIRST;
+    }
+
+    // 署名生成用バッファの格納領域を取得
+    uint8_t offset = 0;
+    uint8_t *signature_base_buffer = u2f_crypto_signature_data_buffer();
+
+    // Authenticator data
+    memcpy(signature_base_buffer + offset, authenticator_data, authenticator_data_size);
+    offset += authenticator_data_size;
+
+    // clientDataHash 
+    memcpy(signature_base_buffer + offset, make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+    offset += authenticator_data_size;
+
+    // メッセージのバイト数をセット
+    u2f_crypto_signature_data_size_set(offset);
+
+    // 署名用の秘密鍵を取得し、署名を生成
+    if (u2f_crypto_sign(u2f_securekey_skey_be()) != NRF_SUCCESS) {
+        // 署名生成に失敗したら終了
+        return false;
+    }
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_crypto_create_asn1_signature() == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
+    }
+
+#if NRF_LOG_DEBUG_SIGN_BUFF
+    NRF_LOG_DEBUG("Signature(%d bytes):", u2f_crypto_signature_data_size());
+    NRF_LOG_HEXDUMP_DEBUG(u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+#endif
+
+    return CTAP1_ERR_SUCCESS;
+}
+
 uint8_t ctap2_make_credential_generate_response_items(void)
 {
     // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
@@ -439,6 +499,13 @@ uint8_t ctap2_make_credential_generate_response_items(void)
 
     // Authenticator dataを生成
     generate_authenticator_data();
+
+    // 認証器に事前インストールされている
+    // 秘密鍵を使用して署名を生成
+    ret = generate_sign();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
     
     return CTAP1_ERR_SUCCESS;
 }
