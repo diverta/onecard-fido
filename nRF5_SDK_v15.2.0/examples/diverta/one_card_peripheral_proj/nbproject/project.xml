@@ -19,6 +19,7 @@
                 <sourceRootElem>../usbd_hid_ctap2_lib</sourceRootElem>
                 <sourceRootElem>../usbd_hid_lib</sourceRootElem>
                 <sourceRootElem>../fido_lib</sourceRootElem>
+                <sourceRootElem>../../../../../tinycbor/src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
