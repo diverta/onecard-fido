@@ -6,8 +6,6 @@
  */
 #include "sdk_common.h"
 
-#include <stdbool.h>
-#include <stdint.h>
 #include "cbor.h"
 #include "ctap2.h"
 #include "ctap2_cbor_authgetinfo.h"
@@ -32,6 +30,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
+#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
@@ -191,9 +190,12 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         }
     }
 
-#if NRF_LOG_DEBUG_CBOR_REQUEST
+#if NRF_LOG_DEBUG_CLHASH_DATA_BUFF
     NRF_LOG_DEBUG("clientDataHash:");
     NRF_LOG_HEXDUMP_DEBUG(make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+#endif
+
+#if NRF_LOG_DEBUG_CBOR_REQUEST
     NRF_LOG_DEBUG("rp:   id[%s] name[%s]", make_credential_request.rp.id, make_credential_request.rp.name);
     NRF_LOG_DEBUG("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
     NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
@@ -454,7 +456,7 @@ uint8_t generate_sign(void)
 
     // clientDataHash 
     memcpy(signature_base_buffer + offset, make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-    offset += authenticator_data_size;
+    offset += CLIENT_DATA_HASH_SIZE;
 
     // メッセージのバイト数をセット
     u2f_crypto_signature_data_size_set(offset);

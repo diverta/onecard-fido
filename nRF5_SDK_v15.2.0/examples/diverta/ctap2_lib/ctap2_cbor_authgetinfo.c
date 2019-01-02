@@ -6,8 +6,6 @@
  */
 #include "sdk_common.h"
 
-#include <stdbool.h>
-#include <stdint.h>
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2.h"
