@@ -7,13 +7,13 @@
 #ifndef CTAP2_CBOR_AUTHGETINFO_H
 #define CTAP2_CBOR_AUTHGETINFO_H
 
-#include <stdbool.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool ctap2_cbor_authgetinfo_response_message(uint8_t *response_buffer, size_t *response_length);
+uint8_t *ctap2_cbor_authgetinfo_aaguid();
+size_t   ctap2_cbor_authgetinfo_aaguid_size();
+uint8_t  ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
 }

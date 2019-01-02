@@ -21,6 +21,24 @@
       <in>one_card_main.c</in>
       <in>one_card_main.h</in>
     </df>
+    <df root="../../../../../tinycbor/src" name="1">
+      <in>cbor.h</in>
+      <in>cborencoder.c</in>
+      <in>cborencoder_close_container_checked.c</in>
+      <in>cborerrorstrings.c</in>
+      <in>cborinternal_p.h</in>
+      <in>cborjson.h</in>
+      <in>cborparser.c</in>
+      <in>cborparser_dup_string.c</in>
+      <in>cborpretty.c</in>
+      <in>cborpretty_stdio.c</in>
+      <in>cbortojson.c</in>
+      <in>cborvalidation.c</in>
+      <in>compilersupport_p.h</in>
+      <in>open_memstream.c</in>
+      <in>tinycbor-version.h</in>
+      <in>utf8_p.h</in>
+    </df>
   </logicalFolder>
   <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>

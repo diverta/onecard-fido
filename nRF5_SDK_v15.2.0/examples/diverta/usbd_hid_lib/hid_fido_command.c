@@ -83,6 +83,9 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
         case U2F_COMMAND_MSG:
             hid_u2f_command_msg_send_response(p_evt);
             break;
+        case CTAP2_COMMAND_CBOR:
+            hid_ctap2_command_cbor_send_response(p_evt);
+            break;
         default:
             break;
     }
@@ -95,6 +98,9 @@ void hid_fido_command_on_report_sent(void)
     switch (cmd) {
         case U2F_COMMAND_MSG:
             hid_u2f_command_msg_report_sent();
+            break;
+        case CTAP2_COMMAND_CBOR:
+            hid_ctap2_command_cbor_report_sent();
             break;
         default:
             break;

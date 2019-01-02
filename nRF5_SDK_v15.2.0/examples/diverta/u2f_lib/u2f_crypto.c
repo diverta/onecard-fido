@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 #include <string.h>
-//#include "ble_u2f.h"
-//#include "ble_u2f_securekey.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME u2f_crypto
@@ -15,11 +13,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "nrf_crypto_hash.h"
 #include "nrf_crypto_ecdsa.h"
 #include "app_error.h"
-
-// nrf_cc310で生成される鍵情報
-static nrf_crypto_ecc_key_pair_generate_context_t keygen_context;
-static nrf_crypto_ecc_private_key_t               private_key;
-static nrf_crypto_ecc_public_key_t                public_key;
 
 // ハッシュ化データ、署名データに関する情報
 static nrf_crypto_hash_context_t       hash_context = {0};
@@ -120,41 +113,6 @@ void u2f_crypto_init(void)
     if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
         APP_ERROR_CHECK(err_code);
     }
-}
-
-void u2f_crypto_generate_keypair(void)
-{
-    ret_code_t err_code;
-    NRF_LOG_DEBUG("u2f_crypto_generate_keypair start ");
-
-    // nrf_cryptoの初期化を実行する
-    u2f_crypto_init();
-
-    // 秘密鍵および公開鍵を生成する
-    err_code = nrf_crypto_ecc_key_pair_generate(
-        &keygen_context, &g_nrf_crypto_ecc_secp256r1_curve_info, &private_key, &public_key);
-    NRF_LOG_DEBUG("u2f_crypto_generate_keypair: nrf_crypto_ecc_key_pair_generate() returns 0x%02x ", err_code);
-    APP_ERROR_CHECK(err_code);
-
-    NRF_LOG_DEBUG("u2f_crypto_generate_keypair end ");
-}
-
-void u2f_crypto_private_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
-{
-    // 秘密鍵データをビッグエンディアンでp_raw_data配列に格納
-    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE;
-    ret_code_t err_code = nrf_crypto_ecc_private_key_to_raw(&private_key, p_raw_data, p_raw_data_size);
-    NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
-    APP_ERROR_CHECK(err_code);
-}
-
-void u2f_crypto_public_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
-{
-    // 公開鍵データをビッグエンディアンでp_raw_data配列に格納
-    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE;
-    ret_code_t err_code = nrf_crypto_ecc_public_key_to_raw(&public_key, p_raw_data, p_raw_data_size);
-    NRF_LOG_DEBUG("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);
-    APP_ERROR_CHECK(err_code);
 }
 
 uint32_t u2f_crypto_sign(uint8_t *private_key_be)

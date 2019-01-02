@@ -6,7 +6,7 @@
 #include "ble_u2f_crypto.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_status.h"
-#include "ble_u2f_crypto_ecb.h"
+#include "u2f_keyhandle.h"
 #include "ble_u2f_util.h"
 
 // for keysize informations
@@ -238,7 +238,7 @@ static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
     // APDUから取得したappIdHash、秘密鍵を使用し、
     // キーハンドルを新規生成する
     uint8_t *p_appid_hash = p_u2f_context->p_apdu->data + U2F_CHAL_SIZE;
-    ble_u2f_crypto_ecb_generate_keyhandle(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
+    u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
 }
 
 void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)

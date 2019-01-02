@@ -33,6 +33,8 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_init.h"
 #include "hid_fido_command.h"
+#include "hid_u2f_command.h"
+#include "hid_ctap2_command.h"
 
 //
 // U2F関連の共有情報
@@ -94,7 +96,10 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             if (ble_u2f_command_on_mainsw_event(&m_u2f) == true) {
                 break;
             }
-            hid_u2f_command_on_mainsw_event();
+            if (hid_u2f_command_on_mainsw_event() == true) {
+                break;
+            }
+            hid_ctap2_command_on_mainsw_event();
         }
 		break;
 		

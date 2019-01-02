@@ -6,7 +6,6 @@
  */
 #include "sdk_common.h"
 
-#include <stdbool.h>
 #include "cbor.h"
 #include "ctap2.h"
 #include "ctap2_cbor_parse.h"
@@ -38,7 +37,7 @@ uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 
 uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
 {
-    size_t sz = DOMAIN_NAME_MAX_SIZE;
+    size_t sz = RP_ID_MAX_SIZE;
     int ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
     if (ret == CborErrorOutOfMemory) {
         return CTAP2_ERR_LIMIT_EXCEEDED;
@@ -47,7 +46,7 @@ uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
         return ret;
     }
 
-    rp->id[DOMAIN_NAME_MAX_SIZE] = 0;
+    rp->id[RP_ID_MAX_SIZE] = 0;
     rp->id_size = sz;
 
     return CborNoError;
@@ -108,13 +107,13 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
             }
 
         } else if (strcmp(key, "name") == 0) {
-            sz = RP_NAME_LIMIT;
+            sz = RP_NAME_MAX_SIZE;
             ret = cbor_value_copy_text_string(&map, (char*)rp->name, &sz, NULL);
             if (ret != CborErrorOutOfMemory && ret != CborNoError) {
                 // Just truncate the name it's okay
                 return ret;
             }
-            rp->name[RP_NAME_LIMIT - 1] = 0;
+            rp->name[RP_NAME_MAX_SIZE - 1] = 0;
         }
 
         ret = cbor_value_advance(&map);
@@ -190,13 +189,13 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
             }
 
         } else if (strcmp((const char *)key, "name") == 0) {
-            sz = USER_NAME_LIMIT;
+            sz = USER_NAME_MAX_SIZE;
             ret = cbor_value_copy_text_string(&map, (char *)user->name, &sz, NULL);
             if (ret != CborErrorOutOfMemory && ret != CborNoError) {
                 // Just truncate the name it's okay
                 return ret;
             }
-            user->name[USER_NAME_LIMIT - 1] = 0;
+            user->name[USER_NAME_MAX_SIZE - 1] = 0;
         }
 
         ret = cbor_value_advance(&map);
@@ -304,4 +303,82 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
     }
 
     return CTAP2_ERR_UNSUPPORTED_ALGORITHM;
+}
+
+uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
+{
+    int       ret;
+    CborValue map;
+    size_t    map_length;
+    int       i;
+    char      key[8];
+    size_t    sz;
+    bool      b;
+
+    if (cbor_value_get_type(val) != CborMapType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_enter_container(val, &map);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_value_get_map_length(val, &map_length);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    for (i = 0; i < map_length; i++) {
+        if (cbor_value_get_type(&map) != CborTextStringType) {
+            return CTAP2_ERR_INVALID_CBOR_TYPE;
+        }
+        sz = sizeof(key);
+        ret = cbor_value_copy_text_string(&map, key, &sz, NULL);
+
+        if (ret == CborErrorOutOfMemory) {
+            return CTAP2_ERR_LIMIT_EXCEEDED;
+        }
+        if (ret != CborNoError) {
+            return ret;
+        }
+        key[sizeof(key) - 1] = 0;
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        if (cbor_value_get_type(&map) != CborBooleanType) {
+            return CTAP2_ERR_INVALID_CBOR_TYPE;
+        }
+
+        if (strncmp(key, "rk", 2) == 0) {
+            ret = cbor_value_get_boolean(&map, &b);
+            if (ret != CborNoError) {
+                return ret;
+            }
+            options->rk = b;
+
+        } else if (strncmp(key, "uv", 2) == 0) {
+            ret = cbor_value_get_boolean(&map, &b);
+            if (ret != CborNoError) {
+                return ret;
+            }
+            options->uv = b;
+
+        } else if (strncmp(key, "up", 2) == 0) {
+            ret = cbor_value_get_boolean(&map, &b);
+            if (ret != CborNoError) {
+                return ret;
+            }
+            options->up = b;
+        }
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return ret;
+        }
+    }
+    return CborNoError;
 }

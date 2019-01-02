@@ -32,13 +32,17 @@ extern "C" {
 #define CTAP1_ERR_TIMEOUT               0x05
 #define CTAP1_ERR_CHANNEL_BUSY          0x06
 #define CTAP1_ERR_LOCK_REQUIRED         0x0a
+#define CTAP2_ERR_CBOR_PARSING          0x10
 #define CTAP2_ERR_CBOR_UNEXPECTED_TYPE  0x11
 #define CTAP2_ERR_INVALID_CBOR          0x12
 #define CTAP2_ERR_INVALID_CBOR_TYPE     0x13
 #define CTAP2_ERR_MISSING_PARAMETER     0x14
 #define CTAP2_ERR_LIMIT_EXCEEDED        0x15
+#define CTAP2_ERR_PROCESSING            0x21
 #define CTAP2_ERR_UNSUPPORTED_ALGORITHM 0x26
 #define CTAP1_ERR_OTHER                 0x7f
+#define CTAP2_ERR_VENDOR_FIRST          0xf0
+#define CTAP2_ERR_VENDOR_LAST           0xff
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
@@ -60,6 +64,8 @@ typedef struct {
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
+void fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
+void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
 
 #ifdef __cplusplus
 }

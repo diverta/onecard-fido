@@ -14,6 +14,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug hex dump data
+#define NRF_LOG_HEXDUMP_DEBUG_PACKET false
+
 // u2f_status（レスポンスバッファ）には、
 // 64バイトまで書込み可能とします
 static uint8_t  u2f_status_buffer[BLE_U2F_MAX_SEND_CHAR_LEN];
@@ -120,8 +123,10 @@ static uint32_t u2f_response_send(ble_u2f_t *p_u2f)
             NRF_LOG_ERROR("u2f_response_send: invalid send data size ");
 
         } else {
+#if NRF_LOG_HEXDUMP_DEBUG_PACKET
             NRF_LOG_DEBUG("u2f_response_send (%dbytes) ", hvx_send_length);
             NRF_LOG_HEXDUMP_DEBUG(u2f_status_buffer, hvx_send_length);
+#endif
         }
 
     } else if (err_code != NRF_ERROR_RESOURCES) {

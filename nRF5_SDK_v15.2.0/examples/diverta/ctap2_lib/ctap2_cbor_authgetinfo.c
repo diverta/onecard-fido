@@ -6,9 +6,9 @@
  */
 #include "sdk_common.h"
 
-#include <stdbool.h>
 #include "cbor.h"
 #include "fido_common.h"
+#include "ctap2.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo
@@ -25,14 +25,23 @@ NRF_LOG_MODULE_REGISTER();
 #define RESP_maxMsgSize             0x5
 #define RESP_pinProtocols           0x6
 
-#define CTAP_MAX_MESSAGE_SIZE       1024
-
 //
 // aaguid（仮の値です）
+//   0xf8a011f38c0a4d15800617111f9edc7d
 //
 static uint8_t CTAP_AAGUID[] = {
-    0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+    0xf8, 0xa0, 0x11, 0xf3, 0x8c, 0x0a, 0x4d, 0x15, 0x80, 0x06, 0x17, 0x11, 0x1f, 0x9e, 0xdc, 0x7d
 };
+
+uint8_t *ctap2_cbor_authgetinfo_aaguid()
+{
+    return CTAP_AAGUID;
+}
+
+size_t ctap2_cbor_authgetinfo_aaguid_size()
+{
+    return sizeof(CTAP_AAGUID);
+}
 
 static bool encode_authgetinfo_response_message(CborEncoder *encoder)
 {
@@ -135,7 +144,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
         // maxMsgSize
         ret = cbor_encode_uint(&map, RESP_maxMsgSize);
         if (ret == CborNoError) {
-            ret = cbor_encode_int(&map, CTAP_MAX_MESSAGE_SIZE);
+            ret = cbor_encode_int(&map, CTAP2_MAX_MESSAGE_SIZE);
             if (ret != CborNoError) {
                 return false;
             }
@@ -166,32 +175,24 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
     return true;
 }
 
-bool ctap2_cbor_authgetinfo_response_message(uint8_t *response_buffer, size_t *response_length)
+uint8_t ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // 作業領域初期化
-    // レスポンスの先頭１バイトはステータスコードであるため、
-    // ２バイトめからCBORレスポンスをセット
-    memset(response_buffer, 0x00, *response_length);
-    uint8_t *encoded_buff = response_buffer + 1;
-    size_t encoded_buff_size = *response_length - 1;
+    memset(encoded_buff, 0x00, *encoded_buff_size);
     
     // CBORエンコーダー初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);
+    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // CBORエンコード実行
     if (encode_authgetinfo_response_message(&encoder) == false) {
-        // １バイトめにエラーコード
-        // （CTAP1_ERR_OTHER）をセット
-        NRF_LOG_DEBUG("encode_authgetinfo_response_message failed");
-        response_buffer[0] = CTAP1_ERR_OTHER;
-        *response_length = 1;
-        return false;
+        // エラーコード（CTAP1_ERR_OTHER）を戻す
+        NRF_LOG_DEBUG("Encoding failed");
+        return CTAP1_ERR_OTHER;
     }
 
-    // １バイトめにステータスコード
-    // （CTAP1_ERR_SUCCESS）をセット
-    response_buffer[0] = CTAP1_ERR_SUCCESS;
-    *response_length = cbor_encoder_get_buffer_size(&encoder, encoded_buff) + 1;
-    return true;
+    // エンコードされたバッファのサイズを設定
+    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    NRF_LOG_DEBUG("Encoding success (%d bytes)", *encoded_buff_size);
+    return CTAP1_ERR_SUCCESS;
 }

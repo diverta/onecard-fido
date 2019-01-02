@@ -13,7 +13,7 @@
 #include "fds.h"
 
 #include "u2f_flash.h"
-#include "u2f_crypto_ecb.h"
+#include "u2f_keyhandle.h"
 #include "u2f_authenticate.h"
 #include "u2f_register.h"
 #include "hid_fido_command.h"
@@ -90,9 +90,10 @@ bool hid_u2f_command_on_mainsw_event(void)
         fido_processing_led_off();
         // 後続のレスポンス送信処理を実行
         u2f_resume_response_process();
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool hid_u2f_command_on_mainsw_long_push_event(void)

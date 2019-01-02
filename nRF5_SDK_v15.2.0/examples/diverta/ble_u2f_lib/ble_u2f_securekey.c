@@ -8,8 +8,8 @@
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_util.h"
 
-// for ble_u2f_crypto_ecb_init
-#include "ble_u2f_crypto_ecb.h"
+// for fido_crypto_ecb_init
+#include "fido_crypto_ecb.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_securekey
@@ -39,14 +39,14 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     if (p_evt->id == FDS_EVT_DEL_FILE) {
         // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
         // (fds_record_update/writeまたはfds_gcが実行される)
-        if (ble_u2f_crypto_ecb_init() == false) {
+        if (fido_crypto_ecb_init() == false) {
             ble_u2f_send_error_response(p_u2f_context, 0x9203);
         }
         
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        if (ble_u2f_crypto_ecb_init() == false) {
+        if (fido_crypto_ecb_init() == false) {
             ble_u2f_send_error_response(p_u2f_context, 0x9204);
         }
         
