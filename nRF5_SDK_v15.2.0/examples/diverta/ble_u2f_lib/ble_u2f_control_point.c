@@ -8,6 +8,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug hex dump data
+#define NRF_LOG_HEXDUMP_DEBUG_PACKET false
+
 // u2f control point（コマンドバッファ）には、
 // 64バイトまで書込み可能とします
 static uint8_t  control_point_buffer[BLE_U2F_MAX_RECV_CHAR_LEN];
@@ -193,8 +196,10 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     memcpy(control_point_buffer, p_evt_write->data, p_evt_write->len);
     control_point_buffer_length = p_evt_write->len;
 
+#if NRF_LOG_HEXDUMP_DEBUG_PACKET
     NRF_LOG_DEBUG("ble_u2f_control_point_receive length=%u ", control_point_buffer_length);
     NRF_LOG_HEXDUMP_DEBUG(control_point_buffer, control_point_buffer_length);
+#endif
 
     if (control_point_buffer[0] & 0x80) {
         // 先頭データが２回連続で送信された場合はエラー

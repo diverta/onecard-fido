@@ -7,8 +7,10 @@
 #include "sdk_common.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "cbor.h"
 #include "fido_common.h"
+#include "ctap2.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo
@@ -24,8 +26,6 @@ NRF_LOG_MODULE_REGISTER();
 #define RESP_options                0x4
 #define RESP_maxMsgSize             0x5
 #define RESP_pinProtocols           0x6
-
-#define CTAP_MAX_MESSAGE_SIZE       1024
 
 //
 // aaguid（仮の値です）
@@ -146,7 +146,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
         // maxMsgSize
         ret = cbor_encode_uint(&map, RESP_maxMsgSize);
         if (ret == CborNoError) {
-            ret = cbor_encode_int(&map, CTAP_MAX_MESSAGE_SIZE);
+            ret = cbor_encode_int(&map, CTAP2_MAX_MESSAGE_SIZE);
             if (ret != CborNoError) {
                 return false;
             }

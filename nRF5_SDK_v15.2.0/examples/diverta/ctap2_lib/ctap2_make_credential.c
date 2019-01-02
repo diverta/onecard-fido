@@ -7,6 +7,7 @@
 #include "sdk_common.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "cbor.h"
 #include "ctap2.h"
 #include "ctap2_cbor_authgetinfo.h"
