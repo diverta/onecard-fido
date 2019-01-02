@@ -115,8 +115,7 @@ static void send_ctap2_command_response(uint8_t ctap2_status, size_t length)
     uint32_t cmd = hid_fido_receive_hid_header()->CMD;
     // １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
-    response_length = length;
-    hid_fido_send_command_response(cid, cmd, response_buffer, response_length);
+    hid_fido_send_command_response(cid, cmd, response_buffer, length);
 
     // アイドル時点滅処理を開始
     fido_idling_led_on(LED_FOR_PROCESSING);
@@ -185,13 +184,40 @@ static void command_make_credential_resume_process(void)
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
     }
+    
+    // レスポンス長を設定（CBORデータ長＋１）
+    response_length = cbor_data_length + 1;
 
-    // レスポンスデータを転送
-    // TODO: これは仮実装です。
-    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
-    NRF_LOG_INFO("authenticatorMakeCredential end");
+    // トークンカウンターレコードを追加
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    ctap2_status = ctap2_make_credential_add_token_counter();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+    }
 }
 
+static void command_make_credential_send_response(fds_evt_t const *const p_evt)
+{
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        NRF_LOG_ERROR("authenticatorMakeCredential abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("authenticatorMakeCredential retry: FDS GC done ");
+        ctap2_make_credential_add_token_counter();
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        send_ctap2_command_response(CTAP1_ERR_SUCCESS, response_length);
+    }
+}
+    
 static void command_authenticator_get_info(void)
 {
     // レスポンスの先頭１バイトはステータスコードであるため、
@@ -223,6 +249,30 @@ void hid_ctap2_command_cbor(void)
             break;
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_authenticator_make_credential();
+            break;
+        default:
+            break;
+    }
+}
+
+void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
+{
+    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
+    switch (get_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            command_make_credential_send_response(p_evt);
+            break;
+        default:
+            break;
+    }
+}
+
+void hid_ctap2_command_cbor_report_sent(void)
+{
+    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
+    switch (get_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            NRF_LOG_INFO("authenticatorMakeCredential end");
             break;
         default:
             break;

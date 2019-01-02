@@ -58,7 +58,7 @@ static size_t                          rpid_hash_size;
 static uint8_t flags;
 
 // signCountを保持
-static uint32_t sign_count;
+static uint32_t sign_count = 0;
 
 // Public Key Credential Sourceを保持
 static uint8_t pubkey_cred_source[128];
@@ -612,9 +612,9 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 
     // CBORバッファの長さを設定
     *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
-    NRF_LOG_DEBUG("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
 
 #if NRF_LOG_DEBUG_CBOR_RESPONSE
+    NRF_LOG_DEBUG("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
     int j, k;
     int max = 288;
     for (j = 0; j < max; j += 64) {
@@ -623,5 +623,25 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
     }
 #endif
 
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_make_credential_add_token_counter(void)
+{
+    // 例外抑止
+    if (rpid_hash_size != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    
+    // rpIdHashをキーとして、
+    // トークンカウンターレコードを追加する
+    uint32_t reserve_word = 0xffffffff;
+    if (u2f_flash_token_counter_write(rpid_hash, sign_count, reserve_word) == false) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // 後続のレスポンス生成・送信は、
+    // Flash ROM書込み完了後に行われる
+    NRF_LOG_DEBUG("sign counter registered (value=%d)", sign_count);
     return CTAP1_ERR_SUCCESS;
 }
