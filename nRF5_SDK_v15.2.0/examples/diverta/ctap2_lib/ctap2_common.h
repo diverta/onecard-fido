@@ -1,16 +1,18 @@
 /* 
- * File:   ctap2.h
+ * File:   ctap2_common.h
  * Author: makmorit
  *
- * Created on 2018/12/17, 10:20
+ * Created on 2019/01/03, 11:32
  */
-#ifndef CTAP2_H
-#define CTAP2_H
+#ifndef CTAP2_COMMON_H
+#define CTAP2_COMMON_H
+
+#include "nrf_crypto_hash.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 //
 // CTAP2をサポートする場合
 // trueを設定
@@ -37,8 +39,22 @@ extern "C" {
 // CTAP2で許容されるメッセージの最大サイズ
 #define CTAP2_MAX_MESSAGE_SIZE  1200
 
+//
+// CTAP2コマンドで共用する作業領域
+// 
+// RP IDのSHA-256ハッシュデータを保持
+extern nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
+extern size_t                          ctap2_rpid_hash_size;
+
+// flagsを保持
+extern uint8_t ctap2_flags;
+
+// signCountを保持
+extern uint32_t ctap2_sign_count;
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* CTAP2_H */
+#endif /* CTAP2_COMMON_H */
+

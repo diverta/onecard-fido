@@ -8,7 +8,6 @@
 #define CTAP_CBOR_PARSE_H
 
 #include "cbor.h"
-#include "ctap2.h"
 
 #ifdef __cplusplus
 extern "C" {

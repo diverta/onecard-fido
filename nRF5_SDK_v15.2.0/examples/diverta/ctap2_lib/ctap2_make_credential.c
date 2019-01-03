@@ -7,7 +7,7 @@
 #include "sdk_common.h"
 
 #include "cbor.h"
-#include "ctap2.h"
+#include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
@@ -49,16 +49,6 @@ struct {
     CTAP_PUBKEY_CRED_PARAM_T cred_param;
     CTAP_OPTIONS_T           options;
 } make_credential_request;
-
-// RP IDのSHA-256ハッシュデータを保持
-static nrf_crypto_hash_sha256_digest_t rpid_hash;
-static size_t                          rpid_hash_size;
-
-// flagsを保持
-static uint8_t flags;
-
-// signCountを保持
-static uint32_t sign_count = 0;
 
 // Public Key Credential Sourceを保持
 static uint8_t pubkey_cred_source[128];
@@ -219,12 +209,12 @@ static void generate_rpid_hash(void)
     // RP IDからSHA-256ハッシュ（32バイト）を生成 
     uint8_t *rpid = make_credential_request.rp.id;
     size_t   rpid_size = strlen((char *)rpid);
-    rpid_hash_size = sizeof(rpid_hash);
-    fido_crypto_generate_sha256_hash(rpid, rpid_size, rpid_hash, &rpid_hash_size);
+    ctap2_rpid_hash_size = sizeof(ctap2_rpid_hash);
+    fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
 
 #if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
     NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
-    NRF_LOG_HEXDUMP_DEBUG(rpid_hash, rpid_hash_size);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_rpid_hash, ctap2_rpid_hash_size);
 #endif
 }
 
@@ -397,12 +387,12 @@ void generate_authenticator_data(void)
     //  rpIdHash
     int offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
-    memcpy(authenticator_data + offset, rpid_hash, rpid_hash_size);
-    offset += rpid_hash_size;
+    memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
+    offset += ctap2_rpid_hash_size;
     //  flags
-    authenticator_data[offset++] = flags;
+    authenticator_data[offset++] = ctap2_flags;
     //  signCount
-    fido_set_uint32_bytes(authenticator_data + offset, sign_count);
+    fido_set_uint32_bytes(authenticator_data + offset, ctap2_sign_count);
     offset += sizeof(uint32_t);
     //  attestedCredentialData
     //   aaguid
@@ -490,7 +480,7 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     // flags編集
     //   User Present result (0x01) &
     //   Attested credential data included (0x40)
-    flags = 0x41;
+    ctap2_flags = 0x41;
 
     // credentialIdを生成
     generate_credential_id();
@@ -629,19 +619,19 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 uint8_t ctap2_make_credential_add_token_counter(void)
 {
     // 例外抑止
-    if (rpid_hash_size != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+    if (ctap2_rpid_hash_size != sizeof(nrf_crypto_hash_sha256_digest_t)) {
         return CTAP2_ERR_PROCESSING;
     }
     
     // rpIdHashをキーとして、
     // トークンカウンターレコードを追加する
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(rpid_hash, sign_count, reserve_word) == false) {
+    if (u2f_flash_token_counter_write(ctap2_rpid_hash, ctap2_sign_count, reserve_word) == false) {
         return CTAP2_ERR_PROCESSING;
     }
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("sign counter registered (value=%d)", sign_count);
+    NRF_LOG_DEBUG("sign counter registered (value=%d)", ctap2_sign_count);
     return CTAP1_ERR_SUCCESS;
 }

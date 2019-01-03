@@ -8,7 +8,7 @@
 
 #include "cbor.h"
 #include "fido_common.h"
-#include "ctap2.h"
+#include "ctap2_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo

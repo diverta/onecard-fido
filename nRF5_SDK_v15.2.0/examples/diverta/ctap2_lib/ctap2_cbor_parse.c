@@ -7,7 +7,7 @@
 #include "sdk_common.h"
 
 #include "cbor.h"
-#include "ctap2.h"
+#include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
 
