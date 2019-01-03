@@ -20,3 +20,19 @@ uint8_t ctap2_flags;
 
 // signCountを保持
 uint32_t ctap2_sign_count = 0;
+
+// Public Key Credential Sourceを保持
+uint8_t pubkey_cred_source[PUBKEY_CRED_SOURCE_MAX_SIZE];
+size_t  pubkey_cred_source_block_size;
+
+// credentialIdを保持
+uint8_t credential_id[CREDENTIAL_ID_MAX_SIZE];
+size_t  credential_id_size;
+
+// credentialPublicKeyを保持
+uint8_t credential_pubkey[CREDENTIAL_ID_MAX_SIZE];
+size_t  credential_pubkey_size;
+
+// Authenticator dataを保持
+uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
+size_t  authenticator_data_size;

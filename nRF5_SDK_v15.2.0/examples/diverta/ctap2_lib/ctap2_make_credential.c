@@ -50,22 +50,6 @@ struct {
     CTAP_OPTIONS_T           options;
 } make_credential_request;
 
-// Public Key Credential Sourceを保持
-static uint8_t pubkey_cred_source[128];
-static size_t  pubkey_cred_source_block_size;
-
-// credentialIdを保持
-static uint8_t credential_id[128];
-static size_t  credential_id_size;
-
-// credentialPublicKeyを保持
-static uint8_t credential_pubkey[80];
-static size_t  credential_pubkey_size;
-
-// Authenticator dataを保持
-static uint8_t authenticator_data[256];
-static size_t  authenticator_data_size;
-
 // エンコードされたかどうかを保持するビット
 #define PARAM_clientDataHash    (1 << 0)
 #define PARAM_rp                (1 << 1)

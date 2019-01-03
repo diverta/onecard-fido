@@ -8,17 +8,11 @@
 #define CTAP_CBOR_PARSE_H
 
 #include "cbor.h"
+#include "ctap2_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// 各種処理用の定数
-#define CLIENT_DATA_HASH_SIZE       32
-#define RP_ID_MAX_SIZE              128
-#define RP_NAME_MAX_SIZE            32
-#define USER_ID_MAX_SIZE            64
-#define USER_NAME_MAX_SIZE          65
 
 // Public Key Credential Type
 #define PUB_KEY_CRED_PUB_KEY        0x01
@@ -41,30 +35,6 @@ extern "C" {
 // Credential type suppurted or not
 #define CREDENTIAL_IS_SUPPORTED     1
 #define CREDENTIAL_NOT_SUPPORTED    0
-
-typedef struct {
-    uint8_t id[RP_ID_MAX_SIZE];
-    uint8_t id_size;
-    uint8_t name[RP_NAME_MAX_SIZE];
-} CTAP_RP_ID_T;
-
-typedef struct {
-    uint8_t id[USER_ID_MAX_SIZE];
-    uint8_t id_size;
-    uint8_t name[USER_NAME_MAX_SIZE];
-} CTAP_USER_ENTITY_T;
-
-typedef struct {
-    uint8_t publicKeyCredentialTypeName[16];
-    uint8_t publicKeyCredentialType;
-    int32_t COSEAlgorithmIdentifier;
-} CTAP_PUBKEY_CRED_PARAM_T;
-
-typedef struct {
-    uint8_t rk;
-    uint8_t uv;
-    uint8_t up;
-} CTAP_OPTIONS_T;
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len);
 uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val);
