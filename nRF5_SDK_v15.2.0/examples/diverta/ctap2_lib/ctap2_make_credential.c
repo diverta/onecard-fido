@@ -30,7 +30,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
+#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  true
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
@@ -42,26 +42,12 @@ NRF_LOG_MODULE_REGISTER();
 // authenticatorMakeCredential
 // リクエストデータを保持する構造体
 struct {
-    uint32_t                 paramsParsed;
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_USER_ENTITY_T       user;
     CTAP_PUBKEY_CRED_PARAM_T cred_param;
     CTAP_OPTIONS_T           options;
-} make_credential_request;
-
-// エンコードされたかどうかを保持するビット
-#define PARAM_clientDataHash    (1 << 0)
-#define PARAM_rp                (1 << 1)
-#define PARAM_user              (1 << 2)
-#define PARAM_pubKeyCredParams  (1 << 3)
-#define PARAM_excludeList       (1 << 4)
-#define PARAM_extensions        (1 << 5)
-#define PARAM_options           (1 << 6)
-#define PARAM_pinAuth           (1 << 7)
-#define PARAM_pinProtocol       (1 << 8)
-#define PARAM_rpId              (1 << 9)
-#define PARAM_allowList         (1 << 10)
+} ctap2_request;
 
 uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
@@ -80,8 +66,12 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 #endif
 
     // リクエスト格納領域初期化
-    memset(&make_credential_request, 0x00, sizeof(make_credential_request));
-    
+    memset(&ctap2_request, 0x00, sizeof(ctap2_request));
+
+    // user presenceのデフォルトを
+    // true に設定しておく。
+    ctap2_request.options.up = true;
+
     // CBOR parser初期化
     ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
     if (ret != CborNoError) {
@@ -117,39 +107,27 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             return CTAP2_ERR_CBOR_PARSING;
         }
 
-        ret = 0;
+        ret = CborNoError;
         switch(key) {
             case 1:
                 // clientDataHash (Byte Array)
-                ret = parse_fixed_byte_string(&map, make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret == CborNoError) {
-                    make_credential_request.paramsParsed |= PARAM_clientDataHash;
-                }
+                ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
                 break;
             case 2:
                 // rp (PublicKeyCredentialRpEntity)
-                ret = parse_rp(&make_credential_request.rp, &map);
-                if (ret == CborNoError) {
-                    make_credential_request.paramsParsed |= PARAM_rp;
-                }
+                ret = parse_rp(&ctap2_request.rp, &map);
                 break;
             case 3:
                 // user (PublicKeyCredentialUserEntity)
-                ret = parse_user(&make_credential_request.user, &map);
-                if (ret == CborNoError) {
-                    make_credential_request.paramsParsed |= PARAM_user;
-                }
+                ret = parse_user(&ctap2_request.user, &map);
                 break;
             case 4:
                 // pubKeyCredParams (CBOR Array)
-                ret = parse_pub_key_cred_params(&make_credential_request.cred_param, &map);
-                if (ret == CborNoError) {
-                    make_credential_request.paramsParsed |= PARAM_pubKeyCredParams;
-                }
+                ret = parse_pub_key_cred_params(&ctap2_request.cred_param, &map);
                 break;                
             case 7:
                 // options (Map of authenticator options)
-                ret = parse_options(&make_credential_request.options ,&map);
+                ret = parse_options(&ctap2_request.options ,&map);
                 break;
             default:
                 break;                
@@ -166,18 +144,18 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 
 #if NRF_LOG_DEBUG_CLHASH_DATA_BUFF
     NRF_LOG_DEBUG("clientDataHash:");
-    NRF_LOG_HEXDUMP_DEBUG(make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
 #endif
 
 #if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("rp:   id[%s] name[%s]", make_credential_request.rp.id, make_credential_request.rp.name);
-    NRF_LOG_DEBUG("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
+    NRF_LOG_DEBUG("rp:   id[%s] name[%s]", ctap2_request.rp.id, ctap2_request.rp.name);
+    NRF_LOG_DEBUG("user: id[%s] name[%s]", ctap2_request.user.id, ctap2_request.user.name);
     NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
-        make_credential_request.cred_param.publicKeyCredentialTypeName);
+        ctap2_request.cred_param.publicKeyCredentialTypeName);
     NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
-        make_credential_request.cred_param.COSEAlgorithmIdentifier);
+        ctap2_request.cred_param.COSEAlgorithmIdentifier);
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
-        make_credential_request.options.rk, make_credential_request.options.uv, make_credential_request.options.up);
+        ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
 #endif
     
     return CTAP1_ERR_SUCCESS;
@@ -185,13 +163,13 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 
 bool ctap2_make_credential_is_tup_needed(void)
 {
-    return (make_credential_request.options.up == 1);
+    return (ctap2_request.options.up == 1);
 }
 
 static void generate_rpid_hash(void)
 {
     // RP IDからSHA-256ハッシュ（32バイト）を生成 
-    uint8_t *rpid = make_credential_request.rp.id;
+    uint8_t *rpid = ctap2_request.rp.id;
     size_t   rpid_size = strlen((char *)rpid);
     ctap2_rpid_hash_size = sizeof(ctap2_rpid_hash);
     fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
@@ -216,7 +194,7 @@ static void generate_pubkey_cred_source(void)
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
 
     // Public Key Credential Type
-    pubkey_cred_source[offset++] = make_credential_request.cred_param.publicKeyCredentialType;
+    pubkey_cred_source[offset++] = ctap2_request.cred_param.publicKeyCredentialType;
 
     // Credential private key
     // キーペアを新規生成し、秘密鍵を格納
@@ -226,10 +204,10 @@ static void generate_pubkey_cred_source(void)
     offset += fido_crypto_keypair_private_key_size();
 
     // Relying Party Identifier (size & buffer)
-    pubkey_cred_source[offset++] = make_credential_request.rp.id_size;
+    pubkey_cred_source[offset++] = ctap2_request.rp.id_size;
     memcpy(pubkey_cred_source + offset, 
-        make_credential_request.rp.id, make_credential_request.rp.id_size);
-    offset += make_credential_request.rp.id_size;
+        ctap2_request.rp.id, ctap2_request.rp.id_size);
+    offset += ctap2_request.rp.id_size;
     
     // Public Key Credential Source自体のサイズを、
     // バッファの１バイト目に設定
@@ -347,7 +325,7 @@ static uint8_t generate_credential_pubkey(void)
     // CBORエンコード実行
     uint8_t *x = fido_crypto_keypair_public_key();
     uint8_t *y = fido_crypto_keypair_public_key() + 32;
-    int32_t alg = make_credential_request.cred_param.COSEAlgorithmIdentifier;
+    int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
     uint8_t ret = encode_credential_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
@@ -429,7 +407,7 @@ uint8_t generate_sign(void)
     offset += authenticator_data_size;
 
     // clientDataHash 
-    memcpy(signature_base_buffer + offset, make_credential_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+    memcpy(signature_base_buffer + offset, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
     offset += CLIENT_DATA_HASH_SIZE;
 
     // メッセージのバイト数をセット

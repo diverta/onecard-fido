@@ -372,7 +372,13 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
             if (ret != CborNoError) {
                 return ret;
             }
-            options->up = b;
+
+            // CTAP2クライアントから 
+            // up = false と明示指定された場合だけ、
+            // user presence を false とする。
+            if (b == false) {
+                options->up = b;
+            }
         }
 
         ret = cbor_value_advance(&map);
