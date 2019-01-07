@@ -11,16 +11,12 @@
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
 #include "fido_crypto_ecb.h"
-#include "fido_crypto_keypair.h"
 
-// for u2f_flash_keydata_read & u2f_flash_keydata_available
+// for u2f_flash_token_counter
 #include "u2f_flash.h"
 
 // for u2f_crypto_sign & other
 #include "u2f_crypto.h"
-
-// for u2f_securekey_skey_be
-#include "u2f_register.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_get_assertion
@@ -49,6 +45,11 @@ struct {
     uint8_t                  allowListSize;
     CTAP_CREDENTIAL_DESC_T   allowList[ALLOW_LIST_MAX_SIZE];
 } ctap2_request;
+
+// credential IDから取り出した秘密鍵の
+// 格納領域を保持
+uint8_t *private_key_be;
+
 
 static void debug_decoded_request()
 {
@@ -215,8 +216,83 @@ static void generate_authenticator_data(void)
     authenticator_data_size = offset;
 }
 
+static void decrypto_credential_id(uint8_t *credential_id, size_t credential_id_size)
+{
+    // authenticatorGetAssertionリクエストから取得した
+    // credentialIdを復号化
+    memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
+    fido_crypto_ecb_decrypt(credential_id, credential_id_size, pubkey_cred_source);
+
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
+        NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
+        NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, pubkey_cred_source[0]);
+#endif
+}
+
+static bool get_private_key_from_credential_id(void)
+{
+    // Public Key Credential Sourceから
+    // rpId(Relying Party Identifier)を取り出す。
+    //  index
+    //  2 - 33: Credential private key（秘密鍵）
+    //  34: Relying Party Identifierのサイズ
+    //  35 - n: Relying Party Identifier（文字列）
+    // 
+    size_t src_rp_id_size = pubkey_cred_source[34];
+    char  *src_rp_id = (char *)(pubkey_cred_source + 35);
+
+    // リクエストされたrpId
+    size_t request_rp_id_size = ctap2_request.rp.id_size;
+    char  *request_rp_id = (char *)ctap2_request.rp.id;
+
+    // リクエストされたrpIdと、Public Key Credential SourceのrpIdを比較し、
+    // 一致している場合は true
+    src_rp_id_size = (src_rp_id_size < request_rp_id_size) ? src_rp_id_size : request_rp_id_size;
+    if (strncmp(request_rp_id, src_rp_id, src_rp_id_size) == 0) {
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
+        private_key_be = pubkey_cred_source + 2;
+        NRF_LOG_DEBUG("Private key of RP[%s]:", src_rp_id);
+        NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
+#endif
+        return true;
+
+    } else {
+        private_key_be = NULL;
+        return false;
+    }
+}
+
+static uint8_t restore_private_key(void)
+{
+    int x;
+    CTAP_CREDENTIAL_DESC_T *desc;
+
+    // credentialIdリストの先頭から逐一処理
+    for (x = 0; x < ctap2_request.allowListSize; x++) {
+        // credentialIdをAES ECBで復号化し、
+        // Public Key Credential Sourceを取得
+        desc = &ctap2_request.allowList[x];
+        decrypto_credential_id(desc->credential_id, desc->credential_id_size);
+
+        // rpIdをマッチングさせ、一致していれば秘密鍵を取り出す
+        if (get_private_key_from_credential_id()) {
+            return CTAP1_ERR_SUCCESS;
+        }
+    }
+
+    // credentialIdリストに
+    // 一致するrpIdがない場合はエラー
+    return CTAP2_ERR_PROCESSING;
+}
+
 static uint8_t generate_sign(void)
 {
+    // 秘密鍵をcredentialIdから取出し
+    uint8_t ret = restore_private_key();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    
     // TODO: 仮の実装です。
     return CTAP2_ERR_PROCESSING;
 }
