@@ -28,9 +28,9 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
 #define NRF_LOG_DEBUG_ALLOW_LIST        false
-#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   true
-#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    true
-#define NRF_LOG_DEBUG_SIGN_BUFF         false
+#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
+#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
+#define NRF_LOG_DEBUG_SIGN_BUFF         true
 #define NRF_LOG_DEBUG_CBOR_RESPONSE     false
 
 // デコードされた
@@ -245,12 +245,13 @@ static bool get_private_key_from_credential_id(void)
     size_t request_rp_id_size = ctap2_request.rp.id_size;
     char  *request_rp_id = (char *)ctap2_request.rp.id;
 
-    // リクエストされたrpIdと、Public Key Credential SourceのrpIdを比較し、
-    // 一致している場合は true
+    // リクエストされたrpIdと、Public Key Credential Sourceの
+    // rpIdを比較し、一致している場合は
+    // 秘密鍵をPublic Key Credential Sourceから取り出す
     src_rp_id_size = (src_rp_id_size < request_rp_id_size) ? src_rp_id_size : request_rp_id_size;
     if (strncmp(request_rp_id, src_rp_id, src_rp_id_size) == 0) {
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
         private_key_be = pubkey_cred_source + 2;
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
         NRF_LOG_DEBUG("Private key of RP[%s]:", src_rp_id);
         NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
 #endif
@@ -292,9 +293,18 @@ static uint8_t generate_sign(void)
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
-    
-    // TODO: 仮の実装です。
-    return CTAP2_ERR_PROCESSING;
+
+    // 署名を実行
+    if (ctap2_generate_signature(ctap2_request.clientDataHash, private_key_be) == false) {
+        return CTAP2_ERR_VENDOR_FIRST;
+    }
+
+#if NRF_LOG_DEBUG_SIGN_BUFF
+    NRF_LOG_DEBUG("Signature(%d bytes):", u2f_crypto_signature_data_size());
+    NRF_LOG_HEXDUMP_DEBUG(u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+#endif
+
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t ctap2_get_assertion_generate_response_items(void)

@@ -7,6 +7,7 @@
 #ifndef CTAP2_COMMON_H
 #define CTAP2_COMMON_H
 
+#include <stdbool.h>
 #include "nrf_crypto_hash.h"
 
 #ifdef __cplusplus
@@ -116,6 +117,7 @@ extern size_t  authenticator_data_size;
 
 // 共通関数
 void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
+bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
 
 #ifdef __cplusplus
 }

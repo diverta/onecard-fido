@@ -383,32 +383,10 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    // 署名生成用バッファの格納領域を取得
-    uint8_t offset = 0;
-    uint8_t *signature_base_buffer = u2f_crypto_signature_data_buffer();
-
-    // Authenticator data
-    memcpy(signature_base_buffer + offset, authenticator_data, authenticator_data_size);
-    offset += authenticator_data_size;
-
-    // clientDataHash 
-    memcpy(signature_base_buffer + offset, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-    offset += CLIENT_DATA_HASH_SIZE;
-
-    // メッセージのバイト数をセット
-    u2f_crypto_signature_data_size_set(offset);
-
-    // 署名用の秘密鍵を取得し、署名を生成
-    if (u2f_crypto_sign(u2f_securekey_skey_be()) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_crypto_create_asn1_signature() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
-        return false;
+    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey_be()) == false) {
+        // 署名を実行
+        // NGであれば、エラーレスポンスを生成して戻す
+        return CTAP2_ERR_VENDOR_FIRST;
     }
 
 #if NRF_LOG_DEBUG_SIGN_BUFF
