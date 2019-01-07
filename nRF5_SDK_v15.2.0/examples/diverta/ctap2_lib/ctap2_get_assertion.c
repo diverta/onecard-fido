@@ -15,7 +15,7 @@
 // for u2f_flash_token_counter
 #include "u2f_flash.h"
 
-// for u2f_crypto_sign & other
+// for u2f_crypto_signature_data
 #include "u2f_crypto.h"
 
 // for logging informations
@@ -30,8 +30,8 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_ALLOW_LIST        false
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
-#define NRF_LOG_DEBUG_SIGN_BUFF         true
-#define NRF_LOG_DEBUG_CBOR_RESPONSE     false
+#define NRF_LOG_DEBUG_SIGN_BUFF         false
+#define NRF_LOG_DEBUG_CBOR_RESPONSE     true
 
 // デコードされた
 // authenticatorGetAssertion
@@ -46,9 +46,17 @@ struct {
     CTAP_CREDENTIAL_DESC_T   allowList[ALLOW_LIST_MAX_SIZE];
 } ctap2_request;
 
+// RP IDに対応する
+// CTAP_CREDENTIAL_DESC_T の個数を保持
+uint8_t number_of_credentials;
+
 // credential IDから取り出した秘密鍵の
 // 格納領域を保持
 uint8_t *private_key_be;
+
+// 秘密鍵の取出し元であるcredential IDの
+// 格納領域を保持
+CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
 
 
 static void debug_decoded_request()
@@ -231,6 +239,9 @@ static void decrypto_credential_id(uint8_t *credential_id, size_t credential_id_
 
 static bool get_private_key_from_credential_id(void)
 {
+    // number_of_credentialsをゼロクリア
+    number_of_credentials = 0;
+
     // Public Key Credential Sourceから
     // rpId(Relying Party Identifier)を取り出す。
     //  index
@@ -246,10 +257,12 @@ static bool get_private_key_from_credential_id(void)
     char  *request_rp_id = (char *)ctap2_request.rp.id;
 
     // リクエストされたrpIdと、Public Key Credential Sourceの
-    // rpIdを比較し、一致している場合は
-    // 秘密鍵をPublic Key Credential Sourceから取り出す
+    // rpIdを比較し、一致している場合
     src_rp_id_size = (src_rp_id_size < request_rp_id_size) ? src_rp_id_size : request_rp_id_size;
     if (strncmp(request_rp_id, src_rp_id, src_rp_id_size) == 0) {
+        // number_of_credentialsをカウントアップ
+        number_of_credentials++;
+        // 秘密鍵をPublic Key Credential Sourceから取り出す
         private_key_be = pubkey_cred_source + 2;
 #if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
         NRF_LOG_DEBUG("Private key of RP[%s]:", src_rp_id);
@@ -277,6 +290,7 @@ static uint8_t restore_private_key(void)
 
         // rpIdをマッチングさせ、一致していれば秘密鍵を取り出す
         if (get_private_key_from_credential_id()) {
+            pkey_credential_desc = desc;
             return CTAP1_ERR_SUCCESS;
         }
     }
@@ -350,10 +364,116 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
     return CTAP1_ERR_SUCCESS;
 }
 
+static uint8_t add_credential_descriptor(CborEncoder *map, CTAP_CREDENTIAL_DESC_T *cred)
+{
+    // Credential (0x01: RESP_credential)
+    CborEncoder desc;
+    int ret = cbor_encode_int(map, 0x01);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_encoder_create_map(map, &desc, 2);
+    if (ret == CborNoError) {
+        ret = cbor_encode_text_string(&desc, "type", 4);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        ret = cbor_encode_text_string(&desc, "public-key", 10);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        ret = cbor_encode_text_string(&desc, "id", 2);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        ret = cbor_encode_byte_string(&desc, (uint8_t*)&cred->credential_id, cred->credential_id_size);
+        if (ret != CborNoError) {
+            return ret;
+        }
+    }
+
+    ret = cbor_encoder_close_container(map, &desc);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    return CborNoError;
+}
+
 uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    // TODO: 仮の実装です。
-    return CTAP2_ERR_PROCESSING;
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+
+    // Map初期化
+    CborEncoder map;
+    int         ret;
+    ret = cbor_encoder_create_map(&encoder, &map, 4);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // Credential (0x01: RESP_credential)
+    ret = add_credential_descriptor(&map, pkey_credential_desc);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // authData (0x02: RESP_authData)
+    ret = cbor_encode_int(&map, 0x02);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    ret = cbor_encode_byte_string(&map, authenticator_data, authenticator_data_size);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // signature (0x03: RESP_signature)
+    ret = cbor_encode_int(&map, 0x03);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    ret = cbor_encode_byte_string(&map, 
+        u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // numberOfCredentials (0x05: RESP_numberOfCredentials)
+    ret = cbor_encode_int(&map, 0x05);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    ret = cbor_encode_int(&map, number_of_credentials);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // CBORバッファの長さを設定
+    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+
+#if NRF_LOG_DEBUG_CBOR_RESPONSE
+    NRF_LOG_DEBUG("authenticatorGetAssertion response(%d bytes):", *encoded_buff_size);
+    int j, k;
+    int max = (*encoded_buff_size) < 256 ? (*encoded_buff_size) : 256;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(encoded_buff + j, (k < 64) ? k : 64);
+    }
+#endif
+
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t ctap2_get_assertion_update_token_counter(void)

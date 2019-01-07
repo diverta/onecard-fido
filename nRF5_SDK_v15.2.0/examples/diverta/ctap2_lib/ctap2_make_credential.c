@@ -17,7 +17,7 @@
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
 #include "u2f_flash.h"
 
-// for u2f_crypto_sign & other
+// for u2f_crypto_signature_data
 #include "u2f_crypto.h"
 
 // for u2f_securekey_skey_be
