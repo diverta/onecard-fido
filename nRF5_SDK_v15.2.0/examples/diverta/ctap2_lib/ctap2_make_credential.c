@@ -11,7 +11,6 @@
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
-#include "fido_crypto.h"
 #include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
@@ -164,20 +163,6 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 bool ctap2_make_credential_is_tup_needed(void)
 {
     return (ctap2_request.options.up == 1);
-}
-
-static void generate_rpid_hash(void)
-{
-    // RP IDからSHA-256ハッシュ（32バイト）を生成 
-    uint8_t *rpid = ctap2_request.rp.id;
-    size_t   rpid_size = strlen((char *)rpid);
-    ctap2_rpid_hash_size = sizeof(ctap2_rpid_hash);
-    fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
-
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-    NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
-    NRF_LOG_HEXDUMP_DEBUG(ctap2_rpid_hash, ctap2_rpid_hash_size);
-#endif
 }
 
 static void generate_pubkey_cred_source(void)
@@ -342,7 +327,7 @@ static uint8_t generate_credential_pubkey(void)
     return CTAP1_ERR_SUCCESS;
 }
 
-void generate_authenticator_data(void)
+static void generate_authenticator_data(void)
 {
     // Authenticator data各項目を
     // 先頭からバッファにセット
@@ -384,7 +369,7 @@ void generate_authenticator_data(void)
     authenticator_data_size = offset;
 }
 
-uint8_t generate_sign(void)
+static uint8_t generate_sign(void)
 {
     if (u2f_flash_keydata_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -437,7 +422,14 @@ uint8_t generate_sign(void)
 uint8_t ctap2_make_credential_generate_response_items(void)
 {
     // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
-    generate_rpid_hash();
+    uint8_t *rpid = ctap2_request.rp.id;
+    size_t   rpid_size = strlen((char *)rpid);
+    ctap2_generate_rpid_hash(rpid, rpid_size);
+
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
+    NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_rpid_hash, ctap2_rpid_hash_size);
+#endif
     
     // flags編集
     //   User Present result (0x01) &

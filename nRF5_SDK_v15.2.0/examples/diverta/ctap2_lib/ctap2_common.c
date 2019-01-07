@@ -6,6 +6,7 @@
  */
 #include "sdk_common.h"
 
+#include "fido_crypto.h"
 #include "ctap2_common.h"
 
 //
@@ -36,3 +37,10 @@ size_t  credential_pubkey_size;
 // Authenticator dataを保持
 uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 size_t  authenticator_data_size;
+
+void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size)
+{
+    // RP IDからSHA-256ハッシュ（32バイト）を生成 
+    ctap2_rpid_hash_size = sizeof(ctap2_rpid_hash);
+    fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
+}

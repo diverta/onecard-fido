@@ -8,10 +8,8 @@
 
 #include "cbor.h"
 #include "ctap2_common.h"
-#include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "fido_common.h"
-#include "fido_crypto.h"
 #include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
@@ -32,10 +30,10 @@ NRF_LOG_MODULE_REGISTER();
 // for debug cbor data
 #define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
-#define NRF_LOG_DEBUG_CBOR_REQUEST      true
-#define NRF_LOG_DEBUG_ALLOW_LIST        true
-#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
-#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
+#define NRF_LOG_DEBUG_CBOR_REQUEST      false
+#define NRF_LOG_DEBUG_ALLOW_LIST        false
+#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   true
+#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    true
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
 #define NRF_LOG_DEBUG_CBOR_RESPONSE     false
 
@@ -189,10 +187,81 @@ bool ctap2_get_assertion_is_tup_needed(void)
     return (ctap2_request.options.up == 1);
 }
 
-uint8_t ctap2_get_assertion_generate_response_items(void)
+static void generate_authenticator_data(void)
+{
+    // Authenticator data各項目を
+    // 先頭からバッファにセット
+    //  rpIdHash
+    int offset = 0;
+    memset(authenticator_data, 0x00, sizeof(authenticator_data));
+    memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
+    offset += ctap2_rpid_hash_size;
+    //  flags
+    authenticator_data[offset++] = ctap2_flags;
+    //  signCount
+    fido_set_uint32_bytes(authenticator_data + offset, ctap2_sign_count);
+    offset += sizeof(uint32_t);
+
+#if NRF_LOG_DEBUG_AUTH_DATA_BUFF
+    int j, k;
+    NRF_LOG_DEBUG("Authenticator data(%d bytes):", offset);
+    for (j = 0; j < offset; j += 64) {
+        k = offset - j;
+        NRF_LOG_HEXDUMP_DEBUG(authenticator_data + j, (k < 64) ? k : 64);
+    }
+#endif
+
+    // データ長を設定
+    authenticator_data_size = offset;
+}
+
+static uint8_t generate_sign(void)
 {
     // TODO: 仮の実装です。
     return CTAP2_ERR_PROCESSING;
+}
+
+uint8_t ctap2_get_assertion_generate_response_items(void)
+{
+    // RP IDからrpIdHash（SHA-256ハッシュ）を生成 
+    uint8_t *rpid = ctap2_request.rp.id;
+    size_t   rpid_size = strlen((char *)rpid);
+    ctap2_generate_rpid_hash(rpid, rpid_size);
+
+#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
+    NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_rpid_hash, ctap2_rpid_hash_size);
+#endif
+
+    // flags編集
+    //   User Present result (0x01)
+    ctap2_flags = 0x01;
+
+    // sign countを取得し、
+    // rpIdHashに紐づくトークンカウンターを検索
+    if (u2f_flash_token_counter_read(ctap2_rpid_hash) == false) {
+        // appIdHashに紐づくトークンカウンターがない場合は
+        // エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("sign counter not found");
+        return CTAP2_ERR_PROCESSING;
+    }
+    NRF_LOG_DEBUG("sign counter found (value=%d)", u2f_flash_token_counter_value());
+
+    // +1 してctap2_sign_countに設定
+    ctap2_sign_count = u2f_flash_token_counter_value();
+    ctap2_sign_count++;
+    
+    // Authenticator dataを生成
+    generate_authenticator_data();
+
+    // credentialIdから取り出した
+    // 秘密鍵により署名を生成
+    uint8_t ret = generate_sign();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)

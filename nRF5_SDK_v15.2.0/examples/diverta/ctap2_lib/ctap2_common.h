@@ -114,6 +114,9 @@ extern size_t  credential_pubkey_size;
 extern uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 extern size_t  authenticator_data_size;
 
+// 共通関数
+void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
+
 #ifdef __cplusplus
 }
 #endif
