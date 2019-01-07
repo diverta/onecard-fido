@@ -30,9 +30,10 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  true
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR      true
+#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      true
+#define NRF_LOG_DEBUG_ALLOW_LIST        true
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
@@ -42,14 +43,46 @@ NRF_LOG_MODULE_REGISTER();
 // authenticatorGetAssertion
 // リクエストデータを保持する構造体
 struct {
-    uint32_t                 paramsParsed;
     bool                     clientDataHashPresent;
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
-    CTAP_USER_ENTITY_T       user;
-    CTAP_PUBKEY_CRED_PARAM_T cred_param;
     CTAP_OPTIONS_T           options;
+    bool                     allowListPresent;
+    uint8_t                  allowListSize;
+    CTAP_CREDENTIAL_DESC_T   allowList[ALLOW_LIST_MAX_SIZE];
 } ctap2_request;
+
+static void debug_decoded_request()
+{
+#if NRF_LOG_DEBUG_CLHASH_DATA_BUFF
+    NRF_LOG_DEBUG("clientDataHash:");
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+#endif
+
+#if NRF_LOG_DEBUG_CBOR_REQUEST
+    NRF_LOG_DEBUG("rp id[%s]", ctap2_request.rp.id);
+    //NRF_LOG_DEBUG("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
+    //NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
+    //    make_credential_request.cred_param.publicKeyCredentialTypeName);
+    //NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
+    //    make_credential_request.cred_param.COSEAlgorithmIdentifier);
+#endif
+
+#if NRF_LOG_DEBUG_ALLOW_LIST
+    int x;
+    CTAP_CREDENTIAL_DESC_T *desc;
+    for (x = 0; x < ctap2_request.allowListSize; x++) {
+        desc = &ctap2_request.allowList[x];
+        NRF_LOG_DEBUG("allowList[%d]: type[%d]", x, desc->type);
+        NRF_LOG_HEXDUMP_DEBUG(desc->credential_id, desc->credential_id_size);
+    }
+#endif
+
+#if NRF_LOG_DEBUG_CBOR_REQUEST
+    NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
+        ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
+#endif
+}
 
 uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
@@ -127,10 +160,12 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
                 break;
             case 3:
                 // allowList
+                ret = parse_allow_list(ctap2_request.allowList, &ctap2_request.allowListSize, &map);
+                ctap2_request.allowListPresent = (ret == CborNoError);
                 break;
             case 5:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options ,&map);
+                ret = parse_options(&ctap2_request.options, &map);
                 break;
             default:
                 break;                
@@ -145,28 +180,13 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
         }
     }
 
-#if NRF_LOG_DEBUG_CLHASH_DATA_BUFF
-    NRF_LOG_DEBUG("clientDataHash:");
-    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-#endif
-
-#if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("rp id[%s]", ctap2_request.rp.id);
-    //NRF_LOG_DEBUG("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
-    //NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
-    //    make_credential_request.cred_param.publicKeyCredentialTypeName);
-    //NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
-    //    make_credential_request.cred_param.COSEAlgorithmIdentifier);
-    NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
-        ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
-#endif
-
+    debug_decoded_request();
     return CTAP1_ERR_SUCCESS;
 }
 
 bool ctap2_get_assertion_is_tup_needed(void)
 {
-    return true;
+    return (ctap2_request.options.up == 1);
 }
 
 uint8_t ctap2_get_assertion_generate_response_items(void)

@@ -388,3 +388,91 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
     }
     return CborNoError;
 }
+
+uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred)
+{
+    int       ret;
+    CborValue val;
+    size_t    buflen;
+    char      type[PUBKEY_CRED_TYPENM_MAX_SIZE];
+
+    if (cbor_value_get_type(arr) != CborMapType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_map_find_value(arr, "id", &val);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    if (cbor_value_get_type(&val) != CborByteStringType) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
+    buflen = CREDENTIAL_ID_MAX_SIZE;
+    cbor_value_copy_byte_string(&val, cred->credential_id, &buflen, NULL);
+    cred->credential_id_size = buflen;
+
+    ret = cbor_value_map_find_value(arr, "type", &val);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    if (cbor_value_get_type(&val) != CborTextStringType) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
+    buflen = sizeof(type);
+    cbor_value_copy_text_string(&val, type, &buflen, NULL);
+
+    if (strncmp(type, "public-key", 11) == 0) {
+        cred->type = PUB_KEY_CRED_PUB_KEY;
+    } else {
+        cred->type = PUB_KEY_CRED_UNKNOWN;
+    }
+
+    return CborNoError;
+}
+
+uint8_t parse_allow_list(CTAP_CREDENTIAL_DESC_T *allowList, uint8_t *allowListSize, CborValue *it)
+{
+    int       ret;
+    CborValue arr;
+    size_t    len;
+    int       i;
+
+    if (cbor_value_get_type(it) != CborArrayType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_enter_container(it, &arr);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_value_get_array_length(it, &len);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    *allowListSize = 0;
+    for(i = 0; i < len; i++) {
+        if (i >= ALLOW_LIST_MAX_SIZE) {
+            return CTAP2_ERR_TOO_MANY_ELEMENTS;
+        }
+        *allowListSize += 1;
+
+        ret = parse_credential_descriptor(&arr, &allowList[i]);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        ret = cbor_value_advance(&arr);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+    }
+
+    return CborNoError;
+}

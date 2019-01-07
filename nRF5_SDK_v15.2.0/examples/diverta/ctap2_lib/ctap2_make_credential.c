@@ -30,7 +30,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  true
+#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false

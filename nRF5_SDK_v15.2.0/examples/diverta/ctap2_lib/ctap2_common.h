@@ -20,9 +20,11 @@ extern "C" {
 #define USER_ID_MAX_SIZE            64
 #define USER_NAME_MAX_SIZE          65
 #define PUBKEY_CRED_SOURCE_MAX_SIZE 128
+#define PUBKEY_CRED_TYPENM_MAX_SIZE 12
 #define CREDENTIAL_ID_MAX_SIZE      80
 #define AUTHENTICATOR_DATA_MAX_SIZE 256
-    
+#define ALLOW_LIST_MAX_SIZE         10
+
 //
 // CTAP2をサポートする場合
 // trueを設定

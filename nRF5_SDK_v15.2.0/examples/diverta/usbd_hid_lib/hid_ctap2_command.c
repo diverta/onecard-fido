@@ -149,6 +149,7 @@ static void command_authenticator_make_credential(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     if (ctap2_make_credential_is_tup_needed()) {
@@ -172,6 +173,7 @@ static void command_make_credential_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     // レスポンスの先頭１バイトはステータスコードであるため、
@@ -184,6 +186,7 @@ static void command_make_credential_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
@@ -233,6 +236,7 @@ static void command_authenticator_get_assertion(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     if (ctap2_get_assertion_is_tup_needed()) {
@@ -256,6 +260,7 @@ static void command_get_assertion_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     // レスポンスの先頭１バイトはステータスコードであるため、
@@ -268,6 +273,7 @@ static void command_get_assertion_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
