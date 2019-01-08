@@ -30,6 +30,15 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_CRED_SOURCE   false
 #define NRF_LOG_DEBUG_CREDENTIAL_ID false
 
+
+// Public Key Credential Sourceを保持
+static uint8_t pubkey_cred_source[PUBKEY_CRED_SOURCE_MAX_SIZE];
+static size_t  pubkey_cred_source_block_size;
+
+// credentialIdを保持
+static uint8_t credential_id[CREDENTIAL_ID_MAX_SIZE];
+static size_t  credential_id_size;
+
 // Public Key Credential Sourceから
 // 生成されたSHA-256ハッシュ値を保持
 nrf_crypto_hash_sha256_digest_t credential_source_hash;
@@ -37,16 +46,26 @@ size_t                          credential_source_hash_size;
 
 // RP IDに対応する
 // CTAP_CREDENTIAL_DESC_T の個数を保持
-uint8_t number_of_credentials;
+static uint8_t number_of_credentials;
 
 // credential IDから取り出した秘密鍵の
 // 格納領域を保持
-uint8_t *private_key_be;
+static uint8_t *private_key_be;
 
 // 秘密鍵の取出し元であるcredential IDの
 // 格納領域を保持
-CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
+static CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
 
+
+uint8_t *ctap2_pubkey_credential_id(void)
+{
+    return credential_id;
+}
+
+size_t ctap2_pubkey_credential_id_size(void)
+{
+    return credential_id_size;
+}
 
 static void generate_credential_source_hash()
 {

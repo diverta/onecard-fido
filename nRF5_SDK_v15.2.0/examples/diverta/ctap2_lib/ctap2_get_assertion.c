@@ -31,7 +31,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
-#define NRF_LOG_DEBUG_CBOR_RESPONSE     true
+#define NRF_LOG_DEBUG_CBOR_RESPONSE     false
 
 // デコードされた
 // authenticatorGetAssertion

@@ -48,6 +48,10 @@ struct {
     CTAP_OPTIONS_T           options;
 } ctap2_request;
 
+// credentialPublicKeyを保持
+static uint8_t credential_pubkey[CREDENTIAL_ID_MAX_SIZE];
+static size_t  credential_pubkey_size;
+
 uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
     CborParser  parser;
@@ -280,6 +284,8 @@ static void generate_authenticator_data(void)
     memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
     offset += aaguid_size;
     //   credentialIdLength
+    uint8_t *credential_id = ctap2_pubkey_credential_id();
+    size_t   credential_id_size = ctap2_pubkey_credential_id_size();
     fido_set_uint16_bytes(authenticator_data + offset, credential_id_size);
     offset += sizeof(uint16_t);
     //   credentialId
