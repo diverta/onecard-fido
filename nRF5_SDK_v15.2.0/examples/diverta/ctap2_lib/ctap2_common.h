@@ -86,6 +86,12 @@ typedef struct {
     CTAP_USER_ENTITY_T user_entity;
 } CTAP_CREDENTIAL_DESC_T;
 
+typedef struct {
+    bool                   present;
+    uint8_t                size;
+    CTAP_CREDENTIAL_DESC_T list[ALLOW_LIST_MAX_SIZE];
+} CTAP_ALLOW_LIST_T;
+
 //
 // CTAP2コマンドで共用する作業領域
 // 

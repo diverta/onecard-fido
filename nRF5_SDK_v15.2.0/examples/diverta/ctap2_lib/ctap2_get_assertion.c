@@ -9,8 +9,8 @@
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
-#include "fido_crypto_ecb.h"
 
 // for u2f_flash_token_counter
 #include "u2f_flash.h"
@@ -41,22 +41,8 @@ struct {
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_OPTIONS_T           options;
-    bool                     allowListPresent;
-    uint8_t                  allowListSize;
-    CTAP_CREDENTIAL_DESC_T   allowList[ALLOW_LIST_MAX_SIZE];
+    CTAP_ALLOW_LIST_T        allowList;
 } ctap2_request;
-
-// RP IDに対応する
-// CTAP_CREDENTIAL_DESC_T の個数を保持
-uint8_t number_of_credentials;
-
-// credential IDから取り出した秘密鍵の
-// 格納領域を保持
-uint8_t *private_key_be;
-
-// 秘密鍵の取出し元であるcredential IDの
-// 格納領域を保持
-CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
 
 
 static void debug_decoded_request()
@@ -167,8 +153,8 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
                 break;
             case 3:
                 // allowList
-                ret = parse_allow_list(ctap2_request.allowList, &ctap2_request.allowListSize, &map);
-                ctap2_request.allowListPresent = (ret == CborNoError);
+                ret = parse_allow_list(&ctap2_request.allowList, &map);
+                ctap2_request.allowList.present = (ret == CborNoError);
                 break;
             case 5:
                 // options (Map of authenticator options)
@@ -224,92 +210,17 @@ static void generate_authenticator_data(void)
     authenticator_data_size = offset;
 }
 
-static void decrypto_credential_id(uint8_t *credential_id, size_t credential_id_size)
-{
-    // authenticatorGetAssertionリクエストから取得した
-    // credentialIdを復号化
-    memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
-    fido_crypto_ecb_decrypt(credential_id, credential_id_size, pubkey_cred_source);
-
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-        NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
-        NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, pubkey_cred_source[0]);
-#endif
-}
-
-static bool get_private_key_from_credential_id(void)
-{
-    // number_of_credentialsをゼロクリア
-    number_of_credentials = 0;
-
-    // Public Key Credential Sourceから
-    // rpId(Relying Party Identifier)を取り出す。
-    //  index
-    //  2 - 33: Credential private key（秘密鍵）
-    //  34: Relying Party Identifierのサイズ
-    //  35 - n: Relying Party Identifier（文字列）
-    // 
-    size_t src_rp_id_size = pubkey_cred_source[34];
-    char  *src_rp_id = (char *)(pubkey_cred_source + 35);
-
-    // リクエストされたrpId
-    size_t request_rp_id_size = ctap2_request.rp.id_size;
-    char  *request_rp_id = (char *)ctap2_request.rp.id;
-
-    // リクエストされたrpIdと、Public Key Credential Sourceの
-    // rpIdを比較し、一致している場合
-    src_rp_id_size = (src_rp_id_size < request_rp_id_size) ? src_rp_id_size : request_rp_id_size;
-    if (strncmp(request_rp_id, src_rp_id, src_rp_id_size) == 0) {
-        // number_of_credentialsをカウントアップ
-        number_of_credentials++;
-        // 秘密鍵をPublic Key Credential Sourceから取り出す
-        private_key_be = pubkey_cred_source + 2;
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-        NRF_LOG_DEBUG("Private key of RP[%s]:", src_rp_id);
-        NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
-#endif
-        return true;
-
-    } else {
-        private_key_be = NULL;
-        return false;
-    }
-}
-
-static uint8_t restore_private_key(void)
-{
-    int x;
-    CTAP_CREDENTIAL_DESC_T *desc;
-
-    // credentialIdリストの先頭から逐一処理
-    for (x = 0; x < ctap2_request.allowListSize; x++) {
-        // credentialIdをAES ECBで復号化し、
-        // Public Key Credential Sourceを取得
-        desc = &ctap2_request.allowList[x];
-        decrypto_credential_id(desc->credential_id, desc->credential_id_size);
-
-        // rpIdをマッチングさせ、一致していれば秘密鍵を取り出す
-        if (get_private_key_from_credential_id()) {
-            pkey_credential_desc = desc;
-            return CTAP1_ERR_SUCCESS;
-        }
-    }
-
-    // credentialIdリストに
-    // 一致するrpIdがない場合はエラー
-    return CTAP2_ERR_PROCESSING;
-}
-
 static uint8_t generate_sign(void)
 {
     // 秘密鍵をcredentialIdから取出し
-    uint8_t ret = restore_private_key();
+    uint8_t ret = restore_private_key(&ctap2_request.allowList, &ctap2_request.rp);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
 
     // 署名を実行
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, private_key_be) == false) {
+    if (ctap2_generate_signature(
+        ctap2_request.clientDataHash, ctap2_pubkey_credential_private_key()) == false) {
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
@@ -419,7 +330,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     }
 
     // Credential (0x01: RESP_credential)
-    ret = add_credential_descriptor(&map, pkey_credential_desc);
+    ret = add_credential_descriptor(&map, ctap2_pubkey_credential_restored_id());
     if (ret != CborNoError) {
         return ret;
     }
@@ -450,7 +361,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }
-    ret = cbor_encode_int(&map, number_of_credentials);
+    ret = cbor_encode_int(&map, ctap2_pubkey_credential_number());
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }

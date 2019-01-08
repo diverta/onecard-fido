@@ -434,7 +434,8 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
     return CborNoError;
 }
 
-uint8_t parse_allow_list(CTAP_CREDENTIAL_DESC_T *allowList, uint8_t *allowListSize, CborValue *it)
+//uint8_t parse_allow_list(CTAP_CREDENTIAL_DESC_T *allowList, uint8_t *allowListSize, CborValue *it)
+uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 {
     int       ret;
     CborValue arr;
@@ -455,14 +456,14 @@ uint8_t parse_allow_list(CTAP_CREDENTIAL_DESC_T *allowList, uint8_t *allowListSi
         return ret;
     }
 
-    *allowListSize = 0;
+    allowList->size = 0;
     for(i = 0; i < len; i++) {
         if (i >= ALLOW_LIST_MAX_SIZE) {
             return CTAP2_ERR_TOO_MANY_ELEMENTS;
         }
-        *allowListSize += 1;
+        allowList->size += 1;
 
-        ret = parse_credential_descriptor(&arr, &allowList[i]);
+        ret = parse_credential_descriptor(&arr, &(allowList->list[i]));
         if (ret != CborNoError) {
             return ret;
         }

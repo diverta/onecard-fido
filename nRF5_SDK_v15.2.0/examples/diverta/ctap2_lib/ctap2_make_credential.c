@@ -10,8 +10,8 @@
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
-#include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
@@ -163,73 +163,6 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 bool ctap2_make_credential_is_tup_needed(void)
 {
     return (ctap2_request.options.up == 1);
-}
-
-static void generate_pubkey_cred_source(void)
-{
-    // Public Key Credential Sourceを編集する
-    // 
-    //  0: Public Key Credential Source自体のサイズ
-    //  1: Public Key Credential Type
-    //  2 - 33: Credential private key（秘密鍵）
-    //  34: Relying Party Identifierのサイズ
-    //  35 - n: Relying Party Identifier（文字列）
-    // 
-    int offset = 1;
-    memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
-
-    // Public Key Credential Type
-    pubkey_cred_source[offset++] = ctap2_request.cred_param.publicKeyCredentialType;
-
-    // Credential private key
-    // キーペアを新規生成し、秘密鍵を格納
-    fido_crypto_keypair_generate();
-    memcpy(pubkey_cred_source + offset, 
-        fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
-    offset += fido_crypto_keypair_private_key_size();
-
-    // Relying Party Identifier (size & buffer)
-    pubkey_cred_source[offset++] = ctap2_request.rp.id_size;
-    memcpy(pubkey_cred_source + offset, 
-        ctap2_request.rp.id, ctap2_request.rp.id_size);
-    offset += ctap2_request.rp.id_size;
-    
-    // Public Key Credential Source自体のサイズを、
-    // バッファの１バイト目に設定
-    pubkey_cred_source[0] = offset;
-
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
-    NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, offset);
-#endif
-
-    // 暗号化対象ブロックサイズを設定
-    //   AES ECBの仕様上、16の倍数でなければならない
-    int block_num = offset / 16;
-    int block_sum = block_num * 16;
-    if (offset == block_sum) {
-        pubkey_cred_source_block_size = offset;
-    } else {
-        pubkey_cred_source_block_size = (block_num + 1) * 16;
-    } 
-}
-
-static void generate_credential_id(void)
-{
-    // Public Key Credential Sourceを編集する
-    generate_pubkey_cred_source();
-
-    // Public Key Credential Sourceを
-    // AES ECBで暗号化し、
-    // credentialIdを生成する
-    memset(credential_id, 0x00, sizeof(credential_id));
-    fido_crypto_ecb_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
-    credential_id_size = pubkey_cred_source_block_size;
-
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-    NRF_LOG_DEBUG("credentialId(%d bytes):", credential_id_size);
-    NRF_LOG_HEXDUMP_DEBUG(credential_id, credential_id_size);
-#endif
 }
 
 static uint8_t encode_credential_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
@@ -413,6 +346,10 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     //   User Present result (0x01) &
     //   Attested credential data included (0x40)
     ctap2_flags = 0x41;
+
+    // Public Key Credential Sourceを編集する
+    generate_pubkey_cred_source(
+        &ctap2_request.cred_param, &ctap2_request.rp, &ctap2_request.user);
 
     // credentialIdを生成
     generate_credential_id();
