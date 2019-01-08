@@ -27,8 +27,10 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_DEBUG_CRED_SOURCE   false
-#define NRF_LOG_DEBUG_CREDENTIAL_ID false
+#define NRF_LOG_DEBUG_CRED_SOURCE       false
+#define NRF_LOG_DEBUG_CRED_SOURCE_BUFF  false
+#define NRF_LOG_DEBUG_CREDENTIAL_ID     false
+#define NRF_LOG_DEBUG_PRIVATE_KEY       false
 
 
 // Public Key Credential Sourceを保持
@@ -99,7 +101,9 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  1: Public Key Credential Type
     //  2 - 33: Credential private key（秘密鍵）
     //  34: Relying Party Identifierのサイズ
-    //  35 - n: Relying Party Identifier（文字列）
+    //  35 - n0: Relying Party Identifier（文字列）
+    //  n1: User Id（バイト配列）のサイズ
+    //  n2 - n3: User Id（バイト配列）
     // 
     int offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
@@ -118,7 +122,20 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     pubkey_cred_source[offset++] = rp->id_size;
     memcpy(pubkey_cred_source + offset, rp->id, rp->id_size);
     offset += rp->id_size;
-    
+
+    // User Id (size & buffer)
+    pubkey_cred_source[offset++] = user->id_size;
+    memcpy(pubkey_cred_source + offset, user->id, user->id_size);
+    offset += user->id_size;
+
+#if NRF_LOG_DEBUG_CRED_SOURCE
+    NRF_LOG_DEBUG("Public Key Credential Source contents");
+    NRF_LOG_DEBUG("RP ID (%d bytes):", rp->id_size);
+    NRF_LOG_HEXDUMP_DEBUG(rp->id, rp->id_size);
+    NRF_LOG_DEBUG("USER ID (%d bytes):", user->id_size);
+    NRF_LOG_HEXDUMP_DEBUG(user->id, user->id_size);
+#endif
+
     // Public Key Credential Source自体のサイズを、
     // バッファの１バイト目に設定
     pubkey_cred_source[0] = offset;
@@ -127,7 +144,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     // SHA-256ハッシュ値（32バイト）を生成
     generate_credential_source_hash();
 
-#if NRF_LOG_DEBUG_CRED_SOURCE
+#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
     NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
     NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, offset);
 #endif
@@ -169,7 +186,7 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // SHA-256ハッシュ値（32バイト）を生成
     generate_credential_source_hash();
 
-#if NRF_LOG_DEBUG_CRED_SOURCE
+#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
         NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
         NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, pubkey_cred_source[0]);
 #endif
@@ -185,10 +202,25 @@ static bool get_private_key_from_credential_id(CTAP_RP_ID_T *rp)
     //  index
     //  2 - 33: Credential private key（秘密鍵）
     //  34: Relying Party Identifierのサイズ
-    //  35 - n: Relying Party Identifier（文字列）
+    //  35 - n0: Relying Party Identifier（文字列）
+    //  n1: User Id（バイト配列）のサイズ
+    //  n2 - n3: User Id（バイト配列）
     // 
-    size_t src_rp_id_size = pubkey_cred_source[34];
-    char  *src_rp_id = (char *)(pubkey_cred_source + 35);
+    size_t offset = 34;
+    size_t src_rp_id_size = pubkey_cred_source[offset++];
+    char  *src_rp_id = (char *)(pubkey_cred_source + offset);
+
+#if NRF_LOG_DEBUG_CRED_SOURCE
+    offset += src_rp_id_size;
+    size_t src_user_id_size = pubkey_cred_source[offset++];
+    char  *src_user_id = (char *)(pubkey_cred_source + offset);
+
+    NRF_LOG_DEBUG("Public Key Credential Source contents");
+    NRF_LOG_DEBUG("RP ID (%d bytes):", src_rp_id_size);
+    NRF_LOG_HEXDUMP_DEBUG(src_rp_id, src_rp_id_size);
+    NRF_LOG_DEBUG("USER ID (%d bytes):", src_user_id_size);
+    NRF_LOG_HEXDUMP_DEBUG(src_user_id, src_user_id_size);
+#endif
 
     // リクエストされたrpId
     size_t request_rp_id_size = rp->id_size;
@@ -202,8 +234,8 @@ static bool get_private_key_from_credential_id(CTAP_RP_ID_T *rp)
         number_of_credentials++;
         // 秘密鍵をPublic Key Credential Sourceから取り出す
         private_key_be = pubkey_cred_source + 2;
-#if NRF_LOG_DEBUG_CREDENTIAL_ID
-        NRF_LOG_DEBUG("Private key of RP[%s]:", src_rp_id);
+#if NRF_LOG_DEBUG_PRIVATE_KEY
+        NRF_LOG_DEBUG("Private key:", src_rp_id);
         NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
 #endif
         return true;
