@@ -478,6 +478,16 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 
 uint8_t ctap2_get_assertion_update_token_counter(void)
 {
-    // TODO: 仮の実装です。
-    return CTAP2_ERR_PROCESSING;
+    // 現在のsign countをrpIdHashに紐づけて
+    // トークンカウンターレコードを更新
+    uint32_t reserve_word = 0xffffffff;
+    if (u2f_flash_token_counter_write(ctap2_rpid_hash, ctap2_sign_count, reserve_word) == false) {
+        // NGであれば終了
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // 後続のレスポンス生成・送信は、
+    // Flash ROM書込み完了後に行われる
+    NRF_LOG_DEBUG("sign counter updated (value=%d)", ctap2_sign_count);
+    return CTAP1_ERR_SUCCESS;
 }
