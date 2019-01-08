@@ -8,6 +8,7 @@
 
 #include "ctap2_common.h"
 #include "fido_common.h"
+#include "fido_crypto.h"
 #include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
 
@@ -29,6 +30,11 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_CRED_SOURCE   false
 #define NRF_LOG_DEBUG_CREDENTIAL_ID false
 
+// Public Key Credential Sourceから
+// 生成されたSHA-256ハッシュ値を保持
+nrf_crypto_hash_sha256_digest_t credential_source_hash;
+size_t                          credential_source_hash_size;
+
 // RP IDに対応する
 // CTAP_CREDENTIAL_DESC_T の個数を保持
 uint8_t number_of_credentials;
@@ -42,7 +48,31 @@ uint8_t *private_key_be;
 CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
 
 
-void generate_pubkey_cred_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_RP_ID_T *rp, CTAP_USER_ENTITY_T *user)
+static void generate_credential_source_hash()
+{
+    // Public Key Credential Sourceから
+    // SHA-256ハッシュ値（32バイト）を生成
+    uint8_t pubkey_cred_source_size = pubkey_cred_source[0];
+    credential_source_hash_size = sizeof(credential_source_hash);
+    fido_crypto_generate_sha256_hash(
+        pubkey_cred_source, pubkey_cred_source_size, credential_source_hash, &credential_source_hash_size);
+}
+
+uint8_t *ctap2_pubkey_credential_source_hash(void)
+{
+    // Public Key Credential Sourceから
+    // 生成されたSHA-256ハッシュ値を戻す
+    //   トークンカウンター登録／更新用の
+    //   キーとして利用する目的
+    return credential_source_hash;
+}
+
+size_t ctap2_pubkey_credential_source_hash_size(void)
+{
+    return credential_source_hash_size;
+}
+
+void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_RP_ID_T *rp, CTAP_USER_ENTITY_T *user)
 {
     // Public Key Credential Sourceを編集する
     // 
@@ -74,6 +104,10 @@ void generate_pubkey_cred_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_RP_ID_T *
     // バッファの１バイト目に設定
     pubkey_cred_source[0] = offset;
 
+    // Public Key Credential Sourceから
+    // SHA-256ハッシュ値（32バイト）を生成
+    generate_credential_source_hash();
+
 #if NRF_LOG_DEBUG_CRED_SOURCE
     NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
     NRF_LOG_HEXDUMP_DEBUG(pubkey_cred_source, offset);
@@ -90,7 +124,7 @@ void generate_pubkey_cred_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_RP_ID_T *
     } 
 }
 
-void generate_credential_id(void)
+void ctap2_pubkey_credential_generate_id(void)
 {
     // Public Key Credential Sourceを
     // AES ECBで暗号化し、
@@ -105,12 +139,16 @@ void generate_credential_id(void)
 #endif
 }
 
-static void decrypto_credential_id(uint8_t *credential_id, size_t credential_id_size)
+static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_t credential_id_size)
 {
     // authenticatorGetAssertionリクエストから取得した
     // credentialIdを復号化
     memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
     fido_crypto_ecb_decrypt(credential_id, credential_id_size, pubkey_cred_source);
+
+    // Public Key Credential Sourceから
+    // SHA-256ハッシュ値（32バイト）を生成
+    generate_credential_source_hash();
 
 #if NRF_LOG_DEBUG_CRED_SOURCE
         NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
@@ -157,7 +195,7 @@ static bool get_private_key_from_credential_id(CTAP_RP_ID_T *rp)
     }
 }
 
-uint8_t restore_private_key(CTAP_ALLOW_LIST_T *allowList, CTAP_RP_ID_T *rp)
+uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList, CTAP_RP_ID_T *rp)
 {
     int x;
     CTAP_CREDENTIAL_DESC_T *desc;
@@ -167,7 +205,7 @@ uint8_t restore_private_key(CTAP_ALLOW_LIST_T *allowList, CTAP_RP_ID_T *rp)
         // credentialIdをAES ECBで復号化し、
         // Public Key Credential Sourceを取得
         desc = &(allowList->list[x]);
-        decrypto_credential_id(desc->credential_id, desc->credential_id_size);
+        ctap2_pubkey_credential_restore_source(desc->credential_id, desc->credential_id_size);
 
         // rpIdをマッチングさせ、一致していれば秘密鍵を取り出す
         if (get_private_key_from_credential_id(rp)) {

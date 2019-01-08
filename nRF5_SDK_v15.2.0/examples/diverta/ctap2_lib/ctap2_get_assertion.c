@@ -182,6 +182,32 @@ bool ctap2_get_assertion_is_tup_needed(void)
     return (ctap2_request.options.up == 1);
 }
 
+static uint8_t read_token_counter(void)
+{
+    // 例外抑止
+    if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // Public Key Credential Sourceから
+    // 生成されたSHA-256ハッシュ値をキーとし、
+    // トークンカウンターレコードを検索
+    uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
+    if (u2f_flash_token_counter_read(p_hash) == false) {
+        // 紐づくトークンカウンターがない場合は
+        // エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("sign counter not found");
+        return CTAP2_ERR_PROCESSING;
+    }
+    NRF_LOG_DEBUG("sign counter found (value=%d)", u2f_flash_token_counter_value());
+
+    // +1 してctap2_sign_countに設定
+    ctap2_sign_count = u2f_flash_token_counter_value();
+    ctap2_sign_count++;
+
+    return CTAP1_ERR_SUCCESS;
+}
+
 static void generate_authenticator_data(void)
 {
     // Authenticator data各項目を
@@ -212,12 +238,6 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    // 秘密鍵をcredentialIdから取出し
-    uint8_t ret = restore_private_key(&ctap2_request.allowList, &ctap2_request.rp);
-    if (ret != CTAP1_ERR_SUCCESS) {
-        return ret;
-    }
-
     // 署名を実行
     if (ctap2_generate_signature(
         ctap2_request.clientDataHash, ctap2_pubkey_credential_private_key()) == false) {
@@ -248,26 +268,27 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
     //   User Present result (0x01)
     ctap2_flags = 0x01;
 
-    // sign countを取得し、
-    // rpIdHashに紐づくトークンカウンターを検索
-    if (u2f_flash_token_counter_read(ctap2_rpid_hash) == false) {
-        // appIdHashに紐づくトークンカウンターがない場合は
-        // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("sign counter not found");
-        return CTAP2_ERR_PROCESSING;
+    // 秘密鍵とCredential Source Hash
+    // （トークンカウンターのキー）を
+    // credentialIdから取出し
+    uint8_t ret = ctap2_pubkey_credential_restore_private_key(&ctap2_request.allowList, &ctap2_request.rp);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
     }
-    NRF_LOG_DEBUG("sign counter found (value=%d)", u2f_flash_token_counter_value());
 
-    // +1 してctap2_sign_countに設定
-    ctap2_sign_count = u2f_flash_token_counter_value();
-    ctap2_sign_count++;
+    // トークンカウンターからsign countを取得し、
+    // あらかじめ +1 しておく
+    ret = read_token_counter();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
     
     // Authenticator dataを生成
     generate_authenticator_data();
 
     // credentialIdから取り出した
     // 秘密鍵により署名を生成
-    uint8_t ret = generate_sign();
+    ret = generate_sign();
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
@@ -389,10 +410,17 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 
 uint8_t ctap2_get_assertion_update_token_counter(void)
 {
-    // 現在のsign countをrpIdHashに紐づけて
+    // 例外抑止
+    if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // Public Key Credential Sourceから
+    // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを更新
+    uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(ctap2_rpid_hash, ctap2_sign_count, reserve_word) == false) {
+    if (u2f_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
         // NGであれば終了
         return CTAP2_ERR_PROCESSING;
     }

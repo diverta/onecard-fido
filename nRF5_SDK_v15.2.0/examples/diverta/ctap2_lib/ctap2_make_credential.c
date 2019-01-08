@@ -348,11 +348,11 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     ctap2_flags = 0x41;
 
     // Public Key Credential Sourceを編集する
-    generate_pubkey_cred_source(
+    ctap2_pubkey_credential_generate_source(
         &ctap2_request.cred_param, &ctap2_request.rp, &ctap2_request.user);
 
     // credentialIdを生成
-    generate_credential_id();
+    ctap2_pubkey_credential_generate_id();
 
     // credentialPublicKey(CBOR)を生成
     uint8_t ret = generate_credential_pubkey();
@@ -488,14 +488,16 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 uint8_t ctap2_make_credential_add_token_counter(void)
 {
     // 例外抑止
-    if (ctap2_rpid_hash_size != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+    if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
         return CTAP2_ERR_PROCESSING;
     }
-    
-    // rpIdHashをキーとして、
+
+    // Public Key Credential Sourceから
+    // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを追加する
+    uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(ctap2_rpid_hash, ctap2_sign_count, reserve_word) == false) {
+    if (u2f_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
         return CTAP2_ERR_PROCESSING;
     }
 
