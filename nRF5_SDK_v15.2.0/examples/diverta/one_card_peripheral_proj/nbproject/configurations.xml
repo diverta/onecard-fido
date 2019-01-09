@@ -43,13 +43,18 @@
                    displayName="ctap2_lib"
                    projectFiles="true"
                    root="../ctap2_lib">
-      <itemPath>../ctap2_lib/ctap2.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_parse.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_parse.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_common.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_common.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_get_assertion.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_get_assertion.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_make_credential.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_make_credential.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_pubkey_credential.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido_lib"
                    displayName="fido_lib"
@@ -2982,10 +2987,28 @@
       </item>
       <item path="../ctap2_lib/ctap2_cbor_parse.c" ex="false" tool="0" flavor2="2">
       </item>
+      <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_get_assertion.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_get_assertion.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../ctap2_lib/ctap2_make_credential.c"
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../ctap2_lib/ctap2_pubkey_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_pubkey_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="2">
       </item>

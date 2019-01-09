@@ -19,7 +19,7 @@
 
 // for U2F command
 #include "u2f.h"
-#include "ctap2.h"
+#include "ctap2_common.h"
 
 // for lighting LED on/off
 #include "fido_idling_led.h"

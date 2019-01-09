@@ -17,7 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // 使用するコマンド／ステータスの読替え
 #include "u2f.h"
-#include "ctap2.h"
+#include "ctap2_common.h"
 #if CTAP2_SUPPORTED
 #define FIDO_COMMAND_ERROR   CTAP2_COMMAND_ERROR
 #define FIDO_COMMAND_PING    CTAP2_COMMAND_PING

@@ -6,9 +6,10 @@
  */
 #include "sdk_common.h"
 
-#include "ctap2.h"
+#include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_make_credential.h"
+#include "ctap2_get_assertion.h"
 #include "fido_common.h"
 #include "fido_idling_led.h"
 #include "hid_fido_command.h"
@@ -37,6 +38,7 @@ static size_t  response_length;
 
 // 関数プロトタイプ
 static void command_make_credential_resume_process(void);
+static void command_get_assertion_resume_process(void);
 
 static uint8_t get_command_byte(void)
 {
@@ -55,6 +57,10 @@ static void resume_response_process(void)
         case CTAP2_CMD_MAKE_CREDENTIAL:
             NRF_LOG_INFO("authenticatorMakeCredential: completed the test of user presence");
             command_make_credential_resume_process();
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            NRF_LOG_INFO("authenticatorGetAssertion: completed the test of user presence");
+            command_get_assertion_resume_process();
             break;
         default:
             break;
@@ -136,11 +142,6 @@ static void command_authenticator_make_credential(void)
 
     NRF_LOG_INFO("authenticatorMakeCredential start");
 
-    // 秘密鍵と証明書をFlash ROMから読込
-    // 秘密鍵と証明書がFlash ROMに登録されていない場合
-    // エラーレスポンスを生成して戻す
-    // TODO:
-
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
     size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
@@ -148,6 +149,7 @@ static void command_authenticator_make_credential(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     if (ctap2_make_credential_is_tup_needed()) {
@@ -171,6 +173,7 @@ static void command_make_credential_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
 
     // レスポンスの先頭１バイトはステータスコードであるため、
@@ -183,6 +186,7 @@ static void command_make_credential_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
+        return;
     }
     
     // レスポンス長を設定（CBORデータ長＋１）
@@ -217,7 +221,94 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
         send_ctap2_command_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
+
+static void command_authenticator_get_assertion(void)
+{
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+
+    NRF_LOG_INFO("authenticatorGetAssertion start");
+
+    // CBORエンコードされたリクエストメッセージをデコード
+    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
+    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    if (ctap2_get_assertion_is_tup_needed()) {
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
+        // LED点滅を開始
+        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        return;
+    }
+
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    command_get_assertion_resume_process();
+}
+
+static void command_get_assertion_resume_process(void)
+{
+    // authenticatorGetAssertionレスポンスに必要な項目を生成
+    uint8_t ctap2_status = ctap2_get_assertion_generate_response_items();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *cbor_data_buffer = response_buffer + 1;
+    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+
+    // authenticatorGetAssertionレスポンスをエンコード
+    ctap2_status = ctap2_get_assertion_encode_response(cbor_data_buffer, &cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
     
+    // レスポンス長を設定（CBORデータ長＋１）
+    response_length = cbor_data_length + 1;
+
+    // トークンカウンターレコードを更新
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    ctap2_status = ctap2_get_assertion_update_token_counter();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+    }
+}
+
+static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
+{
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        NRF_LOG_ERROR("authenticatorGetAssertion abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("authenticatorGetAssertion retry: FDS GC done ");
+        ctap2_make_credential_add_token_counter();
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        send_ctap2_command_response(CTAP1_ERR_SUCCESS, response_length);
+    }
+}
+
 static void command_authenticator_get_info(void)
 {
     // レスポンスの先頭１バイトはステータスコードであるため、
@@ -250,6 +341,9 @@ void hid_ctap2_command_cbor(void)
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_authenticator_make_credential();
             break;
+        case CTAP2_CMD_GET_ASSERTION:
+            command_authenticator_get_assertion();
+            break;
         default:
             break;
     }
@@ -262,6 +356,9 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_make_credential_send_response(p_evt);
             break;
+        case CTAP2_CMD_GET_ASSERTION:
+            command_get_assertion_send_response(p_evt);
+            break;
         default:
             break;
     }
@@ -273,6 +370,9 @@ void hid_ctap2_command_cbor_report_sent(void)
     switch (get_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             NRF_LOG_INFO("authenticatorMakeCredential end");
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            NRF_LOG_INFO("authenticatorGetAssertion end");
             break;
         default:
             break;
