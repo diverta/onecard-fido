@@ -16,7 +16,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // タイマー
 #include "app_timer.h"
-#define LED_ON_OFF_INTERVAL_MSEC 300
 
 APP_TIMER_DEF(m_led_on_off_timer_id);
 static bool app_timer_created = false;
@@ -46,14 +45,14 @@ static void processing_led_init()
     }
 }
 
-static void processing_led_start()
+static void processing_led_start(uint32_t on_off_interval_msec)
 {
     if (app_timer_created == false) {
         return;
     }
 
     // タイマーを開始する
-    uint32_t err_code = app_timer_start(m_led_on_off_timer_id, APP_TIMER_TICKS(LED_ON_OFF_INTERVAL_MSEC), NULL);
+    uint32_t err_code = app_timer_start(m_led_on_off_timer_id, APP_TIMER_TICKS(on_off_interval_msec), NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_led_on_off_timer_id) returns %d ", err_code);
         return;
@@ -74,7 +73,7 @@ static void processing_led_terminate()
     }
 }
 
-void fido_processing_led_on(uint32_t led_for_processing)
+void fido_processing_led_on(uint32_t led_for_processing, uint32_t on_off_interval_msec)
 {
     // 点滅対象のLEDを保持
     m_led_for_processing = led_for_processing;
@@ -83,7 +82,7 @@ void fido_processing_led_on(uint32_t led_for_processing)
     processing_led_init();
 
     // タイマーを開始する
-    processing_led_start();
+    processing_led_start(on_off_interval_msec);
 }
 
 void fido_processing_led_off(void)

@@ -158,7 +158,7 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         NRF_LOG_INFO("authenticatorMakeCredential: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 
@@ -245,7 +245,7 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 

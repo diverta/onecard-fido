@@ -201,7 +201,7 @@ static void u2f_register_do_process(void)
         is_tup_needed = true;
         NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 
@@ -308,7 +308,7 @@ static void u2f_authenticate_do_process(void)
         is_tup_needed = true;
         NRF_LOG_INFO("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE);
+        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 

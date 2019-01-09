@@ -68,7 +68,7 @@ void ble_u2f_user_presence_verify_start(ble_u2f_context_t *p_u2f_context)
     }
 
     // LED点滅を開始
-    fido_processing_led_on(LED_FOR_USER_PRESENCE);
+    fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
     
     NRF_LOG_INFO("User presence verify start ");
 }
