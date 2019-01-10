@@ -11,6 +11,7 @@
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
 #include "fido_common.h"
+#include "fido_crypto_ecb.h"
 #include "fido_idling_led.h"
 #include "hid_fido_command.h"
 #include "hid_fido_send.h"
@@ -19,6 +20,9 @@
 
 // for processing LED on/off
 #include "fido_processing_led.h"
+
+// for ble_u2f_flash_keydata
+#include "ble_u2f_flash.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_ctap2_command
@@ -140,8 +144,6 @@ static void command_authenticator_make_credential(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    NRF_LOG_INFO("authenticatorMakeCredential start");
-
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
     size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
@@ -170,6 +172,9 @@ static void command_make_credential_resume_process(void)
 {
     // LEDを消灯させる
     fido_processing_led_off();
+
+    // 本処理を開始
+    NRF_LOG_INFO("authenticatorMakeCredential start");
 
     // authenticatorMakeCredentialレスポンスに必要な項目を生成
     uint8_t ctap2_status = ctap2_make_credential_generate_response_items();
@@ -230,8 +235,6 @@ static void command_authenticator_get_assertion(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    NRF_LOG_INFO("authenticatorGetAssertion start");
-
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
     size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
@@ -260,6 +263,9 @@ static void command_get_assertion_resume_process(void)
 {
     // LEDを消灯させる
     fido_processing_led_off();
+
+    // 本処理を開始
+    NRF_LOG_INFO("authenticatorGetAssertion start");
 
     // authenticatorGetAssertionレスポンスに必要な項目を生成
     uint8_t ctap2_status = ctap2_get_assertion_generate_response_items();
@@ -307,7 +313,7 @@ static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("authenticatorGetAssertion retry: FDS GC done ");
-        ctap2_make_credential_add_token_counter();
+        ctap2_get_assertion_update_token_counter();
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
@@ -350,9 +356,47 @@ static void command_authenticator_reset_resume_process(void)
     // 赤色LED高速点滅停止
     fido_processing_led_off();
 
-    // レスポンスデータを転送
-    // TODO: これは仮の実装です。
-    send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
+    // 本処理を開始
+    NRF_LOG_INFO("authenticatorReset start");
+
+    // 秘密鍵／証明書をFlash ROM領域から削除
+    // (fds_file_deleteが実行される)
+    if (ble_u2f_flash_keydata_delete() == false) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        return;
+    }
+}
+
+static void command_authenticator_reset_send_response(fds_evt_t const *const p_evt)
+{
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        NRF_LOG_ERROR("authenticatorReset abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_DEL_FILE) {
+        // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
+        // (fds_record_update/writeまたはfds_gcが実行される)
+        if (fido_crypto_ecb_init() == false) {
+            send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+            NRF_LOG_ERROR("authenticatorReset abend: fido_crypto_ecb_init failed");
+            return;
+        }
+
+    } else if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("authenticatorReset retry: FDS GC done ");
+        command_authenticator_reset_resume_process();
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // AES秘密鍵生成(fds_record_update/write)完了の場合
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
+    }
 }
 
 void hid_ctap2_command_cbor(void)
@@ -387,6 +431,9 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
             break;
         case CTAP2_CMD_GET_ASSERTION:
             command_get_assertion_send_response(p_evt);
+            break;
+        case CTAP2_CMD_RESET:
+            command_authenticator_reset_send_response(p_evt);
             break;
         default:
             break;
