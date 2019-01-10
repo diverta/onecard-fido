@@ -257,8 +257,8 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
             // （引数にはHIDヘッダーを含まないデータを渡す）
             extract_and_check_request_data(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
-            // FIDO機能処理スタート時の処理を実行
-            hid_fido_command_on_process_started();
+            // FIDOリクエスト受信開始時の処理を実行
+            hid_fido_command_on_report_started();
             
         } else {
             dump_hid_cont_packet("Recv ", USBD_HID_PACKET_SIZE, req);
