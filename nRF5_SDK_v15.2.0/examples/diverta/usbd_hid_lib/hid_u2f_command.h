@@ -10,7 +10,7 @@ extern "C" {
 void hid_u2f_command_version(void);
 void hid_u2f_command_msg(void);
 void hid_u2f_command_msg_send_response(fds_evt_t const *const p_evt);
-void hid_u2f_command_msg_report_sent(void);
+void hid_u2f_command_msg_report_sent(bool is_timeout_detected);
 
 bool hid_u2f_command_on_mainsw_event(void);
 bool hid_u2f_command_on_mainsw_long_push_event(void);

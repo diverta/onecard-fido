@@ -39,6 +39,7 @@ static size_t  response_length;
 // 関数プロトタイプ
 static void command_make_credential_resume_process(void);
 static void command_get_assertion_resume_process(void);
+static void command_authenticator_reset_resume_process(void);
 
 static uint8_t get_command_byte(void)
 {
@@ -62,6 +63,10 @@ static void resume_response_process(void)
             NRF_LOG_INFO("authenticatorGetAssertion: completed the test of user presence");
             command_get_assertion_resume_process();
             break;
+        case CTAP2_CMD_RESET:
+            NRF_LOG_INFO("authenticatorReset: completed the test of user presence");
+            command_authenticator_reset_resume_process();
+            break;
         default:
             break;
     }
@@ -73,8 +78,6 @@ bool hid_ctap2_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
-        // LEDを消灯させる
-        fido_processing_led_off();
         // 後続のレスポンス送信処理を実行
         resume_response_process();
         return true;
@@ -122,9 +125,6 @@ static void send_ctap2_command_response(uint8_t ctap2_status, size_t length)
     // １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
     hid_fido_send_command_response(cid, cmd, response_buffer, length);
-
-    // アイドル時点滅処理を開始
-    fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
 static void send_ctap2_command_error_response(uint8_t ctap2_status) 
@@ -168,6 +168,9 @@ static void command_authenticator_make_credential(void)
 
 static void command_make_credential_resume_process(void)
 {
+    // LEDを消灯させる
+    fido_processing_led_off();
+
     // authenticatorMakeCredentialレスポンスに必要な項目を生成
     uint8_t ctap2_status = ctap2_make_credential_generate_response_items();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
@@ -255,6 +258,9 @@ static void command_authenticator_get_assertion(void)
 
 static void command_get_assertion_resume_process(void)
 {
+    // LEDを消灯させる
+    fido_processing_led_off();
+
     // authenticatorGetAssertionレスポンスに必要な項目を生成
     uint8_t ctap2_status = ctap2_get_assertion_generate_response_items();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
@@ -329,6 +335,26 @@ static void command_authenticator_get_info(void)
     send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
 }
 
+static void command_authenticator_reset(void)
+{
+    // ユーザー所在確認が必要な旨のフラグを設定
+    is_tup_needed = true;
+    NRF_LOG_INFO("authenticatorReset: waiting to complete the test of user presence");
+
+    // 赤色LED高速点滅開始
+    fido_processing_led_on(LED_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
+}
+
+static void command_authenticator_reset_resume_process(void)
+{
+    // 赤色LED高速点滅停止
+    fido_processing_led_off();
+
+    // レスポンスデータを転送
+    // TODO: これは仮の実装です。
+    send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
 void hid_ctap2_command_cbor(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
@@ -343,6 +369,9 @@ void hid_ctap2_command_cbor(void)
             break;
         case CTAP2_CMD_GET_ASSERTION:
             command_authenticator_get_assertion();
+            break;
+        case CTAP2_CMD_RESET:
+            command_authenticator_reset();
             break;
         default:
             break;
@@ -364,17 +393,27 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_ctap2_command_cbor_report_sent(void)
+void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
+    char *msg = is_timeout_detected ? "timed out" : "end";
     switch (get_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
-            NRF_LOG_INFO("authenticatorMakeCredential end");
+            NRF_LOG_INFO("authenticatorMakeCredential %s", msg);
             break;
         case CTAP2_CMD_GET_ASSERTION:
-            NRF_LOG_INFO("authenticatorGetAssertion end");
+            NRF_LOG_INFO("authenticatorGetAssertion %s", msg);
+            break;
+        case CTAP2_CMD_RESET:
+            NRF_LOG_INFO("authenticatorReset %s", msg);
             break;
         default:
             break;
+    }
+
+    // タイムアウトが発生していた場合はここで
+    // LEDを消灯させる
+    if (is_timeout_detected) {
+        fido_processing_led_off();
     }
 }

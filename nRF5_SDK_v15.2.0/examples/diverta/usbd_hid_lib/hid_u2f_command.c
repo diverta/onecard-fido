@@ -86,8 +86,6 @@ bool hid_u2f_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
-        // LEDを消灯させる
-        fido_processing_led_off();
         // 後続のレスポンス送信処理を実行
         u2f_resume_response_process();
         return true;
@@ -211,6 +209,9 @@ static void u2f_register_do_process(void)
 
 static void u2f_register_resume_process(void)
 {
+    // LEDを消灯させる
+    fido_processing_led_off();
+
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
@@ -318,6 +319,9 @@ static void u2f_authenticate_do_process(void)
 
 static void u2f_authenticate_resume_process(void)
 {
+    // LEDを消灯させる
+    fido_processing_led_off();
+
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = hid_fido_receive_apdu()->data;
@@ -391,15 +395,22 @@ void hid_u2f_command_msg_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_u2f_command_msg_report_sent(void)
+void hid_u2f_command_msg_report_sent(bool is_timeout_detected)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
     uint8_t ins = hid_fido_receive_apdu()->INS;
+    char   *msg = is_timeout_detected ? "timed out" : "end";
     if (ins == U2F_REGISTER) {
-        NRF_LOG_INFO("U2F Register end");
+        NRF_LOG_INFO("U2F Register %s", msg);
 
     } else if (ins == U2F_AUTHENTICATE) {
-        NRF_LOG_INFO("U2F Authenticate end");
+        NRF_LOG_INFO("U2F Authenticate %s", msg);
+    }
+
+    // タイムアウトが発生していた場合はここで
+    // LEDを消灯させる
+    if (is_timeout_detected) {
+        fido_processing_led_off();
     }
 }

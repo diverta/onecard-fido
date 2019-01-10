@@ -120,10 +120,8 @@ void hid_fido_send_input_report_complete()
     if (send_info_t.sent_length == send_info_t.payload_length) {
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
-        // コールバック
-        hid_fido_command_on_report_sent();
-        // FIDO機能処理完了時の処理を実行
-        hid_fido_command_on_process_ended();
+        // FIDOレスポンス送信完了時の処理を実行
+        hid_fido_command_on_report_completed();
         
     } else {
         // 次のフレームの送信を実行

@@ -16,7 +16,7 @@ extern "C" {
 void hid_ctap2_command_init(void);
 void hid_ctap2_command_cbor(void);
 void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt);
-void hid_ctap2_command_cbor_report_sent(void);
+void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected);
 
 bool hid_ctap2_command_on_mainsw_event(void);
 bool hid_ctap2_command_on_mainsw_long_push_event(void);
