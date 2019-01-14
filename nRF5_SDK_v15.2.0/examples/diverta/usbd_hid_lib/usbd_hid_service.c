@@ -24,7 +24,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug hid report
-#define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
+#define NRF_LOG_HEXDUMP_DEBUG_REPORT 1
 
 /**
  * @brief Enable USB power detection
@@ -139,6 +139,14 @@ static bool usbd_hid_frame_receive(uint8_t *p_buff, size_t size)
     static size_t payload_len;
 
     if (size == 0) {
+        return false;
+    }
+
+    // CIDが、ブロードキャスト用か、現在有効である値かチェック
+    uint32_t recv_CID = get_CID(p_buff);
+    if (recv_CID != USBD_HID_BROADCAST && recv_CID != get_current_CID()) {
+        // NGであればパケットを処理せず、リクエストフレームを初期化
+        memset(&request_frame_buffer, 0, sizeof(request_frame_buffer));
         return false;
     }
     

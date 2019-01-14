@@ -52,7 +52,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
-        dump_hid_init_packet("Send ", hid_fido_send_buffer_length, res);
+        dump_hid_init_packet("Send ", res);
 
         // シーケンスを初期化
         seq = 0;
@@ -64,7 +64,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.cont.payload, payload_data + offset, xfer_data_len);
-        dump_hid_cont_packet("Send ", hid_fido_send_buffer_length, res);
+        dump_hid_cont_packet("Send ", res);
     }
 }
 
