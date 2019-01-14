@@ -32,6 +32,18 @@ NRF_LOG_MODULE_REGISTER();
 // タイムアウトが検知されたかどうかを保持するフラグ
 static bool is_timeout_detected;
 
+static void hid_fido_command_ping(void)
+{
+    // PINGの場合は
+    // リクエストのHIDヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t *data = hid_fido_receive_apdu()->data;
+    size_t   length = hid_fido_receive_apdu()->data_length;
+    hid_fido_send_command_response(cid, cmd, data, length);
+}
+
 static void send_error_command_response(uint8_t error_code) 
 {
     // U2F ERRORコマンドに対応する
@@ -58,6 +70,9 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 #if CTAP2_SUPPORTED
         case CTAP2_COMMAND_INIT:
             hid_ctap2_command_init();
+            break;
+        case CTAP2_COMMAND_PING:
+            hid_fido_command_ping();
             break;
 #else
         case U2F_COMMAND_HID_INIT:
@@ -113,6 +128,12 @@ void hid_fido_command_on_report_completed(void)
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
+        case CTAP2_COMMAND_INIT:
+            NRF_LOG_INFO("CTAPHID_INIT end");
+            break;
+        case CTAP2_COMMAND_PING:
+            NRF_LOG_INFO("CTAPHID_PING end");
+            break;
         case U2F_COMMAND_MSG:
             hid_u2f_command_msg_report_sent(is_timeout_detected);
             break;
