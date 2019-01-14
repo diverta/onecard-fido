@@ -24,7 +24,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug hid report
-#define NRF_LOG_HEXDUMP_DEBUG_REPORT 1
+#define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
 
 /**
  * @brief Enable USB power detection
