@@ -20,6 +20,11 @@ void init_CID(void)
     CID_for_initial = USBD_HID_INITIAL_CID;
 }
 
+uint32_t get_current_CID(void)
+{
+    return CID_for_initial;
+}
+
 uint32_t get_incremented_CID(void)
 {
     return ++CID_for_initial;
@@ -50,15 +55,15 @@ size_t get_payload_length(USB_HID_MSG_T *recv_msg)
     return ((recv_msg->pkt.init.bcnth << 8) & 0xff00) | (recv_msg->pkt.init.bcntl & 0x00ff);
 }
 
-void dump_hid_init_packet(char *msg_header, size_t size, USB_HID_MSG_T *recv_msg)
+void dump_hid_init_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
 {
     size_t len = get_payload_length(recv_msg);
-    NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
-        msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
+    NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
+        msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
 }
 
-void dump_hid_cont_packet(char *msg_header, size_t size, USB_HID_MSG_T *recv_msg)
+void dump_hid_cont_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
 {
-    NRF_LOG_DEBUG("%s(%3d bytes) CID: 0x%08x, SEQ: 0x%02x",
-        msg_header, size, get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
+    NRF_LOG_DEBUG("%s CID: 0x%08x, SEQ: 0x%02x",
+        msg_header, get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
 }
