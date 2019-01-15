@@ -20,7 +20,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // キープアライブ・タイマー
 #include "app_timer.h"
-#define KEEPALIVE_INTERVAL_MSEC 500
 
 APP_TIMER_DEF(m_fido_command_timer_id);
 static bool app_timer_created = false;
@@ -67,8 +66,6 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
 
     // LED点滅を開始
     fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
-    
-    NRF_LOG_INFO("User presence verify start ");
 }
 
 uint8_t fido_user_presence_verify_end(void)
@@ -80,6 +77,5 @@ uint8_t fido_user_presence_verify_end(void)
     fido_user_presence_terminate();
     
     // User presence byte(0x01)を生成
-    NRF_LOG_INFO("User presence verified ");
     return 0x01;
 }

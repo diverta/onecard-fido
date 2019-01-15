@@ -52,7 +52,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
-        dump_hid_init_packet("Send ", res);
+        dump_hid_init_packet("Send", res);
 
         // シーケンスを初期化
         seq = 0;
@@ -64,7 +64,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
         // パケットデータを設定
         memcpy(res->pkt.cont.payload, payload_data + offset, xfer_data_len);
-        dump_hid_cont_packet("Send ", res);
+        dump_hid_cont_packet("Send", res);
     }
 }
 
@@ -80,7 +80,14 @@ static void hid_fido_send_setup(uint32_t cid, uint8_t cmd, uint8_t *payload_data
     send_info_t.sent_length = 0;
 }
 
-static void hid_fido_send_input_report(void)
+//
+// hid_fido_send_input_report実行後に、
+// hid_fido_send_input_report_completeを
+// 実行しないかどうかを保持するフラグ
+// 
+static bool no_callback_input_report_complete;
+
+static void hid_fido_send_input_report(bool no_callback)
 {
     size_t  xfer_data_max;
     size_t  xfer_data_len;
@@ -106,10 +113,18 @@ static void hid_fido_send_input_report(void)
 
     // 送信済みバイト数を更新
     send_info_t.sent_length += xfer_data_len;
+    
+    // フラグを退避
+    no_callback_input_report_complete = no_callback;
 }
 
 void hid_fido_send_input_report_complete()
 {
+    if (no_callback_input_report_complete) {
+        // 実行する必要がない場合はスキップ
+        return;
+    }
+
     // hid_fido_send_input_report による
     // フレームの送信が正常に完了した時の処理
     //   hid_user_ev_handlerのイベント
@@ -125,14 +140,14 @@ void hid_fido_send_input_report_complete()
         
     } else {
         // 次のフレームの送信を実行
-        hid_fido_send_input_report();
+        hid_fido_send_input_report(no_callback_input_report_complete);
     }
 }
 
 void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
 {
     hid_fido_send_setup(cid, cmd, response_buffer, response_length);
-    hid_fido_send_input_report();
+    hid_fido_send_input_report(false);
 }
 
 void hid_fido_send_error_command_response(uint32_t cid, uint8_t error_cmd, uint8_t error_code) 
@@ -144,5 +159,17 @@ void hid_fido_send_error_command_response(uint32_t cid, uint8_t error_cmd, uint8
     // FIDO ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     hid_fido_send_setup(cid, error_cmd, err_response_buffer, err_response_length);
-    hid_fido_send_input_report();
+    hid_fido_send_input_report(false);
+}
+
+void hid_fido_send_command_response_no_callback(uint32_t cid, uint8_t cmd, uint8_t status_code) 
+{
+    // レスポンスデータを編集 (1 bytes)
+    uint8_t cmd_response_buffer[1] = {status_code};
+    size_t  cmd_response_length = sizeof(cmd_response_buffer); 
+
+    // FIDO ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    hid_fido_send_setup(cid, cmd, cmd_response_buffer, cmd_response_length);
+    hid_fido_send_input_report(true);
 }

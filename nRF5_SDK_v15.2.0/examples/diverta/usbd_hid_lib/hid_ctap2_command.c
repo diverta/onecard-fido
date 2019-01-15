@@ -29,6 +29,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for user presence test
+#include "fido_user_presence.h"
+
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 
@@ -82,6 +85,8 @@ bool hid_ctap2_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
+        // キープアライブを停止
+        fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
         resume_response_process();
         return true;
@@ -139,10 +144,22 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
     send_ctap2_command_response(ctap2_status, 1);
 }
 
+static void command_timer_handler(void *p_context)
+{
+    // キープアライブ・コマンドを実行する
+    UNUSED_PARAMETER(p_context);
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint32_t cmd = CTAP2_COMMAND_KEEPALIVE;
+    hid_fido_send_command_response_no_callback(cid, cmd, CTAP2_STATUS_UPNEEDED);
+}
+
 static void command_authenticator_make_credential(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
+
+    // ユーザー所在確認のためのキープアライブタイマーを生成する
+    fido_user_presence_init(command_timer_handler);
 
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
@@ -158,9 +175,9 @@ static void command_authenticator_make_credential(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
+        // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorMakeCredential: waiting to complete the test of user presence");
-        // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
@@ -249,9 +266,9 @@ static void command_authenticator_get_assertion(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
+        // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
-        // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 

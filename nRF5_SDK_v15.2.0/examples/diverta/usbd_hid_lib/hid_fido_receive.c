@@ -244,7 +244,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
     for (int n = 0; n < request_frame_number; n++) {
         USB_HID_MSG_T *req = (USB_HID_MSG_T *)(request_frame_buffer + n * USBD_HID_PACKET_SIZE);
         if (n == 0) {
-            dump_hid_init_packet("Recv ", req);
+            dump_hid_init_packet("Recv", req);
 
             // payload長を取得し、リクエストデータ領域に格納
             payload_len = get_payload_length(req);
@@ -261,7 +261,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
             hid_fido_command_on_report_started();
             
         } else {
-            dump_hid_cont_packet("Recv ", req);
+            dump_hid_cont_packet("Recv", req);
 
             // リクエストデータ領域に格納
             size_t remain = payload_len - pos;

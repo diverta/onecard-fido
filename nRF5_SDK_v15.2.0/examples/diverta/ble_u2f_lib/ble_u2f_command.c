@@ -52,6 +52,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         // 0x03 ("enforce-user-presence-and-sign") 
         // ユーザー所在確認が取れたと判定し、
         // キープアライブを停止
+        NRF_LOG_INFO("ble_u2f_authenticate: completed the test of user presence");
         m_u2f_context.user_presence_byte = fido_user_presence_verify_end();
 
         // Authenticationの後続処理を実行する

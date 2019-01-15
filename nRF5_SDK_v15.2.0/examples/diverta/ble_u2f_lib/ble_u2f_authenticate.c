@@ -283,6 +283,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // キープアライブ送信を開始する
         // ステータスバイトにTUP_NEEDED(0x02)を設定
+        NRF_LOG_INFO("ble_u2f_authenticate: waiting to complete the test of user presence");
         p_u2f_context->keepalive_status_byte = 0x02;
         fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
         return;
