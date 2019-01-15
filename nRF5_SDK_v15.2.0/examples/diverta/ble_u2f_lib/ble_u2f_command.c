@@ -11,7 +11,6 @@
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
 #include "ble_u2f_securekey.h"
-#include "ble_u2f_user_presence.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_flash.h"
 #include "ble_u2f_util.h"
@@ -20,6 +19,9 @@
 #define NRF_LOG_MODULE_NAME ble_u2f_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// for user presence test
+#include "fido_user_presence.h"
 
 // Flash ROM更新が完了時、
 // 後続処理が使用するデータを共有
@@ -50,7 +52,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         // 0x03 ("enforce-user-presence-and-sign") 
         // ユーザー所在確認が取れたと判定し、
         // キープアライブを停止
-        ble_u2f_user_presence_verify_end(&m_u2f_context);
+        m_u2f_context.user_presence_byte = fido_user_presence_verify_end();
 
         // Authenticationの後続処理を実行する
         ble_u2f_authenticate_resume_process(&m_u2f_context);
@@ -83,7 +85,7 @@ void ble_u2f_command_initialize_context(void)
 void ble_u2f_command_finalize_context(void)
 {
     // ユーザー所在確認を停止(キープアライブを停止)
-    ble_u2f_user_presence_terminate(&m_u2f_context);
+    fido_user_presence_terminate();
     NRF_LOG_DEBUG("ble_u2f_command_finalize_context done ");
 }
 

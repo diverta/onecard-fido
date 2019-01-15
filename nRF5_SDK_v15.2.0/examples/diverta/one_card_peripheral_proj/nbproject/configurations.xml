@@ -32,8 +32,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_status.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_status_retry.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_status_retry.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_user_presence.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_user_presence.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_util.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_util.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
@@ -74,6 +72,8 @@
       <itemPath>../fido_lib/fido_processing_led.h</itemPath>
       <itemPath>../fido_lib/fido_request_apdu.c</itemPath>
       <itemPath>../fido_lib/fido_request_apdu.h</itemPath>
+      <itemPath>../fido_lib/fido_user_presence.c</itemPath>
+      <itemPath>../fido_lib/fido_user_presence.h</itemPath>
     </logicalFolder>
     <logicalFolder name="generic"
                    displayName="generic"
@@ -2939,16 +2939,6 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_user_presence.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
       <item path="../ble_u2f_lib/ble_u2f_util.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
           <incDir>
@@ -3023,6 +3013,10 @@
       <item path="../fido_lib/fido_processing_led.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido_lib/fido_request_apdu.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../fido_lib/fido_user_presence.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_user_presence.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">
