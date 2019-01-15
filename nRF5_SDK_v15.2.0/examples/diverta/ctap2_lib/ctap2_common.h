@@ -36,6 +36,7 @@ extern "C" {
 #define CTAP2_COMMAND_PING      0x81
 #define CTAP2_COMMAND_INIT      0x86
 #define CTAP2_COMMAND_CBOR      0x90
+#define CTAP2_COMMAND_CANCEL    0x91
 #define CTAP2_COMMAND_ERROR     0xbf
 #define CTAP2_COMMAND_KEEPALIVE 0xbb
 

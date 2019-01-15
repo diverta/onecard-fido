@@ -144,22 +144,20 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
     send_ctap2_command_response(ctap2_status, 1);
 }
 
-static void command_timer_handler(void *p_context)
+void hid_ctap2_command_keepalive_timer_handler(void)
 {
-    // キープアライブ・コマンドを実行する
-    UNUSED_PARAMETER(p_context);
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint32_t cmd = CTAP2_COMMAND_KEEPALIVE;
-    hid_fido_send_command_response_no_callback(cid, cmd, CTAP2_STATUS_UPNEEDED);
+    if (is_tup_needed) {
+        // キープアライブ・コマンドを実行する
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        uint32_t cmd = CTAP2_COMMAND_KEEPALIVE;
+        hid_fido_send_command_response_no_callback(cid, cmd, CTAP2_STATUS_UPNEEDED);
+    }
 }
 
 static void command_authenticator_make_credential(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
-
-    // ユーザー所在確認のためのキープアライブタイマーを生成する
-    fido_user_presence_init(command_timer_handler);
 
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
@@ -481,5 +479,21 @@ void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected)
     // LEDを消灯させる
     if (is_timeout_detected) {
         fido_processing_led_off();
+    }
+}
+
+void hid_ctap2_command_cancel(void)
+{
+    // キープアライブ中の場合は停止
+    if (is_tup_needed) {
+        is_tup_needed = false;
+        fido_user_presence_verify_end();
+        // キャンセルレスポンスを戻す
+        //   CMD:    CTAPHID_CBOR
+        //   status: CTAP2_ERR_KEEPALIVE_CANCEL
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        hid_fido_send_command_response_no_callback(cid, CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
+        NRF_LOG_INFO("CTAPHID_CANCEL done with CBOR command");
+        return;
     }
 }

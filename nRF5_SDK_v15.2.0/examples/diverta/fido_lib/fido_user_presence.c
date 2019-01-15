@@ -21,10 +21,24 @@ NRF_LOG_MODULE_REGISTER();
 // キープアライブ・タイマー
 #include "app_timer.h"
 
+// for keepalive_timer_handler
+#include "hid_ctap2_command.h"
+#include "ble_u2f_command.h"
+
 APP_TIMER_DEF(m_fido_command_timer_id);
 static bool app_timer_created = false;
 
-void fido_user_presence_init(app_timer_timeout_handler_t command_timer_handler)
+static void command_timer_handler(void *p_context)
+{
+    // キープアライブ・コマンドを実行する
+    if (p_context == NULL) {
+        hid_ctap2_command_keepalive_timer_handler();
+    } else {
+        ble_u2f_command_keepalive_timer_handler(p_context);
+    }
+}
+
+static void fido_user_presence_init(void)
 {
     uint32_t err_code;
     if (app_timer_created == false) {
@@ -53,6 +67,8 @@ void fido_user_presence_terminate(void)
 
 void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
 {
+    // タイマーが生成されていない場合は生成する
+    fido_user_presence_init();
     if (app_timer_created == false) {
         return;
     }

@@ -85,6 +85,9 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor();
             break;
+        case CTAP2_COMMAND_CANCEL:
+            hid_ctap2_command_cancel();
+            break;
         default:
             break;
     }
@@ -189,6 +192,7 @@ bool hid_fido_command_is_valid(uint8_t command)
 
         // CTAP2関連コマンド
         case CTAP2_COMMAND_CBOR:
+        case CTAP2_COMMAND_CANCEL:
             return true;
         default:
             return false;

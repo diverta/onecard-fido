@@ -7,8 +7,6 @@
 #ifndef FIDO_USER_PRESENCE_H
 #define FIDO_USER_PRESENCE_H
 
-#include "app_timer.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +15,6 @@ extern "C" {
 #define U2F_KEEPALIVE_INTERVAL_MSEC   500
 #define CTAP2_KEEPALIVE_INTERVAL_MSEC 100
 
-void    fido_user_presence_init(app_timer_timeout_handler_t command_timer_handler);
 void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
 uint8_t fido_user_presence_verify_end(void);

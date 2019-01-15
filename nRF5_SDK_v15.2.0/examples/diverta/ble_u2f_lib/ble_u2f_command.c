@@ -304,3 +304,10 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
             break;
     }
 }
+
+void ble_u2f_command_keepalive_timer_handler(void *p_context)
+{
+    // キープアライブ・コマンドを実行する
+    ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
+    ble_u2f_send_keepalive_response(p_u2f_context);
+}

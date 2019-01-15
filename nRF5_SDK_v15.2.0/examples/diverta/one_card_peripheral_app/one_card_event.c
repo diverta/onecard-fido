@@ -27,16 +27,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_idling_led.h"
 #include "fido_common.h"
 
-// for user presence test
-#include "fido_user_presence.h"
-
-static void command_timer_handler(void *p_context)
-{
-    // キープアライブ・コマンドを実行する
-    ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
-    ble_u2f_send_keepalive_response(p_u2f_context);
-}
-
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
     // U2Fクライアントとの接続が行われた時は、
@@ -45,9 +35,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を初期化する
     ble_u2f_command_initialize_context();
-
-    // ユーザー所在確認のためのキープアライブタイマーを生成する
-    fido_user_presence_init(command_timer_handler);
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     ble_u2f_comm_interval_timer_stop(p_u2f);

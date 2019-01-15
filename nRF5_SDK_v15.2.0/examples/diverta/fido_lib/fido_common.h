@@ -41,6 +41,8 @@ extern "C" {
 #define CTAP2_ERR_TOO_MANY_ELEMENTS     0x17
 #define CTAP2_ERR_PROCESSING            0x21
 #define CTAP2_ERR_UNSUPPORTED_ALGORITHM 0x26
+#define CTAP2_ERR_KEEPALIVE_CANCEL      0x2d
+#define CTAP2_ERR_NO_CREDENTIALS        0x2e
 #define CTAP1_ERR_OTHER                 0x7f
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff
