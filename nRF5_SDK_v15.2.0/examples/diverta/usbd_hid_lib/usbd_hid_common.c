@@ -58,8 +58,13 @@ size_t get_payload_length(USB_HID_MSG_T *recv_msg)
 void dump_hid_init_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
 {
     size_t len = get_payload_length(recv_msg);
-    NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
-        msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
+    if (len == 1) {
+        NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Status(0x%02x)",
+            msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, recv_msg->pkt.init.payload[0]);
+    } else {
+        NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
+            msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
+    }
 }
 
 void dump_hid_cont_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
