@@ -159,7 +159,7 @@ void hid_fido_send_error_command_response(uint32_t cid, uint8_t error_cmd, uint8
     // FIDO ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     hid_fido_send_setup(cid, error_cmd, err_response_buffer, err_response_length);
-    hid_fido_send_input_report(false);
+    hid_fido_send_input_report(true);
 }
 
 void hid_fido_send_command_response_no_callback(uint32_t cid, uint8_t cmd, uint8_t status_code) 

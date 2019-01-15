@@ -167,6 +167,7 @@ static void command_authenticator_make_credential(void)
     uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorMakeCredential: failed to decode CBOR request");
         send_ctap2_command_error_response(ctap2_status);
         return;
     }
@@ -258,6 +259,7 @@ static void command_authenticator_get_assertion(void)
     uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorGetAssertion: failed to decode CBOR request");
         send_ctap2_command_error_response(ctap2_status);
         return;
     }
