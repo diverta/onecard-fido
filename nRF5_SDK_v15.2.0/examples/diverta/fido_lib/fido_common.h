@@ -32,6 +32,7 @@ extern "C" {
 #define CTAP1_ERR_TIMEOUT               0x05
 #define CTAP1_ERR_CHANNEL_BUSY          0x06
 #define CTAP1_ERR_LOCK_REQUIRED         0x0a
+#define CTAP1_ERR_INVALID_CHANNEL       0x0b
 #define CTAP2_ERR_CBOR_PARSING          0x10
 #define CTAP2_ERR_CBOR_UNEXPECTED_TYPE  0x11
 #define CTAP2_ERR_INVALID_CBOR          0x12

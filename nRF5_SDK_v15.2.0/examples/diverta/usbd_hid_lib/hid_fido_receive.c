@@ -68,9 +68,6 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
                         + control_point_buffer[2]);
     p_hid_header->SEQ = 0xff;
 
-    NRF_LOG_DEBUG("INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
-        p_hid_header->CMD, p_hid_header->LEN, p_hid_header->SEQ);
-
     if (hid_fido_command_is_valid(p_hid_header->CMD) == false) {
         // HIDヘッダーに設定されたコマンドが不正の場合、
         // ここで処理を終了
@@ -83,7 +80,6 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     if (p_hid_header->LEN > USBD_HID_INIT_PAYLOAD_SIZE) {
         // HIDヘッダーに設定されたデータ長が
         // 57文字を超える場合、後続データがあると判断
-        NRF_LOG_DEBUG("CONT frame will receive ");
         p_hid_header->CONT = true;
     } else {
         p_hid_header->CONT = false;
@@ -180,9 +176,6 @@ static void extract_and_check_cont_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     // シーケンスを更新
     p_hid_header->SEQ = sequence;
 
-    NRF_LOG_DEBUG("CONT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
-        p_hid_header->CMD, p_hid_header->LEN, p_hid_header->SEQ);
-
     // コピー先となる領域が初期化されていない場合は終了
     if (p_apdu->data == NULL) {
         NRF_LOG_ERROR("APDU data buffer is not initialized ");
@@ -201,7 +194,25 @@ static void extract_and_check_request_data(uint32_t cid, uint8_t *payload, size_
     memcpy(control_point_buffer, payload, payload_size);
     control_point_buffer_length = payload_size;
 
-    if (control_point_buffer[0] & 0x80) {
+    // 受信データに設定されたコマンドバイトを取得
+    uint8_t recv_cmd = control_point_buffer[0];
+
+    if (cid != USBD_HID_BROADCAST && cid != get_current_CID()) {
+        // CIDが不正の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("Command not allowed on cid 0x%08x", cid);
+        hid_header_t.CID =   cid;
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
+
+    } else if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT) {
+        // CMDがINIT以外の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
+
+    } else if (recv_cmd & 0x80) {
         // 先頭データが２回連続で送信された場合はエラー
         if ((hid_header_t.CMD & 0x80) && hid_header_t.CONT == true) {
             NRF_LOG_ERROR("INIT frame received again while CONT is expected ");
@@ -235,6 +246,29 @@ static void extract_and_check_request_data(uint32_t cid, uint8_t *payload, size_
     }
 }
 
+static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
+{
+    uint8_t *cid = recv_msg->cid;
+    uint8_t  cmd = recv_msg->pkt.init.cmd;
+    size_t   len = get_payload_length(recv_msg);
+
+    if (cmd == CTAP2_COMMAND_CBOR) {
+        // CBORコマンドである場合を想定したログ
+        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) OPTION(0x%02x) LEN(%d)",
+            get_CID(cid), cmd, recv_msg->pkt.init.payload[0], len);
+
+    } else {
+        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
+            get_CID(cid), cmd, len);
+    }
+}
+
+static void dump_hid_cont_packet(USB_HID_MSG_T *recv_msg)
+{
+    NRF_LOG_DEBUG("CONT frame: CID(0x%08x) SEQ(0x%02x)",
+        get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
+}
+
 void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     static size_t pos;
@@ -244,7 +278,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
     for (int n = 0; n < request_frame_number; n++) {
         USB_HID_MSG_T *req = (USB_HID_MSG_T *)(request_frame_buffer + n * USBD_HID_PACKET_SIZE);
         if (n == 0) {
-            dump_hid_init_packet("Recv", req);
+            dump_hid_init_packet(req);
 
             // payload長を取得し、リクエストデータ領域に格納
             payload_len = get_payload_length(req);
@@ -261,7 +295,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
             hid_fido_command_on_report_started();
             
         } else {
-            dump_hid_cont_packet("Recv", req);
+            dump_hid_cont_packet(req);
 
             // リクエストデータ領域に格納
             size_t remain = payload_len - pos;
