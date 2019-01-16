@@ -38,6 +38,7 @@ HID_HEADER_T *hid_fido_receive_hid_header(void);
 FIDO_APDU_T  *hid_fido_receive_apdu(void);
 
 void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
+bool hid_fido_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number);
 
 #ifdef __cplusplus
 }

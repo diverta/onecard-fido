@@ -308,3 +308,80 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
         }        
     }
 }
+
+static bool is_init_frame(uint8_t cmd, bool remaining)
+{
+    // hid_fido_receive_request_frame関数で受信した
+    // HIDサービスのフレームデータについて、
+    // INITフレーム or CONTフレームのいずれであるかのチェックを行う。
+    if ((cmd & 0x80) == 0x00) {
+        // １バイト目（CMD or SEQ）の先頭ビットが立っていない場合は
+        // 無条件でCONTフレームであると判定
+        return false;
+
+    } else if (cmd == FIDO_COMMAND_INIT) {
+        // HID INITコマンドの場合は、
+        // CONTフレーム受信の途中であっても
+        // 無条件でINITフレームであると判定
+        // （直前に受信したコマンドの全フレームは無効となる）
+        return true;
+
+    } else if (remaining) {
+        // １バイト目（CMD or SEQ）の先頭ビットが立っている場合、
+        // 受信されていないCONTフレームが残っている時は
+        // CONTフレームであると判定
+        return false;
+
+    } else {
+        // INITフレームであると判定
+        return true;
+    }
+}
+
+bool hid_fido_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number)
+{
+    static size_t pos;
+    static size_t payload_len;
+    static bool   remaining = false;
+
+    if (size == 0) {
+        return false;
+    }
+
+    USB_HID_MSG_T *req = (USB_HID_MSG_T *)p_buff;
+    uint8_t cmd = req->pkt.init.cmd;
+
+    if (is_init_frame(cmd, remaining)) {
+        // 先頭フレームであればpayload長を取得
+        payload_len = get_payload_length(req);
+        
+        // フレームが最後かどうかを判定するための受信済みデータ長
+        pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
+
+        // リクエストフレーム全体を一時領域に格納
+        memset(request_frame_buffer, 0, USBD_HID_MAX_PAYLOAD_SIZE);
+        memcpy(request_frame_buffer, p_buff, size);
+        *request_frame_number = 1;
+
+    } else {
+        // 後続フレームの場合
+        // フレームが最後かどうかを判定するための受信済みデータ長を更新
+        size_t remain = payload_len - pos;
+        size_t cnt = (remain < USBD_HID_CONT_PAYLOAD_SIZE) ? remain : USBD_HID_CONT_PAYLOAD_SIZE;
+        pos += cnt;
+
+        // リクエストフレーム全体を一時領域に格納
+        memcpy(request_frame_buffer + (*request_frame_number) * USBD_HID_PACKET_SIZE, 
+            p_buff, size);
+        (*request_frame_number)++;
+    }
+
+    // リクエストデータを全て受信したらtrueを戻す
+    if (pos == payload_len) {
+        remaining = false;
+        return true;
+    } else {
+        remaining = true;
+        return false;
+    }
+}
