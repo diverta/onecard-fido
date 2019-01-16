@@ -52,9 +52,6 @@ uint32_t get_CID(uint8_t *cid);
 void     set_CID(uint8_t *cid, uint32_t _CID);
 size_t   get_payload_length(USB_HID_MSG_T *recv_msg);
 
-void     dump_hid_init_packet(char *msg_header, USB_HID_MSG_T *recv_msg);
-void     dump_hid_cont_packet(char *msg_header, USB_HID_MSG_T *recv_msg);
-
 #ifdef __cplusplus
 }
 #endif

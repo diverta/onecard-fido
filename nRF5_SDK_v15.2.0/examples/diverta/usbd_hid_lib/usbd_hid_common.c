@@ -7,11 +7,6 @@
 #include <stdio.h>
 #include "usbd_hid_common.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME usbd_hid_common
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
 // HID INITコマンドで新規発行するHIDを保持
 static uint32_t CID_for_initial;
 
@@ -53,22 +48,4 @@ void set_CID(uint8_t *cid, uint32_t _CID)
 size_t get_payload_length(USB_HID_MSG_T *recv_msg)
 {
     return ((recv_msg->pkt.init.bcnth << 8) & 0xff00) | (recv_msg->pkt.init.bcntl & 0x00ff);
-}
-
-void dump_hid_init_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
-{
-    size_t len = get_payload_length(recv_msg);
-    if (len == 1) {
-        NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Status(0x%02x)",
-            msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, recv_msg->pkt.init.payload[0]);
-    } else {
-        NRF_LOG_DEBUG("%s CID: 0x%08x, CMD: 0x%02x, Payload(%3d bytes)",
-            msg_header, get_CID(recv_msg->cid), recv_msg->pkt.init.cmd, len);
-    }
-}
-
-void dump_hid_cont_packet(char *msg_header, USB_HID_MSG_T *recv_msg)
-{
-    NRF_LOG_DEBUG("%s CID: 0x%08x, SEQ: 0x%02x",
-        msg_header, get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
 }

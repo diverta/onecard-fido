@@ -50,6 +50,9 @@ static void send_error_command_response(uint8_t error_code)
     // レスポンスデータを送信パケットに設定し送信
     uint32_t cid = hid_fido_receive_hid_header()->CID;
     hid_fido_send_error_command_response(cid, U2F_COMMAND_ERROR, error_code);
+
+    // 処理タイムアウト監視を停止
+    usbd_hid_comm_interval_timer_stop();
 }
 
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
