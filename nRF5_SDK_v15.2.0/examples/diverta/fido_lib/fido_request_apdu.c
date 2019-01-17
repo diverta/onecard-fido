@@ -14,6 +14,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug receiving data
+#define NRF_LOG_DEBUG_RECEIVING false
+
 // FIDO機能リクエストAPDU編集用の作業領域（固定長）
 static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
 
@@ -170,11 +173,13 @@ void fido_request_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_poi
     memcpy(p_apdu->data, received_data, received_data_length);
     p_apdu->data_length = received_data_length;
 
+#if NRF_LOG_DEBUG_RECEIVING
     if (p_apdu->data_length < p_apdu->Lc) {
         NRF_LOG_DEBUG("INIT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
         NRF_LOG_DEBUG("INIT frame: received data (%d bytes) ", p_apdu->data_length);
     }
+#endif
 }
 
 void fido_request_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
@@ -194,9 +199,12 @@ void fido_request_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_poi
     // コピー済みのデータの直後に取得したデータを連結
     memcpy(p_apdu->data + p_apdu->data_length, received_data, received_data_length);
     p_apdu->data_length += received_data_length;
+
+#if NRF_LOG_DEBUG_RECEIVING
     if (p_apdu->data_length < p_apdu->Lc) {
         NRF_LOG_DEBUG("CONT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
         NRF_LOG_DEBUG("CONT frame: received data (%d bytes) ", p_apdu->data_length);
     }
+#endif
 }

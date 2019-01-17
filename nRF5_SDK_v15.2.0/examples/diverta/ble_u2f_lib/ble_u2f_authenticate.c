@@ -7,7 +7,6 @@
 #include "ble_u2f_flash.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_user_presence.h"
 #include "ble_u2f_util.h"
 #include "u2f_keyhandle.h"
 
@@ -16,6 +15,8 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for user presence test
+#include "fido_user_presence.h"
 
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
 {
@@ -282,8 +283,9 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // キープアライブ送信を開始する
         // ステータスバイトにTUP_NEEDED(0x02)を設定
+        NRF_LOG_INFO("ble_u2f_authenticate: waiting to complete the test of user presence");
         p_u2f_context->keepalive_status_byte = 0x02;
-        ble_u2f_user_presence_verify_start(p_u2f_context);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
         return;
     }
 

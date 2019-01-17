@@ -36,7 +36,9 @@ extern "C" {
 #define CTAP2_COMMAND_PING      0x81
 #define CTAP2_COMMAND_INIT      0x86
 #define CTAP2_COMMAND_CBOR      0x90
+#define CTAP2_COMMAND_CANCEL    0x91
 #define CTAP2_COMMAND_ERROR     0xbf
+#define CTAP2_COMMAND_KEEPALIVE 0xbb
 
 // CTAP2コマンドバイトの識別用
 #define CTAP2_CMD_MAKE_CREDENTIAL       0x01
@@ -52,6 +54,9 @@ extern "C" {
 
 // CTAP2で許容されるメッセージの最大サイズ
 #define CTAP2_MAX_MESSAGE_SIZE  1200
+
+// キープアライブステータス
+#define CTAP2_STATUS_UPNEEDED   0x02
 
 //
 // CTAP2コマンドで共用する構造体

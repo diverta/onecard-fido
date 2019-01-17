@@ -32,6 +32,7 @@ extern "C" {
 #define CTAP1_ERR_TIMEOUT               0x05
 #define CTAP1_ERR_CHANNEL_BUSY          0x06
 #define CTAP1_ERR_LOCK_REQUIRED         0x0a
+#define CTAP1_ERR_INVALID_CHANNEL       0x0b
 #define CTAP2_ERR_CBOR_PARSING          0x10
 #define CTAP2_ERR_CBOR_UNEXPECTED_TYPE  0x11
 #define CTAP2_ERR_INVALID_CBOR          0x12
@@ -41,6 +42,8 @@ extern "C" {
 #define CTAP2_ERR_TOO_MANY_ELEMENTS     0x17
 #define CTAP2_ERR_PROCESSING            0x21
 #define CTAP2_ERR_UNSUPPORTED_ALGORITHM 0x26
+#define CTAP2_ERR_KEEPALIVE_CANCEL      0x2d
+#define CTAP2_ERR_NO_CREDENTIALS        0x2e
 #define CTAP1_ERR_OTHER                 0x7f
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff

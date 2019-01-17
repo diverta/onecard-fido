@@ -29,6 +29,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for user presence test
+#include "fido_user_presence.h"
+
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 
@@ -82,6 +85,8 @@ bool hid_ctap2_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
+        // キープアライブを停止
+        fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
         resume_response_process();
         return true;
@@ -139,6 +144,16 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
     send_ctap2_command_response(ctap2_status, 1);
 }
 
+void hid_ctap2_command_keepalive_timer_handler(void)
+{
+    if (is_tup_needed) {
+        // キープアライブ・コマンドを実行する
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        uint32_t cmd = CTAP2_COMMAND_KEEPALIVE;
+        hid_fido_send_command_response_no_callback(cid, cmd, CTAP2_STATUS_UPNEEDED);
+    }
+}
+
 static void command_authenticator_make_credential(void)
 {
     // ユーザー所在確認フラグをクリア
@@ -150,6 +165,7 @@ static void command_authenticator_make_credential(void)
     uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorMakeCredential: failed to decode CBOR request");
         send_ctap2_command_error_response(ctap2_status);
         return;
     }
@@ -158,9 +174,9 @@ static void command_authenticator_make_credential(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
+        // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorMakeCredential: waiting to complete the test of user presence");
-        // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
@@ -241,6 +257,7 @@ static void command_authenticator_get_assertion(void)
     uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorGetAssertion: failed to decode CBOR request");
         send_ctap2_command_error_response(ctap2_status);
         return;
     }
@@ -249,9 +266,9 @@ static void command_authenticator_get_assertion(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
+        // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
-        // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
@@ -462,5 +479,21 @@ void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected)
     // LEDを消灯させる
     if (is_timeout_detected) {
         fido_processing_led_off();
+    }
+}
+
+void hid_ctap2_command_cancel(void)
+{
+    // キープアライブ中の場合は停止
+    if (is_tup_needed) {
+        is_tup_needed = false;
+        fido_user_presence_verify_end();
+        // キャンセルレスポンスを戻す
+        //   CMD:    CTAPHID_CBOR
+        //   status: CTAP2_ERR_KEEPALIVE_CANCEL
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        hid_fido_send_command_response_no_callback(cid, CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
+        NRF_LOG_INFO("CTAPHID_CANCEL done with CBOR command");
+        return;
     }
 }

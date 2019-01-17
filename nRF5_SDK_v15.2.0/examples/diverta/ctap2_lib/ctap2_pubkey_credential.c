@@ -267,7 +267,7 @@ uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList
 
     // credentialIdリストに
     // 一致するrpIdがない場合はエラー
-    return CTAP2_ERR_PROCESSING;
+    return CTAP2_ERR_NO_CREDENTIALS;
 }
 
 uint8_t ctap2_pubkey_credential_number(void)

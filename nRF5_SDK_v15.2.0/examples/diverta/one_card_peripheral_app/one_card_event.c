@@ -21,7 +21,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_comm_interval_timer.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_pairing.h"
-#include "ble_u2f_user_presence.h"
 #include "ble_u2f_status.h"
 
 // for lighting LED
@@ -36,9 +35,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を初期化する
     ble_u2f_command_initialize_context();
-
-    // ユーザー所在確認のためのキープアライブタイマーを生成する
-    ble_u2f_user_presence_init();
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     ble_u2f_comm_interval_timer_stop(p_u2f);

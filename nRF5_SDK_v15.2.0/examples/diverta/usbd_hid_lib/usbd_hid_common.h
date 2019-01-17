@@ -16,6 +16,7 @@ extern "C" {
 #define USBD_HID_PACKET_SIZE 64
 #define USBD_HID_INIT_PAYLOAD_SIZE (USBD_HID_PACKET_SIZE-7)
 #define USBD_HID_CONT_PAYLOAD_SIZE (USBD_HID_PACKET_SIZE-5)
+#define USBD_HID_MAX_PAYLOAD_SIZE 2048
 
 // USB HIDサービスで使用するCIDの長さ（4バイト）
 #define USBD_HID_CID_LEN 4
@@ -51,9 +52,6 @@ uint32_t get_incremented_CID(void);
 uint32_t get_CID(uint8_t *cid);
 void     set_CID(uint8_t *cid, uint32_t _CID);
 size_t   get_payload_length(USB_HID_MSG_T *recv_msg);
-
-void     dump_hid_init_packet(char *msg_header, USB_HID_MSG_T *recv_msg);
-void     dump_hid_cont_packet(char *msg_header, USB_HID_MSG_T *recv_msg);
 
 #ifdef __cplusplus
 }

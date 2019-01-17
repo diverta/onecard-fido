@@ -150,6 +150,7 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_processing_led.c \
   $(FIDLIB_DIR)/fido_request_apdu.c \
+  $(FIDLIB_DIR)/fido_user_presence.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_flash.c \
@@ -168,7 +169,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_securekey.c \
   $(BLELIB_DIR)/ble_u2f_status.c \
   $(BLELIB_DIR)/ble_u2f_status_retry.c \
-  $(BLELIB_DIR)/ble_u2f_user_presence.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
   $(HIDLIB_DIR)/hid_ctap2_command.c \

@@ -56,7 +56,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
 {
     size_t    sz;
     size_t    map_length;
-    char      key[8];
+    char      key[16];
     int       ret;
     int       i;
     CborValue map;
@@ -134,7 +134,7 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
 {
     size_t    sz;
     size_t    map_length;
-    uint8_t   key[8];
+    uint8_t   key[16];
     int       ret;
     int       i;
     CborValue map;
@@ -311,7 +311,7 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
     CborValue map;
     size_t    map_length;
     int       i;
-    char      key[8];
+    char      key[16];
     size_t    sz;
     bool      b;
 
@@ -434,7 +434,6 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
     return CborNoError;
 }
 
-//uint8_t parse_allow_list(CTAP_CREDENTIAL_DESC_T *allowList, uint8_t *allowListSize, CborValue *it)
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 {
     int       ret;
