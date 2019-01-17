@@ -92,6 +92,10 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             hid_ctap2_command_cancel();
             break;
         default:
+            // 不正なコマンドであるため
+            // エラーレスポンスを送信
+            NRF_LOG_ERROR("Invalid command (0x%02x) ", cmd);
+            send_error_command_response(CTAP1_ERR_INVALID_COMMAND);
             break;
     }
 }

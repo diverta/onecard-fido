@@ -66,17 +66,6 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     p_hid_header->LEN = (uint32_t)(
                          (control_point_buffer[1] << 8 & 0xFF00) 
                         + control_point_buffer[2]);
-    p_hid_header->SEQ = 0xff;
-
-    if (hid_fido_command_is_valid(p_hid_header->CMD) == false) {
-        // HIDヘッダーに設定されたコマンドが不正の場合、
-        // ここで処理を終了
-        NRF_LOG_ERROR("Invalid command (0x%02x) ", p_hid_header->CMD);
-        p_hid_header->CMD =   FIDO_COMMAND_ERROR;
-        p_hid_header->ERROR = CTAP1_ERR_INVALID_COMMAND;
-        return false;
-    }
-
     if (p_hid_header->LEN > USBD_HID_INIT_PAYLOAD_SIZE) {
         // HIDヘッダーに設定されたデータ長が
         // 57文字を超える場合、後続データがあると判断
@@ -84,7 +73,9 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     } else {
         p_hid_header->CONT = false;
     }
-    
+    // SEQは 0xff で初期化しておく
+    p_hid_header->SEQ = 0xff;
+
     // HIDヘッダーだけの場合は、ここで処理を終了
     if (control_point_buffer_length == 3) {
         return true;
@@ -186,66 +177,6 @@ static void extract_and_check_cont_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     fido_request_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
-static void extract_and_check_request_data(uint32_t cid, uint8_t *payload, size_t payload_size)
-{
-    // FIDOクライアントから受信したリクエストデータを、内部バッファに保持
-    // （payloadはHIDヘッダーを含まないデータ）
-    memset(control_point_buffer, 0, sizeof(control_point_buffer));
-    memcpy(control_point_buffer, payload, payload_size);
-    control_point_buffer_length = payload_size;
-
-    // 受信データに設定されたコマンドバイトを取得
-    uint8_t recv_cmd = control_point_buffer[0];
-
-    if (cid != USBD_HID_BROADCAST && cid != get_current_CID()) {
-        // CIDが不正の場合
-        // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("Command not allowed on cid 0x%08x", cid);
-        hid_header_t.CID =   cid;
-        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
-        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
-
-    } else if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT) {
-        // CMDがINIT以外の場合
-        // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
-        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
-        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
-
-    } else if (recv_cmd & 0x80) {
-        // 先頭データが２回連続で送信された場合はエラー
-        if ((hid_header_t.CMD & 0x80) && hid_header_t.CONT == true) {
-            NRF_LOG_ERROR("INIT frame received again while CONT is expected ");
-            hid_header_t.CMD =   FIDO_COMMAND_ERROR;
-            hid_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
-
-        } else {
-            // HIDヘッダーとAPDUを初期化
-            memset(&hid_header_t, 0, sizeof(HID_HEADER_T));
-            memset(&apdu_t, 0, sizeof(FIDO_APDU_T));
-
-            // 初期化されたHIDヘッダーにCIDを再設定
-            hid_header_t.CID = cid;
-
-            // 先頭パケットに対する処理を行う
-            extract_and_check_init_packet(&hid_header_t, &apdu_t);
-        }
-
-    } else {
-        // 後続パケットに対する処理を行う
-        extract_and_check_cont_packet(&hid_header_t, &apdu_t);
-        hid_header_t.CONT = false;
-    }
-
-    if (apdu_t.data_length > apdu_t.Lc) {
-        // データヘッダー設定されたデータ長が不正の場合
-        // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("APDU data length(%d) exceeds Lc(%d) ", apdu_t.data_length, apdu_t.Lc);
-        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
-        hid_header_t.ERROR = CTAP1_ERR_INVALID_LENGTH;
-    }
-}
-
 static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
 {
     uint8_t *cid = recv_msg->cid;
@@ -269,6 +200,87 @@ static void dump_hid_cont_packet(USB_HID_MSG_T *recv_msg)
         get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
 }
 
+static void setup_control_point_buffer(uint8_t *payload, size_t payload_size)
+{
+    // FIDOクライアントから受信したリクエストフレームを、内部バッファに保持
+    // （payloadはHIDヘッダーを含まないデータ）
+    memset(control_point_buffer, 0, sizeof(control_point_buffer));
+    memcpy(control_point_buffer, payload, payload_size);
+    control_point_buffer_length = payload_size;
+}
+
+static void check_apdu_data_length(void)
+{
+    if (apdu_t.data_length > apdu_t.Lc) {
+        // データヘッダー設定されたデータ長が不正の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("APDU data length(%d) exceeds Lc(%d) ", apdu_t.data_length, apdu_t.Lc);
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_LENGTH;
+    }
+}
+
+static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
+{
+    // リクエストフレームを内部バッファに保持
+    setup_control_point_buffer(payload, payload_size);
+
+    if (cid != USBD_HID_BROADCAST && cid != get_current_CID()) {
+        // CIDが不正の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("Command not allowed on cid 0x%08x", cid);
+        hid_header_t.CID =   cid;
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
+        return;
+    }
+
+    // 受信データに設定されたコマンドバイトを取得
+    uint8_t recv_cmd = control_point_buffer[0];
+    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT) {
+        // CMDがINIT以外の場合
+        // エラーレスポンスメッセージを作成
+        NRF_LOG_ERROR("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
+        return;
+    }
+
+    // 先頭データが２回連続で送信された場合はエラー
+    if (hid_header_t.CONT == true) {
+        NRF_LOG_ERROR("INIT frame received again while CONT is expected ");
+        hid_header_t.CMD =   FIDO_COMMAND_ERROR;
+        hid_header_t.ERROR = CTAP1_ERR_INVALID_SEQ;
+        return;
+    }
+
+    // HIDヘッダーとAPDUを初期化
+    memset(&hid_header_t, 0, sizeof(HID_HEADER_T));
+    memset(&apdu_t, 0, sizeof(FIDO_APDU_T));
+
+    // 初期化されたHIDヘッダーにCIDを再設定
+    hid_header_t.CID = cid;
+
+    // 先頭パケットに対する処理を行う
+    extract_and_check_init_packet(&hid_header_t, &apdu_t);
+    
+    // データ長のチェックを行う
+    check_apdu_data_length();
+}
+
+static void receive_request_from_cont_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
+{
+    // リクエストフレームを内部バッファに保持
+    setup_control_point_buffer(payload, payload_size);
+
+    // 後続パケットに対する処理を行う
+    extract_and_check_cont_packet(&hid_header_t, &apdu_t);
+    hid_header_t.CONT = false;
+    
+    // データ長のチェックを行う
+    check_apdu_data_length();
+}
+
 void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     static size_t pos;
@@ -289,7 +301,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
 
             // リクエストデータのチェックと格納
             // （引数にはHIDヘッダーを含まないデータを渡す）
-            extract_and_check_request_data(cid, (uint8_t *)&req->pkt.init, pos + 3);
+            receive_request_from_init_frame(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
             // FIDOリクエスト受信開始時の処理を実行
             hid_fido_command_on_report_started();
@@ -304,7 +316,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
 
             // リクエストデータのチェックと格納
             // （引数にはHIDヘッダーを含まないデータを渡す）
-            extract_and_check_request_data(cid, (uint8_t *)&req->pkt.cont, cnt + 1);            
+            receive_request_from_cont_frame(cid, (uint8_t *)&req->pkt.cont, cnt + 1);            
         }        
     }
 }
