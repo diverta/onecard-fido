@@ -495,8 +495,7 @@ void hid_ctap2_command_cancel(void)
         // キャンセルレスポンスを戻す
         //   CMD:    CTAPHID_CBOR
         //   status: CTAP2_ERR_KEEPALIVE_CANCEL
-        uint32_t cid = hid_fido_receive_hid_header()->CID;
-        hid_fido_send_command_response_no_callback(cid, CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
+        hid_fido_command_send_status_response(CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
         NRF_LOG_INFO("CTAPHID_CANCEL done with CBOR command");
     }
 }

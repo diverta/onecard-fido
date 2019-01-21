@@ -44,15 +44,18 @@ static void hid_fido_command_ping(void)
     hid_fido_send_command_response(cid, cmd, data, length);
 }
 
-static void send_error_command_response(uint8_t error_code) 
+void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     uint32_t cid = hid_fido_receive_hid_header()->CID;
-    hid_fido_send_error_command_response(cid, U2F_COMMAND_ERROR, error_code);
+    hid_fido_send_command_response_no_callback(cid, cmd, status_code);
 
     // 処理タイムアウト監視を停止
     usbd_hid_comm_interval_timer_stop();
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
@@ -64,7 +67,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        send_error_command_response(hid_fido_receive_hid_header()->ERROR);
+        hid_fido_command_send_status_response(U2F_COMMAND_ERROR, hid_fido_receive_hid_header()->ERROR);
         return;
     }
 
@@ -104,7 +107,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             // 不正なコマンドであるため
             // エラーレスポンスを送信
             NRF_LOG_ERROR("Invalid command (0x%02x) ", cmd);
-            send_error_command_response(CTAP1_ERR_INVALID_COMMAND);
+            hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
 }
