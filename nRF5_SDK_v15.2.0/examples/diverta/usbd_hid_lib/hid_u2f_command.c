@@ -395,22 +395,15 @@ void hid_u2f_command_msg_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_u2f_command_msg_report_sent(bool is_timeout_detected)
+void hid_u2f_command_msg_report_sent(void)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
     uint8_t ins = hid_fido_receive_apdu()->INS;
-    char   *msg = is_timeout_detected ? "timed out" : "end";
     if (ins == U2F_REGISTER) {
-        NRF_LOG_INFO("U2F Register %s", msg);
+        NRF_LOG_INFO("U2F Register end");
 
     } else if (ins == U2F_AUTHENTICATE) {
-        NRF_LOG_INFO("U2F Authenticate %s", msg);
-    }
-
-    // タイムアウトが発生していた場合はここで
-    // LEDを消灯させる
-    if (is_timeout_detected) {
-        fido_processing_led_off();
+        NRF_LOG_INFO("U2F Authenticate end");
     }
 }

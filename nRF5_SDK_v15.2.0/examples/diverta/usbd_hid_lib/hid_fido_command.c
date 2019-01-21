@@ -21,6 +21,9 @@
 #include "u2f.h"
 #include "ctap2_common.h"
 
+// for processing LED on/off
+#include "fido_processing_led.h"
+
 // for lighting LED on/off
 #include "fido_idling_led.h"
 
@@ -28,9 +31,6 @@
 #define NRF_LOG_MODULE_NAME hid_fido_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// タイムアウトが検知されたかどうかを保持するフラグ
-static bool is_timeout_detected;
 
 static void hid_fido_command_ping(void)
 {
@@ -112,14 +112,6 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
-    //
-    // 先に処理タイムアウトが発生していた場合は以降の処理を行わない
-    // （後続処理による２重レスポンスを回避するための措置）
-    if (is_timeout_detected == true) {
-        return;
-    }
-
-    // Flash ROM更新後に行うべき後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
@@ -154,15 +146,12 @@ void hid_fido_command_on_report_completed(void)
             NRF_LOG_INFO("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg_report_sent(is_timeout_detected);
+            hid_u2f_command_msg_report_sent();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_report_sent(is_timeout_detected);
+            hid_ctap2_command_cbor_report_sent();
             break;
         default:
-            if (is_timeout_detected) {
-                NRF_LOG_ERROR("FIDO USB HID service timed out.");
-            }
             break;
     }
 }
@@ -172,9 +161,8 @@ void hid_fido_command_on_report_started(void)
     // FIDO機能リクエストの
     // 先頭フレーム受信時の処理を実行
     // 
-    // 処理タイムアウト監視を開始し、フラグをリセット
+    // 処理タイムアウト監視を開始
     usbd_hid_comm_interval_timer_start();
-    is_timeout_detected = false;
 
     // アイドル時点滅処理を停止
     fido_idling_led_off(LED_FOR_PROCESSING);
@@ -184,14 +172,12 @@ void hid_fido_command_on_process_timedout(void)
 {
     // 処理タイムアウト発生時の処理を実行
     //
-    // USBポートにタイムアウトを通知する。
-    // コマンドをU2F ERRORに変更のうえ、
-    // レスポンスデータを送信パケットに設定し送信
-    //   このレスポンスの送信完了後、
-    //   hid_fido_command_on_report_completed()が
-    //   コールバックされる
-    is_timeout_detected = true;
-    send_error_command_response(0x7f);
+    // 処理中表示LEDが点滅していた場合は
+    // ここでLEDを消灯させる
+    fido_processing_led_off();
+
+    // アイドル時点滅処理を再開
+    fido_idling_led_on(LED_FOR_PROCESSING);
 }
 
 bool hid_fido_command_is_valid(uint8_t command)

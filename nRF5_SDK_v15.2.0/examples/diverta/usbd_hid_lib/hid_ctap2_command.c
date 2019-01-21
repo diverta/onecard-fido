@@ -457,28 +457,21 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected)
+void hid_ctap2_command_cbor_report_sent(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    char *msg = is_timeout_detected ? "timed out" : "end";
     switch (get_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
-            NRF_LOG_INFO("authenticatorMakeCredential %s", msg);
+            NRF_LOG_INFO("authenticatorMakeCredential end");
             break;
         case CTAP2_CMD_GET_ASSERTION:
-            NRF_LOG_INFO("authenticatorGetAssertion %s", msg);
+            NRF_LOG_INFO("authenticatorGetAssertion end");
             break;
         case CTAP2_CMD_RESET:
-            NRF_LOG_INFO("authenticatorReset %s", msg);
+            NRF_LOG_INFO("authenticatorReset end");
             break;
         default:
             break;
-    }
-
-    // タイムアウトが発生していた場合はここで
-    // LEDを消灯させる
-    if (is_timeout_detected) {
-        fido_processing_led_off();
     }
 }
 
