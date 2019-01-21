@@ -17,6 +17,7 @@ void hid_ctap2_command_init(void);
 void hid_ctap2_command_cbor(void);
 void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt);
 void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected);
+void hid_ctap2_command_tup_cancel(void);
 void hid_ctap2_command_cancel(void);
 void hid_ctap2_command_keepalive_timer_handler(void);
 

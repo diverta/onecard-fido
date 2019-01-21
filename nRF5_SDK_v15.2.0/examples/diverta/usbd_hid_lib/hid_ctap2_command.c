@@ -482,18 +482,28 @@ void hid_ctap2_command_cbor_report_sent(bool is_timeout_detected)
     }
 }
 
-void hid_ctap2_command_cancel(void)
+void hid_ctap2_command_tup_cancel(void)
 {
-    // キープアライブ中の場合は停止
     if (is_tup_needed) {
+        // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
         fido_user_presence_verify_end();
+        NRF_LOG_INFO("canceled the test of user presence");
+    }
+}
+
+void hid_ctap2_command_cancel(void)
+{
+    if (is_tup_needed) {
+        // ユーザー所在確認待ちの場合はキャンセル
+        is_tup_needed = false;
+        fido_user_presence_verify_end();
+
         // キャンセルレスポンスを戻す
         //   CMD:    CTAPHID_CBOR
         //   status: CTAP2_ERR_KEEPALIVE_CANCEL
         uint32_t cid = hid_fido_receive_hid_header()->CID;
         hid_fido_send_command_response_no_callback(cid, CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
         NRF_LOG_INFO("CTAPHID_CANCEL done with CBOR command");
-        return;
     }
 }

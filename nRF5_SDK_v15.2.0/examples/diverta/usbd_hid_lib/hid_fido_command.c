@@ -68,6 +68,18 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         return;
     }
 
+    // ユーザー所在確認待ちが行われている場合
+    if (cmd == CTAP2_COMMAND_CANCEL) {
+        // キャンセルコマンドの場合は
+        // 所在確認待ちをキャンセルしたうえで
+        // キャンセルレスポンスを戻す
+        hid_ctap2_command_cancel();
+        return;
+    } else {
+        // 他のコマンドの場合は所在確認待ちをキャンセル
+        hid_ctap2_command_tup_cancel();
+    }
+
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
 #if CTAP2_SUPPORTED
@@ -87,9 +99,6 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor();
-            break;
-        case CTAP2_COMMAND_CANCEL:
-            hid_ctap2_command_cancel();
             break;
         default:
             // 不正なコマンドであるため
