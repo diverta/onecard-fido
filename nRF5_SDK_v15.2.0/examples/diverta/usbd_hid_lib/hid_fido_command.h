@@ -33,6 +33,7 @@ typedef struct {
     uint8_t cflags;
 } HID_INIT_RES_T;
 
+void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code);
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
 void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
 void hid_fido_command_on_report_started(void);
