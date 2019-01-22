@@ -15,7 +15,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#define NUM_OF_CBOR_ELEMENTS        5
+#define NUM_OF_CBOR_ELEMENTS        4
 #define NUM_OF_VERSIONS             2
 #define NUM_OF_OPTIONS              5
 
@@ -27,10 +27,13 @@ NRF_LOG_MODULE_REGISTER();
 
 //
 // aaguid（仮の値です）
-//   0xf8a011f38c0a4d15800617111f9edc7d
+//   0x2b2ecbb4-59b4-44fa-868d-a072485d8ae0
+// FIDOアライアンス提供のファイル
+//   Virtual Secp256R1 FIDO2 Conformance Testing CTAP2 Authenticator with Self(surrogate) attestation.json
+// の記述内容と整合させています。
 //
 static uint8_t CTAP_AAGUID[] = {
-    0xf8, 0xa0, 0x11, 0xf3, 0x8c, 0x0a, 0x4d, 0x15, 0x80, 0x06, 0x17, 0x11, 0x1f, 0x9e, 0xdc, 0x7d
+    0x2b, 0x2e, 0xcb, 0xb4, 0x59, 0xb4, 0x44, 0xfa, 0x86, 0x8d, 0xa0, 0x72, 0x48, 0x5d, 0x8a, 0xe0
 };
 
 uint8_t *ctap2_cbor_authgetinfo_aaguid()
@@ -49,7 +52,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
     CborEncoder array;
     CborEncoder map;
     CborEncoder options;
-    CborEncoder pins;
+  //CborEncoder pins;
 
     ret = cbor_encoder_create_map(encoder, &map, NUM_OF_CBOR_ELEMENTS);
     if (ret == CborNoError) {
@@ -150,6 +153,10 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
             }
         }
 
+        /*
+         * PIN認証機能は現在実装されていません。
+         * 実装されるまでは、このブロックをコメントアウトしておきます。
+         *
         // pinProtocols
         ret = cbor_encode_uint(&map, RESP_pinProtocols);
         if (ret == CborNoError) {
@@ -166,6 +173,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
                 return false;
             }
         }
+         */
     }
 
     ret = cbor_encoder_close_container(encoder, &map);
