@@ -395,7 +395,8 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、
+        // トークンカウンター削除完了
+        NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
         // レスポンスを生成してWebAuthnクライアントに戻す
         send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
 
