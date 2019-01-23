@@ -147,13 +147,13 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \
   $(FIDLIB_DIR)/fido_crypto_keypair.c \
+  $(FIDLIB_DIR)/fido_flash.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_processing_led.c \
   $(FIDLIB_DIR)/fido_request_apdu.c \
   $(FIDLIB_DIR)/fido_user_presence.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_crypto.c \
-  $(U2FLIB_DIR)/u2f_flash.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
@@ -162,7 +162,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_control_point.c \
   $(BLELIB_DIR)/ble_u2f_control_point_apdu.c \
   $(BLELIB_DIR)/ble_u2f_crypto.c \
-  $(BLELIB_DIR)/ble_u2f_flash.c \
   $(BLELIB_DIR)/ble_u2f_init.c \
   $(BLELIB_DIR)/ble_u2f_pairing.c \
   $(BLELIB_DIR)/ble_u2f_register.c \

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_util.h"
 
@@ -16,12 +16,24 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// 秘密鍵／証明書削除が完了したかどうかを保持
+static bool skey_cert_deleted = false;
+
 void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
 {
+    // 秘密鍵／証明書削除が完了した旨のフラグをクリア
+    skey_cert_deleted = false;
+
     // 秘密鍵／証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
     NRF_LOG_DEBUG("ble_u2f_securekey_erase start ");
-    if (ble_u2f_flash_keydata_delete() == false) {
+    if (fido_flash_skey_cert_delete() == false) {
+        ble_u2f_send_error_response(p_u2f_context, 0x9201);
+        return;
+    }
+    // トークンカウンターをFlash ROM領域から削除
+    // (fds_file_deleteが実行される)
+    if (fido_flash_token_counter_delete() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9201);
         return;
     }
@@ -37,12 +49,23 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        if (fido_crypto_ecb_init() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x9203);
+        if (skey_cert_deleted == false) {
+            // 秘密鍵／証明書削除が完了した旨のフラグを設定し、
+            // 次のイベント発生を待つ
+            skey_cert_deleted = true;
+            NRF_LOG_DEBUG("fido_flash_skey_cert_delete completed ");
+
+        } else {
+            // トークンカウンター削除が完了
+            NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
+
+            // 続いて、AES秘密鍵生成処理を行う
+            // (fds_record_update/writeまたはfds_gcが実行される)
+            if (fido_crypto_ecb_init() == false) {
+                ble_u2f_send_error_response(p_u2f_context, 0x9203);
+            }
         }
-        
+
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -110,11 +133,11 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
     NRF_LOG_DEBUG("ble_u2f_securekey_install_skey start ");
 
     // Flash ROMに登録済みのデータがあれば領域に読込
-    if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_read() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9312);
         return;
     }
-    uint32_t *securekey_buffer = p_u2f_context->securekey_buffer;
+    uint32_t *securekey_buffer = fido_flash_skey_cert_data();
 
     // リクエストデータのバイト変換を行う
     if (convert_skey_bytes_to_word(data, length, securekey_buffer) == false) {
@@ -124,7 +147,7 @@ void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context)
 
     // 秘密鍵をFlash ROMに格納する
     // (fds_record_update/writeまたはfds_gcが実行される)
-    if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_write() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9314);
     }
 }
@@ -155,7 +178,7 @@ void ble_u2f_securekey_install_skey_response(ble_u2f_context_t *p_u2f_context, f
 uint8_t *ble_u2f_securekey_skey(ble_u2f_context_t *p_u2f_context)
 {
     // 秘密鍵格納領域の開始アドレスを取得
-    uint32_t *skey_buffer = p_u2f_context->securekey_buffer;
+    uint32_t *skey_buffer = fido_flash_skey_cert_data();
     return (uint8_t *)skey_buffer;
 }
 
@@ -163,7 +186,7 @@ uint8_t *ble_u2f_securekey_skey(ble_u2f_context_t *p_u2f_context)
 uint8_t *ble_u2f_securekey_cert(ble_u2f_context_t *p_u2f_context)
 {
     // 証明書データ格納領域の開始アドレスを取得
-    uint32_t *cert_buffer = p_u2f_context->securekey_buffer + SKEY_WORD_NUM + 1;
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM + 1;
     return (uint8_t *)cert_buffer;
 }
 
@@ -171,7 +194,7 @@ uint8_t *ble_u2f_securekey_cert(ble_u2f_context_t *p_u2f_context)
 uint32_t ble_u2f_securekey_cert_length(ble_u2f_context_t *p_u2f_context)
 {
     // 証明書データ格納領域の長さを取得
-    uint32_t *cert_buffer = p_u2f_context->securekey_buffer + SKEY_WORD_NUM;
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM;
     uint32_t cert_buffer_length = *cert_buffer;
     return cert_buffer_length;
 }
@@ -191,13 +214,13 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
     NRF_LOG_DEBUG("ble_u2f_securekey_install_cert start ");
 
     // 登録済みのデータがあれば領域に読込
-    if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_read() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9322);
         return;
     }
 
     // 証明書データ格納領域の開始アドレスを取得
-    uint32_t *securekey_buffer = p_u2f_context->securekey_buffer;
+    uint32_t *securekey_buffer = fido_flash_skey_cert_data();
     uint32_t *cert_buffer = securekey_buffer + SKEY_WORD_NUM;
 
     // 証明書データの格納に必要なワード数をチェックする
@@ -217,7 +240,7 @@ void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context)
 
     // 証明書データをFlash ROMへ書込
     // (fds_record_update/writeまたはfds_gcが実行される)
-    if (ble_u2f_flash_keydata_write(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_write() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9324);
     }
 }

@@ -12,7 +12,7 @@
 
 #include "fds.h"
 
-#include "u2f_flash.h"
+#include "fido_flash.h"
 #include "u2f_keyhandle.h"
 #include "u2f_authenticate.h"
 #include "u2f_register.h"
@@ -176,14 +176,14 @@ static void u2f_register_do_process(void)
 
     NRF_LOG_INFO("U2F Register start");
 
-    if (u2f_flash_keydata_read() == false) {
+    if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         send_u2f_hid_error_report(0x9401);
         return;
     }
 
-    if (u2f_flash_keydata_available() == false) {
+    if (fido_flash_skey_cert_available() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         send_u2f_hid_error_report(0x9402);
@@ -264,7 +264,7 @@ static void u2f_authenticate_do_process(void)
     
     NRF_LOG_INFO("U2F Authenticate start");
 
-    if (u2f_flash_keydata_read() == false) {
+    if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         send_u2f_hid_error_report(0x9501);
@@ -284,14 +284,14 @@ static void u2f_authenticate_do_process(void)
     // appIdHashをリクエストデータから取得し、
     // それに紐づくトークンカウンターを検索
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-    if (u2f_flash_token_counter_read(p_appid_hash) == false) {
+    if (fido_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         NRF_LOG_ERROR("U2F Authenticate: token counter not found ");
         send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
         return;
     }
-    NRF_LOG_DEBUG("U2F Authenticate: token counter value=%d ", u2f_flash_token_counter_value());
+    NRF_LOG_DEBUG("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
 
     // control byte (P1) を参照
     uint8_t control_byte = hid_fido_receive_apdu()->P1;

@@ -4,7 +4,7 @@
 #include <string.h>
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_crypto.h"
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_util.h"
@@ -63,7 +63,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
     uint32_t reserve_word = 0xffffffff;
-    if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         ble_u2f_send_error_response(p_u2f_context, 0x9502);
         return;
@@ -239,7 +239,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
 {
     NRF_LOG_DEBUG("ble_u2f_authenticate start ");
 
-    if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, 0x9501);
@@ -257,7 +257,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     
     // appIdHashをリクエストデータから取得
     uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
-    if (ble_u2f_flash_token_counter_read(p_appid_hash) == false) {
+    if (fido_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashがトークンカウンターにない場合は
         // エラーレスポンスを生成して戻す
         NRF_LOG_ERROR("ble_u2f_authenticate: token counter not found ");
@@ -266,7 +266,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     }
 
     // トークンカウンターを取得
-    p_u2f_context->token_counter = ble_u2f_flash_token_counter_value();
+    p_u2f_context->token_counter = fido_flash_token_counter_value();
     NRF_LOG_DEBUG("token counter value=%d ", p_u2f_context->token_counter);
 
     // control byte (P1) を参照

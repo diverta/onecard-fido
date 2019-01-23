@@ -22,7 +22,7 @@
 #include "fido_processing_led.h"
 
 // for ble_u2f_flash_keydata
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_ctap2_command
@@ -376,9 +376,9 @@ static void command_authenticator_reset_resume_process(void)
     // 本処理を開始
     NRF_LOG_INFO("authenticatorReset start");
 
-    // 秘密鍵／証明書をFlash ROM領域から削除
+    // トークンカウンターをFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    if (ble_u2f_flash_keydata_delete() == false) {
+    if (fido_flash_token_counter_delete() == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
         return;
@@ -395,24 +395,16 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        if (fido_crypto_ecb_init() == false) {
-            send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
-            NRF_LOG_ERROR("authenticatorReset abend: fido_crypto_ecb_init failed");
-            return;
-        }
+        // トークンカウンター削除完了
+        NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("authenticatorReset retry: FDS GC done ");
         command_authenticator_reset_resume_process();
-
-    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
-        // AES秘密鍵生成(fds_record_update/write)完了の場合
-        // レスポンスを生成してWebAuthnクライアントに戻す
-        send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
     }
 }
 

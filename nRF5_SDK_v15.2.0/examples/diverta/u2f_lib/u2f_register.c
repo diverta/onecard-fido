@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "u2f_crypto.h"
-#include "u2f_flash.h"
+#include "fido_flash.h"
 #include "u2f_keyhandle.h"
 #include "fido_crypto_keypair.h"
 
@@ -42,7 +42,7 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
     //   counterの値は0とする
     uint32_t token_counter = 0;
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
         return false;
     }
 
@@ -120,21 +120,21 @@ static bool create_register_signature_base(uint8_t *p_apdu)
 uint8_t *u2f_securekey_skey(void)
 {
     // 秘密鍵格納領域の開始アドレスを取得
-    uint32_t *skey_buffer = u2f_flash_keydata_buffer();
+    uint32_t *skey_buffer = fido_flash_skey_cert_data();
     return (uint8_t *)skey_buffer;
 }
 
 uint8_t *u2f_securekey_cert(void)
 {
     // 証明書データ格納領域の開始アドレスを取得
-    uint32_t *cert_buffer = u2f_flash_keydata_buffer() + SKEY_WORD_NUM + 1;
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM + 1;
     return (uint8_t *)cert_buffer;
 }
 
 uint32_t u2f_securekey_cert_length(void)
 {
     // 証明書データ格納領域の長さを取得
-    uint32_t *cert_buffer = u2f_flash_keydata_buffer() + SKEY_WORD_NUM;
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM;
     uint32_t cert_buffer_length = *cert_buffer;
     return cert_buffer_length;
 }

@@ -12,7 +12,7 @@
 #include "ble_u2f_version.h"
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_pairing.h"
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 #include "ble_u2f_util.h"
 
 // for logging informations

@@ -18,8 +18,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_control_point_apdu.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_crypto.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_crypto.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_flash.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_flash.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_init.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_init.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_pairing.c</itemPath>
@@ -66,6 +64,8 @@
       <itemPath>../fido_lib/fido_crypto_ecb.h</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.c</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.h</itemPath>
+      <itemPath>../fido_lib/fido_flash.c</itemPath>
+      <itemPath>../fido_lib/fido_flash.h</itemPath>
       <itemPath>../fido_lib/fido_idling_led.c</itemPath>
       <itemPath>../fido_lib/fido_idling_led.h</itemPath>
       <itemPath>../fido_lib/fido_processing_led.c</itemPath>
@@ -874,8 +874,6 @@
       <itemPath>../u2f_lib/u2f_authenticate.h</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.c</itemPath>
       <itemPath>../u2f_lib/u2f_crypto.h</itemPath>
-      <itemPath>../u2f_lib/u2f_flash.c</itemPath>
-      <itemPath>../u2f_lib/u2f_flash.h</itemPath>
       <itemPath>../u2f_lib/u2f_keyhandle.c</itemPath>
       <itemPath>../u2f_lib/u2f_keyhandle.h</itemPath>
       <itemPath>../u2f_lib/u2f_register.c</itemPath>
@@ -2887,13 +2885,6 @@
           </preprocessorList>
         </cTool>
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_flash.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
-      </item>
       <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <preprocessorList>
@@ -3008,6 +2999,10 @@
       </item>
       <item path="../fido_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="2">
       </item>
+      <item path="../fido_lib/fido_flash.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_flash.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido_lib/fido_processing_led.c" ex="false" tool="0" flavor2="2">
@@ -3109,8 +3104,6 @@
       <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
-      </item>
-      <item path="../u2f_lib/u2f_flash.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_keyhandle.c" ex="false" tool="0" flavor2="2">
         <cTool>

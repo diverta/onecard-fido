@@ -13,7 +13,7 @@
 #include "fido_crypto_keypair.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
-#include "u2f_flash.h"
+#include "fido_flash.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_crypto.h"

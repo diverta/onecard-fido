@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "fds.h"
-#include "u2f_flash.h"
+#include "fido_flash.h"
 #include "fido_crypto_ecb.h"
 
 // for nrf_drv_rng_xxx
@@ -44,12 +44,12 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     // 一時領域（確保済み）のアドレスを取得
     m_fds_record.data.p_data       = p_fds_record_buffer;
     m_fds_record.data.length_words = 8;
-    m_fds_record.file_id           = U2F_AESKEYS_FILE_ID;
-    m_fds_record.key               = U2F_AESKEYS_MODE_RECORD_KEY;
+    m_fds_record.file_id           = FIDO_AESKEYS_FILE_ID;
+    m_fds_record.key               = FIDO_AESKEYS_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(U2F_AESKEYS_FILE_ID, U2F_AESKEYS_MODE_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
@@ -75,7 +75,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
         NRF_LOG_ERROR("write_random_vector: no space in flash, calling FDS GC ");
-        if (u2f_flash_force_fdc_gc() == false) {
+        if (fido_flash_force_fdc_gc() == false) {
             return false;
         }
     }
@@ -130,7 +130,7 @@ static bool read_random_vector(uint32_t *p_fds_record_buffer)
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret_code_t ret = fds_record_find(U2F_AESKEYS_FILE_ID, U2F_AESKEYS_MODE_RECORD_KEY, &record_desc, &ftok);
+    ret_code_t ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
         if (read_random_vector_record(&record_desc, p_fds_record_buffer) == false) {
