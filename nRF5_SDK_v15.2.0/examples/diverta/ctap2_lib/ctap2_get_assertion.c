@@ -13,7 +13,7 @@
 #include "fido_common.h"
 
 // for u2f_flash_token_counter
-#include "u2f_flash.h"
+#include "fido_flash.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_crypto.h"
@@ -193,16 +193,16 @@ static uint8_t read_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを検索
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    if (u2f_flash_token_counter_read(p_hash) == false) {
+    if (fido_flash_token_counter_read(p_hash) == false) {
         // 紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         NRF_LOG_ERROR("sign counter not found");
         return CTAP2_ERR_PROCESSING;
     }
-    NRF_LOG_DEBUG("sign counter found (value=%d)", u2f_flash_token_counter_value());
+    NRF_LOG_DEBUG("sign counter found (value=%d)", fido_flash_token_counter_value());
 
     // +1 してctap2_sign_countに設定
-    ctap2_sign_count = u2f_flash_token_counter_value();
+    ctap2_sign_count = fido_flash_token_counter_value();
     ctap2_sign_count++;
 
     return CTAP1_ERR_SUCCESS;
@@ -420,7 +420,7 @@ uint8_t ctap2_get_assertion_update_token_counter(void)
     // トークンカウンターレコードを更新
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
         // NGであれば終了
         return CTAP2_ERR_PROCESSING;
     }

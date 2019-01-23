@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 #include "ble_u2f_util.h"
 #include "fido_processing_led.h"
 #include "ble_u2f_comm_interval_timer.h"
@@ -145,12 +145,12 @@ static bool write_pairing_mode(void)
     // 一時領域（確保済み）のアドレスを取得
     m_fds_record.data.p_data       = &m_pairing_mode;
     m_fds_record.data.length_words = 1;
-    m_fds_record.file_id           = U2F_PAIRING_FILE_ID;
-    m_fds_record.key               = U2F_PAIRING_MODE_RECORD_KEY;
+    m_fds_record.file_id           = FIDO_PAIRING_MODE_FILE_ID;
+    m_fds_record.key               = FIDO_PAIRING_MODE_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(U2F_PAIRING_FILE_ID, U2F_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
@@ -176,7 +176,7 @@ static bool write_pairing_mode(void)
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
         NRF_LOG_ERROR("write_pairing_mode: no space in flash, calling FDS GC ");
-        if (ble_u2f_flash_force_fdc_gc() == false) {
+        if (fido_flash_force_fdc_gc() == false) {
             return false;
         }
     }
@@ -263,7 +263,7 @@ static bool read_pairing_mode(void)
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(U2F_PAIRING_FILE_ID, U2F_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
         if (read_pairing_record(&record_desc, &m_pairing_mode) == false) {

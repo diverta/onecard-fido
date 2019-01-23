@@ -4,7 +4,7 @@
 #include <string.h>
 #include "ble_u2f_securekey.h"
 #include "ble_u2f_crypto.h"
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 #include "ble_u2f_status.h"
 #include "u2f_keyhandle.h"
 #include "ble_u2f_util.h"
@@ -43,7 +43,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
     uint32_t token_counter = 0;
     uint32_t reserve_word = 0xffffffff;
-    if (ble_u2f_flash_token_counter_write(p_u2f_context, p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
         ble_u2f_send_error_response(p_u2f_context, 0x9403);
         return;
@@ -245,14 +245,14 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
 {
     NRF_LOG_DEBUG("ble_u2f_register start ");
 
-    if (ble_u2f_flash_keydata_read(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, 0x9401);
         return;
     }
 
-    if (ble_u2f_flash_keydata_available(p_u2f_context) == false) {
+    if (fido_flash_skey_cert_available() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         ble_u2f_send_error_response(p_u2f_context, 0x9402);

@@ -7,7 +7,7 @@
 #include "u2f.h"
 #include "u2f_crypto.h"
 #include "u2f_keyhandle.h"
-#include "u2f_flash.h"
+#include "fido_flash.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME u2f_authenticate
@@ -35,13 +35,13 @@ bool u2f_authenticate_update_token_counter(uint8_t *p_appid_hash)
     NRF_LOG_DEBUG("update_token_counter start ");
 
     // 現在のトークンカウンターを取得し、＋１する
-    uint32_t token_counter = u2f_flash_token_counter_value();
+    uint32_t token_counter = fido_flash_token_counter_value();
     token_counter++;
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         return false;
     }
@@ -159,7 +159,7 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
     uint8_t user_presence_byte = 0x01;
 
     // 現在のトークンカウンターを取得し、＋１する
-    uint32_t token_counter = u2f_flash_token_counter_value();
+    uint32_t token_counter = fido_flash_token_counter_value();
     token_counter++;
     
     // 署名ベースを生成

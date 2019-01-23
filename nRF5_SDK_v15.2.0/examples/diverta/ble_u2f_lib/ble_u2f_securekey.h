@@ -11,12 +11,6 @@
 extern "C" {
 #endif
 
-
-#define SKEY_WORD_NUM 8
-#define CERT_WORD_NUM 257
-#define SKEY_CERT_WORD_NUM (SKEY_WORD_NUM+CERT_WORD_NUM)
-
-
 void ble_u2f_securekey_install_skey(ble_u2f_context_t *p_u2f_context);
 void ble_u2f_securekey_install_cert(ble_u2f_context_t *p_u2f_context);
 void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context);
@@ -28,7 +22,6 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
 uint8_t *ble_u2f_securekey_skey(ble_u2f_context_t *p_u2f_context);
 uint8_t *ble_u2f_securekey_cert(ble_u2f_context_t *p_u2f_context);
 uint32_t ble_u2f_securekey_cert_length(ble_u2f_context_t *p_u2f_context);
-
 
 #ifdef __cplusplus
 }

@@ -15,7 +15,7 @@
 #include "fido_crypto_keypair.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
-#include "u2f_flash.h"
+#include "fido_flash.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_crypto.h"
@@ -310,13 +310,13 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    if (u2f_flash_keydata_read() == false) {
+    if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (u2f_flash_keydata_available() == false) {
+    if (fido_flash_skey_cert_available() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
@@ -503,7 +503,7 @@ uint8_t ctap2_make_credential_add_token_counter(void)
     // トークンカウンターレコードを追加する
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
     uint32_t reserve_word = 0xffffffff;
-    if (u2f_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
         return CTAP2_ERR_PROCESSING;
     }
 

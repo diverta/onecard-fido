@@ -22,7 +22,7 @@
 #include "fido_processing_led.h"
 
 // for ble_u2f_flash_keydata
-#include "ble_u2f_flash.h"
+#include "fido_flash.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_ctap2_command
@@ -378,7 +378,7 @@ static void command_authenticator_reset_resume_process(void)
 
     // 秘密鍵／証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    if (ble_u2f_flash_keydata_delete() == false) {
+    if (fido_flash_skey_cert_delete() == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
         return;
