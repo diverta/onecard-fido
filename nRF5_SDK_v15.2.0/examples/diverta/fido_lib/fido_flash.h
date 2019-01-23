@@ -25,7 +25,7 @@ extern "C" {
 //
 //  トークンカウンター管理用
 //
-#define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFE)
+#define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFB)
 #define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 
 //

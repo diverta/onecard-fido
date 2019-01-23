@@ -16,12 +16,24 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// 秘密鍵／証明書削除が完了したかどうかを保持
+static bool skey_cert_deleted = false;
+
 void ble_u2f_securekey_erase(ble_u2f_context_t *p_u2f_context)
 {
+    // 秘密鍵／証明書削除が完了した旨のフラグをクリア
+    skey_cert_deleted = false;
+
     // 秘密鍵／証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
     NRF_LOG_DEBUG("ble_u2f_securekey_erase start ");
     if (fido_flash_skey_cert_delete() == false) {
+        ble_u2f_send_error_response(p_u2f_context, 0x9201);
+        return;
+    }
+    // トークンカウンターをFlash ROM領域から削除
+    // (fds_file_deleteが実行される)
+    if (fido_flash_token_counter_delete() == false) {
         ble_u2f_send_error_response(p_u2f_context, 0x9201);
         return;
     }
@@ -37,12 +49,23 @@ void ble_u2f_securekey_erase_response(ble_u2f_context_t *p_u2f_context, fds_evt_
     }
 
     if (p_evt->id == FDS_EVT_DEL_FILE) {
-        // fds_file_delete完了の場合は、AES秘密鍵生成処理を行う
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        if (fido_crypto_ecb_init() == false) {
-            ble_u2f_send_error_response(p_u2f_context, 0x9203);
+        if (skey_cert_deleted == false) {
+            // 秘密鍵／証明書削除が完了した旨のフラグを設定し、
+            // 次のイベント発生を待つ
+            skey_cert_deleted = true;
+            NRF_LOG_DEBUG("fido_flash_skey_cert_delete completed ");
+
+        } else {
+            // トークンカウンター削除が完了
+            NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
+
+            // 続いて、AES秘密鍵生成処理を行う
+            // (fds_record_update/writeまたはfds_gcが実行される)
+            if (fido_crypto_ecb_init() == false) {
+                ble_u2f_send_error_response(p_u2f_context, 0x9203);
+            }
         }
-        
+
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行

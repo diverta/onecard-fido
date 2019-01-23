@@ -34,7 +34,7 @@ bool fido_flash_force_fdc_gc(void)
     // FDSガベージコレクションを強制実行
     err_code = fds_gc();
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_gc returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("fido_flash_force_fdc_gc: fds_gc returns 0x%02x ", err_code);
         APP_ERROR_CHECK(err_code);
     }
 
@@ -43,12 +43,10 @@ bool fido_flash_force_fdc_gc(void)
 
 bool fido_flash_skey_cert_delete(void)
 {
-    ret_code_t err_code;
-
     // 秘密鍵／証明書をFlash ROM領域から削除
-    err_code = fds_file_delete(FIDO_SKEY_CERT_FILE_ID);
+    ret_code_t err_code = fds_file_delete(FIDO_SKEY_CERT_FILE_ID);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("fido_flash_skey_cert_delete: fds_file_delete returns 0x%02x ", err_code);
         return false;
     }
 
@@ -168,9 +166,13 @@ bool fido_flash_skey_cert_write(void)
 
 bool fido_flash_token_counter_delete(void)
 {
-    //
-    // TODO: 後日正式実装します。
-    //
+    // トークンカウンターをFlash ROM領域から削除
+    ret_code_t err_code = fds_file_delete(FIDO_TOKEN_COUNTER_FILE_ID);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fido_flash_token_counter_delete: fds_file_delete returns 0x%02x ", err_code);
+        return false;
+    }
+
     return true;
 }
 
@@ -208,7 +210,7 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
     bool found = false;
     fds_find_token_t  ftok = {0};
     do {
-        ret = fds_record_find(FIDO_SKEY_CERT_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, record_desc, &ftok);
+        ret = fds_record_find(FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, record_desc, &ftok);
         if (ret == FDS_SUCCESS) {
             // 同じappIdHashのレコードかどうか判定 (先頭32バイトを比較)
             token_counter_record_get(record_desc, m_token_counter_record_buffer);
@@ -256,7 +258,7 @@ bool fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counte
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
-    record.file_id           = FIDO_SKEY_CERT_FILE_ID;
+    record.file_id           = FIDO_TOKEN_COUNTER_FILE_ID;
     record.key               = FIDO_TOKEN_COUNTER_RECORD_KEY;
     record.data.p_data       = m_token_counter_record_buffer;
     record.data.length_words = 10;
