@@ -143,16 +143,16 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             case 4:
                 // pubKeyCredParams (CBOR Array)
                 ret = parse_pub_key_cred_params(&ctap2_request.cred_param, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 must_item_flag |= 0x08;
                 break;
             case 5:
                 // excludeList (Sequence)
                 ret = parse_verify_exclude_list(&map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             case 6:
@@ -165,8 +165,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             case 7:
                 // options (Map of authenticator options)
                 ret = parse_options(&ctap2_request.options ,&map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             default:

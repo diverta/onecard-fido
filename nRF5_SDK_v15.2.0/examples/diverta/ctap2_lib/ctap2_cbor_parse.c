@@ -9,12 +9,16 @@
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap_cbor_parse
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// for debug
+#define NRF_LOG_DEBUG_CRED_DESC false
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
@@ -225,13 +229,11 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
     return CborNoError;
 }
 
-uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_param)
+uint8_t check_pub_key_cred_param(CborValue *val)
 {
     CborValue cred;
     CborValue alg;
     int       ret;
-    char      type_str[16];
-    size_t    sz = sizeof(type_str);
 
     if (cbor_value_get_type(val) != CborMapType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
@@ -241,23 +243,38 @@ uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_
     if (ret != CborNoError) {
         return ret;
     }
+    if (cbor_value_get_type(&cred) != CborTextStringType) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
     ret = cbor_value_map_find_value(val, "alg", &alg);
     if (ret != CborNoError) {
         return ret;
-    }
-
-    if (cbor_value_get_type(&cred) != CborTextStringType) {
-        return CTAP2_ERR_MISSING_PARAMETER;
     }
     if (cbor_value_get_type(&alg) != CborIntegerType) {
         return CTAP2_ERR_MISSING_PARAMETER;
     }
 
+    return CborNoError;
+}
+
+uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_param)
+{
+    CborValue cred;
+    CborValue alg;
+    int       ret;
+    char      type_str[16];
+    size_t    sz = sizeof(type_str);
+
+    // type の内容を取得
+    ret = cbor_value_map_find_value(val, "type", &cred);
+    if (ret != CborNoError) {
+        return ret;
+    }
     ret = cbor_value_copy_text_string(&cred, type_str, &sz, NULL);
     if (ret != CborNoError) {
         return ret;
     }
-
     type_str[sizeof(type_str) - 1] = 0;
     if (strcmp(type_str, "public-key") == 0) {
         strcpy((char *)cred_param->publicKeyCredentialTypeName, type_str);
@@ -266,6 +283,11 @@ uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_
         cred_param->publicKeyCredentialType = PUB_KEY_CRED_UNKNOWN;
     }
 
+    // alg の内容を取得
+    ret = cbor_value_map_find_value(val, "alg", &alg);
+    if (ret != CborNoError) {
+        return ret;
+    }
     ret = cbor_value_get_int_checked(&alg, (int *)&cred_param->COSEAlgorithmIdentifier);
     if (ret != CborNoError) {
         return ret;
@@ -297,30 +319,39 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
 
     ret = cbor_value_enter_container(val, &array);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     ret = cbor_value_get_array_length(val, &arr_length);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     for (i = 0; i < arr_length; i++) {
-        if ((ret = parse_pub_key_cred_param(&array, cred_param)) == 0) {
-            if (pub_key_cred_param_supported(cred_param) == CREDENTIAL_IS_SUPPORTED) {
-                return CborNoError;
-            }
-        } else {
-            return ret;
+        // 内容チェックを先に行う
+        ret = check_pub_key_cred_param(&array);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        // 内容の解析と取得
+        ret = parse_pub_key_cred_param(&array, cred_param);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        // アルゴリズムのサポートチェック
+        if (pub_key_cred_param_supported(cred_param) == CREDENTIAL_NOT_SUPPORTED) {
+            return CTAP2_ERR_UNSUPPORTED_ALGORITHM;
         }
 
         ret = cbor_value_advance(&array);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
     }
 
-    return CTAP2_ERR_UNSUPPORTED_ALGORITHM;
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
@@ -339,12 +370,12 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
 
     ret = cbor_value_enter_container(val, &map);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     ret = cbor_value_get_map_length(val, &map_length);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     for (i = 0; i < map_length; i++) {
@@ -358,13 +389,13 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
             return CTAP2_ERR_LIMIT_EXCEEDED;
         }
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
         key[sizeof(key) - 1] = 0;
 
         ret = cbor_value_advance(&map);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
 
         if (cbor_value_get_type(&map) != CborBooleanType) {
@@ -374,21 +405,21 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
         if (strncmp(key, "rk", 2) == 0) {
             ret = cbor_value_get_boolean(&map, &b);
             if (ret != CborNoError) {
-                return ret;
+                return CTAP2_ERR_CBOR_PARSING;
             }
             options->rk = b;
 
         } else if (strncmp(key, "uv", 2) == 0) {
             ret = cbor_value_get_boolean(&map, &b);
             if (ret != CborNoError) {
-                return ret;
+                return CTAP2_ERR_CBOR_PARSING;
             }
             options->uv = b;
 
         } else if (strncmp(key, "up", 2) == 0) {
             ret = cbor_value_get_boolean(&map, &b);
             if (ret != CborNoError) {
-                return ret;
+                return CTAP2_ERR_CBOR_PARSING;
             }
 
             // CTAP2クライアントから 
@@ -396,15 +427,19 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
             // user presence を false とする。
             if (b == false) {
                 options->up = b;
+            } else {
+                // up = true の指定は、
+                // 無効なオプションとしてエラーを戻す
+                return CTAP2_ERR_INVALID_OPTION;
             }
         }
 
         ret = cbor_value_advance(&map);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
     }
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred)
@@ -466,26 +501,43 @@ uint8_t parse_verify_exclude_list(CborValue *val)
 
     ret = cbor_value_get_array_length(val, &size);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     ret = cbor_value_enter_container(val, &arr);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
+
+#if NRF_LOG_DEBUG_CRED_DESC
+    NRF_LOG_DEBUG("previous credential id:");
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_pubkey_credential_id(), ctap2_pubkey_credential_id_size());
+#endif
 
     for (i = 0; i < size; i++) {
         ret = parse_credential_descriptor(&arr, &cred);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+#if NRF_LOG_DEBUG_CRED_DESC
+    NRF_LOG_DEBUG("credential descriptor %d:", i);
+    NRF_LOG_HEXDUMP_DEBUG(cred.credential_id, cred.credential_id_size);
+#endif
+
+        // 以前RegisterしたIDが除外リストに入っていた場合、
+        // CTAP2_ERR_CREDENTIAL_EXCLUDED
+        // をレスポンスする
+        if (memcmp(cred.credential_id, ctap2_pubkey_credential_id(), ctap2_pubkey_credential_id_size()) == 0) {
+            return CTAP2_ERR_CREDENTIAL_EXCLUDED;
         }
 
         ret = cbor_value_advance(&arr);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
     }
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
