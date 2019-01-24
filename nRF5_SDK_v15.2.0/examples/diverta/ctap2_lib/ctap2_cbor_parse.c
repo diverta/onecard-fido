@@ -434,6 +434,42 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
     return CborNoError;
 }
 
+uint8_t parse_verify_exclude_list(CborValue *val)
+{
+    int       ret;
+    size_t    size;
+    CborValue arr;
+    int       i;
+    CTAP_CREDENTIAL_DESC_T cred;
+
+    if (cbor_value_get_type(val) != CborArrayType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_get_array_length(val, &size);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_value_enter_container(val, &arr);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    for (i = 0; i < size; i++) {
+        ret = parse_credential_descriptor(&arr, &cred);
+        if (ret != CborNoError) {
+            return ret;
+        }
+
+        ret = cbor_value_advance(&arr);
+        if (ret != CborNoError) {
+            return ret;
+        }
+    }
+    return CborNoError;
+}
+
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 {
     int       ret;
