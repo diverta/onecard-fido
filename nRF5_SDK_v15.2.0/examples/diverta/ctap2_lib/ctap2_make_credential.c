@@ -66,7 +66,12 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
     NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
     NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + 64, cbor_data_length - 64);
+#else
+    UNUSED_PARAMETER(cbor_data_buffer);
+    UNUSED_PARAMETER(cbor_data_length);
 #endif
+    // 必須項目チェック済みフラグを初期化
+    uint8_t must_item_flag = 0;
 
     // リクエスト格納領域初期化
     memset(&ctap2_request, 0x00, sizeof(ctap2_request));
@@ -110,33 +115,62 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             return CTAP2_ERR_CBOR_PARSING;
         }
 
-        ret = CborNoError;
         switch(key) {
             case 1:
                 // clientDataHash (Byte Array)
                 ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x01;
                 break;
             case 2:
                 // rp (PublicKeyCredentialRpEntity)
                 ret = parse_rp(&ctap2_request.rp, &map);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x02;
                 break;
             case 3:
                 // user (PublicKeyCredentialUserEntity)
                 ret = parse_user(&ctap2_request.user, &map);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x04;
                 break;
             case 4:
                 // pubKeyCredParams (CBOR Array)
                 ret = parse_pub_key_cred_params(&ctap2_request.cred_param, &map);
-                break;                
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x08;
+                break;
+            case 5:
+                // excludeList (Sequence)
+                ret = parse_verify_exclude_list(&map);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                break;
+            case 6:
+                // extensions (CBOR map)
+                type = cbor_value_get_type(&map);
+                if (type != CborMapType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                break;
             case 7:
                 // options (Map of authenticator options)
                 ret = parse_options(&ctap2_request.options ,&map);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
                 break;
             default:
-                break;                
-        }
-        if (ret != CborNoError) {
-            return CTAP2_ERR_CBOR_PARSING;
+                break;
         }
 
         ret = cbor_value_advance(&map);
@@ -160,7 +194,12 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
 #endif
-    
+
+    // 必須項目が揃っていない場合はエラー
+    if (must_item_flag != 0x0f) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
     return CTAP1_ERR_SUCCESS;
 }
 
