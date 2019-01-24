@@ -189,6 +189,10 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
             }
 
         } else if (strcmp((const char *)key, "name") == 0) {
+            if (cbor_value_get_type(&map) != CborTextStringType) {
+                return CTAP2_ERR_INVALID_CBOR_TYPE;
+            }
+
             sz = USER_NAME_MAX_SIZE;
             ret = cbor_value_copy_text_string(&map, (char *)user->name, &sz, NULL);
             if (ret != CborErrorOutOfMemory && ret != CborNoError) {
@@ -196,6 +200,20 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
                 return ret;
             }
             user->name[USER_NAME_MAX_SIZE - 1] = 0;
+
+        } else if (strcmp((const char *)key, "displayName") == 0) {
+            // ユーザー名表示はサポートしないので
+            // 項目の型チェックのみを行う
+            if (cbor_value_get_type(&map) != CborTextStringType) {
+                return CTAP2_ERR_INVALID_CBOR_TYPE;
+            }
+
+        } else if (strcmp((const char *)key, "icon") == 0) {
+            // ユーザーアイコンはサポートしないので
+            // 項目の型チェックのみを行う
+            if (cbor_value_get_type(&map) != CborTextStringType) {
+                return CTAP2_ERR_INVALID_CBOR_TYPE;
+            }
         }
 
         ret = cbor_value_advance(&map);
