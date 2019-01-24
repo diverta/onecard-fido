@@ -42,6 +42,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val);
 uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val);
 uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *pubkey_cred_param, CborValue *val);
 uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val);
+uint8_t parse_verify_exclude_list(CborValue *val);
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it);
 
 #ifdef __cplusplus
