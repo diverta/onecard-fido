@@ -20,8 +20,10 @@ core
 nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_proj/nbproject/private/private.xml
 nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_proj/nbproject/private/configurations.xml
 
-# ignore backup files
+# ignore eagle files
 *.b#*
 *.s#*
+*.l#*
+*.epf
 
 nRF5_SDK_v15.2.0/external/micro-ecc/micro-ecc/
