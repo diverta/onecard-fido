@@ -1,0 +1,4 @@
+basicConstraints = CA:false
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+subjectAltName=DNS:diverta.co.jp,DNS:ca.diverta.co.jp
