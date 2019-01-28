@@ -93,7 +93,6 @@ typedef struct {
 } CTAP_CREDENTIAL_DESC_T;
 
 typedef struct {
-    bool                   present;
     uint8_t                size;
     CTAP_CREDENTIAL_DESC_T list[ALLOW_LIST_MAX_SIZE];
 } CTAP_ALLOW_LIST_T;
