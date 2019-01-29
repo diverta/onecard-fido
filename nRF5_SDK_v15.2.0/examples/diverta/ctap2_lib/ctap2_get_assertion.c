@@ -145,31 +145,31 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
             case 1:
                 // rpId
                 ret = parse_rp_id(&ctap2_request.rp, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 must_item_flag |= 0x01;
                 break;
             case 2:
                 // clientDataHash (Byte Array)
                 ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 must_item_flag |= 0x02;
                 break;
             case 3:
                 // allowList
                 ret = parse_allow_list(&ctap2_request.allowList, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             case 5:
                 // options (Map of authenticator options)
                 ret = parse_options(&ctap2_request.options, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             default:

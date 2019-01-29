@@ -22,38 +22,41 @@ NRF_LOG_MODULE_REGISTER();
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
-    size_t sz;
-    int ret;
-    if (cbor_value_get_type(map) == CborByteStringType) {
-        sz = len;
-        ret = cbor_value_copy_byte_string(map, dst, &sz, NULL);
-        if (ret != CborNoError) {
-            return ret;
-        }
-        if (sz != len) {
-            return CTAP1_ERR_OTHER;
-        }
-    } else {
-        return CTAP2_ERR_INVALID_CBOR;
+    if (cbor_value_get_type(map) != CborByteStringType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
     }
-    return CborNoError;
+
+    size_t sz = len;
+    int ret = cbor_value_copy_byte_string(map, dst, &sz, NULL);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+    if (sz != len) {
+        return CTAP1_ERR_OTHER;
+    }
+
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
 {
+    if (cbor_value_get_type(val) != CborTextStringType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
     size_t sz = RP_ID_MAX_SIZE;
     int ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
     if (ret == CborErrorOutOfMemory) {
         return CTAP2_ERR_LIMIT_EXCEEDED;
     }
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     rp->id[RP_ID_MAX_SIZE] = 0;
     rp->id_size = sz;
 
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
@@ -106,7 +109,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
 
         if (strcmp(key, "id") == 0) {
             ret = parse_rp_id(rp, &map);
-            if (ret != CborNoError) {
+            if (ret != CTAP1_ERR_SUCCESS) {
                 return ret;
             }
 
@@ -455,7 +458,7 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
 
     ret = cbor_value_map_find_value(arr, "id", &val);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_MISSING_PARAMETER;
     }
 
     if (cbor_value_get_type(&val) != CborByteStringType) {
@@ -468,7 +471,7 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
 
     ret = cbor_value_map_find_value(arr, "type", &val);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_MISSING_PARAMETER;
     }
 
     if (cbor_value_get_type(&val) != CborTextStringType) {
@@ -484,7 +487,7 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
         cred->type = PUB_KEY_CRED_UNKNOWN;
     }
 
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t parse_verify_exclude_list(CborValue *val)
@@ -553,12 +556,12 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 
     ret = cbor_value_enter_container(it, &arr);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     ret = cbor_value_get_array_length(it, &len);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_CBOR_PARSING;
     }
 
     allowList->size = 0;
@@ -569,16 +572,16 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
         allowList->size += 1;
 
         ret = parse_credential_descriptor(&arr, &(allowList->list[i]));
-        if (ret != CborNoError) {
+        if (ret != CTAP1_ERR_SUCCESS) {
             return ret;
         }
 
         ret = cbor_value_advance(&arr);
         if (ret != CborNoError) {
-            return ret;
+            return CTAP2_ERR_CBOR_PARSING;
         }
 
     }
 
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
