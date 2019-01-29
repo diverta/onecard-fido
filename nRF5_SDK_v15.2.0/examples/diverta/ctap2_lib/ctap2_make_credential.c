@@ -119,8 +119,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             case 1:
                 // clientDataHash (Byte Array)
                 ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 must_item_flag |= 0x01;
                 break;
@@ -164,7 +164,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 break;
             case 7:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options ,&map);
+                ret = parse_options(&ctap2_request.options, &map, true);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }

@@ -37,7 +37,6 @@ NRF_LOG_MODULE_REGISTER();
 // authenticatorGetAssertion
 // リクエストデータを保持する構造体
 struct {
-    bool                     clientDataHashPresent;
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_OPTIONS_T           options;
@@ -97,6 +96,8 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
         NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + j, (k < 64) ? k : 64);
     }
 #endif
+    // 必須項目チェック済みフラグを初期化
+    uint8_t must_item_flag = 0;
 
     // リクエスト格納領域初期化
     memset(&ctap2_request, 0x00, sizeof(ctap2_request));
@@ -140,31 +141,39 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
             return CTAP2_ERR_CBOR_PARSING;
         }
 
-        ret = CborNoError;
         switch(key) {
             case 1:
                 // rpId
                 ret = parse_rp_id(&ctap2_request.rp, &map);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                must_item_flag |= 0x01;
                 break;
             case 2:
                 // clientDataHash (Byte Array)
                 ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                ctap2_request.clientDataHashPresent = (ret == CborNoError);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                must_item_flag |= 0x02;
                 break;
             case 3:
                 // allowList
                 ret = parse_allow_list(&ctap2_request.allowList, &map);
-                ctap2_request.allowList.present = (ret == CborNoError);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
                 break;
             case 5:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options, &map);
+                ret = parse_options(&ctap2_request.options, &map, false);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
                 break;
             default:
                 break;                
-        }
-        if (ret != CborNoError) {
-            return CTAP2_ERR_CBOR_PARSING;
         }
 
         ret = cbor_value_advance(&map);
@@ -174,6 +183,12 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     }
 
     debug_decoded_request();
+
+    // 必須項目が揃っていない場合はエラー
+    if (must_item_flag != 0x03) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
     return CTAP1_ERR_SUCCESS;
 }
 
