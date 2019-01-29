@@ -212,7 +212,7 @@ static uint8_t read_token_counter(void)
         // 紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         NRF_LOG_ERROR("sign counter not found");
-        return CTAP2_ERR_PROCESSING;
+        return CTAP2_ERR_NO_CREDENTIALS;
     }
     NRF_LOG_DEBUG("sign counter found (value=%d)", fido_flash_token_counter_value());
 
