@@ -2,7 +2,7 @@
     "description": "Diverta FIDO Authenticator",
     "aaguid": "2b2ecbb4-59b4-44fa-868d-a072485d8ae0",
     "alternativeDescriptions": {
-        "ru-RU": "Виртуальный Secp256R1 CTAP2 аутентификатор с самоаттестацией для тестирование серверов на соответсвие спецификации FIDO2"
+        "en-US": "Diverta FIDO Authenticator"
     },
     "protocolFamily": "fido2",
     "authenticatorVersion": 2,
