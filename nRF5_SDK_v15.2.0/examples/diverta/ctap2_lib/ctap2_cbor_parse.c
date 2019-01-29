@@ -357,7 +357,7 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
+uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredential)
 {
     int       ret;
     CborValue map;
@@ -425,15 +425,13 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue * val)
                 return CTAP2_ERR_CBOR_PARSING;
             }
 
-            // CTAP2クライアントから 
-            // up = false と明示指定された場合だけ、
-            // user presence を false とする。
-            if (b == false) {
-                options->up = b;
-            } else {
+            if (makeCredential && b) {
+                // makeCredentialの場合、
                 // up = true の指定は、
                 // 無効なオプションとしてエラーを戻す
                 return CTAP2_ERR_INVALID_OPTION;
+            } else {
+                options->up = b;
             }
         }
 

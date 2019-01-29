@@ -167,7 +167,7 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
                 break;
             case 5:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options, &map);
+                ret = parse_options(&ctap2_request.options, &map, false);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }

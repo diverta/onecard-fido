@@ -164,7 +164,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 break;
             case 7:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options ,&map);
+                ret = parse_options(&ctap2_request.options, &map, true);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
