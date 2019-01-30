@@ -119,9 +119,14 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     offset += fido_crypto_keypair_private_key_size();
 
     // Relying Party Identifier (size & buffer)
-    pubkey_cred_source[offset++] = rp->id_size;
-    memcpy(pubkey_cred_source + offset, rp->id, rp->id_size);
-    offset += rp->id_size;
+    //
+    // 仮実装：
+    // rp idは12バイトに制限する
+    //
+    size_t id_size = (rp->id_size < 12) ? rp->id_size : 12;
+    pubkey_cred_source[offset++] = id_size;
+    memcpy(pubkey_cred_source + offset, rp->id, id_size);
+    offset += id_size;
 
     // User Id (size & buffer)
     pubkey_cred_source[offset++] = user->id_size;
