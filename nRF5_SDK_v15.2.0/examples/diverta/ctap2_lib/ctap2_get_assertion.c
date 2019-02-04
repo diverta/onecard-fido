@@ -301,7 +301,7 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
     // 秘密鍵とCredential Source Hash
     // （トークンカウンターのキー）を
     // credentialIdから取出し
-    uint8_t ret = ctap2_pubkey_credential_restore_private_key(&ctap2_request.allowList, &ctap2_request.rp);
+    uint8_t ret = ctap2_pubkey_credential_restore_private_key(&ctap2_request.allowList);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }

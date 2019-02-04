@@ -398,7 +398,7 @@ uint8_t ctap2_make_credential_generate_response_items(void)
 
     // Public Key Credential Sourceを編集する
     ctap2_pubkey_credential_generate_source(
-        &ctap2_request.cred_param, &ctap2_request.rp, &ctap2_request.user);
+        &ctap2_request.cred_param, &ctap2_request.user);
 
     // credentialIdを生成
     ctap2_pubkey_credential_generate_id();
