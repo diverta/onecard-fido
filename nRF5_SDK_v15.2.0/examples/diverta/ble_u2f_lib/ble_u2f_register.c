@@ -42,8 +42,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
     uint8_t *p_appid_hash = p_apdu->data + U2F_CHAL_SIZE;
     uint32_t token_counter = 0;
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
         ble_u2f_send_error_response(p_u2f_context, 0x9403);
         return;

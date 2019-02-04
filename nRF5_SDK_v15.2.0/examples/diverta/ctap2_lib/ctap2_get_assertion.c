@@ -225,6 +225,10 @@ static uint8_t read_token_counter(void)
 
 static void generate_authenticator_data(void)
 {
+    // rpIdHashの先頭アドレスとサイズを取得
+    uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
+    size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
+
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
@@ -434,8 +438,8 @@ uint8_t ctap2_get_assertion_update_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを更新
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
+    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
+    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, p_hash_for_check) == false) {
         // NGであれば終了
         return CTAP2_ERR_PROCESSING;
     }

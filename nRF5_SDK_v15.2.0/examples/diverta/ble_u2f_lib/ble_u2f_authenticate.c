@@ -62,8 +62,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         ble_u2f_send_error_response(p_u2f_context, 0x9502);
         return;

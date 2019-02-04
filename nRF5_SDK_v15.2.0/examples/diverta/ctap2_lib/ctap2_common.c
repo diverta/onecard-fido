@@ -16,8 +16,8 @@
 // CTAP2コマンドで共用する作業領域
 // 
 // RP IDのSHA-256ハッシュデータを保持
-nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
-size_t                          ctap2_rpid_hash_size;
+static nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
+static size_t                          ctap2_rpid_hash_size;
 
 // flagsを保持
 uint8_t ctap2_flags;
@@ -28,6 +28,16 @@ uint32_t ctap2_sign_count = 0;
 // Authenticator dataを保持
 uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 size_t  authenticator_data_size;
+
+uint8_t *ctap2_generated_rpid_hash(void)
+{
+    return ctap2_rpid_hash;
+}
+
+size_t ctap2_generated_rpid_hash_size(void)
+{
+    return ctap2_rpid_hash_size;
+}
 
 void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size)
 {
