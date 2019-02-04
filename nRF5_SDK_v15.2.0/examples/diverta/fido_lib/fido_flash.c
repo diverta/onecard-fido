@@ -227,6 +227,15 @@ uint32_t fido_flash_token_counter_value(void)
     return m_token_counter_record_buffer[8];
 }
 
+uint8_t *fido_flash_token_counter_get_check_hash(void)
+{
+    // カウンターに紐づくチェック用ハッシュが
+    // 格納されている先頭アドレスを戻す
+    // バッファ先頭からのオフセットは９ワード分
+    uint8_t *hash_for_check = (uint8_t *)(m_token_counter_record_buffer + 9);
+    return hash_for_check;
+}
+
 bool fido_flash_token_counter_read(uint8_t *p_appid_hash)
 {
     // Flash ROMから既存データを読込み、

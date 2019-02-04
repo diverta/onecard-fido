@@ -214,6 +214,17 @@ static uint8_t read_token_counter(void)
         NRF_LOG_ERROR("sign counter not found");
         return CTAP2_ERR_NO_CREDENTIALS;
     }
+
+    // CTAP2クライアントから受信したrpIdHashと、
+    // トークンカウンターレコードに紐づくrpIdHashを比較
+    char *ctap2_rpid_hash = (char *)ctap2_generated_rpid_hash();
+    char *hash_for_check = (char *)fido_flash_token_counter_get_check_hash();
+    if (strncmp(ctap2_rpid_hash, hash_for_check, 32) != 0) {
+        // 紐づくトークンカウンターがない場合は
+        // エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("unavailable sign counter");
+        return CTAP2_ERR_NO_CREDENTIALS;
+    }
     NRF_LOG_DEBUG("sign counter found (value=%d)", fido_flash_token_counter_value());
 
     // +1 してctap2_sign_countに設定
