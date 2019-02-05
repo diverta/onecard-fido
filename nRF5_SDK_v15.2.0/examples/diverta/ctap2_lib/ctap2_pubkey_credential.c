@@ -113,7 +113,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
     // 
-    int offset = 1;
+    uint8_t offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
 
     // Public Key Credential Type

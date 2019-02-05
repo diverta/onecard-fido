@@ -83,9 +83,9 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     CborValue   map;
     size_t      map_length;
     CborType    type;
-    int         ret;
-    int         i;
-    int         key;
+    CborError   ret;
+    uint8_t     i;
+    uint8_t     key;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
     NRF_LOG_DEBUG("authenticatorGetAssertion request cbor(%d bytes):", cbor_data_length);
@@ -243,7 +243,7 @@ static void generate_authenticator_data(void)
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
-    int offset = 0;
+    uint8_t offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
@@ -330,7 +330,7 @@ static uint8_t add_credential_descriptor(CborEncoder *map, CTAP_CREDENTIAL_DESC_
 {
     // Credential (0x01: RESP_credential)
     CborEncoder desc;
-    int ret = cbor_encode_int(map, 0x01);
+    CborError ret = cbor_encode_int(map, 0x01);
     if (ret != CborNoError) {
         return ret;
     }
@@ -374,7 +374,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 
     // Map初期化
     CborEncoder map;
-    int         ret;
+    CborError   ret;
     ret = cbor_encoder_create_map(&encoder, &map, 4);
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
