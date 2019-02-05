@@ -32,6 +32,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// ロック対象CIDを保持
+static uint32_t cid_for_lock;
+
 static void hid_fido_command_ping(void)
 {
     // PINGの場合は
@@ -49,6 +52,29 @@ static void hid_fido_command_wink(void)
     // ステータスなしでレスポンスする
     uint32_t cid = hid_fido_receive_hid_header()->CID;
     uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_command_response_no_payload(cid, cmd);
+}
+
+static void hid_fido_command_lock(void)
+{
+    // ロックコマンドのパラメーターを取得する
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t  lock_param = hid_fido_receive_apdu()->data[0];
+
+    if (lock_param > 0) {
+        // パラメーターが指定されていた場合
+        // ロック対象CIDを設定
+        cid_for_lock = cid;
+        NRF_LOG_INFO("Lock command done: CID(0x%08x) parameter(%d) ", cid, lock_param);
+
+    } else {
+        // ロック対象CIDをクリア
+        cid_for_lock = 0;
+        NRF_LOG_INFO("Unlock command done ", lock_param);
+    }
+
+    // ステータスなしでレスポンスする
     hid_fido_send_command_response_no_payload(cid, cmd);
 }
 
@@ -91,6 +117,14 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         hid_ctap2_command_tup_cancel();
     }
 
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    if (cid != cid_for_lock && cid_for_lock != 0) {
+        // ロック対象CID以外からコマンドを受信したら
+        // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
+        hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        return;
+    }
+
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
 #if CTAP2_SUPPORTED
@@ -102,6 +136,9 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case CTAP2_COMMAND_WINK:
             hid_fido_command_wink();
+            break;
+        case CTAP2_COMMAND_LOCK:
+            hid_fido_command_lock();
             break;
 #else
         case U2F_COMMAND_HID_INIT:

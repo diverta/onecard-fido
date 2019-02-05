@@ -34,6 +34,7 @@ extern "C" {
 
 // CTAP2コマンドの識別用
 #define CTAP2_COMMAND_PING      0x81
+#define CTAP2_COMMAND_LOCK      0x84
 #define CTAP2_COMMAND_INIT      0x86
 #define CTAP2_COMMAND_WINK      0x88
 #define CTAP2_COMMAND_CBOR      0x90
