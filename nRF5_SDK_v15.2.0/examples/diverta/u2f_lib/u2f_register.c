@@ -41,8 +41,7 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
     uint32_t token_counter = 0;
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         return false;
     }
 

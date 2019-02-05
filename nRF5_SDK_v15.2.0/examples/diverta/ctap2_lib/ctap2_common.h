@@ -100,23 +100,20 @@ typedef struct {
 //
 // CTAP2コマンドで共用する作業領域
 // 
-// RP IDのSHA-256ハッシュデータを保持
-extern nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
-extern size_t                          ctap2_rpid_hash_size;
-
 // flagsを保持
 extern uint8_t ctap2_flags;
-
-// signCountを保持
-extern uint32_t ctap2_sign_count;
 
 // Authenticator dataを保持
 extern uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 extern size_t  authenticator_data_size;
 
 // 共通関数
-void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
-bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
+uint8_t *ctap2_generated_rpid_hash(void);
+size_t   ctap2_generated_rpid_hash_size(void);
+void     ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
+bool     ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
+uint32_t ctap2_current_sign_count(void);
+void     ctap2_set_sign_count(uint32_t count);
 
 #ifdef __cplusplus
 }

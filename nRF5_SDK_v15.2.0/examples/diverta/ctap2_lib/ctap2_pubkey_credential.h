@@ -13,9 +13,9 @@
 extern "C" {
 #endif
 
-void     ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_RP_ID_T *rp, CTAP_USER_ENTITY_T *user);
+void     ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_USER_ENTITY_T *user);
 void     ctap2_pubkey_credential_generate_id(void);
-uint8_t  ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList, CTAP_RP_ID_T *rp);
+uint8_t  ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList);
 uint8_t  ctap2_pubkey_credential_number(void);
 uint8_t *ctap2_pubkey_credential_private_key(void);
 CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void);

@@ -48,7 +48,7 @@ size_t ctap2_cbor_authgetinfo_aaguid_size()
 
 static bool encode_authgetinfo_response_message(CborEncoder *encoder)
 {
-    int ret;
+    CborError   ret;
     CborEncoder array;
     CborEncoder map;
     CborEncoder options;

@@ -27,6 +27,7 @@ extern "C" {
 //
 #define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFB)
 #define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
+#define FIDO_TOKEN_COUNTER_RECORD_SIZE 17
 
 //
 //  鍵・証明書の長さを管理
@@ -44,9 +45,10 @@ bool      fido_flash_skey_cert_available(void);
 uint32_t *fido_flash_skey_cert_data(void);
 
 bool      fido_flash_token_counter_delete(void);
-bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint32_t reserve_word);
+bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
 bool      fido_flash_token_counter_read(uint8_t *p_appid_hash);
 uint32_t  fido_flash_token_counter_value(void);
+uint8_t  *fido_flash_token_counter_get_check_hash(void);
 
 #ifdef __cplusplus
 }

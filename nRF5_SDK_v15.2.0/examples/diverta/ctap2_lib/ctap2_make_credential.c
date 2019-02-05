@@ -59,8 +59,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     CborValue   map;
     size_t      map_length;
     CborType    type;
-    int         ret;
-    int         i;
+    CborError   ret;
+    uint8_t     i;
     int         key;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
@@ -210,7 +210,7 @@ bool ctap2_make_credential_is_tup_needed(void)
 
 static uint8_t encode_credential_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
 {
-    uint8_t ret;
+    CborError   ret;
     CborEncoder map;
 
     ret = cbor_encoder_create_map(encoder, &map, 5);
@@ -305,21 +305,25 @@ static uint8_t generate_credential_pubkey(void)
 
 static void generate_authenticator_data(void)
 {
+    // rpIdHashの先頭アドレスとサイズを取得
+    uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
+    size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
+
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
-    int offset = 0;
+    uint8_t offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
     //  flags
     authenticator_data[offset++] = ctap2_flags;
     //  signCount
-    fido_set_uint32_bytes(authenticator_data + offset, ctap2_sign_count);
+    fido_set_uint32_bytes(authenticator_data + offset, ctap2_current_sign_count());
     offset += sizeof(uint32_t);
     //  attestedCredentialData
     //   aaguid
-    int aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
+    uint8_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
     memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
     offset += aaguid_size;
     //   credentialIdLength
@@ -392,9 +396,12 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     //   Attested credential data included (0x40)
     ctap2_flags = 0x41;
 
+    // sign counterをゼロクリア
+    ctap2_set_sign_count(0);
+
     // Public Key Credential Sourceを編集する
     ctap2_pubkey_credential_generate_source(
-        &ctap2_request.cred_param, &ctap2_request.rp, &ctap2_request.user);
+        &ctap2_request.cred_param, &ctap2_request.user);
 
     // credentialIdを生成
     ctap2_pubkey_credential_generate_id();
@@ -426,8 +433,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 
     // Map初期化
     CborEncoder map;
-    int         ret;
-    ret = cbor_encoder_create_map(&encoder, &map, 3);
+    CborError ret = cbor_encoder_create_map(&encoder, &map, 3);
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }
@@ -541,13 +547,13 @@ uint8_t ctap2_make_credential_add_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを追加する
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
+    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
+    if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
         return CTAP2_ERR_PROCESSING;
     }
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("sign counter registered (value=%d)", ctap2_sign_count);
+    NRF_LOG_DEBUG("sign counter registered (value=%d)", ctap2_current_sign_count());
     return CTAP1_ERR_SUCCESS;
 }

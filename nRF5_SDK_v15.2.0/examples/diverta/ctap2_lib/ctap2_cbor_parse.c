@@ -45,7 +45,7 @@ uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
     }
 
     size_t sz = RP_ID_MAX_SIZE;
-    int ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
+    CborError ret = cbor_value_copy_text_string(val, (char*)rp->id, &sz, NULL);
     if (ret == CborErrorOutOfMemory) {
         return CTAP2_ERR_LIMIT_EXCEEDED;
     }
@@ -64,8 +64,8 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
     size_t    sz;
     size_t    map_length;
     char      key[16];
-    int       ret;
-    int       i;
+    CborError ret;
+    uint8_t   i;
     CborValue map;
 
     if (cbor_value_get_type(val) != CborMapType) {
@@ -142,8 +142,8 @@ uint8_t parse_user(CTAP_USER_ENTITY_T *user, CborValue *val)
     size_t    sz;
     size_t    map_length;
     uint8_t   key[16];
-    int       ret;
-    int       i;
+    CborError ret;
+    uint8_t   i;
     CborValue map;
 
     if (cbor_value_get_type(val) != CborMapType) {
@@ -236,7 +236,7 @@ uint8_t check_pub_key_cred_param(CborValue *val)
 {
     CborValue cred;
     CborValue alg;
-    int       ret;
+    CborError ret;
 
     if (cbor_value_get_type(val) != CborMapType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
@@ -265,7 +265,7 @@ uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_
 {
     CborValue cred;
     CborValue alg;
-    int       ret;
+    CborError ret;
     char      type_str[16];
     size_t    sz = sizeof(type_str);
 
@@ -312,8 +312,8 @@ static int pub_key_cred_param_supported(CTAP_PUBKEY_CRED_PARAM_T *cred_param)
 uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValue *val)
 {
     size_t    arr_length;
-    int       ret;
-    int       i;
+    CborError ret;
+    uint8_t   i;
     CborValue array;
 
     if (cbor_value_get_type(val) != CborArrayType) {
@@ -359,10 +359,10 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
 
 uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredential)
 {
-    int       ret;
+    CborError ret;
     CborValue map;
     size_t    map_length;
-    int       i;
+    uint8_t   i;
     char      key[16];
     size_t    sz;
     bool      b;
@@ -445,7 +445,7 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredenti
 
 uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred)
 {
-    int       ret;
+    CborError ret;
     CborValue val;
     size_t    buflen;
     char      type[PUBKEY_CRED_TYPENM_MAX_SIZE];
@@ -490,10 +490,10 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
 
 uint8_t parse_verify_exclude_list(CborValue *val)
 {
-    int       ret;
+    CborError ret;
     size_t    size;
     CborValue arr;
-    int       i;
+    uint8_t   i;
     CTAP_CREDENTIAL_DESC_T cred;
 
     if (cbor_value_get_type(val) != CborArrayType) {
@@ -543,10 +543,10 @@ uint8_t parse_verify_exclude_list(CborValue *val)
 
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 {
-    int       ret;
+    CborError ret;
     CborValue arr;
     size_t    len;
-    int       i;
+    uint8_t   i;
 
     if (cbor_value_get_type(it) != CborArrayType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
