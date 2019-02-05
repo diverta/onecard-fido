@@ -44,6 +44,14 @@ static void hid_fido_command_ping(void)
     hid_fido_send_command_response(cid, cmd, data, length);
 }
 
+static void hid_fido_command_wink(void)
+{
+    // ステータスなしでレスポンスする
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_command_response_no_payload(cid, cmd);
+}
+
 void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
     // U2F ERRORコマンドに対応する
@@ -91,6 +99,9 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case CTAP2_COMMAND_PING:
             hid_fido_command_ping();
+            break;
+        case CTAP2_COMMAND_WINK:
+            hid_fido_command_wink();
             break;
 #else
         case U2F_COMMAND_HID_INIT:
