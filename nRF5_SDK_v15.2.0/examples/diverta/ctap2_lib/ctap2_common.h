@@ -52,6 +52,7 @@ extern "C" {
 
 // CTAPHID_INITのオプション識別用
 #define CTAP2_CAPABILITY_WINK   0x01
+#define CTAP2_CAPABILITY_LOCK   0x02
 #define CTAP2_CAPABILITY_CBOR   0x04
 #define CTAP2_CAPABILITY_NMSG   0x08
 

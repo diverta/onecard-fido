@@ -27,13 +27,13 @@
 // for lighting LED on/off
 #include "fido_idling_led.h"
 
+// for locking cid
+#include "fido_lock_channel.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// ロック対象CIDを保持
-static uint32_t cid_for_lock;
 
 static void hid_fido_command_ping(void)
 {
@@ -65,13 +65,11 @@ static void hid_fido_command_lock(void)
     if (lock_param > 0) {
         // パラメーターが指定されていた場合
         // ロック対象CIDを設定
-        cid_for_lock = cid;
-        NRF_LOG_INFO("Lock command done: CID(0x%08x) parameter(%d) ", cid, lock_param);
+        fido_lock_channel_start(cid, lock_param);
 
     } else {
-        // ロック対象CIDをクリア
-        cid_for_lock = 0;
-        NRF_LOG_INFO("Unlock command done ", lock_param);
+        // CIDのロックを解除
+        fido_lock_channel_cancel();
     }
 
     // ステータスなしでレスポンスする
@@ -118,6 +116,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     }
 
     uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint32_t cid_for_lock = fido_lock_channel_cid();
     if (cid != cid_for_lock && cid_for_lock != 0) {
         // ロック対象CID以外からコマンドを受信したら
         // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
