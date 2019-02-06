@@ -34,7 +34,9 @@ extern "C" {
 
 // CTAP2コマンドの識別用
 #define CTAP2_COMMAND_PING      0x81
+#define CTAP2_COMMAND_LOCK      0x84
 #define CTAP2_COMMAND_INIT      0x86
+#define CTAP2_COMMAND_WINK      0x88
 #define CTAP2_COMMAND_CBOR      0x90
 #define CTAP2_COMMAND_CANCEL    0x91
 #define CTAP2_COMMAND_ERROR     0xbf
@@ -49,6 +51,8 @@ extern "C" {
 #define CTAP2_CMD_GET_NEXT_ASSERTION    0x08
 
 // CTAPHID_INITのオプション識別用
+#define CTAP2_CAPABILITY_WINK   0x01
+#define CTAP2_CAPABILITY_LOCK   0x02
 #define CTAP2_CAPABILITY_CBOR   0x04
 #define CTAP2_CAPABILITY_NMSG   0x08
 

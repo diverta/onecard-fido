@@ -13,7 +13,7 @@ extern "C" {
 
 // キープアライブ・タイマー
 #define U2F_KEEPALIVE_INTERVAL_MSEC   500
-#define CTAP2_KEEPALIVE_INTERVAL_MSEC 100
+#define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
 
 void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);

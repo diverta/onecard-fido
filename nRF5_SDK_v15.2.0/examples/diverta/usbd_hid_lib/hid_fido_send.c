@@ -81,7 +81,9 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
         res->pkt.init.bcntl = payload_length & 0x00ff;
 
         // パケットデータを設定
-        memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
+        if (payload_data != NULL) {
+            memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
+        }
         dump_hid_init_packet(res);
 
         // シーケンスを初期化
@@ -123,9 +125,12 @@ static void hid_fido_send_input_report(bool no_callback)
     size_t  xfer_data_len;
     size_t  remaining;
 
-    // 保持中の情報をチェックし、
-    // 完備していない場合は異常終了
-    if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
+    // 保持中の情報をチェック
+    if (send_info_t.payload_length == 0 && send_info_t.payload_data == NULL) {
+        // データ長＝０、データ＝NULLと明示的に指定された場合は
+        // payloadなしのレスポンスを行う
+    } else if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
+        // 完備していない場合は異常終了
         NRF_LOG_ERROR("hid_fido_send_input_report: hid_fido_send_setup incomplete ");
         return;
     }
@@ -177,6 +182,12 @@ void hid_fido_send_input_report_complete()
 void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
 {
     hid_fido_send_setup(cid, cmd, response_buffer, response_length);
+    hid_fido_send_input_report(false);
+}
+
+void hid_fido_send_command_response_no_payload(uint32_t cid, uint8_t cmd)
+{
+    hid_fido_send_setup(cid, cmd, NULL, 0);
     hid_fido_send_input_report(false);
 }
 

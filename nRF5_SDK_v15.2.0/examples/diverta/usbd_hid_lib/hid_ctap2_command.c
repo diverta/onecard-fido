@@ -117,7 +117,7 @@ void hid_ctap2_command_init(void)
     init_res.version_major = 5;
     init_res.version_minor = 0;
     init_res.version_build = 2;
-    init_res.cflags        = CTAP2_CAPABILITY_CBOR;
+    init_res.cflags        = CTAP2_CAPABILITY_WINK | CTAP2_CAPABILITY_LOCK | CTAP2_CAPABILITY_CBOR;
 
     // レスポンスデータを転送
     uint32_t cid = hid_fido_receive_hid_header()->CID;

@@ -27,6 +27,9 @@
 // for lighting LED on/off
 #include "fido_idling_led.h"
 
+// for locking cid
+#include "fido_lock_channel.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_command
 #include "nrf_log.h"
@@ -42,6 +45,35 @@ static void hid_fido_command_ping(void)
     uint8_t *data = hid_fido_receive_apdu()->data;
     size_t   length = hid_fido_receive_apdu()->data_length;
     hid_fido_send_command_response(cid, cmd, data, length);
+}
+
+static void hid_fido_command_wink(void)
+{
+    // ステータスなしでレスポンスする
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_command_response_no_payload(cid, cmd);
+}
+
+static void hid_fido_command_lock(void)
+{
+    // ロックコマンドのパラメーターを取得する
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t  lock_param = hid_fido_receive_apdu()->data[0];
+
+    if (lock_param > 0) {
+        // パラメーターが指定されていた場合
+        // ロック対象CIDを設定
+        fido_lock_channel_start(cid, lock_param);
+
+    } else {
+        // CIDのロックを解除
+        fido_lock_channel_cancel();
+    }
+
+    // ステータスなしでレスポンスする
+    hid_fido_send_command_response_no_payload(cid, cmd);
 }
 
 void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code) 
@@ -83,6 +115,15 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         hid_ctap2_command_tup_cancel();
     }
 
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint32_t cid_for_lock = fido_lock_channel_cid();
+    if (cid != cid_for_lock && cid_for_lock != 0) {
+        // ロック対象CID以外からコマンドを受信したら
+        // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
+        hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        return;
+    }
+
     // データ受信後に実行すべき処理を判定
     switch (cmd) {
 #if CTAP2_SUPPORTED
@@ -91,6 +132,12 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case CTAP2_COMMAND_PING:
             hid_fido_command_ping();
+            break;
+        case CTAP2_COMMAND_WINK:
+            hid_fido_command_wink();
+            break;
+        case CTAP2_COMMAND_LOCK:
+            hid_fido_command_lock();
             break;
 #else
         case U2F_COMMAND_HID_INIT:
