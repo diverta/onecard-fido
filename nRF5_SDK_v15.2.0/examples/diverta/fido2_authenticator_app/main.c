@@ -29,11 +29,11 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-// One Card固有の処理
+// FIDO Authenticator固有の処理
 #include "ble_u2f.h"
 #include "usbd_hid_service.h"
-#include "one_card_main.h"
-#include "one_card_event.h"
+#include "fido_ble_main.h"
+#include "fido_ble_event.h"
 
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
@@ -143,8 +143,8 @@ void advertising_start(bool erase_bonds)
  */
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
-    // One Card固有の処理
-    if (one_card_pm_evt_handler(p_evt)) {
+    // FIDO Authenticator固有の処理
+    if (fido_ble_pm_evt_handler(p_evt)) {
         return;
     }
     
@@ -175,8 +175,8 @@ static void timers_init(void)
     err_code = app_timer_init();
     APP_ERROR_CHECK(err_code);
 
-    // One Card固有のタイマー機能
-    one_card_timers_init();
+    // FIDO Authenticator固有のタイマー機能
+    fido_button_timers_init();
 }
 
 
@@ -232,9 +232,6 @@ static void gatt_init(void)
 {
     ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
-    
-    // One Card固有の設定
-    one_card_gatt_init(&m_gatt);
 }
 
 
@@ -281,8 +278,8 @@ static void services_init(void)
     err_code = ble_dis_init(&dis_init);
     APP_ERROR_CHECK(err_code);
 
-    // One Card固有のサービスを追加設定
-    one_card_services_init();
+    // FIDO Authenticator固有のサービスを追加設定
+    fido_ble_services_init();
 }
 
 
@@ -349,8 +346,8 @@ static void sleep_mode_enter(void)
 {
     ret_code_t err_code;
 
-    // One Card固有の処理
-    one_card_sleep_mode_enter();
+    // FIDO Authenticator固有の処理
+    fido_ble_sleep_mode_enter();
 
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
     err_code = sd_power_system_off();
@@ -460,8 +457,8 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             break;
     }
     
-    // One Card固有の処理
-    one_card_ble_evt_handler(p_ble_evt, p_context);
+    // FIDO Authenticator固有の処理
+    fido_ble_evt_handler(p_ble_evt, p_context);
 }
 
 
@@ -484,9 +481,6 @@ static void ble_stack_init(void)
 
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
     APP_ERROR_CHECK(err_code);
-
-    // One Card固有の設定
-    one_card_ble_stack_init(APP_BLE_CONN_CFG_TAG, ram_start);
 
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
@@ -529,8 +523,8 @@ static void peer_manager_init(void)
     err_code = pm_register(pm_evt_handler);
     APP_ERROR_CHECK(err_code);
 
-    // One Card固有の処理
-    one_card_peer_manager_init();
+    // FIDO Authenticator固有の処理
+    fido_ble_peer_manager_init();
 }
 
 
@@ -555,8 +549,8 @@ static void advertising_init(void)
 
     init.evt_handler = on_adv_evt;
 
-    // One Card固有の設定
-    one_card_advertising_init(&init);
+    // FIDO Authenticator固有の設定
+    fido_ble_advertising_init(&init);
     
     err_code = ble_advertising_init(&m_advertising, &init);
     APP_ERROR_CHECK(err_code);
@@ -571,8 +565,8 @@ static void advertising_init(void)
  */
 static void buttons_leds_init(bool * p_erase_bonds)
 {
-    // One Card固有の設定
-    one_card_buttons_init();
+    // FIDO Authenticator固有の設定
+    fido_button_init();
 }
 
 

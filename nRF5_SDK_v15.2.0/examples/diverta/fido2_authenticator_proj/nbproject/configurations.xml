@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="ble_u2f_lib"
-                   displayName="ble_u2f_lib"
-                   projectFiles="true"
-                   root="../ble_u2f_lib">
+    <logicalFolder name="ble_u2f_lib" displayName="ble_u2f_lib" projectFiles="true">
       <itemPath>../ble_u2f_lib/ble_u2f.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
@@ -34,6 +31,10 @@
       <itemPath>../ble_u2f_lib/ble_u2f_util.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_event.c</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_event.h</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_main.c</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_main.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib"
                    displayName="ctap2_lib"
@@ -238,15 +239,13 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>../fido2_authenticator_app/main.c</itemPath>
-      <itemPath>../fido2_authenticator_app/one_card_event.c</itemPath>
-      <itemPath>../fido2_authenticator_app/one_card_event.h</itemPath>
-      <itemPath>../fido2_authenticator_app/one_card_main.c</itemPath>
-      <itemPath>../fido2_authenticator_app/one_card_main.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido_lib"
                    displayName="fido_lib"
                    projectFiles="true"
                    root="../fido_lib">
+      <itemPath>../fido_lib/fido_button.c</itemPath>
+      <itemPath>../fido_lib/fido_button.h</itemPath>
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
       <itemPath>../fido_lib/fido_crypto.c</itemPath>
@@ -1041,7 +1040,7 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <df root="../../../../../tinycbor/src" name="1">
+    <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
       <in>cborencoder_close_container_checked.c</in>
       <in>cborerrorstrings.c</in>
@@ -3003,200 +3002,101 @@
             tool="0"
             flavor2="2">
       </item>
+      <item path="../ble_u2f_lib/ble_u2f.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_comm_interval_timer.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_comm_interval_timer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_command.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_control_point.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_control_point.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_control_point_apdu.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_control_point_apdu.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_crypto.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_init.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_pairing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_register.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_securekey.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_status.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_status_retry.c"
             ex="false"
             tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+            flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_util.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../ble_u2f_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_status_retry.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
-      <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-          </incDir>
-          <preprocessorList>
-            <Elem>S140</Elem>
-          </preprocessorList>
-        </cTool>
+      <item path="../ble_u2f_lib/ble_u2f_util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_u2f_version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_event.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_event.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_cbor_authgetinfo.c"
             ex="false"
@@ -3256,15 +3156,9 @@
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../fido2_authenticator_app/one_card_event.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
+      <item path="../fido_lib/fido_button.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../fido2_authenticator_app/one_card_main.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
+      <item path="../fido_lib/fido_button.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="2">
       </item>

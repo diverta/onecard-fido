@@ -135,14 +135,13 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(PROJ_DIR)/main.c \
-  $(PROJ_DIR)/one_card_main.c \
-  $(PROJ_DIR)/one_card_event.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(FIDLIB_DIR)/fido_button.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \
@@ -171,6 +170,8 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_status_retry.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
+  $(BLELIB_DIR)/fido_ble_main.c \
+  $(BLELIB_DIR)/fido_ble_event.c \
   $(HIDLIB_DIR)/hid_ctap2_command.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
