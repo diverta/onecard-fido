@@ -20,6 +20,8 @@
                 <sourceRootElem>../usbd_hid_lib</sourceRootElem>
                 <sourceRootElem>../fido_lib</sourceRootElem>
                 <sourceRootElem>../../../../../tinycbor/src</sourceRootElem>
+                <sourceRootElem>../ble_nus_lib</sourceRootElem>
+                <sourceRootElem>../ble_central_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

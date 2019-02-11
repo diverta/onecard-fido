@@ -46,16 +46,6 @@ void fido_ble_services_init(void)
     ble_u2f_init_services(&m_u2f);
 }
 
-void fido_ble_peer_manager_init(void)
-{
-    // FDS処理完了後のU2F処理を続行させる
-    ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = fds_register(hid_fido_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
-}
-
 ble_u2f_t *fido_ble_get_U2F_context(void)
 {
     // U2F関連の共有情報
