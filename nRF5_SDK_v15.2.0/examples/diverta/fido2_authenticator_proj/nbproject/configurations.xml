@@ -52,6 +52,197 @@
       <itemPath>../ctap2_lib/ctap2_pubkey_credential.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="fido2_authenticator_app"
+                   displayName="fido2_authenticator_app"
+                   projectFiles="true"
+                   root="../fido2_authenticator_app">
+      <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+        <logicalFolder name="s140" displayName="s140" projectFiles="true">
+          <logicalFolder name="armgcc" displayName="armgcc" projectFiles="true">
+            <logicalFolder name="_build" displayName="_build" projectFiles="true">
+              <logicalFolder name="nrf52840_xxaa"
+                             displayName="nrf52840_xxaa"
+                             projectFiles="true">
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/aes.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_button.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_error.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_error_handler_gcc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_error_weak.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_scheduler.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_timer.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_usbd.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_usbd_core.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_usbd_hid.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_usbd_hid_generic.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_usbd_string_desc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/app_util_platform.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/auth_status_tracker.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_advdata.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_advertising.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_conn_params.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_conn_state.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_dis.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_srv_common.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_authenticate.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_comm_interval_timer.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_command.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_control_point.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_control_point_apdu.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_crypto.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_init.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_pairing.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_register.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_securekey.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_status.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_status_retry.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_util.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_version.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/boards.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/bsp.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/bsp_btn_ble.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_aes.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_aes_aead.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_chacha_poly_aead.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecdh.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecdsa.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_eddsa.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_hash.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_hmac.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_init.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_mutex.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_rng.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_shared.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/crc16.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_cbor_authgetinfo.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_cbor_parse.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_common.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_get_assertion.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_make_credential.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctap2_pubkey_credential.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ctr_drbg.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fds.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_common.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_crypto.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_crypto_ecb.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_crypto_keypair.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_flash.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_idling_led.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_lock_channel.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_processing_led.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_request_apdu.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fido_user_presence.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/fnmatch.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/gatt_cache_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/gatts_cache_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/gcc_startup_nrf52840.S.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hardfault_handler_gcc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hardfault_implementation.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hid_ctap2_command.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hid_fido_command.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hid_fido_receive.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hid_fido_send.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/hid_u2f_command.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/id_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/main.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/mem_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_assert.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_atfifo.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_atflags.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_atomic.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_balloc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_ble_gatt.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_ble_lesc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_ble_qwr.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_aead.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_aes.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_aes_shared.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_ecc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_ecdh.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_ecdsa.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_eddsa.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_error.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_hash.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_hkdf.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_hmac.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_init.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_rng.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_crypto_shared.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_drv_clock.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_drv_power.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_drv_rng.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_drv_uart.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_drv_usbd.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_fprintf.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_fprintf_format.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_fstorage.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_fstorage_sd.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_hw_backend_init.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_hw_backend_rng.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_hw_backend_rng_mbedtls.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_backend_rtt.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_backend_serial.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_backend_uart.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_default_backends.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_frontend.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_log_str_formatter.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_memobj.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_pwr_mgmt.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_queue.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_ringbuf.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_sdh.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_sdh_ble.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_sdh_soc.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_section_iter.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrf_strerror.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_clock.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_gpiote.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_power.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_power_clock.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_prs.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_rng.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_uart.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_uarte.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/one_card_event.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/one_card_main.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_data_storage.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_database.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_id.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_manager_handler.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/pm_buffer.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/security_dispatcher.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/security_manager.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/system_nrf52840.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/u2f_authenticate.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/u2f_crypto.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/u2f_keyhandle.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/u2f_register.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/usbd_hid_comm_interval_timer.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/usbd_hid_common.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/usbd_hid_service.c.d</itemPath>
+                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/utf.c.d</itemPath>
+              </logicalFolder>
+              <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa.bin</itemPath>
+              <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa.hex</itemPath>
+              <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa.in</itemPath>
+              <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa.map</itemPath>
+              <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa.out</itemPath>
+            </logicalFolder>
+            <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</itemPath>
+            <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/gcc_nrf52.ld</itemPath>
+          </logicalFolder>
+          <logicalFolder name="config" displayName="config" projectFiles="true">
+            <itemPath>../fido2_authenticator_app/pca10056/s140/config/sdk_config.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>../fido2_authenticator_app/main.c</itemPath>
+      <itemPath>../fido2_authenticator_app/one_card_event.c</itemPath>
+      <itemPath>../fido2_authenticator_app/one_card_event.h</itemPath>
+      <itemPath>../fido2_authenticator_app/one_card_main.c</itemPath>
+      <itemPath>../fido2_authenticator_app/one_card_main.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="fido_lib"
                    displayName="fido_lib"
                    projectFiles="true"
@@ -386,6 +577,7 @@
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fstorage/nrf_fstorage_sd.h</itemPath>
           </logicalFolder>
           <logicalFolder name="hardfault" displayName="hardfault" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault/hardfault.h</itemPath>
             <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault/hardfault_implementation.c</itemPath>
           </logicalFolder>
           <logicalFolder name="log" displayName="log" projectFiles="true">
@@ -588,11 +780,6 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <df root="../one_card_peripheral_app" name="0">
-      <in>main.c</in>
-      <in>one_card_event.c</in>
-      <in>one_card_main.c</in>
-    </df>
     <logicalFolder name="opt"
                    displayName="opt"
                    projectFiles="true"
@@ -625,6 +812,7 @@
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/errno.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
@@ -640,8 +828,11 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/alloca.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/assert.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/ctype.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/errno.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/inttypes.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/limits.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/malloc.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/math.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/newlib.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdint.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdio.h</itemPath>
@@ -659,6 +850,7 @@
                            projectFiles="true">
               <logicalFolder name="7.3.1" displayName="7.3.1" projectFiles="true">
                 <logicalFolder name="include" displayName="include" projectFiles="true">
+                  <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/float.h</itemPath>
                   <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stdarg.h</itemPath>
                   <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stdbool.h</itemPath>
                   <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stddef.h</itemPath>
@@ -850,22 +1042,16 @@
       </logicalFolder>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="1">
-      <in>cbor.h</in>
       <in>cborencoder.c</in>
       <in>cborencoder_close_container_checked.c</in>
       <in>cborerrorstrings.c</in>
-      <in>cborinternal_p.h</in>
-      <in>cborjson.h</in>
       <in>cborparser.c</in>
       <in>cborparser_dup_string.c</in>
       <in>cborpretty.c</in>
       <in>cborpretty_stdio.c</in>
       <in>cbortojson.c</in>
       <in>cborvalidation.c</in>
-      <in>compilersupport_p.h</in>
       <in>open_memstream.c</in>
-      <in>tinycbor-version.h</in>
-      <in>utf8_p.h</in>
     </df>
     <logicalFolder name="u2f_lib"
                    displayName="u2f_lib"
@@ -913,7 +1099,7 @@
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
-    <Elem>../one_card_peripheral_app</Elem>
+    <Elem>../fido2_authenticator_app</Elem>
     <Elem>../ble_u2f_lib</Elem>
     <Elem>../usbd_hid_u2f_lib</Elem>
     <Elem>../../../components/libraries/usbd</Elem>
@@ -940,7 +1126,7 @@
       </codeAssistance>
       <makefileType>
         <makeTool>
-          <buildCommandWorkingDir>../one_card_peripheral_app/pca10056/s140/armgcc</buildCommandWorkingDir>
+          <buildCommandWorkingDir>../fido2_authenticator_app/pca10056/s140/armgcc</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
@@ -963,7 +1149,7 @@
           </cTool>
         </makeTool>
         <preBuild>
-          <preBuildCommandWorkingDir>../one_card_peripheral_app/pca10056/s140/armgcc</preBuildCommandWorkingDir>
+          <preBuildCommandWorkingDir>../fido2_authenticator_app/pca10056/s140/armgcc</preBuildCommandWorkingDir>
           <preBuildCommand>make</preBuildCommand>
         </preBuild>
       </makefileType>
@@ -2235,6 +2421,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2329,6 +2516,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2336,6 +2526,13 @@
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c"
             ex="false"
@@ -2751,82 +2948,55 @@
         <cTool flags="0">
         </cTool>
       </item>
-      <item path="../../../../../tinycbor/src/cbor.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../../../tinycbor/src/cborencoder.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborencoder_close_container_checked.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborerrorstrings.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../../tinycbor/src/cborinternal_p.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../../../tinycbor/src/cborjson.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborparser.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborparser_dup_string.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborpretty.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborpretty_stdio.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cbortojson.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborvalidation.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../../tinycbor/src/compilersupport_p.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/open_memstream.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../../tinycbor/src/tinycbor-version.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../../../tinycbor/src/utf8_p.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
             ex="false"
@@ -2838,6 +3008,11 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2848,6 +3023,11 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2855,6 +3035,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2865,6 +3050,11 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2875,6 +3065,11 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2882,6 +3077,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2889,6 +3089,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_init.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2896,6 +3101,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_pairing.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2903,6 +3113,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_register.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2910,6 +3125,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_securekey.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2917,6 +3137,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_status.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2927,6 +3152,11 @@
             tool="0"
             flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2958,6 +3188,11 @@
       </item>
       <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
         <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>S140</Elem>
           </preprocessorList>
@@ -2967,149 +3202,170 @@
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_cbor_parse.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="0">
+      <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../ctap2_lib/ctap2_common.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_get_assertion.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_get_assertion.h" ex="false" tool="3" flavor2="0">
+      <item path="../ctap2_lib/ctap2_get_assertion.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_make_credential.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_pubkey_credential.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2_pubkey_credential.h"
+      <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../fido2_authenticator_app/one_card_event.c"
             ex="false"
-            tool="3"
-            flavor2="0">
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../fido2_authenticator_app/one_card_main.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
       </item>
       <item path="../fido_lib/fido_common.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido_lib/fido_crypto.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_crypto_ecb.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../fido_lib/fido_flash.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../fido_lib/fido_flash.h" ex="false" tool="3" flavor2="0">
+      <item path="../fido_lib/fido_flash.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_idling_led.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../fido_lib/fido_lock_channel.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../fido_lib/fido_lock_channel.h" ex="false" tool="3" flavor2="0">
+      <item path="../fido_lib/fido_lock_channel.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_processing_led.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_request_apdu.c" ex="false" tool="0" flavor2="2">
-      </item>
-      <item path="../fido_lib/fido_user_presence.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../fido_lib/fido_user_presence.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../one_card_peripheral_app/main.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
+        <cTool>
           <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fds</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../ble_u2f_lib</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-            <pElem>../usbd_hid_u2f_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
       </item>
-      <item path="../one_card_peripheral_app/one_card_event.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="0">
+      <item path="../fido_lib/fido_user_presence.c" ex="false" tool="0" flavor2="2">
+        <cTool>
           <incDir>
-            <pElem>../one_card_peripheral_app</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../ble_u2f_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../one_card_peripheral_app/one_card_main.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="0">
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../ble_u2f_lib</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-            <pElem>../usbd_hid_u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
       <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../u2f_lib/u2f_crypto.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../u2f_lib/u2f_keyhandle.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3119,29 +3375,101 @@
         </cTool>
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/hid_ctap2_command.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/hid_fido_command.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/hid_fido_receive.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/hid_fido_send.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/hid_u2f_command.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/usbd_hid_comm_interval_timer.c"
             ex="false"
             tool="0"
             flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../usbd_hid_lib/usbd_hid_common.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../usbd_hid_lib/usbd_hid_service.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
+      <folder path="fido2_authenticator_app">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="generic">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
+      </folder>
       <folder path="nRF5_SDK_15.2.0/components">
         <cTool>
           <incDir>
@@ -3306,6 +3634,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3399,6 +3728,9 @@
             <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3466,6 +3798,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3524,6 +3857,13 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/usbd/class">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>
       </folder>

@@ -1,4 +1,4 @@
-PROJECT_NAME     := one_card_peripheral_app_pca10056_s140
+PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
