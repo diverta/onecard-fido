@@ -8,6 +8,9 @@
 #ifndef FIDO_BLE_EVENT_H
 #define FIDO_BLE_EVENT_H
 
+#include "ble.h"
+#include "peer_manager_types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

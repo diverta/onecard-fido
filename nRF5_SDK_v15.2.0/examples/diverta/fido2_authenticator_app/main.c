@@ -7,6 +7,7 @@
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_soc.h"
 #include "app_timer.h"
+#include "ble.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_pwr_mgmt.h"
 #include "fds.h"
@@ -20,8 +21,12 @@
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 
-#define APP_BLE_CONN_CFG_TAG                1                                       /**< A tag identifying the SoftDevice BLE configuration. */
-#define DEAD_BEEF                           0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+// for NRF_SDH_BLE_OBSERVER
+#include "fido_ble_event.h"
+
+#define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
+#define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
+#define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 /**@brief Callback function for asserts in the SoftDevice.
  *
@@ -89,6 +94,21 @@ static void power_management_init(void)
 }
 
 
+/**@brief Function for handling BLE events.
+ *
+ * @param[in]   p_ble_evt   Bluetooth stack event.
+ * @param[in]   p_context   Unused.
+ */
+static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
+{
+    // ペリフェラル・モード固有の処理
+    fido_ble_peripheral_evt_handler(p_ble_evt, p_context);
+
+    // セントラル・モード固有の処理
+    fido_ble_central_evt_handler(p_ble_evt, p_context);
+}
+
+
 /**@brief Function for initializing the BLE stack.
  *
  * @details Initializes the SoftDevice and the BLE event interrupt.
@@ -112,6 +132,9 @@ static void ble_stack_init(void)
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
     APP_ERROR_CHECK(err_code);
+
+    // Register a handler for BLE events.
+    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
 }
 
 
@@ -163,13 +186,12 @@ int main(void)
     ble_stack_init();
     flash_storage_init();
 
-#ifdef FIDO_BLE_PERIPHERAL
-    // BLEペリフェラルとして動作
-    fido_ble_peripheral_init();
-#else
-    // BLEセントラルとして動作
+    // BLEペリフェラル関連の初期化
+    //fido_ble_peripheral_init();
+
+    // BLEセントラル関連の初期化
     fido_ble_central_init();
-#endif
+    fido_ble_central_scan_start();
 
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();

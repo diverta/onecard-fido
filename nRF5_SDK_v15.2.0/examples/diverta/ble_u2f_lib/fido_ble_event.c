@@ -131,6 +131,7 @@ static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_e
 
 bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
+    UNUSED_PARAMETER(p_context);
     if (p_ble_evt == NULL) {
         return false;
     }
