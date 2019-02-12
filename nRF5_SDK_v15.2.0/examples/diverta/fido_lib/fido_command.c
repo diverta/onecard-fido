@@ -1,5 +1,5 @@
 /* 
- * File:   fido_button.c
+ * File:   fido_command.c
  * Author: makmorit
  *
  * Created on 2019/02/11, 11:31
@@ -18,6 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_command.h"
 #include "hid_u2f_command.h"
 #include "hid_ctap2_command.h"
+#include "hid_fido_command.h"
 #include "fido_ble_main.h"
 
 //
@@ -132,5 +133,16 @@ void fido_button_init(void)
     APP_ERROR_CHECK(err_code);
 
     err_code = app_button_enable();
+    APP_ERROR_CHECK(err_code);
+}
+
+void fido_command_fds_register(void)
+{
+    // FDS処理完了後のBLE処理をFDSに登録
+    ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
+    APP_ERROR_CHECK(err_code);
+
+    // FDS処理完了後のUSB HID処理をFDSに登録
+    err_code = fds_register(hid_fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }

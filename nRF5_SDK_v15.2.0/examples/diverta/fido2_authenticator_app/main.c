@@ -9,7 +9,7 @@
 #include "app_timer.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_pwr_mgmt.h"
-
+#include "fds.h"
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
@@ -17,7 +17,7 @@
 // FIDO Authenticator固有の処理
 #include "fido_ble_peripheral.h"
 #include "usbd_hid_service.h"
-#include "fido_button.h"
+#include "fido_command.h"
 
 #define APP_BLE_CONN_CFG_TAG                1                                       /**< A tag identifying the SoftDevice BLE configuration. */
 #define DEAD_BEEF                           0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
@@ -60,7 +60,7 @@ static void timers_init(void)
  *
  * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
  */
-static void buttons_leds_init(bool * p_erase_bonds)
+static void buttons_leds_init(void)
 {
     // FIDO Authenticator固有の設定
     fido_button_init();
@@ -85,6 +85,45 @@ static void power_management_init(void)
     ret_code_t err_code;
     err_code = nrf_pwr_mgmt_init();
     APP_ERROR_CHECK(err_code);
+}
+
+
+/**@brief Function for initializing the BLE stack.
+ *
+ * @details Initializes the SoftDevice and the BLE event interrupt.
+ */
+static void ble_stack_init(void)
+{
+    ret_code_t err_code;
+
+    err_code = nrf_sdh_enable_request();
+    APP_ERROR_CHECK(err_code);
+
+    // Configure the BLE stack using the default settings.
+    // Fetch the start address of the application RAM.
+    uint32_t ram_start = 0;
+    err_code = nrf_sdh_ble_app_ram_start_get(&ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // Enable BLE stack.
+    err_code = nrf_sdh_ble_enable(&ram_start);
+    APP_ERROR_CHECK(err_code);
+}
+
+
+static void flash_storage_init(void)
+{
+    // FDSを初期化
+    ret_code_t err_code = fds_init();
+    APP_ERROR_CHECK(err_code);
+
+    // FDSイベント発生後に実行される
+    // FIDO Authenticator固有の処理を
+    // fds_registerで登録
+    fido_command_fds_register();
 }
 
 
@@ -114,14 +153,14 @@ static void idle_state_handle(void)
  */
 int main(void)
 {
-    bool erase_bonds = false;
-
     // Initialize.
     log_init();
     usbd_init();
     timers_init();
-    buttons_leds_init(&erase_bonds);
+    buttons_leds_init();
     power_management_init();
+    ble_stack_init();
+    flash_storage_init();
 
     // ペリフェラルとしての処理
     fido_ble_peripheral_init();
@@ -129,7 +168,7 @@ int main(void)
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
-    
+
     // Enter main loop.
     for (;;) {
         // U2F HID Reportを処理

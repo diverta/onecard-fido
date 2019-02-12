@@ -3,7 +3,8 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="ble_central_lib"
                    displayName="ble_central_lib"
-                   projectFiles="true">
+                   projectFiles="true"
+                   root="../ble_central_lib">
       <itemPath>../ble_central_lib/fido_ble_central.c</itemPath>
       <itemPath>../ble_central_lib/fido_ble_central.h</itemPath>
     </logicalFolder>
@@ -255,8 +256,8 @@
                    displayName="fido_lib"
                    projectFiles="true"
                    root="../fido_lib">
-      <itemPath>../fido_lib/fido_button.c</itemPath>
-      <itemPath>../fido_lib/fido_button.h</itemPath>
+      <itemPath>../fido_lib/fido_command.c</itemPath>
+      <itemPath>../fido_lib/fido_command.h</itemPath>
       <itemPath>../fido_lib/fido_common.c</itemPath>
       <itemPath>../fido_lib/fido_common.h</itemPath>
       <itemPath>../fido_lib/fido_crypto.c</itemPath>
@@ -3065,12 +3066,7 @@
       <item path="../ble_central_lib/fido_ble_central.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ble_central_lib/fido_ble_central.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
@@ -3187,7 +3183,7 @@
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../fido_lib/fido_button.c" ex="false" tool="0" flavor2="2">
+      <item path="../fido_lib/fido_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
@@ -3418,6 +3414,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
             <pElem>../ble_u2f_lib</pElem>
+            <pElem>../fido_lib</pElem>
           </incDir>
         </cTool>
       </folder>

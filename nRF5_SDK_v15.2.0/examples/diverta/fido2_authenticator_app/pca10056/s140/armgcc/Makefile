@@ -145,7 +145,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
-  $(FIDLIB_DIR)/fido_button.c \
+  $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \

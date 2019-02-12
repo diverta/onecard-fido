@@ -4,8 +4,6 @@
  *
  * Created on 2019/02/11, 15:04
  */
-#include <stdint.h>
-#include <string.h>
 #include "nordic_common.h"
 #include "nrf.h"
 #include "nrf_sdm.h"
@@ -24,26 +22,19 @@
 #include "app_timer.h"
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
-#include "fds.h"
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_ble_qwr.h"
 #include "ble_conn_state.h"
-#include "nrf_pwr_mgmt.h"
 
+// for logging informations
+#define NRF_LOG_MODULE_NAME fido_ble_peripheral
 #include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "nrf_log_default_backends.h"
+NRF_LOG_MODULE_REGISTER();
 
 // FIDO Authenticator固有の処理
-#include "fido_ble_peripheral.h"
-#include "ble_u2f.h"
-#include "usbd_hid_service.h"
 #include "fido_ble_main.h"
 #include "fido_ble_event.h"
-#include "fido_button.h"
-#include "ble_u2f_command.h"
-#include "hid_fido_command.h"
 
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
@@ -175,30 +166,6 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     fido_ble_evt_handler(p_ble_evt, p_context);
 }
 
-static void ble_stack_init(void)
-{
-    ret_code_t err_code;
-
-    err_code = nrf_sdh_enable_request();
-    APP_ERROR_CHECK(err_code);
-
-    // Configure the BLE stack using the default settings.
-    // Fetch the start address of the application RAM.
-    uint32_t ram_start = 0;
-    err_code = nrf_sdh_ble_app_ram_start_get(&ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    // Enable BLE stack.
-    err_code = nrf_sdh_ble_enable(&ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    // Register a handler for BLE events.
-    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
-}
-
 static void gap_params_init(void)
 {
     ret_code_t              err_code;
@@ -313,30 +280,10 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-static void delete_bonds(void)
+static void advertising_start(void)
 {
-    ret_code_t err_code;
-
-    NRF_LOG_INFO("BLE: erased all bonding information");
-
-    err_code = pm_peers_delete();
+    ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
-}
-
-void advertising_start(bool erase_bonds)
-{
-    if (erase_bonds == true)
-    {
-        delete_bonds();
-        // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
-    }
-    else
-    {
-        ret_code_t err_code;
-
-        err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
-        APP_ERROR_CHECK(err_code);
-    }
 }
 
 static void pm_evt_handler(pm_evt_t const * p_evt)
@@ -352,7 +299,7 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     switch (p_evt->evt_id)
     {
         case PM_EVT_PEERS_DELETE_SUCCEEDED:
-            advertising_start(false);
+            advertising_start();
             break;
 
         default:
@@ -388,16 +335,6 @@ static void peer_manager_init(void)
     APP_ERROR_CHECK(err_code);
 
     err_code = pm_register(pm_evt_handler);
-    APP_ERROR_CHECK(err_code);
-}
-
-static void fido_fds_register(void)
-{
-    // FDS処理完了後のU2F処理を続行させる
-    ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = fds_register(hid_fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -460,18 +397,16 @@ static void advertising_init(void)
 
 void fido_ble_peripheral_init(void)
 {
+    // Register a handler for BLE events.
+    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+
     // ペリフェラルデバイスとしての
     // 各種初期処理を実行
-    ble_stack_init();
     gap_params_init();
     gatt_init();
     services_init();
     conn_params_init();
     peer_manager_init();
-
-    // FIDO Authenticator固有の処理を
-    // fds_registerで登録
-    fido_fds_register();
 
     // advertising_initの実行は
     // peer_manager_init実行後とする
@@ -481,5 +416,5 @@ void fido_ble_peripheral_init(void)
     advertising_init();
 
     // Start execution.
-    advertising_start(false);
+    advertising_start();
 }
