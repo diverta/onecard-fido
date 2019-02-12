@@ -15,6 +15,7 @@
 #include "nrf_log_default_backends.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_central.h"
 #include "fido_ble_peripheral.h"
 #include "usbd_hid_service.h"
 #include "fido_command.h"
@@ -162,8 +163,13 @@ int main(void)
     ble_stack_init();
     flash_storage_init();
 
-    // ペリフェラルとしての処理
+#ifdef FIDO_BLE_PERIPHERAL
+    // BLEペリフェラルとして動作
     fido_ble_peripheral_init();
+#else
+    // BLEセントラルとして動作
+    fido_ble_central_init();
+#endif
 
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();

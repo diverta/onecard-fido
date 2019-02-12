@@ -1,7 +1,8 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
+#TARGET_BLE_TYPE := FIDO_BLE_PERIPHERAL
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
@@ -343,6 +344,7 @@ INC_FOLDERS += \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
+  $(BLCLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets

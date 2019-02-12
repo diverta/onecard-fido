@@ -11,9 +11,10 @@
 extern "C" {
 #endif
 
+void fido_ble_central_init(void);
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* FIDO_BLE_CENTRAL_H */
-
