@@ -8,6 +8,7 @@
 #include "nrf_sdh_soc.h"
 #include "app_timer.h"
 #include "ble.h"
+#include "nrf_ble_gatt.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_pwr_mgmt.h"
 #include "fds.h"
@@ -27,6 +28,8 @@
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+
+NRF_BLE_GATT_DEF(m_gatt);                               /**< GATT module instance. */
 
 /**@brief Callback function for asserts in the SoftDevice.
  *
@@ -151,6 +154,30 @@ static void flash_storage_init(void)
 }
 
 
+/**@brief Function for handling events from the GATT library. */
+void gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
+{
+    // ペリフェラル・モード固有の処理
+    fido_ble_peripheral_gatt_evt_handler(p_gatt, p_evt);
+
+    // セントラル・モード固有の処理
+    fido_ble_central_gatt_evt_handler(p_gatt, p_evt);
+}
+
+
+/**@brief Function for initializing the GATT library. */
+static void gatt_init(void)
+{
+    ret_code_t err_code;
+
+    err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
+    APP_ERROR_CHECK(err_code);
+}
+
+
 /**@brief Function for handling the idle state (main loop).
  *
  * @details If there is no pending log operation, then sleep until next the next event occurs.
@@ -186,12 +213,16 @@ int main(void)
     ble_stack_init();
     flash_storage_init();
 
-    // BLEペリフェラル関連の初期化
-    //fido_ble_peripheral_init();
+    // BLE関連の初期化
+    gatt_init();
 
-    // BLEセントラル関連の初期化
+    // BLEペリフェラル初期設定と
+    // アドバタイジングの開始
+    fido_ble_peripheral_init();
+    fido_ble_peripheral_advertising_start();
+
+    // BLEセントラル初期設定
     fido_ble_central_init();
-    fido_ble_central_scan_start();
 
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();

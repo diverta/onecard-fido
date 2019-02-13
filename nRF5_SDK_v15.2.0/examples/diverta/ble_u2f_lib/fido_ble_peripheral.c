@@ -74,9 +74,6 @@ NRF_LOG_MODULE_REGISTER();
 #define SEC_PARAM_MIN_KEY_SIZE              7                                       /**< Minimum encryption key size. */
 #define SEC_PARAM_MAX_KEY_SIZE              16                                      /**< Maximum encryption key size. */
 
-#define DEAD_BEEF                           0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
-
-NRF_BLE_GATT_DEF(m_gatt_peripheral);                                           /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                             /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                 /**< Advertising module instance. */
 
@@ -88,21 +85,38 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
     {BLE_UUID_U2F_SERVICE,                  BLE_UUID_TYPE_BLE}
 };
 
-// アドバタイジング中かどうかを保持
-static bool advertising_started = false;
+//
+// BLEペリフェラルモードかどうかを保持
+//   Flash ROMにフラグを持って切替設定するか、
+//   ハードウェア的に切替設定するかは
+//   後日要・検討
+//
+static bool ble_peripheral_mode = false;
+
+bool fido_ble_peripheral_mode(void)
+{
+    return ble_peripheral_mode;
+}
 
 void fido_ble_peripheral_advertising_start(void)
 {
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
     ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
-
-    advertising_started = true;
+    NRF_LOG_DEBUG("Advertising started");
 }
 
 void fido_ble_peripheral_advertising_stop(void)
 {
-    advertising_started = false;
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
     (void)sd_ble_gap_adv_stop(m_advertising.adv_handle);
+    NRF_LOG_DEBUG("Advertising stopped");
 }
 
 static void gap_params_init(void)
@@ -129,22 +143,6 @@ static void gap_params_init(void)
     gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
-    APP_ERROR_CHECK(err_code);
-}
-
-static void gatt_evt_handler(nrf_ble_gatt_t * p_gatt, nrf_ble_gatt_evt_t const * p_evt)
-{
-    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED)
-    {
-        NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
-                     p_evt->conn_handle,
-                     p_evt->params.att_mtu_effective);
-    }
-}
-
-static void gatt_init(void)
-{
-    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt_peripheral, gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -330,10 +328,13 @@ static void advertising_init(void)
 
 void fido_ble_peripheral_init(void)
 {
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
     // ペリフェラルデバイスとしての
     // 各種初期処理を実行
     gap_params_init();
-    gatt_init();
     services_init();
     conn_params_init();
     peer_manager_init();
@@ -349,7 +350,7 @@ void fido_ble_peripheral_init(void)
 
 void fido_ble_peripheral_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
-    if (advertising_started == false) {
+    if (ble_peripheral_mode == false) {
         return;
     }
 
@@ -423,4 +424,18 @@ void fido_ble_peripheral_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     // ペリフェラル・モードで動作する
     // FIDO Authenticator固有の処理
     fido_ble_evt_handler(p_ble_evt, p_context);
+}
+
+void fido_ble_peripheral_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
+{
+    UNUSED_PARAMETER(p_gatt);
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
+    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED) {
+        NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
+                     p_evt->conn_handle,
+                     p_evt->params.att_mtu_effective);
+    }
 }

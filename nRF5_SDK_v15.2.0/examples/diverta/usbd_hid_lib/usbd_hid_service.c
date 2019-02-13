@@ -18,6 +18,7 @@
 #include "hid_fido_send.h"
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"
+#include "fido_ble_peripheral.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_hid_service
@@ -231,8 +232,10 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
         case APP_USBD_EVT_POWER_REMOVED:
             NRF_LOG_DEBUG("USB power removed");
             app_usbd_stop();
+            fido_ble_peripheral_advertising_start();
             break;
         case APP_USBD_EVT_POWER_READY:
+            fido_ble_peripheral_advertising_stop();
             NRF_LOG_DEBUG("USB ready");
             app_usbd_start();
             break;

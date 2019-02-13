@@ -12,7 +12,6 @@
 #include "ble_db_discovery.h"
 #include "ble.h"
 #include "ble_gap.h"
-//#include "ble_hci.h"
 #include "nrf_sdh.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_soc.h"
@@ -27,13 +26,14 @@ NRF_LOG_MODULE_REGISTER();
 // for BLE NUS service client
 #include "ble_nus_c.h"
 
+// for fido_ble_peripheral_mode
+#include "fido_ble_peripheral.h"
+
 #define APP_BLE_CONN_CFG_TAG    1   /**< Tag that refers to the BLE stack configuration set with @ref sd_ble_cfg_set. The default tag is @ref BLE_CONN_CFG_TAG_DEFAULT. */
-#define APP_BLE_OBSERVER_PRIO   3   /**< BLE observer priority of the application. There is no need to modify this value. */
 
 #define NUS_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN  /**< UUID type for the Nordic UART Service (vendor specific). */
 
 BLE_NUS_C_DEF(m_ble_nus_c);         /**< BLE Nordic UART Service (NUS) client instance. */
-NRF_BLE_GATT_DEF(m_gatt);           /**< GATT module instance. */
 BLE_DB_DISCOVERY_DEF(m_db_disc);    /**< Database discovery module instance. */
 NRF_BLE_SCAN_DEF(m_scan);           /**< Scanning Module instance. */
 
@@ -46,11 +46,12 @@ static ble_uuid_t const m_nus_uuid =
     .type = NUS_SERVICE_UUID_TYPE
 };
 
-// スキャン中かどうかを保持
-static bool scan_started = false;
-
 void fido_ble_central_scan_start(void)
 {
+    if (fido_ble_peripheral_mode()) {
+        return;
+    }
+
     ret_code_t ret;
 
     ret = nrf_ble_scan_start(&m_scan);
@@ -59,13 +60,18 @@ void fido_ble_central_scan_start(void)
     // スキャン中の旨を通知
     // ret = bsp_indication_set(BSP_INDICATE_SCANNING);
     // APP_ERROR_CHECK(ret);
-
-    scan_started = true;
+    NRF_LOG_DEBUG("Scan started");
 }
 
 void fido_ble_central_scan_stop(void)
 {
-    scan_started = false;
+    if (fido_ble_peripheral_mode()) {
+        return;
+    }
+
+    // Stop scanning.
+    nrf_ble_scan_stop();
+    NRF_LOG_DEBUG("Scan stopped");
 }
 
 static void db_disc_handler(ble_db_discovery_evt_t *p_evt)
@@ -76,27 +82,6 @@ static void db_disc_handler(ble_db_discovery_evt_t *p_evt)
 static void db_discovery_init(void)
 {
     ret_code_t err_code = ble_db_discovery_init(db_disc_handler);
-    APP_ERROR_CHECK(err_code);
-}
-
-static void gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
-{
-    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED) {
-        NRF_LOG_INFO("ATT MTU exchange completed.");
-
-        m_ble_nus_max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
-        NRF_LOG_INFO("Ble NUS max data length set to 0x%X(%d)", m_ble_nus_max_data_len, m_ble_nus_max_data_len);
-    }
-}
-
-static void gatt_init(void)
-{
-    ret_code_t err_code;
-
-    err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -136,6 +121,7 @@ static void nus_c_init(void)
     init.evt_handler = ble_nus_c_evt_handler;
 
     err_code = ble_nus_c_init(&m_ble_nus_c, &init);
+    NRF_LOG_INFO("nus_c_init: %d", err_code);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -195,8 +181,11 @@ static void scan_init(void)
 
 void fido_ble_central_init(void)
 {
+    if (fido_ble_peripheral_mode()) {
+        return;
+    }
+
     db_discovery_init();
-    gatt_init();
     nus_c_init();
     scan_init();
     NRF_LOG_INFO("BLE central initialized");
@@ -205,7 +194,7 @@ void fido_ble_central_init(void)
 void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
     UNUSED_PARAMETER(p_context);
-    if (scan_started == false) {
+    if (fido_ble_peripheral_mode()) {
         return;
     }
 
@@ -279,5 +268,20 @@ void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
         default:
             break;
+    }
+}
+
+void fido_ble_central_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
+{
+    UNUSED_PARAMETER(p_gatt);
+    if (fido_ble_peripheral_mode()) {
+        return;
+    }
+
+    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED) {
+        NRF_LOG_INFO("ATT MTU exchange completed.");
+
+        m_ble_nus_max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
+        NRF_LOG_INFO("Ble NUS max data length set to 0x%X(%d)", m_ble_nus_max_data_len, m_ble_nus_max_data_len);
     }
 }
