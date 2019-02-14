@@ -91,7 +91,7 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
 //   ハードウェア的に切替設定するかは
 //   後日要・検討
 //
-static bool ble_peripheral_mode = false;
+static bool ble_peripheral_mode = true;
 
 bool fido_ble_peripheral_mode(void)
 {
