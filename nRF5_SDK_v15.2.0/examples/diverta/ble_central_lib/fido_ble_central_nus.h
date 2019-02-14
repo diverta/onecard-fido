@@ -18,6 +18,7 @@ extern "C" {
 void fido_ble_central_nus_init(void);
 void fido_ble_central_nus_on_db_disc_evt(ble_db_discovery_evt_t *p_evt);
 void fido_ble_central_nus_evt_connected(ble_evt_t *p_ble_evt, void *p_context);
+void fido_ble_central_nus_disconnect(void);
 
 ble_uuid_t const *fido_ble_central_nus_uuid(void);
 
