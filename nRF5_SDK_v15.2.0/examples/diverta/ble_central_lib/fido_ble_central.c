@@ -23,28 +23,18 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for BLE NUS service client
-#include "ble_nus_c.h"
+#include "ble_u2f.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
 
+// for BLE NUS Client (for testing)
+#include "fido_ble_central_nus.h"
+
 #define APP_BLE_CONN_CFG_TAG    1   /**< Tag that refers to the BLE stack configuration set with @ref sd_ble_cfg_set. The default tag is @ref BLE_CONN_CFG_TAG_DEFAULT. */
 
-#define NUS_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN  /**< UUID type for the Nordic UART Service (vendor specific). */
-
-BLE_NUS_C_DEF(m_ble_nus_c);         /**< BLE Nordic UART Service (NUS) client instance. */
 BLE_DB_DISCOVERY_DEF(m_db_disc);    /**< Database discovery module instance. */
 NRF_BLE_SCAN_DEF(m_scan);           /**< Scanning Module instance. */
-
-static uint16_t m_ble_nus_max_data_len = BLE_GATT_ATT_MTU_DEFAULT - OPCODE_LENGTH - HANDLE_LENGTH; /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
-
-/**@brief NUS UUID. */
-static ble_uuid_t const m_nus_uuid =
-{
-    .uuid = BLE_UUID_NUS_SERVICE,
-    .type = NUS_SERVICE_UUID_TYPE
-};
 
 void fido_ble_central_scan_start(void)
 {
@@ -58,8 +48,6 @@ void fido_ble_central_scan_start(void)
     APP_ERROR_CHECK(ret);
 
     // スキャン中の旨を通知
-    // ret = bsp_indication_set(BSP_INDICATE_SCANNING);
-    // APP_ERROR_CHECK(ret);
     NRF_LOG_DEBUG("Scan started");
 }
 
@@ -76,52 +64,12 @@ void fido_ble_central_scan_stop(void)
 
 static void db_disc_handler(ble_db_discovery_evt_t *p_evt)
 {
-    ble_nus_c_on_db_disc_evt(&m_ble_nus_c, p_evt);
+    fido_ble_central_nus_on_db_disc_evt(p_evt);
 }
 
 static void db_discovery_init(void)
 {
     ret_code_t err_code = ble_db_discovery_init(db_disc_handler);
-    APP_ERROR_CHECK(err_code);
-}
-
-static void ble_nus_c_evt_handler(ble_nus_c_t *p_ble_nus_c, ble_nus_c_evt_t const *p_ble_nus_evt)
-{
-    ret_code_t err_code;
-
-    switch (p_ble_nus_evt->evt_type) {
-        case BLE_NUS_C_EVT_DISCOVERY_COMPLETE:
-            NRF_LOG_INFO("Discovery complete.");
-            err_code = ble_nus_c_handles_assign(p_ble_nus_c, p_ble_nus_evt->conn_handle, &p_ble_nus_evt->handles);
-            APP_ERROR_CHECK(err_code);
-
-            err_code = ble_nus_c_tx_notif_enable(p_ble_nus_c);
-            APP_ERROR_CHECK(err_code);
-            NRF_LOG_INFO("Connected to device with Nordic UART Service.");
-            break;
-
-        case BLE_NUS_C_EVT_NUS_TX_EVT:
-            // TODO:
-            // 受信したデータをプリントするなどの処理を実行
-            // ble_nus_chars_received_uart_print(p_ble_nus_evt->p_data, p_ble_nus_evt->data_len);
-            break;
-
-        case BLE_NUS_C_EVT_DISCONNECTED:
-            NRF_LOG_INFO("Disconnected.");
-            fido_ble_central_scan_start();
-            break;
-    }
-}
-
-static void nus_c_init(void)
-{
-    ret_code_t       err_code;
-    ble_nus_c_init_t init;
-
-    init.evt_handler = ble_nus_c_evt_handler;
-
-    err_code = ble_nus_c_init(&m_ble_nus_c, &init);
-    NRF_LOG_INFO("nus_c_init: %d", err_code);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -133,13 +81,13 @@ static void scan_evt_handler(scan_evt_t const *p_scan_evt)
     switch(p_scan_evt->scan_evt_id) {
         case NRF_BLE_SCAN_EVT_CONNECTING_ERROR:
             err_code = p_scan_evt->params.connecting_err.err_code;
-            APP_ERROR_CHECK(err_code);
+            NRF_LOG_ERROR("Scan connecting error: code=0x%02x", err_code);
             break;
 
         case NRF_BLE_SCAN_EVT_CONNECTED:
             p_connected = p_scan_evt->params.connected.p_connected;
             // Scan is automatically stopped by the connection.
-            NRF_LOG_INFO("Connecting to target %02x%02x%02x%02x%02x%02x",
+            NRF_LOG_DEBUG("Connecting to target %02x%02x%02x%02x%02x%02x",
                 p_connected->peer_addr.addr[0],
                 p_connected->peer_addr.addr[1],
                 p_connected->peer_addr.addr[2],
@@ -150,8 +98,7 @@ static void scan_evt_handler(scan_evt_t const *p_scan_evt)
             break;
 
         case NRF_BLE_SCAN_EVT_SCAN_TIMEOUT:
-            NRF_LOG_INFO("Scan timed out.");
-            fido_ble_central_scan_start();
+            NRF_LOG_ERROR("Scan timed out.");
             break;
 
          default:
@@ -172,7 +119,7 @@ static void scan_init(void)
     err_code = nrf_ble_scan_init(&m_scan, &init_scan, scan_evt_handler);
     APP_ERROR_CHECK(err_code);
 
-    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, &m_nus_uuid);
+    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, fido_ble_central_nus_uuid());
     APP_ERROR_CHECK(err_code);
 
     err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_UUID_FILTER, false);
@@ -186,9 +133,9 @@ void fido_ble_central_init(void)
     }
 
     db_discovery_init();
-    nus_c_init();
+    fido_ble_central_nus_init();
     scan_init();
-    NRF_LOG_INFO("BLE central initialized");
+    NRF_LOG_DEBUG("BLE central initialized");
 }
 
 void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
@@ -203,12 +150,11 @@ void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
-            err_code = ble_nus_c_handles_assign(&m_ble_nus_c, p_ble_evt->evt.gap_evt.conn_handle, NULL);
-            APP_ERROR_CHECK(err_code);
+            // BLE NUS固有の処理
+            fido_ble_central_nus_evt_connected(p_ble_evt, p_context);
 
             // 接続中の旨を通知
-            // err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            // APP_ERROR_CHECK(err_code);
+            NRF_LOG_DEBUG("Connected");
 
             // start discovery of services. The NUS Client waits for a discovery result
             err_code = ble_db_discovery_start(&m_db_disc, p_ble_evt->evt.gap_evt.conn_handle);
@@ -216,14 +162,14 @@ void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            NRF_LOG_INFO("Disconnected. conn_handle: 0x%x, reason: 0x%x",
+            NRF_LOG_DEBUG("Disconnected. conn_handle: 0x%x, reason: 0x%x",
                          p_gap_evt->conn_handle,
                          p_gap_evt->params.disconnected.reason);
             break;
 
         case BLE_GAP_EVT_TIMEOUT:
             if (p_gap_evt->params.timeout.src == BLE_GAP_TIMEOUT_SRC_CONN) {
-                NRF_LOG_INFO("Connection Request timed out.");
+                NRF_LOG_DEBUG("Connection Request timed out.");
             }
             break;
 
@@ -279,9 +225,7 @@ void fido_ble_central_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_
     }
 
     if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED) {
-        NRF_LOG_INFO("ATT MTU exchange completed.");
-
-        m_ble_nus_max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
-        NRF_LOG_INFO("Ble NUS max data length set to 0x%X(%d)", m_ble_nus_max_data_len, m_ble_nus_max_data_len);
+        uint16_t max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
+        NRF_LOG_DEBUG("ATT MTU exchange completed: Max data length set to 0x%X(%d)", max_data_len, max_data_len);
     }
 }

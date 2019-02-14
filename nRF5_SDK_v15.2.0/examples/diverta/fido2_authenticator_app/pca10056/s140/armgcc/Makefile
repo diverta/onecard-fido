@@ -186,6 +186,7 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
   $(BLCLIB_DIR)/fido_ble_central.c \
+  $(BLCLIB_DIR)/fido_ble_central_nus.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
