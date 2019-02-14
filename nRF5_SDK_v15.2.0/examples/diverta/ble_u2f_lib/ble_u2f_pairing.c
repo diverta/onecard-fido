@@ -13,7 +13,6 @@
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
-#include "one_card_main.h"
 
 // for lighting LED
 #include "fido_common.h"

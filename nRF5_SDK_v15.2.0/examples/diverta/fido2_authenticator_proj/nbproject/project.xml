@@ -3,14 +3,14 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>one_card_peripheral_proj</name>
+            <name>fido2_authenticator_proj</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>../one_card_peripheral_app</sourceRootElem>
+                <sourceRootElem>../fido2_authenticator_app</sourceRootElem>
                 <sourceRootElem>../ble_u2f_lib</sourceRootElem>
                 <sourceRootElem>../usbd_hid_u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../components/libraries/usbd</sourceRootElem>
@@ -20,6 +20,8 @@
                 <sourceRootElem>../usbd_hid_lib</sourceRootElem>
                 <sourceRootElem>../fido_lib</sourceRootElem>
                 <sourceRootElem>../../../../../tinycbor/src</sourceRootElem>
+                <sourceRootElem>../ble_nus_lib</sourceRootElem>
+                <sourceRootElem>../ble_central_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

@@ -1,5 +1,9 @@
-#include <stdint.h>
-#include <string.h>
+/* 
+ * File:   fido_ble_peripheral.c
+ * Author: makmorit
+ *
+ * Created on 2019/02/11, 15:04
+ */
 #include "nordic_common.h"
 #include "nrf.h"
 #include "nrf_sdm.h"
@@ -18,22 +22,19 @@
 #include "app_timer.h"
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
-#include "fds.h"
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_ble_qwr.h"
 #include "ble_conn_state.h"
-#include "nrf_pwr_mgmt.h"
 
+// for logging informations
+#define NRF_LOG_MODULE_NAME fido_ble_peripheral
 #include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "nrf_log_default_backends.h"
+NRF_LOG_MODULE_REGISTER();
 
-// One Card固有の処理
-#include "ble_u2f.h"
-#include "usbd_hid_service.h"
-#include "one_card_main.h"
-#include "one_card_event.h"
+// FIDO Authenticator固有の処理
+#include "fido_ble_main.h"
+#include "fido_ble_event.h"
 
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
@@ -73,9 +74,6 @@
 #define SEC_PARAM_MIN_KEY_SIZE              7                                       /**< Minimum encryption key size. */
 #define SEC_PARAM_MAX_KEY_SIZE              16                                      /**< Maximum encryption key size. */
 
-#define DEAD_BEEF                           0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
-
-NRF_BLE_GATT_DEF(m_gatt);                                           /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                             /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                 /**< Advertising module instance. */
 
@@ -87,104 +85,40 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
     {BLE_UUID_U2F_SERVICE,                  BLE_UUID_TYPE_BLE}
 };
 
+//
+// BLEペリフェラルモードかどうかを保持
+//   Flash ROMにフラグを持って切替設定するか、
+//   ハードウェア的に切替設定するかは
+//   後日要・検討
+//
+static bool ble_peripheral_mode = true;
 
-/**@brief Callback function for asserts in the SoftDevice.
- *
- * @details This function will be called in case of an assert in the SoftDevice.
- *
- * @warning This handler is an example only and does not fit a final product. You need to analyze
- *          how your product is supposed to react in case of Assert.
- * @warning On assert from the SoftDevice, the system can only recover on reset.
- *
- * @param[in] line_num   Line number of the failing ASSERT call.
- * @param[in] file_name  File name of the failing ASSERT call.
- */
-void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
+bool fido_ble_peripheral_mode(void)
 {
-    app_error_handler(DEAD_BEEF, line_num, p_file_name);
+    return ble_peripheral_mode;
 }
 
-
-/**@brief Clear bond information from persistent storage.
- */
-static void delete_bonds(void)
+void fido_ble_peripheral_advertising_start(void)
 {
-    ret_code_t err_code;
-
-    NRF_LOG_INFO("BLE: erased all bonding information");
-
-    err_code = pm_peers_delete();
-    APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for starting advertising.
- */
-void advertising_start(bool erase_bonds)
-{
-    if (erase_bonds == true)
-    {
-        delete_bonds();
-        // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
-    }
-    else
-    {
-        ret_code_t err_code;
-
-        err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
-        APP_ERROR_CHECK(err_code);
-    }
-}
-
-
-/**@brief Function for handling Peer Manager events.
- *
- * @param[in] p_evt  Peer Manager event.
- */
-static void pm_evt_handler(pm_evt_t const * p_evt)
-{
-    // One Card固有の処理
-    if (one_card_pm_evt_handler(p_evt)) {
+    if (ble_peripheral_mode == false) {
         return;
     }
-    
-    pm_handler_on_pm_evt(p_evt);
-    pm_handler_flash_clean(p_evt);
 
-    switch (p_evt->evt_id)
-    {
-        case PM_EVT_PEERS_DELETE_SUCCEEDED:
-            advertising_start(false);
-            break;
-
-        default:
-            break;
-    }
-}
-
-
-/**@brief Function for the Timer initialization.
- *
- * @details Initializes the timer module. This creates and starts application timers.
- */
-static void timers_init(void)
-{
-    ret_code_t err_code;
-
-    // Initialize timer module.
-    err_code = app_timer_init();
+    ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
-
-    // One Card固有のタイマー機能
-    one_card_timers_init();
+    NRF_LOG_DEBUG("Advertising started");
 }
 
+void fido_ble_peripheral_advertising_stop(void)
+{
+    if (ble_peripheral_mode == false) {
+        return;
+    }
 
-/**@brief Function for the GAP initialization.
- *
- * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
- *          device including the device name, appearance, and the preferred connection parameters.
- */
+    (void)sd_ble_gap_adv_stop(m_advertising.adv_handle);
+    NRF_LOG_DEBUG("Advertising stopped");
+}
+
 static void gap_params_init(void)
 {
     ret_code_t              err_code;
@@ -212,49 +146,11 @@ static void gap_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief GATT module event handler.
- */
-static void gatt_evt_handler(nrf_ble_gatt_t * p_gatt, nrf_ble_gatt_evt_t const * p_evt)
-{
-    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED)
-    {
-        NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
-                     p_evt->conn_handle,
-                     p_evt->params.att_mtu_effective);
-    }
-}
-
-
-/**@brief Function for initializing the GATT module.
- */
-static void gatt_init(void)
-{
-    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
-    APP_ERROR_CHECK(err_code);
-    
-    // One Card固有の設定
-    one_card_gatt_init(&m_gatt);
-}
-
-
-/**@brief Function for handling Queued Write Module errors.
- *
- * @details A pointer to this function will be passed to each service which may need to inform the
- *          application about an error.
- *
- * @param[in]   nrf_error   Error code containing information about what went wrong.
- */
 static void nrf_qwr_error_handler(uint32_t nrf_error)
 {
     APP_ERROR_HANDLER(nrf_error);
 }
 
-
-/**@brief Function for initializing services that will be used by the application.
- *
- * @details Initialize the Heart Rate, Battery and Device Information services.
- */
 static void services_init(void)
 {
     ret_code_t         err_code;
@@ -281,21 +177,10 @@ static void services_init(void)
     err_code = ble_dis_init(&dis_init);
     APP_ERROR_CHECK(err_code);
 
-    // One Card固有のサービスを追加設定
-    one_card_services_init();
+    // FIDO Authenticator固有のサービスを追加設定
+    fido_ble_services_init();
 }
 
-
-/**@brief Function for handling the Connection Parameters Module.
- *
- * @details This function will be called for all events in the Connection Parameters Module which
- *          are passed to the application.
- *          @note All this function does is to disconnect. This could have been done by simply
- *                setting the disconnect_on_fail config parameter, but instead we use the event
- *                handler mechanism to demonstrate its use.
- *
- * @param[in] p_evt  Event received from the Connection Parameters Module.
- */
 static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
 {
     ret_code_t err_code;
@@ -307,19 +192,11 @@ static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
     }
 }
 
-
-/**@brief Function for handling a Connection Parameters error.
- *
- * @param[in] nrf_error  Error code containing information about what went wrong.
- */
 static void conn_params_error_handler(uint32_t nrf_error)
 {
     APP_ERROR_HANDLER(nrf_error);
 }
 
-
-/**@brief Function for initializing the Connection Parameters module.
- */
 static void conn_params_init(void)
 {
     ret_code_t             err_code;
@@ -340,30 +217,70 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+static void pm_evt_handler(pm_evt_t const * p_evt)
+{
+    // FIDO Authenticator固有の処理
+    if (fido_ble_pm_evt_handler(p_evt)) {
+        return;
+    }
+    
+    pm_handler_on_pm_evt(p_evt);
+    pm_handler_flash_clean(p_evt);
 
-/**@brief Function for putting the chip into sleep mode.
- *
- * @note This function will not return.
- */
+    switch (p_evt->evt_id)
+    {
+        case PM_EVT_PEERS_DELETE_SUCCEEDED:
+            fido_ble_peripheral_advertising_start();
+            break;
+
+        default:
+            break;
+    }
+}
+
+static void peer_manager_init(void)
+{
+    ble_gap_sec_params_t sec_param;
+    ret_code_t           err_code;
+
+    err_code = pm_init();
+    APP_ERROR_CHECK(err_code);
+
+    memset(&sec_param, 0, sizeof(ble_gap_sec_params_t));
+
+    // Security parameters to be used for all security procedures.
+    sec_param.bond           = SEC_PARAM_BOND;
+    sec_param.mitm           = SEC_PARAM_MITM;
+    sec_param.lesc           = SEC_PARAM_LESC;
+    sec_param.keypress       = SEC_PARAM_KEYPRESS;
+    sec_param.io_caps        = SEC_PARAM_IO_CAPABILITIES;
+    sec_param.oob            = SEC_PARAM_OOB;
+    sec_param.min_key_size   = SEC_PARAM_MIN_KEY_SIZE;
+    sec_param.max_key_size   = SEC_PARAM_MAX_KEY_SIZE;
+    sec_param.kdist_own.enc  = 1;
+    sec_param.kdist_own.id   = 1;
+    sec_param.kdist_peer.enc = 1;
+    sec_param.kdist_peer.id  = 1;
+
+    err_code = pm_sec_params_set(&sec_param);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = pm_register(pm_evt_handler);
+    APP_ERROR_CHECK(err_code);
+}
+
 static void sleep_mode_enter(void)
 {
     ret_code_t err_code;
 
-    // One Card固有の処理
-    one_card_sleep_mode_enter();
+    // FIDO Authenticator固有の処理
+    fido_ble_sleep_mode_enter();
 
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
     err_code = sd_power_system_off();
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Function for handling advertising events.
- *
- * @details This function will be called for advertising events which are passed to the application.
- *
- * @param[in] ble_adv_evt  Advertising event.
- */
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 {
     switch (ble_adv_evt)
@@ -381,18 +298,64 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     }
 }
 
-
-/**@brief Function for handling BLE events.
- *
- * @param[in]   p_ble_evt   Bluetooth stack event.
- * @param[in]   p_context   Unused.
- */
-static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
+static void advertising_init(void)
 {
-    ret_code_t err_code;
+    ret_code_t             err_code;
+    ble_advertising_init_t init;
 
-    switch (p_ble_evt->header.evt_id)
-    {
+    memset(&init, 0, sizeof(init));
+
+    init.advdata.name_type               = BLE_ADVDATA_FULL_NAME;
+    init.advdata.include_appearance      = false;
+    init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
+    init.advdata.uuids_complete.p_uuids  = m_adv_uuids;
+
+    init.config.ble_adv_fast_enabled  = true;
+    init.config.ble_adv_fast_interval = APP_ADV_INTERVAL;
+    init.config.ble_adv_fast_timeout  = APP_ADV_DURATION;
+
+    init.evt_handler = on_adv_evt;
+
+    // FIDO Authenticator固有の設定
+    fido_ble_advertising_init(&init);
+    
+    err_code = ble_advertising_init(&m_advertising, &init);
+    APP_ERROR_CHECK(err_code);
+
+    ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
+}
+
+void fido_ble_peripheral_init(void)
+{
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
+    // ペリフェラルデバイスとしての
+    // 各種初期処理を実行
+    gap_params_init();
+    services_init();
+    conn_params_init();
+    peer_manager_init();
+
+    // advertising_initの実行は
+    // peer_manager_init実行後とする
+    //   アドバタイジング設定の前に
+    //   ペアリングモードをFDSから
+    //   取得する必要があるための措置
+    advertising_init();
+    NRF_LOG_INFO("BLE peripheral initialized");
+}
+
+void fido_ble_peripheral_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+{
+    if (ble_peripheral_mode == false) {
+        return;
+    }
+
+    ret_code_t err_code;
+    switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -407,16 +370,14 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
-        {
             NRF_LOG_DEBUG("PHY update request.");
-            ble_gap_phys_t const phys =
-            {
+            ble_gap_phys_t const phys = {
                 .rx_phys = BLE_GAP_PHY_AUTO,
                 .tx_phys = BLE_GAP_PHY_AUTO,
             };
             err_code = sd_ble_gap_phy_update(p_ble_evt->evt.gap_evt.conn_handle, &phys);
             APP_ERROR_CHECK(err_code);
-        } break;
+            break;
 
         case BLE_GATTC_EVT_TIMEOUT:
             // Disconnect on GATT Client timeout event.
@@ -459,203 +420,22 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             // No implementation needed.
             break;
     }
-    
-    // One Card固有の処理
-    one_card_ble_evt_handler(p_ble_evt, p_context);
+
+    // ペリフェラル・モードで動作する
+    // FIDO Authenticator固有の処理
+    fido_ble_evt_handler(p_ble_evt, p_context);
 }
 
-
-/**@brief Function for initializing the BLE stack.
- *
- * @details Initializes the SoftDevice and the BLE event interrupt.
- */
-static void ble_stack_init(void)
+void fido_ble_peripheral_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
 {
-    ret_code_t err_code;
-
-    err_code = nrf_sdh_enable_request();
-    APP_ERROR_CHECK(err_code);
-
-    // Configure the BLE stack using the default settings.
-    // Fetch the start address of the application RAM.
-    uint32_t ram_start = 0;
-    err_code = nrf_sdh_ble_app_ram_start_get(&ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    // One Card固有の設定
-    one_card_ble_stack_init(APP_BLE_CONN_CFG_TAG, ram_start);
-
-    // Enable BLE stack.
-    err_code = nrf_sdh_ble_enable(&ram_start);
-    APP_ERROR_CHECK(err_code);
-
-    // Register a handler for BLE events.
-    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
-}
-
-
-/**@brief Function for the Peer Manager initialization.
- */
-static void peer_manager_init(void)
-{
-    ble_gap_sec_params_t sec_param;
-    ret_code_t           err_code;
-
-    err_code = pm_init();
-    APP_ERROR_CHECK(err_code);
-
-    memset(&sec_param, 0, sizeof(ble_gap_sec_params_t));
-
-    // Security parameters to be used for all security procedures.
-    sec_param.bond           = SEC_PARAM_BOND;
-    sec_param.mitm           = SEC_PARAM_MITM;
-    sec_param.lesc           = SEC_PARAM_LESC;
-    sec_param.keypress       = SEC_PARAM_KEYPRESS;
-    sec_param.io_caps        = SEC_PARAM_IO_CAPABILITIES;
-    sec_param.oob            = SEC_PARAM_OOB;
-    sec_param.min_key_size   = SEC_PARAM_MIN_KEY_SIZE;
-    sec_param.max_key_size   = SEC_PARAM_MAX_KEY_SIZE;
-    sec_param.kdist_own.enc  = 1;
-    sec_param.kdist_own.id   = 1;
-    sec_param.kdist_peer.enc = 1;
-    sec_param.kdist_peer.id  = 1;
-
-    err_code = pm_sec_params_set(&sec_param);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = pm_register(pm_evt_handler);
-    APP_ERROR_CHECK(err_code);
-
-    // One Card固有の処理
-    one_card_peer_manager_init();
-}
-
-
-/**@brief Function for initializing the Advertising functionality.
- */
-static void advertising_init(void)
-{
-    ret_code_t             err_code;
-    ble_advertising_init_t init;
-
-    memset(&init, 0, sizeof(init));
-
-    init.advdata.name_type               = BLE_ADVDATA_FULL_NAME;
-    init.advdata.include_appearance      = false;
-    init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-    init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
-    init.advdata.uuids_complete.p_uuids  = m_adv_uuids;
-
-    init.config.ble_adv_fast_enabled  = true;
-    init.config.ble_adv_fast_interval = APP_ADV_INTERVAL;
-    init.config.ble_adv_fast_timeout  = APP_ADV_DURATION;
-
-    init.evt_handler = on_adv_evt;
-
-    // One Card固有の設定
-    one_card_advertising_init(&init);
-    
-    err_code = ble_advertising_init(&m_advertising, &init);
-    APP_ERROR_CHECK(err_code);
-
-    ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
-}
-
-
-/**@brief Function for initializing buttons and leds.
- *
- * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
- */
-static void buttons_leds_init(bool * p_erase_bonds)
-{
-    // One Card固有の設定
-    one_card_buttons_init();
-}
-
-
-/**@brief Function for initializing the nrf log module.
- */
-static void log_init(void)
-{
-    ret_code_t err_code = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(err_code);
-
-    NRF_LOG_DEFAULT_BACKENDS_INIT();
-}
-
-
-/**@brief Function for initializing power management.
- */
-static void power_management_init(void)
-{
-    ret_code_t err_code;
-    err_code = nrf_pwr_mgmt_init();
-    APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for handling the idle state (main loop).
- *
- * @details If there is no pending log operation, then sleep until next the next event occurs.
- */
-static void idle_state_handle(void)
-{
-    ret_code_t err_code;
-
-    err_code = nrf_ble_lesc_request_handler();
-    APP_ERROR_CHECK(err_code);
-
-#ifdef BOARD_PCA10056
-    // nRF52840 DKで開発時のみ、ログが出力されるようにする
-    if (NRF_LOG_PROCESS()) {
+    UNUSED_PARAMETER(p_gatt);
+    if (ble_peripheral_mode == false) {
         return;
     }
-#endif
 
-    nrf_pwr_mgmt_run();
-}
-
-
-/**@brief Function for application main entry.
- */
-int main(void)
-{
-    bool erase_bonds = false;
-
-    // Initialize.
-    log_init();
-    usbd_init();
-    timers_init();
-    buttons_leds_init(&erase_bonds);
-    power_management_init();
-    ble_stack_init();
-    gap_params_init();
-    gatt_init();
-    services_init();
-    conn_params_init();
-    peer_manager_init();
-
-    // advertising_initの実行は
-    // peer_manager_init実行後とする
-    //   アドバタイジング設定の前に
-    //   ペアリングモードをFDSから
-    //   取得する必要があるための措置
-    advertising_init();
-
-    // Start execution.
-    advertising_start(erase_bonds);
-
-    // USB HIDデバイスクラスを初期化
-    usbd_hid_init();
-    NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
-    
-    // Enter main loop.
-    for (;;) {
-        // U2F HID Reportを処理
-        usbd_hid_do_process();
-        idle_state_handle();
+    if (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED) {
+        NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
+                     p_evt->conn_handle,
+                     p_evt->params.att_mtu_effective);
     }
 }

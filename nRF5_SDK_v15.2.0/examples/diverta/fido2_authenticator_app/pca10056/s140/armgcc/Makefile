@@ -1,4 +1,4 @@
-PROJECT_NAME     := one_card_peripheral_app_pca10056_s140
+PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
@@ -10,6 +10,7 @@ U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
 CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
+BLCLIB_DIR := $(PROJ_DIR)/../ble_central_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -21,13 +22,16 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
 # Source files common to all targets
 SRC_FILES += \
   $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c \
+  $(SDK_ROOT)/components/ble/ble_db_discovery/ble_db_discovery.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis/ble_dis.c \
+  $(SDK_ROOT)/components/ble/ble_services/ble_nus_c/ble_nus_c.c \
   $(SDK_ROOT)/components/ble/common/ble_advdata.c \
   $(SDK_ROOT)/components/ble/common/ble_conn_params.c \
   $(SDK_ROOT)/components/ble/common/ble_conn_state.c \
   $(SDK_ROOT)/components/ble/common/ble_srv_common.c \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt/nrf_ble_gatt.c \
   $(SDK_ROOT)/components/ble/nrf_ble_qwr/nrf_ble_qwr.c \
+  $(SDK_ROOT)/components/ble/nrf_ble_scan/nrf_ble_scan.c \
   $(SDK_ROOT)/components/ble/peer_manager/auth_status_tracker.c \
   $(SDK_ROOT)/components/ble/peer_manager/gatt_cache_manager.c \
   $(SDK_ROOT)/components/ble/peer_manager/gatts_cache_manager.c \
@@ -135,14 +139,13 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(PROJ_DIR)/main.c \
-  $(PROJ_DIR)/one_card_main.c \
-  $(PROJ_DIR)/one_card_event.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \
@@ -171,6 +174,9 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_status_retry.c \
   $(BLELIB_DIR)/ble_u2f_util.c \
   $(BLELIB_DIR)/ble_u2f_version.c \
+  $(BLELIB_DIR)/fido_ble_event.c \
+  $(BLELIB_DIR)/fido_ble_main.c \
+  $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(HIDLIB_DIR)/hid_ctap2_command.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
@@ -179,12 +185,15 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
+  $(BLCLIB_DIR)/fido_ble_central.c \
+  $(BLCLIB_DIR)/fido_ble_central_nus.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
   ../config \
   $(SDK_ROOT)/components \
   $(SDK_ROOT)/components/ble/ble_advertising \
+  $(SDK_ROOT)/components/ble/ble_db_discovery \
   $(SDK_ROOT)/components/ble/ble_dtm \
   $(SDK_ROOT)/components/ble/ble_racp \
   $(SDK_ROOT)/components/ble/ble_services/ble_ancs_c \
@@ -213,6 +222,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/ble/common \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt \
   $(SDK_ROOT)/components/ble/nrf_ble_qwr \
+  $(SDK_ROOT)/components/ble/nrf_ble_scan \
   $(SDK_ROOT)/components/ble/peer_manager \
   $(SDK_ROOT)/components/boards \
   $(SDK_ROOT)/components/drivers_nrf/usbd \
@@ -334,6 +344,7 @@ INC_FOLDERS += \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
+  $(BLCLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets

@@ -1,5 +1,5 @@
 /* 
- * File:   one_card_event.c
+ * File:   fido_ble_event.c
  * Author: makmorit
  *
  * Created on 2018/10/09, 11:59
@@ -10,13 +10,13 @@
 #include "ble_advertising.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME one_card_event
+#define NRF_LOG_MODULE_NAME fido_ble_event
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "ble_u2f.h"
-#include "one_card_main.h"
+#include "fido_ble_main.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_comm_interval_timer.h"
 #include "ble_u2f_util.h"
@@ -129,15 +129,16 @@ static bool ble_u2f_on_rw_authorize_request(ble_u2f_t *p_u2f, ble_evt_t *p_ble_e
     }
 }
 
-bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
+bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
+    UNUSED_PARAMETER(p_context);
     if (p_ble_evt == NULL) {
         return false;
     }
     NRF_LOG_DEBUG("BLE event id=0x%02x", p_ble_evt->header.evt_id);
     
     bool ret = false;
-    ble_u2f_t *p_u2f = one_card_get_U2F_context();
+    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             ble_u2f_on_connect(p_u2f, p_ble_evt);
@@ -171,7 +172,7 @@ bool one_card_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
     return ret;
 }
 
-bool one_card_pm_evt_handler(pm_evt_t *p_evt)
+bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 {
     // ペアリング済みである端末からの
     // 再ペアリング要求を受入れるようにする
@@ -189,7 +190,7 @@ bool one_card_pm_evt_handler(pm_evt_t *p_evt)
     return false;
 }
 
-void one_card_sleep_mode_enter(void)
+void fido_ble_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
     fido_led_light_LED(LED_FOR_PAIRING_MODE, false);
