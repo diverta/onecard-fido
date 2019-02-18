@@ -64,6 +64,8 @@
       <itemPath>../ctap2_lib/ctap2_common.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_get_assertion.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_get_assertion.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_key_agreement.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_key_agreement.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_make_credential.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_make_credential.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_pubkey_credential.c</itemPath>
@@ -3172,6 +3174,10 @@
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../ctap2_lib/ctap2_key_agreement.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_key_agreement.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_make_credential.c"
             ex="false"

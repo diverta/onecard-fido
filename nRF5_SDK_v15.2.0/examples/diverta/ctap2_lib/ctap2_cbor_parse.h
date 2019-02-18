@@ -45,6 +45,8 @@ uint8_t parse_options(CTAP_OPTIONS_T *options, CborValue *val, bool makeCredenti
 uint8_t parse_verify_exclude_list(CborValue *val);
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it);
 
+uint8_t encode_cose_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg);
+
 #ifdef __cplusplus
 }
 #endif

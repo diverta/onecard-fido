@@ -10,6 +10,7 @@
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_key_agreement.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
 #include "fido_crypto_keypair.h"
@@ -197,6 +198,15 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
 
 uint8_t perform_get_key_agreement(void)
 {
+    // キーペアを生成
+    ctap2_key_agreement_generate_keypair();
+
+    // 生成された公開鍵をCOSE形式にエンコード
+    uint8_t ret = ctap2_key_agreement_encode_cose_key();
+    if (ret == CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
     return CTAP1_ERR_SUCCESS;
 }
 

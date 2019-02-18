@@ -144,6 +144,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_client_pin.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
+  $(CT2LIB_DIR)/ctap2_key_agreement.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(FIDLIB_DIR)/fido_command.c \
