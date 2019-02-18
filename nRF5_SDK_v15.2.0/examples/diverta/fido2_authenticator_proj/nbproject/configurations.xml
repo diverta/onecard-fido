@@ -58,6 +58,8 @@
       <itemPath>../ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_parse.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_cbor_parse.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_client_pin.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_client_pin.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_get_assertion.c</itemPath>
@@ -3154,6 +3156,10 @@
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../ctap2_lib/ctap2_client_pin.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_client_pin.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="2">
       </item>

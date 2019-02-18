@@ -15,7 +15,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#define NUM_OF_CBOR_ELEMENTS        4
+#define NUM_OF_CBOR_ELEMENTS        5
 #define NUM_OF_VERSIONS             2
 #define NUM_OF_OPTIONS              5
 
@@ -52,7 +52,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
     CborEncoder array;
     CborEncoder map;
     CborEncoder options;
-  //CborEncoder pins;
+    CborEncoder pins;
 
     ret = cbor_encoder_create_map(encoder, &map, NUM_OF_CBOR_ELEMENTS);
     if (ret == CborNoError) {
@@ -153,10 +153,6 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
             }
         }
 
-        /*
-         * PIN認証機能は現在実装されていません。
-         * 実装されるまでは、このブロックをコメントアウトしておきます。
-         *
         // pinProtocols
         ret = cbor_encode_uint(&map, RESP_pinProtocols);
         if (ret == CborNoError) {
@@ -173,7 +169,6 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
                 return false;
             }
         }
-         */
     }
 
     ret = cbor_encoder_close_container(encoder, &map);
