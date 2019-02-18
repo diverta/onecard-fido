@@ -32,6 +32,10 @@ NRF_LOG_MODULE_REGISTER();
 // for user presence test
 #include "fido_user_presence.h"
 
+// for BLE central function
+#include "fido_ble_central.h"
+#include "fido_ble_central_nus.h"
+
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 
@@ -79,16 +83,23 @@ static void resume_response_process(void)
     }
 }
 
+static void end_verify_tup(void)
+{
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+    // キープアライブを停止
+    fido_user_presence_verify_end();
+    // 後続のレスポンス送信処理を実行
+    resume_response_process();
+}
+
 bool hid_ctap2_command_on_mainsw_event(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
-        is_tup_needed = false;
-        // キープアライブを停止
-        fido_user_presence_verify_end();
-        // 後続のレスポンス送信処理を実行
-        resume_response_process();
+        // 認証処理を続行させる
+        end_verify_tup();
         return true;
     }
 
@@ -99,6 +110,16 @@ bool hid_ctap2_command_on_mainsw_long_push_event(void)
 {
     // NOP
     return true;
+}
+
+void hid_ctap2_command_on_ble_nus_connected(void)
+{
+    if (is_tup_needed) {
+        // ユーザー所在確認が必要な場合、かつ
+        // One Cardのディスカバリーが成功した場合、
+        // 認証処理を続行させる
+        end_verify_tup();
+    }
 }
 
 void hid_ctap2_command_init(void)
@@ -269,6 +290,10 @@ static void command_authenticator_get_assertion(void)
         // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
         fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
+
+        // BLEセントラルモードで動作している場合は、
+        // One Cardのスキャンを開始
+        fido_ble_central_scan_start();
         return;
     }
 
@@ -465,6 +490,9 @@ void hid_ctap2_command_cbor_report_sent(void)
         default:
             break;
     }
+
+    // One Cardとの接続が行われている場合は停止
+    fido_ble_central_nus_disconnect();
 }
 
 void hid_ctap2_command_tup_cancel(void)

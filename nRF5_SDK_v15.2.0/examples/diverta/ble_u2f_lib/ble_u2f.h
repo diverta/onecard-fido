@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 //
-// One Card固有の定義
+// FIDO Authenticator固有の定義
 //
 #define NRF_BLE_GATT_MAX_MTU_SIZE   67
 
