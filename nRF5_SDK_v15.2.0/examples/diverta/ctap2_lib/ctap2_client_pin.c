@@ -196,29 +196,30 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t perform_get_key_agreement(void)
+uint8_t perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // キーペアを生成
     ctap2_key_agreement_generate_keypair();
 
-    // 生成された公開鍵をCOSE形式にエンコード
-    uint8_t ret = ctap2_key_agreement_encode_cose_key();
+    // レスポンスをエンコード
+    uint8_t ret = ctap2_key_agreement_encode_response(encoded_buff, encoded_buff_size);
     if (ret == CTAP1_ERR_SUCCESS) {
         return ret;
     }
-
+    
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_client_pin_perform_subcommand(void)
+uint8_t ctap2_client_pin_perform_subcommand(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
+    uint8_t ret = CTAP1_ERR_OTHER;
     switch (ctap2_request.subCommand) {
         case subcmd_GetKeyAgreement:
-            perform_get_key_agreement();
+            ret = perform_get_key_agreement(encoded_buff, encoded_buff_size);
             break;
         default:
-            return CTAP1_ERR_OTHER;
+            break;
     }
 
-    return CTAP1_ERR_SUCCESS;
+    return ret;
 }

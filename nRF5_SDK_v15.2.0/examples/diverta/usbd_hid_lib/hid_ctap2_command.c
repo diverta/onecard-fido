@@ -397,17 +397,21 @@ static void command_authenticator_client_pin(void)
         return;
     }
 
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    cbor_data_buffer = response_buffer + 1;
+    cbor_data_length = sizeof(response_buffer) - 1;
+
     // サブコマンドに応じた処理を実行
-    ctap2_status = ctap2_client_pin_perform_subcommand();
+    ctap2_status = ctap2_client_pin_perform_subcommand(cbor_data_buffer, &cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
         return;
     }
 
-    // 仮の実装
-    NRF_LOG_DEBUG("authenticatorClientPIN: decode CBOR request success");
-    send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+    // レスポンスデータを転送
+    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
 }
 
 static void command_authenticator_reset(void)

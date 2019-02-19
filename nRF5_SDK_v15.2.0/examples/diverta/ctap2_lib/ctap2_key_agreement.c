@@ -29,10 +29,6 @@ static uint8_t public_key[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
 static size_t  private_key_size = 0;
 static size_t  public_key_size = 0;
 
-// keyAgreementKey (CBOR) を保持
-static uint8_t encoded_cose_key[256];
-static size_t  encoded_cose_key_size;
-
 void ctap2_key_agreement_generate_keypair(void)
 {
     if (public_key_size == 0 && public_key_size == 0) {
@@ -45,23 +41,58 @@ void ctap2_key_agreement_generate_keypair(void)
     }
 }
 
-uint8_t ctap2_key_agreement_encode_cose_key(void)
+static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
 {
-    // CBORエンコーダー初期化
-    CborEncoder encoder;
-    memset(encoded_cose_key, 0x00, sizeof(encoded_cose_key));
-    cbor_encoder_init(&encoder, encoded_cose_key, sizeof(encoded_cose_key), 0);
-
     // CBORエンコード実行
     uint8_t *x = public_key;
     uint8_t *y = public_key + 32;
     int32_t alg = COSE_ALG_ES256;
-    uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
+    uint8_t ret = encode_cose_pubkey(encoder, x, y, alg);
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }
 
-    // CBORエンコードデータ長を取得
-    encoded_cose_key_size = cbor_encoder_get_buffer_size(&encoder, encoded_cose_key);
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_key_agreement_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+{
+    // 作業領域初期化
+    memset(encoded_buff, 0x00, *encoded_buff_size);
+    
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+
+    // Mapに格納する要素数の設定
+    size_t map_elements_num = 1;
+
+    // Map初期化
+    CborEncoder map;
+    CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // KeyAgreement (0x01)
+    ret = cbor_encode_int(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    // 生成された公開鍵をCOSE形式にエンコードし、
+    // mapにセット
+    ret = add_encoded_cosekey_to_map(&map);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // CBORバッファの長さを設定
+    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+
     return CTAP1_ERR_SUCCESS;
 }

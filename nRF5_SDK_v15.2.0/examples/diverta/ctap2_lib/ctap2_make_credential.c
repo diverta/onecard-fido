@@ -208,74 +208,6 @@ bool ctap2_make_credential_is_tup_needed(void)
     return (ctap2_request.options.up == 1);
 }
 
-static uint8_t encode_credential_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
-{
-    CborError   ret;
-    CborEncoder map;
-
-    ret = cbor_encoder_create_map(encoder, &map, 5);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Key type
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_KTY);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, COSE_KEY_KTY_EC2);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Signature algorithm
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_ALG);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, alg);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Curve type
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_CRV);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, COSE_KEY_CRV_P256);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // x-coordinate
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_X);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_byte_string(&map, x, 32);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // y-coordinate
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_Y);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_byte_string(&map, y, 32);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    ret = cbor_encoder_close_container(encoder, &map);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    return CborNoError;
-}
-
 static uint8_t generate_credential_pubkey(void)
 {
     // CBORエンコーダー初期化
@@ -287,7 +219,7 @@ static uint8_t generate_credential_pubkey(void)
     uint8_t *x = fido_crypto_keypair_public_key();
     uint8_t *y = fido_crypto_keypair_public_key() + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
-    uint8_t ret = encode_credential_pubkey(&encoder, x, y, alg);
+    uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }

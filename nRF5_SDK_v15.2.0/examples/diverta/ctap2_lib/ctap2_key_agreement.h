@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 void    ctap2_key_agreement_generate_keypair(void);
-uint8_t ctap2_key_agreement_encode_cose_key(void);
+uint8_t ctap2_key_agreement_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
 }
