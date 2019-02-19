@@ -101,6 +101,16 @@ typedef struct {
     CTAP_CREDENTIAL_DESC_T list[ALLOW_LIST_MAX_SIZE];
 } CTAP_ALLOW_LIST_T;
 
+typedef struct {
+    int kty;
+    int alg;
+    int crv;
+    struct {
+        uint8_t x[32];
+        uint8_t y[32];
+    } key;
+} CTAP_COSE_KEY;
+
 //
 // CTAP2コマンドで共用する作業領域
 // 

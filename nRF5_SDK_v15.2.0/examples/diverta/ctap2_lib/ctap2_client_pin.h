@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length);
-uint8_t ctap2_client_pin_perform_subcommand(uint8_t *encoded_buff, size_t *encoded_buff_size);
+uint8_t ctap2_client_pin_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
 }

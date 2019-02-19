@@ -402,8 +402,9 @@ static void command_authenticator_client_pin(void)
     cbor_data_buffer = response_buffer + 1;
     cbor_data_length = sizeof(response_buffer) - 1;
 
-    // サブコマンドに応じた処理を実行
-    ctap2_status = ctap2_client_pin_perform_subcommand(cbor_data_buffer, &cbor_data_length);
+    // サブコマンドに応じた処理を実行し、
+    // 処理結果のCBORレスポンスを格納
+    ctap2_status = ctap2_client_pin_encode_response(cbor_data_buffer, &cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);

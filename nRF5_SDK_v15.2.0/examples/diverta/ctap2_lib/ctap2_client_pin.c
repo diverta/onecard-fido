@@ -48,6 +48,7 @@ NRF_LOG_MODULE_REGISTER();
 struct {
     uint8_t pinProtocol;
     uint8_t subCommand;
+    CTAP_COSE_KEY cose_key;
     uint8_t pinAuth[PIN_AUTH_SIZE];
     uint8_t newPinEnc[NEW_PIN_ENC_MAX_SIZE];
     size_t  newPinEncSize;
@@ -74,7 +75,13 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     size_t      sz;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, cbor_data_length);
+    NRF_LOG_DEBUG("authenticatorClientPIN request cbor(%d bytes):", cbor_data_length);
+    int j, k;
+    int max = (cbor_data_length < 288) ? cbor_data_length : 288;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + j, (k < 64) ? k : 64);
+    }
 #else
     UNUSED_PARAMETER(cbor_data_buffer);
     UNUSED_PARAMETER(cbor_data_length);
@@ -143,6 +150,10 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 break;
             case 3:
                 // keyAgreement (COSE_Key)
+                ret = parse_cose_pubkey(&map, &ctap2_request.cose_key);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
                 break;
             case 4:
                 // pinAuth (Byte Array)
@@ -196,7 +207,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
+uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // キーペアを生成
     ctap2_key_agreement_generate_keypair();
@@ -210,12 +221,21 @@ uint8_t perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_si
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_client_pin_perform_subcommand(uint8_t *encoded_buff, size_t *encoded_buff_size)
+
+uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+{
+    return CTAP1_ERR_OTHER;
+}
+
+uint8_t ctap2_client_pin_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     uint8_t ret = CTAP1_ERR_OTHER;
     switch (ctap2_request.subCommand) {
         case subcmd_GetKeyAgreement:
-            ret = perform_get_key_agreement(encoded_buff, encoded_buff_size);
+            ret = encode_get_key_agreement_response(encoded_buff, encoded_buff_size);
+            break;
+        case subcmd_SetPin:
+            ret = encode_set_pin_response(encoded_buff, encoded_buff_size);
             break;
         default:
             break;
