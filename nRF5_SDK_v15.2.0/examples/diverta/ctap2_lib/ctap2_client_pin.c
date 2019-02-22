@@ -30,8 +30,8 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR      true
-#define NRF_LOG_DEBUG_CBOR_REQUEST      true
+#define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
+#define NRF_LOG_DEBUG_CBOR_REQUEST      false
 
 // デコードされた
 // authenticatorClientPIN
