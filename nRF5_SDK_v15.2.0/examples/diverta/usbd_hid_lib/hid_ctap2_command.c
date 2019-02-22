@@ -10,6 +10,7 @@
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
+#include "ctap2_client_pin.h"
 #include "fido_common.h"
 #include "fido_crypto_ecb.h"
 #include "fido_idling_led.h"
@@ -383,6 +384,37 @@ static void command_authenticator_get_info(void)
     send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
 }
 
+static void command_authenticator_client_pin(void)
+{
+    // CBORエンコードされたリクエストメッセージをデコード
+    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
+    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    uint8_t  ctap2_status = ctap2_client_pin_decode_request(cbor_data_buffer, cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorClientPIN: failed to decode CBOR request");
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    cbor_data_buffer = response_buffer + 1;
+    cbor_data_length = sizeof(response_buffer) - 1;
+
+    // サブコマンドに応じた処理を実行し、
+    // 処理結果のCBORレスポンスを格納
+    ctap2_status = ctap2_client_pin_encode_response(cbor_data_buffer, &cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    // レスポンスデータを転送
+    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
+}
+
 static void command_authenticator_reset(void)
 {
     // ユーザー所在確認が必要な旨のフラグを設定
@@ -447,6 +479,9 @@ void hid_ctap2_command_cbor(void)
             break;
         case CTAP2_CMD_GET_ASSERTION:
             command_authenticator_get_assertion();
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            command_authenticator_client_pin();
             break;
         case CTAP2_CMD_RESET:
             command_authenticator_reset();

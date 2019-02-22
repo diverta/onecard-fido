@@ -583,3 +583,175 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 
     return CTAP1_ERR_SUCCESS;
 }
+
+uint8_t parse_cose_pubkey(CborValue *it, CTAP_COSE_KEY *cose_key)
+{
+    CborValue map;
+    size_t map_length;
+    int i, ret, key;
+    cose_key->kty = 0;
+    cose_key->crv = 0;
+
+    // 必須項目チェック済みフラグを初期化
+    uint8_t must_item_flag = 0;
+    
+    CborType type = cbor_value_get_type(it);
+    if (type != CborMapType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_enter_container(it,&map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    ret = cbor_value_get_map_length(it, &map_length);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    for (i = 0; i < map_length; i++) {
+        if (cbor_value_get_type(&map) != CborIntegerType) {
+            return CTAP2_ERR_INVALID_CBOR_TYPE;
+        }
+
+        ret = cbor_value_get_int_checked(&map, &key);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        switch(key) {
+            case COSE_KEY_LABEL_KTY:
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &cose_key->kty);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x01;
+                break;
+            case COSE_KEY_LABEL_ALG:
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &cose_key->alg);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x02;
+                break;
+            case COSE_KEY_LABEL_CRV:
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &cose_key->crv);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                must_item_flag |= 0x04;
+                break;
+            case COSE_KEY_LABEL_X:
+                ret = parse_fixed_byte_string(&map, cose_key->key.x, 32);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                must_item_flag |= 0x08;
+                break;
+            case COSE_KEY_LABEL_Y:
+                ret = parse_fixed_byte_string(&map, cose_key->key.y, 32);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                must_item_flag |= 0x10;
+                break;
+            default:
+                break;
+        }
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+    }
+
+    // 必須項目が揃っていない場合はエラー
+    if (must_item_flag != 0x1f) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t encode_cose_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
+{
+    CborError   ret;
+    CborEncoder map;
+
+    ret = cbor_encoder_create_map(encoder, &map, 5);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Key type
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_KTY);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, COSE_KEY_KTY_EC2);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Signature algorithm
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_ALG);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, alg);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // Curve type
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_CRV);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_int(&map, COSE_KEY_CRV_P256);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // x-coordinate
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_X);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_byte_string(&map, x, 32);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    // y-coordinate
+    ret = cbor_encode_int(&map, COSE_KEY_LABEL_Y);
+    if (ret != CborNoError) {
+        return ret;
+    }
+    ret = cbor_encode_byte_string(&map, y, 32);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    ret = cbor_encoder_close_container(encoder, &map);
+    if (ret != CborNoError) {
+        return ret;
+    }
+
+    return CborNoError;
+}
