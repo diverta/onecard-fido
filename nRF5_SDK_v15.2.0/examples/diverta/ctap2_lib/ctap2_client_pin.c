@@ -32,11 +32,6 @@ NRF_LOG_MODULE_REGISTER();
 // for debug cbor data
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      true
 #define NRF_LOG_DEBUG_CBOR_REQUEST      true
-#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
-#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
-#define NRF_LOG_DEBUG_SIGN_BUFF         false
-#define NRF_LOG_DEBUG_CBOR_RESPONSE     false
-
 
 // デコードされた
 // authenticatorClientPIN
@@ -61,6 +56,33 @@ struct {
 #define subcmd_SetPin           0x03
 #define subcmd_ChangePin        0x04
 #define subcmd_GetPinToken      0x05
+
+
+static void debug_decoded_request()
+{
+#if NRF_LOG_DEBUG_CBOR_REQUEST
+    NRF_LOG_DEBUG("pinProtocol(0x%02x) subCommand(0x%02x)", ctap2_request.pinProtocol, ctap2_request.subCommand);
+
+    NRF_LOG_DEBUG("keyAgreement: alg(%d) curve(%d) public key(64 bytes):",
+        ctap2_request.cose_key.alg, ctap2_request.cose_key.crv);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.cose_key.key.x, 32);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.cose_key.key.y, 32);
+
+    NRF_LOG_DEBUG("pinAuth(%dbytes):", PIN_AUTH_SIZE);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, PIN_AUTH_SIZE);
+
+    NRF_LOG_DEBUG("newPinEnc(%dbytes):", ctap2_request.newPinEncSize);
+    int j, k;
+    int max = (ctap2_request.newPinEncSize < NEW_PIN_ENC_MAX_SIZE) ? ctap2_request.newPinEncSize : NEW_PIN_ENC_MAX_SIZE;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(ctap2_request.newPinEnc + j, (k < 64) ? k : 64);
+    }
+
+    NRF_LOG_DEBUG("pinHashEnc(%dbytes):", PIN_HASH_ENC_SIZE);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinHashEnc, PIN_HASH_ENC_SIZE);
+#endif
+}
 
 uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
@@ -195,9 +217,8 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
             return CTAP2_ERR_CBOR_PARSING;
         }
     }
-#if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("pinProtocol(0x%02x) subCommand(0x%02x)", ctap2_request.pinProtocol, ctap2_request.subCommand);
-#endif
+
+    debug_decoded_request();
 
     // 必須項目が揃っていない場合はエラー
     if (must_item_flag != 0x03) {
