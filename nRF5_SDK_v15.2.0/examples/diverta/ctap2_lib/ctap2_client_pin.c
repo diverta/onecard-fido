@@ -12,6 +12,7 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_key_agreement.h"
 #include "ctap2_pubkey_credential.h"
+#include "ctap2_client_pin_sskey.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
 #include "fido_crypto_keypair.h"
@@ -246,8 +247,10 @@ uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded
 
 uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    // PINトークンが未生成の場合は新規生成
+    // 鍵交換用キーペア、PINトークンが
+    // 未生成の場合は新規生成
     ctap2_client_pin_token_init();
+    ctap2_client_pin_sskey_init();
     
     return CTAP1_ERR_OTHER;
 }
