@@ -27,8 +27,8 @@ void fido_crypto_init(void)
     // 初期化が未実行の場合は
     // nrf_crypto_initを実行する
     err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x ", err_code);
     if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
+        NRF_LOG_ERROR("nrf_crypto_init() returns 0x%02x ", err_code);
         APP_ERROR_CHECK(err_code);
     }
 }
@@ -46,6 +46,8 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, nrf_crypt
         data_size, 
         hash_digest, 
         hash_digest_size);
-    NRF_LOG_DEBUG("nrf_crypto_hash_calculate() returns 0x%02x ", err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_hash_calculate() returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 }

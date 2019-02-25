@@ -39,10 +39,10 @@ void ctap2_client_pin_token_init(bool force)
     APP_ERROR_CHECK(err_code);
 
     // 生成済みフラグを設定
-    if (force) {
-        NRF_LOG_DEBUG("PIN token re-generate success");
-    } else {
+    if (!pin_token_generated) {
         NRF_LOG_DEBUG("PIN token generate success");
+    } else {
+        NRF_LOG_DEBUG("PIN token re-generate success");
     }
     pin_token_generated = true;
 }

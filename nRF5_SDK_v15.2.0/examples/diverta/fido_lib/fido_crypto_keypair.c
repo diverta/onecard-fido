@@ -10,9 +10,9 @@
 #include <string.h>
 
 // for keysize informations
-#include "nrf_crypto_init.h"
 #include "nrf_crypto_ecdsa.h"
 #include "app_error.h"
+#include "fido_crypto.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_crypto_keypair
@@ -32,21 +32,6 @@ static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE]
 static size_t  private_key_raw_data_size;
 static size_t  public_key_raw_data_size;
 
-static void fido_crypto_init(void)
-{
-    ret_code_t err_code;
-    if (nrf_crypto_is_initialized() == true) {
-        return;
-    }
-    // 初期化が未実行の場合は
-    // nrf_crypto_initを実行する
-    err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x ", err_code);
-    if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
-        APP_ERROR_CHECK(err_code);
-    }
-}
-
 static void generate_keypair(void)
 {
     ret_code_t err_code;
@@ -57,7 +42,9 @@ static void generate_keypair(void)
     // 秘密鍵および公開鍵を生成する
     err_code = nrf_crypto_ecc_key_pair_generate(
         &keygen_context, &g_nrf_crypto_ecc_secp256r1_curve_info, &private_key, &public_key);
-    NRF_LOG_DEBUG("nrf_crypto_ecc_key_pair_generate() returns 0x%02x ", err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecc_key_pair_generate() returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 }
 
@@ -66,7 +53,9 @@ static void convert_private_key_to_be(uint8_t *p_raw_data, size_t *p_raw_data_si
     // 秘密鍵データをビッグエンディアンでp_raw_data配列に格納
     *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_private_key_to_raw(&private_key, p_raw_data, p_raw_data_size);
-    NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 }
 
@@ -75,7 +64,9 @@ static void convert_public_key_to_be(uint8_t *p_raw_data, size_t *p_raw_data_siz
     // 公開鍵データをビッグエンディアンでp_raw_data配列に格納
     *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_public_key_to_raw(&public_key, p_raw_data, p_raw_data_size);
-    NRF_LOG_DEBUG("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 }
 

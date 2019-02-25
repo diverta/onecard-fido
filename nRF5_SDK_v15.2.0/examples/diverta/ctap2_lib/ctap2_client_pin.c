@@ -34,6 +34,7 @@ NRF_LOG_MODULE_REGISTER();
 // for debug cbor data
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
+#define NRF_LOG_DEBUG_CALCULATED_HMAC   false
 
 // デコードされた
 // authenticatorClientPIN
@@ -236,8 +237,9 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
 
 uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    // キーペアを生成
-    ctap2_key_agreement_generate_keypair();
+    // 鍵交換用キーペアが未生成の場合は新規生成
+    // (再生成は要求しない)
+    ctap2_client_pin_sskey_init(false);
 
     // レスポンスをエンコード
     uint8_t ret = ctap2_key_agreement_encode_response(encoded_buff, encoded_buff_size);
@@ -245,6 +247,7 @@ uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded
         return ret;
     }
     
+    NRF_LOG_DEBUG("getKeyAgreement: public key generate success");
     return CTAP1_ERR_SUCCESS;
 }
 
@@ -260,6 +263,13 @@ uint8_t verify_pin_auth(void)
         return CTAP2_ERR_PROCESSING;
     }
 
+#if NRF_LOG_DEBUG_CALCULATED_HMAC
+    NRF_LOG_DEBUG("Calculated hmac(%dbytes):", ctap2_request.pinAuthSize);
+    NRF_LOG_HEXDUMP_DEBUG(hmac, ctap2_request.pinAuthSize);
+    NRF_LOG_DEBUG("pinAuth(%dbytes):", ctap2_request.pinAuthSize);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, ctap2_request.pinAuthSize);
+#endif
+
     // クライアントから受信したpinAuth（16バイト）を、
     // PINデータから生成されたHMAC SHA-256ハッシュと比較し、
     // 異なる場合はエラーを戻す
@@ -267,23 +277,23 @@ uint8_t verify_pin_auth(void)
         return CTAP2_ERR_PIN_AUTH_INVALID;
     }
 
+    NRF_LOG_DEBUG("setPIN: pinAuth verify success");
     return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    // 鍵交換用キーペア、PINトークンが未生成の場合は新規生成
-    // (再生成は要求しない)
-    ctap2_client_pin_token_init(false);
-    ctap2_client_pin_sskey_init(false);
-
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    ctap2_client_pin_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
- 
+    uint8_t ret = ctap2_client_pin_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        // 鍵交換用キーペアが未生成の場合はエラー
+        return ret;
+    }
+
     // CTAP2クライアントから受け取ったHMACハッシュを、
     // 共通鍵ハッシュを使用して検証
-    uint8_t ret = verify_pin_auth();
+    ret = verify_pin_auth();
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
@@ -293,6 +303,8 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
 
 uint8_t ctap2_client_pin_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
+    NRF_LOG_DEBUG("authenticatorClientPIN start: subcommand(0x%02x)", ctap2_request.subCommand);
+
     uint8_t ret = CTAP1_ERR_OTHER;
     switch (ctap2_request.subCommand) {
         case subcmd_GetKeyAgreement:

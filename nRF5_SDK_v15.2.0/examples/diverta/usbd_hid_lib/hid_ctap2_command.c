@@ -11,6 +11,8 @@
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_client_pin.h"
+#include "ctap2_client_pin_token.h"
+#include "ctap2_client_pin_sskey.h"
 #include "fido_common.h"
 #include "fido_crypto_ecb.h"
 #include "fido_idling_led.h"
@@ -433,6 +435,10 @@ static void command_authenticator_reset_resume_process(void)
     // 本処理を開始
     NRF_LOG_INFO("authenticatorReset start");
 
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_token_init(true);
+    ctap2_client_pin_sskey_init(true);
+
     // トークンカウンターをFlash ROM領域から削除
     // (fds_file_deleteが実行される)
     if (fido_flash_token_counter_delete() == false) {
@@ -521,6 +527,9 @@ void hid_ctap2_command_cbor_report_sent(void)
             break;
         case CTAP2_CMD_RESET:
             NRF_LOG_INFO("authenticatorReset end");
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            NRF_LOG_INFO("authenticatorClientPIN end");
             break;
         default:
             break;

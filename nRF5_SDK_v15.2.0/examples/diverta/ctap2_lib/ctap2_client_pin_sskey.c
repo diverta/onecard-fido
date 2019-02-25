@@ -16,6 +16,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for initial key pair generate
+#include "fido_common.h"
 #include "fido_crypto_keypair.h"
 #include "fido_crypto.h"
 
@@ -62,23 +63,23 @@ void ctap2_client_pin_sskey_init(bool force)
     // モジュール変数内で保持
     fido_crypto_keypair_generate();
     memcpy(private_key_raw_data, fido_crypto_keypair_private_key(), sizeof(private_key_raw_data));
-    memcpy(public_key_raw_data, fido_crypto_keypair_public_key, sizeof(public_key_raw_data));
+    memcpy(public_key_raw_data, fido_crypto_keypair_public_key(), sizeof(public_key_raw_data));
 
     // 生成済みフラグを設定
-    if (force) {
-        NRF_LOG_DEBUG("Keypair for exchanging key re-generate success");
-    } else {
+    if (!keypair_generated) {
         NRF_LOG_DEBUG("Keypair for exchanging key generate success");
+    } else {
+        NRF_LOG_DEBUG("Keypair for exchanging key re-generate success");
     }
     keypair_generated = true;
 }
 
-void ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
+uint8_t ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
 {
     // 鍵交換用キーペアが未生成の場合は終了
     if (!keypair_generated) {
-        NRF_LOG_ERROR("PIN token is not exist");
-        return;
+        NRF_LOG_ERROR("Keypair for exchanging key is not exist");
+        return CTAP1_ERR_OTHER;
     }
 
     // CTAP2クライアントから受け取った公開鍵を、SDK内部形式に変換
@@ -105,6 +106,12 @@ void ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
     // 共通鍵ハッシュ（32バイト）を作成
     sskey_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
     fido_crypto_generate_sha256_hash(sskey_raw_data, sskey_raw_data_size, sskey_hash, &sskey_hash_size);
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t *ctap2_client_pin_sskey_public_key(void)
+{
+    return public_key_raw_data;
 }
 
 uint8_t *ctap2_client_pin_sskey_calculate_hmac(
