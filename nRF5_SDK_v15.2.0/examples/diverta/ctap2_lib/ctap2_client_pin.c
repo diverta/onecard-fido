@@ -12,6 +12,7 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
+#include "ctap2_client_pin_crypto.h"
 #include "ctap2_client_pin_sskey.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
@@ -62,6 +63,8 @@ struct {
 #define subcmd_ChangePin        0x04
 #define subcmd_GetPinToken      0x05
 
+// 復号化されたPINコードを保持
+static uint8_t newPin[NEW_PIN_ENC_MAX_SIZE];
 
 static void debug_decoded_request()
 {
@@ -297,6 +300,11 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
+
+    // CTAP2クライアントから受け取ったPINコードを、
+    // 共通鍵ハッシュを使用して復号化
+    ctap2_client_pin_crypto_init(ctap2_client_pin_sskey_hash());
+    ctap2_client_pin_decrypt(ctap2_request.newPinEnc, ctap2_request.newPinEncSize, newPin);
 
     // レスポンスをエンコード
     ret = ctap2_cbor_encode_response_set_pin(encoded_buff, encoded_buff_size);

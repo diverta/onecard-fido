@@ -114,6 +114,11 @@ uint8_t *ctap2_client_pin_sskey_public_key(void)
     return public_key_raw_data;
 }
 
+uint8_t *ctap2_client_pin_sskey_hash(void)
+{
+    return sskey_hash;
+}
+
 uint8_t *ctap2_client_pin_sskey_calculate_hmac(
     uint8_t *src_data_1, size_t src_data_1_size,
     uint8_t *src_data_2, size_t src_data_2_size)

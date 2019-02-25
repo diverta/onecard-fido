@@ -143,6 +143,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
   $(CT2LIB_DIR)/ctap2_client_pin.c \
+  $(CT2LIB_DIR)/ctap2_client_pin_crypto.c \
   $(CT2LIB_DIR)/ctap2_client_pin_sskey.c \
   $(CT2LIB_DIR)/ctap2_client_pin_token.c \
   $(CT2LIB_DIR)/ctap2_common.c \
