@@ -10,7 +10,7 @@
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
-#include "ctap2_key_agreement.h"
+#include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_client_pin_sskey.h"
 #include "ctap2_client_pin_token.h"
@@ -242,8 +242,8 @@ uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded
     ctap2_client_pin_sskey_init(false);
 
     // レスポンスをエンコード
-    uint8_t ret = ctap2_key_agreement_encode_response(encoded_buff, encoded_buff_size);
-    if (ret == CTAP1_ERR_SUCCESS) {
+    uint8_t ret = ctap2_cbor_encode_response_key_agreement(encoded_buff, encoded_buff_size);
+    if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
     
@@ -295,6 +295,12 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
     // 共通鍵ハッシュを使用して検証
     ret = verify_pin_auth();
     if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
+    // レスポンスをエンコード
+    ret = ctap2_cbor_encode_response_set_pin(encoded_buff, encoded_buff_size);
+    if (ret == CTAP1_ERR_SUCCESS) {
         return ret;
     }
 

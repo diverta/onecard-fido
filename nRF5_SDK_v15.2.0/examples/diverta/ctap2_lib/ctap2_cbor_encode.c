@@ -1,5 +1,5 @@
 /* 
- * File:   ctap2_key_agreement.c
+ * File:   ctap2_cbor_encode.c
  * Author: makmorit
  *
  * Created on 2019/02/18, 15:31
@@ -13,7 +13,7 @@
 #include "ctap2_client_pin_sskey.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_key_agreement
+#define NRF_LOG_MODULE_NAME ctap2_cbor_encode
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -31,7 +31,7 @@ static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_key_agreement_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // 作業領域初期化
     memset(encoded_buff, 0x00, *encoded_buff_size);
@@ -66,6 +66,21 @@ uint8_t ctap2_key_agreement_encode_response(uint8_t *encoded_buff, size_t *encod
     if (ret != CborNoError) {
         return CTAP2_ERR_PROCESSING;
     }
+
+    // CBORバッファの長さを設定
+    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_encode_response_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
+{
+    // 作業領域初期化
+    memset(encoded_buff, 0x00, *encoded_buff_size);
+    
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // CBORバッファの長さを設定
     *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
