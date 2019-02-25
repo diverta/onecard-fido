@@ -7,11 +7,14 @@
 #ifndef CTAP2_CLIENT_PIN_SSKEY_H
 #define CTAP2_CLIENT_PIN_SSKEY_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void ctap2_client_pin_sskey_init(void);
+void ctap2_client_pin_sskey_init(bool force);
+void ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data);
 
 #ifdef __cplusplus
 }

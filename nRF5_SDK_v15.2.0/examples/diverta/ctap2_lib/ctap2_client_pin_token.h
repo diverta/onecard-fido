@@ -7,11 +7,13 @@
 #ifndef CTAP2_CLIENT_PIN_TOKEN_H
 #define CTAP2_CLIENT_PIN_TOKEN_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void     ctap2_client_pin_token_init(void);
+void     ctap2_client_pin_token_init(bool force);
 uint8_t *ctap2_client_pin_token_read(void);
 
 #ifdef __cplusplus
