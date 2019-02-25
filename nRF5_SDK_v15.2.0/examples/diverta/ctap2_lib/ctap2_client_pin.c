@@ -47,9 +47,11 @@ struct {
     uint8_t subCommand;
     CTAP_COSE_KEY cose_key;
     uint8_t pinAuth[PIN_AUTH_SIZE];
+    size_t  pinAuthSize;
     uint8_t newPinEnc[NEW_PIN_ENC_MAX_SIZE];
     size_t  newPinEncSize;
     uint8_t pinHashEnc[PIN_HASH_ENC_SIZE];
+    size_t  pinHashEncSize;
 } ctap2_request;
 
 // サブコマンド定義
@@ -185,6 +187,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                ctap2_request.pinAuthSize = PIN_AUTH_SIZE;
                 break;
             case 5:
                 // newPinEnc (Byte Array)
@@ -209,6 +212,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                ctap2_request.pinHashEncSize = PIN_HASH_ENC_SIZE;
                 break;
             default:
                 break;
@@ -244,6 +248,27 @@ uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded
     return CTAP1_ERR_SUCCESS;
 }
 
+uint8_t verify_pin_auth(void)
+{
+    // 共通鍵ハッシュを利用し、
+    // CTAP2クライアントから受領したPINデータを
+    // HMAC SHA-256アルゴリズムでハッシュ化
+    uint8_t *hmac = ctap2_client_pin_sskey_calculate_hmac(
+        ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
+        ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize);
+    if (hmac == NULL) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+    // クライアントから受信したpinAuth（16バイト）を、
+    // PINデータから生成されたHMAC SHA-256ハッシュと比較し、
+    // 異なる場合はエラーを戻す
+    if (memcmp(hmac, ctap2_request.pinAuth, ctap2_request.pinAuthSize) != 0) {
+        return CTAP2_ERR_PIN_AUTH_INVALID;
+    }
+
+    return CTAP1_ERR_SUCCESS;
+}
 
 uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
@@ -253,10 +278,17 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
     ctap2_client_pin_sskey_init(false);
 
     // CTAP2クライアントから受け取った公開鍵と、
-    // 鍵交換用キーペアの秘密鍵を使用し、共通鍵を生成
+    // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
     ctap2_client_pin_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
-    
-    return CTAP1_ERR_OTHER;
+ 
+    // CTAP2クライアントから受け取ったHMACハッシュを、
+    // 共通鍵ハッシュを使用して検証
+    uint8_t ret = verify_pin_auth();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
+    return CTAP1_ERR_SUCCESS;
 }
 
 uint8_t ctap2_client_pin_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
