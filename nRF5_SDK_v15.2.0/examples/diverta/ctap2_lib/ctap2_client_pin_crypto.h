@@ -11,8 +11,7 @@
 extern "C" {
 #endif
 
-bool ctap2_client_pin_crypto_init(uint8_t *p_password);
-void ctap2_client_pin_decrypt(uint8_t *p_ciphertext, size_t ciphertext_size, uint8_t *out_packet);
+size_t ctap2_client_pin_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
 
 #ifdef __cplusplus
 }

@@ -5,66 +5,65 @@
  * Created on 2019/02/25, 15:11
  */
 #include "sdk_common.h"
-#include "nrf_soc.h"
+
+// for nrf_crypto_aes_crypt
+#include "nrf_crypto.h"
+#include "nrf_crypto_init.h"
+#include "nrf_crypto_error.h"
 #include "app_error.h"
-#include "fido_crypto_ecb.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_client_pin_crypto
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug cbor data
+#define NRF_LOG_DEBUG_DECRYPTED_DATA    true
+
 // AESで使用する作業用エリア
-#define ECB_BLOCK_LENGTH 16
-static uint8_t  m_block_cipher[ECB_BLOCK_LENGTH];
-static uint8_t  m_initialization_vector[ECB_BLOCK_LENGTH];
-static uint8_t *m_password;
+static nrf_crypto_aes_info_t const *p_cbc_info;
+static nrf_crypto_aes_context_t     cbc_decr_ctx;
+static uint8_t                      iv[16];
 
-static nrf_ecb_hal_data_t m_ecb_data;
-
-// AES CBCモード
-#define AES_CBC_MODE_ENCRYPTION 0
-#define AES_CBC_MODE_DECRYPTION 1
-
-bool ctap2_client_pin_crypto_init(uint8_t *p_password)
+static void app_error_check(char *function, ret_code_t err_code)
 {
-    // 暗号が格納されている領域の先頭アドレスを保持
-    m_password = p_password;
-
-    // 初期化ベクターは0とする
-    memset(m_initialization_vector, 0, ECB_BLOCK_LENGTH);
-    return true;
-}
-
-static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key) 
-{
-    // AES構造体、ブロック暗号格納領域を初期化
-    memset(&m_ecb_data, 0, sizeof(nrf_ecb_hal_data_t));
-    memset(m_block_cipher, 0, sizeof(m_block_cipher));
-
-    // 引数のcleartext, keyから16バイト分の暗号／復号計算
-    memcpy(m_ecb_data.key, p_key, SOC_ECB_KEY_LENGTH);
-    memcpy(m_ecb_data.cleartext, p_cleartext, SOC_ECB_CLEARTEXT_LENGTH);
-    uint32_t err_code = sd_ecb_block_encrypt(&m_ecb_data);
-    APP_ERROR_CHECK(err_code);
-
-    // 計算結果を、引数の領域にセット
-    memcpy(m_block_cipher, m_ecb_data.ciphertext, SOC_ECB_CIPHERTEXT_LENGTH);
-}
-
-void ctap2_client_pin_decrypt(uint8_t *p_ciphertext, size_t ciphertext_size, uint8_t *out_packet) 
-{
-    uint8_t *ciphertext;
-    uint8_t *ciphertext_prev = m_initialization_vector;
-    
-    for (int i = 0; i < ciphertext_size; i += ECB_BLOCK_LENGTH) {
-        // ブロックごとに復号化
-        ciphertext = p_ciphertext + i;
-        calculate_block_cipher(ciphertext, m_password);
-        // 前ブロックの暗号化データと、復号化されたブロックデータのXORを計算
-        for (int j = 0; j < ECB_BLOCK_LENGTH; j++) {
-            out_packet[i + j] = m_block_cipher[j] ^ ciphertext_prev[j];
-        }
-        ciphertext_prev = ciphertext;
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("%s returns 0x%04x(%s)", 
+            function, err_code, nrf_crypto_error_string_get(err_code));
+        APP_ERROR_CHECK(err_code);
     }
+}
+
+size_t ctap2_client_pin_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted) 
+{
+#if NRF_LOG_DEBUG_DECRYPTED_DATA
+    NRF_LOG_DEBUG("Encrypted data(%dbytes):", encrypted_size);
+    NRF_LOG_HEXDUMP_DEBUG(p_encrypted, encrypted_size);
+#endif
+
+    ret_code_t err_code;
+    size_t     decrypted_size;
+
+#if NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_MBEDTLS_AES_CBC)
+    p_cbc_info = &g_nrf_crypto_aes_cbc_256_info;
+#endif
+
+    err_code = nrf_crypto_init();
+    app_error_check("nrf_crypto_init", err_code);
+
+    err_code = nrf_mem_init();
+    app_error_check("nrf_mem_init", err_code);
+
+    memset(iv, 0, sizeof(iv));
+    decrypted_size = encrypted_size;
+    err_code = nrf_crypto_aes_crypt(&cbc_decr_ctx, p_cbc_info, NRF_CRYPTO_DECRYPT, 
+        p_key, iv, p_encrypted, encrypted_size, decrypted, &decrypted_size);
+    app_error_check("nrf_crypto_aes_crypt", err_code);
+
+#if NRF_LOG_DEBUG_DECRYPTED_DATA
+    NRF_LOG_DEBUG("Decrypted data(%dbytes):", decrypted_size);
+    NRF_LOG_HEXDUMP_DEBUG(decrypted, decrypted_size);
+#endif
+
+    return decrypted_size;
 }

@@ -303,8 +303,11 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    ctap2_client_pin_crypto_init(ctap2_client_pin_sskey_hash());
-    ctap2_client_pin_decrypt(ctap2_request.newPinEnc, ctap2_request.newPinEncSize, newPin);
+    size_t new_pin_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+        ctap2_request.newPinEnc, ctap2_request.newPinEncSize, newPin);
+    if (new_pin_size != ctap2_request.newPinEncSize) {
+        return CTAP1_ERR_OTHER;
+    }
 
     // レスポンスをエンコード
     ret = ctap2_cbor_encode_response_set_pin(encoded_buff, encoded_buff_size);

@@ -55,19 +55,17 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/bsp/bsp.c \
   $(SDK_ROOT)/components/libraries/button/app_button.c \
   $(SDK_ROOT)/components/libraries/crc16/crc16.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_aes_aead.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_aes.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_chacha_poly_aead.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecc.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdh.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_eddsa.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hash.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hmac.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_init.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_mutex.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_rng.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_shared.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_aes.c \
+  $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_init.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_init.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_rng_mbedtls.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_rng.c \
@@ -138,6 +136,15 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
   $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
+  $(SDK_ROOT)/external/mbedtls/library/aes.c \
+  $(SDK_ROOT)/external/mbedtls/library/aesni.c \
+  $(SDK_ROOT)/external/mbedtls/library/bignum.c \
+  $(SDK_ROOT)/external/mbedtls/library/cipher.c \
+  $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
+  $(SDK_ROOT)/external/mbedtls/library/ecp.c \
+  $(SDK_ROOT)/external/mbedtls/library/ecp_curves.c \
+  $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
+  $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \

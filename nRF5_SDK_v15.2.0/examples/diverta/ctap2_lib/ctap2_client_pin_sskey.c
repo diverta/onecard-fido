@@ -50,6 +50,17 @@ static nrf_crypto_hmac_context_t hmac_context;
 static uint8_t                   hmac_data[NRF_CRYPTO_HASH_SIZE_SHA256];
 static size_t                    hmac_data_size;
 
+static nrf_crypto_ecdh_context_t nrf_crypto_ecdh_context;
+
+static void app_error_check(char *function, ret_code_t err_code)
+{
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("%s returns 0x%04x(%s)", 
+            function, err_code, nrf_crypto_error_string_get(err_code));
+        APP_ERROR_CHECK(err_code);
+    }
+}
+
 void ctap2_client_pin_sskey_init(bool force)
 {
     // 鍵交換用キーペアが生成済みで、かつ
@@ -87,20 +98,20 @@ uint8_t ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
         &g_nrf_crypto_ecc_secp256r1_curve_info, 
         &client_public_key, client_public_key_raw_data, 
         NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
-    APP_ERROR_CHECK(err_code);
-
+    app_error_check("nrf_crypto_ecc_public_key_from_raw", err_code);
+    
     // 自分で生成した公開鍵を、SDK内部形式に変換
     err_code = nrf_crypto_ecc_private_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info, 
         &self_private_key, private_key_raw_data, 
         NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
-    APP_ERROR_CHECK(err_code);
+    app_error_check("nrf_crypto_ecc_private_key_from_raw", err_code);
 
     // 共通鍵を生成
     sskey_raw_data_size = NRF_CRYPTO_ECDH_SECP256R1_SHARED_SECRET_SIZE;
-    err_code = nrf_crypto_ecdh_compute(NULL,
+    err_code = nrf_crypto_ecdh_compute(&nrf_crypto_ecdh_context,
         &self_private_key, &client_public_key, sskey_raw_data, &sskey_raw_data_size);
-    APP_ERROR_CHECK(err_code);
+    app_error_check("nrf_crypto_ecdh_compute", err_code);
 
     // 生成した共通鍵をSHA-256ハッシュ化し、
     // 共通鍵ハッシュ（32バイト）を作成
@@ -126,24 +137,24 @@ uint8_t *ctap2_client_pin_sskey_calculate_hmac(
     // HMACハッシュ計算には、共通鍵ハッシュを使用
     ret_code_t err_code = nrf_crypto_hmac_init(
         &hmac_context, &g_nrf_crypto_hmac_sha256_info, sskey_hash, sskey_hash_size);
-    APP_ERROR_CHECK(err_code);
+    app_error_check("nrf_crypto_hmac_init", err_code);
 
     // 1番目の引数を計算対象に設定
     if (src_data_1 != NULL && src_data_1_size > 0) {
         err_code = nrf_crypto_hmac_update(&hmac_context, src_data_1, src_data_1_size);
-        APP_ERROR_CHECK(err_code);
+        app_error_check("nrf_crypto_hmac_update", err_code);
     }
 
     // 2番目の引数を計算対象に設定
     if (src_data_2 != NULL && src_data_2_size > 0) {
         err_code = nrf_crypto_hmac_update(&hmac_context, src_data_2, src_data_2_size);
-        APP_ERROR_CHECK(err_code);
+        app_error_check("nrf_crypto_hmac_update", err_code);
     }
 
     // HMACハッシュを計算
     hmac_data_size = sizeof(hmac_data);
     err_code = nrf_crypto_hmac_finalize(&hmac_context, hmac_data, &hmac_data_size);
-    APP_ERROR_CHECK(err_code);
+    app_error_check("nrf_crypto_hmac_finalize", err_code);
 
     // HMACハッシュの先頭アドレスを戻す
     return hmac_data;
