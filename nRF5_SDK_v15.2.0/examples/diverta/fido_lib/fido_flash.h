@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "fds.h"
+
 // Flash ROMに保存するための
 // ファイルID、レコードKey
 //
@@ -28,6 +30,13 @@ extern "C" {
 #define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFB)
 #define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 #define FIDO_TOKEN_COUNTER_RECORD_SIZE 17
+//
+//  PINコードハッシュ管理用
+//    トークンカウンター管理と同一ファイルで管理
+//
+#define FIDO_PIN_STORE_FILE_ID          (FIDO_TOKEN_COUNTER_FILE_ID)
+#define FIDO_PIN_STORE_HASH_RECORD_KEY  (0xBFFC)
+#define FIDO_PIN_STORE_HASH_RECORD_SIZE  9
 
 //
 //  鍵・証明書の長さを管理
@@ -37,6 +46,7 @@ extern "C" {
 #define SKEY_CERT_WORD_NUM (SKEY_WORD_NUM+CERT_WORD_NUM)
 
 bool      fido_flash_force_fdc_gc(void);
+bool      fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
 
 bool      fido_flash_skey_cert_delete(void);
 bool      fido_flash_skey_cert_write(void);

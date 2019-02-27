@@ -66,6 +66,8 @@
       <itemPath>../ctap2_lib/ctap2_client_pin_crypto.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_sskey.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_sskey.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_client_pin_store.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_client_pin_store.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_token.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_token.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.c</itemPath>
@@ -3189,6 +3191,16 @@
             flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_client_pin_sskey.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_client_pin_store.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_client_pin_store.h"
             ex="false"
             tool="3"
             flavor2="0">

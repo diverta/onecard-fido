@@ -16,6 +16,7 @@
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_client_pin_crypto.h"
 #include "ctap2_client_pin_sskey.h"
+#include "ctap2_client_pin_store.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
@@ -393,10 +394,14 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
     // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
     m_response_length = *encoded_buff_size + 1;
 
-    // TODO: PINデータハッシュをFlash ROMに保管
-    // 以下は仮の実装なので、保管処理が完成したら差し替えてください。
-    NRF_LOG_DEBUG("setPIN: PIN hash store success");
-    hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+    // PINコードハッシュをFlash ROMに保管
+    // リトライカウンターの初期値は８とする
+    uint32_t retry_counter = 8;
+    if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) != false) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
+        return;
+    }
 }
 
 void ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t response_buffer_size)
@@ -430,6 +435,7 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
             if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
                 // レコードIDがPINコードハッシュ管理であれば
                 // ここでレスポンスを戻す
+                NRF_LOG_DEBUG("setPIN: PIN hash store success");
                 hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
             }
             break;

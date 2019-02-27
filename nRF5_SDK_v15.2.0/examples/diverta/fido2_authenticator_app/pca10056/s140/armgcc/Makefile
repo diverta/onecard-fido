@@ -152,6 +152,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_client_pin.c \
   $(CT2LIB_DIR)/ctap2_client_pin_crypto.c \
   $(CT2LIB_DIR)/ctap2_client_pin_sskey.c \
+  $(CT2LIB_DIR)/ctap2_client_pin_store.c \
   $(CT2LIB_DIR)/ctap2_client_pin_token.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
