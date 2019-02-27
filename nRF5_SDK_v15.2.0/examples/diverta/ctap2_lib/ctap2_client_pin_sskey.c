@@ -99,7 +99,7 @@ uint8_t ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
         &client_public_key, client_public_key_raw_data, 
         NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
     app_error_check("nrf_crypto_ecc_public_key_from_raw", err_code);
-    
+
     // 自分で生成した公開鍵を、SDK内部形式に変換
     err_code = nrf_crypto_ecc_private_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info, 

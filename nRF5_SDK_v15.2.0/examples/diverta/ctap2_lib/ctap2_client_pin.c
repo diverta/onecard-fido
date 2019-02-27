@@ -36,6 +36,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
 #define NRF_LOG_DEBUG_CALCULATED_HMAC   false
+#define NRF_LOG_DEBUG_PIN_CODE          false
 
 // デコードされた
 // authenticatorClientPIN
@@ -64,7 +65,12 @@ struct {
 #define subcmd_GetPinToken      0x05
 
 // 復号化されたPINコードを保持
-static uint8_t newPin[NEW_PIN_ENC_MAX_SIZE];
+static uint8_t pin_code[NEW_PIN_ENC_MAX_SIZE];
+static size_t  pin_code_size;
+
+// PINコードの長さ
+#define NEW_PIN_MAX_SIZE        64
+#define NEW_PIN_MIN_SIZE        4
 
 static void debug_decoded_request()
 {
@@ -280,7 +286,36 @@ uint8_t verify_pin_auth(void)
         return CTAP2_ERR_PIN_AUTH_INVALID;
     }
 
-    NRF_LOG_DEBUG("setPIN: pinAuth verify success");
+    NRF_LOG_DEBUG("pinAuth verification success");
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t check_pin_size(void)
+{
+    uint8_t *pin_buff      = pin_code;
+    size_t   pin_buff_size = pin_code_size;
+
+    // PINバッファには後ろが 0 埋めされているため、
+    // その部分を長さにカウントしないようにする
+    uint8_t pin_len = pin_buff_size - 1;
+    while (pin_buff[pin_len] == 0 && 0 < pin_len) {
+        pin_len--;
+    }
+
+    // PINコードの長さを検証
+    pin_len += 1;
+    if (pin_len < NEW_PIN_MIN_SIZE || pin_len >= NEW_PIN_MAX_SIZE) {
+        return CTAP2_ERR_PIN_POLICY_VIOLATION;
+    }
+
+    // 後ろの 0 埋めを考慮しないPINコード町を設定
+    pin_code_size = pin_len;
+
+#if NRF_LOG_DEBUG_PIN_CODE
+    NRF_LOG_DEBUG("PIN code(%dbytes):", pin_len);
+    NRF_LOG_HEXDUMP_DEBUG(pin_code, pin_len);
+#endif
+
     return CTAP1_ERR_SUCCESS;
 }
 
@@ -303,10 +338,16 @@ uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    size_t new_pin_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
-        ctap2_request.newPinEnc, ctap2_request.newPinEncSize, newPin);
-    if (new_pin_size != ctap2_request.newPinEncSize) {
+    pin_code_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+        ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
+    if (pin_code_size != ctap2_request.newPinEncSize) {
         return CTAP1_ERR_OTHER;
+    }
+
+    // PINコードの長さをチェック
+    ret = check_pin_size();
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
     }
 
     // レスポンスをエンコード

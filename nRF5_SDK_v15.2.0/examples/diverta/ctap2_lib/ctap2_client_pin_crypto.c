@@ -18,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug cbor data
-#define NRF_LOG_DEBUG_DECRYPTED_DATA    true
+#define NRF_LOG_DEBUG_DECRYPTED_DATA    false
 
 // AESで使用する作業用エリア
 static nrf_crypto_aes_info_t const *p_cbc_info;
