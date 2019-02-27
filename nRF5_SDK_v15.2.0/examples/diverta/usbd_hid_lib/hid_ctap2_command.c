@@ -149,7 +149,7 @@ void hid_ctap2_command_init(void)
     hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-static void send_ctap2_command_response(uint8_t ctap2_status, size_t length)
+void hid_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
 {
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
@@ -165,7 +165,7 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     //   エラーなので送信バイト数＝１
-    send_ctap2_command_response(ctap2_status, 1);
+    hid_ctap2_command_send_response(ctap2_status, 1);
 }
 
 void hid_ctap2_command_keepalive_timer_handler(void)
@@ -266,7 +266,7 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
-        send_ctap2_command_response(CTAP1_ERR_SUCCESS, response_length);
+        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
 
@@ -362,7 +362,7 @@ static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
-        send_ctap2_command_response(CTAP1_ERR_SUCCESS, response_length);
+        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
 
@@ -383,7 +383,7 @@ static void command_authenticator_get_info(void)
     }
 
     // レスポンスデータを転送
-    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
+    hid_ctap2_command_send_response(ctap2_status, cbor_data_length + 1);
 }
 
 static void command_authenticator_client_pin(void)
@@ -399,22 +399,31 @@ static void command_authenticator_client_pin(void)
         return;
     }
 
-    // レスポンスの先頭１バイトはステータスコードであるため、
-    // ２バイトめからCBORレスポンスをセットさせるようにする
-    cbor_data_buffer = response_buffer + 1;
-    cbor_data_length = sizeof(response_buffer) - 1;
-
     // サブコマンドに応じた処理を実行し、
     // 処理結果のCBORレスポンスを格納
-    ctap2_status = ctap2_client_pin_encode_response(cbor_data_buffer, &cbor_data_length);
-    if (ctap2_status != CTAP1_ERR_SUCCESS) {
-        // NGであれば、エラーレスポンスを生成して戻す
-        send_ctap2_command_error_response(ctap2_status);
+    ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+}
+
+static void command_authenticator_client_pin_send_response(fds_evt_t const *const p_evt)
+{
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+        NRF_LOG_ERROR("authenticatorClientPIN abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
-    // レスポンスデータを転送
-    send_ctap2_command_response(ctap2_status, cbor_data_length + 1);
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("authenticatorClientPIN retry: FDS GC done ");
+        ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // 全ての処理が完了したら、
+        // レスポンスを生成してCTAP2クライアントに戻す
+        ctap2_client_pin_send_response(p_evt);
+    }
 }
 
 static void command_authenticator_reset(void)
@@ -461,7 +470,7 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
         // トークンカウンター削除完了
         NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
         // レスポンスを生成してWebAuthnクライアントに戻す
-        send_ctap2_command_response(CTAP1_ERR_SUCCESS, 1);
+        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
@@ -509,6 +518,9 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
             break;
         case CTAP2_CMD_RESET:
             command_authenticator_reset_send_response(p_evt);
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            command_authenticator_client_pin_send_response(p_evt);
             break;
         default:
             break;
