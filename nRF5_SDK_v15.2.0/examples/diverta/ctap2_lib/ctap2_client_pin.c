@@ -18,6 +18,7 @@
 #include "ctap2_client_pin_sskey.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
+#include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
@@ -76,6 +77,10 @@ static size_t  pin_code_size;
 // PINコードの長さ
 #define NEW_PIN_MAX_SIZE        64
 #define NEW_PIN_MIN_SIZE        4
+
+// PINコードハッシュを保持
+static uint8_t pin_code_hash[NRF_CRYPTO_HASH_SIZE_SHA256];
+static size_t  pin_code_hash_size;
 
 static void debug_decoded_request()
 {
@@ -300,7 +305,7 @@ uint8_t verify_pin_auth(void)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t check_pin_size(void)
+uint8_t calculate_pin_code_hash(void)
 {
     uint8_t *pin_buff      = pin_code;
     size_t   pin_buff_size = pin_code_size;
@@ -318,12 +323,19 @@ uint8_t check_pin_size(void)
         return CTAP2_ERR_PIN_POLICY_VIOLATION;
     }
 
-    // 後ろの 0 埋めを考慮しないPINコード町を設定
+    // 後ろの 0 埋めを考慮しないPINコード長を設定
     pin_code_size = pin_len;
+
+    // PINコードをSHA-256ハッシュ化し、
+    // PINコードハッシュ（32バイト）を作成
+    pin_code_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
+    fido_crypto_generate_sha256_hash(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
 
 #if NRF_LOG_DEBUG_PIN_CODE
     NRF_LOG_DEBUG("PIN code(%dbytes):", pin_len);
     NRF_LOG_HEXDUMP_DEBUG(pin_code, pin_len);
+    NRF_LOG_DEBUG("PIN code hash(%dbytes):", pin_code_hash_size);
+    NRF_LOG_HEXDUMP_DEBUG(pin_code_hash, pin_code_hash_size);
 #endif
 
     return CTAP1_ERR_SUCCESS;
@@ -360,8 +372,9 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
         return;
     }
 
-    // PINコードの長さをチェック
-    ctap2_status = check_pin_size();
+    // PINコードの長さをチェックし、
+    // OKであればPINコードハッシュを生成
+    ctap2_status = calculate_pin_code_hash();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         hid_ctap2_command_send_response(ctap2_status, 1);
