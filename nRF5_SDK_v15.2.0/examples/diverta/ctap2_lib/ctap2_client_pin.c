@@ -397,7 +397,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
     // PINコードハッシュをFlash ROMに保管
     // リトライカウンターの初期値は８とする
     uint32_t retry_counter = 8;
-    if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) != false) {
+    if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
         return;
