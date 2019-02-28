@@ -6,13 +6,20 @@
  */
 #include "sdk_common.h"
 
+#include "fds.h"
 #include "cbor.h"
+#include "hid_ctap2_command.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
-#include "ctap2_key_agreement.h"
+#include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
+#include "ctap2_client_pin_crypto.h"
+#include "ctap2_client_pin_sskey.h"
+#include "ctap2_client_pin_store.h"
+#include "ctap2_client_pin_token.h"
 #include "fido_common.h"
+#include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
@@ -32,6 +39,8 @@ NRF_LOG_MODULE_REGISTER();
 // for debug cbor data
 #define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
 #define NRF_LOG_DEBUG_CBOR_REQUEST      false
+#define NRF_LOG_DEBUG_CALCULATED_HMAC   false
+#define NRF_LOG_DEBUG_PIN_CODE          false
 
 // デコードされた
 // authenticatorClientPIN
@@ -45,10 +54,15 @@ struct {
     uint8_t subCommand;
     CTAP_COSE_KEY cose_key;
     uint8_t pinAuth[PIN_AUTH_SIZE];
+    size_t  pinAuthSize;
     uint8_t newPinEnc[NEW_PIN_ENC_MAX_SIZE];
     size_t  newPinEncSize;
     uint8_t pinHashEnc[PIN_HASH_ENC_SIZE];
+    size_t  pinHashEncSize;
 } ctap2_request;
+
+// レスポンス長を保持
+static size_t m_response_length;
 
 // サブコマンド定義
 #define subcmd_GetRetries       0x01
@@ -57,6 +71,17 @@ struct {
 #define subcmd_ChangePin        0x04
 #define subcmd_GetPinToken      0x05
 
+// 復号化されたPINコードを保持
+static uint8_t pin_code[NEW_PIN_ENC_MAX_SIZE];
+static size_t  pin_code_size;
+
+// PINコードの長さ
+#define NEW_PIN_MAX_SIZE        64
+#define NEW_PIN_MIN_SIZE        4
+
+// PINコードハッシュを保持
+static uint8_t pin_code_hash[NRF_CRYPTO_HASH_SIZE_SHA256];
+static size_t  pin_code_hash_size;
 
 static void debug_decoded_request()
 {
@@ -183,6 +208,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                ctap2_request.pinAuthSize = PIN_AUTH_SIZE;
                 break;
             case 5:
                 // newPinEnc (Byte Array)
@@ -207,6 +233,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                ctap2_request.pinHashEncSize = PIN_HASH_ENC_SIZE;
                 break;
             default:
                 break;
@@ -228,39 +255,191 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t encode_get_key_agreement_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+void perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    // キーペアを生成
-    ctap2_key_agreement_generate_keypair();
+    // 鍵交換用キーペアが未生成の場合は新規生成
+    // (再生成は要求しない)
+    ctap2_client_pin_sskey_init(false);
 
     // レスポンスをエンコード
-    uint8_t ret = ctap2_key_agreement_encode_response(encoded_buff, encoded_buff_size);
-    if (ret == CTAP1_ERR_SUCCESS) {
-        return ret;
+    uint8_t ctap2_status = ctap2_cbor_encode_response_key_agreement(encoded_buff, encoded_buff_size);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
     }
-    
+
+    // レスポンスをCTAP2クライアントに戻す
+    // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
+    m_response_length = *encoded_buff_size + 1;
+    hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+    NRF_LOG_DEBUG("getKeyAgreement: public key generate success");
+}
+
+uint8_t verify_pin_auth(void)
+{
+    // 共通鍵ハッシュを利用し、
+    // CTAP2クライアントから受領したPINデータを
+    // HMAC SHA-256アルゴリズムでハッシュ化
+    uint8_t *hmac = ctap2_client_pin_sskey_calculate_hmac(
+        ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
+        ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize);
+    if (hmac == NULL) {
+        return CTAP2_ERR_PROCESSING;
+    }
+
+#if NRF_LOG_DEBUG_CALCULATED_HMAC
+    NRF_LOG_DEBUG("Calculated hmac(%dbytes):", ctap2_request.pinAuthSize);
+    NRF_LOG_HEXDUMP_DEBUG(hmac, ctap2_request.pinAuthSize);
+    NRF_LOG_DEBUG("pinAuth(%dbytes):", ctap2_request.pinAuthSize);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, ctap2_request.pinAuthSize);
+#endif
+
+    // クライアントから受信したpinAuth（16バイト）を、
+    // PINデータから生成されたHMAC SHA-256ハッシュと比較し、
+    // 異なる場合はエラーを戻す
+    if (memcmp(hmac, ctap2_request.pinAuth, ctap2_request.pinAuthSize) != 0) {
+        return CTAP2_ERR_PIN_AUTH_INVALID;
+    }
+
+    NRF_LOG_DEBUG("pinAuth verification success");
     return CTAP1_ERR_SUCCESS;
 }
 
-
-uint8_t encode_set_pin_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+uint8_t calculate_pin_code_hash(void)
 {
-    return CTAP1_ERR_OTHER;
+    uint8_t *pin_buff      = pin_code;
+    size_t   pin_buff_size = pin_code_size;
+
+    // PINバッファには後ろが 0 埋めされているため、
+    // その部分を長さにカウントしないようにする
+    uint8_t pin_len = pin_buff_size - 1;
+    while (pin_buff[pin_len] == 0 && 0 < pin_len) {
+        pin_len--;
+    }
+
+    // PINコードの長さを検証
+    pin_len += 1;
+    if (pin_len < NEW_PIN_MIN_SIZE || pin_len >= NEW_PIN_MAX_SIZE) {
+        return CTAP2_ERR_PIN_POLICY_VIOLATION;
+    }
+
+    // 後ろの 0 埋めを考慮しないPINコード長を設定
+    pin_code_size = pin_len;
+
+    // PINコードをSHA-256ハッシュ化し、
+    // PINコードハッシュ（32バイト）を作成
+    pin_code_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
+    fido_crypto_generate_sha256_hash(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
+
+#if NRF_LOG_DEBUG_PIN_CODE
+    NRF_LOG_DEBUG("PIN code(%dbytes):", pin_len);
+    NRF_LOG_HEXDUMP_DEBUG(pin_code, pin_len);
+    NRF_LOG_DEBUG("PIN code hash(%dbytes):", pin_code_hash_size);
+    NRF_LOG_HEXDUMP_DEBUG(pin_code_hash, pin_code_hash_size);
+#endif
+
+    return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_client_pin_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size)
+void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
-    uint8_t ret = CTAP1_ERR_OTHER;
+    // CTAP2クライアントから受け取った公開鍵と、
+    // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
+    uint8_t ctap2_status = ctap2_client_pin_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // 鍵交換用キーペアが未生成の場合は
+        // エラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
+    }
+
+    // CTAP2クライアントから受け取ったHMACハッシュを、
+    // 共通鍵ハッシュを使用して検証
+    ctap2_status = verify_pin_auth();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
+    }
+
+    // CTAP2クライアントから受け取ったPINコードを、
+    // 共通鍵ハッシュを使用して復号化
+    pin_code_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+        ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
+    if (pin_code_size != ctap2_request.newPinEncSize) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
+        return;
+    }
+
+    // PINコードの長さをチェックし、
+    // OKであればPINコードハッシュを生成
+    ctap2_status = calculate_pin_code_hash();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
+    }
+
+    // レスポンスをエンコード
+    ctap2_status = ctap2_cbor_encode_response_set_pin(encoded_buff, encoded_buff_size);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
+    }
+
+    // レスポンスをモジュール変数に設定しておく
+    // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
+    m_response_length = *encoded_buff_size + 1;
+
+    // PINコードハッシュをFlash ROMに保管
+    // リトライカウンターの初期値は８とする
+    uint32_t retry_counter = 8;
+    if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) == false) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
+        return;
+    }
+}
+
+void ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t response_buffer_size)
+{
+    NRF_LOG_DEBUG("authenticatorClientPIN start: subcommand(0x%02x)", ctap2_request.subCommand);
+
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *cbor_data_buffer = response_buffer + 1;
+    size_t   cbor_data_length = response_buffer_size - 1;
+
     switch (ctap2_request.subCommand) {
         case subcmd_GetKeyAgreement:
-            ret = encode_get_key_agreement_response(encoded_buff, encoded_buff_size);
+            perform_get_key_agreement(cbor_data_buffer, &cbor_data_length);
             break;
         case subcmd_SetPin:
-            ret = encode_set_pin_response(encoded_buff, encoded_buff_size);
+            perform_set_pin(cbor_data_buffer, &cbor_data_length);
+            break;
+        default:
+            // サポートされていないサブコマンドなので
+            // エラーステータスを戻す
+            hid_ctap2_command_send_response(CTAP1_ERR_INVALID_COMMAND, 1);
+            break;
+    }
+}
+
+void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
+{
+    switch (ctap2_request.subCommand) {
+        case subcmd_SetPin:
+            if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
+                // レコードIDがPINコードハッシュ管理であれば
+                // ここでレスポンスを戻す
+                NRF_LOG_DEBUG("setPIN: PIN hash store success");
+                hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+            }
             break;
         default:
             break;
     }
-
-    return ret;
 }

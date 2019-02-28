@@ -46,6 +46,7 @@ extern "C" {
 #define CTAP2_ERR_INVALID_OPTION        0x2c
 #define CTAP2_ERR_KEEPALIVE_CANCEL      0x2d
 #define CTAP2_ERR_NO_CREDENTIALS        0x2e
+#define CTAP2_ERR_PIN_AUTH_INVALID      0x33
 #define CTAP2_ERR_PIN_POLICY_VIOLATION  0x37
 #define CTAP1_ERR_OTHER                 0x7f
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
