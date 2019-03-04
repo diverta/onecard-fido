@@ -1,0 +1,66 @@
+mkdir _build
+cd _build && mkdir nrf52840_xxaa
+Assembling file: gcc_startup_nrf52840.S
+Compiling file: nrf_log_backend_rtt.c
+Compiling file: nrf_log_backend_serial.c
+Compiling file: nrf_log_default_backends.c
+Compiling file: nrf_log_frontend.c
+Compiling file: nrf_log_str_formatter.c
+Compiling file: app_button.c
+Compiling file: app_error.c
+Compiling file: app_error_handler_gcc.c
+Compiling file: app_error_weak.c
+Compiling file: app_fifo.c
+Compiling file: app_scheduler.c
+Compiling file: app_timer.c
+Compiling file: app_uart_fifo.c
+Compiling file: app_util_platform.c
+Compiling file: hardfault_implementation.c
+Compiling file: nrf_assert.c
+Compiling file: nrf_atfifo.c
+Compiling file: nrf_atflags.c
+Compiling file: nrf_atomic.c
+Compiling file: nrf_balloc.c
+Compiling file: nrf_fprintf.c
+Compiling file: nrf_fprintf_format.c
+Compiling file: nrf_memobj.c
+Compiling file: nrf_pwr_mgmt.c
+Compiling file: nrf_ringbuf.c
+Compiling file: nrf_section_iter.c
+Compiling file: nrf_strerror.c
+Compiling file: retarget.c
+Compiling file: system_nrf52840.c
+Compiling file: boards.c
+Compiling file: nrf_drv_clock.c
+Compiling file: nrf_drv_uart.c
+Compiling file: nrfx_clock.c
+Compiling file: nrfx_gpiote.c
+Compiling file: nrfx_power_clock.c
+Compiling file: nrfx_prs.c
+Compiling file: nrfx_uart.c
+Compiling file: nrfx_uarte.c
+Compiling file: bsp.c
+Compiling file: bsp_btn_ble.c
+Compiling file: main.c
+Compiling file: SEGGER_RTT.c
+Compiling file: SEGGER_RTT_Syscalls_GCC.c
+Compiling file: SEGGER_RTT_printf.c
+Compiling file: ble_advdata.c
+Compiling file: ble_advertising.c
+Compiling file: ble_conn_params.c
+Compiling file: ble_conn_state.c
+Compiling file: ble_link_ctx_manager.c
+Compiling file: ble_srv_common.c
+Compiling file: nrf_ble_gatt.c
+Compiling file: nrf_ble_qwr.c
+Compiling file: utf.c
+Compiling file: ble_nus.c
+Compiling file: nrf_sdh.c
+Compiling file: nrf_sdh_ble.c
+Compiling file: nrf_sdh_soc.c
+Linking target: _build/nrf52840_xxaa.out
+   text	   data	    bss	    dec	    hex	filename
+  38604	    548	   4636	  43788	   ab0c	_build/nrf52840_xxaa.out
+Preparing: _build/nrf52840_xxaa.hex
+Preparing: _build/nrf52840_xxaa.bin
+DONE nrf52840_xxaa
