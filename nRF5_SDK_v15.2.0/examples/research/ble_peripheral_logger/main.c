@@ -49,6 +49,7 @@
 #include "nrf_delay.h"
 #include "nrf_drv_power.h"
 
+#include "app_timer.h"
 #include "app_error.h"
 #include "app_util.h"
 #include "app_usbd_core.h"
@@ -59,23 +60,10 @@
 
 #include "boards.h"
 #include "bsp.h"
-#include "bsp_cli.h"
-#include "nrf_cli.h"
-#include "nrf_cli_uart.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
-
-/**
- * @brief CLI interface over UART
- */
-NRF_CLI_UART_DEF(m_cli_uart_transport, 0, 64, 16);
-NRF_CLI_DEF(m_cli_uart,
-            "uart_cli:~$ ",
-            &m_cli_uart_transport.transport,
-            '\r',
-            4);
 
 /**@file
  * @defgroup usbd_cdc_acm_example main.c
@@ -268,21 +256,6 @@ static void init_bsp(void)
     bsp_board_init(BSP_INIT_LEDS);
 }
 
-static void init_cli(void)
-{
-    ret_code_t ret;
-    ret = bsp_cli_init(bsp_event_callback);
-    APP_ERROR_CHECK(ret);
-    nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
-    uart_config.pseltxd = TX_PIN_NUMBER;
-    uart_config.pselrxd = RX_PIN_NUMBER;
-    uart_config.hwfc    = NRF_UART_HWFC_DISABLED;
-    ret = nrf_cli_init(&m_cli_uart, &uart_config, true, true, NRF_LOG_SEVERITY_INFO);
-    APP_ERROR_CHECK(ret);
-    ret = nrf_cli_start(&m_cli_uart);
-    APP_ERROR_CHECK(ret);
-}
-
 int main(void)
 {
     ret_code_t ret;
@@ -307,7 +280,6 @@ int main(void)
     APP_ERROR_CHECK(ret);
 
     init_bsp();
-    init_cli();
 
     app_usbd_serial_num_generate();
 
@@ -351,8 +323,6 @@ int main(void)
                 ++frame_counter;
             }
         }
-        
-        nrf_cli_process(&m_cli_uart);
 
         UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
         /* Sleep CPU only if there was no interrupt since last loop processing */

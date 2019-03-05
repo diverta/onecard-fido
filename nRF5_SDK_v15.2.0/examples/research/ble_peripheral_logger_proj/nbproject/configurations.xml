@@ -33,13 +33,35 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc/acm</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli/uart</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/examples/peripheral/rtc/pca10056/blank/config</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            </incDir>
+          </cTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>../ble_peripheral_logger/pca10056/s140/armgcc</preBuildCommandWorkingDir>
           <preBuildCommand>make</preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="../ble_peripheral_logger/main.c" ex="false" tool="0" flavor2="0">
+      <item path="../ble_peripheral_logger/main.c" ex="false" tool="0" flavor2="2">
       </item>
     </conf>
   </confs>

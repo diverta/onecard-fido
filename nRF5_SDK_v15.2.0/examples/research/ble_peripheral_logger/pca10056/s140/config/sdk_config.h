@@ -1316,7 +1316,7 @@
  
 
 #ifndef NRF_BALLOC_CLI_CMDS
-#define NRF_BALLOC_CLI_CMDS 1
+#define NRF_BALLOC_CLI_CMDS 0
 #endif
 
 // </e>
@@ -1327,7 +1327,7 @@
  
 
 #ifndef NRF_CLI_UART_ENABLED
-#define NRF_CLI_UART_ENABLED 1
+#define NRF_CLI_UART_ENABLED 0
 #endif
 
 // <q> NRF_FPRINTF_ENABLED  - nrf_fprintf - fprintf function.
@@ -1476,7 +1476,7 @@
  
 
 #ifndef NRF_QUEUE_CLI_CMDS
-#define NRF_QUEUE_CLI_CMDS 1
+#define NRF_QUEUE_CLI_CMDS 0
 #endif
 
 // </e>
@@ -1545,7 +1545,7 @@
  
 
 #ifndef NRF_CLI_ENABLED
-#define NRF_CLI_ENABLED 1
+#define NRF_CLI_ENABLED 0
 #endif
 
 // <o> NRF_CLI_ARGC_MAX - Maximum number of parameters passed to the command handler. 
@@ -1786,7 +1786,7 @@
  
 
 #ifndef NRF_LOG_CLI_CMDS
-#define NRF_LOG_CLI_CMDS 1
+#define NRF_LOG_CLI_CMDS 0
 #endif
 
 // <o> NRF_LOG_DEFAULT_LEVEL  - Default Severity level
