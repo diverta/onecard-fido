@@ -2,8 +2,9 @@ PROJECT_NAME     := ble_peripheral_logger_pca10056
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
-PROJ_DIR := ../../..
+SDK_ROOT   := $(HOME)/opt/nRF5_SDK_15.2.0
+PROJ_DIR   := ../../..
+CDCLIB_DIR := $(PROJ_DIR)/../usbd_cdc_lib
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := usbd_cdc_acm_gcc_nrf52.ld
@@ -67,6 +68,9 @@ SRC_FILES += \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(SDK_ROOT)/external/utf_converter/utf.c \
+  $(CDCLIB_DIR)/usbd_cdc_logger_interval_timer.c \
+  $(CDCLIB_DIR)/usbd_cdc_logger_process.c \
+  $(CDCLIB_DIR)/usbd_cdc_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -114,6 +118,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/hal \
   $(SDK_ROOT)/external/fprintf \
   $(SDK_ROOT)/components/libraries/log/src \
+  $(CDCLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \

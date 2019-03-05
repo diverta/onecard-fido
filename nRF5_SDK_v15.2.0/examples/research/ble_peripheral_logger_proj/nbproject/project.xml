@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../ble_peripheral_logger</sourceRootElem>
+                <sourceRootElem>../usbd_cdc_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

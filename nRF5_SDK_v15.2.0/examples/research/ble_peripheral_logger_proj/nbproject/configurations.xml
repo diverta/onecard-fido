@@ -4,6 +4,17 @@
     <df root="../ble_peripheral_logger" name="0">
       <in>main.c</in>
     </df>
+    <logicalFolder name="usbd_cdc_lib"
+                   displayName="usbd_cdc_lib"
+                   projectFiles="true"
+                   root="../usbd_cdc_lib">
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_interval_timer.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_interval_timer.h</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_process.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_process.h</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_service.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_service.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
                    projectFiles="false"
@@ -15,6 +26,7 @@
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
     <Elem>../ble_peripheral_logger</Elem>
+    <Elem>../usbd_cdc_lib</Elem>
   </sourceRootList>
   <projectmakefile>../ble_peripheral_logger/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -53,6 +65,8 @@
               <pElem>../../../../../../opt/nRF5_SDK_15.2.0/examples/peripheral/rtc/pca10056/blank/config</pElem>
               <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc</pElem>
               <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             </incDir>
           </cTool>
         </makeTool>
@@ -63,6 +77,30 @@
       </makefileType>
       <item path="../ble_peripheral_logger/main.c" ex="false" tool="0" flavor2="2">
       </item>
+      <item path="../usbd_cdc_lib/usbd_cdc_logger_interval_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../usbd_cdc_lib/usbd_cdc_logger_process.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../usbd_cdc_lib/usbd_cdc_logger_process.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../usbd_cdc_lib/usbd_cdc_service.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <folder path="0">
+        <cTool>
+          <incDir>
+            <pElem>../usbd_cdc_lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
     </conf>
   </confs>
 </configurationDescriptor>
