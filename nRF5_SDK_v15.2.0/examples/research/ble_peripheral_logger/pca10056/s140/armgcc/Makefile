@@ -1,6 +1,7 @@
-PROJECT_NAME     := ble_peripheral_logger_pca10056
+PROJECT_NAME     := ble_peripheral_logger
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
+TARGET_BOARD     := PCA10059
 
 SDK_ROOT   := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR   := ../../..
@@ -130,7 +131,7 @@ OPT = -O3 -g3
 
 # C flags common to all targets
 CFLAGS += $(OPT)
-CFLAGS += -DBOARD_PCA10056
+CFLAGS += -DBOARD_$(TARGET_BOARD)
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DNRF52840_XXAA
@@ -151,7 +152,7 @@ ASMFLAGS += -g3
 ASMFLAGS += -mcpu=cortex-m4
 ASMFLAGS += -mthumb -mabi=aapcs
 ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
-ASMFLAGS += -DBOARD_PCA10056
+ASMFLAGS += -DBOARD_$(TARGET_BOARD)
 ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 ASMFLAGS += -DFLOAT_ABI_HARD
 ASMFLAGS += -DNRF52840_XXAA

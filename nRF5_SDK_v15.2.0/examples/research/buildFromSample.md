@@ -1,8 +1,10 @@
-# [WIP] サンプルアプリ転用手順
+# サンプルアプリ転用手順
 
 ## 概要
 
 Nordicの[USB CDCサービスのサンプルアプリ](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.2.0%2Fusbd_cdc_acm_example.html&cp=4_0_0_4_5_50_3)を改修し、単純にDongleから周期的にテキストをシリアル出力させるアプリケーションに転化させます。
+
+結論としては、このサンプルアプリはそのままではDongle用に転化できないことが判明しました。
 
 ### 動作確認環境
 
@@ -162,10 +164,74 @@ NetBeansの右下部のコンソールには「実行 FINISHED; 終了値0」と
 
 これで初期動作確認は完了です。
 
-## [WIP] ターゲットをnRF52840 Dongleに変更
+## ターゲットをnRF52840 Dongleに変更
 
 前述のサンプルアプリは、nRF52840 DKで動作させたものです。
 
 実際の調査には、nRF52840 Dongleで動作させたいため、サンプルアプリのターゲットをnRF52840 Dongleに変更しなければなりません。
 
-そのための手順は後報します。
+### メイクファイル修正とビルド
+
+メイクファイル`Makefile`について、以下の場所を修正し、ターゲットをnRF52840 DKからnRF52840 Dongleへ変更させます。
+
+- 修正前
+```
+:
+CFLAGS += -DBOARD_PCA10056
+:
+ASMFLAGS += -DBOARD_PCA10056
+```
+
+- 修正後
+```
+TARGET_BOARD     := PCA10059
+:
+CFLAGS += -DBOARD_$(TARGET_BOARD)
+:
+ASMFLAGS += -DBOARD_$(TARGET_BOARD)
+```
+
+
+また、環境設定ファイル`sdk_config.h`について、以下の場所を修正し、ログ処理が実行されないようにします。
+
+- 修正前
+```
+:
+#define NRF_LOG_DEFAULT_LEVEL 4
+:
+```
+
+- 修正後
+```
+:
+#define NRF_LOG_DEFAULT_LEVEL 0
+:
+```
+
+NetBeans上で上記２ファイルを開き、直接編集のうえ、保存します。
+
+その後「プロジェクト(ble_peripheral_logger_proj)をビルド (F11)」を実行します。<br>
+（またはF11キーを押下）
+
+<img src="assets/0019.png" width="600">
+
+しばらくするとビルドが完了し「ビルド SUCCESSFUL」と表示されれば、ビルドは成功です。
+
+<img src="assets/0020.png" width="600">
+
+### プログラム書込み・動作確認 ---> 書込み不能
+
+ビルドが成功したら、nRF Connectを使用して、nRF52840 Dongleにプログラムを書込みます。<br>
+（書込み手順につきましては、<b>[nRF52840 Dongleプログラミング手順](https://github.com/diverta/onecard-fido/blob/master/Development/nRF52840/NRFCONNECTINST.md)</b>をご参照）
+
+書込み対象のプログラムは、`${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger/pca10056/s140/armgcc/_build`にある`nrf52840_xxaa.hex`というファイルになります。
+
+<img src="assets/0021.png" width="480">
+
+ただし残念ながら、2019/3/5現在、上記プログラムはnRF52840 Dongleへ書込みができないことが判明しております。
+
+下図はプログラム`nrf52840_xxaa.hex`をプログラム書込み用ソフトに読み込んだところですが、接続されているDongle に書込み（Write）ができないことを示しています。
+
+<img src="assets/0022.png" width="480">
+
+後日、nRF52840 Dongleで動作するプログラムに、USB CDCを追加導入する形で再試行しようと考えております。
