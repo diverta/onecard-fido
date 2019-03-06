@@ -3,11 +3,10 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="ble_central_lib"
                    displayName="ble_central_lib"
-                   projectFiles="true">
-      <itemPath>../../diverta/ble_central_lib/fido_ble_central.c</itemPath>
-      <itemPath>../../diverta/ble_central_lib/fido_ble_central.h</itemPath>
-      <itemPath>../../diverta/ble_central_lib/fido_ble_central_nus.c</itemPath>
-      <itemPath>../../diverta/ble_central_lib/fido_ble_central_nus.h</itemPath>
+                   projectFiles="true"
+                   root="../ble_central_lib">
+      <itemPath>../ble_central_lib/fido_ble_central.c</itemPath>
+      <itemPath>../ble_central_lib/fido_ble_central.h</itemPath>
     </logicalFolder>
     <df root="../ble_peripheral_logger" name="0">
     </df>
@@ -29,6 +28,36 @@
                     <logicalFolder name="hid" displayName="hid" projectFiles="true">
                       <logicalFolder name="generic" displayName="generic" projectFiles="true">
                         <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+                      </logicalFolder>
+                    </logicalFolder>
+                  </logicalFolder>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="examples" displayName="examples" projectFiles="true">
+              <logicalFolder name="ble_peripheral"
+                             displayName="ble_peripheral"
+                             projectFiles="true">
+                <logicalFolder name="ble_app_uart"
+                               displayName="ble_app_uart"
+                               projectFiles="true">
+                  <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+                    <logicalFolder name="s140" displayName="s140" projectFiles="true">
+                      <logicalFolder name="config" displayName="config" projectFiles="true">
+                        <itemPath>../../ble_peripheral/ble_app_uart/pca10056/s140/config/sdk_config.h</itemPath>
+                      </logicalFolder>
+                    </logicalFolder>
+                  </logicalFolder>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="diverta" displayName="diverta" projectFiles="true">
+                <logicalFolder name="fido2_authenticator_app"
+                               displayName="fido2_authenticator_app"
+                               projectFiles="true">
+                  <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+                    <logicalFolder name="s140" displayName="s140" projectFiles="true">
+                      <logicalFolder name="config" displayName="config" projectFiles="true">
+                        <itemPath>../../diverta/fido2_authenticator_app/pca10056/s140/config/sdk_config.h</itemPath>
                       </logicalFolder>
                     </logicalFolder>
                   </logicalFolder>
@@ -398,6 +427,24 @@
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.c</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.h</itemPath>
               </logicalFolder>
+              <logicalFolder name="s132" displayName="s132" projectFiles="true">
+                <logicalFolder name="headers" displayName="headers" projectFiles="true">
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_error.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="examples" displayName="examples" projectFiles="true">
+            <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+              <logicalFolder name="rtc" displayName="rtc" projectFiles="true">
+                <logicalFolder name="pca10056" displayName="pca10056" projectFiles="true">
+                  <logicalFolder name="blank" displayName="blank" projectFiles="true">
+                    <logicalFolder name="config" displayName="config" projectFiles="true">
+                      <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/examples/peripheral/rtc/pca10056/blank/config/sdk_config.h</itemPath>
+                    </logicalFolder>
+                  </logicalFolder>
+                </logicalFolder>
+              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="external" displayName="external" projectFiles="true">
@@ -497,24 +544,33 @@
           <logicalFolder name="include" displayName="include" projectFiles="true">
             <logicalFolder name="machine" displayName="machine" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_default_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/endian.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/ieeefp.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/malloc.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/stdlib.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/time.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/types.h</itemPath>
             </logicalFolder>
             <logicalFolder name="sys" displayName="sys" projectFiles="true">
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_intsup.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_pthreadtypes.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_sigset.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_stdint.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timespec.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_timeval.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/sched.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/select.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stdio.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/string.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/timespec.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/types.h</itemPath>
             </logicalFolder>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_ansi.h</itemPath>
@@ -529,6 +585,9 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdio.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdlib.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/string.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/strings.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/time.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/xlocale.h</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="lib" displayName="lib" projectFiles="true">
@@ -651,18 +710,26 @@
             <logicalFolder name="include" displayName="include" projectFiles="true">
               <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aes.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/aesni.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/arc4.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/bignum.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/blowfish.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/bn_mul.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/camellia.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/ccm.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/check_config.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/cipher.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/cipher_internal.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/cmac.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/config.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/ctr_drbg.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/des.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/ecp.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/gcm.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/md.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/padlock.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/platform_time.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/sha256.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls/sha512.h</itemPath>
               </logicalFolder>
@@ -750,13 +817,14 @@
     </logicalFolder>
     <logicalFolder name="usbd_cdc_lib"
                    displayName="usbd_cdc_lib"
-                   projectFiles="true">
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.c</itemPath>
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.h</itemPath>
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.c</itemPath>
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.h</itemPath>
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_service.c</itemPath>
-      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_service.h</itemPath>
+                   projectFiles="true"
+                   root="../usbd_cdc_lib">
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_interval_timer.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_interval_timer.h</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_process.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_logger_process.h</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_service.c</itemPath>
+      <itemPath>../usbd_cdc_lib/usbd_cdc_service.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -769,8 +837,8 @@
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
     <Elem>../ble_peripheral_logger</Elem>
-    <Elem>../../diverta/usbd_cdc_lib</Elem>
-    <Elem>../../diverta/ble_central_lib</Elem>
+    <Elem>../ble_central_lib</Elem>
+    <Elem>../usbd_cdc_lib</Elem>
   </sourceRootList>
   <projectmakefile>../ble_peripheral_logger/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2811,56 +2879,55 @@
         <cTool flags="0">
         </cTool>
       </item>
-      <item path="../../diverta/ble_central_lib/fido_ble_central.c"
+      <item path="../ble_central_lib/fido_ble_central.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
-      <item path="../../diverta/ble_central_lib/fido_ble_central.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../diverta/ble_central_lib/fido_ble_central_nus.c"
+      <item path="../usbd_cdc_lib/usbd_cdc_logger_interval_timer.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../../diverta/ble_central_lib/fido_ble_central_nus.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.c"
+      <item path="../usbd_cdc_lib/usbd_cdc_logger_process.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../usbd_cdc_lib/usbd_cdc_service.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc/acm</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
       </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_service.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_service.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
+      <folder path="ble_central_lib">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
+      </folder>
       <folder path="makmorit/GitHub">
         <cTool>
           <incDir>

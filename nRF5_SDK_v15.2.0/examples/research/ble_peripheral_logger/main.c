@@ -1,6 +1,4 @@
 #include "sdk_common.h"
-//#include <stdint.h>
-//#include <string.h>
 #include "nordic_common.h"
 #include "nrf.h"
 #include "app_error.h"
@@ -10,9 +8,7 @@
 #include "app_timer.h"
 #include "ble.h"
 #include "nrf_ble_gatt.h"
-#include "nrf_ble_lesc.h"
 #include "nrf_pwr_mgmt.h"
-#include "fds.h"
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
@@ -98,13 +94,6 @@ static void ble_stack_init(void)
     NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
 }
 
-static void flash_storage_init(void)
-{
-    // FDSを初期化
-    ret_code_t err_code = fds_init();
-    APP_ERROR_CHECK(err_code);
-}
-
 void gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
 {
     fido_ble_central_gatt_evt_handler(p_gatt, p_evt);
@@ -133,11 +122,6 @@ static void application_init(void)
 
 static void idle_state_handle(void)
 {
-    ret_code_t err_code;
-
-    err_code = nrf_ble_lesc_request_handler();
-    APP_ERROR_CHECK(err_code);
-
 #ifdef BOARD_PCA10056
     // nRF52840 DKで開発時のみ、ログが出力されるようにする
     if (NRF_LOG_PROCESS()) {
@@ -155,7 +139,6 @@ int main(void)
     timers_init();
     power_management_init();
     ble_stack_init();
-    flash_storage_init();
 
     // BLE関連の初期化
     gatt_init();

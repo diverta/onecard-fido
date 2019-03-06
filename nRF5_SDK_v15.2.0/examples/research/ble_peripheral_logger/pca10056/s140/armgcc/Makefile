@@ -6,17 +6,14 @@ TARGET_BOARD     := PCA10056
 SDK_ROOT        := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR        := ../../..
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
-CDCLIB_DIR      := $(PROJ_DIR)/../../diverta/usbd_cdc_lib
-BLCLIB_DIR      := $(PROJ_DIR)/../../diverta/ble_central_lib
+CDCLIB_DIR      := $(PROJ_DIR)/../usbd_cdc_lib
+BLCLIB_DIR      := $(PROJ_DIR)/../ble_central_lib
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := gcc_nrf52.ld
 
 # Source files common to all targets
 SRC_FILES += \
-  $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c \
-  $(SDK_ROOT)/components/ble/ble_db_discovery/ble_db_discovery.c \
-  $(SDK_ROOT)/components/ble/ble_services/ble_dis/ble_dis.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_nus_c/ble_nus_c.c \
   $(SDK_ROOT)/components/ble/common/ble_advdata.c \
   $(SDK_ROOT)/components/ble/common/ble_conn_params.c \
@@ -25,19 +22,6 @@ SRC_FILES += \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt/nrf_ble_gatt.c \
   $(SDK_ROOT)/components/ble/nrf_ble_qwr/nrf_ble_qwr.c \
   $(SDK_ROOT)/components/ble/nrf_ble_scan/nrf_ble_scan.c \
-  $(SDK_ROOT)/components/ble/peer_manager/auth_status_tracker.c \
-  $(SDK_ROOT)/components/ble/peer_manager/gatt_cache_manager.c \
-  $(SDK_ROOT)/components/ble/peer_manager/gatts_cache_manager.c \
-  $(SDK_ROOT)/components/ble/peer_manager/id_manager.c \
-  $(SDK_ROOT)/components/ble/peer_manager/nrf_ble_lesc.c \
-  $(SDK_ROOT)/components/ble/peer_manager/peer_data_storage.c \
-  $(SDK_ROOT)/components/ble/peer_manager/peer_database.c \
-  $(SDK_ROOT)/components/ble/peer_manager/peer_id.c \
-  $(SDK_ROOT)/components/ble/peer_manager/peer_manager_handler.c \
-  $(SDK_ROOT)/components/ble/peer_manager/peer_manager.c \
-  $(SDK_ROOT)/components/ble/peer_manager/pm_buffer.c \
-  $(SDK_ROOT)/components/ble/peer_manager/security_dispatcher.c \
-  $(SDK_ROOT)/components/ble/peer_manager/security_manager.c \
   $(SDK_ROOT)/components/boards/boards.c \
   $(SDK_ROOT)/components/drivers_nrf/usbd/nrf_drv_usbd.c \
   $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
@@ -48,32 +32,9 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/bsp/bsp.c \
   $(SDK_ROOT)/components/libraries/button/app_button.c \
   $(SDK_ROOT)/components/libraries/crc16/crc16.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecc.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdh.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_ecdsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hash.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_hmac.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_init.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_mutex.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_rng.c \
-  $(SDK_ROOT)/components/libraries/crypto/backend/cc310/cc310_backend_shared.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_init.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_rng_mbedtls.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/nrf_hw/nrf_hw_backend_rng.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aead.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aes_shared.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_aes.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecc.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecdh.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_ecdsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_eddsa.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_error.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hash.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hkdf.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_hmac.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_init.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_rng.c \
-  $(SDK_ROOT)/components/libraries/crypto/nrf_crypto_shared.c \
   $(SDK_ROOT)/components/libraries/experimental_section_vars/nrf_section_iter.c \
   $(SDK_ROOT)/components/libraries/fds/fds.c \
   $(SDK_ROOT)/components/libraries/fstorage/nrf_fstorage_sd.c \
@@ -129,18 +90,8 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/prs/nrfx_prs.c \
   $(SDK_ROOT)/modules/nrfx/mdk/gcc_startup_nrf52840.S \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
-  $(SDK_ROOT)/external/mbedtls/library/aes.c \
-  $(SDK_ROOT)/external/mbedtls/library/aesni.c \
-  $(SDK_ROOT)/external/mbedtls/library/bignum.c \
-  $(SDK_ROOT)/external/mbedtls/library/cipher.c \
-  $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
-  $(SDK_ROOT)/external/mbedtls/library/ecp.c \
-  $(SDK_ROOT)/external/mbedtls/library/ecp_curves.c \
-  $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
-  $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
   $(BLCLIB_DIR)/fido_ble_central.c \
-  $(BLCLIB_DIR)/fido_ble_central_nus.c \
   $(CDCLIB_DIR)/usbd_cdc_logger_interval_timer.c \
   $(CDCLIB_DIR)/usbd_cdc_logger_process.c \
   $(CDCLIB_DIR)/usbd_cdc_service.c \
