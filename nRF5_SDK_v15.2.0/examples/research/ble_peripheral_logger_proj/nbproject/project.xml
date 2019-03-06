@@ -12,6 +12,7 @@
             <sourceRootList>
                 <sourceRootElem>../ble_peripheral_logger</sourceRootElem>
                 <sourceRootElem>../usbd_cdc_lib</sourceRootElem>
+                <sourceRootElem>../../diverta/usbd_cdc_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

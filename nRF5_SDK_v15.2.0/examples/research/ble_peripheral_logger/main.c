@@ -32,6 +32,13 @@ static void log_init(void)
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 }
 
+static void application_init(void)
+{
+    // ログ出力用タイマーをスタート
+    usbd_cdc_logger_interval_timer_start();
+    NRF_LOG_INFO("BLE peripheral logger application started.");
+}
+
 static void idle_state_handle(void)
 {
 #ifdef BOARD_PCA10056
@@ -52,10 +59,9 @@ int main(void)
 
     // USB CDCを初期化
     usbd_cdc_init();
-    NRF_LOG_INFO("BLE peripheral logger application started.");
 
-    // ログ出力用タイマーをスタート
-    usbd_cdc_logger_interval_timer_start();
+    // アプリケーションの初期化
+    application_init();
     
     while (true) {
         usbd_cdc_do_process();

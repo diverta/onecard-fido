@@ -1,11 +1,11 @@
 PROJECT_NAME     := ble_peripheral_logger
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
 
 SDK_ROOT   := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR   := ../../..
-CDCLIB_DIR := $(PROJ_DIR)/../usbd_cdc_lib
+CDCLIB_DIR := $(PROJ_DIR)/../../diverta/usbd_cdc_lib
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := usbd_cdc_acm_gcc_nrf52.ld

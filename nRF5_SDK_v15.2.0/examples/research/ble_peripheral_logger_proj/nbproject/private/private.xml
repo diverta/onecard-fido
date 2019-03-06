@@ -17,8 +17,8 @@
     </open-files>
     <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
         <module name="org-netbeans-modules-cnd-discovery">
-            <property name="rootFolder" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/usbd_cdc_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger"/>
-            <property name="model-folder" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger_proj*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/usbd_cdc_lib*/Users/makmorit/opt/nRF5_SDK_15.2.0/components/libraries/usbd*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger*/Users/makmorit/opt/nRF5_SDK_15.2.0/components*/Users/makmorit/opt/nRF5_SDK_15.2.0"/>
+            <property name="rootFolder" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/usbd_cdc_lib"/>
+            <property name="model-folder" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/ble_peripheral_logger_proj*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/usbd_cdc_lib*/Users/makmorit/opt/nRF5_SDK_15.2.0/components/libraries/usbd*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research*/Users/makmorit/opt/nRF5_SDK_15.2.0/components"/>
             <property name="exec-log-file" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/research/usbd_cdc_lib"/>
         </module>
     </preferences>
