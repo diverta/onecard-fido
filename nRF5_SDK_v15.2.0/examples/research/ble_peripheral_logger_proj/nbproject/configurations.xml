@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../ble_peripheral_logger" name="0">
+      <in>main.c</in>
+    </df>
+    <logicalFolder name="usbd_cdc_lib"
+                   displayName="usbd_cdc_lib"
+                   projectFiles="true"
+                   root="../../diverta/usbd_cdc_lib">
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.c</itemPath>
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.h</itemPath>
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.c</itemPath>
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.h</itemPath>
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_service.c</itemPath>
+      <itemPath>../../diverta/usbd_cdc_lib/usbd_cdc_service.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要なファイル"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../ble_peripheral_logger/pca10056/s140/armgcc/Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>../ble_peripheral_logger</Elem>
+    <Elem>../usbd_cdc_lib</Elem>
+    <Elem>../../diverta/usbd_cdc_lib</Elem>
+  </sourceRootList>
+  <projectmakefile>../ble_peripheral_logger/pca10056/s140/armgcc/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>GNU_ARM|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+        <buildAnalyzer>false</buildAnalyzer>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../ble_peripheral_logger/pca10056/s140/armgcc</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/drivers_nrf/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc/acm</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli/uart</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/examples/peripheral/rtc/pca10056/blank/config</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+              <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>../ble_peripheral_logger/pca10056/s140/armgcc</preBuildCommandWorkingDir>
+          <preBuildCommand>make</preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_interval_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_logger_process.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../diverta/usbd_cdc_lib/usbd_cdc_service.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../ble_peripheral_logger/main.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <folder path="0">
+        <cTool>
+          <incDir>
+            <pElem>../usbd_cdc_lib</pElem>
+            <pElem>../../diverta/usbd_cdc_lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>
