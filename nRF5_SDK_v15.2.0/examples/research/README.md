@@ -28,8 +28,8 @@ Nordicの[BLE UARTサンプルアプリ](https://infocenter.nordicsemi.com/topic
 
 従いまして、別途 nRF52840 DK、または nRF52832 DK をご用意いただき、前述サンプルアプリを導入願います。<br>
 こちらでも、[NetBeansプロジェクト](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral)を、以下の通り用意しております。
-- nRF52832 DK用 - [https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test](../examples/ble_peripheral/ble_app_uart_test)
-- nRF52840 DK用 - [https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test_nRF52840](../examples/ble_peripheral/ble_app_uart_test_nRF52840)
+- nRF52832 DK用 - [ble_app_uart_test](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test)
+- nRF52840 DK用 - [ble_app_uart_test_nRF52840](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test_nRF52840)
 
 ### 動作確認方法
 
