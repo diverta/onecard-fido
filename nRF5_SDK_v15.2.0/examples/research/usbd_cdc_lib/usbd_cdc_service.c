@@ -192,9 +192,16 @@ void usbd_cdc_do_process(void)
     usbd_cdc_logger_process();
 }
 
-ret_code_t usbd_cdc_buffer_write(const void *p_tx_buffer, size_t size)
+bool usbd_cdc_buffer_write(const void *p_tx_buffer, size_t size)
 {
     // 内部バッファにコピーしてから出力
     memcpy(m_tx_buffer, p_tx_buffer, size);
-    return app_usbd_cdc_acm_write(&m_app_cdc_acm, p_tx_buffer, size);
+    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, p_tx_buffer, size);
+    if (ret != NRF_SUCCESS) {
+        // USBポートには装着されているが、
+        // PCのターミナルアプリケーションが受信していない場合
+        // NRF_LOG_ERROR("Log text is not received by terminal app");
+        return false;
+    }
+    return true;
 }

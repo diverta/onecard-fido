@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void usbd_cdc_logger_process(void);
+void usbd_cdc_logger_process_set_rssi(int8_t rssi_val);
 
 #ifdef __cplusplus
 }

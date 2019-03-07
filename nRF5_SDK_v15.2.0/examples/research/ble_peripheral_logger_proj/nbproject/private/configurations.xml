@@ -55,9 +55,9 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
-          <runcommandpicklistitem>make flash</runcommandpicklistitem>
+          <runcommandpicklistitem>make flash_softdevice flash</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>make flash</runcommand>
+        <runcommand>make flash_softdevice flash</runcommand>
         <rundir>../ble_peripheral_logger/pca10056/s140/armgcc</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>

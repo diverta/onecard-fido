@@ -19,17 +19,19 @@ NRF_LOG_MODULE_REGISTER();
 // for usbd_cdc_logger_serial_second
 #include "usbd_cdc_logger_interval_timer.h"
 
+// for get_adv_stat_info
+#include "fido_ble_central.h"
+
 // 秒通番を保持
 static uint32_t curr_serial_second = 0;
 
-// 編集用領域（１フレーム＝最大64バイトまで）
-static char m_tx_buffer[NRF_DRV_USBD_EPSIZE];
+// 編集用領域
+static char m_tx_buffer[128];
 
 void usbd_cdc_logger_process(void)
 {
     uint32_t   serial_second;
     size_t     size;
-    ret_code_t ret;
     
     // 秒通番が変わったらログ出力処理を行う
     serial_second = usbd_cdc_logger_serial_second();
@@ -47,12 +49,8 @@ void usbd_cdc_logger_process(void)
     }
 
     // ログを編集して出力
-    size = sprintf(m_tx_buffer, "%lu\r\n", curr_serial_second);
-    ret = usbd_cdc_buffer_write(m_tx_buffer, size);
-    if (ret != NRF_SUCCESS) {
-        // USBポートには装着されているが、
-        // PCのターミナルアプリケーションが受信していない場合
-        // NRF_LOG_ERROR("Log text is not received by terminal app: serial second(%lu)", curr_serial_second);
+    size = get_adv_stat_info_string(curr_serial_second, m_tx_buffer);
+    if (usbd_cdc_buffer_write(m_tx_buffer, size) == false) {
         return;
     }
 }
