@@ -9,6 +9,7 @@
       <itemPath>../ble_central_lib/fido_ble_central.h</itemPath>
     </logicalFolder>
     <df root="../ble_peripheral_logger" name="0">
+      <in>main.c</in>
     </df>
     <logicalFolder name="makmorit"
                    displayName="makmorit"
@@ -393,6 +394,7 @@
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_descriptor.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_langid.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_request.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_serial_num.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.c</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_string_desc.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/app_usbd_types.h</itemPath>
@@ -659,6 +661,12 @@
             </logicalFolder>
             <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
               <logicalFolder name="class" displayName="class" projectFiles="true">
+                <logicalFolder name="cdc" displayName="cdc" projectFiles="true">
+                  <logicalFolder name="acm" displayName="acm" projectFiles="true">
+                    <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm.h</itemPath>
+                    <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm_internal.h</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
                 <logicalFolder name="hid" displayName="hid" projectFiles="true">
                   <logicalFolder name="generic" displayName="generic" projectFiles="true">
                     <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.h</itemPath>
@@ -2883,6 +2891,8 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../ble_peripheral_logger/main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../usbd_cdc_lib/usbd_cdc_logger_interval_timer.c"
             ex="false"

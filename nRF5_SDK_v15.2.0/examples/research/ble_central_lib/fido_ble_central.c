@@ -33,9 +33,9 @@ NRF_LOG_MODULE_REGISTER();
 
 NRF_BLE_SCAN_DEF(m_scan);           /**< Scanning Module instance. */
 
-// 最大１０デバイス分の
+// 最大 3 デバイス分の
 // アドバタイジング情報を保持
-#define ADV_STAT_INFO_SIZE_MAX 2
+#define ADV_STAT_INFO_SIZE_MAX 3
 typedef struct {
     uint8_t peer_addr[BLE_GAP_ADDR_LEN];
     int8_t  rssi;
@@ -199,12 +199,12 @@ size_t get_adv_stat_info_string(uint32_t serial_num, char *adv_stat_info_string)
         // Bluetoothアドレス、RSSI値を編集
         sprintf(peer_addr_rssi_buf, 
             "%02x%02x%02x%02x%02x%02x,%d",
-            adv_stat_info[idx].peer_addr[0],
-            adv_stat_info[idx].peer_addr[1],
-            adv_stat_info[idx].peer_addr[2],
-            adv_stat_info[idx].peer_addr[3],
-            adv_stat_info[idx].peer_addr[4],
             adv_stat_info[idx].peer_addr[5],
+            adv_stat_info[idx].peer_addr[4],
+            adv_stat_info[idx].peer_addr[3],
+            adv_stat_info[idx].peer_addr[2],
+            adv_stat_info[idx].peer_addr[1],
+            adv_stat_info[idx].peer_addr[0],
             adv_stat_info[idx].rssi
             );
 

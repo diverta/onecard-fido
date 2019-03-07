@@ -1,7 +1,7 @@
 PROJECT_NAME     := ble_peripheral_logger
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 SDK_ROOT        := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR        := ../../..
