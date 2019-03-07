@@ -15,21 +15,21 @@ Nordicの[USB CDCサービスのサンプルアプリ](https://infocenter.nordic
 
 ### nRF52840 Dongleの準備
 
-NetBeansプロジェクトですので、NetBeansでプロジェクトを開き、ビルドを行います。<br>
-（NetBeansに関しては、[こちらのドキュメント](../../../Development/nRF52840/NETBEANS.md)をご参照）
+NetBeansでプロジェクトを作成・ビルドを行っています。<br>
+（NetBeansに関しては、[こちらのドキュメント](../../../Development/nRF52840/NETBEANS.md)をご参照）<br>
+NetBeansによりビルドされたHEXファイルは、サブディレクトリー [ble_peripheral_logger_firmwares](ble_peripheral_logger_firmwares) に格納しております。
 
-NetBeansによりビルドされたHEXファイルは、サブディレクトリー [ble_peripheral_logger_firmwares](ble_peripheral_logger_firmwares) に格納しております。<br>
-こちらの２本のHEXファイルを、下記手順によりnRF52840 Dongleに書込みます。<br>
+[ble_peripheral_logger_firmwares](ble_peripheral_logger_firmwares)配下に格納された２本のHEXファイルを、下記手順によりnRF52840 Dongleに書込みます。<br>
 　<b>[nRF52840 Dongleプログラミング手順](https://github.com/diverta/onecard-fido/blob/master/Development/nRF52840/NRFCONNECTINST.md)</b>
 
 ### BLEデバイスの準備
 
-Nordicの[BLE UARTサービスのサンプルアプリ](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v15.2.0%2Fble_sdk_app_nus_c.html&cp=4_0_0_4_1_0_7)を導入したBLEペリフェラルデバイスについて、RSSI値を測定します。
+Nordicの[BLE UARTサンプルアプリ](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_nus_eval.html?cp=4_0_0_4_1_2_24)を導入したBLEペリフェラルデバイスについて、RSSI値を測定します。
 
 従いまして、別途 nRF52840 DK、または nRF52832 DK をご用意いただき、前述サンプルアプリを導入願います。<br>
 こちらでも、[NetBeansプロジェクト](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral)を、以下の通り用意しております。
-- nRF52832 DK用 - [ble_app_uart_test](../examples/ble_peripheral/ble_app_uart_test)
-- nRF52840 DK用 - [ble_app_uart_test_nRF52840](../examples/ble_peripheral/ble_app_uart_test_nRF52840)
+- nRF52832 DK用 - [https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test](../examples/ble_peripheral/ble_app_uart_test)
+- nRF52840 DK用 - [https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0/examples/ble_peripheral/ble_app_uart_test_nRF52840](../examples/ble_peripheral/ble_app_uart_test_nRF52840)
 
 ### 動作確認方法
 
