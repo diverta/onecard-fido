@@ -17,8 +17,8 @@
 #include "nrf_log_default_backends.h"
 
 // FIDO Authenticator固有の処理
-#include "fido_ble_central.h"
 #include "fido_ble_peripheral.h"
+#include "fido_ble_peripheral_timer.h"
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 
@@ -97,21 +97,6 @@ static void power_management_init(void)
 }
 
 
-/**@brief Function for handling BLE events.
- *
- * @param[in]   p_ble_evt   Bluetooth stack event.
- * @param[in]   p_context   Unused.
- */
-static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
-{
-    // ペリフェラル・モード固有の処理
-    fido_ble_peripheral_evt_handler(p_ble_evt, p_context);
-
-    // セントラル・モード固有の処理
-    fido_ble_central_evt_handler(p_ble_evt, p_context);
-}
-
-
 /**@brief Function for initializing the BLE stack.
  *
  * @details Initializes the SoftDevice and the BLE event interrupt.
@@ -137,7 +122,7 @@ static void ble_stack_init(void)
     APP_ERROR_CHECK(err_code);
 
     // Register a handler for BLE events.
-    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, fido_ble_peripheral_evt_handler, NULL);
 }
 
 
@@ -154,26 +139,12 @@ static void flash_storage_init(void)
 }
 
 
-/**@brief Function for handling events from the GATT library. */
-void gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
-{
-    // ペリフェラル・モード固有の処理
-    fido_ble_peripheral_gatt_evt_handler(p_gatt, p_evt);
-
-    // セントラル・モード固有の処理
-    fido_ble_central_gatt_evt_handler(p_gatt, p_evt);
-}
-
-
 /**@brief Function for initializing the GATT library. */
 static void gatt_init(void)
 {
     ret_code_t err_code;
 
-    err_code = nrf_ble_gatt_init(&m_gatt, gatt_evt_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
+    err_code = nrf_ble_gatt_init(&m_gatt, fido_ble_peripheral_gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -215,17 +186,13 @@ int main(void)
 
     // BLE関連の初期化
     gatt_init();
-
-    // BLEペリフェラル初期設定と
-    // アドバタイジングの開始
     fido_ble_peripheral_init();
-    fido_ble_peripheral_advertising_start();
-
-    // BLEセントラル初期設定
-    fido_ble_central_init();
 
     // USB HIDデバイスクラスを初期化
     usbd_hid_init();
+
+    // BLEペリフェラル始動タイマーを開始
+    fido_ble_peripheral_timer_start();
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
 
     // Enter main loop.

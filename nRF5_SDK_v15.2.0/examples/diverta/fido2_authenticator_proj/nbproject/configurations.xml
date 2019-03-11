@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="ble_central_lib"
-                   displayName="ble_central_lib"
-                   projectFiles="true"
-                   root="../ble_central_lib">
-      <itemPath>../ble_central_lib/fido_ble_central.c</itemPath>
-      <itemPath>../ble_central_lib/fido_ble_central.h</itemPath>
-      <itemPath>../ble_central_lib/fido_ble_central_nus.c</itemPath>
-      <itemPath>../ble_central_lib/fido_ble_central_nus.h</itemPath>
-    </logicalFolder>
     <logicalFolder name="ble_u2f_lib"
                    displayName="ble_u2f_lib"
                    projectFiles="true"
@@ -49,6 +40,8 @@
       <itemPath>../ble_u2f_lib/fido_ble_main.h</itemPath>
       <itemPath>../ble_u2f_lib/fido_ble_peripheral.c</itemPath>
       <itemPath>../ble_u2f_lib/fido_ble_peripheral.h</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_peripheral_timer.c</itemPath>
+      <itemPath>../ble_u2f_lib/fido_ble_peripheral_timer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib"
                    displayName="ctap2_lib"
@@ -3077,21 +3070,6 @@
             tool="0"
             flavor2="2">
       </item>
-      <item path="../ble_central_lib/fido_ble_central.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-      </item>
-      <item path="../ble_central_lib/fido_ble_central_nus.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ble_central_lib/fido_ble_central_nus.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
             tool="0"
@@ -3143,6 +3121,16 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_peripheral_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/fido_ble_peripheral_timer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_cbor_authgetinfo.c"
             ex="false"
