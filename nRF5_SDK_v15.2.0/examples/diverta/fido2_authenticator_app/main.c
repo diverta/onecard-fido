@@ -7,6 +7,7 @@
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_soc.h"
 #include "app_timer.h"
+#include "app_usbd.h"
 #include "ble.h"
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_lesc.h"
@@ -19,6 +20,7 @@
 // FIDO Authenticator固有の処理
 #include "fido_ble_peripheral.h"
 #include "fido_ble_peripheral_timer.h"
+#include "usbd_hid_common.h"
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 
@@ -62,17 +64,6 @@ static void timers_init(void)
 
     // FIDO Authenticator固有のタイマー機能
     fido_button_timers_init();
-}
-
-
-/**@brief Function for initializing buttons and leds.
- *
- * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
- */
-static void buttons_leds_init(void)
-{
-    // FIDO Authenticator固有の設定
-    fido_button_init();
 }
 
 
@@ -170,6 +161,36 @@ static void idle_state_handle(void)
     nrf_pwr_mgmt_run();
 }
 
+/**
+ * @brief Function for handling USBD specific event
+ *
+ * @param event     USBD library event.
+ * */
+static void usbd_user_ev_handler(app_usbd_event_type_t event)
+{
+    if (event == APP_USBD_EVT_POWER_DETECTED) {
+        if (fido_ble_peripheral_mode()) {
+            // BLEペリフェラル稼働中にUSB接続された場合は、
+            // ソフトデバイスを再起動
+            NVIC_SystemReset();
+        }
+    }    
+    if (event == APP_USBD_EVT_STOPPED) {
+        // 給電が継続している場合は、USBを無効化したのちに
+        // ソフトデバイスを再起動
+        app_usbd_disable();
+        NVIC_SystemReset();
+    }
+}
+
+static void application_init(void)
+{
+    // アプリケーションで使用するボタンの設定
+    fido_button_init();
+
+    // アプリケーションで使用するCIDを初期化
+    init_CID();
+}
 
 /**@brief Function for application main entry.
  */
@@ -179,7 +200,6 @@ int main(void)
     log_init();
     usbd_init();
     timers_init();
-    buttons_leds_init();
     power_management_init();
     ble_stack_init();
     flash_storage_init();
@@ -189,11 +209,14 @@ int main(void)
     fido_ble_peripheral_init();
 
     // USB HIDデバイスクラスを初期化
-    usbd_hid_init();
+    usbd_hid_init(usbd_user_ev_handler);
 
     // BLEペリフェラル始動タイマーを開始
     fido_ble_peripheral_timer_start();
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
+
+    // アプリケーション固有の初期化処理
+    application_init();
 
     // Enter main loop.
     for (;;) {
