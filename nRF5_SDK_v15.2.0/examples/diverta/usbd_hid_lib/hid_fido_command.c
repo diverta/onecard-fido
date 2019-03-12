@@ -87,7 +87,7 @@ void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code)
     usbd_hid_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on(LED_FOR_PROCESSING);
+    fido_idling_led_on();
 }
 
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
@@ -184,7 +184,7 @@ void hid_fido_command_on_report_completed(void)
     usbd_hid_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on(LED_FOR_PROCESSING);
+    fido_idling_led_on();
 
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
@@ -215,7 +215,7 @@ void hid_fido_command_on_report_started(void)
     usbd_hid_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
-    fido_idling_led_off(LED_FOR_PROCESSING);
+    fido_idling_led_off();
 }
 
 void hid_fido_command_on_process_timedout(void) 
@@ -227,7 +227,7 @@ void hid_fido_command_on_process_timedout(void)
     fido_processing_led_off();
 
     // アイドル時点滅処理を再開
-    fido_idling_led_on(LED_FOR_PROCESSING);
+    fido_idling_led_on();
 }
 
 bool hid_fido_command_is_valid(uint8_t command)

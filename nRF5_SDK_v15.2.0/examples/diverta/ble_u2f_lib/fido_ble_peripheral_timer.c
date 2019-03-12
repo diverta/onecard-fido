@@ -18,6 +18,9 @@ NRF_LOG_MODULE_REGISTER();
 // for fido_ble_peripheral_advertising_start
 #include "fido_ble_peripheral.h"
 
+// for lighting LED
+#include "fido_idling_led.h"
+
 #define TIMER_MSEC 1000
 
 // タイマー
@@ -41,8 +44,9 @@ static void timeout_handler(void *p_context)
         fido_ble_peripheral_advertising_start();
     }
 
-    // TODO:
+    // アイドル時点滅処理を開始
     // USB HID、BLEでアイドル時のLED色を変える
+    fido_idling_led_on();
 }
 
 static void timer_terminate(void)

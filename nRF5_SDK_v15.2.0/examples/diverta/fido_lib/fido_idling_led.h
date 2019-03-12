@@ -7,14 +7,12 @@
 #ifndef FIDO_IDLING_LED_H__
 #define FIDO_IDLING_LED_H__
 
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void fido_idling_led_on(uint32_t led_for_idling);
-void fido_idling_led_off(uint32_t led_for_idling);
+void fido_idling_led_on(void);
+void fido_idling_led_off(void);
 
 #ifdef __cplusplus
 }

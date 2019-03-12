@@ -14,10 +14,6 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
-// for lighting LED
-#include "fido_common.h"
-#include "fido_idling_led.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing
 #include "nrf_log.h"
@@ -284,34 +280,14 @@ static bool read_pairing_mode(void)
     }
 }
 
-static void alternate_pairing_mode(ble_u2f_t *p_u2f, bool pairing_mode)
-{
-    // 引数の値をペアリングモードに設定
-    run_as_pairing_mode = pairing_mode;
-    
-    // ペアリングモードとして動作するか否かを設定
-    if (run_as_pairing_mode == true) {
-        // 指定のLEDを点灯させる
-        fido_led_light_LED(LED_FOR_PAIRING_MODE, true);
-        // アイドル時点滅処理を停止
-        fido_idling_led_off(LED_FOR_PROCESSING);
-        NRF_LOG_INFO("Run as pairing mode ");
-
-    } else {
-        // 指定のLEDを消灯させる
-        fido_led_light_LED(LED_FOR_PAIRING_MODE, false);
-        // アイドル時点滅処理を開始
-        fido_idling_led_on(LED_FOR_PROCESSING);
-        NRF_LOG_INFO("Run as non-pairing mode ");
-    }
-}
-
 void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
 {
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
-    alternate_pairing_mode(p_u2f, read_pairing_mode());
-    
+    run_as_pairing_mode = read_pairing_mode();
+    NRF_LOG_INFO("Run as %s mode",
+        run_as_pairing_mode ? "pairing" : "non-pairing");
+
     // Flash ROM上は非ペアリングモードに設定
     //   (SoftDevice再起動時に
     //   非ペアリングモードで起動させるための措置)

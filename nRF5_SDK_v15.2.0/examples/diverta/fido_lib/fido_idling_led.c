@@ -19,6 +19,12 @@ NRF_LOG_MODULE_REGISTER();
 // for lighting LED
 #include "fido_common.h"
 
+// for fido_ble_peripheral_mode
+#include "fido_ble_peripheral.h"
+
+// for ble_u2f_pairing_mode_get
+#include "ble_u2f_pairing.h"
+
 APP_TIMER_DEF(m_idling_led_timer_id);
 static bool app_timer_created = false;
 static bool led_state = false;
@@ -83,11 +89,25 @@ static void idling_led_terminate()
     }
 }
 
-void fido_idling_led_on(uint32_t led_for_processing)
+void fido_idling_led_on(void)
 {
-    // 点滅対象のLEDを保持
-    m_led_for_processing = led_for_processing;
-    
+    if (ble_u2f_pairing_mode_get()) {
+        // ペアリングモードの場合は
+        // RED LEDの連続点灯とします。
+        m_led_for_processing = LED_FOR_PAIRING_MODE;
+        fido_led_light_LED(m_led_for_processing, true);
+        return;
+    }
+
+    if (fido_ble_peripheral_mode()) {
+        // BLEペリフェラル稼働中かつ
+        // 非ペアリングモード＝BLUE LED点滅
+        m_led_for_processing = LED_FOR_PROCESSING;
+    } else {
+        // USB HID稼働中＝GREEN LED点滅
+        m_led_for_processing = LED_FOR_USER_PRESENCE;
+    }
+
     // タイマーが生成されていない場合は生成
     idling_led_init();
 
@@ -95,11 +115,8 @@ void fido_idling_led_on(uint32_t led_for_processing)
     idling_led_start();
 }
 
-void fido_idling_led_off(uint32_t led_for_processing)
+void fido_idling_led_off(void)
 {
-    // 点滅対象のLEDを保持
-    m_led_for_processing = led_for_processing;
-    
     // LEDを消灯させる
     fido_led_light_LED(m_led_for_processing, false);
 

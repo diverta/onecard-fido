@@ -24,8 +24,8 @@
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 
-// for NRF_SDH_BLE_OBSERVER
-#include "fido_ble_event.h"
+// for lighting LED
+#include "fido_idling_led.h"
 
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -190,6 +190,9 @@ static void application_init(void)
 
     // アプリケーションで使用するCIDを初期化
     init_CID();
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
 }
 
 /**@brief Function for application main entry.
