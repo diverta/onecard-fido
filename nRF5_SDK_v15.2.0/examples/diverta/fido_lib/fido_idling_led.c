@@ -31,7 +31,7 @@ static bool led_state = false;
 
 // 点滅対象のLEDを保持
 // FIDO機能で使用するLEDのピン番号を指定
-static uint32_t m_led_for_processing;
+static uint32_t m_led_for_processing = LED_FOR_PROCESSING;
 static uint8_t  led_status = 0;
 
 static void command_timer_handler(void *p_context)
@@ -89,8 +89,20 @@ static void idling_led_terminate()
     }
 }
 
+void fido_idling_led_off(void)
+{
+    // LEDを消灯させる
+    fido_led_light_LED(m_led_for_processing, false);
+
+    // タイマーを停止する
+    idling_led_terminate();
+}
+
 void fido_idling_led_on(void)
 {
+    // LEDを一旦消灯
+    fido_idling_led_off();
+
     if (ble_u2f_pairing_mode_get()) {
         // ペアリングモードの場合は
         // RED LEDの連続点灯とします。
@@ -113,13 +125,4 @@ void fido_idling_led_on(void)
 
     // タイマーを開始する
     idling_led_start();
-}
-
-void fido_idling_led_off(void)
-{
-    // LEDを消灯させる
-    fido_led_light_LED(m_led_for_processing, false);
-
-    // タイマーを停止する
-    idling_led_terminate();
 }
