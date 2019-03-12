@@ -40,7 +40,7 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     ble_u2f_comm_interval_timer_stop(p_u2f);
 
     // アイドル時点滅処理を停止
-    fido_idling_led_off(LED_FOR_PROCESSING);
+    fido_idling_led_off();
 
     // FIDO機能実行中LEDを点灯
     fido_led_light_LED(LED_FOR_PROCESSING, true);
@@ -60,7 +60,7 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     fido_led_light_LED(LED_FOR_PROCESSING, false);
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on(LED_FOR_PROCESSING);
+    fido_idling_led_on();
     
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     ble_u2f_pairing_on_disconnect();

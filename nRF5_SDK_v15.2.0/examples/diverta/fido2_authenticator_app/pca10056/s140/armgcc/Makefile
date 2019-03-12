@@ -10,7 +10,6 @@ U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
 CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
-BLCLIB_DIR := $(PROJ_DIR)/../ble_central_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -190,6 +189,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_main.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
+  $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
   $(HIDLIB_DIR)/hid_ctap2_command.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
@@ -198,8 +198,6 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
-  $(BLCLIB_DIR)/fido_ble_central.c \
-  $(BLCLIB_DIR)/fido_ble_central_nus.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

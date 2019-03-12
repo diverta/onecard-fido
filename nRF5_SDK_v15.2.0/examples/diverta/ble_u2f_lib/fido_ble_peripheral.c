@@ -85,13 +85,8 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
     {BLE_UUID_U2F_SERVICE,                  BLE_UUID_TYPE_BLE}
 };
 
-//
 // BLEペリフェラルモードかどうかを保持
-//   Flash ROMにフラグを持って切替設定するか、
-//   ハードウェア的に切替設定するかは
-//   後日要・検討
-//
-static bool ble_peripheral_mode = true;
+static bool ble_peripheral_mode = false;
 
 bool fido_ble_peripheral_mode(void)
 {
@@ -100,9 +95,9 @@ bool fido_ble_peripheral_mode(void)
 
 void fido_ble_peripheral_advertising_start(void)
 {
-    if (ble_peripheral_mode == false) {
-        return;
-    }
+    // アドバタイジングをスタートさせた場合は
+    // BLEペリフェラルモードに移行
+    ble_peripheral_mode = true;
 
     ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
@@ -328,10 +323,6 @@ static void advertising_init(void)
 
 void fido_ble_peripheral_init(void)
 {
-    if (ble_peripheral_mode == false) {
-        return;
-    }
-
     // ペリフェラルデバイスとしての
     // 各種初期処理を実行
     gap_params_init();

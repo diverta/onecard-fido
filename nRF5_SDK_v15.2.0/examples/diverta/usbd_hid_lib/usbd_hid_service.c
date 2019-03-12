@@ -27,6 +27,9 @@ NRF_LOG_MODULE_REGISTER();
 // for debug hid report
 #define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
 
+// USBイベントハンドラーの参照を待避
+static void (*event_handler)(app_usbd_event_type_t event);
+
 /**
  * @brief Enable USB power detection
  */
@@ -201,8 +204,10 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
  * */
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
-    switch (event)
-    {
+    // アプリケーション固有の処理を実行
+    (*event_handler)(event);
+
+    switch (event) {
         case APP_USBD_EVT_DRV_SOF:
             break;
         case APP_USBD_EVT_DRV_RESET:
@@ -267,13 +272,10 @@ void usbd_init(void)
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
     
-    // アプリケーションで使用するCIDを初期化
-    init_CID();
-    
     NRF_LOG_DEBUG("usbd_init() done");
 }
 
-void usbd_hid_init(void)
+void usbd_hid_init(void (*event_handler_)(app_usbd_event_type_t event))
 { 
     ret_code_t ret;
     app_usbd_class_inst_t const * class_inst_generic;
@@ -295,6 +297,9 @@ void usbd_hid_init(void)
         app_usbd_start();
     }
 
+    // USBイベントハンドラーの参照を待避
+    event_handler = event_handler_;
+    
     NRF_LOG_DEBUG("usbd_hid_init() done");
 }
 

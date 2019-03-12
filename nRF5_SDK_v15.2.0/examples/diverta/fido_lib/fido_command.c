@@ -9,7 +9,7 @@
 #include "app_button.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME fido_button
+#define NRF_LOG_MODULE_NAME fido_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
