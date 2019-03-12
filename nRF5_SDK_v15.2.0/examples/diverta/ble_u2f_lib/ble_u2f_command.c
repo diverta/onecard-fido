@@ -23,6 +23,9 @@ NRF_LOG_MODULE_REGISTER();
 // for user presence test
 #include "fido_user_presence.h"
 
+// for fido_ble_peripheral_mode
+#include "fido_ble_peripheral.h"
+
 // Flash ROM更新が完了時、
 // 後続処理が使用するデータを共有
 static ble_u2f_context_t m_u2f_context;
@@ -67,6 +70,13 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
+    UNUSED_PARAMETER(p_u2f);
+    if (!fido_ble_peripheral_mode()) {
+        // BLEペリフェラルが稼働していないときに
+        // MAIN SWが長押しされた場合は無視
+        return false;
+    }
+
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);
     return true;
