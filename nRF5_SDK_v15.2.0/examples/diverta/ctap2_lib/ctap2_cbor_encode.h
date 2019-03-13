@@ -11,6 +11,7 @@
 extern "C" {
 #endif
 
+uint8_t ctap2_cbor_encode_response_retry_counter(uint8_t *encoded_buff, size_t *encoded_buff_size, uint32_t retry_counter);
 uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size);
 uint8_t ctap2_cbor_encode_response_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size);
 

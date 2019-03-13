@@ -267,6 +267,30 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     return CTAP1_ERR_SUCCESS;
 }
 
+void perform_get_retry_counter(uint8_t *encoded_buff, size_t *encoded_buff_size)
+{
+    uint32_t retry_counter = 8;
+
+    // PINコードハッシュ、リトライカウンターをFlash ROMから取得
+    if (ctap2_client_pin_store_hash_read()) {
+        retry_counter = ctap2_client_pin_store_retry_counter();
+    }
+    
+    // レスポンスをエンコード
+    uint8_t ctap2_status = ctap2_cbor_encode_response_retry_counter(encoded_buff, encoded_buff_size, retry_counter);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(ctap2_status, 1);
+        return;
+    }
+
+    // レスポンスをCTAP2クライアントに戻す
+    // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
+    m_response_length = *encoded_buff_size + 1;
+    hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+    NRF_LOG_DEBUG("getRetries: retry counter=%d", retry_counter);
+}
+
 void perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // 鍵交換用キーペアが未生成の場合は新規生成
@@ -503,6 +527,9 @@ void ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t respon
     size_t   cbor_data_length = response_buffer_size - 1;
 
     switch (ctap2_request.subCommand) {
+        case subcmd_GetRetries:
+            perform_get_retry_counter(cbor_data_buffer, &cbor_data_length);
+            break;
         case subcmd_GetKeyAgreement:
             perform_get_key_agreement(cbor_data_buffer, &cbor_data_length);
             break;
