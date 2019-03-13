@@ -83,6 +83,18 @@ static size_t  pin_code_size;
 static uint8_t pin_code_hash[NRF_CRYPTO_HASH_SIZE_SHA256];
 static size_t  pin_code_hash_size;
 
+// PINミスマッチ最大連続回数
+#define PIN_MISMATCH_COUNT_MAX 3
+
+// PINミスマッチが連続した回数を保持
+static uint8_t pin_mismatch_count = 0;
+
+// changePINコマンドのステータスコードを保持
+//   コマンドの処理成功／失敗にかかわらず、
+//   PINリトライカウンターレコードの更新をはさんでレスポンスするため、
+//   外部変数にステータスコードを保持させる必要あり
+uint8_t change_pin_status_code;
+
 static void debug_decoded_request()
 {
 #if NRF_LOG_DEBUG_CBOR_REQUEST
@@ -342,7 +354,75 @@ uint8_t calculate_pin_code_hash(void)
     return CTAP1_ERR_SUCCESS;
 }
 
-void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
+bool check_pin_code_hash(void)
+{
+    // PINコードハッシュ、リトライカウンターをFlash ROMから取得
+    if (ctap2_client_pin_store_hash_read() == false) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP2_ERR_PIN_NOT_SET, 1);
+        return false;
+    }
+
+    // リトライカウンターを１減らす
+    uint32_t retry_counter = ctap2_client_pin_store_retry_counter();
+    if (retry_counter > 0) {
+        retry_counter--;
+    }
+    NRF_LOG_DEBUG("changePIN: retry counter remains %d times", retry_counter);
+
+    // CTAP2クライアントから受け取った旧いPINコードを、
+    // 共通鍵ハッシュを使用して復号化
+    pin_code_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+        ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, pin_code);
+    if (pin_code_size != ctap2_request.pinHashEncSize) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
+        return false;
+    }
+
+    // 復号化された旧いPINコードと、
+    // Flash ROMに保管されているPINコードを比較し、
+    // 一致していれば後続の処理を行う
+    if (memcmp(pin_code, ctap2_client_pin_store_pin_code_hash(), pin_code_size) == 0) {
+        NRF_LOG_DEBUG("changePIN: PIN code hash matching test OK");
+        return true;
+    }
+
+    // 一致しない場合はキーペアを再生成
+    ctap2_client_pin_sskey_init(true);
+
+    // エラーレスポンスを待避
+    if (retry_counter == 0) {
+        // リトライカウンターが0の場合
+        NRF_LOG_ERROR("changePIN: PIN code hash matching NG (max retry count reached)");
+        change_pin_status_code = CTAP2_ERR_PIN_BLOCKED;
+
+    } else if (++pin_mismatch_count == PIN_MISMATCH_COUNT_MAX) {
+        // PINミスマッチが連続した回数をカウントアップし、
+        // ３回に達した場合
+        NRF_LOG_ERROR("changePIN: PIN code hash matching NG (consecutive 3 times)");
+        change_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
+        // アプリケーション全体をロックし、
+        // システムリセットが必要である旨をユーザーに知らせる
+        hid_ctap2_command_set_abort_flag(true);
+
+    } else {
+        NRF_LOG_ERROR("changePIN: PIN code hash matching NG");
+        change_pin_status_code = CTAP2_ERR_PIN_INVALID;
+    }
+
+    // リトライカウンターをFlash ROMに更新登録
+    if (ctap2_client_pin_store_hash_write(NULL, retry_counter) == false) {
+        // 処理NGの場合はエラーレスポンスを生成して戻す
+        hid_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
+        return false;
+    }
+
+    // 後続の処理は行わない
+    return false;
+}
+
+void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_change)
 {
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
@@ -361,6 +441,15 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size)
         // 処理NGの場合はエラーレスポンスを生成して戻す
         hid_ctap2_command_send_response(ctap2_status, 1);
         return;
+    }
+
+    if (pin_change) {
+        // PIN変更リクエストの場合は、PINのマッチングチェックを実行
+        // チェックがNGの場合は、
+        // リトライカウンターを１減らしてFlash ROMに反映
+        if (check_pin_code_hash() == false) {
+            return;
+        }
     }
 
     // CTAP2クライアントから受け取ったPINコードを、
@@ -418,7 +507,10 @@ void ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t respon
             perform_get_key_agreement(cbor_data_buffer, &cbor_data_length);
             break;
         case subcmd_SetPin:
-            perform_set_pin(cbor_data_buffer, &cbor_data_length);
+            perform_set_pin(cbor_data_buffer, &cbor_data_length, false);
+            break;
+        case subcmd_ChangePin:
+            perform_set_pin(cbor_data_buffer, &cbor_data_length, true);
             break;
         default:
             // サポートされていないサブコマンドなので
@@ -437,6 +529,14 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("setPIN: PIN hash store success");
                 hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+            }
+            break;
+        case subcmd_ChangePin:
+            if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
+                // レコードIDがPINコードハッシュ管理であれば
+                // ここでレスポンスを戻す
+                NRF_LOG_DEBUG("changePIN: PIN hash store success");
+                hid_ctap2_command_send_response(change_pin_status_code, m_response_length);
             }
             break;
         default:

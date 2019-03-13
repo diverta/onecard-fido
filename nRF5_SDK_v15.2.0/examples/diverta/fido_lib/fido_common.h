@@ -46,7 +46,11 @@ extern "C" {
 #define CTAP2_ERR_INVALID_OPTION        0x2c
 #define CTAP2_ERR_KEEPALIVE_CANCEL      0x2d
 #define CTAP2_ERR_NO_CREDENTIALS        0x2e
+#define CTAP2_ERR_PIN_INVALID           0x31
+#define CTAP2_ERR_PIN_BLOCKED           0x32
 #define CTAP2_ERR_PIN_AUTH_INVALID      0x33
+#define CTAP2_ERR_PIN_AUTH_BLOCKED      0x34
+#define CTAP2_ERR_PIN_NOT_SET           0x35
 #define CTAP2_ERR_PIN_POLICY_VIOLATION  0x37
 #define CTAP1_ERR_OTHER                 0x7f
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
@@ -71,6 +75,7 @@ typedef struct {
 
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
+void fido_led_light_all_LED(bool led_on);
 void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
 void fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
 void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
