@@ -25,35 +25,30 @@ NRF_LOG_MODULE_REGISTER();
 //     リトライカウンター: 1ワード（4バイト)
 static uint32_t m_pin_store_hash_record[FIDO_PIN_STORE_HASH_RECORD_SIZE];
 
-static bool pin_code_hash_record_find(uint8_t *p_pin_code_hash, fds_record_desc_t *record_desc)
+static bool pin_code_hash_record_find(fds_record_desc_t *record_desc)
 {
-    ret_code_t ret;
-    
-    // Flash ROMから既存データを走査
-    bool found = false;
-    fds_find_token_t  ftok = {0};
-    do {
-        ret = fds_record_find(FIDO_PIN_STORE_FILE_ID, FIDO_PIN_STORE_HASH_RECORD_KEY, record_desc, &ftok);
-        if (ret == FDS_SUCCESS) {
-            // 同じPINコードハッシュのレコードかどうか判定
-            // (先頭16バイトだけを比較)
-            fido_flash_fds_record_get(record_desc, m_pin_store_hash_record);
-            if (strncmp((char *)p_pin_code_hash, (char *)m_pin_store_hash_record, 16) == 0) {
-                found = true;
-            }
-        }
-    } while (ret == FDS_SUCCESS && found == false);
+    // 作業領域の初期化
+    memset(m_pin_store_hash_record, 0, FIDO_PIN_STORE_HASH_RECORD_SIZE * 4);
 
-    return found;
+    // Flash ROMから既存データを検索し、
+    // 見つかった場合は true を戻す
+    fds_find_token_t  ftok = {0};
+    ret_code_t ret = fds_record_find(FIDO_PIN_STORE_FILE_ID, FIDO_PIN_STORE_HASH_RECORD_KEY, record_desc, &ftok);
+    if (ret != FDS_SUCCESS) {
+        return false;
+    }
+
+    // Flash ROMに登録されているデータを読み出す
+    return fido_flash_fds_record_get(record_desc, m_pin_store_hash_record);
 }
 
-bool ctap2_client_pin_store_hash_read(uint8_t *p_pin_code_hash)
+bool ctap2_client_pin_store_hash_read(void)
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データを
     // m_pin_store_hash_record に読込む
     fds_record_desc_t record_desc;
-    return pin_code_hash_record_find(p_pin_code_hash, &record_desc);
+    return pin_code_hash_record_find(&record_desc);
 }
 
 uint8_t *ctap2_client_pin_store_pin_code_hash(void)
@@ -74,10 +69,13 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
     // Flash ROMから既存データを走査
     bool found = false;
     fds_record_desc_t record_desc;
-    found = pin_code_hash_record_find(p_pin_code_hash, &record_desc);
+    found = pin_code_hash_record_find(&record_desc);
     
-    // ユニークキーとなるPINコードハッシュ部 (8ワード)
-    memcpy((uint8_t *)m_pin_store_hash_record, p_pin_code_hash, 32);
+    // PINコードハッシュ部 (8ワード)
+    // NULLが引き渡された場合は、更新しないものとする
+    if (p_pin_code_hash != NULL) {
+        memcpy((uint8_t *)m_pin_store_hash_record, p_pin_code_hash, 32);
+    }
 
     // トークンカウンター部 (1ワード)
     m_pin_store_hash_record[8] = retry_counter;
