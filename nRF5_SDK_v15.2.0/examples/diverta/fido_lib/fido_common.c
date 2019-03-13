@@ -9,6 +9,7 @@
 
 // for lighting LED
 #include "nrf_gpio.h"
+#include "fido_common.h"
 
 void fido_led_light_LED(uint32_t pin_number, bool led_on)
 {
@@ -21,6 +22,13 @@ void fido_led_light_LED(uint32_t pin_number, bool led_on)
         // LEDを消灯させる
         nrf_gpio_pin_clear(pin_number);
     }
+}
+
+void fido_led_light_all_LED(bool led_on)
+{
+    fido_led_light_LED(LED_FOR_PAIRING_MODE, led_on);
+    fido_led_light_LED(LED_FOR_USER_PRESENCE, led_on);
+    fido_led_light_LED(LED_FOR_PROCESSING, led_on);
 }
 
 void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word)

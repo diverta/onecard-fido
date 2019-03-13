@@ -400,12 +400,11 @@ bool check_pin_code_hash(void)
     } else if (++pin_mismatch_count == PIN_MISMATCH_COUNT_MAX) {
         // PINミスマッチが連続した回数をカウントアップし、
         // ３回に達した場合
-        // TODO:
-        //   あわせて、アプリケーション全体をロックし、
-        //   システムリセットが必要である旨を
-        //   何らかの方法でユーザーに知らせる
         NRF_LOG_ERROR("changePIN: PIN code hash matching NG (consecutive 3 times)");
         change_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
+        // アプリケーション全体をロックし、
+        // システムリセットが必要である旨をユーザーに知らせる
+        hid_ctap2_command_set_abort_flag(true);
 
     } else {
         NRF_LOG_ERROR("changePIN: PIN code hash matching NG");
