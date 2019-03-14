@@ -38,9 +38,6 @@ NRF_LOG_MODULE_REGISTER();
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 
-// レスポンス完了後の処理を停止させるフラグ
-static bool abort_flag = false;
-
 //
 // CTAP2レスポンスデータ格納領域
 // （コマンド共通）
@@ -522,11 +519,6 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_ctap2_command_set_abort_flag(bool flag)
-{
-    abort_flag = flag;
-}
-
 void hid_ctap2_command_cbor_report_sent(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
@@ -545,13 +537,6 @@ void hid_ctap2_command_cbor_report_sent(void)
             break;
         default:
             break;
-    }
-
-    if (abort_flag) {
-        // レスポンス完了後の処理を停止させる場合は、
-        // 全色LEDを点灯させたのち、無限ループに入る
-        fido_led_light_all_LED(true);
-        while(true);
     }
 }
 

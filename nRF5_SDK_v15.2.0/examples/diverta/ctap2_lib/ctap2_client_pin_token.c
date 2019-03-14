@@ -17,9 +17,16 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+#include "fido_common.h"
+#include "ctap2_client_pin_crypto.h"
+
 // PINトークン格納領域
 #define PIN_TOKEN_SIZE 16
 static uint8_t m_pin_token[PIN_TOKEN_SIZE];
+
+// 暗号化されたPINトークンの格納領域
+static size_t  encoded_pin_token_size;
+static uint8_t encoded_pin_token[PIN_TOKEN_SIZE];
 
 // PINトークンが生成済みかどうかを保持
 static bool pin_token_generated = false;
@@ -47,7 +54,7 @@ void ctap2_client_pin_token_init(bool force)
     pin_token_generated = true;
 }
 
-uint8_t *ctap2_client_pin_token_read(void)
+uint8_t *ctap2_client_pin_token_encoded(void)
 {
     // PINトークンが未生成の場合は終了
     if (!pin_token_generated) {
@@ -56,5 +63,24 @@ uint8_t *ctap2_client_pin_token_read(void)
     }
 
     // PINトークン格納領域の先頭アドレスを戻す
-    return m_pin_token;
+    return encoded_pin_token;
+}
+
+size_t ctap2_client_pin_token_encoded_size(void)
+{
+    // PINトークン長を戻す
+    return PIN_TOKEN_SIZE;
+}
+
+uint8_t ctap2_client_pin_token_encode(uint8_t *p_key)
+{
+    // PINトークンを、共通鍵ハッシュを使用して復号化
+    encoded_pin_token_size = ctap2_client_pin_encrypt(p_key, 
+        m_pin_token, PIN_TOKEN_SIZE, encoded_pin_token);
+    if (encoded_pin_token_size != PIN_TOKEN_SIZE) {
+        // 処理NGの場合はエラーコードを戻す
+        return CTAP1_ERR_OTHER;
+    }
+
+    return CTAP1_ERR_SUCCESS;
 }

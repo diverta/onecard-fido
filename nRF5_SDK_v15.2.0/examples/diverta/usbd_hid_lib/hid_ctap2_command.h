@@ -21,7 +21,6 @@ void hid_ctap2_command_cbor_report_sent(void);
 void hid_ctap2_command_tup_cancel(void);
 void hid_ctap2_command_cancel(void);
 void hid_ctap2_command_keepalive_timer_handler(void);
-void hid_ctap2_command_set_abort_flag(bool flag);
 bool hid_ctap2_command_on_mainsw_event(void);
 bool hid_ctap2_command_on_mainsw_long_push_event(void);
 void hid_ctap2_command_on_ble_nus_connected(void);

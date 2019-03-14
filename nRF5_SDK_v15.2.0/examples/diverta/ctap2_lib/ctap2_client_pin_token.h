@@ -14,7 +14,9 @@ extern "C" {
 #endif
 
 void     ctap2_client_pin_token_init(bool force);
-uint8_t *ctap2_client_pin_token_read(void);
+uint8_t *ctap2_client_pin_token_encoded(void);
+size_t   ctap2_client_pin_token_encoded_size(void);
+uint8_t  ctap2_client_pin_token_encode(uint8_t *p_key);
 
 #ifdef __cplusplus
 }

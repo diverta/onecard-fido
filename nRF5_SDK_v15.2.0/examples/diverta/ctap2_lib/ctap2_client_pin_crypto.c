@@ -67,3 +67,27 @@ size_t ctap2_client_pin_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t enc
 
     return decrypted_size;
 }
+
+size_t ctap2_client_pin_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted) 
+{
+    ret_code_t err_code;
+    size_t     encrypted_size;
+
+#if NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_MBEDTLS_AES_CBC)
+    p_cbc_info = &g_nrf_crypto_aes_cbc_256_info;
+#endif
+
+    err_code = nrf_crypto_init();
+    app_error_check("nrf_crypto_init", err_code);
+
+    err_code = nrf_mem_init();
+    app_error_check("nrf_mem_init", err_code);
+
+    memset(iv, 0, sizeof(iv));
+    encrypted_size = plaintext_size;
+    err_code = nrf_crypto_aes_crypt(&cbc_decr_ctx, p_cbc_info, NRF_CRYPTO_ENCRYPT, 
+        p_key, iv, p_plaintext, plaintext_size, encrypted, &encrypted_size);
+    app_error_check("nrf_crypto_aes_crypt", err_code);
+
+    return encrypted_size;
+}

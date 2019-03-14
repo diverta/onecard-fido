@@ -39,7 +39,7 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
 void hid_fido_command_on_report_started(void);
 void hid_fido_command_on_report_completed(void);
 void hid_fido_command_on_process_timedout(void);
-
+void hid_fido_command_set_abort_flag(bool flag);
 bool hid_fido_command_is_valid(uint8_t command);
 
 #ifdef __cplusplus
