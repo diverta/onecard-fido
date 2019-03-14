@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 size_t ctap2_client_pin_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
+size_t ctap2_client_pin_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
 
 #ifdef __cplusplus
 }
