@@ -35,6 +35,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// レスポンス完了後の処理を停止させるフラグ
+static bool abort_flag = false;
+
 static void hid_fido_command_ping(void)
 {
     // PINGの場合は
@@ -175,6 +178,11 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
     }
 }
 
+void hid_fido_command_set_abort_flag(bool flag)
+{
+    abort_flag = flag;
+}
+
 void hid_fido_command_on_report_completed(void)
 {
     // FIDO機能レスポンスの
@@ -182,9 +190,6 @@ void hid_fido_command_on_report_completed(void)
     // 
     // 処理タイムアウト監視を停止
     usbd_hid_comm_interval_timer_stop();
-
-    // アイドル時点滅処理を開始
-    fido_idling_led_on();
 
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
@@ -203,6 +208,16 @@ void hid_fido_command_on_report_completed(void)
             break;
         default:
             break;
+    }
+
+    if (abort_flag) {
+        // レスポンス完了後の処理を停止させる場合は、
+        // 全色LEDを点灯させたのち、無限ループに入る
+        fido_led_light_all_LED(true);
+        while(true);
+    } else {
+        // アイドル時点滅処理を開始
+        fido_idling_led_on();
     }
 }
 

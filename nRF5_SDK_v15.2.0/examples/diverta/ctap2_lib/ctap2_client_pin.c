@@ -8,6 +8,7 @@
 
 #include "fds.h"
 #include "cbor.h"
+#include "hid_fido_command.h"
 #include "hid_ctap2_command.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
@@ -428,7 +429,7 @@ bool check_pin_code_hash(char *command_name)
         change_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
         // アプリケーション全体をロックし、
         // システムリセットが必要である旨をユーザーに知らせる
-        hid_ctap2_command_set_abort_flag(true);
+        hid_fido_command_set_abort_flag(true);
 
     } else {
         NRF_LOG_ERROR("%s: PIN code hash matching NG", command_name);
