@@ -26,6 +26,9 @@ extern "C" {
 #define AUTHENTICATOR_DATA_MAX_SIZE 256
 #define ALLOW_LIST_MAX_SIZE         10
 
+// 各種処理用の定数（PIN関連）
+#define PIN_AUTH_SIZE               16
+
 //
 // CTAP2をサポートする場合
 // trueを設定
@@ -114,9 +117,6 @@ typedef struct {
 //
 // CTAP2コマンドで共用する作業領域
 // 
-// flagsを保持
-extern uint8_t ctap2_flags;
-
 // Authenticator dataを保持
 extern uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 extern size_t  authenticator_data_size;
@@ -128,6 +128,9 @@ void     ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
 bool     ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
 uint32_t ctap2_current_sign_count(void);
 void     ctap2_set_sign_count(uint32_t count);
+uint8_t  ctap2_flags_value(void);
+void     ctap2_flags_init(uint8_t flag);
+void     ctap2_flags_set(uint8_t flag);
 
 #ifdef __cplusplus
 }

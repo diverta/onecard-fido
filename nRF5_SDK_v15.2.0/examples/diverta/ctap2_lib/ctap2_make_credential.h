@@ -18,6 +18,7 @@ bool    ctap2_make_credential_is_tup_needed(void);
 uint8_t ctap2_make_credential_generate_response_items(void);
 uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size);
 uint8_t ctap2_make_credential_add_token_counter(void);
+uint8_t ctap2_make_credential_verify_pin_auth(void);
 
 #ifdef __cplusplus
 }

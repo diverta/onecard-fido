@@ -46,7 +46,6 @@ NRF_LOG_MODULE_REGISTER();
 // デコードされた
 // authenticatorClientPIN
 // リクエストデータを保持する構造体
-#define PIN_AUTH_SIZE           16
 #define NEW_PIN_ENC_MAX_SIZE    256
 #define NEW_PIN_ENC_MIN_SIZE    64
 #define PIN_HASH_ENC_SIZE       16
@@ -645,4 +644,11 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
         default:
             break;
     }
+}
+
+void ctap2_client_pin_init(void)
+{
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_token_init(true);
+    ctap2_client_pin_sskey_init(true);
 }

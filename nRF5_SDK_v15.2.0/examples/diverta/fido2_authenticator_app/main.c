@@ -23,6 +23,7 @@
 #include "usbd_hid_common.h"
 #include "usbd_hid_service.h"
 #include "fido_command.h"
+#include "ctap2_client_pin.h"
 
 // for lighting LED
 #include "fido_idling_led.h"
@@ -190,6 +191,9 @@ static void application_init(void)
 
     // アプリケーションで使用するCIDを初期化
     init_CID();
+
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_init();
 
     // アイドル時点滅処理を開始
     fido_idling_led_on();

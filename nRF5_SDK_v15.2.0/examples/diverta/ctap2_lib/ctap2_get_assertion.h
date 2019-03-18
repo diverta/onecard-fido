@@ -18,6 +18,7 @@ bool    ctap2_get_assertion_is_tup_needed(void);
 uint8_t ctap2_get_assertion_generate_response_items(void);
 uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encoded_buff_size);
 uint8_t ctap2_get_assertion_update_token_counter(void);
+uint8_t ctap2_get_assertion_verify_pin_auth(void);
 
 #ifdef __cplusplus
 }
