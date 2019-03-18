@@ -645,3 +645,10 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
             break;
     }
 }
+
+void ctap2_client_pin_init(void)
+{
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_token_init(true);
+    ctap2_client_pin_sskey_init(true);
+}
