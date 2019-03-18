@@ -26,6 +26,9 @@ extern "C" {
 #define AUTHENTICATOR_DATA_MAX_SIZE 256
 #define ALLOW_LIST_MAX_SIZE         10
 
+// 各種処理用の定数（PIN関連）
+#define PIN_AUTH_SIZE               16
+
 //
 // CTAP2をサポートする場合
 // trueを設定

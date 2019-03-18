@@ -36,6 +36,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
 #define NRF_LOG_DEBUG_CBOR_RESPONSE     false
+#define NRF_LOG_DEBUG_PIN_AUTH          false
 
 // デコードされた
 // authenticatorMakeCredential
@@ -46,6 +47,8 @@ struct {
     CTAP_USER_ENTITY_T       user;
     CTAP_PUBKEY_CRED_PARAM_T cred_param;
     CTAP_OPTIONS_T           options;
+    uint8_t                  pinAuth[PIN_AUTH_SIZE];
+    uint8_t                  pinProtocol;
 } ctap2_request;
 
 // credentialPublicKeyを保持
@@ -62,6 +65,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     CborError   ret;
     uint8_t     i;
     int         key;
+    int         intval;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
     NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
@@ -169,6 +173,24 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                     return ret;
                 }
                 break;
+            case 8:
+                // pinAuth（Byte Array）
+                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                break;
+            case 9:
+                // pinProtocol (Unsigned Integer)
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &intval);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                ctap2_request.pinProtocol = (uint8_t)intval;
+                break;
             default:
                 break;
         }
@@ -193,6 +215,11 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         ctap2_request.cred_param.COSEAlgorithmIdentifier);
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
+#endif
+
+#if NRF_LOG_DEBUG_PIN_AUTH
+    NRF_LOG_DEBUG("pinAuth (pinProtocol=0x%02x):", ctap2_request.pinProtocol);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, PIN_AUTH_SIZE);
 #endif
 
     // 必須項目が揃っていない場合はエラー

@@ -32,6 +32,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
 #define NRF_LOG_DEBUG_CBOR_RESPONSE     false
+#define NRF_LOG_DEBUG_PIN_AUTH          false
 
 // デコードされた
 // authenticatorGetAssertion
@@ -41,6 +42,8 @@ struct {
     CTAP_RP_ID_T             rp;
     CTAP_OPTIONS_T           options;
     CTAP_ALLOW_LIST_T        allowList;
+    uint8_t                  pinAuth[PIN_AUTH_SIZE];
+    uint8_t                  pinProtocol;
 } ctap2_request;
 
 
@@ -74,6 +77,11 @@ static void debug_decoded_request()
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
 #endif
+
+#if NRF_LOG_DEBUG_PIN_AUTH
+    NRF_LOG_DEBUG("pinAuth (pinProtocol=0x%02x):", ctap2_request.pinProtocol);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, PIN_AUTH_SIZE);
+#endif
 }
 
 uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbor_data_length)
@@ -86,6 +94,7 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     CborError   ret;
     uint8_t     i;
     int         key;
+    int         intval;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
     NRF_LOG_DEBUG("authenticatorGetAssertion request cbor(%d bytes):", cbor_data_length);
@@ -171,6 +180,24 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                break;
+            case 6:
+                // pinAuth（Byte Array）
+                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                break;
+            case 7:
+                // pinProtocol (Unsigned Integer)
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &intval);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                ctap2_request.pinProtocol = (uint8_t)intval;
                 break;
             default:
                 break;                

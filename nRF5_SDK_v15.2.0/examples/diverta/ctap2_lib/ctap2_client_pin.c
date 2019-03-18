@@ -46,7 +46,6 @@ NRF_LOG_MODULE_REGISTER();
 // デコードされた
 // authenticatorClientPIN
 // リクエストデータを保持する構造体
-#define PIN_AUTH_SIZE           16
 #define NEW_PIN_ENC_MAX_SIZE    256
 #define NEW_PIN_ENC_MIN_SIZE    64
 #define PIN_HASH_ENC_SIZE       16
