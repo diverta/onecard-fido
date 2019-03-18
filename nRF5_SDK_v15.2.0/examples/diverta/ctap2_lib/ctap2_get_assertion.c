@@ -8,6 +8,7 @@
 
 #include "cbor.h"
 #include "ctap2_common.h"
+#include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
@@ -275,7 +276,7 @@ static void generate_authenticator_data(void)
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
     //  flags
-    authenticator_data[offset++] = ctap2_flags;
+    authenticator_data[offset++] = ctap2_flags_value();
     //  signCount
     fido_set_uint32_bytes(authenticator_data + offset, ctap2_current_sign_count());
     offset += sizeof(uint32_t);
@@ -323,7 +324,7 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
 
     // flags編集
     //   User Present result (0x01)
-    ctap2_flags = 0x01;
+    ctap2_flags_set(0x01);
 
     // 秘密鍵とCredential Source Hash
     // （トークンカウンターのキー）を
@@ -485,5 +486,27 @@ uint8_t ctap2_get_assertion_update_token_counter(void)
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
     NRF_LOG_DEBUG("sign counter updated (value=%d)", ctap2_current_sign_count());
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_get_assertion_verify_pin_auth(void)
+{
+    // PIN認証が必要でない場合は終了
+    if (ctap2_request.pinProtocol != 0x01) {
+        return CTAP1_ERR_SUCCESS;
+    }
+
+    // pinAuthの妥当性チェックを行い、
+    // NGの場合はPIN認証失敗
+    uint8_t ctap2_status = ctap2_client_pin_token_verify_pin_auth(ctap2_request.clientDataHash, ctap2_request.pinAuth);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        NRF_LOG_ERROR("pinAuth verification failed");
+        return ctap2_status;
+    }
+
+    // flagsを設定
+    //   User Verified result (0x04)
+    ctap2_flags_set(0x04);
+    NRF_LOG_DEBUG("pinAuth verification success");
     return CTAP1_ERR_SUCCESS;
 }
