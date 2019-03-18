@@ -190,6 +190,17 @@ static void command_authenticator_make_credential(void)
         return;
     }
 
+    // flagsをゼロクリア
+    ctap2_flags_init(0x00);
+
+    // PINの妥当性チェック
+    ctap2_status = ctap2_make_credential_verify_pin_auth();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
     if (ctap2_make_credential_is_tup_needed()) {
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定

@@ -20,7 +20,7 @@ static nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
 static size_t                          ctap2_rpid_hash_size;
 
 // flagsを保持
-uint8_t ctap2_flags;
+static uint8_t ctap2_flags;
 
 // signCountを保持
 static uint32_t ctap2_sign_count = 0;
@@ -92,4 +92,19 @@ bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be
     }
 
     return true;
+}
+
+uint8_t ctap2_flags_value(void)
+{
+    return ctap2_flags;
+}
+
+void ctap2_flags_init(uint8_t flag)
+{
+    ctap2_flags = flag;
+}
+
+void ctap2_flags_set(uint8_t flag)
+{
+    ctap2_flags |= flag;
 }
