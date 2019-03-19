@@ -605,8 +605,8 @@
                 <outlet property="menuItemFile1" destination="cCk-nh-aaI" id="0ZH-et-dd3"/>
                 <outlet property="menuItemFile2" destination="XNy-QP-mqi" id="KOG-yy-QOa"/>
                 <outlet property="menuItemFile3" destination="DKu-Wo-Se1" id="Yt2-8A-bre"/>
-                <outlet property="menuItemTestBLE1" destination="500" id="eGm-Bc-JMV"/>
-                <outlet property="menuItemTestHID1" destination="jXE-Zz-HlF" id="aZI-7r-yRG"/>
+                <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
+                <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>

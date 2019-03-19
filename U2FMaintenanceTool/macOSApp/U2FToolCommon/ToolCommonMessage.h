@@ -104,4 +104,8 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 
+#pragma mark - コマンドテスト関連メッセージ
+#define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
+#define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
+
 #endif /* ToolCommonMessage_h */
