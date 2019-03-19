@@ -13,6 +13,8 @@
 		64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64ED9A8C1647439300F39EAE /* AppDelegate.m */; };
 		64ED9A901647439300F39EAE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64ED9A8E1647439300F39EAE /* MainMenu.xib */; };
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
+		7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */; };
+		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */; };
 		7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
@@ -46,6 +48,9 @@
 		64ED9A8C1647439300F39EAE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		64ED9A8F1647439300F39EAE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		64ED9A9C164752C800F39EAE /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
+		7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
+		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertreqParamWindow.h; sourceTree = "<group>"; };
 		7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertreqParamWindow.m; sourceTree = "<group>"; };
 		7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CertreqParamWindow.xib; sourceTree = "<group>"; };
@@ -84,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
 				7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */,
@@ -114,6 +120,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7A0D20BE22408E920022EA8E /* IOKit.framework */,
 				64ED9A9C164752C800F39EAE /* IOBluetooth.framework */,
 				64ED9A791647439300F39EAE /* Cocoa.framework */,
 				64ED9A7B1647439300F39EAE /* Other Frameworks */,
@@ -187,6 +194,8 @@
 				7A9274072105AB960062FA89 /* ToolCommonMessage.h */,
 				7A9274092105AB960062FA89 /* ToolTimer.h */,
 				7A9274012105AB950062FA89 /* ToolTimer.m */,
+				7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */,
+				7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */,
 			);
 			path = U2FToolCommon;
 			sourceTree = "<group>";
@@ -270,6 +279,7 @@
 				7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */,
+				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */,
 			);
