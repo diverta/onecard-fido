@@ -27,6 +27,9 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
     @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
 
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestHID1;
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE1;
+
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
@@ -171,6 +174,14 @@
         [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
+    }
+
+    - (IBAction)menuItemTestHID1DidSelect:(id)sender {
+        [ToolPopupWindow informational:@"建設中です。" informativeText:nil];
+    }
+
+    - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
+        [ToolPopupWindow informational:@"現在実行できません。" informativeText:nil];
     }
 
 #pragma mark - Call back from ToolFilePanel
