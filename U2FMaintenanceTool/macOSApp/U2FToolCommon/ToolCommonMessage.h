@@ -105,6 +105,9 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 
+#pragma mark - ToolHIDCommandクラス専用メッセージ
+#define MSG_HID_CMD_RESPONSE_TIMEOUT        @"HIDデバイスからの応答が受信できませんでした。"
+
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
 #define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
