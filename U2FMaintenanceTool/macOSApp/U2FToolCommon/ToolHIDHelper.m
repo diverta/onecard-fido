@@ -145,6 +145,7 @@
             xfer_data_max = (i == 0) ? HID_INIT_PAYLOAD_SIZE : HID_CONT_PAYLOAD_SIZE;
             xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
             // 送信パケットを編集
+            memset(xfer_data, 0x00, sizeof(xfer_data));
             char *cidBytes = (char *)[cid bytes];
             for (uint8_t j = 0; j < 4; j++) {
                 xfer_data[j] = cidBytes[j];
