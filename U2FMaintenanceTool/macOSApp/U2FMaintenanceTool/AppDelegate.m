@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
+#import "ToolHIDCommand.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
@@ -8,7 +9,7 @@
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolHIDCommandDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -27,8 +28,12 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
     @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
 
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
+    @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -44,6 +49,7 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
+        self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
@@ -78,6 +84,8 @@
         [self.menuItemFile1 setEnabled:enabled];
         [self.menuItemFile2 setEnabled:enabled];
         [self.menuItemFile3 setEnabled:enabled];
+        [self.menuItemTestUSB setEnabled:enabled];
+        [self.menuItemTestBLE setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -171,6 +179,16 @@
         [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
+    }
+
+    - (IBAction)menuItemTestHID1DidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
+    }
+
+    - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -364,6 +382,25 @@
             [self setBleTransactionStarted:false];
             // レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
+        }
+    }
+
+#pragma mark - Call back from ToolHIDCommand
+
+    - (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message {
+        // ボタンを活性化
+        [self enableButtons:true];
+        // メッセージが設定されていない場合は何もしない
+        if (message == nil || [message length] == 0) {
+            return;
+        }
+        // メッセージを画面のテキストエリアに表示
+        [self notifyToolCommandMessage:message];
+        // ポップアップを表示
+        if (success) {
+            [ToolPopupWindow informational:message informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:message informativeText:nil];
         }
     }
 
