@@ -1,16 +1,15 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
-#import "ToolHIDHelper.h"
+#import "ToolHIDCommand.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
 #import "ToolParamWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
-#import "ToolTestMenu.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolHIDHelperDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolHIDCommandDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -34,10 +33,9 @@
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
-    @property (nonatomic) ToolHIDHelper     *toolHIDHelper;
+    @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
-    @property (nonatomic) ToolTestMenu      *toolTestMenu;
 
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
@@ -51,11 +49,10 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
-        self.toolHIDHelper  = [[ToolHIDHelper alloc]  initWithDelegate:self];
+        self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
-        self.toolTestMenu   = [[ToolTestMenu alloc]   initWithHelper:[self toolHIDHelper]];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
     }
@@ -185,11 +182,13 @@
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
-        [[self toolTestMenu] doTestCtapHidInit];
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
-        [[self toolTestMenu] doTestBleDummy];
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -386,9 +385,23 @@
         }
     }
 
-#pragma mark - Call back from ToolHIDHelper
+#pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidHelperDidReceive:(NSData *)message cid:(NSData *)cid command:(uint8_t)command {
+    - (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message {
+        // ボタンを活性化
+        [self enableButtons:true];
+        // メッセージが設定されていない場合は何もしない
+        if (message == nil || [message length] == 0) {
+            return;
+        }
+        // メッセージを画面のテキストエリアに表示
+        [self notifyToolCommandMessage:message];
+        // ポップアップを表示
+        if (success) {
+            [ToolPopupWindow informational:message informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:message informativeText:nil];
+        }
     }
 
 @end

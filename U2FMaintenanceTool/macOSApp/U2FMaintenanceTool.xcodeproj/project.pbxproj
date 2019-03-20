@@ -32,7 +32,7 @@
 		7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
-		7AFF0FEC2240C3B300AFE075 /* ToolTestMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AFF0FEA2240C3B300AFE075 /* ToolTestMenu.m */; };
+		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,8 +83,8 @@
 		7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParamWindow.m; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		7AFF0FEA2240C3B300AFE075 /* ToolTestMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTestMenu.m; sourceTree = "<group>"; };
-		7AFF0FEB2240C3B300AFE075 /* ToolTestMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTestMenu.h; sourceTree = "<group>"; };
+		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
+		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,8 +145,6 @@
 		64ED9A7F1647439300F39EAE /* U2FMaintenanceTool */ = {
 			isa = PBXGroup;
 			children = (
-				7AFF0FEB2240C3B300AFE075 /* ToolTestMenu.h */,
-				7AFF0FEA2240C3B300AFE075 /* ToolTestMenu.m */,
 				7ADA84631FE36E6D00879CB4 /* Images.xcassets */,
 				64ED9A8B1647439300F39EAE /* AppDelegate.h */,
 				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
@@ -201,6 +199,8 @@
 				7A9274012105AB950062FA89 /* ToolTimer.m */,
 				7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */,
 				7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */,
+				7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */,
+				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
 			);
 			path = U2FToolCommon;
 			sourceTree = "<group>";
@@ -280,12 +280,12 @@
 				7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */,
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
+				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */,
 				7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */,
 				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
-				7AFF0FEC2240C3B300AFE075 /* ToolTestMenu.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */,
 			);

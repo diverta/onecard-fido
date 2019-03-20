@@ -16,13 +16,13 @@
 
     - (id)initWithDelegate:(id<ToolHIDHelperDelegate>)delegate;
     - (bool)isDeviceConnected;
-    - (void)hidHelperWillSend:(NSData *)message cid:(NSData *)cid command:(uint8_t)command;
+    - (void)hidHelperWillSend:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
 
 @end
 
 @protocol ToolHIDHelperDelegate <NSObject>
 
-    - (void)hidHelperDidReceive:(NSData *)message cid:(NSData *)cid command:(uint8_t)command;
+    - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
 
 @end
 

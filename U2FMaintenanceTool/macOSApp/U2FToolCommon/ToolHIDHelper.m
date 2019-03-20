@@ -20,7 +20,6 @@
     @property (nonatomic) IOHIDManagerRef   toolHIDManager;
     @property (nonatomic) IOHIDDeviceRef    toolHIDDevice;
     @property (nonatomic) NSMutableData    *hidResponse;
-    @property (nonatomic) NSData           *CID;
 @end
 
 @implementation ToolHIDHelper
@@ -88,8 +87,8 @@
         NSData *cid = [reportData subdataWithRange:NSMakeRange(0, 4)];
         
         // コマンド／シーケンスは先頭から５バイト目を参照
-        uint8_t command = message[4];
-        if (command & 0x80) {
+        uint8_t cmd = message[4];
+        if (cmd & 0x80) {
             // データ格納領域を初期化
             [self setHidResponse:[NSMutableData alloc]];
             // INITフレームから、８バイト目以降のデータを連結（最大57バイト）
@@ -107,28 +106,28 @@
         // パケットをすべて受信したら、データをアプリケーションに引き渡す
         remaining -= datalen;
         if (remaining == 0) {
-            NSLog(@"hidHelperDidReceive(cid=%@, command=%02x, %lu bytes): %@",
-                  cid, command,
+            NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
+                  cid, cmd,
                   (unsigned long)[[self hidResponse] length],
                   [self hidResponse]);
-            [[self delegate] hidHelperDidReceive:[self hidResponse] cid:cid command:command];
+            [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:cmd];
         }
     }
 
 #pragma mark - Functions for send message to HID device
 
     - (void)hidHelperWillSend:(NSData *)message
-                          cid:(NSData *)cid command:(uint8_t)command {
-        NSLog(@"hidHelperWillSend(cid=%@, command=%02x, %lu bytes): %@",
+                          CID:(NSData *)cid CMD:(uint8_t)command {
+        NSLog(@"hidHelperWillSend(CID=%@, CMD=%02x, %lu bytes): %@",
               cid, command, (unsigned long)[message length], message);
         
         NSArray<NSData *> *requestFrames =
-        [self generateHIDRequestFramesFrom:message cid:cid command:command];
+        [self generateHIDRequestFramesFrom:message CID:cid CMD:command];
         [self HIDManagerWillSendRequestFrames:requestFrames];
     }
 
     - (NSArray<NSData *> *)generateHIDRequestFramesFrom:(NSData *)message
-                                                    cid:(NSData *)cid command:(uint8_t)command {
+                                                    CID:(NSData *)cid CMD:(uint8_t)command {
         // 分割されたメッセージを格納する配列
         NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
         // メッセージをバイト配列に変換

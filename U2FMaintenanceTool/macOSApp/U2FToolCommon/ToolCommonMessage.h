@@ -57,6 +57,7 @@
 #define PROCESS_NAME_CREATE_CERTREQ_CSR             @"証明書要求ファイル作成"
 #define PROCESS_NAME_CREATE_SELFCRT_CRT             @"自己署名証明書ファイル作成"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
+#define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
