@@ -9,12 +9,22 @@
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
+#import "ToolInstallCommand.h"
 #import "ToolPopupWindow.h"
+
+// HIDコマンドバイト
+#define HID_CMD_CTAPHID_INIT        0x86
+#define HID_CMD_ERASE_SKEY_CERT     0xC0
+#define HID_CMD_INSTALL_SKEY_CERT   0xC1
 
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
-    @property (nonatomic) ToolHIDHelper *toolHIDHelper;
-    @property (nonatomic) Command        command;
+    @property (nonatomic) ToolHIDHelper      *toolHIDHelper;
+    @property (nonatomic) ToolInstallCommand *toolInstallCommand;
+
+    @property (nonatomic) Command   command;
+    @property (nonatomic) NSString *skeyFilePath;
+    @property (nonatomic) NSString *certFilePath;
 
 @end
 
@@ -30,6 +40,7 @@
             [self setDelegate:delegate];
         }
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
+        [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         return self;
     }
 
@@ -64,6 +75,15 @@
                                        result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
+#pragma mark - Parameter set
+
+    - (void)setInstallParameter:(Command)command
+                   skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath {
+        // インストール対象の鍵・証明書ファイルパスを保持
+        [self setSkeyFilePath:skeyFilePath];
+        [self setCertFilePath:certFilePath];
+    }
+
 #pragma mark - Constants for test
 
     char cidBytes[] = {0xff, 0xff, 0xff, 0xff};
@@ -91,13 +111,36 @@
         // CTAPHID_INITコマンドをテスト実行する
         NSData *message = [[NSData alloc] initWithBytes:nonceBytes length:sizeof(nonceBytes)];
         NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
-        [self doRequest:message CID:cid CMD:0x86];
+        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_INIT];
     }
 
     - (void)doResponseCtapHidInit:(NSData *)message {
         // レスポンスメッセージの先頭８バイトと、リクエスト時のnonceが一致しているか確認
         char *requestBytes = (char *)[message bytes];
         bool result = (memcmp(requestBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+        // AppDelegateに制御を戻す
+        [self doResponseToAppDelegate:result];
+    }
+
+    - (void)doEraseSkeyCert {
+        // メッセージを編集し、コマンド 0xC0 を実行
+        NSData *message = [[self toolInstallCommand] generateEraseSkeyCertMessage:[self command]];
+        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
+        [self doRequest:message CID:cid CMD:HID_CMD_ERASE_SKEY_CERT];
+    }
+
+    - (void)doInstallSkeyCert {
+        // メッセージを編集し、コマンド 0xC1 を実行
+        NSData *message = [[self toolInstallCommand] generateInstallSkeyCertMessage:[self command]
+                            skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
+        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
+        [self doRequest:message CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
+    }
+
+    - (void)doResponseMaintenanceCommand:(NSData *)message {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        char *requestBytes = (char *)[message bytes];
+        bool result = (requestBytes[0] == 0x00);
         // AppDelegateに制御を戻す
         [self doResponseToAppDelegate:result];
     }
@@ -116,6 +159,12 @@
             case COMMAND_TEST_CTAPHID_INIT:
                 [self doTestCtapHidInit];
                 break;
+            case COMMAND_ERASE_SKEY_CERT:
+                [self doEraseSkeyCert];
+                break;
+            case COMMAND_INSTALL_SKEY:
+                [self doInstallSkeyCert];
+                break;
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
@@ -133,6 +182,10 @@
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
+                break;
+            case COMMAND_ERASE_SKEY_CERT:
+            case COMMAND_INSTALL_SKEY:
+                [self doResponseMaintenanceCommand:message];
                 break;
             default:
                 break;

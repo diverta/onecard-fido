@@ -101,7 +101,7 @@
             return;
         }
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
     }
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
@@ -125,10 +125,10 @@
         }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [self.toolCommand setInstallParameter:COMMAND_INSTALL_SKEY
-                            skeyFilePath:self.fieldPath1.stringValue
-                            certFilePath:self.fieldPath2.stringValue];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
+        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY
+                                      skeyFilePath:self.fieldPath1.stringValue
+                                      certFilePath:self.fieldPath2.stringValue];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY];
     }
 
     - (IBAction)button4DidPress:(id)sender {
