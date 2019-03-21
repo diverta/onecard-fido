@@ -126,13 +126,38 @@
         [self HIDManagerWillSendRequestFrames:requestFrames];
     }
 
+    - (void)setCIDBytes:(char *)data_buf CID:(NSData *)cid {
+        char *cidBytes = (char *)[cid bytes];
+        for (uint8_t j = 0; j < 4; j++) {
+            data_buf[j] = cidBytes[j];
+        }
+    }
+
+    - (NSArray<NSData *> *)generateHeaderFrameFrom:(NSData *)message
+                                               CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // 作業領域を初期化
+        NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
+        char xfer_data[HID_INIT_HEADER_SIZE];
+        memset(xfer_data, 0x00, sizeof(xfer_data));
+        // ヘッダー（CID、CMD、データ長）だけのフレームを生成
+        [self setCIDBytes:xfer_data CID:cid];
+        xfer_data[4] = cmd;
+        NSData *xferMessage = [[NSData alloc] initWithBytes:xfer_data length:HID_INIT_HEADER_SIZE];
+        [array addObject:xferMessage];
+        return array;
+    }
+
     - (NSArray<NSData *> *)generateHIDRequestFramesFrom:(NSData *)message
                                                     CID:(NSData *)cid CMD:(uint8_t)command {
-        // 分割されたメッセージを格納する配列
-        NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
         // メッセージをバイト配列に変換
         char    *dataBytes = (char *)[message bytes];
         uint16_t dataLength = (uint16_t)[message length];
+        if (dataLength == 0) {
+            // データ長が0の場合は、ヘッダー（CID、CMD、データ長）だけのフレームを生成
+            return [self generateHeaderFrameFrom:message CID:cid CMD:command];
+        }
+        // 分割されたメッセージを格納する配列
+        NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
         // 分割送信
         char     xfer_data[HID_PACKET_SIZE];
         uint16_t xfer_data_max;
@@ -146,10 +171,7 @@
             xfer_data_len = (remaining < xfer_data_max) ? remaining : xfer_data_max;
             // 送信パケットを編集
             memset(xfer_data, 0x00, sizeof(xfer_data));
-            char *cidBytes = (char *)[cid bytes];
-            for (uint8_t j = 0; j < 4; j++) {
-                xfer_data[j] = cidBytes[j];
-            }
+            [self setCIDBytes:xfer_data CID:cid];
             if (i == 0) {
                 xfer_data[4] = command;
                 xfer_data[5] = (dataLength >> 8) & 0x00ff; // MSB(messageLength)
