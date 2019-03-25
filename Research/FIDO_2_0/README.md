@@ -10,3 +10,6 @@ Intel社が無償公開しているCBORライブラリー「<b>[tinycbor](https:
 - <b>[libfido2導入手順](LIBFIDO2.md) </b><br>
 Yubico社が無償公開しているlibfido2の導入手順について掲載しています。<br>
 libfido2に同梱されるサンプルプログラムにより、<b>開発中のFIDO 2.0 Authenticatorの単体テストが可能</b>となります。
+
+- <b>[EdgeブラウザーのWebAuthnテスト](EDGETEST.md) </b><br>
+現在開発中の[FIDO 2.0 Authenticator](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。

@@ -9,6 +9,7 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
+#include "ctap2_client_pin_store.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo
@@ -17,7 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 
 #define NUM_OF_CBOR_ELEMENTS        5
 #define NUM_OF_VERSIONS             2
-#define NUM_OF_OPTIONS              5
+#define NUM_OF_OPTIONS              4
 
 #define RESP_versions               0x1
 #define RESP_aaguid                 0x3
@@ -119,19 +120,25 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
                     }
                 }
 
+                /*
+                 * 生体認証機能を装備していない認証器は、
+                 * パラメーター 'uv' をレスポンスする必要無し
+                 * See: https://fidoalliance.org/specs/fido-v2.0-ps-20190130/fido-client-to-authenticator-protocol-v2.0-ps-20190130.html#authenticatorGetInfo
+                 * 
                 ret = cbor_encode_text_stringz(&options, "uv");
                 if (ret == CborNoError) {
-                    // NOT [yet] capable of verifying user
                     ret = cbor_encode_boolean(&options, false);
                     if (ret != CborNoError) {
                         return false;
                     }
                 }
+                 */
 
                 ret = cbor_encode_text_stringz(&options, "clientPin");
                 if (ret == CborNoError) {
-                    // NOT [yet] capable of verifying user
-                    ret = cbor_encode_boolean(&options, false);
+                    // 認証器にPINが設定されているかどうかチェックし、
+                    // 設定の有無を 'clientPin' に設定
+                    ret = cbor_encode_boolean(&options, ctap2_client_pin_store_pin_code_exist());
                     if (ret != CborNoError) {
                         return false;
                     }

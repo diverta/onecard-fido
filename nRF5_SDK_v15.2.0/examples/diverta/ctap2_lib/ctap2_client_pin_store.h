@@ -17,6 +17,7 @@ bool      ctap2_client_pin_store_hash_read(void);
 bool      ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter);
 uint8_t  *ctap2_client_pin_store_pin_code_hash(void);
 uint32_t  ctap2_client_pin_store_retry_counter(void);
+bool      ctap2_client_pin_store_pin_code_exist(void);
 
 #ifdef __cplusplus
 }
