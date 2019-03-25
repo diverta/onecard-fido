@@ -69,7 +69,7 @@ nRF52840 DongleとEdgeブラウザーを使用し、WebAuthn機能（ユーザ�
 
 ### ユーザー登録
 
-Edgeブラウザーを起動し、URL「https://webauthn.org」を実行すると、WebAuthn機能のデモページが表示されます。
+Edgeブラウザーを起動し、URL「[https://webauthn.org](https://webauthn.org)」を実行すると、WebAuthn機能のデモページが表示されます。
 
 nRF52840 Dongleは、PCのUSBポートに装着しておきます。
 
