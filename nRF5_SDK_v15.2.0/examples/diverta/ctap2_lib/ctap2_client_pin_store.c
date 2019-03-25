@@ -116,3 +116,22 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
 
     return true;
 }
+
+bool ctap2_client_pin_store_pin_code_exist(void)
+{
+    // PINコードをFlash ROMから読み出し
+    if (ctap2_client_pin_store_hash_read() == false) {
+        return false;
+    }
+
+    // PINコードハッシュがゼロ埋めされている場合は未登録と判断
+    uint8_t *pin_code_hash = ctap2_client_pin_store_pin_code_hash();
+    uint8_t  pin_code_hash_size = FIDO_PIN_STORE_HASH_RECORD_SIZE * 4;
+    uint8_t  i;
+    for (i = 0; i < pin_code_hash_size; i++) {
+        if (pin_code_hash[i] != 0) {
+            return true;
+        }
+    }
+    return false;
+}
