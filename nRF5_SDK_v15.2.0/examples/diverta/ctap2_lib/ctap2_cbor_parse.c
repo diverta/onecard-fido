@@ -316,6 +316,10 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
     uint8_t   i;
     CborValue array;
 
+    // アルゴリズムサポートチェック用
+    uint8_t supported_cnt = 0;
+    uint8_t unsupported_cnt = 0;
+
     if (cbor_value_get_type(val) != CborArrayType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
     }
@@ -345,13 +349,21 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
 
         // アルゴリズムのサポートチェック
         if (pub_key_cred_param_supported(cred_param) == CREDENTIAL_NOT_SUPPORTED) {
-            return CTAP2_ERR_UNSUPPORTED_ALGORITHM;
+            unsupported_cnt++;
+        } else {
+            supported_cnt++;
         }
 
         ret = cbor_value_advance(&array);
         if (ret != CborNoError) {
             return CTAP2_ERR_CBOR_PARSING;
         }
+    }
+
+    if (supported_cnt == 0 && unsupported_cnt > 0) {
+        // サポートされないアルゴリズムしか存在しない場合は、
+        // その旨のエラーステータスをレスポンス
+        return CTAP2_ERR_UNSUPPORTED_ALGORITHM;
     }
 
     return CTAP1_ERR_SUCCESS;
