@@ -8,17 +8,7 @@
 #import "ToolCommand.h"
 #import "ToolCommonMessage.h"
 
-// for web safe B64 encode & decode
-#import "NSData+Base64.h"
-
 @interface ToolCommand ()
-
-    @property (nonatomic) NSString *skeyFilePath;
-    @property (nonatomic) NSString *certFilePath;
-    @property (nonatomic) NSData   *hidHelperMessage;
-
-    @property (nonatomic) NSDictionary *U2FRequestDict;
-    @property (nonatomic) NSDictionary *U2FResponseDict;
 
 @end
 
@@ -36,28 +26,6 @@
         return self;
     }
 
-#pragma mark - Web Safe B64 encode & decode
-
-- (NSString *)encodeWebSafeB64StringFrom:(NSData *)data {
-    // Not web safe--->Web safeに変換された文字列を得る
-    NSString *encodedData = [data base64EncodedStringWithSeparateLines:false];
-    NSString *str = [encodedData
-                     stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
-    NSString *webSafeB64String = [str
-                                  stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-    return webSafeB64String;
-}
-
-- (NSData *)decodeWebSafeB64StringFrom:(NSString *)webSafeB64String {
-    // Web safe--->Not web safeに変換してからデコード
-    NSString *str = [webSafeB64String
-                     stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
-    NSString *b64String = [str
-                           stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
-    NSData *decodedData = [NSData dataFromBase64String:b64String];
-    return decodedData;
-}
-
 #pragma mark - Private methods
 
 - (void)createCommandPairing {
@@ -67,127 +35,6 @@
     unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x45, 0x00, 0x00};
     NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
     [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
-}
-
-- (void)createCommandEraseSkeyCert {
-    NSLog(@"Erase secure key and certificate start");
-    
-    // 書き込むコマンドを編集
-    unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x42, 0x00, 0x00};
-    NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-    [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
-}
-
-- (NSData *)convertSkeyPem:(NSString *)skeyPemContents {
-    // Base64エンコードされた秘密鍵文字列をデコード
-    NSData *decodedPemData = [[NSData alloc]
-                              initWithBase64EncodedString:skeyPemContents
-                              options:NSDataBase64DecodingIgnoreUnknownCharacters];
-
-    // デコードされたデータが39バイト未満の場合はエラー
-    if ([decodedPemData length] < 39) {
-        NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
-        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_LENGTH_IN_PEM];
-        return nil;
-    }
-
-    // 秘密鍵データの先頭6バイト目に「0x0420」というヘッダーがない場合はエラー
-    const char *decodedPem = [decodedPemData bytes];
-    if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
-        NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
-        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_HEADER_IN_PEM];
-        return nil;
-    }
-    
-    // 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
-    // 先頭からリトルエンディアン形式で配置しなおす。
-    char keyBuffer[32];
-    for (int i = 0; i < 32; i++) {
-        keyBuffer[31 - i] = decodedPem[7 + i];
-    }
-
-    // NSDataに変換された秘密鍵を戻す
-    NSData *skeyData = [[NSData alloc] initWithBytes:keyBuffer length:sizeof(keyBuffer)];
-    return skeyData;
-}
-
-- (NSData *)readSkeyFromFile:(NSString *)skeyFilePath {
-    // 鍵ファイルから読み込み
-    NSError  *err;
-    NSString *str = [NSString
-                     stringWithContentsOfFile:skeyFilePath
-                     encoding:NSUTF8StringEncoding
-                     error:&err];
-    if (err.code) {
-        NSLog(@"Secure key file read error: %@", err.description);
-        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_SKEY_PEM_FILE];
-        return nil;
-    }
-    
-    // 読み込んだデータからヘッダー、フッターを除去
-    NSArray *lines = [str componentsSeparatedByString:@"\n"];
-    NSMutableString *pem = [NSMutableString string];
-    bool headerFound = false;
-    for (NSString *line in lines) {
-        if ([line length] == 0) {
-            continue;
-        }
-        if ([line compare:@"-----BEGIN EC PRIVATE KEY-----"] == NSOrderedSame) {
-            headerFound = true;
-            continue;
-        }
-        if ([line compare:@"-----END EC PRIVATE KEY-----"] == NSOrderedSame) {
-            continue;
-        }
-        if (headerFound == true) {
-            [pem appendString:line];
-        }
-    }
-
-    // ヘッダーが見つからない場合はエラー
-    if (headerFound == false) {
-        NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
-        [self toolCommandDidProcess:false message:MSG_INVALID_SKEY_CONTENT_IN_PEM];
-        return nil;
-    }
-
-    // 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
-    // 先頭からリトルエンディアン形式で配置しなおす。
-    return [self convertSkeyPem:pem];
-}
-
-- (void)createCommandInstallSkey {
-    NSLog(@"Install secure key start");
-    
-    // 鍵ファイルから秘密鍵（32バイト）を取得
-    NSData *dataSkey = [self readSkeyFromFile:self.skeyFilePath];
-    if (dataSkey == nil) {
-        [self setBleRequestArray:nil];
-        return;
-    }
-
-    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:dataSkey INS:0x43 P1:0x00];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
-}
-
-- (NSData *)readCertFromFile:(NSString *)certFilePath {
-    // 証明書ファイルから読み込み
-    NSData *data = [NSData dataWithContentsOfFile:certFilePath];
-    if (data == nil || [data length] == 0) {
-        [self toolCommandDidProcess:false message:MSG_CANNOT_READ_CERT_CRT_FILE];
-        return nil;
-    }
-
-    // 証明書ファイルの長さが68バイト未満の場合はエラー
-    NSUInteger dataCertLength = [data length];
-    if (dataCertLength < 68) {
-        [self toolCommandDidProcess:false message:MSG_INVALID_CERT_LENGTH_IN_CRT];
-        return nil;
-    }
-
-    NSLog(MSG_READ_NBYTES_FROM_CRT_FILE, dataCertLength, data);
-    return data;
 }
 
 - (NSArray<NSData *> *)generateCommandArrayFrom:(NSData *)dataForCommand {
@@ -255,21 +102,6 @@
     return dataForRequest;
 }
 
-- (void)createCommandInstallCert {
-    NSLog(@"Install certificate start");
-
-    // 証明書ファイルから内容を取得
-    NSData *dataCert = [self readCertFromFile:self.certFilePath];
-    if (dataCert == nil) {
-        [self setBleRequestArray:nil];
-        return;
-    }
-
-    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:dataCert INS:0x44 P1:0x00];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
-}
-
 - (NSData *)generateHexBytesFrom:(NSString *)hexString {
     unsigned int  hexInt;
     unsigned char byte;
@@ -333,92 +165,6 @@
     return true;
 }
 
-- (void)createCommandU2FRegister:(Command)command
-             appIdHashWebSafeB64:(NSString *)appIdHashWebSafeB64
-             challengeWebSafeB64:(NSString *)challengeWebSafeB64
-                         version:(NSString *)version {
-    NSLog(@"U2F Register start");
-    NSLog(@"appIdHashWebSafeB64[%@]", appIdHashWebSafeB64);
-    NSLog(@"challengeWebSafeB64[%@]", challengeWebSafeB64);
-    NSLog(@"ver[%@]",                 version);
-    
-    // U2Fリクエストパラメーターをデコード
-    NSData *appIdHash = [self decodeWebSafeB64StringFrom:appIdHashWebSafeB64];
-    NSData *challenge = [self decodeWebSafeB64StringFrom:challengeWebSafeB64];
-    
-    // U2Fリクエストデータを編集
-    NSMutableData *requestData = [[NSMutableData alloc] initWithData:challenge];
-    [requestData appendData:appIdHash];
-    
-    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
-}
-
-- (void)createCommandU2FAuthentication:(Command)command
-                   appIdHashWebSafeB64:(NSString *)appIdHashWebSafeB64
-                   challengeWebSafeB64:(NSString *)challengeWebSafeB64
-                   keyHandleWebSafeB64:(NSString *)keyHandleWebSafeB64
-                               version:(NSString *)version {
-    NSLog(@"U2F Authentication start");
-    NSLog(@"appIdHashWebSafeB64[%@]", appIdHashWebSafeB64);
-    NSLog(@"challengeWebSafeB64[%@]", challengeWebSafeB64);
-    NSLog(@"keyhandleWebSafeB64[%@]", keyHandleWebSafeB64);
-    NSLog(@"ver[%@]",                 version);
-    
-    // U2Fリクエストパラメーターをデコード
-    NSData *appIdHash = [self decodeWebSafeB64StringFrom:appIdHashWebSafeB64];
-    NSData *challenge = [self decodeWebSafeB64StringFrom:challengeWebSafeB64];
-    NSData *keyHandle = [self decodeWebSafeB64StringFrom:keyHandleWebSafeB64];
-    
-    // U2Fリクエストデータを編集
-    NSMutableData *requestData = [[NSMutableData alloc] initWithData:challenge];
-    [requestData appendData:appIdHash];
-    
-    unsigned char keyHandleLenChar[] = {(unsigned char)[keyHandle length]};
-    [requestData appendBytes:keyHandleLenChar length:sizeof(keyHandleLenChar)];
-    [requestData appendData:keyHandle];
-
-    // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-    NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:0x03];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
-}
-
-- (NSString *)U2FRequestTypeString {
-    // 受信データのリクエスト種別を取得
-    if ([self U2FRequestDict]) {
-        return [[self U2FRequestDict] objectForKey:@"type"];
-    } else {
-        return @"";
-    }
-}
-
-- (bool)isEnrollHelperRequest {
-    return [[self U2FRequestTypeString] isEqualToString:@"enroll_helper_request"];
-}
-
-- (bool)isSignHelperRequest {
-    return [[self U2FRequestTypeString] isEqualToString:@"sign_helper_request"];
-}
-
-- (NSDictionary *)getU2FRequestDictForKey:(NSString *)keyword {
-    if ([self U2FRequestDict]) {
-        NSArray *array = [[self U2FRequestDict] objectForKey:keyword];
-        if (array && [array count]) {
-            NSDictionary *dict = [array objectAtIndex:0];
-            if (dict) {
-                return dict;
-            }
-        }
-    }
-    return nil;
-}
-
-- (void)createCommandU2FHIDProcess {
-    // HIDデバイスから転送されたAPDUより、分割送信のために64バイトごとのコマンド配列を作成
-    [self setBleRequestArray:[self generateCommandArrayFrom:[self hidHelperMessage]]];
-}
-
 - (NSUInteger)getStatusWordFrom:(NSData *)bleResponseData {
     // BLEレスポンスデータから、ステータスワードを取得する
     NSUInteger length = [bleResponseData length];
@@ -429,94 +175,14 @@
     return statusWord;
 }
 
-- (void)createU2FResponseDictFrom:(NSData *)bleResponseData {
-    // ステータスワードが正常の場合はリターンコードを０とする
-    NSUInteger statusWord = [self getStatusWordFrom:bleResponseData];
-    if (statusWord == 0x9000) {
-        statusWord = 0;
-    }
-    NSNumber *statusWordNumber = [[NSNumber alloc] initWithUnsignedInteger:statusWord];
-    
-    // BLEからのレスポンスからステータスワードを除去し、Web Safe Base64エンコード
-    NSUInteger length = [bleResponseData length];
-    NSData *bleResponse = [bleResponseData subdataWithRange:NSMakeRange(0, length-2)];
-    NSString *encodedResponse = [self encodeWebSafeB64StringFrom:bleResponse];
-    
-    // リクエスト種別に応じたレスポンスデータを生成
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    if ([self isEnrollHelperRequest]) {
-        // レスポンスするversionはリクエストと同値を戻す
-        NSDictionary *reqDict = [self getU2FRequestDictForKey:@"enrollChallenges"];
-        NSString *version = [reqDict objectForKey:@"version"];
-        // レスポンスデータを生成
-        [dict setValue:@"enroll_helper_reply" forKey:@"type"];
-        [dict setValue:version                forKey:@"version"];
-        [dict setValue:statusWordNumber       forKey:@"code"];
-        [dict setValue:encodedResponse        forKey:@"enrollData"];
-        
-    } else if ([self isSignHelperRequest]) {
-        // レスポンスするappIdHash、challenge、keyHandle、versionはリクエストと同値を戻す
-        NSDictionary *reqDict = [self getU2FRequestDictForKey:@"signData"];
-        NSString *appIdHashWebSafeB64 = [reqDict objectForKey:@"appIdHash"];
-        NSString *challengeWebSafeB64 = [reqDict objectForKey:@"challengeHash"];
-        NSString *keyHandleWebSafeB64 = [reqDict objectForKey:@"keyHandle"];
-        NSString *version             = [reqDict objectForKey:@"version"];
-        // レスポンスデータを生成
-        NSMutableDictionary *subdict = [[NSMutableDictionary alloc] init];
-        [subdict setValue:version              forKey:@"version"];
-        [subdict setValue:appIdHashWebSafeB64  forKey:@"appIdHash"];
-        [subdict setValue:challengeWebSafeB64  forKey:@"challengeHash"];
-        [subdict setValue:keyHandleWebSafeB64  forKey:@"keyHandle"];
-        [subdict setValue:encodedResponse      forKey:@"signatureData"];
-        [dict    setValue:@"sign_helper_reply" forKey:@"type"];
-        [dict    setValue:statusWordNumber     forKey:@"code"];
-        [dict    setValue:subdict              forKey:@"responseData"];
-    }
-    
-    // レスポンスデータを保持
-    [self setU2FResponseDict:dict];
-}
-
 #pragma mark - Public methods
-
-- (void)setInstallParameter:(Command)command
-          skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath {
-    // インストール対象の鍵・証明書ファイルパスを保持
-    [self setSkeyFilePath:skeyFilePath];
-    [self setCertFilePath:certFilePath];
-}
-
-- (void)setU2FProcessParameter:(Command)command
-      bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages {
-    // Chromeエクステンションからの受信データを保持(最初の１件)
-    if (bleHelperMessages && [bleHelperMessages count] == 1) {
-        [self setU2FRequestDict:[bleHelperMessages objectAtIndex:0]];
-        NSLog(@"setU2FProcessParameter: %@", [self U2FRequestDict]);
-    }
-}
-
-- (void)setU2FHIDProcessParameter:(Command)command
-                 hidHelperMessage:(NSData *)hidHelperMessage {
-    // HIDデバイスからの受信データを保持
-    [self setHidHelperMessage:hidHelperMessage];
-    NSLog(@"setU2FHIDProcessParameter: %@", [self hidHelperMessage]);
-}
 
 - (void)toolCommandWillCreateBleRequest:(Command)command {
     // コマンドに応じ、以下の処理に分岐
     [self setCommand:command];
     switch (command) {
-        case COMMAND_ERASE_SKEY_CERT:
-            [self createCommandEraseSkeyCert];
-            break;
-        case COMMAND_INSTALL_SKEY:
-            [self createCommandInstallSkey];
-            break;
         case COMMAND_TEST_REGISTER:
             [self createCommandTestRegister];
-            break;
-        case COMMAND_U2F_HID_PROCESS:
-            [self createCommandU2FHIDProcess];
             break;
         case COMMAND_PAIRING:
             [self createCommandPairing];
@@ -629,17 +295,6 @@
         case COMMAND_PAIRING:
             [self toolCommandDidProcess:true message:@"Pairing end"];
             break;
-        case COMMAND_ERASE_SKEY_CERT:
-            [self toolCommandDidProcess:true message:@"Erase secure key and certificate end"];
-            break;
-        case COMMAND_INSTALL_SKEY:
-            NSLog(@"Install secure key end");
-            [self setCommand:COMMAND_INSTALL_CERT];
-            [self createCommandInstallCert];
-            break;
-        case COMMAND_INSTALL_CERT:
-            [self toolCommandDidProcess:true message:@"Install certificate end"];
-            break;
         case COMMAND_TEST_REGISTER:
             [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
             NSLog(@"Register test success");
@@ -670,9 +325,6 @@
             NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
             [self toolCommandDidProcess:true message:@"Health check end"];
             break;
-        case COMMAND_U2F_HID_PROCESS:
-            [self toolCommandDidProcess:true message:@"U2F response received"];
-            break;
         default:
             break;
     }
@@ -694,14 +346,6 @@
     // 画面処理時は、処理終了とメッセージ文言をAppDelegateに戻す
     [[self delegate] toolCommandDidProcess:[self command] result:result
                                    message:message];
-}
-
-- (NSDictionary *)getU2FResponseDict {
-    if ([self U2FResponseDict]) {
-        return [self U2FResponseDict];
-    } else {
-        return [[NSDictionary alloc] init];
-    }
 }
 
 @end

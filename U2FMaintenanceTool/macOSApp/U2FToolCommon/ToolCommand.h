@@ -24,15 +24,6 @@
     - (void)toolCommandWillProcessBleResponse;
     - (bool)isResponseCompleted:(NSData *)responseData;
 
-    - (void)setInstallParameter:(Command)command
-                   skeyFilePath:(NSString *)skeyFilePath
-                   certFilePath:(NSString *)certFilePath;
-    - (void)setU2FProcessParameter:(Command)command
-                 bleHelperMessages:(NSArray<NSDictionary *> *)bleHelperMessages;
-    - (void)setU2FHIDProcessParameter:(Command)command
-                     hidHelperMessage:(NSData *)hidHelperMessage;
-    - (NSDictionary *)getU2FResponseDict;
-
 @end
 
 @protocol ToolCommandDelegate <NSObject>
