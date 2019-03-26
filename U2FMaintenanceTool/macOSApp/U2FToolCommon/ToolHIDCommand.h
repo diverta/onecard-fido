@@ -17,12 +17,14 @@
 
     - (id)initWithDelegate:(id<ToolHIDCommandDelegate>)delegate;
     - (void)hidHelperWillProcess:(Command)command;
+    - (void)setInstallParameter:(Command)command
+                   skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
 
 @end
 
 @protocol ToolHIDCommandDelegate <NSObject>
 
-- (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message;
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 

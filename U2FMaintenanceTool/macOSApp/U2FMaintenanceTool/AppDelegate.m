@@ -101,7 +101,7 @@
             return;
         }
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
     }
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
@@ -125,10 +125,10 @@
         }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [self.toolCommand setInstallParameter:COMMAND_INSTALL_SKEY
-                            skeyFilePath:self.fieldPath1.stringValue
-                            certFilePath:self.fieldPath2.stringValue];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
+        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY
+                                      skeyFilePath:self.fieldPath1.stringValue
+                                      certFilePath:self.fieldPath2.stringValue];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY];
     }
 
     - (IBAction)button4DidPress:(id)sender {
@@ -387,20 +387,24 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message {
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+        // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
+        if (result == false) {
+            [self notifyToolCommandMessage:message];
+        }
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:command],
+                         result? MSG_SUCCESS:MSG_FAILURE];
         // ボタンを活性化
         [self enableButtons:true];
-        // メッセージが設定されていない場合は何もしない
-        if (message == nil || [message length] == 0) {
-            return;
-        }
         // メッセージを画面のテキストエリアに表示
-        [self notifyToolCommandMessage:message];
+        [self notifyToolCommandMessage:str];
         // ポップアップを表示
-        if (success) {
-            [ToolPopupWindow informational:message informativeText:nil];
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
         } else {
-            [ToolPopupWindow critical:message informativeText:nil];
+            [ToolPopupWindow critical:str informativeText:nil];
         }
     }
 

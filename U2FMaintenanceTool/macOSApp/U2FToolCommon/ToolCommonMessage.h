@@ -66,7 +66,7 @@
 #define MSG_INVALID_SKEY_CONTENT_IN_PEM     @"鍵ファイルの内容が不正です。"
 #define MSG_CANNOT_READ_CERT_CRT_FILE       @"証明書ファイルを読み込むことができません。"
 #define MSG_INVALID_CERT_LENGTH_IN_CRT      @"証明書ファイルに格納されたデータの長さが不正です。"
-#define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。%@"
+#define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"

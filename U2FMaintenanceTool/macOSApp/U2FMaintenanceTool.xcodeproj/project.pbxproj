@@ -24,8 +24,8 @@
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolCommand.m */; };
 		7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLECentral.m */; };
-		7A92740E2105AB960062FA89 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274082105AB960062FA89 /* NSData+Base64.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
+		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
 		7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA55A98203A69C80043C893 /* ToolFileMenu.m */; };
 		7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */; };
 		7AAAEDCB2044E2DC004F5B11 /* SelfcrtParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */; };
@@ -63,7 +63,6 @@
 		7A53791A203E48630062E9E2 /* ToolFilePanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
 		7A84811C203CF6FE00380005 /* OpenSSL.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSSL.c; sourceTree = "<group>"; };
 		7A84811D203CF6FE00380005 /* OpenSSL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenSSL.h; sourceTree = "<group>"; };
-		7A9274002105AB950062FA89 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
@@ -71,9 +70,10 @@
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
 		7A9274062105AB950062FA89 /* ToolBLECentral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECentral.h; sourceTree = "<group>"; };
 		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
-		7A9274082105AB960062FA89 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		7A9274092105AB960062FA89 /* ToolTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTimer.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
+		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
+		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
 		7AA55A98203A69C80043C893 /* ToolFileMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFileMenu.m; sourceTree = "<group>"; };
 		7AA55A9A203A6EA00043C893 /* ToolFileMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFileMenu.h; sourceTree = "<group>"; };
 		7AAAEDC72044E2DC004F5B11 /* SelfcrtParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfcrtParamWindow.h; sourceTree = "<group>"; };
@@ -186,8 +186,6 @@
 		7A9273FF2105AB590062FA89 /* U2FToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A9274002105AB950062FA89 /* NSData+Base64.h */,
-				7A9274082105AB960062FA89 /* NSData+Base64.m */,
 				7A9274062105AB950062FA89 /* ToolBLECentral.h */,
 				7A9274042105AB950062FA89 /* ToolBLECentral.m */,
 				7A9274022105AB950062FA89 /* ToolCommand.h */,
@@ -197,10 +195,12 @@
 				7A9274072105AB960062FA89 /* ToolCommonMessage.h */,
 				7A9274092105AB960062FA89 /* ToolTimer.h */,
 				7A9274012105AB950062FA89 /* ToolTimer.m */,
-				7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */,
 				7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */,
-				7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */,
+				7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */,
 				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
+				7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */,
+				7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */,
+				7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */,
 			);
 			path = U2FToolCommon;
 			sourceTree = "<group>";
@@ -272,7 +272,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
-				7A92740E2105AB960062FA89 /* NSData+Base64.m in Sources */,
 				7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */,
 				7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */,
 				7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */,
@@ -286,6 +285,7 @@
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */,
 				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
+				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */,
 			);
