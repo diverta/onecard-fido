@@ -16,6 +16,7 @@
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
 #include "hid_ctap2_command.h"
+#include "fido_maintenance.h"
 
 // for U2F command
 #include "u2f.h"
@@ -153,6 +154,10 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor();
             break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            fido_maintenance_command();
+            break;
         default:
             // 不正なコマンドであるため
             // エラーレスポンスを送信
@@ -172,6 +177,10 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
             break;
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor_send_response(p_evt);
+            break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            fido_maintenance_command_send_response(p_evt);
             break;
         default:
             break;
@@ -205,6 +214,10 @@ void hid_fido_command_on_report_completed(void)
             break;
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor_report_sent();
+            break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            fido_maintenance_command_report_sent();
             break;
         default:
             break;
@@ -243,25 +256,4 @@ void hid_fido_command_on_process_timedout(void)
 
     // アイドル時点滅処理を再開
     fido_idling_led_on();
-}
-
-bool hid_fido_command_is_valid(uint8_t command)
-{
-    // FIDO機能（U2F、CTAP2）の
-    // コマンドであればtrueを戻す
-    switch (command) {
-        // U2F関連コマンド
-        case U2F_COMMAND_PING:
-        case U2F_COMMAND_MSG:
-        case U2F_COMMAND_HID_LOCK:
-        case U2F_COMMAND_HID_INIT:
-        case U2F_COMMAND_HID_WINK:
-
-        // CTAP2関連コマンド
-        case CTAP2_COMMAND_CBOR:
-        case CTAP2_COMMAND_CANCEL:
-            return true;
-        default:
-            return false;
-    }
 }

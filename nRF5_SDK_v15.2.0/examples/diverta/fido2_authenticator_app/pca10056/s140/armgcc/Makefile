@@ -165,6 +165,7 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_flash.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_lock_channel.c \
+  $(FIDLIB_DIR)/fido_maintenance.c \
   $(FIDLIB_DIR)/fido_processing_led.c \
   $(FIDLIB_DIR)/fido_request_apdu.c \
   $(FIDLIB_DIR)/fido_user_presence.c \
@@ -181,7 +182,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_u2f_init.c \
   $(BLELIB_DIR)/ble_u2f_pairing.c \
   $(BLELIB_DIR)/ble_u2f_register.c \
-  $(BLELIB_DIR)/ble_u2f_securekey.c \
   $(BLELIB_DIR)/ble_u2f_status.c \
   $(BLELIB_DIR)/ble_u2f_status_retry.c \
   $(BLELIB_DIR)/ble_u2f_util.c \

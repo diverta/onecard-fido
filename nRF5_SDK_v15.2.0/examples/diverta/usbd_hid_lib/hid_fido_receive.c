@@ -19,6 +19,7 @@ NRF_LOG_MODULE_REGISTER();
 // 使用するコマンド／ステータスの読替え
 #include "u2f.h"
 #include "ctap2_common.h"
+#include "fido_common.h"
 #if CTAP2_SUPPORTED
 #define FIDO_COMMAND_ERROR   CTAP2_COMMAND_ERROR
 #define FIDO_COMMAND_PING    CTAP2_COMMAND_PING
@@ -91,8 +92,9 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     if (p_hid_header->CMD == FIDO_COMMAND_PING || 
         p_hid_header->CMD == FIDO_COMMAND_INIT ||
         p_hid_header->CMD == FIDO_COMMAND_LOCK ||
-        p_hid_header->CMD == FIDO_COMMAND_CBOR) {
-        // コマンドがPING、INIT、LOCK、CBORの場合は、APDUではないため
+        p_hid_header->CMD == FIDO_COMMAND_CBOR ||
+        p_hid_header->CMD >= MNT_COMMAND_BASE) {
+        // コマンドがPING、INIT、LOCK、CBOR、管理コマンドの場合は、APDUではないため
         // データ長だけセットしておく
         p_apdu->Lc = p_hid_header->LEN;
     } else {
@@ -241,8 +243,8 @@ static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size
 
     // 受信データに設定されたコマンドバイトを取得
     uint8_t recv_cmd = control_point_buffer[0];
-    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT) {
-        // CMDがINIT以外の場合
+    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT && recv_cmd < MNT_COMMAND_BASE) {
+        // CMDがINITまたは管理コマンド以外の場合
         // エラーレスポンスメッセージを作成
         NRF_LOG_ERROR("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
         hid_header_t.CMD =   FIDO_COMMAND_ERROR;

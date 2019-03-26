@@ -325,7 +325,7 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey_be()) == false) {
+    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey()) == false) {
         // 署名を実行
         // NGであれば、エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;

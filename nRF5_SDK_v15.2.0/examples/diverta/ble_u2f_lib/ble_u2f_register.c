@@ -2,11 +2,13 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "ble_u2f_securekey.h"
+
+#include "ble_u2f.h"
 #include "ble_u2f_crypto.h"
 #include "fido_flash.h"
 #include "ble_u2f_status.h"
 #include "u2f_keyhandle.h"
+#include "u2f_register.h"
 #include "ble_u2f_util.h"
 
 // for keysize informations
@@ -24,10 +26,6 @@ static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZ
 static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
 static size_t  private_key_raw_data_size;
 static size_t  public_key_raw_data_size;
-
-// インストール済み秘密鍵のエンディアン変換用配列
-static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
-
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
@@ -152,8 +150,8 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
-    uint8_t *cert_buffer = ble_u2f_securekey_cert(p_u2f_context);
-    uint32_t cert_buffer_length = ble_u2f_securekey_cert_length(p_u2f_context);
+    uint8_t *cert_buffer = u2f_securekey_cert();
+    uint32_t cert_buffer_length = u2f_securekey_cert_length();
 
     // 証明書格納領域からコピー
     memcpy(response_message_buffer + offset, cert_buffer, cert_buffer_length);
@@ -183,19 +181,6 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     return true;
 }
 
-static void convert_private_key_endian(ble_u2f_context_t *p_u2f_context)
-{
-    // インストール済み秘密鍵のエンディアンを変換
-    //   private_key_leはリトルエンディアンで格納されている秘密鍵のバイト配列
-    //   private_key_beはビッグエンディアンに変換された配列
-    uint8_t *private_key_le = ble_u2f_securekey_skey(p_u2f_context);
-    size_t key_size = sizeof(private_key_be);
-    
-    for (int i = 0; i < key_size; i++) {
-        private_key_be[i] = private_key_le[key_size - 1 - i];
-    }
-}
-
 static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
 {
     // エラー時のレスポンスを「予期しないエラー」に設定
@@ -207,8 +192,7 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    convert_private_key_endian(p_u2f_context);
-    if (ble_u2f_crypto_sign(private_key_be, p_u2f_context) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(u2f_securekey_skey(), p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }

@@ -56,6 +56,11 @@ extern "C" {
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff
 
+// 管理コマンドの識別用
+#define MNT_COMMAND_BASE                0xc0
+#define MNT_COMMAND_ERASE_SKEY_CERT     0xc0
+#define MNT_COMMAND_INSTALL_SKEY_CERT   0xc1
+
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
     uint8_t  CLA;
