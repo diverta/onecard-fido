@@ -79,6 +79,22 @@ static void hid_fido_command_lock(void)
     hid_fido_send_command_response_no_payload(cid, cmd);
 }
 
+void hid_ctap2_command_erase_skey_cert(void)
+{
+    // 仮の実装です。
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_command_response_no_callback(cid, cmd, CTAP1_ERR_SUCCESS);
+}
+
+void hid_ctap2_command_install_skey_cert(void)
+{
+    // 仮の実装です。
+    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
+    hid_fido_send_command_response_no_callback(cid, cmd, CTAP1_ERR_SUCCESS);
+}
+
 void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
     // U2F ERRORコマンドに対応する
@@ -152,6 +168,12 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case CTAP2_COMMAND_CBOR:
             hid_ctap2_command_cbor();
+            break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+            hid_ctap2_command_erase_skey_cert();
+            break;
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            hid_ctap2_command_install_skey_cert();
             break;
         default:
             // 不正なコマンドであるため
