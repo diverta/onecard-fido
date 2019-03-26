@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_common.h"
+#include "u2f.h"
 #include "u2f_crypto.h"
 #include "fido_flash.h"
 #include "u2f_keyhandle.h"
@@ -15,9 +17,6 @@
 #define NRF_LOG_MODULE_NAME u2f_register
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// for macro (SKEY_WORD_NUM, CERT_WORD_NUM, SKEY_CERT_WORD_NUM)
-#include "ble_u2f_securekey.h"
 
 // インストール済み秘密鍵のエンディアン変換用配列
 static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];

@@ -10,9 +10,7 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
-#include "ble_u2f_securekey.h"
 #include "ble_u2f_pairing.h"
-#include "fido_flash.h"
 #include "ble_u2f_util.h"
 
 // for logging informations
@@ -137,21 +135,6 @@ static enum COMMAND_TYPE get_command_type(void)
                 // ボンディング情報削除コマンド
                 NRF_LOG_DEBUG("get_command_type: initialize bonding information ");
                 current_command = COMMAND_INITBOND;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITFSTR) {
-                // 秘密鍵／証明書削除コマンド
-                NRF_LOG_DEBUG("get_command_type: initialize fstorage ");
-                current_command = COMMAND_INITFSTR;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITSKEY) {
-                // 秘密鍵導入コマンド
-                NRF_LOG_DEBUG("get_command_type: initial skey data received ");
-                current_command = COMMAND_INITSKEY;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITCERT) {
-                // データが完成していれば、証明書導入用コマンドを実行
-                NRF_LOG_DEBUG("get_command_type: initial cert data received ");
-                current_command = COMMAND_INITCERT;
                 
             } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
                 // ペアリングのためのレスポンスを実行
@@ -235,18 +218,6 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_INITBOND:
             ble_u2f_pairing_delete_bonds(&m_u2f_context);
             break;
-
-        case COMMAND_INITFSTR:
-            ble_u2f_securekey_erase(&m_u2f_context);
-            break;
-
-        case COMMAND_INITSKEY:
-            ble_u2f_securekey_install_skey(&m_u2f_context);
-            break;
-
-        case COMMAND_INITCERT:
-            ble_u2f_securekey_install_cert(&m_u2f_context);
-            break;
             
         case COMMAND_PAIRING:
             ble_u2f_send_success_response(&m_u2f_context);
@@ -290,18 +261,6 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
-        case COMMAND_INITFSTR:
-            ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
-            break;
-
-        case COMMAND_INITSKEY:
-            ble_u2f_securekey_install_skey_response(&m_u2f_context, p_evt);
-            break;
-
-        case COMMAND_INITCERT:
-            ble_u2f_securekey_install_cert_response(&m_u2f_context, p_evt);
-            break;
-
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(&m_u2f_context, p_evt);
             break;

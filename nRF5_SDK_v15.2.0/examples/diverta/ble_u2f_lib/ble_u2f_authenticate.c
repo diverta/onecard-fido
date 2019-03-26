@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "ble_u2f_securekey.h"
+
+#include "fds.h"
+#include "ble_u2f.h"
 #include "ble_u2f_crypto.h"
 #include "fido_flash.h"
 #include "ble_u2f_status.h"

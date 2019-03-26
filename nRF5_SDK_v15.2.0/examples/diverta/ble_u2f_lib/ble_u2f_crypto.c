@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
-#include "ble_u2f_securekey.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_crypto
