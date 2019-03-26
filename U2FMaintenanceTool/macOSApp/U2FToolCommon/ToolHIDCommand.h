@@ -24,7 +24,7 @@
 
 @protocol ToolHIDCommandDelegate <NSObject>
 
-    - (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message;
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 

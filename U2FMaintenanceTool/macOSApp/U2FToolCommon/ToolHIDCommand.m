@@ -98,11 +98,7 @@
         [self startResponseTimeoutMonitor];
     }
 
-    - (void)doResponseToAppDelegate:(bool)result {
-        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
-        NSString *message = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                         [ToolCommon processNameOfCommand:[self command]],
-                         result? MSG_SUCCESS:MSG_FAILURE];
+    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
         // AppDelegateに制御を戻す
         [[self delegate] hidCommandDidProcess:[self command] result:result message:message];
     }
@@ -119,7 +115,7 @@
         char *requestBytes = (char *)[message bytes];
         bool result = (memcmp(requestBytes, nonceBytes, sizeof(nonceBytes)) == 0);
         // AppDelegateに制御を戻す
-        [self doResponseToAppDelegate:result];
+        [self doResponseToAppDelegate:result message:nil];
     }
 
     - (void)doEraseSkeyCert {
@@ -130,9 +126,16 @@
     }
 
     - (void)doInstallSkeyCert {
-        // メッセージを編集し、コマンド 0xC1 を実行
+        // メッセージを編集
         NSData *message = [[self toolInstallCommand] generateInstallSkeyCertMessage:[self command]
                             skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
+        if (message == nil) {
+            // 処理が失敗した場合は、AppDelegateに制御を戻す
+            [self doResponseToAppDelegate:false message:[[self toolInstallCommand] lastErrorMessage]];
+            return;
+        }
+
+        // コマンド 0xC1 を実行
         NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
         [self doRequest:message CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
     }
@@ -142,7 +145,7 @@
         char *requestBytes = (char *)[message bytes];
         bool result = (requestBytes[0] == 0x00);
         // AppDelegateに制御を戻す
-        [self doResponseToAppDelegate:result];
+        [self doResponseToAppDelegate:result message:nil];
     }
 
     - (void)hidHelperWillProcess:(Command)command {

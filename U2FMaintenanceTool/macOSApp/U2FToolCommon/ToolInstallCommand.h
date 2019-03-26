@@ -16,6 +16,8 @@
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath;
 
+    @property (nonatomic) NSString *lastErrorMessage;
+
 @end
 
 #endif /* ToolInstallCommand_h */

@@ -387,20 +387,24 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidCommandDidProcess:(bool)success result:(bool)result message:(NSString *)message {
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+        // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
+        if (result == false) {
+            [self notifyToolCommandMessage:message];
+        }
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:command],
+                         result? MSG_SUCCESS:MSG_FAILURE];
         // ボタンを活性化
         [self enableButtons:true];
-        // メッセージが設定されていない場合は何もしない
-        if (message == nil || [message length] == 0) {
-            return;
-        }
         // メッセージを画面のテキストエリアに表示
-        [self notifyToolCommandMessage:message];
+        [self notifyToolCommandMessage:str];
         // ポップアップを表示
-        if (success) {
-            [ToolPopupWindow informational:message informativeText:nil];
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
         } else {
-            [ToolPopupWindow critical:message informativeText:nil];
+            [ToolPopupWindow critical:str informativeText:nil];
         }
     }
 
