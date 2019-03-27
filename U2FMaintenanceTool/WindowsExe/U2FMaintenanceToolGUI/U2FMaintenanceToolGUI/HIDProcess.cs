@@ -102,6 +102,11 @@ namespace U2FMaintenanceToolGUI
             }
         }
 
+        public bool IsUSBDeviceDisconnected()
+        {
+            return (device == null);
+        }
+
         private string GetHIDDevicePath()
         {
             // 接続済みのHIDデバイスから、

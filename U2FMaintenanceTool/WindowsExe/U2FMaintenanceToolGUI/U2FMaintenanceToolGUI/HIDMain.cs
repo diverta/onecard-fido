@@ -73,6 +73,14 @@ namespace U2FMaintenanceToolGUI
 
         public void DoTestCtapHidInit()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (hidProcess.IsUSBDeviceDisconnected()) {
+                PrintMessageText(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
+            // nonce を送信する
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes);
         }
 

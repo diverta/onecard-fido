@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using U2FMaintenanceToolCommon;
 
 namespace U2FMaintenanceToolGUI
 {
@@ -338,7 +339,7 @@ namespace U2FMaintenanceToolGUI
         private void メニューはありませんToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
-                "このメニューは実行できません.",
+                AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED,
                 AppMain.U2FMaintenanceToolTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }

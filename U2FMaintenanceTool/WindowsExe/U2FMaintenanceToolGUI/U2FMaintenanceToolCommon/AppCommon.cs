@@ -19,6 +19,10 @@ namespace U2FMaintenanceToolCommon
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
 
+        // コマンドテスト関連メッセージ
+        public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
+        public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
+
         // Windows版固有のメッセージ文言
         // USB管理
         public const string MSG_U2FCOMMAND_PROCESS = "管理コマンドの実行";
