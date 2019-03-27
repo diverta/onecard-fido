@@ -66,7 +66,7 @@ namespace U2FMaintenanceToolGUI
             }
             OutputLogToFile(AppCommon.MSG_USB_DETECT_STARTED);
 
-            // U2F HIDデバイスに自動接続
+            // USB HIDデバイスに自動接続
             StartAsyncOperation();
         }
 
@@ -84,7 +84,7 @@ namespace U2FMaintenanceToolGUI
 
         public void OnUSBDeviceArrival()
         {
-            // U2F HIDデバイスに自動接続
+            // USB HIDデバイスに自動接続
             StartAsyncOperation();
         }
 
@@ -96,7 +96,7 @@ namespace U2FMaintenanceToolGUI
             }
 
             if (GetHIDDevicePath().Equals("")) {
-                // U2F HIDデバイスが切断されてしまった場合
+                // USB HIDデバイスが切断されてしまった場合
                 CloseDevice();
                 MessageTextEvent(AppCommon.MSG_HID_REMOVED);
             }
@@ -120,7 +120,7 @@ namespace U2FMaintenanceToolGUI
 
         private async void StartAsyncOperation()
         {
-            // 0.25秒待機後に、もう一度U2F HIDデバイスの有無を確認
+            // 0.25秒待機後に、もう一度USB HIDデバイスの有無を確認
             await Task.Run(() => System.Threading.Thread.Sleep(250));
             string devicePath = GetHIDDevicePath();
             if (devicePath.Equals("")) {
@@ -223,8 +223,8 @@ namespace U2FMaintenanceToolGUI
 
             if (received == receivedMessageLen) {
                 // 全フレームを受信できたら、
-                // HIDデバイスからのデータをBLE経由で転送
-                OutputLogToFile(AppCommon.MSG_HID_REQUEST_TRANSFERRED);
+                // HIDデバイスからのデータをHIDMainに転送
+                OutputLogToFile(AppCommon.MSG_HID_RESPONSE_RECEIVED);
                 ReceiveHIDMessageEvent(receivedMessage, receivedMessageLen);
             }
         }
@@ -306,7 +306,7 @@ namespace U2FMaintenanceToolGUI
             }
 
             // 転送完了メッセージ
-            OutputLogToFile(string.Format(AppCommon.MSG_HID_RESPONSE_TRANSFERRED));
+            OutputLogToFile(string.Format(AppCommon.MSG_HID_REQUEST_SENT));
         }
 
         private void DumpMessage(byte[] message, int length)

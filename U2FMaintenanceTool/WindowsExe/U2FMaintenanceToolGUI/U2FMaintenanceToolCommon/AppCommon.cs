@@ -21,15 +21,14 @@ namespace U2FMaintenanceToolCommon
 
         // Windows版固有のメッセージ文言
         // USB管理
-        public const string MSG_U2FCOMMAND_PROCESS = "U2F管理コマンドの実行";
-        public const string MSG_HID_BLE_CONNECTION = "U2F HIDデバイスから要求された処理";
+        public const string MSG_U2FCOMMAND_PROCESS = "管理コマンドの実行";
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
         public const string MSG_USB_DETECT_STARTED = "USBデバイス検知を開始しました。";
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
-        public const string MSG_HID_REMOVED = "U2F HIDデバイスが取り外されました。";
-        public const string MSG_HID_CONNECTED = "U2F HIDデバイスに接続されました。";
-        public const string MSG_HID_REQUEST_TRANSFERRED = "U2F HIDデバイスからU2Fリクエストが転送されました。";
-        public const string MSG_HID_RESPONSE_TRANSFERRED = "U2F HIDデバイスへU2Fレスポンスを転送しました。";
+        public const string MSG_HID_REMOVED = "USB HIDデバイスが取り外されました。";
+        public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
+        public const string MSG_HID_RESPONSE_RECEIVED = "USB HIDデバイスからレスポンスを受信しました。";
+        public const string MSG_HID_REQUEST_SENT = "USB HIDデバイスにリクエストを送信しました。";
         public const string MSG_FORMAT_NOT_INSTALLED = "{0}が導入されていません。";
         public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
