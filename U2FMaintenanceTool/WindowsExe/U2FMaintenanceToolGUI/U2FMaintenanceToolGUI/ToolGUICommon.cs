@@ -42,6 +42,7 @@
         public const string PROCESS_NAME_CREATE_CERTREQ_CSR = "証明書要求ファイル作成";
         public const string PROCESS_NAME_CREATE_SELFCRT_CRT = "自己署名証明書ファイル作成";
         public const string PROCESS_NAME_PAIRING = "ペアリング";
+        public const string PROCESS_NAME_TEST_CTAPHID_INIT = "CTAPHID_INITのテスト";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";

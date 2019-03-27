@@ -6,7 +6,7 @@ using U2FMaintenanceToolCommon;
 
 namespace U2FMaintenanceToolGUI
 {
-    class AppMain
+    internal class AppMain
     {
         private enum BLERequestType
         {   

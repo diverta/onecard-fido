@@ -50,6 +50,11 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.メニューはありませんToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -168,6 +173,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ファイルFToolStripMenuItem,
+            this.テストTToolStripMenuItem,
             this.その他OToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -227,6 +233,45 @@
             this.u2F管理ツールについてToolStripMenuItem.Text = "U2F管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.u2F管理ツールについてToolStripMenuItem_Click);
             // 
+            // テストTToolStripMenuItem
+            // 
+            this.テストTToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.uSBToolStripMenuItem,
+            this.bLEToolStripMenuItem});
+            this.テストTToolStripMenuItem.Name = "テストTToolStripMenuItem";
+            this.テストTToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.テストTToolStripMenuItem.Text = "テスト(&T)";
+            // 
+            // uSBToolStripMenuItem
+            // 
+            this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cTAPHIDINIT実行ToolStripMenuItem});
+            this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uSBToolStripMenuItem.Text = "USB";
+            // 
+            // bLEToolStripMenuItem
+            // 
+            this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.メニューはありませんToolStripMenuItem});
+            this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bLEToolStripMenuItem.Text = "BLE";
+            // 
+            // cTAPHIDINIT実行ToolStripMenuItem
+            // 
+            this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
+            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
+            this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
+            // 
+            // メニューはありませんToolStripMenuItem
+            // 
+            this.メニューはありませんToolStripMenuItem.Name = "メニューはありませんToolStripMenuItem";
+            this.メニューはありませんToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.メニューはありませんToolStripMenuItem.Text = "(メニューはありません)";
+            this.メニューはありませんToolStripMenuItem.Click += new System.EventHandler(this.メニューはありませんToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -282,6 +327,11 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem その他OToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem テストTToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uSBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cTAPHIDINIT実行ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem メニューはありませんToolStripMenuItem;
     }
 }
 
