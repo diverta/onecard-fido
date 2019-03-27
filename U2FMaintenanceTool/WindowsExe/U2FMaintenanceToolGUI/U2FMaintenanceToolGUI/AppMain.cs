@@ -11,7 +11,6 @@ namespace U2FMaintenanceToolGUI
         private enum BLERequestType
         {   
             None = 0,
-            EraseSkeyCert,
             InstallSkey,
             InstallCert,
             TestRegister,
@@ -216,9 +215,6 @@ namespace U2FMaintenanceToolGUI
             }
 
             switch (bleRequestType) {
-            case BLERequestType.EraseSkeyCert:
-                DoResponse(ret, receivedMessage, receivedLen);
-                break;
             case BLERequestType.InstallSkey:
                 DoInstallCertFile();
                 break;
@@ -251,19 +247,6 @@ namespace U2FMaintenanceToolGUI
             // BLEメッセージが返送されて来たら
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(ret);
-        }
-
-        public void doEraseSkeyCert()
-        {
-            // リクエストデータ（APDU）を編集し request に格納
-            // INS=0x42, P1=0x00
-            byte[] u2fVersionFrameData = {
-                    0x83, 0x00, 0x04,
-                    0x00, 0x42, 0x00, 0x00
-                };
-
-            // BLE処理を実行し、メッセージを転送
-            DoRequest(u2fVersionFrameData, u2fVersionFrameData.Length, BLERequestType.EraseSkeyCert);
         }
 
         private string ReadTextFile(string skeyFilePath)

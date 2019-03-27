@@ -44,7 +44,7 @@ namespace U2FMaintenanceToolGUI
             else if (sender.Equals(button2)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
-                app.doEraseSkeyCert();
+                hid.DoEraseSkeyCert();
 
             }
             else if (sender.Equals(button3)) {
