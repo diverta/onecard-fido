@@ -25,6 +25,9 @@ namespace U2FMaintenanceToolGUI
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
         private readonly byte[] nonceBytes = {0x71, 0xcb, 0x1c, 0x3b, 0x10, 0x8e, 0xc9, 0x24};
 
+        // リクエストデータ格納領域
+        private byte[] RequestData = new byte[1024];
+
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -60,8 +63,14 @@ namespace U2FMaintenanceToolGUI
         private void ReceiveHIDMessage(byte[] message, int length)
         {
             // HIDデバイスからメッセージ受信時の処理を行う
-            if (hidProcess.receivedCMD == Const.HID_CMD_CTAPHID_INIT) {
+            switch(hidProcess.receivedCMD) {
+            case Const.HID_CMD_CTAPHID_INIT:
                 DoResponseTestCtapHidInit(message, length);
+                break;
+            case Const.HID_CMD_ERASE_SKEY_CERT:
+            case Const.HID_CMD_INSTALL_SKEY_CERT:
+                DoResponseMaintSkeyCert(message, length);
+                break;
             }
         }
 
@@ -71,17 +80,25 @@ namespace U2FMaintenanceToolGUI
             mainForm.OnPrintMessageText(messageText);
         }
 
-        public void DoTestCtapHidInit()
+        private bool CheckUSBDeviceDisconnected()
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (hidProcess.IsUSBDeviceDisconnected()) {
                 PrintMessageText(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 mainForm.OnAppMainProcessExited(false);
+                return true;
+            }
+            return false;
+        }
+
+        public void DoTestCtapHidInit()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-
             // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes);
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
         }
 
         private void DoResponseTestCtapHidInit(byte[] message, int length)
@@ -94,6 +111,46 @@ namespace U2FMaintenanceToolGUI
                     break;
                 }
             }
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(result);
+        }
+
+        public void DoEraseSkeyCert()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+        }
+
+        public void DoInstallSkeyCert(string skeyFilePath, string certFilePath)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 秘密鍵をファイルから読込
+            InstallSkeyCert installSkeyCert = new InstallSkeyCert();
+            if (installSkeyCert.ReadPemFile(skeyFilePath) == false) {
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 証明書をファイルから読込
+            if (installSkeyCert.ReadCertFile(certFilePath) == false) {
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 秘密鍵・証明書の内容を配列にセットし、HIDデバイスに送信
+            int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
+        }
+
+        private void DoResponseMaintSkeyCert(byte[] message, int length)
+        {
+            // ステータスバイトをチェック
+            bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
         }

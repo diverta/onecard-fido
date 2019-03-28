@@ -234,12 +234,37 @@ namespace U2FMaintenanceToolGUI
             }
         }
 
-        public void SendHIDMessage(byte[] cid, byte cmd, byte[] message)
+        private void SendHIDHeaderMessage(byte[] cid, byte cmd, byte[] message, int messageSize)
+        {
+            // 送信メッセージサイズが０の場合は
+            // CIDとCMDだけを送信する。
+            for (int j = 0; j < frameData.Length; j++) {
+                // フレームデータを初期化
+                frameData[j] = 0;
+            }
+
+            for (int c = 0; c < cid.Length; c++) {
+                // CIDをコピー
+                frameData[c] = cid[c];
+            }
+
+            // CMDをコピー
+            frameData[4] = cmd;
+
+            OutputLogToFile(string.Format(
+                "INIT frame: data size={0} length={1}",
+                messageSize, 0));
+            DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
+
+            // フレームデータを転送
+            device.Write(frameData);
+        }
+
+        public void SendHIDMessage(byte[] cid, byte cmd, byte[] message, int messageSize)
         {
             // メッセージがない場合は終了
-            int transferMessageLen = message.Length;
-            if (transferMessageLen == 0) {
-                OutputLogToFile("SendHIDMessage: invalid message size(0)");
+            if (message == null) {
+                OutputLogToFile("SendHIDMessage: invalid message buffer");
                 return;
             }
             // 
@@ -258,7 +283,12 @@ namespace U2FMaintenanceToolGUI
             // 
             int transferred = 0;
             int seq = 0;
-            while (transferred < transferMessageLen) {
+            if (messageSize == 0) {
+                // 送信メッセージサイズが０の場合は
+                // CIDとCMDだけを送信する。
+                SendHIDHeaderMessage(cid, cmd, message, messageSize);
+            }
+            while (transferred < messageSize) {
                 for (int j = 0; j < frameData.Length; j++) {
                     // フレームデータを初期化
                     frameData[j] = 0;
@@ -272,19 +302,19 @@ namespace U2FMaintenanceToolGUI
                     // INITフレーム
                     // ヘッダーを設定
                     frameData[4] = cmd;
-                    frameData[5] = (byte)(transferMessageLen / 256);
-                    frameData[6] = (byte)(transferMessageLen % 256);
+                    frameData[5] = (byte)(messageSize / 256);
+                    frameData[6] = (byte)(messageSize % 256);
 
                     // データをコピー
                     int maxLen = Const.HID_FRAME_LEN - Const.HID_INIT_HEADER_LEN;
-                    int dataLenInFrame = (transferMessageLen < maxLen) ? transferMessageLen : maxLen;
+                    int dataLenInFrame = (messageSize < maxLen) ? messageSize : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
                         frameData[Const.HID_INIT_HEADER_LEN + i] = message[transferred++];
                     }
 
                     OutputLogToFile(string.Format(
                         "INIT frame: data size={0} length={1}",
-                        transferMessageLen, dataLenInFrame));
+                        messageSize, dataLenInFrame));
                     DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
 
                 } else {
@@ -293,7 +323,7 @@ namespace U2FMaintenanceToolGUI
                     frameData[4] = (byte)seq;
 
                     // データをコピー
-                    int remaining = transferMessageLen - transferred;
+                    int remaining = messageSize - transferred;
                     int maxLen = Const.HID_FRAME_LEN - Const.HID_CONT_HEADER_LEN;
                     int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
