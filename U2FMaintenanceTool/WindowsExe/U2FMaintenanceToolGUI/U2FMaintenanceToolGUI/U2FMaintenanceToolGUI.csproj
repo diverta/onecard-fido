@@ -85,6 +85,7 @@
     <Compile Include="HIDDevice.cs" />
     <Compile Include="HIDMain.cs" />
     <Compile Include="HIDProcess.cs" />
+    <Compile Include="InstallSkeyCert.cs" />
     <Compile Include="ToolGUICommon.cs" />
     <Compile Include="AppMain.cs" />
     <Compile Include="CertReqParamForm.cs">

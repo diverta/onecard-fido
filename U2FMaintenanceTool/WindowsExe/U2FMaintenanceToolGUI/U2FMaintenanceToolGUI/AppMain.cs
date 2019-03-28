@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using U2FMaintenanceToolCommon;
 
 namespace U2FMaintenanceToolGUI
@@ -11,8 +10,6 @@ namespace U2FMaintenanceToolGUI
         private enum BLERequestType
         {   
             None = 0,
-            InstallSkey,
-            InstallCert,
             TestRegister,
             TestAuthenticateCheck,
             TestAuthenticate,
@@ -39,9 +36,6 @@ namespace U2FMaintenanceToolGUI
         public const string OpenSSLExe = "openssl.exe";
         public const string OpenSSLCacertV3Ext = "cacertV3.ext";
         public bool opensslAvailable;
-
-        // インストールする証明書ファイルパスを保持
-        private string CertFilePath;
 
         // リクエストデータ格納領域
         private byte[] U2FRequestData = new byte[1024];
@@ -215,12 +209,6 @@ namespace U2FMaintenanceToolGUI
             }
 
             switch (bleRequestType) {
-            case BLERequestType.InstallSkey:
-                DoInstallCertFile();
-                break;
-            case BLERequestType.InstallCert:
-                DoResponse(ret, receivedMessage, receivedLen);
-                break;
             case BLERequestType.TestRegister:
                 DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticateCheck);
                 break;
@@ -247,186 +235,6 @@ namespace U2FMaintenanceToolGUI
             // BLEメッセージが返送されて来たら
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(ret);
-        }
-
-        private string ReadTextFile(string skeyFilePath)
-        {
-            string text = "";
-            try {
-                string line;
-                using (StreamReader sr = new StreamReader(
-                    skeyFilePath, Encoding.GetEncoding("Shift_JIS"))) {
-                    while ((line = sr.ReadLine()) != null) {
-                        // ヘッダー／フッターは読み飛ばす
-                        if (line.Equals("-----BEGIN EC PRIVATE KEY-----")) {
-                            continue;
-                        }
-                        if (line.Equals("-----END EC PRIVATE KEY-----")) {
-                            continue;
-                        }
-                        text += line;
-                    }
-                }
-            } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("ReadLine failed: {0}", e.Message), true);
-            }
-            return text;
-        }
-
-        private byte[] DecodeB64EncodedString(string strMessage)
-        {
-            try {
-                // non web-safe形式に変換
-                string encodedText = strMessage;
-                encodedText = encodedText.Replace('_', '/');
-                encodedText = encodedText.Replace('-', '+');
-
-                // メッセージをbase64デコード
-                byte[] transferMessage = Convert.FromBase64String(encodedText);
-                return transferMessage;
-
-            } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("Convert.FromBase64String failed: {0}", e.Message), true);
-            }
-            return null;
-        }
-
-        private bool ReadPemFile(string skeyFilePath, byte[] skeyBytes)
-        {
-            string pemText = ReadTextFile(skeyFilePath);
-            if (pemText.Length == 0) {
-                return false;
-            }
-
-            byte[] pemBytes = DecodeB64EncodedString(pemText);
-            if (pemBytes == null) {
-                return false;
-            }
-
-            // 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
-            // 先頭からリトルエンディアン形式で配置しなおす。
-            for (int i = 0; i < 32; i++) {
-                skeyBytes[31 - i] = pemBytes[7 + i];
-            }
-
-            return true;
-        }
-
-        private int GenerateInstallSkeyBytes(byte[] u2fRequestData, byte[] skeyBytes, int skeyBytesLen)
-        {
-            int pos;
-
-            // ヘッダーにコマンドをセット
-            u2fRequestData[0] = 0x83;
-
-            // リクエストデータを配列にセット
-            //   INS=0x43, P1=0x00
-            u2fRequestData[Const.MSG_HEADER_LEN + 0] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 1] = 0x43;
-            u2fRequestData[Const.MSG_HEADER_LEN + 2] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 3] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 4] = 0x00;
-            //   データ長を設定
-            u2fRequestData[Const.MSG_HEADER_LEN + 5] = (byte)(skeyBytesLen / 256);
-            u2fRequestData[Const.MSG_HEADER_LEN + 6] = (byte)(skeyBytesLen % 256);
-            //   データを設定
-            pos = 7;
-            Array.Copy(skeyBytes, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, skeyBytesLen);
-            pos += skeyBytesLen;
-
-            // Leを設定
-            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
-
-            // ヘッダーにデータ長をセット
-            u2fRequestData[1] = (byte)(pos / 256);
-            u2fRequestData[2] = (byte)(pos % 256);
-
-            return Const.MSG_HEADER_LEN + pos;
-        }
-
-        public void doInstallSkeyCert(string skeyFilePath, string certFilePath)
-        {
-            // 証明書ファイルパスを保持
-            CertFilePath = certFilePath;
-
-            // 秘密鍵ファイルを読込む
-            //   skey_bufferの先頭から32バイト分、
-            //   リトルエンディアン形式で格納される
-            byte[] skeyBytes = new byte[32];
-            if (ReadPemFile(skeyFilePath, skeyBytes) == false) {
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-
-            // リクエストデータ（APDU）を編集しリクエストデータに格納
-            byte[] U2FRequestData = new byte[64];
-            int length = GenerateInstallSkeyBytes(U2FRequestData, skeyBytes, skeyBytes.Length);
-
-            // BLE処理を実行し、メッセージを転送
-            DoRequest(U2FRequestData, length, BLERequestType.InstallSkey);
-        }
-
-        private byte[] ReadCertFile(string certFilePath)
-        {
-            try {
-                byte[] certBytes = File.ReadAllBytes(certFilePath);
-                return certBytes;
-
-            } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("File.ReadAllBytes failed: {0}", e.Message), true);
-            }
-
-            return null;
-        }
-
-        private int GenerateInstallCertBytes(byte[] u2fRequestData, byte[] certBytes, int certBytesLen)
-        {
-            int pos;
-
-            // ヘッダーにコマンドをセット
-            u2fRequestData[0] = 0x83;
-
-            // リクエストデータを配列にセット
-            //   INS=0x44, P1=0x00
-            u2fRequestData[Const.MSG_HEADER_LEN + 0] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 1] = 0x44;
-            u2fRequestData[Const.MSG_HEADER_LEN + 2] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 3] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + 4] = 0x00;
-            //   データ長を設定
-            u2fRequestData[Const.MSG_HEADER_LEN + 5] = (byte)(certBytesLen / 256);
-            u2fRequestData[Const.MSG_HEADER_LEN + 6] = (byte)(certBytesLen % 256);
-            //   データを設定
-            pos = 7;
-            Array.Copy(certBytes, 0, u2fRequestData, Const.MSG_HEADER_LEN + pos, certBytesLen);
-            pos += certBytesLen;
-
-            // Leを設定
-            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
-            u2fRequestData[Const.MSG_HEADER_LEN + pos++] = 0x00;
-
-            // ヘッダーにデータ長をセット
-            u2fRequestData[1] = (byte)(pos / 256);
-            u2fRequestData[2] = (byte)(pos % 256);
-
-            return Const.MSG_HEADER_LEN + pos;
-        }
-
-        public void DoInstallCertFile()
-        {
-            // 証明書ファイルを読込む
-            byte[] certBytes = ReadCertFile(CertFilePath);
-            if (certBytes == null) {
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-
-            // リクエストデータ（APDU）を編集しリクエストデータに格納
-            int length = GenerateInstallCertBytes(U2FRequestData, certBytes, certBytes.Length);
-
-            // BLE処理を実行し、メッセージを転送
-            DoRequest(U2FRequestData, length, BLERequestType.InstallCert);
         }
 
         private void GenerateNonceBytes()

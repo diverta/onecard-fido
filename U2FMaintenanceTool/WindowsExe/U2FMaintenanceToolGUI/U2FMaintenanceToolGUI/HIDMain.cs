@@ -125,6 +125,28 @@ namespace U2FMaintenanceToolGUI
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
         }
 
+        public void DoInstallSkeyCert(string skeyFilePath, string certFilePath)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 秘密鍵をファイルから読込
+            InstallSkeyCert installSkeyCert = new InstallSkeyCert();
+            if (installSkeyCert.ReadPemFile(skeyFilePath) == false) {
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 証明書をファイルから読込
+            if (installSkeyCert.ReadCertFile(certFilePath) == false) {
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 秘密鍵・証明書の内容を配列にセットし、HIDデバイスに送信
+            int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
+        }
+
         private void DoResponseMaintSkeyCert(byte[] message, int length)
         {
             // ステータスバイトをチェック
