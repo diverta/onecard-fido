@@ -1,6 +1,6 @@
-# EdgeブラウザーのWebAuthnテスト
+# Edgeブラウザーを使用したWebAuthnテスト手順
 
-現在開発中の[FIDO 2.0 Authenticator](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。
+現在開発中の[FIDO2認証器](../../nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。
 
 
 ## ソフトウェアの導入
@@ -17,13 +17,30 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 ### ファームウェアの書込み
 
-[FIDO 2.0 Authenticator](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
-書込み手順につきましては、[nRF52840 Dongleプログラミング手順](https://github.com/diverta/onecard-fido/blob/master/Development/nRF52840/NRFCONNECTINST.md)をご参照ください。
+[FIDO2認証器](../../nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
+書込み手順につきましては、[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)をご参照ください。
 
 ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: onecard-fido/nRF5_SDK_v15.2.0/firmwares/
-- アプリケーション: [nrf52840_xxaa.hex](https://github.com/diverta/onecard-fido/blob/master/nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
-- ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](https://github.com/diverta/onecard-fido/blob/master/nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
+- アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
+- ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](../../nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
+
+## 鍵・証明書の導入
+
+まず最初に、[FIDO2認証器](../../nRF5_SDK_v15.2.0)に鍵・証明書を導入します。
+
+### 管理ツールの導入
+
+（[管理ツール](../../U2FMaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
+導入手順につきましては、[管理ツールインストール手順](../../Usage/TOOL_INSTALL.md)をご参照ください。
+
+### 鍵・証明書を導入
+
+PC環境に導入した管理ツールを使用し、鍵・証明書を作成／インストールします。<br>
+以下の手順書をご参照願います。
+
+* [鍵・証明書インストール手順（macOS版）](../../Usage/INSTALL.md) <br>
+* [鍵・証明書インストール手順（Windows版）](../../Usage/INSTALL_WINDOWS.md) <br>
 
 ## PINの作成
 
@@ -32,9 +49,9 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 ### PIN作成ツールを実行
 
 2019/03/25現在、Edgeブラウザーでは、認証器に対してPINを設定させることができないようです。<br>
-従いまして、Yubico社から提供されているテストツール「[libfido2](https://github.com/Yubico/libfido2)」を使用し、[FIDO 2.0 Authenticator](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)にPINを設定するようにします。
+従いまして、Yubico社から提供されているテストツール「[libfido2](https://github.com/Yubico/libfido2)」を使用し、[FIDO 2.0 Authenticator](../../nRF5_SDK_v15.2.0)にPINを設定するようにします。
 
-（[管理ツール](https://github.com/diverta/onecard-fido/blob/master/U2FMaintenanceTool/README.md)からPINを設定できるよう、後日対応予定となっています。しばらくお待ちいただければと存じます）
+（[管理ツール](../../U2FMaintenanceTool/README.md)からPINを設定できるよう、後日対応予定となっています。しばらくお待ちいただければと存じます）
 
 ### PIN作成ツール実行手順
 
