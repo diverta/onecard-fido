@@ -31,7 +31,7 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 ### 管理ツールの導入
 
-（[管理ツール](../../U2FMaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
+[管理ツール](../../U2FMaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
 導入手順につきましては、[管理ツールインストール手順](../../Usage/TOOL_INSTALL.md)をご参照ください。
 
 ### 鍵・証明書を導入
