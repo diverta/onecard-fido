@@ -18,7 +18,7 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 ### ファームウェアの書込み
 
 [FIDO2認証器](../../nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
-書込み手順につきましては、[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)をご参照ください。
+書込み手順につきましては、<b>[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)</b>をご参照ください。
 
 ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: onecard-fido/nRF5_SDK_v15.2.0/firmwares/
@@ -27,20 +27,23 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 ## 鍵・証明書の導入
 
-まず最初に、[FIDO2認証器](../../nRF5_SDK_v15.2.0)に鍵・証明書を導入します。
+nRF52840 Dongleにファームウェアを書き込んだら、[FIDO2認証器](../../nRF5_SDK_v15.2.0)に鍵・証明書を導入します。
 
-### 管理ツールの導入
+#### 管理ツールを導入
 
-[管理ツール](../../U2FMaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
-導入手順につきましては、[管理ツールインストール手順](../../Usage/TOOL_INSTALL.md)をご参照ください。
-
-### 鍵・証明書を導入
-
-PC環境に導入した管理ツールを使用し、鍵・証明書を作成／インストールします。<br>
+まずは[管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
-* [鍵・証明書インストール手順（macOS版）](../../Usage/INSTALL.md) <br>
-* [鍵・証明書インストール手順（Windows版）](../../Usage/INSTALL_WINDOWS.md) <br>
+* <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b><br>
+* <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b><br>
+
+#### 鍵・証明書を導入
+
+PC環境に導入した管理ツールを使用し、鍵・証明書をインストールします。<br>
+以下の手順書をご参照願います。
+
+* <b>[鍵・証明書の導入手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLKEYCRT.md) </b><br>
+* <b>[鍵・証明書の導入手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLKEYCRT.md) </b><br>
 
 ## PINの作成
 

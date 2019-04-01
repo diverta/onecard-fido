@@ -1,4 +1,4 @@
-# 鍵・証明書の導入
+# 鍵・証明書の導入手順
 
 ## 概要
 
@@ -25,9 +25,10 @@ FIDO認証器側の処理が成功すると「鍵・証明書・キーハンド�
 ## 鍵・証明書のインストール
 
 秘密鍵ファイル（fido2test.pem）、証明書ファイル（fido2test.crt）を、それぞれ「参照」ボタンをクリックして選択します。<br>
-ファイルのリポジトリー上の場所は以下の通りです。
-- 秘密鍵ファイル - [Research/provisionalCA/fido2test.pem](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.pem)
-- 証明書ファイル - [Research/provisionalCA/fido2test.crt](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.crt)
+ファイルのGitHubリポジトリー上の場所は以下の通りです。
+- ディレクトリー：[onecard-fido/Research/provisionalCA/](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/)
+- 秘密鍵ファイル：[fido2test.pem](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.pem)
+- 証明書ファイル：[fido2test.crt](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.crt)
 
 <img src="assets/0010.png" width="450">
 

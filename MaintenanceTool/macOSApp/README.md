@@ -21,5 +21,5 @@ macOS Sierra (Version 10.12.6) 〜
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
-- <b>[鍵・証明書の導入](INSTALLKEYCRT.md)</b><br>
+- <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
 FIDO認証器管理ツールに、鍵・証明書をインストールする手順を掲載しています。
