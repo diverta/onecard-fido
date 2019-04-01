@@ -7,18 +7,21 @@
 * [Edgeブラウザーを使用したWebAuthnテスト手順](../Research/FIDO_2_0/EDGETEST.md)<br>
 [FIDO2認証器](../nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。
 
-* [管理ツールインストール手順](TOOL_INSTALL.md) <br>
-[FIDO2認証器](../nRF5_SDK_v15.2.0)の管理ツールをインストールする手順について掲載しています。
+* [FIDO認証器管理ツール](../../MaintenanceTool/README.md)<br>
+[FIDO2認証器](../nRF5_SDK_v15.2.0)を管理するために必要な[FIDO認証器管理ツール](../../MaintenanceTool/README.md)について、プログラムのインストール手順や、鍵・証明書の導入手順をまとめています。
+
+## U2F関連の各種手順
+
+FIDO2への移行に伴い、現在開発を終了していますが、履歴として残します。
+
+* [U2F管理ツールインストール手順](TOOL_INSTALL.md) <br>
+[One Card BLE U2Fサービス](../nRF5_SDK_v13.0.0)の管理ツールをインストールする手順について掲載しています。
 
 * [鍵・証明書インストール手順（macOS版）](INSTALL.md) <br>
 macOS環境での、鍵・証明書作成／インストール手順を掲載しています。
 
 * [鍵・証明書インストール手順（Windows版）](INSTALL_WINDOWS.md) <br>
 Windows環境での、鍵・証明書作成／インストール手順を掲載しています。
-
-## U2F関連の各種手順
-
-FIDO2への移行に伴い、現在開発を終了していますが、履歴として残します。
 
 * [One Cardペアリング手順](PAIRING.md) <br>
 ペアリングモード変更／ペアリング実行の手順を掲載しています。

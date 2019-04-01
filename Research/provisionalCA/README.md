@@ -50,11 +50,6 @@ https://qiita.com/ll_kuma_ll/items/13c962a6a74874af39c6
 - オレオレ認証局とオレオレ証明書<br>
 https://qiita.com/softark/items/15a5280bd38c5dd97b48
 
-### 管理ツールへの反映（後日予定）
-
-[U2F管理ツール](https://github.com/diverta/onecard-fido/tree/master/U2FMaintenanceTool)で作成される開発用証明書は、自己署名証明書です。<br>
-こちらの仕様は後日、管理ツール自身が認証局になり、証明書に署名をするような仕様に変更したいと考えます。
-
 ## 仮設認証局の設置
 
 おおまかには以下の手順で、仮設認証局を設置します。
@@ -330,5 +325,3 @@ MacBookPro-makmorit-jp:provisionalCA makmorit$
 ```
 
 以上で、開発用証明書の発行は完了です。
-
-適宜、生成された鍵ファイル`fido2test.pem`、および開発用証明書ファイル`fido2test.crt`を、[U2F管理ツール](https://github.com/diverta/onecard-fido/tree/master/U2FMaintenanceTool)を使用し、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)にインストールしてください。

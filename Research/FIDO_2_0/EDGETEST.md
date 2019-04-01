@@ -31,7 +31,7 @@ nRF52840 Dongleにファームウェアを書き込んだら、[FIDO2認証器](
 
 #### 管理ツールを導入
 
-まずは[管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
+まずは[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b><br>
