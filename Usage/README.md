@@ -7,8 +7,8 @@
 * [Edgeブラウザーを使用したWebAuthnテスト手順](../Research/FIDO_2_0/EDGETEST.md)<br>
 [FIDO2認証器](../nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。
 
-* [FIDO認証器管理ツール](../../MaintenanceTool/README.md)<br>
-[FIDO2認証器](../nRF5_SDK_v15.2.0)を管理するために必要な[FIDO認証器管理ツール](../../MaintenanceTool/README.md)について、プログラムのインストール手順や、鍵・証明書の導入手順をまとめています。
+* [FIDO認証器管理ツール](../MaintenanceTool/README.md)<br>
+[FIDO2認証器](../nRF5_SDK_v15.2.0)を管理するために必要な[FIDO認証器管理ツール](../MaintenanceTool/README.md)について、プログラムのインストール手順や、鍵・証明書の導入手順をまとめています。
 
 ## U2F関連の各種手順
 
