@@ -12,24 +12,27 @@ FIDO認証器管理ツールをWindows環境にインストールする手順を
 
 MaintenanceToolWin.zipを展開すると、下図のように「MaintenanceToolWin」というフォルダーができるので、任意の場所に配置します。
 
+<img src="assets/0002.png" width="500">
+
 フォルダー内にある「MaintenanceToolGUI.exe」が、実行ファイルになります。
 
+<img src="assets/0003.png" width="500">
 
 ## インストールの実行
 
 前述の実行ファイル「MaintenanceToolGUI.exe」を右クリックし「開く」を実行してください。
 
-<img src="assets/0002.png" width="400">
+<img src="assets/0004.png" width="500">
 
 2019/04/01現在、アプリに署名がされていないため、ダウンロードしたプログラムを実行できない旨のダイアログが表示されます。<br>
-「詳細情報」をクリックして、実行ボタンを表示させます。
+「詳細情報」をクリックします。
 
-<img src="assets/0003.png" width="300">
+<img src="assets/0005.png" width="300">
 
-表示された実行ボタンをクリックして、FIDO認証器管理ツールを実行させます。
+画面表示が変わり「実行ボタン」が表示されますので、その「実行ボタン」をクリックします。
 
-<img src="assets/0004.png" width="400">
+<img src="assets/0006.png" width="300">
 
 FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="assets/0006.png" width="400">
+<img src="assets/0007.png" width="400">
