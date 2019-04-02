@@ -15,21 +15,13 @@
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
 		7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
-		7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */; };
-		7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
-		7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50CBED2045051900BDE52F /* ToolParameters.m */; };
-		7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A537918203E483E0062E9E2 /* ToolFilePanel.m */; };
-		7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A84811C203CF6FE00380005 /* OpenSSL.c */; };
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolCommand.m */; };
 		7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLECentral.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
-		7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA55A98203A69C80043C893 /* ToolFileMenu.m */; };
-		7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */; };
-		7AAAEDCB2044E2DC004F5B11 /* SelfcrtParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */; };
-		7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */; };
+		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
@@ -51,17 +43,8 @@
 		7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertreqParamWindow.h; sourceTree = "<group>"; };
-		7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertreqParamWindow.m; sourceTree = "<group>"; };
-		7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CertreqParamWindow.xib; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
-		7A50CBEC2044FBE600BDE52F /* ToolParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolParameters.h; sourceTree = "<group>"; };
-		7A50CBED2045051900BDE52F /* ToolParameters.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParameters.m; sourceTree = "<group>"; };
-		7A537918203E483E0062E9E2 /* ToolFilePanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
-		7A53791A203E48630062E9E2 /* ToolFilePanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
-		7A84811C203CF6FE00380005 /* OpenSSL.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSSL.c; sourceTree = "<group>"; };
-		7A84811D203CF6FE00380005 /* OpenSSL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenSSL.h; sourceTree = "<group>"; };
 		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
@@ -73,13 +56,8 @@
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
-		7AA55A98203A69C80043C893 /* ToolFileMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolFileMenu.m; sourceTree = "<group>"; };
-		7AA55A9A203A6EA00043C893 /* ToolFileMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolFileMenu.h; sourceTree = "<group>"; };
-		7AAAEDC72044E2DC004F5B11 /* SelfcrtParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfcrtParamWindow.h; sourceTree = "<group>"; };
-		7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelfcrtParamWindow.m; sourceTree = "<group>"; };
-		7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelfcrtParamWindow.xib; sourceTree = "<group>"; };
-		7AB325D5203E710800FBE97B /* ToolParamWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolParamWindow.h; sourceTree = "<group>"; };
-		7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolParamWindow.m; sourceTree = "<group>"; };
+		7AB3BC7922530BA000519124 /* ToolFilePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
+		7AB3BC7A22530BA000519124 /* ToolFilePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -142,22 +120,8 @@
 				64ED9A8C1647439300F39EAE /* AppDelegate.m */,
 				64ED9A8E1647439300F39EAE /* MainMenu.xib */,
 				64ED9A801647439300F39EAE /* Supporting Files */,
-				7AA55A9A203A6EA00043C893 /* ToolFileMenu.h */,
-				7AA55A98203A69C80043C893 /* ToolFileMenu.m */,
-				7A15C6AF203BF2BA005A2E5A /* CertreqParamWindow.h */,
-				7A15C6B0203BF2BA005A2E5A /* CertreqParamWindow.m */,
-				7A15C6B1203BF2BA005A2E5A /* CertreqParamWindow.xib */,
-				7AAAEDC72044E2DC004F5B11 /* SelfcrtParamWindow.h */,
-				7AAAEDC82044E2DC004F5B11 /* SelfcrtParamWindow.m */,
-				7AAAEDC92044E2DC004F5B11 /* SelfcrtParamWindow.xib */,
-				7A84811D203CF6FE00380005 /* OpenSSL.h */,
-				7A84811C203CF6FE00380005 /* OpenSSL.c */,
-				7A53791A203E48630062E9E2 /* ToolFilePanel.h */,
-				7A537918203E483E0062E9E2 /* ToolFilePanel.m */,
-				7A50CBEC2044FBE600BDE52F /* ToolParameters.h */,
-				7A50CBED2045051900BDE52F /* ToolParameters.m */,
-				7AB325D5203E710800FBE97B /* ToolParamWindow.h */,
-				7AB325D6203E72CC00FBE97B /* ToolParamWindow.m */,
+				7AB3BC7922530BA000519124 /* ToolFilePanel.h */,
+				7AB3BC7A22530BA000519124 /* ToolFilePanel.m */,
 				7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */,
 				7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */,
 			);
@@ -250,8 +214,6 @@
 			files = (
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
-				7A15C6B3203BF2BA005A2E5A /* CertreqParamWindow.xib in Resources */,
-				7AAAEDCB2044E2DC004F5B11 /* SelfcrtParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,19 +225,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */,
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
-				7AA55A99203A69C80043C893 /* ToolFileMenu.m in Sources */,
-				7AB325D7203E72CC00FBE97B /* ToolParamWindow.m in Sources */,
-				7AAAEDCA2044E2DC004F5B11 /* SelfcrtParamWindow.m in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
-				7A50CBEE2045051900BDE52F /* ToolParameters.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */,
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
-				7A84811E203CF6FE00380005 /* OpenSSL.c in Sources */,
-				7A537919203E483F0062E9E2 /* ToolFilePanel.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
-				7A15C6B2203BF2BA005A2E5A /* CertreqParamWindow.m in Sources */,
 				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,

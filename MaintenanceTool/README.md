@@ -12,7 +12,7 @@ macOS版と、Windows版を用意しました。
 * ヘルスチェック実行
 * コマンドテスト機能
 
-## macOS版
+## [macOS版](macOSApp)
 
 #### 画面イメージ
 <img src="assets/0001.png" width="500">
@@ -20,7 +20,7 @@ macOS版と、Windows版を用意しました。
 #### 動作環境
 macOS Sierra (Version 10.12.6)〜
 
-## Windows版
+## [Windows版](WindowsExe)
 
 #### 画面イメージ
 <img src="assets/0002.png" width="500">

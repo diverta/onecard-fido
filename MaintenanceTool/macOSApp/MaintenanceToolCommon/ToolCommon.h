@@ -14,16 +14,12 @@
 typedef enum : NSInteger {
     COMMAND_NONE = 1,
     COMMAND_ERASE_SKEY_CERT,
-    COMMAND_INSTALL_SKEY,
-    COMMAND_INSTALL_CERT,
+    COMMAND_INSTALL_SKEY_CERT,
     COMMAND_TEST_REGISTER,
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
     COMMAND_U2F_HID_PROCESS,
-    COMMAND_CREATE_KEYPAIR_PEM,
-    COMMAND_CREATE_CERTREQ_CSR,
-    COMMAND_CREATE_SELFCRT_CRT,
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_INIT
 } Command;
@@ -32,6 +28,10 @@ typedef enum : NSInteger {
 @interface ToolCommon : NSObject
 
     + (NSString *)processNameOfCommand:(Command)command;
+
+    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText;
 
 @end
 

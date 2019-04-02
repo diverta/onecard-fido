@@ -8,6 +8,7 @@
 
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolPopupWindow.h"
 
 @interface ToolCommon ()
 
@@ -25,8 +26,7 @@
             case COMMAND_ERASE_SKEY_CERT:
                 processName = PROCESS_NAME_ERASE_SKEY_CERT;
                 break;
-            case COMMAND_INSTALL_SKEY:
-            case COMMAND_INSTALL_CERT:
+            case COMMAND_INSTALL_SKEY_CERT:
                 processName = PROCESS_NAME_INSTALL_SKEY_CERT;
                 break;
             case COMMAND_TEST_REGISTER:
@@ -34,15 +34,6 @@
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
             case COMMAND_TEST_AUTH_USER_PRESENCE:
                 processName = PROCESS_NAME_HEALTHCHECK;
-                break;
-            case COMMAND_CREATE_KEYPAIR_PEM:
-                processName = PROCESS_NAME_CREATE_KEYPAIR_PEM;
-                break;
-            case COMMAND_CREATE_CERTREQ_CSR:
-                processName = PROCESS_NAME_CREATE_CERTREQ_CSR;
-                break;
-            case COMMAND_CREATE_SELFCRT_CRT:
-                processName = PROCESS_NAME_CREATE_SELFCRT_CRT;
                 break;
             case COMMAND_TEST_CTAPHID_INIT:
                 processName = PROCESS_NAME_TEST_CTAPHID_INIT;
@@ -52,6 +43,40 @@
                 break;
         }
         return processName;
+    }
+
+#pragma mark - Utilities for check entry
+
+    + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        if ([[textField stringValue] length] == 0) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText {
+        // 入力されたファイルパスが存在しない場合はfalseを戻す
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[textField stringValue]] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_FILE_PATH informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText{
+        // 入力値が数字だけで構成されていない場合はfalseを戻す
+        NSString *string = [textField stringValue];
+        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
+        if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_NUMBER informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
     }
 
 @end
