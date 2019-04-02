@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     public partial class AboutForm : Form
     {
         public AboutForm()
         {
             InitializeComponent();
+        }
+
+        public void SetTitleAndVersionText(String toolName, String toolVersion)
+        {
+            // ツールタイトル表示
+            Text = String.Format("{0}について", toolName);
+            label1.Text = toolName;
 
             // バージョン表示
-            labelVersion.Text = "Version 0.1.7";
+            labelVersion.Text = toolVersion;
         }
     }
 }

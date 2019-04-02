@@ -1,4 +1,4 @@
-﻿namespace U2FMaintenanceToolGUI
+﻿namespace MaintenanceToolGUI
 {
     partial class AboutForm
     {
@@ -49,9 +49,9 @@
             // 
             this.label1.Location = new System.Drawing.Point(110, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 12);
+            this.label1.Size = new System.Drawing.Size(150, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "U2F管理ツール";
+            this.label1.Text = "label1";
             // 
             // labelVersion
             // 
@@ -83,7 +83,7 @@
             this.MinimizeBox = false;
             this.Name = "AboutForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "U2F管理ツールについて";
+            this.Text = "AboutForm";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
