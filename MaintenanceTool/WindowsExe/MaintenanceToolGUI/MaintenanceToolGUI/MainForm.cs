@@ -200,117 +200,6 @@ namespace U2FMaintenanceToolGUI
             return (dialogResult == DialogResult.Yes);
         }
 
-        private void 鍵ファイル作成KToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            doCreatePrivateKeyFile(sender);
-        }
-
-        private void 証明書要求ファイル作成RToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            doCreateCertReqFile(sender);
-        }
-
-        private void 自己署名証明書ファイル作成SToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            doCreateSelfCertFile(sender);
-        }
-
-        private void doCreatePrivateKeyFile(object sender)
-        {
-            string filePath = FormUtil.createFilePath(saveFileDialog1,
-                    ToolGUICommon.MSG_PROMPT_CREATE_PEM_PATH,
-                    ToolGUICommon.DEFAULT_PEM_NAME,
-                    ToolGUICommon.FILTER_SELECT_PEM_PATH
-                    );
-            doCreateFile(sender, filePath);
-        }
-
-        // パラメーター入力画面での入力項目
-        public string certReqParamSubject;
-        public string certReqParamKeyFile;
-        public string certReqParamOutFile;
-
-        private void doCreateCertReqFile(object sender)
-        {
-            // パラメーター入力画面を表示
-            CertReqParamForm f = new CertReqParamForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel)
-            {
-                // パラメーター入力画面でCancelの場合は終了
-                return;
-            }
-            doCreateFile(sender, certReqParamOutFile);
-        }
-
-        // パラメーター入力画面での入力項目
-        public string selfCertParamKeyFile;
-        public string selfCertParamCsrFile;
-        public string selfCertParamDays;
-        public string selfCertParamOutFile;
-
-        private void doCreateSelfCertFile(object sender)
-        {
-            // パラメーター入力画面を表示
-            SelfCertParamForm f = new SelfCertParamForm(this);
-            if (f.ShowDialog() == DialogResult.Cancel)
-            {
-                // パラメーター入力画面でCancelの場合は終了
-                return;
-            }
-            doCreateFile(sender, selfCertParamOutFile);
-        }
-
-        private bool checkOpensslAvailable()
-        {
-            // OpenSSLコマンドがある場合はOK
-            if (app.opensslAvailable)
-            {
-                return true;
-            }
-
-            // OpenSSLコマンドがない旨の表示
-            string message = "OpenSSLコマンドを実行できません。";
-            textBox1.AppendText(message + "\r\n");
-            textBox1.AppendText(AppMain.OpenSSLExe + "をインストールしてください。\r\n");
-
-            // 処理結果を画面表示し、ボタンを押下可能とする
-            MessageBox.Show(message, AppMain.U2FMaintenanceToolTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            enableButtons(true);
-            return false;
-        }
-
-        private void doCreateFile(object sender, string filePath)
-        {
-            // ファイルが生成されていない場合は終了
-            if (filePath.Equals(string.Empty)) {
-                return;
-            }
-
-            // OpenSSLコマンドが存在しない場合は終了
-            if (checkOpensslAvailable() == false) {
-                return;
-            }
-
-            // ボタンを押下不可とする
-            enableButtons(false);
-
-            // ボタンに対応する処理を実行
-            if (sender.Equals(鍵ファイル作成KToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_KEYPAIR_PEM;
-                app.doCreatePrivateKey(filePath);
-
-            }
-            else if (sender.Equals(証明書要求ファイル作成RToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_CERTREQ_CSR;
-                app.doCreateCertReq(filePath, certReqParamKeyFile, certReqParamSubject);
-
-            }
-            else if (sender.Equals(自己署名証明書ファイル作成SToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_CREATE_SELFCRT_CRT;
-                app.doCreateSelfCert(filePath, selfCertParamKeyFile, selfCertParamCsrFile, selfCertParamDays);
-            }
-        }
-
         private void u2F管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // バージョン表示画面を表示
@@ -320,14 +209,6 @@ namespace U2FMaintenanceToolGUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 走行中のコマンドがある場合は画面を閉じないようにする
-            if (app.commandProcessRunning()) {
-                e.Cancel = true;
-                MessageBox.Show(
-                    "コマンドが実行中です.\n画面を閉じることはできません.", 
-                    AppMain.U2FMaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
         }
 
         private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)

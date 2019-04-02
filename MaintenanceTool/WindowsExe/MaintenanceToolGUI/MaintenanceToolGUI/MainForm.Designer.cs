@@ -42,19 +42,14 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.鍵ファイル作成KToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.証明書要求ファイル作成RToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.自己署名証明書ファイル作成SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.メニューはありませんToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.メニューはありませんToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -172,7 +167,6 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ファイルFToolStripMenuItem,
             this.テストTToolStripMenuItem,
             this.その他OToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -180,58 +174,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // ファイルFToolStripMenuItem
-            // 
-            this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.鍵ファイル作成KToolStripMenuItem,
-            this.証明書要求ファイル作成RToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.自己署名証明書ファイル作成SToolStripMenuItem});
-            this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
-            // 
-            // 鍵ファイル作成KToolStripMenuItem
-            // 
-            this.鍵ファイル作成KToolStripMenuItem.Name = "鍵ファイル作成KToolStripMenuItem";
-            this.鍵ファイル作成KToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.鍵ファイル作成KToolStripMenuItem.Text = "鍵ファイル作成(&K)...";
-            this.鍵ファイル作成KToolStripMenuItem.Click += new System.EventHandler(this.鍵ファイル作成KToolStripMenuItem_Click);
-            // 
-            // 証明書要求ファイル作成RToolStripMenuItem
-            // 
-            this.証明書要求ファイル作成RToolStripMenuItem.Name = "証明書要求ファイル作成RToolStripMenuItem";
-            this.証明書要求ファイル作成RToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.証明書要求ファイル作成RToolStripMenuItem.Text = "証明書要求ファイル作成(&R)...";
-            this.証明書要求ファイル作成RToolStripMenuItem.Click += new System.EventHandler(this.証明書要求ファイル作成RToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(236, 6);
-            // 
-            // 自己署名証明書ファイル作成SToolStripMenuItem
-            // 
-            this.自己署名証明書ファイル作成SToolStripMenuItem.Name = "自己署名証明書ファイル作成SToolStripMenuItem";
-            this.自己署名証明書ファイル作成SToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.自己署名証明書ファイル作成SToolStripMenuItem.Text = "自己署名証明書ファイル作成(&S)...";
-            this.自己署名証明書ファイル作成SToolStripMenuItem.Click += new System.EventHandler(this.自己署名証明書ファイル作成SToolStripMenuItem_Click);
-            // 
-            // その他OToolStripMenuItem
-            // 
-            this.その他OToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.u2F管理ツールについてToolStripMenuItem});
-            this.その他OToolStripMenuItem.Name = "その他OToolStripMenuItem";
-            this.その他OToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.その他OToolStripMenuItem.Text = "その他(&O)";
-            // 
-            // u2F管理ツールについてToolStripMenuItem
-            // 
-            this.u2F管理ツールについてToolStripMenuItem.Name = "u2F管理ツールについてToolStripMenuItem";
-            this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.u2F管理ツールについてToolStripMenuItem.Text = "U2F管理ツールについて(&A)...";
-            this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.u2F管理ツールについてToolStripMenuItem_Click);
             // 
             // テストTToolStripMenuItem
             // 
@@ -250,6 +192,13 @@
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
+            // cTAPHIDINIT実行ToolStripMenuItem
+            // 
+            this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
+            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
+            this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
+            // 
             // bLEToolStripMenuItem
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -258,19 +207,27 @@
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
-            // cTAPHIDINIT実行ToolStripMenuItem
-            // 
-            this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
-            // 
             // メニューはありませんToolStripMenuItem
             // 
             this.メニューはありませんToolStripMenuItem.Name = "メニューはありませんToolStripMenuItem";
-            this.メニューはありませんToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.メニューはありませんToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.メニューはありませんToolStripMenuItem.Text = "(メニューはありません)";
             this.メニューはありませんToolStripMenuItem.Click += new System.EventHandler(this.メニューはありませんToolStripMenuItem_Click);
+            // 
+            // その他OToolStripMenuItem
+            // 
+            this.その他OToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.u2F管理ツールについてToolStripMenuItem});
+            this.その他OToolStripMenuItem.Name = "その他OToolStripMenuItem";
+            this.その他OToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.その他OToolStripMenuItem.Text = "その他(&O)";
+            // 
+            // u2F管理ツールについてToolStripMenuItem
+            // 
+            this.u2F管理ツールについてToolStripMenuItem.Name = "u2F管理ツールについてToolStripMenuItem";
+            this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
+            this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.u2F管理ツールについてToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -319,11 +276,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 鍵ファイル作成KToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 証明書要求ファイル作成RToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem 自己署名証明書ファイル作成SToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem その他OToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;

@@ -32,11 +32,6 @@ namespace U2FMaintenanceToolGUI
         // U2F管理ツールの情報
         public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
 
-        // OpenSSLコマンドの情報
-        public const string OpenSSLExe = "openssl.exe";
-        public const string OpenSSLCacertV3Ext = "cacertV3.ext";
-        public bool opensslAvailable;
-
         // リクエストデータ格納領域
         private byte[] U2FRequestData = new byte[1024];
 
@@ -53,9 +48,6 @@ namespace U2FMaintenanceToolGUI
         // メイン画面の参照を保持
         private MainForm mainForm;
 
-        // 実行中の外部プロセスを保持
-        private Process p;
-
         // BLEデバイス関連
         private BLEProcess bleProcess = new BLEProcess();
 
@@ -64,17 +56,6 @@ namespace U2FMaintenanceToolGUI
             // メイン画面の参照を保持
             mainForm = f;
             AppCommon.logFileName = "U2FMaintenanceToolGUI.log";
-
-            // OpenSSLコマンドが導入されているかチェック
-            if (File.Exists(OpenSSLExe) == false) {
-                outputLogToFile(OpenSSLExe + "が導入されていません");
-                opensslAvailable = false;
-            } else if (File.Exists(OpenSSLCacertV3Ext) == false) {
-                outputLogToFile(OpenSSLCacertV3Ext + "が導入されていません");
-                opensslAvailable = false;
-            } else {
-                opensslAvailable = true;
-            }
 
             // BLEデバイス関連
             bleProcess.OneCardPeripheralPaired += new BLEProcess.oneCardPeripheralPairedEvent(OnPairedDevice);
@@ -102,73 +83,6 @@ namespace U2FMaintenanceToolGUI
                 System.Text.Encoding.Default);
             sr.WriteLine(formatted);
             sr.Close();
-        }
-
-        private void doCommandWithExecutable(string executable, string arguments)
-        {
-            // 実行対象プロセスの実行可能ファイルがない場合は終了
-            if (opensslAvailable == false) {
-                return;
-            }
-
-            // MS-DOSコマンドプロンプト画面が表示されないように
-            // プロセスを実行する
-            p = new Process();
-            p.OutputDataReceived += processOutputDataReceived;
-            p.ErrorDataReceived += processErrorDataReceived;
-
-            p.StartInfo.FileName = executable;
-            p.StartInfo.Arguments = arguments;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-
-            // イベントハンドラーがフォームを作成したスレッドで実行されるようにする
-            p.SynchronizingObject = mainForm;
-            // イベントハンドラー追加
-            p.Exited += new EventHandler(onProcessExited);
-            // プロセスが終了したときにExitedイベントを発生させる
-            p.EnableRaisingEvents = true;
-
-            // プロセス実行が完了するまで待つ
-            p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-
-            // 実行開始ログ出力
-            outputLogToFile(string.Format(
-                "コマンドの実行を開始しました: {0} {1}", 
-                p.StartInfo.FileName, p.StartInfo.Arguments));
-        }
-
-        public bool commandProcessRunning()
-        {
-            // プロセスがない場合
-            if (p == null) {
-                return false;
-            }
-            // プロセスが既に停止している場合
-            if (p.HasExited == true) {
-                return false;
-            }
-            // プロセスが走行中と判定
-            return true;
-        }
-
-        private void onProcessExited(object sender, EventArgs e)
-        {
-            // プロセスのリターンコードを取得
-            bool ret = (p.ExitCode == 0);
-
-            // 実行結果をログ出力
-            outputLogToFile(string.Format(
-                "コマンドの実行が{0}しました: {1} {2}",
-                ret ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE,
-                p.StartInfo.FileName, p.StartInfo.Arguments));
-
-            // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
-            mainForm.OnAppMainProcessExited(ret);
         }
 
         private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
@@ -388,29 +302,6 @@ namespace U2FMaintenanceToolGUI
 
             // BLE処理を実行し、メッセージを転送
             DoRequest(U2FRequestData, length, type);
-        }
-
-        public void doCreatePrivateKey(string filePath)
-        {
-            // openssl.exe ecparam -out <filePath> -name prime256v1 -genkey -noout を実行する
-            string arguments = string.Format("ecparam -out {0} -name prime256v1 -genkey -noout", filePath);
-            doCommandWithExecutable("openssl.exe", arguments);
-        }
-
-        public void doCreateCertReq(string filePath, string certReqParamKeyFile, string certReqParamSubject)
-        {
-            // openssl.exe req -new -key <certReqParamKeyFile> -subj "<certReqParamSubject>" -out <filePath> を実行する
-            string arguments = string.Format("req -new -key {0} -subj \"{1}\" -out {2} -config openssl.cnf", 
-                certReqParamKeyFile, certReqParamSubject, filePath);
-            doCommandWithExecutable("openssl.exe", arguments);
-        }
-
-        public void doCreateSelfCert(string filePath, string selfCertParamKeyFile, string selfCertParamCsrFile, string selfCertParamDays)
-        {
-            // openssl.exe x509 -in <selfCertParamCsrFile> -days <selfCertParamDays> -req -signkey <selfCertParamKeyFile> -out <filePath> -outform der -extfile cacertV3.ext を実行する
-            string arguments = string.Format("x509 -in {0} -days {1} -req -signkey {2} -out {3} -outform der -extfile {4}",
-                selfCertParamCsrFile, selfCertParamDays, selfCertParamKeyFile, filePath, OpenSSLCacertV3Ext);
-            doCommandWithExecutable("openssl.exe", arguments);
         }
 
         public void doExit()
