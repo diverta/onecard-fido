@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using U2FMaintenanceToolCommon;
+using MaintenanceToolCommon;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     internal class HIDProcess
     {

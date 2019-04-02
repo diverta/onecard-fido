@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using U2FMaintenanceToolCommon;
+using MaintenanceToolCommon;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     internal class AppMain
     {
@@ -29,9 +27,6 @@ namespace U2FMaintenanceToolGUI
             public const int U2F_KEYHANDLE_SIZE = 64;
         };
 
-        // U2F管理ツールの情報
-        public const string U2FMaintenanceToolTitle = "U2F Maintenance Tool";
-
         // リクエストデータ格納領域
         private byte[] U2FRequestData = new byte[1024];
 
@@ -55,52 +50,19 @@ namespace U2FMaintenanceToolGUI
         {
             // メイン画面の参照を保持
             mainForm = f;
-            AppCommon.logFileName = "U2FMaintenanceToolGUI.log";
 
             // BLEデバイス関連
             bleProcess.OneCardPeripheralPaired += new BLEProcess.oneCardPeripheralPairedEvent(OnPairedDevice);
             bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
 
-            outputLogToFile("U2F管理ツールを起動しました");
+            AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MainForm.MaintenanceToolTitle), true);
         }
 
         private void OnPrintMessageText(string message)
         {
             // メッセージを画面表示させる
             mainForm.OnPrintMessageText(message);
-        }
-        
-        private void outputLogToFile(string message)
-        {
-            // メッセージに現在時刻を付加する
-            string formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
-
-            // ログファイルにメッセージを出力する
-            string fname = "U2FMaintenanceToolGUI.log";
-            StreamWriter sr = new StreamWriter(
-                (new FileStream(fname, FileMode.Append)), 
-                System.Text.Encoding.Default);
-            sr.WriteLine(formatted);
-            sr.Close();
-        }
-
-        private void processOutputDataReceived(object sender, DataReceivedEventArgs args)
-        {
-            if (string.IsNullOrEmpty(args.Data)) {
-                return;
-            }
-            // メイン画面の参照を経由し処理を実行
-            mainForm.onAppMainProcessOutputData(args.Data);
-        }
-
-        private void processErrorDataReceived(object sender, DataReceivedEventArgs args)
-        {
-            if (string.IsNullOrEmpty(args.Data)) {
-                return;
-            }
-            // メイン画面の参照を経由し処理を実行
-            mainForm.onAppMainProcessErrorData(args.Data);
         }
 
         public void doPairing()
@@ -296,7 +258,7 @@ namespace U2FMaintenanceToolGUI
                 // メッセージを画面表示
                 mainForm.OnPrintMessageText("U2F Authenticateを開始します.");
                 mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
-                mainForm.OnPrintMessageText("  One Card上のユーザー所在確認LEDが点滅したら、");
+                mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
                 mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
             }
 
@@ -308,7 +270,7 @@ namespace U2FMaintenanceToolGUI
         {
             bleProcess.DisconnectBLE();
             System.Windows.Forms.Application.Exit();
-            outputLogToFile("U2F管理ツールを終了しました");
+            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MainForm.MaintenanceToolTitle), true);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace U2FMaintenanceToolCommon
+namespace MaintenanceToolCommon
 {
     public static class AppCommon
     {
@@ -25,7 +25,6 @@ namespace U2FMaintenanceToolCommon
 
         // Windows版固有のメッセージ文言
         // USB管理
-        public const string MSG_U2FCOMMAND_PROCESS = "管理コマンドの実行";
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
         public const string MSG_USB_DETECT_STARTED = "USBデバイス検知を開始しました。";
         public const string MSG_USB_DETECT_END = "USBデバイス検知を終了しました。";
@@ -51,7 +50,7 @@ namespace U2FMaintenanceToolCommon
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
 
         // ログファイル名称のデフォルト
-        public static string logFileName = "U2FMaintenanceToolCommon.log";
+        public static string logFileName = "MaintenanceToolGUI.log";
 
         public static void OutputLogText(string logText)
         {

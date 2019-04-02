@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using U2FMaintenanceToolCommon;
+using MaintenanceToolCommon;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     internal class InstallSkeyCert
     {

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     static class Program
     {

@@ -6,7 +6,7 @@ using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage.Streams;
 
-namespace U2FMaintenanceToolCommon
+namespace MaintenanceToolCommon
 {
     public class BLEService
     {

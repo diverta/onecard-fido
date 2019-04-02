@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace U2FMaintenanceToolCommon
+namespace MaintenanceToolCommon
 {
     public class BLEProcess
     {

@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     class FormUtil
     {

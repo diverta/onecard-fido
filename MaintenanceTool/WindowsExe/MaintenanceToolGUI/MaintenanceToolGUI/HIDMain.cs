@@ -1,6 +1,6 @@
-﻿using U2FMaintenanceToolCommon;
+﻿using MaintenanceToolCommon;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     internal static class Const
     {
@@ -32,7 +32,6 @@ namespace U2FMaintenanceToolGUI
         {
             // メイン画面の参照を保持
             mainForm = f;
-            AppCommon.logFileName = "U2FMaintenanceToolGUI.log";
 
             // HIDデバイス関連
             // イベントの登録

@@ -1,4 +1,4 @@
-﻿namespace U2FMaintenanceToolGUI
+﻿namespace MaintenanceToolGUI
 {
     partial class MainForm
     {
@@ -195,7 +195,7 @@
             // cTAPHIDINIT実行ToolStripMenuItem
             // 
             this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
             this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
             // 
@@ -227,7 +227,7 @@
             this.u2F管理ツールについてToolStripMenuItem.Name = "u2F管理ツールについてToolStripMenuItem";
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
-            this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.u2F管理ツールについてToolStripMenuItem_Click);
+            this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -251,7 +251,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "U2F Maintenance Tool";
+            this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using U2FMaintenanceToolCommon;
+using MaintenanceToolCommon;
 
-namespace U2FMaintenanceToolGUI
+namespace MaintenanceToolGUI
 {
     public partial class MainForm : Form
     {
@@ -10,11 +10,18 @@ namespace U2FMaintenanceToolGUI
         private HIDMain hid;
         private string commandTitle = "";
 
+        // 管理ツールの情報
+        public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
+        public const string MaintenanceToolVersion = "Version 0.1.8";
+
         public MainForm()
         {
             InitializeComponent();
             app = new AppMain(this);
             hid = new HIDMain(this);
+
+            // 画面タイトルを設定
+            Text = MaintenanceToolTitle;
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
@@ -103,7 +110,7 @@ namespace U2FMaintenanceToolGUI
 
             // 未入力の場合はポップアップメッセージを表示して
             // テキストボックスにフォーカスを移す
-            MessageBox.Show(errorMessage, AppMain.U2FMaintenanceToolTitle,
+            MessageBox.Show(errorMessage, MaintenanceToolTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             textBox.Focus();
 
@@ -162,18 +169,6 @@ namespace U2FMaintenanceToolGUI
             menuStrip1.Enabled = enabled;
         }
 
-        public void onAppMainProcessOutputData(string outputData)
-        {
-            // U2F管理コマンド実行時の標準出力内容を表示
-            textBox1.AppendText(outputData + "\r\n");
-        }
-
-        public void onAppMainProcessErrorData(string errorData)
-        {
-            // U2F管理コマンド実行時の標準エラー出力内容を表示
-            textBox1.AppendText(errorData + "\r\n");
-        }
-
         private void DisplayStartMessage(string message)
         {
             // 処理開始メッセージを表示
@@ -183,27 +178,28 @@ namespace U2FMaintenanceToolGUI
 
         private void displayResultMessage(string message, bool success)
         {
-            // U2F管理コマンドの実行結果を表示
+            // コマンドの実行結果を表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
-            MessageBox.Show(formatted, AppMain.U2FMaintenanceToolTitle);
+            MessageBox.Show(formatted, MaintenanceToolTitle);
         }
 
         private bool displayPromptPopup(string message)
         {
             DialogResult dialogResult = MessageBox.Show(
-                message, AppMain.U2FMaintenanceToolTitle,
+                message, MaintenanceToolTitle,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             // Yesがクリックされた場合 true を戻す
             return (dialogResult == DialogResult.Yes);
         }
 
-        private void u2F管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // バージョン表示画面を表示
             AboutForm f = new AboutForm();
+            f.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
             f.ShowDialog();
         }
 
@@ -221,7 +217,7 @@ namespace U2FMaintenanceToolGUI
         {
             MessageBox.Show(
                 AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED,
-                AppMain.U2FMaintenanceToolTitle,
+                MaintenanceToolTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
