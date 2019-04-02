@@ -92,6 +92,10 @@
 #pragma mark - Command functions
 
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // コマンド開始メッセージを画面表示
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                             [ToolCommon processNameOfCommand:[self command]]];
+        [[self delegate] notifyToolCommandMessage:startMsg];
         // HIDデバイスにリクエストを送信
         [[self toolHIDHelper] hidHelperWillSend:message CID:cid CMD:cmd];
         // レスポンスタイムアウトを監視
@@ -149,12 +153,6 @@
     }
 
     - (void)hidHelperWillProcess:(Command)command {
-        // USBポートに接続されていない場合は終了
-        if (![[self toolHIDHelper] isDeviceConnected]) {
-            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
-            [[self delegate] hidCommandDidProcess:command result:false message:nil];
-            return;
-        }
         // コマンドを待避
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
@@ -165,7 +163,7 @@
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
-            case COMMAND_INSTALL_SKEY:
+            case COMMAND_INSTALL_SKEY_CERT:
                 [self doInstallSkeyCert];
                 break;
             default:
@@ -174,6 +172,15 @@
                 [[self delegate] hidCommandDidProcess:command result:false message:nil];
                 break;
         }
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if (![[self toolHIDHelper] isDeviceConnected]) {
+            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -187,7 +194,7 @@
                 [self doResponseCtapHidInit:message];
                 break;
             case COMMAND_ERASE_SKEY_CERT:
-            case COMMAND_INSTALL_SKEY:
+            case COMMAND_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];
                 break;
             default:

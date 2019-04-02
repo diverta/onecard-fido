@@ -2,14 +2,12 @@
 #import "ToolBLECentral.h"
 #import "ToolHIDCommand.h"
 #import "ToolCommand.h"
-#import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
-#import "ToolParamWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolHIDCommandDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolHIDCommandDelegate, ToolCommandDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -24,17 +22,12 @@
     @property (assign) IBOutlet NSButton    *buttonPath1;
     @property (assign) IBOutlet NSButton    *buttonPath2;
 
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile1;
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
-    @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
-
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
 
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
-    @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
@@ -51,7 +44,6 @@
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
         self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
-        self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
@@ -81,9 +73,6 @@
         [self.buttonPath1 setEnabled:enabled];
         [self.buttonPath2 setEnabled:enabled];
         [self.buttonQuit setEnabled:enabled];
-        [self.menuItemFile1 setEnabled:enabled];
-        [self.menuItemFile2 setEnabled:enabled];
-        [self.menuItemFile3 setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
     }
@@ -95,6 +84,9 @@
     }
 
     - (IBAction)button2DidPress:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         // 鍵・証明書削除
         if ([ToolPopupWindow promptYesNo:MSG_ERASE_SKEY_CERT
                          informativeText:MSG_PROMPT_ERASE_SKEY_CERT] == false) {
@@ -106,11 +98,11 @@
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
         // 入力項目が正しく指定されていない場合は終了
-        if ([ToolParamWindow checkMustEntry:field informativeText:message] == false) {
+        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
             return false;
         }
         // 入力されたファイルパスが存在しない場合は終了
-        if ([ToolParamWindow checkFileExist:field informativeText:message] == false) {
+        if ([ToolCommon checkFileExist:field informativeText:message] == false) {
             return false;
         }
         return true;
@@ -123,12 +115,15 @@
         if ([self checkPathEntry:self.fieldPath2 messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
             return;
         }
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY
+        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY_CERT
                                       skeyFilePath:self.fieldPath1.stringValue
                                       certFilePath:self.fieldPath2.stringValue];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY_CERT];
     }
 
     - (IBAction)button4DidPress:(id)sender {
@@ -150,7 +145,7 @@
     - (IBAction)buttonPath1DidPress:(id)sender {
         [self enableButtons:false];
         [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_PEM_PATH
+                                       message:MSG_PROMPT_SELECT_PKEY_PATH
                                      fileTypes:@[@"pem"]];
         [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
@@ -163,25 +158,10 @@
         [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
     }
 
-    - (IBAction)menuItemFile1DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_KEYPAIR_PEM];
-    }
-
-    - (IBAction)menuItemFile2DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_CERTREQ_CSR];
-    }
-
-    - (IBAction)menuItemFile3DidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
-                                                command:COMMAND_CREATE_SELFCRT_CRT];
-    }
-
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         [self enableButtons:false];
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
@@ -256,18 +236,6 @@
         [self setLastCommandSuccess:result];
         // デバイス接続を切断
         [[self toolBLECentral] centralManagerWillDisconnect];
-    }
-
-#pragma mark - Call back from ToolFileMenu
-
-    - (void)notifyToolFileMenuMessage:(NSString *)message {
-        // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
-    }
-
-    - (void)notifyToolFileMenuEnd {
-        // ボタンを活性化
-        [self enableButtons:true];
     }
 
 #pragma mark - Call back from ToolBLECentral
@@ -392,20 +360,24 @@
         if (result == false) {
             [self notifyToolCommandMessage:message];
         }
-        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
-        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                         [ToolCommon processNameOfCommand:command],
-                         result? MSG_SUCCESS:MSG_FAILURE];
+        // コマンド名称を取得
+        NSString *processNameOfCommand = [ToolCommon processNameOfCommand:command];
+        if (processNameOfCommand) {
+            // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                             processNameOfCommand,
+                             result? MSG_SUCCESS:MSG_FAILURE];
+            // メッセージを画面のテキストエリアに表示
+            [self notifyToolCommandMessage:str];
+            // ポップアップを表示
+            if (result) {
+                [ToolPopupWindow informational:str informativeText:nil];
+            } else {
+                [ToolPopupWindow critical:str informativeText:nil];
+            }
+        }
         // ボタンを活性化
         [self enableButtons:true];
-        // メッセージを画面のテキストエリアに表示
-        [self notifyToolCommandMessage:str];
-        // ポップアップを表示
-        if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
-        } else {
-            [ToolPopupWindow critical:str informativeText:nil];
-        }
     }
 
 @end
