@@ -37,6 +37,7 @@
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
 #define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
+#define PROCESS_NAME_TEST_CLIENT_PIN                @"ClientPIN1のテスト"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"

@@ -38,6 +38,9 @@
             case COMMAND_TEST_CTAPHID_INIT:
                 processName = PROCESS_NAME_TEST_CTAPHID_INIT;
                 break;
+            case COMMAND_CLIENT_PIN:
+                processName = PROCESS_NAME_TEST_CLIENT_PIN;
+                break;
             default:
                 processName = nil;
                 break;

@@ -349,6 +349,12 @@
                                                 <action selector="menuItemTestHID1DidSelect:" target="494" id="HxU-DT-2q4"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="PIN set sample" id="Skf-vE-gcm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID2DidSelect:" target="494" id="gco-OU-RRq"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

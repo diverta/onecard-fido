@@ -166,6 +166,14 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
 
+    - (IBAction)menuItemTestHID2DidSelect:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_CLIENT_PIN];
+    }
+
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         [self enableButtons:false];
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
