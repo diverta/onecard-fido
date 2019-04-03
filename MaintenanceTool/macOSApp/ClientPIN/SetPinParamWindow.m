@@ -58,11 +58,26 @@
 
 #pragma mark - Check for entries and process
 
+    - (void) doSetPin:(id)sender {
+        // 入力内容チェック
+        if ([self checkEntries:sender] == false) {
+            return;
+        }
+        // PINコードを設定して画面を閉じる
+        [[self toolClientPINCommand] setPinNew:[[self fieldPin] stringValue]];
+        [[self toolClientPINCommand] setPinOld:nil];
+        [self terminateWindow:NSModalResponseOK];
+    }
+
     - (void) doChangePin:(id)sender {
         // 入力内容チェック
         if ([self checkEntries:sender] == false) {
             return;
         }
+        // PINコードを設定して画面を閉じる
+        [[self toolClientPINCommand] setPinNew:[[self fieldPin] stringValue]];
+        [[self toolClientPINCommand] setPinOld:[[self fieldPinOld] stringValue]];
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (bool) checkEntries:(id)sender {

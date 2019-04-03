@@ -8,6 +8,7 @@
 #define ToolClientPINCommand_h
 
 #import "ToolCommon.h"
+#import "ToolHIDCommand.h"
 
 @interface ToolClientPINCommand : NSObject
 
@@ -15,7 +16,8 @@
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
                           toolCommand:(ToolHIDCommand *)toolCommand;
 
-    @property (nonatomic) NSString *lastErrorMessage;
+    @property (nonatomic) NSString *pinNew;
+    @property (nonatomic) NSString *pinOld;
 
 @end
 

@@ -32,14 +32,18 @@
 #pragma mark - Command functions
 
     - (NSData *)generateSetPinMessage:(Command)command {
-        NSLog(@"Set PIN sample start");
+        NSLog(@"Set PIN sample start: new(%@) old(%@)",
+              [self pinNew], [self pinOld]);
         return [[NSData alloc] init];
     }
+
+#pragma mark - Communication with dialog
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
                           toolCommand:(ToolHIDCommand *)toolCommand {
         // ダイアログの親ウィンドウを保持
         [[self setPinParamWindow] setParentWindow:parentWindow];
+        [[self setPinParamWindow] setToolClientPINCommand:self];
         [self setToolHIDCommand:toolCommand];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self setPinParamWindow] window];
@@ -51,9 +55,15 @@
     }
 
     - (void)setPinParamWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
-        // 画面を閉じ、AppDelegateに制御を戻す
+        // 画面を閉じる
         [[self setPinParamWindow] close];
-        [[self toolHIDCommand] setPinParamWindowDidClose];
+        // キャンセルボタンがクリックされた場合は、そのままAppDelegateに制御を戻す
+        if (modalResponse == NSModalResponseCancel) {
+            [[self toolHIDCommand] setPinParamWindowDidClose];
+            return;
+        }
+        // PINコード新規設定／変更を実行
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_CLIENT_PIN];
     }
 
 @end
