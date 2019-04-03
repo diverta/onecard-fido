@@ -21,6 +21,9 @@
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;
 
+    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)setPinParamWindowDidClose;
+
 @end
 
 @protocol ToolHIDCommandDelegate <NSObject>

@@ -127,9 +127,12 @@
     }
 
     - (IBAction)button4DidPress:(id)sender {
-        // ヘルスチェック実行
+        // PINコード設定画面を開く
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
+        [[self toolHIDCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -166,17 +169,10 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
 
-    - (IBAction)menuItemTestHID2DidSelect:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
-            return;
-        }
-        [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_CLIENT_PIN];
-    }
-
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
+        // ヘルスチェック実行
         [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
     }
 
 #pragma mark - Call back from ToolFilePanel

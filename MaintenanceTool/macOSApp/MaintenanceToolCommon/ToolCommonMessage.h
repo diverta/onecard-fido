@@ -10,7 +10,7 @@
 #pragma mark - 共通
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
-#define MSG_INVALID_NUMBER          @"入力値が数値ではありません。"
+#define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
 #define MSG_SUCCESS                 @"成功"
@@ -91,5 +91,14 @@
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
 #define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
+
+#pragma mark - PIN設定画面
+#define MSG_PROMPT_INPUT_NEW_PIN            @"新しいPINコードを入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_CONFIRM    @"新しいPINコード（確認用）を入力してください"
+#define MSG_PROMPT_INPUT_OLD_PIN            @"変更前のPINコードを入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_NUM        @"新しいPINコードを数字で入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM   @"新しいPINコード（確認用）を数字で入力してください"
+#define MSG_PROMPT_INPUT_OLD_PIN_NUM        @"変更前のPINコードを数字で入力してください"
+#define MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT   @"確認用のPINコードを正しく入力してください"
 
 #endif /* ToolCommonMessage_h */

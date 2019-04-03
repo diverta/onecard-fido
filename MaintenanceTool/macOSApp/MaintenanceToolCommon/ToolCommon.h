@@ -32,7 +32,9 @@ typedef enum : NSInteger {
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
-    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText;
+    + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
+          informativeText:(NSString *)informativeText;
 
 @end
 

@@ -17,6 +17,8 @@
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
+		7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A84EFA22254440500DF449D /* SetPinParamWindow.xib */; };
+		7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A84EFA522544F7000DF449D /* SetPinParamWindow.m */; };
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolCommand.m */; };
 		7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLECentral.m */; };
@@ -48,6 +50,9 @@
 		7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
+		7A84EFA22254440500DF449D /* SetPinParamWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetPinParamWindow.xib; sourceTree = "<group>"; };
+		7A84EFA422544F7000DF449D /* SetPinParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPinParamWindow.h; sourceTree = "<group>"; };
+		7A84EFA522544F7000DF449D /* SetPinParamWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetPinParamWindow.m; sourceTree = "<group>"; };
 		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
@@ -146,6 +151,9 @@
 		7A30CAD122533E050071B6EF /* ClientPIN */ = {
 			isa = PBXGroup;
 			children = (
+				7A84EFA422544F7000DF449D /* SetPinParamWindow.h */,
+				7A84EFA522544F7000DF449D /* SetPinParamWindow.m */,
+				7A84EFA22254440500DF449D /* SetPinParamWindow.xib */,
 				7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */,
 				7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */,
 			);
@@ -227,6 +235,7 @@
 			files = (
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
+				7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */,
 				7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */,
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,

@@ -70,13 +70,24 @@
         return true;
     }
 
-    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText{
+    + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText{
         // 入力値が数字だけで構成されていない場合はfalseを戻す
         NSString *string = [textField stringValue];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
         if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
-            [ToolPopupWindow warning:MSG_INVALID_NUMBER informativeText:informativeText];
+            [ToolPopupWindow warning:MSG_NOT_NUMERIC informativeText:informativeText];
             [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
+          informativeText:(NSString *)informativeText {
+        // 入力項目が等しくない場合はfalseを戻す
+        if ([[destField stringValue] isEqualToString:[srcField stringValue]] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [destField becomeFirstResponder];
             return false;
         }
         return true;

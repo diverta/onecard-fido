@@ -12,6 +12,8 @@
 @interface ToolClientPINCommand : NSObject
 
     - (NSData *)generateSetPinMessage:(Command)command;
+    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
+                          toolCommand:(ToolHIDCommand *)toolCommand;
 
     @property (nonatomic) NSString *lastErrorMessage;
 

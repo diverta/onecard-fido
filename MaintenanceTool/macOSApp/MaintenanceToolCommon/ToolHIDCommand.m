@@ -254,4 +254,17 @@
         }
     }
 
+#pragma mark - Interface for SetPinParamWindow
+
+    - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログをモーダルで表示
+        [[self toolClientPINCommand] setPinParamWindowWillOpen:sender
+                                                  parentWindow:parentWindow toolCommand:self];
+    }
+
+    - (void)setPinParamWindowDidClose {
+        // AppDelegateに制御を戻す
+        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
 @end
