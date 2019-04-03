@@ -9,6 +9,7 @@
 
 #pragma mark - 共通
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
+#define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
@@ -93,9 +94,9 @@
 #define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
 
 #pragma mark - PIN設定画面
-#define MSG_PROMPT_INPUT_NEW_PIN            @"新しいPINコードを入力してください"
-#define MSG_PROMPT_INPUT_NEW_PIN_CONFIRM    @"新しいPINコード（確認用）を入力してください"
-#define MSG_PROMPT_INPUT_OLD_PIN            @"変更前のPINコードを入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN            @"新しいPINコードを４〜16桁で入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_CONFIRM    @"新しいPINコード（確認用）を４〜16桁で入力してください"
+#define MSG_PROMPT_INPUT_OLD_PIN            @"変更前のPINコードを４〜16桁で入力してください"
 #define MSG_PROMPT_INPUT_NEW_PIN_NUM        @"新しいPINコードを数字で入力してください"
 #define MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM   @"新しいPINコード（確認用）を数字で入力してください"
 #define MSG_PROMPT_INPUT_OLD_PIN_NUM        @"変更前のPINコードを数字で入力してください"

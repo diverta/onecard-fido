@@ -10,6 +10,10 @@
 // BLE接続再試行の上限回数
 #define BLE_CONNECTION_RETRY_MAX_COUNT 3
 
+// PINコードの最小／最大桁数
+#define PIN_CODE_SIZE_MIN 4
+#define PIN_CODE_SIZE_MAX 16
+
 // コマンド種別
 typedef enum : NSInteger {
     COMMAND_NONE = 1,
@@ -35,6 +39,9 @@ typedef enum : NSInteger {
     + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
           informativeText:(NSString *)informativeText;
+    + (bool) checkEntrySize:(NSTextField *)textField
+                    minSize:(size_t)minSize maxSize:(size_t)maxSize
+            informativeText:(NSString *)informativeText;
 
 @end
 

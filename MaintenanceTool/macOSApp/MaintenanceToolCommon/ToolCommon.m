@@ -93,4 +93,17 @@
         return true;
     }
 
+    + (bool) checkEntrySize:(NSTextField *)textField
+                    minSize:(size_t)minSize maxSize:(size_t)maxSize
+            informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        size_t size = [[textField stringValue] length];
+        if (size < minSize || size > maxSize) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD_SIZE informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
 @end

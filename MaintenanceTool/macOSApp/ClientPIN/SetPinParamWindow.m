@@ -66,13 +66,15 @@
     }
 
     - (bool) checkEntries:(id)sender {
-        // 必須入力チェック
-        if ([ToolCommon checkMustEntry:[self fieldPin]
-                            informativeText:MSG_PROMPT_INPUT_NEW_PIN] == false) {
+        // 長さチェック
+        if ([ToolCommon checkEntrySize:[self fieldPin]
+                               minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN] == false) {
             return false;
         }
-        if ([ToolCommon checkMustEntry:[self fieldPinConfirm]
-                            informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONFIRM] == false) {
+        if ([ToolCommon checkEntrySize:[self fieldPinConfirm]
+                               minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
+                       informativeText:MSG_PROMPT_INPUT_NEW_PIN_CONFIRM] == false) {
             return false;
         }
         // 数字チェック
@@ -86,7 +88,8 @@
         }
         // 変更ボタンがクリックされた場合は、変更前PINコードの入力チェックを実行
         if (sender == _buttonChangePin) {
-            if ([ToolCommon checkMustEntry:[self fieldPinOld]
+            if ([ToolCommon checkEntrySize:[self fieldPinOld]
+                                   minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
                            informativeText:MSG_PROMPT_INPUT_OLD_PIN] == false) {
                 return false;
             }
