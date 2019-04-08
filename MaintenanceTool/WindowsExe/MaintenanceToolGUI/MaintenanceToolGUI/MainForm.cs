@@ -61,14 +61,19 @@ namespace MaintenanceToolGUI
 
             }
             else if (sender.Equals(button4)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
-                DisplayStartMessage(commandTitle);
-                app.doHealthCheck();
-
+                //commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
+                //DisplayStartMessage(commandTitle);
+                //app.doHealthCheck();
             }
             else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
                 hid.DoTestCtapHidInit();
+            }
+            else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
+                DisplayStartMessage(commandTitle);
+                app.doHealthCheck();
+
             }
         }
 
@@ -135,8 +140,6 @@ namespace MaintenanceToolGUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            // ヘルスチェック実行
-            doCommand(sender);
         }
 
         private void buttonPath1_Click(object sender, EventArgs e)
@@ -213,12 +216,10 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void メニューはありませんToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED,
-                MaintenanceToolTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            // ヘルスチェック実行
+            doCommand(sender);
         }
 
         protected override void WndProc(ref Message m)
