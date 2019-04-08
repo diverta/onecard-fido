@@ -207,9 +207,9 @@
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
-            // メニューはありませんToolStripMenuItem
+            // DoHealthCheckToolStripMenuItem
             // 
-            this.DoHealthCheckToolStripMenuItem.Name = "メニューはありませんToolStripMenuItem";
+            this.DoHealthCheckToolStripMenuItem.Name = "DoHealthCheckToolStripMenuItem";
             this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.DoHealthCheckToolStripMenuItem.Text = "ヘルスチェック実行";
             this.DoHealthCheckToolStripMenuItem.Click += new System.EventHandler(this.DoHealthCheckToolStripMenuItem_Click);
