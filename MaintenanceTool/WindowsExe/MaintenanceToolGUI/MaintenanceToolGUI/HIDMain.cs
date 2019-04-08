@@ -83,6 +83,15 @@ namespace MaintenanceToolGUI
             mainForm.OnPrintMessageText(messageText);
         }
 
+        public bool IsUSBDeviceDisconnected()
+        {
+            // USB HID接続がない場合は true
+            if (hidProcess.IsUSBDeviceDisconnected()) {
+                return true;
+            }
+            return false;
+        }
+
         private bool CheckUSBDeviceDisconnected()
         {
             // USB HID接続がない場合はエラーメッセージを表示

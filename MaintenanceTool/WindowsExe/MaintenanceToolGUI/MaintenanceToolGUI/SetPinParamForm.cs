@@ -44,7 +44,7 @@ namespace MaintenanceToolGUI
         private void buttonSetPin_Click(object sender, EventArgs e)
         {
             // 入力チェックがNGの場合は中断
-            if (CheckEntries() == false) {
+            if (CheckEntries(false) == false) {
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace MaintenanceToolGUI
         private void buttonChangePin_Click(object sender, EventArgs e)
         {
             // 入力チェックがNGの場合は中断
-            if (CheckEntries() == false) {
+            if (CheckEntries(true) == false) {
                 return;
             }
 
@@ -73,8 +73,37 @@ namespace MaintenanceToolGUI
             TerminateWindow(DialogResult.OK);
         }
 
-        private bool CheckEntries()
+        private bool CheckEntries(bool change)
         {
+            // 長さチェック
+            if (FormUtil.checkEntrySize(textPin, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
+                return false;
+            }
+            if (FormUtil.checkEntrySize(textPinConfirm, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
+                return false;
+            }
+            if (FormUtil.checkIsNumeric(textPin, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+                return false;
+            }
+            if (FormUtil.checkIsNumeric(textPinConfirm, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+                return false;
+            }
+
+            // 変更ボタンがクリックされた場合は、変更前PINコードの入力チェックを実行
+            if (change) {
+                if (FormUtil.checkEntrySize(textPinOld, ToolGUICommon.PIN_CODE_SIZE_MIN, ToolGUICommon.PIN_CODE_SIZE_MAX, ToolGUICommon.MSG_INVALID_FIELD_SIZE) == false) {
+                    return false;
+                }
+                if (FormUtil.checkIsNumeric(textPinOld, ToolGUICommon.MSG_INVALID_NUMBER) == false) {
+                    return false;
+                }
+            }
+
+            // 確認用PINコードのチェック
+            if (FormUtil.compareEntry(textPinConfirm, textPin, ToolGUICommon.MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT) == false) {
+                return false;
+            }
+
             return true;
         }
     }

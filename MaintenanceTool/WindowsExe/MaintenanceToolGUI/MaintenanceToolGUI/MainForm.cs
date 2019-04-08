@@ -104,8 +104,21 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
+        private bool CheckUSBDeviceDisconnected()
+        {
+            if (hid.IsUSBDeviceDisconnected()) {
+                MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
+                return true;
+            }
+            return false;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
                 ToolGUICommon.MSG_ERASE_SKEY_CERT,
@@ -138,6 +151,10 @@ namespace MaintenanceToolGUI
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // ファイルパス入力チェック
             if (checkPathEntry(textPath1, ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
             {
@@ -154,6 +171,10 @@ namespace MaintenanceToolGUI
 
         private void button4_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             DoCommandClientPinSet(sender, e);
         }
 
