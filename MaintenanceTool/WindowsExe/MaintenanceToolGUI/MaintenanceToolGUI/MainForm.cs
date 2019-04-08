@@ -60,11 +60,6 @@ namespace MaintenanceToolGUI
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
-            else if (sender.Equals(button4)) {
-                //commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
-                //DisplayStartMessage(commandTitle);
-                //app.doHealthCheck();
-            }
             else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
                 hid.DoTestCtapHidInit();
@@ -75,6 +70,25 @@ namespace MaintenanceToolGUI
                 app.doHealthCheck();
 
             }
+        }
+
+        private void DoCommandClientPinSet(object sender, EventArgs e)
+        {
+            // パラメーター入力画面を表示
+            SetPinParamForm f = new SetPinParamForm();
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを表示
+            commandTitle = f.CommandTitle;
+            DisplayStartMessage(commandTitle);
+
+            // PINコード設定
+            hid.DoClientPinSet(f.PinNew, f.PinOld);
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -140,6 +154,7 @@ namespace MaintenanceToolGUI
 
         private void button4_Click(object sender, EventArgs e)
         {
+            DoCommandClientPinSet(sender, e);
         }
 
         private void buttonPath1_Click(object sender, EventArgs e)

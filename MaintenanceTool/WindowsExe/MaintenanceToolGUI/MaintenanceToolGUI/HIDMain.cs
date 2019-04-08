@@ -12,6 +12,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_CTAPHID_INIT = 0x86;
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
+        public const int HID_CMD_CTAPHID_CBOR = 0x90;
     }
 
     internal class HIDMain
@@ -69,6 +70,9 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_ERASE_SKEY_CERT:
             case Const.HID_CMD_INSTALL_SKEY_CERT:
                 DoResponseMaintSkeyCert(message, length);
+                break;
+            case Const.HID_CMD_CTAPHID_CBOR:
+                DoResponseCtapHidCbor(message, length);
                 break;
             }
         }
@@ -147,6 +151,25 @@ namespace MaintenanceToolGUI
         }
 
         private void DoResponseMaintSkeyCert(byte[] message, int length)
+        {
+            // ステータスバイトをチェック
+            bool result = (message[0] == 0x00);
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(result);
+        }
+
+        public void DoClientPinSet(string pinNew, string pinOld)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            PrintMessageText(string.Format("pinNew({0}) pinOld({1})", pinNew, pinOld));
+            // 仮の実装：nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        private void DoResponseCtapHidCbor(byte[] message, int length)
         {
             // ステータスバイトをチェック
             bool result = (message[0] == 0x00);

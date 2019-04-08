@@ -24,6 +24,8 @@
         public const string PROCESS_NAME_HEALTHCHECK = "ヘルスチェック";
         public const string PROCESS_NAME_PAIRING = "ペアリング";
         public const string PROCESS_NAME_TEST_CTAPHID_INIT = "CTAPHID_INITのテスト";
+        public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
+        public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";

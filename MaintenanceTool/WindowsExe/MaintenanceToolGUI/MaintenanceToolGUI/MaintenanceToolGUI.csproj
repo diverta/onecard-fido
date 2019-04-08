@@ -86,6 +86,12 @@
     <Compile Include="HIDMain.cs" />
     <Compile Include="HIDProcess.cs" />
     <Compile Include="InstallSkeyCert.cs" />
+    <Compile Include="SetPinParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetPinParamForm.Designer.cs">
+      <DependentUpon>SetPinParamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolGUICommon.cs" />
     <Compile Include="AppMain.cs" />
     <Compile Include="FormUtil.cs" />
@@ -112,6 +118,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SetPinParamForm.resx">
+      <DependentUpon>SetPinParamForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
