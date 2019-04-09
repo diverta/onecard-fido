@@ -9,6 +9,21 @@ namespace MaintenanceToolGUI
         public int Crv { get; set; }
         public byte[] X { get; set; }
         public byte[] Y { get; set; }
+
+        public KeyAgreement()
+        {
+        }
+
+        public KeyAgreement(int kty, int alg, int crv, byte[] x, byte[] y)
+        {
+            Kty = kty;
+            Alg = alg;
+            Crv = crv;
+            X = new byte[32];
+            Y = new byte[32];
+            x.CopyTo(X, 0);
+            y.CopyTo(Y, 0);
+        }
     }
 
     internal class CBORDecoder
@@ -18,7 +33,7 @@ namespace MaintenanceToolGUI
         }
 
         // 認証器から受信した公開鍵を保持
-        private KeyAgreement AgreementKey = new KeyAgreement();
+        private KeyAgreement AgreementKey;
 
         public KeyAgreement GetKeyAgreement(byte[] cborBytes)
         {
@@ -34,6 +49,7 @@ namespace MaintenanceToolGUI
 
         private void ParseCOSEkey(CBORObject cbor)
         {
+            AgreementKey = new KeyAgreement();
             foreach (CBORObject key in cbor.Keys) {
                 short keyVal = key.AsInt16();
                 if (keyVal == 1) {
