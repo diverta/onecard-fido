@@ -243,6 +243,7 @@ namespace MaintenanceToolGUI
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);
             }
+
             // レスポンスされたCBORを抽出
             byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
             if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
@@ -253,8 +254,8 @@ namespace MaintenanceToolGUI
                 }
             }
 
-            // 仮の実装：画面に制御を戻す
-            mainForm.OnAppMainProcessExited(true);
+            // 正しくレスポンスされなかった場合、画面に制御を戻す
+            mainForm.OnAppMainProcessExited(false);
         }
 
         public void DoResponseGetKeyAgreement(byte[] cborBytes)
@@ -262,17 +263,20 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
             byte[] receivedCID = hidProcess.receivedCID;
-            byte[] PINCbor = null;
 
             if (clientPinOld.Equals(string.Empty)) {
                 // SetPINコマンドを実行する
                 subCommand = Const.HID_SUBCMD_CLIENT_PIN_SET;
-                PINCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, cborBytes);
             } else {
                 // ChangePINコマンドを実行する
                 subCommand = Const.HID_SUBCMD_CLIENT_PIN_CHANGE;
-                PINCbor = new CBOREncoder().ChangePIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
             }
+
+            // リクエストデータ（CBOR）をエンコード
+            byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
+            // for debug
+            AppCommon.OutputLogToFile("Encoded CBOR: ", true);
+            AppCommon.OutputLogToFile(AppCommon.DumpMessage(setPinCbor, setPinCbor.Length), false);
 
             // 仮の実装：画面に制御を戻す
             mainForm.OnAppMainProcessExited(true);
