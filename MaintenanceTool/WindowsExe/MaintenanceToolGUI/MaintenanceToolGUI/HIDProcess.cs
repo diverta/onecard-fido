@@ -368,7 +368,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージにログファイルに出力する
             // printTimeStampがfalse時は、現在時刻を付加しない
-            AppCommon.OutputLogToFile(message, printTimeStamp);
+            // AppCommon.OutputLogToFile(message, printTimeStamp);
         }
     }
 }
