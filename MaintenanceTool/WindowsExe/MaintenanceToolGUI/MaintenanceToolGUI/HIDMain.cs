@@ -224,16 +224,58 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getAgreementCbor, getAgreementCbor.Length);
         }
 
+        private byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            //   CBORバイト配列はレスポンスの２バイト目以降
+            int cborLength = length - 1;
+            byte[] cborBytes = new byte[cborLength];
+            for (int i = 0; i < cborLength; i++) {
+                cborBytes[i] = message[1 + i];
+            }
+            return cborBytes;
+        }
+
         private void DoResponseCtapHidCbor(byte[] message, int length)
         {
             // ステータスバイトをチェック
-            bool result = (message[0] == 0x00);
+            if (message[0] != 0x00) {
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+            }
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
+                if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT) {
+                    // PIN設定処理を続行
+                    DoResponseGetKeyAgreement(cborBytes);
+                    return;
+                }
+            }
 
-            // for debug
-            PrintMessageText(string.Format("response({0}) len({1})", message, length));
+            // 仮の実装：画面に制御を戻す
+            mainForm.OnAppMainProcessExited(true);
+        }
 
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(result);
+        public void DoResponseGetKeyAgreement(byte[] cborBytes)
+        {
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            byte[] receivedCID = hidProcess.receivedCID;
+            byte[] PINCbor = null;
+
+            if (clientPinOld.Equals(string.Empty)) {
+                // SetPINコマンドを実行する
+                subCommand = Const.HID_SUBCMD_CLIENT_PIN_SET;
+                PINCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, cborBytes);
+            } else {
+                // ChangePINコマンドを実行する
+                subCommand = Const.HID_SUBCMD_CLIENT_PIN_CHANGE;
+                PINCbor = new CBOREncoder().ChangePIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
+            }
+
+            // 仮の実装：画面に制御を戻す
+            mainForm.OnAppMainProcessExited(true);
         }
     }
 }
