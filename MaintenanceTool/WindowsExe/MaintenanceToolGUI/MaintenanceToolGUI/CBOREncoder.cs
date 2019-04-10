@@ -1,6 +1,4 @@
-﻿using MaintenanceToolCommon;
-using PeterO.Cbor;
-using System;
+﻿using PeterO.Cbor;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -30,7 +28,7 @@ namespace MaintenanceToolGUI
         // pinAuth
         //   setPIN: LEFT(HMAC-SHA-256(sharedSecret, newPinEnc), 16)
         //   changePIN: LEFT(HMAC-SHA-256(sharedSecret, newPinEnc || pinHashEnc), 16)
-        byte[] PinAuth;
+        private byte[] PinAuth;
 
         // 共通鍵を保持
         private byte[] SharedSecretKey;
@@ -60,7 +58,8 @@ namespace MaintenanceToolGUI
             if (pinOld.Equals(string.Empty)) {
                 PinHashEnc = null;
             } else {
-                // TODO: pinHashEncを生成
+                // pinHashEncを生成
+                PinHashEnc = CreatePinHashEnc(pinOld, SharedSecretKey);
             }
 
             // newPinEnc、pinAuthを生成
@@ -123,6 +122,31 @@ namespace MaintenanceToolGUI
             return true;
         }
 
+        private byte[] CreatePinHashEnc(string curPin, byte[] sharedSecret)
+        {
+            // curPin のハッシュを生成  SHA-256(curPin)
+            byte[] pinbyte = Encoding.ASCII.GetBytes(curPin);
+            SHA256 sha = new SHA256CryptoServiceProvider();
+            byte[] pinsha = sha.ComputeHash(pinbyte);
+
+            // 先頭16バイトを抽出  LEFT(SHA-256(curPin),16)
+            byte[] pinsha16 = pinsha.ToList().Skip(0).Take(16).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("pinHash: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(pinsha16, pinsha16.Length), false);
+
+            // AES256-CBCで暗号化  
+            //   AES256-CBC(sharedSecret, IV=0, LEFT(SHA-256(curPin),16))
+            byte[] pinHashEnc = AES256CBCEncrypt(sharedSecret, pinsha16);
+
+            // for debug
+            // AppCommon.OutputLogToFile("pinHashEnc: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(pinHashEnc, pinHashEnc.Length), false);
+
+            return pinHashEnc;
+        }
+
         private void CreateNewPinEnc(string pinNew)
         {
             byte[] newPinBytes = PaddingPin64(pinNew);
@@ -165,9 +189,16 @@ namespace MaintenanceToolGUI
 
         private void CreatePinAuth(byte[] newPinEnc, byte[] pinHashEnc)
         {
+            // ハッシュ化対象データを生成
+            List<byte> dataForHash = new List<byte>();
+            dataForHash.AddRange(newPinEnc.ToArray());
+            if (pinHashEnc != null) {
+                dataForHash.AddRange(pinHashEnc.ToArray());
+            }
+
             // LEFT(HMAC-SHA-256(sharedSecret, newPinEnc), 16)
             using (var hmacsha256 = new HMACSHA256(SharedSecretKey)) {
-                byte[] digest = hmacsha256.ComputeHash(newPinEnc);
+                byte[] digest = hmacsha256.ComputeHash(dataForHash.ToArray());
                 PinAuth = digest.ToList().Take(16).ToArray();
             }
         }
@@ -180,6 +211,7 @@ namespace MaintenanceToolGUI
             //   0x03: keyAgreemen
             //   0x04: pinAuth
             //   0x05: newPinEnc
+            //   0x06: pinHashEnc
             CBORObject cbor = CBORObject.NewMap();
             cbor.Add(0x01, 1);
             cbor.Add(0x02, subCommand);
@@ -195,9 +227,17 @@ namespace MaintenanceToolGUI
             cbor.Add(0x04, PinAuth);
             cbor.Add(0x05, NewPinEnc);
 
+            if (PinHashEnc != null) {
+                cbor.Add(0x06, PinHashEnc);
+            }
+
             // エンコードを実行
             byte[] payload = cbor.EncodeToBytes();
             byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;
