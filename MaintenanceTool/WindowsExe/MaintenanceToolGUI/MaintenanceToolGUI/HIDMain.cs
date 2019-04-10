@@ -242,6 +242,7 @@ namespace MaintenanceToolGUI
             if (message[0] != 0x00) {
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);
+                return;
             }
 
             if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
