@@ -35,4 +35,4 @@ MaintenanceToolWin.zipを展開すると、下図のように「MaintenanceToolW
 
 FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
-<img src="assets/0007.png" width="400">
+<img src="../assets/0002.png" width="400">
