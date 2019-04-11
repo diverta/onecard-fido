@@ -12,6 +12,13 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_CTAPHID_INIT = 0x86;
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
+        public const int HID_CMD_CTAPHID_CBOR = 0x90;
+        // サブコマンドバイトに関する定義
+        public const byte HID_CBORCMD_NONE = 0x00;
+        public const byte HID_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
+        public const byte HID_SUBCMD_CLIENT_PIN_SET = 0x03;
+        public const byte HID_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
     }
 
     internal class HIDMain
@@ -27,6 +34,14 @@ namespace MaintenanceToolGUI
 
         // リクエストデータ格納領域
         private byte[] RequestData = new byte[1024];
+
+        // 実行中のサブコマンドを保持
+        private byte cborCommand;
+        private byte subCommand;
+
+        // PINコード設定処理の実行引数を退避
+        private string clientPinNew;
+        private string clientPinOld;
 
         public HIDMain(MainForm f)
         {
@@ -70,6 +85,9 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_INSTALL_SKEY_CERT:
                 DoResponseMaintSkeyCert(message, length);
                 break;
+            case Const.HID_CMD_CTAPHID_CBOR:
+                DoResponseCtapHidCbor(message, length);
+                break;
             }
         }
 
@@ -77,6 +95,15 @@ namespace MaintenanceToolGUI
         {
             // 画面のテキストエリアにメッセージを表示
             mainForm.OnPrintMessageText(messageText);
+        }
+
+        public bool IsUSBDeviceDisconnected()
+        {
+            // USB HID接続がない場合は true
+            if (hidProcess.IsUSBDeviceDisconnected()) {
+                return true;
+            }
+            return false;
         }
 
         private bool CheckUSBDeviceDisconnected()
@@ -96,8 +123,20 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_NONE;
             // nonce を送信する
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        private byte[] ExtractReceivedCID(byte[] message)
+        {
+            // メッセージからCIDを抽出して戻す
+            byte[] receivedCID = new byte[4];
+            for (int j = 0; j < receivedCID.Length; j++) {
+                receivedCID[j] = message[8 + j];
+            }
+            return receivedCID;
         }
 
         private void DoResponseTestCtapHidInit(byte[] message, int length)
@@ -110,8 +149,13 @@ namespace MaintenanceToolGUI
                     break;
                 }
             }
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(result);
+            if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
+                // レスポンスされたCIDを抽出し、PIN設定処理を続行
+                DoGetKeyAgreement(ExtractReceivedCID(message));
+            } else { 
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(result);
+            }
         }
 
         public void DoEraseSkeyCert()
@@ -152,6 +196,89 @@ namespace MaintenanceToolGUI
             bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
+        }
+
+        public void DoClientPinSet(string pinNew, string pinOld)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 実行引数を退避
+            clientPinNew = pinNew;
+            clientPinOld = pinOld;
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            // nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        public void DoGetKeyAgreement(byte[] receivedCID)
+        {
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            subCommand = Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
+            // GetAgreementコマンドを実行する
+            CBOREncoder cborEncoder = new CBOREncoder();
+            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(cborCommand, subCommand);
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getAgreementCbor, getAgreementCbor.Length);
+        }
+
+        private byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            //   CBORバイト配列はレスポンスの２バイト目以降
+            int cborLength = length - 1;
+            byte[] cborBytes = new byte[cborLength];
+            for (int i = 0; i < cborLength; i++) {
+                cborBytes[i] = message[1 + i];
+            }
+            return cborBytes;
+        }
+
+        private void DoResponseCtapHidCbor(byte[] message, int length)
+        {
+            // ステータスバイトをチェック
+            if (message[0] != 0x00) {
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
+            if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
+                if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT) {
+                    // レスポンスされたCBORを抽出し、PIN設定処理を続行
+                    byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+                    DoResponseGetKeyAgreement(cborBytes);
+
+                } else {
+                    // 画面に制御を戻す
+                    mainForm.OnAppMainProcessExited(true);
+                }
+
+            } else {
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+            }
+        }
+
+        public void DoResponseGetKeyAgreement(byte[] cborBytes)
+        {
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            byte[] receivedCID = hidProcess.receivedCID;
+
+            if (clientPinOld.Equals(string.Empty)) {
+                // SetPINコマンドを実行する
+                subCommand = Const.HID_SUBCMD_CLIENT_PIN_SET;
+            } else {
+                // ChangePINコマンドを実行する
+                subCommand = Const.HID_SUBCMD_CLIENT_PIN_CHANGE;
+            }
+
+            // リクエストデータ（CBOR）をエンコードして送信
+            byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, setPinCbor, setPinCbor.Length);
         }
     }
 }

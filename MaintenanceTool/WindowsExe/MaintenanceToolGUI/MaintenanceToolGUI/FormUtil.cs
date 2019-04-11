@@ -71,5 +71,39 @@ namespace MaintenanceToolGUI
             }
             return true;
         }
+
+        public static bool checkIsNumeric(TextBox textBox, string informativeText)
+        {
+            if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
+                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_NUMBER,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        public static bool compareEntry(TextBox destText, TextBox srcText, string informativeText)
+        {
+            if (destText.Text.Equals(srcText.Text)) {
+                return true;
+            }
+            MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            destText.Focus();
+            return false;
+        }
+
+        public static bool checkEntrySize(TextBox textBox, int minSize, int maxSize, string informativeText)
+        {
+            int size = textBox.Text.Length;
+            if (size < minSize || size > maxSize) {
+                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
     }
 }

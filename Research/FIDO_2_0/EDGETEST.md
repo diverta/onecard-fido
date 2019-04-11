@@ -1,7 +1,6 @@
 # Edgeブラウザーを使用したWebAuthnテスト手順
 
-現在開発中の[FIDO2認証器](../../nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPIN番号により行う手順を掲載しています。
-
+現在開発中の[FIDO2認証器](../../nRF5_SDK_v15.2.0)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPINコードにより行う手順を掲載しています。
 
 ## ソフトウェアの導入
 
@@ -25,63 +24,30 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 - アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
 - ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](../../nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
 
-## 鍵・証明書の導入
+## FIDO2認証器の準備
 
 nRF52840 Dongleにファームウェアを書き込んだら、[FIDO2認証器](../../nRF5_SDK_v15.2.0)に鍵・証明書を導入します。
 
 #### 管理ツールを導入
 
-まずは[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS／Windows 10）に導入します。<br>
+まずは[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b><br>
 * <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b><br>
 
 #### 鍵・証明書を導入
 
-PC環境に導入した管理ツールを使用し、鍵・証明書をインストールします。<br>
+PC環境に導入した管理ツールを使用し、鍵・証明書のインストール、およびPINコード（暗証番号）の設定をします。<br>
 以下の手順書をご参照願います。
 
-* <b>[鍵・証明書の導入手順（macOS版）](../../MaintenanceTool/macOSApp/INSTALLKEYCRT.md) </b><br>
 * <b>[鍵・証明書の導入手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLKEYCRT.md) </b><br>
 
-## PINの作成
+#### PINコードを設定
 
-今回はPIN（暗証番号）として、`012345`という６けたの数字を使用するものとします。
+PC環境に導入した管理ツールを使用し、PINコード（暗証番号）を設定します。<br>
+以下の手順書をご参照願います。
 
-### PIN作成ツールを実行
-
-2019/03/25現在、Edgeブラウザーでは、認証器に対してPINを設定させることができないようです。<br>
-従いまして、Yubico社から提供されているテストツール「[libfido2](https://github.com/Yubico/libfido2)」を使用し、[FIDO 2.0 Authenticator](../../nRF5_SDK_v15.2.0)にPINを設定するようにします。
-
-（[管理ツール](../../U2FMaintenanceTool/README.md)からPINを設定できるよう、後日対応予定となっています。しばらくお待ちいただければと存じます）
-
-### PIN作成ツール実行手順
-
-まずは「libfido2」を、[こちらの手順書](https://github.com/diverta/onecard-fido/blob/master/Research/FIDO_2_0/LIBFIDO2.md)にしたがって導入します。
-
-その後、PCのUSBポートにnRF52840 Dongleを装着し、下記コマンド [注1] を順に実行します。
-```
-fido2-token
-${HOME}/GitHub/libfido2/build/examples/setpin <pin> <device>
-
-`<pin>`には、暗証番号`012345`を指定します。
-`<device>`には、`fido2-token`コマンドで表示されたFIDO2認証器の名称を指定します。
-```
-[注1] [前述の手順書](https://github.com/diverta/onecard-fido/blob/master/Research/FIDO_2_0/LIBFIDO2.md)に従うと、PIN作成コマンドは、`${HOME}/GitHub/libfido2/build/examples/setpin`に導入されます。
-
-
-実行例は下記になります。
-```
-MacBookPro-makmorit-jp:~ makmorit$ fido2-token -L
-USB_f055_0001_14200000: vendor=0xfffff055, product=0x0001 (Diverta Inc. U2F USB HID Authenticator)
-MacBookPro-makmorit-jp:~ makmorit$ ${HOME}/GitHub/libfido2/build/examples/setpin 012345 USB_f055_0001_14200000
-MacBookPro-makmorit-jp:~ makmorit$ echo $?
-0
-MacBookPro-makmorit-jp:~ makmorit$
-```
-
-これで、PINの作成作業は完了です。
+* <b>[PINコードの設定手順（Windows版）](../../MaintenanceTool/WindowsExe/SETPIN.md) </b><br>
 
 ## WebAuthn機能テストの実行
 

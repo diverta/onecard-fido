@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.8";
+        public const string MaintenanceToolVersion = "Version 0.1.9";
 
         public MainForm()
         {
@@ -60,16 +60,35 @@ namespace MaintenanceToolGUI
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
-            else if (sender.Equals(button4)) {
+            else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
+                hid.DoTestCtapHidInit();
+            }
+            else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
             }
-            else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
-                hid.DoTestCtapHidInit();
+        }
+
+        private void DoCommandClientPinSet(object sender, EventArgs e)
+        {
+            // パラメーター入力画面を表示
+            SetPinParamForm f = new SetPinParamForm();
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
             }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを表示
+            commandTitle = f.CommandTitle;
+            DisplayStartMessage(commandTitle);
+
+            // PINコード設定
+            hid.DoClientPinSet(f.PinNew, f.PinOld);
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -85,8 +104,21 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
+        private bool CheckUSBDeviceDisconnected()
+        {
+            if (hid.IsUSBDeviceDisconnected()) {
+                MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
+                return true;
+            }
+            return false;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // プロンプトで表示されるメッセージ
             string message = string.Format("{0}\n\n{1}",
                 ToolGUICommon.MSG_ERASE_SKEY_CERT,
@@ -119,6 +151,10 @@ namespace MaintenanceToolGUI
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // ファイルパス入力チェック
             if (checkPathEntry(textPath1, ToolGUICommon.MSG_PROMPT_SELECT_PKEY_PATH) == false)
             {
@@ -135,8 +171,11 @@ namespace MaintenanceToolGUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            // ヘルスチェック実行
-            doCommand(sender);
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            DoCommandClientPinSet(sender, e);
         }
 
         private void buttonPath1_Click(object sender, EventArgs e)
@@ -213,12 +252,10 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void メニューはありませんToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED,
-                MaintenanceToolTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            // ヘルスチェック実行
+            doCommand(sender);
         }
 
         protected override void WndProc(ref Message m)
