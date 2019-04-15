@@ -70,6 +70,20 @@ namespace MaintenanceToolGUI
             return GenerateSetPinCbor(cborCommand, subCommand);
         }
 
+        public byte[] GetPinToken(byte cborCommand, byte subCommand, string pinCur, byte[] agreementKeyCBOR)
+        {
+            // 公開鍵から共通鍵を生成
+            if (CreateSharedSecretKey(agreementKeyCBOR) == false) {
+                return null;
+            }
+
+            // pinHashEncを生成
+            PinHashEnc = CreatePinHashEnc(pinCur, SharedSecretKey);
+
+            // 送信データをCBORエンコードしたバイト配列を戻す
+            return GenerateGetPinTokenCbor(cborCommand, subCommand);
+        }
+
         private bool CreateSharedSecretKey(byte[] agreementKeyCBOR)
         {
             // CBORをデコードして公開鍵を抽出
@@ -208,7 +222,7 @@ namespace MaintenanceToolGUI
             // 送信データを生成
             //   0x01: pinProtocol
             //   0x02: subCommand
-            //   0x03: keyAgreemen
+            //   0x03: keyAgreement
             //   0x04: pinAuth
             //   0x05: newPinEnc
             //   0x06: pinHashEnc
@@ -230,6 +244,38 @@ namespace MaintenanceToolGUI
             if (PinHashEnc != null) {
                 cbor.Add(0x06, PinHashEnc);
             }
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        private byte[] GenerateGetPinTokenCbor(byte cborCommand, byte subCommand)
+        {
+            // 送信データを生成
+            //   0x01: pinProtocol
+            //   0x02: subCommand
+            //   0x03: keyAgreement
+            //   0x06: pinHashEnc
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, 1);
+            cbor.Add(0x02, subCommand);
+
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, AgreementPublicKey.Kty);
+            keyParam.Add(3, AgreementPublicKey.Alg);
+            keyParam.Add(-1, AgreementPublicKey.Crv);
+            keyParam.Add(-2, AgreementPublicKey.X);
+            keyParam.Add(-3, AgreementPublicKey.Y);
+            cbor.Add(0x03, keyParam);
+            cbor.Add(0x06, PinHashEnc);
 
             // エンコードを実行
             byte[] payload = cbor.EncodeToBytes();

@@ -265,15 +265,24 @@ namespace MaintenanceToolGUI
             }
 
             if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
+                // レスポンスされたCBORを抽出
+                byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
                 if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT) {
-                    // レスポンスされたCBORを抽出
-                    byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
                     if (requestType == HIDRequestType.TestMakeCredential) {
                         // PINトークン取得処理を続行
                         DoGetPinToken(cborBytes);
                     } else {
                         // PIN設定処理を続行
                         DoResponseGetKeyAgreement(cborBytes);
+                    }
+
+                } else if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN) {
+                    if (requestType == HIDRequestType.TestMakeCredential) {
+                        // ログイン／認証処理を続行
+                        DoResponseGetPinToken(cborBytes);
+                    } else {
+                        // 画面に制御を戻す
+                        mainForm.OnAppMainProcessExited(true);
                     }
 
                 } else {
@@ -324,8 +333,20 @@ namespace MaintenanceToolGUI
 
         public void DoGetPinToken(byte[] cborBytes)
         {
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            subCommand = Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
+            byte[] receivedCID = hidProcess.receivedCID;
+
+            // リクエストデータ（CBOR）をエンコードして送信
+            byte[] getPinTokenCbor = new CBOREncoder().GetPinToken(cborCommand, subCommand, clientPin, cborBytes);
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor, getPinTokenCbor.Length);
+        }
+
+        public void DoResponseGetPinToken(byte[] cborBytes)
+        {
             // 仮の実装：画面に制御を戻す
-            AppCommon.OutputLogToFile(string.Format("DoGetPinToken called: PIN({0})", clientPin), true);
+            AppCommon.OutputLogToFile(string.Format("DoResponseGetPinToken called: PIN({0})", clientPin), true);
             mainForm.OnAppMainProcessExited(true);
         }
     }
