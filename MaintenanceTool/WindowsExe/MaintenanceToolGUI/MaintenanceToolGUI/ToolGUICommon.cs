@@ -31,8 +31,9 @@
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
-        public const string PROCESS_NAME_HEALTHCHECK = "ヘルスチェック";
+        public const string PROCESS_NAME_U2F_HEALTHCHECK = "U2Fヘルスチェック";
         public const string PROCESS_NAME_PAIRING = "ペアリング";
+        public const string PROCESS_NAME_CTAP2_HEALTHCHECK = "CTAP2ヘルスチェック";
         public const string PROCESS_NAME_TEST_CTAPHID_INIT = "CTAPHID_INITのテスト";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";

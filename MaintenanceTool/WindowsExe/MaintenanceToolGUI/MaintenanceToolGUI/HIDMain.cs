@@ -280,5 +280,17 @@ namespace MaintenanceToolGUI
             byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, setPinCbor, setPinCbor.Length);
         }
+
+        public void DoCtap2Healthcheck()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 実行するコマンドを退避
+            cborCommand = Const.HID_CBORCMD_NONE;   // 仮の実装
+            // nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
     }
 }

@@ -59,13 +59,16 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
+            } else if (sender.Equals(toolStripMenuItem1)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
+                hid.DoCtap2Healthcheck();
             }
             else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
                 hid.DoTestCtapHidInit();
             }
             else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
+                commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
@@ -221,7 +224,7 @@ namespace MaintenanceToolGUI
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
-            MessageBox.Show(formatted, MaintenanceToolTitle);
+            MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
 
         private bool displayPromptPopup(string message)
@@ -246,6 +249,12 @@ namespace MaintenanceToolGUI
         {
         }
 
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // CTAP2ヘルスチェック実行
+            doCommand(sender);
+        }
+
         private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CTAPHID_INITのテストを実行
@@ -254,7 +263,7 @@ namespace MaintenanceToolGUI
 
         private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // ヘルスチェック実行
+            // U2Fヘルスチェック実行
             doCommand(sender);
         }
 
