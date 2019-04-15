@@ -59,9 +59,6 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
-            } else if (sender.Equals(toolStripMenuItem1)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
-                hid.DoCtap2Healthcheck();
             }
             else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
@@ -92,6 +89,25 @@ namespace MaintenanceToolGUI
 
             // PINコード設定
             hid.DoClientPinSet(f.PinNew, f.PinOld);
+        }
+
+        private void DoCommandCtap2Healthcheck(object sender, EventArgs e)
+        {
+            // パラメーター入力画面を表示
+            PinCodeParamForm f = new PinCodeParamForm();
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを表示
+            commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
+            DisplayStartMessage(commandTitle);
+
+            // CTAP2ヘルスチェック実行
+            hid.DoCtap2Healthcheck(f.PinCurr);
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -251,8 +267,12 @@ namespace MaintenanceToolGUI
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // CTAP2ヘルスチェック実行
-            doCommand(sender);
+            DoCommandCtap2Healthcheck(sender, e);
         }
 
         private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)

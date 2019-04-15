@@ -179,6 +179,12 @@
     <Compile Include="PeterO\PrecisionContext.cs" />
     <Compile Include="PeterO\Rounding.cs" />
     <Compile Include="PeterO\TrapException.cs" />
+    <Compile Include="PinCodeParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PinCodeParamForm.Designer.cs">
+      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SetPinParamForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +217,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="PinCodeParamForm.resx">
+      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SetPinParamForm.resx">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </EmbeddedResource>
