@@ -65,5 +65,19 @@ namespace MaintenanceToolGUI
                 }
             }
         }
+
+        public byte[] GetPinTokenEnc(byte[] cborBytes)
+        {
+            // 暗号化されているpinTokenを抽出
+            byte[] pinTokenEnc = null;
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                byte keyVal = key.AsByte();
+                if (keyVal == 0x02) {
+                    pinTokenEnc = cbor[key].GetByteString();
+                }
+            }
+            return pinTokenEnc;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System.Text;
 
 namespace MaintenanceToolGUI
 {
@@ -48,6 +49,11 @@ namespace MaintenanceToolGUI
 
         // ヘルスチェック処理の実行引数を退避
         private string clientPin;
+
+        // 共通鍵を退避
+        //   getPinToken時に生成した共通鍵を、
+        //   makeCredential、getAssertion実行時まで保持しておく
+        private byte[] SharedSecretKey = null;
 
         // 実行機能を保持
         private enum HIDRequestType
@@ -264,35 +270,47 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
-                // レスポンスされたCBORを抽出
-                byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
-                if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT) {
-                    if (requestType == HIDRequestType.TestMakeCredential) {
-                        // PINトークン取得処理を続行
-                        DoGetPinToken(cborBytes);
-                    } else {
-                        // PIN設定処理を続行
-                        DoResponseGetKeyAgreement(cborBytes);
-                    }
+            switch (cborCommand) {
+            case Const.HID_CBORCMD_CLIENT_PIN:
+                DoResponseCommandClientPin(message, length);
+                break;
+            case Const.HID_CBORCMD_MAKE_CREDENTIAL:
+            case Const.HID_CBORCMD_GET_ASSERTION:
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(true);
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                break;
+            }
+        }
 
-                } else if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN) {
-                    if (requestType == HIDRequestType.TestMakeCredential) {
-                        // ログイン／認証処理を続行
-                        DoResponseGetPinToken(cborBytes);
-                    } else {
-                        // 画面に制御を戻す
-                        mainForm.OnAppMainProcessExited(true);
-                    }
+        private void DoResponseCommandClientPin(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT) {
+                if (requestType == HIDRequestType.TestMakeCredential) {
+                    // PINトークン取得処理を続行
+                    DoGetPinToken(cborBytes);
+                } else {
+                    // PIN設定処理を続行
+                    DoResponseGetKeyAgreement(cborBytes);
+                }
 
+            } else if (subCommand == Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN) {
+                if (requestType == HIDRequestType.TestMakeCredential) {
+                    // ログイン／認証処理を続行
+                    DoResponseGetPinToken(cborBytes);
                 } else {
                     // 画面に制御を戻す
                     mainForm.OnAppMainProcessExited(true);
                 }
 
             } else {
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(true);
             }
         }
 
@@ -339,15 +357,46 @@ namespace MaintenanceToolGUI
             byte[] receivedCID = hidProcess.receivedCID;
 
             // リクエストデータ（CBOR）をエンコードして送信
-            byte[] getPinTokenCbor = new CBOREncoder().GetPinToken(cborCommand, subCommand, clientPin, cborBytes);
+            //   この時に生成した共通鍵は、モジュール内で保持しておく
+            CBOREncoder encoder = new CBOREncoder();
+            byte[] getPinTokenCbor = encoder.GetPinToken(cborCommand, subCommand, clientPin, cborBytes);
+            SharedSecretKey = encoder.SharedSecretKey;
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor, getPinTokenCbor.Length);
         }
 
         public void DoResponseGetPinToken(byte[] cborBytes)
         {
-            // 仮の実装：画面に制御を戻す
-            AppCommon.OutputLogToFile(string.Format("DoResponseGetPinToken called: PIN({0})", clientPin), true);
-            mainForm.OnAppMainProcessExited(true);
+            // リクエストデータ（CBOR）をエンコード
+            byte[] requestCbor = null;
+            byte[] receivedCID = hidProcess.receivedCID;
+            if (requestType == HIDRequestType.TestMakeCredential) {
+                cborCommand = Const.HID_CBORCMD_MAKE_CREDENTIAL;
+                requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
+            } else {
+                cborCommand = Const.HID_CBORCMD_GET_ASSERTION;
+                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey);
+            }
+
+            if (requestCbor == null) {
+                // 処理失敗時は画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
+            // リクエスト転送の前に、
+            // 基板上ののMAIN SWを押してもらうように促す
+            // メッセージを画面表示
+            if (requestType == HIDRequestType.TestMakeCredential) {
+                mainForm.OnPrintMessageText("ユーザー登録テストを開始します.");
+            } else {
+                mainForm.OnPrintMessageText("ログインテストを開始します.");
+            }
+            mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
+            mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
+            mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
+
+            // リクエストを送信
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, requestCbor, requestCbor.Length);
         }
     }
 }
