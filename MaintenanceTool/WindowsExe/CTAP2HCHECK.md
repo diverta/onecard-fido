@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -14,7 +14,7 @@ CTAP2ヘルスチェックは、USB HID経由で実行されます。
 
 #### 使用できる機材
 
-Nordic社から販売されている開発基板「nRF52840 DK」または「nRF52840 Dongle」が、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用できます。
+Nordic社から販売されている開発基板「nRF52840 DK」または「nRF52840 Dongle」が、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用できます。
 
 - nRF52840 DK<br>
 https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/
