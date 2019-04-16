@@ -8,11 +8,9 @@ PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-f
 * 鍵・証明書削除
 * 鍵・証明書インストール
 * PINコード設定
+* CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
 * コマンドテスト機能
-
-#### 現在制作中の機能
-* CTAP2ヘルスチェック実行
 
 ### 画面イメージ
 <img src="../assets/0002.png" width="500">
@@ -30,6 +28,9 @@ FIDO認証器に、鍵・証明書をインストールする手順を掲載し�
 
 - <b>[PINコードの設定手順](SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。
+
+- <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
+FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
 - <b>[Edgeブラウザーを使用したWebAuthnテスト手順](../../Research/FIDO_2_0/EDGETEST.md)</b><br>
 FIDO認証器と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPINコードにより行う手順を掲載しています。
