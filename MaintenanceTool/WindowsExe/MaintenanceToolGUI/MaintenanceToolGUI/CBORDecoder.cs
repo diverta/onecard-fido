@@ -1,4 +1,6 @@
-﻿using PeterO.Cbor;
+﻿using MaintenanceToolCommon;
+using PeterO.Cbor;
+using System.Linq;
 
 namespace MaintenanceToolGUI
 {
@@ -26,30 +28,50 @@ namespace MaintenanceToolGUI
         }
     }
 
+    internal class MakeCredentialResponse
+    {
+        // データ項目
+        public string Fmt { get; set; }
+        public byte[] RpIdHash { get; set; }
+        public byte Flags { get; set; }
+        public int SignCount;
+        public byte[] Aaguid { get; set; }
+        public int CredentialIdLength;
+        public byte[] CredentialId { get; set; }
+        public byte[] CredentialPublicKeyByte { get; set; }
+
+        // データ長
+        public static int RpIdHashSize = 32;
+        public static int SignCountSize = 4;
+        public static int AaguidSize = 16;
+        public static int CredentialIdLengthSize = 2;
+
+        public MakeCredentialResponse()
+        {
+        }
+    }
+
     internal class CBORDecoder
     {
         public CBORDecoder()
         {
         }
 
-        // 認証器から受信した公開鍵を保持
-        private KeyAgreement AgreementKey;
-
         public KeyAgreement GetKeyAgreement(byte[] cborBytes)
         {
+            KeyAgreement AgreementKey = new KeyAgreement();
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
             foreach (CBORObject key in cbor.Keys) {
                 byte keyVal = key.AsByte();
                 if (keyVal == 0x01) {
-                    ParseCOSEkey(cbor[key]);
+                    ParseCOSEkey(cbor[key], AgreementKey);
                 }
             }
             return AgreementKey;
         }
 
-        private void ParseCOSEkey(CBORObject cbor)
+        private void ParseCOSEkey(CBORObject cbor, KeyAgreement AgreementKey)
         {
-            AgreementKey = new KeyAgreement();
             foreach (CBORObject key in cbor.Keys) {
                 short keyVal = key.AsInt16();
                 if (keyVal == 1) {
@@ -64,6 +86,81 @@ namespace MaintenanceToolGUI
                     AgreementKey.Y = cbor[key].GetByteString();
                 }
             }
+        }
+
+        public byte[] GetPinTokenEnc(byte[] cborBytes)
+        {
+            // 暗号化されているpinTokenを抽出
+            byte[] pinTokenEnc = null;
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                byte keyVal = key.AsByte();
+                if (keyVal == 0x02) {
+                    pinTokenEnc = cbor[key].GetByteString();
+                }
+            }
+            return pinTokenEnc;
+        }
+
+        public MakeCredentialResponse MakeCredential(byte[] cborBytes)
+        {
+            MakeCredentialResponse MakeCredentialRes = new MakeCredentialResponse();
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                var keyVal = key.AsByte();
+                if (keyVal == 0x01) {
+                    // fmt
+                    MakeCredentialRes.Fmt = cbor[key].AsString();
+                } else if (keyVal == 0x02) {
+                    // authData
+                    parseAuthData(cbor[key].GetByteString(), MakeCredentialRes);
+                }
+            }
+            return MakeCredentialRes;
+        }
+
+        private void parseAuthData(byte[] data, MakeCredentialResponse MakeCredentialRes)
+        {
+            int index = 0;
+            int size;
+
+            // rpIdHash
+            size = MakeCredentialResponse.RpIdHashSize;
+            MakeCredentialRes.RpIdHash = data.Skip(index).Take(size).ToArray();
+            index += size;
+
+            // for debug
+            // AppCommon.OutputLogToFile("rpIdHash: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.RpIdHash, size), false);
+
+            // flags
+            MakeCredentialRes.Flags = data[index];
+            index++;
+
+            // signCount（エンディアン変換が必要）
+            MakeCredentialRes.SignCount = AppCommon.ToInt32(data, index, true);
+            index += MakeCredentialResponse.SignCountSize;
+
+            // aaguid
+            size = MakeCredentialResponse.AaguidSize;
+            MakeCredentialRes.Aaguid = data.Skip(index).Take(16).ToArray();
+            index += size;
+
+            // credentialIdLength（エンディアン変換が必要）
+            MakeCredentialRes.CredentialIdLength = AppCommon.ToInt16(data, index, true);
+            index += MakeCredentialResponse.CredentialIdLengthSize;
+
+            // CredentialId
+            size = MakeCredentialRes.CredentialIdLength;
+            MakeCredentialRes.CredentialId = data.Skip(index).Take(size).ToArray();
+            index += size;
+
+            // for debug
+            // AppCommon.OutputLogToFile("CredentialId: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.CredentialId, size), false);
+
+            // credentialPublicKey
+            MakeCredentialRes.CredentialPublicKeyByte = data.Skip(index).ToArray();
         }
     }
 }

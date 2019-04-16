@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.9";
+        public const string MaintenanceToolVersion = "Version 0.1.10";
 
         public MainForm()
         {
@@ -65,7 +65,7 @@ namespace MaintenanceToolGUI
                 hid.DoTestCtapHidInit();
             }
             else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_HEALTHCHECK;
+                commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
@@ -89,6 +89,25 @@ namespace MaintenanceToolGUI
 
             // PINコード設定
             hid.DoClientPinSet(f.PinNew, f.PinOld);
+        }
+
+        private void DoCommandCtap2Healthcheck(object sender, EventArgs e)
+        {
+            // パラメーター入力画面を表示
+            PinCodeParamForm f = new PinCodeParamForm();
+            if (f.ShowDialog() == DialogResult.Cancel) {
+                // パラメーター入力画面でCancelの場合は終了
+                return;
+            }
+
+            // ボタンを押下不可とする
+            enableButtons(false);
+            // 開始メッセージを表示
+            commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
+            DisplayStartMessage(commandTitle);
+
+            // CTAP2ヘルスチェック実行
+            hid.DoCtap2Healthcheck(f.PinCurr);
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -221,7 +240,7 @@ namespace MaintenanceToolGUI
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
-            MessageBox.Show(formatted, MaintenanceToolTitle);
+            MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
 
         private bool displayPromptPopup(string message)
@@ -246,6 +265,16 @@ namespace MaintenanceToolGUI
         {
         }
 
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // CTAP2ヘルスチェック実行
+            DoCommandCtap2Healthcheck(sender, e);
+        }
+
         private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CTAPHID_INITのテストを実行
@@ -254,7 +283,7 @@ namespace MaintenanceToolGUI
 
         private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // ヘルスチェック実行
+            // U2Fヘルスチェック実行
             doCommand(sender);
         }
 

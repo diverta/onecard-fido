@@ -1,4 +1,5 @@
-﻿using PeterO.Cbor;
+﻿using MaintenanceToolCommon;
+using PeterO.Cbor;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -31,7 +32,7 @@ namespace MaintenanceToolGUI
         private byte[] PinAuth;
 
         // 共通鍵を保持
-        private byte[] SharedSecretKey;
+        public byte[] SharedSecretKey { get; set; }
 
         public byte[] GetKeyAgreement(byte cborCommand, byte subCommand)
         {
@@ -68,6 +69,20 @@ namespace MaintenanceToolGUI
 
             // 送信データをCBORエンコードしたバイト配列を戻す
             return GenerateSetPinCbor(cborCommand, subCommand);
+        }
+
+        public byte[] GetPinToken(byte cborCommand, byte subCommand, string pinCur, byte[] agreementKeyCBOR)
+        {
+            // 公開鍵から共通鍵を生成
+            if (CreateSharedSecretKey(agreementKeyCBOR) == false) {
+                return null;
+            }
+
+            // pinHashEncを生成
+            PinHashEnc = CreatePinHashEnc(pinCur, SharedSecretKey);
+
+            // 送信データをCBORエンコードしたバイト配列を戻す
+            return GenerateGetPinTokenCbor(cborCommand, subCommand);
         }
 
         private bool CreateSharedSecretKey(byte[] agreementKeyCBOR)
@@ -208,7 +223,7 @@ namespace MaintenanceToolGUI
             // 送信データを生成
             //   0x01: pinProtocol
             //   0x02: subCommand
-            //   0x03: keyAgreemen
+            //   0x03: keyAgreement
             //   0x04: pinAuth
             //   0x05: newPinEnc
             //   0x06: pinHashEnc
@@ -237,6 +252,224 @@ namespace MaintenanceToolGUI
 
             // for debug
             // AppCommon.OutputLogToFile("Encoded CBOR request: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        private byte[] GenerateGetPinTokenCbor(byte cborCommand, byte subCommand)
+        {
+            // 送信データを生成
+            //   0x01: pinProtocol
+            //   0x02: subCommand
+            //   0x03: keyAgreement
+            //   0x06: pinHashEnc
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, 1);
+            cbor.Add(0x02, subCommand);
+
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, AgreementPublicKey.Kty);
+            keyParam.Add(3, AgreementPublicKey.Alg);
+            keyParam.Add(-1, AgreementPublicKey.Crv);
+            keyParam.Add(-2, AgreementPublicKey.X);
+            keyParam.Add(-3, AgreementPublicKey.Y);
+            cbor.Add(0x03, keyParam);
+            cbor.Add(0x06, PinHashEnc);
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request: ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        //
+        // ヘルスチェック実行用のテストデータ
+        // 
+        byte[] challenge = Encoding.ASCII.GetBytes("This is challenge");
+        string rpid = "diverta.co.jp";
+        string rpname = "Diverta inc.";
+        byte[] userid = Encoding.ASCII.GetBytes("1234567890123456");
+        string username = "username";
+        string displayName = "User Name";
+
+        public byte[] MakeCredential(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey)
+        {
+            // pinTokenを抽出
+            byte[] pinToken = ExtractPinToken(pinTokenCBOR, sharedSecretKey);
+            if (pinToken == null) {
+                return null;
+            }
+
+            // clientDataHashを生成
+            byte[] clientDataHash = CreateClientDataHash(challenge);
+
+            // pinAuthを生成
+            byte[] pinAuth = CreateClientPinAuth(pinToken, clientDataHash);
+
+            // 送信データをCBORエンコードしたバイト配列を戻す
+            return GenerateMakeCredentialCbor(cborCommand, clientDataHash, pinAuth);
+        }
+
+        public byte[] GetAssertion(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey, MakeCredentialResponse makeCredentialRes)
+        {
+            // pinTokenを抽出
+            byte[] pinToken = ExtractPinToken(pinTokenCBOR, sharedSecretKey);
+            if (pinToken == null) {
+                return null;
+            }
+
+            // clientDataHashを生成
+            byte[] clientDataHash = CreateClientDataHash(challenge);
+
+            // pinAuthを生成
+            byte[] pinAuth = CreateClientPinAuth(pinToken, clientDataHash);
+
+            // 送信データをCBORエンコードしたバイト配列を戻す
+            return GenerateGetAssertionCbor(cborCommand, clientDataHash, pinAuth, makeCredentialRes);
+        }
+
+        private byte[] ExtractPinToken(byte[] pinTokenCBOR, byte[] sharedSecretKey)
+        {
+            // pinTokenをCBORから抽出
+            CBORDecoder cborDecoder = new CBORDecoder();
+            byte[] pinTokenEnc = cborDecoder.GetPinTokenEnc(pinTokenCBOR);
+            if (pinTokenEnc == null) {
+                AppCommon.OutputLogToFile("Extract encrypted pinToken fail", true);
+                return null;
+            }
+
+            // pinTokenを共通鍵で復号化
+            return AES256CBCDecrypt(sharedSecretKey, pinTokenEnc);
+        }
+
+        private byte[] CreateClientDataHash(byte[] challenge)
+        {
+            SHA256 sha = new SHA256CryptoServiceProvider();
+            return sha.ComputeHash(challenge);
+        }
+
+        private byte[] CreateClientPinAuth(byte[] pinToken, byte[] clientDataHash)
+        {
+            // LEFT(HMAC-SHA-256(pinToken, clientDataHash), 16)
+            byte[] pinAuth = null;
+            using (var hmacsha256 = new HMACSHA256(pinToken)) {
+                byte[] digest = hmacsha256.ComputeHash(clientDataHash);
+                pinAuth = digest.ToList().Take(16).ToArray();
+            }
+            return pinAuth;
+        }
+
+        private byte[] AES256CBCDecrypt(byte[] key, byte[] data)
+        {
+            // AES256-CBCにより復号化
+            //   鍵の長さ: 256（32バイト）
+            //   ブロックサイズ: 128（16バイト）
+            //   暗号利用モード: CBC
+            //   初期化ベクター: 0
+            AesManaged aes = new AesManaged {
+                KeySize = 256,
+                BlockSize = 128,
+                Mode = CipherMode.CBC,
+                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Key = key,
+                Padding = PaddingMode.None
+            };
+            return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
+        }
+
+        private byte[] GenerateMakeCredentialCbor(byte cborCommand, byte[] clientDataHash, byte[] pinAuth)
+        {
+            // 送信データを生成
+            //   0x01: clientDataHash
+            //   0x02: rp
+            //   0x03: user
+            //   0x04: pubKeyCredParams
+            //   0x07: options
+            //   0x08: pinAuth
+            //   0x09: pinProtocol
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, clientDataHash);
+            cbor.Add(0x02, CBORObject.NewMap().Add("id", rpid).Add("name", rpname));
+
+            var user = CBORObject.NewMap();
+            user.Add("id", userid);
+            user.Add("name", username);
+            user.Add("displayName", displayName);
+            cbor.Add(0x03, user);
+
+            var pubKeyCredParams = CBORObject.NewMap();
+            pubKeyCredParams.Add("alg", -7);
+            pubKeyCredParams.Add("type", "public-key");
+            cbor.Add(0x04, CBORObject.NewArray().Add(pubKeyCredParams));
+
+            var opt = CBORObject.NewMap();
+            opt.Add("rk", false);
+            opt.Add("uv", false);
+            opt.Add("up", false);
+            cbor.Add(0x07, opt);
+
+            if (pinAuth != null) {
+                cbor.Add(0x08, pinAuth);
+                cbor.Add(0x09, 1);
+            }
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request(MakeCredential): ", true);
+            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
+        }
+
+        private byte[] GenerateGetAssertionCbor(byte cborCommand, byte[] clientDataHash, byte[] pinAuth, MakeCredentialResponse makeCredentialRes)
+        {
+            // 送信データを生成
+            //   0x01: rpid
+            //   0x02: clientDataHash
+            //   0x03: allowList
+            //   0x05: options
+            //   0x06: pinAuth
+            //   0x07: pinProtocol
+            CBORObject cbor = CBORObject.NewMap();
+            cbor.Add(0x01, rpid);
+            cbor.Add(0x02, clientDataHash);
+
+            if (makeCredentialRes != null) {
+                CBORObject pubKeyCredParams = CBORObject.NewMap();
+                pubKeyCredParams.Add("type", "public-key");
+                pubKeyCredParams.Add("id", makeCredentialRes.CredentialId);
+                cbor.Add(0x03, CBORObject.NewArray().Add(pubKeyCredParams));
+            }
+
+            var opt = CBORObject.NewMap();
+            opt.Add("rk", false);
+            opt.Add("uv", false);
+            opt.Add("up", true);
+            cbor.Add(0x05, opt);
+
+            if (pinAuth != null) {
+                cbor.Add(0x06, pinAuth);
+                cbor.Add(0x07, 1);
+            }
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { cborCommand }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogToFile("Encoded CBOR request(GetAssertion): ", true);
             // AppCommon.OutputLogToFile(AppCommon.DumpMessage(encoded, encoded.Length), false);
 
             // エンコードされたCBORバイト配列を戻す

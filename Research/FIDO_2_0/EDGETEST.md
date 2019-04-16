@@ -14,7 +14,21 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 <img src="assets01/0001.png" width="700">
 
-### ファームウェアの書込み
+## FIDO2認証器の準備
+
+#### 使用できる機材
+
+Nordic社から販売されている開発基板「nRF52840 DK」または「nRF52840 Dongle」が、[FIDO2認証器](../../nRF5_SDK_v15.2.0)として使用できます。
+
+- nRF52840 DK<br>
+https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/
+
+- nRF52840 Dongle<br>
+https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/
+
+本文では、nRF52840 Dongleを使用するものとしております。
+
+#### ファームウェアの書込み
 
 [FIDO2認証器](../../nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
 書込み手順につきましては、<b>[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)</b>をご参照ください。
@@ -24,30 +38,21 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 - アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
 - ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](../../nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
 
-## FIDO2認証器の準備
-
-nRF52840 Dongleにファームウェアを書き込んだら、[FIDO2認証器](../../nRF5_SDK_v15.2.0)に鍵・証明書を導入します。
-
 #### 管理ツールを導入
 
-まずは[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows 10）に導入します。<br>
+[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
-* <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b><br>
+* <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>
 
-#### 鍵・証明書を導入
+#### 鍵・証明書導入／PIN設定
 
 PC環境に導入した管理ツールを使用し、鍵・証明書のインストール、およびPINコード（暗証番号）の設定をします。<br>
 以下の手順書をご参照願います。
 
-* <b>[鍵・証明書の導入手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLKEYCRT.md) </b><br>
+* <b>[鍵・証明書の導入手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLKEYCRT.md) </b>
 
-#### PINコードを設定
-
-PC環境に導入した管理ツールを使用し、PINコード（暗証番号）を設定します。<br>
-以下の手順書をご参照願います。
-
-* <b>[PINコードの設定手順（Windows版）](../../MaintenanceTool/WindowsExe/SETPIN.md) </b><br>
+* <b>[PINコードの設定手順（Windows版）](../../MaintenanceTool/WindowsExe/SETPIN.md) </b>
 
 ## WebAuthn機能テストの実行
 

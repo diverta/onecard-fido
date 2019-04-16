@@ -228,6 +228,11 @@ namespace MaintenanceToolGUI
                     seq, dataLenInFrame), true);
             }
 
+            // キープアライブレスポンスの場合は無視
+            if (receivedCMD == 0xbb) {
+                return;
+            }
+
             // メッセージをダンプ
             AppendLogToBuffer(AppCommon.DumpMessage(frameData, frameData.Length), false);
 

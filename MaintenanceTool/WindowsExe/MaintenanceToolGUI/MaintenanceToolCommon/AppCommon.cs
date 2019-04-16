@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MaintenanceToolCommon
@@ -91,6 +92,31 @@ namespace MaintenanceToolCommon
                 }
             }
             return sb.ToString();
+        }
+
+        public static int ToInt32(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 4);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt32(sub, 0);
+        }
+
+        public static int ToInt16(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 2);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt16(sub, 0);
+        }
+
+        private static byte[] GetSubArray(byte[] src, int startIndex, int count)
+        {
+            byte[] dst = new byte[count];
+            Array.Copy(src, startIndex, dst, 0, count);
+            return dst;
         }
     }
 }
