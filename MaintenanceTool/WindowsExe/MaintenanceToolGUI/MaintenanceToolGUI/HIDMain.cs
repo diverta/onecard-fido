@@ -386,14 +386,12 @@ namespace MaintenanceToolGUI
             // リクエスト転送の前に、
             // 基板上ののMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            if (requestType == HIDRequestType.TestMakeCredential) {
-                mainForm.OnPrintMessageText("ユーザー登録テストを開始します.");
-            } else {
+            if (requestType == HIDRequestType.TestGetAssertion) {
                 mainForm.OnPrintMessageText("ログインテストを開始します.");
+                mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
+                mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
+                mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
             }
-            mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
-            mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
-            mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
 
             // リクエストを送信
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, requestCbor, requestCbor.Length);

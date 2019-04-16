@@ -391,6 +391,7 @@ namespace MaintenanceToolGUI
             var opt = CBORObject.NewMap();
             opt.Add("rk", false);
             opt.Add("uv", false);
+            opt.Add("up", false);
             cbor.Add(0x07, opt);
 
             if (pinAuth != null) {
