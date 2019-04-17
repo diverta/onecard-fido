@@ -16,6 +16,12 @@ namespace MaintenanceToolGUI
             InitFieldValue();
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            // 最初の項目にフォーカス
+            textPin.Focus();
+        }
+
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             // 画面項目を初期化し、この画面を閉じる
@@ -36,9 +42,6 @@ namespace MaintenanceToolGUI
             textPin.Text = "";
             textPinConfirm.Text = "";
             textPinOld.Text = "";
-
-            // 最初の項目にフォーカス
-            textPin.Focus();
         }
 
         private void buttonSetPin_Click(object sender, EventArgs e)
