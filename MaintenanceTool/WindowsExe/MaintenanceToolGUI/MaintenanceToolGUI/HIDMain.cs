@@ -268,7 +268,7 @@ namespace MaintenanceToolGUI
         private void DoResponseCtapHidCbor(byte[] message, int length)
         {
             // ステータスバイトをチェック
-            if (message[0] != 0x00) {
+            if (CheckStatusByte(message) == false) {
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);
                 return;
@@ -290,6 +290,26 @@ namespace MaintenanceToolGUI
                 mainForm.OnAppMainProcessExited(false);
                 break;
             }
+        }
+
+        private bool CheckStatusByte(byte[] message)
+        {
+            switch (message[0]) {
+            case 0x00:
+                return true;
+            case 0x31:  // CTAP2_ERR_PIN_INVALID
+                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_INVALID);
+                break;
+            case 0x32:  // CTAP2_ERR_PIN_BLOCKED
+                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_BLOCKED);
+                break;
+            case 0x34:  // CTAP2_ERR_PIN_AUTH_BLOCKED
+                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_AUTH_BLOCKED);
+                break;
+            default:
+                break;
+            }
+            return false;
         }
 
         private void DoResponseCommandClientPin(byte[] message, int length)
