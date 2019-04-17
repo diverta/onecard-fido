@@ -93,7 +93,7 @@ static uint8_t pin_mismatch_count = 0;
 //   コマンドの処理成功／失敗にかかわらず、
 //   PINリトライカウンターレコードの更新をはさんでレスポンスするため、
 //   外部変数にステータスコードを保持させる必要あり
-uint8_t change_pin_status_code;
+uint8_t check_pin_status_code;
 
 static void debug_decoded_request()
 {
@@ -409,6 +409,7 @@ bool check_pin_code_hash(char *command_name)
     // 一致していれば後続の処理を行う
     if (memcmp(pin_code, ctap2_client_pin_store_pin_code_hash(), pin_code_size) == 0) {
         NRF_LOG_DEBUG("%s: PIN code hash matching test OK", command_name);
+        check_pin_status_code = CTAP1_ERR_SUCCESS;
         return true;
     }
 
@@ -419,20 +420,20 @@ bool check_pin_code_hash(char *command_name)
     if (retry_counter == 0) {
         // リトライカウンターが0の場合
         NRF_LOG_ERROR("%s: PIN code hash matching NG (max retry count reached)", command_name);
-        change_pin_status_code = CTAP2_ERR_PIN_BLOCKED;
+        check_pin_status_code = CTAP2_ERR_PIN_BLOCKED;
 
     } else if (++pin_mismatch_count == PIN_MISMATCH_COUNT_MAX) {
         // PINミスマッチが連続した回数をカウントアップし、
         // ３回に達した場合
         NRF_LOG_ERROR("%s: PIN code hash matching NG (consecutive 3 times)", command_name);
-        change_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
+        check_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
         // アプリケーション全体をロックし、
         // システムリセットが必要である旨をユーザーに知らせる
         hid_fido_command_set_abort_flag(true);
 
     } else {
         NRF_LOG_ERROR("%s: PIN code hash matching NG", command_name);
-        change_pin_status_code = CTAP2_ERR_PIN_INVALID;
+        check_pin_status_code = CTAP2_ERR_PIN_INVALID;
     }
 
     // リトライカウンターをFlash ROMに更新登録
@@ -630,7 +631,7 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
                 // レコードIDがPINコードハッシュ管理であれば
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("changePIN: PIN hash store success");
-                hid_ctap2_command_send_response(change_pin_status_code, m_response_length);
+                hid_ctap2_command_send_response(check_pin_status_code, m_response_length);
             }
             break;
         case subcmd_GetPinToken:
@@ -638,7 +639,7 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
                 // レコードIDがPINコードハッシュ管理であれば
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("getPinToken: retry counter store success");
-                hid_ctap2_command_send_response(change_pin_status_code, m_response_length);
+                hid_ctap2_command_send_response(check_pin_status_code, m_response_length);
             }
             break;
         default:
