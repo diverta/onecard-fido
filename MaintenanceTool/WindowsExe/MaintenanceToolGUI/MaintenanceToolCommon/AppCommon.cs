@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MaintenanceToolCommon
@@ -22,6 +23,11 @@ namespace MaintenanceToolCommon
         // コマンドテスト関連メッセージ
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
+
+        // PINコードチェック関連メッセージ
+        public const string MSG_CTAP2_ERR_PIN_INVALID = "入力されたPINコードが違います。正しいPINコードを入力してください。";
+        public const string MSG_CTAP2_ERR_PIN_BLOCKED = "使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。";
+        public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
 
         // Windows版固有のメッセージ文言
         // USB管理
@@ -91,6 +97,31 @@ namespace MaintenanceToolCommon
                 }
             }
             return sb.ToString();
+        }
+
+        public static int ToInt32(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 4);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt32(sub, 0);
+        }
+
+        public static int ToInt16(byte[] value, int startIndex, bool changeEndian = false)
+        {
+            byte[] sub = GetSubArray(value, startIndex, 2);
+            if (changeEndian == true) {
+                sub = sub.Reverse().ToArray();
+            }
+            return BitConverter.ToInt16(sub, 0);
+        }
+
+        private static byte[] GetSubArray(byte[] src, int startIndex, int count)
+        {
+            byte[] dst = new byte[count];
+            Array.Copy(src, startIndex, dst, 0, count);
+            return dst;
         }
     }
 }

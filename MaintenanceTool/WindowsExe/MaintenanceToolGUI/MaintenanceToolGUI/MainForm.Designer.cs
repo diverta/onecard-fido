@@ -46,10 +46,11 @@
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.メニューはありませんToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -151,7 +152,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(200, 25);
             this.button4.TabIndex = 10;
-            this.button4.Text = "ヘルスチェック実行";
+            this.button4.Text = "PINコード設定";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -187,6 +188,7 @@
             // uSBToolStripMenuItem
             // 
             this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
             this.cTAPHIDINIT実行ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
@@ -195,24 +197,24 @@
             // cTAPHIDINIT実行ToolStripMenuItem
             // 
             this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
             this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
             // 
             // bLEToolStripMenuItem
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.メニューはありませんToolStripMenuItem});
+            this.DoHealthCheckToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
-            // メニューはありませんToolStripMenuItem
+            // DoHealthCheckToolStripMenuItem
             // 
-            this.メニューはありませんToolStripMenuItem.Name = "メニューはありませんToolStripMenuItem";
-            this.メニューはありませんToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.メニューはありませんToolStripMenuItem.Text = "(メニューはありません)";
-            this.メニューはありませんToolStripMenuItem.Click += new System.EventHandler(this.メニューはありませんToolStripMenuItem_Click);
+            this.DoHealthCheckToolStripMenuItem.Name = "DoHealthCheckToolStripMenuItem";
+            this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DoHealthCheckToolStripMenuItem.Text = "U2Fヘルスチェック実行";
+            this.DoHealthCheckToolStripMenuItem.Click += new System.EventHandler(this.DoHealthCheckToolStripMenuItem_Click);
             // 
             // その他OToolStripMenuItem
             // 
@@ -228,6 +230,13 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem1.Text = "CTAP2ヘルスチェック実行";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // MainForm
             // 
@@ -283,7 +292,8 @@
         private System.Windows.Forms.ToolStripMenuItem uSBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cTAPHIDINIT実行ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem メニューはありませんToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHealthCheckToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 
