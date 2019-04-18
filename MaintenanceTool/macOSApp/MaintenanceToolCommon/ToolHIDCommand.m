@@ -127,11 +127,16 @@
     }
 
     - (void)doResponseCtapHidInit:(NSData *)message {
-        // レスポンスメッセージの先頭８バイトと、リクエスト時のnonceが一致しているか確認
-        char *requestBytes = (char *)[message bytes];
-        bool result = (memcmp(requestBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+        // レスポンスメッセージのnonceと、リクエスト時のnonceが一致しているか確認
+        bool result = [self isCorrectNonceBytes:message];
         // AppDelegateに制御を戻す
         [self doResponseToAppDelegate:result message:nil];
+    }
+
+    - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
+        // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
+        char *responseBytes = (char *)[hidInitResponseMessage bytes];
+        return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
     }
 
     - (void)doEraseSkeyCert {
@@ -160,14 +165,6 @@
         [self doRequest:message CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
     }
 
-    - (void)doResponseMaintenanceCommand:(NSData *)message {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        char *requestBytes = (char *)[message bytes];
-        bool result = (requestBytes[0] == 0x00);
-        // AppDelegateに制御を戻す
-        [self doResponseToAppDelegate:result message:nil];
-    }
-
     - (void)doClientPin {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -175,27 +172,26 @@
         [self doRequestCtapHidInit];
     }
 
-    - (void)doRequestClientPinSet:(NSData *)cid {
-        // メッセージを編集し、コマンド 0x90 を実行
-        NSData *message = [[self toolClientPINCommand] generateSetPinMessage:[self command]];
-        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
     - (void)doResponseClientPin:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
         if (cmd == HID_CMD_CTAPHID_INIT) {
-            // CTAPHID_INITからの戻り場合
-            // 受領したCID（9〜12バイト目）を使用し、SetPINコマンドを実行
-            NSData *newCID = [message subdataWithRange:NSMakeRange(8, 4)];
-            [self doRequestClientPinSet:newCID];
+            // CTAPHID_INITから戻ったら、受領したCIDを使用し、GetKeyAgreementコマンドを実行
+            NSData *newCID = [self getNewCIDFrom:message];
+            [self doRequestGetKeyAgreement:newCID];
             return;
         }
-        // SetPINからの戻りの場合は、
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        char *requestBytes = (char *)[message bytes];
-        bool result = (requestBytes[0] == 0x00);
-        // AppDelegateに制御を戻す
-        [self doResponseToAppDelegate:result message:nil];
+    }
+
+    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
+        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
+        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
+        return newCID;
+    }
+
+    - (void)doRequestGetKeyAgreement:(NSData *)cid {
+        // メッセージを編集し、コマンド 0x90 を実行
+        NSData *message = [[self toolClientPINCommand] generateSetPinMessage:[self command]];
+        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)hidHelperWillProcess:(Command)command {
@@ -237,6 +233,11 @@
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // レスポンスタイムアウト監視を停止
         [self cancelResponseTimeoutMonitor];
+        // ステータスコードを確認し、NG時は画面に制御を戻す
+        if ([self isErrorStatusCode:message]) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_INIT:
@@ -244,7 +245,7 @@
                 break;
             case COMMAND_ERASE_SKEY_CERT:
             case COMMAND_INSTALL_SKEY_CERT:
-                [self doResponseMaintenanceCommand:message];
+                [self doResponseToAppDelegate:true message:nil];
                 break;
             case COMMAND_CLIENT_PIN:
                 [self doResponseClientPin:message CID:cid CMD:cmd];
@@ -252,6 +253,18 @@
             default:
                 break;
         }
+    }
+
+    - (bool)isErrorStatusCode:(NSData *)responseMessage {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        char *requestBytes = (char *)[responseMessage bytes];
+        switch (requestBytes[0]) {
+            case 0x00:
+                return true;
+            default:
+                break;
+        }
+        return false;
     }
 
 #pragma mark - Interface for SetPinParamWindow
