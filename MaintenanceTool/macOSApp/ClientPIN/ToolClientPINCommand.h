@@ -12,7 +12,7 @@
 
 @interface ToolClientPINCommand : NSObject
 
-    - (NSData *)generateSetPinMessage:(Command)command;
+    - (NSData *)generateGetKeyAgreementRequest:(Command)command;
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
                           toolCommand:(ToolHIDCommand *)toolCommand;
 
