@@ -127,10 +127,23 @@
     }
 
     - (void)doResponseCtapHidInit:(NSData *)message {
-        // レスポンスメッセージのnonceと、リクエスト時のnonceが一致しているか確認
-        bool result = [self isCorrectNonceBytes:message];
-        // AppDelegateに制御を戻す
-        [self doResponseToAppDelegate:result message:nil];
+        if ([self isCorrectNonceBytes:message] == false) {
+            // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、
+            // 画面に制御を戻す
+            [self doResponseToAppDelegate:false message:nil];
+        }
+        switch ([self command]) {
+            case COMMAND_TEST_CTAPHID_INIT:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+            case COMMAND_CLIENT_PIN:
+                // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
+                [self doRequestGetKeyAgreement:[self getNewCIDFrom:message]];
+                break;
+            default:
+                break;
+        }
     }
 
     - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
@@ -165,6 +178,11 @@
         [self doRequest:message CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
     }
 
+    - (void)doResponseMaintenanceCommand:(NSData *)message {
+        // ステータスコードを確認し、画面に制御を戻す
+        [self doResponseToAppDelegate:[self checkStatusCode:message] message:nil];
+    }
+
     - (void)doClientPin {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -172,14 +190,16 @@
         [self doRequestCtapHidInit];
     }
 
-    - (void)doResponseClientPin:(NSData *)message
+    - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
-        if (cmd == HID_CMD_CTAPHID_INIT) {
-            // CTAPHID_INITから戻ったら、受領したCIDを使用し、GetKeyAgreementコマンドを実行
-            NSData *newCID = [self getNewCIDFrom:message];
-            [self doRequestGetKeyAgreement:newCID];
-            return;
-        }
+        // 仮の実装：画面に制御を戻す
+        [self doResponseToAppDelegate:true message:nil];
+    }
+
+    - (void)doResponseCommandCbor:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、画面に制御を戻す
+        [self doResponseToAppDelegate:[self checkStatusCode:message] message:nil];
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
@@ -189,8 +209,12 @@
     }
 
     - (void)doRequestGetKeyAgreement:(NSData *)cid {
-        // メッセージを編集し、コマンド 0x90 を実行
-        NSData *message = [[self toolClientPINCommand] generateSetPinMessage:[self command]];
+        // メッセージを編集し、GetKeyAgreementサブコマンドを実行
+        NSData *message = [[self toolClientPINCommand] generateGetKeyAgreementRequest:[self command]];
+        if (message == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
@@ -233,29 +257,24 @@
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // レスポンスタイムアウト監視を停止
         [self cancelResponseTimeoutMonitor];
-        // ステータスコードを確認し、NG時は画面に制御を戻す
-        if ([self isErrorStatusCode:message]) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
         // コマンドに応じ、以下の処理に分岐
-        switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_INIT:
+        switch (cmd) {
+            case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
-            case COMMAND_ERASE_SKEY_CERT:
-            case COMMAND_INSTALL_SKEY_CERT:
-                [self doResponseToAppDelegate:true message:nil];
+            case HID_CMD_ERASE_SKEY_CERT:
+            case HID_CMD_INSTALL_SKEY_CERT:
+                [self doResponseMaintenanceCommand:message];
                 break;
-            case COMMAND_CLIENT_PIN:
-                [self doResponseClientPin:message CID:cid CMD:cmd];
+            case HID_CMD_CTAPHID_CBOR:
+                [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
                 break;
             default:
                 break;
         }
     }
 
-    - (bool)isErrorStatusCode:(NSData *)responseMessage {
+    - (bool)checkStatusCode:(NSData *)responseMessage {
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         char *requestBytes = (char *)[responseMessage bytes];
         switch (requestBytes[0]) {
