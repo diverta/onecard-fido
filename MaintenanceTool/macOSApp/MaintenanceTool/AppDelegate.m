@@ -202,7 +202,9 @@
 
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
+        if (message) {
+            [self appendLogMessage:message];
+        }
     }
 
     - (void)toolCommandDidCreateBleRequest {
