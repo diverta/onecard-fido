@@ -8,6 +8,7 @@
 #include "ECDH.h"
 #include "FIDODefines.h"
 #include "fido_blob.h"
+#include "fido_crypto.h"
 #include "debug_log.h"
 
 static uint8_t requestBytes[1024];
@@ -76,7 +77,12 @@ uint8_t ctap2_cbor_encode_client_pin_set_or_change(
     if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
         return CTAP1_ERR_OTHER;
     }
-
+    // pinHashEncを生成
+    if (old_pin != NULL) {
+        if (generate_pin_hash_enc(old_pin) != CTAP1_ERR_SUCCESS) {
+            return CTAP1_ERR_OTHER;
+        }
+    }
     // 仮の仕様
     requestBytesLength = 0;
     return CTAP1_ERR_SUCCESS;

@@ -15,6 +15,8 @@
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
 		7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
+		7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228A226DBE6F00FC5F07 /* fido_crypto.c */; };
+		7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228D226DC24B00FC5F07 /* AES256CBC.c */; };
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
@@ -52,6 +54,10 @@
 		7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		7A16228A226DBE6F00FC5F07 /* fido_crypto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fido_crypto.c; sourceTree = "<group>"; };
+		7A16228B226DBE6F00FC5F07 /* fido_crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
+		7A16228D226DC24B00FC5F07 /* AES256CBC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
+		7A16228E226DC24B00FC5F07 /* AES256CBC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AES256CBC.h; sourceTree = "<group>"; };
 		7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolClientPINCommand.m; sourceTree = "<group>"; };
 		7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
@@ -180,10 +186,14 @@
 				7A98E263226858C50007F154 /* CBOREncoder.c */,
 				7AB55376226D572D003FA435 /* CBORDecoder.h */,
 				7AB55375226D572D003FA435 /* CBORDecoder.c */,
+				7A16228E226DC24B00FC5F07 /* AES256CBC.h */,
+				7A16228D226DC24B00FC5F07 /* AES256CBC.c */,
 				7AB55379226D75BA003FA435 /* ECDH.h */,
 				7AB55378226D75BA003FA435 /* ECDH.c */,
 				7A9F105F226DB4EE007AEB41 /* fido_blob.h */,
 				7A9F105E226DB4EE007AEB41 /* fido_blob.c */,
+				7A16228B226DBE6F00FC5F07 /* fido_crypto.h */,
+				7A16228A226DBE6F00FC5F07 /* fido_crypto.c */,
 				7A9F1062226DB82B007AEB41 /* debug_log.h */,
 				7A9F1061226DB82B007AEB41 /* debug_log.c */,
 				7A98E266226859420007F154 /* FIDODefines.h */,
@@ -280,6 +290,7 @@
 			files = (
 				7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */,
 				7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */,
+				7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */,
 				7A9F1060226DB4EE007AEB41 /* fido_blob.c in Sources */,
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
@@ -287,6 +298,7 @@
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7A98E265226858C50007F154 /* CBOREncoder.c in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
+				7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A9F1063226DB82B007AEB41 /* debug_log.c in Sources */,
 				7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */,
