@@ -19,6 +19,9 @@ static es256_pk_t  *pk;     /* our public key; returned */
 static es256_sk_t  *sk;     /* our private key */
 static es256_pk_t  *ak;     /* authenticator's public key */
 static fido_blob_t *ecdh;   /* shared ecdh secret; returned */
+static uint8_t      shared_secret_key[32];
+static uint8_t      public_key_X[32];
+static uint8_t      public_key_Y[32];
 
 // エラーメッセージを保持
 static char error_message[1024];
@@ -332,7 +335,7 @@ static uint8_t perform_ecdh(const es256_sk_t *sk, const es256_pk_t *pk, fido_blo
     fido_blob_t  *secret = NULL;
     uint8_t       ok = CTAP1_ERR_OTHER;
     
-    *ecdh = NULL;
+    *ecdh = NULL;   /* shared ecdh secret; returned */
     
     /* allocate blobs for secret & ecdh */
     if ((secret = fido_blob_new()) == NULL ||
@@ -393,8 +396,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     sk = NULL; /* our private key */
     pk = NULL; /* our public key; returned */
     ak = NULL; /* authenticator's public key */
-    ecdh = NULL; /* shared ecdh secret; returned */
-    
+
     // 作業領域の確保
     if ((sk = es256_sk_new()) == NULL ||
         (pk = es256_pk_new()) == NULL ||
@@ -425,27 +427,29 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
     r = CTAP1_ERR_SUCCESS;
 
 fail:
+    // 生成された鍵を内部配列に保持
+    if (r == CTAP1_ERR_SUCCESS) {
+        memcpy(shared_secret_key, sk->d, 32);
+        memcpy(public_key_X, pk->x, 32);
+        memcpy(public_key_Y, pk->y, 32);
+    }
+    // 確保領域を解放
     es256_sk_free(&sk);
     es256_pk_free(&ak);
-    
-    if (r != CTAP1_ERR_SUCCESS) {
-        es256_pk_free(&pk);
-        fido_blob_free(&ecdh);
-    }
-    
+    es256_pk_free(&pk);
+    fido_blob_free(&ecdh);
+
     return r;
 }
 
 uint8_t *ECDH_shared_secret_key(void) {
-    if (ecdh == NULL) {
-        return NULL;
-    }
-    return ecdh->ptr;
+    return shared_secret_key;
 }
 
-size_t ECDH_shared_secret_key_size(void) {
-    if (ecdh == NULL) {
-        return 0;
-    }
-    return ecdh->len;
+uint8_t *ECDH_public_key_X(void) {
+    return public_key_X;
+}
+
+uint8_t *ECDH_public_key_Y(void) {
+    return public_key_Y;
 }

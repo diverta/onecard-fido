@@ -30,6 +30,7 @@ typedef struct es256_sk {
 char    *ECDH_error_message(void);
 uint8_t  ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y);
 uint8_t *ECDH_shared_secret_key(void);
-size_t   ECDH_shared_secret_key_size(void);
+uint8_t *ECDH_public_key_X(void);
+uint8_t *ECDH_public_key_Y(void);
 
 #endif /* ECDH_h */
