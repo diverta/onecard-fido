@@ -11,6 +11,7 @@
 #import "ToolClientPINCommand.h"
 #import "SetPinParamWindow.h"
 #import "FIDODefines.h"
+#import "CBORDecoder.h"
 #import "CBOREncoder.h"
 
 @interface ToolClientPINCommand ()
@@ -40,6 +41,37 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
+            return nil;
+        }
+    }
+
+    - (NSData *)generateClientPinSetRequestWith:(NSData *)keyAgreementResponse {
+        // GetKeyAgreementレスポンスから公開鍵を抽出
+        uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
+        size_t   keyAgreementSize = [keyAgreementResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+
+        // for debug
+        // NSLog(@"pubkey_X %@", [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_X() length:32]);
+        // NSLog(@"pubkey_Y %@", [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_Y() length:32]);
+
+        // SetPINまたはChangePINリクエストを生成して戻す
+        char *pin_new = (char *)[[self pinNew] UTF8String];
+        char *pin_old = NULL;
+        if ([[self pinOld] length] != 0) {
+            pin_old = (char *)[[self pinOld] UTF8String];
+        }
+        status_code = ctap2_cbor_encode_client_pin_set_or_change(
+                        ctap2_cbor_decode_agreement_pubkey_X(), ctap2_cbor_decode_agreement_pubkey_Y(),
+                        pin_new, pin_old);
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            NSLog(@"CBOREncoder error: %s", CBOREncoder_error_message());
             return nil;
         }
     }

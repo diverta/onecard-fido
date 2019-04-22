@@ -27,6 +27,8 @@
 		7A98E265226858C50007F154 /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A98E263226858C50007F154 /* CBOREncoder.c */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
+		7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55375226D572D003FA435 /* CBORDecoder.c */; };
+		7AB5537A226D75BA003FA435 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55378226D75BA003FA435 /* ECDH.c */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
@@ -72,6 +74,10 @@
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
 		7AB3BC7922530BA000519124 /* ToolFilePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolFilePanel.h; sourceTree = "<group>"; };
 		7AB3BC7A22530BA000519124 /* ToolFilePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolFilePanel.m; sourceTree = "<group>"; };
+		7AB55375226D572D003FA435 /* CBORDecoder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CBORDecoder.c; sourceTree = "<group>"; };
+		7AB55376226D572D003FA435 /* CBORDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBORDecoder.h; sourceTree = "<group>"; };
+		7AB55378226D75BA003FA435 /* ECDH.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ECDH.c; sourceTree = "<group>"; };
+		7AB55379226D75BA003FA435 /* ECDH.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -164,8 +170,12 @@
 				7A84EFA22254440500DF449D /* SetPinParamWindow.xib */,
 				7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */,
 				7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */,
-				7A98E263226858C50007F154 /* CBOREncoder.c */,
 				7A98E264226858C50007F154 /* CBOREncoder.h */,
+				7A98E263226858C50007F154 /* CBOREncoder.c */,
+				7AB55376226D572D003FA435 /* CBORDecoder.h */,
+				7AB55375226D572D003FA435 /* CBORDecoder.c */,
+				7AB55379226D75BA003FA435 /* ECDH.h */,
+				7AB55378226D75BA003FA435 /* ECDH.c */,
 				7A98E266226859420007F154 /* FIDODefines.h */,
 			);
 			path = ClientPIN;
@@ -267,7 +277,9 @@
 				7A98E265226858C50007F154 /* CBOREncoder.c in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
+				7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */,
 				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
+				7AB5537A226D75BA003FA435 /* ECDH.c in Sources */,
 				7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */,
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
