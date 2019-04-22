@@ -12,6 +12,7 @@
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
 #import "ToolPopupWindow.h"
+#import "FIDODefines.h"
 
 // HIDコマンドバイト
 #define HID_CMD_CTAPHID_INIT        0x86
@@ -28,6 +29,10 @@
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
     @property (nonatomic) NSString *certFilePath;
+
+    // 実行中のサブコマンドを保持
+    @property (nonatomic) uint8_t   cborCommand;
+    @property (nonatomic) uint8_t   subCommand;
 
 @end
 
@@ -139,6 +144,8 @@
                 break;
             case COMMAND_CLIENT_PIN:
                 // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
+                [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+                [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
                 [self doRequestGetKeyAgreement:[self getNewCIDFrom:message]];
                 break;
             default:
@@ -192,14 +199,71 @@
 
     - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // 仮の実装：画面に制御を戻す
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        if ([self checkStatusCode:message] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        switch ([self cborCommand]) {
+            case CTAP2_CMD_CLIENT_PIN:
+                [self doResponseCommandClientPin:message CID:cid CMD:cmd];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                [self doResponseToAppDelegate:false message:nil];
+                break;
+        }
+    }
+
+    - (void)doResponseCommandClientPin:(NSData *)message
+                                   CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        
+        switch ([self subCommand]) {
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
+                [self doResponseCommandGetKeyAgreement:cborBytes CID:cid];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+        }
+    }
+
+    - (void)doResponseCommandGetKeyAgreement:(NSData *)message CID:(NSData *)cid {
+        switch ([self command]) {
+            default:
+                // PIN設定処理を続行
+                [self doClientPinSetOrChange:message CID:cid];
+                break;
+        }
+    }
+
+    - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        if ([[[self toolClientPINCommand] pinOld] length] == 0) {
+            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_SET];
+        } else {
+            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_CHANGE];
+        }
+        // メッセージを編集し、GetKeyAgreementサブコマンドを実行
+        NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // 仮の仕様：
+        //[self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
         [self doResponseToAppDelegate:true message:nil];
     }
 
-    - (void)doResponseCommandCbor:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、画面に制御を戻す
-        [self doResponseToAppDelegate:[self checkStatusCode:message] message:nil];
+    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {

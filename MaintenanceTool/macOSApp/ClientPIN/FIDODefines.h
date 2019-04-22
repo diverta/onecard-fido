@@ -15,6 +15,11 @@
 #define CTAP2_CMD_RESET                 0x07
 #define CTAP2_CMD_GET_NEXT_ASSERTION    0x08
 
+#define CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT   0x02
+#define CTAP2_SUBCMD_CLIENT_PIN_SET             0x03
+#define CTAP2_SUBCMD_CLIENT_PIN_CHANGE          0x04
+#define CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN   0x05
+
 // FIDO機能関連エラーステータス
 #define CTAP1_ERR_SUCCESS               0x00
 #define CTAP1_ERR_INVALID_COMMAND       0x01
