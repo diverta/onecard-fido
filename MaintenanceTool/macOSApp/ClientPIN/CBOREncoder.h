@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include "cbor.h"
 
-char    *CBOREncoder_error_message(void);
 uint8_t *ctap2_cbor_encode_request_bytes(void);
 size_t   ctap2_cbor_encode_request_bytes_size(void);
 uint8_t  ctap2_cbor_encode_get_agreement_key(void);

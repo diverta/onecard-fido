@@ -4,10 +4,9 @@
 //
 //  Created by Makoto Morita on 2019/04/22.
 //
-#include <stdlib.h>
-#include <string.h>
 #include "ECDH.h"
 #include "FIDODefines.h"
+#include "debug_log.h"
 
 // for OpenSSL
 #include <openssl/ec.h>
@@ -22,46 +21,6 @@ static fido_blob_t *ecdh;   /* shared ecdh secret; returned */
 static uint8_t      shared_secret_key[32];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
-
-// エラーメッセージを保持
-static char error_message[1024];
-
-char *ECDH_error_message(void) {
-    return error_message;
-}
-
-static void log_debug(const char *fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    vsprintf(error_message, fmt, ap);
-    va_end(ap);
-}
-
-static void explicit_bzero(void *p, size_t n) {
-    if (n == 0) return;
-    memset(p, 0, n);
-}
-
-static fido_blob_t *fido_blob_new(void) {
-    return (fido_blob_t *)calloc(1UL, sizeof(fido_blob_t));
-}
-
-static void fido_blob_free(fido_blob_t **bp) {
-    fido_blob_t *b;
-    
-    if (bp == NULL || (b = *bp) == NULL)
-        return;
-    
-    if (b->ptr) {
-        explicit_bzero(b->ptr, b->len);
-        free(b->ptr);
-    }
-    
-    explicit_bzero(b, sizeof(*b));
-    free(b);
-    
-    *bp = NULL;
-}
 
 static es256_sk_t *es256_sk_new(void) {
     return (es256_sk_t *)calloc(1UL, sizeof(es256_sk_t));

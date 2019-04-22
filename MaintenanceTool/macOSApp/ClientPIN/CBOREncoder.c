@@ -7,16 +7,11 @@
 #include "CBOREncoder.h"
 #include "ECDH.h"
 #include "FIDODefines.h"
+#include "fido_blob.h"
+#include "debug_log.h"
 
 static uint8_t requestBytes[1024];
 static size_t  requestBytesLength;
-
-// エラーメッセージを保持
-static char *error_message;
-
-char *CBOREncoder_error_message(void) {
-    return error_message;
-}
 
 uint8_t *ctap2_cbor_encode_request_bytes(void) {
     return requestBytes;
@@ -79,7 +74,6 @@ uint8_t ctap2_cbor_encode_client_pin_set_or_change(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *new_pin, char *old_pin) {
     // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
     if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
-        error_message = ECDH_error_message();
         return CTAP1_ERR_OTHER;
     }
 
