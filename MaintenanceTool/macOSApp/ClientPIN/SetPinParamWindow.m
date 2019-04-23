@@ -43,7 +43,7 @@
     }
 
     - (IBAction)buttonSetPinDidPress:(id)sender {
-        [self doChangePin:sender];
+        [self doSetPin:sender];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -63,9 +63,10 @@
         if ([self checkEntries:sender] == false) {
             return;
         }
-        // PINコードを設定して画面を閉じる
+        // PINコード、実行コマンドを設定して画面を閉じる
         [[self toolClientPINCommand] setPinNew:[[self fieldPin] stringValue]];
         [[self toolClientPINCommand] setPinOld:nil];
+        [[self toolClientPINCommand] setPinCommand:COMMAND_CLIENT_PIN_SET];
         [self terminateWindow:NSModalResponseOK];
     }
 
@@ -74,9 +75,10 @@
         if ([self checkEntries:sender] == false) {
             return;
         }
-        // PINコードを設定して画面を閉じる
+        // PINコード、実行コマンドを設定して画面を閉じる
         [[self toolClientPINCommand] setPinNew:[[self fieldPin] stringValue]];
         [[self toolClientPINCommand] setPinOld:[[self fieldPinOld] stringValue]];
+        [[self toolClientPINCommand] setPinCommand:COMMAND_CLIENT_PIN_CHANGE];
         [self terminateWindow:NSModalResponseOK];
     }
 

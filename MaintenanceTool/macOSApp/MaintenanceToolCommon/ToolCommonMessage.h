@@ -38,7 +38,8 @@
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
 #define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
-#define PROCESS_NAME_TEST_CLIENT_PIN                @"ClientPIN1のテスト"
+#define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
+#define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -101,5 +102,10 @@
 #define MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM   @"新しいPINコード（確認用）を数字で入力してください"
 #define MSG_PROMPT_INPUT_OLD_PIN_NUM        @"変更前のPINコードを数字で入力してください"
 #define MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT   @"確認用のPINコードを正しく入力してください"
+
+#pragma mark - PINコードチェック関連メッセージ
+#define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"
+#define MSG_CTAP2_ERR_PIN_BLOCKED           @"使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。"
+#define MSG_CTAP2_ERR_PIN_AUTH_BLOCKED      @"PIN認証が無効となりました。認証器をUSBポートから取り外してください。"
 
 #endif /* ToolCommonMessage_h */

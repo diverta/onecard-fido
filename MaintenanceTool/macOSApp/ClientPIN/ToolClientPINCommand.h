@@ -19,6 +19,7 @@
 
     @property (nonatomic) NSString *pinNew;
     @property (nonatomic) NSString *pinOld;
+    @property (nonatomic) Command   pinCommand;
 
 @end
 
