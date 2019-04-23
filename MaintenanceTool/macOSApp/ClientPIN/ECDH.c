@@ -14,10 +14,6 @@
 #include <openssl/sha.h>
 
 // 生成された鍵を保持
-static es256_pk_t  *pk;     /* our public key; returned */
-static es256_sk_t  *sk;     /* our private key */
-static es256_pk_t  *ak;     /* authenticator's public key */
-static fido_blob_t *ecdh;   /* shared ecdh secret; returned */
 static uint8_t      shared_secret_key[32];
 static uint8_t      public_key_X[32];
 static uint8_t      public_key_Y[32];
@@ -351,10 +347,10 @@ fail:
 
 uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y) {
     uint8_t r;
-
-    sk = NULL; /* our private key */
-    pk = NULL; /* our public key; returned */
-    ak = NULL; /* authenticator's public key */
+    es256_pk_t  *pk = NULL; /* our public key; returned */
+    es256_sk_t  *sk = NULL; /* our private key */
+    es256_pk_t  *ak = NULL; /* authenticator's public key */
+    fido_blob_t *ecdh;      /* shared ecdh secret; returned */
 
     // 作業領域の確保
     if ((sk = es256_sk_new()) == NULL ||
@@ -388,7 +384,7 @@ uint8_t ECDH_create_shared_secret_key(uint8_t *agreement_pubkey_X, uint8_t *agre
 fail:
     // 生成された鍵を内部配列に保持
     if (r == CTAP1_ERR_SUCCESS) {
-        memcpy(shared_secret_key, sk->d, 32);
+        memcpy(shared_secret_key, ecdh->ptr, ecdh->len);
         memcpy(public_key_X, pk->x, 32);
         memcpy(public_key_Y, pk->y, 32);
     }
