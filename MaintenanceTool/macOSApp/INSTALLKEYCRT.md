@@ -12,19 +12,19 @@
 
 管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)を装着します。
 
-<img src="assets/0006.png" width="450">
+<img src="assets/0006.png" width="400">
 
 次に「鍵・証明書・キーハンドル消去」ボタンをクリックします。
 
-<img src="assets/0007.png" width="450">
+<img src="assets/0007.png" width="400">
 
 確認ダイアログが表示されますので「Yes」をクリックします。
 
-<img src="assets/0008.png" width="450">
+<img src="assets/0008.png" width="400">
 
 FIDO認証器側の処理が成功すると「鍵・証明書・キーハンドル削除処理が成功しました。」と表示されます。
 
-<img src="assets/0009.png" width="450">
+<img src="assets/0009.png" width="400">
 
 ## 鍵・証明書のインストール
 
