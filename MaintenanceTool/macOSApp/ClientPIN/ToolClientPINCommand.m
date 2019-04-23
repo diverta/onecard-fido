@@ -103,7 +103,7 @@
             return;
         }
         // PINコード新規設定／変更を実行
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_CLIENT_PIN];
+        [[self toolHIDCommand] hidHelperWillProcess:[self pinCommand]];
     }
 
 @end

@@ -100,11 +100,16 @@
 
 #pragma mark - Command functions
 
+    - (void)displayMessage:(NSString *)string {
+        // メッセージを画面表示
+        [[self delegate] notifyToolCommandMessage:string];
+    }
+
     - (void)displayStartMessage {
         // コマンド開始メッセージを画面表示
         NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
                               [ToolCommon processNameOfCommand:[self command]]];
-        [[self delegate] notifyToolCommandMessage:startMsg];
+        [self displayMessage:startMsg];
     }
 
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
@@ -142,7 +147,8 @@
                 // 画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
                 break;
-            case COMMAND_CLIENT_PIN:
+            case COMMAND_CLIENT_PIN_SET:
+            case COMMAND_CLIENT_PIN_CHANGE:
                 // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
                 [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
                 [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
@@ -254,9 +260,8 @@
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
-        // 仮の仕様：
-        //[self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-        [self doResponseToAppDelegate:true message:nil];
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
@@ -296,7 +301,8 @@
             case COMMAND_INSTALL_SKEY_CERT:
                 [self doInstallSkeyCert];
                 break;
-            case COMMAND_CLIENT_PIN:
+            case COMMAND_CLIENT_PIN_SET:
+            case COMMAND_CLIENT_PIN_CHANGE:
                 [self doClientPin];
                 break;
             default:
@@ -342,8 +348,18 @@
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
         char *requestBytes = (char *)[responseMessage bytes];
         switch (requestBytes[0]) {
-            case 0x00:
+            case CTAP1_ERR_SUCCESS:
                 return true;
+            case CTAP2_ERR_PIN_INVALID:
+            case CTAP2_ERR_PIN_AUTH_INVALID:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
+                break;
+            case CTAP2_ERR_PIN_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_AUTH_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+                break;
             default:
                 break;
         }
