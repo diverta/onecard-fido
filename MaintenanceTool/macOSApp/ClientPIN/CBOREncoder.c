@@ -78,10 +78,19 @@ uint8_t ctap2_cbor_encode_client_pin_set_or_change(
         return CTAP1_ERR_OTHER;
     }
     // pinHashEncを生成
-    if (old_pin != NULL) {
+    bool change_pin = (old_pin != NULL);
+    if (change_pin) {
         if (generate_pin_hash_enc(old_pin) != CTAP1_ERR_SUCCESS) {
             return CTAP1_ERR_OTHER;
         }
+    }
+    // newPinEncを生成
+    if (generate_new_pin_enc(new_pin) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinAuthを生成
+    if (generate_pin_auth(change_pin) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
     }
     // 仮の仕様
     requestBytesLength = 0;
