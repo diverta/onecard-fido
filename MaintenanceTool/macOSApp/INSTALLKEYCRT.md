@@ -20,11 +20,11 @@
 
 確認ダイアログが表示されますので「Yes」をクリックします。
 
-<img src="assets/0008.png" width="300">
+<img src="assets/0008.png" width="450">
 
 FIDO認証器側の処理が成功すると「鍵・証明書・キーハンドル削除処理が成功しました。」と表示されます。
 
-<img src="assets/0009.png" width="300">
+<img src="assets/0009.png" width="450">
 
 ## 鍵・証明書のインストール
 
