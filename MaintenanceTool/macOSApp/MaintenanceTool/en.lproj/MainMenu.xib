@@ -356,7 +356,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="BLE" id="497">
                                     <items>
-                                        <menuItem title="(メニューはありません)" id="500">
+                                        <menuItem title="ヘルスチェック実行" id="500">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="menuItemTestBLE1DidSelect:" target="494" id="1oW-xs-J50"/>
@@ -564,7 +564,7 @@
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb">
                         <rect key="frame" x="14" y="174" width="233" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="ヘルスチェック実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
+                        <buttonCell key="cell" type="push" title="PINコード設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                         </buttonCell>

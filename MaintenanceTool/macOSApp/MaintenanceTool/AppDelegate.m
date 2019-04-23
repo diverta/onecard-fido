@@ -127,9 +127,12 @@
     }
 
     - (IBAction)button4DidPress:(id)sender {
-        // ヘルスチェック実行
+        // PINコード設定画面を開く
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
+        [[self toolHIDCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -167,8 +170,9 @@
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
+        // ヘルスチェック実行
         [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -198,7 +202,9 @@
 
     - (void)notifyToolCommandMessage:(NSString *)message {
         // 画面上のテキストエリアにメッセージを表示する
-        [self appendLogMessage:message];
+        if (message) {
+            [self appendLogMessage:message];
+        }
     }
 
     - (void)toolCommandDidCreateBleRequest {

@@ -9,8 +9,9 @@
 
 #pragma mark - 共通
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
+#define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
-#define MSG_INVALID_NUMBER          @"入力値が数値ではありません。"
+#define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
 #define MSG_SUCCESS                 @"成功"
@@ -37,6 +38,8 @@
 #define PROCESS_NAME_HEALTHCHECK                    @"ヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
 #define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
+#define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
+#define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -90,5 +93,19 @@
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
 #define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
+
+#pragma mark - PIN設定画面
+#define MSG_PROMPT_INPUT_NEW_PIN            @"新しいPINコードを４〜16桁で入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_CONFIRM    @"新しいPINコード（確認用）を４〜16桁で入力してください"
+#define MSG_PROMPT_INPUT_OLD_PIN            @"変更前のPINコードを４〜16桁で入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_NUM        @"新しいPINコードを数字で入力してください"
+#define MSG_PROMPT_INPUT_NEW_PIN_CONF_NUM   @"新しいPINコード（確認用）を数字で入力してください"
+#define MSG_PROMPT_INPUT_OLD_PIN_NUM        @"変更前のPINコードを数字で入力してください"
+#define MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT   @"確認用のPINコードを正しく入力してください"
+
+#pragma mark - PINコードチェック関連メッセージ
+#define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"
+#define MSG_CTAP2_ERR_PIN_BLOCKED           @"使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。"
+#define MSG_CTAP2_ERR_PIN_AUTH_BLOCKED      @"PIN認証が無効となりました。認証器をUSBポートから取り外してください。"
 
 #endif /* ToolCommonMessage_h */

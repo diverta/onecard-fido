@@ -38,6 +38,12 @@
             case COMMAND_TEST_CTAPHID_INIT:
                 processName = PROCESS_NAME_TEST_CTAPHID_INIT;
                 break;
+            case COMMAND_CLIENT_PIN_SET:
+                processName = PROCESS_NAME_CLIENT_PIN_SET;
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                processName = PROCESS_NAME_CLIENT_PIN_CHANGE;
+                break;
             default:
                 processName = nil;
                 break;
@@ -67,12 +73,36 @@
         return true;
     }
 
-    + (bool) checkIsNumber:(NSTextField *)textField informativeText:(NSString *)informativeText{
+    + (bool) checkIsNumeric:(NSTextField *)textField informativeText:(NSString *)informativeText{
         // 入力値が数字だけで構成されていない場合はfalseを戻す
         NSString *string = [textField stringValue];
         NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:string];
         if ([[NSCharacterSet decimalDigitCharacterSet] isSupersetOfSet:characterSet] == false) {
-            [ToolPopupWindow warning:MSG_INVALID_NUMBER informativeText:informativeText];
+            [ToolPopupWindow warning:MSG_NOT_NUMERIC informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) compareEntry:(NSTextField *)destField srcField:(NSTextField *)srcField
+          informativeText:(NSString *)informativeText {
+        // 入力項目が等しくない場合はfalseを戻す
+        if ([[destField stringValue] isEqualToString:[srcField stringValue]] == false) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD informativeText:informativeText];
+            [destField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) checkEntrySize:(NSTextField *)textField
+                    minSize:(size_t)minSize maxSize:(size_t)maxSize
+            informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        size_t size = [[textField stringValue] length];
+        if (size < minSize || size > maxSize) {
+            [ToolPopupWindow warning:MSG_INVALID_FIELD_SIZE informativeText:informativeText];
             [textField becomeFirstResponder];
             return false;
         }

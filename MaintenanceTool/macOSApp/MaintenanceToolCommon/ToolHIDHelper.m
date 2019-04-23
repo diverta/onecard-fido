@@ -79,6 +79,7 @@
     - (void)HIDManagerDidReceiveMessage:(uint8_t *)message length:(long)length {
         static uint16_t remaining;
         uint16_t        datalen;
+        static uint8_t  receivedCmd;
         
         NSData *reportData = [[NSData alloc] initWithBytes:message length:length];
         NSLog(@"ToolHIDHelper receive: reportLength(%ld) report(%@)", length, reportData);
@@ -96,6 +97,8 @@
             datalen = (remaining < HID_INIT_PAYLOAD_SIZE) ? remaining : HID_INIT_PAYLOAD_SIZE;
             [[self hidResponse]
              appendData:[reportData subdataWithRange:NSMakeRange(HID_INIT_HEADER_SIZE, datalen)]];
+            // コマンドを退避
+            receivedCmd = cmd;
             
         } else {
             // CONTフレームから、６バイト目以降のデータを連結（最大59バイト）
@@ -107,10 +110,10 @@
         remaining -= datalen;
         if (remaining == 0) {
             NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
-                  cid, cmd,
+                  cid, receivedCmd,
                   (unsigned long)[[self hidResponse] length],
                   [self hidResponse]);
-            [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:cmd];
+            [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
         }
     }
 
