@@ -21,7 +21,7 @@ Windows 10（32bit／64bit）
 ## 手順書
 
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
-FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
+FIDO認証器管理ツールをWindows環境にインストールする手順を掲載しています。
 
 - <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
 FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
