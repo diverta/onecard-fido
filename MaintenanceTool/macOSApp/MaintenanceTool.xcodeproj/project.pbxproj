@@ -22,6 +22,9 @@
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A84EFA22254440500DF449D /* SetPinParamWindow.xib */; };
 		7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A84EFA522544F7000DF449D /* SetPinParamWindow.m */; };
+		7A850B8D227011F400F7BCD8 /* PinCodeParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A850B8A227011F300F7BCD8 /* PinCodeParamWindow.m */; };
+		7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A850B8C227011F400F7BCD8 /* PinCodeParamWindow.xib */; };
+		7A850B91227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A850B90227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m */; };
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolCommand.m */; };
 		7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLECentral.m */; };
@@ -66,6 +69,11 @@
 		7A84EFA22254440500DF449D /* SetPinParamWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetPinParamWindow.xib; sourceTree = "<group>"; };
 		7A84EFA422544F7000DF449D /* SetPinParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPinParamWindow.h; sourceTree = "<group>"; };
 		7A84EFA522544F7000DF449D /* SetPinParamWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetPinParamWindow.m; sourceTree = "<group>"; };
+		7A850B8A227011F300F7BCD8 /* PinCodeParamWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinCodeParamWindow.m; sourceTree = "<group>"; };
+		7A850B8B227011F300F7BCD8 /* PinCodeParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PinCodeParamWindow.h; sourceTree = "<group>"; };
+		7A850B8C227011F400F7BCD8 /* PinCodeParamWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinCodeParamWindow.xib; sourceTree = "<group>"; };
+		7A850B8F227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCTAP2HealthCheckCommand.h; sourceTree = "<group>"; };
+		7A850B90227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCTAP2HealthCheckCommand.m; sourceTree = "<group>"; };
 		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommand.m; sourceTree = "<group>"; };
@@ -116,6 +124,7 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7A850B89227011B900F7BCD8 /* CTAP2HealthCheck */,
 				7A30CAD122533E050071B6EF /* ClientPIN */,
 				7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */,
 				64ED9A7F1647439300F39EAE /* MaintenanceTool */,
@@ -201,6 +210,18 @@
 			path = ClientPIN;
 			sourceTree = "<group>";
 		};
+		7A850B89227011B900F7BCD8 /* CTAP2HealthCheck */ = {
+			isa = PBXGroup;
+			children = (
+				7A850B8F227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.h */,
+				7A850B90227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m */,
+				7A850B8B227011F300F7BCD8 /* PinCodeParamWindow.h */,
+				7A850B8A227011F300F7BCD8 /* PinCodeParamWindow.m */,
+				7A850B8C227011F400F7BCD8 /* PinCodeParamWindow.xib */,
+			);
+			path = CTAP2HealthCheck;
+			sourceTree = "<group>";
+		};
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +297,7 @@
 			files = (
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
+				7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */,
 				7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
@@ -297,6 +319,7 @@
 				7A92740C2105AB960062FA89 /* ToolCommand.m in Sources */,
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7A98E265226858C50007F154 /* CBOREncoder.c in Sources */,
+				7A850B91227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
@@ -307,6 +330,7 @@
 				7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */,
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
+				7A850B8D227011F400F7BCD8 /* PinCodeParamWindow.m in Sources */,
 				7A92740D2105AB960062FA89 /* ToolBLECentral.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

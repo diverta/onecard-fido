@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="PinCodeParamWindow">
+            <connections>
+                <outlet property="buttonCancel" destination="kik-fx-a3Y" id="Rk3-wk-SHm"/>
+                <outlet property="buttonChangePin" destination="jhK-Yn-uey" id="xMb-ID-pfN"/>
+                <outlet property="buttonOK" destination="jhK-Yn-uey" id="XeU-za-slG"/>
+                <outlet property="fieldPin" destination="yIg-S9-fRB" id="gWU-cm-i5X"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="448" height="120"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="448" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aAi-OX-HpX" userLabel="Title">
+                        <rect key="frame" x="18" y="94" width="412" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="LKL-9P-GXy"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="PINコード入力" id="163-rf-hqd">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jhK-Yn-uey" userLabel="Button OK">
+                        <rect key="frame" x="134" y="13" width="82" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="KN9-ci-Unp"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yPS-qA-IZ7">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonOKDidPress:" target="-2" id="0nI-2y-TWj"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kik-fx-a3Y">
+                        <rect key="frame" x="233" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DhK-fm-Dfy">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonCancelDidPress:" target="-2" id="dOa-rL-gBq"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PPE-ty-oX4">
+                        <rect key="frame" x="18" y="68" width="117" height="13"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="認証器のPINコード" id="AML-DE-YIv">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-S9-fRB">
+                        <rect key="frame" x="149" y="64" width="279" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="279" id="inV-91-QK8"/>
+                        </constraints>
+                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="7yi-7W-4Mn">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </secureTextFieldCell>
+                    </secureTextField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="jhK-Yn-uey" firstAttribute="top" secondItem="yIg-S9-fRB" secondAttribute="bottom" constant="23" id="1lf-PE-NBe"/>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="9" id="2ot-My-TQh"/>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="E50-0T-7tM"/>
+                    <constraint firstItem="yIg-S9-fRB" firstAttribute="trailing" secondItem="aAi-OX-HpX" secondAttribute="trailing" id="NkI-8q-5dZ"/>
+                    <constraint firstItem="kik-fx-a3Y" firstAttribute="leading" secondItem="jhK-Yn-uey" secondAttribute="trailing" constant="29" id="Rug-RJ-ySW"/>
+                    <constraint firstAttribute="trailing" secondItem="aAi-OX-HpX" secondAttribute="trailing" constant="20" symbolic="YES" id="TPN-qA-ZE6"/>
+                    <constraint firstItem="PPE-ty-oX4" firstAttribute="leading" secondItem="aAi-OX-HpX" secondAttribute="leading" id="fml-aC-aUn"/>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="centerX" secondItem="jhK-Yn-uey" secondAttribute="centerX" constant="49" id="hTx-vo-Ozb"/>
+                    <constraint firstItem="PPE-ty-oX4" firstAttribute="baseline" secondItem="yIg-S9-fRB" secondAttribute="baseline" id="kLM-27-fuP"/>
+                    <constraint firstItem="yIg-S9-fRB" firstAttribute="leading" secondItem="PPE-ty-oX4" secondAttribute="trailing" constant="16" id="ndl-Sc-Fem"/>
+                    <constraint firstItem="jhK-Yn-uey" firstAttribute="top" secondItem="kik-fx-a3Y" secondAttribute="top" id="sxs-TX-N7k"/>
+                    <constraint firstAttribute="bottom" secondItem="jhK-Yn-uey" secondAttribute="bottom" constant="20" symbolic="YES" id="vgi-Zl-gHO"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="116" y="86"/>
+        </window>
+    </objects>
+</document>

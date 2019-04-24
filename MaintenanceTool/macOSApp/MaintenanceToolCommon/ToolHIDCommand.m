@@ -11,6 +11,7 @@
 #import "ToolHIDHelper.h"
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
+#import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 
@@ -25,6 +26,8 @@
     @property (nonatomic) ToolHIDHelper        *toolHIDHelper;
     @property (nonatomic) ToolInstallCommand   *toolInstallCommand;
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
+    @property (nonatomic) ToolCTAP2HealthCheckCommand
+                                               *toolCTAP2HealthCheckCommand;
 
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
@@ -50,6 +53,7 @@
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
         [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
+        [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
         return self;
     }
 
@@ -375,6 +379,19 @@
     }
 
     - (void)setPinParamWindowDidClose {
+        // AppDelegateに制御を戻す
+        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
+#pragma mark - Interface for PinCodeParamWindow
+
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログをモーダルで表示
+        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
+                                            parentWindow:parentWindow toolCommand:self];
+    }
+
+    - (void)pinCodeParamWindowDidClose {
         // AppDelegateに制御を戻す
         [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
     }
