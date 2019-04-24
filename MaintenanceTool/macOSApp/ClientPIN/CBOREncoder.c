@@ -281,3 +281,86 @@ uint8_t ctap2_cbor_encode_client_pin_set_or_change(
     // リクエストCBORを生成
     return generate_set_pin_cbor(change_pin);
 }
+
+static uint8_t generate_get_pin_token_cbor(void) {
+    // Mapに格納する要素数
+    size_t map_elements_num;
+    // 作業領域初期化
+    memset(requestBytes, 0x00, sizeof(requestBytes));
+    requestBytesLength = 0;
+    // encoded_buffの１バイト目にCBORコマンドを設定
+    requestBytes[0] = CTAP2_CMD_CLIENT_PIN;
+    // エンコード結果を格納する領域
+    uint8_t *encoded_buff = (uint8_t *)requestBytes + 1;
+    size_t encoded_buff_size = sizeof(requestBytes) - 1;
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);
+    // Mapに格納する要素数の設定
+    map_elements_num = 4;
+    // Map初期化
+    CborEncoder map;
+    CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinProtocol(0x01): 0x01
+    ret = cbor_encode_int(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_uint(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // subCommand(0x02)
+    ret = cbor_encode_int(&map, 0x02);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_uint(&map, CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // keyAgreement(0x03)
+    ret = cbor_encode_int(&map, 0x03);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = add_encoded_cosekey_to_map(&map);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    // pinHashEnc(0x06) 16 bytes
+    ret = cbor_encode_int(&map, 0x06);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_byte_string(&map, pin_hash_enc(), 16);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // Mapクローズ
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // CBORバッファの長さを設定
+    encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    requestBytesLength = encoded_buff_size + 1;
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_encode_client_pin_token_get(
+    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *cur_pin) {
+    // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
+    if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinHashEncを生成
+    if (generate_pin_hash_enc(cur_pin) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // リクエストCBORを生成
+    return generate_get_pin_token_cbor();
+}

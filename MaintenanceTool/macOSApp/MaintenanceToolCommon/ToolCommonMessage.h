@@ -110,5 +110,6 @@
 #define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"
 #define MSG_CTAP2_ERR_PIN_BLOCKED           @"使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。"
 #define MSG_CTAP2_ERR_PIN_AUTH_BLOCKED      @"PIN認証が無効となりました。認証器をUSBポートから取り外してください。"
+#define MSG_CTAP2_ERR_PIN_NOT_SET           @"PINコードが認証器に設定されていません。PINコードを新規設定してください。"
 
 #endif /* ToolCommonMessage_h */

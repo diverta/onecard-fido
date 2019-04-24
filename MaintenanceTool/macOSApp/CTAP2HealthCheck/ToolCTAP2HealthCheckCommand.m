@@ -9,6 +9,10 @@
 #import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "PinCodeParamWindow.h"
+#import "FIDODefines.h"
+#import "CBORDecoder.h"
+#import "CBOREncoder.h"
+#import "debug_log.h"
 
 @interface ToolCTAP2HealthCheckCommand ()
 
@@ -29,6 +33,29 @@
     }
 
 #pragma mark - Command functions
+
+    - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse {
+        // GetKeyAgreementレスポンスから公開鍵を抽出
+        uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
+        size_t   keyAgreementSize = [keyAgreementResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        // getPinTokenリクエストを生成して戻す
+        char *pin_cur = (char *)[[self pinCur] UTF8String];
+        status_code = ctap2_cbor_encode_client_pin_token_get(
+                            ctap2_cbor_decode_agreement_pubkey_X(),
+                            ctap2_cbor_decode_agreement_pubkey_Y(),
+                            pin_cur);
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            return nil;
+        }
+    }
 
 #pragma mark - Communication with dialog
 
@@ -55,8 +82,8 @@
             [[self toolHIDCommand] pinCodeParamWindowDidClose];
             return;
         }
-        // CTAP2ヘルスチェックを実行（コードは仮の仕様）
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
+        // CTAP2ヘルスチェックを実行
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
 @end

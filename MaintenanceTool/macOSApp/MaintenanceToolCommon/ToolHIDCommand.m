@@ -153,6 +153,8 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
                 [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
                 [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
@@ -243,6 +245,11 @@
 
     - (void)doResponseCommandGetKeyAgreement:(NSData *)message CID:(NSData *)cid {
         switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                // PINトークン取得処理を続行
+                [self doClientPinTokenGet:message CID:cid];
+                break;
             default:
                 // PIN設定処理を続行
                 [self doClientPinSetOrChange:message CID:cid];
@@ -291,6 +298,21 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
+    - (void)doClientPinTokenGet:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
+        // メッセージを編集し、getPinTokenサブコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                                generateClientPinTokenGetRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
     - (void)hidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
@@ -307,6 +329,8 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 [self doClientPin];
                 break;
             default:
@@ -363,6 +387,9 @@
                 break;
             case CTAP2_ERR_PIN_AUTH_BLOCKED:
                 [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_NOT_SET:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
                 break;
             default:
                 break;
