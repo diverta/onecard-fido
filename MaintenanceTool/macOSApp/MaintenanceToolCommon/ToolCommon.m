@@ -44,6 +44,10 @@
             case COMMAND_CLIENT_PIN_CHANGE:
                 processName = PROCESS_NAME_CLIENT_PIN_CHANGE;
                 break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                processName = PROCESS_NAME_CTAP2_HEALTHCHECK;
+                break;
             default:
                 processName = nil;
                 break;
