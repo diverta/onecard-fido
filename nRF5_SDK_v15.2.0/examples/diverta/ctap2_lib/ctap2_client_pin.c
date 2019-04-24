@@ -408,6 +408,8 @@ bool check_pin_code_hash(char *command_name)
     // Flash ROMに保管されているPINコードを比較し、
     // 一致していれば後続の処理を行う
     if (memcmp(pin_code, ctap2_client_pin_store_pin_code_hash(), pin_code_size) == 0) {
+        // PINミスマッチ連続回数をゼロクリア
+        pin_mismatch_count = 0;
         NRF_LOG_DEBUG("%s: PIN code hash matching test OK", command_name);
         check_pin_status_code = CTAP1_ERR_SUCCESS;
         return true;
@@ -624,6 +626,9 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("setPIN: PIN hash store success");
                 hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+                // PINが新規設定されたので、
+                // PINミスマッチ連続回数をゼロクリア
+                pin_mismatch_count = 0;
             }
             break;
         case subcmd_ChangePin:
