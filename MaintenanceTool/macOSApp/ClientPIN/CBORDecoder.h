@@ -38,4 +38,7 @@ uint8_t  ctap2_cbor_decode_get_agreement_key(uint8_t *cbor_data_buffer, size_t c
 uint8_t *ctap2_cbor_decode_agreement_pubkey_X(void);
 uint8_t *ctap2_cbor_decode_agreement_pubkey_Y(void);
 
+uint8_t  ctap2_cbor_decode_pin_token(uint8_t *cbor_data_buffer, size_t cbor_data_length);
+uint8_t *ctap2_cbor_decrypted_pin_token(void);
+
 #endif /* CBORDecoder_h */

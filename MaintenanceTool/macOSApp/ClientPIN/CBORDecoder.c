@@ -6,8 +6,17 @@
 //
 #include "CBORDecoder.h"
 #include "FIDODefines.h"
+#include "fido_crypto.h"
 
+// 公開鍵格納領域
 static CTAP_COSE_KEY cose_key;
+
+// PINトークン格納領域
+#define PIN_TOKEN_SIZE 16
+static uint8_t decrypted_pin_token[PIN_TOKEN_SIZE];
+
+// 暗号化されたPINトークンの格納領域
+static uint8_t encrypted_pin_token[PIN_TOKEN_SIZE];
 
 static uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
@@ -203,4 +212,89 @@ uint8_t *ctap2_cbor_decode_agreement_pubkey_X(void) {
 
 uint8_t *ctap2_cbor_decode_agreement_pubkey_Y(void) {
     return cose_key.key.y;
+}
+
+uint8_t ctap2_cbor_decode_encrypted_pin_token(uint8_t *cbor_data_buffer, size_t cbor_data_length) {
+    CborParser  parser;
+    CborValue   it;
+    CborValue   map;
+    size_t      map_length;
+    CborType    type;
+    CborError   ret;
+    uint8_t     i;
+    int         key;
+    
+    // CBOR parser初期化
+    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+    
+    type = cbor_value_get_type(&it);
+    if (type != CborMapType) {
+        return CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
+    }
+    
+    ret = cbor_value_enter_container(&it, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+    
+    ret = cbor_value_get_map_length(&it, &map_length);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+    
+    for (i = 0; i < map_length; i++) {
+        type = cbor_value_get_type(&map);
+        if (type != CborIntegerType) {
+            return CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
+        }
+        ret = cbor_value_get_int_checked(&map, &key);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+        
+        switch(key) {
+            case 2:
+                // pinToken (Byte Array)
+                ret = parse_fixed_byte_string(&map, encrypted_pin_token, PIN_TOKEN_SIZE);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                break;
+            default:
+                break;
+        }
+        
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+    }
+    
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_decode_pin_token(uint8_t *cbor_data_buffer, size_t cbor_data_length) {
+    // 暗号化されたPINトークンをCBORから抽出
+    uint8_t ret = ctap2_cbor_decode_encrypted_pin_token(cbor_data_buffer, cbor_data_length);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    // PINトークンを復号化
+    ret = decrypto_pin_token(encrypted_pin_token, decrypted_pin_token, PIN_TOKEN_SIZE);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t *ctap2_cbor_decrypted_pin_token(void) {
+    return decrypted_pin_token;
 }

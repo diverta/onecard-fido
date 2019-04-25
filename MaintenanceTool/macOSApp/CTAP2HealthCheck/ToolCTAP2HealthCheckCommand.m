@@ -57,6 +57,23 @@
         }
     }
 
+    - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse {
+        // GetPinTokenレスポンスからPINトークンを抽出
+        uint8_t *pinTokenResp = (uint8_t *)[getPinTokenResponse bytes];
+        size_t   pinTokenRespSize = [getPinTokenResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_pin_token(pinTokenResp, pinTokenRespSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return nil;
+        }
+        
+        // for debug
+        NSLog(@"decrypted pinToken %@",
+              [[NSData alloc] initWithBytes:ctap2_cbor_decrypted_pin_token() length:16]);
+
+        // 仮の実装
+        return nil;
+    }
+
 #pragma mark - Communication with dialog
 
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow

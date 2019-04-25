@@ -236,6 +236,9 @@
             case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 [self doResponseCommandGetKeyAgreement:cborBytes CID:cid];
                 break;
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
+                [self doResponseCommandGetPinToken:cborBytes CID:cid];
+                break;
             default:
                 // 画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
@@ -305,6 +308,33 @@
         // メッセージを編集し、getPinTokenサブコマンドを実行
         NSData *request = [[self toolCTAP2HealthCheckCommand]
                                 generateClientPinTokenGetRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandGetPinToken:(NSData *)message CID:(NSData *)cid {
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // ユーザー登録テスト処理を続行
+                [self doTestMakeCredential:message CID:cid];
+                break;
+            default:
+                // PIN設定処理を続行
+                [self doClientPinSetOrChange:message CID:cid];
+                break;
+        }
+    }
+
+    - (void)doTestMakeCredential:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
+        // メッセージを編集し、getPinTokenサブコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                           generateMakeCredentialRequestWith:message];
         if (request == nil) {
             [self doResponseToAppDelegate:false message:nil];
             return;

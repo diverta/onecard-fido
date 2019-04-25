@@ -15,6 +15,7 @@
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
                            toolCommand:(ToolHIDCommand *)toolCommand;
     - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse;
+    - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse;
 
     @property (nonatomic) NSString *pinCur;
 

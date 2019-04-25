@@ -222,3 +222,36 @@ fail:
     
     return ok;
 }
+
+uint8_t decrypto_pin_token(
+    uint8_t *encrypted_pin_token, uint8_t *decrypted_pin_token, size_t pin_token_size) {
+    fido_blob_t *key;
+    fido_blob_t *pe;
+    fido_blob_t *pd;
+    uint8_t      ok = CTAP1_ERR_OTHER;
+    
+    // 作業領域の確保
+    memset(decrypted_pin_token, 0, pin_token_size);
+    if ((key = fido_blob_new()) == NULL ||
+        (pe = fido_blob_new()) == NULL ||
+        (pd = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // 共通鍵を使用し、PINコードを復号化
+    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(pe, encrypted_pin_token, pin_token_size);
+    if (aes256_cbc_dec(key, pe, pd) < 0) {
+        goto fail;
+    }
+    // 配列に退避
+    memcpy(decrypted_pin_token, pd->ptr, pin_token_size);
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&key);
+    fido_blob_free(&pe);
+    fido_blob_free(&pd);
+
+    return ok;
+}

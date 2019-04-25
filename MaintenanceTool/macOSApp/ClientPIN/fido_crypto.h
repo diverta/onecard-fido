@@ -20,4 +20,7 @@ uint8_t  generate_pin_hash_enc(const char *cur_pin);
 uint8_t  generate_new_pin_enc(const char *new_pin);
 uint8_t  generate_pin_auth(bool change_pin);
 
+uint8_t  decrypto_pin_token(
+            uint8_t *encrypted_pin_token, uint8_t *decrypted_pin_token, size_t pin_token_size);
+
 #endif /* fido_crypto_h */
