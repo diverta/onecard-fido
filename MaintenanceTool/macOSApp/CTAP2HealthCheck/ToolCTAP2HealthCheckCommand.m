@@ -80,8 +80,17 @@
     }
 
     - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse {
-        // 仮の実装
-        NSLog(@"parseMakeCredentialResponse: Now constructing...");
+        // MakeCredentialレスポンスからクレデンシャルIDを抽出
+        uint8_t *response = (uint8_t *)[makeCredentialResponse bytes];
+        size_t   responseSize = [makeCredentialResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_make_credential(response, responseSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            return false;
+        }
+        // for debug
+        // NSLog(@"parseMakeCredentialResponseWith: credential id %@",
+        //       [[NSData alloc] initWithBytes:ctap2_cbor_decode_credential_id()
+        //                              length:ctap2_cbor_decode_credential_id_size()]);
         return true;
     }
 
