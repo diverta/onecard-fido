@@ -9,7 +9,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PinCodeParamWindow">
             <connections>
                 <outlet property="buttonCancel" destination="kik-fx-a3Y" id="Rk3-wk-SHm"/>
-                <outlet property="buttonChangePin" destination="jhK-Yn-uey" id="xMb-ID-pfN"/>
                 <outlet property="buttonOK" destination="jhK-Yn-uey" id="XeU-za-slG"/>
                 <outlet property="fieldPin" destination="yIg-S9-fRB" id="gWU-cm-i5X"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
