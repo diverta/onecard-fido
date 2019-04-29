@@ -223,6 +223,9 @@
             case CTAP2_CMD_MAKE_CREDENTIAL:
                 [self doResponseCommandMakeCredential:message CID:cid CMD:cmd];
                 break;
+            case CTAP2_CMD_GET_ASSERTION:
+                [self doResponseCommandGetAssertion:message CID:cid CMD:cmd];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 [self doResponseToAppDelegate:false message:nil];
@@ -325,6 +328,10 @@
                 // ユーザー登録テスト処理を続行
                 [self doTestMakeCredential:message CID:cid];
                 break;
+            case COMMAND_TEST_GET_ASSERTION:
+                // ログインテスト処理を続行
+                [self doTestGetAssertion:message CID:cid];
+                break;
             default:
                 // PIN設定処理を続行
                 [self doClientPinSetOrChange:message CID:cid];
@@ -350,15 +357,35 @@
                                         CID:(NSData *)cid CMD:(uint8_t)cmd {
         // レスポンスされたCBORを抽出
         NSData *cborBytes = [self extractCBORBytesFrom:message];
-        // ログインテスト処理を続行
-        [self doTestGetAssertion:cborBytes CID:cid];
+        // MakeCredentialレスポンスを解析して保持
+        if ([[self toolCTAP2HealthCheckCommand]
+             parseMakeCredentialResponseWith:cborBytes] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを実行
+        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
     }
 
     - (void)doTestGetAssertion:(NSData *)message CID:(NSData *)cid {
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
-        // 仮の仕様：画面に制御を戻す
+        // メッセージを編集し、GetAssertionコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                           generateGetAssertionRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandGetAssertion:(NSData *)message
+                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ヘルスチェックが成功したので、画面に制御を戻す
         [self doResponseToAppDelegate:true message:nil];
+        return;
     }
 
     - (void)hidHelperWillProcess:(Command)command {

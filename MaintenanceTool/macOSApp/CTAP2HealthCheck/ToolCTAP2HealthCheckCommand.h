@@ -16,6 +16,8 @@
                            toolCommand:(ToolHIDCommand *)toolCommand;
     - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse;
     - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse;
+    - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse;
+    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse;
 
     @property (nonatomic) NSString *pinCur;
 
