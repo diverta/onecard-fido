@@ -445,7 +445,7 @@ static uint8_t encode_user(CborEncoder *encoder) {
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t encode_options(CborEncoder *encoder) {
+static uint8_t encode_options(CborEncoder *encoder, bool up) {
     // Mapに格納する要素数 = 3
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(encoder, &map, 3);
@@ -473,7 +473,7 @@ static uint8_t encode_options(CborEncoder *encoder) {
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
-        ret = cbor_encode_boolean(&map, false);
+        ret = cbor_encode_boolean(&map, up);
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }
@@ -549,7 +549,7 @@ static uint8_t generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    // pinHashEnc(0x01) 32 bytes
+    // clientDataHash(0x01) 32 bytes
     ret = cbor_encode_int(&map, 0x01);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
@@ -590,7 +590,7 @@ static uint8_t generate_make_credential_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = encode_options(&map);
+    ret = encode_options(&map, false);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -635,4 +635,149 @@ uint8_t ctap2_cbor_encode_make_credential(
     }
     // リクエストCBORを生成
     return generate_make_credential_cbor();
+}
+
+static uint8_t encode_allow_list(
+    CborEncoder *encoder, uint8_t *credential_id, size_t credential_id_size) {
+    // 配列要素数 = 1;
+    CborEncoder cborarray;
+    CborError ret = cbor_encoder_create_array(encoder, &cborarray, 1);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // Mapに格納する要素数 = 2
+    CborEncoder map;
+    ret = cbor_encoder_create_map(&cborarray, &map, 2);
+    if (ret == CborNoError) {
+        // type
+        ret = cbor_encode_text_stringz(&map, "type");
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+        ret = cbor_encode_text_stringz(&map, public_key_type);
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+        // id
+        ret = cbor_encode_text_stringz(&map, "id");
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+        ret = cbor_encode_byte_string(&map, credential_id, credential_id_size);
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+    }
+    ret = cbor_encoder_close_container(&cborarray, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    // 配列をクローズ
+    ret = cbor_encoder_close_container(encoder, &cborarray);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    return CTAP1_ERR_SUCCESS;
+}
+
+static uint8_t generate_get_assertion_cbor(uint8_t *credential_id, size_t credential_id_size) {
+    // Mapに格納する要素数
+    size_t map_elements_num;
+    // 作業領域初期化
+    memset(requestBytes, 0x00, sizeof(requestBytes));
+    requestBytesLength = 0;
+    // encoded_buffの１バイト目にCBORコマンドを設定
+    requestBytes[0] = CTAP2_CMD_GET_ASSERTION;
+    // エンコード結果を格納する領域
+    uint8_t *encoded_buff = (uint8_t *)requestBytes + 1;
+    size_t encoded_buff_size = sizeof(requestBytes) - 1;
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);
+    // Mapに格納する要素数の設定
+    map_elements_num = 6;
+    // Map初期化
+    CborEncoder map;
+    CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // rpId(0x01) String
+    ret = cbor_encode_int(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_text_stringz(&map, rpid);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // clientDataHash(0x02) 32 bytes
+    ret = cbor_encode_int(&map, 0x02);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_byte_string(&map, client_data_hash(), 32);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // allowList(0x03) Sequence of PublicKeyCredentialDescriptors
+    ret = cbor_encode_int(&map, 0x03);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = encode_allow_list(&map, credential_id, credential_id_size);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // options(0x05) Map of authenticator options
+    ret = cbor_encode_int(&map, 0x05);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = encode_options(&map, true);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinAuth(0x06) 16bytes
+    ret = cbor_encode_int(&map, 0x06);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_byte_string(&map, pin_auth(), 16);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinProtocol(0x07): 0x01
+    ret = cbor_encode_int(&map, 0x07);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_uint(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // Mapクローズ
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // CBORバッファの長さを設定
+    encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    requestBytesLength = encoded_buff_size + 1;
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_encode_get_assertion(
+    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, uint8_t *pin_token,
+    uint8_t *credential_id, size_t credential_id_size) {
+    // clientDataHashを生成
+    if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // pinAuthを生成
+    if (generate_pin_auth_from_client_data(pin_token, client_data_hash()) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // リクエストCBORを生成
+    return generate_get_assertion_cbor(credential_id, credential_id_size);
 }

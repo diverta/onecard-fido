@@ -72,14 +72,16 @@
         // タイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                   withObject:nil afterDelay:10.0];
-        NSLog(@"ResponseTimeoutMonitor started");
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor started");
     }
 
     - (void)cancelResponseTimeoutMonitor {
         // タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                    withObject:nil];
-        NSLog(@"ResponseTimeoutMonitor canceled");
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor canceled");
     }
 
     - (void)responseTimeoutMonitorDidTimeout {
@@ -377,6 +379,11 @@
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
+        // リクエスト転送の前に、基板上ののMAIN SWを押してもらうように促すメッセージを画面表示
+        [self displayMessage:@"ログインテストを開始します."];
+        [self displayMessage:@"  ユーザー所在確認が必要となりますので、"];
+        [self displayMessage:@"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"];
+        [self displayMessage:@"  MAIN SWを１回押してください."];
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
