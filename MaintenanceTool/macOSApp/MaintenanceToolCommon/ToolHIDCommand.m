@@ -220,6 +220,9 @@
             case CTAP2_CMD_CLIENT_PIN:
                 [self doResponseCommandClientPin:message CID:cid CMD:cmd];
                 break;
+            case CTAP2_CMD_MAKE_CREDENTIAL:
+                [self doResponseCommandMakeCredential:message CID:cid CMD:cmd];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 [self doResponseToAppDelegate:false message:nil];
@@ -332,7 +335,7 @@
     - (void)doTestMakeCredential:(NSData *)message CID:(NSData *)cid {
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
-        // メッセージを編集し、getPinTokenサブコマンドを実行
+        // メッセージを編集し、MakeCredentialコマンドを実行
         NSData *request = [[self toolCTAP2HealthCheckCommand]
                            generateMakeCredentialRequestWith:message];
         if (request == nil) {
@@ -341,6 +344,21 @@
         }
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandMakeCredential:(NSData *)message
+                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // ログインテスト処理を続行
+        [self doTestGetAssertion:cborBytes CID:cid];
+    }
+
+    - (void)doTestGetAssertion:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
+        // 仮の仕様：画面に制御を戻す
+        [self doResponseToAppDelegate:true message:nil];
     }
 
     - (void)hidHelperWillProcess:(Command)command {

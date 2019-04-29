@@ -17,5 +17,7 @@ uint8_t  ctap2_cbor_encode_client_pin_set_or_change(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *new_pin, char *old_pin);
 uint8_t ctap2_cbor_encode_client_pin_token_get(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, char *cur_pin);
+uint8_t ctap2_cbor_encode_make_credential(
+    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, uint8_t *pin_token);
 
 #endif /* CBOREncoder_h */

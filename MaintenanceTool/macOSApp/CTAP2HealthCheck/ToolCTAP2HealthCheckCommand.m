@@ -16,7 +16,7 @@
 
 @interface ToolCTAP2HealthCheckCommand ()
 
-    @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
+    @property (nonatomic) ToolHIDCommand     *toolHIDCommand;
     @property (nonatomic) PinCodeParamWindow *pinCodeParamWindow;
 
 @end
@@ -65,13 +65,18 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return nil;
         }
-        
-        // for debug
-        NSLog(@"decrypted pinToken %@",
-              [[NSData alloc] initWithBytes:ctap2_cbor_decrypted_pin_token() length:16]);
-
-        // 仮の実装
-        return nil;
+        // makeCredentialリクエストを生成して戻す
+        status_code = ctap2_cbor_encode_make_credential(
+                            ctap2_cbor_decode_agreement_pubkey_X(),
+                            ctap2_cbor_decode_agreement_pubkey_Y(),
+                            ctap2_cbor_decrypted_pin_token());
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            return nil;
+        }
     }
 
 #pragma mark - Communication with dialog
