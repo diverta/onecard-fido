@@ -15,7 +15,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug hex dump data
-#define NRF_LOG_HEXDUMP_DEBUG_PACKET true
+#define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 
 // u2f_status（レスポンスバッファ）には、
 // 64バイトまで書込み可能とします
