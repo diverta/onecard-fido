@@ -11,6 +11,7 @@
 #import "ToolHIDHelper.h"
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
+#import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 
@@ -25,6 +26,8 @@
     @property (nonatomic) ToolHIDHelper        *toolHIDHelper;
     @property (nonatomic) ToolInstallCommand   *toolInstallCommand;
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
+    @property (nonatomic) ToolCTAP2HealthCheckCommand
+                                               *toolCTAP2HealthCheckCommand;
 
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
@@ -50,6 +53,7 @@
         [self setToolHIDHelper:[[ToolHIDHelper alloc] initWithDelegate:self]];
         [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
+        [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
         return self;
     }
 
@@ -68,14 +72,16 @@
         // タイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                   withObject:nil afterDelay:10.0];
-        NSLog(@"ResponseTimeoutMonitor started");
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor started");
     }
 
     - (void)cancelResponseTimeoutMonitor {
         // タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                    withObject:nil];
-        NSLog(@"ResponseTimeoutMonitor canceled");
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor canceled");
     }
 
     - (void)responseTimeoutMonitorDidTimeout {
@@ -149,6 +155,8 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
                 [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
                 [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
@@ -214,6 +222,12 @@
             case CTAP2_CMD_CLIENT_PIN:
                 [self doResponseCommandClientPin:message CID:cid CMD:cmd];
                 break;
+            case CTAP2_CMD_MAKE_CREDENTIAL:
+                [self doResponseCommandMakeCredential:message CID:cid CMD:cmd];
+                break;
+            case CTAP2_CMD_GET_ASSERTION:
+                [self doResponseCommandGetAssertion:message CID:cid CMD:cmd];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 [self doResponseToAppDelegate:false message:nil];
@@ -230,6 +244,9 @@
             case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 [self doResponseCommandGetKeyAgreement:cborBytes CID:cid];
                 break;
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
+                [self doResponseCommandGetPinToken:cborBytes CID:cid];
+                break;
             default:
                 // 画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
@@ -239,6 +256,11 @@
 
     - (void)doResponseCommandGetKeyAgreement:(NSData *)message CID:(NSData *)cid {
         switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                // PINトークン取得処理を続行
+                [self doClientPinTokenGet:message CID:cid];
+                break;
             default:
                 // PIN設定処理を続行
                 [self doClientPinSetOrChange:message CID:cid];
@@ -287,6 +309,92 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
+    - (void)doClientPinTokenGet:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
+        // メッセージを編集し、getPinTokenサブコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                                generateClientPinTokenGetRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandGetPinToken:(NSData *)message CID:(NSData *)cid {
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // ユーザー登録テスト処理を続行
+                [self doTestMakeCredential:message CID:cid];
+                break;
+            case COMMAND_TEST_GET_ASSERTION:
+                // ログインテスト処理を続行
+                [self doTestGetAssertion:message CID:cid];
+                break;
+            default:
+                // PIN設定処理を続行
+                [self doClientPinSetOrChange:message CID:cid];
+                break;
+        }
+    }
+
+    - (void)doTestMakeCredential:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
+        // メッセージを編集し、MakeCredentialコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                           generateMakeCredentialRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandMakeCredential:(NSData *)message
+                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // MakeCredentialレスポンスを解析して保持
+        if ([[self toolCTAP2HealthCheckCommand]
+             parseMakeCredentialResponseWith:cborBytes] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを実行
+        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
+    }
+
+    - (void)doTestGetAssertion:(NSData *)message CID:(NSData *)cid {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
+        // メッセージを編集し、GetAssertionコマンドを実行
+        NSData *request = [[self toolCTAP2HealthCheckCommand]
+                           generateGetAssertionRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // リクエスト転送の前に、基板上ののMAIN SWを押してもらうように促すメッセージを画面表示
+        [self displayMessage:@"ログインテストを開始します."];
+        [self displayMessage:@"  ユーザー所在確認が必要となりますので、"];
+        [self displayMessage:@"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"];
+        [self displayMessage:@"  MAIN SWを１回押してください."];
+        // コマンドを実行
+        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doResponseCommandGetAssertion:(NSData *)message
+                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ヘルスチェックが成功したので、画面に制御を戻す
+        [self doResponseToAppDelegate:true message:nil];
+        return;
+    }
+
     - (void)hidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
@@ -303,6 +411,8 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
                 [self doClientPin];
                 break;
             default:
@@ -360,6 +470,9 @@
             case CTAP2_ERR_PIN_AUTH_BLOCKED:
                 [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
                 break;
+            case CTAP2_ERR_PIN_NOT_SET:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+                break;
             default:
                 break;
         }
@@ -375,6 +488,19 @@
     }
 
     - (void)setPinParamWindowDidClose {
+        // AppDelegateに制御を戻す
+        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
+#pragma mark - Interface for PinCodeParamWindow
+
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログをモーダルで表示
+        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
+                                            parentWindow:parentWindow toolCommand:self];
+    }
+
+    - (void)pinCodeParamWindowDidClose {
         // AppDelegateに制御を戻す
         [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
     }

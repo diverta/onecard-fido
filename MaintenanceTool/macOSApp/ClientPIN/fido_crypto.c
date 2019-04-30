@@ -35,6 +35,10 @@ static size_t  newPinEncSize;
 //   changePIN: LEFT(HMAC-SHA-256(sharedSecret, newPinEnc || pinHashEnc), 16)
 static uint8_t pinAuth[16];
 
+// clientDataHash: Hash of the serialized client data
+//   SHA-256(clientData)
+static uint8_t clientDataHash[32];
+
 uint8_t *pin_hash_enc(void) {
     return pinHashEnc;
 }
@@ -49,6 +53,10 @@ size_t new_pin_enc_size(void) {
 
 uint8_t *pin_auth(void) {
     return pinAuth;
+}
+
+uint8_t *client_data_hash(void) {
+    return clientDataHash;
 }
 
 static uint8_t sha256(fido_blob_t *data, fido_blob_t *digest) {
@@ -207,6 +215,116 @@ uint8_t generate_pin_auth(bool change_pin) {
             log_debug("%s: HMAC_Update(pinHashEnc)", __func__);
             goto fail;
         }
+    }
+    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: HMAC_Final", __func__);
+        goto fail;
+    }
+    // 配列に退避
+    memcpy(pinAuth, dgst, sizeof(pinAuth));
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&key);
+    
+    return ok;
+}
+
+uint8_t decrypto_pin_token(
+    uint8_t *encrypted_pin_token, uint8_t *decrypted_pin_token, size_t pin_token_size) {
+    fido_blob_t *key;
+    fido_blob_t *pe;
+    fido_blob_t *pd;
+    uint8_t      ok = CTAP1_ERR_OTHER;
+    
+    // 作業領域の確保
+    memset(decrypted_pin_token, 0, pin_token_size);
+    if ((key = fido_blob_new()) == NULL ||
+        (pe = fido_blob_new()) == NULL ||
+        (pd = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // 共通鍵を使用し、PINコードを復号化
+    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    fido_blob_set(pe, encrypted_pin_token, pin_token_size);
+    if (aes256_cbc_dec(key, pe, pd) < 0) {
+        goto fail;
+    }
+    // 配列に退避
+    memcpy(decrypted_pin_token, pd->ptr, pin_token_size);
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&key);
+    fido_blob_free(&pe);
+    fido_blob_free(&pd);
+
+    return ok;
+}
+
+uint8_t generate_client_data_hash(const char *client_data) {
+    fido_blob_t *cd = NULL;
+    fido_blob_t *cdh = NULL;
+    uint8_t      ok = CTAP1_ERR_OTHER;
+    
+    // 作業領域の確保
+    memset(clientDataHash, 0, sizeof(clientDataHash));
+    if ((cd = fido_blob_new()) == NULL ||
+        (cdh = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // ClientDataハッシュを生成（32バイト）
+    fido_blob_set(cd, (uint8_t *)client_data, strlen(client_data));
+    if (sha256(cd, cdh) != CTAP1_ERR_SUCCESS || cdh->len < 32) {
+        log_debug("%s: SHA256", __func__);
+        goto fail;
+    }
+    // 配列に退避
+    memcpy(clientDataHash, cdh->ptr, cdh->len);
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&cd);
+    fido_blob_free(&cdh);
+    
+    return ok;
+}
+
+uint8_t generate_pin_auth_from_client_data(uint8_t *decrypted_pin_token, uint8_t *client_data_hash) {
+    uint8_t       dgst[SHA256_DIGEST_LENGTH];
+    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
+    const EVP_MD *md = NULL;
+    HMAC_CTX     *ctx = NULL;
+    fido_blob_t  *key;
+    uint8_t       ok = CTAP1_ERR_OTHER;
+    size_t        pin_token_size = 16;
+    size_t        client_data_hash_size = SHA256_DIGEST_LENGTH;
+    
+    // 作業領域の確保
+    memset(pinAuth, 0, sizeof(pinAuth));
+    if ((key = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // 復号化されたPINトークンと、clientDataHashを使用し、pinAuthを生成
+    fido_blob_set(key, decrypted_pin_token, pin_token_size);
+    if ((ctx = HMAC_CTX_new()) == NULL) {
+        log_debug("%s: HMAC_CTX_new", __func__);
+        goto fail;
+    }
+    if ((md = EVP_sha256()) == NULL) {
+        log_debug("%s: EVP_sha256", __func__);
+        goto fail;
+    }
+    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
+        log_debug("%s: HMAC_Init_ex", __func__);
+        goto fail;
+    }
+    if (HMAC_Update(ctx, client_data_hash, client_data_hash_size) == 0) {
+        log_debug("%s: HMAC_Update(clientDataHash)", __func__);
+        goto fail;
     }
     if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
         log_debug("%s: HMAC_Final", __func__);

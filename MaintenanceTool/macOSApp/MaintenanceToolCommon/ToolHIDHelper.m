@@ -82,7 +82,8 @@
         static uint8_t  receivedCmd;
         
         NSData *reportData = [[NSData alloc] initWithBytes:message length:length];
-        NSLog(@"ToolHIDHelper receive: reportLength(%ld) report(%@)", length, reportData);
+        // for debug
+        // NSLog(@"ToolHIDHelper receive: reportLength(%ld) report(%@)", length, reportData);
         
         // CIDは先頭から４バイトを取得
         NSData *cid = [reportData subdataWithRange:NSMakeRange(0, 4)];
@@ -109,10 +110,13 @@
         // パケットをすべて受信したら、データをアプリケーションに引き渡す
         remaining -= datalen;
         if (remaining == 0) {
-            NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
-                  cid, receivedCmd,
-                  (unsigned long)[[self hidResponse] length],
-                  [self hidResponse]);
+            if (receivedCmd != 0xbb) {
+                // キープアライブレスポンス以外であれば、情報をコンソール出力
+                NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
+                      cid, receivedCmd,
+                      (unsigned long)[[self hidResponse] length],
+                      [self hidResponse]);
+            }
             [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
         }
     }
@@ -197,8 +201,9 @@
             CFIndex  reportLength = [frame length];
             IOReturn ret = IOHIDDeviceSetReport([self toolHIDDevice], kIOHIDReportTypeOutput, 0x00,
                                                 reportBytes, reportLength);
-            if (ret == kIOReturnSuccess) {
-                NSLog(@"ToolHIDHelper send: messageLength(%ld) message(%@)",
+            // 送信失敗時は情報をコンソール出力
+            if (ret != kIOReturnSuccess) {
+                NSLog(@"ToolHIDHelper send failed: messageLength(%ld) message(%@)",
                       (long)[frame length], frame);
             }
         }

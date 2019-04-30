@@ -162,6 +162,15 @@
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
+        // PINコード入力画面を開く
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        [self enableButtons:false];
+        [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
