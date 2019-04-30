@@ -97,9 +97,19 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // データ長だけセットしておく
         p_apdu->Lc = p_ble_header->LEN;
     } else {
-        // コマンドがPING以外の場合
-        // APDUヘッダー項目を編集して保持
-        offset += ble_u2f_control_point_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        p_apdu->CLA = control_point_buffer[offset];
+        if (p_apdu->CLA != 0x00) {
+            // CLA部（control pointの先頭から4バイトめ）が
+            // 0x00以外の場合は、CTAP2とみなし、
+            // CLA部およびデータ長だけをセットしておく
+            p_apdu->Lc = p_ble_header->LEN;
+            NRF_LOG_DEBUG("CTAP2 command(0x%02x) CBOR size(%d) ", 
+                p_apdu->CLA, p_apdu->Lc - 1);
+        } else {
+            // コマンドがPING以外で、U2Fの場合
+            // APDUヘッダー項目を編集して保持
+            offset += ble_u2f_control_point_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        }
     }
 
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {

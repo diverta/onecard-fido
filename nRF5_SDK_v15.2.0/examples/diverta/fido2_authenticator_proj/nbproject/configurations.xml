@@ -5,6 +5,8 @@
                    displayName="ble_u2f_lib"
                    projectFiles="true"
                    root="../ble_u2f_lib">
+      <itemPath>../ble_u2f_lib/ble_ctap2_command.c</itemPath>
+      <itemPath>../ble_u2f_lib/ble_ctap2_command.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
@@ -3069,6 +3071,10 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../ble_u2f_lib/ble_ctap2_command.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_u2f_lib/ble_ctap2_command.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"

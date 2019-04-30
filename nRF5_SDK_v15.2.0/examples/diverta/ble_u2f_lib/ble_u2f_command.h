@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+ble_u2f_context_t *get_ble_u2f_context(void);
 void ble_u2f_command_initialize_context(void);
 void ble_u2f_command_finalize_context(void);
 void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write);
