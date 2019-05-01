@@ -183,7 +183,7 @@ bool is_ctap2_command_byte(uint8_t command_byte)
 {
     // CTAP2のコマンドバイトかどうか判定する
     bool ret = false;
-    switch (get_command_byte()) {
+    switch (command_byte) {
         case CTAP2_CMD_GETINFO:
         case CTAP2_CMD_RESET:
             ret = true;
