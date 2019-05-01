@@ -13,6 +13,10 @@
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_util.h"
 
+// for CTAP2 support
+#include "ctap2_common.h"
+#include "ble_ctap2_command.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_command
 #include "nrf_log.h"
@@ -28,6 +32,10 @@ NRF_LOG_MODULE_REGISTER();
 // 後続処理が使用するデータを共有
 static ble_u2f_context_t m_u2f_context;
 
+ble_u2f_context_t *get_ble_u2f_context(void)
+{
+    return &m_u2f_context;
+}
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 {
@@ -117,6 +125,13 @@ static enum COMMAND_TYPE get_command_type(void)
             }
 
             // 受信データをすべて受け取った場合は以下の処理
+            // CTAP2コマンドから先に処理する。
+            if (p_apdu->CLA == CTAP2_CMD_GETINFO) {
+                NRF_LOG_DEBUG("get_command_type: authenticatorGetInfo Request Message received ");
+                return COMMAND_CTAP2_CMD_GETINFO;
+            }
+
+            // 以下はU2Fコマンド
             if (p_apdu->INS == U2F_REGISTER) {
                 NRF_LOG_DEBUG("get_command_type: Registration Request Message received ");
                 current_command = COMMAND_U2F_REGISTER;
@@ -221,6 +236,10 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             
         case COMMAND_PAIRING:
             ble_u2f_send_success_response(&m_u2f_context);
+            break;
+
+        case COMMAND_CTAP2_CMD_GETINFO:
+            ble_ctap2_authenticator_get_info();
             break;
 
         case COMMAND_U2F_REGISTER:
