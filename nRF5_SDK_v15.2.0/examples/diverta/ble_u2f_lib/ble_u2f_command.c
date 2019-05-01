@@ -126,9 +126,8 @@ static enum COMMAND_TYPE get_command_type(void)
 
             // 受信データをすべて受け取った場合は以下の処理
             // CTAP2コマンドから先に処理する。
-            if (p_apdu->CLA == CTAP2_CMD_GETINFO) {
-                NRF_LOG_DEBUG("get_command_type: authenticatorGetInfo Request Message received ");
-                return COMMAND_CTAP2_CMD_GETINFO;
+            if (is_ctap2_command_byte(p_apdu->CLA)) {
+                return COMMAND_CTAP2_COMMAND;
             }
 
             // 以下はU2Fコマンド
@@ -238,8 +237,8 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             ble_u2f_send_success_response(&m_u2f_context);
             break;
 
-        case COMMAND_CTAP2_CMD_GETINFO:
-            ble_ctap2_authenticator_get_info();
+        case COMMAND_CTAP2_COMMAND:
+            ble_ctap2_command_do_process();
             break;
 
         case COMMAND_U2F_REGISTER:
@@ -271,12 +270,15 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         ble_u2f_pairing_reflect_mode_change(&m_u2f_context, p_evt);
         return;
     }
-
+        
     // 共有情報の中に接続情報がない場合は終了
     ble_u2f_t *p_u2f = m_u2f_context.p_u2f;
     if (p_u2f == NULL) {
         return;
     }
+
+    // CTAP2コマンドの処理を実行
+    ble_ctap2_command_on_fs_evt(p_evt);
     
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
@@ -298,4 +300,10 @@ void ble_u2f_command_keepalive_timer_handler(void *p_context)
     // キープアライブ・コマンドを実行する
     ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
     ble_u2f_send_keepalive_response(p_u2f_context);
+}
+
+void ble_u2f_command_on_response_send_completed(void)
+{
+    // CTAP2コマンドの処理を実行
+    ble_ctap2_command_response_sent();
 }

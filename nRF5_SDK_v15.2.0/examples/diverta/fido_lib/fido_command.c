@@ -16,6 +16,7 @@ NRF_LOG_MODULE_REGISTER();
 // for FIDO
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
+#include "ble_ctap2_command.h"
 #include "hid_u2f_command.h"
 #include "hid_ctap2_command.h"
 #include "hid_fido_command.h"
@@ -80,6 +81,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
                 break;
             }
             hid_ctap2_command_on_mainsw_event();
+            ble_ctap2_command_on_mainsw_event();
         }
 		break;
 		
