@@ -299,6 +299,7 @@ bool is_ctap2_command_byte(uint8_t command_byte)
         case CTAP2_CMD_GETINFO:
         case CTAP2_CMD_RESET:
         case CTAP2_CMD_MAKE_CREDENTIAL:
+        case CTAP2_CMD_GET_ASSERTION:
             ret = true;
             break;
         default:
