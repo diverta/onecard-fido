@@ -52,6 +52,7 @@ static void ble_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, response_buffer, response_length);
     ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    NRF_LOG_DEBUG("ble_u2f_status_response_send (%dbytes) status=0x%02x", response_length, ctap2_status);
 }
 
 static void send_ctap2_command_error_response(uint8_t ctap2_status) 
@@ -186,7 +187,7 @@ static void command_authenticator_make_credential(void)
     //   CBORエンコードデータは、受信データの２バイト目以降に格納
     ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     uint8_t *cbor_data_buffer = p_u2f_context->p_apdu->data + 1;
-    uint8_t  cbor_data_length = p_u2f_context->p_apdu->Lc - 1;
+    size_t   cbor_data_length = p_u2f_context->p_apdu->data_length - 1;
     uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
@@ -238,6 +239,7 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
         ble_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+        NRF_LOG_INFO("authenticatorMakeCredential end");
     }
 }
 
@@ -256,6 +258,10 @@ static void resume_response_process(void)
         case CTAP2_CMD_RESET:
             NRF_LOG_INFO("authenticatorReset: completed the test of user presence");
             command_authenticator_reset_resume_process();
+            break;
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            NRF_LOG_INFO("authenticatorMakeCredential: completed the test of user presence");
+            command_make_credential_resume_process();
             break;
         default:
             break;
@@ -342,9 +348,6 @@ void ble_ctap2_command_response_sent(void)
             break;
         case CTAP2_CMD_RESET:
             NRF_LOG_INFO("authenticatorReset end");
-            break;
-        case CTAP2_CMD_MAKE_CREDENTIAL:
-            NRF_LOG_INFO("authenticatorMakeCredential end");
             break;
         default:
             break;
