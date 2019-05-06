@@ -9,6 +9,7 @@
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_make_credential.h"
+#include "ctap2_get_assertion.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_client_pin_sskey.h"
 #include "fido_common.h"
@@ -33,6 +34,10 @@ NRF_LOG_MODULE_REGISTER();
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
+
+// FDS処理中かどうかを保持
+static bool is_fds_processing = false;
+
 //
 // CTAP2レスポンスデータ格納領域
 // （コマンド共通）
@@ -176,12 +181,14 @@ static void command_make_credential_resume_process(void)
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
     }
+    is_fds_processing = true;
 }
 
 static void command_authenticator_make_credential(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
+    is_fds_processing = false;
 
     // CBORエンコードされたリクエストメッセージをデコード
     //   CBORエンコードデータは、受信データの２バイト目以降に格納
@@ -213,7 +220,7 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         NRF_LOG_INFO("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
         return;
     }
 
@@ -223,6 +230,12 @@ static void command_authenticator_make_credential(void)
 
 static void command_make_credential_send_response(fds_evt_t const *const p_evt)
 {
+    if (is_fds_processing == false) {
+        NRF_LOG_DEBUG("command_make_credential_send_response called by other event");
+        return;
+    }
+    is_fds_processing = false;
+    
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
@@ -240,6 +253,120 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
         // レスポンスを生成してWebAuthnクライアントに戻す
         ble_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
         NRF_LOG_INFO("authenticatorMakeCredential end");
+    }
+}
+
+static void command_get_assertion_resume_process(void)
+{
+    // LEDを消灯させる
+    fido_processing_led_off();
+
+    // 本処理を開始
+    NRF_LOG_INFO("authenticatorGetAssertion start");
+
+    // authenticatorGetAssertionレスポンスに必要な項目を生成
+    uint8_t ctap2_status = ctap2_get_assertion_generate_response_items();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    // レスポンスの先頭１バイトはステータスコードであるため、
+    // ２バイトめからCBORレスポンスをセットさせるようにする
+    uint8_t *cbor_data_buffer = response_buffer + 1;
+    size_t   cbor_data_length = sizeof(response_buffer) - 1;
+
+    // authenticatorGetAssertionレスポンスをエンコード
+    ctap2_status = ctap2_get_assertion_encode_response(cbor_data_buffer, &cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+    
+    // レスポンス長を設定（CBORデータ長＋１）
+    response_length = cbor_data_length + 1;
+
+    // トークンカウンターレコードを更新
+    // (fds_record_update/writeまたはfds_gcが実行される)
+    ctap2_status = ctap2_get_assertion_update_token_counter();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+    }
+    is_fds_processing = true;
+}
+
+static void command_authenticator_get_assertion(void)
+{
+    // ユーザー所在確認フラグをクリア
+    is_tup_needed = false;
+    is_fds_processing = false;
+
+    // CBORエンコードされたリクエストメッセージをデコード
+    //   CBORエンコードデータは、受信データの２バイト目以降に格納
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
+    uint8_t *cbor_data_buffer = p_u2f_context->p_apdu->data + 1;
+    size_t   cbor_data_length = p_u2f_context->p_apdu->data_length - 1;
+    uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        NRF_LOG_ERROR("authenticatorGetAssertion: failed to decode CBOR request");
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    // flagsをゼロクリア
+    ctap2_flags_init(0x00);
+
+    // PINの妥当性チェック
+    ctap2_status = ctap2_get_assertion_verify_pin_auth();
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        // NGであれば、エラーレスポンスを生成して戻す
+        send_ctap2_command_error_response(ctap2_status);
+        return;
+    }
+
+    if (ctap2_get_assertion_is_tup_needed()) {
+        // ユーザー所在確認が必要な場合は、ここで終了し
+        // その旨のフラグを設定
+        is_tup_needed = true;
+        // キープアライブ送信を開始
+        NRF_LOG_INFO("authenticatorGetAssertion: waiting to complete the test of user presence");
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
+        return;
+    }
+
+    // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
+    command_get_assertion_resume_process();
+}
+
+static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
+{
+    if (is_fds_processing == false) {
+        NRF_LOG_DEBUG("command_get_assertion_send_response called by other event");
+        return;
+    }
+    is_fds_processing = false;
+    
+    if (p_evt->result != FDS_SUCCESS) {
+        // FDS処理でエラーが発生時は以降の処理を行わない
+        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        NRF_LOG_ERROR("authenticatorGetAssertion abend: FDS EVENT=%d ", p_evt->id);
+        return;
+    }
+
+    if (p_evt->id == FDS_EVT_GC) {
+        // FDSリソース不足解消のためGCが実行された場合は、
+        // GC実行直前の処理を再実行
+        NRF_LOG_WARNING("authenticatorGetAssertion retry: FDS GC done ");
+        ctap2_get_assertion_update_token_counter();
+
+    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        ble_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+        NRF_LOG_INFO("authenticatorGetAssertion end");
     }
 }
 
@@ -262,6 +389,10 @@ static void resume_response_process(void)
         case CTAP2_CMD_MAKE_CREDENTIAL:
             NRF_LOG_INFO("authenticatorMakeCredential: completed the test of user presence");
             command_make_credential_resume_process();
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            NRF_LOG_INFO("authenticatorGetAssertion: completed the test of user presence");
+            command_get_assertion_resume_process();
             break;
         default:
             break;
@@ -320,6 +451,9 @@ void ble_ctap2_command_do_process(void)
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_authenticator_make_credential();
             break;
+        case CTAP2_CMD_GET_ASSERTION:
+            command_authenticator_get_assertion();
+            break;
         default:
             break;
     }
@@ -334,6 +468,9 @@ void ble_ctap2_command_on_fs_evt(fds_evt_t const *const p_evt)
             break;
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_make_credential_send_response(p_evt);
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            command_get_assertion_send_response(p_evt);
             break;
         default:
             break;
