@@ -13,6 +13,7 @@ extern "C" {
 
 void ble_u2f_control_point_initialize(void);
 void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_context_t *p_u2f_context);
+uint8_t ble_u2f_control_point_receive_frame_count(void);
 
 #ifdef __cplusplus
 }

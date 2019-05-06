@@ -22,6 +22,15 @@ static uint16_t control_point_buffer_length;
 static BLE_HEADER_T ble_header_t;
 static FIDO_APDU_T   apdu_t;
 
+// 無通信タイムアウトタイマーが開始後、
+// 受信したリクエストフレーム数を
+// このモジュール内で保持
+static uint8_t received_frame_count;
+
+uint8_t ble_u2f_control_point_receive_frame_count(void)
+{
+    return received_frame_count;
+}
 
 void ble_u2f_control_point_initialize(void)
 {
@@ -222,6 +231,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
             // BLEヘッダーとAPDUを初期化
             memset(&ble_header_t, 0, sizeof(BLE_HEADER_T));
             memset(&apdu_t, 0, sizeof(FIDO_APDU_T));
+            received_frame_count = 0;
 
             // 先頭パケットに対する処理を行う
             u2f_request_receive_leading_packet(
@@ -232,6 +242,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
         // 後続パケットに対する処理を行う
         u2f_request_receive_following_packet(&ble_header_t, &apdu_t);
         ble_header_t.CONT = false;
+            received_frame_count++;
     }
 
     if (apdu_t.data_length > apdu_t.Lc) {

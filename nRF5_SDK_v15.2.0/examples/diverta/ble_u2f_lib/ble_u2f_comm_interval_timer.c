@@ -9,6 +9,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for ble_u2f_control_point_receive_frame_count
+#include "ble_u2f_control_point.h"
+
 #define COMMUNICATION_INTERVAL_MSEC 10000
 
 // 無通信タイマー
@@ -24,6 +27,7 @@ static void communication_interval_timeout_handler(void *p_context)
 
     // 直近のレスポンスから10秒を経過した場合、
     // nRF52から強制的にBLEコネクションを切断
+    NRF_LOG_ERROR("Communication interval timed out: received %d frames", ble_u2f_control_point_receive_frame_count());
     ble_u2f_t *p_u2f = (ble_u2f_t *)p_context;
     sd_ble_gap_disconnect(p_u2f->conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
 }
