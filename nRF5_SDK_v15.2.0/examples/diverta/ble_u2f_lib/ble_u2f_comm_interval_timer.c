@@ -65,6 +65,9 @@ void ble_u2f_comm_interval_timer_stop(ble_u2f_t *p_u2f)
 
 void ble_u2f_comm_interval_timer_start(ble_u2f_t *p_u2f)
 {
+    // 受信フレーム数カウンターをクリア
+    ble_u2f_control_point_receive_frame_count_clear();
+
     // タイマー生成
     if (app_timer_created == false) {
         communication_interval_timer_init(p_u2f);
