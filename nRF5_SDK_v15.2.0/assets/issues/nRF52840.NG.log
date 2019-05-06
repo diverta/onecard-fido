@@ -1,0 +1,54 @@
+<debug> usbd_hid_service: usbd_init() done
+<debug> nrf_ble_lesc: Initialized nrf_crypto.
+<debug> nrf_ble_lesc: Initialized nrf_ble_lesc.
+<debug> nrf_ble_lesc: Generating ECC key pair
+<info> ble_u2f_pairing: Run as non-pairing mode
+<info> fido_ble_peripheral: BLE peripheral initialized
+<debug> usbd_hid_service: usbd_hid_init() done
+<info> app: Diverta FIDO Authenticator application started.
+<debug> ctap2_client_pin_token: PIN token generate success
+<debug> ctap2_client_pin_sskey: Keypair for exchanging key generate success
+<debug> fido_ble_peripheral_timer: USB HID is inactive: starting BLE peripheral
+<info> fido_ble_peripheral: BLE: Fast advertising.
+<debug> fido_ble_peripheral: Advertising started
+<debug> usbd_hid_service: usbd_init() done
+<debug> nrf_ble_lesc: Initialized nrf_crypto.
+<debug> nrf_ble_lesc: Initialized nrf_ble_lesc.
+<debug> nrf_ble_lesc: Generating ECC key pair
+<info> ble_u2f_pairing: Run as non-pairing mode
+<info> fido_ble_peripheral: BLE peripheral initialized
+<debug> usbd_hid_service: usbd_hid_init() done
+<info> app: Diverta FIDO Authenticator application started.
+<debug> ctap2_client_pin_token: PIN token generate success
+<debug> ctap2_client_pin_sskey: Keypair for exchanging key generate success
+<debug> usbd_hid_service: USB power detected
+<debug> usbd_hid_service: USB ready
+<debug> hid_fido_receive: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(8)
+<debug> hid_fido_send: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(17)
+<info> hid_fido_command: CTAPHID_INIT end
+<debug> hid_fido_receive: INIT frame: CID(0x01003301) CMD(0x90) OPTION(0x04) LEN(1)
+<debug> ctap2_cbor_authgetinfo: Encoding success (71 bytes)
+<debug> hid_fido_send: INIT frame: CID(0x01003301) CMD(0x90) LEN(72)
+<debug> hid_fido_send: CONT frame: CID(0x01003301) SEQ(0x00)
+<debug> fido_ble_peripheral_timer: USB HID is active, BLE peripheral is inactive
+<debug> hid_fido_receive: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(8)
+<debug> hid_fido_send: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(17)
+<info> hid_fido_command: CTAPHID_INIT end
+<debug> hid_fido_receive: INIT frame: CID(0x01003302) CMD(0x90) OPTION(0x04) LEN(1)
+<debug> ctap2_cbor_authgetinfo: Encoding success (71 bytes)
+<debug> hid_fido_send: INIT frame: CID(0x01003302) CMD(0x90) LEN(72)
+<debug> hid_fido_send: CONT frame: CID(0x01003302) SEQ(0x00)
+<debug> hid_fido_receive: INIT frame: CID(0x01003302) CMD(0x90) OPTION(0x01) LEN(159)
+<debug> hid_fido_receive: CONT frame: CID(0x01003302) SEQ(0x00)
+<debug> hid_fido_receive: CONT frame: CID(0x01003302) SEQ(0x01)
+<error> hid_ctap2_command: authenticatorMakeCredential: failed to decode CBOR request
+<debug> hid_fido_send: INIT frame: CID(0x01003302) CMD(0x90) STATUS(0x7F)
+<info> hid_ctap2_command: authenticatorMakeCredential end
+<debug> hid_fido_receive: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(8)
+<debug> hid_fido_send: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(17)
+<info> hid_fido_command: CTAPHID_INIT end
+<debug> hid_fido_receive: INIT frame: CID(0x01003303) CMD(0x90) OPTION(0x04) LEN(1)
+<debug> ctap2_cbor_authgetinfo: Encoding success (71 bytes)
+<debug> hid_fido_send: INIT frame: CID(0x01003303) CMD(0x90) LEN(72)
+<debug> hid_fido_send: CONT frame: CID(0x01003303) SEQ(0x00)
+
