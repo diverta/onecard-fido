@@ -178,7 +178,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 // pinAuth（Byte Array）
                 ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
                 if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                    // PINが正しく設定されていない旨のエラーを戻す
+                    return CTAP2_ERR_PIN_NOT_SET;
                 }
                 break;
             case 9:
