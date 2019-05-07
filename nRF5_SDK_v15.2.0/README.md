@@ -1,31 +1,34 @@
-# Diverta FIDO Authenticator
+# nRF52840版 FIDO2.0認証器
 
 ## 概要
-FIDO U2Fの仕様に準拠したUSB HID／BLEサービスです。
+FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケーションです。
 
-- PCにおけるU2F Register／Authenticate実行時：ドングルをUSBポートに挿すと、nRF52840のUSB HIDサービスを経由して処理が行われます。
+- PCにおけるユーザー登録／ログイン実行時[注1]：nRF52840 DongleをUSBポートに挿すと、nRF52840のUSB HIDサービスを経由して処理が行われます。
 
-- AndroidにおけるU2F Authenticate実行時：ドングルに外部電源を供給すると、nRF52840のBLEサービスを経由して処理が行われます。
+- Androidにおけるログイン実行時[注1]：nRF52840 DKの「nRF USB端子」をUSBポートに接続しない状態で使用すると、nRF52840のBLEサービスを経由してログイン処理が行われます。[注2]
 
-FIDO U2Fに関する情報 : https://fidoalliance.org/download/
+[注1] U2Fではユーザー登録＝Register、ログイン＝Authenticate、WebAuthnではユーザー登録＝MakeCredential、ログイン＝GetAssertionと、実行されるコマンドが異なります。<br>
+[注2] 2019/05/07現在では、Chrome Android上ではU2F Authenticateコマンドのみのサポートとなっているようです。
+
+FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 ### ハードウェア
 
-nRF52840 Dongleでの動作を想定しています。
+主として、nRF52840 Dongle＋PCのUSBポートの組み合わせによるWebAuthn操作を想定しています。
 
 ただし、nRF52840 DK（開発用ボード）でも動作させることが可能です。<br>
 この場合は、USB経由のUARTにより、デバッグログを表示させることができます。
 
 ### ファームウェア
 
-「Diverta FIDO Authenticator」で使用するファームウェアは下記の２本になります。<br>
-フォルダー `firmwares` に格納しています。
+「nRF52840版 FIDO2.0認証器」で使用するファームウェアは下記の２本になります。<br>
+フォルダー[`firmwares`](firmwares/README.md) に格納しています。
 
 - s140_nrf52_6.1.0_softdevice.hex - ソフトデバイス
 
 - nrf52840_xxaa.hex - アプリケーション
 
-これらのファームウェアは、Nordic社から提供されているアプリ「nRF Connect」を使い、nRF52840 Dongleにダウンロードするようにします。<br>
+これらのファームウェアは、Nordic社から提供されているアプリ「nRF Connect」を使い、nRF52840 DongleやnRF52840 DKにダウンロードするようにします。<br>
 「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[nRF52840 Dongleプログラミング手順](../Development/nRF52840/NRFCONNECTINST.md)」</b>をご参照願います。<br>
 　
 ## 動作確認手順
