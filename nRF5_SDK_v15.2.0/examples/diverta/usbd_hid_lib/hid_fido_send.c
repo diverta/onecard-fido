@@ -44,13 +44,13 @@ static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
     }
 
     size_t len = get_payload_length(recv_msg);
-    if (len == 1) {
-        // レスポンスがステータスコードのみである場合を想定したログ
-        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) STATUS(0x%02x)",
-            get_CID(cid), cmd, recv_msg->pkt.init.payload[0]);
-    } else {
+    if (cmd == CTAP2_COMMAND_INIT || cmd == CTAP2_COMMAND_PING) {
         NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
             get_CID(cid), cmd, len);
+    } else {
+        // レスポンスの先頭１バイト目＝ステータスコードである場合を想定したログ
+        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d) STATUS(0x%02x)",
+            get_CID(cid), cmd, len, recv_msg->pkt.init.payload[0]);
     }
 }
 
