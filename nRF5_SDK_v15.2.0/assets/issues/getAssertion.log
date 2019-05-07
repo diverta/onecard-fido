@@ -1,0 +1,75 @@
+<debug> hid_fido_receive: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(8)
+<debug> hid_fido_send: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(17)
+<info> hid_fido_command: CTAPHID_INIT end
+<debug> hid_fido_receive: INIT frame: CID(0x01003305) CMD(0x90) OPTION(0x04) LEN(1)
+<debug> ctap2_cbor_authgetinfo: Encoding success (71 bytes)
+<debug> hid_fido_send: INIT frame: CID(0x01003305) CMD(0x90) LEN(72)
+<debug> hid_fido_send: CONT frame: CID(0x01003305) SEQ(0x00)
+<debug> hid_fido_receive: INIT frame: CID(0x01003305) CMD(0x90) OPTION(0x02) LEN(164)
+<debug> hid_fido_receive: CONT frame: CID(0x01003305) SEQ(0x00)
+<debug> hid_fido_receive: CONT frame: CID(0x01003305) SEQ(0x01)
+<info> hid_ctap2_command: authenticatorGetAssertion start
+<debug> ctap2_get_assertion: sign counter found (value=0)
+<debug> u2f_crypto: u2f_crypto_sign start 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_hash_calculate() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_ecc_private_key_from_raw() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_ecdsa_sign() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign end 
+<debug> u2f_crypto: u2f_crypto_create_asn1_signature start 
+<debug> u2f_crypto: u2f_crypto_create_asn1_signature end 
+<debug> ctap2_get_assertion: sign counter updated (value=1)
+<debug> hid_fido_send: INIT frame: CID(0x01003305) CMD(0x90) LEN(204)
+<debug> hid_fido_send: CONT frame: CID(0x01003305) SEQ(0x00)
+<debug> hid_fido_send: CONT frame: CID(0x01003305) SEQ(0x01)
+<debug> hid_fido_send: CONT frame: CID(0x01003305) SEQ(0x02)
+<info> hid_ctap2_command: authenticatorGetAssertion end
+<debug> hid_fido_receive: INIT frame: CID(0x01003305) CMD(0x90) OPTION(0x06) LEN(6)
+<debug> ctap2_client_pin: authenticatorClientPIN start: subcommand(0x01)
+<debug> hid_fido_send: INIT frame: CID(0x01003305) CMD(0x90) LEN(4)
+<debug> ctap2_client_pin: getRetries: retry counter=8
+<info> hid_ctap2_command: authenticatorClientPIN end
+<debug> hid_fido_receive: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(8)
+<debug> hid_fido_send: INIT frame: CID(0xFFFFFFFF) CMD(0x86) LEN(17)
+<info> hid_fido_command: CTAPHID_INIT end
+<debug> hid_fido_receive: INIT frame: CID(0x01003306) CMD(0x90) OPTION(0x04) LEN(1)
+<debug> ctap2_cbor_authgetinfo: Encoding success (71 bytes)
+<debug> hid_fido_send: INIT frame: CID(0x01003306) CMD(0x90) LEN(72)
+<debug> hid_fido_send: CONT frame: CID(0x01003306) SEQ(0x00)
+<debug> hid_fido_receive: INIT frame: CID(0x01003306) CMD(0x90) OPTION(0x06) LEN(6)
+<debug> ctap2_client_pin: authenticatorClientPIN start: subcommand(0x02)
+<debug> ctap2_client_pin_sskey: Keypair for exchanging key is already exist
+<debug> hid_fido_send: INIT frame: CID(0x01003306) CMD(0x90) LEN(80)
+<debug> ctap2_client_pin: getKeyAgreement: public key generate success
+<debug> hid_fido_send: CONT frame: CID(0x01003306) SEQ(0x00)
+<info> hid_ctap2_command: authenticatorClientPIN end
+<debug> hid_fido_receive: INIT frame: CID(0x01003306) CMD(0x90) OPTION(0x06) LEN(103)
+<debug> hid_fido_receive: CONT frame: CID(0x01003306) SEQ(0x00)
+<debug> ctap2_client_pin: authenticatorClientPIN start: subcommand(0x05)
+<debug> ctap2_client_pin: getPinToken: retry counter remains 7 times
+<debug> ctap2_client_pin: getPinToken: PIN code hash matching test OK
+<debug> ctap2_client_pin: getPinToken: retry counter store success
+<debug> hid_fido_send: INIT frame: CID(0x01003306) CMD(0x90) LEN(20)
+<info> hid_ctap2_command: authenticatorClientPIN end
+<debug> hid_fido_receive: INIT frame: CID(0x01003306) CMD(0x90) OPTION(0x02) LEN(184)
+<debug> hid_fido_receive: CONT frame: CID(0x01003306) SEQ(0x00)
+<debug> hid_fido_receive: CONT frame: CID(0x01003306) SEQ(0x01)
+<debug> hid_fido_receive: CONT frame: CID(0x01003306) SEQ(0x02)
+<debug> ctap2_get_assertion: pinAuth verification success
+<info> hid_ctap2_command: authenticatorGetAssertion: waiting to complete the test of user presence
+<info> hid_ctap2_command: authenticatorGetAssertion: completed the test of user presence
+<info> hid_ctap2_command: authenticatorGetAssertion start
+<debug> ctap2_get_assertion: sign counter found (value=1)
+<debug> u2f_crypto: u2f_crypto_sign start 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_hash_calculate() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_ecc_private_key_from_raw() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign: nrf_crypto_ecdsa_sign() returns 0x00 
+<debug> u2f_crypto: u2f_crypto_sign end 
+<debug> u2f_crypto: u2f_crypto_create_asn1_signature start 
+<debug> u2f_crypto: u2f_crypto_create_asn1_signature end 
+<debug> ctap2_get_assertion: sign counter updated (value=2)
+<debug> hid_fido_send: INIT frame: CID(0x01003306) CMD(0x90) LEN(206)
+<debug> hid_fido_send: CONT frame: CID(0x01003306) SEQ(0x00)
+<debug> hid_fido_send: CONT frame: CID(0x01003306) SEQ(0x01)
+<debug> hid_fido_send: CONT frame: CID(0x01003306) SEQ(0x02)
+<info> hid_ctap2_command: authenticatorGetAssertion end
+
