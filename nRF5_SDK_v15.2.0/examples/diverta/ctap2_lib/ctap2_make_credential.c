@@ -250,7 +250,7 @@ static uint8_t generate_credential_pubkey(void)
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
     uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORエンコードデータ長を取得
@@ -396,33 +396,33 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(&encoder, &map, 3);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // fmt (0x01: RESP_fmt)
     ret = cbor_encode_int(&map, 0x01);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     ret = cbor_encode_text_stringz(&map, "packed");
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // authData (0x02: RESP_authData)
     ret = cbor_encode_int(&map, 0x02);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     ret = cbor_encode_byte_string(&map, authenticator_data, authenticator_data_size);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // attStmt (0x03: RESP_attStmt)
     ret = cbor_encode_int(&map, 0x03);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // 証明書は入れ子のCBORとなる
@@ -433,26 +433,26 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         // alg
         ret = cbor_encode_text_stringz(&stmtmap,"alg");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encode_int(&stmtmap,COSE_ALG_ES256);
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         // sig
         ret = cbor_encode_text_stringz(&stmtmap,"sig");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encode_byte_string(&stmtmap,
             u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         // x5c
         ret = cbor_encode_text_stringz(&stmtmap,"x5c");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
@@ -462,23 +462,23 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {
-                return CTAP2_ERR_PROCESSING;
+                return CTAP1_ERR_OTHER;
             }
             ret = cbor_encoder_close_container(&stmtmap, &x5carr);
             if (ret != CborNoError) {
-                return CTAP2_ERR_PROCESSING;
+                return CTAP1_ERR_OTHER;
             }
         }
     }
 
     ret = cbor_encoder_close_container(&map, &stmtmap);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORバッファの長さを設定
@@ -501,7 +501,7 @@ uint8_t ctap2_make_credential_add_token_counter(void)
 {
     // 例外抑止
     if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // Public Key Credential Sourceから
@@ -510,7 +510,7 @@ uint8_t ctap2_make_credential_add_token_counter(void)
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
     uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
     if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // 後続のレスポンス生成・送信は、

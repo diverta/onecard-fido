@@ -26,7 +26,7 @@ static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
     int32_t alg = COSE_ALG_ES256;
     uint8_t ret = encode_cose_pubkey(encoder, x, y, alg);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     return CTAP1_ERR_SUCCESS;
@@ -48,24 +48,24 @@ uint8_t ctap2_cbor_encode_response_retry_counter(uint8_t *encoded_buff, size_t *
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // retries (0x03)
     ret = cbor_encode_int(&map, 0x03);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     // リトライカウンター値をエンコードし、
     // mapにセット
     ret = cbor_encode_uint(&map, retry_counter);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORバッファの長さを設定
@@ -90,13 +90,13 @@ uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // KeyAgreement (0x01)
     ret = cbor_encode_int(&map, 0x01);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     // 生成された公開鍵をCOSE形式にエンコードし、
     // mapにセット
@@ -107,7 +107,7 @@ uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *
 
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORバッファの長さを設定
@@ -147,22 +147,22 @@ uint8_t ctap2_cbor_encode_response_get_pin_token(uint8_t *encoded_buff, size_t *
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // pinToken (0x02)
     ret = cbor_encode_int(&map, 0x02);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     ret = cbor_encode_byte_string(&map, ctap2_client_pin_token_encoded(), ctap2_client_pin_token_encoded_size());
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORバッファの長さを設定

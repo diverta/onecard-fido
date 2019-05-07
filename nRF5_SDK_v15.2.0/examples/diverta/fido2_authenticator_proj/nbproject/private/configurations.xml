@@ -20,7 +20,7 @@
       <in>utf8_p.h</in>
     </df>
   </logicalFolder>
-  <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
+  <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
     <conf name="Default" type="0">
       <toolsSet>
