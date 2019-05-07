@@ -112,7 +112,6 @@
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_init.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_pairing.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_register.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_securekey.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_status.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_status_retry.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/ble_u2f_util.c.d</itemPath>
@@ -120,13 +119,9 @@
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/boards.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/bsp.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/bsp_btn_ble.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_aes.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_aes_aead.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_chacha_poly_aead.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecc.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecdh.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_ecdsa.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_eddsa.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_hash.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_hmac.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/cc310_backend_init.c.d</itemPath>
@@ -223,8 +218,6 @@
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_rng.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_uart.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/nrfx_uarte.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/one_card_event.c.d</itemPath>
-                <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/one_card_main.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_data_storage.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_database.c.d</itemPath>
                 <itemPath>../fido2_authenticator_app/pca10056/s140/armgcc/_build/nrf52840_xxaa/peer_id.c.d</itemPath>
@@ -1126,7 +1119,6 @@
                    displayName="重要なファイル"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
-      <itemPath>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -1145,7 +1137,7 @@
     <Elem>../ble_nus_lib</Elem>
     <Elem>../ble_central_lib</Elem>
   </sourceRootList>
-  <projectmakefile>../one_card_peripheral_app/pca10056/s140/armgcc/Makefile</projectmakefile>
+  <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
     <conf name="Default" type="0">
       <toolsSet>
@@ -1225,8 +1217,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1241,9 +1231,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1258,9 +1246,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1273,7 +1259,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1304,10 +1289,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1327,10 +1310,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1349,10 +1330,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1370,11 +1349,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1393,7 +1370,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
@@ -1403,7 +1379,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cifra</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1422,11 +1397,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1446,10 +1419,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1464,9 +1435,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
+            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1485,10 +1455,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1508,10 +1476,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1525,9 +1491,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/peer_manager</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1545,10 +1509,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1567,10 +1529,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1623,11 +1583,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1643,13 +1601,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1679,10 +1635,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1698,10 +1652,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1717,10 +1669,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1735,13 +1685,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1756,13 +1704,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1777,13 +1723,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1798,14 +1742,12 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1823,12 +1765,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1847,12 +1787,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1868,11 +1806,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1885,11 +1821,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1906,11 +1840,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -1924,11 +1856,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1982,9 +1912,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1995,8 +1923,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2007,8 +1933,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2019,8 +1943,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2031,8 +1953,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2044,9 +1964,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2058,9 +1976,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2074,12 +1990,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cifra</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2093,10 +2007,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2108,9 +2020,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2125,12 +2035,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2145,12 +2053,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2165,12 +2071,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2185,12 +2089,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2202,9 +2104,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2218,13 +2118,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2238,11 +2136,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2258,13 +2154,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2277,10 +2171,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2297,12 +2189,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2315,9 +2205,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2345,11 +2233,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2365,9 +2251,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2387,9 +2271,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2405,10 +2287,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2426,7 +2306,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
@@ -2434,7 +2313,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2450,10 +2328,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2471,11 +2347,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
@@ -2493,10 +2367,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2572,7 +2444,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -2610,7 +2481,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2620,9 +2490,7 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2636,11 +2504,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2652,7 +2518,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2663,7 +2528,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2673,9 +2537,7 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2687,8 +2549,6 @@
         <cTool flags="0">
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2699,9 +2559,7 @@
             flavor2="3">
         <cTool flags="0">
           <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2742,8 +2600,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2752,10 +2608,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-          <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_printf.c"
@@ -2766,8 +2618,6 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2793,12 +2643,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2807,11 +2655,6 @@
             ex="false"
             tool="0"
             flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-          </incDir>
-        </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_rng.c"
             ex="false"
@@ -2827,13 +2670,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2850,10 +2691,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2871,13 +2710,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2897,12 +2734,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2918,12 +2753,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2942,12 +2775,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2967,12 +2798,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -2993,12 +2822,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3372,11 +3199,6 @@
         </cTool>
       </item>
       <item path="../u2f_lib/u2f_keyhandle.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-          </incDir>
-        </cTool>
       </item>
       <item path="../u2f_lib/u2f_register.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3511,11 +3333,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3535,11 +3355,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3550,8 +3368,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_dis</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3562,10 +3378,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3578,9 +3392,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3592,8 +3404,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3605,11 +3415,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3617,9 +3425,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3630,11 +3436,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3644,9 +3448,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3658,10 +3460,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
@@ -3683,12 +3483,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3697,9 +3495,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crc16</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3707,8 +3503,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3717,9 +3511,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/crypto/backend/nrf_hw</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3728,9 +3520,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3743,9 +3533,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fstorage</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3755,9 +3543,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
@@ -3771,11 +3557,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3788,9 +3572,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../fido2_authenticator_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3807,7 +3590,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
@@ -3815,7 +3597,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
+            <pElem>../fido2_authenticator_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3827,10 +3609,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/cli</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
@@ -3842,8 +3622,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3853,8 +3631,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3862,7 +3638,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/sensorsim</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3871,9 +3646,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3884,13 +3657,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3934,9 +3705,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3946,9 +3715,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/library</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include/mbedtls</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/nrf_tls/mbedtls/nrf_crypto/config</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/mbedtls/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3963,7 +3730,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/utf_converter</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3978,12 +3744,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
@@ -3992,7 +3756,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../one_card_peripheral_app/pca10056/s140/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
