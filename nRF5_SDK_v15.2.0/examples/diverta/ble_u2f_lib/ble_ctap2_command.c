@@ -238,7 +238,7 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
     
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
         NRF_LOG_ERROR("authenticatorMakeCredential abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
@@ -352,7 +352,7 @@ static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
     
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP2_ERR_PROCESSING);
+        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
         NRF_LOG_ERROR("authenticatorGetAssertion abend: FDS EVENT=%d ", p_evt->id);
         return;
     }

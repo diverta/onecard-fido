@@ -321,7 +321,7 @@ uint8_t verify_pin_auth(void)
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize);
     if (hmac == NULL) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
 #if NRF_LOG_DEBUG_CALCULATED_HMAC
