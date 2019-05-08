@@ -109,5 +109,10 @@ namespace MaintenanceToolGUI
 
             return true;
         }
+
+        private void buttonClearPin_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
