@@ -40,7 +40,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JfA-Vb-BEZ" userLabel="SetPIN">
-                        <rect key="frame" x="101" y="13" width="89" height="32"/>
+                        <rect key="frame" x="63" y="13" width="89" height="32"/>
                         <buttonCell key="cell" type="push" title="新規設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OdN-hU-lMY">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
@@ -50,7 +50,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jhK-Yn-uey" userLabel="ChangePIN">
-                        <rect key="frame" x="190" y="13" width="82" height="32"/>
+                        <rect key="frame" x="152" y="13" width="82" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="70" id="KN9-ci-Unp"/>
                         </constraints>
@@ -62,8 +62,81 @@
                             <action selector="buttonChangePinDidPress:" target="-2" id="Pjg-V7-DNC"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dez-m3-HUd" userLabel="ClearPIN">
+                        <rect key="frame" x="234" y="13" width="82" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="PdE-na-fZc"/>
+                        </constraints>
+                        <buttonCell key="cell" type="push" title="解除" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Av8-BN-gBv">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="buttonClearDidPress:" target="-2" id="Hlf-qk-eyY"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3jI-a0-Os2">
+                        <rect key="frame" x="18" y="95" width="142" height="13"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="新しいPINコード(確認)" id="opz-OT-yWo">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kdz-X8-29k">
+                        <rect key="frame" x="18" y="60" width="139" height="17"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="変更前のPINコード" id="Hhs-BD-M7B">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-S9-fRB">
+                        <rect key="frame" x="163" y="123" width="279" height="22"/>
+                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="7yi-7W-4Mn">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </secureTextFieldCell>
+                    </secureTextField>
+                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G9c-TJ-wcb">
+                        <rect key="frame" x="163" y="91" width="279" height="22"/>
+                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Vbi-0U-MC9">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </secureTextFieldCell>
+                    </secureTextField>
+                    <secureTextField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="n06-2y-XEr">
+                        <rect key="frame" x="163" y="58" width="279" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="279" id="you-C6-tnt"/>
+                        </constraints>
+                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="TAg-2k-Tuh">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </secureTextFieldCell>
+                    </secureTextField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PPE-ty-oX4">
+                        <rect key="frame" x="18" y="127" width="139" height="13"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="新しいPINコード" id="AML-DE-YIv">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kik-fx-a3Y">
-                        <rect key="frame" x="272" y="13" width="82" height="32"/>
+                        <rect key="frame" x="316" y="14" width="82" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DhK-fm-Dfy">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -75,79 +148,35 @@ Gw
                             <action selector="buttonCancelDidPress:" target="-2" id="dOa-rL-gBq"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3jI-a0-Os2">
-                        <rect key="frame" x="18" y="95" width="142" height="13"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="新しいPINコード(確認)" id="opz-OT-yWo">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kdz-X8-29k">
-                        <rect key="frame" x="18" y="60" width="139" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="変更前のPINコード" id="Hhs-BD-M7B">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yIg-S9-fRB">
-                        <rect key="frame" x="163" y="123" width="279" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="7yi-7W-4Mn">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            <allowedInputSourceLocales>
-                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                            </allowedInputSourceLocales>
-                        </secureTextFieldCell>
-                    </secureTextField>
-                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G9c-TJ-wcb">
-                        <rect key="frame" x="163" y="91" width="279" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Vbi-0U-MC9">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            <allowedInputSourceLocales>
-                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                            </allowedInputSourceLocales>
-                        </secureTextFieldCell>
-                    </secureTextField>
-                    <secureTextField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n06-2y-XEr">
-                        <rect key="frame" x="163" y="58" width="279" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="TAg-2k-Tuh">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            <allowedInputSourceLocales>
-                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                            </allowedInputSourceLocales>
-                        </secureTextFieldCell>
-                    </secureTextField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PPE-ty-oX4">
-                        <rect key="frame" x="18" y="127" width="139" height="13"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="新しいPINコード" id="AML-DE-YIv">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="trailing" secondItem="G9c-TJ-wcb" secondAttribute="trailing" id="17v-gU-zI4"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="leading" secondItem="kdz-X8-29k" secondAttribute="trailing" constant="8" symbolic="YES" id="1bQ-TG-STn"/>
                     <constraint firstItem="aAi-OX-HpX" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="9" id="2ot-My-TQh"/>
+                    <constraint firstItem="yIg-S9-fRB" firstAttribute="top" secondItem="aAi-OX-HpX" secondAttribute="bottom" constant="8" symbolic="YES" id="307-tU-ES1"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="top" secondItem="n06-2y-XEr" secondAttribute="bottom" constant="17" id="3Bz-IT-oTD"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="trailing" secondItem="yIg-S9-fRB" secondAttribute="trailing" id="7Ic-8p-xGT"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="leading" secondItem="yIg-S9-fRB" secondAttribute="leading" id="8te-FF-Bg6"/>
                     <constraint firstItem="jhK-Yn-uey" firstAttribute="leading" secondItem="JfA-Vb-BEZ" secondAttribute="trailing" constant="12" symbolic="YES" id="BHD-dI-K9L"/>
                     <constraint firstAttribute="bottom" secondItem="JfA-Vb-BEZ" secondAttribute="bottom" constant="20" symbolic="YES" id="BpO-Gi-aSW"/>
+                    <constraint firstItem="PPE-ty-oX4" firstAttribute="leading" secondItem="kdz-X8-29k" secondAttribute="leading" id="Cso-uv-X7V"/>
                     <constraint firstItem="aAi-OX-HpX" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" constant="20" symbolic="YES" id="E50-0T-7tM"/>
-                    <constraint firstItem="kik-fx-a3Y" firstAttribute="leading" secondItem="jhK-Yn-uey" secondAttribute="trailing" constant="12" symbolic="YES" id="Rug-RJ-ySW"/>
+                    <constraint firstItem="G9c-TJ-wcb" firstAttribute="leading" secondItem="3jI-a0-Os2" secondAttribute="trailing" constant="5" id="I3U-ET-Lyw"/>
+                    <constraint firstItem="PPE-ty-oX4" firstAttribute="baseline" secondItem="yIg-S9-fRB" secondAttribute="baseline" id="QWC-Ry-JTM"/>
+                    <constraint firstItem="kik-fx-a3Y" firstAttribute="leading" secondItem="jhK-Yn-uey" secondAttribute="trailing" constant="94" id="Rug-RJ-ySW"/>
                     <constraint firstAttribute="trailing" secondItem="aAi-OX-HpX" secondAttribute="trailing" constant="20" symbolic="YES" id="TPN-qA-ZE6"/>
-                    <constraint firstItem="aAi-OX-HpX" firstAttribute="centerX" secondItem="jhK-Yn-uey" secondAttribute="centerX" id="hTx-vo-Ozb"/>
-                    <constraint firstItem="jhK-Yn-uey" firstAttribute="top" secondItem="kik-fx-a3Y" secondAttribute="top" id="sxs-TX-N7k"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="baseline" secondItem="jhK-Yn-uey" secondAttribute="baseline" id="ZOK-S5-Gv3"/>
+                    <constraint firstItem="PPE-ty-oX4" firstAttribute="leading" secondItem="aAi-OX-HpX" secondAttribute="leading" id="b4V-jN-zGX"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="trailing" secondItem="aAi-OX-HpX" secondAttribute="trailing" id="cvy-aY-ula"/>
+                    <constraint firstItem="3jI-a0-Os2" firstAttribute="baseline" secondItem="G9c-TJ-wcb" secondAttribute="baseline" id="dPC-Ew-VFA"/>
+                    <constraint firstItem="aAi-OX-HpX" firstAttribute="centerX" secondItem="jhK-Yn-uey" secondAttribute="centerX" constant="38" id="hTx-vo-Ozb"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="centerY" secondItem="kdz-X8-29k" secondAttribute="centerY" id="jhI-Ag-amZ"/>
+                    <constraint firstItem="3jI-a0-Os2" firstAttribute="leading" secondItem="PPE-ty-oX4" secondAttribute="leading" id="mzG-vx-kLk"/>
+                    <constraint firstItem="yIg-S9-fRB" firstAttribute="leading" secondItem="PPE-ty-oX4" secondAttribute="trailing" constant="8" symbolic="YES" id="otD-Gy-xqG"/>
+                    <constraint firstItem="Dez-m3-HUd" firstAttribute="leading" secondItem="JfA-Vb-BEZ" secondAttribute="trailing" constant="94" id="rWy-AL-Ln3"/>
+                    <constraint firstItem="jhK-Yn-uey" firstAttribute="top" secondItem="kik-fx-a3Y" secondAttribute="top" constant="1" id="sxs-TX-N7k"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="top" secondItem="G9c-TJ-wcb" secondAttribute="bottom" constant="11" id="x9C-2i-zmt"/>
+                    <constraint firstItem="n06-2y-XEr" firstAttribute="leading" secondItem="G9c-TJ-wcb" secondAttribute="leading" id="xSz-bv-oMb"/>
                     <constraint firstItem="JfA-Vb-BEZ" firstAttribute="baseline" secondItem="jhK-Yn-uey" secondAttribute="baseline" id="yd8-ia-tZp"/>
                 </constraints>
             </view>

@@ -105,6 +105,8 @@
 #define MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT   @"確認用のPINコードを正しく入力してください"
 #define MSG_PROMPT_INPUT_CUR_PIN            @"PINコードを４〜16桁で入力してください"
 #define MSG_PROMPT_INPUT_CUR_PIN_NUM        @"PINコードを数字で入力してください"
+#define MSG_CLEAR_PIN_CODE                  @"FIDO認証器に設定されたPINコードを解除します。"
+#define MSG_PROMPT_CLEAR_PIN_CODE           @"解除後はユーザー登録／ログイン時にPINコード入力を要求されなくなります。\nPINコード解除処理を実行しますか？"
 
 #pragma mark - PINコードチェック関連メッセージ
 #define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"

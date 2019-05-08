@@ -7,6 +7,7 @@
 #import "SetPinParamWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolPopupWindow.h"
 
 @interface SetPinParamWindow ()
 
@@ -44,6 +45,10 @@
 
     - (IBAction)buttonSetPinDidPress:(id)sender {
         [self doSetPin:sender];
+    }
+
+    - (IBAction)buttonClearDidPress:(id)sender {
+        [self doClearPin:sender];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -121,6 +126,14 @@
             return false;
         }
         return true;
+    }
+
+    - (void) doClearPin:(id)sender {
+        // 鍵・証明書削除
+        if ([ToolPopupWindow promptYesNo:MSG_CLEAR_PIN_CODE
+                         informativeText:MSG_PROMPT_CLEAR_PIN_CODE] == false) {
+            return;
+        }
     }
 
 @end
