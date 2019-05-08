@@ -41,6 +41,7 @@
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_CTAP2_HEALTHCHECK              @"CTAP2ヘルスチェック"
+#define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -106,12 +107,21 @@
 #define MSG_PROMPT_INPUT_CUR_PIN            @"PINコードを４〜16桁で入力してください"
 #define MSG_PROMPT_INPUT_CUR_PIN_NUM        @"PINコードを数字で入力してください"
 #define MSG_CLEAR_PIN_CODE                  @"FIDO認証器に設定されたPINコードを解除します。"
-#define MSG_PROMPT_CLEAR_PIN_CODE           @"解除後はユーザー登録／ログイン時にPINコード入力を要求されなくなります。\nPINコード解除処理を実行しますか？"
+#define MSG_PROMPT_CLEAR_PIN_CODE           @"解除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nPINコード解除処理を実行しますか？"
+#define MSG_CLEAR_PIN_CODE_COMMENT1         @"  ユーザー確認が必要となりますので、"
+#define MSG_CLEAR_PIN_CODE_COMMENT2         @"  FIDO認証器上のユーザー確認LEDが高速点滅したら、"
+#define MSG_CLEAR_PIN_CODE_COMMENT3         @"  MAIN SWを１回押してください."
 
 #pragma mark - PINコードチェック関連メッセージ
 #define MSG_CTAP2_ERR_PIN_INVALID           @"入力されたPINコードが違います。正しいPINコードを入力してください。"
 #define MSG_CTAP2_ERR_PIN_BLOCKED           @"使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。"
 #define MSG_CTAP2_ERR_PIN_AUTH_BLOCKED      @"PIN認証が無効となりました。認証器をUSBポートから取り外してください。"
 #define MSG_CTAP2_ERR_PIN_NOT_SET           @"PINコードが認証器に設定されていません。PINコードを新規設定してください。"
+
+#pragma mark - CTAP2ヘルスチェック関連メッセージ
+#define MSG_HCHK_CTAP2_LOGIN_TEST_START     @"ログインテストを開始します."
+#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
+#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"
+#define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  MAIN SWを１回押してください."
 
 #endif /* ToolCommonMessage_h */

@@ -129,11 +129,16 @@
     }
 
     - (void) doClearPin:(id)sender {
-        // 鍵・証明書削除
+        // 処理続行確認ダイアログを開く
         if ([ToolPopupWindow promptYesNo:MSG_CLEAR_PIN_CODE
                          informativeText:MSG_PROMPT_CLEAR_PIN_CODE] == false) {
             return;
         }
+        // PINコード、実行コマンドを設定して画面を閉じる
+        [[self toolClientPINCommand] setPinNew:nil];
+        [[self toolClientPINCommand] setPinOld:nil];
+        [[self toolClientPINCommand] setPinCommand:COMMAND_AUTH_RESET];
+        [self terminateWindow:NSModalResponseOK];
     }
 
 @end
