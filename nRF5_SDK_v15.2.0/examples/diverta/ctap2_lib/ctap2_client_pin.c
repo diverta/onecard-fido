@@ -551,6 +551,8 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
     // チェックがNGの場合は、
     // リトライカウンターを１減らしてFlash ROMに反映
     if (check_pin_code_hash("getPinToken") == false) {
+        // レスポンス長は1バイトとする（ステータスコードのみ）
+        m_response_length = 1;
         return;
     }
 
