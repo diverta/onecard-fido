@@ -87,8 +87,14 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
             DisplayStartMessage(commandTitle);
 
-            // PINコード設定
-            hid.DoClientPinSet(f.PinNew, f.PinOld);
+            if (f.PinNew == "" && f.PinOld == "") {
+                // パラメーター画面でPINが指定されなかった場合はPIN解除実行と判断
+                hid.DoAuthReset();
+
+            } else {
+                // PINコード設定
+                hid.DoClientPinSet(f.PinNew, f.PinOld);
+            }
         }
 
         private void DoCommandCtap2Healthcheck(object sender, EventArgs e)

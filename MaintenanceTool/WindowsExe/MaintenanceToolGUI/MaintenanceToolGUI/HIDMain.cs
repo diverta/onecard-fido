@@ -18,6 +18,7 @@ namespace MaintenanceToolGUI
         public const byte HID_CBORCMD_MAKE_CREDENTIAL = 0x01;
         public const byte HID_CBORCMD_GET_ASSERTION = 0x02;
         public const byte HID_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte HID_CBORCMD_AUTH_RESET = 0x07;
         public const byte HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
         public const byte HID_SUBCMD_CLIENT_PIN_SET = 0x03;
         public const byte HID_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
@@ -67,6 +68,7 @@ namespace MaintenanceToolGUI
             TestCtapHidInit,
             TestMakeCredential,
             TestGetAssertion,
+            AuthReset
         };
         private HIDRequestType requestType;
 
@@ -180,6 +182,9 @@ namespace MaintenanceToolGUI
             if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
                 // レスポンスされたCIDを抽出し、PIN設定処理を続行
                 DoGetKeyAgreement(ExtractReceivedCID(message));
+            } else if (cborCommand == Const.HID_CBORCMD_AUTH_RESET) {
+                // レスポンスされたCIDを抽出し、Reset処理を続行
+                DoRequestAuthReset(ExtractReceivedCID(message));
             } else { 
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(result);
@@ -224,6 +229,33 @@ namespace MaintenanceToolGUI
             bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
+        }
+
+        public void DoAuthReset()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 実行するコマンドを退避
+            requestType = HIDRequestType.AuthReset;
+            cborCommand = Const.HID_CBORCMD_AUTH_RESET;
+            // nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        public void DoRequestAuthReset(byte[] receivedCID)
+        {
+            // リクエスト転送の前に、
+            // 基板上ののMAIN SWを押してもらうように促す
+            // メッセージを画面表示
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT1);
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT2);
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT3);
+
+            // authenticatorResetコマンドを実行する
+            byte[] commandByte = { 0x07 };
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, commandByte, commandByte.Length);
         }
 
         public void DoClientPinSet(string pinNew, string pinOld)
@@ -282,6 +314,7 @@ namespace MaintenanceToolGUI
                 DoResponseCommandMakeCredential(message, length);
                 break;
             case Const.HID_CBORCMD_GET_ASSERTION:
+            case Const.HID_CBORCMD_AUTH_RESET:
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(true);
                 break;
