@@ -298,6 +298,7 @@ namespace MaintenanceToolGUI
             case 0x00:
                 return true;
             case 0x31:  // CTAP2_ERR_PIN_INVALID
+            case 0x33:  // CTAP2_ERR_PIN_AUTH_INVALID:
                 mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_INVALID);
                 break;
             case 0x32:  // CTAP2_ERR_PIN_BLOCKED
@@ -305,6 +306,9 @@ namespace MaintenanceToolGUI
                 break;
             case 0x34:  // CTAP2_ERR_PIN_AUTH_BLOCKED
                 mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_AUTH_BLOCKED);
+                break;
+            case 0x35:  // CTAP2_ERR_PIN_NOT_SET
+                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_NOT_SET);
                 break;
             default:
                 break;

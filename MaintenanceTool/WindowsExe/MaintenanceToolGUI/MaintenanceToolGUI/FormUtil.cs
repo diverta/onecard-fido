@@ -40,7 +40,7 @@ namespace MaintenanceToolGUI
         {
             if (textBox.Text.Equals(string.Empty))
             {
-                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -52,7 +52,7 @@ namespace MaintenanceToolGUI
         {
             if (File.Exists(textBox.Text) == false)
             {
-                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FILE_PATH,
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -64,7 +64,7 @@ namespace MaintenanceToolGUI
         {
             if (Regex.IsMatch(textBox.Text, "^[1-9]{1}[0-9]*$") == false)
             {
-                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_NUMBER,
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -75,7 +75,7 @@ namespace MaintenanceToolGUI
         public static bool checkIsNumeric(TextBox textBox, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
-                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_NUMBER,
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
@@ -88,7 +88,7 @@ namespace MaintenanceToolGUI
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
             }
-            MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
+            MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
             destText.Focus();
             return false;
@@ -98,7 +98,7 @@ namespace MaintenanceToolGUI
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
-                MessageBox.Show(informativeText, ToolGUICommon.MSG_INVALID_FIELD,
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox.Focus();
                 return false;
