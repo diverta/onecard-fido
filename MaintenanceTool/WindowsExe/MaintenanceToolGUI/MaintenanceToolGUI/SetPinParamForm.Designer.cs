@@ -36,6 +36,7 @@
             this.buttonChangePin = new System.Windows.Forms.Button();
             this.buttonSetPin = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonClearPin = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -44,7 +45,7 @@
             this.label1.Location = new System.Drawing.Point(12, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 12);
-            this.label1.TabIndex = 7;
+            this.label1.TabIndex = 8;
             this.label1.Text = "新しいPINコード";
             // 
             // label2
@@ -53,7 +54,7 @@
             this.label2.Location = new System.Drawing.Point(12, 51);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 12);
-            this.label2.TabIndex = 8;
+            this.label2.TabIndex = 9;
             this.label2.Text = "新しいPINコード(確認)";
             // 
             // label3
@@ -62,7 +63,7 @@
             this.label3.Location = new System.Drawing.Point(12, 80);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(96, 12);
-            this.label3.TabIndex = 9;
+            this.label3.TabIndex = 10;
             this.label3.Text = "変更前のPINコード";
             // 
             // textPin
@@ -91,7 +92,7 @@
             // 
             // buttonChangePin
             // 
-            this.buttonChangePin.Location = new System.Drawing.Point(156, 121);
+            this.buttonChangePin.Location = new System.Drawing.Point(114, 121);
             this.buttonChangePin.Name = "buttonChangePin";
             this.buttonChangePin.Size = new System.Drawing.Size(75, 23);
             this.buttonChangePin.TabIndex = 5;
@@ -101,7 +102,7 @@
             // 
             // buttonSetPin
             // 
-            this.buttonSetPin.Location = new System.Drawing.Point(75, 121);
+            this.buttonSetPin.Location = new System.Drawing.Point(33, 121);
             this.buttonSetPin.Name = "buttonSetPin";
             this.buttonSetPin.Size = new System.Drawing.Size(75, 23);
             this.buttonSetPin.TabIndex = 4;
@@ -111,19 +112,30 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(237, 121);
+            this.buttonCancel.Location = new System.Drawing.Point(276, 121);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 0;
+            this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // buttonClearPin
+            // 
+            this.buttonClearPin.Location = new System.Drawing.Point(195, 121);
+            this.buttonClearPin.Name = "buttonClearPin";
+            this.buttonClearPin.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearPin.TabIndex = 6;
+            this.buttonClearPin.Text = "解除";
+            this.buttonClearPin.UseVisualStyleBackColor = true;
+            this.buttonClearPin.Click += new System.EventHandler(this.buttonClearPin_Click);
             // 
             // SetPinParamForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 156);
+            this.Controls.Add(this.buttonClearPin);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSetPin);
             this.Controls.Add(this.buttonChangePin);
@@ -156,5 +168,6 @@
         private System.Windows.Forms.Button buttonChangePin;
         private System.Windows.Forms.Button buttonSetPin;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonClearPin;
     }
 }

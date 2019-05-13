@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.11";
+        public const string MaintenanceToolVersion = "Version 0.1.12";
 
         public MainForm()
         {
@@ -87,8 +87,14 @@ namespace MaintenanceToolGUI
             commandTitle = f.CommandTitle;
             DisplayStartMessage(commandTitle);
 
-            // PINコード設定
-            hid.DoClientPinSet(f.PinNew, f.PinOld);
+            if (f.PinNew == "" && f.PinOld == "") {
+                // パラメーター画面でPINが指定されなかった場合はPIN解除実行と判断
+                hid.DoAuthReset();
+
+            } else {
+                // PINコード設定
+                hid.DoClientPinSet(f.PinNew, f.PinOld);
+            }
         }
 
         private void DoCommandCtap2Healthcheck(object sender, EventArgs e)
@@ -145,7 +151,7 @@ namespace MaintenanceToolGUI
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message))
+            if (FormUtil.DisplayPromptPopup(message))
             {
                 doCommand(sender);
             }
@@ -241,16 +247,6 @@ namespace MaintenanceToolGUI
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
-        }
-
-        private bool displayPromptPopup(string message)
-        {
-            DialogResult dialogResult = MessageBox.Show(
-                message, MaintenanceToolTitle,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            // Yesがクリックされた場合 true を戻す
-            return (dialogResult == DialogResult.Yes);
         }
 
         private void 管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
