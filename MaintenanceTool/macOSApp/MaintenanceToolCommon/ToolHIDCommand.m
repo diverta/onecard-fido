@@ -162,6 +162,11 @@
                 [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
                 [self doRequestGetKeyAgreement:[self getNewCIDFrom:message]];
                 break;
+            case COMMAND_AUTH_RESET:
+                // 受領したCIDを使用し、authenticatorResetコマンドを実行
+                [self setCborCommand:CTAP2_CMD_RESET];
+                [self doRequestAuthReset:[self getNewCIDFrom:message]];
+                break;
             default:
                 break;
         }
@@ -227,6 +232,10 @@
                 break;
             case CTAP2_CMD_GET_ASSERTION:
                 [self doResponseCommandGetAssertion:message CID:cid CMD:cmd];
+                break;
+            case CTAP2_CMD_RESET:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -380,10 +389,10 @@
             return;
         }
         // リクエスト転送の前に、基板上ののMAIN SWを押してもらうように促すメッセージを画面表示
-        [self displayMessage:@"ログインテストを開始します."];
-        [self displayMessage:@"  ユーザー所在確認が必要となりますので、"];
-        [self displayMessage:@"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"];
-        [self displayMessage:@"  MAIN SWを１回押してください."];
+        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
@@ -393,6 +402,17 @@
         // ヘルスチェックが成功したので、画面に制御を戻す
         [self doResponseToAppDelegate:true message:nil];
         return;
+    }
+
+    - (void)doRequestAuthReset:(NSData *)cid {
+        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
+        // メッセージを編集し、authenticatorResetコマンドを実行
+        char commandByte[] = {0x07};
+        NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
+        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)hidHelperWillProcess:(Command)command {
@@ -413,6 +433,7 @@
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
+            case COMMAND_AUTH_RESET:
                 [self doClientPin];
                 break;
             default:
