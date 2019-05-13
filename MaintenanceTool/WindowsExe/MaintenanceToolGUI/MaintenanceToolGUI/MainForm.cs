@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.11";
+        public const string MaintenanceToolVersion = "Version 0.1.12";
 
         public MainForm()
         {
