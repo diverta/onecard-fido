@@ -28,6 +28,9 @@
         public const string MSG_PROMPT_INPUT_OLD_PIN_NUM = "変更前のPINコードを数字で入力してください";
         public const string MSG_PROMPT_INPUT_PIN_CONFIRM_CRCT = "確認用のPINコードを正しく入力してください";
 
+        public const string MSG_CLEAR_PIN_CODE = "FIDO認証器に設定されたPINコードを解除します。";
+        public const string MSG_PROMPT_CLEAR_PIN_CODE = "解除後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nPINコード解除処理を実行しますか？";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";

@@ -145,7 +145,7 @@ namespace MaintenanceToolGUI
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (displayPromptPopup(message))
+            if (FormUtil.DisplayPromptPopup(message))
             {
                 doCommand(sender);
             }
@@ -241,16 +241,6 @@ namespace MaintenanceToolGUI
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
-        }
-
-        private bool displayPromptPopup(string message)
-        {
-            DialogResult dialogResult = MessageBox.Show(
-                message, MaintenanceToolTitle,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            // Yesがクリックされた場合 true を戻す
-            return (dialogResult == DialogResult.Yes);
         }
 
         private void 管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)

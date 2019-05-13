@@ -112,7 +112,15 @@ namespace MaintenanceToolGUI
 
         private void buttonClearPin_Click(object sender, EventArgs e)
         {
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                ToolGUICommon.MSG_CLEAR_PIN_CODE,
+                ToolGUICommon.MSG_PROMPT_CLEAR_PIN_CODE);
 
+            // 鍵・証明書削除
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (FormUtil.DisplayPromptPopup(message)) {
+            }
         }
     }
 }

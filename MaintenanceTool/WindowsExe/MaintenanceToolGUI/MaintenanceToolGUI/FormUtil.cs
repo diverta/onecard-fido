@@ -6,6 +6,16 @@ namespace MaintenanceToolGUI
 {
     class FormUtil
     {
+        public static bool DisplayPromptPopup(string message)
+        {
+            DialogResult dialogResult = MessageBox.Show(
+                message, MainForm.MaintenanceToolTitle,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // Yesがクリックされた場合 true を戻す
+            return (dialogResult == DialogResult.Yes);
+        }
+
         public static void selectFilePath(
             OpenFileDialog dialog, string title, string filter, TextBox textBox)
         {
