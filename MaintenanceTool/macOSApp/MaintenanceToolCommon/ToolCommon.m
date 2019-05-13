@@ -48,6 +48,9 @@
             case COMMAND_TEST_GET_ASSERTION:
                 processName = PROCESS_NAME_CTAP2_HEALTHCHECK;
                 break;
+            case COMMAND_AUTH_RESET:
+                processName = PROCESS_NAME_AUTH_RESET;
+                break;
             default:
                 processName = nil;
                 break;
