@@ -107,7 +107,7 @@
 #define MSG_PROMPT_INPUT_CUR_PIN            @"PINコードを４〜16桁で入力してください"
 #define MSG_PROMPT_INPUT_CUR_PIN_NUM        @"PINコードを数字で入力してください"
 #define MSG_CLEAR_PIN_CODE                  @"FIDO認証器に設定されたPINコードを解除します。"
-#define MSG_PROMPT_CLEAR_PIN_CODE           @"解除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nPINコード解除処理を実行しますか？"
+#define MSG_PROMPT_CLEAR_PIN_CODE           @"解除後はFIDO認証器によるログインができなくなります。\n（インストールされた鍵・証明書はそのまま残ります）\n\nPINコード解除処理を実行しますか？"
 #define MSG_CLEAR_PIN_CODE_COMMENT1         @"  ユーザー確認が必要となりますので、"
 #define MSG_CLEAR_PIN_CODE_COMMENT2         @"  FIDO認証器上のユーザー確認LEDが高速点滅したら、"
 #define MSG_CLEAR_PIN_CODE_COMMENT3         @"  MAIN SWを１回押してください."
