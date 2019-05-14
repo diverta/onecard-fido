@@ -64,7 +64,7 @@ bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be
     }
 
     // 署名生成用バッファの格納領域を取得
-    uint8_t offset = 0;
+    size_t  offset = 0;
     uint8_t *signature_base_buffer = u2f_crypto_signature_data_buffer();
 
     // Authenticator data
