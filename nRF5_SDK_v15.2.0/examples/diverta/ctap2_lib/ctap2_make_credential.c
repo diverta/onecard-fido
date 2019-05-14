@@ -50,6 +50,7 @@ struct {
     CTAP_OPTIONS_T           options;
     uint8_t                  pinAuth[PIN_AUTH_SIZE];
     uint8_t                  pinProtocol;
+    CTAP_EXTENSIONS_T        extensions;
 } ctap2_request;
 
 // credentialPublicKeyを保持
@@ -69,8 +70,13 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     int         intval;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + 64, cbor_data_length - 64);
+    NRF_LOG_DEBUG("authenticatorMakeCredential request cbor(%d bytes):", cbor_data_length);
+    int j, k;
+    int max = (cbor_data_length < 288) ? cbor_data_length : 288;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + j, (k < 64) ? k : 64);
+    }
 #else
     UNUSED_PARAMETER(cbor_data_buffer);
     UNUSED_PARAMETER(cbor_data_length);
@@ -162,9 +168,9 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 break;
             case 6:
                 // extensions (CBOR map)
-                type = cbor_value_get_type(&map);
-                if (type != CborMapType) {
-                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                ret = parse_extensions(&map, &ctap2_request.extensions);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             case 7:
@@ -209,14 +215,17 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 #endif
 
 #if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("rp:   id[%s] name[%s]", ctap2_request.rp.id, ctap2_request.rp.name);
-    NRF_LOG_DEBUG("user: id[%s] name[%s]", ctap2_request.user.id, ctap2_request.user.name);
+    NRF_LOG_DEBUG("rp: id[%s] name[%s]", ctap2_request.rp.id, ctap2_request.rp.name);
+    NRF_LOG_DEBUG("user: name[%s]", ctap2_request.user.name);
+    NRF_LOG_DEBUG("user id(%d bytes):", ctap2_request.user.id_size);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.user.id, ctap2_request.user.id_size);
     NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
         ctap2_request.cred_param.publicKeyCredentialTypeName);
     NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
         ctap2_request.cred_param.COSEAlgorithmIdentifier);
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
+    NRF_LOG_DEBUG("extensions: hmac-secret[%d]", ctap2_request.extensions.hmac_secret_requested);
 #endif
 
 #if NRF_LOG_DEBUG_PIN_AUTH

@@ -114,6 +114,18 @@ typedef struct {
     } key;
 } CTAP_COSE_KEY;
 
+typedef struct {
+    uint8_t        saltLen;
+    uint8_t        saltEnc[64];
+    uint8_t        saltAuth[32];
+    CTAP_COSE_KEY *keyAgreement;
+} CTAP_HMAC_SECRET_T;
+
+typedef struct {
+    bool                hmac_secret_requested;
+    CTAP_HMAC_SECRET_T *hmac_secret;
+} CTAP_EXTENSIONS_T;
+
 //
 // CTAP2コマンドで共用する作業領域
 // 

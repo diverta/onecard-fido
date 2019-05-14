@@ -767,3 +767,161 @@ uint8_t encode_cose_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t
 
     return CborNoError;
 }
+
+static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
+{
+    size_t    map_length;
+    size_t    salt_len;
+    uint8_t   parsed_count = 0;
+    int       key;
+    int       ret;
+    uint8_t   i;
+    CborValue map;
+
+    if (cbor_value_get_type(val) != CborMapType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_enter_container(val,&map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    ret = cbor_value_get_map_length(val, &map_length);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    for (i = 0; i < map_length; i++) {
+        if (cbor_value_get_type(&map) != CborIntegerType) {
+            return CTAP2_ERR_INVALID_CBOR_TYPE;
+        }
+        ret = cbor_value_get_int(&map, &key);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        switch(key) {
+            case 0x01:
+                // keyAgreement(0x01)
+                ret = parse_cose_pubkey(&map, hs->keyAgreement);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                parsed_count++;
+                break;
+
+            case 0x02:
+                // saltEnc(0x02): 
+                //   Encrypt one or two salts (Called salt1 (32 bytes) and salt2 (32 bytes)) 
+                //   using sharedSecret
+                salt_len = 64;
+                ret = cbor_value_copy_byte_string(&map, hs->saltEnc, &salt_len, NULL);
+                if ((salt_len != 32 && salt_len != 64) || ret == CborErrorOutOfMemory) {
+                    return CTAP1_ERR_INVALID_LENGTH;
+                } else if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                hs->saltLen = salt_len;
+                parsed_count++;
+                break;
+
+            case 0x03:
+                // saltAuth(0x03): 
+                //   LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
+                salt_len = 32;
+                ret = cbor_value_copy_byte_string(&map, hs->saltAuth, &salt_len, NULL);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                parsed_count++;
+                break;
+        }
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+    }
+
+    if (parsed_count != 3) {
+        return CTAP2_ERR_MISSING_PARAMETER;
+    }
+
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
+{
+    CborValue map;
+    size_t    sz, map_length;
+    char      key[16];
+    int       ret;
+    uint8_t   i;
+    bool      b;
+
+    if (cbor_value_get_type(val) != CborMapType) {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+
+    ret = cbor_value_enter_container(val, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    ret = cbor_value_get_map_length(val, &map_length);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    for (i = 0; i < map_length; i++) {
+        if (cbor_value_get_type(&map) != CborTextStringType) {
+            return CTAP2_ERR_INVALID_CBOR_TYPE;
+        }
+
+        sz = sizeof(key);
+        ret = cbor_value_copy_text_string(&map, key, &sz, NULL);
+        if (ret == CborErrorOutOfMemory) {
+            // Error, rp map key is too large. Ignoring.
+            cbor_value_advance(&map);
+            cbor_value_advance(&map);
+            continue;
+        } else if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        key[sizeof(key) - 1] = 0;
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+        if (strncmp(key, "hmac-secret", 11) == 0) {
+            if (cbor_value_get_type(&map) == CborBooleanType) {
+                ret = cbor_value_get_boolean(&map, &b);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                if (b) {
+                    ext->hmac_secret_requested = true;
+                }
+
+            } else if (cbor_value_get_type(&map) == CborMapType) {
+                ret = parse_hmac_secret(&map, ext->hmac_secret);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+            }
+        }
+
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+    }
+    return CTAP1_ERR_SUCCESS;
+}
