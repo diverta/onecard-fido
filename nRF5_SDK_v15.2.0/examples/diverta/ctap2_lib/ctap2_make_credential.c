@@ -273,12 +273,61 @@ static uint8_t generate_credential_pubkey(void)
     return CTAP1_ERR_SUCCESS;
 }
 
+static uint8_t make_extensions_cbor(uint8_t *ext_encoder_buf, size_t *ext_encoder_buf_size)
+{
+    CborEncoder extensions;
+    uint8_t     ret;
+
+    cbor_encoder_init(&extensions, ext_encoder_buf, *ext_encoder_buf_size, 0);
+
+    CborEncoder hmac_secret_map;
+    ret = cbor_encoder_create_map(&extensions, &hmac_secret_map, 1);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+
+    ret = cbor_encode_text_stringz(&hmac_secret_map, "hmac-secret");
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+
+    ret = cbor_encode_boolean(&hmac_secret_map, 1);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+
+    ret = cbor_encoder_close_container(&extensions, &hmac_secret_map);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+
+    *ext_encoder_buf_size = cbor_encoder_get_buffer_size(&extensions, ext_encoder_buf);
+    return CTAP1_ERR_SUCCESS;
+}
+
+static uint8_t add_extensions_cbor(uint8_t *authenticator_data)
+{
+    size_t   ext_encoder_buf_size = 14;
+    uint8_t *ext_encoder_buf = authenticator_data;
+    if (make_extensions_cbor(ext_encoder_buf, &ext_encoder_buf_size) != CTAP1_ERR_SUCCESS) {
+        return 0;
+    }
+
+    return ext_encoder_buf_size;
+}
+
 static void generate_authenticator_data(void)
 {
     // rpIdHashの先頭アドレスとサイズを取得
     uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
     size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
 
+    // extensions設定時はflagsを追加設定
+    //   Extension data included (0x80)
+    if (ctap2_request.extensions.hmac_secret_requested) {
+        ctap2_flags_set(0x80);
+    }
+    
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
@@ -307,6 +356,11 @@ static void generate_authenticator_data(void)
     //   credentialPublicKey
     memcpy(authenticator_data + offset, credential_pubkey, credential_pubkey_size);
     offset += credential_pubkey_size;
+    //   extensions設定時
+    //     {"hmac-secret": true}
+    if (ctap2_request.extensions.hmac_secret_requested) {
+        offset += add_extensions_cbor(authenticator_data + offset);
+    }
 
 #if NRF_LOG_DEBUG_AUTH_DATA_BUFF
     int j, k;
