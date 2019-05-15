@@ -31,12 +31,12 @@ extern "C" {
 #define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 #define FIDO_TOKEN_COUNTER_RECORD_SIZE 17
 //
-//  PINコードハッシュ管理用
+//  PINリトライカウンター管理用
 //    トークンカウンター管理と同一ファイルで管理
 //
-#define FIDO_PIN_STORE_FILE_ID          (FIDO_TOKEN_COUNTER_FILE_ID)
-#define FIDO_PIN_STORE_HASH_RECORD_KEY  (0xBFFC)
-#define FIDO_PIN_STORE_HASH_RECORD_SIZE  9
+#define FIDO_PIN_RETRY_COUNTER_FILE_ID      (FIDO_TOKEN_COUNTER_FILE_ID)
+#define FIDO_PIN_RETRY_COUNTER_RECORD_KEY   (0xBFFC)
+#define FIDO_PIN_RETRY_COUNTER_RECORD_SIZE  9
 
 //
 //  鍵・証明書の長さを管理
