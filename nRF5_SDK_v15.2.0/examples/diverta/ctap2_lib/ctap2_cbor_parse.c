@@ -908,6 +908,8 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
                 }
                 if (b) {
                     ext->hmac_secret_requested = true;
+                } else {
+                    ext->hmac_secret_requested = false;
                 }
 
             } else if (cbor_value_get_type(&map) == CborMapType) {
@@ -915,6 +917,8 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+            } else {
+                return CTAP2_ERR_INVALID_CBOR_TYPE;
             }
         }
 
