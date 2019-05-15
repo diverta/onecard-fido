@@ -83,7 +83,7 @@ static void generate_credential_source_hash()
     
     // Public Key Credential Source + rpIdHashから
     // SHA-256ハッシュ値（32バイト）を生成
-    uint8_t hash_source_size = pubkey_cred_source_size + ctap2_rpid_hash_size;
+    size_t hash_source_size = pubkey_cred_source_size + ctap2_rpid_hash_size;
     credential_source_hash_size = sizeof(credential_source_hash);
     fido_crypto_generate_sha256_hash(
         hash_source_buffer, hash_source_size, credential_source_hash, &credential_source_hash_size);
@@ -113,7 +113,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
     // 
-    uint8_t offset = 1;
+    size_t offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
 
     // Public Key Credential Type
@@ -152,8 +152,8 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // 暗号化対象ブロックサイズを設定
     //   AES ECBの仕様上、16の倍数でなければならない
-    int block_num = offset / 16;
-    int block_sum = block_num * 16;
+    size_t block_num = offset / 16;
+    size_t block_sum = block_num * 16;
     if (offset == block_sum) {
         pubkey_cred_source_block_size = offset;
     } else {

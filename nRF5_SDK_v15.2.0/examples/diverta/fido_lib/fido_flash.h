@@ -26,14 +26,24 @@ extern "C" {
 #define FIDO_AESKEYS_RECORD_KEY       (0xBFFE)
 //
 //  トークンカウンター管理用
-//
+//  レコードサイズ = 17 ワード
+//    レコードキー: 8ワード（32バイト）
+//      U2Fの場合＝appIdHash
+//      CTAP2の場合＝Public Key Credential Sourceから生成されたSHA-256ハッシュ値
+//      （実質、Webサイト＋ユーザー＋鍵の組み合わせでユニークとなるキー）
+//    トークンカウンター: 1ワード（4バイト)
+//    Webサイト情報: 8ワード（32バイト）
+//      U2Fの場合＝appIdHash
+//      CTAP2の場合＝rpIdHash
 #define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFB)
 #define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFFD)
 #define FIDO_TOKEN_COUNTER_RECORD_SIZE 17
 //
 //  PINリトライカウンター管理用
-//    トークンカウンター管理と同一ファイルで管理
-//
+//  トークンカウンター管理と同一ファイルで管理
+//  レコードサイズ = 9 ワード
+//    PINコードハッシュ: 8ワード（32バイト）
+//    リトライカウンター: 1ワード（4バイト)
 #define FIDO_PIN_RETRY_COUNTER_FILE_ID      (FIDO_TOKEN_COUNTER_FILE_ID)
 #define FIDO_PIN_RETRY_COUNTER_RECORD_KEY   (0xBFFC)
 #define FIDO_PIN_RETRY_COUNTER_RECORD_SIZE  9

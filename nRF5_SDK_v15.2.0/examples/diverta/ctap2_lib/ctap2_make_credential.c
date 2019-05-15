@@ -331,7 +331,7 @@ static void generate_authenticator_data(void)
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
-    uint8_t offset = 0;
+    size_t offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
@@ -342,7 +342,7 @@ static void generate_authenticator_data(void)
     offset += sizeof(uint32_t);
     //  attestedCredentialData
     //   aaguid
-    uint8_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
+    size_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
     memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
     offset += aaguid_size;
     //   credentialIdLength
@@ -550,7 +550,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 #if NRF_LOG_DEBUG_CBOR_RESPONSE
     NRF_LOG_DEBUG("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
     int j, k;
-    int max = 288;
+    int max = 320;
     for (j = 0; j < max; j += 64) {
         k = max - j;
         NRF_LOG_HEXDUMP_DEBUG(encoded_buff + j, (k < 64) ? k : 64);
