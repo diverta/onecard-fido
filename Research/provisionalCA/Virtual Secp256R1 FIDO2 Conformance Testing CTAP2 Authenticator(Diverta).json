@@ -20,11 +20,8 @@
         15880
     ],
     "userVerificationDetails": [
-        [
-            {
-                "userVerification": 1
-            }
-        ]
+        [{"userVerification": 1}],
+        [{"userVerification": 4}]
     ],
     "keyProtection": 10,
     "matcherProtection": 4,
