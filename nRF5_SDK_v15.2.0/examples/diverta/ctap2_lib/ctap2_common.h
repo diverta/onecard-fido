@@ -25,6 +25,7 @@ extern "C" {
 #define CREDENTIAL_ID_MAX_SIZE      256
 #define AUTHENTICATOR_DATA_MAX_SIZE 384
 #define ALLOW_LIST_MAX_SIZE         10
+#define CRED_RANDOM_SIZE            32
 
 // 各種処理用の定数（PIN関連）
 #define PIN_AUTH_SIZE               16
