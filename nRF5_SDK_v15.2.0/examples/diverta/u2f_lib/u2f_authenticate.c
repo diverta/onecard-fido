@@ -40,8 +40,7 @@ bool u2f_authenticate_update_token_counter(uint8_t *p_appid_hash)
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         return false;
     }

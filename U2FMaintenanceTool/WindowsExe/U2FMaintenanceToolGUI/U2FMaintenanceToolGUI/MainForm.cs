@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Windows.Forms;
+using U2FMaintenanceToolCommon;
 
 namespace U2FMaintenanceToolGUI
 {
     public partial class MainForm : Form
     {
         private AppMain app;
+        private HIDMain hid;
         private string commandTitle = "";
 
         public MainForm()
         {
             InitializeComponent();
             app = new AppMain(this);
+            hid = new HIDMain(this);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
         {
             // このアプリケーションを終了する
+            hid.OnFormDestroy();
             app.doExit();
         }
 
@@ -40,13 +44,13 @@ namespace U2FMaintenanceToolGUI
             else if (sender.Equals(button2)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
-                app.doEraseSkeyCert();
+                hid.DoEraseSkeyCert();
 
             }
             else if (sender.Equals(button3)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_INSTALL_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
-                app.doInstallSkeyCert(textPath1.Text, textPath2.Text);
+                hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
             else if (sender.Equals(button4)) {
@@ -54,6 +58,10 @@ namespace U2FMaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
 
+            }
+            else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
+                hid.DoTestCtapHidInit();
             }
         }
 
@@ -321,5 +329,39 @@ namespace U2FMaintenanceToolGUI
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // CTAPHID_INITのテストを実行
+            doCommand(sender);
+        }
+
+        private void メニューはありませんToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED,
+                AppMain.U2FMaintenanceToolTitle,
+                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == WmDevicechange) {
+                int wParam = m.WParam.ToInt32();
+                if (wParam == DbtDevicearrival) {
+                    hid.OnUSBDeviceArrival();
+                }
+                if (wParam == DbtDeviceremovecomplete) {
+                    hid.OnUSBDeviceRemoveComplete();
+                }
+            }
+        }
+
+        // WndProc で使用する定数
+        public const int WmDevicechange = 0x0219;
+        public const int DbtDevicearrival = 0x8000;
+        public const int DbtDeviceremovecomplete = 0x8004;
     }
 }

@@ -22,6 +22,21 @@ static uint16_t control_point_buffer_length;
 static BLE_HEADER_T ble_header_t;
 static FIDO_APDU_T   apdu_t;
 
+// 無通信タイムアウトタイマーが開始後、
+// 受信したリクエストフレーム数を
+// このモジュール内で保持
+static uint8_t received_frame_count;
+
+void ble_u2f_control_point_receive_frame_count_clear(void)
+{
+    // 受信フレーム数をリセット
+    received_frame_count = 0;
+}
+
+uint8_t ble_u2f_control_point_receive_frame_count(void)
+{
+    return received_frame_count;
+}
 
 void ble_u2f_control_point_initialize(void)
 {
@@ -97,9 +112,19 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         // データ長だけセットしておく
         p_apdu->Lc = p_ble_header->LEN;
     } else {
-        // コマンドがPING以外の場合
-        // APDUヘッダー項目を編集して保持
-        offset += ble_u2f_control_point_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        p_apdu->CLA = control_point_buffer[offset];
+        if (p_apdu->CLA != 0x00) {
+            // CLA部（control pointの先頭から4バイトめ）が
+            // 0x00以外の場合は、CTAP2とみなし、
+            // CLA部およびデータ長だけをセットしておく
+            p_apdu->Lc = p_ble_header->LEN;
+            NRF_LOG_DEBUG("CTAP2 command(0x%02x) CBOR size(%d) ", 
+                p_apdu->CLA, p_apdu->Lc - 1);
+        } else {
+            // コマンドがPING以外で、U2Fの場合
+            // APDUヘッダー項目を編集して保持
+            offset += ble_u2f_control_point_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        }
     }
 
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {
@@ -235,4 +260,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     // 共有情報にBLEヘッダーとAPDUの参照を引き渡す
     p_u2f_context->p_ble_header = &ble_header_t;
     p_u2f_context->p_apdu = &apdu_t;
+
+    // 受信フレーム数をカウントアップ
+    received_frame_count++;
 }

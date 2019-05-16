@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_common.h"
+#include "u2f.h"
 #include "u2f_crypto.h"
 #include "fido_flash.h"
 #include "u2f_keyhandle.h"
@@ -15,12 +17,6 @@
 #define NRF_LOG_MODULE_NAME u2f_register
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// for macro (SKEY_WORD_NUM, CERT_WORD_NUM, SKEY_CERT_WORD_NUM)
-#include "ble_u2f_securekey.h"
-
-// インストール済み秘密鍵のエンディアン変換用配列
-static uint8_t private_key_be[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
 
 // ステータスワードを保持
 static uint16_t status_word;
@@ -41,8 +37,7 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
     uint32_t token_counter = 0;
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, reserve_word) == false) {
+    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         return false;
     }
 
@@ -192,26 +187,6 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     return true;
 }
 
-static void convert_private_key_endian(void)
-{
-    // インストール済み秘密鍵のエンディアンを変換
-    //   private_key_leはリトルエンディアンで格納されている秘密鍵のバイト配列
-    //   private_key_beはビッグエンディアンに変換された配列
-    uint8_t *private_key_le = u2f_securekey_skey();
-    size_t key_size = sizeof(private_key_be);
-    
-    for (int i = 0; i < key_size; i++) {
-        private_key_be[i] = private_key_le[key_size - 1 - i];
-    }
-}
-
-uint8_t *u2f_securekey_skey_be(void)
-{
-    // ビッグエンディアンイメージの秘密鍵格納領域の開始アドレスを取得
-    convert_private_key_endian();
-    return private_key_be;
-}
-
 bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_buffer, size_t *response_length, uint32_t apdu_le)
 {
     // エラー時のレスポンスを「予期しないエラー」に設定
@@ -223,7 +198,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (u2f_crypto_sign(u2f_securekey_skey_be()) != NRF_SUCCESS) {
+    if (u2f_crypto_sign(u2f_securekey_skey()) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }

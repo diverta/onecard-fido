@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "U2FMaintenanceToolGUI", "U2FMaintenanceToolGUI\U2FMaintenanceToolGUI.csproj", "{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "U2FHelper", "U2FHelper\U2FHelper.csproj", "{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,24 +37,6 @@ Global
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x64.Build.0 = Release|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x86.ActiveCfg = Release|Any CPU
 		{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}.Release|x86.Build.0 = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x64.Build.0 = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Debug|x86.Build.0 = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|Any CPU.Build.0 = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|x64.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|x64.Build.0 = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|x86.ActiveCfg = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Deploy|x86.Build.0 = Debug|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|x64.ActiveCfg = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|x64.Build.0 = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|x86.ActiveCfg = Release|Any CPU
-		{38828EDD-C5AD-4E4B-AD6C-1F1CD1358A19}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

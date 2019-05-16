@@ -4,9 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-//#include "ble_u2f_securekey.h"
 #include "fido_flash.h"
-#include "fds.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash
@@ -15,9 +13,8 @@ NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
-static uint32_t m_token_counter_record_buffer[10];
+static uint32_t m_token_counter_record_buffer[FIDO_TOKEN_COUNTER_RECORD_SIZE];
 static uint32_t m_token_counter;
-static uint32_t m_reserve_word;
 
 // 鍵・証明書データ読込用の作業領域（固定長）
 static uint32_t skey_cert_data[SKEY_CERT_WORD_NUM];
@@ -53,8 +50,7 @@ bool fido_flash_skey_cert_delete(void)
     return true;
 }
 
-
-static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata_buffer)
+bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer)
 {
 	fds_flash_record_t flash_record;
 	uint32_t *data;
@@ -69,16 +65,16 @@ static bool keydata_record_get(fds_record_desc_t *record_desc, uint32_t *keydata
 
     data = (uint32_t *)flash_record.p_data;
     data_length = flash_record.p_header->length_words;
-    memcpy(keydata_buffer, data, data_length * sizeof(uint32_t));
+    memcpy(record_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
+
     return true;
 }
-
 
 bool fido_flash_skey_cert_read(void)
 {
@@ -91,7 +87,7 @@ bool fido_flash_skey_cert_read(void)
     ret_code_t ret = fds_record_find(FIDO_SKEY_CERT_FILE_ID, FIDO_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
-        if (keydata_record_get(&record_desc, skey_cert_data) == false) {
+        if (fido_flash_fds_record_get(&record_desc, skey_cert_data) == false) {
             return false;
         }
 
@@ -176,32 +172,6 @@ bool fido_flash_token_counter_delete(void)
     return true;
 }
 
-static bool token_counter_record_get(fds_record_desc_t *record_desc, uint32_t *token_counter_buffer)
-{
-	fds_flash_record_t flash_record;
-	uint32_t *data;
-    uint16_t  data_length;
-    ret_code_t err_code;
-
-    err_code = fds_record_open(record_desc, &flash_record);
-    if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
-        return false;
-    }
-
-    data = (uint32_t *)flash_record.p_data;
-    data_length = flash_record.p_header->length_words;
-    memcpy(token_counter_buffer, data, data_length * sizeof(uint32_t));
-
-    err_code = fds_record_close(record_desc);
-    if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
-        return false;	
-    }
-
-    return true;
-}
-
 static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *record_desc)
 {
     ret_code_t ret;
@@ -213,7 +183,7 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
         ret = fds_record_find(FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, record_desc, &ftok);
         if (ret == FDS_SUCCESS) {
             // 同じappIdHashのレコードかどうか判定 (先頭32バイトを比較)
-            token_counter_record_get(record_desc, m_token_counter_record_buffer);
+            fido_flash_fds_record_get(record_desc, m_token_counter_record_buffer);
             if (strncmp((char *)p_appid_hash, (char *)m_token_counter_record_buffer, 32) == 0) {
                 found = true;
             }
@@ -229,6 +199,15 @@ uint32_t fido_flash_token_counter_value(void)
     return m_token_counter_record_buffer[8];
 }
 
+uint8_t *fido_flash_token_counter_get_check_hash(void)
+{
+    // カウンターに紐づくチェック用ハッシュが
+    // 格納されている先頭アドレスを戻す
+    // バッファ先頭からのオフセットは９ワード分
+    uint8_t *hash_for_check = (uint8_t *)(m_token_counter_record_buffer + 9);
+    return hash_for_check;
+}
+
 bool fido_flash_token_counter_read(uint8_t *p_appid_hash)
 {
     // Flash ROMから既存データを読込み、
@@ -238,7 +217,7 @@ bool fido_flash_token_counter_read(uint8_t *p_appid_hash)
     return token_counter_record_find(p_appid_hash, &record_desc);
 }
 
-bool fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint32_t reserve_word)
+bool fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check)
 {
     // Flash ROMから既存データを走査
     bool found = false;
@@ -252,16 +231,16 @@ bool fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counte
     m_token_counter = token_counter;
     m_token_counter_record_buffer[8] = m_token_counter;
 
-    // 予備部 (1ワード)
-    m_reserve_word = reserve_word;
-    m_token_counter_record_buffer[9] = m_reserve_word;
+    // チェック用のIdHash部 (8ワード)
+    // バッファ先頭からのオフセットは９ワード（36バイト）分
+    memcpy((uint8_t *)m_token_counter_record_buffer + 36, p_hash_for_check, 32);
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
     record.file_id           = FIDO_TOKEN_COUNTER_FILE_ID;
     record.key               = FIDO_TOKEN_COUNTER_RECORD_KEY;
     record.data.p_data       = m_token_counter_record_buffer;
-    record.data.length_words = 10;
+    record.data.length_words = FIDO_TOKEN_COUNTER_RECORD_SIZE;
 
     ret_code_t ret;
     if (found == true) {

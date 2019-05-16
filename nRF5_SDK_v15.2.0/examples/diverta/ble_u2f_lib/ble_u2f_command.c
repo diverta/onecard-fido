@@ -10,10 +10,12 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
-#include "ble_u2f_securekey.h"
 #include "ble_u2f_pairing.h"
-#include "fido_flash.h"
 #include "ble_u2f_util.h"
+
+// for CTAP2 support
+#include "ctap2_common.h"
+#include "ble_ctap2_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_command
@@ -23,10 +25,17 @@ NRF_LOG_MODULE_REGISTER();
 // for user presence test
 #include "fido_user_presence.h"
 
+// for fido_ble_peripheral_mode
+#include "fido_ble_peripheral.h"
+
 // Flash ROM更新が完了時、
 // 後続処理が使用するデータを共有
 static ble_u2f_context_t m_u2f_context;
 
+ble_u2f_context_t *get_ble_u2f_context(void)
+{
+    return &m_u2f_context;
+}
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 {
@@ -67,6 +76,13 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
 
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 {
+    UNUSED_PARAMETER(p_u2f);
+    if (!fido_ble_peripheral_mode()) {
+        // BLEペリフェラルが稼働していないときに
+        // MAIN SWが長押しされた場合は無視
+        return false;
+    }
+
     // ペアリングモード変更を実行
     ble_u2f_pairing_change_mode(&m_u2f_context);
     return true;
@@ -109,6 +125,12 @@ static enum COMMAND_TYPE get_command_type(void)
             }
 
             // 受信データをすべて受け取った場合は以下の処理
+            // CTAP2コマンドから先に処理する。
+            if (is_ctap2_command_byte(p_apdu->CLA)) {
+                return COMMAND_CTAP2_COMMAND;
+            }
+
+            // 以下はU2Fコマンド
             if (p_apdu->INS == U2F_REGISTER) {
                 NRF_LOG_DEBUG("get_command_type: Registration Request Message received ");
                 current_command = COMMAND_U2F_REGISTER;
@@ -127,21 +149,6 @@ static enum COMMAND_TYPE get_command_type(void)
                 // ボンディング情報削除コマンド
                 NRF_LOG_DEBUG("get_command_type: initialize bonding information ");
                 current_command = COMMAND_INITBOND;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITFSTR) {
-                // 秘密鍵／証明書削除コマンド
-                NRF_LOG_DEBUG("get_command_type: initialize fstorage ");
-                current_command = COMMAND_INITFSTR;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITSKEY) {
-                // 秘密鍵導入コマンド
-                NRF_LOG_DEBUG("get_command_type: initial skey data received ");
-                current_command = COMMAND_INITSKEY;
-
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITCERT) {
-                // データが完成していれば、証明書導入用コマンドを実行
-                NRF_LOG_DEBUG("get_command_type: initial cert data received ");
-                current_command = COMMAND_INITCERT;
                 
             } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
                 // ペアリングのためのレスポンスを実行
@@ -225,21 +232,13 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
         case COMMAND_INITBOND:
             ble_u2f_pairing_delete_bonds(&m_u2f_context);
             break;
-
-        case COMMAND_INITFSTR:
-            ble_u2f_securekey_erase(&m_u2f_context);
-            break;
-
-        case COMMAND_INITSKEY:
-            ble_u2f_securekey_install_skey(&m_u2f_context);
-            break;
-
-        case COMMAND_INITCERT:
-            ble_u2f_securekey_install_cert(&m_u2f_context);
-            break;
             
         case COMMAND_PAIRING:
             ble_u2f_send_success_response(&m_u2f_context);
+            break;
+
+        case COMMAND_CTAP2_COMMAND:
+            ble_ctap2_command_do_process();
             break;
 
         case COMMAND_U2F_REGISTER:
@@ -271,27 +270,18 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         ble_u2f_pairing_reflect_mode_change(&m_u2f_context, p_evt);
         return;
     }
-
+        
     // 共有情報の中に接続情報がない場合は終了
     ble_u2f_t *p_u2f = m_u2f_context.p_u2f;
     if (p_u2f == NULL) {
         return;
     }
+
+    // CTAP2コマンドの処理を実行
+    ble_ctap2_command_on_fs_evt(p_evt);
     
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
-        case COMMAND_INITFSTR:
-            ble_u2f_securekey_erase_response(&m_u2f_context, p_evt);
-            break;
-
-        case COMMAND_INITSKEY:
-            ble_u2f_securekey_install_skey_response(&m_u2f_context, p_evt);
-            break;
-
-        case COMMAND_INITCERT:
-            ble_u2f_securekey_install_cert_response(&m_u2f_context, p_evt);
-            break;
-
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(&m_u2f_context, p_evt);
             break;
@@ -310,4 +300,10 @@ void ble_u2f_command_keepalive_timer_handler(void *p_context)
     // キープアライブ・コマンドを実行する
     ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
     ble_u2f_send_keepalive_response(p_u2f_context);
+}
+
+void ble_u2f_command_on_response_send_completed(void)
+{
+    // CTAP2コマンドの処理を実行
+    ble_ctap2_command_response_sent();
 }

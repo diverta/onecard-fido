@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "ToolBLECentral.h"
+#import "ToolHIDCommand.h"
 #import "ToolCommand.h"
 #import "ToolFileMenu.h"
 #import "ToolFilePanel.h"
@@ -8,7 +9,7 @@
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolBLECentralDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
+    <ToolBLECentralDelegate, ToolHIDCommandDelegate, ToolCommandDelegate, ToolFileMenuDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -27,8 +28,12 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemFile2;
     @property (assign) IBOutlet NSMenuItem  *menuItemFile3;
 
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+
     @property (nonatomic) ToolCommand       *toolCommand;
     @property (nonatomic) ToolBLECentral    *toolBLECentral;
+    @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFileMenu      *toolFileMenu;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -44,6 +49,7 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolBLECentral = [[ToolBLECentral alloc] initWithDelegate:self];
+        self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
         self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
         self.toolFileMenu   = [[ToolFileMenu alloc]   initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
@@ -78,6 +84,8 @@
         [self.menuItemFile1 setEnabled:enabled];
         [self.menuItemFile2 setEnabled:enabled];
         [self.menuItemFile3 setEnabled:enabled];
+        [self.menuItemTestUSB setEnabled:enabled];
+        [self.menuItemTestBLE setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -93,7 +101,7 @@
             return;
         }
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_ERASE_SKEY_CERT];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
     }
 
     - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
@@ -117,10 +125,10 @@
         }
         // 鍵・証明書インストール
         [self enableButtons:false];
-        [self.toolCommand setInstallParameter:COMMAND_INSTALL_SKEY
-                            skeyFilePath:self.fieldPath1.stringValue
-                            certFilePath:self.fieldPath2.stringValue];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_INSTALL_SKEY];
+        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY
+                                      skeyFilePath:self.fieldPath1.stringValue
+                                      certFilePath:self.fieldPath2.stringValue];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY];
     }
 
     - (IBAction)button4DidPress:(id)sender {
@@ -171,6 +179,16 @@
         [self enableButtons:false];
         [[self toolFileMenu] toolFileMenuWillCreateFile:self parentWindow:[self window]
                                                 command:COMMAND_CREATE_SELFCRT_CRT];
+    }
+
+    - (IBAction)menuItemTestHID1DidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
+    }
+
+    - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_NONE];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -364,6 +382,29 @@
             [self setBleTransactionStarted:false];
             // レスポンスを次処理に引き渡す
             [self.toolCommand toolCommandWillProcessBleResponse];
+        }
+    }
+
+#pragma mark - Call back from ToolHIDCommand
+
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+        // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
+        if (result == false) {
+            [self notifyToolCommandMessage:message];
+        }
+        // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:command],
+                         result? MSG_SUCCESS:MSG_FAILURE];
+        // ボタンを活性化
+        [self enableButtons:true];
+        // メッセージを画面のテキストエリアに表示
+        [self notifyToolCommandMessage:str];
+        // ポップアップを表示
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:str informativeText:nil];
         }
     }
 

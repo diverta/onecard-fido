@@ -16,18 +16,38 @@
 // CTAP2コマンドで共用する作業領域
 // 
 // RP IDのSHA-256ハッシュデータを保持
-nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
-size_t                          ctap2_rpid_hash_size;
+static nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
+static size_t                          ctap2_rpid_hash_size;
 
 // flagsを保持
-uint8_t ctap2_flags;
+static uint8_t ctap2_flags;
 
 // signCountを保持
-uint32_t ctap2_sign_count = 0;
+static uint32_t ctap2_sign_count = 0;
 
 // Authenticator dataを保持
 uint8_t authenticator_data[AUTHENTICATOR_DATA_MAX_SIZE];
 size_t  authenticator_data_size;
+
+uint32_t ctap2_current_sign_count(void)
+{
+    return ctap2_sign_count;
+}
+
+void ctap2_set_sign_count(uint32_t count)
+{
+    ctap2_sign_count = count;
+}
+
+uint8_t *ctap2_generated_rpid_hash(void)
+{
+    return ctap2_rpid_hash;
+}
+
+size_t ctap2_generated_rpid_hash_size(void)
+{
+    return ctap2_rpid_hash_size;
+}
 
 void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size)
 {
@@ -72,4 +92,19 @@ bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be
     }
 
     return true;
+}
+
+uint8_t ctap2_flags_value(void)
+{
+    return ctap2_flags;
+}
+
+void ctap2_flags_init(uint8_t flag)
+{
+    ctap2_flags = flag;
+}
+
+void ctap2_flags_set(uint8_t flag)
+{
+    ctap2_flags |= flag;
 }

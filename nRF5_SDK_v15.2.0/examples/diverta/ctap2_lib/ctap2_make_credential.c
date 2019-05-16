@@ -10,6 +10,7 @@
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
+#include "ctap2_client_pin_token.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
 #include "fido_crypto_keypair.h"
@@ -36,6 +37,7 @@ NRF_LOG_MODULE_REGISTER();
 #define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
 #define NRF_LOG_DEBUG_SIGN_BUFF         false
 #define NRF_LOG_DEBUG_CBOR_RESPONSE     false
+#define NRF_LOG_DEBUG_PIN_AUTH          false
 
 // デコードされた
 // authenticatorMakeCredential
@@ -46,6 +48,8 @@ struct {
     CTAP_USER_ENTITY_T       user;
     CTAP_PUBKEY_CRED_PARAM_T cred_param;
     CTAP_OPTIONS_T           options;
+    uint8_t                  pinAuth[PIN_AUTH_SIZE];
+    uint8_t                  pinProtocol;
 } ctap2_request;
 
 // credentialPublicKeyを保持
@@ -59,9 +63,10 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     CborValue   map;
     size_t      map_length;
     CborType    type;
-    int         ret;
-    int         i;
+    CborError   ret;
+    uint8_t     i;
     int         key;
+    int         intval;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
     NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
@@ -119,8 +124,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
             case 1:
                 // clientDataHash (Byte Array)
                 ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 must_item_flag |= 0x01;
                 break;
@@ -164,10 +169,29 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 break;
             case 7:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options ,&map);
+                ret = parse_options(&ctap2_request.options, &map, true);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
+                break;
+            case 8:
+                // pinAuth（Byte Array）
+                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    // PINが正しく設定されていない旨のエラーを戻す
+                    return CTAP2_ERR_PIN_NOT_SET;
+                }
+                break;
+            case 9:
+                // pinProtocol (Unsigned Integer)
+                if (cbor_value_get_type(&map) != CborIntegerType) {
+                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                }
+                ret = cbor_value_get_int_checked(&map, &intval);
+                if (ret != CborNoError) {
+                    return CTAP2_ERR_CBOR_PARSING;
+                }
+                ctap2_request.pinProtocol = (uint8_t)intval;
                 break;
             default:
                 break;
@@ -195,6 +219,11 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
 #endif
 
+#if NRF_LOG_DEBUG_PIN_AUTH
+    NRF_LOG_DEBUG("pinAuth (pinProtocol=0x%02x):", ctap2_request.pinProtocol);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, PIN_AUTH_SIZE);
+#endif
+
     // 必須項目が揃っていない場合はエラー
     if (must_item_flag != 0x0f) {
         return CTAP2_ERR_MISSING_PARAMETER;
@@ -208,74 +237,6 @@ bool ctap2_make_credential_is_tup_needed(void)
     return (ctap2_request.options.up == 1);
 }
 
-static uint8_t encode_credential_pubkey(CborEncoder *encoder, uint8_t *x, uint8_t *y, int32_t alg)
-{
-    uint8_t ret;
-    CborEncoder map;
-
-    ret = cbor_encoder_create_map(encoder, &map, 5);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Key type
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_KTY);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, COSE_KEY_KTY_EC2);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Signature algorithm
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_ALG);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, alg);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // Curve type
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_CRV);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_int(&map, COSE_KEY_CRV_P256);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // x-coordinate
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_X);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_byte_string(&map, x, 32);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    // y-coordinate
-    ret = cbor_encode_int(&map, COSE_KEY_LABEL_Y);
-    if (ret != CborNoError) {
-        return ret;
-    }
-    ret = cbor_encode_byte_string(&map, y, 32);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    ret = cbor_encoder_close_container(encoder, &map);
-    if (ret != CborNoError) {
-        return ret;
-    }
-
-    return CborNoError;
-}
-
 static uint8_t generate_credential_pubkey(void)
 {
     // CBORエンコーダー初期化
@@ -287,9 +248,9 @@ static uint8_t generate_credential_pubkey(void)
     uint8_t *x = fido_crypto_keypair_public_key();
     uint8_t *y = fido_crypto_keypair_public_key() + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
-    uint8_t ret = encode_credential_pubkey(&encoder, x, y, alg);
+    uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORエンコードデータ長を取得
@@ -305,21 +266,25 @@ static uint8_t generate_credential_pubkey(void)
 
 static void generate_authenticator_data(void)
 {
+    // rpIdHashの先頭アドレスとサイズを取得
+    uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
+    size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
+
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
-    int offset = 0;
+    uint8_t offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
     //  flags
-    authenticator_data[offset++] = ctap2_flags;
+    authenticator_data[offset++] = ctap2_flags_value();
     //  signCount
-    fido_set_uint32_bytes(authenticator_data + offset, ctap2_sign_count);
+    fido_set_uint32_bytes(authenticator_data + offset, ctap2_current_sign_count());
     offset += sizeof(uint32_t);
     //  attestedCredentialData
     //   aaguid
-    int aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
+    uint8_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
     memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
     offset += aaguid_size;
     //   credentialIdLength
@@ -361,7 +326,7 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey_be()) == false) {
+    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey()) == false) {
         // 署名を実行
         // NGであれば、エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
@@ -390,11 +355,14 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     // flags編集
     //   User Present result (0x01) &
     //   Attested credential data included (0x40)
-    ctap2_flags = 0x41;
+    ctap2_flags_set(0x41);
+
+    // sign counterをゼロクリア
+    ctap2_set_sign_count(0);
 
     // Public Key Credential Sourceを編集する
     ctap2_pubkey_credential_generate_source(
-        &ctap2_request.cred_param, &ctap2_request.rp, &ctap2_request.user);
+        &ctap2_request.cred_param, &ctap2_request.user);
 
     // credentialIdを生成
     ctap2_pubkey_credential_generate_id();
@@ -426,36 +394,35 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 
     // Map初期化
     CborEncoder map;
-    int         ret;
-    ret = cbor_encoder_create_map(&encoder, &map, 3);
+    CborError ret = cbor_encoder_create_map(&encoder, &map, 3);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // fmt (0x01: RESP_fmt)
     ret = cbor_encode_int(&map, 0x01);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     ret = cbor_encode_text_stringz(&map, "packed");
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // authData (0x02: RESP_authData)
     ret = cbor_encode_int(&map, 0x02);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
     ret = cbor_encode_byte_string(&map, authenticator_data, authenticator_data_size);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // attStmt (0x03: RESP_attStmt)
     ret = cbor_encode_int(&map, 0x03);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // 証明書は入れ子のCBORとなる
@@ -466,26 +433,26 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         // alg
         ret = cbor_encode_text_stringz(&stmtmap,"alg");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encode_int(&stmtmap,COSE_ALG_ES256);
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         // sig
         ret = cbor_encode_text_stringz(&stmtmap,"sig");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encode_byte_string(&stmtmap,
             u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         // x5c
         ret = cbor_encode_text_stringz(&stmtmap,"x5c");
         if (ret != CborNoError) {
-            return CTAP2_ERR_PROCESSING;
+            return CTAP1_ERR_OTHER;
         }
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
@@ -495,23 +462,23 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {
-                return CTAP2_ERR_PROCESSING;
+                return CTAP1_ERR_OTHER;
             }
             ret = cbor_encoder_close_container(&stmtmap, &x5carr);
             if (ret != CborNoError) {
-                return CTAP2_ERR_PROCESSING;
+                return CTAP1_ERR_OTHER;
             }
         }
     }
 
     ret = cbor_encoder_close_container(&map, &stmtmap);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // CBORバッファの長さを設定
@@ -534,20 +501,42 @@ uint8_t ctap2_make_credential_add_token_counter(void)
 {
     // 例外抑止
     if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
-        return CTAP2_ERR_PROCESSING;
+        return CTAP1_ERR_OTHER;
     }
 
     // Public Key Credential Sourceから
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを追加する
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint32_t reserve_word = 0xffffffff;
-    if (fido_flash_token_counter_write(p_hash, ctap2_sign_count, reserve_word) == false) {
-        return CTAP2_ERR_PROCESSING;
+    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
+    if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
+        return CTAP1_ERR_OTHER;
     }
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("sign counter registered (value=%d)", ctap2_sign_count);
+    NRF_LOG_DEBUG("sign counter registered (value=%d)", ctap2_current_sign_count());
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_make_credential_verify_pin_auth(void)
+{
+    // PIN認証が必要でない場合は終了
+    if (ctap2_request.pinProtocol != 0x01) {
+        return CTAP1_ERR_SUCCESS;
+    }
+
+    // pinAuthの妥当性チェックを行い、
+    // NGの場合はPIN認証失敗
+    uint8_t ctap2_status = ctap2_client_pin_token_verify_pin_auth(ctap2_request.clientDataHash, ctap2_request.pinAuth);
+    if (ctap2_status != CTAP1_ERR_SUCCESS) {
+        NRF_LOG_ERROR("pinAuth verification failed");
+        return ctap2_status;
+    }
+
+    // flagsを設定
+    //   User Verified result (0x04)
+    ctap2_flags_set(0x04);
+    NRF_LOG_DEBUG("pinAuth verification success");
     return CTAP1_ERR_SUCCESS;
 }

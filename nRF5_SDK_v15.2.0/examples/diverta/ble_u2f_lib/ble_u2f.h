@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 //
-// One Card固有の定義
+// FIDO Authenticator固有の定義
 //
 #define NRF_BLE_GATT_MAX_MTU_SIZE   67
 
@@ -94,9 +94,7 @@ enum COMMAND_TYPE
 {
     COMMAND_NONE = 0,
     COMMAND_INITBOND,
-    COMMAND_INITFSTR,
-    COMMAND_INITSKEY,
-    COMMAND_INITCERT,
+    COMMAND_CTAP2_COMMAND,
     COMMAND_U2F_REGISTER,
     COMMAND_U2F_AUTHENTICATE,
     COMMAND_U2F_VERSION,

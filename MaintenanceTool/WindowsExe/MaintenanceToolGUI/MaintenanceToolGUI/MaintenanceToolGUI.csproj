@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2BB774A0-42A0-428A-BC85-F0D2F2CC403F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MaintenanceToolGUI</RootNamespace>
+    <AssemblyName>MaintenanceToolGUI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetPlatformVersion>10.0</TargetPlatformVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>CS3021</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.WindowsRuntime">
+      <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Windows.winmd">
+      <HintPath>C:\Program Files\Windows Kits\10\UnionMetadata\Windows.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MaintenanceToolCommon\AppCommon.cs">
+      <Link>AppCommon.cs</Link>
+    </Compile>
+    <Compile Include="..\MaintenanceToolCommon\BLEProcess.cs">
+      <Link>BLEProcess.cs</Link>
+    </Compile>
+    <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
+      <Link>BLEService.cs</Link>
+    </Compile>
+    <Compile Include="AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CBORDecoder.cs" />
+    <Compile Include="CBOREncoder.cs" />
+    <Compile Include="HIDDevice.cs" />
+    <Compile Include="HIDMain.cs" />
+    <Compile Include="HIDProcess.cs" />
+    <Compile Include="InstallSkeyCert.cs" />
+    <Compile Include="PeterO\BigInteger.cs" />
+    <Compile Include="PeterO\BigIntegerExtra.cs" />
+    <Compile Include="PeterO\Cbor\Base64.cs" />
+    <Compile Include="PeterO\Cbor\CBORCanonical.cs" />
+    <Compile Include="PeterO\Cbor\CBORDataUtilities.cs" />
+    <Compile Include="PeterO\Cbor\CBORDateConverter.cs" />
+    <Compile Include="PeterO\Cbor\CBORDouble.cs" />
+    <Compile Include="PeterO\Cbor\CBOREInteger.cs" />
+    <Compile Include="PeterO\Cbor\CBOREncodeOptions.cs" />
+    <Compile Include="PeterO\Cbor\CBORException.cs" />
+    <Compile Include="PeterO\Cbor\CBORExtendedDecimal.cs" />
+    <Compile Include="PeterO\Cbor\CBORExtendedFloat.cs" />
+    <Compile Include="PeterO\Cbor\CBORExtendedRational.cs" />
+    <Compile Include="PeterO\Cbor\CBORInteger.cs" />
+    <Compile Include="PeterO\Cbor\CBORJson.cs" />
+    <Compile Include="PeterO\Cbor\CBORObject.cs" />
+    <Compile Include="PeterO\Cbor\CBORObjectExtra.cs" />
+    <Compile Include="PeterO\Cbor\CBORObjectFactory.cs" />
+    <Compile Include="PeterO\Cbor\CBORObjectMath.cs" />
+    <Compile Include="PeterO\Cbor\CBORReader.cs" />
+    <Compile Include="PeterO\Cbor\CBORSingle.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag0.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag1.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag2.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag26.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag27.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag3.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag30.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag32.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag37.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag4.cs" />
+    <Compile Include="PeterO\Cbor\CBORTag5.cs" />
+    <Compile Include="PeterO\Cbor\CBORTagAny.cs" />
+    <Compile Include="PeterO\Cbor\CBORTagGenericString.cs" />
+    <Compile Include="PeterO\Cbor\CBORTagUnsigned.cs" />
+    <Compile Include="PeterO\Cbor\CBORType.cs" />
+    <Compile Include="PeterO\Cbor\CBORTypeFilter.cs" />
+    <Compile Include="PeterO\Cbor\CBORTypeMapper.cs" />
+    <Compile Include="PeterO\Cbor\CBORUriConverter.cs" />
+    <Compile Include="PeterO\Cbor\CBORUtilities.cs" />
+    <Compile Include="PeterO\Cbor\CBORUuidConverter.cs" />
+    <Compile Include="PeterO\Cbor\CharacterInputWithCount.cs" />
+    <Compile Include="PeterO\Cbor\CharacterReader.cs" />
+    <Compile Include="PeterO\Cbor\FastInteger2.cs" />
+    <Compile Include="PeterO\Cbor\ICBORConverter.cs" />
+    <Compile Include="PeterO\Cbor\ICBORNumber.cs" />
+    <Compile Include="PeterO\Cbor\ICBORTag.cs" />
+    <Compile Include="PeterO\Cbor\ICBORToFromConverter.cs" />
+    <Compile Include="PeterO\Cbor\ICharacterInput.cs" />
+    <Compile Include="PeterO\Cbor\JSONOptions.cs" />
+    <Compile Include="PeterO\Cbor\PODOptions.cs" />
+    <Compile Include="PeterO\Cbor\PropertyMap.cs" />
+    <Compile Include="PeterO\Cbor\PropertyMap2.cs" />
+    <Compile Include="PeterO\Cbor\SharedRefs.cs" />
+    <Compile Include="PeterO\Cbor\StringOutput.cs" />
+    <Compile Include="PeterO\Cbor\StringRefs.cs" />
+    <Compile Include="PeterO\Cbor\URIUtility.cs" />
+    <Compile Include="PeterO\DataUtilities.cs" />
+    <Compile Include="PeterO\DebugUtility.cs" />
+    <Compile Include="PeterO\ExtendedDecimal.cs" />
+    <Compile Include="PeterO\ExtendedFloat.cs" />
+    <Compile Include="PeterO\ExtendedRational.cs" />
+    <Compile Include="PeterO\Numbers\BigNumberFlags.cs" />
+    <Compile Include="PeterO\Numbers\BitShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\DigitShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\EContext.cs" />
+    <Compile Include="PeterO\Numbers\EDecimal.cs" />
+    <Compile Include="PeterO\Numbers\EDecimalExtra.cs" />
+    <Compile Include="PeterO\Numbers\EFloat.cs" />
+    <Compile Include="PeterO\Numbers\EFloatExtra.cs" />
+    <Compile Include="PeterO\Numbers\EInteger.cs" />
+    <Compile Include="PeterO\Numbers\EIntegerExtra.cs" />
+    <Compile Include="PeterO\Numbers\ERational.cs" />
+    <Compile Include="PeterO\Numbers\ERationalExtra.cs" />
+    <Compile Include="PeterO\Numbers\ERounding.cs" />
+    <Compile Include="PeterO\Numbers\ETrapException.cs" />
+    <Compile Include="PeterO\Numbers\ExtendedOrSimpleRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\Extras.cs" />
+    <Compile Include="PeterO\Numbers\FastInteger.cs" />
+    <Compile Include="PeterO\Numbers\FastIntegerFixed.cs" />
+    <Compile Include="PeterO\Numbers\IRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\IRadixMathHelper.cs" />
+    <Compile Include="PeterO\Numbers\IShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\NumberUtility.cs" />
+    <Compile Include="PeterO\Numbers\RadixMath.cs" />
+    <Compile Include="PeterO\Numbers\SimpleRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\TrappableRadixMath.cs" />
+    <Compile Include="PeterO\PrecisionContext.cs" />
+    <Compile Include="PeterO\Rounding.cs" />
+    <Compile Include="PeterO\TrapException.cs" />
+    <Compile Include="PinCodeParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PinCodeParamForm.Designer.cs">
+      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SetPinParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetPinParamForm.Designer.cs">
+      <DependentUpon>SetPinParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolGUICommon.cs" />
+    <Compile Include="AppMain.cs" />
+    <Compile Include="FormUtil.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="PinCodeParamForm.resx">
+      <DependentUpon>PinCodeParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetPinParamForm.resx">
+      <DependentUpon>SetPinParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 および x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

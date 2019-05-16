@@ -44,13 +44,13 @@ static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
     }
 
     size_t len = get_payload_length(recv_msg);
-    if (len == 1) {
-        // レスポンスがステータスコードのみである場合を想定したログ
-        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) STATUS(0x%02x)",
-            get_CID(cid), cmd, recv_msg->pkt.init.payload[0]);
-    } else {
+    if (cmd == CTAP2_COMMAND_INIT || cmd == CTAP2_COMMAND_PING) {
         NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
             get_CID(cid), cmd, len);
+    } else {
+        // レスポンスの先頭１バイト目＝ステータスコードである場合を想定したログ
+        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d) STATUS(0x%02x)",
+            get_CID(cid), cmd, len, recv_msg->pkt.init.payload[0]);
     }
 }
 
@@ -81,7 +81,9 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
         res->pkt.init.bcntl = payload_length & 0x00ff;
 
         // パケットデータを設定
-        memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
+        if (payload_data != NULL) {
+            memcpy(res->pkt.init.payload, payload_data + offset, xfer_data_len);
+        }
         dump_hid_init_packet(res);
 
         // シーケンスを初期化
@@ -123,9 +125,12 @@ static void hid_fido_send_input_report(bool no_callback)
     size_t  xfer_data_len;
     size_t  remaining;
 
-    // 保持中の情報をチェックし、
-    // 完備していない場合は異常終了
-    if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
+    // 保持中の情報をチェック
+    if (send_info_t.payload_length == 0 && send_info_t.payload_data == NULL) {
+        // データ長＝０、データ＝NULLと明示的に指定された場合は
+        // payloadなしのレスポンスを行う
+    } else if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
+        // 完備していない場合は異常終了
         NRF_LOG_ERROR("hid_fido_send_input_report: hid_fido_send_setup incomplete ");
         return;
     }
@@ -177,6 +182,12 @@ void hid_fido_send_input_report_complete()
 void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
 {
     hid_fido_send_setup(cid, cmd, response_buffer, response_length);
+    hid_fido_send_input_report(false);
+}
+
+void hid_fido_send_command_response_no_payload(uint32_t cid, uint8_t cmd)
+{
+    hid_fido_send_setup(cid, cmd, NULL, 0);
     hid_fido_send_input_report(false);
 }
 

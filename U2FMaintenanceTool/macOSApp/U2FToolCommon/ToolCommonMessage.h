@@ -57,6 +57,7 @@
 #define PROCESS_NAME_CREATE_CERTREQ_CSR             @"証明書要求ファイル作成"
 #define PROCESS_NAME_CREATE_SELFCRT_CRT             @"自己署名証明書ファイル作成"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
+#define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -65,7 +66,7 @@
 #define MSG_INVALID_SKEY_CONTENT_IN_PEM     @"鍵ファイルの内容が不正です。"
 #define MSG_CANNOT_READ_CERT_CRT_FILE       @"証明書ファイルを読み込むことができません。"
 #define MSG_INVALID_CERT_LENGTH_IN_CRT      @"証明書ファイルに格納されたデータの長さが不正です。"
-#define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。%@"
+#define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"
@@ -103,5 +104,12 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  One Card上のユーザー所在確認LEDが点滅したら、"
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
+
+#pragma mark - ToolHIDCommandクラス専用メッセージ
+#define MSG_HID_CMD_RESPONSE_TIMEOUT        @"HIDデバイスからの応答が受信できませんでした。"
+
+#pragma mark - コマンドテスト関連メッセージ
+#define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
+#define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
 
 #endif /* ToolCommonMessage_h */

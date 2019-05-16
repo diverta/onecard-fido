@@ -17,7 +17,7 @@ namespace U2FMaintenanceToolGUI
             InitializeComponent();
 
             // バージョン表示
-            labelVersion.Text = "Version 0.1.6";
+            labelVersion.Text = "Version 0.1.7";
         }
     }
 }

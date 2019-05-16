@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include "fido_request_apdu.h"
+#include "fido_lock_channel.h"
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"
 #include "usbd_hid_common.h"
@@ -18,14 +19,17 @@ NRF_LOG_MODULE_REGISTER();
 // 使用するコマンド／ステータスの読替え
 #include "u2f.h"
 #include "ctap2_common.h"
+#include "fido_common.h"
 #if CTAP2_SUPPORTED
 #define FIDO_COMMAND_ERROR   CTAP2_COMMAND_ERROR
 #define FIDO_COMMAND_PING    CTAP2_COMMAND_PING
 #define FIDO_COMMAND_INIT    CTAP2_COMMAND_INIT
+#define FIDO_COMMAND_LOCK    CTAP2_COMMAND_LOCK
 #else
 #define FIDO_COMMAND_ERROR   U2F_COMMAND_ERROR
 #define FIDO_COMMAND_PING    U2F_COMMAND_PING
 #define FIDO_COMMAND_INIT    U2F_COMMAND_HID_INIT
+#define FIDO_COMMAND_LOCK    U2F_COMMAND_LOCK
 #endif
 #define FIDO_COMMAND_CBOR    CTAP2_COMMAND_CBOR
 
@@ -87,12 +91,14 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
 
     if (p_hid_header->CMD == FIDO_COMMAND_PING || 
         p_hid_header->CMD == FIDO_COMMAND_INIT ||
-        p_hid_header->CMD == FIDO_COMMAND_CBOR) {
-        // コマンドがPING、INIT、CBORの場合は、APDUではないため
+        p_hid_header->CMD == FIDO_COMMAND_LOCK ||
+        p_hid_header->CMD == FIDO_COMMAND_CBOR ||
+        p_hid_header->CMD >= MNT_COMMAND_BASE) {
+        // コマンドがPING、INIT、LOCK、CBOR、管理コマンドの場合は、APDUではないため
         // データ長だけセットしておく
         p_apdu->Lc = p_hid_header->LEN;
     } else {
-        // コマンドがPING以外の場合
+        // コマンドが上記以外の場合
         // APDUヘッダー項目を編集して保持
         offset += fido_request_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
     }
@@ -225,10 +231,10 @@ static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size
     // リクエストフレームを内部バッファに保持
     setup_control_point_buffer(payload, payload_size);
 
-    if (cid != USBD_HID_BROADCAST && cid != get_current_CID()) {
+    if (cid == 0) {
         // CIDが不正の場合
         // エラーレスポンスメッセージを作成
-        NRF_LOG_ERROR("Command not allowed on cid 0x%08x", cid);
+        NRF_LOG_ERROR("Command not allowed on cid 0x00");
         hid_header_t.CID =   cid;
         hid_header_t.CMD =   FIDO_COMMAND_ERROR;
         hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
@@ -237,8 +243,8 @@ static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size
 
     // 受信データに設定されたコマンドバイトを取得
     uint8_t recv_cmd = control_point_buffer[0];
-    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT) {
-        // CMDがINIT以外の場合
+    if (cid == USBD_HID_BROADCAST && recv_cmd != FIDO_COMMAND_INIT && recv_cmd < MNT_COMMAND_BASE) {
+        // CMDがINITまたは管理コマンド以外の場合
         // エラーレスポンスメッセージを作成
         NRF_LOG_ERROR("Command 0x%02x not allowed on cid 0x%08x", recv_cmd, cid);
         hid_header_t.CMD =   FIDO_COMMAND_ERROR;

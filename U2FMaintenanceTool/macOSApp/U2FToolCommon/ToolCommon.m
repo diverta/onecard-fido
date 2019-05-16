@@ -47,6 +47,9 @@
             case COMMAND_CREATE_SELFCRT_CRT:
                 processName = PROCESS_NAME_CREATE_SELFCRT_CRT;
                 break;
+            case COMMAND_TEST_CTAPHID_INIT:
+                processName = PROCESS_NAME_TEST_CTAPHID_INIT;
+                break;
             default:
                 processName = nil;
                 break;

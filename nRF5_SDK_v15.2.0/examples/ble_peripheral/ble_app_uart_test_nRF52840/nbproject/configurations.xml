@@ -1,0 +1,1726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../ble_app_uart" name="0">
+      <in>main.c</in>
+    </df>
+    <logicalFolder name="nRF5_SDK_15.2.0"
+                   displayName="nRF5_SDK_15.2.0"
+                   projectFiles="true"
+                   root="../../../../../../opt/nRF5_SDK_15.2.0">
+      <logicalFolder name="components" displayName="components" projectFiles="true">
+        <logicalFolder name="ble" displayName="ble" projectFiles="true">
+          <logicalFolder name="ble_advertising"
+                         displayName="ble_advertising"
+                         projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising/ble_advertising.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising/ble_advertising.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="ble_link_ctx_manager"
+                         displayName="ble_link_ctx_manager"
+                         projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager/ble_link_ctx_manager.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager/ble_link_ctx_manager.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="ble_services"
+                         displayName="ble_services"
+                         projectFiles="true">
+            <logicalFolder name="ble_nus" displayName="ble_nus" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_nus/ble_nus.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_nus/ble_nus.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="common" displayName="common" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_advdata.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_advdata.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_params.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_params.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_state.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_state.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_srv_common.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_srv_common.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="nrf_ble_gatt"
+                         displayName="nrf_ble_gatt"
+                         projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt/nrf_ble_gatt.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt/nrf_ble_gatt.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="nrf_ble_qwr" displayName="nrf_ble_qwr" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr/nrf_ble_qwr.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr/nrf_ble_qwr.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="boards" displayName="boards" projectFiles="true">
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/boards/pca10040.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
+          <logicalFolder name="atomic" displayName="atomic" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic/nrf_atomic.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic/nrf_atomic.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic/nrf_atomic_internal.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="atomic_fifo" displayName="atomic_fifo" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo/nrf_atfifo.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo/nrf_atfifo.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo/nrf_atfifo_internal.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="atomic_flags"
+                         displayName="atomic_flags"
+                         projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags/nrf_atflags.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags/nrf_atflags.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="balloc" displayName="balloc" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc/nrf_balloc.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc/nrf_balloc.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="bsp" displayName="bsp" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp_btn_ble.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp_btn_ble.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp_config.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="button" displayName="button" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button/app_button.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button/app_button.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="experimental_section_vars"
+                         displayName="experimental_section_vars"
+                         projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars/nrf_section.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars/nrf_section_iter.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars/nrf_section_iter.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="fifo" displayName="fifo" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fifo/app_fifo.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fifo/app_fifo.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="hardfault" displayName="hardfault" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault/hardfault_implementation.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="log" displayName="log" projectFiles="true">
+            <logicalFolder name="src" displayName="src" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_backend_rtt.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_backend_serial.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_backend_serial.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_ctrl_internal.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_default_backends.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_frontend.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_internal.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_str_formatter.c</itemPath>
+            </logicalFolder>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_backend_interface.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_backend_rtt.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_ctrl.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_default_backends.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_instance.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_str_formatter.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/nrf_log_types.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="memobj" displayName="memobj" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj/nrf_memobj.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj/nrf_memobj.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="pwr_mgmt" displayName="pwr_mgmt" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt/nrf_pwr_mgmt.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt/nrf_pwr_mgmt.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="ringbuf" displayName="ringbuf" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf/nrf_ringbuf.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf/nrf_ringbuf.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="scheduler" displayName="scheduler" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler/app_scheduler.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler/app_scheduler.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="strerror" displayName="strerror" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror/nrf_strerror.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror/nrf_strerror.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="timer" displayName="timer" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="uart" displayName="uart" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart/app_uart.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart/app_uart_fifo.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart/retarget.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="util" displayName="util" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error_handler_gcc.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error_weak.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error_weak.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_util.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_util_platform.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_util_platform.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nordic_common.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_assert.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_assert.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_common.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_errors.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_macros.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_os.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/sdk_resources.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="softdevice" displayName="softdevice" projectFiles="true">
+          <logicalFolder name="common" displayName="common" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_ble.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_ble.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="external" displayName="external" projectFiles="true">
+        <logicalFolder name="fprintf" displayName="fprintf" projectFiles="true">
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf_format.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf_format.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="segger_rtt" displayName="segger_rtt" projectFiles="true">
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_Conf.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_printf.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="utf_converter"
+                       displayName="utf_converter"
+                       projectFiles="true">
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/utf_converter/utf.c</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/external/utf_converter/utf.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="integration" displayName="integration" projectFiles="true">
+        <logicalFolder name="nrfx" displayName="nrfx" projectFiles="true">
+          <logicalFolder name="legacy" displayName="legacy" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/apply_old_config.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_gpiote.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_uart.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_uart.h</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/nrfx_config.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/nrfx_glue.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/nrfx_log.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="modules" displayName="modules" projectFiles="true">
+        <logicalFolder name="nrfx" displayName="nrfx" projectFiles="true">
+          <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+            <logicalFolder name="src" displayName="src" projectFiles="true">
+              <logicalFolder name="prs" displayName="prs" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs/nrfx_prs.c</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs/nrfx_prs.h</itemPath>
+              </logicalFolder>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_clock.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_gpiote.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_power_clock.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_uart.c</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_uarte.c</itemPath>
+            </logicalFolder>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/nrfx_common.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/nrfx_errors.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="mdk" displayName="mdk" projectFiles="true">
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/compiler_abstraction.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf51_to_nrf52.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf51_to_nrf52840.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52832_peripherals.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52840.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52840_bitfields.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52840_peripherals.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52_bitfields.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52_name_change.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf52_to_nrf52840.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/nrf_peripherals.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52.h</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52840.c</itemPath>
+            <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52840.h</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/nrfx.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="opt"
+                   displayName="opt"
+                   projectFiles="true"
+                   root="../../../../../../opt">
+      <logicalFolder name="gcc-arm-none-eabi-7-2018-q2-update"
+                     displayName="gcc-arm-none-eabi-7-2018-q2-update"
+                     projectFiles="true">
+        <logicalFolder name="arm-none-eabi"
+                       displayName="arm-none-eabi"
+                       projectFiles="true">
+          <logicalFolder name="include" displayName="include" projectFiles="true">
+            <logicalFolder name="machine" displayName="machine" projectFiles="true">
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_default_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/ieeefp.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/stdlib.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/types.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="sys" displayName="sys" projectFiles="true">
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_intsup.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_pthreadtypes.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_stdint.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stdio.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/string.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/types.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_ansi.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_newlib_version.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/ctype.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/newlib.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdint.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdio.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdlib.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/string.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="lib" displayName="lib" projectFiles="true">
+          <logicalFolder name="gcc" displayName="gcc" projectFiles="true">
+            <logicalFolder name="arm-none-eabi"
+                           displayName="arm-none-eabi"
+                           projectFiles="true">
+              <logicalFolder name="7.3.1" displayName="7.3.1" projectFiles="true">
+                <logicalFolder name="include" displayName="include" projectFiles="true">
+                  <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stdarg.h</itemPath>
+                  <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stdbool.h</itemPath>
+                  <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stddef.h</itemPath>
+                  <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stdint.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="nRF5_SDK_15.2.0"
+                     displayName="nRF5_SDK_15.2.0"
+                     projectFiles="true">
+        <logicalFolder name="components" displayName="components" projectFiles="true">
+          <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
+            <logicalFolder name="delay" displayName="delay" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay/nrf_delay.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="mutex" displayName="mutex" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex/nrf_mtx.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="softdevice" displayName="softdevice" projectFiles="true">
+            <logicalFolder name="s132" displayName="s132" projectFiles="true">
+              <logicalFolder name="headers" displayName="headers" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_err.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_gap.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_gatt.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_gattc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_gatts.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_hci.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_l2cap.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_ranges.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/ble_types.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_error.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_error_sdm.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_error_soc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_nvic.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_sd_def.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_sdm.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_soc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers/nrf_svc.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="s140" displayName="s140" projectFiles="true">
+              <logicalFolder name="headers" displayName="headers" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_err.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_gap.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_gatt.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_gattc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_gatts.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_hci.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_l2cap.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_ranges.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/ble_types.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_error.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_error_sdm.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_error_soc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_nvic.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_sd_def.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_sdm.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_soc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers/nrf_svc.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="toolchain" displayName="toolchain" projectFiles="true">
+            <logicalFolder name="cmsis" displayName="cmsis" projectFiles="true">
+              <logicalFolder name="include" displayName="include" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include/cmsis_gcc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include/core_cm4.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include/core_cmFunc.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include/core_cmInstr.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include/core_cmSimd.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="modules" displayName="modules" projectFiles="true">
+          <logicalFolder name="nrfx" displayName="nrfx" projectFiles="true">
+            <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+              <logicalFolder name="include" displayName="include" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrf_bitmask.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_clock.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_gpiote.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_power.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_power_clock.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_uart.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include/nrfx_uarte.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="hal" displayName="hal" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_clock.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_gpio.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_gpiote.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_power.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uart.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal/nrf_uarte.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="soc" displayName="soc" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_coredep.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_irqs.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_irqs_nrf52832.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc/nrfx_irqs_nrf52840.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要なファイル"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../ble_app_uart/pca10056/s140/armgcc/Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>../ble_app_uart</Elem>
+  </sourceRootList>
+  <projectmakefile>../ble_app_uart/pca10056/s140/armgcc/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>GNU_ARM|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-O3 -std=c99"/>
+      </flagsDictionary>
+      <codeAssistance>
+        <buildAnalyzer>false</buildAnalyzer>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../ble_app_uart/pca10056/s140/armgcc</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>../ble_app_uart/pca10056/s140/armgcc</preBuildCommandWorkingDir>
+          <preBuildCommand>make</preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising/ble_advertising.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager/ble_link_ctx_manager.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_nus/ble_nus.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_advdata.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_params.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_conn_state.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common/ble_srv_common.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt/nrf_ble_gatt.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr/nrf_ble_qwr.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/boards/boards.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic/nrf_atomic.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo/nrf_atfifo.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags/nrf_atflags.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc/nrf_balloc.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp/bsp_btn_ble.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button/app_button.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars/nrf_section_iter.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fifo/app_fifo.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault/hardfault_implementation.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_backend_rtt.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_backend_serial.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_default_backends.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_frontend.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src/nrf_log_str_formatter.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj/nrf_memobj.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt/nrf_pwr_mgmt.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf/nrf_ringbuf.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler/app_scheduler.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror/nrf_strerror.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer/app_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart/app_uart_fifo.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fifo</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart/retarget.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error_handler_gcc.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_error_weak.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/app_util_platform.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util/nrf_assert.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_ble.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf_format.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt/SEGGER_RTT_printf.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/utf_converter/utf.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_clock.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy/nrf_drv_uart.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_clock.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_gpiote.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_power_clock.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_uart.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/nrfx_uarte.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs/nrfx_prs.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk/system_nrf52840.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../ble_app_uart/main.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <folder path="0">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_nus</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/ble/ble_advertising">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_advertising</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/ble/ble_services">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_services/ble_nus</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/ble_link_ctx_manager</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_gatt</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/nrf_ble_qwr</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/ble/common</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/boards">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/boards</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/atomic">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/atomic_fifo">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_fifo</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/atomic_flags">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic_flags</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/balloc">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/bsp">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/bsp</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/button">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/button</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/experimental_section_vars">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/fifo">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/fifo</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/hardfault">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/hardfault</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/log">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/memobj">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/pwr_mgmt">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/pwr_mgmt</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/mutex</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/memobj</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/balloc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/ringbuf">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/ringbuf</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/atomic</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/scheduler">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/scheduler</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/strerror">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/timer">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/timer</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/delay</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/uart">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/uart</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/components/libraries/util">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/external/fprintf">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s132/headers</pElem>
+            <pElem>../ble_app_uart/pca10040/s132/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/external/segger_rtt">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/segger_rtt</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/external/utf_converter">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/external/utf_converter</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers/src/prs</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/drivers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/soc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../ble_app_uart/pca10056/s140/armgcc</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nRF5_SDK_15.2.0/modules/nrfx/mdk">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>

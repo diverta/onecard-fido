@@ -67,7 +67,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 12);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Copywrite (c) 2017-2018 Diverta Inc.";
+            this.label3.Text = "Copywrite (c) 2017-2019 Diverta Inc.";
             // 
             // AboutForm
             // 
