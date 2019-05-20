@@ -778,6 +778,9 @@ static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
     uint8_t   i;
     CborValue map;
 
+    // 解析済みフラグを初期化
+    hs->hmac_secret_parsed = false;
+
     if (cbor_value_get_type(val) != CborMapType) {
         return CTAP2_ERR_INVALID_CBOR_TYPE;
     }
@@ -808,7 +811,7 @@ static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
         switch(key) {
             case 0x01:
                 // keyAgreement(0x01)
-                ret = parse_cose_pubkey(&map, hs->keyAgreement);
+                ret = parse_cose_pubkey(&map, &hs->keyAgreement);
                 if (ret != CborNoError) {
                     return CTAP2_ERR_CBOR_PARSING;
                 }
@@ -833,9 +836,11 @@ static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
             case 0x03:
                 // saltAuth(0x03): 
                 //   LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
-                salt_len = 32;
+                salt_len = 16;
                 ret = cbor_value_copy_byte_string(&map, hs->saltAuth, &salt_len, NULL);
-                if (ret != CborNoError) {
+                if (salt_len != 16 || ret == CborErrorOutOfMemory) {
+                    return CTAP1_ERR_INVALID_LENGTH;
+                } else if (ret != CborNoError) {
                     return CTAP2_ERR_CBOR_PARSING;
                 }
                 parsed_count++;
@@ -852,6 +857,8 @@ static uint8_t parse_hmac_secret(CborValue *val, CTAP_HMAC_SECRET_T *hs)
         return CTAP2_ERR_MISSING_PARAMETER;
     }
 
+    // 解析済みフラグを設定
+    hs->hmac_secret_parsed = true;
     return CTAP1_ERR_SUCCESS;
 }
 
@@ -886,7 +893,7 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
         sz = sizeof(key);
         ret = cbor_value_copy_text_string(&map, key, &sz, NULL);
         if (ret == CborErrorOutOfMemory) {
-            // Error, rp map key is too large. Ignoring.
+            NRF_LOG_DEBUG("extensions map key is too large, ignoring");
             cbor_value_advance(&map);
             cbor_value_advance(&map);
             continue;
@@ -913,7 +920,7 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
                 }
 
             } else if (cbor_value_get_type(&map) == CborMapType) {
-                ret = parse_hmac_secret(&map, ext->hmac_secret);
+                ret = parse_hmac_secret(&map, &ext->hmac_secret);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }

@@ -116,15 +116,16 @@ typedef struct {
 } CTAP_COSE_KEY;
 
 typedef struct {
+    bool           hmac_secret_parsed;
     uint8_t        saltLen;
     uint8_t        saltEnc[64];
-    uint8_t        saltAuth[32];
-    CTAP_COSE_KEY *keyAgreement;
+    uint8_t        saltAuth[16];
+    CTAP_COSE_KEY  keyAgreement;
 } CTAP_HMAC_SECRET_T;
 
 typedef struct {
-    bool                hmac_secret_requested;
-    CTAP_HMAC_SECRET_T *hmac_secret;
+    bool               hmac_secret_requested;
+    CTAP_HMAC_SECRET_T hmac_secret;
 } CTAP_EXTENSIONS_T;
 
 //
