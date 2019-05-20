@@ -29,7 +29,7 @@ static size_t signature_size;
 #define ASN_SEQUENCE 0x30;
 
 // 署名ベースおよび署名を編集するための作業領域（固定長）
-#define SIGNATURE_BASE_BUFFER_LENGTH 256
+#define SIGNATURE_BASE_BUFFER_LENGTH 384
 static uint8_t signature_data_buffer[SIGNATURE_BASE_BUFFER_LENGTH];
 static size_t  signature_data_size;
 

@@ -18,6 +18,10 @@ NRF_LOG_MODULE_REGISTER();
 
 static nrf_crypto_hash_context_t hash_context = {0};
 
+// for generate random vector
+#include "nrf_crypto_rng.h"
+static uint8_t m_random_vector[64];
+
 void fido_crypto_init(void)
 {
     ret_code_t err_code;
@@ -50,4 +54,23 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, nrf_crypt
         NRF_LOG_ERROR("nrf_crypto_hash_calculate() returns 0x%02x ", err_code);
     }
     APP_ERROR_CHECK(err_code);
+}
+
+void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
+{
+    // Initialize crypto library.
+    ret_code_t err_code = nrf_crypto_init();
+    APP_ERROR_CHECK(err_code);
+
+    // Generate a random vector of specified length.
+    err_code = nrf_crypto_rng_vector_generate(m_random_vector, vector_buf_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_rng_vector_generate() returns 0x%02x ", err_code);
+    }
+    APP_ERROR_CHECK(err_code);
+
+    // 引数で指定のバイト数分、配列に格納
+    for (uint8_t r = 0; r < vector_buf_size; r++) {
+        vector_buf[r] = m_random_vector[r];
+    }
 }

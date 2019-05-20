@@ -154,6 +154,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_client_pin_store.c \
   $(CT2LIB_DIR)/ctap2_client_pin_token.c \
   $(CT2LIB_DIR)/ctap2_common.c \
+  $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \

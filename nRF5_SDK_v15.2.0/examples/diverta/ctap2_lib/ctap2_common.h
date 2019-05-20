@@ -20,11 +20,12 @@ extern "C" {
 #define RP_NAME_MAX_SIZE            32
 #define USER_ID_MAX_SIZE            64
 #define USER_NAME_MAX_SIZE          65
-#define PUBKEY_CRED_SOURCE_MAX_SIZE 128
+#define PUBKEY_CRED_SOURCE_MAX_SIZE 256
 #define PUBKEY_CRED_TYPENM_MAX_SIZE 12
-#define CREDENTIAL_ID_MAX_SIZE      128
-#define AUTHENTICATOR_DATA_MAX_SIZE 256
+#define CREDENTIAL_ID_MAX_SIZE      256
+#define AUTHENTICATOR_DATA_MAX_SIZE 384
 #define ALLOW_LIST_MAX_SIZE         10
+#define CRED_RANDOM_SIZE            32
 
 // 各種処理用の定数（PIN関連）
 #define PIN_AUTH_SIZE               16
@@ -113,6 +114,19 @@ typedef struct {
         uint8_t y[32];
     } key;
 } CTAP_COSE_KEY;
+
+typedef struct {
+    bool           hmac_secret_parsed;
+    uint8_t        saltLen;
+    uint8_t        saltEnc[64];
+    uint8_t        saltAuth[16];
+    CTAP_COSE_KEY  keyAgreement;
+} CTAP_HMAC_SECRET_T;
+
+typedef struct {
+    bool               hmac_secret_requested;
+    CTAP_HMAC_SECRET_T hmac_secret;
+} CTAP_EXTENSIONS_T;
 
 //
 // CTAP2コマンドで共用する作業領域
