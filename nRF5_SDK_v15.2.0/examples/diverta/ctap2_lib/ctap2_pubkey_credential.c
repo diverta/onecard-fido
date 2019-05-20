@@ -54,6 +54,10 @@ static uint8_t number_of_credentials;
 // 格納領域を保持
 static uint8_t *private_key_be;
 
+// credential IDから取り出したCredRandomの
+// 格納領域を保持
+static uint8_t *cred_random;
+
 // 秘密鍵の取出し元であるcredential IDの
 // 格納領域を保持
 static CTAP_CREDENTIAL_DESC_T *pkey_credential_desc;
@@ -103,6 +107,7 @@ size_t ctap2_pubkey_credential_source_hash_size(void)
     return credential_source_hash_size;
 }
 
+#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
 static void print_hexdump_debug(uint8_t *buff, size_t size)
 {
     int j, k;
@@ -111,6 +116,7 @@ static void print_hexdump_debug(uint8_t *buff, size_t size)
         NRF_LOG_HEXDUMP_DEBUG(buff + j, (k < 64) ? k : 64);
     }
 }
+#endif
 
 void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_USER_ENTITY_T *user)
 {
@@ -236,6 +242,12 @@ static bool get_private_key_from_credential_id(void)
     NRF_LOG_DEBUG("Private key:", src_rp_id);
     NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
 #endif
+
+    // CredRandom領域を取り出す
+    // （末尾から32バイト分）
+    uint8_t size = pubkey_cred_source[0];
+    cred_random = pubkey_cred_source + size - CRED_RANDOM_SIZE;
+
     return true;
 }
 
@@ -286,6 +298,12 @@ uint8_t *ctap2_pubkey_credential_private_key(void)
 {
     // credential IDから取り出した秘密鍵の格納領域
     return private_key_be;
+}
+
+uint8_t *ctap2_pubkey_credential_cred_random(void)
+{
+    // credential IDから取り出したCredRandomの格納領域
+    return cred_random;
 }
 
 CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
