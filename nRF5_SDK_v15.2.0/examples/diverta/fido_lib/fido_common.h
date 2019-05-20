@@ -53,6 +53,9 @@ extern "C" {
 #define CTAP2_ERR_PIN_NOT_SET           0x35
 #define CTAP2_ERR_PIN_POLICY_VIOLATION  0x37
 #define CTAP1_ERR_OTHER                 0x7f
+#define CTAP2_ERR_SPEC_LAST             0xdf
+#define CTAP2_ERR_EXTENSION_FIRST       0xe0
+#define CTAP2_ERR_EXTENSION_LAST        0xef
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff
 

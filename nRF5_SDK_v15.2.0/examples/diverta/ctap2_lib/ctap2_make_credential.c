@@ -11,6 +11,7 @@
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_client_pin_token.h"
+#include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
 #include "fido_crypto_keypair.h"
@@ -273,47 +274,16 @@ static uint8_t generate_credential_pubkey(void)
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t make_extensions_cbor(uint8_t *ext_encoder_buf, size_t *ext_encoder_buf_size)
-{
-    CborEncoder extensions;
-    uint8_t     ret;
-
-    cbor_encoder_init(&extensions, ext_encoder_buf, *ext_encoder_buf_size, 0);
-
-    CborEncoder hmac_secret_map;
-    ret = cbor_encoder_create_map(&extensions, &hmac_secret_map, 1);
-    if (ret != CborNoError) {
-        return CTAP1_ERR_OTHER;
-    }
-
-    ret = cbor_encode_text_stringz(&hmac_secret_map, "hmac-secret");
-    if (ret != CborNoError) {
-        return CTAP1_ERR_OTHER;
-    }
-
-    ret = cbor_encode_boolean(&hmac_secret_map, 1);
-    if (ret != CborNoError) {
-        return CTAP1_ERR_OTHER;
-    }
-
-    ret = cbor_encoder_close_container(&extensions, &hmac_secret_map);
-    if (ret != CborNoError) {
-        return CTAP1_ERR_OTHER;
-    }
-
-    *ext_encoder_buf_size = cbor_encoder_get_buffer_size(&extensions, ext_encoder_buf);
-    return CTAP1_ERR_SUCCESS;
-}
-
 static uint8_t add_extensions_cbor(uint8_t *authenticator_data)
 {
-    size_t   ext_encoder_buf_size = 14;
-    uint8_t *ext_encoder_buf = authenticator_data;
-    if (make_extensions_cbor(ext_encoder_buf, &ext_encoder_buf_size) != CTAP1_ERR_SUCCESS) {
+    // レスポンス用CBORを生成
+    if (ctap2_extension_hmac_secret_cbor_for_create() != CTAP1_ERR_SUCCESS) {
         return 0;
     }
 
-    return ext_encoder_buf_size;
+    // authenticatorData領域に格納
+    memcpy(authenticator_data, ctap2_extension_hmac_secret_cbor(), ctap2_extension_hmac_secret_cbor_size());
+    return ctap2_extension_hmac_secret_cbor_size();
 }
 
 static void generate_authenticator_data(void)

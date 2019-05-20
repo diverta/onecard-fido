@@ -65,6 +65,8 @@
       <itemPath>../ctap2_lib/ctap2_client_pin_token.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.h</itemPath>
+      <itemPath>../ctap2_lib/ctap2_extension_hmac_secret.c</itemPath>
+      <itemPath>../ctap2_lib/ctap2_extension_hmac_secret.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_get_assertion.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_get_assertion.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_make_credential.c</itemPath>
@@ -3035,6 +3037,16 @@
             flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../ctap2_lib/ctap2_extension_hmac_secret.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ctap2_lib/ctap2_extension_hmac_secret.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../ctap2_lib/ctap2_get_assertion.c" ex="false" tool="0" flavor2="2">
         <cTool>
