@@ -415,6 +415,15 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
+    - (void)doCtap2HealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
+            [self displayStartMessage];
+        }
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
     - (void)hidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
@@ -431,10 +440,12 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
             case COMMAND_AUTH_RESET:
                 [self doClientPin];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doCtap2HealthCheck];
                 break;
             default:
                 // エラーメッセージを表示
