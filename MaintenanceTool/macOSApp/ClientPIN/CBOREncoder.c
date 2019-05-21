@@ -445,6 +445,28 @@ static uint8_t encode_user(CborEncoder *encoder) {
     return CTAP1_ERR_SUCCESS;
 }
 
+static uint8_t encode_extensions_for_cred(CborEncoder *encoder) {
+    // Mapに格納する要素数 = 1
+    CborEncoder map;
+    CborError ret = cbor_encoder_create_map(encoder, &map, 1);
+    if (ret == CborNoError) {
+        // "hmac-secret": true
+        ret = cbor_encode_text_stringz(&map, "hmac-secret");
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+        ret = cbor_encode_boolean(&map, true);
+        if (ret != CborNoError) {
+            return CTAP1_ERR_OTHER;
+        }
+    }
+    ret = cbor_encoder_close_container(encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_PROCESSING;
+    }
+    return CTAP1_ERR_SUCCESS;
+}
+
 static uint8_t encode_options(CborEncoder *encoder, bool up) {
     // Mapに格納する要素数 = 3
     CborEncoder map;
@@ -542,7 +564,7 @@ static uint8_t generate_make_credential_cbor(void) {
     CborEncoder encoder;
     cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);
     // Mapに格納する要素数の設定
-    map_elements_num = 7;
+    map_elements_num = 8;
     // Map初期化
     CborEncoder map;
     CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
@@ -582,6 +604,15 @@ static uint8_t generate_make_credential_cbor(void) {
         return CTAP1_ERR_OTHER;
     }
     ret = encode_pubkey_cred_params(&map);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // extensions(0x06) CBOR map of extension identifier
+    ret = cbor_encode_int(&map, 0x06);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = encode_extensions_for_cred(&map);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
