@@ -39,12 +39,18 @@ namespace MaintenanceToolGUI
         public int CredentialIdLength;
         public byte[] CredentialId { get; set; }
         public byte[] CredentialPublicKeyByte { get; set; }
+        public byte[] extensionsCBORByte { get; set; }
 
         // データ長
         public static int RpIdHashSize = 32;
         public static int SignCountSize = 4;
         public static int AaguidSize = 16;
         public static int CredentialIdLengthSize = 2;
+        public static int CredentialPublicKeySize = 77;
+        public static int ExtensionsCBORSize = 14;
+
+        // for debug
+        public static bool OutputDebugLog = false;
 
         public MakeCredentialResponse()
         {
@@ -129,9 +135,10 @@ namespace MaintenanceToolGUI
             MakeCredentialRes.RpIdHash = data.Skip(index).Take(size).ToArray();
             index += size;
 
-            // for debug
-            // AppCommon.OutputLogToFile("rpIdHash: ", true);
-            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.RpIdHash, size), false);
+            if (MakeCredentialResponse.OutputDebugLog) {
+                AppCommon.OutputLogToFile("rpIdHash: ", true);
+                AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.RpIdHash, size), false);
+            }
 
             // flags
             MakeCredentialRes.Flags = data[index];
@@ -155,12 +162,35 @@ namespace MaintenanceToolGUI
             MakeCredentialRes.CredentialId = data.Skip(index).Take(size).ToArray();
             index += size;
 
-            // for debug
-            // AppCommon.OutputLogToFile("CredentialId: ", true);
-            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.CredentialId, size), false);
+            if (MakeCredentialResponse.OutputDebugLog) {
+                AppCommon.OutputLogToFile("CredentialId: ", true);
+                AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.CredentialId, size), false);
+            }
 
             // credentialPublicKey
-            MakeCredentialRes.CredentialPublicKeyByte = data.Skip(index).ToArray();
+            size = MakeCredentialResponse.CredentialPublicKeySize;
+            MakeCredentialRes.CredentialPublicKeyByte = data.Skip(index).Take(size).ToArray();
+            index += size;
+
+            if (MakeCredentialResponse.OutputDebugLog) {
+                AppCommon.OutputLogToFile("CredentialPublicKeyByte: ", true);
+                AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.CredentialPublicKeyByte, size), false);
+            }
+
+            // extensions CBORが付加されていない場合は終了
+            size = MakeCredentialResponse.ExtensionsCBORSize;
+            if (data.Length - index < size) {
+                MakeCredentialRes.extensionsCBORByte = null;
+                return;
+            }
+
+            // extensions CBOR
+            MakeCredentialRes.extensionsCBORByte = data.Skip(index).Take(size).ToArray();
+
+            if (MakeCredentialResponse.OutputDebugLog) {
+                AppCommon.OutputLogToFile("extensions CBOR: ", true);
+                AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.extensionsCBORByte, size), false);
+            }
         }
     }
 }
