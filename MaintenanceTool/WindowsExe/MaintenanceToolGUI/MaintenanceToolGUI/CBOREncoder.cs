@@ -392,6 +392,7 @@ namespace MaintenanceToolGUI
             //   0x02: rp
             //   0x03: user
             //   0x04: pubKeyCredParams
+            //   0x06: extensions
             //   0x07: options
             //   0x08: pinAuth
             //   0x09: pinProtocol
@@ -409,6 +410,10 @@ namespace MaintenanceToolGUI
             pubKeyCredParams.Add("alg", -7);
             pubKeyCredParams.Add("type", "public-key");
             cbor.Add(0x04, CBORObject.NewArray().Add(pubKeyCredParams));
+
+            var extensions = CBORObject.NewMap();
+            extensions.Add("hmac-secret", true);
+            cbor.Add(0x06, extensions);
 
             var opt = CBORObject.NewMap();
             opt.Add("rk", false);
