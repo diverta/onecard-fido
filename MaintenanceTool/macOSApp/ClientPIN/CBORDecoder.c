@@ -335,6 +335,19 @@ uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
            make_credential_res.credentialIdLength);
     index += make_credential_res.credentialIdLength;
 
+    // Credential Public Key
+    memcpy(make_credential_res.credentialPubKey, auth_data_bytes + index,
+           CREDENTIAL_PUBKEY_MAX_SIZE);
+    index += CREDENTIAL_PUBKEY_MAX_SIZE;
+
+    if (auth_data_size - index < EXT_CBOR_FOR_CRED_MAX_SIZE) {
+        return CTAP1_ERR_SUCCESS;
+    }
+
+    // Extensions CBOR for makeCredential
+    memcpy(make_credential_res.extCBORForCred, auth_data_bytes + index,
+           EXT_CBOR_FOR_CRED_MAX_SIZE);
+
     return CTAP1_ERR_SUCCESS;
 }
 

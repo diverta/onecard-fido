@@ -30,6 +30,8 @@
 #define AAGUID_SIZE                 16
 #define CREDENTIAL_ID_LENGTH_SIZE   2
 #define CREDENTIAL_ID_MAX_SIZE      128
+#define CREDENTIAL_PUBKEY_MAX_SIZE  77
+#define EXT_CBOR_FOR_CRED_MAX_SIZE  14
 
 typedef struct {
     int kty;
@@ -48,6 +50,8 @@ typedef struct {
     uint8_t  aaguid[AAGUID_SIZE];
     size_t   credentialIdLength;
     uint8_t  credentialId[CREDENTIAL_ID_MAX_SIZE];
+    uint8_t  credentialPubKey[CREDENTIAL_PUBKEY_MAX_SIZE];
+    uint8_t  extCBORForCred[EXT_CBOR_FOR_CRED_MAX_SIZE];
 } CTAP_MAKE_CREDENTIAL_RES;
 
 uint8_t  ctap2_cbor_decode_get_agreement_key(uint8_t *cbor_data_buffer, size_t cbor_data_length);
