@@ -39,6 +39,15 @@ static uint8_t pinAuth[16];
 //   SHA-256(clientData)
 static uint8_t clientDataHash[32];
 
+// saltEnc: Encrypt two salts using sharedSecret
+//   AES256-CBC(sharedSecret, IV=0, salt1 (32 bytes) || salt2 (32 bytes))
+static uint8_t saltEnc[64];
+static size_t  saltEncSize;
+
+// saltAuth
+//   LEFT(HMAC-SHA-256(sharedSecret, saltEnc), 16)
+static uint8_t saltAuth[16];
+
 uint8_t *pin_hash_enc(void) {
     return pinHashEnc;
 }
@@ -57,6 +66,14 @@ uint8_t *pin_auth(void) {
 
 uint8_t *client_data_hash(void) {
     return clientDataHash;
+}
+
+uint8_t *salt_enc(void) {
+    return saltEnc;
+}
+
+uint8_t *salt_auth(void) {
+    return saltAuth;
 }
 
 static uint8_t sha256(fido_blob_t *data, fido_blob_t *digest) {
@@ -332,6 +349,86 @@ uint8_t generate_pin_auth_from_client_data(uint8_t *decrypted_pin_token, uint8_t
     }
     // 配列に退避
     memcpy(pinAuth, dgst, sizeof(pinAuth));
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&key);
+    
+    return ok;
+}
+
+uint8_t generate_salt_enc(uint8_t *hmac_secret_salt, size_t hmac_secret_salt_size) {
+    fido_blob_t *psalt;
+    fido_blob_t *key;
+    fido_blob_t *pe;
+    uint8_t      ok = CTAP1_ERR_OTHER;
+
+    // 作業領域の確保
+    memset(saltEnc, 0, sizeof(saltEnc));
+    if ((psalt = fido_blob_new()) == NULL ||
+        (key = fido_blob_new()) == NULL ||
+        (pe = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // 共通鍵を使用し、PINコードを暗号化
+    fido_blob_set(psalt, hmac_secret_salt, hmac_secret_salt_size);
+    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    if (aes256_cbc_enc(key, psalt, pe) < 0) {
+        goto fail;
+    }
+    
+    // 配列に退避
+    memcpy(saltEnc, pe->ptr, pe->len);
+    saltEncSize = pe->len;
+    ok = CTAP1_ERR_SUCCESS;
+    
+fail:
+    // 作業領域を解放
+    fido_blob_free(&psalt);
+    fido_blob_free(&key);
+    fido_blob_free(&pe);
+    
+    return ok;
+}
+
+uint8_t generate_salt_auth(uint8_t *salt_enc, size_t salt_enc_size) {
+    uint8_t       dgst[SHA256_DIGEST_LENGTH];
+    unsigned int  dgst_len = SHA256_DIGEST_LENGTH;
+    const EVP_MD *md = NULL;
+    HMAC_CTX     *ctx = NULL;
+    fido_blob_t  *key;
+    uint8_t       ok = CTAP1_ERR_OTHER;
+    
+    // 作業領域の確保
+    memset(saltAuth, 0, sizeof(saltAuth));
+    if ((key = fido_blob_new()) == NULL) {
+        goto fail;
+    }
+    // 共通鍵と暗号化されたsaltを使用し、saltAuthを生成
+    fido_blob_set(key, ECDH_shared_secret_key(), 32);
+    if ((ctx = HMAC_CTX_new()) == NULL) {
+        log_debug("%s: HMAC_CTX_new", __func__);
+        goto fail;
+    }
+    if ((md = EVP_sha256()) == NULL) {
+        log_debug("%s: EVP_sha256", __func__);
+        goto fail;
+    }
+    if (HMAC_Init_ex(ctx, key->ptr, (int)key->len, md, NULL) == 0) {
+        log_debug("%s: HMAC_Init_ex", __func__);
+        goto fail;
+    }
+    if (HMAC_Update(ctx, salt_enc, salt_enc_size) == 0) {
+        log_debug("%s: HMAC_Update(saltEnc)", __func__);
+        goto fail;
+    }
+    if (HMAC_Final(ctx, dgst, &dgst_len) == 0 || dgst_len != SHA256_DIGEST_LENGTH) {
+        log_debug("%s: HMAC_Final", __func__);
+        goto fail;
+    }
+    // 配列に退避
+    memcpy(saltAuth, dgst, sizeof(saltAuth));
     ok = CTAP1_ERR_SUCCESS;
     
 fail:

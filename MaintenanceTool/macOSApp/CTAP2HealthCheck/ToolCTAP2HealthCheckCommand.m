@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "PinCodeParamWindow.h"
@@ -18,6 +19,7 @@
 
     @property (nonatomic) ToolHIDCommand     *toolHIDCommand;
     @property (nonatomic) PinCodeParamWindow *pinCodeParamWindow;
+    @property (nonatomic) NSData             *hmacSecretSalt;
 
 @end
 
@@ -28,8 +30,22 @@
         // 使用するダイアログを生成
         [self setPinCodeParamWindow:[[PinCodeParamWindow alloc]
                                     initWithWindowNibName:@"PinCodeParamWindow"]];
+        // テストデータ（salt）を生成
+        [self setHmacSecretSalt:[self createHmacSecretSalt]];
         NSLog(@"ToolCTAP2HealthCheckCommand initialized");
         return self;
+    }
+
+    - (NSData *)createHmacSecretSalt {
+        NSData *salt1 =
+        [ToolCommon generateHexBytesFrom:
+            @"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
+        NSData *salt2 =
+        [ToolCommon generateHexBytesFrom:
+            @"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
+        NSMutableData *salt = [[NSMutableData alloc] initWithData:salt1];
+        [salt appendData:salt2];
+        return salt;
     }
 
 #pragma mark - Command functions
@@ -108,7 +124,8 @@
                             ctap2_cbor_decode_agreement_pubkey_Y(),
                             ctap2_cbor_decrypted_pin_token(),
                             ctap2_cbor_decode_credential_id(),
-                            ctap2_cbor_decode_credential_id_size());
+                            ctap2_cbor_decode_credential_id_size(),
+                            (uint8_t *)[[self hmacSecretSalt] bytes]);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
