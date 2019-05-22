@@ -103,6 +103,10 @@
         if (status_code != CTAP1_ERR_SUCCESS) {
             return false;
         }
+        // レスポンス内に"hmac-secret"拡張が含まれていたらその旨をログ表示
+        if (ctap2_cbor_decode_ext_hmac_secret()->flag) {
+            NSLog(@"parseMakeCredentialResponseWith: 'hmac-secret':true");
+        }
         // for debug
         // NSLog(@"parseMakeCredentialResponseWith: credential id %@",
         //       [[NSData alloc] initWithBytes:ctap2_cbor_decode_credential_id()

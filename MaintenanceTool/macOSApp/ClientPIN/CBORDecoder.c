@@ -21,6 +21,9 @@ static uint8_t encrypted_pin_token[PIN_TOKEN_SIZE];
 // MakeCredentialレスポンス格納領域
 static CTAP_MAKE_CREDENTIAL_RES make_credential_res;
 
+// レスポンスから解析されたhmac-secret拡張情報
+static CTAP_EXT_HMAC_SECRET_RES hmac_secret_res;
+
 static uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
     if (cbor_value_get_type(map) != CborByteStringType) {
@@ -302,6 +305,52 @@ uint8_t *ctap2_cbor_decrypted_pin_token(void) {
     return decrypted_pin_token;
 }
 
+static uint8_t parse_ext_hmac_secret_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
+    CborError   ret;
+    CborParser  parser;
+    CborValue   map;
+    CborValue   value;
+    
+    // リクエスト格納領域初期化
+    memset(&hmac_secret_res, 0x00, sizeof(hmac_secret_res));
+
+    // CBOR parser初期化し、データがMapであることをチェック
+    ret = cbor_parser_init(auth_data_bytes, auth_data_size, CborValidateCanonicalFormat, &parser, &map);
+    if (ret != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+    if (cbor_value_get_type(&map) != CborMapType) {
+        return CTAP2_ERR_CBOR_UNEXPECTED_TYPE;
+    }
+    
+    // "hmac-secret"エントリーを探す
+    if (cbor_value_map_find_value(&map, "hmac-secret", &value) != CborNoError) {
+        return CTAP2_ERR_CBOR_PARSING;
+    }
+
+    if (cbor_value_get_type(&value) == CborBooleanType) {
+        // makeCredentialの場合は、true／falseのいずれか
+        if (cbor_value_get_boolean(&value, &hmac_secret_res.flag) != CborNoError) {
+            hmac_secret_res.flag = false;
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+    } else if (cbor_value_get_type(&value) == CborByteStringType) {
+        // getAssertionの場合は、64バイトのバイナリーデータ
+        hmac_secret_res.output_size = sizeof(hmac_secret_res.output);
+        ret = cbor_value_copy_byte_string(&map, hmac_secret_res.output, &hmac_secret_res.output_size, NULL);
+        if (ret != CborNoError) {
+            hmac_secret_res.output_size = 0;
+            return CTAP2_ERR_CBOR_PARSING;
+        }
+
+    } else {
+        return CTAP2_ERR_INVALID_CBOR_TYPE;
+    }
+    
+    return CTAP1_ERR_SUCCESS;
+}
+
 uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
     // rpIdHash
     uint8_t index = 0;
@@ -345,8 +394,10 @@ uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
     }
 
     // Extensions CBOR for makeCredential
-    memcpy(make_credential_res.extCBORForCred, auth_data_bytes + index,
-           EXT_CBOR_FOR_CRED_MAX_SIZE);
+    uint8_t ret = parse_ext_hmac_secret_data(auth_data_bytes + index, EXT_CBOR_FOR_CRED_MAX_SIZE);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
 
     return CTAP1_ERR_SUCCESS;
 }
@@ -438,4 +489,8 @@ uint8_t *ctap2_cbor_decode_credential_id(void) {
 
 size_t ctap2_cbor_decode_credential_id_size(void) {
     return make_credential_res.credentialIdLength;
+}
+
+CTAP_EXT_HMAC_SECRET_RES *ctap2_cbor_decode_ext_hmac_secret(void) {
+    return &hmac_secret_res;
 }

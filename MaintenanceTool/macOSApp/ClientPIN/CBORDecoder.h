@@ -51,8 +51,13 @@ typedef struct {
     size_t   credentialIdLength;
     uint8_t  credentialId[CREDENTIAL_ID_MAX_SIZE];
     uint8_t  credentialPubKey[CREDENTIAL_PUBKEY_MAX_SIZE];
-    uint8_t  extCBORForCred[EXT_CBOR_FOR_CRED_MAX_SIZE];
 } CTAP_MAKE_CREDENTIAL_RES;
+
+typedef struct {
+    bool     flag;
+    uint8_t  output[64];
+    size_t   output_size;
+} CTAP_EXT_HMAC_SECRET_RES;
 
 uint8_t  ctap2_cbor_decode_get_agreement_key(uint8_t *cbor_data_buffer, size_t cbor_data_length);
 uint8_t *ctap2_cbor_decode_agreement_pubkey_X(void);
@@ -64,5 +69,6 @@ uint8_t *ctap2_cbor_decrypted_pin_token(void);
 uint8_t  ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor_data_length);
 uint8_t *ctap2_cbor_decode_credential_id(void);
 size_t   ctap2_cbor_decode_credential_id_size(void);
+CTAP_EXT_HMAC_SECRET_RES *ctap2_cbor_decode_ext_hmac_secret(void);
 
 #endif /* CBORDecoder_h */
