@@ -325,7 +325,7 @@ static uint8_t parse_ext_hmac_secret_data(uint8_t *auth_data_bytes, size_t auth_
     
     // "hmac-secret"エントリーを探す
     if (cbor_value_map_find_value(&map, "hmac-secret", &value) != CborNoError) {
-        return CTAP2_ERR_CBOR_PARSING;
+        return CTAP2_ERR_MISSING_PARAMETER;
     }
 
     if (cbor_value_get_type(&value) == CborBooleanType) {
@@ -338,7 +338,7 @@ static uint8_t parse_ext_hmac_secret_data(uint8_t *auth_data_bytes, size_t auth_
     } else if (cbor_value_get_type(&value) == CborByteStringType) {
         // getAssertionの場合は、64バイトのバイナリーデータ
         hmac_secret_res.output_size = sizeof(hmac_secret_res.output);
-        ret = cbor_value_copy_byte_string(&map, hmac_secret_res.output, &hmac_secret_res.output_size, NULL);
+        ret = cbor_value_copy_byte_string(&value, hmac_secret_res.output, &hmac_secret_res.output_size, NULL);
         if (ret != CborNoError) {
             hmac_secret_res.output_size = 0;
             return CTAP2_ERR_CBOR_PARSING;
@@ -351,7 +351,7 @@ static uint8_t parse_ext_hmac_secret_data(uint8_t *auth_data_bytes, size_t auth_
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
+static uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size, bool make_credential) {
     // rpIdHash
     uint8_t index = 0;
     memcpy(make_credential_res.rpIdHash, auth_data_bytes + index, RP_ID_HASH_SIZE);
@@ -368,33 +368,36 @@ uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
     }
     index += SIGN_COUNT_SIZE;
 
-    // aaguid
-    memcpy(make_credential_res.aaguid, auth_data_bytes + index, AAGUID_SIZE);
-    index += AAGUID_SIZE;
-
-    // credentialIdLength（エンディアン変換が必要）
-    uint8_t *id_length = (uint8_t *)&make_credential_res.credentialIdLength;
-    for (int j = 0; j < CREDENTIAL_ID_LENGTH_SIZE; j++) {
-        id_length[CREDENTIAL_ID_LENGTH_SIZE - 1 - j] = auth_data_bytes[index + j];
+    if (make_credential) {
+        // aaguid
+        memcpy(make_credential_res.aaguid, auth_data_bytes + index, AAGUID_SIZE);
+        index += AAGUID_SIZE;
+        
+        // credentialIdLength（エンディアン変換が必要）
+        uint8_t *id_length = (uint8_t *)&make_credential_res.credentialIdLength;
+        for (int j = 0; j < CREDENTIAL_ID_LENGTH_SIZE; j++) {
+            id_length[CREDENTIAL_ID_LENGTH_SIZE - 1 - j] = auth_data_bytes[index + j];
+        }
+        index += CREDENTIAL_ID_LENGTH_SIZE;
+        
+        // CredentialId
+        memcpy(make_credential_res.credentialId, auth_data_bytes + index,
+               make_credential_res.credentialIdLength);
+        index += make_credential_res.credentialIdLength;
+        
+        // Credential Public Key
+        memcpy(make_credential_res.credentialPubKey, auth_data_bytes + index,
+               CREDENTIAL_PUBKEY_MAX_SIZE);
+        index += CREDENTIAL_PUBKEY_MAX_SIZE;
     }
-    index += CREDENTIAL_ID_LENGTH_SIZE;
-
-    // CredentialId
-    memcpy(make_credential_res.credentialId, auth_data_bytes + index,
-           make_credential_res.credentialIdLength);
-    index += make_credential_res.credentialIdLength;
-
-    // Credential Public Key
-    memcpy(make_credential_res.credentialPubKey, auth_data_bytes + index,
-           CREDENTIAL_PUBKEY_MAX_SIZE);
-    index += CREDENTIAL_PUBKEY_MAX_SIZE;
 
     if (auth_data_size - index < EXT_CBOR_FOR_CRED_MAX_SIZE) {
         return CTAP1_ERR_SUCCESS;
     }
 
     // Extensions CBOR for makeCredential
-    uint8_t ret = parse_ext_hmac_secret_data(auth_data_bytes + index, EXT_CBOR_FOR_CRED_MAX_SIZE);
+    size_t size = make_credential ? EXT_CBOR_FOR_CRED_MAX_SIZE : EXT_CBOR_FOR_GET_MAX_SIZE;
+    uint8_t ret = parse_ext_hmac_secret_data(auth_data_bytes + index, size);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
@@ -402,7 +405,8 @@ uint8_t parse_auth_data(uint8_t *auth_data_bytes, size_t auth_data_size) {
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor_data_length) {
+static uint8_t ctap2_cbor_decode_response_create_or_get(
+    uint8_t *cbor_data_buffer, size_t cbor_data_length, bool make_credential) {
     CborParser  parser;
     CborValue   it;
     CborValue   map;
@@ -436,7 +440,7 @@ uint8_t ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }
-    
+
     for (i = 0; i < map_length; i++) {
         type = cbor_value_get_type(&map);
         if (type != CborIntegerType) {
@@ -465,7 +469,7 @@ uint8_t ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor
                 if (ret != CborNoError) {
                     return ret;
                 }
-                ret = parse_auth_data(auth_data_bytes, auth_data_size);
+                ret = parse_auth_data(auth_data_bytes, auth_data_size, make_credential);
                 if (ret != CTAP1_ERR_SUCCESS) {
                     return ret;
                 }
@@ -478,6 +482,26 @@ uint8_t ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor
         if (ret != CborNoError) {
             return CTAP2_ERR_CBOR_PARSING;
         }
+    }
+    
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor_data_length) {
+    // レスポンスCBORの解析
+    uint8_t ret = ctap2_cbor_decode_response_create_or_get(cbor_data_buffer, cbor_data_length, true);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t ctap2_cbor_decode_get_assertion(uint8_t *cbor_data_buffer, size_t cbor_data_length, bool verify_salt) {
+    // レスポンスCBORの解析
+    uint8_t ret = ctap2_cbor_decode_response_create_or_get(cbor_data_buffer, cbor_data_length, false);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
     }
     
     return CTAP1_ERR_SUCCESS;

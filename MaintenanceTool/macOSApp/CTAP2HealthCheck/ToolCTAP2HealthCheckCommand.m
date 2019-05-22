@@ -107,10 +107,6 @@
         if (ctap2_cbor_decode_ext_hmac_secret()->flag) {
             NSLog(@"parseMakeCredentialResponseWith: 'hmac-secret':true");
         }
-        // for debug
-        // NSLog(@"parseMakeCredentialResponseWith: credential id %@",
-        //       [[NSData alloc] initWithBytes:ctap2_cbor_decode_credential_id()
-        //                              length:ctap2_cbor_decode_credential_id_size()]);
         return true;
     }
 
@@ -137,6 +133,24 @@
             NSLog(@"CBOREncoder error: %s", log_debug_message());
             return nil;
         }
+    }
+
+    - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt {
+        // GetAssertionレスポンスを解析
+        uint8_t *response = (uint8_t *)[getAssertionResponse bytes];
+        size_t   responseSize = [getAssertionResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_assertion(response, responseSize, verifySalt);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            NSLog(@"parseGetAssertionResponseWith failed(0x%02x)", status_code);
+            return false;
+        }
+        // レスポンス内に"hmac-secret"拡張が含まれていたらその旨をログ表示
+        if (ctap2_cbor_decode_ext_hmac_secret()->output_size > 0) {
+            NSLog(@"parseGetAssertionResponseWith: 'hmac-secret':%@",
+                  [[NSData alloc] initWithBytes:ctap2_cbor_decode_ext_hmac_secret()->output
+                                         length:ctap2_cbor_decode_ext_hmac_secret()->output_size]);
+        }
+        return true;
     }
 
 #pragma mark - Communication with dialog

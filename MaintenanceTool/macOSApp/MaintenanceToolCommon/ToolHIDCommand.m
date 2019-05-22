@@ -408,8 +408,19 @@
 
     - (void)doResponseCommandGetAssertion:(NSData *)message
                                         CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // テストが２回成功したら画面に制御を戻して終了
-        if ([self getAssertionCount] == 2) {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // GetAssertionレスポンスを解析
+        // ２回目のコマンド実行では、認証器から受領したsaltの内容検証が必要
+        bool verifySaltNeeded = ([self getAssertionCount] == 2);
+        if ([[self toolCTAP2HealthCheckCommand]
+             parseGetAssertionResponseWith:cborBytes
+             verifySalt:verifySaltNeeded] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // ２回目のテストが成功したら画面に制御を戻して終了
+        if (verifySaltNeeded) {
             [self doResponseToAppDelegate:true message:nil];
             return;
         }

@@ -32,6 +32,7 @@
 #define CREDENTIAL_ID_MAX_SIZE      128
 #define CREDENTIAL_PUBKEY_MAX_SIZE  77
 #define EXT_CBOR_FOR_CRED_MAX_SIZE  14
+#define EXT_CBOR_FOR_GET_MAX_SIZE   79
 
 typedef struct {
     int kty;
@@ -67,6 +68,7 @@ uint8_t  ctap2_cbor_decode_pin_token(uint8_t *cbor_data_buffer, size_t cbor_data
 uint8_t *ctap2_cbor_decrypted_pin_token(void);
 
 uint8_t  ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbor_data_length);
+uint8_t  ctap2_cbor_decode_get_assertion(uint8_t *cbor_data_buffer, size_t cbor_data_length, bool verify_salt);
 uint8_t *ctap2_cbor_decode_credential_id(void);
 size_t   ctap2_cbor_decode_credential_id_size(void);
 CTAP_EXT_HMAC_SECRET_RES *ctap2_cbor_decode_ext_hmac_secret(void);
