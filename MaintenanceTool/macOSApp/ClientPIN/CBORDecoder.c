@@ -24,6 +24,10 @@ static CTAP_MAKE_CREDENTIAL_RES make_credential_res;
 // レスポンスから解析されたhmac-secret拡張情報
 static CTAP_EXT_HMAC_SECRET_RES hmac_secret_res;
 
+// hmac-secret拡張から抽出／復号化されたsaltを保持
+static uint8_t decrypted_salt_org[64];
+static uint8_t decrypted_salt_cur[64];
+
 static uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
     if (cbor_value_get_type(map) != CborByteStringType) {
@@ -503,8 +507,19 @@ uint8_t ctap2_cbor_decode_get_assertion(uint8_t *cbor_data_buffer, size_t cbor_d
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
-    
+    // hmac-secretのsaltを共通鍵で復号化（処理内容が同一のため、PINトークン復号化処理を流用）
+    uint8_t *decrypted_salt_buff = verify_salt ? decrypted_salt_cur : decrypted_salt_org;
+    ret = decrypto_pin_token(hmac_secret_res.output, decrypted_salt_buff, hmac_secret_res.output_size);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+
     return CTAP1_ERR_SUCCESS;
+}
+
+bool ctap2_cbor_decode_verify_salt(void) {
+    // saltの内容検証を行う
+    return (memcmp(decrypted_salt_cur, decrypted_salt_org, hmac_secret_res.output_size) == 0);
 }
 
 uint8_t *ctap2_cbor_decode_credential_id(void) {

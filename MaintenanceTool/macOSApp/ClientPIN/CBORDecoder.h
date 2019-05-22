@@ -71,6 +71,7 @@ uint8_t  ctap2_cbor_decode_make_credential(uint8_t *cbor_data_buffer, size_t cbo
 uint8_t  ctap2_cbor_decode_get_assertion(uint8_t *cbor_data_buffer, size_t cbor_data_length, bool verify_salt);
 uint8_t *ctap2_cbor_decode_credential_id(void);
 size_t   ctap2_cbor_decode_credential_id_size(void);
+bool     ctap2_cbor_decode_verify_salt(void);
 CTAP_EXT_HMAC_SECRET_RES *ctap2_cbor_decode_ext_hmac_secret(void);
 
 #endif /* CBORDecoder_h */
