@@ -17,7 +17,8 @@
     - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse;
     - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse;
     - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse;
-    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse;
+    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up;
+    - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt;
 
     @property (nonatomic) NSString *pinCur;
 

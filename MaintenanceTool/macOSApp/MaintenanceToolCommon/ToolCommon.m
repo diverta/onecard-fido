@@ -58,6 +58,22 @@
         return processName;
     }
 
+    + (NSData *)generateHexBytesFrom:(NSString *)hexString {
+        unsigned int  hexInt;
+        unsigned char byte;
+        
+        // 与えられたHEX文字列を２文字ずつ切り出し、バイトデータに変換する
+        NSMutableData *convertedBytes = [[NSMutableData alloc] init];
+        for (int i = 0; i < [hexString length]; i+=2) {
+            NSString *tmp = [hexString substringWithRange:NSMakeRange(i, 2)];
+            [[NSScanner scannerWithString:tmp] scanHexInt:&hexInt];
+            byte = (unsigned char)hexInt;
+            [convertedBytes appendBytes:&byte length:sizeof(byte)];
+        }
+        
+        return convertedBytes;
+    }
+
 #pragma mark - Utilities for check entry
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText {

@@ -37,6 +37,9 @@
     @property (nonatomic) uint8_t   cborCommand;
     @property (nonatomic) uint8_t   subCommand;
 
+    // ログインテストカウンター
+    @property (nonatomic) uint8_t   getAssertionCount;
+
 @end
 
 @implementation ToolHIDCommand
@@ -375,6 +378,7 @@
             return;
         }
         // CTAP2ヘルスチェックのログインテストを実行
+        [self setGetAssertionCount:1];
         [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
     }
 
@@ -382,26 +386,47 @@
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
         // メッセージを編集し、GetAssertionコマンドを実行
+        // ２回目のコマンド実行では、MAIN SW押下によるユーザー所在確認が必要
+        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
         NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateGetAssertionRequestWith:message];
+                           generateGetAssertionRequestWith:message
+                           userPresence:testUserPresenceNeeded];
         if (request == nil) {
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
-        // リクエスト転送の前に、基板上ののMAIN SWを押してもらうように促すメッセージを画面表示
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        if (testUserPresenceNeeded) {
+            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        }
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)doResponseCommandGetAssertion:(NSData *)message
                                         CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ヘルスチェックが成功したので、画面に制御を戻す
-        [self doResponseToAppDelegate:true message:nil];
-        return;
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // GetAssertionレスポンスを解析
+        // ２回目のコマンド実行では、認証器から受領したsaltの内容検証が必要
+        bool verifySaltNeeded = ([self getAssertionCount] == 2);
+        if ([[self toolCTAP2HealthCheckCommand]
+             parseGetAssertionResponseWith:cborBytes
+             verifySalt:verifySaltNeeded] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // ２回目のテストが成功したら画面に制御を戻して終了
+        if (verifySaltNeeded) {
+            [self doResponseToAppDelegate:true message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを再度実行
+        [self setGetAssertionCount:[self getAssertionCount] + 1];
+        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
     }
 
     - (void)doRequestAuthReset:(NSData *)cid {
@@ -413,6 +438,15 @@
         char commandByte[] = {0x07};
         NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
+    }
+
+    - (void)doCtap2HealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
+            [self displayStartMessage];
+        }
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
     }
 
     - (void)hidHelperWillProcess:(Command)command {
@@ -431,10 +465,12 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
             case COMMAND_AUTH_RESET:
                 [self doClientPin];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doCtap2HealthCheck];
                 break;
             default:
                 // エラーメッセージを表示

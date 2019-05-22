@@ -21,6 +21,6 @@ uint8_t ctap2_cbor_encode_make_credential(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, uint8_t *pin_token);
 uint8_t ctap2_cbor_encode_get_assertion(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, uint8_t *pin_token,
-    uint8_t *credential_id, size_t credential_id_size);
+    uint8_t *credential_id, size_t credential_id_size, uint8_t *hmac_secret_salt, bool user_presence);
 
 #endif /* CBOREncoder_h */
