@@ -110,7 +110,7 @@
         return true;
     }
 
-    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse {
+    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up {
         // GetPinTokenレスポンスからPINトークンを抽出
         uint8_t *pinTokenResp = (uint8_t *)[getPinTokenResponse bytes];
         size_t   pinTokenRespSize = [getPinTokenResponse length];
@@ -125,7 +125,7 @@
                             ctap2_cbor_decrypted_pin_token(),
                             ctap2_cbor_decode_credential_id(),
                             ctap2_cbor_decode_credential_id_size(),
-                            (uint8_t *)[[self hmacSecretSalt] bytes]);
+                            (uint8_t *)[[self hmacSecretSalt] bytes], up);
         if (status_code == CTAP1_ERR_SUCCESS) {
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];

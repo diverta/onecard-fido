@@ -787,7 +787,7 @@ static uint8_t encode_extensions_for_get(CborEncoder *encoder, uint8_t *hmac_sec
 }
 
 static uint8_t generate_get_assertion_cbor(
-    uint8_t *credential_id, size_t credential_id_size, uint8_t *hmac_secret_salt) {
+    uint8_t *credential_id, size_t credential_id_size, uint8_t *hmac_secret_salt, bool user_presence) {
     // Mapに格納する要素数
     size_t map_elements_num;
     // 作業領域初期化
@@ -850,7 +850,7 @@ static uint8_t generate_get_assertion_cbor(
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
-    ret = encode_options(&map, true);
+    ret = encode_options(&map, user_presence);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
@@ -885,7 +885,7 @@ static uint8_t generate_get_assertion_cbor(
 
 uint8_t ctap2_cbor_encode_get_assertion(
     uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y, uint8_t *pin_token,
-    uint8_t *credential_id, size_t credential_id_size, uint8_t *hmac_secret_salt) {
+    uint8_t *credential_id, size_t credential_id_size, uint8_t *hmac_secret_salt, bool user_presence) {
     // clientDataHashを生成
     if (generate_client_data_hash(challenge) != CTAP1_ERR_SUCCESS) {
         return CTAP1_ERR_OTHER;
@@ -895,5 +895,5 @@ uint8_t ctap2_cbor_encode_get_assertion(
         return CTAP1_ERR_OTHER;
     }
     // リクエストCBORを生成
-    return generate_get_assertion_cbor(credential_id, credential_id_size, hmac_secret_salt);
+    return generate_get_assertion_cbor(credential_id, credential_id_size, hmac_secret_salt, user_presence);
 }

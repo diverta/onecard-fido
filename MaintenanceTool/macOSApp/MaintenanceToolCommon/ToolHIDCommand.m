@@ -37,6 +37,9 @@
     @property (nonatomic) uint8_t   cborCommand;
     @property (nonatomic) uint8_t   subCommand;
 
+    // ログインテストカウンター
+    @property (nonatomic) uint8_t   getAssertionCount;
+
 @end
 
 @implementation ToolHIDCommand
@@ -375,6 +378,7 @@
             return;
         }
         // CTAP2ヘルスチェックのログインテストを実行
+        [self setGetAssertionCount:1];
         [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
     }
 
@@ -382,26 +386,36 @@
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
         // メッセージを編集し、GetAssertionコマンドを実行
+        // ２回目のコマンド実行では、MAIN SW押下によるユーザー所在確認が必要
+        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
         NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateGetAssertionRequestWith:message];
+                           generateGetAssertionRequestWith:message
+                           userPresence:testUserPresenceNeeded];
         if (request == nil) {
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
-        // リクエスト転送の前に、基板上ののMAIN SWを押してもらうように促すメッセージを画面表示
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
-        [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        if (testUserPresenceNeeded) {
+            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        }
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)doResponseCommandGetAssertion:(NSData *)message
                                         CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ヘルスチェックが成功したので、画面に制御を戻す
-        [self doResponseToAppDelegate:true message:nil];
-        return;
+        // テストが２回成功したら画面に制御を戻して終了
+        if ([self getAssertionCount] == 2) {
+            [self doResponseToAppDelegate:true message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを再度実行
+        [self setGetAssertionCount:[self getAssertionCount] + 1];
+        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
     }
 
     - (void)doRequestAuthReset:(NSData *)cid {
