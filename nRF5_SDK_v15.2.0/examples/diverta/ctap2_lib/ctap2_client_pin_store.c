@@ -19,21 +19,21 @@ NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
 // 
-// PINコードハッシュ管理用
+// PINリトライカウンター管理用
 //   レコードサイズ = 9 ワード
 //     PINコードハッシュ: 8ワード（32バイト）
 //     リトライカウンター: 1ワード（4バイト)
-static uint32_t m_pin_store_hash_record[FIDO_PIN_STORE_HASH_RECORD_SIZE];
+static uint32_t m_pin_store_hash_record[FIDO_PIN_RETRY_COUNTER_RECORD_SIZE];
 
 static bool pin_code_hash_record_find(fds_record_desc_t *record_desc)
 {
     // 作業領域の初期化
-    memset(m_pin_store_hash_record, 0, FIDO_PIN_STORE_HASH_RECORD_SIZE * 4);
+    memset(m_pin_store_hash_record, 0, FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * 4);
 
     // Flash ROMから既存データを検索し、
     // 見つかった場合は true を戻す
     fds_find_token_t  ftok = {0};
-    ret_code_t ret = fds_record_find(FIDO_PIN_STORE_FILE_ID, FIDO_PIN_STORE_HASH_RECORD_KEY, record_desc, &ftok);
+    ret_code_t ret = fds_record_find(FIDO_PIN_RETRY_COUNTER_FILE_ID, FIDO_PIN_RETRY_COUNTER_RECORD_KEY, record_desc, &ftok);
     if (ret != FDS_SUCCESS) {
         return false;
     }
@@ -82,10 +82,10 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
-    record.file_id           = FIDO_PIN_STORE_FILE_ID;
-    record.key               = FIDO_PIN_STORE_HASH_RECORD_KEY;
+    record.file_id           = FIDO_PIN_RETRY_COUNTER_FILE_ID;
+    record.key               = FIDO_PIN_RETRY_COUNTER_RECORD_KEY;
     record.data.p_data       = m_pin_store_hash_record;
-    record.data.length_words = FIDO_PIN_STORE_HASH_RECORD_SIZE;
+    record.data.length_words = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE;
 
     ret_code_t ret;
     if (found == true) {
@@ -126,7 +126,7 @@ bool ctap2_client_pin_store_pin_code_exist(void)
 
     // PINコードハッシュがゼロ埋めされている場合は未登録と判断
     uint8_t *pin_code_hash = ctap2_client_pin_store_pin_code_hash();
-    uint8_t  pin_code_hash_size = FIDO_PIN_STORE_HASH_RECORD_SIZE * 4;
+    uint8_t  pin_code_hash_size = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * 4;
     uint8_t  i;
     for (i = 0; i < pin_code_hash_size; i++) {
         if (pin_code_hash[i] != 0) {

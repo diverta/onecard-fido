@@ -11,6 +11,7 @@
 #include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
+#include "ctap2_extension_hmac_secret.h"
 #include "fido_common.h"
 
 // for u2f_flash_token_counter
@@ -45,6 +46,7 @@ struct {
     CTAP_ALLOW_LIST_T        allowList;
     uint8_t                  pinAuth[PIN_AUTH_SIZE];
     uint8_t                  pinProtocol;
+    CTAP_EXTENSIONS_T        extensions;
 } ctap2_request;
 
 
@@ -175,6 +177,13 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
                     return ret;
                 }
                 break;
+            case 4:
+                // extensions (CBOR map)
+                ret = parse_extensions(&map, &ctap2_request.extensions);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
+                }
+                break;
             case 5:
                 // options (Map of authenticator options)
                 ret = parse_options(&ctap2_request.options, &map, false);
@@ -262,11 +271,30 @@ static uint8_t read_token_counter(void)
     return CTAP1_ERR_SUCCESS;
 }
 
+static uint8_t add_extensions_cbor(uint8_t *authenticator_data)
+{
+    // レスポンス用CBORを生成
+    if (ctap2_extension_hmac_secret_cbor_for_get(
+        &ctap2_request.extensions) != CTAP1_ERR_SUCCESS) {
+        return 0;
+    }
+
+    // authenticatorData領域に格納
+    memcpy(authenticator_data, ctap2_extension_hmac_secret_cbor(), ctap2_extension_hmac_secret_cbor_size());
+    return ctap2_extension_hmac_secret_cbor_size();
+}
+
 static void generate_authenticator_data(void)
 {
     // rpIdHashの先頭アドレスとサイズを取得
     uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
     size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
+
+    // extensions設定時はflagsを追加設定
+    //   Extension data included (0x80)
+    if (ctap2_request.extensions.hmac_secret.hmac_secret_parsed) {
+        ctap2_flags_set(0x80);
+    }
 
     // Authenticator data各項目を
     // 先頭からバッファにセット
@@ -280,6 +308,11 @@ static void generate_authenticator_data(void)
     //  signCount
     fido_set_uint32_bytes(authenticator_data + offset, ctap2_current_sign_count());
     offset += sizeof(uint32_t);
+    //  extensions設定時
+    //    {"hmac-secret": AES256-CBC(sharedSecret, IV=0, output1 (32 bytes) || output2 (32 bytes))}
+    if (ctap2_request.extensions.hmac_secret.hmac_secret_parsed) {
+        offset += add_extensions_cbor(authenticator_data + offset);
+    }
 
 #if NRF_LOG_DEBUG_AUTH_DATA_BUFF
     int j, k;

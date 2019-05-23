@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ToolCommand.h"
+#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 
 @interface ToolCommand ()
@@ -102,28 +103,14 @@
     return dataForRequest;
 }
 
-- (NSData *)generateHexBytesFrom:(NSString *)hexString {
-    unsigned int  hexInt;
-    unsigned char byte;
-
-    // 与えられたHEX文字列を２文字ずつ切り出し、バイトデータに変換する
-    NSMutableData *convertedBytes = [[NSMutableData alloc] init];
-    for (int i = 0; i < [hexString length]; i+=2) {
-        NSString *tmp = [hexString substringWithRange:NSMakeRange(i, 2)];
-        [[NSScanner scannerWithString:tmp] scanHexInt:&hexInt];
-        byte = (unsigned char)hexInt;
-        [convertedBytes appendBytes:&byte length:sizeof(byte)];
-    }
-
-    return convertedBytes;
-}
-
 - (NSMutableData *)createTestRequestData {
     // テストデータから、リクエストデータの先頭部分を生成
     NSData *challenge =
-        [self generateHexBytesFrom:@"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
+        [ToolCommon generateHexBytesFrom:
+            @"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
     NSData *appIDHash =
-        [self generateHexBytesFrom:@"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
+        [ToolCommon generateHexBytesFrom:
+            @"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
 
     NSMutableData *requestData = [[NSMutableData alloc] initWithData:challenge];
     [requestData appendData:appIDHash];

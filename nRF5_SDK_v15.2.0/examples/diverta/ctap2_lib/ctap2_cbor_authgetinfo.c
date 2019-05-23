@@ -16,7 +16,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#define NUM_OF_CBOR_ELEMENTS        5
+#define NUM_OF_CBOR_ELEMENTS        6
 #define NUM_OF_VERSIONS             2
 #define NUM_OF_OPTIONS              4
 
@@ -68,6 +68,23 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
                 }
 
                 ret = cbor_encode_text_stringz(&array, "FIDO_2_0");
+                if (ret != CborNoError) {
+                    return false;
+                }
+            }
+
+            ret = cbor_encoder_close_container(&map, &array);
+            if (ret != CborNoError) {
+                return false;
+            }
+        }
+
+        // extensions (0x02)
+        ret = cbor_encode_uint(&map, 0x02);
+        if (ret == CborNoError) {
+            ret = cbor_encoder_create_array(&map, &array, 1);
+            if (ret == CborNoError) {
+                ret = cbor_encode_text_stringz(&array, "hmac-secret");
                 if (ret != CborNoError) {
                     return false;
                 }

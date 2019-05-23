@@ -37,6 +37,7 @@ typedef enum : NSInteger {
 @interface ToolCommon : NSObject
 
     + (NSString *)processNameOfCommand:(Command)command;
+    + (NSData *)generateHexBytesFrom:(NSString *)hexString;
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;

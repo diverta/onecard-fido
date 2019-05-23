@@ -510,7 +510,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
     // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
     m_response_length = *encoded_buff_size + 1;
 
-    // PINコードハッシュをFlash ROMに保管
+    // PINリトライカウンターをFlash ROMに保管
     // リトライカウンターの初期値は８とする
     uint32_t retry_counter = 8;
     if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) == false) {
@@ -576,7 +576,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
     // （レスポンス長はステータス1バイト＋CBORレスポンス長とする）
     m_response_length = *encoded_buff_size + 1;
 
-    // PINコードハッシュをFlash ROMに保管
+    // PINリトライカウンターをFlash ROMに保管
     // リトライカウンターの初期値は８とする
     retry_counter = 8;
     if (ctap2_client_pin_store_hash_write(NULL, retry_counter) == false) {
@@ -623,8 +623,8 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
 {
     switch (ctap2_request.subCommand) {
         case subcmd_SetPin:
-            if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
-                // レコードIDがPINコードハッシュ管理であれば
+            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
+                // レコードIDがPINリトライカウンター管理であれば
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("setPIN: PIN hash store success");
                 hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
@@ -634,16 +634,16 @@ void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
             }
             break;
         case subcmd_ChangePin:
-            if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
-                // レコードIDがPINコードハッシュ管理であれば
+            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
+                // レコードIDがPINリトライカウンター管理であれば
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("changePIN: PIN hash store success");
                 hid_ctap2_command_send_response(check_pin_status_code, m_response_length);
             }
             break;
         case subcmd_GetPinToken:
-            if (p_evt->write.record_key == FIDO_PIN_STORE_HASH_RECORD_KEY) {
-                // レコードIDがPINコードハッシュ管理であれば
+            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
+                // レコードIDがPINリトライカウンター管理であれば
                 // ここでレスポンスを戻す
                 NRF_LOG_DEBUG("getPinToken: retry counter store success");
                 hid_ctap2_command_send_response(check_pin_status_code, m_response_length);

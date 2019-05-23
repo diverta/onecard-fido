@@ -11,6 +11,7 @@
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_client_pin_token.h"
+#include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
 #include "fido_crypto_keypair.h"
@@ -50,6 +51,7 @@ struct {
     CTAP_OPTIONS_T           options;
     uint8_t                  pinAuth[PIN_AUTH_SIZE];
     uint8_t                  pinProtocol;
+    CTAP_EXTENSIONS_T        extensions;
 } ctap2_request;
 
 // credentialPublicKeyを保持
@@ -69,8 +71,13 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     int         intval;
 
 #if NRF_LOG_HEXDUMP_DEBUG_CBOR
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer, 64);
-    NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + 64, cbor_data_length - 64);
+    NRF_LOG_DEBUG("authenticatorMakeCredential request cbor(%d bytes):", cbor_data_length);
+    int j, k;
+    int max = (cbor_data_length < 288) ? cbor_data_length : 288;
+    for (j = 0; j < max; j += 64) {
+        k = max - j;
+        NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + j, (k < 64) ? k : 64);
+    }
 #else
     UNUSED_PARAMETER(cbor_data_buffer);
     UNUSED_PARAMETER(cbor_data_length);
@@ -162,9 +169,9 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
                 break;
             case 6:
                 // extensions (CBOR map)
-                type = cbor_value_get_type(&map);
-                if (type != CborMapType) {
-                    return CTAP2_ERR_INVALID_CBOR_TYPE;
+                ret = parse_extensions(&map, &ctap2_request.extensions);
+                if (ret != CTAP1_ERR_SUCCESS) {
+                    return ret;
                 }
                 break;
             case 7:
@@ -209,14 +216,17 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 #endif
 
 #if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("rp:   id[%s] name[%s]", ctap2_request.rp.id, ctap2_request.rp.name);
-    NRF_LOG_DEBUG("user: id[%s] name[%s]", ctap2_request.user.id, ctap2_request.user.name);
+    NRF_LOG_DEBUG("rp: id[%s] name[%s]", ctap2_request.rp.id, ctap2_request.rp.name);
+    NRF_LOG_DEBUG("user: name[%s]", ctap2_request.user.name);
+    NRF_LOG_DEBUG("user id(%d bytes):", ctap2_request.user.id_size);
+    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.user.id, ctap2_request.user.id_size);
     NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
         ctap2_request.cred_param.publicKeyCredentialTypeName);
     NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
         ctap2_request.cred_param.COSEAlgorithmIdentifier);
     NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
+    NRF_LOG_DEBUG("extensions: hmac-secret[%d]", ctap2_request.extensions.hmac_secret_requested);
 #endif
 
 #if NRF_LOG_DEBUG_PIN_AUTH
@@ -264,16 +274,34 @@ static uint8_t generate_credential_pubkey(void)
     return CTAP1_ERR_SUCCESS;
 }
 
+static uint8_t add_extensions_cbor(uint8_t *authenticator_data)
+{
+    // レスポンス用CBORを生成
+    if (ctap2_extension_hmac_secret_cbor_for_create() != CTAP1_ERR_SUCCESS) {
+        return 0;
+    }
+
+    // authenticatorData領域に格納
+    memcpy(authenticator_data, ctap2_extension_hmac_secret_cbor(), ctap2_extension_hmac_secret_cbor_size());
+    return ctap2_extension_hmac_secret_cbor_size();
+}
+
 static void generate_authenticator_data(void)
 {
     // rpIdHashの先頭アドレスとサイズを取得
     uint8_t *ctap2_rpid_hash = ctap2_generated_rpid_hash();
     size_t   ctap2_rpid_hash_size = ctap2_generated_rpid_hash_size();
 
+    // extensions設定時はflagsを追加設定
+    //   Extension data included (0x80)
+    if (ctap2_request.extensions.hmac_secret_requested) {
+        ctap2_flags_set(0x80);
+    }
+    
     // Authenticator data各項目を
     // 先頭からバッファにセット
     //  rpIdHash
-    uint8_t offset = 0;
+    size_t offset = 0;
     memset(authenticator_data, 0x00, sizeof(authenticator_data));
     memcpy(authenticator_data + offset, ctap2_rpid_hash, ctap2_rpid_hash_size);
     offset += ctap2_rpid_hash_size;
@@ -284,7 +312,7 @@ static void generate_authenticator_data(void)
     offset += sizeof(uint32_t);
     //  attestedCredentialData
     //   aaguid
-    uint8_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
+    size_t aaguid_size = ctap2_cbor_authgetinfo_aaguid_size();
     memcpy(authenticator_data + offset, ctap2_cbor_authgetinfo_aaguid(), aaguid_size);
     offset += aaguid_size;
     //   credentialIdLength
@@ -298,6 +326,11 @@ static void generate_authenticator_data(void)
     //   credentialPublicKey
     memcpy(authenticator_data + offset, credential_pubkey, credential_pubkey_size);
     offset += credential_pubkey_size;
+    //   extensions設定時
+    //     {"hmac-secret": true}
+    if (ctap2_request.extensions.hmac_secret_requested) {
+        offset += add_extensions_cbor(authenticator_data + offset);
+    }
 
 #if NRF_LOG_DEBUG_AUTH_DATA_BUFF
     int j, k;
@@ -487,7 +520,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 #if NRF_LOG_DEBUG_CBOR_RESPONSE
     NRF_LOG_DEBUG("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
     int j, k;
-    int max = 288;
+    int max = 320;
     for (j = 0; j < max; j += 64) {
         k = max - j;
         NRF_LOG_HEXDUMP_DEBUG(encoded_buff + j, (k < 64) ? k : 64);
