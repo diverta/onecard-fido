@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolCommon;
 using PeterO.Cbor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -14,7 +15,7 @@ namespace MaintenanceToolGUI
         }
 
         // 管理ツール側で発行した新規公開鍵を保持
-        private KeyAgreement AgreementPublicKey;
+        public KeyAgreement AgreementPublicKey { get; set; }
 
         // pinHashEnc: 
         //   Encrypted first 16 bytes of SHA-256 hash of curPin 
@@ -33,6 +34,10 @@ namespace MaintenanceToolGUI
 
         // 共通鍵を保持
         public byte[] SharedSecretKey { get; set; }
+
+        // hmac-secret機能で使用するsaltを保持
+        private Random random = new Random();
+        private byte[] Salt = new byte[64];
 
         public byte[] GetKeyAgreement(byte cborCommand, byte subCommand)
         {
@@ -314,11 +319,14 @@ namespace MaintenanceToolGUI
             // pinAuthを生成
             byte[] pinAuth = CreateClientPinAuth(pinToken, clientDataHash);
 
+            // hmac-secret機能で使用する64バイトSaltを生成
+            CreateRandomSalt();
+
             // 送信データをCBORエンコードしたバイト配列を戻す
             return GenerateMakeCredentialCbor(cborCommand, clientDataHash, pinAuth);
         }
 
-        public byte[] GetAssertion(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey, MakeCredentialResponse makeCredentialRes)
+        public byte[] GetAssertion(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey, CreateOrGetCommandResponse makeCredentialRes, KeyAgreement agreementPublicKey)
         {
             // pinTokenを抽出
             byte[] pinToken = ExtractPinToken(pinTokenCBOR, sharedSecretKey);
@@ -332,8 +340,16 @@ namespace MaintenanceToolGUI
             // pinAuthを生成
             byte[] pinAuth = CreateClientPinAuth(pinToken, clientDataHash);
 
+            // saltEncを生成
+            byte[] saltEnc = CreateSaltEnc(sharedSecretKey, Salt);
+
+            // saltAuthを生成
+            byte[] saltAuth = CreateSaltAuth(sharedSecretKey, saltEnc);
+
             // 送信データをCBORエンコードしたバイト配列を戻す
-            return GenerateGetAssertionCbor(cborCommand, clientDataHash, pinAuth, makeCredentialRes);
+            byte[] credentialID = makeCredentialRes.CredentialId;
+            return GenerateGetAssertionCbor(cborCommand, clientDataHash, credentialID, pinAuth, 
+                agreementPublicKey, saltEnc, saltAuth);
         }
 
         private byte[] ExtractPinToken(byte[] pinTokenCBOR, byte[] sharedSecretKey)
@@ -383,6 +399,31 @@ namespace MaintenanceToolGUI
                 Padding = PaddingMode.None
             };
             return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
+        }
+
+        public void CreateRandomSalt()
+        {
+            // 64バイト salt（ランダム値）を生成しておく
+            random.NextBytes(Salt);
+            // for debug
+            AppCommon.OutputLogToFile("Generated Salt: ", true);
+            AppCommon.OutputLogToFile(AppCommon.DumpMessage(Salt, Salt.Length), false);
+        }
+
+        private byte[] CreateSaltEnc(byte[] sharedSecret, byte[] salt)
+        {
+            // AES256-CBCで暗号化  
+            //   AES256-CBC(sharedSecret, IV=0, salt)
+            byte[] saltEnc = AES256CBCEncrypt(sharedSecret, salt);
+            return saltEnc;
+        }
+
+        private byte[] CreateSaltAuth(byte[] sharedSecret, byte[] saltEnc)
+        {
+            // LEFT(HMAC-SHA-256(sharedSecret, newPinEnc), 16)
+            var hmacsha256 = new HMACSHA256(sharedSecret);
+            byte[] digest = hmacsha256.ComputeHash(saltEnc);
+            return digest.ToList().Take(16).ToArray();
         }
 
         private byte[] GenerateMakeCredentialCbor(byte cborCommand, byte[] clientDataHash, byte[] pinAuth)
@@ -438,12 +479,15 @@ namespace MaintenanceToolGUI
             return encoded;
         }
 
-        private byte[] GenerateGetAssertionCbor(byte cborCommand, byte[] clientDataHash, byte[] pinAuth, MakeCredentialResponse makeCredentialRes)
+        private byte[] GenerateGetAssertionCbor(
+            byte cborCommand, byte[] clientDataHash, byte[] credentialId, byte[] pinAuth, 
+            KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth)
         {
             // 送信データを生成
             //   0x01: rpid
             //   0x02: clientDataHash
             //   0x03: allowList
+            //   0x04: extensions
             //   0x05: options
             //   0x06: pinAuth
             //   0x07: pinProtocol
@@ -451,12 +495,13 @@ namespace MaintenanceToolGUI
             cbor.Add(0x01, rpid);
             cbor.Add(0x02, clientDataHash);
 
-            if (makeCredentialRes != null) {
-                CBORObject pubKeyCredParams = CBORObject.NewMap();
-                pubKeyCredParams.Add("type", "public-key");
-                pubKeyCredParams.Add("id", makeCredentialRes.CredentialId);
-                cbor.Add(0x03, CBORObject.NewArray().Add(pubKeyCredParams));
-            }
+            CBORObject pubKeyCredParams = CBORObject.NewMap();
+            pubKeyCredParams.Add("type", "public-key");
+            pubKeyCredParams.Add("id", credentialId);
+            cbor.Add(0x03, CBORObject.NewArray().Add(pubKeyCredParams));
+
+            CBORObject extensions = CreateExtensionsCBORObject(agreementPublicKey, saltEnc, saltAuth);
+            cbor.Add(0x04, extensions);
 
             var opt = CBORObject.NewMap();
             opt.Add("rk", false);
@@ -479,6 +524,26 @@ namespace MaintenanceToolGUI
 
             // エンコードされたCBORバイト配列を戻す
             return encoded;
+        }
+
+        CBORObject CreateExtensionsCBORObject(KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth)
+        {
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, agreementPublicKey.Kty);
+            keyParam.Add(3, agreementPublicKey.Alg);
+            keyParam.Add(-1, agreementPublicKey.Crv);
+            keyParam.Add(-2, agreementPublicKey.X);
+            keyParam.Add(-3, agreementPublicKey.Y);
+
+            CBORObject hmacSecret = CBORObject.NewMap();
+            hmacSecret.Add(0x01, keyParam);
+            hmacSecret.Add(0x02, saltEnc);
+            hmacSecret.Add(0x03, saltAuth);
+
+            CBORObject extensions = CBORObject.NewMap();
+            extensions.Add("hmac-secret", hmacSecret);
+
+            return extensions;
         }
     }
 }
