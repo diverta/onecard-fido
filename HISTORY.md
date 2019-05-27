@@ -2,6 +2,24 @@
 
 ## プログラム更新履歴
 
+#### 2018/09/27（Version 0.1.6）
+
+以下のプログラムを修正しました。<br>
+
+- [macOS版U2F管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
+- [Windows版U2F管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+修正点は以下になります。
+- U2F Helper制作にともない、不要となった機能「Chrome設定」(Chrome Native Messaging) を、U2F管理ツール画面から削除
+- C++で制作したWIndows版U2F管理コマンド（U2FMaintenanceToolCMD.exe）を、C#の画面アプリ内に移植しました（Issue #72）
+
+U2F Helper（ヘルパーアプリ）は、別途製作した[U2F USB HIDデバイス（ヘルパーデバイス）](U2FHIDDevice/readme.md)と連携し、One Cardを使ったU2F認証を、Chromeブラウザーの標準機能で実行するために必要なプログラムです。
+
+- [macOS版U2F Helper](U2FMaintenanceTool/macOSApp/U2FHelper.pkg)
+- [Windows版U2F Helper](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+
+具体的な使用方法は、別途手順書[「Googleアカウントを使ったテスト手順」](Usage/GOOGLEACCTEST.md)をご参照ください。
+
 #### 2018/09/03
 
 [ヘルパーデバイス（U2F USB HIDデバイス）](U2FHIDDevice/readme.md)を制作しました。<br>
