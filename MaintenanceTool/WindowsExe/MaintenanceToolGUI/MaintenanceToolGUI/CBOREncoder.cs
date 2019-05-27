@@ -326,7 +326,7 @@ namespace MaintenanceToolGUI
             return GenerateMakeCredentialCbor(cborCommand, clientDataHash, pinAuth);
         }
 
-        public byte[] GetAssertion(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey, CreateOrGetCommandResponse makeCredentialRes, KeyAgreement agreementPublicKey)
+        public byte[] GetAssertion(byte cborCommand, string pinCur, byte[] pinTokenCBOR, byte[] sharedSecretKey, CreateOrGetCommandResponse makeCredentialRes, KeyAgreement agreementPublicKey, bool testUserPresenceNeeded)
         {
             // pinTokenを抽出
             byte[] pinToken = ExtractPinToken(pinTokenCBOR, sharedSecretKey);
@@ -349,7 +349,7 @@ namespace MaintenanceToolGUI
             // 送信データをCBORエンコードしたバイト配列を戻す
             byte[] credentialID = makeCredentialRes.CredentialId;
             return GenerateGetAssertionCbor(cborCommand, clientDataHash, credentialID, pinAuth, 
-                agreementPublicKey, saltEnc, saltAuth);
+                agreementPublicKey, saltEnc, saltAuth, testUserPresenceNeeded);
         }
 
         private byte[] ExtractPinToken(byte[] pinTokenCBOR, byte[] sharedSecretKey)
@@ -481,7 +481,8 @@ namespace MaintenanceToolGUI
 
         private byte[] GenerateGetAssertionCbor(
             byte cborCommand, byte[] clientDataHash, byte[] credentialId, byte[] pinAuth, 
-            KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth)
+            KeyAgreement agreementPublicKey, byte[] saltEnc, byte[] saltAuth,
+            bool testUserPresenceNeeded)
         {
             // 送信データを生成
             //   0x01: rpid
@@ -506,7 +507,7 @@ namespace MaintenanceToolGUI
             var opt = CBORObject.NewMap();
             opt.Add("rk", false);
             opt.Add("uv", false);
-            opt.Add("up", true);
+            opt.Add("up", testUserPresenceNeeded);
             cbor.Add(0x05, opt);
 
             if (pinAuth != null) {

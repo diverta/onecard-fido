@@ -61,6 +61,9 @@ namespace MaintenanceToolGUI
         //   getAssertion実行時まで保持しておく
         private CreateOrGetCommandResponse MakeCredentialRes = null;
 
+        // GetAssertion実行回数を保持
+        private int GetAssertionCount;
+
         // 実行機能を保持
         private enum HIDRequestType
         {
@@ -454,6 +457,9 @@ namespace MaintenanceToolGUI
 
         public void DoResponseGetPinToken(byte[] cborBytes)
         {
+            // GetAssertion実行が２回目かどうか判定
+            bool testUserPresenceNeeded = (GetAssertionCount == 2);
+
             // リクエストデータ（CBOR）をエンコード
             byte[] requestCbor = null;
             byte[] receivedCID = hidProcess.receivedCID;
@@ -461,8 +467,9 @@ namespace MaintenanceToolGUI
                 cborCommand = Const.HID_CBORCMD_MAKE_CREDENTIAL;
                 requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
             } else {
+                // ２回目のGetAssertion実行では、MAIN SW押下によるユーザー所在確認が必要
                 cborCommand = Const.HID_CBORCMD_GET_ASSERTION;
-                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes, AgreementPublicKey);
+                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes, AgreementPublicKey, testUserPresenceNeeded);
             }
 
             if (requestCbor == null) {
@@ -472,9 +479,9 @@ namespace MaintenanceToolGUI
             }
 
             // リクエスト転送の前に、
-            // 基板上ののMAIN SWを押してもらうように促す
+            // 基板上のMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            if (requestType == HIDRequestType.TestGetAssertion) {
+            if (requestType == HIDRequestType.TestGetAssertion && testUserPresenceNeeded) {
                 mainForm.OnPrintMessageText("ログインテストを開始します.");
                 mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
                 mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
@@ -493,6 +500,34 @@ namespace MaintenanceToolGUI
             // Credential IDを抽出して退避
             MakeCredentialRes = new CBORDecoder().CreateOrGetCommand(cborBytes, true);
 
+            // GetAssertionコマンドを実行する
+            GetAssertionCount = 1;
+            DoRequestCommandGetAssertion();
+        }
+
+        private void DoResponseCommandGetAssertion(byte[] message, int length)
+        {
+            // GetAssertion実行が２回目かどうか判定
+            bool verifySaltNeeded = (GetAssertionCount == 2);
+ 
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            // hmac-secret拡張情報からsaltを抽出して保持
+            CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
+
+            if (verifySaltNeeded) {
+                // ２回目のテストが成功したら画面に制御を戻して終了
+                mainForm.OnAppMainProcessExited(true);
+                return;
+            }
+
+            // GetAssertionコマンドを実行する
+            GetAssertionCount++;
+            DoRequestCommandGetAssertion();
+        }
+
+        private void DoRequestCommandGetAssertion()
+        {
             // 実行するコマンドと引数を退避
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンドを事前実行する必要あり
@@ -500,17 +535,6 @@ namespace MaintenanceToolGUI
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
             // nonce を送信する
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
-        }
-
-        private void DoResponseCommandGetAssertion(byte[] message, int length)
-        {
-            // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
-            // hmac-secret拡張情報からsaltを抽出して保持
-            CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
-
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(true);
         }
     }
 }
