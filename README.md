@@ -8,8 +8,9 @@ One CardにFIDO U2F認証機能を実装するプロジェクトです。
 
 以下のプログラムを修正しました。<br>
 
-- [macOS版 FIDO認証器管理ツール](U2FMaintenanceTool/macOSApp/U2FMaintenanceTool.pkg)
-- [Windows版 FIDO認証器管理ツール](U2FMaintenanceTool/WindowsExe/U2FMaintenanceToolWin.zip)
+- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.2.0)
+- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
+- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
 
 主な修正点は以下になります。
 - CTAP2ヘルスチェック機能を追加（`hmac-secret`検証機能付き）[注1]
