@@ -101,6 +101,16 @@ namespace MaintenanceToolCommon
             return sb.ToString();
         }
 
+        public static bool CompareBytes(byte[] src, byte[] dest, int size)
+        {
+            for (int i = 0; i < size; i++) {
+                if (src[i] != dest[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static int ToInt32(byte[] value, int startIndex, bool changeEndian = false)
         {
             byte[] sub = GetSubArray(value, startIndex, 4);
