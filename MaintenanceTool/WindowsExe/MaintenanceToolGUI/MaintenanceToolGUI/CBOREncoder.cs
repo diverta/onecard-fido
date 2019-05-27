@@ -158,7 +158,7 @@ namespace MaintenanceToolGUI
 
             // AES256-CBCで暗号化  
             //   AES256-CBC(sharedSecret, IV=0, LEFT(SHA-256(curPin),16))
-            byte[] pinHashEnc = AES256CBCEncrypt(sharedSecret, pinsha16);
+            byte[] pinHashEnc = AppCommon.AES256CBCEncrypt(sharedSecret, pinsha16);
 
             // for debug
             // AppCommon.OutputLogToFile("pinHashEnc: ", true);
@@ -170,7 +170,7 @@ namespace MaintenanceToolGUI
         private void CreateNewPinEnc(string pinNew)
         {
             byte[] newPinBytes = PaddingPin64(pinNew);
-            NewPinEnc = AES256CBCEncrypt(SharedSecretKey, newPinBytes);
+            NewPinEnc = AppCommon.AES256CBCEncrypt(SharedSecretKey, newPinBytes);
         }
 
         private byte[] PaddingPin64(string pin)
@@ -187,24 +187,6 @@ namespace MaintenanceToolGUI
                 }
             }
             return pinBytes;
-        }
-
-        private byte[] AES256CBCEncrypt(byte[] key, byte[] data)
-        {
-            // AES256-CBCにより暗号化
-            //   鍵の長さ: 256（32バイト）
-            //   ブロックサイズ: 128（16バイト）
-            //   暗号利用モード: CBC
-            //   初期化ベクター: 0
-            AesManaged aes = new AesManaged {
-                KeySize = 256,
-                BlockSize = 128,
-                Mode = CipherMode.CBC,
-                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Key = key,
-                Padding = PaddingMode.None
-            };
-            return aes.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
         }
 
         private void CreatePinAuth(byte[] newPinEnc, byte[] pinHashEnc)
@@ -363,7 +345,7 @@ namespace MaintenanceToolGUI
             }
 
             // pinTokenを共通鍵で復号化
-            return AES256CBCDecrypt(sharedSecretKey, pinTokenEnc);
+            return AppCommon.AES256CBCDecrypt(sharedSecretKey, pinTokenEnc);
         }
 
         private byte[] CreateClientDataHash(byte[] challenge)
@@ -383,24 +365,6 @@ namespace MaintenanceToolGUI
             return pinAuth;
         }
 
-        private byte[] AES256CBCDecrypt(byte[] key, byte[] data)
-        {
-            // AES256-CBCにより復号化
-            //   鍵の長さ: 256（32バイト）
-            //   ブロックサイズ: 128（16バイト）
-            //   暗号利用モード: CBC
-            //   初期化ベクター: 0
-            AesManaged aes = new AesManaged {
-                KeySize = 256,
-                BlockSize = 128,
-                Mode = CipherMode.CBC,
-                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Key = key,
-                Padding = PaddingMode.None
-            };
-            return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
-        }
-
         public void CreateRandomSalt()
         {
             // 64バイト salt（ランダム値）を生成しておく
@@ -414,7 +378,7 @@ namespace MaintenanceToolGUI
         {
             // AES256-CBCで暗号化  
             //   AES256-CBC(sharedSecret, IV=0, salt)
-            byte[] saltEnc = AES256CBCEncrypt(sharedSecret, salt);
+            byte[] saltEnc = AppCommon.AES256CBCEncrypt(sharedSecret, salt);
             return saltEnc;
         }
 
