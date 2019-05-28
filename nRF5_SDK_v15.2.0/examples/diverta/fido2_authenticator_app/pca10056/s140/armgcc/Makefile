@@ -10,6 +10,7 @@ U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
 CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
+NFCLIB_DIR := $(PROJ_DIR)/../nfc_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -112,6 +113,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/util/app_error.c \
   $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
   $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
+  $(SDK_ROOT)/components/nfc/t4t_lib/hal_t4t/hal_nfc_t4t.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_ble.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh_soc.c \
   $(SDK_ROOT)/components/softdevice/common/nrf_sdh.c \
@@ -200,6 +202,7 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
+  $(NFCLIB_DIR)/nfc_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -358,12 +361,14 @@ INC_FOLDERS += \
   $(BLELIB_DIR) \
   $(HIDLIB_DIR) \
   $(BLCLIB_DIR) \
+  $(NFCLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets
 LIB_FILES += \
   $(SDK_ROOT)/external/nrf_cc310/lib/libnrf_cc310_0.9.10.a \
   $(TINYCBOR_ROOT)/lib/libtinycbor.a \
+  $(SDK_ROOT)/components/nfc/t4t_lib/nfc_t4t_lib_gcc.a \
 
 # Optimization flags
 OPT = -O3 -g3
