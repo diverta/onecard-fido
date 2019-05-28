@@ -220,7 +220,7 @@ int main(void)
     usbd_hid_init(usbd_user_ev_handler);
 
     // NFC関連の初期化
-    nfc_func_init();
+    nfc_service_init();
     
     // BLEペリフェラル始動タイマーを開始
     fido_ble_peripheral_timer_start();
