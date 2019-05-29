@@ -203,6 +203,8 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
   $(NFCLIB_DIR)/nfc_service.c \
+  $(NFCLIB_DIR)/nfc_fido_receive.c \
+  $(NFCLIB_DIR)/nfc_fido_send.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

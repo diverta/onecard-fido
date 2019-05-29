@@ -338,6 +338,11 @@
                    displayName="nfc_lib"
                    projectFiles="true"
                    root="../nfc_lib">
+      <itemPath>../nfc_lib/nfc_common.h</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_receive.c</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_receive.h</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_send.c</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_send.h</itemPath>
       <itemPath>../nfc_lib/nfc_service.c</itemPath>
       <itemPath>../nfc_lib/nfc_service.h</itemPath>
     </logicalFolder>
@@ -3188,6 +3193,16 @@
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../nfc_lib/nfc_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_receive.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_receive.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_send.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_send.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../nfc_lib/nfc_service.c" ex="false" tool="0" flavor2="2">
       </item>
