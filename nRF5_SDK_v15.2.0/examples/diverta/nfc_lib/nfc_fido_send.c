@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 
+#include "fido_common.h"
 #include "nfc_common.h"
 #include "nfc_service.h"
 #include "nfc_fido_send.h"
@@ -62,7 +63,7 @@ bool nfc_fido_send_response(uint16_t resp)
 
 void nfc_fido_send_app_selection_response(NFC_APPLETS selected_app)
 {
-    char *version = "U2F_V2";
+    char *version = U2F_V2_VERSION_STRING;
 
     if (selected_app == APP_FIDO) {
         nfc_fido_send_response_ex((uint8_t *)version, strlen(version), SW_SUCCESS);

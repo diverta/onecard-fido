@@ -81,6 +81,10 @@ typedef struct {
 #define APDU_DATA_MAX_LENGTH 1024
 #endif
 
+// FIDO関連 バージョン文字列
+#define U2F_V2_VERSION_STRING      "U2F_V2"
+#define FIDO_2_0_VERSION_STRING    "FIDO_2_0"
+
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_led_light_all_LED(bool led_on);
