@@ -47,7 +47,7 @@ https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/
 
 #### 鍵・証明書を導入
 
-PC環境に導入した管理ツールを使用し、鍵・証明書のインストールの設定をします。<br>
+PC環境に導入した管理ツールを使用し、nRF52840 Dongleに、鍵・証明書を導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[鍵・証明書の導入手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLKEYCRT.md) </b>
@@ -64,7 +64,7 @@ nRF52840 Dongleは、PCのUSBポートに装着しておきます。
 
 <img src="assets01/0002.png" width="640">
 
-表示されたWebページ中央部にある「username」欄に、適宜ユーザー名を入力後『SIGN IN」ボタンをクリックします。
+表示されたWebページ中央部にある「Sign In」枠内の「username」欄に、適宜ユーザー名を入力後『SIGN IN」ボタンをクリックします。
 
 <img src="assets01/0003.png" width="270">
 
