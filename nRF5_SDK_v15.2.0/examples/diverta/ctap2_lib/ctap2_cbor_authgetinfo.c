@@ -62,12 +62,12 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
         if (ret == CborNoError) {
             ret = cbor_encoder_create_array(&map, &array, NUM_OF_VERSIONS);
             if (ret == CborNoError) {
-                ret = cbor_encode_text_stringz(&array, "U2F_V2");
+                ret = cbor_encode_text_stringz(&array, U2F_V2_VERSION_STRING);
                 if (ret != CborNoError) {
                     return false;
                 }
 
-                ret = cbor_encode_text_stringz(&array, "FIDO_2_0");
+                ret = cbor_encode_text_stringz(&array, FIDO_2_0_VERSION_STRING);
                 if (ret != CborNoError) {
                     return false;
                 }

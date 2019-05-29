@@ -137,7 +137,7 @@ void hid_u2f_command_version(void)
     memset(&version_res, 0x00, sizeof(version_res));
 
     // レスポンスデータを編集 (8 bytes)
-    strcpy((char *)version_res.version, "U2F_V2");
+    strcpy((char *)version_res.version, U2F_V2_VERSION_STRING);
     uint16_t status_word = U2F_SW_NO_ERROR;
     version_res.status_word[0] = (status_word >> 8) & 0x00ff;
     version_res.status_word[1] = status_word & 0x00ff;

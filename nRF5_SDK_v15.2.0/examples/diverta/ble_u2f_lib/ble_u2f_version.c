@@ -8,6 +8,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+#include "fido_common.h"
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_status.h"
@@ -16,7 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 static uint8_t u2f_version_data_buffer[8];
 
 // FIDOアライアンスが制定したバージョン文字列を保持
-static uint8_t u2f_version[] = "U2F_V2";
+static uint8_t u2f_version[] = U2F_V2_VERSION_STRING;
 static uint8_t u2f_version_length = 6;
 
 void ble_u2f_version_do_process(ble_u2f_context_t *p_u2f_context)

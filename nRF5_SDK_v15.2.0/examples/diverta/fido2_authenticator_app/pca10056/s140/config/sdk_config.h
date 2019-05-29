@@ -11602,7 +11602,7 @@
 // <e> NFC_T4T_HAL_ENABLED - nfc_t4t_hal - Hardware Abstraction Layer for NFC library.
 //==========================================================
 #ifndef NFC_T4T_HAL_ENABLED
-#define NFC_T4T_HAL_ENABLED 0
+#define NFC_T4T_HAL_ENABLED 1
 #endif
 // <o> NFCT_CONFIG_IRQ_PRIORITY  - Interrupt priority
  
@@ -11624,7 +11624,7 @@
 // <e> HAL_NFC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef HAL_NFC_CONFIG_LOG_ENABLED
-#define HAL_NFC_CONFIG_LOG_ENABLED 0
+#define HAL_NFC_CONFIG_LOG_ENABLED 1
 #endif
 // <o> HAL_NFC_CONFIG_LOG_LEVEL  - Default Severity level
  

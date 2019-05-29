@@ -24,6 +24,7 @@
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 #include "ctap2_client_pin.h"
+#include "nfc_service.h"
 
 // for lighting LED
 #include "fido_idling_led.h"
@@ -218,6 +219,9 @@ int main(void)
     // USB HIDデバイスクラスを初期化
     usbd_hid_init(usbd_user_ev_handler);
 
+    // NFC関連の初期化
+    nfc_service_init();
+    
     // BLEペリフェラル始動タイマーを開始
     fido_ble_peripheral_timer_start();
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
