@@ -334,6 +334,18 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="nfc_lib"
+                   displayName="nfc_lib"
+                   projectFiles="true"
+                   root="../nfc_lib">
+      <itemPath>../nfc_lib/nfc_common.h</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_receive.c</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_receive.h</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_send.c</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_send.h</itemPath>
+      <itemPath>../nfc_lib/nfc_service.c</itemPath>
+      <itemPath>../nfc_lib/nfc_service.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="nRF5_SDK_15.2.0"
                    displayName="nRF5_SDK_15.2.0"
                    projectFiles="true"
@@ -1138,6 +1150,7 @@
     <Elem>../../../../../tinycbor/src</Elem>
     <Elem>../ble_nus_lib</Elem>
     <Elem>../ble_central_lib</Elem>
+    <Elem>../nfc_lib</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2538,10 +2551,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_ble.c"
@@ -2549,10 +2558,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/components/softdevice/common/nrf_sdh_soc.c"
@@ -2560,10 +2565,6 @@
             tool="0"
             flavor2="3">
         <cTool flags="0">
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-          </incDir>
         </cTool>
       </item>
       <item path="../../../../../../opt/nRF5_SDK_15.2.0/external/fprintf/nrf_fprintf.c"
@@ -2901,9 +2902,7 @@
             tool="0"
             flavor2="2">
       </item>
-      <item path="../ble_u2f_lib/ble_ctap2_command.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../ble_u2f_lib/ble_ctap2_command.h" ex="false" tool="3" flavor2="0">
+      <item path="../ble_u2f_lib/ble_ctap2_command.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../ble_u2f_lib/ble_u2f_authenticate.c"
             ex="false"
@@ -2958,12 +2957,7 @@
       <item path="../ble_u2f_lib/fido_ble_peripheral_timer.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ble_u2f_lib/fido_ble_peripheral_timer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../ctap2_lib/ctap2_cbor_authgetinfo.c"
             ex="false"
@@ -2978,9 +2972,12 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2_cbor_encode.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_cbor_encode.h" ex="false" tool="3" flavor2="0">
+      <item path="../ctap2_lib/ctap2_cbor_encode.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_cbor_parse.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -2992,61 +2989,64 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2_client_pin.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_client_pin.h" ex="false" tool="3" flavor2="0">
+      <item path="../ctap2_lib/ctap2_client_pin.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_client_pin_crypto.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_client_pin_crypto.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_client_pin_sskey.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_client_pin_sskey.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_client_pin_store.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_client_pin_store.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_client_pin_token.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_client_pin_token.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_common.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../ctap2_lib/ctap2_extension_hmac_secret.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ctap2_lib/ctap2_extension_hmac_secret.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../ctap2_lib/ctap2_get_assertion.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3090,6 +3090,7 @@
         <cTool>
           <incDir>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3156,9 +3157,12 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../fido_lib/fido_maintenance.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../fido_lib/fido_maintenance.h" ex="false" tool="3" flavor2="0">
+      <item path="../fido_lib/fido_maintenance.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../fido_lib/fido_processing_led.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3189,6 +3193,18 @@
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../nfc_lib/nfc_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_receive.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_receive.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_send.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_send.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_service.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../u2f_lib/u2f_authenticate.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3304,6 +3320,7 @@
         <cTool>
           <incDir>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3701,6 +3718,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
+            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3768,6 +3787,14 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/toolchain/cmsis/include</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="nfc_lib">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/nfc/t4t_lib</pElem>
           </incDir>
         </cTool>
       </folder>

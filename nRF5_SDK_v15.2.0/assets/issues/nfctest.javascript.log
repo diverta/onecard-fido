@@ -1,0 +1,146 @@
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\preload.js:73 Loading U2F, UAF and FIDO2 Conformance testing API...
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\preload.js:80 Preload complete
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:282 New reader detected Sony FeliCa Port/PaSoRi 3.0 0
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:71 Card inserted
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:77 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+load.js:166 Loading key...  fido2authr
+load.js:166 Loading key...  fido2server
+load.js:166 Loading key...  webauthn
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\fido2dep.js:17 Trying to connect to: undefined(eeee8c439439)...
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\fido2dep.js:17 Disconnecting device undefined(eeee8c439439)
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+controller.js:576 Detected changes
+controller.js:589 Saved changes
+sandbox.js:48 [Deprecation] 'window.webkitStorageInfo' is deprecated. Please use 'navigator.webkitTemporaryStorage' or 'navigator.webkitPersistentStorage' instead.
+clone @ sandbox.js:48
+controller.js:331 Test started: P-1
+
+        Send FIDO applet selection command and check that authenticator succeeds.
+
+            For CTAP1(U2F) compatible authenticators check that authenticator returns 0x5532465F5632(U2F_V2) in response.
+            For CTAP2 only authenticators check that authenticator returns 0x4649444f5f325f30(FIDO_2_0) in response.
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+controller.js:331 Test started: P-2
+
+        Send a valid CTAP2 authenticatorMakeCreditential(0x01) message, wrapped in Extended APDU, wait for the response, and check that Authenticator returns CTAP1_ERR_SUCCESS(0x00) error code.
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 8010000000011301a4015820006c1fb12d9afb95162db10b8b5708dbe7c6a1457998a36f4561be059651ca0e02a26269646d747970657377616e6b792e6164646e616d657829546865204578616d706c6520436f72706f726174696f6e20776974682066616b6520646f6d61696e2103a4626964582011fb06b75693b13b568ef3125089d9af5f1ec46c8181c197fcfee734a23278c66469636f6e782868747470733a2f2f706963732e61636d652e636f6d2f30302f702f61426a6a6a707150622e706e67646e616d65781c6d6567616e76696e7a616e7440636f636f6e757462757273742e686e6b646973706c61794e616d656d4d6567616e2056696e7a616e740481a263616c672664747970656a7075626c69632d6b65790000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+controller.js:331 Test started: P-3
+
+        Send a valid CTAP2 authenticatorMakeCreditential(0x01) message, wrapped in Short APDU, wait for the response, and check that Authenticator returns CTAP1_ERR_SUCCESS(0x00) error code.
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 90100000f001a401582070658a3820ca64e8d2e6790781c9ea20f4745ba3151b0d0da7f12aadaabe2b6602a26269647272656c6174696f6e736f63696574792e7669646e616d657829546865204578616d706c6520436f72706f726174696f6e20776974682066616b6520646f6d61696e2103a462696458205b73544f6fbf574579c9d90a3cc204b4c6cc2700527e2b49823f878c8db4f6536469636f6e782868747470733a2f2f706963732e61636d652e636f6d2f30302f702f61426a6a6a707150622e706e67646e616d6578206c756372656369612e6772656e7a4074756d626c656f62656469656e742e686e6b646973706c
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 801000002d61794e616d656e4c75637265636961204772656e7a0481a263616c672664747970656a7075626c69632d6b657900
+controller.js:331 Test started: P-4
+
+        Send a valid CTAP2 authenticatorMakeCreditential(0x01) message, wrapped in Short APDU with mixed sizes, wait for the response, and check that Authenticator returns CTAP1_ERR_SUCCESS(0x00) error code.
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:196 Uncaught TypeError: Cannot read property 'buffersReceived' of undefined
+    at NFCReader.completeTransaction (C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:196:30)
+    at reader.transmit (C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:224:22)
+controller.js:331 Test started: F-1
+
+        Send CTAP2 getInfo(0x04) with invalid INS, wrapped in Short APDU, and check that authenticator returns APDU error SW_INS_NOT_SUPPORTED(0x6D00)
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 80750000010400
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+controller.js:331 Test started: F-2
+
+        Send CTAP2 getInfo(0x04) with invalid INS, wrapped in Extended APDU, and check that authenticator returns APDU error SW_INS_NOT_SUPPORTED(0x6D00)
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 80750000000001040000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+controller.js:331 Test started: F-3
+
+        Send CTAP2 getInfo(0x04) wrapped in Short APDU with invalid Lc, and check that authenticator returns APDU error SW_WRONG_LENGTH(0x6700)
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 80100000ff0400
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+controller.js:331 Test started: F-4
+
+        Send CTAP2 getInfo(0x04) wrapped in Extended APDU with invalid Lc, and check that authenticator returns APDU error SW_WRONG_LENGTH(0x6700)
+
+    
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 00a4040008a0000006472f000100
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 5532465f56329000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_NO_ERROR
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:218 NFC DATA SENT: 801000000000ff040000
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:223 NFC DATA RECEIVED: 6d00
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:191 RECEIVED  SW_INS_NOT_SUPPORTED
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:102 Selected protocol "2" for reader "Sony FeliCa Port/PaSoRi 3.0 0"
+mocha.min.js:1 Uncaught (in promise) TypeError: Cannot read property 'currentRetry' of undefined
+    at mocha.min.js:1
+    at u (mocha.min.js:1)
+    at mocha.min.js:1
+    at <anonymous>
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:61 Card removed
+C:\Users\makmo\AppData\Local\F\app-1.1.0\resources\app\dependencies\transports\nfcdep.js:67 Card was removed!

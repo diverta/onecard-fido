@@ -28,10 +28,20 @@ namespace MaintenanceToolGUI
         }
     }
 
-    internal class MakeCredentialResponse
+    internal class ExtHmacSecretResponse
+    {
+        public bool Flag { get; set; }
+        public byte[] Output { get; set; }
+        public static int OutputSize = 64;
+
+        public ExtHmacSecretResponse()
+        {
+        }
+    }
+
+    internal class CreateOrGetCommandResponse
     {
         // データ項目
-        public string Fmt { get; set; }
         public byte[] RpIdHash { get; set; }
         public byte Flags { get; set; }
         public int SignCount;
@@ -39,14 +49,21 @@ namespace MaintenanceToolGUI
         public int CredentialIdLength;
         public byte[] CredentialId { get; set; }
         public byte[] CredentialPublicKeyByte { get; set; }
+        public ExtHmacSecretResponse HmacSecretRes { get; set; }
 
         // データ長
         public static int RpIdHashSize = 32;
         public static int SignCountSize = 4;
         public static int AaguidSize = 16;
         public static int CredentialIdLengthSize = 2;
+        public static int CredentialPublicKeySize = 77;
+        public static int ExtensionsCBORForCreateSize = 14;
+        public static int ExtensionsCBORForGetSize = 79;
 
-        public MakeCredentialResponse()
+        // for debug
+        public static bool OutputDebugLog = false;
+
+        public CreateOrGetCommandResponse()
         {
         }
     }
@@ -102,65 +119,120 @@ namespace MaintenanceToolGUI
             return pinTokenEnc;
         }
 
-        public MakeCredentialResponse MakeCredential(byte[] cborBytes)
+        public CreateOrGetCommandResponse CreateOrGetCommand(byte[] cborBytes, bool makeCredential)
         {
-            MakeCredentialResponse MakeCredentialRes = new MakeCredentialResponse();
+            CreateOrGetCommandResponse response = new CreateOrGetCommandResponse();
             CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
             foreach (CBORObject key in cbor.Keys) {
                 var keyVal = key.AsByte();
-                if (keyVal == 0x01) {
-                    // fmt
-                    MakeCredentialRes.Fmt = cbor[key].AsString();
-                } else if (keyVal == 0x02) {
+                if (keyVal == 0x02) {
                     // authData
-                    parseAuthData(cbor[key].GetByteString(), MakeCredentialRes);
+                    ParseAuthData(cbor[key].GetByteString(), response, makeCredential);
                 }
             }
-            return MakeCredentialRes;
+            return response;
         }
 
-        private void parseAuthData(byte[] data, MakeCredentialResponse MakeCredentialRes)
+        private void ParseAuthData(byte[] data, CreateOrGetCommandResponse response, bool makeCredential)
         {
             int index = 0;
             int size;
 
             // rpIdHash
-            size = MakeCredentialResponse.RpIdHashSize;
-            MakeCredentialRes.RpIdHash = data.Skip(index).Take(size).ToArray();
+            size = CreateOrGetCommandResponse.RpIdHashSize;
+            response.RpIdHash = data.Skip(index).Take(size).ToArray();
             index += size;
 
-            // for debug
-            // AppCommon.OutputLogToFile("rpIdHash: ", true);
-            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.RpIdHash, size), false);
+            if (CreateOrGetCommandResponse.OutputDebugLog) {
+                AppCommon.OutputLogToFile("rpIdHash: ", true);
+                AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.RpIdHash, size), false);
+            }
 
             // flags
-            MakeCredentialRes.Flags = data[index];
+            response.Flags = data[index];
             index++;
 
             // signCount（エンディアン変換が必要）
-            MakeCredentialRes.SignCount = AppCommon.ToInt32(data, index, true);
-            index += MakeCredentialResponse.SignCountSize;
+            response.SignCount = AppCommon.ToInt32(data, index, true);
+            index += CreateOrGetCommandResponse.SignCountSize;
 
-            // aaguid
-            size = MakeCredentialResponse.AaguidSize;
-            MakeCredentialRes.Aaguid = data.Skip(index).Take(16).ToArray();
-            index += size;
+            if (makeCredential) {
+                // aaguid
+                size = CreateOrGetCommandResponse.AaguidSize;
+                response.Aaguid = data.Skip(index).Take(16).ToArray();
+                index += size;
 
-            // credentialIdLength（エンディアン変換が必要）
-            MakeCredentialRes.CredentialIdLength = AppCommon.ToInt16(data, index, true);
-            index += MakeCredentialResponse.CredentialIdLengthSize;
+                // credentialIdLength（エンディアン変換が必要）
+                response.CredentialIdLength = AppCommon.ToInt16(data, index, true);
+                index += CreateOrGetCommandResponse.CredentialIdLengthSize;
 
-            // CredentialId
-            size = MakeCredentialRes.CredentialIdLength;
-            MakeCredentialRes.CredentialId = data.Skip(index).Take(size).ToArray();
-            index += size;
+                // CredentialId
+                size = response.CredentialIdLength;
+                response.CredentialId = data.Skip(index).Take(size).ToArray();
+                index += size;
 
-            // for debug
-            // AppCommon.OutputLogToFile("CredentialId: ", true);
-            // AppCommon.OutputLogToFile(AppCommon.DumpMessage(MakeCredentialRes.CredentialId, size), false);
+                if (CreateOrGetCommandResponse.OutputDebugLog) {
+                    AppCommon.OutputLogToFile("CredentialId: ", true);
+                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.CredentialId, size), false);
+                }
 
-            // credentialPublicKey
-            MakeCredentialRes.CredentialPublicKeyByte = data.Skip(index).ToArray();
+                // credentialPublicKey
+                size = CreateOrGetCommandResponse.CredentialPublicKeySize;
+                response.CredentialPublicKeyByte = data.Skip(index).Take(size).ToArray();
+                index += size;
+
+                if (CreateOrGetCommandResponse.OutputDebugLog) {
+                    AppCommon.OutputLogToFile("CredentialPublicKeyByte: ", true);
+                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.CredentialPublicKeyByte, size), false);
+                }
+            }
+
+            // extensions CBORが付加されていない場合は終了
+            size = makeCredential ? 
+                CreateOrGetCommandResponse.ExtensionsCBORForCreateSize : 
+                CreateOrGetCommandResponse.ExtensionsCBORForGetSize;
+            if (data.Length - index < size) {
+                response.HmacSecretRes = null;
+                return;
+            }
+
+            // extensions CBOR
+            byte[] extensionsCBORByte = data.Skip(index).Take(size).ToArray();
+            ParseExtHmacSecretData(extensionsCBORByte, response);
+        }
+
+        public void ParseExtHmacSecretData(byte[] cborBytes, CreateOrGetCommandResponse response)
+        {
+            // hmac-secret拡張データを初期化
+            response.HmacSecretRes = new ExtHmacSecretResponse();
+            response.HmacSecretRes.Flag = false;
+            response.HmacSecretRes.Output = null;
+
+            // hmac-secret拡張データを解析
+            CBORObject cbor = CBORObject.DecodeFromBytes(cborBytes, CBOREncodeOptions.Default);
+            foreach (CBORObject key in cbor.Keys) {
+                string keyVal = key.AsString();
+                if (keyVal == "hmac-secret") {
+                    CBORObject value = cbor[key];
+                    if (value.Type == CBORType.Boolean) {
+                        response.HmacSecretRes.Flag = value.AsBoolean();
+                    } else if (value.Type == CBORType.ByteString) {
+                        response.HmacSecretRes.Output = value.GetByteString();
+                    }
+                }
+            }
+
+            if (CreateOrGetCommandResponse.OutputDebugLog) {
+                if (response.HmacSecretRes.Flag) {
+                    AppCommon.OutputLogToFile(string.Format("Extensions 'hmac-secret':true"), true);
+                }
+                if (response.HmacSecretRes.Output != null) {
+                    AppCommon.OutputLogToFile(string.Format("Extensions 'hmac-secret':"), true);
+                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(
+                        response.HmacSecretRes.Output,
+                        ExtHmacSecretResponse.OutputSize), false);
+                }
+            }
         }
     }
 }

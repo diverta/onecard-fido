@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MaintenanceToolCommon
@@ -100,6 +101,16 @@ namespace MaintenanceToolCommon
             return sb.ToString();
         }
 
+        public static bool CompareBytes(byte[] src, byte[] dest, int size)
+        {
+            for (int i = 0; i < size; i++) {
+                if (src[i] != dest[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static int ToInt32(byte[] value, int startIndex, bool changeEndian = false)
         {
             byte[] sub = GetSubArray(value, startIndex, 4);
@@ -123,6 +134,42 @@ namespace MaintenanceToolCommon
             byte[] dst = new byte[count];
             Array.Copy(src, startIndex, dst, 0, count);
             return dst;
+        }
+
+        public static byte[] AES256CBCEncrypt(byte[] key, byte[] data)
+        {
+            // AES256-CBCにより暗号化
+            //   鍵の長さ: 256（32バイト）
+            //   ブロックサイズ: 128（16バイト）
+            //   暗号利用モード: CBC
+            //   初期化ベクター: 0
+            AesManaged aes = new AesManaged {
+                KeySize = 256,
+                BlockSize = 128,
+                Mode = CipherMode.CBC,
+                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Key = key,
+                Padding = PaddingMode.None
+            };
+            return aes.CreateEncryptor().TransformFinalBlock(data, 0, data.Length);
+        }
+
+        public static byte[] AES256CBCDecrypt(byte[] key, byte[] data)
+        {
+            // AES256-CBCにより復号化
+            //   鍵の長さ: 256（32バイト）
+            //   ブロックサイズ: 128（16バイト）
+            //   暗号利用モード: CBC
+            //   初期化ベクター: 0
+            AesManaged aes = new AesManaged {
+                KeySize = 256,
+                BlockSize = 128,
+                Mode = CipherMode.CBC,
+                IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Key = key,
+                Padding = PaddingMode.None
+            };
+            return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
         }
     }
 }

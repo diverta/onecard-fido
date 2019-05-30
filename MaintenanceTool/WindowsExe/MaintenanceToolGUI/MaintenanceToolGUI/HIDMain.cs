@@ -54,11 +54,19 @@ namespace MaintenanceToolGUI
         //   getPinToken時に生成した共通鍵を、
         //   makeCredential、getAssertion実行時まで保持しておく
         private byte[] SharedSecretKey = null;
+        private KeyAgreement AgreementPublicKey = null;
 
         // ユーザー登録情報を退避
         //   makeCredential時に受信したユーザー登録情報を、
         //   getAssertion実行時まで保持しておく
-        private MakeCredentialResponse MakeCredentialRes = null;
+        private CreateOrGetCommandResponse MakeCredentialRes = null;
+
+        // GetAssertion実行回数を保持
+        private int GetAssertionCount;
+
+        // １回目のGetAssertion実行時、
+        // hmac-secret拡張から抽出／復号化されたsaltを保持
+        private byte[] DecryptedSaltOrg;
 
         // 実行機能を保持
         private enum HIDRequestType
@@ -314,6 +322,8 @@ namespace MaintenanceToolGUI
                 DoResponseCommandMakeCredential(message, length);
                 break;
             case Const.HID_CBORCMD_GET_ASSERTION:
+                DoResponseCommandGetAssertion(message, length);
+                break;
             case Const.HID_CBORCMD_AUTH_RESET:
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(true);
@@ -445,11 +455,15 @@ namespace MaintenanceToolGUI
             CBOREncoder encoder = new CBOREncoder();
             byte[] getPinTokenCbor = encoder.GetPinToken(cborCommand, subCommand, clientPin, cborBytes);
             SharedSecretKey = encoder.SharedSecretKey;
+            AgreementPublicKey = encoder.AgreementPublicKey;
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor, getPinTokenCbor.Length);
         }
 
         public void DoResponseGetPinToken(byte[] cborBytes)
         {
+            // GetAssertion実行が２回目かどうか判定
+            bool testUserPresenceNeeded = (GetAssertionCount == 2);
+
             // リクエストデータ（CBOR）をエンコード
             byte[] requestCbor = null;
             byte[] receivedCID = hidProcess.receivedCID;
@@ -457,8 +471,9 @@ namespace MaintenanceToolGUI
                 cborCommand = Const.HID_CBORCMD_MAKE_CREDENTIAL;
                 requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
             } else {
+                // ２回目のGetAssertion実行では、MAIN SW押下によるユーザー所在確認が必要
                 cborCommand = Const.HID_CBORCMD_GET_ASSERTION;
-                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes);
+                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes, AgreementPublicKey, testUserPresenceNeeded);
             }
 
             if (requestCbor == null) {
@@ -468,9 +483,9 @@ namespace MaintenanceToolGUI
             }
 
             // リクエスト転送の前に、
-            // 基板上ののMAIN SWを押してもらうように促す
+            // 基板上のMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            if (requestType == HIDRequestType.TestGetAssertion) {
+            if (requestType == HIDRequestType.TestGetAssertion && testUserPresenceNeeded) {
                 mainForm.OnPrintMessageText("ログインテストを開始します.");
                 mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
                 mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
@@ -487,8 +502,41 @@ namespace MaintenanceToolGUI
             byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
             // 次のGetAssertionリクエスト送信に必要となる
             // Credential IDを抽出して退避
-            MakeCredentialRes = new CBORDecoder().MakeCredential(cborBytes);
+            MakeCredentialRes = new CBORDecoder().CreateOrGetCommand(cborBytes, true);
 
+            // GetAssertionコマンドを実行する
+            GetAssertionCount = 1;
+            DoRequestCommandGetAssertion();
+        }
+
+        private void DoResponseCommandGetAssertion(byte[] message, int length)
+        {
+            // GetAssertion実行が２回目かどうか判定
+            bool verifySaltNeeded = (GetAssertionCount == 2);
+ 
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            // hmac-secret拡張情報からsaltを抽出して保持
+            CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
+            if (VerifyHmacSecretSalt(resp.HmacSecretRes.Output, verifySaltNeeded) == false) {
+                // salt検証失敗時は画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
+            if (verifySaltNeeded) {
+                // ２回目のテストが成功したら画面に制御を戻して終了
+                mainForm.OnAppMainProcessExited(true);
+                return;
+            }
+
+            // GetAssertionコマンドを実行する
+            GetAssertionCount++;
+            DoRequestCommandGetAssertion();
+        }
+
+        private void DoRequestCommandGetAssertion()
+        {
             // 実行するコマンドと引数を退避
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンドを事前実行する必要あり
@@ -496,6 +544,32 @@ namespace MaintenanceToolGUI
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
             // nonce を送信する
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)
+        {
+            // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
+            if (encryptedSalt == null) {
+                return true;
+            }
+
+            if (verifySaltNeeded) {
+                // １回目のGetAssertionの場合はオリジナルSaltと内容を比較し、
+                // 同じ内容であれば検証成功
+                byte[] decryptedSaltCur = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                bool success = AppCommon.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
+
+                // 検証結果はログファイル出力する
+                AppCommon.OutputLogToFile(string.Format(
+                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed"),
+                    true);
+                return success;
+
+            } else {
+                // １回目のGetAssertionの場合はオリジナルSaltを抽出して終了
+                DecryptedSaltOrg = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                return true;
+            }
         }
     }
 }
