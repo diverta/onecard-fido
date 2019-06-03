@@ -339,6 +339,8 @@
                    projectFiles="true"
                    root="../nfc_lib">
       <itemPath>../nfc_lib/nfc_common.h</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_command.c</itemPath>
+      <itemPath>../nfc_lib/nfc_fido_command.h</itemPath>
       <itemPath>../nfc_lib/nfc_fido_receive.c</itemPath>
       <itemPath>../nfc_lib/nfc_fido_receive.h</itemPath>
       <itemPath>../nfc_lib/nfc_fido_send.c</itemPath>
@@ -3195,6 +3197,10 @@
         </cTool>
       </item>
       <item path="../nfc_lib/nfc_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_command.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../nfc_lib/nfc_fido_command.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../nfc_lib/nfc_fido_receive.c" ex="false" tool="0" flavor2="0">
       </item>

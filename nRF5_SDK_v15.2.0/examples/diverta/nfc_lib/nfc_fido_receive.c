@@ -7,13 +7,14 @@
 #include "nfc_common.h"
 #include "nfc_fido_send.h"
 #include "fido_common.h"
+#include "nfc_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_receive
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for debug cbor data
+// for debug apdu data
 #define NRF_LOG_DEBUG_APDU_FRAME_BUFF false
 #define NRF_LOG_DEBUG_APDU_BUFF       false
 #define NRF_LOG_DEBUG_BUFF (NRF_LOG_DEBUG_APDU_FRAME_BUFF || NRF_LOG_DEBUG_APDU_BUFF)
@@ -37,6 +38,11 @@ static void print_hexdump_debug(uint8_t *buff, size_t size)
     }
 }
 #endif
+
+FIDO_APDU_T *nfc_fido_receive_apdu(void)
+{
+    return &fido_apdu;
+}
 
 static void clear_work_area()
 {
@@ -197,9 +203,8 @@ static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
     
     if (is_last_nfc_frame((APDU_HEADER *)data)) {
         // 最終フレームの場合
-        // 仮の実装です。
-        NRF_LOG_DEBUG("CTAP2 APDU received success");
-        nfc_fido_send_response(SW_SUCCESS);
+        // 受信したデータについて処理を行う
+        nfc_fido_command_on_request_received();
 
     } else {
         // 最終フレームでない場合は、ここでレスポンスを戻す
