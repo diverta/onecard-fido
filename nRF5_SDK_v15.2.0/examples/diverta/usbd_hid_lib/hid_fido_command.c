@@ -152,7 +152,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             hid_u2f_command_msg();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor();
+            hid_ctap2_command_cbor(TRANSPORT_HID);
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:

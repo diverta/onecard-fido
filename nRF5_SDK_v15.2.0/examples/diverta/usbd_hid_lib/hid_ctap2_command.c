@@ -35,6 +35,9 @@ NRF_LOG_MODULE_REGISTER();
 // for user presence test
 #include "fido_user_presence.h"
 
+// トランスポート種別を保持
+static TRANSPORT_TYPE m_transport_type;
+
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 
@@ -494,8 +497,11 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
     }
 }
 
-void hid_ctap2_command_cbor(void)
+void hid_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
 {
+    // トランスポート種別を保持
+    m_transport_type = transport_type;
+    
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     //   最初の１バイト目がCTAP2コマンドバイトで、
     //   残りは全てCBORデータバイトとなっている

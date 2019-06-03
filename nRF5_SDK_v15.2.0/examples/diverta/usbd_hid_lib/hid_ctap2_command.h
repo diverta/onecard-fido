@@ -8,6 +8,7 @@
 #define HID_CTAP2_COMMAND_H
 
 #include "fds.h"
+#include "fido_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,7 +16,7 @@ extern "C" {
 
 void hid_ctap2_command_init(void);
 void hid_ctap2_command_send_response(uint8_t ctap2_status, size_t length);
-void hid_ctap2_command_cbor(void);
+void hid_ctap2_command_cbor(TRANSPORT_TYPE transport_type);
 void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt);
 void hid_ctap2_command_cbor_report_sent(void);
 void hid_ctap2_command_tup_cancel(void);
