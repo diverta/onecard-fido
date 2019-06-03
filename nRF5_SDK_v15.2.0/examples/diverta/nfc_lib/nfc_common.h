@@ -15,7 +15,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 
-#define NFC_APDU_BUFF_SIZE 256
+#define NFC_APDU_BUFF_SIZE 512
 
 // APDUヘッダー（5バイト）    
 typedef struct {
@@ -58,7 +58,7 @@ typedef enum {
     APP_MIFARE_TYPE_4,
     APP_CAPABILITY_CONTAINER,
     APP_NDEF_TAG,
-	APP_FIDO,
+    APP_FIDO,
 } NFC_APPLETS;
 
 #ifdef __cplusplus
