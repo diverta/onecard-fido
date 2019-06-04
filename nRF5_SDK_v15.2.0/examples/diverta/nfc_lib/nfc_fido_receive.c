@@ -7,6 +7,7 @@
 #include "nfc_common.h"
 #include "nfc_fido_send.h"
 #include "fido_common.h"
+#include "fido_ctap2_command.h"
 #include "nfc_fido_command.h"
 
 // for logging informations
@@ -202,9 +203,9 @@ static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
     }
     
     if (is_last_nfc_frame((APDU_HEADER *)data)) {
-        // 最終フレームの場合
-        // 受信したデータについて処理を行う
-        nfc_fido_command_on_request_received();
+        // 最終フレームの場合、受信したデータについて
+        // CTAP2コマンド処理を実行する
+        fido_ctap2_command_cbor(TRANSPORT_NFC);
 
     } else {
         // 最終フレームでない場合は、ここでレスポンスを戻す
