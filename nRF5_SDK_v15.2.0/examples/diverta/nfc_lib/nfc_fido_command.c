@@ -28,3 +28,10 @@ void nfc_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
             break;
     }
 }
+
+void nfc_fido_command_on_send_completed(void)
+{
+    // FIDO機能レスポンスの
+    // 全フレーム送信完了時の処理を実行
+    fido_ctap2_command_cbor_hid_report_sent();
+}

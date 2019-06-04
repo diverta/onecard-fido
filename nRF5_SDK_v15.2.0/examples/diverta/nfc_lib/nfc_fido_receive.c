@@ -235,6 +235,13 @@ void nfc_fido_receive_request_frame(uint8_t *buf, size_t len)
             // FIDO 2.0機能へ振り分け
             perform_fido_ctap2_message(buf, len);
             break;
+
+        case 0xc0:
+            // FIDO 2.0機能へ振り分け
+            if (apdu->cla == 0x80) {
+                nfc_fido_send_command_response_cont(apdu->lc);
+            }
+            break;
             
         default:
             NRF_LOG_ERROR("Unknown INS 0x%02x", apdu->ins);

@@ -21,6 +21,7 @@
 #include "hid_fido_receive.h"
 #include "usbd_hid_common.h"
 #include "nfc_fido_receive.h"
+#include "nfc_fido_send.h"
 
 // for processing LED on/off
 #include "fido_processing_led.h"
@@ -196,25 +197,20 @@ void fido_ctap2_command_hid_init(void)
     hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-static void send_ctap2_command_response_hid(uint8_t ctap2_status, size_t length) 
-{
-    // CTAP2 CBORコマンドに対応する
-    // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint32_t cmd = hid_fido_receive_hid_header()->CMD;
-    // １バイトめにステータスコードをセット
-    response_buffer[0] = ctap2_status;
-    hid_fido_send_command_response(cid, cmd, response_buffer, length);
-}
-
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
 {
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     //   １バイトめにステータスコードをセット
+    response_buffer[0] = ctap2_status;
     if (m_transport_type == TRANSPORT_HID) {
-        send_ctap2_command_response_hid(ctap2_status, length);
-    }
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        uint32_t cmd = hid_fido_receive_hid_header()->CMD;
+        hid_fido_send_command_response(cid, cmd, response_buffer, length);
+
+    } else if (m_transport_type == TRANSPORT_NFC) {
+        nfc_fido_send_command_response(response_buffer, length);
+    } 
 }
 
 static void send_ctap2_command_error_response(uint8_t ctap2_status) 

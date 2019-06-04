@@ -16,6 +16,13 @@ extern "C" {
 #include <stddef.h>
 
 #define NFC_APDU_BUFF_SIZE 512
+    
+//
+// レスポンス１回あたりの送信データ長の上限
+//   現状、ステータスワード＋データで、合わせて
+//   256バイトになるよう調整しています。
+//   使用機器の制限により、チューニングする必要あり
+#define NFC_RESPONSE_MAX_SIZE 254
 
 // APDUヘッダー（5バイト）    
 typedef struct {

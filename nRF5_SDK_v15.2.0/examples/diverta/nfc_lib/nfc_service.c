@@ -21,7 +21,9 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for debug hid report
-#define NRF_LOG_HEXDUMP_DEBUG_APDU false
+#define NRF_LOG_HEXDUMP_DEBUG_RX_APDU false
+#define NRF_LOG_HEXDUMP_DEBUG_TX_APDU false
+#define NRF_LOG_DEBUG_BUFF (NRF_LOG_HEXDUMP_DEBUG_RX_APDU || NRF_LOG_HEXDUMP_DEBUG_TX_APDU)
 
 // NFCの接続状態を保持
 static bool nfc_field_on;
@@ -30,11 +32,22 @@ static bool nfc_field_on;
 static uint8_t received_data[NFC_APDU_BUFF_SIZE];
 static size_t  received_data_size;
 
+#if NRF_LOG_DEBUG_BUFF
+static void print_hexdump_debug(uint8_t *buff, size_t size)
+{
+    int j, k;
+    for (j = 0; j < size; j += 64) {
+        k = size - j;
+        NRF_LOG_HEXDUMP_DEBUG(buff + j, (k < 64) ? k : 64);
+    }
+}
+#endif
+
 static void nfc_data_received(const uint8_t *data, size_t data_size)
 {
-#if NRF_LOG_HEXDUMP_DEBUG_APDU
+#if NRF_LOG_HEXDUMP_DEBUG_RX_APDU
     NRF_LOG_DEBUG("NFC RX data (%d bytes):", data_size);
-    NRF_LOG_HEXDUMP_DEBUG(data, data_size);
+    print_hexdump_debug(data, data_size);
 #endif
 
     nfc_fido_receive_request_frame((uint8_t *)data, data_size);
@@ -95,9 +108,9 @@ void nfc_service_init(void)
 
 void nfc_service_data_send(uint8_t *data, size_t data_size)
 {
-#if NRF_LOG_HEXDUMP_DEBUG_APDU
+#if NRF_LOG_HEXDUMP_DEBUG_TX_APDU
     NRF_LOG_DEBUG("NFC TX data (%d bytes):", data_size);
-    NRF_LOG_HEXDUMP_DEBUG(data, data_size);
+    print_hexdump_debug(data, data_size);
 #endif
 
     // Send the response PDU over NFC.
