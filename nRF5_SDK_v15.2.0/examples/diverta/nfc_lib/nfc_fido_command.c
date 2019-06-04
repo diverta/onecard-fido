@@ -34,7 +34,7 @@ void nfc_fido_command_on_request_received(void)
     //   残りは全てCBORデータバイトとなっている
     switch (get_command_byte()) {
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor(TRANSPORT_NFC);
+            fido_ctap2_command_cbor(TRANSPORT_NFC);
             break;
         default:
             // 不正なコマンドであるため
@@ -51,7 +51,7 @@ void nfc_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
     uint8_t cmd = nfc_fido_receive_apdu()->INS;
     switch (cmd) {
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_send_response(p_evt);
+            fido_ctap2_command_cbor_send_response(p_evt);
             break;
         default:
             break;

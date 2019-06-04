@@ -32,7 +32,7 @@ static void command_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
     if (p_context == NULL) {
-        hid_ctap2_command_keepalive_timer_handler();
+        fido_ctap2_command_keepalive_timer_handler();
     } else {
         ble_u2f_command_keepalive_timer_handler(p_context);
     }

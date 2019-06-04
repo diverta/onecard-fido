@@ -112,11 +112,11 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         // キャンセルコマンドの場合は
         // 所在確認待ちをキャンセルしたうえで
         // キャンセルレスポンスを戻す
-        hid_ctap2_command_cancel();
+        fido_ctap2_command_cancel();
         return;
     } else {
         // 他のコマンドの場合は所在確認待ちをキャンセル
-        hid_ctap2_command_tup_cancel();
+        fido_ctap2_command_tup_cancel();
     }
 
     uint32_t cid = hid_fido_receive_hid_header()->CID;
@@ -132,7 +132,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     switch (cmd) {
 #if CTAP2_SUPPORTED
         case CTAP2_COMMAND_INIT:
-            hid_ctap2_command_init();
+            fido_ctap2_command_hid_init();
             break;
         case CTAP2_COMMAND_PING:
             hid_fido_command_ping();
@@ -152,7 +152,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             hid_u2f_command_msg();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor(TRANSPORT_HID);
+            fido_ctap2_command_cbor(TRANSPORT_HID);
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
@@ -176,7 +176,7 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
             hid_u2f_command_msg_send_response(p_evt);
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_send_response(p_evt);
+            fido_ctap2_command_cbor_send_response(p_evt);
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
@@ -213,7 +213,7 @@ void hid_fido_command_on_report_completed(void)
             hid_u2f_command_msg_report_sent();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_report_sent();
+            fido_ctap2_command_cbor_hid_report_sent();
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:

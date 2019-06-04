@@ -81,7 +81,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             if (hid_u2f_command_on_mainsw_event() == true) {
                 break;
             }
-            hid_ctap2_command_on_mainsw_event();
+            fido_ctap2_command_on_mainsw_event();
             ble_ctap2_command_on_mainsw_event();
         }
 		break;
