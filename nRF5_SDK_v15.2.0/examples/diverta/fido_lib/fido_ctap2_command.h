@@ -1,11 +1,11 @@
 /* 
- * File:   hid_ctap2_command.h
+ * File:   fido_ctap2_command.h
  * Author: makmorit
  *
  * Created on 2018/12/18, 13:36
  */
-#ifndef HID_CTAP2_COMMAND_H
-#define HID_CTAP2_COMMAND_H
+#ifndef FIDO_CTAP2_COMMAND_H
+#define FIDO_CTAP2_COMMAND_H
 
 #include "fds.h"
 #include "fido_common.h"
@@ -30,5 +30,5 @@ void fido_ctap2_command_on_ble_nus_connected(void);
 }
 #endif
 
-#endif /* HID_CTAP2_COMMAND_H */
+#endif /* FIDO_CTAP2_COMMAND_H */
 

@@ -1,5 +1,5 @@
 /* 
- * File:   hid_ctap2_command.c
+ * File:   fido_ctap2_command.c
  * Author: makmorit
  *
  * Created on 2018/12/18, 13:36

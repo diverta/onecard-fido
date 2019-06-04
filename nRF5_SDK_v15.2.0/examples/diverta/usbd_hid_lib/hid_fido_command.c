@@ -15,7 +15,7 @@
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
-#include "hid_ctap2_command.h"
+#include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
 
 // for U2F command

@@ -9,7 +9,7 @@
 #include "fds.h"
 #include "cbor.h"
 #include "hid_fido_command.h"
-#include "hid_ctap2_command.h"
+#include "fido_ctap2_command.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_parse.h"
