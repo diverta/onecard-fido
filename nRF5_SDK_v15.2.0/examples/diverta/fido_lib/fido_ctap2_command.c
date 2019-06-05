@@ -1,5 +1,5 @@
 /* 
- * File:   hid_ctap2_command.c
+ * File:   fido_ctap2_command.c
  * Author: makmorit
  *
  * Created on 2018/12/18, 13:36
@@ -20,6 +20,8 @@
 #include "hid_fido_send.h"
 #include "hid_fido_receive.h"
 #include "usbd_hid_common.h"
+#include "nfc_fido_receive.h"
+#include "nfc_fido_send.h"
 
 // for processing LED on/off
 #include "fido_processing_led.h"
@@ -28,12 +30,15 @@
 #include "fido_flash.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME hid_ctap2_command
+#define NRF_LOG_MODULE_NAME fido_ctap2_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
 #include "fido_user_presence.h"
+
+// トランスポート種別を保持
+static TRANSPORT_TYPE m_transport_type;
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
@@ -51,13 +56,60 @@ static void command_make_credential_resume_process(void);
 static void command_get_assertion_resume_process(void);
 static void command_authenticator_reset_resume_process(void);
 
+static uint8_t *get_cbor_data_buffer(void)
+{
+    uint8_t *buffer;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            buffer = hid_fido_receive_apdu()->data + 1;
+            break;
+        case TRANSPORT_NFC:
+            buffer = nfc_fido_receive_apdu()->data + 1;
+            break;
+        default:
+            buffer = NULL;
+            break;
+    }
+    return buffer;
+}
+
+static size_t get_cbor_data_buffer_size(void)
+{
+    size_t size;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            size = hid_fido_receive_apdu()->Lc - 1;
+            break;
+        case TRANSPORT_NFC:
+            size = nfc_fido_receive_apdu()->Lc + 1;
+            break;
+        default:
+            size = 0;
+            break;
+    }
+    return size;
+}
 static uint8_t get_command_byte(void)
 {
+    uint8_t *ctap2_cbor_buffer;
+    uint8_t  ctap2_command_byte;
+
     // CTAP2 CBORコマンドを取得
     //   最初の１バイト目がCTAP2コマンドバイトで、
     //   残りは全てCBORデータバイトとなっている
-    uint8_t *ctap2_cbor_buffer = hid_fido_receive_apdu()->data;
-    uint8_t  ctap2_command_byte = ctap2_cbor_buffer[0];
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            ctap2_cbor_buffer = hid_fido_receive_apdu()->data;
+            ctap2_command_byte = ctap2_cbor_buffer[0];
+            break;
+        case TRANSPORT_NFC:
+            ctap2_cbor_buffer = nfc_fido_receive_apdu()->data;
+            ctap2_command_byte = ctap2_cbor_buffer[0];
+            break;
+        default:
+            ctap2_command_byte = 0x00;
+            break;
+    }
 
     return ctap2_command_byte;
 }
@@ -92,7 +144,7 @@ static void end_verify_tup(void)
     resume_response_process();
 }
 
-bool hid_ctap2_command_on_mainsw_event(void)
+bool fido_ctap2_command_on_mainsw_event(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
@@ -105,13 +157,13 @@ bool hid_ctap2_command_on_mainsw_event(void)
     return false;
 }
 
-bool hid_ctap2_command_on_mainsw_long_push_event(void)
+bool fido_ctap2_command_on_mainsw_long_push_event(void)
 {
     // NOP
     return true;
 }
 
-void hid_ctap2_command_on_ble_nus_connected(void)
+void fido_ctap2_command_on_ble_nus_connected(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合、かつ
@@ -121,7 +173,7 @@ void hid_ctap2_command_on_ble_nus_connected(void)
     }
 }
 
-void hid_ctap2_command_init(void)
+void fido_ctap2_command_hid_init(void)
 {
     // 編集領域を初期化
     memset(&init_res, 0x00, sizeof(init_res));
@@ -145,15 +197,20 @@ void hid_ctap2_command_init(void)
     hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-void hid_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
+void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
 {
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint32_t cmd = hid_fido_receive_hid_header()->CMD;
-    // １バイトめにステータスコードをセット
+    //   １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
-    hid_fido_send_command_response(cid, cmd, response_buffer, length);
+    if (m_transport_type == TRANSPORT_HID) {
+        uint32_t cid = hid_fido_receive_hid_header()->CID;
+        uint32_t cmd = hid_fido_receive_hid_header()->CMD;
+        hid_fido_send_command_response(cid, cmd, response_buffer, length);
+
+    } else if (m_transport_type == TRANSPORT_NFC) {
+        nfc_fido_send_command_response(response_buffer, length);
+    } 
 }
 
 static void send_ctap2_command_error_response(uint8_t ctap2_status) 
@@ -161,16 +218,25 @@ static void send_ctap2_command_error_response(uint8_t ctap2_status)
     // CTAP2 CBORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     //   エラーなので送信バイト数＝１
-    hid_ctap2_command_send_response(ctap2_status, 1);
+    fido_ctap2_command_send_response(ctap2_status, 1);
 }
 
-void hid_ctap2_command_keepalive_timer_handler(void)
+static void send_ctap2_status_response(uint8_t cmd, uint8_t status_code) 
+{
+    // CTAP2ステータスコード（１バイト）をレスポンス
+    if (m_transport_type == TRANSPORT_HID) {
+        hid_fido_command_send_status_response(cmd, status_code);
+    }
+}
+
+void fido_ctap2_command_keepalive_timer_handler(void)
 {
     if (is_tup_needed) {
         // キープアライブ・コマンドを実行する
-        uint32_t cid = hid_fido_receive_hid_header()->CID;
-        uint32_t cmd = CTAP2_COMMAND_KEEPALIVE;
-        hid_fido_send_command_response_no_callback(cid, cmd, CTAP2_STATUS_UPNEEDED);
+        if (m_transport_type == TRANSPORT_HID) {
+            uint32_t cid = hid_fido_receive_hid_header()->CID;
+            hid_fido_send_command_response_no_callback(cid, CTAP2_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
+        }
     }
 }
 
@@ -180,8 +246,8 @@ static void command_authenticator_make_credential(void)
     is_tup_needed = false;
 
     // CBORエンコードされたリクエストメッセージをデコード
-    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
-    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    uint8_t *cbor_data_buffer = get_cbor_data_buffer();
+    size_t   cbor_data_length = get_cbor_data_buffer_size();
     uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
@@ -273,7 +339,7 @@ static void command_make_credential_send_response(fds_evt_t const *const p_evt)
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
-        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
 
@@ -283,8 +349,8 @@ static void command_authenticator_get_assertion(void)
     is_tup_needed = false;
 
     // CBORエンコードされたリクエストメッセージをデコード
-    uint8_t *cbor_data_buffer = hid_fido_receive_apdu()->data + 1;
-    size_t   cbor_data_length = hid_fido_receive_apdu()->Lc - 1;
+    uint8_t *cbor_data_buffer = get_cbor_data_buffer();
+    size_t   cbor_data_length = get_cbor_data_buffer_size();
     uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
@@ -376,7 +442,7 @@ static void command_get_assertion_send_response(fds_evt_t const *const p_evt)
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してWebAuthnクライアントに戻す
-        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
 
@@ -397,7 +463,7 @@ static void command_authenticator_get_info(void)
     }
 
     // レスポンスデータを転送
-    hid_ctap2_command_send_response(ctap2_status, cbor_data_length + 1);
+    fido_ctap2_command_send_response(ctap2_status, cbor_data_length + 1);
 }
 
 static void command_authenticator_client_pin(void)
@@ -484,7 +550,7 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
         // トークンカウンター削除完了
         NRF_LOG_DEBUG("fido_flash_token_counter_delete completed ");
         // レスポンスを生成してWebAuthnクライアントに戻す
-        hid_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
+        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
 
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
@@ -494,8 +560,11 @@ static void command_authenticator_reset_send_response(fds_evt_t const *const p_e
     }
 }
 
-void hid_ctap2_command_cbor(void)
+void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
 {
+    // トランスポート種別を保持
+    m_transport_type = transport_type;
+    
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     //   最初の１バイト目がCTAP2コマンドバイトで、
     //   残りは全てCBORデータバイトとなっている
@@ -520,7 +589,7 @@ void hid_ctap2_command_cbor(void)
     }
 }
 
-void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
+void fido_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_command_byte()) {
@@ -541,7 +610,7 @@ void hid_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void hid_ctap2_command_cbor_report_sent(void)
+void fido_ctap2_command_cbor_hid_report_sent(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_command_byte()) {
@@ -562,7 +631,7 @@ void hid_ctap2_command_cbor_report_sent(void)
     }
 }
 
-void hid_ctap2_command_tup_cancel(void)
+void fido_ctap2_command_tup_cancel(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
@@ -572,7 +641,7 @@ void hid_ctap2_command_tup_cancel(void)
     }
 }
 
-void hid_ctap2_command_cancel(void)
+void fido_ctap2_command_cancel(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
@@ -582,7 +651,7 @@ void hid_ctap2_command_cancel(void)
         // キャンセルレスポンスを戻す
         //   CMD:    CTAPHID_CBOR
         //   status: CTAP2_ERR_KEEPALIVE_CANCEL
-        hid_fido_command_send_status_response(CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
+        send_ctap2_status_response(CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
         NRF_LOG_INFO("CTAPHID_CANCEL done with CBOR command");
     }
 }

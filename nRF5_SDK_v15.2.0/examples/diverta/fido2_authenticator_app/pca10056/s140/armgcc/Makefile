@@ -165,6 +165,7 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \
   $(FIDLIB_DIR)/fido_crypto_keypair.c \
+  $(FIDLIB_DIR)/fido_ctap2_command.c \
   $(FIDLIB_DIR)/fido_flash.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_lock_channel.c \
@@ -194,7 +195,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_main.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
-  $(HIDLIB_DIR)/hid_ctap2_command.c \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
@@ -202,9 +202,10 @@ SRC_FILES += \
   $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
-  $(NFCLIB_DIR)/nfc_service.c \
+  $(NFCLIB_DIR)/nfc_fido_command.c \
   $(NFCLIB_DIR)/nfc_fido_receive.c \
   $(NFCLIB_DIR)/nfc_fido_send.c \
+  $(NFCLIB_DIR)/nfc_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

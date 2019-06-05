@@ -11,9 +11,12 @@
 extern "C" {
 #endif
 
+#include "fido_common.h"
+
 //
 // 関数群
 //
+FIDO_APDU_T *nfc_fido_receive_apdu(void);
 void nfc_fido_receive_request_frame(uint8_t *buf, size_t len);
 
 #ifdef __cplusplus
