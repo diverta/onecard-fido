@@ -1,7 +1,7 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.2.0
 PROJ_DIR := ../../..
@@ -160,6 +160,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(FIDLIB_DIR)/fido_comm_interval_timer.c \
   $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
@@ -199,7 +200,6 @@ SRC_FILES += \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
   $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/usbd_hid_comm_interval_timer.c \
   $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
   $(NFCLIB_DIR)/nfc_fido_command.c \
