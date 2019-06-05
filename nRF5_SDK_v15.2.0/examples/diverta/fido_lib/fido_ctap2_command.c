@@ -610,7 +610,7 @@ void fido_ctap2_command_cbor_send_response(fds_evt_t const *const p_evt)
     }
 }
 
-void fido_ctap2_command_cbor_hid_report_sent(void)
+void fido_ctap2_command_cbor_response_completed(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_command_byte()) {
