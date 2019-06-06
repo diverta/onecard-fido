@@ -15,8 +15,6 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 
-#define NFC_APDU_BUFF_SIZE 512
-    
 //
 // レスポンス１回あたりの送信データ長の上限
 //   現状、ステータスワード＋データで、合わせて
