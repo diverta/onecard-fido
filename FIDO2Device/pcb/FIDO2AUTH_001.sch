@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -376,8 +376,8 @@ Metric Code Size 1005</description>
 <smd name="3" x="0.95" y="1.1" dx="1" dy="1.44" layer="1"/>
 <smd name="2" x="0.95" y="-1.1" dx="1" dy="1.44" layer="1"/>
 <smd name="1" x="-0.75" y="-1.1" dx="1.2" dy="1.44" layer="1"/>
-<text x="-1.5875" y="2.301875" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-1.42875" y="-3.01625" size="0.7112" layer="27">&gt;VALUE</text>
+<text x="-1.666875" y="2.301875" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.666875" y="-3.01625" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="0.7366" y1="-1.3208" x2="1.1938" y2="-0.635" layer="51"/>
 <rectangle x1="0.7112" y1="0.635" x2="1.1684" y2="1.3208" layer="51"/>
 <rectangle x1="-1.143" y1="0.635" x2="-0.6858" y2="1.3208" layer="51"/>
@@ -1497,6 +1497,57 @@ DIN A4, landscape with location and doc. field</description>
 <text x="-4.5" y="4.5" size="1.27" layer="25">&gt;NAME</text>
 <text x="-4.5" y="-4.5" size="1.27" layer="27">&gt;VALUE</text>
 </package>
+<package name="DF65-5P-1.7V_DEV">
+<description>&lt;b&gt;DF65 Series&lt;/b&gt;&lt;p&gt;
+1.7mm pitch, Low Profile Wire-to-Board Connectors</description>
+<text x="4.33" y="0.525" size="0.8128" layer="25">&gt;NAME</text>
+<text x="-3.83" y="-1.975" size="0.8128" layer="27">&gt;VALUE</text>
+<rectangle x1="1.3" y1="-0.6" x2="2.1" y2="1.4" layer="29"/>
+<rectangle x1="-0.4" y1="-0.6" x2="0.4" y2="1.4" layer="29"/>
+<rectangle x1="4.425" y1="-6.75" x2="5.125" y2="-4.15" layer="1"/>
+<rectangle x1="-5.125" y1="-6.75" x2="-4.425" y2="-4.15" layer="1"/>
+<rectangle x1="4.475" y1="-5.9" x2="5.075" y2="-4.2" layer="31"/>
+<rectangle x1="-2.1" y1="-0.6" x2="-1.3" y2="1.4" layer="29"/>
+<rectangle x1="-3.8" y1="-0.6" x2="-3" y2="1.4" layer="29"/>
+<rectangle x1="3" y1="-0.6" x2="3.8" y2="1.4" layer="29"/>
+<rectangle x1="-5.075" y1="-5.9" x2="-4.475" y2="-4.2" layer="31"/>
+<rectangle x1="4.325" y1="-6.85" x2="5.225" y2="-4.05" layer="29"/>
+<rectangle x1="-5.225" y1="-6.85" x2="-4.325" y2="-4.05" layer="29"/>
+<smd name="3" x="0" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="2" x="-1.7" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="1" x="-3.4" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="4" x="1.7" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="5" x="3.4" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-0.25" y1="-0.45" x2="0.25" y2="0.45" layer="31"/>
+<rectangle x1="-1.95" y1="-0.45" x2="-1.45" y2="0.45" layer="31"/>
+<rectangle x1="-3.65" y1="-0.45" x2="-3.15" y2="0.45" layer="31"/>
+<rectangle x1="1.45" y1="-0.45" x2="1.95" y2="0.45" layer="31"/>
+<rectangle x1="3.15" y1="-0.45" x2="3.65" y2="0.45" layer="31"/>
+<wire x1="5.6" y1="-5.75" x2="5.6" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="-5.6" y1="-5.75" x2="-5.6" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="-5.45" y1="-3.95" x2="-5.45" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-5.6" y1="-3.95" x2="-5.45" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="5.45" y1="-3.95" x2="5.6" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="5.45" y1="-3.95" x2="5.45" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-5.45" y1="0.3" x2="-3.9" y2="0.3" width="0.127" layer="21"/>
+<wire x1="3.9" y1="0.3" x2="5.45" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-4.2" y1="-5.75" x2="4.2" y2="-5.75" width="0.127" layer="21"/>
+<wire x1="-5.6" y1="-5.75" x2="-5.35" y2="-5.75" width="0.127" layer="21"/>
+<wire x1="5.35" y1="-5.75" x2="5.6" y2="-5.75" width="0.127" layer="21"/>
+<wire x1="-2.9" y1="0.3" x2="-2.2" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-1.2" y1="0.3" x2="-0.5" y2="0.3" width="0.127" layer="21"/>
+<wire x1="0.5" y1="0.3" x2="1.2" y2="0.3" width="0.127" layer="21"/>
+<wire x1="2.2" y1="0.3" x2="2.9" y2="0.3" width="0.127" layer="21"/>
+</package>
+<package name="HEADER_5PIN">
+<pad name="1" x="0" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
+<pad name="2" x="2.54" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<pad name="3" x="5.08" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<pad name="4" x="7.62" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<pad name="5" x="10.16" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
+<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
+</package>
 </packages>
 <symbols>
 <symbol name="USB_CON_MALE_A">
@@ -1533,6 +1584,25 @@ DIN A4, landscape with location and doc. field</description>
 <pin name="FG1" x="20.32" y="15.24" length="short" direction="pas" rot="R180"/>
 <pin name="FG2" x="20.32" y="2.54" length="short" direction="pas" rot="R180"/>
 </symbol>
+<symbol name="IF_5PIN">
+<description>&lt;b&gt;5-pin インターフェース&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="15.24" y1="-12.7" x2="3.175" y2="-12.7" width="0.4064" layer="94"/>
+<wire x1="3.81" y1="-5.08" x2="5.08" y2="-5.08" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="3.175" y2="-12.7" width="0.4064" layer="94"/>
+<wire x1="15.24" y1="-12.7" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<text x="2.54" y="-15.24" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="0" y="-7.62" length="middle" direction="pas" swaplevel="1"/>
+<pin name="3" x="0" y="-5.08" length="middle" direction="pas" swaplevel="1"/>
+<pin name="1" x="0" y="-10.16" length="middle" direction="pas" swaplevel="1"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
+<pin name="4" x="0" y="-2.54" length="middle" direction="pas" swaplevel="1"/>
+<pin name="5" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
+<wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="-10.16" x2="5.08" y2="-10.16" width="0.6096" layer="94"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="TE-1734028" prefix="CN">
@@ -1551,6 +1621,38 @@ TE Connectivity</description>
 <connect gate="G$1" pin="FG2" pad="FG2"/>
 <connect gate="G$1" pin="GND" pad="4"/>
 <connect gate="G$1" pin="VBUS" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="IF_5PIN" prefix="CN">
+<description>&lt;b&gt;5-pin インターフェース&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="IF_5PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="DF65-5P-1.7V_DEV">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_H" package="HEADER_5PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -1610,6 +1712,8 @@ TE Connectivity</description>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="2.2k"/>
 <part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
+<part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
+<part name="GND14" library="Supply" deviceset="0V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -1916,6 +2020,8 @@ TE Connectivity</description>
 <text x="166.37" y="11.43" size="2.54" layer="91">nRF52840版FIDO2認証器
 開発用ブレークアウト基板</text>
 <text x="30.48" y="91.44" size="3.81" layer="91">LED部</text>
+<text x="147.32" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
+<text x="147.32" y="83.82" size="2.54" layer="91">USBブートローダーを初期書込する際に使用します。</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -1940,6 +2046,8 @@ TE Connectivity</description>
 <instance part="R3" gate="G$1" x="86.36" y="40.64" rot="R90"/>
 <instance part="R4" gate="G$1" x="96.52" y="40.64" rot="R90"/>
 <instance part="R5" gate="G$1" x="106.68" y="40.64" rot="R90"/>
+<instance part="CN2" gate="G$1" x="193.04" y="71.12"/>
+<instance part="GND14" gate="1" x="190.5" y="53.34"/>
 </instances>
 <busses>
 </busses>
@@ -2013,6 +2121,12 @@ TE Connectivity</description>
 <wire x1="180.34" y1="111.76" x2="180.34" y2="119.38" width="0.1524" layer="91"/>
 <junction x="167.64" y="111.76"/>
 </segment>
+<segment>
+<pinref part="GND14" gate="1" pin="0V"/>
+<wire x1="190.5" y1="55.88" x2="190.5" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="CN2" gate="G$1" pin="1"/>
+<wire x1="190.5" y1="60.96" x2="193.04" y2="60.96" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$2" class="0">
 <segment>
@@ -2071,6 +2185,12 @@ TE Connectivity</description>
 <pinref part="LED2" gate="G$1" pin="A"/>
 <wire x1="91.44" y1="63.5" x2="91.44" y2="68.58" width="0.1524" layer="91"/>
 <label x="91.44" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<pinref part="CN2" gate="G$1" pin="4"/>
+<wire x1="193.04" y1="68.58" x2="167.64" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="167.64" y1="68.58" x2="167.64" y2="60.96" width="0.1524" layer="91"/>
+<label x="167.64" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="LED1" class="0">
@@ -2131,6 +2251,30 @@ TE Connectivity</description>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="55.88" y1="55.88" x2="55.88" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="SWDIO" class="0">
+<segment>
+<pinref part="CN2" gate="G$1" pin="2"/>
+<wire x1="193.04" y1="63.5" x2="182.88" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="63.5" x2="182.88" y2="60.96" width="0.1524" layer="91"/>
+<label x="182.88" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="SWDCLK" class="0">
+<segment>
+<pinref part="CN2" gate="G$1" pin="3"/>
+<wire x1="193.04" y1="66.04" x2="175.26" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="175.26" y1="66.04" x2="175.26" y2="60.96" width="0.1524" layer="91"/>
+<label x="175.26" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="RESET" class="0">
+<segment>
+<pinref part="CN2" gate="G$1" pin="5"/>
+<wire x1="193.04" y1="71.12" x2="160.02" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="160.02" y1="71.12" x2="160.02" y2="60.96" width="0.1524" layer="91"/>
+<label x="160.02" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 </nets>
