@@ -28,8 +28,11 @@ NRF_LOG_MODULE_REGISTER();
 // NFCの接続状態を保持
 static bool nfc_field_on;
 
+//
 // Extended APDUフォーマットに対応するための一時バッファ
-static uint8_t received_data[NFC_APDU_BUFF_SIZE];
+//   512バイトを上限とします。
+//
+static uint8_t received_data[512];
 static size_t  received_data_size;
 
 #if NRF_LOG_DEBUG_BUFF

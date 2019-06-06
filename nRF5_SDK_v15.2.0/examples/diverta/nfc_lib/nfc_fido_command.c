@@ -10,6 +10,12 @@
 #include "fido_ctap2_command.h"
 #include "nfc_fido_receive.h"
 
+// for communication interval timer
+#include "fido_comm_interval_timer.h"
+
+// for lighting LED on/off
+#include "fido_idling_led.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_command
 #include "nrf_log.h"
@@ -33,5 +39,25 @@ void nfc_fido_command_on_send_completed(void)
 {
     // FIDO機能レスポンスの
     // 全フレーム送信完了時の処理を実行
-    fido_ctap2_command_cbor_hid_report_sent();
+    //
+    // 処理タイムアウト監視を停止
+    fido_comm_interval_timer_stop();
+
+    // 全フレーム送信後に行われる後続処理を実行
+    fido_ctap2_command_cbor_response_completed();
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
+}
+
+void nfc_fido_command_on_request_started(void) 
+{
+    // FIDO機能リクエストの
+    // 先頭フレーム受信時の処理を実行
+    // 
+    // 処理タイムアウト監視を開始
+    fido_comm_interval_timer_start();
+
+    // アイドル時点滅処理を停止
+    fido_idling_led_off();
 }

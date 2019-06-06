@@ -14,6 +14,7 @@ extern "C" {
 void fido_button_timers_init(void);
 void fido_button_init(void);
 void fido_command_fds_register(void);
+void fido_command_on_process_timedout(void);
 
 #ifdef __cplusplus
 }

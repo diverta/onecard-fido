@@ -23,6 +23,12 @@ NRF_LOG_MODULE_REGISTER();
 #include "nfc_fido_command.h"
 #include "fido_ble_main.h"
 
+// for processing LED on/off
+#include "fido_processing_led.h"
+
+// for lighting LED on/off
+#include "fido_idling_led.h"
+
 //
 // ボタンのピン番号
 //
@@ -156,4 +162,16 @@ void fido_command_fds_register(void)
     // FDS処理完了後の処理をFDSに登録
     ret_code_t err_code = fds_register(fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
+}
+
+void fido_command_on_process_timedout(void) 
+{
+    // 処理タイムアウト発生時の処理を実行
+    //
+    // 処理中表示LEDが点滅していた場合は
+    // ここでLEDを消灯させる
+    fido_processing_led_off();
+
+    // アイドル時点滅処理を再開
+    fido_idling_led_on();
 }

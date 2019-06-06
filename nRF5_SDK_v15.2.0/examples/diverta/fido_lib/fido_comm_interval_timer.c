@@ -1,5 +1,5 @@
 /* 
- * File:   usbd_hid_comm_interval_timer.c
+ * File:   fido_comm_interval_timer.c
  * Author: makmorit
  *
  * Created on 2018/11/26, 10:50
@@ -7,10 +7,10 @@
 #include "sdk_common.h"
 #include "app_timer.h"
 
-#include "hid_fido_command.h"
+#include "fido_command.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME usbd_hid_comm_interval_timer
+#define NRF_LOG_MODULE_NAME fido_comm_interval_timer
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -25,7 +25,7 @@ static void comm_interval_timeout_handler(void *p_context)
 {
     // 直近のレスポンスから10秒を経過した場合、
     // FIDO機能処理タイムアウト時の処理を実行
-    hid_fido_command_on_process_timedout();
+    fido_command_on_process_timedout();
 }
 
 static void comm_interval_timer_init(void)
@@ -44,7 +44,7 @@ static void comm_interval_timer_init(void)
     app_timer_created = true;
 }
 
-void usbd_hid_comm_interval_timer_stop(void)
+void fido_comm_interval_timer_stop(void)
 {
     if (app_timer_created == false || app_timer_started == false) {
         return;
@@ -59,7 +59,7 @@ void usbd_hid_comm_interval_timer_stop(void)
     }
 }
 
-void usbd_hid_comm_interval_timer_start(void)
+void fido_comm_interval_timer_start(void)
 {
     // タイマー生成
     if (app_timer_created == false) {
@@ -71,7 +71,7 @@ void usbd_hid_comm_interval_timer_start(void)
 
     // タイマーが既にスタートしている場合は停止させる
     if (app_timer_started == true) {
-        usbd_hid_comm_interval_timer_stop();
+        fido_comm_interval_timer_stop();
     }
 
     // 直近レスポンスからの経過秒数監視を開始

@@ -18,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // Capability container
-const CAPABILITY_CONTAINER NFC_CC = {
+static const CAPABILITY_CONTAINER NFC_CC = {
     .cclen_hi = 0x00, 
     .cclen_lo = 0x0f,
     .version = 0x20,
@@ -34,7 +34,9 @@ static char  NDEF_SAMPLE[32];
 static char *DIVERTA_SITE_URI = "www.diverta.co.jp/";
 
 // データ一時格納領域
-uint8_t response_buff[NFC_APDU_BUFF_SIZE];
+//   レスポンス１回あたりの送信データ長の上限＋ステータスワード（２バイト）
+#define RESPONSE_BUFF_SIZE (NFC_RESPONSE_MAX_SIZE + 2)
+static uint8_t response_buff[RESPONSE_BUFF_SIZE];
 
 // レスポンスデータに関する情報を保持
 static uint8_t *m_response_buffer;
@@ -44,7 +46,7 @@ static size_t   m_responsed_size;
 bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status_word)
 {
     // データ長チェック
-    if (data_size > NFC_APDU_BUFF_SIZE - 2) {
+    if (data_size > NFC_RESPONSE_MAX_SIZE) {
         return false;
     }
     
@@ -137,6 +139,7 @@ void nfc_fido_send_command_response_cont(uint8_t get_response_size)
     }
 
     // フレーム送信
+    NRF_LOG_DEBUG("APDU sent a frame (%d bytes) status=0x%04x", response_size, status_word);
     uint8_t *response_buffer = m_response_buffer + m_responsed_size;
     nfc_fido_send_response_ex(response_buffer, response_size, status_word);
     m_responsed_size += response_size;
