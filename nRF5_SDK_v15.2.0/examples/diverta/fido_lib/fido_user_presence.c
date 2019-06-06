@@ -22,7 +22,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "app_timer.h"
 
 // for keepalive_timer_handler
-#include "hid_ctap2_command.h"
+#include "fido_ctap2_command.h"
 #include "ble_u2f_command.h"
 
 APP_TIMER_DEF(m_fido_command_timer_id);
@@ -32,7 +32,7 @@ static void command_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
     if (p_context == NULL) {
-        hid_ctap2_command_keepalive_timer_handler();
+        fido_ctap2_command_keepalive_timer_handler();
     } else {
         ble_u2f_command_keepalive_timer_handler(p_context);
     }

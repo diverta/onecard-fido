@@ -18,9 +18,16 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_command.h"
 #include "ble_ctap2_command.h"
 #include "hid_u2f_command.h"
-#include "hid_ctap2_command.h"
+#include "fido_ctap2_command.h"
 #include "hid_fido_command.h"
+#include "nfc_fido_command.h"
 #include "fido_ble_main.h"
+
+// for processing LED on/off
+#include "fido_processing_led.h"
+
+// for lighting LED on/off
+#include "fido_idling_led.h"
 
 //
 // ボタンのピン番号
@@ -80,7 +87,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             if (hid_u2f_command_on_mainsw_event() == true) {
                 break;
             }
-            hid_ctap2_command_on_mainsw_event();
+            fido_ctap2_command_on_mainsw_event();
             ble_ctap2_command_on_mainsw_event();
         }
 		break;
@@ -138,13 +145,33 @@ void fido_button_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+static void fido_command_on_fs_evt(fds_evt_t const *const p_evt)
+{
+    // FDS処理完了後のBLE処理を実行
+    ble_u2f_command_on_fs_evt(p_evt);
+
+    // FDS処理完了後のUSB HID処理を実行
+    hid_fido_command_on_fs_evt(p_evt);
+
+    // FDS処理完了後のNFC処理を実行
+    nfc_fido_command_on_fs_evt(p_evt);
+}
+
 void fido_command_fds_register(void)
 {
-    // FDS処理完了後のBLE処理をFDSに登録
-    ret_code_t err_code = fds_register(ble_u2f_command_on_fs_evt);
+    // FDS処理完了後の処理をFDSに登録
+    ret_code_t err_code = fds_register(fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
+}
 
-    // FDS処理完了後のUSB HID処理をFDSに登録
-    err_code = fds_register(hid_fido_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
+void fido_command_on_process_timedout(void) 
+{
+    // 処理タイムアウト発生時の処理を実行
+    //
+    // 処理中表示LEDが点滅していた場合は
+    // ここでLEDを消灯させる
+    fido_processing_led_off();
+
+    // アイドル時点滅処理を再開
+    fido_idling_led_on();
 }

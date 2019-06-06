@@ -10,6 +10,7 @@
 #include "nfc_common.h"
 #include "nfc_service.h"
 #include "nfc_fido_send.h"
+#include "nfc_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_send
@@ -17,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // Capability container
-const CAPABILITY_CONTAINER NFC_CC = {
+static const CAPABILITY_CONTAINER NFC_CC = {
     .cclen_hi = 0x00, 
     .cclen_lo = 0x0f,
     .version = 0x20,
@@ -33,12 +34,19 @@ static char  NDEF_SAMPLE[32];
 static char *DIVERTA_SITE_URI = "www.diverta.co.jp/";
 
 // データ一時格納領域
-uint8_t response_buff[NFC_APDU_BUFF_SIZE];
+//   レスポンス１回あたりの送信データ長の上限＋ステータスワード（２バイト）
+#define RESPONSE_BUFF_SIZE (NFC_RESPONSE_MAX_SIZE + 2)
+static uint8_t response_buff[RESPONSE_BUFF_SIZE];
+
+// レスポンスデータに関する情報を保持
+static uint8_t *m_response_buffer;
+static size_t   m_response_length;
+static size_t   m_responsed_size;
 
 bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status_word)
 {
     // データ長チェック
-    if (data_size > NFC_APDU_BUFF_SIZE - 2) {
+    if (data_size > NFC_RESPONSE_MAX_SIZE) {
         return false;
     }
     
@@ -100,5 +108,64 @@ void nfc_fido_send_ndef_tag_sample(APDU_HEADER *apdu)
             0xd1, 0x01, sample_plen, 'U',
             0x03, DIVERTA_SITE_URI);
         nfc_fido_send_response_ex((uint8_t *)NDEF_SAMPLE, sample_rlen, SW_SUCCESS);
+    }
+}
+
+void nfc_fido_send_command_response_cont(uint8_t get_response_size)
+{
+    uint16_t status_word;
+
+    // GetResponseコマンド（INS = 0xc0）を受信したら、
+    // 次のフレームをレスポンス
+    size_t remaining = m_response_length - m_responsed_size;
+    if (remaining == 0) {
+        return;
+    }
+
+    // 今回送信フレーム長を計算
+    size_t response_max_size = (get_response_size == 0x00) ? NFC_RESPONSE_MAX_SIZE : get_response_size;
+    size_t response_size = (remaining < response_max_size) ? remaining : response_max_size;
+
+    // 次回送信フレーム長を計算
+    remaining -= response_size;
+
+    // 次回送信フレーム長に応じ、ステータスワードを生成
+    if (remaining == 0) {
+        status_word = SW_SUCCESS;
+    } else if (remaining < NFC_RESPONSE_MAX_SIZE) {
+        status_word = SW_GET_RESPONSE | (0x00ff & (uint16_t)remaining);
+    } else {
+        status_word = SW_GET_RESPONSE;
+    }
+
+    // フレーム送信
+    NRF_LOG_DEBUG("APDU sent a frame (%d bytes) status=0x%04x", response_size, status_word);
+    uint8_t *response_buffer = m_response_buffer + m_responsed_size;
+    nfc_fido_send_response_ex(response_buffer, response_size, status_word);
+    m_responsed_size += response_size;
+
+    if (remaining == 0) {
+        NRF_LOG_DEBUG("APDU sent completed (%d bytes)", m_responsed_size);
+        nfc_fido_command_on_send_completed();
+    }
+}
+
+void nfc_fido_send_command_response(uint8_t *response_buffer, size_t response_length)
+{
+    // 引数で指定されたデータを、
+    // ISO 7816-4 APDU chainingを使用して
+    // 複数フレームに分割してレスポンス
+    m_response_buffer = response_buffer;
+    m_response_length = response_length;
+    m_responsed_size = 0;
+    
+    if (response_length < NFC_RESPONSE_MAX_SIZE) {
+        // 上限バイト以内であれば単一フレームで送信
+        nfc_fido_send_command_response_cont((uint8_t)response_length);
+
+    } else {
+        // 254バイトを超える場合は残りのフレームは
+        // 次回のGetResponseコマンド受信時に送信
+        nfc_fido_send_command_response_cont(0x00);
     }
 }

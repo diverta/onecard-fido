@@ -9,7 +9,6 @@
         <group>
             <file>file:/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app/pca10056/s140/armgcc/Makefile</file>
             <file>file:/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app/pca10056/s140/config/sdk_config.h</file>
-            <file>file:/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app/main.c</file>
         </group>
     </open-files>
     <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">

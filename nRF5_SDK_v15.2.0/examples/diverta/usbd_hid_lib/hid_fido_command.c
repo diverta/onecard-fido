@@ -11,19 +11,16 @@
 #include <stdlib.h>
 
 #include "fds.h"
-#include "usbd_hid_comm_interval_timer.h"
+#include "fido_comm_interval_timer.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
-#include "hid_ctap2_command.h"
+#include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
 
 // for U2F command
 #include "u2f.h"
 #include "ctap2_common.h"
-
-// for processing LED on/off
-#include "fido_processing_led.h"
 
 // for lighting LED on/off
 #include "fido_idling_led.h"
@@ -88,7 +85,7 @@ void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code)
     hid_fido_send_command_response_no_callback(cid, cmd, status_code);
 
     // 処理タイムアウト監視を停止
-    usbd_hid_comm_interval_timer_stop();
+    fido_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
     fido_idling_led_on();
@@ -112,11 +109,11 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         // キャンセルコマンドの場合は
         // 所在確認待ちをキャンセルしたうえで
         // キャンセルレスポンスを戻す
-        hid_ctap2_command_cancel();
+        fido_ctap2_command_cancel();
         return;
     } else {
         // 他のコマンドの場合は所在確認待ちをキャンセル
-        hid_ctap2_command_tup_cancel();
+        fido_ctap2_command_tup_cancel();
     }
 
     uint32_t cid = hid_fido_receive_hid_header()->CID;
@@ -132,7 +129,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     switch (cmd) {
 #if CTAP2_SUPPORTED
         case CTAP2_COMMAND_INIT:
-            hid_ctap2_command_init();
+            fido_ctap2_command_hid_init();
             break;
         case CTAP2_COMMAND_PING:
             hid_fido_command_ping();
@@ -152,7 +149,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             hid_u2f_command_msg();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor();
+            fido_ctap2_command_cbor(TRANSPORT_HID);
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
@@ -176,7 +173,7 @@ void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
             hid_u2f_command_msg_send_response(p_evt);
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_send_response(p_evt);
+            fido_ctap2_command_cbor_send_response(p_evt);
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
@@ -198,7 +195,7 @@ void hid_fido_command_on_report_completed(void)
     // 全フレーム送信完了時の処理を実行
     // 
     // 処理タイムアウト監視を停止
-    usbd_hid_comm_interval_timer_stop();
+    fido_comm_interval_timer_stop();
 
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
@@ -213,7 +210,7 @@ void hid_fido_command_on_report_completed(void)
             hid_u2f_command_msg_report_sent();
             break;
         case CTAP2_COMMAND_CBOR:
-            hid_ctap2_command_cbor_report_sent();
+            fido_ctap2_command_cbor_response_completed();
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
@@ -240,20 +237,8 @@ void hid_fido_command_on_report_started(void)
     // 先頭フレーム受信時の処理を実行
     // 
     // 処理タイムアウト監視を開始
-    usbd_hid_comm_interval_timer_start();
+    fido_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
     fido_idling_led_off();
-}
-
-void hid_fido_command_on_process_timedout(void) 
-{
-    // 処理タイムアウト発生時の処理を実行
-    //
-    // 処理中表示LEDが点滅していた場合は
-    // ここでLEDを消灯させる
-    fido_processing_led_off();
-
-    // アイドル時点滅処理を再開
-    fido_idling_led_on();
 }

@@ -85,6 +85,14 @@ typedef struct {
 #define U2F_V2_VERSION_STRING      "U2F_V2"
 #define FIDO_2_0_VERSION_STRING    "FIDO_2_0"
 
+// トランスポート種別
+typedef enum _TRANSPORT_TYPE {
+    TRANSPORT_NONE = 0,
+    TRANSPORT_BLE,
+    TRANSPORT_HID,
+    TRANSPORT_NFC
+} TRANSPORT_TYPE;
+
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_led_light_all_LED(bool led_on);
