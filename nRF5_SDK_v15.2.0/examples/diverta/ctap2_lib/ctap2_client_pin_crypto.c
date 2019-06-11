@@ -10,6 +10,7 @@
 #include "nrf_crypto.h"
 #include "nrf_crypto_init.h"
 #include "nrf_crypto_error.h"
+#include "mem_manager.h"
 #include "app_error.h"
 
 // for logging informations
