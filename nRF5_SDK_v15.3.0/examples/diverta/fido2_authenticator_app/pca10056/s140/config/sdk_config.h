@@ -955,6 +955,15 @@
 #define NRF_CRYPTO_BACKEND_CC310_RNG_ENABLED 1
 #endif
 
+// <q> NRF_CRYPTO_BACKEND_CC310_INTERRUPTS_ENABLED  - Enable Interrupts while support using CC310.
+ 
+
+// <i> Select a library version compatible with the configuration. When interrupts are disable, a version named _noint must be used
+
+#ifndef NRF_CRYPTO_BACKEND_CC310_INTERRUPTS_ENABLED
+#define NRF_CRYPTO_BACKEND_CC310_INTERRUPTS_ENABLED 1
+#endif
+
 // </e>
 
 // <e> NRF_CRYPTO_BACKEND_CIFRA_ENABLED - Enable the Cifra backend.
