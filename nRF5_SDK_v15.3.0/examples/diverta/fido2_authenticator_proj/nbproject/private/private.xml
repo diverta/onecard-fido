@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <data xmlns="http://www.netbeans.org/ns/make-project-private/1">
+        <activeConfTypeElem>0</activeConfTypeElem>
+        <activeConfIndexElem>0</activeConfIndexElem>
+    </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app/pca10056/s140/armgcc/Makefile</file>
+            <file>file:/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app/pca10056/s140/config/sdk_config.h</file>
+        </group>
+    </open-files>
+    <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
+        <module name="org-netbeans-modules-cnd-discovery">
+            <property name="rootFolder" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/nfc_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/ble_nus_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_app*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/ctap2_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/u2f_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/usbd_hid_u2f_lib"/>
+            <property name="model-folder" value="/Users/makmorit/opt/nRF5_SDK_15.2.0/components*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/nfc_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_app*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/ble_nus_lib*/Users/makmorit/GitHub/tinycbor/src"/>
+            <property name="exec-log-file" value="/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/nfc_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/ble_nus_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/ctap2_lib*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_app*/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/u2f_lib"/>
+        </module>
+    </preferences>
+</project-private>
