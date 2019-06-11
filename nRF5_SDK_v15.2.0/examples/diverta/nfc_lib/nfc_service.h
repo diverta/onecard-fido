@@ -11,10 +11,12 @@
 extern "C" {
 #endif
 
+#include "stdbool.h"
+
 //
 // 関数群
 //
-void nfc_service_init(void);
+void nfc_service_init(bool closure);
 void nfc_service_data_send(uint8_t *data, size_t data_size);
 
 #ifdef __cplusplus
