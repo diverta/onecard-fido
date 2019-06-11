@@ -52,3 +52,9 @@ nRF52840 Dongleと、Googleアカウント、Chromeブラウザーを使用し�
 - <b>[PCでのU2F Register/Authenticate確認手順](../nRF5_SDK_v15.2.0/PCCHROME.md)</b>
 
 - <b>[AndroidでのU2F Authenticate確認手順](../nRF5_SDK_v15.2.0/ANDROID.md)</b>
+
+## 開発環境構築手順
+
+以下の手順書をご参照願います。
+
+- <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
