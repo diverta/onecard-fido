@@ -62,7 +62,7 @@
           <runcommandpicklistitem>make flash</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>make flash</runcommand>
-        <rundir>/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.2.0/examples/diverta/fido2_authenticator_proj/../fido2_authenticator_app/pca10056/s140/armgcc</rundir>
+        <rundir>/Users/makmorit/GitHub/onecard-fido/nRF5_SDK_v15.3.0/examples/diverta/fido2_authenticator_proj/../fido2_authenticator_app/pca10056/s140/armgcc</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
