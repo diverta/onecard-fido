@@ -14,9 +14,11 @@ NRF_LOG_MODULE_REGISTER();
 // for generate hash
 #include "nrf_crypto_init.h"
 #include "nrf_crypto_hash.h"
+#include "nrf_crypto_ecdsa.h"
 #include "app_error.h"
 
 static nrf_crypto_hash_context_t hash_context = {0};
+static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 
 // for generate random vector
 #include "nrf_crypto_rng.h"
@@ -73,4 +75,24 @@ void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_s
     for (uint8_t r = 0; r < vector_buf_size; r++) {
         vector_buf[r] = m_random_vector[r];
     }
+}
+
+void fido_crypto_ecdsa_sign(nrf_crypto_ecc_private_key_t *private_key_for_sign, 
+    uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
+{
+    // Initialize crypto library.
+    ret_code_t err_code = nrf_crypto_init();
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_crypto_ecdsa_sign(
+        &sign_context, 
+        private_key_for_sign,
+        hash_digest,
+        digest_size,
+        signature, 
+        signature_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
+    }
+    APP_ERROR_CHECK(err_code);
 }

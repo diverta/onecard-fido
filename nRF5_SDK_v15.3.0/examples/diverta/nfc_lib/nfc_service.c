@@ -95,8 +95,12 @@ static void nfc_callback(void *context, nfc_t4t_event_t event, const uint8_t *da
     }
 }
 
-void nfc_service_init(void)
+void nfc_service_init(bool closure)
 {
+    if (closure) {
+        // NFC機能が閉塞されている場合は終了
+        return;
+    }
     nfc_field_on = false;
 
     // Set up NFC

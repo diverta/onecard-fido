@@ -219,8 +219,8 @@ int main(void)
     // USB HIDデバイスクラスを初期化
     usbd_hid_init(usbd_user_ev_handler);
 
-    // NFC関連の初期化
-    nfc_service_init();
+    // NFC関連の初期化（機能閉塞中です）
+    nfc_service_init(true);
     
     // BLEペリフェラル始動タイマーを開始
     fido_ble_peripheral_timer_start();
