@@ -9,7 +9,7 @@
 
 - [s140_nrf52_6.1.1_softdevice.hex](s140_nrf52_6.1.1_softdevice.hex) - ソフトデバイス
 
-- [nrf52840_DG_xxaa.hex](nrf52840_xxaa.hex) - アプリケーション（nRF52840 Dongle用）
+- [nrf52840_xxaa.hex](nrf52840_xxaa.hex) - アプリケーション（nRF52840 Dongle用）
 
 - [nrf52840_DK_xxaa.hex](nrf52840_DK_xxaa.hex) - アプリケーション（nRF52840 DK用）
 

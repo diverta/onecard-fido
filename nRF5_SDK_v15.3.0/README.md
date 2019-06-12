@@ -32,7 +32,7 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 - nrf52840_DK_xxaa.hex - アプリケーション（nRF52840 DK用）
 
-- nrf52840_DG_xxaa.hex - アプリケーション（nRF52840 Dongle用）
+- nrf52840_xxaa.hex - アプリケーション（nRF52840 Dongle用）
 
 これらのファームウェアは、Nordic社から提供されているアプリ「nRF Connect」を使い、nRF52840 DongleやnRF52840 DKにダウンロードするようにします。<br>
 「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[nRF52840 Dongleプログラミング手順](../Development/nRF52840/NRFCONNECTINST.md)」</b>をご参照願います。
