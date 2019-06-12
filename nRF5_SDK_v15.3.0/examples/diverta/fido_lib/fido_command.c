@@ -35,7 +35,7 @@ NRF_LOG_MODULE_REGISTER();
 #define PIN_MAIN_SW_IN                  BUTTON_1
 #define PIN_MAIN_SW_PULL                BUTTON_PULL
 
-#define APP_BUTTON_NUM                  2
+#define APP_BUTTON_NUM                  1
 #define APP_BUTTON_DELAY                APP_TIMER_TICKS(100)
 #define APP_BUTTON_ACTION_PUSH          APP_BUTTON_PUSH
 #define APP_BUTTON_ACTION_RELEASE       APP_BUTTON_RELEASE
@@ -139,9 +139,15 @@ void fido_button_init(void)
     ret_code_t err_code;
 
     err_code = app_button_init((app_button_cfg_t*)m_app_buttons, APP_BUTTON_NUM, APP_BUTTON_DELAY);
+    if (err_code) {
+        NRF_LOG_ERROR("app_button_init returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 
     err_code = app_button_enable();
+    if (err_code) {
+        NRF_LOG_ERROR("app_button_enable returns 0x%02x ", err_code);
+    }
     APP_ERROR_CHECK(err_code);
 }
 
