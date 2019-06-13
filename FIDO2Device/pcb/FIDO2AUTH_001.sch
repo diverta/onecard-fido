@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -674,6 +674,39 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.95" y1="-0.6" x2="-0.35" y2="-0.1" layer="29"/>
 <rectangle x1="-1.349375" y1="0.748125" x2="-1.099375" y2="0.998125" layer="21"/>
 </package>
+<package name="SOT23">
+<description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
+<smd name="3" x="0" y="1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="2" x="0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<smd name="1" x="-0.95" y="-1.1" dx="1" dy="1.4" layer="1"/>
+<text x="-1.42875" y="2.2225" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.508125" y="-3.4925" size="0.7112" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
+<rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
+<rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
+<wire x1="-0.25" y1="-0.66" x2="0.25" y2="-0.66" width="0.127" layer="21"/>
+<wire x1="-1.425" y1="0.66" x2="-1.425" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="-1.425" y1="0.66" x2="-0.7" y2="0.66" width="0.127" layer="21"/>
+<wire x1="1.425" y1="0.66" x2="1.425" y2="-0.2" width="0.127" layer="21"/>
+<wire x1="0.7" y1="0.66" x2="1.425" y2="0.66" width="0.127" layer="21"/>
+</package>
+<package name="SOD323-W">
+<description>&lt;b&gt;SOD323 &lt;/b&gt; &lt;p&gt;
+Wave soldering</description>
+<wire x1="-1" y1="0.7" x2="1" y2="0.7" width="0.1524" layer="51"/>
+<wire x1="1" y1="0.7" x2="1" y2="-0.7" width="0.1524" layer="51"/>
+<wire x1="1" y1="-0.7" x2="-1" y2="-0.7" width="0.1524" layer="51"/>
+<wire x1="-1" y1="-0.7" x2="-1" y2="0.7" width="0.1524" layer="51"/>
+<wire x1="-0.5" y1="0" x2="0.1" y2="0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="0.4" x2="0.1" y2="-0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="-0.4" x2="-0.5" y2="0" width="0.1524" layer="51"/>
+<smd name="C" x="-1.45" y="0" dx="1.5" dy="1.2" layer="1"/>
+<smd name="A" x="1.45" y="0" dx="1.5" dy="1.2" layer="1"/>
+<rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
+<text x="-1.16125" y="1.0875" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
+<rectangle x1="-1.1" y1="-1.5" x2="-0.7" y2="-1.1" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="MDBT50">
@@ -926,6 +959,33 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <text x="-6.35" y="-3.81" size="1.27" layer="94" rot="R180">R</text>
 <text x="-1.27" y="-3.81" size="1.27" layer="94" rot="R180">G</text>
 <text x="3.81" y="-3.81" size="1.27" layer="94" rot="R180">B</text>
+</symbol>
+<symbol name="XC6206">
+<description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="2.54" y1="2.54" x2="20.32" y2="2.54" width="0.254" layer="94"/>
+<wire x1="20.32" y1="2.54" x2="20.32" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="20.32" y1="-7.62" x2="2.54" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-7.62" x2="2.54" y2="2.54" width="0.254" layer="94"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
+<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="VSS" x="22.86" y="-5.08" length="short" direction="pas" rot="R180"/>
+<pin name="VOUT" x="22.86" y="0" length="short" direction="pas" rot="R180"/>
+<pin name="VIN" x="0" y="-2.54" length="short" direction="pas"/>
+</symbol>
+<symbol name="SBD">
+<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="1.27" x2="1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="1.27" x2="1.905" y2="1.016" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="0.635" y1="-1.016" x2="0.635" y2="-1.27" width="0.254" layer="94"/>
+<text x="-2.286" y="1.905" size="1.778" layer="95">&gt;NAME</text>
+<text x="-2.286" y="-3.429" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="A" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
+<pin name="C" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -1368,6 +1428,54 @@ Source: http://document.sharpsma.com/files/GM1WA55311A_SS.pdf</description>
 </device>
 </devices>
 </deviceset>
+<deviceset name="XC6206" prefix="U">
+<description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;
+出力電圧: 3.3 V &lt;br&gt;
+出力電流: 200 mA&lt;br&gt;
+入力電圧最大値: 6 V &lt;br&gt;
+最小入力電圧: 1.8 V&lt;br&gt;
+動作供給電流: 1 uA&lt;br&gt;
+最低動作温度: - 40 C &lt;br&gt;
+最高動作温度: + 85 C</description>
+<gates>
+<gate name="G$1" symbol="XC6206" x="0" y="2.54"/>
+</gates>
+<devices>
+<device name="P332MR-G" package="SOT23">
+<connects>
+<connect gate="G$1" pin="VIN" pad="3"/>
+<connect gate="G$1" pin="VOUT" pad="2"/>
+<connect gate="G$1" pin="VSS" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PMEG2005" prefix="D">
+<description>&lt;b&gt;ショットキーダイオード&lt;/b&gt;&lt;p&gt;
+If - 順電流: 500 mA &lt;br&gt;
+Vrrm - 繰返し逆電圧: 20 V  &lt;br&gt;
+Vf - 順電圧: 0.39 V  &lt;br&gt;
+Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
+最低動作温度: - 65 C  &lt;br&gt;
+最高動作温度: + 150 C &lt;br&gt;</description>
+<gates>
+<gate name="G$1" symbol="SBD" x="2.54" y="0"/>
+</gates>
+<devices>
+<device name="AEA,115" package="SOD323-W">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="Generic">
@@ -1689,7 +1797,7 @@ TE Connectivity</description>
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="C5" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
+<part name="C5" library="Parts" deviceset="CAP" device="_0603" value="0.01uF"/>
 <part name="C6" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
 <part name="C7" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
 <part name="C8" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
@@ -1714,6 +1822,15 @@ TE Connectivity</description>
 <part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
+<part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
+<part name="U2" library="Parts" deviceset="XC6206" device="P332MR-G"/>
+<part name="C10" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
+<part name="C11" library="Parts" deviceset="CAP" device="_0603" value="1uF"/>
+<part name="GND15" library="Supply" deviceset="0V" device=""/>
+<part name="GND16" library="Supply" deviceset="0V" device=""/>
+<part name="GND17" library="Supply" deviceset="0V" device=""/>
+<part name="D2" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
 </parts>
 <sheets>
 <sheet>
@@ -2084,9 +2201,9 @@ TE Connectivity</description>
 <wire x1="93.98" y1="157.48" x2="104.14" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="C7" gate="G$1" pin="1"/>
 <wire x1="104.14" y1="157.48" x2="104.14" y2="154.94" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="157.48" x2="109.22" y2="157.48" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="157.48" x2="119.38" y2="157.48" width="0.1524" layer="91"/>
 <junction x="104.14" y="157.48"/>
-<label x="109.22" y="157.48" size="1.778" layer="95" xref="yes"/>
+<label x="119.38" y="157.48" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="0V" class="0">
@@ -2275,6 +2392,93 @@ TE Connectivity</description>
 <wire x1="193.04" y1="71.12" x2="160.02" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="160.02" y1="71.12" x2="160.02" y2="60.96" width="0.1524" layer="91"/>
 <label x="160.02" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+</nets>
+</sheet>
+<sheet>
+<plain>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Breakout</text>
+<text x="166.37" y="11.43" size="2.54" layer="91">nRF52840版FIDO2認証器
+開発用ブレークアウト基板</text>
+<text x="35.56" y="152.4" size="3.81" layer="91">電源供給部</text>
+<text x="35.56" y="147.32" size="2.54" layer="91" align="top-left">USBポートに装着時は、VBUSの5.0V--&gt;3.3Vに降圧して供給します。
+乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
+<text x="66.04" y="76.2" size="2.54" layer="91">ここにボタン乾電池ケースを
+追加します。</text>
+</plain>
+<instances>
+<instance part="FRAME3" gate="G$1" x="0" y="0"/>
+<instance part="U2" gate="G$1" x="73.66" y="124.46"/>
+<instance part="C10" gate="G$1" x="66.04" y="116.84"/>
+<instance part="C11" gate="G$1" x="111.76" y="116.84"/>
+<instance part="GND15" gate="1" x="101.6" y="101.6"/>
+<instance part="GND16" gate="1" x="66.04" y="101.6"/>
+<instance part="GND17" gate="1" x="111.76" y="101.6"/>
+<instance part="D2" gate="G$1" x="121.92" y="124.46"/>
+<instance part="D3" gate="G$1" x="121.92" y="81.28"/>
+</instances>
+<busses>
+</busses>
+<nets>
+<net name="0V" class="0">
+<segment>
+<pinref part="C10" gate="G$1" pin="2"/>
+<pinref part="GND16" gate="1" pin="0V"/>
+<wire x1="66.04" y1="109.22" x2="66.04" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U2" gate="G$1" pin="VSS"/>
+<pinref part="GND15" gate="1" pin="0V"/>
+<wire x1="96.52" y1="119.38" x2="101.6" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="119.38" x2="101.6" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C11" gate="G$1" pin="2"/>
+<pinref part="GND17" gate="1" pin="0V"/>
+<wire x1="111.76" y1="109.22" x2="111.76" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="VOUT"/>
+<wire x1="96.52" y1="124.46" x2="111.76" y2="124.46" width="0.1524" layer="91"/>
+<pinref part="C11" gate="G$1" pin="1"/>
+<wire x1="111.76" y1="124.46" x2="119.38" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="124.46" x2="111.76" y2="116.84" width="0.1524" layer="91"/>
+<junction x="111.76" y="124.46"/>
+<pinref part="D2" gate="G$1" pin="A"/>
+</segment>
+</net>
+<net name="VBUS_NRF" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="VIN"/>
+<pinref part="C10" gate="G$1" pin="1"/>
+<wire x1="73.66" y1="121.92" x2="66.04" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="121.92" x2="66.04" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="121.92" x2="58.42" y2="121.92" width="0.1524" layer="91"/>
+<junction x="66.04" y="121.92"/>
+<label x="58.42" y="121.92" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="VDD_NRF" class="0">
+<segment>
+<wire x1="124.46" y1="124.46" x2="144.78" y2="124.46" width="0.1524" layer="91"/>
+<label x="149.86" y="124.46" size="1.778" layer="95" xref="yes"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+<pinref part="D3" gate="G$1" pin="C"/>
+<wire x1="144.78" y1="124.46" x2="149.86" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="81.28" x2="144.78" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="81.28" x2="144.78" y2="124.46" width="0.1524" layer="91"/>
+<junction x="144.78" y="124.46"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<wire x1="63.5" y1="88.9" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="88.9" x2="114.3" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="71.12" x2="63.5" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="71.12" x2="63.5" y2="88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
