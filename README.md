@@ -1,8 +1,27 @@
 # One Card FIDO対応
 
-One CardにFIDO U2F認証機能を実装するプロジェクトです。
+One CardにFIDO U2F／WebAuthn認証機能を実装するプロジェクトです。
+
+## プログラム
+
+- <b>[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)</b><br>
+Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器のファームウェアです。<br>
+nRF52840 DK（開発ボード）、nRF52840 Dongle（USBドングル）の両方に対応しています。
+
+- <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
+FIDO2認証器に、鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
+[Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
 ## What's new
+
+#### 2019/06/13
+
+[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
+
+なお、[移行前のプログラム](nRF5_SDK_v15.2.0)は、そのまま残してあります。<br>
+（今後はメンテナンスする予定はございません。ご容赦ください）
+
+また、管理ツールの修正はございません。
 
 #### 2019/05/27（Version 0.1.13）
 
@@ -44,7 +63,7 @@ Windows環境による具体的なテスト方法は、別途手順書[「Edge�
 ただし、U2FはChromeブラウザーのみのサポートであり、かつ将来的にサポートが拡張される予定もないため、現在はメンテナンスをストップさせております。<br>
 何卒ご容赦ください。
 
-### BLE U2Fサービス
+#### BLE U2Fサービス
 
 One CardのBLE上で稼働するFIDO U2F機能です。<br>
 U2F v1.2の仕様に準拠しております。
@@ -55,25 +74,19 @@ FIDO U2F対応デバイスは、USBポートに挿して使用する「YubiKey�
 
 コード格納場所--->[nRF5_SDK_v13.0.0](nRF5_SDK_v13.0.0)
 
-### U2F管理ツール
+#### U2F管理ツール
 
-PC環境から、BLE U2Fサービスの動作に必要な鍵・証明書の導入などを行うツールです。
+PC環境から、BLE U2Fサービスの動作に必要な鍵・証明書の導入などを行うツールです。<br>
 macOS版と、Windows版を用意しました。
 
 コード格納場所--->[U2FMaintenanceTool](U2FMaintenanceTool)
 
-## 運用に関する情報
+## 各種情報
 
-[こちらのページ](Usage/README.md)からご参照いただけます。
+- [運用に関する情報](Usage/README.md)
 
-## 開発に関する情報
+- [開発に関する情報](Development/README.md)
 
-[こちらのページ](Development/README.md)からご参照いただけます。
+- [調査に関する情報](Research/README.md)
 
-## 調査に関する情報
-
-[こちらのページ](Research/README.md)からご参照いただけます。
-
-## 障害に関する情報
-
-[Issues](https://github.com/diverta/onecard-fido/issues)からご参照いただけます。
+- [障害に関する情報](https://github.com/diverta/onecard-fido/issues)
