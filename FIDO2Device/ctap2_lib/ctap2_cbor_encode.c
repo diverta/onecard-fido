@@ -4,7 +4,6 @@
  *
  * Created on 2019/02/18, 15:31
  */
-#include "sdk_common.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -12,11 +11,6 @@
 #include "ctap2_cbor_parse.h"
 #include "fido_crypto_sskey.h"
 #include "ctap2_client_pin_token.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_cbor_encode
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
 
 static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
 {

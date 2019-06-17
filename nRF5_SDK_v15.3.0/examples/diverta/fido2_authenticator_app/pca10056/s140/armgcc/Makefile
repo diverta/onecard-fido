@@ -168,6 +168,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_password.c \
+  $(PLTLIB_DIR)/fido_log.c \
   $(FIDLIB_DIR)/fido_comm_interval_timer.c \
   $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_common.c \

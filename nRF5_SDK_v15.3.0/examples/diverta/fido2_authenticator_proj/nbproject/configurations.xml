@@ -43,7 +43,10 @@
       <itemPath>../ble_u2f_lib/fido_ble_peripheral_timer.c</itemPath>
       <itemPath>../ble_u2f_lib/fido_ble_peripheral_timer.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
+    <logicalFolder name="ctap2_lib"
+                   displayName="ctap2_lib"
+                   projectFiles="true"
+                   root="../../../../FIDO2Device/ctap2_lib">
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c</itemPath>
@@ -618,7 +621,10 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="plat_lib" displayName="plat_lib" projectFiles="true">
+    <logicalFolder name="plat_lib"
+                   displayName="plat_lib"
+                   projectFiles="true"
+                   root="../plat_lib">
       <itemPath>../plat_lib/fido_aes_cbc_256_crypto.c</itemPath>
       <itemPath>../plat_lib/fido_aes_cbc_256_crypto.h</itemPath>
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
@@ -631,6 +637,8 @@
       <itemPath>../plat_lib/fido_flash_client_pin_store.h</itemPath>
       <itemPath>../plat_lib/fido_flash_password.c</itemPath>
       <itemPath>../plat_lib/fido_flash_password.h</itemPath>
+      <itemPath>../plat_lib/fido_log.c</itemPath>
+      <itemPath>../plat_lib/fido_log.h</itemPath>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
@@ -644,7 +652,10 @@
       <in>cborvalidation.c</in>
       <in>open_memstream.c</in>
     </df>
-    <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
+    <logicalFolder name="u2f_lib"
+                   displayName="u2f_lib"
+                   projectFiles="true"
+                   root="../../../../FIDO2Device/u2f_lib">
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f.h</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
@@ -792,147 +803,112 @@
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_common.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_common.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_get_assertion.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../../../../FIDO2Device/u2f_lib/u2f_authenticate.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_authenticate.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/u2f_lib/u2f_keyhandle.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_keyhandle.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/u2f_lib/u2f_register.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_register.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.c"
             ex="false"
             tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+            flavor2="2">
       </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
             ex="false"
@@ -959,6 +935,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../fido_lib</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -976,6 +955,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -992,6 +973,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1013,6 +995,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1028,6 +1012,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1043,6 +1028,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1064,6 +1050,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/micro_ecc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1076,6 +1063,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1093,6 +1081,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1114,6 +1104,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1128,6 +1120,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1144,6 +1137,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1156,6 +1150,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1170,6 +1165,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1188,6 +1184,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1203,6 +1200,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1225,6 +1223,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1278,6 +1277,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1295,6 +1295,7 @@
         <cTool>
           <incDir>
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
+            <pElem>../plat_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1316,6 +1317,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1340,6 +1343,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1370,6 +1374,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1424,6 +1429,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1480,38 +1486,24 @@
       <item path="../plat_lib/fido_aes_cbc_256_crypto.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
-      <item path="../plat_lib/fido_aes_cbc_256_crypto.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
+      <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../plat_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_crypto_keypair.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_flash.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../plat_lib/fido_flash.h" ex="false" tool="3" flavor2="0">
+      <item path="../plat_lib/fido_flash.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../plat_lib/fido_flash_client_pin_store.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
-      <item path="../plat_lib/fido_flash_client_pin_store.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="0">
+      <item path="../plat_lib/fido_log.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash_password.h" ex="false" tool="3" flavor2="0">
+      <item path="../plat_lib/fido_log.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../usbd_hid_lib/hid_fido_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -1532,6 +1524,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1557,6 +1551,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1581,6 +1577,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1598,6 +1595,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../plat_lib</pElem>
+            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1656,6 +1655,7 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/balloc</pElem>
+            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -1677,6 +1677,13 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/nfc/t4t_lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="u2f_lib">
+        <cTool>
+          <incDir>
+            <pElem>../plat_lib</pElem>
           </incDir>
         </cTool>
       </folder>

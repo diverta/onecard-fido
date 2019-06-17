@@ -4,7 +4,8 @@
  *
  * Created on 2019/01/08, 11:24
  */
-#include "sdk_common.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #include "ctap2_common.h"
 #include "fido_aes_cbc_256_crypto.h"
@@ -12,6 +13,7 @@
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 #include "fido_flash_password.h"
+#include "fido_log.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
 #include "fido_flash.h"
@@ -22,17 +24,11 @@
 // for u2f_securekey_skey_be
 #include "u2f_register.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_pubkey_credential
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
 // for debug cbor data
-#define NRF_LOG_DEBUG_CRED_SOURCE       false
-#define NRF_LOG_DEBUG_CRED_SOURCE_BUFF  false
-#define NRF_LOG_DEBUG_CREDENTIAL_ID     false
-#define NRF_LOG_DEBUG_PRIVATE_KEY       false
-
+#define LOG_DEBUG_CRED_SOURCE       false
+#define LOG_DEBUG_CRED_SOURCE_BUFF  false
+#define LOG_DEBUG_CREDENTIAL_ID     false
+#define LOG_DEBUG_PRIVATE_KEY       false
 
 // Public Key Credential Sourceを保持
 static uint8_t pubkey_cred_source[PUBKEY_CRED_SOURCE_MAX_SIZE];
@@ -108,17 +104,6 @@ size_t ctap2_pubkey_credential_source_hash_size(void)
     return credential_source_hash_size;
 }
 
-#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
-static void print_hexdump_debug(uint8_t *buff, size_t size)
-{
-    int j, k;
-    for (j = 0; j < size; j += 64) {
-        k = size - j;
-        NRF_LOG_HEXDUMP_DEBUG(buff + j, (k < 64) ? k : 64);
-    }
-}
-#endif
-
 void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CTAP_USER_ENTITY_T *user)
 {
     // Public Key Credential Sourceを編集する
@@ -151,10 +136,10 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     fido_crypto_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
-#if NRF_LOG_DEBUG_CRED_SOURCE
-    NRF_LOG_DEBUG("Public Key Credential Source contents");
-    NRF_LOG_DEBUG("USER ID (%d bytes):", user->id_size);
-    NRF_LOG_HEXDUMP_DEBUG(user->id, user->id_size);
+#if LOG_DEBUG_CRED_SOURCE
+    fido_log_debug("Public Key Credential Source contents");
+    fido_log_debug("USER ID (%d bytes):", user->id_size);
+    fido_log_print_hexdump_debug(user->id, user->id_size);
 #endif
 
     // Public Key Credential Source自体のサイズを、
@@ -165,8 +150,8 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     // SHA-256ハッシュ値（32バイト）を生成
     generate_credential_source_hash();
 
-#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
-    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", offset);
+#if LOG_DEBUG_CRED_SOURCE_BUFF
+    fido_log_debug("Public Key Credential Source(%d bytes):", offset);
     print_hexdump_debug(pubkey_cred_source, offset);
 #endif
 
@@ -191,9 +176,9 @@ void ctap2_pubkey_credential_generate_id(void)
         pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
-#if NRF_LOG_DEBUG_CREDENTIAL_ID
-    NRF_LOG_DEBUG("credentialId(%d bytes):", credential_id_size);
-    NRF_LOG_HEXDUMP_DEBUG(credential_id, credential_id_size);
+#if LOG_DEBUG_CREDENTIAL_ID
+    fido_log_debug("credentialId(%d bytes):", credential_id_size);
+    fido_log_print_hexdump_debug(credential_id, credential_id_size);
 #endif
 }
 
@@ -209,8 +194,8 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // SHA-256ハッシュ値（32バイト）を生成
     generate_credential_source_hash();
 
-#if NRF_LOG_DEBUG_CRED_SOURCE_BUFF
-    NRF_LOG_DEBUG("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
+#if LOG_DEBUG_CRED_SOURCE_BUFF
+    fido_log_debug("Public Key Credential Source(%d bytes):", pubkey_cred_source[0]);
     print_hexdump_debug(pubkey_cred_source, pubkey_cred_source[0]);
 #endif
 }
@@ -227,23 +212,23 @@ static bool get_private_key_from_credential_id(void)
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
     // 
-#if NRF_LOG_DEBUG_CRED_SOURCE
+#if LOG_DEBUG_CRED_SOURCE
     size_t offset = 34;
     size_t src_user_id_size = pubkey_cred_source[offset++];
     char  *src_user_id = (char *)(pubkey_cred_source + offset);
 
-    NRF_LOG_DEBUG("Public Key Credential Source contents");
-    NRF_LOG_DEBUG("USER ID (%d bytes):", src_user_id_size);
-    NRF_LOG_HEXDUMP_DEBUG(src_user_id, src_user_id_size);
+    fido_log_debug("Public Key Credential Source contents");
+    fido_log_debug("USER ID (%d bytes):", src_user_id_size);
+    fido_log_print_hexdump_debug(src_user_id, src_user_id_size);
 #endif
 
     // number_of_credentialsをカウントアップ
     number_of_credentials++;
     // 秘密鍵をPublic Key Credential Sourceから取り出す
     private_key_be = pubkey_cred_source + 2;
-#if NRF_LOG_DEBUG_PRIVATE_KEY
-    NRF_LOG_DEBUG("Private key:", src_rp_id);
-    NRF_LOG_HEXDUMP_DEBUG(private_key_be, 32);
+#if LOG_DEBUG_PRIVATE_KEY
+    fido_log_debug("Private key:", src_rp_id);
+    fido_log_print_hexdump_debug(private_key_be, 32);
 #endif
 
     // CredRandom領域を取り出す

@@ -4,6 +4,8 @@
  *
  * Created on 2019/01/03, 11:32
  */
+#include <stddef.h>
+
 #include "fido_crypto.h"
 #include "ctap2_common.h"
 

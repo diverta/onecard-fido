@@ -4,21 +4,11 @@
  *
  * Created on 2018/12/25, 13:21
  */
-#include "sdk_common.h"
-
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_common.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap_cbor_parse
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
-// for debug
-#define NRF_LOG_DEBUG_CRED_DESC false
 
 uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
@@ -893,7 +883,7 @@ uint8_t parse_extensions(CborValue *val, CTAP_EXTENSIONS_T *ext)
         sz = sizeof(key);
         ret = cbor_value_copy_text_string(&map, key, &sz, NULL);
         if (ret == CborErrorOutOfMemory) {
-            NRF_LOG_DEBUG("extensions map key is too large, ignoring");
+            // extensions map key is too large, ignoring
             cbor_value_advance(&map);
             cbor_value_advance(&map);
             continue;

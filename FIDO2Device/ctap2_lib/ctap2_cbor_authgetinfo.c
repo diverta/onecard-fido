@@ -4,17 +4,11 @@
  *
  * Created on 2018/12/24, 9:32
  */
-#include "sdk_common.h"
-
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
 #include "fido_flash_client_pin_store.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+#include "fido_log.h"
 
 #define NUM_OF_CBOR_ELEMENTS        6
 #define NUM_OF_VERSIONS             2
@@ -214,12 +208,12 @@ uint8_t ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *enc
     // CBORエンコード実行
     if (encode_authgetinfo_response_message(&encoder) == false) {
         // エラーコード（CTAP1_ERR_OTHER）を戻す
-        NRF_LOG_DEBUG("Encoding failed");
+        fido_log_error("Encoding failed");
         return CTAP1_ERR_OTHER;
     }
 
     // エンコードされたバッファのサイズを設定
     *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
-    NRF_LOG_DEBUG("Encoding success (%d bytes)", *encoded_buff_size);
+    fido_log_debug("Encoding success (%d bytes)", *encoded_buff_size);
     return CTAP1_ERR_SUCCESS;
 }

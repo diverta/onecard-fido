@@ -4,8 +4,6 @@
  *
  * Created on 2019/01/03, 11:05
  */
-#include "sdk_common.h"
-
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_client_pin_token.h"
@@ -14,6 +12,7 @@
 #include "ctap2_extension_hmac_secret.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
+#include "fido_log.h"
 
 // for u2f_flash_token_counter
 #include "fido_flash.h"
@@ -21,21 +20,16 @@
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_get_assertion
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
 // for debug cbor data
-#define NRF_LOG_DEBUG_CLHASH_DATA_BUFF  false
-#define NRF_LOG_HEXDUMP_DEBUG_CBOR      false
-#define NRF_LOG_DEBUG_CBOR_REQUEST      false
-#define NRF_LOG_DEBUG_ALLOW_LIST        false
-#define NRF_LOG_DEBUG_AUTH_DATA_ITEMS   false
-#define NRF_LOG_DEBUG_AUTH_DATA_BUFF    false
-#define NRF_LOG_DEBUG_SIGN_BUFF         false
-#define NRF_LOG_DEBUG_CBOR_RESPONSE     false
-#define NRF_LOG_DEBUG_PIN_AUTH          false
+#define LOG_DEBUG_CLHASH_DATA_BUFF  false
+#define LOG_HEXDUMP_DEBUG_CBOR      false
+#define LOG_DEBUG_CBOR_REQUEST      false
+#define LOG_DEBUG_ALLOW_LIST        false
+#define LOG_DEBUG_AUTH_DATA_ITEMS   false
+#define LOG_DEBUG_AUTH_DATA_BUFF    false
+#define LOG_DEBUG_SIGN_BUFF         false
+#define LOG_DEBUG_CBOR_RESPONSE     false
+#define LOG_DEBUG_PIN_AUTH          false
 
 // デコードされた
 // authenticatorGetAssertion
@@ -53,38 +47,38 @@ struct {
 
 static void debug_decoded_request()
 {
-#if NRF_LOG_DEBUG_CLHASH_DATA_BUFF
-    NRF_LOG_DEBUG("clientDataHash:");
-    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+#if LOG_DEBUG_CLHASH_DATA_BUFF
+    fido_log_debug("clientDataHash:");
+    fido_log_print_hexdump_debug(ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
 #endif
 
-#if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("rp id[%s]", ctap2_request.rp.id);
-    //NRF_LOG_DEBUG("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
-    //NRF_LOG_DEBUG("publicKeyCredentialTypeName: %s", 
+#if LOG_DEBUG_CBOR_REQUEST
+    fido_log_debug("rp id[%s]", ctap2_request.rp.id);
+    //fido_log_debug("user: id[%s] name[%s]", make_credential_request.user.id, make_credential_request.user.name);
+    //fido_log_debug("publicKeyCredentialTypeName: %s", 
     //    make_credential_request.cred_param.publicKeyCredentialTypeName);
-    //NRF_LOG_DEBUG("COSEAlgorithmIdentifier: %d", 
+    //fido_log_debug("COSEAlgorithmIdentifier: %d", 
     //    make_credential_request.cred_param.COSEAlgorithmIdentifier);
 #endif
 
-#if NRF_LOG_DEBUG_ALLOW_LIST
+#if LOG_DEBUG_ALLOW_LIST
     int x;
     CTAP_CREDENTIAL_DESC_T *desc;
     for (x = 0; x < ctap2_request.allowListSize; x++) {
         desc = &ctap2_request.allowList[x];
-        NRF_LOG_DEBUG("allowList[%d]: type[%d]", x, desc->type);
-        NRF_LOG_HEXDUMP_DEBUG(desc->credential_id, desc->credential_id_size);
+        fido_log_debug("allowList[%d]: type[%d]", x, desc->type);
+        fido_log_print_hexdump_debug(desc->credential_id, desc->credential_id_size);
     }
 #endif
 
-#if NRF_LOG_DEBUG_CBOR_REQUEST
-    NRF_LOG_DEBUG("options: rk[%d] uv[%d] up[%d]", 
+#if LOG_DEBUG_CBOR_REQUEST
+    fido_log_debug("options: rk[%d] uv[%d] up[%d]", 
         ctap2_request.options.rk, ctap2_request.options.uv, ctap2_request.options.up);
 #endif
 
-#if NRF_LOG_DEBUG_PIN_AUTH
-    NRF_LOG_DEBUG("pinAuth (pinProtocol=0x%02x):", ctap2_request.pinProtocol);
-    NRF_LOG_HEXDUMP_DEBUG(ctap2_request.pinAuth, PIN_AUTH_SIZE);
+#if LOG_DEBUG_PIN_AUTH
+    fido_log_debug("pinAuth (pinProtocol=0x%02x):", ctap2_request.pinProtocol);
+    fido_log_print_hexdump_debug(ctap2_request.pinAuth, PIN_AUTH_SIZE);
 #endif
 }
 
@@ -100,13 +94,13 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     int         key;
     int         intval;
 
-#if NRF_LOG_HEXDUMP_DEBUG_CBOR
-    NRF_LOG_DEBUG("authenticatorGetAssertion request cbor(%d bytes):", cbor_data_length);
+#if LOG_HEXDUMP_DEBUG_CBOR
+    fido_log_debug("authenticatorGetAssertion request cbor(%d bytes):", cbor_data_length);
     int j, k;
     int max = (cbor_data_length < 288) ? cbor_data_length : 288;
     for (j = 0; j < max; j += 64) {
         k = max - j;
-        NRF_LOG_HEXDUMP_DEBUG(cbor_data_buffer + j, (k < 64) ? k : 64);
+        fido_log_print_hexdump_debug(cbor_data_buffer + j, (k < 64) ? k : 64);
     }
 #endif
     // 必須項目チェック済みフラグを初期化
@@ -249,7 +243,7 @@ static uint8_t read_token_counter(void)
     if (fido_flash_token_counter_read(p_hash) == false) {
         // 紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("sign counter not found");
+        fido_log_error("sign counter not found");
         return CTAP2_ERR_NO_CREDENTIALS;
     }
 
@@ -260,10 +254,10 @@ static uint8_t read_token_counter(void)
     if (strncmp(ctap2_rpid_hash, hash_for_check, 32) != 0) {
         // 紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("unavailable sign counter");
+        fido_log_error("unavailable sign counter");
         return CTAP2_ERR_NO_CREDENTIALS;
     }
-    NRF_LOG_DEBUG("sign counter found (value=%d)", fido_flash_token_counter_value());
+    fido_log_debug("sign counter found (value=%d)", fido_flash_token_counter_value());
 
     // +1 してctap2_sign_countに設定
     uint32_t ctap2_sign_count = fido_flash_token_counter_value();
@@ -315,12 +309,12 @@ static void generate_authenticator_data(void)
         offset += add_extensions_cbor(authenticator_data + offset);
     }
 
-#if NRF_LOG_DEBUG_AUTH_DATA_BUFF
+#if LOG_DEBUG_AUTH_DATA_BUFF
     int j, k;
-    NRF_LOG_DEBUG("Authenticator data(%d bytes):", offset);
+    fido_log_debug("Authenticator data(%d bytes):", offset);
     for (j = 0; j < offset; j += 64) {
         k = offset - j;
-        NRF_LOG_HEXDUMP_DEBUG(authenticator_data + j, (k < 64) ? k : 64);
+        fido_log_print_hexdump_debug(authenticator_data + j, (k < 64) ? k : 64);
     }
 #endif
 
@@ -336,9 +330,9 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-#if NRF_LOG_DEBUG_SIGN_BUFF
-    NRF_LOG_DEBUG("Signature(%d bytes):", u2f_signature_data_size());
-    NRF_LOG_HEXDUMP_DEBUG(u2f_signature_data_buffer(), u2f_signature_data_size());
+#if LOG_DEBUG_SIGN_BUFF
+    fido_log_debug("Signature(%d bytes):", u2f_signature_data_size());
+    fido_log_print_hexdump_debug(u2f_signature_data_buffer(), u2f_signature_data_size());
 #endif
 
     return CTAP1_ERR_SUCCESS;
@@ -351,9 +345,9 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
     size_t   rpid_size = strlen((char *)rpid);
     ctap2_generate_rpid_hash(rpid, rpid_size);
 
-#if NRF_LOG_DEBUG_AUTH_DATA_ITEMS
-    NRF_LOG_DEBUG("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
-    NRF_LOG_HEXDUMP_DEBUG(ctap2_rpid_hash, ctap2_rpid_hash_size);
+#if LOG_DEBUG_AUTH_DATA_ITEMS
+    fido_log_debug("RP ID[%s](%d bytes) hash value:", rpid, rpid_size);
+    fido_log_print_hexdump_debug(ctap2_rpid_hash, ctap2_rpid_hash_size);
 #endif
 
     // flags編集
@@ -487,13 +481,13 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     // CBORバッファの長さを設定
     *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
-#if NRF_LOG_DEBUG_CBOR_RESPONSE
-    NRF_LOG_DEBUG("authenticatorGetAssertion response(%d bytes):", *encoded_buff_size);
+#if LOG_DEBUG_CBOR_RESPONSE
+    fido_log_debug("authenticatorGetAssertion response(%d bytes):", *encoded_buff_size);
     int j, k;
     int max = (*encoded_buff_size) < 256 ? (*encoded_buff_size) : 256;
     for (j = 0; j < max; j += 64) {
         k = max - j;
-        NRF_LOG_HEXDUMP_DEBUG(encoded_buff + j, (k < 64) ? k : 64);
+        fido_log_print_hexdump_debug(encoded_buff + j, (k < 64) ? k : 64);
     }
 #endif
 
@@ -519,7 +513,7 @@ uint8_t ctap2_get_assertion_update_token_counter(void)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("sign counter updated (value=%d)", ctap2_current_sign_count());
+    fido_log_debug("sign counter updated (value=%d)", ctap2_current_sign_count());
     return CTAP1_ERR_SUCCESS;
 }
 
@@ -534,13 +528,13 @@ uint8_t ctap2_get_assertion_verify_pin_auth(void)
     // NGの場合はPIN認証失敗
     uint8_t ctap2_status = ctap2_client_pin_token_verify_pin_auth(ctap2_request.clientDataHash, ctap2_request.pinAuth);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
-        NRF_LOG_ERROR("pinAuth verification failed");
+        fido_log_error("pinAuth verification failed");
         return ctap2_status;
     }
 
     // flagsを設定
     //   User Verified result (0x04)
     ctap2_flags_set(0x04);
-    NRF_LOG_DEBUG("pinAuth verification success");
+    fido_log_debug("pinAuth verification success");
     return CTAP1_ERR_SUCCESS;
 }

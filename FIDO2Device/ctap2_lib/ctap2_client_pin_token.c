@@ -4,20 +4,14 @@
  *
  * Created on 2019/02/23, 11:22
  */
-#include "sdk_common.h"
-
 #include <stdio.h>
 #include <string.h>
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_client_pin_token
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
 
 #include "fido_common.h"
 #include "ctap2_common.h"
 #include "fido_aes_cbc_256_crypto.h"
 #include "fido_crypto.h"
+#include "fido_log.h"
 
 // PINトークン格納領域
 #define PIN_TOKEN_SIZE 16
@@ -38,7 +32,7 @@ void ctap2_client_pin_token_init(bool force)
     // PINトークンが生成済みで、かつ
     // 強制再生成を要求しない場合は終了
     if (pin_token_generated && force == false) {
-        NRF_LOG_DEBUG("PIN token is already exist");
+        fido_log_debug("PIN token is already exist");
         return;
     }
 
@@ -47,9 +41,9 @@ void ctap2_client_pin_token_init(bool force)
 
     // 生成済みフラグを設定
     if (!pin_token_generated) {
-        NRF_LOG_DEBUG("PIN token generate success");
+        fido_log_debug("PIN token generate success");
     } else {
-        NRF_LOG_DEBUG("PIN token re-generate success");
+        fido_log_debug("PIN token re-generate success");
     }
     pin_token_generated = true;
 }
@@ -58,7 +52,7 @@ uint8_t *ctap2_client_pin_token_encoded(void)
 {
     // PINトークンが未生成の場合は終了
     if (!pin_token_generated) {
-        NRF_LOG_DEBUG("PIN token is not exist");
+        fido_log_debug("PIN token is not exist");
         return NULL;
     }
 
