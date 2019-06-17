@@ -14,6 +14,10 @@
 extern "C" {
 #endif
 
+// サイズの定義（nRF5 SDKの定義から抽象化）
+#define SSKEY_HASH_SIZE     NRF_CRYPTO_HASH_SIZE_SHA256    
+#define HMAC_SHA_256_SIZE   NRF_CRYPTO_HASH_SIZE_SHA256    
+
 void fido_crypto_init(void);
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, nrf_crypto_hash_sha256_digest_t hash_digest, size_t *hash_digest_size);
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);

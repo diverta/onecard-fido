@@ -20,6 +20,10 @@ NRF_LOG_MODULE_REGISTER();
 // for calculate hmac
 #include "nrf_crypto_hmac.h"
 
+// for nrf_drv_rng_xxx
+#include "nrf_drv_rng.h"
+#include "nrf_crypto_error.h"
+
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 

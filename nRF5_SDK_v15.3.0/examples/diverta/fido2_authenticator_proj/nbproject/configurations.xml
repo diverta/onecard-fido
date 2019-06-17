@@ -55,8 +55,6 @@
       <itemPath>../ctap2_lib/ctap2_cbor_parse.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin.h</itemPath>
-      <itemPath>../ctap2_lib/ctap2_client_pin_sskey.c</itemPath>
-      <itemPath>../ctap2_lib/ctap2_client_pin_sskey.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_token.c</itemPath>
       <itemPath>../ctap2_lib/ctap2_client_pin_token.h</itemPath>
       <itemPath>../ctap2_lib/ctap2_common.c</itemPath>
@@ -269,6 +267,8 @@
       <itemPath>../fido_lib/fido_crypto_ecb.h</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.c</itemPath>
       <itemPath>../fido_lib/fido_crypto_keypair.h</itemPath>
+      <itemPath>../fido_lib/fido_crypto_sskey.c</itemPath>
+      <itemPath>../fido_lib/fido_crypto_sskey.h</itemPath>
       <itemPath>../fido_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../fido_lib/fido_ctap2_command.h</itemPath>
       <itemPath>../fido_lib/fido_flash.c</itemPath>
@@ -1190,31 +1190,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../ctap2_lib/ctap2_client_pin_sskey.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../ctap2_lib/ctap2_client_pin_token.c"
             ex="false"
             tool="0"
@@ -1477,6 +1452,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../fido_lib/fido_crypto_sskey.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../fido_lib/fido_crypto_sskey.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido_lib/fido_ctap2_command.c" ex="false" tool="0" flavor2="2">
         <cTool>

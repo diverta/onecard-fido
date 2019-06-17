@@ -1,5 +1,5 @@
 /* 
- * File:   ctap2_client_pin_sskey.c
+ * File:   fido_crypto_sskey.c
  * Author: makmorit
  *
  * Created on 2019/02/23, 11:17
@@ -10,7 +10,7 @@
 #include "nrf_crypto_ecdh.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_client_pin_sskey
+#define NRF_LOG_MODULE_NAME fido_crypto_sskey
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -55,7 +55,7 @@ static void app_error_check(char *function, ret_code_t err_code)
     }
 }
 
-void ctap2_client_pin_sskey_init(bool force)
+void fido_crypto_sskey_init(bool force)
 {
     // 鍵交換用キーペアが生成済みで、かつ
     // 強制再生成を要求しない場合は終了
@@ -79,7 +79,7 @@ void ctap2_client_pin_sskey_init(bool force)
     keypair_generated = true;
 }
 
-uint8_t ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
+uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
 {
     // 鍵交換用キーペアが未生成の場合は終了
     if (!keypair_generated) {
@@ -114,12 +114,12 @@ uint8_t ctap2_client_pin_sskey_generate(uint8_t *client_public_key_raw_data)
     return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t *ctap2_client_pin_sskey_public_key(void)
+uint8_t *fido_crypto_sskey_public_key(void)
 {
     return public_key_raw_data;
 }
 
-uint8_t *ctap2_client_pin_sskey_hash(void)
+uint8_t *fido_crypto_sskey_hash(void)
 {
     return sskey_hash;
 }

@@ -9,11 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// for nrf_drv_rng_xxx
-#include "nrf_drv_rng.h"
-#include "nrf_crypto_error.h"
-#include "nrf_crypto_hmac.h"
-
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_client_pin_token
 #include "nrf_log.h"
@@ -22,6 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_common.h"
 #include "ctap2_common.h"
 #include "fido_aes_cbc_256_crypto.h"
+#include "fido_crypto.h"
 
 // PINトークン格納領域
 #define PIN_TOKEN_SIZE 16
@@ -35,9 +31,7 @@ static uint8_t encoded_pin_token[PIN_TOKEN_SIZE];
 static bool pin_token_generated = false;
 
 // HMAC SHA-256ハッシュ格納領域
-static nrf_crypto_hmac_context_t hmac_context;
-static uint8_t                   hmac_data[NRF_CRYPTO_HASH_SIZE_SHA256];
-static size_t                    hmac_data_size;
+static uint8_t hmac[HMAC_SHA_256_SIZE];
 
 void ctap2_client_pin_token_init(bool force)
 {
@@ -49,9 +43,7 @@ void ctap2_client_pin_token_init(bool force)
     }
 
     // 16バイトのランダムベクターを生成
-    memset(m_pin_token, 0, sizeof(m_pin_token));
-    uint32_t err_code = nrf_drv_rng_rand(m_pin_token, PIN_TOKEN_SIZE);
-    APP_ERROR_CHECK(err_code);
+    fido_crypto_generate_random_vector(m_pin_token, PIN_TOKEN_SIZE);
 
     // 生成済みフラグを設定
     if (!pin_token_generated) {
@@ -93,48 +85,16 @@ uint8_t ctap2_client_pin_token_encode(uint8_t *p_key)
     return CTAP1_ERR_SUCCESS;
 }
 
-static void app_error_check(char *function, ret_code_t err_code)
-{
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("%s returns 0x%04x(%s)", 
-            function, err_code, nrf_crypto_error_string_get(err_code));
-        APP_ERROR_CHECK(err_code);
-    }
-}
-
-static uint8_t *calculate_hmac(
-    uint8_t *key_data,   size_t key_size,
-    uint8_t *src_data_1, size_t src_data_1_size)
-{
-    // HMACハッシュ計算には、引数の key_data を使用
-    ret_code_t err_code = nrf_crypto_hmac_init(
-        &hmac_context, &g_nrf_crypto_hmac_sha256_info, key_data, key_size);
-    app_error_check("nrf_crypto_hmac_init", err_code);
-
-    // 引数を計算対象に設定
-    if (src_data_1 != NULL && src_data_1_size > 0) {
-        err_code = nrf_crypto_hmac_update(&hmac_context, src_data_1, src_data_1_size);
-        app_error_check("nrf_crypto_hmac_update", err_code);
-    }
-
-    // HMACハッシュを計算
-    hmac_data_size = sizeof(hmac_data);
-    err_code = nrf_crypto_hmac_finalize(&hmac_context, hmac_data, &hmac_data_size);
-    app_error_check("nrf_crypto_hmac_finalize", err_code);
-
-    // HMACハッシュの先頭アドレスを戻す
-    return hmac_data;
-}
-
 uint8_t ctap2_client_pin_token_verify_pin_auth(uint8_t *clientDataHash, uint8_t *pinAuth)
 {
     // clientDataHashからHMAC SHA-256ハッシュを計算
-    uint8_t *p_hmac = calculate_hmac(m_pin_token, PIN_TOKEN_SIZE, clientDataHash, CLIENT_DATA_HASH_SIZE);
+    fido_crypto_calculate_hmac_sha256(m_pin_token, PIN_TOKEN_SIZE, 
+        clientDataHash, CLIENT_DATA_HASH_SIZE, NULL, 0, hmac);
 
     // クライアントから受信したpinAuth（16バイト）を、
     // 生成されたHMAC SHA-256ハッシュと比較し、
     // 異なる場合はエラーを戻す
-    if (memcmp(p_hmac, pinAuth, PIN_AUTH_SIZE) != 0) {
+    if (memcmp(hmac, pinAuth, PIN_AUTH_SIZE) != 0) {
         return CTAP2_ERR_PIN_AUTH_INVALID;
     }
 

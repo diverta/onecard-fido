@@ -12,7 +12,7 @@
 #include "ctap2_get_assertion.h"
 #include "ctap2_client_pin.h"
 #include "ctap2_client_pin_token.h"
-#include "ctap2_client_pin_sskey.h"
+#include "fido_crypto_sskey.h"
 #include "fido_common.h"
 #include "fido_crypto_ecb.h"
 #include "fido_idling_led.h"
@@ -526,7 +526,7 @@ static void command_authenticator_reset_resume_process(void)
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    ctap2_client_pin_sskey_init(true);
+    fido_crypto_sskey_init(true);
 
     // トークンカウンターをFlash ROM領域から削除
     // (fds_file_deleteが実行される)

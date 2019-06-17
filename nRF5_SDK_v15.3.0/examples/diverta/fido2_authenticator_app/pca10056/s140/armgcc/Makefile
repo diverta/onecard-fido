@@ -154,7 +154,6 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
   $(CT2LIB_DIR)/ctap2_client_pin.c \
-  $(CT2LIB_DIR)/ctap2_client_pin_sskey.c \
   $(CT2LIB_DIR)/ctap2_client_pin_token.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
@@ -168,6 +167,7 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_crypto.c \
   $(FIDLIB_DIR)/fido_crypto_ecb.c \
   $(FIDLIB_DIR)/fido_crypto_keypair.c \
+  $(FIDLIB_DIR)/fido_crypto_sskey.c \
   $(FIDLIB_DIR)/fido_ctap2_command.c \
   $(FIDLIB_DIR)/fido_flash.c \
   $(FIDLIB_DIR)/fido_flash_client_pin_store.c \

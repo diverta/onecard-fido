@@ -10,7 +10,7 @@
 
 #include "fido_common.h"
 #include "ctap2_cbor_parse.h"
-#include "ctap2_client_pin_sskey.h"
+#include "fido_crypto_sskey.h"
 #include "ctap2_client_pin_token.h"
 
 // for logging informations
@@ -21,8 +21,8 @@ NRF_LOG_MODULE_REGISTER();
 static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
 {
     // CBORエンコード実行
-    uint8_t *x = ctap2_client_pin_sskey_public_key();
-    uint8_t *y = ctap2_client_pin_sskey_public_key() + 32;
+    uint8_t *x = fido_crypto_sskey_public_key();
+    uint8_t *y = fido_crypto_sskey_public_key() + 32;
     int32_t alg = COSE_ALG_ES256;
     uint8_t ret = encode_cose_pubkey(encoder, x, y, alg);
     if (ret != CborNoError) {

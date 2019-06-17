@@ -11,7 +11,7 @@
 #include "ctap2_common.h"
 #include "fido_aes_cbc_256_crypto.h"
 #include "fido_crypto.h"
-#include "ctap2_client_pin_sskey.h"
+#include "fido_crypto_sskey.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 
@@ -29,7 +29,7 @@ NRF_LOG_MODULE_REGISTER();
 static uint8_t salt[64];
 static uint8_t output[64];
 static uint8_t encrypted_output[64];
-static uint8_t hmac[32];
+static uint8_t hmac[HMAC_SHA_256_SIZE];
 
 // 生成されたCBORを格納
 static uint8_t extension_cbor[80];
@@ -94,7 +94,7 @@ uint8_t verify_salt_auth(CTAP_EXTENSIONS_T *ext)
     // CTAP2クライアントから受領したsaltEncを
     // HMAC SHA-256アルゴリズムでハッシュ化
     fido_crypto_calculate_hmac_sha256(
-        ctap2_client_pin_sskey_hash(), 32,
+        fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, NULL, 0, hmac);
 
     // クライアントから受信したsaltAuth（16バイト）を、
@@ -154,7 +154,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
     // （ClientPIN1における共通鍵ハッシュ生成処理と同様の処理）
-    uint8_t ret = ctap2_client_pin_sskey_generate((uint8_t *)&ext->hmac_secret.keyAgreement.key);
+    uint8_t ret = fido_crypto_sskey_generate((uint8_t *)&ext->hmac_secret.keyAgreement.key);
     if (ret != CTAP1_ERR_SUCCESS) {
         NRF_LOG_DEBUG("generate sharedSecret from keyAgreement failed");
         return ret;
@@ -170,7 +170,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
 
     // CTAP2クライアントから受け取ったsaltEncを、
     // 共通鍵ハッシュを使用して復号化
-    size_t salt_size = fido_aes_cbc_256_decrypt(ctap2_client_pin_sskey_hash(), 
+    size_t salt_size = fido_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, salt);
     if (salt_size != ext->hmac_secret.saltLen) {
         NRF_LOG_ERROR("saltEnc decrpytion failed");
@@ -186,7 +186,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     }
 
     // 計算されたoutputを、共通鍵ハッシュを使用して暗号化
-    size_t encrypted_size = fido_aes_cbc_256_encrypt(ctap2_client_pin_sskey_hash(), 
+    size_t encrypted_size = fido_aes_cbc_256_encrypt(fido_crypto_sskey_hash(), 
         output, salt_size, encrypted_output);
     if (encrypted_size != salt_size) {
         NRF_LOG_ERROR("output encrpytion failed");
