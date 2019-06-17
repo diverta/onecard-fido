@@ -27,6 +27,9 @@ NRF_LOG_MODULE_REGISTER();
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 
+// 署名生成のための秘密鍵情報を保持
+static nrf_crypto_ecc_private_key_t private_key_for_sign;
+
 // for generate random vector
 #include "nrf_crypto_rng.h"
 static uint8_t m_random_vector[64];
@@ -89,16 +92,29 @@ void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_s
     }
 }
 
-void fido_crypto_ecdsa_sign(nrf_crypto_ecc_private_key_t *private_key_for_sign, 
+void fido_crypto_ecdsa_sign(uint8_t *private_key_be, 
     uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
 {
     // Initialize crypto library.
     ret_code_t err_code = nrf_crypto_init();
     APP_ERROR_CHECK(err_code);
 
+    // 署名に使用する秘密鍵（32バイト）を取得
+    //   SDK 15以降はビッグエンディアンで引き渡す必要あり
+    err_code = nrf_crypto_ecc_private_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info,
+        &private_key_for_sign, 
+        private_key_be, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_from_raw() returns 0x%02x ", err_code);
+    }
+    APP_ERROR_CHECK(err_code);
+    
+    // 署名実行
     err_code = nrf_crypto_ecdsa_sign(
         &sign_context, 
-        private_key_for_sign,
+        &private_key_for_sign,
         hash_digest,
         digest_size,
         signature, 

@@ -4,23 +4,16 @@
 #include <string.h>
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME u2f_crypto
+#define NRF_LOG_MODULE_NAME u2f_signature
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// for generate pkey
-#include "nrf_crypto_init.h"
-#include "nrf_crypto_hash.h"
-#include "nrf_crypto_ecdsa.h"
-#include "app_error.h"
 
 #include "fido_crypto.h"
 
 // ハッシュ化データ、署名データに関する情報
-static nrf_crypto_hash_sha256_digest_t hash_digest;
-static nrf_crypto_ecc_private_key_t    private_key_for_sign;
-static nrf_crypto_ecdsa_signature_t    signature;
-static size_t signature_size;
+static uint8_t hash_digest[SHA_256_HASH_SIZE];
+static uint8_t signature[ECDSA_SIGNATURE_SIZE];
+static size_t  signature_size;
 
 // ASN.1形式に変換された署名を格納する領域の大きさ
 #define ASN1_SIGNATURE_MAXLEN 72
@@ -85,43 +78,27 @@ void verify_sign(void)
 }
 #endif
 
-uint8_t *u2f_crypto_signature_data_buffer(void)
+uint8_t *u2f_signature_data_buffer(void)
 {
     return signature_data_buffer;
 }
 
-size_t u2f_crypto_signature_data_size(void)
+size_t u2f_signature_data_size(void)
 {
     return signature_data_size;
 }
 
-void u2f_crypto_signature_data_size_set(size_t size)
+void u2f_signature_base_data_size_set(size_t size)
 {
     signature_data_size = size;
 }
 
-void u2f_crypto_init(void)
+uint32_t u2f_signature_do_sign(uint8_t *private_key_be)
 {
-    ret_code_t err_code;
-    if (nrf_crypto_is_initialized() == true) {
-        return;
-    }
-    // 初期化が未実行の場合は
-    // nrf_crypto_initを実行する
-    err_code = nrf_crypto_init();
-    NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x ", err_code);
-    if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED) {
-        APP_ERROR_CHECK(err_code);
-    }
-}
-
-uint32_t u2f_crypto_sign(uint8_t *private_key_be)
-{
-    ret_code_t err_code;
     NRF_LOG_DEBUG("ECDSA sign start ");
 
     // nrf_cryptoの初期化を実行する
-    u2f_crypto_init();
+    fido_crypto_init();
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成
@@ -137,21 +114,9 @@ uint32_t u2f_crypto_sign(uint8_t *private_key_be)
     size_t digest_size = sizeof(hash_digest);
     fido_crypto_generate_sha256_hash(signature_base_buffer, signature_base_buffer_length, hash_digest, &digest_size);
 
-    // 署名に使用する秘密鍵（32バイト）を取得
-    //   SDK 15以降はビッグエンディアンで引き渡す必要あり
-    err_code = nrf_crypto_ecc_private_key_from_raw(
-        &g_nrf_crypto_ecc_secp256r1_curve_info,
-        &private_key_for_sign, 
-        private_key_be, 
-        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_from_raw() returns 0x%02x ", err_code);
-    }
-    APP_ERROR_CHECK(err_code);
-
     // ハッシュデータと秘密鍵により、署名データ作成
     signature_size = sizeof(signature);
-    fido_crypto_ecdsa_sign(&private_key_for_sign, hash_digest, digest_size, signature, &signature_size);
+    fido_crypto_ecdsa_sign(private_key_be, hash_digest, digest_size, signature, &signature_size);
 
 #if DEBUG_VERIFY_SIGN
     // 署名の妥当性検証を行う
@@ -162,7 +127,7 @@ uint32_t u2f_crypto_sign(uint8_t *private_key_be)
     return NRF_SUCCESS;
 }
 
-bool u2f_crypto_create_asn1_signature(void)
+bool u2f_signature_convert_to_asn1(void)
 {
     // 格納領域を確保
     uint8_t *asn1_signature = signature_data_buffer;

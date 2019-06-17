@@ -5,13 +5,10 @@
 
 #include "fido_common.h"
 #include "u2f.h"
-#include "u2f_crypto.h"
+#include "u2f_signature.h"
 #include "fido_flash.h"
 #include "u2f_keyhandle.h"
 #include "fido_crypto_keypair.h"
-
-// for keysize informations
-#include "nrf_crypto_ecdsa.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME u2f_register
@@ -90,7 +87,7 @@ static bool create_register_signature_base(uint8_t *p_apdu)
     uint8_t offset = 0;
 
     // RFU
-    uint8_t *signature_base_buffer = u2f_crypto_signature_data_buffer();
+    uint8_t *signature_base_buffer = u2f_signature_data_buffer();
     signature_base_buffer[offset++] = 0x00;
 
     // APDUからappIdHash, challengeを取得し格納
@@ -107,7 +104,7 @@ static bool create_register_signature_base(uint8_t *p_apdu)
     offset += copied_size;
 
     // メッセージのバイト数をセット
-    u2f_crypto_signature_data_size_set(offset);
+    u2f_signature_base_data_size_set(offset);
 
     return true;
 }
@@ -165,9 +162,9 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
 
     // 署名格納領域からコピー
     memcpy(response_message_buffer + offset, 
-        u2f_crypto_signature_data_buffer(), 
-        u2f_crypto_signature_data_size());
-    offset += u2f_crypto_signature_data_size();
+        u2f_signature_data_buffer(), 
+        u2f_signature_data_size());
+    offset += u2f_signature_data_size();
 
     if (apdu_le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
@@ -198,13 +195,13 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (u2f_crypto_sign(u2f_securekey_skey()) != NRF_SUCCESS) {
+    if (u2f_signature_do_sign(u2f_securekey_skey()) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }
 
     // ASN.1形式署名を格納する領域を準備
-    if (u2f_crypto_create_asn1_signature() == false) {
+    if (u2f_signature_convert_to_asn1() == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;

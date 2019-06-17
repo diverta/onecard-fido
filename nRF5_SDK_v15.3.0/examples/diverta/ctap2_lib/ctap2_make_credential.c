@@ -20,7 +20,7 @@
 #include "fido_flash.h"
 
 // for u2f_crypto_signature_data
-#include "u2f_crypto.h"
+#include "u2f_signature.h"
 
 // for u2f_securekey_skey_be
 #include "u2f_register.h"
@@ -366,8 +366,8 @@ static uint8_t generate_sign(void)
     }
 
 #if NRF_LOG_DEBUG_SIGN_BUFF
-    NRF_LOG_DEBUG("Signature(%d bytes):", u2f_crypto_signature_data_size());
-    NRF_LOG_HEXDUMP_DEBUG(u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+    NRF_LOG_DEBUG("Signature(%d bytes):", u2f_signature_data_size());
+    NRF_LOG_HEXDUMP_DEBUG(u2f_signature_data_buffer(), u2f_signature_data_size());
 #endif
 
     return CTAP1_ERR_SUCCESS;
@@ -478,7 +478,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
             return CTAP1_ERR_OTHER;
         }
         ret = cbor_encode_byte_string(&stmtmap,
-            u2f_crypto_signature_data_buffer(), u2f_crypto_signature_data_size());
+            u2f_signature_data_buffer(), u2f_signature_data_size());
         if (ret != CborNoError) {
             return CTAP1_ERR_OTHER;
         }

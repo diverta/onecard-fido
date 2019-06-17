@@ -178,9 +178,9 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_request_apdu.c \
   $(FIDLIB_DIR)/fido_user_presence.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
-  $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
+  $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_ctap2_command.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
   $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \

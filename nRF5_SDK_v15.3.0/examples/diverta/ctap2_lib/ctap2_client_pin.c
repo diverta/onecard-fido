@@ -27,7 +27,7 @@
 #include "fido_flash.h"
 
 // for u2f_crypto_signature_data
-#include "u2f_crypto.h"
+#include "u2f_signature.h"
 
 // for u2f_securekey_skey_be
 #include "u2f_register.h"
