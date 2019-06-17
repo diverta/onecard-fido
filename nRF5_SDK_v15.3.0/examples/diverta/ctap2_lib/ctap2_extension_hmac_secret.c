@@ -9,7 +9,7 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "ctap2_client_pin_crypto.h"
+#include "fido_aes_cbc_256_crypto.h"
 #include "ctap2_client_pin_sskey.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
@@ -212,7 +212,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
 
     // CTAP2クライアントから受け取ったsaltEncを、
     // 共通鍵ハッシュを使用して復号化
-    size_t salt_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+    size_t salt_size = fido_aes_cbc_256_decrypt(ctap2_client_pin_sskey_hash(), 
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, salt);
     if (salt_size != ext->hmac_secret.saltLen) {
         NRF_LOG_ERROR("saltEnc decrpytion failed");
@@ -234,7 +234,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     }
 
     // 計算されたoutputを、共通鍵ハッシュを使用して暗号化
-    size_t encrypted_size = ctap2_client_pin_encrypt(ctap2_client_pin_sskey_hash(), 
+    size_t encrypted_size = fido_aes_cbc_256_encrypt(ctap2_client_pin_sskey_hash(), 
         output, salt_size, encrypted_output);
     if (encrypted_size != salt_size) {
         NRF_LOG_ERROR("output encrpytion failed");

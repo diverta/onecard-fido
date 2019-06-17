@@ -1,5 +1,5 @@
 /* 
- * File:   ctap2_client_pin_store.c
+ * File:   fido_flash_client_pin_store.c
  * Author: makmorit
  *
  * Created on 2019/02/27, 10:43
@@ -13,7 +13,7 @@
 #include "fido_flash.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME ctap2_client_pin_store
+#define NRF_LOG_MODULE_NAME fido_flash_client_pin_store
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -42,7 +42,7 @@ static bool pin_code_hash_record_find(fds_record_desc_t *record_desc)
     return fido_flash_fds_record_get(record_desc, m_pin_store_hash_record);
 }
 
-bool ctap2_client_pin_store_hash_read(void)
+bool fido_flash_client_pin_store_hash_read(void)
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データを
@@ -51,20 +51,20 @@ bool ctap2_client_pin_store_hash_read(void)
     return pin_code_hash_record_find(&record_desc);
 }
 
-uint8_t *ctap2_client_pin_store_pin_code_hash(void)
+uint8_t *fido_flash_client_pin_store_pin_code_hash(void)
 {
     // レコード領域の先頭アドレスを戻す
     return (uint8_t *)m_pin_store_hash_record;
 }
 
-uint32_t ctap2_client_pin_store_retry_counter(void)
+uint32_t fido_flash_client_pin_store_retry_counter(void)
 {
     // カウンターを取得して戻す
     // （レコード領域先頭から９ワード目）
     return m_pin_store_hash_record[8];
 }
 
-bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter)
+bool fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter)
 {
     // Flash ROMから既存データを走査
     bool found = false;
@@ -92,7 +92,7 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ctap2_client_pin_store_hash_write: fds_record_update returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fido_flash_client_pin_store_hash_write: fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
@@ -100,7 +100,7 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("ctap2_client_pin_store_hash_write: fds_record_write returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fido_flash_client_pin_store_hash_write: fds_record_write returns 0x%02x ", ret);
             return false;
         }
     }
@@ -108,7 +108,7 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("ctap2_client_pin_store_hash_write: no space in flash, calling FDS GC ");
+        NRF_LOG_ERROR("fido_flash_client_pin_store_hash_write: no space in flash, calling FDS GC ");
         if (fido_flash_force_fdc_gc() == false) {
             return false;
         }
@@ -117,15 +117,15 @@ bool ctap2_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_
     return true;
 }
 
-bool ctap2_client_pin_store_pin_code_exist(void)
+bool fido_flash_client_pin_store_pin_code_exist(void)
 {
     // PINコードをFlash ROMから読み出し
-    if (ctap2_client_pin_store_hash_read() == false) {
+    if (fido_flash_client_pin_store_hash_read() == false) {
         return false;
     }
 
     // PINコードハッシュがゼロ埋めされている場合は未登録と判断
-    uint8_t *pin_code_hash = ctap2_client_pin_store_pin_code_hash();
+    uint8_t *pin_code_hash = fido_flash_client_pin_store_pin_code_hash();
     uint8_t  pin_code_hash_size = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * 4;
     uint8_t  i;
     for (i = 0; i < pin_code_hash_size; i++) {

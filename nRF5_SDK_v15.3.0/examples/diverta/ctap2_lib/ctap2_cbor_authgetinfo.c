@@ -9,7 +9,7 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "ctap2_client_pin_store.h"
+#include "fido_flash_client_pin_store.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_cbor_authgetinfo
@@ -155,7 +155,7 @@ static bool encode_authgetinfo_response_message(CborEncoder *encoder)
                 if (ret == CborNoError) {
                     // 認証器にPINが設定されているかどうかチェックし、
                     // 設定の有無を 'clientPin' に設定
-                    ret = cbor_encode_boolean(&options, ctap2_client_pin_store_pin_code_exist());
+                    ret = cbor_encode_boolean(&options, fido_flash_client_pin_store_pin_code_exist());
                     if (ret != CborNoError) {
                         return false;
                     }

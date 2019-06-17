@@ -15,9 +15,9 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
-#include "ctap2_client_pin_crypto.h"
+#include "fido_aes_cbc_256_crypto.h"
 #include "ctap2_client_pin_sskey.h"
-#include "ctap2_client_pin_store.h"
+#include "fido_flash_client_pin_store.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
@@ -272,8 +272,8 @@ void perform_get_retry_counter(uint8_t *encoded_buff, size_t *encoded_buff_size)
     uint32_t retry_counter = 8;
 
     // PINコードハッシュ、リトライカウンターをFlash ROMから取得
-    if (ctap2_client_pin_store_hash_read()) {
-        retry_counter = ctap2_client_pin_store_retry_counter();
+    if (fido_flash_client_pin_store_hash_read()) {
+        retry_counter = fido_flash_client_pin_store_retry_counter();
     }
     
     // レスポンスをエンコード
@@ -381,14 +381,14 @@ uint8_t calculate_pin_code_hash(void)
 bool check_pin_code_hash(char *command_name)
 {
     // PINコードハッシュ、リトライカウンターをFlash ROMから取得
-    if (ctap2_client_pin_store_hash_read() == false) {
+    if (fido_flash_client_pin_store_hash_read() == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP2_ERR_PIN_NOT_SET, 1);
         return false;
     }
 
     // リトライカウンターを１減らす
-    uint32_t retry_counter = ctap2_client_pin_store_retry_counter();
+    uint32_t retry_counter = fido_flash_client_pin_store_retry_counter();
     if (retry_counter > 0) {
         retry_counter--;
     }
@@ -396,7 +396,7 @@ bool check_pin_code_hash(char *command_name)
 
     // CTAP2クライアントから受け取った旧いPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+    pin_code_size = fido_aes_cbc_256_decrypt(ctap2_client_pin_sskey_hash(), 
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, pin_code);
     if (pin_code_size != ctap2_request.pinHashEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -407,7 +407,7 @@ bool check_pin_code_hash(char *command_name)
     // 復号化された旧いPINコードと、
     // Flash ROMに保管されているPINコードを比較し、
     // 一致していれば後続の処理を行う
-    if (memcmp(pin_code, ctap2_client_pin_store_pin_code_hash(), pin_code_size) == 0) {
+    if (memcmp(pin_code, fido_flash_client_pin_store_pin_code_hash(), pin_code_size) == 0) {
         // PINミスマッチ連続回数をゼロクリア
         pin_mismatch_count = 0;
         NRF_LOG_DEBUG("%s: PIN code hash matching test OK", command_name);
@@ -439,7 +439,7 @@ bool check_pin_code_hash(char *command_name)
     }
 
     // リトライカウンターをFlash ROMに更新登録
-    if (ctap2_client_pin_store_hash_write(NULL, retry_counter) == false) {
+    if (fido_flash_client_pin_store_hash_write(NULL, retry_counter) == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
         return false;
@@ -481,7 +481,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = ctap2_client_pin_decrypt(ctap2_client_pin_sskey_hash(), 
+    pin_code_size = fido_aes_cbc_256_decrypt(ctap2_client_pin_sskey_hash(), 
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
     if (pin_code_size != ctap2_request.newPinEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -513,7 +513,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
     // PINリトライカウンターをFlash ROMに保管
     // リトライカウンターの初期値は８とする
     uint32_t retry_counter = 8;
-    if (ctap2_client_pin_store_hash_write(pin_code_hash, retry_counter) == false) {
+    if (fido_flash_client_pin_store_hash_write(pin_code_hash, retry_counter) == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
         return;
@@ -524,13 +524,13 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // リトライカウンターをFlash ROMから取得
-    if (ctap2_client_pin_store_hash_read() == false) {
+    if (fido_flash_client_pin_store_hash_read() == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP2_ERR_PIN_NOT_SET, 1);
         return;
     }
 
-    uint32_t retry_counter = ctap2_client_pin_store_retry_counter();
+    uint32_t retry_counter = fido_flash_client_pin_store_retry_counter();
     if (retry_counter == 0) {
         // リトライカウンターが0の場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP2_ERR_PIN_BLOCKED, 1);
@@ -579,7 +579,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
     // PINリトライカウンターをFlash ROMに保管
     // リトライカウンターの初期値は８とする
     retry_counter = 8;
-    if (ctap2_client_pin_store_hash_write(NULL, retry_counter) == false) {
+    if (fido_flash_client_pin_store_hash_write(NULL, retry_counter) == false) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
         return;

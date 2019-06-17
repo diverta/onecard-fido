@@ -21,7 +21,7 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "ctap2_client_pin_crypto.h"
+#include "fido_aes_cbc_256_crypto.h"
 
 // PINトークン格納領域
 #define PIN_TOKEN_SIZE 16
@@ -83,7 +83,7 @@ size_t ctap2_client_pin_token_encoded_size(void)
 uint8_t ctap2_client_pin_token_encode(uint8_t *p_key)
 {
     // PINトークンを、共通鍵ハッシュを使用して復号化
-    encoded_pin_token_size = ctap2_client_pin_encrypt(p_key, 
+    encoded_pin_token_size = fido_aes_cbc_256_encrypt(p_key, 
         m_pin_token, PIN_TOKEN_SIZE, encoded_pin_token);
     if (encoded_pin_token_size != PIN_TOKEN_SIZE) {
         // 処理NGの場合はエラーコードを戻す
