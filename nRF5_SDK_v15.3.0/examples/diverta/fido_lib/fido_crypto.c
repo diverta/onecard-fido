@@ -20,10 +20,6 @@ NRF_LOG_MODULE_REGISTER();
 // for calculate hmac
 #include "nrf_crypto_hmac.h"
 
-// for nrf_drv_rng_xxx
-#include "nrf_drv_rng.h"
-#include "nrf_crypto_error.h"
-
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 
@@ -54,7 +50,7 @@ void fido_crypto_init(void)
     }
 }
 
-void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, nrf_crypto_hash_sha256_digest_t hash_digest, size_t *hash_digest_size)
+void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
 {    
     // nrf_cryptoの初期化を実行する
     fido_crypto_init();

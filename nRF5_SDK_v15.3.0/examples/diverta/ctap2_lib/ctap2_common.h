@@ -8,7 +8,6 @@
 #define CTAP2_COMMON_H
 
 #include <stdbool.h>
-#include "nrf_crypto_hash.h"
 
 #ifdef __cplusplus
 extern "C" {

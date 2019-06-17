@@ -4,8 +4,6 @@
  *
  * Created on 2019/01/03, 11:32
  */
-#include "sdk_common.h"
-
 #include "fido_crypto.h"
 #include "ctap2_common.h"
 
@@ -16,8 +14,8 @@
 // CTAP2コマンドで共用する作業領域
 // 
 // RP IDのSHA-256ハッシュデータを保持
-static nrf_crypto_hash_sha256_digest_t ctap2_rpid_hash;
-static size_t                          ctap2_rpid_hash_size;
+static uint8_t ctap2_rpid_hash[SHA_256_HASH_SIZE];
+static size_t  ctap2_rpid_hash_size;
 
 // flagsを保持
 static uint8_t ctap2_flags;
@@ -79,10 +77,7 @@ bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be
     u2f_signature_base_data_size_set(offset);
 
     // 署名用の秘密鍵を使用し、署名を生成
-    if (u2f_signature_do_sign(private_key_be) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
+    u2f_signature_do_sign(private_key_be);
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1() == false) {

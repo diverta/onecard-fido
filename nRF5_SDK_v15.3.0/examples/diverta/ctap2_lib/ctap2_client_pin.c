@@ -80,7 +80,7 @@ static size_t  pin_code_size;
 #define NEW_PIN_MIN_SIZE        4
 
 // PINコードハッシュを保持
-static uint8_t pin_code_hash[NRF_CRYPTO_HASH_SIZE_SHA256];
+static uint8_t pin_code_hash[SHA_256_HASH_SIZE];
 static size_t  pin_code_hash_size;
 static uint8_t hmac[HMAC_SHA_256_SIZE];
 
@@ -365,7 +365,7 @@ uint8_t calculate_pin_code_hash(void)
 
     // PINコードをSHA-256ハッシュ化し、
     // PINコードハッシュ（32バイト）を作成
-    pin_code_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
+    pin_code_hash_size = SHA_256_HASH_SIZE;
     fido_crypto_generate_sha256_hash(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
 
 #if NRF_LOG_DEBUG_PIN_CODE

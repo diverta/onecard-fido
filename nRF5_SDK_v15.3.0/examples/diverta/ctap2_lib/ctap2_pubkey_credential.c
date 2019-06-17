@@ -43,8 +43,8 @@ static size_t  credential_id_size;
 
 // Public Key Credential Sourceから
 // 生成されたSHA-256ハッシュ値を保持
-nrf_crypto_hash_sha256_digest_t credential_source_hash;
-size_t                          credential_source_hash_size;
+uint8_t credential_source_hash[SHA_256_HASH_SIZE];
+size_t  credential_source_hash_size;
 
 // RP IDに対応する
 // CTAP_CREDENTIAL_DESC_T の個数を保持

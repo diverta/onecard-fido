@@ -195,10 +195,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (u2f_signature_do_sign(u2f_securekey_skey()) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
+    u2f_signature_do_sign(u2f_securekey_skey());
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1() == false) {

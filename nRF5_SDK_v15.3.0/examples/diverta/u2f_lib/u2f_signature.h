@@ -12,7 +12,7 @@ extern "C" {
 uint8_t *u2f_signature_data_buffer(void);
 size_t   u2f_signature_data_size(void);
 void     u2f_signature_base_data_size_set(size_t size);
-uint32_t u2f_signature_do_sign(uint8_t *private_key_be);
+void     u2f_signature_do_sign(uint8_t *private_key_be);
 bool     u2f_signature_convert_to_asn1(void);
 
 

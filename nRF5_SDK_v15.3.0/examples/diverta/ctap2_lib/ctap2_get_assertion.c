@@ -13,6 +13,7 @@
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "fido_common.h"
+#include "fido_crypto.h"
 
 // for u2f_flash_token_counter
 #include "fido_flash.h"
@@ -237,7 +238,7 @@ bool ctap2_get_assertion_is_tup_needed(void)
 static uint8_t read_token_counter(void)
 {
     // 例外抑止
-    if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+    if (ctap2_pubkey_credential_source_hash_size() != SHA_256_HASH_SIZE) {
         return CTAP1_ERR_OTHER;
     }
 
@@ -502,7 +503,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 uint8_t ctap2_get_assertion_update_token_counter(void)
 {
     // 例外抑止
-    if (ctap2_pubkey_credential_source_hash_size() != sizeof(nrf_crypto_hash_sha256_digest_t)) {
+    if (ctap2_pubkey_credential_source_hash_size() != SHA_256_HASH_SIZE) {
         return CTAP1_ERR_OTHER;
     }
 

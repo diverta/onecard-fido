@@ -170,10 +170,7 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
     uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
 
     // キーハンドルから取り出した秘密鍵により署名を生成
-    if (u2f_signature_do_sign(private_key_be) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
+    u2f_signature_do_sign(private_key_be);
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1() == false) {

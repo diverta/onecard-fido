@@ -93,7 +93,7 @@ void u2f_signature_base_data_size_set(size_t size)
     signature_data_size = size;
 }
 
-uint32_t u2f_signature_do_sign(uint8_t *private_key_be)
+void u2f_signature_do_sign(uint8_t *private_key_be)
 {
     NRF_LOG_DEBUG("ECDSA sign start ");
 
@@ -124,7 +124,6 @@ uint32_t u2f_signature_do_sign(uint8_t *private_key_be)
 #endif
 
     NRF_LOG_DEBUG("ECDSA sign end ");
-    return NRF_SUCCESS;
 }
 
 bool u2f_signature_convert_to_asn1(void)
