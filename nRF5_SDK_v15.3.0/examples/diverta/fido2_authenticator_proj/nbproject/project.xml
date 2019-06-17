@@ -23,6 +23,7 @@
                 <sourceRootElem>../ble_nus_lib</sourceRootElem>
                 <sourceRootElem>../ble_central_lib</sourceRootElem>
                 <sourceRootElem>../nfc_lib</sourceRootElem>
+                <sourceRootElem>../plat_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
