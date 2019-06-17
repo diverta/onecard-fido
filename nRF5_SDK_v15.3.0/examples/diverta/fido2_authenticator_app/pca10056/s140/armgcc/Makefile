@@ -5,10 +5,11 @@ TARGET_BOARD     := PCA10056
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
+FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
+U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
+CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 FIDLIB_DIR := $(PROJ_DIR)/../fido_lib
-U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
-CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
 NFCLIB_DIR := $(PROJ_DIR)/../nfc_lib
