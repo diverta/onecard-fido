@@ -1,5 +1,5 @@
 /* 
- * File:   fido_crypto_ecb.c
+ * File:   fido_flash_password.c
  * Author: makmorit
  *
  * Created on 2018/12/27, 14:46
@@ -9,33 +9,18 @@
 #include <stdio.h>
 #include <string.h>
 #include "fds.h"
+#include "fido_crypto.h"
 #include "fido_flash.h"
-#include "fido_crypto_ecb.h"
-
-// for nrf_drv_rng_xxx
-#include "nrf_drv_rng.h"
+#include "fido_flash_password.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME fido_crypto_ecb
+#define NRF_LOG_MODULE_NAME fido_flash_password
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// AES ECBで使用する作業用エリア
-#define ECB_BLOCK_LENGTH 16
-static nrf_ecb_hal_data_t m_ecb_data;
-static uint8_t block_cipher[ECB_BLOCK_LENGTH];
-
-// AES ECBで使用する初期化ベクターとパスワード
-uint8_t *m_initialization_vector;
-uint8_t *m_password;
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
 static uint32_t     m_random_vector[8];
-
-// AES CFBモード
-#define AES_CFB_MODE_ENCRYPTION 0
-#define AES_CFB_MODE_DECRYPTION 1
 
 static bool write_random_vector(uint32_t *p_fds_record_buffer)
 {
@@ -83,12 +68,10 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     return true;
 }
 
-bool fido_crypto_ecb_init(void)
+bool fido_flash_password_generate(void)
 {
     // 32バイトのランダムベクターを生成
-    memset(m_random_vector, 0, sizeof(m_random_vector));
-    uint32_t err_code = nrf_drv_rng_rand((uint8_t *)m_random_vector, 32);
-    APP_ERROR_CHECK(err_code);
+    fido_crypto_generate_random_vector((uint8_t *)m_random_vector, 32);
 
     // Flash ROMに書き出して保存
     if (write_random_vector(m_random_vector) == false) {
@@ -145,67 +128,15 @@ static bool read_random_vector(uint32_t *p_fds_record_buffer)
     return true;
 }
 
-static bool retrieve_ecb_keys()
+uint8_t *fido_flash_password_get(void)
 {
     if (read_random_vector(m_random_vector) == false) {
         // Flash ROMにランダムベクターを格納したレコードが存在しない場合
         // 処理終了
-        return false;
+        return NULL;
     }
 
     // Flash ROMレコードから取り出したランダムベクターを
-    // 16バイトずつ分割し、初期化ベクター、パスワードに設定
-    m_initialization_vector = (uint8_t *)m_random_vector;
-    m_password = (uint8_t *)m_random_vector + ECB_BLOCK_LENGTH;
-    return true;
-}
-
-static void calculate_block_cipher(uint8_t *p_cleartext, uint8_t *p_key) 
-{
-    // AES ECB構造体、ブロック暗号格納領域を初期化
-    memset(&m_ecb_data, 0, sizeof(nrf_ecb_hal_data_t));
-    memset(block_cipher, 0, sizeof(block_cipher));
-
-    // 引数のcleartext, keyからブロック暗号(16バイト)を自動生成
-    memcpy(m_ecb_data.key, p_key, SOC_ECB_KEY_LENGTH);
-    memcpy(m_ecb_data.cleartext, p_cleartext, SOC_ECB_CLEARTEXT_LENGTH);
-    uint32_t err_code = sd_ecb_block_encrypt(&m_ecb_data);
-    APP_ERROR_CHECK(err_code);
-
-    // ブロック暗号を、引数の領域にセット
-    memcpy(block_cipher, m_ecb_data.ciphertext, SOC_ECB_CIPHERTEXT_LENGTH);
-}
-
-static void process_aes_cfb_crypto(uint8_t mode, uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
-{
-    // AES ECB暗号を取得
-    retrieve_ecb_keys();
-
-    // 最初のブロック暗号生成時の入力には
-    // 初期化ベクターを指定
-    uint8_t *cleartext = m_initialization_vector;
-
-    for (int i = 0; i < packet_length; i += ECB_BLOCK_LENGTH) {
-        // ブロック暗号を生成して暗号化
-        calculate_block_cipher(cleartext, m_password);
-        for (int j = 0; j < ECB_BLOCK_LENGTH; j++) {
-            out_packet[i + j] = packet[i + j] ^ block_cipher[j];
-        }
-        // 次回ブロック暗号生成時に入力となる領域を設定
-        if (mode == AES_CFB_MODE_ENCRYPTION) {
-            cleartext = out_packet + i;
-        } else {
-            cleartext = packet + i;
-        }
-    }
-}
-
-void fido_crypto_ecb_encrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
-{
-    process_aes_cfb_crypto(AES_CFB_MODE_ENCRYPTION, packet, packet_length, out_packet);
-}
-
-void fido_crypto_ecb_decrypt(uint8_t *packet, uint32_t packet_length, uint8_t *out_packet) 
-{
-    process_aes_cfb_crypto(AES_CFB_MODE_DECRYPTION, packet, packet_length, out_packet);
+    // パスワードに設定
+    return (uint8_t *)m_random_vector;
 }

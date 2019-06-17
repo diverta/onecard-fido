@@ -165,12 +165,12 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_common.c \
   $(FIDLIB_DIR)/fido_crypto.c \
-  $(FIDLIB_DIR)/fido_crypto_ecb.c \
   $(FIDLIB_DIR)/fido_crypto_keypair.c \
   $(FIDLIB_DIR)/fido_crypto_sskey.c \
   $(FIDLIB_DIR)/fido_ctap2_command.c \
   $(FIDLIB_DIR)/fido_flash.c \
   $(FIDLIB_DIR)/fido_flash_client_pin_store.c \
+  $(FIDLIB_DIR)/fido_flash_password.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_lock_channel.c \
   $(FIDLIB_DIR)/fido_maintenance.c \

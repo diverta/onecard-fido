@@ -14,7 +14,7 @@
 #include "ctap2_client_pin_token.h"
 #include "fido_crypto_sskey.h"
 #include "fido_common.h"
-#include "fido_crypto_ecb.h"
+#include "fido_flash_password.h"
 #include "fido_idling_led.h"
 #include "hid_fido_command.h"
 #include "hid_fido_send.h"

@@ -7,10 +7,11 @@
 #include "sdk_common.h"
 
 #include "ctap2_common.h"
+#include "fido_aes_cbc_256_crypto.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
-#include "fido_crypto_ecb.h"
 #include "fido_crypto_keypair.h"
+#include "fido_flash_password.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
 #include "fido_flash.h"
@@ -183,10 +184,11 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 void ctap2_pubkey_credential_generate_id(void)
 {
     // Public Key Credential Sourceを
-    // AES ECBで暗号化し、
+    // AES CBCで暗号化し、
     // credentialIdを生成する
     memset(credential_id, 0x00, sizeof(credential_id));
-    fido_crypto_ecb_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
+    fido_aes_cbc_256_encrypt(fido_flash_password_get(), 
+        pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
 #if NRF_LOG_DEBUG_CREDENTIAL_ID
@@ -200,7 +202,8 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // authenticatorGetAssertionリクエストから取得した
     // credentialIdを復号化
     memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
-    fido_crypto_ecb_decrypt(credential_id, credential_id_size, pubkey_cred_source);
+    fido_aes_cbc_256_decrypt(fido_flash_password_get(), 
+        credential_id, credential_id_size, pubkey_cred_source);
 
     // Public Key Credential Sourceから
     // SHA-256ハッシュ値（32バイト）を生成

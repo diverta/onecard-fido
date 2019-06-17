@@ -12,7 +12,7 @@
 
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
-#include "fido_crypto_ecb.h"
+#include "fido_flash_password.h"
 #include "fido_flash.h"
 #include "fido_maintenance.h"
 
@@ -88,7 +88,7 @@ static void command_erase_skey_cert_response(fds_evt_t const *const p_evt)
 
             // 続いて、AES秘密鍵生成処理を行う
             // (fds_record_update/writeまたはfds_gcが実行される)
-            if (fido_crypto_ecb_init() == false) {
+            if (fido_flash_password_generate() == false) {
                 send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
             }
         }
@@ -96,7 +96,7 @@ static void command_erase_skey_cert_response(fds_evt_t const *const p_evt)
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        if (fido_crypto_ecb_init() == false) {
+        if (fido_flash_password_generate() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
         }
         
