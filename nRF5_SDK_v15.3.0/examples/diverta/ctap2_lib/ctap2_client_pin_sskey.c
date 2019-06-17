@@ -8,7 +8,6 @@
 #include "app_error.h"
 #include "nrf_crypto_ecc.h"
 #include "nrf_crypto_ecdh.h"
-#include "nrf_crypto_hmac.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ctap2_client_pin_sskey
@@ -44,11 +43,6 @@ static size_t  sskey_raw_data_size;
 // 共通鍵ハッシュ格納領域
 static nrf_crypto_hash_sha256_digest_t sskey_hash;
 static size_t                          sskey_hash_size;
-
-// HMAC SHA-256ハッシュ格納領域
-static nrf_crypto_hmac_context_t hmac_context;
-static uint8_t                   hmac_data[NRF_CRYPTO_HASH_SIZE_SHA256];
-static size_t                    hmac_data_size;
 
 static nrf_crypto_ecdh_context_t nrf_crypto_ecdh_context;
 
@@ -128,34 +122,4 @@ uint8_t *ctap2_client_pin_sskey_public_key(void)
 uint8_t *ctap2_client_pin_sskey_hash(void)
 {
     return sskey_hash;
-}
-
-uint8_t *ctap2_client_pin_sskey_calculate_hmac(
-    uint8_t *src_data_1, size_t src_data_1_size,
-    uint8_t *src_data_2, size_t src_data_2_size)
-{
-    // HMACハッシュ計算には、共通鍵ハッシュを使用
-    ret_code_t err_code = nrf_crypto_hmac_init(
-        &hmac_context, &g_nrf_crypto_hmac_sha256_info, sskey_hash, sskey_hash_size);
-    app_error_check("nrf_crypto_hmac_init", err_code);
-
-    // 1番目の引数を計算対象に設定
-    if (src_data_1 != NULL && src_data_1_size > 0) {
-        err_code = nrf_crypto_hmac_update(&hmac_context, src_data_1, src_data_1_size);
-        app_error_check("nrf_crypto_hmac_update", err_code);
-    }
-
-    // 2番目の引数を計算対象に設定
-    if (src_data_2 != NULL && src_data_2_size > 0) {
-        err_code = nrf_crypto_hmac_update(&hmac_context, src_data_2, src_data_2_size);
-        app_error_check("nrf_crypto_hmac_update", err_code);
-    }
-
-    // HMACハッシュを計算
-    hmac_data_size = sizeof(hmac_data);
-    err_code = nrf_crypto_hmac_finalize(&hmac_context, hmac_data, &hmac_data_size);
-    app_error_check("nrf_crypto_hmac_finalize", err_code);
-
-    // HMACハッシュの先頭アドレスを戻す
-    return hmac_data;
 }

@@ -17,12 +17,20 @@ NRF_LOG_MODULE_REGISTER();
 #include "nrf_crypto_ecdsa.h"
 #include "app_error.h"
 
+// for calculate hmac
+#include "nrf_crypto_hmac.h"
+
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 
 // for generate random vector
 #include "nrf_crypto_rng.h"
 static uint8_t m_random_vector[64];
+
+// HMAC SHA-256ハッシュ格納領域
+static nrf_crypto_hmac_context_t hmac_context;
+static uint8_t                   hmac_data[NRF_CRYPTO_HASH_SIZE_SHA256];
+static size_t                    hmac_data_size;
 
 void fido_crypto_init(void)
 {
@@ -95,4 +103,48 @@ void fido_crypto_ecdsa_sign(nrf_crypto_ecc_private_key_t *private_key_for_sign,
         NRF_LOG_ERROR("nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
     }
     APP_ERROR_CHECK(err_code);
+}
+
+void fido_crypto_calculate_hmac_sha256(
+    uint8_t *key_data, size_t key_data_size, 
+    uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
+    uint8_t *dest_data)
+{
+    // HMACハッシュ計算には、引数のkey_dataを使用
+    ret_code_t err_code = nrf_crypto_hmac_init(
+        &hmac_context, &g_nrf_crypto_hmac_sha256_info, 
+        key_data, key_data_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_hmac_init failed");
+    }
+    APP_ERROR_CHECK(err_code);
+
+    // 引数を計算対象に設定
+    err_code = nrf_crypto_hmac_update(&hmac_context, src_data, src_data_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_hmac_update failed");
+    }
+    APP_ERROR_CHECK(err_code);
+
+    // 2番目の引数を計算対象に設定
+    if (src_data_2 != NULL && src_data_2_size > 0) {
+        err_code = nrf_crypto_hmac_update(&hmac_context, src_data_2, src_data_2_size);
+        if (err_code != NRF_SUCCESS) {
+            NRF_LOG_ERROR("nrf_crypto_hmac_update failed");
+        }
+        APP_ERROR_CHECK(err_code);
+    }
+
+    // HMACハッシュを計算
+    hmac_data_size = sizeof(hmac_data);
+    err_code = nrf_crypto_hmac_finalize(&hmac_context, hmac_data, &hmac_data_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_hmac_finalize failed");
+    }
+    APP_ERROR_CHECK(err_code);
+
+    // 計算結果をdestDataへコピー
+    for (uint8_t i = 0; i < sizeof(hmac_data); i++) {
+        dest_data[i] = hmac_data[i];
+    }
 }

@@ -82,6 +82,7 @@ static size_t  pin_code_size;
 // PINコードハッシュを保持
 static uint8_t pin_code_hash[NRF_CRYPTO_HASH_SIZE_SHA256];
 static size_t  pin_code_hash_size;
+static uint8_t hmac[32];
 
 // PINミスマッチ最大連続回数
 #define PIN_MISMATCH_COUNT_MAX 3
@@ -317,12 +318,11 @@ uint8_t verify_pin_auth(void)
     // 共通鍵ハッシュを利用し、
     // CTAP2クライアントから受領したPINデータを
     // HMAC SHA-256アルゴリズムでハッシュ化
-    uint8_t *hmac = ctap2_client_pin_sskey_calculate_hmac(
+    fido_crypto_calculate_hmac_sha256(
+        ctap2_client_pin_sskey_hash(), 32,
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
-        ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize);
-    if (hmac == NULL) {
-        return CTAP1_ERR_OTHER;
-    }
+        ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, 
+        hmac);
 
 #if NRF_LOG_DEBUG_CALCULATED_HMAC
     NRF_LOG_DEBUG("Calculated hmac(%dbytes):", ctap2_request.pinAuthSize);
