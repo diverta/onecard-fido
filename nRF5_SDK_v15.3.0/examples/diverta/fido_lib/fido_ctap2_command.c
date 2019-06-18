@@ -18,7 +18,7 @@
 #include "hid_fido_command.h"
 #include "hid_fido_send.h"
 #include "hid_fido_receive.h"
-#include "usbd_hid_common.h"
+#include "fido_hid_common.h"
 #include "nfc_fido_receive.h"
 #include "nfc_fido_send.h"
 

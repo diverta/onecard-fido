@@ -154,6 +154,7 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
   $(FD2LIB_DIR)/fido_common.c \
+  $(FD2LIB_DIR)/fido_hid_common.c \
   $(FD2LIB_DIR)/fido_request_apdu.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
@@ -204,7 +205,6 @@ SRC_FILES += \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
   $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/usbd_hid_common.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
   $(NFCLIB_DIR)/nfc_fido_command.c \
   $(NFCLIB_DIR)/nfc_fido_receive.c \

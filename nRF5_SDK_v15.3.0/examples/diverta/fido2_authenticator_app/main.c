@@ -20,7 +20,7 @@
 // FIDO Authenticator固有の処理
 #include "fido_ble_peripheral.h"
 #include "fido_ble_peripheral_timer.h"
-#include "usbd_hid_common.h"
+#include "fido_hid_common.h"
 #include "usbd_hid_service.h"
 #include "fido_command.h"
 #include "ctap2_client_pin.h"

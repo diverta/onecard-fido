@@ -17,8 +17,8 @@ extern "C" {
 #define U2F_KEEPALIVE_INTERVAL_MSEC   500
 #define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
 
-void fido_button_timers_init(void);
-void fido_button_init(void);
+void fido_command_on_mainsw_event(void);
+void fido_command_on_mainsw_long_push_event(void);
 void fido_command_fds_register(void);
 void fido_command_on_process_timedout(void);
 void fido_command_long_push_timer_handler(void *p_context);

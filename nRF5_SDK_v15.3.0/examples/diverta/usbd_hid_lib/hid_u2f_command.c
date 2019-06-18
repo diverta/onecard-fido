@@ -19,7 +19,7 @@
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
-#include "usbd_hid_common.h"
+#include "fido_hid_common.h"
 
 // for processing LED on/off
 #include "fido_board.h"

@@ -29,6 +29,8 @@ extern "C" {
 #define LED_BLINK_INTERVAL_MSEC         250
 
 // 関数群
+void fido_button_timers_init(void);
+void fido_button_init(void);
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_led_light_all_LED(bool led_on);
 void fido_processing_led_timedout_handler(void);

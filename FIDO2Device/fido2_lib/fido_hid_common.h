@@ -1,12 +1,12 @@
 /* 
- * File:   usbd_hid_common.h
+ * File:   fido_hid_common.h
  * Author: makmorit
  *
  * Created on 2018/12/17, 13:23
  */
 
-#ifndef USBD_HID_COMMON_H
-#define USBD_HID_COMMON_H
+#ifndef FIDO_HID_COMMON_H
+#define FIDO_HID_COMMON_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,5 +62,5 @@ uint32_t fido_lock_channel_cid(void);
 }
 #endif
 
-#endif /* USBD_HID_COMMON_H */
+#endif /* FIDO_HID_COMMON_H */
 

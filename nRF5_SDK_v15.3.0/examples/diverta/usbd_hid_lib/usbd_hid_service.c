@@ -14,7 +14,7 @@
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
 
-#include "usbd_hid_common.h"
+#include "fido_hid_common.h"
 #include "hid_fido_send.h"
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"

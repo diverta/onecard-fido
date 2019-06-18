@@ -11,7 +11,7 @@
 #include "fido_command.h"
 #include "fido_log.h"
 
-#include "usbd_hid_common.h"
+#include "fido_hid_common.h"
 
 //
 // 無通信タイマー
