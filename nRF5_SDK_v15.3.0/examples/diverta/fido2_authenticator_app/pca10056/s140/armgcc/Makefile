@@ -6,6 +6,7 @@ TARGET_BOARD     := PCA10056
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
+FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
@@ -152,6 +153,8 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
+  $(FD2LIB_DIR)/fido_common.c \
+  $(FD2LIB_DIR)/fido_request_apdu.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
@@ -162,23 +165,22 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_DIR)/fido_flash.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_log.c \
   $(FIDLIB_DIR)/fido_comm_interval_timer.c \
   $(FIDLIB_DIR)/fido_command.c \
-  $(FIDLIB_DIR)/fido_common.c \
-  $(FIDLIB_DIR)/fido_crypto_sskey.c \
   $(FIDLIB_DIR)/fido_ctap2_command.c \
   $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_lock_channel.c \
   $(FIDLIB_DIR)/fido_maintenance.c \
   $(FIDLIB_DIR)/fido_processing_led.c \
-  $(FIDLIB_DIR)/fido_request_apdu.c \
   $(FIDLIB_DIR)/fido_user_presence.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
@@ -364,6 +366,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/soc \
   $(PROJ_DIR) \
   $(PLTLIB_DIR) \
+  $(FD2LIB_DIR) \
   $(FIDLIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \

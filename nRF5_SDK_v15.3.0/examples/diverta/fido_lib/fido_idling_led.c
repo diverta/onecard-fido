@@ -17,7 +17,7 @@ NRF_LOG_MODULE_REGISTER();
 #define LED_ON_OFF_INTERVAL_MSEC 250
 
 // for lighting LED
-#include "fido_common.h"
+#include "fido_board.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"

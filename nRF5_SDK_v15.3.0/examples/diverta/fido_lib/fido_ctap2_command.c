@@ -24,6 +24,7 @@
 #include "nfc_fido_send.h"
 
 // for processing LED on/off
+#include "fido_board.h"
 #include "fido_processing_led.h"
 
 // for ble_u2f_flash_keydata

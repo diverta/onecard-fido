@@ -23,6 +23,7 @@
 #include "ctap2_common.h"
 
 // for lighting LED on/off
+#include "fido_board.h"
 #include "fido_idling_led.h"
 
 // for locking cid

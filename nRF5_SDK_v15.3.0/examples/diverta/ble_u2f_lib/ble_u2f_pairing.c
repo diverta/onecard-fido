@@ -14,6 +14,9 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
+// for LED
+#include "fido_board.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing
 #include "nrf_log.h"

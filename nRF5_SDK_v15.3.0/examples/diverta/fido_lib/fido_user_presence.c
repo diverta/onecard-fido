@@ -15,7 +15,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // 機能実行中LED点滅処理
-#include "fido_common.h"
+#include "fido_board.h"
 #include "fido_processing_led.h"
 
 // キープアライブ・タイマー

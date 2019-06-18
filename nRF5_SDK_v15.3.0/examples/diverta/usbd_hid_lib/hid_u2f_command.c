@@ -22,6 +22,7 @@
 #include "usbd_hid_common.h"
 
 // for processing LED on/off
+#include "fido_board.h"
 #include "fido_processing_led.h"
 
 // for logging informations

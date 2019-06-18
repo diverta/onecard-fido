@@ -27,8 +27,8 @@ static nrf_crypto_ecc_public_key_t                public_key;
 // 鍵ペア情報をRAWデータに変換する領域
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
-static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
+static uint8_t private_key_raw_data[RAW_PRIVATE_KEY_SIZE];
+static uint8_t public_key_raw_data[RAW_PUBLIC_KEY_SIZE];
 static size_t  private_key_raw_data_size;
 static size_t  public_key_raw_data_size;
 
@@ -51,7 +51,7 @@ static void generate_keypair(void)
 static void convert_private_key_to_be(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
     // 秘密鍵データをビッグエンディアンでp_raw_data配列に格納
-    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE;
+    *p_raw_data_size = RAW_PRIVATE_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_private_key_to_raw(&private_key, p_raw_data, p_raw_data_size);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("nrf_crypto_ecc_private_key_to_raw() returns 0x%02x ", err_code);
@@ -62,7 +62,7 @@ static void convert_private_key_to_be(uint8_t *p_raw_data, size_t *p_raw_data_si
 static void convert_public_key_to_be(uint8_t *p_raw_data, size_t *p_raw_data_size)
 {
     // 公開鍵データをビッグエンディアンでp_raw_data配列に格納
-    *p_raw_data_size = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE;
+    *p_raw_data_size = RAW_PUBLIC_KEY_SIZE;
     ret_code_t err_code = nrf_crypto_ecc_public_key_to_raw(&public_key, p_raw_data, p_raw_data_size);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("nrf_crypto_ecc_public_key_to_raw() returns 0x%02x ", err_code);

@@ -22,8 +22,8 @@ NRF_LOG_MODULE_REGISTER();
 // 鍵交換用キーペア格納領域
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
-static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
+static uint8_t private_key_raw_data[RAW_PRIVATE_KEY_SIZE];
+static uint8_t public_key_raw_data[RAW_PUBLIC_KEY_SIZE];
 
 // 鍵交換用キーペアが生成済みかどうかを保持
 static bool keypair_generated = false;
@@ -37,7 +37,7 @@ static nrf_crypto_ecc_private_key_t self_private_key;
 // 共通鍵格納領域
 //   この領域に格納される共通鍵(Shared secret key)は、
 //   ビッグエンディアン配列となる
-static uint8_t sskey_raw_data[NRF_CRYPTO_ECDH_SECP256R1_SHARED_SECRET_SIZE];
+static uint8_t sskey_raw_data[SHARED_SECRET_SIZE];
 static size_t  sskey_raw_data_size;
 
 // 共通鍵ハッシュ格納領域
@@ -91,25 +91,25 @@ uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
     ret_code_t err_code = nrf_crypto_ecc_public_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info, 
         &client_public_key, client_public_key_raw_data, 
-        NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
+        RAW_PUBLIC_KEY_SIZE);
     app_error_check("nrf_crypto_ecc_public_key_from_raw", err_code);
 
     // 自分で生成した公開鍵を、SDK内部形式に変換
     err_code = nrf_crypto_ecc_private_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info, 
         &self_private_key, private_key_raw_data, 
-        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
+        RAW_PRIVATE_KEY_SIZE);
     app_error_check("nrf_crypto_ecc_private_key_from_raw", err_code);
 
     // 共通鍵を生成
-    sskey_raw_data_size = NRF_CRYPTO_ECDH_SECP256R1_SHARED_SECRET_SIZE;
+    sskey_raw_data_size = SHARED_SECRET_SIZE;
     err_code = nrf_crypto_ecdh_compute(&nrf_crypto_ecdh_context,
         &self_private_key, &client_public_key, sskey_raw_data, &sskey_raw_data_size);
     app_error_check("nrf_crypto_ecdh_compute", err_code);
 
     // 生成した共通鍵をSHA-256ハッシュ化し、
     // 共通鍵ハッシュ（32バイト）を作成
-    sskey_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
+    sskey_hash_size = SHA_256_HASH_SIZE;
     fido_crypto_generate_sha256_hash(sskey_raw_data, sskey_raw_data_size, sskey_hash, &sskey_hash_size);
     return CTAP1_ERR_SUCCESS;
 }

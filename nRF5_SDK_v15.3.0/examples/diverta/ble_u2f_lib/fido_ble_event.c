@@ -25,7 +25,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for lighting LED
 #include "fido_idling_led.h"
-#include "fido_common.h"
+#include "fido_board.h"
 
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {

@@ -1,0 +1,35 @@
+/* 
+ * File:   fido_board.h
+ * Author: makmorit
+ *
+ * Created on 2019/06/18, 10:12
+ */
+
+#ifndef FIDO_BOARD_H
+#define FIDO_BOARD_H
+
+#include "boards.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// FIDO機能で使用するLEDのピン番号を設定
+// nRF52840 Dongleでは以下の割り当てになります。
+//   LED2=Red
+//   LED3=Green
+//   LED4=Blue
+#define LED_FOR_PAIRING_MODE    LED_2
+#define LED_FOR_USER_PRESENCE   LED_3
+#define LED_FOR_PROCESSING      LED_4
+
+// 関数群
+void fido_led_light_LED(uint32_t pin_number, bool led_on);
+void fido_led_light_all_LED(bool led_on);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FIDO_BOARD_H */
+

@@ -7,7 +7,7 @@
 #include "sdk_common.h"
 
 // for lighting LED
-#include "fido_common.h"
+#include "fido_board.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_processing_led

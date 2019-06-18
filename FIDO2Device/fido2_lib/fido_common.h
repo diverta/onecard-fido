@@ -7,21 +7,11 @@
 #ifndef FIDO_COMMON_H
 #define FIDO_COMMON_H
 
-#include <stdbool.h>
-#include "boards.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-// FIDO機能で使用するLEDのピン番号を設定
-// nRF52840 Dongleでは以下の割り当てになります。
-//   LED2=Red
-//   LED3=Green
-//   LED4=Blue
-#define LED_FOR_PAIRING_MODE    LED_2
-#define LED_FOR_USER_PRESENCE   LED_3
-#define LED_FOR_PROCESSING      LED_4
 
 // FIDO機能関連エラーステータス
 #define CTAP1_ERR_SUCCESS               0x00
@@ -94,8 +84,6 @@ typedef enum _TRANSPORT_TYPE {
 } TRANSPORT_TYPE;
 
 // 関数群
-void fido_led_light_LED(uint32_t pin_number, bool led_on);
-void fido_led_light_all_LED(bool led_on);
 void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
 void fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
 void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
