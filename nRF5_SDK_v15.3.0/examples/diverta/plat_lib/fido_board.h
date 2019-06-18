@@ -23,9 +23,20 @@ extern "C" {
 #define LED_FOR_USER_PRESENCE   LED_3
 #define LED_FOR_PROCESSING      LED_4
 
+// 点滅間隔の定義
+#define LED_ON_OFF_INTERVAL_MSEC        300
+#define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
+#define LED_BLINK_INTERVAL_MSEC         250
+
 // 関数群
 void fido_led_light_LED(uint32_t pin_number, bool led_on);
 void fido_led_light_all_LED(bool led_on);
+void fido_processing_led_timedout_handler(void);
+void fido_processing_led_on(uint32_t led_for_processing, uint32_t on_off_interval_msec);
+void fido_processing_led_off(void);
+void fido_idling_led_timedout_handler(void);
+void fido_idling_led_on(void);
+void fido_idling_led_off(void);
 
 #ifdef __cplusplus
 }

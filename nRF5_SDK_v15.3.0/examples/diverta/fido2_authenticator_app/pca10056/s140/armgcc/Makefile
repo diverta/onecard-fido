@@ -177,11 +177,8 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_timer.c \
   $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_ctap2_command.c \
-  $(FIDLIB_DIR)/fido_idling_led.c \
   $(FIDLIB_DIR)/fido_lock_channel.c \
   $(FIDLIB_DIR)/fido_maintenance.c \
-  $(FIDLIB_DIR)/fido_processing_led.c \
-  $(FIDLIB_DIR)/fido_user_presence.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \

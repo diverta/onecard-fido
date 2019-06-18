@@ -23,11 +23,11 @@ NRF_LOG_MODULE_REGISTER();
 #include "nfc_fido_command.h"
 #include "fido_ble_main.h"
 
-// for processing LED on/off
-#include "fido_processing_led.h"
+// for processing & lighting LED on/off
+#include "fido_board.h"
 
-// for lighting LED on/off
-#include "fido_idling_led.h"
+// for keepalive timer
+#include "fido_timer.h"
 
 //
 // ボタンのピン番号
@@ -41,27 +41,23 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_BUTTON_ACTION_RELEASE       APP_BUTTON_RELEASE
 #define APP_BUTTON_ACTION_LONG_PUSH     2
 
-#define LONG_PUSH_TIMEOUT               APP_TIMER_TICKS(3000)
+#define LONG_PUSH_TIMEOUT               3000
 
 //
 // ボタン長押し検知関連
 //
-APP_TIMER_DEF(m_long_push_timer_id);
 static bool m_long_pushed = false;
 static bool m_push_initial = true;
 
 static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 {
-    ret_code_t err_code;
-
 	switch (button_action) {
 	case APP_BUTTON_ACTION_PUSH:
         if (m_push_initial) {
             m_push_initial = false;
         }
         if (pin_no == PIN_MAIN_SW_IN) {
-            err_code = app_timer_start(m_long_push_timer_id, LONG_PUSH_TIMEOUT, NULL);
-            APP_ERROR_CHECK(err_code);
+            fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, NULL);
         }
 		break;
 		
@@ -78,7 +74,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         }
 
         if (pin_no == PIN_MAIN_SW_IN) {
-            app_timer_stop(m_long_push_timer_id);
+            fido_button_long_push_timer_stop();
             
             // FIDO U2F固有の処理を実行
             if (ble_u2f_command_on_mainsw_event(fido_ble_get_U2F_context()) == true) {
@@ -106,9 +102,9 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 	}
 }
 
-static void on_long_push_timer_timeout(void *p_context)
+void fido_command_long_push_timer_handler(void *p_context)
 {
-	NRF_LOG_INFO("Button long pushed.");
+    (void)p_context;
 
 	m_long_pushed = true;
 	on_button_evt(PIN_MAIN_SW_IN, APP_BUTTON_ACTION_LONG_PUSH);
@@ -119,12 +115,8 @@ static void on_long_push_timer_timeout(void *p_context)
 //
 void fido_button_timers_init(void)
 {
-    ret_code_t err_code;
-    
-    // ボタン長押し検知用タイマー（３秒）
-    err_code = app_timer_create(&m_long_push_timer_id, 
-        APP_TIMER_MODE_SINGLE_SHOT, on_long_push_timer_timeout);
-    APP_ERROR_CHECK(err_code);
+    // ボタン長押し検知用タイマー
+    fido_button_long_push_timer_init();
 }
 
 static const app_button_cfg_t m_app_buttons[APP_BUTTON_NUM] = {
@@ -180,4 +172,41 @@ void fido_command_on_process_timedout(void)
 
     // アイドル時点滅処理を再開
     fido_idling_led_on();
+}
+
+void fido_command_keepalive_timer_handler(void *p_context)
+{
+    // キープアライブ・コマンドを実行する
+    if (p_context == NULL) {
+        fido_ctap2_command_keepalive_timer_handler();
+    } else {
+        ble_u2f_command_keepalive_timer_handler(p_context);
+    }
+}
+
+void fido_user_presence_terminate(void)
+{
+    // タイマーを停止する
+    fido_keepalive_interval_timer_stop();
+}
+
+void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
+{
+    // タイマーが生成されていない場合は生成する
+    fido_keepalive_interval_timer_start(timeout_msec, p_context);
+
+    // LED点滅を開始
+    fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+}
+
+uint8_t fido_user_presence_verify_end(void)
+{
+    // LEDを消灯させる
+    fido_processing_led_off();
+
+    // タイマーを停止する
+    fido_keepalive_interval_timer_stop();
+    
+    // User presence byte(0x01)を生成
+    return 0x01;
 }

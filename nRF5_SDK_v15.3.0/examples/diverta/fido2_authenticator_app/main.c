@@ -27,7 +27,7 @@
 #include "nfc_service.h"
 
 // for lighting LED
-#include "fido_idling_led.h"
+#include "fido_board.h"
 
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */

@@ -14,7 +14,7 @@
 #include "fido_timer.h"
 
 // for lighting LED on/off
-#include "fido_idling_led.h"
+#include "fido_board.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_command

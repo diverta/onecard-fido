@@ -20,7 +20,6 @@
 
 // for processing LED on/off
 #include "fido_board.h"
-#include "fido_processing_led.h"
 
 // for ble_u2f_flash_keydata
 #include "fido_flash.h"
@@ -31,7 +30,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
-#include "fido_user_presence.h"
+#include "fido_command.h"
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;

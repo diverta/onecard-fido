@@ -15,7 +15,6 @@
 #include "fido_crypto_sskey.h"
 #include "fido_common.h"
 #include "fido_flash_password.h"
-#include "fido_idling_led.h"
 #include "hid_fido_command.h"
 #include "hid_fido_send.h"
 #include "hid_fido_receive.h"
@@ -25,7 +24,6 @@
 
 // for processing LED on/off
 #include "fido_board.h"
-#include "fido_processing_led.h"
 
 // for ble_u2f_flash_keydata
 #include "fido_flash.h"
@@ -36,7 +34,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
-#include "fido_user_presence.h"
+#include "fido_command.h"
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;

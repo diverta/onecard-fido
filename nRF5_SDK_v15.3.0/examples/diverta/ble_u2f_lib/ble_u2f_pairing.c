@@ -5,7 +5,6 @@
 #include "ble_u2f.h"
 #include "fido_flash.h"
 #include "ble_u2f_util.h"
-#include "fido_processing_led.h"
 #include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"

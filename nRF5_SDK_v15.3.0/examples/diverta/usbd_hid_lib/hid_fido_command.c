@@ -24,7 +24,6 @@
 
 // for lighting LED on/off
 #include "fido_board.h"
-#include "fido_idling_led.h"
 
 // for locking cid
 #include "fido_lock_channel.h"
