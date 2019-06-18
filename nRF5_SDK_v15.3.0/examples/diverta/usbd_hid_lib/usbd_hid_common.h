@@ -53,6 +53,11 @@ uint32_t get_CID(uint8_t *cid);
 void     set_CID(uint8_t *cid, uint32_t _CID);
 size_t   get_payload_length(USB_HID_MSG_T *recv_msg);
 
+void     fido_lock_channel_timedout_handler(void *context);
+void     fido_lock_channel_start(uint32_t cid, uint8_t lock_param);
+void     fido_lock_channel_cancel(void);
+uint32_t fido_lock_channel_cid(void);
+
 #ifdef __cplusplus
 }
 #endif

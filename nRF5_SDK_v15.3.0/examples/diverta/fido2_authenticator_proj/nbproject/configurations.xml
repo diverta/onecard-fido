@@ -266,8 +266,6 @@
       <itemPath>../fido_lib/fido_command.h</itemPath>
       <itemPath>../fido_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../fido_lib/fido_ctap2_command.h</itemPath>
-      <itemPath>../fido_lib/fido_lock_channel.c</itemPath>
-      <itemPath>../fido_lib/fido_lock_channel.h</itemPath>
       <itemPath>../fido_lib/fido_maintenance.c</itemPath>
       <itemPath>../fido_lib/fido_maintenance.h</itemPath>
     </logicalFolder>
@@ -1361,23 +1359,6 @@
             <pElem>../plat_lib</pElem>
             <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../fido_lib/fido_lock_channel.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/log/src</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
       </item>

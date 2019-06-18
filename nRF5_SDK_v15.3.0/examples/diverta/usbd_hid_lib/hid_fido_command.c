@@ -26,7 +26,7 @@
 #include "fido_board.h"
 
 // for locking cid
-#include "fido_lock_channel.h"
+#include "usbd_hid_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_command

@@ -12,6 +12,14 @@
 #include "nrf_log.h"
 //NRF_LOG_MODULE_REGISTER();
 
+void fido_log_info(const char *fmt, ...)
+{
+    va_list list;
+    va_start(list, fmt);
+    NRF_LOG_INFO(fmt);
+    va_end(list);
+}
+
 void fido_log_error(const char *fmt, ...)
 {
     va_list list;
