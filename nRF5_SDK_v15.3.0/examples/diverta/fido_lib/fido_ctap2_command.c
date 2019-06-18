@@ -500,9 +500,11 @@ static void command_authenticator_client_pin_send_response(fds_evt_t const *cons
         ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
-        // 全ての処理が完了したら、
+        // リトライカウンターのFlash ROM書込処理が完了したら、
         // レスポンスを生成してCTAP2クライアントに戻す
-        ctap2_client_pin_send_response(p_evt);
+        if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
+            ctap2_client_pin_send_response();
+        }
     }
 }
 

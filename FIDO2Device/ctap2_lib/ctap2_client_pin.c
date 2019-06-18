@@ -4,7 +4,6 @@
  *
  * Created on 2019/02/18, 11:05
  */
-#include "fds.h"
 #include "cbor.h"
 #include "hid_fido_command.h"
 #include "fido_ctap2_command.h"
@@ -613,35 +612,26 @@ void ctap2_client_pin_perform_subcommand(uint8_t *response_buffer, size_t respon
     }
 }
 
-void ctap2_client_pin_send_response(fds_evt_t const *const p_evt)
+void ctap2_client_pin_send_response(void)
 {
     switch (ctap2_request.subCommand) {
         case subcmd_SetPin:
-            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
-                // レコードIDがPINリトライカウンター管理であれば
-                // ここでレスポンスを戻す
-                fido_log_debug("setPIN: PIN hash store success");
-                fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
-                // PINが新規設定されたので、
-                // PINミスマッチ連続回数をゼロクリア
-                pin_mismatch_count = 0;
-            }
+            // レスポンスを戻す
+            fido_log_debug("setPIN: PIN hash store success");
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, m_response_length);
+            // PINが新規設定されたので、
+            // PINミスマッチ連続回数をゼロクリア
+            pin_mismatch_count = 0;
             break;
         case subcmd_ChangePin:
-            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
-                // レコードIDがPINリトライカウンター管理であれば
-                // ここでレスポンスを戻す
-                fido_log_debug("changePIN: PIN hash store success");
-                fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
-            }
+            // レスポンスを戻す
+            fido_log_debug("changePIN: PIN hash store success");
+            fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
             break;
         case subcmd_GetPinToken:
-            if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
-                // レコードIDがPINリトライカウンター管理であれば
-                // ここでレスポンスを戻す
-                fido_log_debug("getPinToken: retry counter store success");
-                fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
-            }
+            // レスポンスを戻す
+            fido_log_debug("getPinToken: retry counter store success");
+            fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
             break;
         default:
             break;
