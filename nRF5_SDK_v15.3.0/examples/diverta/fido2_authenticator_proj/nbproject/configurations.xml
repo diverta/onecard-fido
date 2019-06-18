@@ -262,8 +262,6 @@
                    displayName="fido_lib"
                    projectFiles="true"
                    root="../fido_lib">
-      <itemPath>../fido_lib/fido_comm_interval_timer.c</itemPath>
-      <itemPath>../fido_lib/fido_comm_interval_timer.h</itemPath>
       <itemPath>../fido_lib/fido_command.c</itemPath>
       <itemPath>../fido_lib/fido_command.h</itemPath>
       <itemPath>../fido_lib/fido_ctap2_command.c</itemPath>
@@ -646,6 +644,8 @@
       <itemPath>../plat_lib/fido_flash_password.h</itemPath>
       <itemPath>../plat_lib/fido_log.c</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
+      <itemPath>../plat_lib/fido_timer.c</itemPath>
+      <itemPath>../plat_lib/fido_timer.h</itemPath>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
@@ -1322,19 +1322,6 @@
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
-      <item path="../fido_lib/fido_comm_interval_timer.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../fido_lib/fido_command.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
@@ -1616,6 +1603,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/fido_timer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_timer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../usbd_hid_lib/hid_fido_command.c" ex="false" tool="0" flavor2="2">
         <cTool>

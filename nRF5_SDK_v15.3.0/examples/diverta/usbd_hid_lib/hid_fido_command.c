@@ -11,12 +11,12 @@
 #include <stdlib.h>
 
 #include "fds.h"
-#include "fido_comm_interval_timer.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "hid_u2f_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
+#include "fido_timer.h"
 
 // for U2F command
 #include "u2f.h"

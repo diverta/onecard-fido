@@ -11,7 +11,7 @@
 #include "nfc_fido_receive.h"
 
 // for communication interval timer
-#include "fido_comm_interval_timer.h"
+#include "fido_timer.h"
 
 // for lighting LED on/off
 #include "fido_idling_led.h"
