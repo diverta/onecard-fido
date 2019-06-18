@@ -1,5 +1,5 @@
 /* 
- * File:   hid_u2f_command.c
+ * File:   fido_u2f_command.c
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21

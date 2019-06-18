@@ -8,7 +8,7 @@
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
 #include "ble_ctap2_command.h"
-#include "hid_u2f_command.h"
+#include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
 #include "hid_fido_command.h"
 #include "nfc_fido_command.h"

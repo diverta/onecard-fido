@@ -1,5 +1,5 @@
-#ifndef HID_U2F_COMMAND_H__
-#define HID_U2F_COMMAND_H__
+#ifndef FIDO_U2F_COMMAND_H__
+#define FIDO_U2F_COMMAND_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,6 +19,6 @@ bool hid_u2f_command_on_mainsw_long_push_event(void);
 }
 #endif
 
-#endif // HID_U2F_COMMAND_H__
+#endif // FIDO_U2F_COMMAND_H__
 
 /** @} */

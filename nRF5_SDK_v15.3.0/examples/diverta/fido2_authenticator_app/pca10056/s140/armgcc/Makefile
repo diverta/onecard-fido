@@ -179,6 +179,7 @@ SRC_FILES += \
   $(FIDLIB_DIR)/fido_command.c \
   $(FIDLIB_DIR)/fido_ctap2_command.c \
   $(FIDLIB_DIR)/fido_maintenance.c \
+  $(FIDLIB_DIR)/fido_u2f_command.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
@@ -204,7 +205,6 @@ SRC_FILES += \
   $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
-  $(HIDLIB_DIR)/hid_u2f_command.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
   $(NFCLIB_DIR)/nfc_fido_command.c \
   $(NFCLIB_DIR)/nfc_fido_receive.c \

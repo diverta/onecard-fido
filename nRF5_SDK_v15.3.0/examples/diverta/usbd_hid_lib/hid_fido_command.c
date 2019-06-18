@@ -13,7 +13,7 @@
 #include "fds.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
-#include "hid_u2f_command.h"
+#include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
 #include "fido_timer.h"
