@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "ctap2_common.h"
-#include "fido_aes_cbc_256_crypto.h"
+#include "fido_crypto_aes_cbc_256.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
@@ -172,7 +172,7 @@ void ctap2_pubkey_credential_generate_id(void)
     // AES CBCで暗号化し、
     // credentialIdを生成する
     memset(credential_id, 0x00, sizeof(credential_id));
-    fido_aes_cbc_256_encrypt(fido_flash_password_get(), 
+    fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), 
         pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
@@ -187,7 +187,7 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // authenticatorGetAssertionリクエストから取得した
     // credentialIdを復号化
     memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
-    fido_aes_cbc_256_decrypt(fido_flash_password_get(), 
+    fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), 
         credential_id, credential_id_size, pubkey_cred_source);
 
     // Public Key Credential Sourceから

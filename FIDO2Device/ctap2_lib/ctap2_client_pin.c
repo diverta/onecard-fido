@@ -12,7 +12,7 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
-#include "fido_aes_cbc_256_crypto.h"
+#include "fido_crypto_aes_cbc_256.h"
 #include "fido_crypto_sskey.h"
 #include "fido_flash_client_pin_store.h"
 #include "ctap2_client_pin_token.h"
@@ -389,7 +389,7 @@ static bool check_pin_code_hash(void)
 
     // CTAP2クライアントから受け取った旧いPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, pin_code);
     if (pin_code_size != ctap2_request.pinHashEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -474,7 +474,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
     if (pin_code_size != ctap2_request.newPinEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す

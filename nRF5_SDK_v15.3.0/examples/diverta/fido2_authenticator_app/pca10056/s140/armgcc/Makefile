@@ -162,8 +162,8 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
-  $(PLTLIB_DIR)/fido_aes_cbc_256_crypto.c \
   $(PLTLIB_DIR)/fido_crypto.c \
+  $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_DIR)/fido_flash.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \

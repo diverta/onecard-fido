@@ -1,5 +1,5 @@
 /* 
- * File:   fido_aes_cbc_256_crypto.c
+ * File:   fido_crypto_aes_cbc_256.c
  * Author: makmorit
  *
  * Created on 2019/02/25, 15:11
@@ -35,7 +35,7 @@ static void app_error_check(char *function, ret_code_t err_code)
     }
 }
 
-size_t fido_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted) 
+size_t fido_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted) 
 {
 #if NRF_LOG_DEBUG_DECRYPTED_DATA
     NRF_LOG_DEBUG("Encrypted data(%dbytes):", encrypted_size);
@@ -69,7 +69,7 @@ size_t fido_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t enc
     return decrypted_size;
 }
 
-size_t fido_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted) 
+size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted) 
 {
     ret_code_t err_code;
     size_t     encrypted_size;

@@ -1,5 +1,3 @@
-#include "sdk_common.h"
-
 #include <stdio.h>
 #include <string.h>
 
@@ -9,11 +7,7 @@
 #include "fido_flash.h"
 #include "u2f_keyhandle.h"
 #include "fido_crypto_keypair.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME u2f_register
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+#include "fido_log.h"
 
 // ステータスワードを保持
 static uint16_t status_word;
@@ -26,7 +20,7 @@ uint16_t u2f_register_status_word(void)
 bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
 {
     // 開始ログを出力
-    NRF_LOG_DEBUG("add_token_counter start ");
+    fido_log_debug("add_token_counter start ");
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを追加する
@@ -40,7 +34,7 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("add_token_counter end ");
+    fido_log_debug("add_token_counter end ");
     return true;
 }
 
@@ -169,7 +163,7 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     if (apdu_le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
         // エラーレスポンスを送信するよう指示
-        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, apdu_le);
+        fido_log_error("Response message length(%d) exceeds Le(%d) ", offset, apdu_le);
         status_word = U2F_SW_WRONG_LENGTH;
         return false;
     }

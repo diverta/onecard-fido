@@ -625,10 +625,10 @@
                    displayName="plat_lib"
                    projectFiles="true"
                    root="../plat_lib">
-      <itemPath>../plat_lib/fido_aes_cbc_256_crypto.c</itemPath>
-      <itemPath>../plat_lib/fido_aes_cbc_256_crypto.h</itemPath>
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
       <itemPath>../plat_lib/fido_crypto.h</itemPath>
+      <itemPath>../plat_lib/fido_crypto_aes_cbc_256.c</itemPath>
+      <itemPath>../plat_lib/fido_crypto_aes_cbc_256.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_keypair.c</itemPath>
       <itemPath>../plat_lib/fido_crypto_keypair.h</itemPath>
       <itemPath>../plat_lib/fido_flash.c</itemPath>
@@ -1483,12 +1483,12 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/fido_aes_cbc_256_crypto.c"
+      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../plat_lib/fido_crypto_aes_cbc_256.c"
             ex="false"
             tool="0"
             flavor2="2">
-      </item>
-      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="2">
       </item>

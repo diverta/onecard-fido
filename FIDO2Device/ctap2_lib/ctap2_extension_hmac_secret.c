@@ -7,7 +7,7 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "fido_aes_cbc_256_crypto.h"
+#include "fido_crypto_aes_cbc_256.h"
 #include "fido_crypto.h"
 #include "fido_crypto_sskey.h"
 #include "fido_log.h"
@@ -152,7 +152,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
 
     // CTAP2クライアントから受け取ったsaltEncを、
     // 共通鍵ハッシュを使用して復号化
-    size_t salt_size = fido_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    size_t salt_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, salt);
     if (salt_size != ext->hmac_secret.saltLen) {
         fido_log_error("saltEnc decrpytion failed");
@@ -168,7 +168,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     }
 
     // 計算されたoutputを、共通鍵ハッシュを使用して暗号化
-    size_t encrypted_size = fido_aes_cbc_256_encrypt(fido_crypto_sskey_hash(), 
+    size_t encrypted_size = fido_crypto_aes_cbc_256_encrypt(fido_crypto_sskey_hash(), 
         output, salt_size, encrypted_output);
     if (encrypted_size != salt_size) {
         fido_log_error("output encrpytion failed");
