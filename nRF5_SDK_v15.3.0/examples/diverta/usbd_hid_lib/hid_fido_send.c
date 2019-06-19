@@ -7,8 +7,8 @@
 #include <stdio.h>
 
 #include "fido_hid_channel.h"
+#include "fido_hid_command.h"
 #include "usbd_hid_service.h"
-#include "hid_fido_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_send

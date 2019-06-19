@@ -12,7 +12,7 @@
 #include "nfc_t4t_lib.h"
 #include "app_error.h"
 
-#include "nfc_common.h"
+#include "fido_nfc_common.h"
 #include "nfc_fido_receive.h"
 
 // for logging informations

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "fido_request_apdu.h"
 
-#include "hid_fido_command.h"
+#include "fido_hid_command.h"
 #include "hid_fido_receive.h"
 #include "fido_hid_channel.h"
 

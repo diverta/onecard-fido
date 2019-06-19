@@ -1,11 +1,11 @@
 /* 
- * File:   nfc_fido_command.h
+ * File:   fido_nfc_command.h
  * Author: makmorit
  *
  * Created on 2019/06/03, 15:20
  */
-#ifndef NFC_FIDO_COMMAND_H
-#define NFC_FIDO_COMMAND_H
+#ifndef FIDO_NFC_COMMAND_H
+#define FIDO_NFC_COMMAND_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ void nfc_fido_command_on_request_started(void);
 }
 #endif
 
-#endif /* NFC_FIDO_COMMAND_H */
+#endif /* FIDO_NFC_COMMAND_H */

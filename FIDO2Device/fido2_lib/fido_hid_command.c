@@ -1,5 +1,5 @@
 /* 
- * File:   hid_fido_command.c
+ * File:   fido_hid_command.c
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
@@ -7,27 +7,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "hid_fido_receive.h"
-#include "hid_fido_send.h"
-#include "fido_u2f_command.h"
+//
+// プラットフォーム非依存コード
+//
+#include "ctap2_common.h"
 #include "fido_ctap2_command.h"
+#include "fido_hid_channel.h"
 #include "fido_maintenance.h"
+#include "fido_u2f_command.h"
+#include "u2f.h"
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "fido_board.h"         // for lighting LED on/off
+#include "fido_flash_event.h"   // for Flash ROM event
 #include "fido_timer.h"
 #include "fido_log.h"
-
-// for U2F command
-#include "u2f.h"
-#include "ctap2_common.h"
-
-// for lighting LED on/off
-#include "fido_board.h"
-
-// for locking cid
-#include "fido_hid_channel.h"
-
-// for Flash ROM event
-#include "fido_flash_event.h"
+#include "hid_fido_receive.h"
+#include "hid_fido_send.h"
 
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;

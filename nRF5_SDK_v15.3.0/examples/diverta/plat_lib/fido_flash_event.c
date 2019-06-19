@@ -4,14 +4,9 @@
  *
  * Created on 2019/06/19, 10:10
  */
-#include "ble_u2f.h"
 #include "ble_u2f_command.h"
-#include "ble_ctap2_command.h"
-#include "fido_u2f_command.h"
-#include "fido_ctap2_command.h"
-#include "hid_fido_command.h"
-#include "nfc_fido_command.h"
-#include "fido_ble_main.h"
+#include "fido_hid_command.h"
+#include "fido_nfc_command.h"
 
 #include "fido_flash.h"
 #include "fido_flash_event.h"

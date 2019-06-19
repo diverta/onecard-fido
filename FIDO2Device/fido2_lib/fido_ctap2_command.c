@@ -24,12 +24,12 @@
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "hid_fido_command.h"
 #include "hid_fido_send.h"
 #include "hid_fido_receive.h"
 #include "fido_board.h"             // for processing LED on/off
 #include "fido_command.h"           // for user presence test
 #include "fido_crypto_sskey.h"
+#include "fido_hid_command.h"
 #include "fido_flash.h"             // for flash keydata
 #include "fido_flash_password.h"
 #include "fido_log.h"

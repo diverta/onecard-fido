@@ -7,10 +7,10 @@
 #include <stdio.h>
 
 #include "fido_common.h"
-#include "nfc_common.h"
+#include "fido_nfc_common.h"
 #include "nfc_service.h"
 #include "nfc_fido_send.h"
-#include "nfc_fido_command.h"
+#include "fido_nfc_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_send

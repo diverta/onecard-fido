@@ -10,9 +10,9 @@
 #include "ble_ctap2_command.h"
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
-#include "hid_fido_command.h"
-#include "nfc_fido_command.h"
 #include "fido_ble_main.h"
+#include "fido_hid_command.h"
+#include "fido_nfc_command.h"
 
 // for processing & lighting LED on/off
 #include "fido_board.h"

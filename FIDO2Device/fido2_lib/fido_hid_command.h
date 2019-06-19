@@ -1,12 +1,12 @@
 /* 
- * File:   hid_fido_command.h
+ * File:   fido_hid_command.h
  * Author: makmorit
  *
  * Created on 2018/12/17, 15:11
  */
 
-#ifndef HID_FIDO_COMMAND_H
-#define HID_FIDO_COMMAND_H
+#ifndef FIDO_HID_COMMAND_H
+#define FIDO_HID_COMMAND_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -45,5 +45,5 @@ bool hid_fido_command_is_valid(uint8_t command);
 }
 #endif
 
-#endif /* HID_FIDO_COMMAND_H */
+#endif /* FIDO_HID_COMMAND_H */
 

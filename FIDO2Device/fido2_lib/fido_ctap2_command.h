@@ -7,6 +7,9 @@
 #ifndef FIDO_CTAP2_COMMAND_H
 #define FIDO_CTAP2_COMMAND_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "fido_common.h"
 
 // for Flash ROM event

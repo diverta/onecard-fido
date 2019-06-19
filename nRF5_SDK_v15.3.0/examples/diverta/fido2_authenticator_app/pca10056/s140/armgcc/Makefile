@@ -158,6 +158,8 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_request_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
+  $(FD2LIB_DIR)/fido_hid_command.c \
+  $(FD2LIB_DIR)/fido_nfc_command.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
@@ -202,11 +204,9 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_main.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
-  $(HIDLIB_DIR)/hid_fido_command.c \
   $(HIDLIB_DIR)/hid_fido_receive.c \
   $(HIDLIB_DIR)/hid_fido_send.c \
   $(HIDLIB_DIR)/usbd_hid_service.c \
-  $(NFCLIB_DIR)/nfc_fido_command.c \
   $(NFCLIB_DIR)/nfc_fido_receive.c \
   $(NFCLIB_DIR)/nfc_fido_send.c \
   $(NFCLIB_DIR)/nfc_service.c \

@@ -1,28 +1,21 @@
 /* 
- * File:   nfc_fido_command.c
+ * File:   fido_nfc_command.c
  * Author: makmorit
  *
  * Created on 2019/06/03, 15:20
  */
-#include "sdk_common.h"
-#include "fds.h"
-
+//
+// プラットフォーム非依存コード
+//
 #include "fido_ctap2_command.h"
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "fido_board.h"         // for lighting LED on/off
+#include "fido_flash_event.h"   // for Flash ROM event
+#include "fido_timer.h"         // for communication interval timer
 #include "nfc_fido_receive.h"
-
-// for communication interval timer
-#include "fido_timer.h"
-
-// for lighting LED on/off
-#include "fido_board.h"
-
-// for Flash ROM event
-#include "fido_flash_event.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME nfc_fido_command
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
 
 void nfc_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt)
 {

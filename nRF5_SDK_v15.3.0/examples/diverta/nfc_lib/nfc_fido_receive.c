@@ -4,11 +4,11 @@
  *
  * Created on 2019/05/29, 11:03
  */
-#include "nfc_common.h"
+#include "fido_nfc_common.h"
 #include "nfc_fido_send.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
-#include "nfc_fido_command.h"
+#include "fido_nfc_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_receive

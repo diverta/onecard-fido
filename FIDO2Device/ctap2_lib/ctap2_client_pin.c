@@ -5,7 +5,7 @@
  * Created on 2019/02/18, 11:05
  */
 #include "cbor.h"
-#include "hid_fido_command.h"
+#include "fido_hid_command.h"
 #include "fido_ctap2_command.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"

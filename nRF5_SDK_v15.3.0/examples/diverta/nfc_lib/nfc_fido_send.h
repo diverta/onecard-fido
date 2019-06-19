@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include "nfc_common.h"
+#include "fido_nfc_common.h"
 
 // Capability Container
 typedef struct {

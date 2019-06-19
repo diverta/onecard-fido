@@ -1,11 +1,11 @@
 /* 
- * File:   nfc_common.h
+ * File:   fido_nfc_common.h
  * Author: makmorit
  *
  * Created on 2019/05/29, 11:43
  */
-#ifndef NFC_COMMON_H
-#define NFC_COMMON_H
+#ifndef FIDO_NFC_COMMON_H
+#define FIDO_NFC_COMMON_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,4 +70,4 @@ typedef enum {
 }
 #endif
 
-#endif /* NFC_COMMON_H */
+#endif /* FIDO_NFC_COMMON_H */
