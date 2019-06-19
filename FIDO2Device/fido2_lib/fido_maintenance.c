@@ -8,12 +8,19 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "hid_fido_receive.h"
-#include "hid_fido_send.h"
-#include "fido_flash_password.h"
-#include "fido_flash.h"
+//
+// プラットフォーム非依存コード
+//
 #include "fido_maintenance.h"
 
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "hid_fido_receive.h"
+#include "hid_fido_send.h"
+#include "fido_flash.h"
+#include "fido_flash_password.h"
 #include "fido_log.h"
 
 // 秘密鍵／証明書削除が完了したかどうかを保持

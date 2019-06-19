@@ -8,24 +8,26 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "fido_flash.h"
-#include "u2f_keyhandle.h"
+//
+// プラットフォーム非依存コード
+//
+#include "fido_hid_channel.h"
+#include "u2f.h"
 #include "u2f_authenticate.h"
+#include "u2f_keyhandle.h"
 #include "u2f_register.h"
+
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
-#include "fido_hid_common.h"
+#include "fido_board.h"         // for processing LED on/off
+#include "fido_flash.h"
+#include "fido_flash_event.h"   // for Flash ROM event
 #include "fido_log.h"
-
-// for processing LED on/off
-#include "fido_board.h"
-
-// for Flash ROM event
-#include "fido_flash_event.h"
-
-// for U2F_CHAL_SIZE
-#include "u2f.h"
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;

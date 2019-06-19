@@ -1,12 +1,12 @@
 /* 
- * File:   fido_hid_common.c
+ * File:   fido_hid_channel.c
  * Author: makmorit
  *
  * Created on 2018/11/06, 14:21
  */
 #include <stdio.h>
 #include <stdbool.h>
-#include "fido_hid_common.h"
+#include "fido_hid_channel.h"
 
 #include "fido_timer.h"
 #include "fido_log.h"

@@ -9,7 +9,7 @@
 
 #include "hid_fido_command.h"
 #include "hid_fido_receive.h"
-#include "fido_hid_common.h"
+#include "fido_hid_channel.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME hid_fido_receive

@@ -10,7 +10,6 @@ FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
-FIDLIB_DIR := $(PROJ_DIR)/../fido_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
 NFCLIB_DIR := $(PROJ_DIR)/../nfc_lib
@@ -154,8 +153,11 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
   $(FD2LIB_DIR)/fido_common.c \
-  $(FD2LIB_DIR)/fido_hid_common.c \
+  $(FD2LIB_DIR)/fido_ctap2_command.c \
+  $(FD2LIB_DIR)/fido_hid_channel.c \
+  $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_request_apdu.c \
+  $(FD2LIB_DIR)/fido_u2f_command.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
@@ -167,6 +169,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(PLTLIB_DIR)/fido_board.c \
+  $(PLTLIB_DIR)/fido_command.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
@@ -177,10 +180,6 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_log.c \
   $(PLTLIB_DIR)/fido_timer.c \
-  $(FIDLIB_DIR)/fido_command.c \
-  $(FIDLIB_DIR)/fido_ctap2_command.c \
-  $(FIDLIB_DIR)/fido_maintenance.c \
-  $(FIDLIB_DIR)/fido_u2f_command.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
@@ -364,7 +363,6 @@ INC_FOLDERS += \
   $(PROJ_DIR) \
   $(PLTLIB_DIR) \
   $(FD2LIB_DIR) \
-  $(FIDLIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \

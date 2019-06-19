@@ -8,31 +8,33 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "ctap2_common.h"
+//
+// プラットフォーム非依存コード
+//
 #include "ctap2_cbor_authgetinfo.h"
-#include "ctap2_make_credential.h"
-#include "ctap2_get_assertion.h"
 #include "ctap2_client_pin.h"
 #include "ctap2_client_pin_token.h"
-#include "fido_crypto_sskey.h"
+#include "ctap2_common.h"
+#include "ctap2_get_assertion.h"
+#include "ctap2_make_credential.h"
 #include "fido_common.h"
-#include "fido_flash_password.h"
+#include "fido_hid_channel.h"
+
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
 #include "hid_fido_command.h"
 #include "hid_fido_send.h"
 #include "hid_fido_receive.h"
-#include "fido_hid_common.h"
+#include "fido_board.h"             // for processing LED on/off
+#include "fido_command.h"           // for user presence test
+#include "fido_crypto_sskey.h"
+#include "fido_flash.h"             // for flash keydata
+#include "fido_flash_password.h"
+#include "fido_log.h"
 #include "nfc_fido_receive.h"
 #include "nfc_fido_send.h"
-#include "fido_log.h"
-
-// for processing LED on/off
-#include "fido_board.h"
-
-// for ble_u2f_flash_keydata
-#include "fido_flash.h"
-
-// for user presence test
-#include "fido_command.h"
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;

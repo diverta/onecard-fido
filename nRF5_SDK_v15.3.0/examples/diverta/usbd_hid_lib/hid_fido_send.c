@@ -6,7 +6,7 @@
  */
 #include <stdio.h>
 
-#include "fido_hid_common.h"
+#include "fido_hid_channel.h"
 #include "usbd_hid_service.h"
 #include "hid_fido_command.h"
 

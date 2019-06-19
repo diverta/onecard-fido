@@ -24,7 +24,7 @@
 #include "fido_board.h"
 
 // for locking cid
-#include "fido_hid_common.h"
+#include "fido_hid_channel.h"
 
 // for Flash ROM event
 #include "fido_flash_event.h"
