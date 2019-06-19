@@ -15,9 +15,9 @@
 #include "app_error.h"
 
 #include "fido_hid_channel.h"
-#include "hid_fido_send.h"
+#include "fido_hid_send.h"
 #include "fido_hid_command.h"
-#include "hid_fido_receive.h"
+#include "fido_hid_receive.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_hid_service

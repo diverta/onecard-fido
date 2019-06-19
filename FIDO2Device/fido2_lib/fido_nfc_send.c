@@ -1,5 +1,5 @@
 /* 
- * File:   nfc_fido_send.c
+ * File:   fido_nfc_send.c
  * Author: makmorit
  *
  * Created on 2019/05/29, 11:30
@@ -9,7 +9,7 @@
 #include "fido_common.h"
 #include "fido_nfc_common.h"
 #include "nfc_service.h"
-#include "nfc_fido_send.h"
+#include "fido_nfc_send.h"
 #include "fido_nfc_command.h"
 
 // for logging informations

@@ -1,12 +1,12 @@
 /* 
- * File:   hid_fido_receive.h
+ * File:   fido_hid_receive.h
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
  */
 
-#ifndef HID_FIDO_RECEIVE_H
-#define HID_FIDO_RECEIVE_H
+#ifndef FIDO_HID_RECEIVE_H
+#define FIDO_HID_RECEIVE_H
 
 #include <stdbool.h>
 #include "fido_common.h"
@@ -44,5 +44,5 @@ bool hid_fido_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
 }
 #endif
 
-#endif /* HID_FIDO_RECEIVE_H */
+#endif /* FIDO_HID_RECEIVE_H */
 

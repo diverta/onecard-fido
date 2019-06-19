@@ -1,5 +1,5 @@
 /* 
- * File:   hid_fido_receive.c
+ * File:   fido_hid_receive.c
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
@@ -8,7 +8,7 @@
 #include "fido_request_apdu.h"
 
 #include "fido_hid_command.h"
-#include "hid_fido_receive.h"
+#include "fido_hid_receive.h"
 #include "fido_hid_channel.h"
 
 // for logging informations

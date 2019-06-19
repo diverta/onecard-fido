@@ -24,8 +24,8 @@
 #include "fido_flash_event.h"   // for Flash ROM event
 #include "fido_timer.h"
 #include "fido_log.h"
-#include "hid_fido_receive.h"
-#include "hid_fido_send.h"
+#include "fido_hid_receive.h"
+#include "fido_hid_send.h"
 
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;

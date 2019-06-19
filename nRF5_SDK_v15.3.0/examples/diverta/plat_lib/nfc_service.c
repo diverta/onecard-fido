@@ -13,7 +13,7 @@
 #include "app_error.h"
 
 #include "fido_nfc_common.h"
-#include "nfc_fido_receive.h"
+#include "fido_nfc_receive.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_service

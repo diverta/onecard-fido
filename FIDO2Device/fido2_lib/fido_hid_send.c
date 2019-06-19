@@ -1,5 +1,5 @@
 /* 
- * File:   hid_fido_send.c
+ * File:   fido_hid_send.c
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21

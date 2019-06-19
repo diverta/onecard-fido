@@ -1,12 +1,12 @@
 /* 
- * File:   hid_fido_send.h
+ * File:   fido_hid_send.h
  * Author: makmorit
  *
  * Created on 2018/11/21, 14:21
  */
 
-#ifndef HID_FIDO_SEND_H
-#define HID_FIDO_SEND_H
+#ifndef FIDO_HID_SEND_H
+#define FIDO_HID_SEND_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,5 +21,5 @@ void hid_fido_send_command_response_no_callback(uint32_t cid, uint8_t cmd, uint8
 }
 #endif
 
-#endif /* HID_FIDO_SEND_H */
+#endif /* FIDO_HID_SEND_H */
 

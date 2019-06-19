@@ -1,11 +1,11 @@
 /* 
- * File:   nfc_fido_receive.c
+ * File:   fido_nfc_receive.c
  * Author: makmorit
  *
  * Created on 2019/05/29, 11:03
  */
 #include "fido_nfc_common.h"
-#include "nfc_fido_send.h"
+#include "fido_nfc_send.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "fido_nfc_command.h"

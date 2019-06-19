@@ -1,11 +1,11 @@
 /* 
- * File:   nfc_fido_send.h
+ * File:   fido_nfc_send.h
  * Author: makmorit
  *
  * Created on 2019/05/29, 11:30
  */
-#ifndef NFC_FIDO_SEND_H
-#define NFC_FIDO_SEND_H
+#ifndef FIDO_NFC_SEND_H
+#define FIDO_NFC_SEND_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,4 +41,4 @@ void nfc_fido_send_command_response(uint8_t *response_buffer, size_t response_le
 }
 #endif
 
-#endif /* NFC_FIDO_SEND_H */
+#endif /* FIDO_NFC_SEND_H */

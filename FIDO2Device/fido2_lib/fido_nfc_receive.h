@@ -1,11 +1,11 @@
 /* 
- * File:   nfc_fido_receive.h
+ * File:   fido_nfc_receive.h
  * Author: makmorit
  *
  * Created on 2019/05/29, 11:03
  */
-#ifndef NFC_FIDO_RECEIVE_H
-#define NFC_FIDO_RECEIVE_H
+#ifndef FIDO_NFC_RECEIVE_H
+#define FIDO_NFC_RECEIVE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ void nfc_fido_receive_request_frame(uint8_t *buf, size_t len);
 }
 #endif
 
-#endif /* NFC_FIDO_RECEIVE_H */
+#endif /* FIDO_NFC_RECEIVE_H */

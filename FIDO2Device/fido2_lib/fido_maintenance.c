@@ -17,8 +17,8 @@
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "hid_fido_receive.h"
-#include "hid_fido_send.h"
+#include "fido_hid_receive.h"
+#include "fido_hid_send.h"
 #include "fido_flash.h"
 #include "fido_flash_password.h"
 #include "fido_log.h"
