@@ -17,7 +17,7 @@
 #include "fido_timer.h"         // for communication interval timer
 #include "nfc_fido_receive.h"
 
-void nfc_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt)
+void fido_nfc_command_on_fs_evt(fido_flash_event_t const *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = nfc_fido_receive_apdu()->INS;
@@ -31,7 +31,7 @@ void nfc_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt)
     }
 }
 
-void nfc_fido_command_on_send_completed(void)
+void fido_nfc_command_on_send_completed(void)
 {
     // FIDO機能レスポンスの
     // 全フレーム送信完了時の処理を実行
@@ -46,7 +46,7 @@ void nfc_fido_command_on_send_completed(void)
     fido_idling_led_on();
 }
 
-void nfc_fido_command_on_request_started(void) 
+void fido_nfc_command_on_request_started(void) 
 {
     // FIDO機能リクエストの
     // 先頭フレーム受信時の処理を実行

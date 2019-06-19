@@ -146,7 +146,7 @@ void nfc_fido_send_command_response_cont(uint8_t get_response_size)
 
     if (remaining == 0) {
         NRF_LOG_DEBUG("APDU sent completed (%d bytes)", m_responsed_size);
-        nfc_fido_command_on_send_completed();
+        fido_nfc_command_on_send_completed();
     }
 }
 

@@ -32,7 +32,7 @@ static void fido_command_on_fs_evt(fds_evt_t const *const p_evt)
     hid_fido_command_on_fs_evt(&flash_event);
 
     // FDS処理完了後のNFC処理を実行
-    nfc_fido_command_on_fs_evt(&flash_event);
+    fido_nfc_command_on_fs_evt(&flash_event);
 }
 
 void fido_command_fds_register(void)

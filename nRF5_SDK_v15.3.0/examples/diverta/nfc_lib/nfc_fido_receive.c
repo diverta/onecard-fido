@@ -155,7 +155,7 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
     // 一番最初のフレームの場合
     if (fido_apdu->data_length == 0) {
         // FIDOリクエスト受信開始時の処理を実行
-        nfc_fido_command_on_request_started();
+        fido_nfc_command_on_request_started();
     }
     
     // データを抽出して内部変数に退避
