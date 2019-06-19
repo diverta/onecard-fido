@@ -5,17 +5,19 @@
  * Created on 2019/05/29, 11:30
  */
 #include <stdio.h>
-
+//
+// プラットフォーム非依存コード
+//
 #include "fido_common.h"
-#include "fido_nfc_common.h"
-#include "nfc_service.h"
-#include "fido_nfc_send.h"
 #include "fido_nfc_command.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME nfc_fido_send
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+#include "fido_nfc_common.h"
+#include "fido_nfc_send.h"
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "fido_log.h"
+#include "nfc_service.h"
 
 // Capability container
 static const CAPABILITY_CONTAINER NFC_CC = {
@@ -43,7 +45,7 @@ static uint8_t *m_response_buffer;
 static size_t   m_response_length;
 static size_t   m_responsed_size;
 
-bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status_word)
+static bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status_word)
 {
     // データ長チェック
     if (data_size > NFC_RESPONSE_MAX_SIZE) {
@@ -64,12 +66,12 @@ bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status
 	return true;
 }
 
-bool nfc_fido_send_response(uint16_t resp)
+bool fido_nfc_send_response(uint16_t resp)
 {
 	return nfc_fido_send_response_ex(NULL, 0, resp);
 }
 
-void nfc_fido_send_app_selection_response(NFC_APPLETS selected_app)
+void fido_nfc_send_app_selection_response(NFC_APPLETS selected_app)
 {
     char *version = U2F_V2_VERSION_STRING;
 
@@ -77,19 +79,19 @@ void nfc_fido_send_app_selection_response(NFC_APPLETS selected_app)
         nfc_fido_send_response_ex((uint8_t *)version, strlen(version), SW_SUCCESS);
 
     } else if (selected_app != APP_NOTHING) {
-        nfc_fido_send_response(SW_SUCCESS);
+        fido_nfc_send_response(SW_SUCCESS);
 
     } else {
-        nfc_fido_send_response(SW_FILE_NOT_FOUND);
+        fido_nfc_send_response(SW_FILE_NOT_FOUND);
     }
 }
 
-void nfc_fido_send_ndef_cc_sample(void)
+void fido_nfc_send_ndef_cc_sample(void)
 {
     nfc_fido_send_response_ex((uint8_t *)&NFC_CC, sizeof(CAPABILITY_CONTAINER), SW_SUCCESS);
 }
 
-void nfc_fido_send_ndef_tag_sample(APDU_HEADER *apdu)
+void fido_nfc_send_ndef_tag_sample(APDU_HEADER *apdu)
 {
     char sw[2];
     char sample_slen = (char)strlen(DIVERTA_SITE_URI);
@@ -111,7 +113,7 @@ void nfc_fido_send_ndef_tag_sample(APDU_HEADER *apdu)
     }
 }
 
-void nfc_fido_send_command_response_cont(uint8_t get_response_size)
+void fido_nfc_send_command_response_cont(uint8_t get_response_size)
 {
     uint16_t status_word;
 
@@ -139,18 +141,18 @@ void nfc_fido_send_command_response_cont(uint8_t get_response_size)
     }
 
     // フレーム送信
-    NRF_LOG_DEBUG("APDU sent a frame (%d bytes) status=0x%04x", response_size, status_word);
+    fido_log_debug("APDU sent a frame (%d bytes) status=0x%04x", response_size, status_word);
     uint8_t *response_buffer = m_response_buffer + m_responsed_size;
     nfc_fido_send_response_ex(response_buffer, response_size, status_word);
     m_responsed_size += response_size;
 
     if (remaining == 0) {
-        NRF_LOG_DEBUG("APDU sent completed (%d bytes)", m_responsed_size);
+        fido_log_debug("APDU sent completed (%d bytes)", m_responsed_size);
         fido_nfc_command_on_send_completed();
     }
 }
 
-void nfc_fido_send_command_response(uint8_t *response_buffer, size_t response_length)
+void fido_nfc_send_command_response(uint8_t *response_buffer, size_t response_length)
 {
     // 引数で指定されたデータを、
     // ISO 7816-4 APDU chainingを使用して
@@ -161,11 +163,11 @@ void nfc_fido_send_command_response(uint8_t *response_buffer, size_t response_le
     
     if (response_length < NFC_RESPONSE_MAX_SIZE) {
         // 上限バイト以内であれば単一フレームで送信
-        nfc_fido_send_command_response_cont((uint8_t)response_length);
+        fido_nfc_send_command_response_cont((uint8_t)response_length);
 
     } else {
         // 254バイトを超える場合は残りのフレームは
         // 次回のGetResponseコマンド受信時に送信
-        nfc_fido_send_command_response_cont(0x00);
+        fido_nfc_send_command_response_cont(0x00);
     }
 }

@@ -7,15 +7,17 @@
 #ifndef FIDO_LOG_H
 #define FIDO_LOG_H
 
+#include "nrf_log.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void fido_log_info(const char *fmt, ...);
-void fido_log_warning(const char *fmt, ...);
-void fido_log_error(const char *fmt, ...);
-void fido_log_debug(const char *fmt, ...);
-void fido_log_print_hexdump_debug(uint8_t *buff, size_t size);
+#define fido_log_info(...)                  NRF_LOG_INFO(__VA_ARGS__)
+#define fido_log_warning(...)               NRF_LOG_WARNING(__VA_ARGS__)
+#define fido_log_error(...)                 NRF_LOG_ERROR(__VA_ARGS__)
+#define fido_log_debug(...)                 NRF_LOG_DEBUG(__VA_ARGS__)
+#define fido_log_print_hexdump_debug(...)   NRF_LOG_HEXDUMP_DEBUG(__VA_ARGS__)
 
 #ifdef __cplusplus
 }

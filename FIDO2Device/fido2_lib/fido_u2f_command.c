@@ -56,12 +56,12 @@ static void u2f_authenticate_resume_process(void);
 static void u2f_resume_response_process(void)
 {
     uint8_t ins;
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = hid_fido_receive_apdu()->INS;
+            ins = fido_hid_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
                 fido_log_info("U2F Register: completed the test of user presence");
                 u2f_register_resume_process();
@@ -99,9 +99,9 @@ bool hid_u2f_command_on_mainsw_long_push_event(void)
 
 static void send_u2f_response(void)
 {
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
-    hid_fido_send_command_response(cid, cmd, u2f_response_buffer, u2f_response_length);
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response(cid, cmd, u2f_response_buffer, u2f_response_length);
 }
 
 void hid_u2f_command_init(void)
@@ -110,7 +110,7 @@ void hid_u2f_command_init(void)
     memset(&init_res, 0x00, sizeof(init_res));
 
     // nonce を取得
-    uint8_t *nonce = hid_fido_receive_apdu()->data;
+    uint8_t *nonce = fido_hid_receive_apdu()->data;
 
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
@@ -123,9 +123,9 @@ void hid_u2f_command_init(void)
     init_res.cflags        = 0;
 
     // レスポンスデータを転送
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
-    hid_fido_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
 void hid_u2f_command_version(void)
@@ -140,9 +140,9 @@ void hid_u2f_command_version(void)
     version_res.status_word[1] = status_word & 0x00ff;
 
     // レスポンスデータを転送
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
-    hid_fido_send_command_response(cid, cmd, (uint8_t *)&version_res, sizeof(version_res));
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response(cid, cmd, (uint8_t *)&version_res, sizeof(version_res));
 }
 
 static void send_u2f_hid_error_report(uint16_t status_word)
@@ -160,7 +160,7 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 {
     // U2F Register／AuthenticateリクエストAPDUから
     // appid_hash(Application parameter)を取り出す
-    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
+    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
     uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
     
     return p_appid_hash;
@@ -188,7 +188,7 @@ static void u2f_register_do_process(void)
     }
     
     // control byte (P1) を参照
-    uint8_t control_byte = hid_fido_receive_apdu()->P1;
+    uint8_t control_byte = fido_hid_receive_apdu()->P1;
     if (control_byte == 0x03) {
         // 0x03 ("enforce-user-presence-and-sign")
         // ユーザー所在確認が必要な場合は、ここで終了し
@@ -213,8 +213,8 @@ static void u2f_register_resume_process(void)
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
 
-    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
-    uint32_t apdu_le = hid_fido_receive_apdu()->Le;
+    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
+    uint32_t apdu_le = fido_hid_receive_apdu()->Le;
     u2f_response_length = sizeof(u2f_response_buffer);
     if (u2f_register_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
@@ -268,7 +268,7 @@ static void u2f_authenticate_do_process(void)
         return;
     }
 
-    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
+    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
     if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
@@ -291,7 +291,7 @@ static void u2f_authenticate_do_process(void)
     fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
 
     // control byte (P1) を参照
-    uint8_t control_byte = hid_fido_receive_apdu()->P1;
+    uint8_t control_byte = fido_hid_receive_apdu()->P1;
     if (control_byte == 0x07) {
         // 0x07 ("check-only") の場合はここで終了し
         // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
@@ -321,8 +321,8 @@ static void u2f_authenticate_resume_process(void)
 
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
-    uint8_t *apdu_data = hid_fido_receive_apdu()->data;
-    uint32_t apdu_le = hid_fido_receive_apdu()->Le;
+    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
+    uint32_t apdu_le = fido_hid_receive_apdu()->Le;
     u2f_response_length = sizeof(u2f_response_buffer);
     if (u2f_authenticate_response_message(apdu_data, u2f_response_buffer, &u2f_response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
@@ -367,7 +367,7 @@ void hid_u2f_command_msg(void)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = hid_fido_receive_apdu()->INS;
+    uint8_t ins = fido_hid_receive_apdu()->INS;
     if (ins == U2F_VERSION) {
         hid_u2f_command_version();
 
@@ -383,7 +383,7 @@ void hid_u2f_command_msg_send_response(fido_flash_event_t *const p_evt)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = hid_fido_receive_apdu()->INS;
+    uint8_t ins = fido_hid_receive_apdu()->INS;
     if (ins == U2F_REGISTER) {
         u2f_register_send_response(p_evt);
 
@@ -396,7 +396,7 @@ void hid_u2f_command_msg_report_sent(void)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = hid_fido_receive_apdu()->INS;
+    uint8_t ins = fido_hid_receive_apdu()->INS;
     if (ins == U2F_REGISTER) {
         fido_log_info("U2F Register end");
 

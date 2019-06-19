@@ -4,7 +4,6 @@
  *
  * Created on 2018/11/21, 14:21
  */
-
 #ifndef FIDO_HID_RECEIVE_H
 #define FIDO_HID_RECEIVE_H
 
@@ -34,15 +33,14 @@ typedef struct {
     bool CONT;
 } HID_HEADER_T;
 
-HID_HEADER_T *hid_fido_receive_hid_header(void);
-FIDO_APDU_T  *hid_fido_receive_apdu(void);
+HID_HEADER_T *fido_hid_receive_header(void);
+FIDO_APDU_T  *fido_hid_receive_apdu(void);
 
-void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
-bool hid_fido_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number);
+void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
+bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* FIDO_HID_RECEIVE_H */
-

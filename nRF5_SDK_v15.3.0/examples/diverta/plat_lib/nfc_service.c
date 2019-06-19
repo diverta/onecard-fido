@@ -53,7 +53,7 @@ static void nfc_data_received(const uint8_t *data, size_t data_size)
     print_hexdump_debug(data, data_size);
 #endif
 
-    nfc_fido_receive_request_frame((uint8_t *)data, data_size);
+    fido_nfc_receive_request_frame((uint8_t *)data, data_size);
 }
 
 static void nfc_callback(void *context, nfc_t4t_event_t event, const uint8_t *data, size_t data_size, uint32_t flags)

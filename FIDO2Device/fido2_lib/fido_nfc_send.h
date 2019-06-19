@@ -29,13 +29,12 @@ typedef struct {
 //
 // 関数群
 //
-bool nfc_fido_send_response_ex(uint8_t *data, uint8_t data_size, uint16_t status_word);
-bool nfc_fido_send_response(uint16_t resp);
-void nfc_fido_send_app_selection_response(NFC_APPLETS selected_app);
-void nfc_fido_send_ndef_cc_sample(void);
-void nfc_fido_send_ndef_tag_sample(APDU_HEADER *apdu);
-void nfc_fido_send_command_response_cont(uint8_t get_response_size);
-void nfc_fido_send_command_response(uint8_t *response_buffer, size_t response_length);
+bool fido_nfc_send_response(uint16_t resp);
+void fido_nfc_send_app_selection_response(NFC_APPLETS selected_app);
+void fido_nfc_send_ndef_cc_sample(void);
+void fido_nfc_send_ndef_tag_sample(APDU_HEADER *apdu);
+void fido_nfc_send_command_response_cont(uint8_t get_response_size);
+void fido_nfc_send_command_response(uint8_t *response_buffer, size_t response_length);
 
 #ifdef __cplusplus
 }

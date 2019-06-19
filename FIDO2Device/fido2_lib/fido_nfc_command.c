@@ -20,7 +20,7 @@
 void fido_nfc_command_on_fs_evt(fido_flash_event_t const *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = nfc_fido_receive_apdu()->INS;
+    uint8_t cmd = fido_nfc_receive_apdu()->INS;
     switch (cmd) {
         case 0x10:
             // NFC CTAP2 command

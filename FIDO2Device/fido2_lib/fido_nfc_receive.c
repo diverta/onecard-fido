@@ -4,21 +4,24 @@
  *
  * Created on 2019/05/29, 11:03
  */
-#include "fido_nfc_common.h"
-#include "fido_nfc_send.h"
+//
+// プラットフォーム非依存コード
+//
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "fido_nfc_command.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME nfc_fido_receive
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+#include "fido_nfc_common.h"
+#include "fido_nfc_send.h"
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "fido_log.h"
 
 // for debug apdu data
-#define NRF_LOG_DEBUG_APDU_FRAME_BUFF false
-#define NRF_LOG_DEBUG_APDU_BUFF       false
-#define NRF_LOG_DEBUG_BUFF (NRF_LOG_DEBUG_APDU_FRAME_BUFF || NRF_LOG_DEBUG_APDU_BUFF)
+#define LOG_DEBUG_APDU_FRAME_BUFF false
+#define LOG_DEBUG_APDU_BUFF       false
+#define LOG_DEBUG_BUFF (LOG_DEBUG_APDU_FRAME_BUFF || LOG_DEBUG_APDU_BUFF)
 
 // 現在選択されているアプリケーション
 static NFC_APPLETS selected_app;
@@ -29,18 +32,18 @@ static FIDO_APDU_T fido_apdu;
 // FIDOリクエストAPDU編集用の作業領域（固定長）
 static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
 
-#if NRF_LOG_DEBUG_BUFF
+#if LOG_DEBUG_BUFF
 static void print_hexdump_debug(uint8_t *buff, size_t size)
 {
     int j, k;
     for (j = 0; j < size; j += 64) {
         k = size - j;
-        NRF_LOG_HEXDUMP_DEBUG(buff + j, (k < 64) ? k : 64);
+        fido_log_print_hexdump_debug(buff + j, (k < 64) ? k : 64);
     }
 }
 #endif
 
-FIDO_APDU_T *nfc_fido_receive_apdu(void)
+FIDO_APDU_T *fido_nfc_receive_apdu(void)
 {
     return &fido_apdu;
 }
@@ -61,19 +64,19 @@ static void select_applet(uint8_t *aid, int aid_size)
     // アプリケーションIDごとに処理を分岐
     if (memcmp(aid, AID_FIDO, aid_size) == 0) {
         selected_app = APP_FIDO;
-        NRF_LOG_DEBUG("FIDO application select");
+        fido_log_debug("FIDO application select");
 
     } else if (memcmp(aid, AID_NDEF_TYPE_4, aid_size) == 0) {
         selected_app = APP_NDEF_TYPE_4;
-        NRF_LOG_DEBUG("NDEF tag type-4 application select");
+        fido_log_debug("NDEF tag type-4 application select");
 
     } else if (memcmp(aid, AID_CAPABILITY_CONTAINER, aid_size) == 0) {
         selected_app = APP_CAPABILITY_CONTAINER;
-        NRF_LOG_DEBUG("Capability Container select");
+        fido_log_debug("Capability Container select");
 
     } else if (memcmp(aid, AID_NDEF_TAG, aid_size) == 0) {
         selected_app = APP_NDEF_TAG;
-        NRF_LOG_DEBUG("NDEF select");
+        fido_log_debug("NDEF select");
 
     } else {
         selected_app = APP_NOTHING;
@@ -84,15 +87,15 @@ static void perform_read_binary(APDU_HEADER *apdu)
 {
     switch(selected_app) {
         case APP_CAPABILITY_CONTAINER:
-            nfc_fido_send_ndef_cc_sample();
+            fido_nfc_send_ndef_cc_sample();
             break;
         case APP_NDEF_TAG:
             // サンプルのNDEFタグを編集
             //   http://www.diverta.co.jp/
-            nfc_fido_send_ndef_tag_sample(apdu);
+            fido_nfc_send_ndef_tag_sample(apdu);
             break;
         default:
-            NRF_LOG_ERROR("No binary applet selected");
+            fido_log_error("No binary applet selected");
             return;
         break;
     }
@@ -148,7 +151,7 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
     if (data_in_frame_size != real_size) {
         // ヘッダーから抽出したデータ長が、
         // 実際に受信したデータ長と異なる場合はエラー
-        NRF_LOG_ERROR("APDU size error: data size in header(%d) <> real data size(%d bytes)", data_in_frame_size, real_size);
+        fido_log_error("APDU size error: data size in header(%d) <> real data size(%d bytes)", data_in_frame_size, real_size);
         return SW_WRONG_LENGTH;
     }
     
@@ -179,9 +182,9 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
         } else {
             fido_apdu->Le = (size_t)(data[data_size - 1]);
         }
-        NRF_LOG_DEBUG("APDU received: INS (0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
+        fido_log_debug("APDU received: INS (0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
             fido_apdu->INS, fido_apdu->P1, fido_apdu->P2, fido_apdu->Lc, fido_apdu->Le);
-#if NRF_LOG_DEBUG_APDU_BUFF
+#if LOG_DEBUG_APDU_BUFF
         print_hexdump_debug(fido_apdu->data, fido_apdu->data_length);
 #endif
     }
@@ -192,19 +195,19 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
 static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
 {
     if (selected_app != APP_FIDO) {
-        nfc_fido_send_response(SW_INS_INVALID);
+        fido_nfc_send_response(SW_INS_INVALID);
         return;
     }
     
-#if NRF_LOG_DEBUG_APDU_FRAME_BUFF
-    NRF_LOG_DEBUG("NFC received CTAP2 message(%d bytes):", data_size);
+#if LOG_DEBUG_APDU_FRAME_BUFF
+    fido_log_debug("NFC received CTAP2 message(%d bytes):", data_size);
     print_hexdump_debug(data, data_size);
 #endif
 
     // APDUエンコーディングの判定を行う。
     uint16_t status_word = process_with_nfc_header(data, data_size, &fido_apdu);
     if (status_word != SW_SUCCESS) {
-        nfc_fido_send_response(status_word);
+        fido_nfc_send_response(status_word);
         return;
     }
     
@@ -215,11 +218,11 @@ static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
 
     } else {
         // 最終フレームでない場合は、ここでレスポンスを戻す
-        nfc_fido_send_response(status_word);
+        fido_nfc_send_response(status_word);
     }
 }
 
-void nfc_fido_receive_request_frame(uint8_t *buf, size_t len)
+void fido_nfc_receive_request_frame(uint8_t *buf, size_t len)
 {
     APDU_HEADER *apdu = (APDU_HEADER *)buf;
     uint8_t     *payload = buf + APDU_HEADER_SIZE;
@@ -229,7 +232,7 @@ void nfc_fido_receive_request_frame(uint8_t *buf, size_t len)
         case APDU_INS_SELECT:
             // アプリケーションを選択し、レスポンスを送信
             select_applet(payload, plen);
-            nfc_fido_send_app_selection_response(selected_app);
+            fido_nfc_send_app_selection_response(selected_app);
             break;
 
         case APDU_INS_READ_BINARY:
@@ -245,13 +248,13 @@ void nfc_fido_receive_request_frame(uint8_t *buf, size_t len)
         case 0xc0:
             // FIDO 2.0機能へ振り分け
             if (apdu->cla == 0x80) {
-                nfc_fido_send_command_response_cont(apdu->lc);
+                fido_nfc_send_command_response_cont(apdu->lc);
             }
             break;
             
         default:
-            NRF_LOG_ERROR("Unknown INS 0x%02x", apdu->ins);
-			nfc_fido_send_response(SW_INS_INVALID);
+            fido_log_error("Unknown INS 0x%02x", apdu->ins);
+			fido_nfc_send_response(SW_INS_INVALID);
             break;
     }
 }

@@ -152,7 +152,7 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
     // Output reportから受信フレームを取得し、
     // request_frame_bufferに格納
     // 受信フレーム数は、request_frame_numberに設定される
-    m_report_received = hid_fido_receive_request_frame(
+    m_report_received = fido_hid_receive_request_frame(
         rep_buf->p_buff, rep_buf->size,
         request_frame_buffer, &request_frame_number);
 }
@@ -176,7 +176,7 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
         }
         case APP_USBD_HID_USER_EVT_IN_REPORT_DONE:
         {
-            hid_fido_send_input_report_complete();
+            fido_hid_send_input_report_complete();
             m_report_pending = false;
             break;
         }

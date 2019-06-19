@@ -35,27 +35,27 @@ static void hid_fido_command_ping(void)
     // PINGの場合は
     // リクエストのHIDヘッダーとデータを編集せず
     // レスポンスとして戻す（エコーバック）
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
-    uint8_t *data = hid_fido_receive_apdu()->data;
-    size_t   length = hid_fido_receive_apdu()->data_length;
-    hid_fido_send_command_response(cid, cmd, data, length);
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    size_t   length = fido_hid_receive_apdu()->data_length;
+    fido_hid_send_command_response(cid, cmd, data, length);
 }
 
 static void hid_fido_command_wink(void)
 {
     // ステータスなしでレスポンスする
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
-    hid_fido_send_command_response_no_payload(cid, cmd);
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 static void hid_fido_command_lock(void)
 {
     // ロックコマンドのパラメーターを取得する
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint8_t  cmd = hid_fido_receive_hid_header()->CMD;
-    uint8_t  lock_param = hid_fido_receive_apdu()->data[0];
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
 
     if (lock_param > 0) {
         // パラメーターが指定されていた場合
@@ -68,15 +68,15 @@ static void hid_fido_command_lock(void)
     }
 
     // ステータスなしでレスポンスする
-    hid_fido_send_command_response_no_payload(cid, cmd);
+    fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    hid_fido_send_command_response_no_callback(cid, cmd, status_code);
+    uint32_t cid = fido_hid_receive_header()->CID;
+    fido_hid_send_command_response_no_callback(cid, cmd, status_code);
 
     // 処理タイムアウト監視を停止
     fido_comm_interval_timer_stop();
@@ -89,12 +89,12 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 {
     // 受信したフレームから、リクエストデータを取得し、
     // 同時に内容をチェックする
-    hid_fido_receive_request_data(request_frame_buffer, request_frame_number);
+    fido_hid_receive_request_data(request_frame_buffer, request_frame_number);
 
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, hid_fido_receive_hid_header()->ERROR);
+        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header()->ERROR);
         return;
     }
 
@@ -110,7 +110,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         fido_ctap2_command_tup_cancel();
     }
 
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
+    uint32_t cid = fido_hid_receive_header()->CID;
     uint32_t cid_for_lock = fido_lock_channel_cid();
     if (cid != cid_for_lock && cid_for_lock != 0) {
         // ロック対象CID以外からコマンドを受信したら
@@ -161,7 +161,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
 void fido_hid_command_on_fs_evt(fido_flash_event_t *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
             hid_u2f_command_msg_send_response(p_evt);
@@ -192,7 +192,7 @@ void fido_hid_command_on_report_completed(void)
     fido_comm_interval_timer_stop();
 
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case CTAP2_COMMAND_INIT:
             fido_log_info("CTAPHID_INIT end");

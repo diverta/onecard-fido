@@ -34,11 +34,11 @@ static uint8_t response_buffer[1024];
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = hid_fido_receive_hid_header()->CID;
-    uint32_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cmd = fido_hid_receive_header()->CMD;
     // １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
-    hid_fido_send_command_response(cid, cmd, response_buffer, length);
+    fido_hid_send_command_response(cid, cmd, response_buffer, length);
 }
 
 static void send_command_error_response(uint8_t ctap2_status) 
@@ -111,8 +111,8 @@ static void command_erase_skey_cert_response(fido_flash_event_t const *const p_e
 
 static void command_install_skey_cert(void)
 {
-    uint8_t *data = hid_fido_receive_apdu()->data;
-    uint16_t length = hid_fido_receive_apdu()->Lc;
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    uint16_t length = fido_hid_receive_apdu()->Lc;
 
     // 元データチェック
     if (data == NULL || length == 0) {
@@ -181,7 +181,7 @@ static void command_install_skey_cert_response(fido_flash_event_t const *const p
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
             command_erase_skey_cert();
@@ -197,7 +197,7 @@ void fido_maintenance_command(void)
 void fido_maintenance_command_send_response(fido_flash_event_t const *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
             command_erase_skey_cert_response(p_evt);
@@ -213,7 +213,7 @@ void fido_maintenance_command_send_response(fido_flash_event_t const *const p_ev
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = hid_fido_receive_hid_header()->CMD;
+    uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
             fido_log_info("Erase private key and certificate end");

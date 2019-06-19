@@ -5,18 +5,18 @@
  * Created on 2018/11/21, 14:21
  */
 #include <stdio.h>
-
+//
+// プラットフォーム非依存コード
+//
+#include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
 #include "fido_hid_channel.h"
 #include "fido_hid_command.h"
+//
+// プラットフォーム依存コード
+// ターゲットごとの実装となります。
+//
+#include "fido_log.h"
 #include "usbd_hid_service.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME hid_fido_send
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
-// for CTAP2_COMMAND_KEEPALIVE
-#include "ctap2_common.h"
 
 // FIDO機能のHIDリクエストデータ格納領域
 static uint8_t hid_fido_send_buffer[USBD_HID_PACKET_SIZE];
@@ -45,18 +45,18 @@ static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
 
     size_t len = get_payload_length(recv_msg);
     if (cmd == CTAP2_COMMAND_INIT || cmd == CTAP2_COMMAND_PING) {
-        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
+        fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
             get_CID(cid), cmd, len);
     } else {
         // レスポンスの先頭１バイト目＝ステータスコードである場合を想定したログ
-        NRF_LOG_DEBUG("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d) STATUS(0x%02x)",
+        fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d) STATUS(0x%02x)",
             get_CID(cid), cmd, len, recv_msg->pkt.init.payload[0]);
     }
 }
 
 static void dump_hid_cont_packet(USB_HID_MSG_T *recv_msg)
 {
-    NRF_LOG_DEBUG("CONT frame: CID(0x%08x) SEQ(0x%02x)",
+    fido_log_debug("CONT frame: CID(0x%08x) SEQ(0x%02x)",
         get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
 }
 
@@ -131,7 +131,7 @@ static void hid_fido_send_input_report(bool no_callback)
         // payloadなしのレスポンスを行う
     } else if (send_info_t.payload_length == 0 || send_info_t.payload_data == NULL) {
         // 完備していない場合は異常終了
-        NRF_LOG_ERROR("hid_fido_send_input_report: hid_fido_send_setup incomplete ");
+        fido_log_error("hid_fido_send_input_report: hid_fido_send_setup incomplete ");
         return;
     }
     
@@ -153,7 +153,7 @@ static void hid_fido_send_input_report(bool no_callback)
     no_callback_input_report_complete = no_callback;
 }
 
-void hid_fido_send_input_report_complete()
+void fido_hid_send_input_report_complete()
 {
     if (no_callback_input_report_complete) {
         // 実行する必要がない場合はスキップ
@@ -179,19 +179,19 @@ void hid_fido_send_input_report_complete()
     }
 }
 
-void hid_fido_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
+void fido_hid_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length)
 {
     hid_fido_send_setup(cid, cmd, response_buffer, response_length);
     hid_fido_send_input_report(false);
 }
 
-void hid_fido_send_command_response_no_payload(uint32_t cid, uint8_t cmd)
+void fido_hid_send_command_response_no_payload(uint32_t cid, uint8_t cmd)
 {
     hid_fido_send_setup(cid, cmd, NULL, 0);
     hid_fido_send_input_report(false);
 }
 
-void hid_fido_send_command_response_no_callback(uint32_t cid, uint8_t cmd, uint8_t status_code) 
+void fido_hid_send_command_response_no_callback(uint32_t cid, uint8_t cmd, uint8_t status_code) 
 {
     // レスポンスデータを編集 (1 bytes)
     uint8_t cmd_response_buffer[1] = {status_code};
