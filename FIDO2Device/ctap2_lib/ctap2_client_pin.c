@@ -424,7 +424,7 @@ static bool check_pin_code_hash(void)
         check_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
         // アプリケーション全体をロックし、
         // システムリセットが必要である旨をユーザーに知らせる
-        hid_fido_command_set_abort_flag(true);
+        fido_hid_command_set_abort_flag(true);
 
     } else {
         fido_log_error("PIN code hash matching NG");

@@ -332,5 +332,5 @@ void usbd_hid_do_process(void)
     m_report_received = false;
     
     // FIDO USB HIDサービスを実行
-    hid_fido_command_on_report_received(request_frame_buffer, request_frame_number);
+    fido_hid_command_on_report_received(request_frame_buffer, request_frame_number);
 }

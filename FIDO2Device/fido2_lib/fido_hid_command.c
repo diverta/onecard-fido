@@ -71,7 +71,7 @@ static void hid_fido_command_lock(void)
     hid_fido_send_command_response_no_payload(cid, cmd);
 }
 
-void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code) 
+void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
@@ -85,7 +85,7 @@ void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_idling_led_on();
 }
 
-void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
+void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     // 受信したフレームから、リクエストデータを取得し、
     // 同時に内容をチェックする
@@ -94,7 +94,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        hid_fido_command_send_status_response(U2F_COMMAND_ERROR, hid_fido_receive_hid_header()->ERROR);
+        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, hid_fido_receive_hid_header()->ERROR);
         return;
     }
 
@@ -115,7 +115,7 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     if (cid != cid_for_lock && cid_for_lock != 0) {
         // ロック対象CID以外からコマンドを受信したら
         // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
-        hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
         return;
     }
 
@@ -153,12 +153,12 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             // 不正なコマンドであるため
             // エラーレスポンスを送信
             fido_log_error("Invalid command (0x%02x) ", cmd);
-            hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
+            fido_hid_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
 }
 
-void hid_fido_command_on_fs_evt(fido_flash_event_t *const p_evt)
+void fido_hid_command_on_fs_evt(fido_flash_event_t *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
@@ -178,12 +178,12 @@ void hid_fido_command_on_fs_evt(fido_flash_event_t *const p_evt)
     }
 }
 
-void hid_fido_command_set_abort_flag(bool flag)
+void fido_hid_command_set_abort_flag(bool flag)
 {
     abort_flag = flag;
 }
 
-void hid_fido_command_on_report_completed(void)
+void fido_hid_command_on_report_completed(void)
 {
     // FIDO機能レスポンスの
     // 全フレーム送信完了時の処理を実行
@@ -225,7 +225,7 @@ void hid_fido_command_on_report_completed(void)
     }
 }
 
-void hid_fido_command_on_report_started(void) 
+void fido_hid_command_on_report_started(void) 
 {
     // FIDO機能リクエストの
     // 先頭フレーム受信時の処理を実行

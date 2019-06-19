@@ -224,7 +224,7 @@ static void send_ctap2_status_response(uint8_t cmd, uint8_t status_code)
 {
     // CTAP2ステータスコード（１バイト）をレスポンス
     if (m_transport_type == TRANSPORT_HID) {
-        hid_fido_command_send_status_response(cmd, status_code);
+        fido_hid_command_send_status_response(cmd, status_code);
     }
 }
 

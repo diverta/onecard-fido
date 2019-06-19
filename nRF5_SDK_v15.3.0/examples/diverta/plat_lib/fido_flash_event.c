@@ -29,7 +29,7 @@ static void fido_command_on_fs_evt(fds_evt_t const *const p_evt)
     flash_event.retry_counter_write = (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY);
 
     // FDS処理完了後のUSB HID処理を実行
-    hid_fido_command_on_fs_evt(&flash_event);
+    fido_hid_command_on_fs_evt(&flash_event);
 
     // FDS処理完了後のNFC処理を実行
     fido_nfc_command_on_fs_evt(&flash_event);

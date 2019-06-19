@@ -310,7 +310,7 @@ void hid_fido_receive_request_data(uint8_t *request_frame_buffer, size_t request
             receive_request_from_init_frame(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
             // FIDOリクエスト受信開始時の処理を実行
-            hid_fido_command_on_report_started();
+            fido_hid_command_on_report_started();
             
         } else {
             dump_hid_cont_packet(req);
