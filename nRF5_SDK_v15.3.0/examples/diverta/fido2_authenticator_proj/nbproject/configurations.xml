@@ -636,6 +636,8 @@
       <itemPath>../plat_lib/fido_flash.h</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.h</itemPath>
+      <itemPath>../plat_lib/fido_flash_event.c</itemPath>
+      <itemPath>../fido2_authenticator_app/fido_flash_event.h</itemPath>
       <itemPath>../plat_lib/fido_flash_password.c</itemPath>
       <itemPath>../plat_lib/fido_flash_password.h</itemPath>
       <itemPath>../plat_lib/fido_log.c</itemPath>
@@ -1401,6 +1403,11 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../fido2_authenticator_app/fido_flash_event.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido_lib/fido_command.c" ex="false" tool="0" flavor2="2">
@@ -1654,6 +1661,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/fido_flash_event.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="2">
         <cTool>

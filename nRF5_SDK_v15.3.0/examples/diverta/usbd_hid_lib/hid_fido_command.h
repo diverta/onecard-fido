@@ -11,8 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "fds.h"
-#include "peer_manager.h"
+// for Flash ROM event
+#include "fido_flash_event.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +35,7 @@ typedef struct {
 
 void hid_fido_command_send_status_response(uint8_t cmd, uint8_t status_code);
 void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
-void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
+void hid_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt);
 void hid_fido_command_on_report_started(void);
 void hid_fido_command_on_report_completed(void);
 void hid_fido_command_set_abort_flag(bool flag);

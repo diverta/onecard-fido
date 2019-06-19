@@ -4,13 +4,9 @@
  *
  * Created on 2018/11/21, 14:21
  */
-#include "sdk_common.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "fds.h"
 
 #include "fido_flash.h"
 #include "u2f_keyhandle.h"
@@ -20,14 +16,13 @@
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "fido_hid_common.h"
+#include "fido_log.h"
 
 // for processing LED on/off
 #include "fido_board.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME hid_u2f_command
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+// for Flash ROM event
+#include "fido_flash_event.h"
 
 // for U2F_CHAL_SIZE
 #include "u2f.h"
@@ -66,11 +61,11 @@ static void u2f_resume_response_process(void)
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = hid_fido_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
-                NRF_LOG_INFO("U2F Register: completed the test of user presence");
+                fido_log_info("U2F Register: completed the test of user presence");
                 u2f_register_resume_process();
                 
             } else if (ins == U2F_AUTHENTICATE) {
-                NRF_LOG_INFO("U2F Authenticate: completed the test of user presence");
+                fido_log_info("U2F Authenticate: completed the test of user presence");
                 u2f_authenticate_resume_process();
             }
             break;
@@ -174,7 +169,7 @@ static void u2f_register_do_process(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    NRF_LOG_INFO("U2F Register start");
+    fido_log_info("U2F Register start");
 
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -197,7 +192,7 @@ static void u2f_register_do_process(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
-        NRF_LOG_INFO("U2F Register: waiting to complete the test of user presence");
+        fido_log_info("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
         fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
@@ -235,23 +230,23 @@ static void u2f_register_resume_process(void)
     }
 }
 
-static void u2f_register_send_response(fds_evt_t const *const p_evt)
+static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result != FDS_SUCCESS) {
+    if (p_evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         send_u2f_hid_error_report(0x9404);
-        NRF_LOG_ERROR("U2F Register abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("U2F Register abend: FDS EVENT");
         return;
     }
 
-    if (p_evt->id == FDS_EVT_GC) {
+    if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("U2F Register retry: FDS GC done ");
+        fido_log_warning("U2F Register retry: FDS GC done ");
         uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
         u2f_register_add_token_counter(p_appid_hash);
 
-    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+    } else if (p_evt->write_update) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_u2f_response();
     }
@@ -262,7 +257,7 @@ static void u2f_authenticate_do_process(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
     
-    NRF_LOG_INFO("U2F Authenticate start");
+    fido_log_info("U2F Authenticate start");
 
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -276,7 +271,7 @@ static void u2f_authenticate_do_process(void)
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンス(0x6A80)を生成して戻す
-        NRF_LOG_ERROR("U2F Authenticate: invalid keyhandle ");
+        fido_log_error("U2F Authenticate: invalid keyhandle ");
         send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
         return;
     }
@@ -287,11 +282,11 @@ static void u2f_authenticate_do_process(void)
     if (fido_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("U2F Authenticate: token counter not found ");
+        fido_log_error("U2F Authenticate: token counter not found ");
         send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
         return;
     }
-    NRF_LOG_DEBUG("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
+    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
 
     // control byte (P1) を参照
     uint8_t control_byte = hid_fido_receive_apdu()->P1;
@@ -307,7 +302,7 @@ static void u2f_authenticate_do_process(void)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
-        NRF_LOG_INFO("U2F Authenticate: waiting to complete the test of user presence");
+        fido_log_info("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
         fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
@@ -344,23 +339,23 @@ static void u2f_authenticate_resume_process(void)
     }
 }
 
-static void u2f_authenticate_send_response(fds_evt_t const *const p_evt)
+static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result != FDS_SUCCESS) {
+    if (p_evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         send_u2f_hid_error_report(0x9503);
-        NRF_LOG_ERROR("U2F Authenticate abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("U2F Authenticate abend");
         return;
     }
 
-    if (p_evt->id == FDS_EVT_GC) {
+    if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        NRF_LOG_WARNING("U2F Authenticate retry: FDS GC done ");
+        fido_log_warning("U2F Authenticate retry: FDS GC done ");
         uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
         u2f_authenticate_update_token_counter(p_appid_hash);
 
-    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+    } else if (p_evt->write_update) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_u2f_response();
     }
@@ -382,7 +377,7 @@ void hid_u2f_command_msg(void)
     }
 }
 
-void hid_u2f_command_msg_send_response(fds_evt_t const *const p_evt)
+void hid_u2f_command_msg_send_response(fido_flash_event_t *const p_evt)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
@@ -401,9 +396,9 @@ void hid_u2f_command_msg_report_sent(void)
     //   [0]CLA [1]INS [2]P1 3[P2]
     uint8_t ins = hid_fido_receive_apdu()->INS;
     if (ins == U2F_REGISTER) {
-        NRF_LOG_INFO("U2F Register end");
+        fido_log_info("U2F Register end");
 
     } else if (ins == U2F_AUTHENTICATE) {
-        NRF_LOG_INFO("U2F Authenticate end");
+        fido_log_info("U2F Authenticate end");
     }
 }

@@ -16,12 +16,15 @@
 // for lighting LED on/off
 #include "fido_board.h"
 
+// for Flash ROM event
+#include "fido_flash_event.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME nfc_fido_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-void nfc_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
+void nfc_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = nfc_fido_receive_apdu()->INS;

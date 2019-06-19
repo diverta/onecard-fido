@@ -19,7 +19,6 @@ extern "C" {
 
 void fido_command_on_mainsw_event(void);
 void fido_command_on_mainsw_long_push_event(void);
-void fido_command_fds_register(void);
 void fido_command_on_process_timedout(void);
 void fido_command_long_push_timer_handler(void *p_context);
 void fido_command_keepalive_timer_handler(void *p_context);

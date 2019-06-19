@@ -4,19 +4,17 @@
  *
  * Created on 2018/11/21, 14:21
  */
-#include "sdk_common.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include "fds.h"
 #include "hid_fido_receive.h"
 #include "hid_fido_send.h"
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
 #include "fido_timer.h"
+#include "fido_log.h"
 
 // for U2F command
 #include "u2f.h"
@@ -28,10 +26,8 @@
 // for locking cid
 #include "fido_hid_common.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME hid_fido_command
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+// for Flash ROM event
+#include "fido_flash_event.h"
 
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
@@ -158,13 +154,13 @@ void hid_fido_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         default:
             // 不正なコマンドであるため
             // エラーレスポンスを送信
-            NRF_LOG_ERROR("Invalid command (0x%02x) ", cmd);
+            fido_log_error("Invalid command (0x%02x) ", cmd);
             hid_fido_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
 }
 
-void hid_fido_command_on_fs_evt(fds_evt_t const *const p_evt)
+void hid_fido_command_on_fs_evt(fido_flash_event_t *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
@@ -201,10 +197,10 @@ void hid_fido_command_on_report_completed(void)
     uint8_t cmd = hid_fido_receive_hid_header()->CMD;
     switch (cmd) {
         case CTAP2_COMMAND_INIT:
-            NRF_LOG_INFO("CTAPHID_INIT end");
+            fido_log_info("CTAPHID_INIT end");
             break;
         case CTAP2_COMMAND_PING:
-            NRF_LOG_INFO("CTAPHID_PING end");
+            fido_log_info("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
             hid_u2f_command_msg_report_sent();

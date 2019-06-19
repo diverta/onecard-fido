@@ -11,10 +11,11 @@
 extern "C" {
 #endif
 
-#include "fds.h"
+// for Flash ROM event
+#include "fido_flash_event.h"
 
 void nfc_fido_command_on_request_received(void);
-void nfc_fido_command_on_fs_evt(fds_evt_t const *const p_evt);
+void nfc_fido_command_on_fs_evt(fido_flash_event_t const *const p_evt);
 void nfc_fido_command_on_send_completed(void);
 void nfc_fido_command_on_request_started(void);
 

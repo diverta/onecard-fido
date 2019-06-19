@@ -41,25 +41,6 @@ void fido_command_on_mainsw_long_push_event(void)
     }
 }
 
-static void fido_command_on_fs_evt(fds_evt_t const *const p_evt)
-{
-    // FDS処理完了後のBLE処理を実行
-    ble_u2f_command_on_fs_evt(p_evt);
-
-    // FDS処理完了後のUSB HID処理を実行
-    hid_fido_command_on_fs_evt(p_evt);
-
-    // FDS処理完了後のNFC処理を実行
-    nfc_fido_command_on_fs_evt(p_evt);
-}
-
-void fido_command_fds_register(void)
-{
-    // FDS処理完了後の処理をFDSに登録
-    ret_code_t err_code = fds_register(fido_command_on_fs_evt);
-    APP_ERROR_CHECK(err_code);
-}
-
 void fido_command_on_process_timedout(void) 
 {
     // 処理タイムアウト発生時の処理を実行

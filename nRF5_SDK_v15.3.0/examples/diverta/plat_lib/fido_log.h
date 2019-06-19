@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void fido_log_info(const char *fmt, ...);
+void fido_log_warning(const char *fmt, ...);
 void fido_log_error(const char *fmt, ...);
 void fido_log_debug(const char *fmt, ...);
 void fido_log_print_hexdump_debug(uint8_t *buff, size_t size);
