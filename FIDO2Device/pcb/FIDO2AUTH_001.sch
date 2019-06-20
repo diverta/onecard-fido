@@ -1656,6 +1656,59 @@ DIN A4, landscape with location and doc. field</description>
 <text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
 <text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
 </package>
+<package name="BAT-HLD-012-SMT">
+<description>&lt;b&gt;Battery Holders&lt;/B&gt; &lt;p&gt;
+CR1216/1225&lt;br&gt;
+9.5 mm x 15.3 mm x 3.6 mm</description>
+<smd name="-" x="0" y="0" dx="10.16" dy="10.16" layer="1" roundness="100"/>
+<smd name="+@1" x="-7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
+<smd name="+@2" x="7.62" y="0" dx="2.54" dy="5.08" layer="1"/>
+<wire x1="6.35" y1="3.048" x2="4.826" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-6.35" y1="3.048" x2="-4.826" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-4.826" y1="4.572" x2="-3.048" y2="4.572" width="0.127" layer="21"/>
+<wire x1="4.826" y1="4.572" x2="3.048" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-6.35" y1="-3.048" x2="-2.54" y2="-4.826" width="0.127" layer="21" curve="61.172159"/>
+<wire x1="6.35" y1="-3.048" x2="2.54" y2="-4.826" width="0.127" layer="21" curve="-61.172159"/>
+</package>
+<package name="HEADER_3PIN">
+<pad name="1" x="0" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
+<pad name="2" x="2.54" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<pad name="3" x="5.08" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
+<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
+</package>
+<package name="DF65-3P-1.7V_DEV">
+<description>&lt;b&gt;DF65 Series&lt;/b&gt;&lt;p&gt;
+1.7mm pitch, Low Profile Wire-to-Board Connectors</description>
+<text x="4" y="0.6" size="0.8128" layer="25">&gt;NAME</text>
+<text x="4" y="-2" size="0.8128" layer="27">&gt;VALUE</text>
+<rectangle x1="1.3" y1="-0.6" x2="2.1" y2="1.4" layer="29"/>
+<rectangle x1="-0.4" y1="-0.6" x2="0.4" y2="1.4" layer="29"/>
+<rectangle x1="2.725" y1="-6.75" x2="3.425" y2="-4.15" layer="1"/>
+<rectangle x1="-3.425" y1="-6.75" x2="-2.725" y2="-4.15" layer="1"/>
+<rectangle x1="2.775" y1="-5.9" x2="3.375" y2="-4.2" layer="31"/>
+<rectangle x1="-2.1" y1="-0.6" x2="-1.3" y2="1.4" layer="29"/>
+<rectangle x1="-3.375" y1="-5.9" x2="-2.775" y2="-4.2" layer="31"/>
+<rectangle x1="2.625" y1="-6.85" x2="3.525" y2="-4.05" layer="29"/>
+<rectangle x1="-3.525" y1="-6.85" x2="-2.625" y2="-4.05" layer="29"/>
+<smd name="2" x="0" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="1" x="-1.7" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<smd name="3" x="1.7" y="0.4" dx="0.6" dy="1.8" layer="1" stop="no" cream="no"/>
+<rectangle x1="-0.25" y1="-0.45" x2="0.25" y2="0.45" layer="31"/>
+<rectangle x1="-1.95" y1="-0.45" x2="-1.45" y2="0.45" layer="31"/>
+<rectangle x1="1.45" y1="-0.45" x2="1.95" y2="0.45" layer="31"/>
+<wire x1="-3.9" y1="-5.75" x2="3.9" y2="-5.75" width="0.127" layer="51"/>
+<wire x1="-3.75" y1="0.3" x2="3.75" y2="0.3" width="0.127" layer="51"/>
+<wire x1="3.9" y1="-5.75" x2="3.9" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="-3.9" y1="-5.75" x2="-3.9" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="-3.95" x2="-3.75" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-3.9" y1="-3.95" x2="-3.75" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="3.75" y1="-3.95" x2="3.9" y2="-3.95" width="0.127" layer="21"/>
+<wire x1="3.75" y1="-3.95" x2="3.75" y2="0.3" width="0.127" layer="21"/>
+<wire x1="-2.5" y1="-5.75" x2="2.5" y2="-5.75" width="0.127" layer="21"/>
+<wire x1="-3.75" y1="0.3" x2="-2.2" y2="0.3" width="0.127" layer="21"/>
+<wire x1="2.2" y1="0.3" x2="3.75" y2="0.3" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="USB_CON_MALE_A">
@@ -1710,6 +1763,34 @@ DIN A4, landscape with location and doc. field</description>
 <pin name="5" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
 <wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
 <wire x1="3.81" y1="-10.16" x2="5.08" y2="-10.16" width="0.6096" layer="94"/>
+</symbol>
+<symbol name="3V">
+<description>&lt;b&gt;ボタン電池&lt;/b&gt;</description>
+<wire x1="-0.635" y1="0.635" x2="-0.635" y2="0" width="0.4064" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-0.635" y2="0" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="0" x2="-0.635" y2="-0.635" width="0.4064" layer="94"/>
+<wire x1="0.635" y1="2.54" x2="0.635" y2="0" width="0.4064" layer="94"/>
+<wire x1="0.635" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
+<wire x1="0.635" y1="0" x2="0.635" y2="-2.54" width="0.4064" layer="94"/>
+<text x="-1.27" y="3.175" size="1.778" layer="95">&gt;NAME</text>
+<text x="-1.27" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="+" x="5.08" y="0" visible="off" length="short" direction="pas" rot="R180"/>
+<pin name="-" x="-5.08" y="0" visible="pad" length="short" direction="pas"/>
+</symbol>
+<symbol name="IF_3PIN">
+<description>&lt;b&gt;3-pin インターフェース&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="15.24" y1="-7.62" x2="3.175" y2="-7.62" width="0.4064" layer="94"/>
+<wire x1="3.81" y1="-5.08" x2="5.08" y2="-5.08" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="3.175" y2="-7.62" width="0.4064" layer="94"/>
+<wire x1="15.24" y1="-7.62" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="0" y="-2.54" length="middle" direction="pas" swaplevel="1"/>
+<pin name="3" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
+<pin name="1" x="0" y="-5.08" length="middle" direction="pas" swaplevel="1"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -1768,6 +1849,51 @@ TE Connectivity</description>
 </device>
 </devices>
 </deviceset>
+<deviceset name="BAT-HLD-012-SMT" prefix="BAT">
+<description>&lt;b&gt;ボタン電池ホルダー(CR1216/1225) &lt;/B&gt;&lt;p&gt;</description>
+<gates>
+<gate name="G$1" symbol="3V" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="BAT-HLD-012-SMT">
+<connects>
+<connect gate="G$1" pin="+" pad="+@1 +@2"/>
+<connect gate="G$1" pin="-" pad="-"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="IF_3PIN" prefix="CN">
+<description>&lt;b&gt;3-pin インターフェース&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="IF_3PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="_" package="DF65-3P-1.7V_DEV">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="" package="HEADER_3PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 </libraries>
@@ -1799,16 +1925,16 @@ TE Connectivity</description>
 <part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="C5" library="Parts" deviceset="CAP" device="_0603" value="0.01uF"/>
 <part name="C6" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
-<part name="C7" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
-<part name="C8" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="C7" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
+<part name="C8" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
 <part name="FB3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="CN1" library="Connectors" deviceset="TE-1734028" device=""/>
-<part name="R1" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
-<part name="C9" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="R1" library="Parts" deviceset="RESISTOR" device="_0603" value="10k"/>
+<part name="C9" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
 <part name="GND11" library="Supply" deviceset="0V" device=""/>
 <part name="SW1" library="Parts" deviceset="SKRPACE010" device=""/>
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
@@ -1816,10 +1942,10 @@ TE Connectivity</description>
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
 <part name="LED1" library="Parts" deviceset="APHD1608" device="LSURCK"/>
 <part name="LED2" library="Parts" deviceset="APHF1608" device="LSEEQBDZGKC"/>
-<part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
-<part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
-<part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="2.2k"/>
-<part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
+<part name="R2" library="Parts" deviceset="RESISTOR" device="_0603" value="1.5k"/>
+<part name="R3" library="Parts" deviceset="RESISTOR" device="_0603" value="1.2k"/>
+<part name="R4" library="Parts" deviceset="RESISTOR" device="_0603" value="2.2k"/>
+<part name="R5" library="Parts" deviceset="RESISTOR" device="_0603" value="390"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
@@ -1831,6 +1957,10 @@ TE Connectivity</description>
 <part name="GND17" library="Supply" deviceset="0V" device=""/>
 <part name="D2" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
 <part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
+<part name="BAT1" library="Connectors" deviceset="BAT-HLD-012-SMT" device=""/>
+<part name="GND18" library="Supply" deviceset="0V" device=""/>
+<part name="CN3" library="Connectors" deviceset="IF_3PIN" device=""/>
+<part name="GND19" library="Supply" deviceset="0V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -2404,8 +2534,8 @@ TE Connectivity</description>
 <text x="35.56" y="152.4" size="3.81" layer="91">電源供給部</text>
 <text x="35.56" y="147.32" size="2.54" layer="91" align="top-left">USBポートに装着時は、VBUSの5.0V--&gt;3.3Vに降圧して供給します。
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
-<text x="66.04" y="76.2" size="2.54" layer="91">ここにボタン乾電池ケースを
-追加します。</text>
+<text x="78.74" y="60.96" size="2.54" layer="91">ボタン乾電池ケースは
+基板の背面に実装</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -2417,6 +2547,10 @@ TE Connectivity</description>
 <instance part="GND17" gate="1" x="111.76" y="101.6"/>
 <instance part="D2" gate="G$1" x="121.92" y="124.46"/>
 <instance part="D3" gate="G$1" x="121.92" y="81.28"/>
+<instance part="BAT1" gate="G$1" x="93.98" y="81.28"/>
+<instance part="GND18" gate="1" x="66.04" y="71.12"/>
+<instance part="CN3" gate="G$1" x="104.14" y="30.48"/>
+<instance part="GND19" gate="1" x="96.52" y="17.78"/>
 </instances>
 <busses>
 </busses>
@@ -2437,6 +2571,18 @@ TE Connectivity</description>
 <pinref part="C11" gate="G$1" pin="2"/>
 <pinref part="GND17" gate="1" pin="0V"/>
 <wire x1="111.76" y1="109.22" x2="111.76" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="BAT1" gate="G$1" pin="-"/>
+<pinref part="GND18" gate="1" pin="0V"/>
+<wire x1="88.9" y1="81.28" x2="66.04" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="81.28" x2="66.04" y2="73.66" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="CN3" gate="G$1" pin="1"/>
+<pinref part="GND19" gate="1" pin="0V"/>
+<wire x1="104.14" y1="25.4" x2="96.52" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="25.4" x2="96.52" y2="20.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -2464,10 +2610,10 @@ TE Connectivity</description>
 <net name="VDD_NRF" class="0">
 <segment>
 <wire x1="124.46" y1="124.46" x2="144.78" y2="124.46" width="0.1524" layer="91"/>
-<label x="149.86" y="124.46" size="1.778" layer="95" xref="yes"/>
+<label x="160.02" y="124.46" size="1.778" layer="95" xref="yes"/>
 <pinref part="D2" gate="G$1" pin="C"/>
 <pinref part="D3" gate="G$1" pin="C"/>
-<wire x1="144.78" y1="124.46" x2="149.86" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="124.46" x2="160.02" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="81.28" x2="144.78" y2="81.28" width="0.1524" layer="91"/>
 <wire x1="144.78" y1="81.28" x2="144.78" y2="124.46" width="0.1524" layer="91"/>
 <junction x="144.78" y="124.46"/>
@@ -2475,10 +2621,17 @@ TE Connectivity</description>
 </net>
 <net name="N$1" class="0">
 <segment>
-<wire x1="63.5" y1="88.9" x2="114.3" y2="88.9" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="88.9" x2="114.3" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="71.12" x2="63.5" y2="71.12" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="71.12" x2="63.5" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="73.66" x2="119.38" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="73.66" x2="119.38" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="55.88" x2="73.66" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="55.88" x2="73.66" y2="73.66" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="BAT1" gate="G$1" pin="+"/>
+<pinref part="D3" gate="G$1" pin="A"/>
+<wire x1="99.06" y1="81.28" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
