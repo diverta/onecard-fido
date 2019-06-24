@@ -23,6 +23,10 @@
                 <sourceRootElem>../ble_nus_lib</sourceRootElem>
                 <sourceRootElem>../ble_central_lib</sourceRootElem>
                 <sourceRootElem>../nfc_lib</sourceRootElem>
+                <sourceRootElem>../plat_lib</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/ctap2_lib</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/u2f_lib</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/fido2_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

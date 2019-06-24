@@ -19,7 +19,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_peripheral.h"
 
 // for lighting LED
-#include "fido_idling_led.h"
+#include "fido_board.h"
 
 #define TIMER_MSEC 1000
 

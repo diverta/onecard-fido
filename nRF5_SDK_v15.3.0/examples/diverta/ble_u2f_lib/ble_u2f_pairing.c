@@ -5,7 +5,6 @@
 #include "ble_u2f.h"
 #include "fido_flash.h"
 #include "ble_u2f_util.h"
-#include "fido_processing_led.h"
 #include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
@@ -13,6 +12,9 @@
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
+
+// for LED
+#include "fido_board.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing

@@ -11,7 +11,7 @@
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_client_pin_token.h"
-#include "ctap2_client_pin_sskey.h"
+#include "fido_crypto_sskey.h"
 #include "fido_common.h"
 
 // for BLE transport
@@ -19,7 +19,7 @@
 #include "ble_u2f_status.h"
 
 // for processing LED on/off
-#include "fido_processing_led.h"
+#include "fido_board.h"
 
 // for ble_u2f_flash_keydata
 #include "fido_flash.h"
@@ -30,7 +30,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
-#include "fido_user_presence.h"
+#include "fido_command.h"
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
@@ -108,7 +108,7 @@ static void command_authenticator_reset_resume_process(void)
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    ctap2_client_pin_sskey_init(true);
+    fido_crypto_sskey_init(true);
 
     // トークンカウンターをFlash ROM領域から削除
     // (fds_file_deleteが実行される)

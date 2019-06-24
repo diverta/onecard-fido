@@ -18,7 +18,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
-#include "fido_user_presence.h"
+#include "fido_command.h"
 
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
 {

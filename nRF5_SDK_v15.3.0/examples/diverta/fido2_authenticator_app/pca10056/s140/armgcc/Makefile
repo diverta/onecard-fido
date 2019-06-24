@@ -5,12 +5,12 @@ TARGET_BOARD     := PCA10059
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
-FIDLIB_DIR := $(PROJ_DIR)/../fido_lib
-U2FLIB_DIR := $(PROJ_DIR)/../u2f_lib
-CT2LIB_DIR := $(PROJ_DIR)/../ctap2_lib
+FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
+FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
+U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
+CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
-HIDLIB_DIR := $(PROJ_DIR)/../usbd_hid_lib
-NFCLIB_DIR := $(PROJ_DIR)/../nfc_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -150,37 +150,45 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
+  $(FD2LIB_DIR)/fido_common.c \
+  $(FD2LIB_DIR)/fido_ctap2_command.c \
+  $(FD2LIB_DIR)/fido_hid_channel.c \
+  $(FD2LIB_DIR)/fido_maintenance.c \
+  $(FD2LIB_DIR)/fido_request_apdu.c \
+  $(FD2LIB_DIR)/fido_u2f_command.c \
+  $(FD2LIB_DIR)/fido_hid_command.c \
+  $(FD2LIB_DIR)/fido_hid_receive.c \
+  $(FD2LIB_DIR)/fido_hid_send.c \
+  $(FD2LIB_DIR)/fido_nfc_command.c \
+  $(FD2LIB_DIR)/fido_nfc_receive.c \
+  $(FD2LIB_DIR)/fido_nfc_send.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \
   $(CT2LIB_DIR)/ctap2_client_pin.c \
-  $(CT2LIB_DIR)/ctap2_client_pin_crypto.c \
-  $(CT2LIB_DIR)/ctap2_client_pin_sskey.c \
-  $(CT2LIB_DIR)/ctap2_client_pin_store.c \
   $(CT2LIB_DIR)/ctap2_client_pin_token.c \
   $(CT2LIB_DIR)/ctap2_common.c \
   $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
-  $(FIDLIB_DIR)/fido_comm_interval_timer.c \
-  $(FIDLIB_DIR)/fido_command.c \
-  $(FIDLIB_DIR)/fido_common.c \
-  $(FIDLIB_DIR)/fido_crypto.c \
-  $(FIDLIB_DIR)/fido_crypto_ecb.c \
-  $(FIDLIB_DIR)/fido_crypto_keypair.c \
-  $(FIDLIB_DIR)/fido_ctap2_command.c \
-  $(FIDLIB_DIR)/fido_flash.c \
-  $(FIDLIB_DIR)/fido_idling_led.c \
-  $(FIDLIB_DIR)/fido_lock_channel.c \
-  $(FIDLIB_DIR)/fido_maintenance.c \
-  $(FIDLIB_DIR)/fido_processing_led.c \
-  $(FIDLIB_DIR)/fido_request_apdu.c \
-  $(FIDLIB_DIR)/fido_user_presence.c \
+  $(PLTLIB_DIR)/fido_board.c \
+  $(PLTLIB_DIR)/fido_command.c \
+  $(PLTLIB_DIR)/fido_crypto.c \
+  $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
+  $(PLTLIB_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_DIR)/fido_flash.c \
+  $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
+  $(PLTLIB_DIR)/fido_flash_event.c \
+  $(PLTLIB_DIR)/fido_flash_password.c \
+  $(PLTLIB_DIR)/fido_timer.c \
+  $(PLTLIB_DIR)/nfc_service.c \
+  $(PLTLIB_DIR)/usbd_hid_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
-  $(U2FLIB_DIR)/u2f_crypto.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
+  $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_ctap2_command.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
   $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \
@@ -199,16 +207,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_main.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
-  $(HIDLIB_DIR)/hid_fido_command.c \
-  $(HIDLIB_DIR)/hid_fido_receive.c \
-  $(HIDLIB_DIR)/hid_fido_send.c \
-  $(HIDLIB_DIR)/hid_u2f_command.c \
-  $(HIDLIB_DIR)/usbd_hid_common.c \
-  $(HIDLIB_DIR)/usbd_hid_service.c \
-  $(NFCLIB_DIR)/nfc_fido_command.c \
-  $(NFCLIB_DIR)/nfc_fido_receive.c \
-  $(NFCLIB_DIR)/nfc_fido_send.c \
-  $(NFCLIB_DIR)/nfc_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -360,13 +358,11 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(SDK_ROOT)/modules/nrfx/soc \
   $(PROJ_DIR) \
-  $(FIDLIB_DIR) \
+  $(PLTLIB_DIR) \
+  $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
-  $(HIDLIB_DIR) \
-  $(BLCLIB_DIR) \
-  $(NFCLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets

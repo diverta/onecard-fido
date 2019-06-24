@@ -23,7 +23,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for user presence test
-#include "fido_user_presence.h"
+#include "fido_command.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
