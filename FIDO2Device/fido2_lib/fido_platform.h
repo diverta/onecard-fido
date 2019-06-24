@@ -7,6 +7,9 @@
 #ifndef FIDO_PLATFORM_H
 #define FIDO_PLATFORM_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,6 +27,10 @@ typedef enum _LED_LIGHT_MODE {
 #define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
 #define LED_BLINK_INTERVAL_MSEC         250
 
+// キープアライブ・タイマー
+#define U2F_KEEPALIVE_INTERVAL_MSEC   500
+#define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
+
 //
 // fido_board.c
 //
@@ -35,6 +42,13 @@ void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_inter
 void fido_processing_led_off(void);
 void fido_idling_led_on(void);
 void fido_idling_led_off(void);
+
+//
+// fido_command.c
+//
+void    fido_user_presence_terminate(void);
+void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
+uint8_t fido_user_presence_verify_end(void);
 
 #ifdef __cplusplus
 }

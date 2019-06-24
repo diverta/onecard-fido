@@ -12,13 +12,13 @@
 #include "ble_u2f_util.h"
 #include "u2f_keyhandle.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_authenticate
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// for user presence test
-#include "fido_command.h"
 
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
 {

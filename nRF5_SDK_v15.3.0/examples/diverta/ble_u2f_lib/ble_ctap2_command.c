@@ -29,9 +29,6 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for user presence test
-#include "fido_command.h"
-
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 

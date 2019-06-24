@@ -29,7 +29,6 @@
 //
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "fido_command.h"           // for user presence test
 #include "fido_crypto_sskey.h"
 #include "fido_hid_command.h"
 #include "fido_flash.h"             // for flash keydata

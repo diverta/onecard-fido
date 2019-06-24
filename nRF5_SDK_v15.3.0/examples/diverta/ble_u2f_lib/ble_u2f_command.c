@@ -17,13 +17,13 @@
 #include "ctap2_common.h"
 #include "ble_ctap2_command.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_command
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// for user presence test
-#include "fido_command.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"

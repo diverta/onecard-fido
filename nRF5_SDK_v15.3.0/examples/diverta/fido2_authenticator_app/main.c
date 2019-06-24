@@ -22,7 +22,6 @@
 #include "fido_ble_peripheral_timer.h"
 #include "fido_hid_channel.h"
 #include "usbd_hid_service.h"
-#include "fido_command.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
 
