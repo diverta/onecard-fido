@@ -27,7 +27,6 @@
 #include "fido_hid_command.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
-#include "fido_flash.h"
 #include "fido_flash_event.h"   // for Flash ROM event
 
 // ユーザー所在確認が必要かどうかを保持

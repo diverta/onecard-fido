@@ -5,11 +5,13 @@
 
 #include "ble_u2f.h"
 #include "ble_u2f_crypto.h"
-#include "fido_flash.h"
 #include "ble_u2f_status.h"
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
 #include "ble_u2f_util.h"
+
+// for flash ROM
+#include "fds.h"
 
 // for keysize informations
 #include "nrf_crypto_ecdsa.h"
@@ -18,6 +20,9 @@
 #define NRF_LOG_MODULE_NAME ble_u2f_register
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // 鍵ペア情報をRAWデータに変換する領域
 //   この領域に格納される鍵は
@@ -150,8 +155,8 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
-    uint8_t *cert_buffer = u2f_securekey_cert();
-    uint32_t cert_buffer_length = u2f_securekey_cert_length();
+    uint8_t *cert_buffer = fido_flash_cert_data();
+    uint32_t cert_buffer_length = fido_flash_cert_data_length();
 
     // 証明書格納領域からコピー
     memcpy(response_message_buffer + offset, cert_buffer, cert_buffer_length);
@@ -192,7 +197,7 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (ble_u2f_crypto_sign(u2f_securekey_skey(), p_u2f_context) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(fido_flash_skey_data(), p_u2f_context) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }

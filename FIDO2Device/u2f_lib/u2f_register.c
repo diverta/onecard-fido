@@ -4,7 +4,6 @@
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_signature.h"
-#include "fido_flash.h"
 #include "u2f_keyhandle.h"
 #include "fido_crypto_keypair.h"
 
@@ -105,28 +104,6 @@ static bool create_register_signature_base(uint8_t *p_apdu)
     return true;
 }
 
-uint8_t *u2f_securekey_skey(void)
-{
-    // 秘密鍵格納領域の開始アドレスを取得
-    uint32_t *skey_buffer = fido_flash_skey_cert_data();
-    return (uint8_t *)skey_buffer;
-}
-
-uint8_t *u2f_securekey_cert(void)
-{
-    // 証明書データ格納領域の開始アドレスを取得
-    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM + 1;
-    return (uint8_t *)cert_buffer;
-}
-
-uint32_t u2f_securekey_cert_length(void)
-{
-    // 証明書データ格納領域の長さを取得
-    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM;
-    uint32_t cert_buffer_length = *cert_buffer;
-    return cert_buffer_length;
-}
-
 static bool create_registration_response_message(uint8_t *response_message_buffer, size_t *response_length, uint32_t apdu_le)
 {
     // メッセージを格納する領域を確保
@@ -149,8 +126,8 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
-    uint8_t *cert_buffer = u2f_securekey_cert();
-    uint32_t cert_buffer_length = u2f_securekey_cert_length();
+    uint8_t *cert_buffer = fido_flash_cert_data();
+    uint32_t cert_buffer_length = fido_flash_cert_data_length();
 
     // 証明書格納領域からコピー
     memcpy(response_message_buffer + offset, cert_buffer, cert_buffer_length);
@@ -191,7 +168,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    u2f_signature_do_sign(u2f_securekey_skey());
+    u2f_signature_do_sign(fido_flash_skey_data());
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1() == false) {

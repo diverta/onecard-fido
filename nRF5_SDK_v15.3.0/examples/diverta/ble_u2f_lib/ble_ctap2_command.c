@@ -21,9 +21,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for ble_u2f_flash_keydata
-#include "fido_flash.h"
-
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
 

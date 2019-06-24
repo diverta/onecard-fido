@@ -15,9 +15,6 @@
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 
-// for u2f_flash_keydata_read & u2f_flash_keydata_available
-#include "fido_flash.h"
-
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
 
@@ -356,7 +353,7 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, u2f_securekey_skey()) == false) {
+    if (ctap2_generate_signature(ctap2_request.clientDataHash, fido_flash_skey_data()) == false) {
         // 署名を実行
         // NGであれば、エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
@@ -487,8 +484,8 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
             // 証明書格納領域と長さを取得
-            uint8_t *cert_buffer = u2f_securekey_cert();
-            uint32_t cert_buffer_length = u2f_securekey_cert_length();
+            uint8_t *cert_buffer = fido_flash_cert_data();
+            uint32_t cert_buffer_length = fido_flash_cert_data_length();
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {

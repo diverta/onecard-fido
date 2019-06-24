@@ -31,7 +31,6 @@
 #include "fido_hid_receive.h"
 #include "fido_crypto_sskey.h"
 #include "fido_hid_command.h"
-#include "fido_flash.h"             // for flash keydata
 #include "fido_flash_password.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"

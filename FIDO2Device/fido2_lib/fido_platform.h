@@ -50,6 +50,25 @@ void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
 uint8_t fido_user_presence_verify_end(void);
 
 //
+// fido_flash.c
+//
+bool      fido_flash_skey_cert_delete(void);
+bool      fido_flash_skey_cert_write(void);
+bool      fido_flash_skey_cert_read(void);
+bool      fido_flash_skey_cert_available(void);
+bool      fido_flash_skey_cert_data_prepare(uint8_t *data, uint16_t length);
+uint32_t *fido_flash_skey_cert_data(void);
+uint8_t  *fido_flash_skey_data(void);
+uint8_t  *fido_flash_cert_data(void);
+uint32_t  fido_flash_cert_data_length(void);
+
+bool      fido_flash_token_counter_delete(void);
+bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
+bool      fido_flash_token_counter_read(uint8_t *p_appid_hash);
+uint32_t  fido_flash_token_counter_value(void);
+uint8_t  *fido_flash_token_counter_get_check_hash(void);
+
+//
 // fido_log.h
 //
 // nRF52840の場合は、NRF_LOG_xxxx読替マクロが実体のため、

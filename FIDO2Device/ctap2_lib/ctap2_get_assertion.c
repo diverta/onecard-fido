@@ -13,9 +13,6 @@
 #include "fido_common.h"
 #include "fido_crypto.h"
 
-// for u2f_flash_token_counter
-#include "fido_flash.h"
-
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
 
