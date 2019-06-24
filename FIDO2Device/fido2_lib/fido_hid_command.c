@@ -25,7 +25,6 @@
 // ターゲットごとの実装となります。
 //
 #include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_timer.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 

@@ -11,8 +11,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-#include "fido_timer.h"
-
 // HID INITコマンドで新規発行するHIDを保持
 static uint32_t CID_for_initial;
 

@@ -59,6 +59,16 @@ uint8_t fido_user_presence_verify_end(void);
 #include "fido_log.h"
 #endif
 
+//
+// fido_timer.c
+//
+void fido_comm_interval_timer_stop(void);
+void fido_comm_interval_timer_start(void);
+void fido_processing_led_timer_stop(void);
+void fido_processing_led_timer_start(uint32_t on_off_interval_msec);
+void fido_lock_channel_timer_stop(void);
+void fido_lock_channel_timer_start(uint32_t lock_ms);
+
 #ifdef __cplusplus
 }
 #endif

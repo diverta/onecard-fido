@@ -17,7 +17,6 @@
 // ターゲットごとの実装となります。
 //
 #include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_timer.h"         // for communication interval timer
 #include "fido_nfc_receive.h"
 
 void fido_nfc_command_on_fs_evt(fido_flash_event_t const *const p_evt)
