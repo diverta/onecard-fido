@@ -8,7 +8,9 @@
 #include "fido_common.h"
 #include "ctap2_common.h"
 #include "fido_flash_client_pin_store.h"
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 #define NUM_OF_CBOR_ELEMENTS        6
 #define NUM_OF_VERSIONS             2

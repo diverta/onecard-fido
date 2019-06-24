@@ -3,7 +3,9 @@
 #include <stdbool.h>
 
 #include "fido_crypto.h"
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // ハッシュ化データ、署名データに関する情報
 static uint8_t hash_digest[SHA_256_HASH_SIZE];

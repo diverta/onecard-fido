@@ -20,7 +20,7 @@
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 
-//業務処理／HW依存処理間のインターフェース
+// 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 //
@@ -33,7 +33,6 @@
 #include "fido_hid_command.h"
 #include "fido_flash.h"             // for flash keydata
 #include "fido_flash_password.h"
-#include "fido_log.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
 

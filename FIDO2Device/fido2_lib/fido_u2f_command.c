@@ -29,7 +29,6 @@
 #include "fido_hid_send.h"
 #include "fido_flash.h"
 #include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_log.h"
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;

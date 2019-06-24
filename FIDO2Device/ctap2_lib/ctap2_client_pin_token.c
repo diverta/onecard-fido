@@ -11,7 +11,9 @@
 #include "ctap2_common.h"
 #include "fido_crypto_aes_cbc_256.h"
 #include "fido_crypto.h"
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // PINトークン格納領域
 #define PIN_TOKEN_SIZE 16

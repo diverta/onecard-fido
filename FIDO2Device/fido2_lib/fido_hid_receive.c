@@ -16,11 +16,9 @@
 #include "fido_hid_receive.h"
 #include "fido_request_apdu.h"
 #include "u2f.h"
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // 使用するコマンド／ステータスの読替え
 #if CTAP2_SUPPORTED

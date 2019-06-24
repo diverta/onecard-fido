@@ -13,7 +13,6 @@
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 #include "fido_flash_password.h"
-#include "fido_log.h"
 
 // for u2f_flash_keydata_read & u2f_flash_keydata_available
 #include "fido_flash.h"
@@ -23,6 +22,9 @@
 
 // for u2f_securekey_skey_be
 #include "u2f_register.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for debug cbor data
 #define LOG_DEBUG_CRED_SOURCE       false

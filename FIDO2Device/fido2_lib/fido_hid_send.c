@@ -11,11 +11,14 @@
 #include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
 #include "fido_hid_channel.h"
 #include "fido_hid_command.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "fido_log.h"
 #include "usbd_hid_service.h"
 
 // FIDO機能のHIDリクエストデータ格納領域

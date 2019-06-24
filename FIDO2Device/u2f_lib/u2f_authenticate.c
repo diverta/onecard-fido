@@ -6,7 +6,9 @@
 #include "u2f_signature.h"
 #include "u2f_keyhandle.h"
 #include "fido_flash.h"
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // ステータスワードを保持
 static uint16_t status_word;

@@ -10,9 +10,11 @@
 #include "fido_crypto_aes_cbc_256.h"
 #include "fido_crypto.h"
 #include "fido_crypto_sskey.h"
-#include "fido_log.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for debug cbor data
 #define LOG_DEBUG_SALT_BUFF false

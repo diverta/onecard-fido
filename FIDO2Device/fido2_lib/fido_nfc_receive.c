@@ -12,11 +12,9 @@
 #include "fido_nfc_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_log.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for debug apdu data
 #define LOG_DEBUG_APDU_FRAME_BUFF false
