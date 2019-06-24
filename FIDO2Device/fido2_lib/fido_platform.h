@@ -50,6 +50,15 @@ void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
 uint8_t fido_user_presence_verify_end(void);
 
+//
+// fido_log.h
+//
+// nRF52840の場合は、NRF_LOG_xxxx読替マクロが実体のため、
+// nRF5 SDK依存のマクロ定義をインクルードさせる
+#ifdef NRF52840_XXAA
+#include "fido_log.h"
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,11 +16,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_pairing
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
 static uint32_t m_pairing_mode;
@@ -39,7 +34,7 @@ static bool pairing_completed;
 void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
 {
     ret_code_t err_code;
-    NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds start ");
+    fido_log_debug("ble_u2f_pairing_delete_bonds start ");
     
     // 接続情報を保持
     m_u2f_context = p_u2f_context;
@@ -48,7 +43,7 @@ void ble_u2f_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
     err_code = pm_peers_delete();
     if (err_code != FDS_SUCCESS) {
         // 失敗した場合はエラーレスポンスを戻す
-        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
+        fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
         ble_u2f_send_error_response(p_u2f_context, 0x9101);
         return;
     }
@@ -63,12 +58,12 @@ bool ble_u2f_pairing_delete_bonds_response(pm_evt_t const *p_evt)
     // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
         ble_u2f_send_success_response(m_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds end ");
+        fido_log_debug("ble_u2f_pairing_delete_bonds end ");
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
         ble_u2f_send_error_response(m_u2f_context, 0x9102);
-        NRF_LOG_ERROR("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
+        fido_log_error("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
         return true;
     }
     
@@ -96,7 +91,7 @@ bool ble_u2f_pairing_reject_request(ble_evt_t const *p_ble_evt)
         if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
             // ペアリングモードでない場合は、
             // ペアリング要求に応じないようにする
-            NRF_LOG_ERROR("Reject pairing request from an already bonded peer. ");
+            fido_log_error("Reject pairing request from an already bonded peer. ");
             uint16_t conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             ret_code_t code = sd_ble_gap_sec_params_reply(conn_handle, BLE_GAP_SEC_STATUS_UNSPECIFIED, NULL, NULL);
             APP_ERROR_CHECK(code);
@@ -127,7 +122,7 @@ bool ble_u2f_pairing_allow_repairing(pm_evt_t const *p_evt)
     if (p_evt->evt_id == PM_EVT_CONN_SEC_CONFIG_REQ) {
         // ペアリング済みである端末からの
         // 再ペアリング要求を受入れるようにする
-        NRF_LOG_DEBUG("Accept pairing request from an already bonded peer. ");
+        fido_log_debug("Accept pairing request from an already bonded peer. ");
         pm_conn_sec_config_t conn_sec_config = {.allow_repairing = true};
         pm_conn_sec_config_reply(p_evt->conn_handle, &conn_sec_config);
         return true;
@@ -152,7 +147,7 @@ static bool write_pairing_mode(void)
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_pairing_mode: fds_record_update returns 0x%02x ", ret);
+            fido_log_error("write_pairing_mode: fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
@@ -160,19 +155,19 @@ static bool write_pairing_mode(void)
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_pairing_mode: fds_record_write returns 0x%02x ", ret);
+            fido_log_error("write_pairing_mode: fds_record_write returns 0x%02x ", ret);
             return false;
         }
 
     } else {
-        NRF_LOG_DEBUG("write_pairing_mode: fds_record_find returns 0x%02x ", ret);
+        fido_log_debug("write_pairing_mode: fds_record_find returns 0x%02x ", ret);
         return false;
     }
 
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
         // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("write_pairing_mode: no space in flash, calling FDS GC ");
+        fido_log_error("write_pairing_mode: no space in flash, calling FDS GC ");
         if (fido_flash_force_fdc_gc() == false) {
             return false;
         }
@@ -207,7 +202,7 @@ void ble_u2f_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_e
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("ble_u2f_pairing_change_mode abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
@@ -221,7 +216,7 @@ void ble_u2f_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_e
     } else if (p_evt->id == FDS_EVT_GC) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // エラーメッセージを出力
-        NRF_LOG_ERROR("ble_u2f_pairing_reflect_mode_change abend: FDS GC done ");
+        fido_log_error("ble_u2f_pairing_reflect_mode_change abend: FDS GC done ");
     }
 }
 
@@ -234,7 +229,7 @@ static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_b
 
     err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
+        fido_log_error("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
 
@@ -244,7 +239,7 @@ static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_b
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
+        fido_log_error("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
     return true;
@@ -287,7 +282,7 @@ void ble_u2f_pairing_get_mode(ble_u2f_t *p_u2f)
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
     run_as_pairing_mode = read_pairing_mode();
-    NRF_LOG_INFO("Run as %s mode",
+    fido_log_info("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 
     // Flash ROM上は非ペアリングモードに設定
@@ -306,12 +301,12 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
 {
     // LESCペアリング完了時のステータスを確認
     uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
-    NRF_LOG_INFO("Authorization status: 0x%02x ", auth_status);
+    fido_log_info("Authorization status: 0x%02x ", auth_status);
 
     // ペアリング成功時はペアリングモードをキャンセル
     // （ペアリングキャンセルのためのソフトデバイス再起動は、disconnect時に実行される）
     if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
-        NRF_LOG_INFO("Pairing completed with success ");
+        fido_log_info("Pairing completed with success ");
         pairing_completed = true;
         
         // ペアリング先から切断されない可能性があるため、
@@ -323,7 +318,7 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
     // ペアリング先から切断されない可能性があるため、
     // 無通信タイムアウトのタイマー（10秒）をスタートさせる
     if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
-        NRF_LOG_INFO("Pairing rejected");
+        fido_log_info("Pairing rejected");
         ble_u2f_comm_interval_timer_start(p_u2f);
     }
 }
@@ -333,7 +328,7 @@ void ble_u2f_pairing_on_disconnect(void)
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
     if (run_as_pairing_mode == true && pairing_completed == true) {
-        NRF_LOG_DEBUG("ble_u2f_pairing_on_disconnect called. ");
+        fido_log_debug("ble_u2f_pairing_on_disconnect called. ");
         NVIC_SystemReset();
     }
 }
