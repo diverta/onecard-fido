@@ -7,7 +7,6 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "fido_flash_client_pin_store.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

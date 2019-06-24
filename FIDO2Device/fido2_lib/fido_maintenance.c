@@ -18,12 +18,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_flash_password.h"
-
 // 秘密鍵／証明書削除が完了したかどうかを保持
 static bool skey_cert_deleted = false;
 

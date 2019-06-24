@@ -69,6 +69,21 @@ uint32_t  fido_flash_token_counter_value(void);
 uint8_t  *fido_flash_token_counter_get_check_hash(void);
 
 //
+// fido_flash_client_pin_store.c
+//
+bool      fido_flash_client_pin_store_hash_read(void);
+bool      fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter);
+uint8_t  *fido_flash_client_pin_store_pin_code_hash(void);
+uint32_t  fido_flash_client_pin_store_retry_counter(void);
+bool      fido_flash_client_pin_store_pin_code_exist(void);
+
+//
+// fido_flash_password.c
+//
+bool     fido_flash_password_generate(void);
+uint8_t *fido_flash_password_get(void);
+
+//
 // fido_log.h
 //
 // nRF52840の場合は、NRF_LOG_xxxx読替マクロが実体のため、

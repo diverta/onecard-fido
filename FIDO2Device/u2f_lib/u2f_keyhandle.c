@@ -3,7 +3,9 @@
 
 #include "u2f.h"
 #include "fido_crypto_aes_cbc_256.h"
-#include "fido_flash_password.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // キーハンドル生成・格納用領域
 // Register, Authenticateで共通使用

@@ -12,7 +12,6 @@
 #include "fido_common.h"
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
-#include "fido_flash_password.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"

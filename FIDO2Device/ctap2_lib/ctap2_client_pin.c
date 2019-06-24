@@ -14,7 +14,6 @@
 #include "ctap2_pubkey_credential.h"
 #include "fido_crypto_aes_cbc_256.h"
 #include "fido_crypto_sskey.h"
-#include "fido_flash_client_pin_store.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
