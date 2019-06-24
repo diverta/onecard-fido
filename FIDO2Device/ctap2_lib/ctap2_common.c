@@ -6,11 +6,13 @@
  */
 #include <stddef.h>
 
-#include "fido_crypto.h"
 #include "ctap2_common.h"
 
 // for u2f_crypto_sign & other
 #include "u2f_signature.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 //
 // CTAP2コマンドで共用する作業領域

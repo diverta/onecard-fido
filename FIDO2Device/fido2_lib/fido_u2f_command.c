@@ -17,6 +17,9 @@
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
@@ -24,10 +27,7 @@
 #include "fido_hid_command.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
-#include "fido_board.h"         // for processing LED on/off
-#include "fido_flash.h"
 #include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_log.h"
 
 // ユーザー所在確認が必要かどうかを保持
 static bool is_tup_needed = false;
@@ -196,7 +196,7 @@ static void u2f_register_do_process(void)
         is_tup_needed = true;
         fido_log_info("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 
@@ -306,7 +306,7 @@ static void u2f_authenticate_do_process(void)
         is_tup_needed = true;
         fido_log_info("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
         return;
     }
 

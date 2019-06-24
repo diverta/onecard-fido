@@ -11,14 +11,12 @@
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "fido_common.h"
-#include "fido_crypto.h"
-#include "fido_log.h"
-
-// for u2f_flash_token_counter
-#include "fido_flash.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for debug cbor data
 #define LOG_DEBUG_CLHASH_DATA_BUFF  false

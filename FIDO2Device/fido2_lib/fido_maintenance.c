@@ -11,17 +11,12 @@
 //
 // プラットフォーム非依存コード
 //
-#include "fido_maintenance.h"
-
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
-#include "fido_flash.h"
-#include "fido_flash_password.h"
-#include "fido_log.h"
+#include "fido_maintenance.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // 秘密鍵／証明書削除が完了したかどうかを保持
 static bool skey_cert_deleted = false;
@@ -126,29 +121,12 @@ static void command_install_skey_cert(void)
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
         return;
     }
-    uint32_t *securekey_buffer = fido_flash_skey_cert_data();
 
-    // 秘密鍵部（リクエストデータの先頭32バイト）を領域に格納
-    memcpy(securekey_buffer, data, 32);
-
-    // 証明書データ格納領域の開始アドレスを取得
-    uint32_t *cert_buffer = securekey_buffer + SKEY_WORD_NUM;
-    uint16_t  cert_length = length - 32;
-
-    // 証明書データの格納に必要なワード数をチェックする
-    uint32_t cert_buffer_length = (cert_length - 1) / 4 + 2;
-    if (cert_buffer_length > CERT_WORD_NUM) {
-        fido_log_error("cert data words(%d) exceeds max words(%d) ",
-            cert_buffer_length, CERT_WORD_NUM);
+    // Flash ROMに登録する鍵・証明書データを準備
+    if (fido_flash_skey_cert_data_prepare(data, length) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 8);
         return;
     }
-    
-    // １ワード目に、証明書の当初バイト数を格納し、
-    // ２ワード目以降から、証明書のデータを格納するようにする
-    // (エンディアンは変換せずにそのまま格納)
-    cert_buffer[0] = (uint32_t)cert_length;
-    memcpy(cert_buffer + 1, data + 32, cert_length);
 
     // 証明書データをFlash ROMへ書込
     // (fds_record_update/writeまたはfds_gcが実行される)

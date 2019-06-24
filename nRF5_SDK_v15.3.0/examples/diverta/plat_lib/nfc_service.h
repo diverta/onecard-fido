@@ -17,11 +17,9 @@ extern "C" {
 // 関数群
 //
 void nfc_service_init(bool closure);
-void nfc_service_data_send(uint8_t *data, size_t data_size);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* NFC_SERVICE_H */
-

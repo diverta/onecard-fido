@@ -58,18 +58,6 @@ extern "C" {
 bool      fido_flash_force_fdc_gc(void);
 bool      fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
 
-bool      fido_flash_skey_cert_delete(void);
-bool      fido_flash_skey_cert_write(void);
-bool      fido_flash_skey_cert_read(void);
-bool      fido_flash_skey_cert_available(void);
-uint32_t *fido_flash_skey_cert_data(void);
-
-bool      fido_flash_token_counter_delete(void);
-bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
-bool      fido_flash_token_counter_read(uint8_t *p_appid_hash);
-uint32_t  fido_flash_token_counter_value(void);
-uint8_t  *fido_flash_token_counter_get_check_hash(void);
-
 #ifdef __cplusplus
 }
 #endif

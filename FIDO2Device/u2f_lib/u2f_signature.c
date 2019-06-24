@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "fido_crypto.h"
-#include "fido_log.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // ハッシュ化データ、署名データに関する情報
 static uint8_t hash_digest[SHA_256_HASH_SIZE];
@@ -91,9 +91,6 @@ void u2f_signature_base_data_size_set(size_t size)
 void u2f_signature_do_sign(uint8_t *private_key_be)
 {
     fido_log_debug("ECDSA sign start ");
-
-    // nrf_cryptoの初期化を実行する
-    fido_crypto_init();
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成

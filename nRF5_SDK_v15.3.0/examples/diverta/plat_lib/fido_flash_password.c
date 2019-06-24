@@ -18,6 +18,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
 static uint32_t     m_random_vector[8];

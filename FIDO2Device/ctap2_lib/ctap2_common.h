@@ -8,6 +8,7 @@
 #define CTAP2_COMMON_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

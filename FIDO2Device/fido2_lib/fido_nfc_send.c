@@ -12,12 +12,9 @@
 #include "fido_nfc_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_log.h"
-#include "nfc_service.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // Capability container
 static const CAPABILITY_CONTAINER NFC_CC = {

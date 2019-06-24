@@ -24,6 +24,28 @@ uint32_t *fido_flash_skey_cert_data(void)
     return skey_cert_data;
 }
 
+uint8_t *fido_flash_skey_data(void)
+{
+    // 秘密鍵格納領域の開始アドレスを取得
+    uint32_t *skey_buffer = fido_flash_skey_cert_data();
+    return (uint8_t *)skey_buffer;
+}
+
+uint8_t *fido_flash_cert_data(void)
+{
+    // 証明書データ格納領域の開始アドレスを取得
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM + 1;
+    return (uint8_t *)cert_buffer;
+}
+
+uint32_t fido_flash_cert_data_length(void)
+{
+    // 証明書データ格納領域の長さを取得
+    uint32_t *cert_buffer = fido_flash_skey_cert_data() + SKEY_WORD_NUM;
+    uint32_t cert_buffer_length = *cert_buffer;
+    return cert_buffer_length;
+}
+
 bool fido_flash_force_fdc_gc(void)
 {
     ret_code_t err_code;
@@ -113,6 +135,31 @@ bool fido_flash_skey_cert_available(void)
     return false;
 }
 
+bool fido_flash_skey_cert_data_prepare(uint8_t *data, uint16_t length)
+{
+    // 秘密鍵部（リクエストデータの先頭32バイト）を領域に格納
+    uint32_t *securekey_buffer = fido_flash_skey_cert_data();
+    memcpy(securekey_buffer, data, 32);
+
+    // 証明書データ格納領域の開始アドレスを取得
+    uint32_t *cert_buffer = securekey_buffer + SKEY_WORD_NUM;
+    uint16_t  cert_length = length - 32;
+
+    // 証明書データの格納に必要なワード数をチェックする
+    uint32_t cert_buffer_length = (cert_length - 1) / 4 + 2;
+    if (cert_buffer_length > CERT_WORD_NUM) {
+        NRF_LOG_ERROR("cert data words(%d) exceeds max words(%d) ",
+            cert_buffer_length, CERT_WORD_NUM);
+        return false;
+    }
+    
+    // １ワード目に、証明書の当初バイト数を格納し、
+    // ２ワード目以降から、証明書のデータを格納するようにする
+    // (エンディアンは変換せずにそのまま格納)
+    cert_buffer[0] = (uint32_t)cert_length;
+    memcpy(cert_buffer + 1, data + 32, cert_length);
+    return true;
+}
 
 bool fido_flash_skey_cert_write(void)
 {

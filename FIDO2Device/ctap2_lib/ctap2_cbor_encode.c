@@ -9,8 +9,10 @@
 
 #include "fido_common.h"
 #include "ctap2_cbor_parse.h"
-#include "fido_crypto_sskey.h"
 #include "ctap2_client_pin_token.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 static uint8_t add_encoded_cosekey_to_map(CborEncoder *encoder)
 {
