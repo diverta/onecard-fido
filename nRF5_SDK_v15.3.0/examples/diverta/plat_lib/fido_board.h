@@ -13,6 +13,8 @@ extern "C" {
 #endif
 
 // 関数群
+void fido_button_timers_init(void);
+void fido_button_init(void);
 void fido_processing_led_timedout_handler(void);
 void fido_idling_led_timedout_handler(void);
 

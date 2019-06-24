@@ -16,12 +16,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "nfc_service.h"
-
 // Capability container
 static const CAPABILITY_CONTAINER NFC_CC = {
     .cclen_hi = 0x00, 

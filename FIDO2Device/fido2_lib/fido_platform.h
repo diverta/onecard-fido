@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,8 +35,6 @@ typedef enum _LED_LIGHT_MODE {
 //
 // fido_board.c
 //
-void fido_button_timers_init(void);
-void fido_button_init(void);
 void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on);
 void fido_led_light_all(bool led_on);
 void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec);
@@ -68,6 +67,16 @@ void fido_processing_led_timer_stop(void);
 void fido_processing_led_timer_start(uint32_t on_off_interval_msec);
 void fido_lock_channel_timer_stop(void);
 void fido_lock_channel_timer_start(uint32_t lock_ms);
+
+//
+// nfc_service.c
+//
+void nfc_service_data_send(uint8_t *data, size_t data_size);
+
+//
+// usbd_hid_service.c
+//
+void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
 
 #ifdef __cplusplus
 }
