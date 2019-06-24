@@ -9,8 +9,6 @@
 
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "fido_crypto_aes_cbc_256.h"
-#include "fido_crypto.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

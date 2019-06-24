@@ -7,9 +7,6 @@
 #include "cbor.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
-#include "fido_crypto_aes_cbc_256.h"
-#include "fido_crypto.h"
-#include "fido_crypto_sskey.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 

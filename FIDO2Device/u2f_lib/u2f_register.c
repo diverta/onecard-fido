@@ -5,7 +5,6 @@
 #include "u2f.h"
 #include "u2f_signature.h"
 #include "u2f_keyhandle.h"
-#include "fido_crypto_keypair.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

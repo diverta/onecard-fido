@@ -11,12 +11,6 @@
 extern "C" {
 #endif
 
-void     fido_crypto_keypair_generate(void);
-uint8_t *fido_crypto_keypair_private_key(void);
-uint8_t *fido_crypto_keypair_public_key(void);
-size_t   fido_crypto_keypair_private_key_size(void);
-size_t   fido_crypto_keypair_public_key_size(void);
-
 #ifdef __cplusplus
 }
 #endif

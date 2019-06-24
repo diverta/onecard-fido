@@ -32,6 +32,15 @@ typedef enum _LED_LIGHT_MODE {
 #define U2F_KEEPALIVE_INTERVAL_MSEC   500
 #define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
 
+// crypto関連の定義
+#define RAW_PRIVATE_KEY_SIZE    32
+#define RAW_PUBLIC_KEY_SIZE     64
+#define SHARED_SECRET_SIZE      32
+#define ECDSA_SIGNATURE_SIZE    64
+#define SHA_256_HASH_SIZE       32
+#define SSKEY_HASH_SIZE         32
+#define HMAC_SHA_256_SIZE       32
+
 //
 // fido_board.c
 //
@@ -48,6 +57,36 @@ void fido_idling_led_off(void);
 void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
 uint8_t fido_user_presence_verify_end(void);
+
+//
+// fido_crypto.c
+//
+void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
+void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
+void fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size);
+void fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
+
+//
+// fido_crypto_aes_cbc_256.c
+//
+size_t fido_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
+size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
+
+//
+// fido_crypto_keypair.c
+//
+void     fido_crypto_keypair_generate(void);
+uint8_t *fido_crypto_keypair_private_key(void);
+uint8_t *fido_crypto_keypair_public_key(void);
+size_t   fido_crypto_keypair_private_key_size(void);
+
+//
+// fido_crypto_sskey.c
+//
+void     fido_crypto_sskey_init(bool force);
+uint8_t  fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data);
+uint8_t *fido_crypto_sskey_public_key(void);
+uint8_t *fido_crypto_sskey_hash(void);
 
 //
 // fido_flash.c

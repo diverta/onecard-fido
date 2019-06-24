@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "u2f.h"
-#include "fido_crypto_aes_cbc_256.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

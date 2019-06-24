@@ -11,7 +11,6 @@
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_client_pin_token.h"
-#include "fido_crypto_sskey.h"
 #include "fido_common.h"
 
 // for BLE transport

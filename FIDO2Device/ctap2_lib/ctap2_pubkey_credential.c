@@ -8,10 +8,7 @@
 #include <stdint.h>
 
 #include "ctap2_common.h"
-#include "fido_crypto_aes_cbc_256.h"
 #include "fido_common.h"
-#include "fido_crypto.h"
-#include "fido_crypto_keypair.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"

@@ -12,12 +12,8 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
-#include "fido_crypto_aes_cbc_256.h"
-#include "fido_crypto_sskey.h"
 #include "ctap2_client_pin_token.h"
 #include "fido_common.h"
-#include "fido_crypto.h"
-#include "fido_crypto_keypair.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
