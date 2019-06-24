@@ -26,8 +26,8 @@
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
 
-// for lighting LED
-#include "fido_board.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for FDS event handle
 #include "fido_flash_event.h"

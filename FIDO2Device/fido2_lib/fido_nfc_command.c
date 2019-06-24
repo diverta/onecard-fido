@@ -8,11 +8,14 @@
 // プラットフォーム非依存コード
 //
 #include "fido_ctap2_command.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "fido_board.h"         // for lighting LED on/off
 #include "fido_flash_event.h"   // for Flash ROM event
 #include "fido_timer.h"         // for communication interval timer
 #include "fido_nfc_receive.h"

@@ -14,8 +14,8 @@
 #include "fido_hid_command.h"
 #include "fido_nfc_command.h"
 
-// for processing & lighting LED on/off
-#include "fido_board.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for keepalive timer
 #include "fido_timer.h"
@@ -75,7 +75,7 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
     fido_keepalive_interval_timer_start(timeout_msec, p_context);
 
     // LED点滅を開始
-    fido_processing_led_on(LED_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+    fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
 }
 
 uint8_t fido_user_presence_verify_end(void)

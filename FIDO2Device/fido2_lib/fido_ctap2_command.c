@@ -20,13 +20,15 @@
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 
+//業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "fido_board.h"             // for processing LED on/off
 #include "fido_command.h"           // for user presence test
 #include "fido_crypto_sskey.h"
 #include "fido_hid_command.h"
@@ -512,7 +514,7 @@ static void command_authenticator_reset(void)
     fido_log_info("authenticatorReset: waiting to complete the test of user presence");
 
     // 赤色LED高速点滅開始
-    fido_processing_led_on(LED_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
 }
 
 static void command_authenticator_reset_resume_process(void)

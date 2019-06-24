@@ -24,6 +24,18 @@
 // for ble_u2f_pairing_mode_get
 #include "ble_u2f_pairing.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+// FIDO機能で使用するLEDのピン番号を設定
+// nRF52840 Dongleでは以下の割り当てになります。
+//   LED2=Red
+//   LED3=Green
+//   LED4=Blue
+#define LED_FOR_PAIRING_MODE    LED_2
+#define LED_FOR_USER_PRESENCE   LED_3
+#define LED_FOR_PROCESSING      LED_4
+
 //
 // ボタンのピン番号
 //
@@ -146,7 +158,7 @@ static uint32_t m_led_for_processing;
 // アイドル時LED点滅制御用変数
 static uint8_t  led_status = 0;
 
-void fido_led_light_LED(uint32_t pin_number, bool led_on)
+static void led_light_pin_set(uint32_t pin_number, bool led_on)
 {
     // LEDを出力設定
     nrf_gpio_cfg_output(pin_number);
@@ -159,24 +171,56 @@ void fido_led_light_LED(uint32_t pin_number, bool led_on)
     }
 }
 
-void fido_led_light_all_LED(bool led_on)
+void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on)
 {
-    fido_led_light_LED(LED_FOR_PAIRING_MODE, led_on);
-    fido_led_light_LED(LED_FOR_USER_PRESENCE, led_on);
-    fido_led_light_LED(LED_FOR_PROCESSING, led_on);
+    // 点滅対象のLEDを保持
+    uint32_t pin_number;
+    switch (led_light_mode) {
+        case LED_LIGHT_FOR_PAIRING_MODE:
+            pin_number = LED_FOR_PAIRING_MODE;
+            break;
+        case LED_LIGHT_FOR_USER_PRESENCE:
+            pin_number = LED_FOR_USER_PRESENCE;
+            break;
+        case LED_LIGHT_FOR_PROCESSING:
+            pin_number = LED_FOR_PROCESSING;
+            break;
+        default:
+            return;
+    }
+    led_light_pin_set(pin_number, led_on);
+}
+
+void fido_led_light_all(bool led_on)
+{
+    led_light_pin_set(LED_FOR_PAIRING_MODE, led_on);
+    led_light_pin_set(LED_FOR_USER_PRESENCE, led_on);
+    led_light_pin_set(LED_FOR_PROCESSING, led_on);
 }
 
 void fido_processing_led_timedout_handler(void)
 {
     // LEDを点滅させる
     led_state = !led_state;
-    fido_led_light_LED(m_led_for_processing, led_state);
+    led_light_pin_set(m_led_for_processing, led_state);
 }
 
-void fido_processing_led_on(uint32_t led_for_processing, uint32_t on_off_interval_msec)
+void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec)
 {
     // 点滅対象のLEDを保持
-    m_led_for_processing = led_for_processing;
+    switch (led_light_mode) {
+        case LED_LIGHT_FOR_PAIRING_MODE:
+            m_led_for_processing = LED_FOR_PAIRING_MODE;
+            break;
+        case LED_LIGHT_FOR_USER_PRESENCE:
+            m_led_for_processing = LED_FOR_USER_PRESENCE;
+            break;
+        case LED_LIGHT_FOR_PROCESSING:
+            m_led_for_processing = LED_FOR_PROCESSING;
+            break;
+        default:
+            return;
+    }
     
     // タイマーを開始する
     fido_processing_led_timer_start(on_off_interval_msec);
@@ -185,7 +229,7 @@ void fido_processing_led_on(uint32_t led_for_processing, uint32_t on_off_interva
 void fido_processing_led_off(void)
 {
     // LEDを消灯させる
-    fido_led_light_LED(m_led_for_processing, false);
+    led_light_pin_set(m_led_for_processing, false);
 
     // タイマーを停止する
     fido_processing_led_timer_stop();
@@ -201,13 +245,13 @@ void fido_idling_led_timedout_handler(void)
     } else {
         led_state = false;
     }
-    fido_led_light_LED(m_led_for_processing, led_state);
+    led_light_pin_set(m_led_for_processing, led_state);
 }
 
 void fido_idling_led_off(void)
 {
     // LEDを消灯させる
-    fido_led_light_LED(m_led_for_processing, false);
+    led_light_pin_set(m_led_for_processing, false);
 
     // タイマーを停止する
     fido_idling_led_timer_stop();
@@ -222,7 +266,7 @@ void fido_idling_led_on(void)
         // ペアリングモードの場合は
         // RED LEDの連続点灯とします。
         m_led_for_processing = LED_FOR_PAIRING_MODE;
-        fido_led_light_LED(m_led_for_processing, true);
+        led_light_pin_set(m_led_for_processing, true);
         return;
     }
 

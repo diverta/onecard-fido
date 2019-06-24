@@ -13,8 +13,8 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
-// for LED
-#include "fido_board.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_pairing
@@ -102,7 +102,7 @@ bool ble_u2f_pairing_reject_request(ble_evt_t const *p_ble_evt)
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            fido_processing_led_on(LED_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
+            fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
             return true;
         }
     }
@@ -347,7 +347,7 @@ void ble_u2f_pairing_notify_unavailable(pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_processing_led_on(LED_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、ペアリングモードLED点滅を停止
         fido_processing_led_off();

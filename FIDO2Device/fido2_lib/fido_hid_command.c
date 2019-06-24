@@ -16,11 +16,14 @@
 #include "fido_maintenance.h"
 #include "fido_u2f_command.h"
 #include "u2f.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 //
 // プラットフォーム依存コード
 // ターゲットごとの実装となります。
 //
-#include "fido_board.h"         // for lighting LED on/off
 #include "fido_flash_event.h"   // for Flash ROM event
 #include "fido_timer.h"
 #include "fido_log.h"
@@ -217,7 +220,7 @@ void fido_hid_command_on_report_completed(void)
     if (abort_flag) {
         // レスポンス完了後の処理を停止させる場合は、
         // 全色LEDを点灯させたのち、無限ループに入る
-        fido_led_light_all_LED(true);
+        fido_led_light_all(true);
         while(true);
     } else {
         // アイドル時点滅処理を開始

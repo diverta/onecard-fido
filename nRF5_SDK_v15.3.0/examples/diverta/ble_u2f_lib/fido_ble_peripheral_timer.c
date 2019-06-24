@@ -18,8 +18,8 @@ NRF_LOG_MODULE_REGISTER();
 // for fido_ble_peripheral_advertising_start
 #include "fido_ble_peripheral.h"
 
-// for lighting LED
-#include "fido_board.h"
+//業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 #define TIMER_MSEC 1000
 

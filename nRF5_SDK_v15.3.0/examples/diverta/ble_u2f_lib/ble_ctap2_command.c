@@ -18,8 +18,8 @@
 #include "ble_u2f_command.h"
 #include "ble_u2f_status.h"
 
-// for processing LED on/off
-#include "fido_board.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for ble_u2f_flash_keydata
 #include "fido_flash.h"
@@ -95,7 +95,7 @@ static void command_authenticator_reset(void)
     NRF_LOG_INFO("authenticatorReset: waiting to complete the test of user presence");
 
     // 赤色LED高速点滅開始
-    fido_processing_led_on(LED_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
 }
 
 static void command_authenticator_reset_resume_process(void)
