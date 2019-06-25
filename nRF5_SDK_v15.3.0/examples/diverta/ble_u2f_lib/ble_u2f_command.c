@@ -10,7 +10,6 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
-#include "ble_u2f_pairing.h"
 #include "ble_u2f_util.h"
 #include "fido_timer.h"
 
@@ -23,6 +22,9 @@
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
+
+// for BLE pairing functions
+#include "fido_ble_pairing.h"
 
 // Flash ROM更新が完了時、
 // 後続処理が使用するデータを共有
@@ -80,7 +82,7 @@ bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
     }
 
     // ペアリングモード変更を実行
-    ble_u2f_pairing_change_mode(&m_u2f_context);
+    fido_ble_pairing_change_mode(&m_u2f_context);
     return true;
 }
 
@@ -219,14 +221,14 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
-    if (ble_u2f_pairing_mode_get() == true && m_u2f_context.command != COMMAND_PAIRING) {
+    if (fido_ble_pairing_mode_get() == true && m_u2f_context.command != COMMAND_PAIRING) {
         ble_u2f_send_error_response(&m_u2f_context, 0x9601);
         return;
     }
 
     switch (m_u2f_context.command) {
         case COMMAND_INITBOND:
-            ble_u2f_pairing_delete_bonds(&m_u2f_context);
+            fido_ble_pairing_delete_bonds(&m_u2f_context);
             break;
             
         case COMMAND_PAIRING:
@@ -263,7 +265,7 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     // ペアリングモード変更時のイベントを優先させる
     if (m_u2f_context.command == COMMAND_CHANGE_PAIRING_MODE) {
-        ble_u2f_pairing_reflect_mode_change(&m_u2f_context, p_evt);
+        fido_ble_pairing_reflect_mode_change(&m_u2f_context, p_evt);
         return;
     }
         

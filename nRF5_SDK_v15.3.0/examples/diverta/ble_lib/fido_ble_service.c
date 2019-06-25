@@ -1,15 +1,27 @@
-#include "sdk_common.h"
-
-#include <stdio.h>
-#include <string.h>
-
-#include "ble_u2f.h"
+/* 
+ * File:   fido_ble_service.c
+ * Author: makmorit
+ *
+ * Created on 2019/06/25, 13:30
+ */
+// for ble_advertising_init_t
+#include "ble_advertising.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_init
+#define NRF_LOG_MODULE_NAME fido_ble_service
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for BLE functions
+#include "fido_ble_pairing.h"
+
+// for FIDO
+#include "ble_u2f.h"
+#include "ble_u2f_command.h"
+
+//
+// BLE U2Fサービスに関する定義
+//
 #define BLE_UUID_U2F_CONTROL_POINT_CHAR             0xFFF1
 #define BLE_UUID_U2F_STATUS_CHAR                    0xFFF2
 #define BLE_UUID_U2F_CONTROL_POINT_LENGTH_CHAR      0xFFF3
@@ -27,7 +39,25 @@ static uint8_t control_point_length[2] = {0x00, 0x40};   // 64Bytes
 static uint8_t service_revision_bitfield[1] = {0xe0};    // Supports 1.1, 1.2, 2.0
 static uint8_t service_revision[3] = {0x31, 0x2e, 0x31}; // 1.1
 
+//
+// U2F関連の共有情報
+//
+static ble_u2f_t m_u2f;
 
+void fido_ble_advertising_init(ble_advertising_init_t *p_init)
+{
+    // アドバタイジング設定の前に、
+    // ペアリングモードをFDSから取得
+    fido_ble_pairing_get_mode(&m_u2f);
+    
+    // ペアリングモードでない場合は、
+    // ディスカバリーができないよう設定
+    p_init->advdata.flags = fido_ble_pairing_advertising_flag();
+}
+
+//
+// BLEサービス初期化
+//
 static uint32_t u2f_status_char_add(ble_u2f_t * p_u2f)
 {
     // 'U2F Status' characteristicを登録する。
@@ -80,7 +110,6 @@ static uint32_t u2f_status_char_add(ble_u2f_t * p_u2f)
                                            &p_u2f->u2f_status_handles);
 }
 
-
 static uint32_t u2f_control_point_char_add(ble_u2f_t * p_u2f)
 {
     // 'U2F Control Point' characteristicを登録する。
@@ -124,7 +153,6 @@ static uint32_t u2f_control_point_char_add(ble_u2f_t * p_u2f)
                                            &attr_char_value,
                                            &p_u2f->u2f_control_point_handles);
 }
-
 
 static uint32_t u2f_control_point_length_char_add(ble_u2f_t * p_u2f)
 {
@@ -170,7 +198,6 @@ static uint32_t u2f_control_point_length_char_add(ble_u2f_t * p_u2f)
                                            &attr_char_value,
                                            &p_u2f->u2f_control_point_length_handles);
 }
-
 
 static uint32_t u2f_service_revision_bitfield_char_add(ble_u2f_t * p_u2f)
 {
@@ -218,7 +245,6 @@ static uint32_t u2f_service_revision_bitfield_char_add(ble_u2f_t * p_u2f)
                                            &p_u2f->u2f_service_revision_bitfield_handles);
 }
 
-
 static uint32_t u2f_service_revision_char_add(ble_u2f_t * p_u2f)
 {
     // 'U2F Service Revision' characteristicを登録する。
@@ -263,8 +289,7 @@ static uint32_t u2f_service_revision_char_add(ble_u2f_t * p_u2f)
                                            &p_u2f->u2f_service_revision_handles);
 }
 
-
-uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
+static uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
 {
     uint32_t      err_code;
     ble_uuid_t    ble_uuid;
@@ -302,4 +327,16 @@ uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
     VERIFY_SUCCESS(err_code);
 
     return NRF_SUCCESS;
+}
+
+void fido_ble_services_init(void)
+{
+    // U2Fサービスを初期化
+    ble_u2f_init_services(&m_u2f);
+}
+
+ble_u2f_t *fido_ble_get_U2F_context(void)
+{
+    // U2F関連の共有情報
+    return &m_u2f;
 }

@@ -16,11 +16,11 @@ NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "ble_u2f.h"
-#include "fido_ble_main.h"
+#include "fido_ble_service.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_control_point.h"
 #include "ble_u2f_util.h"
-#include "ble_u2f_pairing.h"
+#include "fido_ble_pairing.h"
 #include "ble_u2f_status.h"
 #include "fido_timer.h"
 
@@ -57,7 +57,7 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     fido_idling_led_on();
     
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
-    ble_u2f_pairing_on_disconnect();
+    fido_ble_pairing_on_disconnect();
 }
 
 static bool ble_u2f_on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
@@ -144,7 +144,7 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
         case BLE_GAP_EVT_AUTH_STATUS:
             // ペアリングが成功したかどうかを判定
-            ble_u2f_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
+            fido_ble_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
             break;
 
         case BLE_GATTS_EVT_WRITE:
@@ -170,16 +170,16 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 {
     // ペアリング済みである端末からの
     // 再ペアリング要求を受入れるようにする
-    ble_u2f_pairing_allow_repairing(p_evt);
+    fido_ble_pairing_allow_repairing(p_evt);
     
     // ペアリング情報の削除が完了したときの処理を行う
-    if (ble_u2f_pairing_delete_bonds_response(p_evt)) {
+    if (fido_ble_pairing_delete_bonds_response(p_evt)) {
         return true;
     }
     
     // ペアリングが無効になってしまった場合
     // ペアリングモードLED点滅を開始させる
-    ble_u2f_pairing_notify_unavailable(p_evt);
+    fido_ble_pairing_notify_unavailable(p_evt);
     
     return false;
 }

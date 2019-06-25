@@ -10,7 +10,7 @@
 #include "ble_ctap2_command.h"
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
-#include "fido_ble_main.h"
+#include "fido_ble_service.h"
 #include "fido_hid_command.h"
 #include "fido_nfc_command.h"
 

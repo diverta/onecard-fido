@@ -10,7 +10,8 @@ FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
-BLELIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
+BLULIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
+BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -189,23 +190,22 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
-  $(BLELIB_DIR)/ble_ctap2_command.c \
-  $(BLELIB_DIR)/ble_u2f_authenticate.c \
-  $(BLELIB_DIR)/ble_u2f_command.c \
-  $(BLELIB_DIR)/ble_u2f_control_point.c \
-  $(BLELIB_DIR)/ble_u2f_control_point_apdu.c \
-  $(BLELIB_DIR)/ble_u2f_crypto.c \
-  $(BLELIB_DIR)/ble_u2f_init.c \
-  $(BLELIB_DIR)/ble_u2f_pairing.c \
-  $(BLELIB_DIR)/ble_u2f_register.c \
-  $(BLELIB_DIR)/ble_u2f_status.c \
-  $(BLELIB_DIR)/ble_u2f_status_retry.c \
-  $(BLELIB_DIR)/ble_u2f_util.c \
-  $(BLELIB_DIR)/ble_u2f_version.c \
+  $(BLULIB_DIR)/ble_ctap2_command.c \
+  $(BLULIB_DIR)/ble_u2f_authenticate.c \
+  $(BLULIB_DIR)/ble_u2f_command.c \
+  $(BLULIB_DIR)/ble_u2f_control_point.c \
+  $(BLULIB_DIR)/ble_u2f_control_point_apdu.c \
+  $(BLULIB_DIR)/ble_u2f_crypto.c \
+  $(BLULIB_DIR)/ble_u2f_register.c \
+  $(BLULIB_DIR)/ble_u2f_status.c \
+  $(BLULIB_DIR)/ble_u2f_status_retry.c \
+  $(BLULIB_DIR)/ble_u2f_util.c \
+  $(BLULIB_DIR)/ble_u2f_version.c \
   $(BLELIB_DIR)/fido_ble_event.c \
-  $(BLELIB_DIR)/fido_ble_main.c \
+  $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
+  $(BLELIB_DIR)/fido_ble_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -362,6 +362,7 @@ INC_FOLDERS += \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
+  $(BLULIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets
