@@ -156,7 +156,7 @@ static enum COMMAND_TYPE get_command_type(void)
             } else {
                 // INSが不正の場合は終了
                 fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
-                ble_u2f_send_error_response(&m_u2f_context, U2F_SW_INS_NOT_SUPPORTED);
+                ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
 
@@ -164,7 +164,7 @@ static enum COMMAND_TYPE get_command_type(void)
                 // INSが正しくてもCLAが不正の場合は
                 // エラーレスポンスを送信して終了
                 fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", m_u2f_context.p_apdu->CLA);
-                ble_u2f_send_error_response(&m_u2f_context, U2F_SW_CLA_NOT_SUPPORTED);
+                ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_CLA_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
 
@@ -172,7 +172,7 @@ static enum COMMAND_TYPE get_command_type(void)
             if (status_word != 0x00) {
                 // リクエストの検査中にステータスワードが設定された場合は
                 // エラーレスポンスを送信して終了
-                ble_u2f_send_error_response(&m_u2f_context, status_word);
+                ble_u2f_send_error_response(p_ble_header->CMD, status_word);
                 return COMMAND_NONE;
             }
             
@@ -195,7 +195,7 @@ static enum COMMAND_TYPE get_command_type(void)
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
         m_u2f_context.p_ble_header = p_ble_header;
-        ble_u2f_send_command_error_response(&m_u2f_context, p_ble_header->ERROR);
+        ble_u2f_send_command_error_response(p_ble_header->ERROR);
 
         // 以降のリクエストデータは読み捨てる
         p_ble_header->CMD = 0;
@@ -210,9 +210,6 @@ static enum COMMAND_TYPE get_command_type(void)
 
 void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write)
 {
-    // BLE接続情報を共有情報に保持
-    m_u2f_context.p_u2f = p_u2f;
-
     // コマンドバッファに入力されたリクエストデータを取得
     ble_u2f_control_point_receive(p_evt_write, &m_u2f_context);
 
@@ -222,7 +219,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
     if (fido_ble_pairing_mode_get() == true && m_u2f_context.command != COMMAND_PAIRING) {
-        ble_u2f_send_error_response(&m_u2f_context, 0x9601);
+        ble_u2f_send_error_response(m_u2f_context.p_ble_header->CMD, 0x9601);
         return;
     }
 
@@ -232,7 +229,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             break;
             
         case COMMAND_PAIRING:
-            ble_u2f_send_success_response(&m_u2f_context);
+            ble_u2f_send_success_response(m_u2f_context.p_ble_header->CMD);
             break;
 
         case COMMAND_CTAP2_COMMAND:
@@ -269,9 +266,8 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
         return;
     }
         
-    // 共有情報の中に接続情報がない場合は終了
-    ble_u2f_t *p_u2f = m_u2f_context.p_u2f;
-    if (p_u2f == NULL) {
+    // コマンドが確定していない場合は終了
+    if (m_u2f_context.command == COMMAND_NONE) {
         return;
     }
 
@@ -297,7 +293,7 @@ void ble_u2f_command_keepalive_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
     ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
-    ble_u2f_send_keepalive_response(p_u2f_context);
+    ble_u2f_send_keepalive_response(p_u2f_context->keepalive_status_byte);
 }
 
 void ble_u2f_command_on_response_send_completed(void)

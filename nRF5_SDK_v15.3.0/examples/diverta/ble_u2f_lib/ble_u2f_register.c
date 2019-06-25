@@ -47,7 +47,7 @@ static void add_token_counter(ble_u2f_context_t *p_u2f_context)
     uint32_t token_counter = 0;
     if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
-        ble_u2f_send_error_response(p_u2f_context, 0x9403);
+        ble_u2f_send_error_response(p_u2f_context->p_ble_header->CMD, 0x9403);
         return;
     }
 
@@ -232,18 +232,19 @@ static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
 void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
 {
     NRF_LOG_DEBUG("ble_u2f_register start ");
+    uint8_t cmd = p_u2f_context->p_ble_header->CMD;
 
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x9401);
+        ble_u2f_send_error_response(cmd, 0x9401);
         return;
     }
 
     if (fido_flash_skey_cert_available() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x9402);
+        ble_u2f_send_error_response(cmd, 0x9402);
         return;
     }
     
@@ -254,7 +255,7 @@ void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, p_u2f_context->p_ble_header->STATUS_WORD);
+        ble_u2f_send_error_response(cmd, p_u2f_context->p_ble_header->STATUS_WORD);
         return;
     }
 
@@ -272,14 +273,15 @@ static void send_register_response(ble_u2f_context_t *p_u2f_context)
 
     // 生成したレスポンスを戻す
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }
 
 void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x9404);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, 0x9404);
         NRF_LOG_ERROR("ble_u2f_register abend: FDS EVENT=%d ", p_evt->id);
         return;
     }

@@ -44,7 +44,7 @@ static void ble_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, response_buffer, response_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
     fido_log_debug("ble_u2f_status_response_send (%dbytes) status=0x%02x", response_length, ctap2_status);
 }
 

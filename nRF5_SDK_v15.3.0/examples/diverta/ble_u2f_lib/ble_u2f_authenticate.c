@@ -60,7 +60,8 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
     // トークンカウンターレコードを更新する
     if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
         // NGであれば、エラーレスポンスを生成して終了
-        ble_u2f_send_error_response(p_u2f_context, 0x9502);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, 0x9502);
         return;
     }
 
@@ -220,7 +221,8 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
     // レスポンス・メッセージを生成
     if (create_response_message(p_u2f_context) == false) {
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, p_u2f_context->p_ble_header->STATUS_WORD);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, p_u2f_context->p_ble_header->STATUS_WORD);
         return;
     }
     
@@ -233,11 +235,12 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
 void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
 {
     fido_log_debug("ble_u2f_authenticate start ");
+    uint8_t cmd = p_u2f_context->p_ble_header->CMD;
 
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        ble_u2f_send_error_response(p_u2f_context, 0x9501);
+        ble_u2f_send_error_response(cmd, 0x9501);
         return;
     }
 
@@ -246,7 +249,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
         fido_log_error("ble_u2f_authenticate: invalid keyhandle ");
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
+        ble_u2f_send_error_response(cmd, U2F_SW_WRONG_DATA);
         return;
     }
     
@@ -256,7 +259,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // appIdHashがトークンカウンターにない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("ble_u2f_authenticate: token counter not found ");
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
+        ble_u2f_send_error_response(cmd, U2F_SW_WRONG_DATA);
         return;
     }
 
@@ -269,7 +272,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     if (control_byte == 0x07) {
         // 0x07 ("check-only") の場合はここで終了し
         // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_CONDITIONS_NOT_SATISFIED);
+        ble_u2f_send_error_response(cmd, U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
     }
 
@@ -300,14 +303,15 @@ static void send_authentication_response(ble_u2f_context_t *p_u2f_context)
 
     // 生成したレスポンスを戻す
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }
 
 void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        ble_u2f_send_error_response(p_u2f_context, 0x9503);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, 0x9503);
         fido_log_error("ble_u2f_authenticate abend: FDS EVENT=%d ", p_evt->id);
         return;
     }

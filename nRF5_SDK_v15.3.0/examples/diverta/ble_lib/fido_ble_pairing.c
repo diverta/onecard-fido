@@ -44,25 +44,28 @@ void fido_ble_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
     if (err_code != FDS_SUCCESS) {
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
-        ble_u2f_send_error_response(p_u2f_context, 0x9101);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, 0x9101);
         return;
     }
 }
 
 bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
 {
+    uint8_t cmd = m_u2f_context->p_ble_header->CMD;
+
     // pm_peers_deleteが完了したときの処理。
     //   PM_EVT_PEERS_DELETE_SUCCEEDED、または
     //   PM_EVT_PEERS_DELETE_FAILEDの
     //   いずれかのイベントが発生する
     // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        ble_u2f_send_success_response(m_u2f_context);
+        ble_u2f_send_success_response(cmd);
         fido_log_debug("ble_u2f_pairing_delete_bonds end ");
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        ble_u2f_send_error_response(m_u2f_context, 0x9102);
+        ble_u2f_send_error_response(cmd, 0x9102);
         fido_log_error("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
         return true;
     }

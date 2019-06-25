@@ -108,7 +108,6 @@ enum COMMAND_TYPE
 typedef struct
 {
     enum COMMAND_TYPE command;
-    ble_u2f_t        *p_u2f;
     BLE_HEADER_T     *p_ble_header;
     FIDO_APDU_T       *p_apdu;
     uint8_t          *apdu_data_buffer;

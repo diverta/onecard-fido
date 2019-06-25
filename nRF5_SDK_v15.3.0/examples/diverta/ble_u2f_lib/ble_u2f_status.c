@@ -108,7 +108,7 @@ void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, ui
     send_info_t.busy = false;
 }
 
-uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
+uint32_t ble_u2f_status_response_send(void)
 {
     uint32_t data_length;
     uint32_t err_code;
@@ -172,7 +172,7 @@ void ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f)
         // フラグがbusyの場合、再送のため１回だけ
         // ble_u2f_status_response_send関数を呼び出す
         send_info_t.busy = false;
-        ble_u2f_status_response_send(p_u2f);
+        ble_u2f_status_response_send();
     }
 }
 
@@ -180,7 +180,6 @@ void ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f)
 void ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context)
 {
     // BLE接続情報、BLEヘッダー、APDUの参照を取得
-    ble_u2f_t *p_u2f = p_u2f_context->p_u2f;
     BLE_HEADER_T *p_ble_header = p_u2f_context->p_ble_header;
     FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
 
@@ -188,7 +187,7 @@ void ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context)
     // リクエストのBLEヘッダーとデータを編集せず
     // レスポンスとして戻す（エコーバック）
     ble_u2f_status_setup(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
-    ble_u2f_status_response_send(p_u2f);
+    ble_u2f_status_response_send();
 }
 
 
@@ -201,7 +200,7 @@ void ble_u2f_status_response_send_retry(void)
     }
     
     // レスポンスを送信
-    uint32_t err_code = ble_u2f_status_response_send(p_u2f);
+    uint32_t err_code = ble_u2f_status_response_send();
     NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
 }
 
@@ -212,33 +211,29 @@ void ble_u2f_status_response_send_retry(void)
 static uint8_t  data_buffer[2];
 static uint32_t data_buffer_length;
 
-void ble_u2f_send_success_response(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_send_success_response(uint8_t command_for_response)
 {
     // レスポンスを生成
-    uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
     fido_set_status_word(data_buffer, U2F_SW_NO_ERROR);
     data_buffer_length = 2;
 
     // 生成したレスポンスを戻す
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }
 
-void ble_u2f_send_error_response(ble_u2f_context_t *p_u2f_context, uint16_t err_status_word)
+void ble_u2f_send_error_response(uint8_t command_for_response, uint16_t err_status_word)
 {    
-    // コマンドを格納
-    uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
-
     // ステータスワードを格納
     fido_set_status_word(data_buffer, err_status_word);
     data_buffer_length = 2;
     
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }
 
-void ble_u2f_send_command_error_response(ble_u2f_context_t *p_u2f_context, uint8_t err_code)
+void ble_u2f_send_command_error_response(uint8_t err_code)
 {
     // コマンドを格納
     uint8_t command_for_response = U2F_COMMAND_ERROR;
@@ -249,19 +244,19 @@ void ble_u2f_send_command_error_response(ble_u2f_context_t *p_u2f_context, uint8
 
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }
 
-void ble_u2f_send_keepalive_response(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_send_keepalive_response(uint8_t keepalive_status_byte)
 {
     // コマンドを格納
     uint8_t command_for_response = U2F_COMMAND_KEEPALIVE;
 
     // エラーコードを格納
-    data_buffer[0]     = p_u2f_context->keepalive_status_byte;
+    data_buffer[0]     = keepalive_status_byte;
     data_buffer_length = 1;
 
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
 }

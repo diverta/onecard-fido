@@ -35,7 +35,8 @@ void ble_u2f_version_do_process(ble_u2f_context_t *p_u2f_context)
         // Leを確認し、6バイトでなかったら
         // エラーレスポンスを送信し終了
         NRF_LOG_ERROR("Response message length(6) exceeds Le(%d) ", p_u2f_context->p_apdu->Le);
-        ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_LENGTH);
+        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        ble_u2f_send_error_response(cmd, U2F_SW_WRONG_LENGTH);
         return;
     }
     
@@ -44,6 +45,6 @@ void ble_u2f_version_do_process(ble_u2f_context_t *p_u2f_context)
 
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, u2f_version_data_buffer, sizeof(u2f_version_data_buffer));
-    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+    ble_u2f_status_response_send();
     NRF_LOG_DEBUG("ble_u2f_version end ");
 }
