@@ -12,6 +12,7 @@
 #include "ble_u2f_version.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_util.h"
+#include "fido_timer.h"
 
 // for CTAP2 support
 #include "ctap2_common.h"
@@ -299,6 +300,12 @@ void ble_u2f_command_keepalive_timer_handler(void *p_context)
 
 void ble_u2f_command_on_response_send_completed(void)
 {
+    // 受信フレーム数カウンターをクリア
+    ble_u2f_control_point_receive_frame_count_clear();
+
+    // 次回リクエストまでの経過秒数監視をスタート
+    fido_comm_interval_timer_start();
+
     // CTAP2コマンドの処理を実行
     ble_ctap2_command_response_sent();
 }

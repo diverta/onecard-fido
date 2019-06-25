@@ -191,7 +191,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_ctap2_command.c \
   $(BLELIB_DIR)/ble_u2f_authenticate.c \
-  $(BLELIB_DIR)/ble_u2f_comm_interval_timer.c \
   $(BLELIB_DIR)/ble_u2f_command.c \
   $(BLELIB_DIR)/ble_u2f_control_point.c \
   $(BLELIB_DIR)/ble_u2f_control_point_apdu.c \

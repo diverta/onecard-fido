@@ -5,13 +5,13 @@
 #include "ble_u2f.h"
 #include "fido_flash.h"
 #include "ble_u2f_util.h"
-#include "ble_u2f_comm_interval_timer.h"
 #include "peer_manager.h"
 #include "fds.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
+#include "fido_timer.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -311,7 +311,7 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
         
         // ペアリング先から切断されない可能性があるため、
         // 無通信タイムアウトのタイマー（10秒）をスタートさせる
-        ble_u2f_comm_interval_timer_start(p_u2f);
+        fido_comm_interval_timer_start();
     }
     
     // 非ペアリングモードでペアリング要求があった場合も
@@ -319,7 +319,7 @@ void ble_u2f_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
     // 無通信タイムアウトのタイマー（10秒）をスタートさせる
     if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
         fido_log_info("Pairing rejected");
-        ble_u2f_comm_interval_timer_start(p_u2f);
+        fido_comm_interval_timer_start();
     }
 }
 

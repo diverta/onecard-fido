@@ -18,10 +18,11 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f.h"
 #include "fido_ble_main.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_comm_interval_timer.h"
+#include "ble_u2f_control_point.h"
 #include "ble_u2f_util.h"
 #include "ble_u2f_pairing.h"
 #include "ble_u2f_status.h"
+#include "fido_timer.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -36,7 +37,7 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     ble_u2f_command_initialize_context();
 
     // 無通信タイマーが既にスタートしている場合は停止させる
-    ble_u2f_comm_interval_timer_stop(p_u2f);
+    fido_comm_interval_timer_stop();
 
     // アイドル時点滅処理を停止
     fido_idling_led_off();
@@ -195,4 +196,17 @@ void fido_ble_sleep_mode_enter(void)
     fido_led_light(LED_LIGHT_FOR_PAIRING_MODE, false);
     fido_led_light(LED_LIGHT_FOR_USER_PRESENCE, false);
     fido_led_light(LED_LIGHT_FOR_PROCESSING, false);
+}
+
+void fido_ble_on_process_timedout(void)
+{
+    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    if (p_u2f == NULL) {
+        return;
+    }
+
+    // 直近のレスポンスから10秒を経過した場合、
+    // nRF52から強制的にBLEコネクションを切断
+    NRF_LOG_DEBUG("Communication interval timed out: received %d frames", ble_u2f_control_point_receive_frame_count());
+    sd_ble_gap_disconnect(p_u2f->conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
 }

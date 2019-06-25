@@ -10,8 +10,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_comm_interval_timer.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_comm_interval_timer.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_command.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_command.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_control_point.c</itemPath>
@@ -1195,27 +1193,6 @@
             <pElem>../plat_lib</pElem>
             <pElem>../../../../FIDO2Device/u2f_lib</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f_comm_interval_timer.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/timer</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>
