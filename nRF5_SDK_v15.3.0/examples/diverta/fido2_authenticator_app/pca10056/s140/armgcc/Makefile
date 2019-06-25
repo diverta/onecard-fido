@@ -195,7 +195,6 @@ SRC_FILES += \
   $(BLULIB_DIR)/ble_u2f_command.c \
   $(BLULIB_DIR)/ble_u2f_control_point.c \
   $(BLULIB_DIR)/ble_u2f_control_point_apdu.c \
-  $(BLULIB_DIR)/ble_u2f_crypto.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLULIB_DIR)/ble_u2f_status.c \
   $(BLULIB_DIR)/ble_u2f_util.c \

@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-bool ble_u2f_signature_data_allocate(void);
 bool ble_u2f_response_message_allocate(void);
 
 #ifdef __cplusplus

@@ -5,11 +5,12 @@
 
 #include "fds.h"
 #include "ble_u2f.h"
-#include "ble_u2f_crypto.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_util.h"
+
 #include "u2f_keyhandle.h"
+#include "u2f_signature.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -105,19 +106,13 @@ static uint16_t copy_token_counter_data(uint8_t *p_dest_buffer, uint32_t token_c
     return 4;
 }
 
-static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user_presence, uint32_t token_counter)
+static bool create_authenticate_signature_base(uint8_t *p_apdu_data, uint8_t user_presence, uint32_t token_counter)
 {
     uint8_t offset = 0;
 
-    // 署名ベースを格納する領域を確保
-    if (ble_u2f_signature_data_allocate() == false) {
-        return false;
-    }
-
     // APDUからappIdHashを取得し格納
-    uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
-    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint16_t copied_size = copy_appIdHash_data(signature_base_buffer + offset, p_apdu->data);
+    uint8_t *signature_base_buffer = u2f_signature_data_buffer();
+    uint16_t copied_size = copy_appIdHash_data(signature_base_buffer + offset, p_apdu_data);
     offset += copied_size;
 
     // User Presence
@@ -128,11 +123,11 @@ static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user
     offset += copied_size;
         
     // APDUからchallengeを取得し格納
-    copied_size = copy_challenge_data(signature_base_buffer + offset, p_apdu->data);
+    copied_size = copy_challenge_data(signature_base_buffer + offset, p_apdu_data);
     offset += copied_size;
     
     // メッセージのバイト数をセット
-    p_u2f_context->signature_data_buffer_length = offset;
+    u2f_signature_base_data_size_set(offset);
 
     return true;
 }
@@ -185,9 +180,11 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     p_u2f_context->p_ble_header->STATUS_WORD = 0x9504;
     
     // 署名ベースを生成（トークンカウンターは現在値＋１とする）
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    uint8_t *request_buffer = p_apdu->data;
     uint8_t user_presence = p_u2f_context->user_presence_byte;
     uint32_t token_counter = p_u2f_context->token_counter + 1;
-    if (create_signature_base(p_u2f_context, user_presence, token_counter) == false) {
+    if (create_authenticate_signature_base(request_buffer, user_presence, token_counter) == false) {
         return false;
     }
 
@@ -195,13 +192,10 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
 
     // キーハンドルから取り出した秘密鍵により署名を生成
-    if (ble_u2f_crypto_sign(private_key_be) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
+    u2f_signature_do_sign(private_key_be);
 
     // ASN.1形式署名を格納する領域を準備
-    if (ble_u2f_crypto_create_asn1_signature() == false) {
+    if (u2f_signature_convert_to_asn1() == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;

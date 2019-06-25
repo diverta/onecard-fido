@@ -30,8 +30,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_control_point.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_control_point_apdu.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_control_point_apdu.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_crypto.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_crypto.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_status.c</itemPath>
@@ -1287,32 +1285,6 @@
             <pElem>../../../../FIDO2Device/u2f_lib</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f_crypto.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include</pElem>
           </incDir>
         </cTool>
       </item>

@@ -5,11 +5,13 @@
 
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_crypto.h"
+
 #include "ble_u2f_status.h"
+#include "ble_u2f_util.h"
+
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
-#include "ble_u2f_util.h"
+#include "u2f_signature.h"
 
 // for flash ROM
 #include "fds.h"
@@ -24,14 +26,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
-
-// 鍵ペア情報をRAWデータに変換する領域
-//   この領域に格納される鍵は
-//   ビッグエンディアン配列となる
-static uint8_t private_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE];
-static size_t  private_key_raw_data_size;
-static size_t  public_key_raw_data_size;
 
 static void add_token_counter(ble_u2f_context_t *p_u2f_context)
 {
@@ -75,8 +69,7 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は public_key_raw_data に
     // ビッグエンディアンで格納される
-    ble_u2f_crypto_public_key(public_key_raw_data, &public_key_raw_data_size);
-    uint8_t *p_publickey = public_key_raw_data;
+    uint8_t *p_publickey = fido_crypto_keypair_public_key();
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
@@ -96,22 +89,16 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
     return copied_size;
 }
 
-static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
+static bool create_register_signature_base(uint8_t *p_apdu)
 {
     uint8_t offset = 0;
 
-    // 署名ベースを格納する領域を確保
-    if (ble_u2f_signature_data_allocate() == false) {
-        return false;
-    }
-
     // RFU
-    uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
+    uint8_t *signature_base_buffer = u2f_signature_data_buffer();
     signature_base_buffer[offset++] = 0x00;
 
     // APDUからappIdHash, challengeを取得し格納
-    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint16_t copied_size = copy_apdu_data(signature_base_buffer + offset, p_apdu->data);
+    uint16_t copied_size = copy_apdu_data(signature_base_buffer + offset, p_apdu);
     offset += copied_size;
 
     // キーハンドルを格納
@@ -124,7 +111,7 @@ static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
     offset += copied_size;
 
     // メッセージのバイト数をセット
-    p_u2f_context->signature_data_buffer_length = offset;
+    u2f_signature_base_data_size_set(offset);
 
     return true;
 }
@@ -165,9 +152,9 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
 
     // 署名格納領域からコピー
     memcpy(response_message_buffer + offset, 
-        p_u2f_context->signature_data_buffer, 
-        p_u2f_context->signature_data_buffer_length);
-    offset += p_u2f_context->signature_data_buffer_length;
+        u2f_signature_data_buffer(), 
+        u2f_signature_data_size());
+    offset += u2f_signature_data_size();
 
     if (p_u2f_context->p_apdu->Le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
@@ -193,18 +180,17 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     p_u2f_context->p_ble_header->STATUS_WORD = 0x9405;
     
     // 署名ベースを生成
-    if (create_register_signature_base(p_u2f_context) == false) {
+    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    uint8_t *request_buffer = p_apdu->data;
+    if (create_register_signature_base(request_buffer) == false) {
         return false;
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (ble_u2f_crypto_sign(fido_flash_skey_data()) != NRF_SUCCESS) {
-        // 署名生成に失敗したら終了
-        return false;
-    }
+    u2f_signature_do_sign(fido_flash_skey_data());
 
     // ASN.1形式署名を格納する領域を準備
-    if (ble_u2f_crypto_create_asn1_signature() == false) {
+    if (u2f_signature_convert_to_asn1() == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;
@@ -215,19 +201,6 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
         return false;
     }
     return true;
-}
-
-
-static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
-{
-    // nrf_cc310により、キーペアを新規生成する
-    ble_u2f_crypto_generate_keypair();
-    ble_u2f_crypto_private_key(private_key_raw_data, &private_key_raw_data_size);
-
-    // APDUから取得したappIdHash、秘密鍵を使用し、
-    // キーハンドルを新規生成する
-    uint8_t *p_appid_hash = p_u2f_context->p_apdu->data + U2F_CHAL_SIZE;
-    u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
 }
 
 void ble_u2f_register_do_process(void)
@@ -250,8 +223,10 @@ void ble_u2f_register_do_process(void)
         return;
     }
     
+    // APDUから取得したappIdHash、秘密鍵を使用し、
     // キーハンドルを新規生成
-    generate_keyhandle(p_u2f_context);
+    uint8_t *p_appid_hash = p_u2f_context->p_apdu->data + U2F_CHAL_SIZE;
+    u2f_register_generate_keyhandle(p_appid_hash);
 
     if (create_register_response_message(p_u2f_context) == false) {
         // U2Fのリクエストデータを取得し、
