@@ -198,13 +198,13 @@ SRC_FILES += \
   $(BLULIB_DIR)/ble_u2f_crypto.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLULIB_DIR)/ble_u2f_status.c \
-  $(BLULIB_DIR)/ble_u2f_status_retry.c \
   $(BLULIB_DIR)/ble_u2f_util.c \
   $(BLULIB_DIR)/ble_u2f_version.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
+  $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
 
 # Include folders common to all targets

@@ -5,7 +5,8 @@
 #include "ble_u2f_command.h"
 
 // 送信リトライ（３秒後）タイマー
-#include "ble_u2f_status_retry.h"
+#include "fido_ble_send_retry.h"
+#include "fido_ble_service.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_status
@@ -91,51 +92,6 @@ static uint8_t edit_u2f_staus_data(uint8_t offset)
     return data_length;
 }
 
-static uint32_t u2f_response_send(ble_u2f_t *p_u2f)
-{
-    // U2Fクライアントに対してレスポンスを送信する。
-    //   U2Fクライアントと接続されていない場合は
-    //   何もしない。
-
-    if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
-        return NRF_ERROR_INVALID_STATE;
-    }
-
-    uint16_t hvx_send_length;
-    ble_gatts_hvx_params_t hvx_params;
-    uint32_t err_code;
-
-    hvx_send_length = u2f_status_buffer_length;
-
-    memset(&hvx_params, 0, sizeof(hvx_params));
-    hvx_params.handle = p_u2f->u2f_status_handles.value_handle;
-    hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
-    hvx_params.offset = 0;
-    hvx_params.p_len  = &hvx_send_length;
-    hvx_params.p_data = u2f_status_buffer;
-
-    err_code = sd_ble_gatts_hvx(p_u2f->conn_handle, &hvx_params);
-    if (err_code == NRF_SUCCESS) {
-        if (hvx_send_length != u2f_status_buffer_length) {
-            err_code = NRF_ERROR_DATA_SIZE;
-            NRF_LOG_ERROR("u2f_response_send: invalid send data size ");
-
-        } else {
-#if NRF_LOG_HEXDUMP_DEBUG_PACKET
-            NRF_LOG_DEBUG("u2f_response_send (%dbytes) ", hvx_send_length);
-            NRF_LOG_HEXDUMP_DEBUG(u2f_status_buffer, hvx_send_length);
-#endif
-        }
-
-    } else if (err_code != NRF_ERROR_RESOURCES) {
-        // 未送信データが存在する状態(NRF_ERROR_RESOURCES)の場合は
-        // 後ほどビジーと判断して再送させるため、エラー扱いとしない
-        NRF_LOG_ERROR("u2f_response_send: sd_ble_gatts_hvx failed (err_code=%d) ", err_code);
-    }
-
-    return err_code;
-}
-
 
 void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
 {
@@ -177,7 +133,7 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
         data_length = edit_u2f_staus_data(offset);
 
         // u2f_status_bufferに格納されたパケットを送信
-        err_code = u2f_response_send(p_u2f);
+        err_code = fido_ble_response_send(u2f_status_buffer, u2f_status_buffer_length);
         if (err_code != NRF_SUCCESS) {
 
             if (err_code == NRF_ERROR_RESOURCES) {
@@ -189,7 +145,7 @@ uint32_t ble_u2f_status_response_send(ble_u2f_t *p_u2f)
             } else if (err_code == NRF_ERROR_INVALID_STATE) {
                 // "ATT_MTU exchange is ongoing"状態と判断して送信中断。
                 // リトライタイマーをスタートし、３秒後、本関数を再度呼び出して再送させる。
-                ble_u2f_status_retry_timer_start(p_u2f);
+                fido_ble_send_retry_timer_start();
             }
 
             break;
@@ -233,4 +189,79 @@ void ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context)
     // レスポンスとして戻す（エコーバック）
     ble_u2f_status_setup(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
     ble_u2f_status_response_send(p_u2f);
+}
+
+
+void ble_u2f_status_response_send_retry(void)
+{
+    // U2Fクライアントとの接続が切り離された時は終了
+    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
+    if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
+        return;
+    }
+    
+    // レスポンスを送信
+    uint32_t err_code = ble_u2f_status_response_send(p_u2f);
+    NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
+}
+
+//
+// メッセージ送信関連処理
+//
+// レスポンス編集エリア
+static uint8_t  data_buffer[2];
+static uint32_t data_buffer_length;
+
+void ble_u2f_send_success_response(ble_u2f_context_t *p_u2f_context)
+{
+    // レスポンスを生成
+    uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
+    fido_set_status_word(data_buffer, U2F_SW_NO_ERROR);
+    data_buffer_length = 2;
+
+    // 生成したレスポンスを戻す
+    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
+    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+}
+
+void ble_u2f_send_error_response(ble_u2f_context_t *p_u2f_context, uint16_t err_status_word)
+{    
+    // コマンドを格納
+    uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
+
+    // ステータスワードを格納
+    fido_set_status_word(data_buffer, err_status_word);
+    data_buffer_length = 2;
+    
+    // レスポンスを送信
+    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
+    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+}
+
+void ble_u2f_send_command_error_response(ble_u2f_context_t *p_u2f_context, uint8_t err_code)
+{
+    // コマンドを格納
+    uint8_t command_for_response = U2F_COMMAND_ERROR;
+
+    // エラーコードを格納
+    data_buffer[0]     = err_code;
+    data_buffer_length = 1;
+
+    // レスポンスを送信
+    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
+    ble_u2f_status_response_send(p_u2f_context->p_u2f);
+}
+
+void ble_u2f_send_keepalive_response(ble_u2f_context_t *p_u2f_context)
+{
+    // コマンドを格納
+    uint8_t command_for_response = U2F_COMMAND_KEEPALIVE;
+
+    // エラーコードを格納
+    data_buffer[0]     = p_u2f_context->keepalive_status_byte;
+    data_buffer_length = 1;
+
+    // レスポンスを送信
+    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
+    ble_u2f_status_response_send(p_u2f_context->p_u2f);
 }

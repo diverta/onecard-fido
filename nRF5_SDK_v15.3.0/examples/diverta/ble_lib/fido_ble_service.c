@@ -340,3 +340,48 @@ ble_u2f_t *fido_ble_get_U2F_context(void)
     // U2F関連の共有情報
     return &m_u2f;
 }
+
+uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length)
+{
+    // U2Fクライアントに対してレスポンスを送信する。
+    //   U2Fクライアントと接続されていない場合は
+    //   何もしない。
+
+    if (m_u2f.conn_handle == BLE_CONN_HANDLE_INVALID) {
+        return NRF_ERROR_INVALID_STATE;
+    }
+
+    uint16_t hvx_send_length;
+    ble_gatts_hvx_params_t hvx_params;
+    uint32_t err_code;
+
+    hvx_send_length = u2f_status_buffer_length;
+
+    memset(&hvx_params, 0, sizeof(hvx_params));
+    hvx_params.handle = m_u2f.u2f_status_handles.value_handle;
+    hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+    hvx_params.offset = 0;
+    hvx_params.p_len  = &hvx_send_length;
+    hvx_params.p_data = u2f_status_buffer;
+
+    err_code = sd_ble_gatts_hvx(m_u2f.conn_handle, &hvx_params);
+    if (err_code == NRF_SUCCESS) {
+        if (hvx_send_length != u2f_status_buffer_length) {
+            err_code = NRF_ERROR_DATA_SIZE;
+            NRF_LOG_ERROR("fido_ble_response_send: invalid send data size ");
+
+        } else {
+#if NRF_LOG_HEXDUMP_DEBUG_PACKET
+            NRF_LOG_DEBUG("fido_ble_response_send (%dbytes) ", hvx_send_length);
+            NRF_LOG_HEXDUMP_DEBUG(u2f_status_buffer, hvx_send_length);
+#endif
+        }
+
+    } else if (err_code != NRF_ERROR_RESOURCES) {
+        // 未送信データが存在する状態(NRF_ERROR_RESOURCES)の場合は
+        // 後ほどビジーと判断して再送させるため、エラー扱いとしない
+        NRF_LOG_ERROR("fido_ble_response_send: sd_ble_gatts_hvx failed (err_code=%d) ", err_code);
+    }
+
+    return err_code;
+}

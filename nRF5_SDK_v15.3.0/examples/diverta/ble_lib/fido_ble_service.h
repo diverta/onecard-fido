@@ -17,6 +17,7 @@ extern "C" {
 void       fido_ble_advertising_init(ble_advertising_init_t *p_init);
 void       fido_ble_services_init(void);
 ble_u2f_t *fido_ble_get_U2F_context(void);
+uint32_t   fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length);
 
 #ifdef __cplusplus
 }

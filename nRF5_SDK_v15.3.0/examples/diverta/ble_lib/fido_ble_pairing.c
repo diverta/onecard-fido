@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_status.h"
 #include "fido_flash.h"
-#include "ble_u2f_util.h"
 #include "peer_manager.h"
 #include "fds.h"
 #include "nrf_sdh_ble.h"
