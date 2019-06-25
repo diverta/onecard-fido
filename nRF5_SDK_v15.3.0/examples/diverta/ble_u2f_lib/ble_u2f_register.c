@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "ble_u2f.h"
+#include "ble_u2f_command.h"
 #include "ble_u2f_crypto.h"
 #include "ble_u2f_status.h"
 #include "u2f_keyhandle.h"
@@ -100,7 +101,7 @@ static bool create_register_signature_base(ble_u2f_context_t *p_u2f_context)
     uint8_t offset = 0;
 
     // 署名ベースを格納する領域を確保
-    if (ble_u2f_signature_data_allocate(p_u2f_context) == false) {
+    if (ble_u2f_signature_data_allocate() == false) {
         return false;
     }
 
@@ -132,7 +133,7 @@ static bool create_registration_response_message(ble_u2f_context_t *p_u2f_contex
 {
     // メッセージを格納する領域を確保
     // 確保した領域は、共有情報に設定します
-    if (ble_u2f_response_message_allocate(p_u2f_context) == false) {
+    if (ble_u2f_response_message_allocate() == false) {
         return false;
     }
 
@@ -197,13 +198,13 @@ static bool create_register_response_message(ble_u2f_context_t *p_u2f_context)
     }
 
     // 署名用の秘密鍵を取得し、署名を生成
-    if (ble_u2f_crypto_sign(fido_flash_skey_data(), p_u2f_context) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(fido_flash_skey_data()) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }
 
     // ASN.1形式署名を格納する領域を準備
-    if (ble_u2f_crypto_create_asn1_signature(p_u2f_context) == false) {
+    if (ble_u2f_crypto_create_asn1_signature() == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;
@@ -229,9 +230,10 @@ static void generate_keyhandle(ble_u2f_context_t *p_u2f_context)
     u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
 }
 
-void ble_u2f_register_do_process(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_register_do_process(void)
 {
     NRF_LOG_DEBUG("ble_u2f_register start ");
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     uint8_t cmd = p_u2f_context->p_ble_header->CMD;
 
     if (fido_flash_skey_cert_read() == false) {
@@ -276,8 +278,9 @@ static void send_register_response(ble_u2f_context_t *p_u2f_context)
     ble_u2f_status_response_send();
 }
 
-void ble_u2f_register_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
+void ble_u2f_register_send_response(fds_evt_t const *const p_evt)
 {
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         uint8_t cmd = p_u2f_context->p_ble_header->CMD;

@@ -17,7 +17,7 @@ extern "C" {
 void     ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length);
 uint32_t ble_u2f_status_response_send(void);
 void     ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f);
-void     ble_u2f_status_response_ping(ble_u2f_context_t *p_u2f_context);
+void     ble_u2f_status_response_ping(void);
 void     ble_u2f_status_response_send_retry(void);
 //
 // メッセージ送信関連処理

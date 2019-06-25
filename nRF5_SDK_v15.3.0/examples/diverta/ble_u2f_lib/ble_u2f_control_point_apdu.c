@@ -3,6 +3,7 @@
 
 #include "ble_u2f.h"
 #include "ble_u2f_util.h"
+#include "ble_u2f_command.h"
 #include "ble_u2f_control_point_apdu.h"
 
 // for logging informations
@@ -102,9 +103,10 @@ uint8_t ble_u2f_control_point_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_
     return apdu_header_length + lc_length;
 }
 
-bool ble_u2f_control_point_apdu_allocate(ble_u2f_context_t *p_u2f_context, FIDO_APDU_T *p_apdu)
+bool ble_u2f_control_point_apdu_allocate(FIDO_APDU_T *p_apdu)
 {
     // U2FリクエストAPDU編集用作業領域の参照先と最大バイト数を保持
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     p_u2f_context->apdu_data_buffer        = apdu_data_buffer;
     p_u2f_context->apdu_data_buffer_length = APDU_DATA_MAX_LENGTH;
     NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", APDU_DATA_MAX_LENGTH);

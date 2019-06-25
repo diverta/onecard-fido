@@ -5,12 +5,52 @@
 #include <stdbool.h>
 
 #include "fds.h"
-#include "peer_manager.h"
+#include "ble_gatts.h"
 #include "ble_u2f.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// 初期設定コマンド群(鍵・証明書の新規導入用等)
+#define U2F_INS_INSTALL_INITBOND 0x41
+#define U2F_INS_INSTALL_INITFSTR 0x42
+#define U2F_INS_INSTALL_INITSKEY 0x43
+#define U2F_INS_INSTALL_INITCERT 0x44
+#define U2F_INS_INSTALL_PAIRING  0x45
+
+// コマンドバッファに書き込まれた
+// 文字列を識別するための定義
+enum COMMAND_TYPE
+{
+    COMMAND_NONE = 0,
+    COMMAND_INITBOND,
+    COMMAND_CTAP2_COMMAND,
+    COMMAND_U2F_REGISTER,
+    COMMAND_U2F_AUTHENTICATE,
+    COMMAND_U2F_VERSION,
+    COMMAND_U2F_PING,
+    COMMAND_CHANGE_PAIRING_MODE,
+    COMMAND_PAIRING
+};
+
+// fstorageによりFlash ROM更新が完了時、
+// 後続処理が使用するデータを共有
+typedef struct
+{
+    enum COMMAND_TYPE command;
+    BLE_HEADER_T     *p_ble_header;
+    FIDO_APDU_T       *p_apdu;
+    uint8_t          *apdu_data_buffer;
+    uint16_t          apdu_data_buffer_length;
+    uint8_t          *response_message_buffer;
+    uint16_t          response_message_buffer_length;
+    uint8_t          *signature_data_buffer;
+    uint16_t          signature_data_buffer_length;
+    uint8_t           keepalive_status_byte;
+    uint8_t           user_presence_byte;
+    uint32_t          token_counter;
+} ble_u2f_context_t;
 
 ble_u2f_context_t *get_ble_u2f_context(void);
 void ble_u2f_command_initialize_context(void);

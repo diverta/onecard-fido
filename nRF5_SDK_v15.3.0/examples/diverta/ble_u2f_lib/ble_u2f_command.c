@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "ble_u2f.h"
+#include "ble_u2f_command.h"
 #include "ble_u2f_control_point.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_register.h"
@@ -63,7 +64,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         m_u2f_context.user_presence_byte = fido_user_presence_verify_end();
 
         // Authenticationの後続処理を実行する
-        ble_u2f_authenticate_resume_process(&m_u2f_context);
+        ble_u2f_authenticate_resume_process();
         return true;
 
     } else {
@@ -82,7 +83,7 @@ bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
     }
 
     // ペアリングモード変更を実行
-    fido_ble_pairing_change_mode(&m_u2f_context);
+    fido_ble_pairing_change_mode();
     return true;
 }
 
@@ -211,7 +212,7 @@ static enum COMMAND_TYPE get_command_type(void)
 void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write)
 {
     // コマンドバッファに入力されたリクエストデータを取得
-    ble_u2f_control_point_receive(p_evt_write, &m_u2f_context);
+    ble_u2f_control_point_receive(p_evt_write);
 
     // データ受信後に実行すべき処理を判定
     m_u2f_context.command = get_command_type();
@@ -225,7 +226,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
 
     switch (m_u2f_context.command) {
         case COMMAND_INITBOND:
-            fido_ble_pairing_delete_bonds(&m_u2f_context);
+            fido_ble_pairing_delete_bonds();
             break;
             
         case COMMAND_PAIRING:
@@ -237,19 +238,19 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             break;
 
         case COMMAND_U2F_REGISTER:
-            ble_u2f_register_do_process(&m_u2f_context);
+            ble_u2f_register_do_process();
             break;
 
         case COMMAND_U2F_AUTHENTICATE:
-            ble_u2f_authenticate_do_process(&m_u2f_context);
+            ble_u2f_authenticate_do_process();
             break;
 
         case COMMAND_U2F_VERSION:
-            ble_u2f_version_do_process(&m_u2f_context);
+            ble_u2f_version_do_process();
             break;
 
         case COMMAND_U2F_PING:
-            ble_u2f_status_response_ping(&m_u2f_context);
+            ble_u2f_status_response_ping();
             break;
 
         default:
@@ -262,7 +263,7 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     // ペアリングモード変更時のイベントを優先させる
     if (m_u2f_context.command == COMMAND_CHANGE_PAIRING_MODE) {
-        fido_ble_pairing_reflect_mode_change(&m_u2f_context, p_evt);
+        fido_ble_pairing_reflect_mode_change(p_evt);
         return;
     }
         
@@ -277,11 +278,11 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     // Flash ROM更新後に行われる後続処理を実行
     switch (m_u2f_context.command) {
         case COMMAND_U2F_REGISTER:
-            ble_u2f_register_send_response(&m_u2f_context, p_evt);
+            ble_u2f_register_send_response(p_evt);
             break;
 
         case COMMAND_U2F_AUTHENTICATE:
-            ble_u2f_authenticate_send_response(&m_u2f_context, p_evt);
+            ble_u2f_authenticate_send_response(p_evt);
             break;
 
         default:

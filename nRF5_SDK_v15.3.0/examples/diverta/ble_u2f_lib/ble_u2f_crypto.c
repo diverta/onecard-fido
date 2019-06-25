@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_command.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_u2f_crypto
@@ -85,7 +86,7 @@ void ble_u2f_crypto_public_key(uint8_t *p_raw_data, size_t *p_raw_data_size)
     APP_ERROR_CHECK(err_code);
 }
 
-uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_context)
+uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be)
 {
     ret_code_t err_code;
     NRF_LOG_DEBUG("ble_u2f_crypto_sign start ");
@@ -95,6 +96,7 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_c
 
     // 署名対象バイト配列からSHA256アルゴリズムにより、
     // ハッシュデータ作成
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     uint8_t *signature_base_buffer = p_u2f_context->signature_data_buffer;
     uint16_t signature_base_buffer_length = p_u2f_context->signature_data_buffer_length;
     size_t digest_size = sizeof(hash_digest);
@@ -133,9 +135,10 @@ uint32_t ble_u2f_crypto_sign(uint8_t *private_key_be, ble_u2f_context_t *p_u2f_c
     return NRF_SUCCESS;
 }
 
-bool ble_u2f_crypto_create_asn1_signature(ble_u2f_context_t *p_u2f_context)
+bool ble_u2f_crypto_create_asn1_signature(void)
 {
     // 格納領域を確保
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     uint8_t *asn1_signature = p_u2f_context->signature_data_buffer;
     if (asn1_signature == NULL) {
         NRF_LOG_DEBUG("ble_u2f_crypto_create_asn1_signature: allocation failed ");

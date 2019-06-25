@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
+#include "ble_u2f_command.h"
 #include "ble_u2f_status.h"
 #include "fido_flash.h"
 #include "peer_manager.h"
@@ -31,20 +32,20 @@ static ble_u2f_context_t *m_u2f_context;
 // ペアリング完了フラグ（ペアリングモードで、ペアリング完了時にtrueが設定される）
 static bool pairing_completed;
 
-void fido_ble_pairing_delete_bonds(ble_u2f_context_t *p_u2f_context)
+void fido_ble_pairing_delete_bonds(void)
 {
     ret_code_t err_code;
     fido_log_debug("ble_u2f_pairing_delete_bonds start ");
     
     // 接続情報を保持
-    m_u2f_context = p_u2f_context;
+    m_u2f_context = get_ble_u2f_context();
 
     // ボンディング情報を削除
     err_code = pm_peers_delete();
     if (err_code != FDS_SUCCESS) {
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
-        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
+        uint8_t cmd = m_u2f_context->p_ble_header->CMD;
         ble_u2f_send_error_response(cmd, 0x9101);
         return;
     }
@@ -179,7 +180,7 @@ static bool write_pairing_mode(void)
     return true;
 }
 
-void fido_ble_pairing_change_mode(ble_u2f_context_t *p_u2f_context)
+void fido_ble_pairing_change_mode(void)
 {
     if (run_as_pairing_mode == false) {
         // 非ペアリングモードの場合は
@@ -198,10 +199,11 @@ void fido_ble_pairing_change_mode(ble_u2f_context_t *p_u2f_context)
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     p_u2f_context->command = COMMAND_CHANGE_PAIRING_MODE;
 }
 
-void fido_ble_pairing_reflect_mode_change(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
+void fido_ble_pairing_reflect_mode_change(fds_evt_t const *const p_evt)
 {
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない

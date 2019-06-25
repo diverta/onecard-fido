@@ -1,6 +1,6 @@
 #include "sdk_common.h"
 
-#include "ble_u2f_util.h"
+#include "ble_u2f_command.h"
 #include "ble_u2f_control_point_apdu.h"
 
 // for logging informations
@@ -58,7 +58,7 @@ static bool is_valid_command(uint8_t command)
     }
 }
 
-static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context, BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
+static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_APDU_T *p_apdu)
 {
     if (control_point_buffer_length < 3) {
         // 受取ったバイト数が３バイトに満たない場合は、
@@ -149,7 +149,7 @@ static bool u2f_request_receive_leading_packet(ble_u2f_context_t *p_u2f_context,
         return true;
     }
 
-    if (ble_u2f_control_point_apdu_allocate(p_u2f_context, p_apdu) == false) {
+    if (ble_u2f_control_point_apdu_allocate(p_apdu) == false) {
         // データ格納領域を初期化し、アドレスを保持
         return false;
     }
@@ -213,7 +213,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
     ble_u2f_control_point_apdu_from_following(p_ble_header, p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
-void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_context_t *p_u2f_context)
+void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write)
 {
     // U2Fクライアントから受信したリクエストデータを、
     // 内部バッファに保持
@@ -239,8 +239,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
             memset(&apdu_t, 0, sizeof(FIDO_APDU_T));
 
             // 先頭パケットに対する処理を行う
-            u2f_request_receive_leading_packet(
-                p_u2f_context, &ble_header_t, &apdu_t);
+            u2f_request_receive_leading_packet(&ble_header_t, &apdu_t);
         }
 
     } else {
@@ -258,6 +257,7 @@ void ble_u2f_control_point_receive(ble_gatts_evt_write_t *p_evt_write, ble_u2f_c
     }
 
     // 共有情報にBLEヘッダーとAPDUの参照を引き渡す
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     p_u2f_context->p_ble_header = &ble_header_t;
     p_u2f_context->p_apdu = &apdu_t;
 

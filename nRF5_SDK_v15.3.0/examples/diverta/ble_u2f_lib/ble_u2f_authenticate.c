@@ -110,7 +110,7 @@ static bool create_signature_base(ble_u2f_context_t *p_u2f_context, uint8_t user
     uint8_t offset = 0;
 
     // 署名ベースを格納する領域を確保
-    if (ble_u2f_signature_data_allocate(p_u2f_context) == false) {
+    if (ble_u2f_signature_data_allocate() == false) {
         return false;
     }
 
@@ -141,7 +141,7 @@ static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_cont
 {
     // メッセージを格納する領域を確保
     // 確保した領域は、共有情報に設定します
-    if (ble_u2f_response_message_allocate(p_u2f_context) == false) {
+    if (ble_u2f_response_message_allocate() == false) {
         return false;
     }
     
@@ -195,13 +195,13 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
 
     // キーハンドルから取り出した秘密鍵により署名を生成
-    if (ble_u2f_crypto_sign(private_key_be, p_u2f_context) != NRF_SUCCESS) {
+    if (ble_u2f_crypto_sign(private_key_be) != NRF_SUCCESS) {
         // 署名生成に失敗したら終了
         return false;
     }
 
     // ASN.1形式署名を格納する領域を準備
-    if (ble_u2f_crypto_create_asn1_signature(p_u2f_context) == false) {
+    if (ble_u2f_crypto_create_asn1_signature() == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;
@@ -215,10 +215,11 @@ static bool create_response_message(ble_u2f_context_t *p_u2f_context)
     return true;
 }
 
-void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_authenticate_resume_process(void)
 {
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     if (create_response_message(p_u2f_context) == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         uint8_t cmd = p_u2f_context->p_ble_header->CMD;
@@ -232,9 +233,10 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
     update_token_counter(p_u2f_context);
 }
 
-void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
+void ble_u2f_authenticate_do_process(void)
 {
     fido_log_debug("ble_u2f_authenticate start ");
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     uint8_t cmd = p_u2f_context->p_ble_header->CMD;
 
     if (fido_flash_skey_cert_read() == false) {
@@ -291,7 +293,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     // User presence byte(0x01)を生成し、
     // ただちにレスポンス・メッセージを生成
     p_u2f_context->user_presence_byte = 0x01;
-    ble_u2f_authenticate_resume_process(p_u2f_context);
+    ble_u2f_authenticate_resume_process();
 }
 
 static void send_authentication_response(ble_u2f_context_t *p_u2f_context)
@@ -306,8 +308,9 @@ static void send_authentication_response(ble_u2f_context_t *p_u2f_context)
     ble_u2f_status_response_send();
 }
 
-void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_evt_t const *const p_evt)
+void ble_u2f_authenticate_send_response(fds_evt_t const *const p_evt)
 {
+    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         uint8_t cmd = p_u2f_context->p_ble_header->CMD;
