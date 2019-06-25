@@ -41,9 +41,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // アイドル時点滅処理を停止
     fido_idling_led_off();
-
-    // FIDO機能実行中LEDを点灯
-    fido_led_light(LED_LIGHT_FOR_PROCESSING, true);
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
@@ -55,9 +52,6 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // 共有情報を消去する
     ble_u2f_command_finalize_context();
-
-    // FIDO機能実行中LEDを消灯
-    fido_led_light(LED_LIGHT_FOR_PROCESSING, false);
 
     // アイドル時点滅処理を開始
     fido_idling_led_on();
@@ -193,9 +187,7 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 void fido_ble_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
-    fido_led_light(LED_LIGHT_FOR_PAIRING_MODE, false);
-    fido_led_light(LED_LIGHT_FOR_USER_PRESENCE, false);
-    fido_led_light(LED_LIGHT_FOR_PROCESSING, false);
+    fido_led_light_all(false);
 }
 
 void fido_ble_on_process_timedout(void)
