@@ -36,7 +36,7 @@ BLE_HEADER_T *fido_ble_receive_header(void);
 FIDO_APDU_T  *fido_ble_receive_apdu(void);
 
 void          fido_ble_receive_init(void);
-void          fido_ble_receive_control_point(uint8_t *data, uint16_t length);
+bool          fido_ble_receive_control_point(uint8_t *data, uint16_t length);
 void          fido_ble_receive_frame_count_clear(void);
 uint8_t       fido_ble_receive_frame_count(void);
 

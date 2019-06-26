@@ -22,8 +22,13 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_status.h"
 #include "fido_timer.h"
 
+#include "fido_ble_receive.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// 受信データが完備しているかどうかを保持
+static bool m_report_received;
 
 static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 {
@@ -64,8 +69,7 @@ static bool ble_u2f_on_write(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     if (p_evt_write->handle == p_u2f->u2f_control_point_handles.value_handle) {
         // Control Point（コマンドバッファ）の内容更新時の処理
         // コマンドバッファに入力されたリクエストデータを取得し、
-        // その内容を判定し処理を実行
-        ble_u2f_command_on_ble_evt_write(p_u2f, p_evt_write);
+        m_report_received = fido_ble_receive_control_point(p_evt_write->data, p_evt_write->len);
         return true;
 
     } else {
@@ -199,4 +203,16 @@ void fido_ble_on_process_timedout(void)
     // nRF52から強制的にBLEコネクションを切断
     NRF_LOG_DEBUG("Communication interval timed out: received %d frames", fido_ble_receive_frame_count());
     sd_ble_gap_disconnect(p_u2f->conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
+}
+
+void fido_ble_do_process(void)
+{
+    // 受信データがない場合は終了
+    if (m_report_received == false) {
+        return;
+    }
+    m_report_received = false;
+    
+    // FIDO BLEサービスを実行
+    fido_ble_command_on_request_received();
 }

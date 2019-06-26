@@ -194,7 +194,7 @@ void fido_ble_pairing_change_mode(void)
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
-    fido_ble_receive_command_set(COMMAND_CHANGE_PAIRING_MODE);
+    fido_ble_command_set(COMMAND_CHANGE_PAIRING_MODE);
 }
 
 void fido_ble_pairing_reflect_mode_change(fds_evt_t const *const p_evt)

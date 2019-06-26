@@ -34,17 +34,11 @@
 #define U2F_INS_INSTALL_PAIRING  0x45
 
 //
-// 経過措置
-//   ble_u2f_commandで判定されたコマンドを保持
+// ble_u2f_commandで判定されたコマンドを保持
 //
 static enum COMMAND_TYPE command;
 
-enum COMMAND_TYPE fido_ble_receive_command_get(void)
-{
-    return command;
-}
-
-void fido_ble_receive_command_set(enum COMMAND_TYPE c)
+void fido_ble_command_set(enum COMMAND_TYPE c)
 {
     command = c;
 }
@@ -127,80 +121,63 @@ static enum COMMAND_TYPE get_command_type(void)
     // 初期導入データか、リクエストデータの
     // どちらかであるのか判定する
     if (p_ble_header->CMD == U2F_COMMAND_MSG) {
-        if (p_apdu->Lc == p_apdu->data_length) {
-            if (p_ble_header->CONT == true) {
-                // 後続パケットが存在するのでスルー
-                return COMMAND_NONE;
-            }
+        // CTAP2コマンドから先に処理する。
+        if (is_ctap2_command_byte(p_apdu->CLA)) {
+            return COMMAND_CTAP2_COMMAND;
+        }
 
-            // 受信データをすべて受け取った場合は以下の処理
-            // CTAP2コマンドから先に処理する。
-            if (is_ctap2_command_byte(p_apdu->CLA)) {
-                return COMMAND_CTAP2_COMMAND;
-            }
+        // 以下はU2Fコマンド
+        if (p_apdu->INS == U2F_REGISTER) {
+            fido_log_debug("get_command_type: Registration Request Message received ");
+            current_command = COMMAND_U2F_REGISTER;
 
-            // 以下はU2Fコマンド
-            if (p_apdu->INS == U2F_REGISTER) {
-                fido_log_debug("get_command_type: Registration Request Message received ");
-                current_command = COMMAND_U2F_REGISTER;
+        } else if (p_apdu->INS == U2F_AUTHENTICATE) {
+            fido_log_debug("get_command_type: Authentication Request Message received ");
+            current_command = COMMAND_U2F_AUTHENTICATE;
 
-            } else if (p_apdu->INS == U2F_AUTHENTICATE) {
-                fido_log_debug("get_command_type: Authentication Request Message received ");
-                current_command = COMMAND_U2F_AUTHENTICATE;
+        } else if (p_apdu->INS == U2F_VERSION) {
+            fido_log_debug("get_command_type: GetVersion Request Message received ");
+            current_command = COMMAND_U2F_VERSION;
 
-            } else if (p_apdu->INS == U2F_VERSION) {
-                fido_log_debug("get_command_type: GetVersion Request Message received ");
-                current_command = COMMAND_U2F_VERSION;
+        // 初期導入関連コマンドの場合
+        // (vendor defined command)
+        } else if (p_apdu->INS == U2F_INS_INSTALL_INITBOND) {
+            // ボンディング情報削除コマンド
+            fido_log_debug("get_command_type: initialize bonding information ");
+            current_command = COMMAND_INITBOND;
 
-            // 初期導入関連コマンドの場合
-            // (vendor defined command)
-            } else if (p_apdu->INS == U2F_INS_INSTALL_INITBOND) {
-                // ボンディング情報削除コマンド
-                fido_log_debug("get_command_type: initialize bonding information ");
-                current_command = COMMAND_INITBOND;
-                
-            } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
-                // ペアリングのためのレスポンスを実行
-                fido_log_debug("get_command_type: pairing request received ");
-                current_command = COMMAND_PAIRING;
+        } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
+            // ペアリングのためのレスポンスを実行
+            fido_log_debug("get_command_type: pairing request received ");
+            current_command = COMMAND_PAIRING;
 
-            } else {
-                // INSが不正の場合は終了
-                fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
-                ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
-                return COMMAND_NONE;
-            }
-
-            if (fido_ble_receive_apdu()->CLA != 0x00) {
-                // INSが正しくてもCLAが不正の場合は
-                // エラーレスポンスを送信して終了
-                fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", fido_ble_receive_apdu()->CLA);
-                ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_CLA_NOT_SUPPORTED);
-                return COMMAND_NONE;
-            }
-
-            uint16_t status_word = fido_ble_receive_header()->STATUS_WORD;
-            if (status_word != 0x00) {
-                // リクエストの検査中にステータスワードが設定された場合は
-                // エラーレスポンスを送信して終了
-                ble_u2f_send_error_response(p_ble_header->CMD, status_word);
-                return COMMAND_NONE;
-            }
-            
         } else {
-            // データが完成していないのでスルー
-            current_command = COMMAND_NONE;
+            // INSが不正の場合は終了
+            fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
+            ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
+            return COMMAND_NONE;
+        }
+
+        if (fido_ble_receive_apdu()->CLA != 0x00) {
+            // INSが正しくてもCLAが不正の場合は
+            // エラーレスポンスを送信して終了
+            fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", fido_ble_receive_apdu()->CLA);
+            ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_CLA_NOT_SUPPORTED);
+            return COMMAND_NONE;
+        }
+
+        uint16_t status_word = fido_ble_receive_header()->STATUS_WORD;
+        if (status_word != 0x00) {
+            // リクエストの検査中にステータスワードが設定された場合は
+            // エラーレスポンスを送信して終了
+            ble_u2f_send_error_response(p_ble_header->CMD, status_word);
+            return COMMAND_NONE;
         }
 
     } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
-        if (p_apdu->Lc == p_apdu->data_length) {
-            // データが完成していれば、PINGレスポンスを実行
-            fido_log_debug("get_command_type: PING Request Message received ");
-            current_command = COMMAND_U2F_PING;
-        } else {
-            // データが完成していないのでスルー
-            current_command = COMMAND_NONE;
-        }
+        // データが完成していれば、PINGレスポンスを実行
+        fido_log_debug("get_command_type: PING Request Message received ");
+        current_command = COMMAND_U2F_PING;
 
     } else if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
@@ -218,22 +195,19 @@ static enum COMMAND_TYPE get_command_type(void)
     return current_command;
 }
 
-void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write)
+void fido_ble_command_on_request_received(void)
 {
-    // コマンドバッファに入力されたリクエストデータを取得
-    fido_ble_receive_control_point(p_evt_write->data, p_evt_write->len);
-
     // データ受信後に実行すべき処理を判定
-    fido_ble_receive_command_set(get_command_type());
+    fido_ble_command_set(get_command_type());
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
-    if (fido_ble_pairing_mode_get() == true && fido_ble_receive_command_get() != COMMAND_PAIRING) {
+    if (fido_ble_pairing_mode_get() == true && command != COMMAND_PAIRING) {
         ble_u2f_send_error_response(fido_ble_receive_header()->CMD, 0x9601);
         return;
     }
 
-    switch (fido_ble_receive_command_get()) {
+    switch (command) {
         case COMMAND_INITBOND:
             fido_ble_pairing_delete_bonds();
             break;
@@ -271,13 +245,13 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
 void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     // ペアリングモード変更時のイベントを優先させる
-    if (fido_ble_receive_command_get() == COMMAND_CHANGE_PAIRING_MODE) {
+    if (command == COMMAND_CHANGE_PAIRING_MODE) {
         fido_ble_pairing_reflect_mode_change(p_evt);
         return;
     }
         
     // コマンドが確定していない場合は終了
-    if (fido_ble_receive_command_get() == COMMAND_NONE) {
+    if (command == COMMAND_NONE) {
         return;
     }
 
@@ -285,7 +259,7 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     ble_ctap2_command_on_fs_evt(p_evt);
     
     // Flash ROM更新後に行われる後続処理を実行
-    switch (fido_ble_receive_command_get()) {
+    switch (command) {
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(p_evt);
             break;

@@ -5,10 +5,7 @@
 #include <stdbool.h>
 
 #include "fds.h"
-#include "ble_gatts.h"
 #include "ble_u2f.h"
-
-#include "fido_ble_receive.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,19 +28,14 @@ enum COMMAND_TYPE
 
 void ble_u2f_command_initialize_context(void);
 void ble_u2f_command_finalize_context(void);
-void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write);
 void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt);
 void ble_u2f_command_keepalive_timer_handler(void *p_context);
 void ble_u2f_command_on_response_send_completed(void);
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f);
 bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f);
 
-//
-// 経過措置
-//   ble_u2f_commandで判定されたコマンドを保持
-//
-enum COMMAND_TYPE fido_ble_receive_command_get(void);
-void fido_ble_receive_command_set(enum COMMAND_TYPE c);
+void fido_ble_command_set(enum COMMAND_TYPE c);
+void fido_ble_command_on_request_received(void);
 
 #ifdef __cplusplus
 }

@@ -229,7 +229,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
     fido_ble_receive_apdu_from_following(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
-void fido_ble_receive_control_point(uint8_t *data, uint16_t length)
+bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
 {
     // U2Fクライアントから受信したリクエストデータを、
     // 内部バッファに保持
@@ -274,4 +274,19 @@ void fido_ble_receive_control_point(uint8_t *data, uint16_t length)
 
     // 受信フレーム数をカウントアップ
     received_frame_count++;
+
+    if (apdu_t.data_length == apdu_t.Lc) {
+        // 全ての受信データが完備したらtrueを戻す
+        fido_log_debug("apdu data received(%d bytes)", apdu_t.data_length);
+        return true;
+
+    } else if (ble_header_t.CMD == U2F_COMMAND_ERROR) {
+        // リクエストデータの検査中にエラーが確認された場合、
+        // エラーレスポンス実行のため、trueを戻す
+        return true;
+        
+    } else {
+        // データが完備していなければfalseを戻す
+        return false;
+    }
 }
