@@ -104,12 +104,6 @@ uint8_t ble_u2f_control_point_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_
 
 bool ble_u2f_control_point_apdu_allocate(FIDO_APDU_T *p_apdu)
 {
-    // U2FリクエストAPDU編集用作業領域の参照先と最大バイト数を保持
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    p_u2f_context->apdu_data_buffer        = apdu_data_buffer;
-    p_u2f_context->apdu_data_buffer_length = APDU_DATA_MAX_LENGTH;
-    NRF_LOG_DEBUG("response_message_buffer allocated (%d bytes) ", APDU_DATA_MAX_LENGTH);
-
     // 確保領域は0で初期化
     memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
 

@@ -12,6 +12,7 @@
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
+#include "fido_ble_receive.h"
 #include "fido_timer.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -199,8 +200,7 @@ void fido_ble_pairing_change_mode(void)
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    p_u2f_context->command = COMMAND_CHANGE_PAIRING_MODE;
+    fido_ble_receive_command_set(COMMAND_CHANGE_PAIRING_MODE);
 }
 
 void fido_ble_pairing_reflect_mode_change(fds_evt_t const *const p_evt)

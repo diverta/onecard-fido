@@ -247,6 +247,8 @@
                    displayName="fido2_lib"
                    projectFiles="true"
                    root="../../../../FIDO2Device/fido2_lib">
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_receive.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_receive.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_common.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
@@ -957,6 +959,16 @@
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_common.c"
             ex="false"

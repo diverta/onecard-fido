@@ -11,6 +11,7 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
+#include "fido_ble_receive.h"
 #include "fido_timer.h"
 
 // for CTAP2 support
@@ -214,16 +215,16 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     ble_u2f_control_point_receive(p_evt_write);
 
     // データ受信後に実行すべき処理を判定
-    m_u2f_context.command = get_command_type();
+    fido_ble_receive_command_set(get_command_type());
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
-    if (fido_ble_pairing_mode_get() == true && m_u2f_context.command != COMMAND_PAIRING) {
+    if (fido_ble_pairing_mode_get() == true && fido_ble_receive_command_get() != COMMAND_PAIRING) {
         ble_u2f_send_error_response(m_u2f_context.p_ble_header->CMD, 0x9601);
         return;
     }
 
-    switch (m_u2f_context.command) {
+    switch (fido_ble_receive_command_get()) {
         case COMMAND_INITBOND:
             fido_ble_pairing_delete_bonds();
             break;
@@ -261,13 +262,13 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
 void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 {
     // ペアリングモード変更時のイベントを優先させる
-    if (m_u2f_context.command == COMMAND_CHANGE_PAIRING_MODE) {
+    if (fido_ble_receive_command_get() == COMMAND_CHANGE_PAIRING_MODE) {
         fido_ble_pairing_reflect_mode_change(p_evt);
         return;
     }
         
     // コマンドが確定していない場合は終了
-    if (m_u2f_context.command == COMMAND_NONE) {
+    if (fido_ble_receive_command_get() == COMMAND_NONE) {
         return;
     }
 
@@ -275,7 +276,7 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
     ble_ctap2_command_on_fs_evt(p_evt);
     
     // Flash ROM更新後に行われる後続処理を実行
-    switch (m_u2f_context.command) {
+    switch (fido_ble_receive_command_get()) {
         case COMMAND_U2F_REGISTER:
             ble_u2f_register_send_response(p_evt);
             break;

@@ -8,6 +8,8 @@
 #include "ble_gatts.h"
 #include "ble_u2f.h"
 
+#include "fido_ble_receive.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,11 +40,8 @@ enum COMMAND_TYPE
 // 後続処理が使用するデータを共有
 typedef struct
 {
-    enum COMMAND_TYPE command;
     BLE_HEADER_T     *p_ble_header;
     FIDO_APDU_T       *p_apdu;
-    uint8_t          *apdu_data_buffer;
-    uint16_t          apdu_data_buffer_length;
 } ble_u2f_context_t;
 
 ble_u2f_context_t *get_ble_u2f_context(void);
