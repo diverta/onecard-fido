@@ -11,7 +11,6 @@
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
-#include "ble_u2f_util.h"
 #include "fido_timer.h"
 
 // for CTAP2 support
@@ -61,7 +60,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         // ユーザー所在確認が取れたと判定し、
         // キープアライブを停止
         fido_log_info("ble_u2f_authenticate: completed the test of user presence");
-        m_u2f_context.user_presence_byte = fido_user_presence_verify_end();
+        fido_user_presence_verify_end();
 
         // Authenticationの後続処理を実行する
         ble_u2f_authenticate_resume_process();
@@ -293,8 +292,8 @@ void ble_u2f_command_on_fs_evt(fds_evt_t const *const p_evt)
 void ble_u2f_command_keepalive_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
-    ble_u2f_context_t *p_u2f_context = (ble_u2f_context_t *)p_context;
-    ble_u2f_send_keepalive_response(p_u2f_context->keepalive_status_byte);
+    uint8_t *p_keepalive_status_byte = (uint8_t *)p_context;
+    ble_u2f_send_keepalive_response(*p_keepalive_status_byte);
 }
 
 void ble_u2f_command_on_response_send_completed(void)

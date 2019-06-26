@@ -5,12 +5,13 @@
 
 #include "fds.h"
 #include "ble_u2f.h"
-#include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_util.h"
+#include "ble_u2f_status.h"
 
+#include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
-#include "u2f_signature.h"
+
+#include "fido_u2f_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -24,197 +25,16 @@ static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
     return p_appid_hash;
 }
 
-static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
-{
-    // リクエストデータのキーハンドルを参照
-    //   APDUの65バイト目以降
-    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint32_t keyhandle_length = p_apdu->data[64];
-    uint8_t *keyhandle_value = p_apdu->data + 65;
-
-    // キーハンドルを復号化
-    //   keyhandle_base_bufferに
-    //   AppIDHash、秘密鍵が格納される
-    u2f_keyhandle_restore(keyhandle_value, keyhandle_length);
-    
-    // リクエストデータからappIDHashを取得
-    // キーハンドルに含まれているものと異なる場合はエラー
-    uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
-    if (strncmp((char *)keyhandle_base_buffer, (char *)p_appid_hash, U2F_APPID_SIZE) != 0) {
-        return false;
-    }
-
-    return true;
-}
-
-static void update_token_counter(ble_u2f_context_t *p_u2f_context)
-{
-    // 開始ログを出力
-    fido_log_debug("update_token_counter start ");
-
-    // appIdHash、トークンカウンターを共有情報から取得
-    // （トークンカウンターは現在値＋１とする）
-    uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
-    uint32_t token_counter = p_u2f_context->token_counter + 1;
-
-    // appIdHashをキーとして、
-    // トークンカウンターレコードを更新する
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
-        // NGであれば、エラーレスポンスを生成して終了
-        uint8_t cmd = p_u2f_context->p_ble_header->CMD;
-        ble_u2f_send_error_response(cmd, 0x9502);
-        return;
-    }
-
-    // 後続のレスポンス生成・送信は、
-    // Flash ROM書込み完了後に行われる
-    fido_log_debug("update_token_counter end ");
-}
-
-static uint16_t copy_appIdHash_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
-{
-    // APDUからappIdHashを取得し
-    // 指定の領域に格納
-    uint8_t *p_appid_hash = p_apdu_data + U2F_CHAL_SIZE;
-    memcpy(p_dest_buffer, p_appid_hash, U2F_APPID_SIZE);
-    
-    // コピーしたサイズを戻す
-    return U2F_APPID_SIZE;
-}
-
-static uint16_t copy_challenge_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
-{
-    // APDUからchallengeを取得し
-    // 指定の領域に格納
-    uint8_t *p_challenge  = p_apdu_data;
-    memcpy(p_dest_buffer, p_challenge, U2F_CHAL_SIZE);
-    
-    // コピーしたサイズを戻す
-    return U2F_CHAL_SIZE;
-}
-
-static uint16_t copy_token_counter_data(uint8_t *p_dest_buffer, uint32_t token_counter)
-{
-    // トークンカウンター (4バイト) を
-    // 指定の領域に格納
-    p_dest_buffer[0] = token_counter >> 24 & 0xff;
-    p_dest_buffer[1] = token_counter >> 16 & 0xff;
-    p_dest_buffer[2] = token_counter >>  8 & 0xff;
-    p_dest_buffer[3] = token_counter >>  0 & 0xff;
-    
-    // コピーしたサイズを戻す
-    return 4;
-}
-
-static bool create_authenticate_signature_base(uint8_t *p_apdu_data, uint8_t user_presence, uint32_t token_counter)
-{
-    uint8_t offset = 0;
-
-    // APDUからappIdHashを取得し格納
-    uint8_t *signature_base_buffer = u2f_signature_data_buffer();
-    uint16_t copied_size = copy_appIdHash_data(signature_base_buffer + offset, p_apdu_data);
-    offset += copied_size;
-
-    // User Presence
-    signature_base_buffer[offset++] = user_presence;
-
-    // Counter
-    copied_size = copy_token_counter_data(signature_base_buffer + offset, token_counter);
-    offset += copied_size;
-        
-    // APDUからchallengeを取得し格納
-    copied_size = copy_challenge_data(signature_base_buffer + offset, p_apdu_data);
-    offset += copied_size;
-    
-    // メッセージのバイト数をセット
-    u2f_signature_base_data_size_set(offset);
-
-    return true;
-}
-
-static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_context, uint8_t user_presence, uint32_t token_counter)
-{
-    // メッセージを格納する領域を確保
-    // 確保した領域は、共有情報に設定します
-    if (ble_u2f_response_message_allocate() == false) {
-        return false;
-    }
-    
-    // 確保した領域の先頭アドレスを取得
-    uint8_t *response_message_buffer = p_u2f_context->response_message_buffer;
-    uint16_t offset = 0;
-
-    // user presence
-    response_message_buffer[offset++] = user_presence;
-
-    // token counter
-    offset += copy_token_counter_data(response_message_buffer + offset, token_counter);
-
-    // 署名格納領域からコピー
-    memcpy(response_message_buffer + offset, 
-        p_u2f_context->signature_data_buffer, 
-        p_u2f_context->signature_data_buffer_length);
-    offset += p_u2f_context->signature_data_buffer_length;
-
-    if (p_u2f_context->p_apdu->Le < offset) {
-        // Leを確認し、メッセージのバイト数がオーバーする場合
-        // エラーレスポンスを送信するよう指示
-        fido_log_error("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
-        p_u2f_context->p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
-        return false;
-    }
-
-    // ステータスワード
-    fido_set_status_word(response_message_buffer + offset, U2F_SW_NO_ERROR);
-    offset += 2;
-    
-    // メッセージのバイト数をセット
-    p_u2f_context->response_message_buffer_length = offset;
-
-    return true;
-}
-
-static bool create_response_message(ble_u2f_context_t *p_u2f_context)
-{
-    // エラー時のレスポンスを「予期しないエラー」に設定
-    p_u2f_context->p_ble_header->STATUS_WORD = 0x9504;
-    
-    // 署名ベースを生成（トークンカウンターは現在値＋１とする）
-    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
-    uint8_t *request_buffer = p_apdu->data;
-    uint8_t user_presence = p_u2f_context->user_presence_byte;
-    uint32_t token_counter = p_u2f_context->token_counter + 1;
-    if (create_authenticate_signature_base(request_buffer, user_presence, token_counter) == false) {
-        return false;
-    }
-
-    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
-    uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
-
-    // キーハンドルから取り出した秘密鍵により署名を生成
-    u2f_signature_do_sign(private_key_be);
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
-        return false;
-    }
-
-    if (create_authentication_response_message(p_u2f_context, user_presence, token_counter) == false) {
-        // レスポンスメッセージ生成
-        return false;
-    }
-
-    return true;
-}
-
 void ble_u2f_authenticate_resume_process(void)
 {
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
     ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    if (create_response_message(p_u2f_context) == false) {
+    uint8_t *apdu_data = p_u2f_context->p_apdu->data;
+    uint32_t apdu_le = p_u2f_context->p_apdu->Le;
+    size_t  *u2f_response_length = fido_u2f_command_response_length();
+    *u2f_response_length = fido_u2f_command_response_buffer_size();
+    if (u2f_authenticate_response_message(apdu_data, fido_u2f_command_response_buffer(), u2f_response_length, apdu_le) == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         uint8_t cmd = p_u2f_context->p_ble_header->CMD;
         ble_u2f_send_error_response(cmd, p_u2f_context->p_ble_header->STATUS_WORD);
@@ -224,7 +44,8 @@ void ble_u2f_authenticate_resume_process(void)
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新
     // (fds_record_update/writeまたはfds_gcが実行される)
-    update_token_counter(p_u2f_context);
+    uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
+    u2f_authenticate_update_token_counter(p_appid_hash);
 }
 
 void ble_u2f_authenticate_do_process(void)
@@ -240,7 +61,8 @@ void ble_u2f_authenticate_do_process(void)
         return;
     }
 
-    if (check_request_keyhandle(p_u2f_context) == false) {
+    uint8_t *apdu_data = p_u2f_context->p_apdu->data;
+    if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
@@ -248,8 +70,9 @@ void ble_u2f_authenticate_do_process(void)
         ble_u2f_send_error_response(cmd, U2F_SW_WRONG_DATA);
         return;
     }
-    
-    // appIdHashをリクエストデータから取得
+
+    // appIdHashをリクエストデータから取得し、
+    // それに紐づくトークンカウンターを検索
     uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
     if (fido_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashがトークンカウンターにない場合は
@@ -258,10 +81,7 @@ void ble_u2f_authenticate_do_process(void)
         ble_u2f_send_error_response(cmd, U2F_SW_WRONG_DATA);
         return;
     }
-
-    // トークンカウンターを取得
-    p_u2f_context->token_counter = fido_flash_token_counter_value();
-    fido_log_debug("token counter value=%d ", p_u2f_context->token_counter);
+    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
 
     // control byte (P1) を参照
     uint8_t control_byte = p_u2f_context->p_apdu->P1;
@@ -278,15 +98,13 @@ void ble_u2f_authenticate_do_process(void)
         // キープアライブ送信を開始する
         // ステータスバイトにTUP_NEEDED(0x02)を設定
         fido_log_info("ble_u2f_authenticate: waiting to complete the test of user presence");
-        p_u2f_context->keepalive_status_byte = 0x02;
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
+        uint8_t keepalive_status_byte = 0x02;
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, &keepalive_status_byte);
         return;
     }
 
     // ユーザー所在確認不要の場合は、ここで
-    // User presence byte(0x01)を生成し、
     // ただちにレスポンス・メッセージを生成
-    p_u2f_context->user_presence_byte = 0x01;
     ble_u2f_authenticate_resume_process();
 }
 
@@ -294,8 +112,8 @@ static void send_authentication_response(ble_u2f_context_t *p_u2f_context)
 {
     // レスポンスを生成
     uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
-    uint8_t *data_buffer = p_u2f_context->response_message_buffer;
-    uint16_t data_buffer_length = p_u2f_context->response_message_buffer_length;
+    uint8_t *data_buffer = fido_u2f_command_response_buffer();
+    uint16_t data_buffer_length = (uint16_t)(*fido_u2f_command_response_length());
 
     // 生成したレスポンスを戻す
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
@@ -317,7 +135,8 @@ void ble_u2f_authenticate_send_response(fds_evt_t const *const p_evt)
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("ble_u2f_authenticate retry: FDS GC done ");
-        update_token_counter(p_u2f_context);
+        uint8_t *p_appid_hash = get_appid_from_apdu(p_u2f_context);
+        u2f_authenticate_update_token_counter(p_appid_hash);
 
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す

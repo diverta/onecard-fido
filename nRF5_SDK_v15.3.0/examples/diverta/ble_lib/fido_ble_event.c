@@ -19,7 +19,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_service.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_control_point.h"
-#include "ble_u2f_util.h"
 #include "fido_ble_pairing.h"
 #include "ble_u2f_status.h"
 #include "fido_timer.h"

@@ -1,7 +1,6 @@
 #include "sdk_common.h"
 
 #include "ble_u2f.h"
-#include "ble_u2f_util.h"
 #include "ble_u2f_command.h"
 
 // 送信リトライ（３秒後）タイマー

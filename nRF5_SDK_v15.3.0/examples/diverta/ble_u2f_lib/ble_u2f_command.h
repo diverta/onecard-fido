@@ -43,13 +43,6 @@ typedef struct
     FIDO_APDU_T       *p_apdu;
     uint8_t          *apdu_data_buffer;
     uint16_t          apdu_data_buffer_length;
-    uint8_t          *response_message_buffer;
-    uint16_t          response_message_buffer_length;
-    uint8_t          *signature_data_buffer;
-    uint16_t          signature_data_buffer_length;
-    uint8_t           keepalive_status_byte;
-    uint8_t           user_presence_byte;
-    uint32_t          token_counter;
 } ble_u2f_context_t;
 
 ble_u2f_context_t *get_ble_u2f_context(void);
