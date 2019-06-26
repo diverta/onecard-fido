@@ -2,6 +2,7 @@
 
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
+#include "fido_ble_receive.h"
 
 // 送信リトライ（３秒後）タイマー
 #include "fido_ble_send_retry.h"
@@ -179,9 +180,8 @@ void ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f)
 void ble_u2f_status_response_ping(void)
 {
     // BLE接続情報、BLEヘッダー、APDUの参照を取得
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    BLE_HEADER_T *p_ble_header = p_u2f_context->p_ble_header;
-    FIDO_APDU_T *p_apdu = p_u2f_context->p_apdu;
+    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
+    FIDO_APDU_T *p_apdu = fido_ble_receive_apdu();
 
     // PINGの場合は
     // リクエストのBLEヘッダーとデータを編集せず

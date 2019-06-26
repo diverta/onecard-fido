@@ -11,6 +11,7 @@
 #include "ctap2_make_credential.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_client_pin_token.h"
+#include "fido_ble_receive.h"
 #include "fido_common.h"
 
 // for BLE transport
@@ -36,8 +37,7 @@ static size_t  response_length;
 static void ble_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
 {
     // コマンドを格納
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    uint8_t command_for_response = p_u2f_context->p_ble_header->CMD;
+    uint8_t command_for_response = fido_ble_receive_header()->CMD;
     // １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
     response_length = length;
@@ -180,9 +180,8 @@ static void command_authenticator_make_credential(void)
 
     // CBORエンコードされたリクエストメッセージをデコード
     //   CBORエンコードデータは、受信データの２バイト目以降に格納
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    uint8_t *cbor_data_buffer = p_u2f_context->p_apdu->data + 1;
-    size_t   cbor_data_length = p_u2f_context->p_apdu->data_length - 1;
+    uint8_t *cbor_data_buffer = fido_ble_receive_apdu()->data + 1;
+    size_t   cbor_data_length = fido_ble_receive_apdu()->data_length - 1;
     uint8_t  ctap2_status = ctap2_make_credential_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
@@ -208,7 +207,8 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
+        uint8_t keepalive_status_byte = 0x02;
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, &keepalive_status_byte);
         return;
     }
 
@@ -294,9 +294,8 @@ static void command_authenticator_get_assertion(void)
 
     // CBORエンコードされたリクエストメッセージをデコード
     //   CBORエンコードデータは、受信データの２バイト目以降に格納
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    uint8_t *cbor_data_buffer = p_u2f_context->p_apdu->data + 1;
-    size_t   cbor_data_length = p_u2f_context->p_apdu->data_length - 1;
+    uint8_t *cbor_data_buffer = fido_ble_receive_apdu()->data + 1;
+    size_t   cbor_data_length = fido_ble_receive_apdu()->data_length - 1;
     uint8_t  ctap2_status = ctap2_get_assertion_decode_request(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
@@ -322,7 +321,8 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorGetAssertion: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
+        uint8_t keepalive_status_byte = 0x02;
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, &keepalive_status_byte);
         return;
     }
 
@@ -362,8 +362,7 @@ static uint8_t get_command_byte(void)
 {
     // CTAP2コマンドを取得
     //   受信データの最初の１バイト目がCTAP2コマンドバイト
-    ble_u2f_context_t *p_u2f_context = get_ble_u2f_context();
-    uint8_t ctap2_command_byte = p_u2f_context->p_apdu->CLA;
+    uint8_t ctap2_command_byte = fido_ble_receive_apdu()->CLA;
     return ctap2_command_byte;
 }
 

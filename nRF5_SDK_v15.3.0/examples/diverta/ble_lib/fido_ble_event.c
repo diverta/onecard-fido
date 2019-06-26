@@ -18,7 +18,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f.h"
 #include "fido_ble_service.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_control_point.h"
 #include "fido_ble_pairing.h"
 #include "ble_u2f_status.h"
 #include "fido_timer.h"
@@ -198,6 +197,6 @@ void fido_ble_on_process_timedout(void)
 
     // 直近のレスポンスから10秒を経過した場合、
     // nRF52から強制的にBLEコネクションを切断
-    NRF_LOG_DEBUG("Communication interval timed out: received %d frames", ble_u2f_control_point_receive_frame_count());
+    NRF_LOG_DEBUG("Communication interval timed out: received %d frames", fido_ble_receive_frame_count());
     sd_ble_gap_disconnect(p_u2f->conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
 }

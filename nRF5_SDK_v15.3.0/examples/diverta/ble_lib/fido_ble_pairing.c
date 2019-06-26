@@ -27,9 +27,6 @@ static uint32_t m_pairing_mode;
 // ペアリングモードを保持
 static bool run_as_pairing_mode;
 
-// 接続情報を保持
-static ble_u2f_context_t *m_u2f_context;
-
 // ペアリング完了フラグ（ペアリングモードで、ペアリング完了時にtrueが設定される）
 static bool pairing_completed;
 
@@ -37,16 +34,13 @@ void fido_ble_pairing_delete_bonds(void)
 {
     ret_code_t err_code;
     fido_log_debug("ble_u2f_pairing_delete_bonds start ");
-    
-    // 接続情報を保持
-    m_u2f_context = get_ble_u2f_context();
 
     // ボンディング情報を削除
     err_code = pm_peers_delete();
     if (err_code != FDS_SUCCESS) {
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
-        uint8_t cmd = m_u2f_context->p_ble_header->CMD;
+        uint8_t cmd = fido_ble_receive_header()->CMD;
         ble_u2f_send_error_response(cmd, 0x9101);
         return;
     }
@@ -54,7 +48,7 @@ void fido_ble_pairing_delete_bonds(void)
 
 bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
 {
-    uint8_t cmd = m_u2f_context->p_ble_header->CMD;
+    uint8_t cmd = fido_ble_receive_header()->CMD;
 
     // pm_peers_deleteが完了したときの処理。
     //   PM_EVT_PEERS_DELETE_SUCCEEDED、または

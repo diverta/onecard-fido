@@ -6,7 +6,6 @@
 
 #include "ble_u2f.h"
 #include "ble_u2f_command.h"
-#include "ble_u2f_control_point.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
@@ -27,13 +26,27 @@
 // for BLE pairing functions
 #include "fido_ble_pairing.h"
 
-// Flash ROM更新が完了時、
-// 後続処理が使用するデータを共有
-static ble_u2f_context_t m_u2f_context;
+// 初期設定コマンド群(鍵・証明書の新規導入用等)
+#define U2F_INS_INSTALL_INITBOND 0x41
+#define U2F_INS_INSTALL_INITFSTR 0x42
+#define U2F_INS_INSTALL_INITSKEY 0x43
+#define U2F_INS_INSTALL_INITCERT 0x44
+#define U2F_INS_INSTALL_PAIRING  0x45
 
-ble_u2f_context_t *get_ble_u2f_context(void)
+//
+// 経過措置
+//   ble_u2f_commandで判定されたコマンドを保持
+//
+static enum COMMAND_TYPE command;
+
+enum COMMAND_TYPE fido_ble_receive_command_get(void)
 {
-    return &m_u2f_context;
+    return command;
+}
+
+void fido_ble_receive_command_set(enum COMMAND_TYPE c)
+{
+    command = c;
 }
 
 bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
@@ -44,16 +57,16 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         return false;
     }
 
-    if (m_u2f_context.p_ble_header == NULL) {
+    if (fido_ble_receive_header() == NULL) {
         // BLEリクエスト受信(ble_u2f_control_point_receive)より
         // 前の時点の場合は無視
         return false;
     }
 
     // CMD,INS,P1を参照
-    uint8_t cmd = m_u2f_context.p_ble_header->CMD;
-    uint8_t ins = m_u2f_context.p_apdu->INS;
-    uint8_t control_byte = m_u2f_context.p_apdu->P1;
+    uint8_t cmd = fido_ble_receive_header()->CMD;
+    uint8_t ins = fido_ble_receive_apdu()->INS;
+    uint8_t control_byte = fido_ble_receive_apdu()->P1;
     if (cmd == 0x83 && ins == 0x02 && control_byte == 0x03) {
         // 0x83 ("MSG") 
         // 0x02 ("U2F_AUTHENTICATE")
@@ -89,12 +102,9 @@ bool ble_u2f_command_on_mainsw_long_push_event(ble_u2f_t *p_u2f)
 
 void ble_u2f_command_initialize_context(void)
 {
-    // 共有情報をゼロクリアする
-    memset(&m_u2f_context, 0, sizeof(ble_u2f_context_t));
-    fido_log_debug("ble_u2f_command_initialize_context done ");
-    
     // コマンド／リクエストデータ格納領域を初期化する
-    ble_u2f_control_point_initialize();
+    fido_ble_receive_init();
+    fido_log_debug("ble_u2f_command_initialize_context done ");
 }
 
 
@@ -110,8 +120,8 @@ static enum COMMAND_TYPE get_command_type(void)
     enum COMMAND_TYPE current_command;
 
     // BLEヘッダー、APDUの参照を取得
-    BLE_HEADER_T *p_ble_header = m_u2f_context.p_ble_header;
-    FIDO_APDU_T *p_apdu = m_u2f_context.p_apdu;
+    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
+    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
 
     // 受信したリクエストデータが、
     // 初期導入データか、リクエストデータの
@@ -161,15 +171,15 @@ static enum COMMAND_TYPE get_command_type(void)
                 return COMMAND_NONE;
             }
 
-            if (m_u2f_context.p_apdu->CLA != 0x00) {
+            if (fido_ble_receive_apdu()->CLA != 0x00) {
                 // INSが正しくてもCLAが不正の場合は
                 // エラーレスポンスを送信して終了
-                fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", m_u2f_context.p_apdu->CLA);
+                fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", fido_ble_receive_apdu()->CLA);
                 ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_CLA_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
 
-            uint16_t status_word = m_u2f_context.p_ble_header->STATUS_WORD;
+            uint16_t status_word = fido_ble_receive_header()->STATUS_WORD;
             if (status_word != 0x00) {
                 // リクエストの検査中にステータスワードが設定された場合は
                 // エラーレスポンスを送信して終了
@@ -195,7 +205,6 @@ static enum COMMAND_TYPE get_command_type(void)
     } else if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        m_u2f_context.p_ble_header = p_ble_header;
         ble_u2f_send_command_error_response(p_ble_header->ERROR);
 
         // 以降のリクエストデータは読み捨てる
@@ -212,7 +221,7 @@ static enum COMMAND_TYPE get_command_type(void)
 void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p_evt_write)
 {
     // コマンドバッファに入力されたリクエストデータを取得
-    ble_u2f_control_point_receive(p_evt_write);
+    fido_ble_receive_control_point(p_evt_write->data, p_evt_write->len);
 
     // データ受信後に実行すべき処理を判定
     fido_ble_receive_command_set(get_command_type());
@@ -220,7 +229,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
     if (fido_ble_pairing_mode_get() == true && fido_ble_receive_command_get() != COMMAND_PAIRING) {
-        ble_u2f_send_error_response(m_u2f_context.p_ble_header->CMD, 0x9601);
+        ble_u2f_send_error_response(fido_ble_receive_header()->CMD, 0x9601);
         return;
     }
 
@@ -230,7 +239,7 @@ void ble_u2f_command_on_ble_evt_write(ble_u2f_t *p_u2f, ble_gatts_evt_write_t *p
             break;
             
         case COMMAND_PAIRING:
-            ble_u2f_send_success_response(m_u2f_context.p_ble_header->CMD);
+            ble_u2f_send_success_response(fido_ble_receive_header()->CMD);
             break;
 
         case COMMAND_CTAP2_COMMAND:
@@ -300,7 +309,7 @@ void ble_u2f_command_keepalive_timer_handler(void *p_context)
 void ble_u2f_command_on_response_send_completed(void)
 {
     // 受信フレーム数カウンターをクリア
-    ble_u2f_control_point_receive_frame_count_clear();
+    fido_ble_receive_frame_count_clear();
 
     // 次回リクエストまでの経過秒数監視をスタート
     fido_comm_interval_timer_start();

@@ -35,13 +35,10 @@ typedef struct {
 BLE_HEADER_T *fido_ble_receive_header(void);
 FIDO_APDU_T  *fido_ble_receive_apdu(void);
 
-//
-// 経過措置
-//   ble_u2f_commandで判定されたコマンドを保持
-//
-#include "ble_u2f_command.h"
-enum COMMAND_TYPE fido_ble_receive_command_get(void);
-void fido_ble_receive_command_set(enum COMMAND_TYPE c);
+void          fido_ble_receive_init(void);
+void          fido_ble_receive_control_point(uint8_t *data, uint16_t length);
+void          fido_ble_receive_frame_count_clear(void);
+uint8_t       fido_ble_receive_frame_count(void);
 
 #ifdef __cplusplus
 }

@@ -152,6 +152,7 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
+  $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -194,8 +195,6 @@ SRC_FILES += \
   $(BLULIB_DIR)/ble_ctap2_command.c \
   $(BLULIB_DIR)/ble_u2f_authenticate.c \
   $(BLULIB_DIR)/ble_u2f_command.c \
-  $(BLULIB_DIR)/ble_u2f_control_point.c \
-  $(BLULIB_DIR)/ble_u2f_control_point_apdu.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLULIB_DIR)/ble_u2f_status.c \
   $(BLULIB_DIR)/ble_u2f_version.c \
