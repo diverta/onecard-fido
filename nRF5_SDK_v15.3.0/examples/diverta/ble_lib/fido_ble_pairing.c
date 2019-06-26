@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ble_u2f.h"
-#include "ble_u2f_command.h"
+#include "fido_ble_command.h"
 #include "ble_u2f_status.h"
 #include "fido_flash.h"
 #include "peer_manager.h"
@@ -194,7 +194,7 @@ void fido_ble_pairing_change_mode(void)
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
-    fido_ble_command_set(COMMAND_CHANGE_PAIRING_MODE);
+    fido_ble_command_set_change_pairing_mode();
 }
 
 void fido_ble_pairing_reflect_mode_change(fds_evt_t const *const p_evt)

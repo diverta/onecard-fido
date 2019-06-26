@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "fds.h"
 #include "ble_u2f.h"
-#include "ble_u2f_command.h"
 #include "ble_u2f_status.h"
 
 #include "u2f_keyhandle.h"
@@ -70,24 +68,25 @@ static void send_register_response()
     ble_u2f_status_response_send();
 }
 
-void ble_u2f_register_send_response(fds_evt_t const *const p_evt)
+void ble_u2f_register_send_response(void const *p_evt)
 {
-    if (p_evt->result != FDS_SUCCESS) {
+    fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
+    if (evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         uint8_t cmd = fido_ble_receive_header()->CMD;
         ble_u2f_send_error_response(cmd, 0x9404);
-        fido_log_error("ble_u2f_register abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("ble_u2f_register abend ");
         return;
     }
 
-    if (p_evt->id == FDS_EVT_GC) {
+    if (evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         fido_log_warning("ble_u2f_register retry: FDS GC done ");
         uint8_t *p_appid_hash = fido_ble_receive_apdu()->data + U2F_CHAL_SIZE;
         u2f_register_add_token_counter(p_appid_hash);
 
-    } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+    } else if (evt->write_update) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_register_response();
         fido_log_debug("ble_u2f_register end ");

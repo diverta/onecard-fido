@@ -151,6 +151,7 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
+  $(FD2LIB_DIR)/fido_ble_command.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
   $(FD2LIB_DIR)/fido_common.c \
@@ -194,7 +195,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLULIB_DIR)/ble_ctap2_command.c \
   $(BLULIB_DIR)/ble_u2f_authenticate.c \
-  $(BLULIB_DIR)/ble_u2f_command.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLULIB_DIR)/ble_u2f_status.c \
   $(BLULIB_DIR)/ble_u2f_version.c \

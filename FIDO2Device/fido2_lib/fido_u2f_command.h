@@ -5,12 +5,9 @@
 extern "C" {
 #endif
 
-// for Flash ROM event
-#include "fido_flash_event.h"
-
 void hid_u2f_command_version(void);
 void hid_u2f_command_msg(void);
-void hid_u2f_command_msg_send_response(fido_flash_event_t *const p_evt);
+void hid_u2f_command_msg_send_response(void *const p_evt);
 void hid_u2f_command_msg_report_sent(void);
 
 bool hid_u2f_command_on_mainsw_event(void);

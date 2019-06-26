@@ -24,8 +24,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_command.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_command.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_status.c</itemPath>
@@ -243,6 +241,8 @@
                    displayName="fido2_lib"
                    projectFiles="true"
                    root="../../../../FIDO2Device/fido2_lib">
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_command.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_receive.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_receive.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ble_receive_apdu.c</itemPath>
@@ -958,6 +958,16 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
             ex="false"
             tool="0"
@@ -1240,32 +1250,6 @@
             <pElem>../plat_lib</pElem>
             <pElem>../../../../FIDO2Device/u2f_lib</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f_command.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/peer_manager</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/nrf_ble_gatt</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
-            <pElem>../../../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../plat_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>

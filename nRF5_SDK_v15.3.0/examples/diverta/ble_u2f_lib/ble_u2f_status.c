@@ -1,7 +1,7 @@
 #include "sdk_common.h"
 
 #include "ble_u2f.h"
-#include "ble_u2f_command.h"
+#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 
 // 送信リトライ（３秒後）タイマー
@@ -158,7 +158,7 @@ uint32_t ble_u2f_status_response_send(void)
         // 最終レコードの場合は、次回リクエストまでの経過秒数監視をスタート
         if (send_info_t.sent_length == send_info_t.data_length) {
             // FIDOレスポンス送信完了時の処理を実行
-            ble_u2f_command_on_response_send_completed();
+            fido_ble_command_on_response_send_completed();
         }
     }
 

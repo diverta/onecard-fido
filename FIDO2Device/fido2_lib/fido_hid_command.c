@@ -159,7 +159,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     }
 }
 
-void fido_hid_command_on_fs_evt(fido_flash_event_t *const p_evt)
+void fido_hid_command_on_fs_evt(void *const p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = fido_hid_receive_header()->CMD;

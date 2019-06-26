@@ -17,7 +17,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
 #include "ble_u2f.h"
-#include "ble_u2f_command.h"
 
 //
 // BLE U2Fサービスに関する定義
