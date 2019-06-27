@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1857,7 +1857,7 @@ TE Connectivity</description>
 <devices>
 <device name="" package="BAT-HLD-012-SMT">
 <connects>
-<connect gate="G$1" pin="+" pad="+@1 +@2"/>
+<connect gate="G$1" pin="+" pad="+@1"/>
 <connect gate="G$1" pin="-" pad="-"/>
 </connects>
 <technologies>
@@ -2258,6 +2258,21 @@ TE Connectivity</description>
 <junction x="185.42" y="43.18"/>
 </segment>
 </net>
+<net name="AIN0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P0.02/AIN0"/>
+<wire x1="43.18" y1="86.36" x2="35.56" y2="86.36" width="0.1524" layer="91"/>
+<label x="35.56" y="86.36" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="AIN1" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P0.03/AIN1"/>
+<wire x1="43.18" y1="91.44" x2="35.56" y2="91.44" width="0.1524" layer="91"/>
+<label x="35.56" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="35.56" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -2549,8 +2564,8 @@ TE Connectivity</description>
 <instance part="D3" gate="G$1" x="121.92" y="81.28"/>
 <instance part="BAT1" gate="G$1" x="93.98" y="81.28"/>
 <instance part="GND18" gate="1" x="66.04" y="71.12"/>
-<instance part="CN3" gate="G$1" x="104.14" y="30.48"/>
-<instance part="GND19" gate="1" x="96.52" y="17.78"/>
+<instance part="CN3" gate="G$1" x="203.2" y="68.58"/>
+<instance part="GND19" gate="1" x="195.58" y="55.88"/>
 </instances>
 <busses>
 </busses>
@@ -2581,8 +2596,8 @@ TE Connectivity</description>
 <segment>
 <pinref part="CN3" gate="G$1" pin="1"/>
 <pinref part="GND19" gate="1" pin="0V"/>
-<wire x1="104.14" y1="25.4" x2="96.52" y2="25.4" width="0.1524" layer="91"/>
-<wire x1="96.52" y1="25.4" x2="96.52" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="203.2" y1="63.5" x2="195.58" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="195.58" y1="63.5" x2="195.58" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -2619,19 +2634,27 @@ TE Connectivity</description>
 <junction x="144.78" y="124.46"/>
 </segment>
 </net>
-<net name="N$1" class="0">
-<segment>
-<wire x1="73.66" y1="73.66" x2="119.38" y2="73.66" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="73.66" x2="119.38" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="55.88" x2="73.66" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="55.88" x2="73.66" y2="73.66" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$5" class="0">
 <segment>
 <pinref part="BAT1" gate="G$1" pin="+"/>
 <pinref part="D3" gate="G$1" pin="A"/>
 <wire x1="99.06" y1="81.28" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="AIN0" class="0">
+<segment>
+<pinref part="CN3" gate="G$1" pin="2"/>
+<wire x1="203.2" y1="66.04" x2="190.5" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="190.5" y1="66.04" x2="190.5" y2="71.12" width="0.1524" layer="91"/>
+<label x="190.5" y="71.12" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+</net>
+<net name="AIN1" class="0">
+<segment>
+<pinref part="CN3" gate="G$1" pin="3"/>
+<wire x1="203.2" y1="68.58" x2="195.58" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="195.58" y1="68.58" x2="195.58" y2="71.12" width="0.1524" layer="91"/>
+<label x="195.58" y="71.12" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
 </nets>
