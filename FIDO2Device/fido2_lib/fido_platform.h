@@ -42,6 +42,18 @@ typedef enum _LED_LIGHT_MODE {
 #define HMAC_SHA_256_SIZE       32
 
 //
+// fido_ble_service.c
+//
+uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length);
+bool     fido_ble_service_disconnected(void);
+void     fido_ble_service_disconnect_force(void);
+
+//
+// fido_ble_send_retry.c
+//
+void fido_ble_send_retry_timer_start(void);
+
+//
 // fido_board.c
 //
 void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on);

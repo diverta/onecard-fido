@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-void fido_ble_send_retry_timer_start(void);
-
 #ifdef __cplusplus
 }
 #endif

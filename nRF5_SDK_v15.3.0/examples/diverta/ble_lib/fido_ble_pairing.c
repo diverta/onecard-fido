@@ -2,9 +2,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "ble_u2f.h"
+
 #include "fido_ble_command.h"
-#include "ble_u2f_status.h"
 #include "fido_flash.h"
 #include "peer_manager.h"
 #include "fds.h"
@@ -13,6 +12,7 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 #include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 #include "fido_timer.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -41,7 +41,7 @@ void fido_ble_pairing_delete_bonds(void)
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        ble_u2f_send_error_response(cmd, 0x9101);
+        fido_ble_send_error_response(cmd, 0x9101);
         return;
     }
 }
@@ -56,12 +56,12 @@ bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
     //   いずれかのイベントが発生する
     // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        ble_u2f_send_success_response(cmd);
+        fido_ble_send_success_response(cmd);
         fido_log_debug("ble_u2f_pairing_delete_bonds end ");
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        ble_u2f_send_error_response(cmd, 0x9102);
+        fido_ble_send_error_response(cmd, 0x9102);
         fido_log_error("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
         return true;
     }
@@ -276,7 +276,7 @@ static bool read_pairing_mode(void)
     }
 }
 
-void fido_ble_pairing_get_mode(ble_u2f_t *p_u2f)
+void fido_ble_pairing_get_mode(void)
 {
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
@@ -296,7 +296,7 @@ void fido_ble_pairing_get_mode(ble_u2f_t *p_u2f)
     pairing_completed = false;
 }
 
-void fido_ble_pairing_on_evt_auth_status(ble_u2f_t *p_u2f, ble_evt_t * p_ble_evt)
+void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
 {
     // LESCペアリング完了時のステータスを確認
     uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;

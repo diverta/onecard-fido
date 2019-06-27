@@ -4,8 +4,6 @@
  *
  * Created on 2019/04/30, 13:48
  */
-#include "sdk_common.h"
-
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_make_credential.h"
@@ -13,10 +11,8 @@
 #include "ctap2_client_pin_token.h"
 #include "fido_ble_command.h"
 #include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 #include "fido_common.h"
-
-// for BLE transport
-#include "ble_u2f_status.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -43,8 +39,7 @@ static void ble_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     response_length = length;
     
     // レスポンスを送信
-    ble_u2f_status_setup(command_for_response, response_buffer, response_length);
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, response_buffer, response_length);
     fido_log_debug("ble_u2f_status_response_send (%dbytes) status=0x%02x", response_length, ctap2_status);
 }
 

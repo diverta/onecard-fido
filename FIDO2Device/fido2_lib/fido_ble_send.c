@@ -1,23 +1,25 @@
-#include "sdk_common.h"
-
-#include "ble_u2f.h"
+/* 
+ * File:   fido_ble_send.c
+ * Author: makmorit
+ *
+ * Created on 2019/06/27, 9:49
+ */
+//
+// プラットフォーム非依存コード
+//
+#include "u2f.h"
 #include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 
-// 送信リトライ（３秒後）タイマー
-#include "fido_ble_send_retry.h"
-#include "fido_ble_service.h"
-
-// for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_status
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for debug hex dump data
 #define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 
 // u2f_status（レスポンスバッファ）には、
 // 64バイトまで書込み可能とします
+#define BLE_U2F_MAX_SEND_CHAR_LEN 64
 static uint8_t  u2f_status_buffer[BLE_U2F_MAX_SEND_CHAR_LEN];
 static uint16_t u2f_status_buffer_length;
 
@@ -93,7 +95,7 @@ static uint8_t edit_u2f_staus_data(uint8_t offset)
 }
 
 
-void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
+static void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
 {
     // 送信のために必要な情報を保持
     send_info_t.command_for_response = command_for_response;
@@ -108,21 +110,21 @@ void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buffer, ui
     send_info_t.busy = false;
 }
 
-uint32_t ble_u2f_status_response_send(void)
+static uint32_t ble_u2f_status_response_send(void)
 {
     uint32_t data_length;
     uint32_t err_code;
 
     // フラグがビジーの場合は異常終了
     if (send_info_t.busy == true) {
-        NRF_LOG_ERROR("ble_u2f_status_response_send: HVX function is busy ");
+        fido_log_error("ble_u2f_status_response_send: function is busy ");
         return NRF_ERROR_INVALID_STATE;
     }
 
     // 保持中の情報をチェックし、
     // 完備していない場合は異常終了
     if (send_info_t.data == NULL) {
-        NRF_LOG_ERROR("ble_u2f_status_response_send: ble_u2f_status_setup incomplete ");
+        fido_log_error("ble_u2f_status_response_send: ble_u2f_status_setup incomplete ");
         return NRF_ERROR_INVALID_DATA;
     }
 
@@ -166,7 +168,7 @@ uint32_t ble_u2f_status_response_send(void)
 }
 
 
-void ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f)
+void fido_ble_send_on_tx_complete(void)
 {
     if (send_info_t.busy == true) {
         // フラグがbusyの場合、再送のため１回だけ
@@ -177,31 +179,16 @@ void ble_u2f_status_on_tx_complete(ble_u2f_t *p_u2f)
 }
 
 
-void ble_u2f_status_response_ping(void)
-{
-    // BLE接続情報、BLEヘッダー、APDUの参照を取得
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T *p_apdu = fido_ble_receive_apdu();
-
-    // PINGの場合は
-    // リクエストのBLEヘッダーとデータを編集せず
-    // レスポンスとして戻す（エコーバック）
-    ble_u2f_status_setup(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
-    ble_u2f_status_response_send();
-}
-
-
-void ble_u2f_status_response_send_retry(void)
+void fido_ble_send_response_retry(void)
 {
     // U2Fクライアントとの接続が切り離された時は終了
-    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
-    if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
+    if (fido_ble_service_disconnected()) {
         return;
     }
     
     // レスポンスを送信
     uint32_t err_code = ble_u2f_status_response_send();
-    NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
+    fido_log_debug("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
 }
 
 //
@@ -211,29 +198,33 @@ void ble_u2f_status_response_send_retry(void)
 static uint8_t  data_buffer[2];
 static uint32_t data_buffer_length;
 
-void ble_u2f_send_success_response(uint8_t command_for_response)
+void fido_ble_send_response_data(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
+{
+    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
+    ble_u2f_status_response_send();
+}
+
+void fido_ble_send_success_response(uint8_t command_for_response)
 {
     // レスポンスを生成
     fido_set_status_word(data_buffer, U2F_SW_NO_ERROR);
     data_buffer_length = 2;
 
     // 生成したレスポンスを戻す
-    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
 }
 
-void ble_u2f_send_error_response(uint8_t command_for_response, uint16_t err_status_word)
+void fido_ble_send_error_response(uint8_t command_for_response, uint16_t err_status_word)
 {    
     // ステータスワードを格納
     fido_set_status_word(data_buffer, err_status_word);
     data_buffer_length = 2;
     
     // レスポンスを送信
-    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
 }
 
-void ble_u2f_send_command_error_response(uint8_t err_code)
+void fido_ble_send_command_error_response(uint8_t err_code)
 {
     // コマンドを格納
     uint8_t command_for_response = U2F_COMMAND_ERROR;
@@ -243,11 +234,10 @@ void ble_u2f_send_command_error_response(uint8_t err_code)
     data_buffer_length = 1;
 
     // レスポンスを送信
-    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
 }
 
-void ble_u2f_send_keepalive_response(uint8_t keepalive_status_byte)
+void fido_ble_send_keepalive_response(uint8_t keepalive_status_byte)
 {
     // コマンドを格納
     uint8_t command_for_response = U2F_COMMAND_KEEPALIVE;
@@ -257,6 +247,17 @@ void ble_u2f_send_keepalive_response(uint8_t keepalive_status_byte)
     data_buffer_length = 1;
 
     // レスポンスを送信
-    ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
+}
+
+void fido_ble_send_ping_response(void)
+{
+    // BLE接続情報、BLEヘッダー、APDUの参照を取得
+    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
+    FIDO_APDU_T *p_apdu = fido_ble_receive_apdu();
+
+    // PINGの場合は
+    // リクエストのBLEヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    fido_ble_send_response_data(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
 }

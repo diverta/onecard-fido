@@ -4,6 +4,8 @@
  *
  * Created on 2019/06/25, 13:30
  */
+#include <stddef.h>
+
 // for ble_advertising_init_t
 #include "ble_advertising.h"
 
@@ -13,10 +15,32 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for BLE functions
+#include "fido_ble_service.h"
+#include "fido_ble_receive.h"
 #include "fido_ble_pairing.h"
 
-// for FIDO
-#include "ble_u2f.h"
+//
+// FIDO Authenticator固有の定義
+//
+#define NRF_BLE_GATT_MAX_MTU_SIZE   67
+
+// BLEパケット項目のサイズ
+#define OPCODE_LENGTH 1
+#define HANDLE_LENGTH 2
+
+// ここでBLEの送受信可能最大データ長を調整します
+//   U2F Control Point、U2F Status のバッファ長も、
+//   この長さに合わせます
+#if defined(NRF_BLE_GATT_MAX_MTU_SIZE) && (NRF_BLE_GATT_MAX_MTU_SIZE != 0)
+    #define BLE_U2F_MAX_DATA_LEN (NRF_BLE_GATT_MAX_MTU_SIZE - OPCODE_LENGTH - HANDLE_LENGTH)
+    #define BLE_GATT_ATT_MTU_PERIPH_SIZE NRF_BLE_GATT_MAX_MTU_SIZE
+#else
+    #define BLE_U2F_MAX_DATA_LEN (BLE_GATT_MTU_SIZE_DEFAULT - OPCODE_LENGTH - HANDLE_LENGTH)
+    #define BLE_GATT_ATT_MTU_PERIPH_SIZE BLE_GATT_MTU_SIZE_DEFAULT
+#endif
+
+#define BLE_U2F_MAX_RECV_CHAR_LEN BLE_U2F_MAX_DATA_LEN
+#define BLE_U2F_MAX_SEND_CHAR_LEN BLE_U2F_MAX_DATA_LEN
 
 //
 // BLE U2Fサービスに関する定義
@@ -43,14 +67,15 @@ static uint8_t service_revision[3] = {0x31, 0x2e, 0x31}; // 1.1
 //
 static ble_u2f_t m_u2f;
 
-void fido_ble_advertising_init(ble_advertising_init_t *p_init)
+void fido_ble_advertising_init(void *p)
 {
     // アドバタイジング設定の前に、
     // ペアリングモードをFDSから取得
-    fido_ble_pairing_get_mode(&m_u2f);
+    fido_ble_pairing_get_mode();
     
     // ペアリングモードでない場合は、
     // ディスカバリーができないよう設定
+    ble_advertising_init_t *p_init = (ble_advertising_init_t *)p;
     p_init->advdata.flags = fido_ble_pairing_advertising_flag();
 }
 
@@ -383,4 +408,22 @@ uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_bu
     }
 
     return err_code;
+}
+
+bool fido_ble_service_disconnected(void)
+{
+    // BLEクライアントとの接続が切り離されている場合 true
+    return (m_u2f.conn_handle == BLE_CONN_HANDLE_INVALID);
+}
+
+void fido_ble_service_disconnect_force(void)
+{
+    if (fido_ble_service_disconnected()) {
+        // 未接続の場合は終了
+        return;
+    }
+
+    // nRF52から強制的にBLEコネクションを切断
+    NRF_LOG_DEBUG("Communication interval timed out: received %d frames", fido_ble_receive_frame_count());
+    sd_ble_gap_disconnect(m_u2f.conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
 }

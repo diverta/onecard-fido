@@ -7,17 +7,40 @@
 #ifndef FIDO_BLE_SERVICE_H
 #define FIDO_BLE_SERVICE_H
 
-#include "ble_advertising.h"
-#include "ble_u2f.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void       fido_ble_advertising_init(ble_advertising_init_t *p_init);
+// BLE U2FサービスのUUID
+#define BLE_UUID_U2F_SERVICE 0xFFFD
+
+// 
+// BLEサービス共有情報／データ受信用ハンドラー
+// 
+typedef struct ble_u2f_s ble_u2f_t;
+typedef void (*ble_u2f_data_handler_t)(ble_u2f_t *p_u2f, uint8_t *p_data, uint16_t length);
+
+struct ble_u2f_s
+{
+    uint8_t                  uuid_type;
+    uint16_t                 service_handle;
+
+    ble_gatts_char_handles_t u2f_status_handles;
+    ble_gatts_char_handles_t u2f_control_point_handles;
+    ble_gatts_char_handles_t u2f_control_point_length_handles;
+    ble_gatts_char_handles_t u2f_service_revision_bitfield_handles;
+    ble_gatts_char_handles_t u2f_service_revision_handles;
+
+    uint16_t                 conn_handle;
+    ble_u2f_data_handler_t   data_handler;
+};
+
+//
+// 関数群
+//
+void       fido_ble_advertising_init(void *p_init);
 void       fido_ble_services_init(void);
 ble_u2f_t *fido_ble_get_U2F_context(void);
-uint32_t   fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length);
 
 #ifdef __cplusplus
 }

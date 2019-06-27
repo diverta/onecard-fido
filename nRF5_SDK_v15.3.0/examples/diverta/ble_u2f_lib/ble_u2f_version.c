@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "u2f.h"
 #include "fido_ble_receive.h"
-#include "ble_u2f_status.h"
+#include "fido_ble_send.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -30,7 +31,7 @@ void ble_u2f_version_do_process(void)
         // エラーレスポンスを送信し終了
         fido_log_error("Response message length(6) exceeds Le(%d) ", fido_ble_receive_apdu()->Le);
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        ble_u2f_send_error_response(cmd, U2F_SW_WRONG_LENGTH);
+        fido_ble_send_error_response(cmd, U2F_SW_WRONG_LENGTH);
         return;
     }
     
@@ -38,7 +39,6 @@ void ble_u2f_version_do_process(void)
     fido_set_status_word(u2f_version_data_buffer + u2f_version_length, status_word);
 
     // レスポンスを送信
-    ble_u2f_status_setup(command_for_response, u2f_version_data_buffer, sizeof(u2f_version_data_buffer));
-    ble_u2f_status_response_send();
+    fido_ble_send_response_data(command_for_response, u2f_version_data_buffer, sizeof(u2f_version_data_buffer));
     fido_log_debug("ble_u2f_version end ");
 }

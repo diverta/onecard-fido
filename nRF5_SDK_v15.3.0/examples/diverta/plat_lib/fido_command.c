@@ -33,7 +33,7 @@
 void fido_command_on_mainsw_event(void)
 {
     // ボタンが短押しされた時の処理を実行
-    if (fido_ble_get_U2F_context()->conn_handle != BLE_CONN_HANDLE_INVALID) {
+    if (fido_ble_service_disconnected() == false) {
         if (fido_ble_command_on_mainsw_event() == true) {
             return;
         }

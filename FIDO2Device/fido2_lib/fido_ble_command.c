@@ -11,11 +11,11 @@
 #include "ctap2_common.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_receive_apdu.h"
+#include "fido_ble_send.h"
 
 // 移行中のモジュール
 #include "fido_ble_pairing.h"
 #include "ble_ctap2_command.h"  // for CTAP2 support
-#include "ble_u2f_status.h"
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
@@ -64,7 +64,7 @@ void fido_ble_command_on_request_received(void)
     if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        ble_u2f_send_command_error_response(p_ble_header->ERROR);
+        fido_ble_send_command_error_response(p_ble_header->ERROR);
         return;
     }
     
@@ -73,9 +73,9 @@ void fido_ble_command_on_request_received(void)
     if (fido_ble_pairing_mode_get()) {
         if (p_ble_header->CMD == U2F_COMMAND_MSG &&
             p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
-            ble_u2f_send_success_response(fido_ble_receive_header()->CMD);
+            fido_ble_send_success_response(fido_ble_receive_header()->CMD);
         } else {
-            ble_u2f_send_error_response(fido_ble_receive_header()->CMD, 0x9601);
+            fido_ble_send_error_response(fido_ble_receive_header()->CMD, 0x9601);
         }
         return;
     }
@@ -104,14 +104,14 @@ void fido_ble_command_on_request_received(void)
             default:
                 // INSが不正の場合は終了
                 fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
-                ble_u2f_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
+                fido_ble_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
                 break;
         }
     }
 
     if (p_ble_header->CMD == U2F_COMMAND_PING) {
         // PINGレスポンスを実行
-        ble_u2f_status_response_ping();
+        fido_ble_send_ping_response();
         return;
     }
 }
@@ -154,7 +154,7 @@ void fido_ble_command_keepalive_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
     uint8_t *p_keepalive_status_byte = (uint8_t *)p_context;
-    ble_u2f_send_keepalive_response(*p_keepalive_status_byte);
+    fido_ble_send_keepalive_response(*p_keepalive_status_byte);
 }
 
 void fido_ble_command_on_response_send_completed(void)

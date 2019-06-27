@@ -1,7 +1,6 @@
 #include "sdk_common.h"
 
-#include "ble_u2f.h"
-#include "ble_u2f_status.h"
+#include "fido_ble_send.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_ble_send_retry
@@ -19,7 +18,7 @@ static bool app_timer_started = false;
 static void command_timer_handler(void *p_context)
 {
     // レスポンスを再送する
-    ble_u2f_status_response_send_retry();
+    fido_ble_send_response_retry();
 }
 
 static void ble_u2f_status_retry_init()

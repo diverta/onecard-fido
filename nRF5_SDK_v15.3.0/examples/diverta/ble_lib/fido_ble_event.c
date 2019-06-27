@@ -4,7 +4,6 @@
  *
  * Created on 2018/10/09, 11:59
  */
-
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
@@ -15,14 +14,13 @@
 NRF_LOG_MODULE_REGISTER();
 
 // for FIDO
-#include "ble_u2f.h"
 #include "fido_ble_service.h"
 #include "fido_ble_pairing.h"
-#include "ble_u2f_status.h"
 #include "fido_timer.h"
 
 #include "fido_ble_command.h"
 #include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -146,7 +144,7 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
         case BLE_GAP_EVT_AUTH_STATUS:
             // ペアリングが成功したかどうかを判定
-            fido_ble_pairing_on_evt_auth_status(p_u2f, p_ble_evt);
+            fido_ble_pairing_on_evt_auth_status(p_ble_evt);
             break;
 
         case BLE_GATTS_EVT_WRITE:
@@ -158,7 +156,7 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
             break;
 
         case BLE_GATTS_EVT_HVN_TX_COMPLETE:
-            ble_u2f_status_on_tx_complete(p_u2f);
+            fido_ble_send_on_tx_complete();
             break;
 
         default:
@@ -194,15 +192,9 @@ void fido_ble_sleep_mode_enter(void)
 
 void fido_ble_on_process_timedout(void)
 {
-    ble_u2f_t *p_u2f = fido_ble_get_U2F_context();
-    if (p_u2f == NULL) {
-        return;
-    }
-
     // 直近のレスポンスから10秒を経過した場合、
     // nRF52から強制的にBLEコネクションを切断
-    NRF_LOG_DEBUG("Communication interval timed out: received %d frames", fido_ble_receive_frame_count());
-    sd_ble_gap_disconnect(p_u2f->conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
+    fido_ble_service_disconnect_force();    
 }
 
 void fido_ble_do_process(void)

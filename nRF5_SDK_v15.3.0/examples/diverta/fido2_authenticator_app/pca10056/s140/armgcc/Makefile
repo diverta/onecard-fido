@@ -154,6 +154,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_command.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
+  $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -196,7 +197,6 @@ SRC_FILES += \
   $(BLULIB_DIR)/ble_ctap2_command.c \
   $(BLULIB_DIR)/ble_u2f_authenticate.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
-  $(BLULIB_DIR)/ble_u2f_status.c \
   $(BLULIB_DIR)/ble_u2f_version.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
