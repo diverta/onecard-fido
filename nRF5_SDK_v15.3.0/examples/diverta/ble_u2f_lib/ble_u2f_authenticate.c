@@ -6,19 +6,13 @@
 #include "fds.h"
 #include "ble_u2f.h"
 #include "ble_u2f_crypto.h"
-#include "fido_flash.h"
 #include "ble_u2f_status.h"
 #include "ble_u2f_command.h"
 #include "ble_u2f_util.h"
 #include "u2f_keyhandle.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_authenticate
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
-// for user presence test
-#include "fido_user_presence.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 static uint8_t *get_appid_from_apdu(ble_u2f_context_t *p_u2f_context)
 {
@@ -55,7 +49,7 @@ static bool check_request_keyhandle(ble_u2f_context_t *p_u2f_context)
 static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 {
     // 開始ログを出力
-    NRF_LOG_DEBUG("update_token_counter start ");
+    fido_log_debug("update_token_counter start ");
 
     // appIdHash、トークンカウンターを共有情報から取得
     // （トークンカウンターは現在値＋１とする）
@@ -72,7 +66,7 @@ static void update_token_counter(ble_u2f_context_t *p_u2f_context)
 
     // 後続のレスポンス生成・送信は、
     // Flash ROM書込み完了後に行われる
-    NRF_LOG_DEBUG("update_token_counter end ");
+    fido_log_debug("update_token_counter end ");
 }
 
 static uint16_t copy_appIdHash_data(uint8_t *p_dest_buffer, uint8_t *p_apdu_data)
@@ -169,7 +163,7 @@ static bool create_authentication_response_message(ble_u2f_context_t *p_u2f_cont
     if (p_u2f_context->p_apdu->Le < offset) {
         // Leを確認し、メッセージのバイト数がオーバーする場合
         // エラーレスポンスを送信するよう指示
-        NRF_LOG_ERROR("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
+        fido_log_error("Response message length(%d) exceeds Le(%d) ", offset, p_u2f_context->p_apdu->Le);
         p_u2f_context->p_ble_header->STATUS_WORD = U2F_SW_WRONG_LENGTH;
         return false;
     }
@@ -238,7 +232,7 @@ void ble_u2f_authenticate_resume_process(ble_u2f_context_t *p_u2f_context)
 
 void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
 {
-    NRF_LOG_DEBUG("ble_u2f_authenticate start ");
+    fido_log_debug("ble_u2f_authenticate start ");
 
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
@@ -251,7 +245,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("ble_u2f_authenticate: invalid keyhandle ");
+        fido_log_error("ble_u2f_authenticate: invalid keyhandle ");
         ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
         return;
     }
@@ -261,14 +255,14 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
     if (fido_flash_token_counter_read(p_appid_hash) == false) {
         // appIdHashがトークンカウンターにない場合は
         // エラーレスポンスを生成して戻す
-        NRF_LOG_ERROR("ble_u2f_authenticate: token counter not found ");
+        fido_log_error("ble_u2f_authenticate: token counter not found ");
         ble_u2f_send_error_response(p_u2f_context, U2F_SW_WRONG_DATA);
         return;
     }
 
     // トークンカウンターを取得
     p_u2f_context->token_counter = fido_flash_token_counter_value();
-    NRF_LOG_DEBUG("token counter value=%d ", p_u2f_context->token_counter);
+    fido_log_debug("token counter value=%d ", p_u2f_context->token_counter);
 
     // control byte (P1) を参照
     uint8_t control_byte = p_u2f_context->p_apdu->P1;
@@ -284,7 +278,7 @@ void ble_u2f_authenticate_do_process(ble_u2f_context_t *p_u2f_context)
         // ユーザー所在確認が必要な場合は、ここで終了し
         // キープアライブ送信を開始する
         // ステータスバイトにTUP_NEEDED(0x02)を設定
-        NRF_LOG_INFO("ble_u2f_authenticate: waiting to complete the test of user presence");
+        fido_log_info("ble_u2f_authenticate: waiting to complete the test of user presence");
         p_u2f_context->keepalive_status_byte = 0x02;
         fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, p_u2f_context);
         return;
@@ -314,7 +308,7 @@ void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_ev
     if (p_evt->result != FDS_SUCCESS) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         ble_u2f_send_error_response(p_u2f_context, 0x9503);
-        NRF_LOG_ERROR("ble_u2f_authenticate abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("ble_u2f_authenticate abend: FDS EVENT=%d ", p_evt->id);
         return;
     }
 
@@ -327,6 +321,6 @@ void ble_u2f_authenticate_send_response(ble_u2f_context_t *p_u2f_context, fds_ev
     } else if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_authentication_response(p_u2f_context);
-        NRF_LOG_DEBUG("ble_u2f_authenticate end ");
+        fido_log_debug("ble_u2f_authenticate end ");
     }
 }

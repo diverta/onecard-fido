@@ -19,7 +19,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "ble_u2f_init.h"
 
 // for fds_register on hid service
-#include "hid_fido_command.h"
+#include "fido_hid_command.h"
 
 //
 // U2F関連の共有情報

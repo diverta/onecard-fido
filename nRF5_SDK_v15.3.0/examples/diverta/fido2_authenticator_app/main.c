@@ -20,14 +20,19 @@
 // FIDO Authenticator固有の処理
 #include "fido_ble_peripheral.h"
 #include "fido_ble_peripheral_timer.h"
-#include "usbd_hid_common.h"
+#include "fido_hid_channel.h"
 #include "usbd_hid_service.h"
-#include "fido_command.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 // for lighting LED
-#include "fido_idling_led.h"
+#include "fido_board.h"
+
+// for FDS event handle
+#include "fido_flash_event.h"
 
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */

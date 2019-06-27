@@ -17,13 +17,8 @@
 #include "ctap2_common.h"
 #include "ble_ctap2_command.h"
 
-// for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_command
-#include "nrf_log.h"
-NRF_LOG_MODULE_REGISTER();
-
-// for user presence test
-#include "fido_user_presence.h"
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
@@ -61,7 +56,7 @@ bool ble_u2f_command_on_mainsw_event(ble_u2f_t *p_u2f)
         // 0x03 ("enforce-user-presence-and-sign") 
         // ユーザー所在確認が取れたと判定し、
         // キープアライブを停止
-        NRF_LOG_INFO("ble_u2f_authenticate: completed the test of user presence");
+        fido_log_info("ble_u2f_authenticate: completed the test of user presence");
         m_u2f_context.user_presence_byte = fido_user_presence_verify_end();
 
         // Authenticationの後続処理を実行する
@@ -92,7 +87,7 @@ void ble_u2f_command_initialize_context(void)
 {
     // 共有情報をゼロクリアする
     memset(&m_u2f_context, 0, sizeof(ble_u2f_context_t));
-    NRF_LOG_DEBUG("ble_u2f_command_initialize_context done ");
+    fido_log_debug("ble_u2f_command_initialize_context done ");
     
     // コマンド／リクエストデータ格納領域を初期化する
     ble_u2f_control_point_initialize();
@@ -103,7 +98,7 @@ void ble_u2f_command_finalize_context(void)
 {
     // ユーザー所在確認を停止(キープアライブを停止)
     fido_user_presence_terminate();
-    NRF_LOG_DEBUG("ble_u2f_command_finalize_context done ");
+    fido_log_debug("ble_u2f_command_finalize_context done ");
 }
 
 static enum COMMAND_TYPE get_command_type(void)
@@ -132,32 +127,32 @@ static enum COMMAND_TYPE get_command_type(void)
 
             // 以下はU2Fコマンド
             if (p_apdu->INS == U2F_REGISTER) {
-                NRF_LOG_DEBUG("get_command_type: Registration Request Message received ");
+                fido_log_debug("get_command_type: Registration Request Message received ");
                 current_command = COMMAND_U2F_REGISTER;
 
             } else if (p_apdu->INS == U2F_AUTHENTICATE) {
-                NRF_LOG_DEBUG("get_command_type: Authentication Request Message received ");
+                fido_log_debug("get_command_type: Authentication Request Message received ");
                 current_command = COMMAND_U2F_AUTHENTICATE;
 
             } else if (p_apdu->INS == U2F_VERSION) {
-                NRF_LOG_DEBUG("get_command_type: GetVersion Request Message received ");
+                fido_log_debug("get_command_type: GetVersion Request Message received ");
                 current_command = COMMAND_U2F_VERSION;
 
             // 初期導入関連コマンドの場合
             // (vendor defined command)
             } else if (p_apdu->INS == U2F_INS_INSTALL_INITBOND) {
                 // ボンディング情報削除コマンド
-                NRF_LOG_DEBUG("get_command_type: initialize bonding information ");
+                fido_log_debug("get_command_type: initialize bonding information ");
                 current_command = COMMAND_INITBOND;
                 
             } else if (p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
                 // ペアリングのためのレスポンスを実行
-                NRF_LOG_DEBUG("get_command_type: pairing request received ");
+                fido_log_debug("get_command_type: pairing request received ");
                 current_command = COMMAND_PAIRING;
 
             } else {
                 // INSが不正の場合は終了
-                NRF_LOG_DEBUG("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
+                fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
                 ble_u2f_send_error_response(&m_u2f_context, U2F_SW_INS_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
@@ -165,7 +160,7 @@ static enum COMMAND_TYPE get_command_type(void)
             if (m_u2f_context.p_apdu->CLA != 0x00) {
                 // INSが正しくてもCLAが不正の場合は
                 // エラーレスポンスを送信して終了
-                NRF_LOG_DEBUG("get_command_type: Invalid CLA(0x%02x) ", m_u2f_context.p_apdu->CLA);
+                fido_log_debug("get_command_type: Invalid CLA(0x%02x) ", m_u2f_context.p_apdu->CLA);
                 ble_u2f_send_error_response(&m_u2f_context, U2F_SW_CLA_NOT_SUPPORTED);
                 return COMMAND_NONE;
             }
@@ -186,7 +181,7 @@ static enum COMMAND_TYPE get_command_type(void)
     } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
         if (p_apdu->Lc == p_apdu->data_length) {
             // データが完成していれば、PINGレスポンスを実行
-            NRF_LOG_DEBUG("get_command_type: PING Request Message received ");
+            fido_log_debug("get_command_type: PING Request Message received ");
             current_command = COMMAND_U2F_PING;
         } else {
             // データが完成していないのでスルー
