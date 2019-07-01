@@ -5,6 +5,7 @@
 #include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
 
+#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_u2f_command.h"
@@ -31,7 +32,7 @@ void ble_u2f_authenticate_resume_process(void)
     if (u2f_authenticate_response_message(apdu_data, fido_u2f_command_response_buffer(), u2f_response_length, apdu_le) == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        fido_ble_send_error_response(cmd, fido_ble_receive_header()->STATUS_WORD);
+        fido_ble_command_send_status_word(cmd, fido_ble_receive_header()->STATUS_WORD);
         return;
     }
     
@@ -50,7 +51,7 @@ void ble_u2f_authenticate_do_process(void)
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        fido_ble_send_error_response(cmd, 0x9501);
+        fido_ble_command_send_status_word(cmd, 0x9501);
         return;
     }
 
@@ -60,7 +61,7 @@ void ble_u2f_authenticate_do_process(void)
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンスを生成して戻す
         fido_log_error("ble_u2f_authenticate: invalid keyhandle ");
-        fido_ble_send_error_response(cmd, U2F_SW_WRONG_DATA);
+        fido_ble_command_send_status_word(cmd, U2F_SW_WRONG_DATA);
         return;
     }
 
@@ -71,7 +72,7 @@ void ble_u2f_authenticate_do_process(void)
         // appIdHashがトークンカウンターにない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("ble_u2f_authenticate: token counter not found ");
-        fido_ble_send_error_response(cmd, U2F_SW_WRONG_DATA);
+        fido_ble_command_send_status_word(cmd, U2F_SW_WRONG_DATA);
         return;
     }
     fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
@@ -81,7 +82,7 @@ void ble_u2f_authenticate_do_process(void)
     if (control_byte == 0x07) {
         // 0x07 ("check-only") の場合はここで終了し
         // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
-        fido_ble_send_error_response(cmd, U2F_SW_CONDITIONS_NOT_SATISFIED);
+        fido_ble_command_send_status_word(cmd, U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
     }
 
@@ -109,7 +110,7 @@ static void send_authentication_response(void)
     uint16_t data_buffer_length = (uint16_t)(*fido_u2f_command_response_length());
 
     // 生成したレスポンスを戻す
-    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
+    fido_ble_send_command_response(command_for_response, data_buffer, data_buffer_length);
 }
 
 void ble_u2f_authenticate_send_response(void const *p_evt)
@@ -118,7 +119,7 @@ void ble_u2f_authenticate_send_response(void const *p_evt)
     if (evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        fido_ble_send_error_response(cmd, 0x9503);
+        fido_ble_command_send_status_word(cmd, 0x9503);
         fido_log_error("ble_u2f_authenticate abend");
         return;
     }

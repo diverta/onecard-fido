@@ -194,7 +194,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
-  $(BLULIB_DIR)/ble_ctap2_command.c \
   $(BLULIB_DIR)/ble_u2f_authenticate.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLULIB_DIR)/ble_u2f_version.c \

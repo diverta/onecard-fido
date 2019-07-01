@@ -12,10 +12,10 @@
 #include "fido_ble_receive.h"
 #include "fido_ble_receive_apdu.h"
 #include "fido_ble_send.h"
+#include "fido_ctap2_command.h"  // for CTAP2 support
 
 // 移行中のモジュール
 #include "fido_ble_pairing.h"
-#include "ble_ctap2_command.h"  // for CTAP2 support
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
 #include "ble_u2f_version.h"
@@ -55,6 +55,53 @@ bool fido_ble_command_on_mainsw_event(void)
     }
 }
 
+void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code) 
+{
+    // U2F ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    fido_ble_send_command_response_no_callback(cmd, status_code);
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
+}
+
+void fido_ble_command_send_status_word(uint8_t command_for_response, uint16_t err_status_word)
+{    
+    // ステータスワードを格納
+    uint8_t cmd_response_buffer[2];
+    fido_set_status_word(cmd_response_buffer, err_status_word);
+    
+    // レスポンスを送信
+    fido_ble_send_command_response(command_for_response, cmd_response_buffer, sizeof(cmd_response_buffer));
+}
+
+static void send_ping_response(void)
+{
+    // BLE接続情報、BLEヘッダー、APDUの参照を取得
+    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
+    FIDO_APDU_T *p_apdu = fido_ble_receive_apdu();
+
+    // PINGの場合は
+    // リクエストのBLEヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    fido_ble_send_command_response(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
+}
+
+static bool ctap2_command_do_process(uint8_t command_byte)
+{
+    // 受信データの先頭１バイトめで処理を判定
+    switch (command_byte) {
+        case CTAP2_CMD_GETINFO:
+        case CTAP2_CMD_RESET:
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+        case CTAP2_CMD_GET_ASSERTION:
+            fido_ctap2_command_cbor(TRANSPORT_BLE);
+            return true;
+        default:
+            return false;
+    }
+}
+
 void fido_ble_command_on_request_received(void)
 {
     // BLEヘッダー、APDUの参照を取得
@@ -64,7 +111,7 @@ void fido_ble_command_on_request_received(void)
     if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        fido_ble_send_command_error_response(p_ble_header->ERROR);
+        fido_ble_command_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header()->ERROR);
         return;
     }
     
@@ -73,16 +120,15 @@ void fido_ble_command_on_request_received(void)
     if (fido_ble_pairing_mode_get()) {
         if (p_ble_header->CMD == U2F_COMMAND_MSG &&
             p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
-            fido_ble_send_success_response(fido_ble_receive_header()->CMD);
+            fido_ble_command_send_status_word(fido_ble_receive_header()->CMD, U2F_SW_NO_ERROR);
         } else {
-            fido_ble_send_error_response(fido_ble_receive_header()->CMD, 0x9601);
+            fido_ble_command_send_status_word(fido_ble_receive_header()->CMD, 0x9601);
         }
         return;
     }
 
-    if (is_ctap2_command_byte(p_apdu->CLA)) {
-        // CTAP2コマンドを処理する。
-        ble_ctap2_command_do_process();
+    // CTAP2コマンドを処理する。
+    if (ctap2_command_do_process(p_apdu->CLA)) {
         return;
     }
 
@@ -104,14 +150,14 @@ void fido_ble_command_on_request_received(void)
             default:
                 // INSが不正の場合は終了
                 fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
-                fido_ble_send_error_response(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
+                fido_ble_command_send_status_word(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
                 break;
         }
     }
 
     if (p_ble_header->CMD == U2F_COMMAND_PING) {
         // PINGレスポンスを実行
-        fido_ble_send_ping_response();
+        send_ping_response();
         return;
     }
 }
@@ -130,7 +176,7 @@ void fido_ble_command_on_fs_evt(void const *p_evt)
     }
 
     // CTAP2コマンドの処理を実行
-    ble_ctap2_command_on_fs_evt(p_evt);
+    fido_ctap2_command_cbor_send_response(p_evt);
     
     // Flash ROM更新後に行われる後続処理を実行
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
@@ -154,7 +200,7 @@ void fido_ble_command_keepalive_timer_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
     uint8_t *p_keepalive_status_byte = (uint8_t *)p_context;
-    fido_ble_send_keepalive_response(*p_keepalive_status_byte);
+    fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, *p_keepalive_status_byte);
 }
 
 void fido_ble_command_on_response_send_completed(void)
@@ -166,5 +212,5 @@ void fido_ble_command_on_response_send_completed(void)
     fido_comm_interval_timer_start();
 
     // CTAP2コマンドの処理を実行
-    ble_ctap2_command_response_sent();
+    fido_ctap2_command_cbor_response_completed();
 }

@@ -14,6 +14,7 @@
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_timer.h"
+#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -41,7 +42,7 @@ void fido_ble_pairing_delete_bonds(void)
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        fido_ble_send_error_response(cmd, 0x9101);
+        fido_ble_command_send_status_word(cmd, 0x9101);
         return;
     }
 }
@@ -56,12 +57,12 @@ bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
     //   いずれかのイベントが発生する
     // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        fido_ble_send_success_response(cmd);
+        fido_ble_command_send_status_word(cmd, U2F_SW_NO_ERROR);
         fido_log_debug("ble_u2f_pairing_delete_bonds end ");
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        fido_ble_send_error_response(cmd, 0x9102);
+        fido_ble_command_send_status_word(cmd, 0x9102);
         fido_log_error("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
         return true;
     }
