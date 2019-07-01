@@ -233,6 +233,7 @@ static void command_make_credential_send_response(void const *p_evt)
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("authenticatorMakeCredential retry: FDS GC done ");
         ctap2_make_credential_add_token_counter();
+        is_fds_processing = true;
 
     } else if (evt->write_update) {
         // レスポンスを生成してWebAuthnクライアントに戻す
@@ -348,6 +349,7 @@ static void command_get_assertion_send_response(void const *p_evt)
         // GC実行直前の処理を再実行
         NRF_LOG_WARNING("authenticatorGetAssertion retry: FDS GC done ");
         ctap2_get_assertion_update_token_counter();
+        is_fds_processing = true;
 
     } else if (evt->write_update) {
         // レスポンスを生成してWebAuthnクライアントに戻す
