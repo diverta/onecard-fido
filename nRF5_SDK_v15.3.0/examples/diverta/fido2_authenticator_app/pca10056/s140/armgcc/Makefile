@@ -196,7 +196,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLULIB_DIR)/ble_u2f_authenticate.c \
   $(BLULIB_DIR)/ble_u2f_register.c \
-  $(BLULIB_DIR)/ble_u2f_version.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \

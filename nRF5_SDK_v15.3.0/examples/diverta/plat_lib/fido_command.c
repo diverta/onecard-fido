@@ -35,7 +35,7 @@ void fido_command_on_mainsw_event(void)
             return;
         }
     }
-    if (hid_u2f_command_on_mainsw_event() == true) {
+    if (fido_u2f_command_on_mainsw_event() == true) {
         return;
     }
     fido_ctap2_command_on_mainsw_event();

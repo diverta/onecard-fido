@@ -13,12 +13,12 @@
 #include "fido_ble_receive_apdu.h"
 #include "fido_ble_send.h"
 #include "fido_ctap2_command.h"  // for CTAP2 support
+#include "fido_u2f_command.h"    // for U2F support
 
 // 移行中のモジュール
 #include "fido_ble_pairing.h"
 #include "ble_u2f_register.h"
 #include "ble_u2f_authenticate.h"
-#include "ble_u2f_version.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -87,21 +87,6 @@ static void send_ping_response(void)
     fido_ble_send_command_response(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
 }
 
-static bool ctap2_command_do_process(uint8_t command_byte)
-{
-    // 受信データの先頭１バイトめで処理を判定
-    switch (command_byte) {
-        case CTAP2_CMD_GETINFO:
-        case CTAP2_CMD_RESET:
-        case CTAP2_CMD_MAKE_CREDENTIAL:
-        case CTAP2_CMD_GET_ASSERTION:
-            fido_ctap2_command_cbor(TRANSPORT_BLE);
-            return true;
-        default:
-            return false;
-    }
-}
-
 void fido_ble_command_on_request_received(void)
 {
     // BLEヘッダー、APDUの参照を取得
@@ -127,31 +112,35 @@ void fido_ble_command_on_request_received(void)
         return;
     }
 
-    // CTAP2コマンドを処理する。
-    if (ctap2_command_do_process(p_apdu->CLA)) {
-        return;
-    }
-
     if (p_ble_header->CMD == U2F_COMMAND_MSG) {
-        // U2Fコマンド／管理用コマンドを処理する。
-        switch (p_apdu->INS) {
-            case U2F_INS_INSTALL_INITBOND:
-                fido_ble_pairing_delete_bonds();
-                break;
-            case U2F_REGISTER:
-                ble_u2f_register_do_process();
-                break;
-            case U2F_AUTHENTICATE:
-                ble_u2f_authenticate_do_process();
-                break;
-            case U2F_VERSION:
-                ble_u2f_version_do_process();
-                break;
-            default:
-                // INSが不正の場合は終了
-                fido_log_debug("get_command_type: Invalid INS(0x%02x) ", p_apdu->INS);
-                fido_ble_command_send_status_word(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
-                break;
+        if (p_apdu->CLA != 0x00) {
+            // CTAP2コマンドを処理する。
+            fido_ctap2_command_cbor(TRANSPORT_BLE);
+
+        } else {
+            // 移行中の処理
+            if (p_apdu->INS == U2F_VERSION) {
+                fido_u2f_command_msg(TRANSPORT_BLE);
+            }
+            // U2Fコマンド／管理用コマンドを処理する。
+            switch (p_apdu->INS) {
+                case U2F_INS_INSTALL_INITBOND:
+                    fido_ble_pairing_delete_bonds();
+                    break;
+                case U2F_REGISTER:
+                    ble_u2f_register_do_process();
+                    break;
+                case U2F_AUTHENTICATE:
+                    ble_u2f_authenticate_do_process();
+                    break;
+                case U2F_VERSION:
+                    break;
+                default:
+                    // INSが不正の場合は終了
+                    fido_log_debug("Invalid INS(0x%02x) ", p_apdu->INS);
+                    fido_ble_command_send_status_word(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
+                    break;
+            }
         }
     }
 

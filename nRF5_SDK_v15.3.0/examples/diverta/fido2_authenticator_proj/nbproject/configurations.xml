@@ -23,8 +23,6 @@
       <itemPath>../ble_u2f_lib/ble_u2f_authenticate.h</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.c</itemPath>
       <itemPath>../ble_u2f_lib/ble_u2f_register.h</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_version.c</itemPath>
-      <itemPath>../ble_u2f_lib/ble_u2f_version.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib"
                    displayName="ctap2_lib"
@@ -1255,23 +1253,6 @@
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../ble_u2f_lib/ble_u2f_version.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../FIDO2Device/u2f_lib</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
           </incDir>
         </cTool>
