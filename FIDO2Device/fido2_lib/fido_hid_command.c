@@ -28,9 +28,6 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 
-// レスポンス完了後の処理を停止させるフラグ
-static bool abort_flag = false;
-
 static void hid_fido_command_ping(void)
 {
     // PINGの場合は
@@ -137,11 +134,11 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
 #else
         case U2F_COMMAND_HID_INIT:
-            hid_u2f_command_init();
+            fido_u2f_command_hid_init();
             break;
 #endif
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg();
+            fido_u2f_command_msg(TRANSPORT_HID);
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor(TRANSPORT_HID);
@@ -157,31 +154,6 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             fido_hid_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
-}
-
-void fido_hid_command_on_fs_evt(fido_flash_event_t *const p_evt)
-{
-    // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
-    switch (cmd) {
-        case U2F_COMMAND_MSG:
-            hid_u2f_command_msg_send_response(p_evt);
-            break;
-        case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor_send_response(p_evt);
-            break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-            fido_maintenance_command_send_response(p_evt);
-            break;
-        default:
-            break;
-    }
-}
-
-void fido_hid_command_set_abort_flag(bool flag)
-{
-    abort_flag = flag;
 }
 
 void fido_hid_command_on_report_completed(void)
@@ -202,7 +174,7 @@ void fido_hid_command_on_report_completed(void)
             fido_log_info("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg_report_sent();
+            fido_u2f_command_msg_report_sent();
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_response_completed();
@@ -215,15 +187,13 @@ void fido_hid_command_on_report_completed(void)
             break;
     }
 
-    if (abort_flag) {
-        // レスポンス完了後の処理を停止させる場合は、
-        // 全色LEDを点灯させたのち、無限ループに入る
-        fido_led_light_all(true);
-        while(true);
-    } else {
-        // アイドル時点滅処理を開始
-        fido_idling_led_on();
+    if (fido_command_do_abort()) {
+        // レスポンス完了後の処理を停止させる場合はここで終了
+        return;
     }
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
 }
 
 void fido_hid_command_on_report_started(void) 

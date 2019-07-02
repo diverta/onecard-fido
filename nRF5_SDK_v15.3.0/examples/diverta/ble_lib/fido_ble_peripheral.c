@@ -33,7 +33,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // FIDO Authenticator固有の処理
-#include "fido_ble_main.h"
+#include "fido_ble_service.h"
 #include "fido_ble_event.h"
 
 #if   defined(BOARD_PCA10056)

@@ -1,10 +1,9 @@
 #include "sdk_common.h"
 
-#include "ble_u2f.h"
-#include "ble_u2f_status.h"
+#include "fido_ble_send.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME ble_u2f_status_retry
+#define NRF_LOG_MODULE_NAME fido_ble_send_retry
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -18,15 +17,8 @@ static bool app_timer_started = false;
 
 static void command_timer_handler(void *p_context)
 {
-    // U2Fクライアントとの接続が切り離された時は終了
-    ble_u2f_t *p_u2f = (ble_u2f_t *)p_context;
-    if (p_u2f->conn_handle == BLE_CONN_HANDLE_INVALID) {
-        return;
-    }
-    
-    // レスポンスを送信
-    uint32_t err_code = ble_u2f_status_response_send(p_u2f);
-    NRF_LOG_DEBUG("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
+    // レスポンスを再送する
+    fido_ble_send_response_retry();
 }
 
 static void ble_u2f_status_retry_init()
@@ -57,7 +49,7 @@ static void ble_u2f_status_retry_terminate()
     }
 }
 
-static void ble_u2f_status_retry_start(ble_u2f_t *p_u2f)
+static void ble_u2f_status_retry_start(void)
 {
     if (app_timer_created == false) {
         return;
@@ -70,7 +62,7 @@ static void ble_u2f_status_retry_start(ble_u2f_t *p_u2f)
 
     // タイマーを開始する
     uint32_t timeout_ticks = APP_TIMER_TICKS(RETRY_INTERVAL_MSEC);
-    uint32_t err_code = app_timer_start(m_ble_u2f_status_retry_timer_id, timeout_ticks, p_u2f);
+    uint32_t err_code = app_timer_start(m_ble_u2f_status_retry_timer_id, timeout_ticks, NULL);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_timer_start(m_ble_u2f_status_retry_timer_id) returns %d ", err_code);
         return;
@@ -78,11 +70,11 @@ static void ble_u2f_status_retry_start(ble_u2f_t *p_u2f)
     app_timer_started = true;
 }
 
-void ble_u2f_status_retry_timer_start(ble_u2f_t *p_u2f)
+void fido_ble_send_retry_timer_start(void)
 {
     // タイマーが生成されていない場合は生成
     ble_u2f_status_retry_init();
 
     // タイマーを開始する
-    ble_u2f_status_retry_start(p_u2f);
+    ble_u2f_status_retry_start();
 }

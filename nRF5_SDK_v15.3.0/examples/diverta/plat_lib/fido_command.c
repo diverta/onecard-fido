@@ -4,13 +4,15 @@
  *
  * Created on 2019/02/11, 11:31
  */
-// for FIDO
-#include "ble_u2f.h"
-#include "ble_u2f_command.h"
-#include "ble_ctap2_command.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+//
+// プラットフォーム非依存コード
+//
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
-#include "fido_ble_main.h"
+#include "fido_ble_command.h"
 #include "fido_hid_command.h"
 #include "fido_nfc_command.h"
 
@@ -20,24 +22,46 @@
 // for keepalive timer
 #include "fido_timer.h"
 
+// for fido_ble_pairing_change_mode
+#include "fido_ble_peripheral.h"
+#include "fido_ble_pairing.h"
+#include "fido_ble_service.h"
+
+// レスポンス完了後の処理を停止させるフラグ
+static bool abort_flag = false;
+
+bool fido_command_do_abort(void)
+{
+    // レスポンス完了後の処理を停止させる場合は、
+    // 全色LEDを点灯させたのち、無限ループに入る
+    if (abort_flag) {
+        fido_led_light_all(true);
+        while(true);
+    }
+    return abort_flag;
+}
+
+void fido_command_abort_flag_set(bool flag)
+{
+    abort_flag = flag;
+}
+
 void fido_command_on_mainsw_event(void)
 {
     // ボタンが短押しされた時の処理を実行
-    if (ble_u2f_command_on_mainsw_event(fido_ble_get_U2F_context()) == true) {
-        return;
-    }
-    if (hid_u2f_command_on_mainsw_event() == true) {
+    if (fido_u2f_command_on_mainsw_event() == true) {
         return;
     }
     fido_ctap2_command_on_mainsw_event();
-    ble_ctap2_command_on_mainsw_event();
 }
 
 void fido_command_on_mainsw_long_push_event(void)
 {
     // ボタンが長押しされた時の処理を実行
-    if (ble_u2f_command_on_mainsw_long_push_event(fido_ble_get_U2F_context()) == true) {
-        return;
+    if (fido_ble_peripheral_mode()) {
+        // BLEペリフェラルが稼働時は、
+        // ペアリングモード変更を実行
+        fido_ble_pairing_change_mode();
     }
 }
 
@@ -53,14 +77,11 @@ void fido_command_on_process_timedout(void)
     fido_idling_led_on();
 }
 
-void fido_command_keepalive_timer_handler(void *p_context)
+void fido_command_keepalive_timer_handler(void)
 {
     // キープアライブ・コマンドを実行する
-    if (p_context == NULL) {
-        fido_ctap2_command_keepalive_timer_handler();
-    } else {
-        ble_u2f_command_keepalive_timer_handler(p_context);
-    }
+    fido_ctap2_command_keepalive_timer_handler();
+    fido_u2f_command_keepalive_timer_handler();
 }
 
 void fido_user_presence_terminate(void)
@@ -69,10 +90,10 @@ void fido_user_presence_terminate(void)
     fido_keepalive_interval_timer_stop();
 }
 
-void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
+void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
     // タイマーが生成されていない場合は生成する
-    fido_keepalive_interval_timer_start(timeout_msec, p_context);
+    fido_keepalive_interval_timer_start(timeout_msec);
 
     // LED点滅を開始
     fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
