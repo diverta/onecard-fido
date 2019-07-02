@@ -175,26 +175,6 @@ static void led_light_pin_set(uint32_t pin_number, bool led_on)
     }
 }
 
-void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on)
-{
-    // 点滅対象のLEDを保持
-    uint32_t pin_number;
-    switch (led_light_mode) {
-        case LED_LIGHT_FOR_PAIRING_MODE:
-            pin_number = LED_FOR_PAIRING_MODE;
-            break;
-        case LED_LIGHT_FOR_USER_PRESENCE:
-            pin_number = LED_FOR_USER_PRESENCE;
-            break;
-        case LED_LIGHT_FOR_PROCESSING:
-            pin_number = LED_FOR_PROCESSING;
-            break;
-        default:
-            return;
-    }
-    led_light_pin_set(pin_number, led_on);
-}
-
 void fido_led_light_all(bool led_on)
 {
     led_light_pin_set(LED_FOR_PAIRING_MODE, led_on);

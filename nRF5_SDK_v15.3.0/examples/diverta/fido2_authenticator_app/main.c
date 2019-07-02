@@ -201,9 +201,6 @@ static void application_init(void)
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_init();
-
-    // アイドル時点滅処理を開始
-    fido_idling_led_on();
 }
 
 /**@brief Function for application main entry.

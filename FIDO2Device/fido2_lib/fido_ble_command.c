@@ -122,3 +122,12 @@ void fido_ble_command_on_response_send_completed(void)
     // アイドル時点滅処理を開始
     fido_idling_led_on();
 }
+
+void fido_ble_command_on_request_started(void) 
+{
+    // FIDO機能リクエストの
+    // 先頭フレーム受信時の処理を実行
+    // 
+    // アイドル時点滅処理を停止
+    fido_idling_led_off();
+}

@@ -59,7 +59,6 @@ void fido_ble_send_retry_timer_start(void);
 //
 // fido_board.c
 //
-void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on);
 void fido_led_light_all(bool led_on);
 void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec);
 void fido_processing_led_off(void);
