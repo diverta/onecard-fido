@@ -97,8 +97,28 @@ void fido_ble_command_on_response_send_completed(void)
     fido_ble_receive_frame_count_clear();
 
     // 次回リクエストまでの経過秒数監視をスタート
+    //   レスポンス完了後から10秒経過後も接続されたままの場合、
+    //   nRF52側からBLE接続を強制切断させるための措置
     fido_comm_interval_timer_start();
 
-    // CTAP2コマンドの処理を実行
-    fido_ctap2_command_cbor_response_completed();
+    // 全フレーム送信後に行われる後続処理を実行
+    uint8_t cmd = fido_ble_receive_header()->CMD;
+    switch (cmd) {
+        case U2F_COMMAND_MSG:
+            fido_u2f_command_msg_report_sent();
+            break;
+        case CTAP2_COMMAND_CBOR:
+            fido_ctap2_command_cbor_response_completed();
+            break;
+        default:
+            break;
+    }
+
+    if (fido_command_do_abort()) {
+        // レスポンス完了後の処理を停止させる場合はここで終了
+        return;
+    }
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
 }

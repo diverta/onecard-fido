@@ -28,9 +28,6 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 
-// レスポンス完了後の処理を停止させるフラグ
-static bool abort_flag = false;
-
 static void hid_fido_command_ping(void)
 {
     // PINGの場合は
@@ -159,11 +156,6 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     }
 }
 
-void fido_hid_command_set_abort_flag(bool flag)
-{
-    abort_flag = flag;
-}
-
 void fido_hid_command_on_report_completed(void)
 {
     // FIDO機能レスポンスの
@@ -195,15 +187,13 @@ void fido_hid_command_on_report_completed(void)
             break;
     }
 
-    if (abort_flag) {
-        // レスポンス完了後の処理を停止させる場合は、
-        // 全色LEDを点灯させたのち、無限ループに入る
-        fido_led_light_all(true);
-        while(true);
-    } else {
-        // アイドル時点滅処理を開始
-        fido_idling_led_on();
+    if (fido_command_do_abort()) {
+        // レスポンス完了後の処理を停止させる場合はここで終了
+        return;
     }
+
+    // アイドル時点滅処理を開始
+    fido_idling_led_on();
 }
 
 void fido_hid_command_on_report_started(void) 

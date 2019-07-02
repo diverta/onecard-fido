@@ -27,6 +27,25 @@
 #include "fido_ble_pairing.h"
 #include "fido_ble_service.h"
 
+// レスポンス完了後の処理を停止させるフラグ
+static bool abort_flag = false;
+
+bool fido_command_do_abort(void)
+{
+    // レスポンス完了後の処理を停止させる場合は、
+    // 全色LEDを点灯させたのち、無限ループに入る
+    if (abort_flag) {
+        fido_led_light_all(true);
+        while(true);
+    }
+    return abort_flag;
+}
+
+void fido_command_abort_flag_set(bool flag)
+{
+    abort_flag = flag;
+}
+
 void fido_command_on_mainsw_event(void)
 {
     // ボタンが短押しされた時の処理を実行
