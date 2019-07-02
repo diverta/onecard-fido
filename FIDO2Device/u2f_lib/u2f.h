@@ -49,6 +49,10 @@ extern "C" {
 #define U2F_COMMAND_HID_WINK  0x88
 #define U2F_COMMAND_ERROR     0xbf
 
+// 管理機能用コード(BLEペアリング関連)
+#define U2F_INS_INSTALL_INITBOND 0x41
+#define U2F_INS_INSTALL_PAIRING  0x45
+
 #ifdef __cplusplus
 }
 #endif

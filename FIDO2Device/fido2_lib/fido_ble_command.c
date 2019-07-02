@@ -15,15 +15,8 @@
 #include "fido_ctap2_command.h"  // for CTAP2 support
 #include "fido_u2f_command.h"    // for U2F support
 
-// 移行中のモジュール
-#include "fido_ble_pairing.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
-
-// 初期設定コマンド群(鍵・証明書の新規導入用等)
-#define U2F_INS_INSTALL_INITBOND 0x41
-#define U2F_INS_INSTALL_PAIRING  0x45
 
 void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
@@ -96,13 +89,6 @@ void fido_ble_command_on_request_received(void)
         // PINGレスポンスを実行
         send_ping_response();
     }
-}
-
-void fido_ble_command_keepalive_timer_handler(void *p_context)
-{
-    // キープアライブ・コマンドを実行する
-    uint8_t *p_keepalive_status_byte = (uint8_t *)p_context;
-    fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, *p_keepalive_status_byte);
 }
 
 void fido_ble_command_on_response_send_completed(void)

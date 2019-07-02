@@ -602,19 +602,14 @@
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
       <itemPath>../plat_lib/fido_crypto.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_aes_cbc_256.c</itemPath>
-      <itemPath>../plat_lib/fido_crypto_aes_cbc_256.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_keypair.c</itemPath>
-      <itemPath>../plat_lib/fido_crypto_keypair.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_sskey.c</itemPath>
-      <itemPath>../plat_lib/fido_crypto_sskey.h</itemPath>
       <itemPath>../plat_lib/fido_flash.c</itemPath>
       <itemPath>../plat_lib/fido_flash.h</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
-      <itemPath>../plat_lib/fido_flash_client_pin_store.h</itemPath>
       <itemPath>../plat_lib/fido_flash_event.c</itemPath>
       <itemPath>../fido2_authenticator_app/fido_flash_event.h</itemPath>
       <itemPath>../plat_lib/fido_flash_password.c</itemPath>
-      <itemPath>../plat_lib/fido_flash_password.h</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
       <itemPath>../plat_lib/fido_timer.c</itemPath>
       <itemPath>../plat_lib/fido_timer.h</itemPath>

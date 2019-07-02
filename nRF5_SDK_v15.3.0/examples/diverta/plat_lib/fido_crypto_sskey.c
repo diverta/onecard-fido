@@ -17,7 +17,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // for initial key pair generate
 #include "fido_common.h"
-#include "fido_crypto_keypair.h"
 #include "fido_crypto.h"
 
 // 業務処理／HW依存処理間のインターフェース
