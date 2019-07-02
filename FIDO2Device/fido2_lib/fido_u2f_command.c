@@ -25,6 +25,7 @@
 #include "fido_ble_send.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
+#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -74,15 +75,58 @@ size_t *fido_u2f_command_response_length(void)
     return &response_length;
 }
 
+static uint8_t get_u2f_command_byte(void)
+{
+    uint8_t cmd;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            cmd = fido_hid_receive_header()->CMD;
+            break;
+        case TRANSPORT_BLE:
+            cmd = fido_ble_receive_header()->CMD;
+            break;
+        case TRANSPORT_NFC:
+            // ヘッダーが存在しないため、
+            // U2Fコマンドは常に U2F_COMMAND_MSG になります
+            cmd = U2F_COMMAND_MSG;
+            break;
+        default:
+            cmd = 0x00;
+            break;
+    }
+
+    return cmd;
+}
+
+static FIDO_APDU_T *get_receive_apdu(void)
+{
+    FIDO_APDU_T *p_apdu;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            p_apdu = fido_hid_receive_apdu();
+            break;
+        case TRANSPORT_BLE:
+            p_apdu = fido_ble_receive_apdu();
+            break;
+        case TRANSPORT_NFC:
+            p_apdu = fido_nfc_receive_apdu();
+            break;
+        default:
+            p_apdu = NULL;
+            break;
+    }
+
+    return p_apdu;
+}
+
 static void u2f_resume_response_process(void)
 {
     uint8_t ins;
-    uint8_t cmd = fido_hid_receive_header()->CMD;
-    switch (cmd) {
+    switch (get_u2f_command_byte()) {
         case U2F_COMMAND_MSG:
             // u2f_request_buffer の先頭バイトを参照
             //   [0]CLA [1]INS [2]P1 3[P2]
-            ins = fido_hid_receive_apdu()->INS;
+            ins = get_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
                 fido_log_info("U2F Register: completed the test of user presence");
                 u2f_register_resume_process();
@@ -176,7 +220,7 @@ static void u2f_command_version(void)
     fido_log_info("U2F Version done");
 }
 
-static void send_u2f_hid_error_report(uint16_t status_word)
+static void send_u2f_error_status_response(uint16_t status_word)
 {
     // エラーステータスワードをビッグエンディアンで格納
     response_buffer[0] = (status_word >> 8) & 0x00ff;
@@ -191,13 +235,13 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
 {
     // U2F Register／AuthenticateリクエストAPDUから
     // appid_hash(Application parameter)を取り出す
-    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
+    uint8_t *apdu_data = get_receive_apdu()->data;
     uint8_t *p_appid_hash = apdu_data + U2F_CHAL_SIZE;
     
     return p_appid_hash;
 }
 
-static void u2f_register_do_process(void)
+static void u2f_command_register(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
@@ -207,19 +251,19 @@ static void u2f_register_do_process(void)
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        send_u2f_hid_error_report(0x9401);
+        send_u2f_error_status_response(0x9401);
         return;
     }
 
     if (fido_flash_skey_cert_available() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
-        send_u2f_hid_error_report(0x9402);
+        send_u2f_error_status_response(0x9402);
         return;
     }
     
     // control byte (P1) を参照
-    uint8_t control_byte = fido_hid_receive_apdu()->P1;
+    uint8_t control_byte = get_receive_apdu()->P1;
     if (control_byte == 0x03) {
         // 0x03 ("enforce-user-presence-and-sign")
         // ユーザー所在確認が必要な場合は、ここで終了し
@@ -244,14 +288,14 @@ static void u2f_register_resume_process(void)
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
 
-    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
-    uint32_t apdu_le = fido_hid_receive_apdu()->Le;
+    uint8_t *apdu_data = get_receive_apdu()->data;
+    uint32_t apdu_le = get_receive_apdu()->Le;
     response_length = sizeof(response_buffer);
     if (u2f_register_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
         // NGであれば、エラーレスポンスを生成して戻す
-        send_u2f_hid_error_report(u2f_register_status_word());
+        send_u2f_error_status_response(u2f_register_status_word());
         return;
     }
 
@@ -259,7 +303,7 @@ static void u2f_register_resume_process(void)
     // (fds_record_update/writeまたはfds_gcが実行される)
     if (u2f_register_add_token_counter(p_appid_hash) == false) {
         // 処理NGの場合、エラーレスポンスを生成して終了
-        send_u2f_hid_error_report(0x9403);
+        send_u2f_error_status_response(0x9403);
     }
 }
 
@@ -267,7 +311,7 @@ static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
 {
     if (p_evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        send_u2f_hid_error_report(0x9404);
+        send_u2f_error_status_response(0x9404);
         fido_log_error("U2F Register abend: FDS EVENT");
         return;
     }
@@ -279,13 +323,13 @@ static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
         uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
         u2f_register_add_token_counter(p_appid_hash);
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         fido_u2f_command_send_response(response_buffer, response_length);
     }
 }
 
-static void u2f_authenticate_do_process(void)
+static void u2f_command_authenticate(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
@@ -295,17 +339,17 @@ static void u2f_authenticate_do_process(void)
     if (fido_flash_skey_cert_read() == false) {
         // 秘密鍵と証明書をFlash ROMから読込
         // NGであれば、エラーレスポンスを生成して戻す
-        send_u2f_hid_error_report(0x9501);
+        send_u2f_error_status_response(0x9501);
         return;
     }
 
-    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
+    uint8_t *apdu_data = get_receive_apdu()->data;
     if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
         // リクエストデータのキーハンドルを復号化し、
         // リクエストデータのappIDHashがキーハンドルに含まれていない場合、
         // エラーレスポンス(0x6A80)を生成して戻す
         fido_log_error("U2F Authenticate: invalid keyhandle ");
-        send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
+        send_u2f_error_status_response(U2F_SW_WRONG_DATA);
         return;
     }
 
@@ -316,17 +360,17 @@ static void u2f_authenticate_do_process(void)
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("U2F Authenticate: token counter not found ");
-        send_u2f_hid_error_report(U2F_SW_WRONG_DATA);
+        send_u2f_error_status_response(U2F_SW_WRONG_DATA);
         return;
     }
     fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
 
     // control byte (P1) を参照
-    uint8_t control_byte = fido_hid_receive_apdu()->P1;
+    uint8_t control_byte = get_receive_apdu()->P1;
     if (control_byte == 0x07) {
         // 0x07 ("check-only") の場合はここで終了し
         // SW_CONDITIONS_NOT_SATISFIED (0x6985)を戻す
-        send_u2f_hid_error_report(U2F_SW_CONDITIONS_NOT_SATISFIED);
+        send_u2f_error_status_response(U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
     }
 
@@ -352,14 +396,14 @@ static void u2f_authenticate_resume_process(void)
 
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
-    uint8_t *apdu_data = fido_hid_receive_apdu()->data;
-    uint32_t apdu_le = fido_hid_receive_apdu()->Le;
+    uint8_t *apdu_data = get_receive_apdu()->data;
+    uint32_t apdu_le = get_receive_apdu()->Le;
     response_length = sizeof(response_buffer);
     if (u2f_authenticate_response_message(apdu_data, response_buffer, &response_length, apdu_le) == false) {
         // U2Fのリクエストデータを取得し、
         // レスポンス・メッセージを生成
         // NGであれば、エラーレスポンスを生成して戻す
-        send_u2f_hid_error_report(u2f_authenticate_status_word());
+        send_u2f_error_status_response(u2f_authenticate_status_word());
         return;
     }
 
@@ -368,7 +412,7 @@ static void u2f_authenticate_resume_process(void)
     // (fds_record_update/writeまたはfds_gcが実行される)
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     if (u2f_authenticate_update_token_counter(p_appid_hash) == false) {
-        send_u2f_hid_error_report(0x9502);
+        send_u2f_error_status_response(0x9502);
     }
 }
 
@@ -376,7 +420,7 @@ static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt
 {
     if (p_evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        send_u2f_hid_error_report(0x9503);
+        send_u2f_error_status_response(0x9503);
         fido_log_error("U2F Authenticate abend");
         return;
     }
@@ -388,61 +432,48 @@ static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt
         uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
         u2f_authenticate_update_token_counter(p_appid_hash);
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         fido_u2f_command_send_response(response_buffer, response_length);
     }
-}
-
-static uint8_t get_ins_byte(void)
-{
-    uint8_t ins;
-
-    // CTAP2 CBORコマンドを取得
-    //   最初の１バイト目がCTAP2コマンドバイトで、
-    //   残りは全てCBORデータバイトとなっている
-    switch (m_transport_type) {
-        case TRANSPORT_HID:
-            ins = fido_hid_receive_apdu()->INS;
-            break;
-        case TRANSPORT_BLE:
-            ins = fido_ble_receive_apdu()->INS;
-            break;
-        case TRANSPORT_NFC:
-            ins = fido_nfc_receive_apdu()->INS;
-            break;
-        default:
-            ins = 0x00;
-            break;
-    }
-
-    return ins;
 }
 
 void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
     m_transport_type = transport_type;
-    
+
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_ins_byte();
-    if (ins == U2F_VERSION) {
-        u2f_command_version();
-
-    } else if (ins == U2F_REGISTER) {
-        u2f_register_do_process();
-
-    } else if (ins == U2F_AUTHENTICATE) {
-        u2f_authenticate_do_process();
+    uint8_t ins = get_receive_apdu()->INS;
+    switch (ins) {
+        case U2F_REGISTER:
+            u2f_command_register();
+            break;
+        case U2F_AUTHENTICATE:
+            u2f_command_authenticate();
+            break;
+        case U2F_VERSION:
+            u2f_command_version();
+            break;
+        default:
+            // INSが不正の場合は終了
+            fido_log_debug("Invalid INS(0x%02x) ", ins);
+            fido_ble_command_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
+            break;
     }
 }
 
 void fido_u2f_command_msg_send_response(fido_flash_event_t *const p_evt)
 {
+    if (get_u2f_command_byte() != U2F_COMMAND_MSG) {
+        // U2Fコマンド以外は処理しない
+        return;
+    }
+
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = fido_hid_receive_apdu()->INS;
+    uint8_t ins = get_receive_apdu()->INS;
     if (ins == U2F_REGISTER) {
         u2f_register_send_response(p_evt);
 
@@ -455,7 +486,7 @@ void fido_u2f_command_msg_report_sent(void)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = fido_hid_receive_apdu()->INS;
+    uint8_t ins = get_receive_apdu()->INS;
     if (ins == U2F_REGISTER) {
         fido_log_info("U2F Register end");
 

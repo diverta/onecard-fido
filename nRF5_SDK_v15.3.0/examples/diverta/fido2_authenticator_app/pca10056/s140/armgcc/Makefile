@@ -10,7 +10,6 @@ FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
-BLULIB_DIR := $(PROJ_DIR)/../ble_u2f_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
@@ -194,8 +193,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
-  $(BLULIB_DIR)/ble_u2f_authenticate.c \
-  $(BLULIB_DIR)/ble_u2f_register.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_peripheral.c \
@@ -358,7 +355,6 @@ INC_FOLDERS += \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
-  $(BLULIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets

@@ -97,7 +97,7 @@ static void command_erase_skey_cert_response(void const *p_evt)
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
         }
         
-    } else if (evt->write_update) {
+    } else if (evt->write_update && evt->aeskeys_write) {
         // AES秘密鍵生成(fds_record_update/write)完了の場合
         // レスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP1_ERR_SUCCESS);
@@ -150,7 +150,7 @@ static void command_install_skey_cert_response(fido_flash_event_t const *const p
         fido_log_warning("Install private key and certificate retry: FDS GC done ");
         command_install_skey_cert();
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->skey_cert_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP1_ERR_SUCCESS);
     }
