@@ -90,7 +90,7 @@ static size_t get_cbor_data_buffer_size(void)
     }
     return size;
 }
-static uint8_t get_command_byte(void)
+static uint8_t get_ctap2_command_byte(void)
 {
     uint8_t *ctap2_cbor_buffer;
     uint8_t  ctap2_command_byte;
@@ -121,7 +121,7 @@ static uint8_t get_command_byte(void)
 
 static void resume_response_process(void)
 {
-    switch (get_command_byte()) {
+    switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             fido_log_info("authenticatorMakeCredential: completed the test of user presence");
             command_make_credential_resume_process();
@@ -166,16 +166,6 @@ bool fido_ctap2_command_on_mainsw_long_push_event(void)
 {
     // NOP
     return true;
-}
-
-void fido_ctap2_command_on_ble_nus_connected(void)
-{
-    if (is_tup_needed) {
-        // ユーザー所在確認が必要な場合、かつ
-        // One Cardのディスカバリーが成功した場合、
-        // 認証処理を続行させる
-        end_verify_tup();
-    }
 }
 
 void fido_ctap2_command_hid_init(void)
@@ -352,7 +342,7 @@ static void command_make_credential_send_response(fido_flash_event_t const *cons
         fido_log_warning("authenticatorMakeCredential retry: FDS GC done ");
         ctap2_make_credential_add_token_counter();
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してWebAuthnクライアントに戻す
         fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
@@ -455,7 +445,7 @@ static void command_get_assertion_send_response(fido_flash_event_t const *const 
         fido_log_warning("authenticatorGetAssertion retry: FDS GC done ");
         ctap2_get_assertion_update_token_counter();
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してWebAuthnクライアントに戻す
         fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
@@ -583,7 +573,7 @@ void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     //   最初の１バイト目がCTAP2コマンドバイトで、
     //   残りは全てCBORデータバイトとなっている
-    switch (get_command_byte()) {
+    switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_GETINFO:
             command_authenticator_get_info();
             break;
@@ -604,10 +594,41 @@ void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
     }
 }
 
+static bool verify_ctap2_cbor_command(void)
+{
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            if (fido_hid_receive_header()->CMD == CTAP2_COMMAND_CBOR) {
+                return true;
+            }
+            break;
+        case TRANSPORT_BLE:
+            if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+                // BLE CTAP2 command
+                return true;
+            }
+            break;
+        case TRANSPORT_NFC:
+            if (fido_nfc_receive_apdu()->INS == 0x10) {
+                // NFC CTAP2 command
+                return true;
+            }
+            break;
+        default:
+            break;
+    }
+    return false;
+}
+
 void fido_ctap2_command_cbor_send_response(void const *p_evt)
 {
+    if (verify_ctap2_cbor_command() == false) {
+        // CTAP2 CBORコマンド以外は処理しない
+        return;
+    }
+    
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    switch (get_command_byte()) {
+    switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             command_make_credential_send_response(p_evt);
             break;
@@ -628,7 +649,7 @@ void fido_ctap2_command_cbor_send_response(void const *p_evt)
 void fido_ctap2_command_cbor_response_completed(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    switch (get_command_byte()) {
+    switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             fido_log_info("authenticatorMakeCredential end");
             break;

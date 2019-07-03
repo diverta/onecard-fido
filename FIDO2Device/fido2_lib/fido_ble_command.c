@@ -17,8 +17,6 @@
 
 // 移行中のモジュール
 #include "fido_ble_pairing.h"
-#include "ble_u2f_register.h"
-#include "ble_u2f_authenticate.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -26,34 +24,6 @@
 // 初期設定コマンド群(鍵・証明書の新規導入用等)
 #define U2F_INS_INSTALL_INITBOND 0x41
 #define U2F_INS_INSTALL_PAIRING  0x45
-
-// ペアリングモード変更中の旨を保持
-static bool change_pairing_mode = false;
-
-bool fido_ble_command_on_mainsw_event(void)
-{
-    // CMD,INS,P1を参照
-    uint8_t cmd = fido_ble_receive_header()->CMD;
-    uint8_t ins = fido_ble_receive_apdu()->INS;
-    uint8_t control_byte = fido_ble_receive_apdu()->P1;
-    if (cmd == 0x83 && ins == 0x02 && control_byte == 0x03) {
-        // 0x83 ("MSG") 
-        // 0x02 ("U2F_AUTHENTICATE")
-        // 0x03 ("enforce-user-presence-and-sign") 
-        // ユーザー所在確認が取れたと判定し、
-        // キープアライブを停止
-        fido_log_info("ble_u2f_authenticate: completed the test of user presence");
-        fido_user_presence_verify_end();
-
-        // Authenticationの後続処理を実行する
-        ble_u2f_authenticate_resume_process();
-        return true;
-
-    } else {
-        // 他のコマンドの場合は無視
-        return false;
-    }
-}
 
 void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code) 
 {
@@ -118,70 +88,13 @@ void fido_ble_command_on_request_received(void)
             fido_ctap2_command_cbor(TRANSPORT_BLE);
 
         } else {
-            // 移行中の処理
-            if (p_apdu->INS == U2F_VERSION) {
-                fido_u2f_command_msg(TRANSPORT_BLE);
-            }
             // U2Fコマンド／管理用コマンドを処理する。
-            switch (p_apdu->INS) {
-                case U2F_INS_INSTALL_INITBOND:
-                    fido_ble_pairing_delete_bonds();
-                    break;
-                case U2F_REGISTER:
-                    ble_u2f_register_do_process();
-                    break;
-                case U2F_AUTHENTICATE:
-                    ble_u2f_authenticate_do_process();
-                    break;
-                case U2F_VERSION:
-                    break;
-                default:
-                    // INSが不正の場合は終了
-                    fido_log_debug("Invalid INS(0x%02x) ", p_apdu->INS);
-                    fido_ble_command_send_status_word(p_ble_header->CMD, U2F_SW_INS_NOT_SUPPORTED);
-                    break;
-            }
+            fido_u2f_command_msg(TRANSPORT_BLE);
         }
-    }
 
-    if (p_ble_header->CMD == U2F_COMMAND_PING) {
+    } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
         // PINGレスポンスを実行
         send_ping_response();
-        return;
-    }
-}
-
-void fido_ble_command_set_change_pairing_mode(void)
-{
-    change_pairing_mode = true;
-}
-
-void fido_ble_command_on_fs_evt(void const *p_evt)
-{
-    // ペアリングモード変更時のイベントを優先させる
-    if (change_pairing_mode) {
-        fido_ble_pairing_reflect_mode_change(p_evt);
-        return;
-    }
-
-    // CTAP2コマンドの処理を実行
-    fido_ctap2_command_cbor_send_response(p_evt);
-    
-    // Flash ROM更新後に行われる後続処理を実行
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
-    if (p_ble_header->CMD == U2F_COMMAND_MSG) {
-        // U2Fコマンド／管理用コマンドを処理する。
-        switch (p_apdu->INS) {
-            case U2F_REGISTER:
-                ble_u2f_register_send_response(p_evt);
-                break;
-            case U2F_AUTHENTICATE:
-                ble_u2f_authenticate_send_response(p_evt);
-                break;
-            default:
-                break;
-        }
     }
 }
 

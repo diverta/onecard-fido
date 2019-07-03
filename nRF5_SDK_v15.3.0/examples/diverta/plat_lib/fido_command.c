@@ -30,11 +30,6 @@
 void fido_command_on_mainsw_event(void)
 {
     // ボタンが短押しされた時の処理を実行
-    if (fido_ble_service_disconnected() == false) {
-        if (fido_ble_command_on_mainsw_event() == true) {
-            return;
-        }
-    }
     if (fido_u2f_command_on_mainsw_event() == true) {
         return;
     }

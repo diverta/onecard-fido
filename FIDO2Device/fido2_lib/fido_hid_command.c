@@ -159,26 +159,6 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     }
 }
 
-void fido_hid_command_on_fs_evt(void *const p_evt)
-{
-    // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
-    switch (cmd) {
-        case U2F_COMMAND_MSG:
-            fido_u2f_command_msg_send_response(p_evt);
-            break;
-        case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor_send_response(p_evt);
-            break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-            fido_maintenance_command_send_response(p_evt);
-            break;
-        default:
-            break;
-    }
-}
-
 void fido_hid_command_set_abort_flag(bool flag)
 {
     abort_flag = flag;

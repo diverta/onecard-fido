@@ -14,20 +14,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-void fido_nfc_command_on_fs_evt(void const *p_evt)
-{
-    // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = fido_nfc_receive_apdu()->INS;
-    switch (cmd) {
-        case 0x10:
-            // NFC CTAP2 command
-            fido_ctap2_command_cbor_send_response(p_evt);
-            break;
-        default:
-            break;
-    }
-}
-
 void fido_nfc_command_on_send_completed(void)
 {
     // FIDO機能レスポンスの

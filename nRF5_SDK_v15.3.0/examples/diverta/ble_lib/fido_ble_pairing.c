@@ -31,6 +31,9 @@ static bool run_as_pairing_mode;
 // ペアリング完了フラグ（ペアリングモードで、ペアリング完了時にtrueが設定される）
 static bool pairing_completed;
 
+// ペアリングモード変更中の旨を保持
+static bool change_pairing_mode = false;
+
 void fido_ble_pairing_delete_bonds(void)
 {
     ret_code_t err_code;
@@ -195,25 +198,31 @@ void fido_ble_pairing_change_mode(void)
     // fds_gc完了後に
     // ble_u2f_pairing_reflect_mode_change関数が
     // 呼び出されるようにするための処理区分を設定
-    fido_ble_command_set_change_pairing_mode();
+    change_pairing_mode = true;
 }
 
-void fido_ble_pairing_reflect_mode_change(fds_evt_t const *const p_evt)
+void fido_ble_pairing_reflect_mode_change(void const *p_evt)
 {
-    if (p_evt->result != FDS_SUCCESS) {
+    if (change_pairing_mode == false) {
+        return;
+    }
+    change_pairing_mode = false;
+
+    fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
+    if (evt->result == false) {
         // FDS処理でエラーが発生時は以降の処理を行わない
-        fido_log_error("ble_u2f_pairing_change_mode abend: FDS EVENT=%d ", p_evt->id);
+        fido_log_error("ble_u2f_pairing_change_mode abend");
         return;
     }
 
-    if (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE) {
+    if (evt->write_update && evt->pairing_mode_write) {
         // ble_u2f_pairing_change_modeにより実行した
         // fds_record_update/writeが正常完了の場合、
         // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
         // 変更したペアリングモード設定を反映するため、システムリセットを実行
         NVIC_SystemReset();
 
-    } else if (p_evt->id == FDS_EVT_GC) {
+    } else if (evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // エラーメッセージを出力
         fido_log_error("ble_u2f_pairing_reflect_mode_change abend: FDS GC done ");

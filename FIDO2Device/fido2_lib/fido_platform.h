@@ -138,6 +138,10 @@ typedef struct {
     bool delete_file;
     bool write_update;
     bool retry_counter_write;
+    bool token_counter_write;
+    bool skey_cert_write;
+    bool aeskeys_write;
+    bool pairing_mode_write;
 } fido_flash_event_t;
 
 //
