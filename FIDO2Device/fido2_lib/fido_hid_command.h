@@ -10,7 +10,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stddef.h>
+
+// for Flash ROM event
+#include "fido_flash_event.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,6 +35,7 @@ typedef struct {
 
 void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code);
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
+void fido_hid_command_on_fs_evt(fido_flash_event_t const *const p_evt);
 void fido_hid_command_on_report_started(void);
 void fido_hid_command_on_report_completed(void);
 void fido_hid_command_set_abort_flag(bool flag);

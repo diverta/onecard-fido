@@ -11,6 +11,7 @@
 #include "fds.h"
 #include "fido_crypto.h"
 #include "fido_flash.h"
+#include "fido_flash_password.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash_password
