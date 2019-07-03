@@ -28,16 +28,6 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_idling_led_on();
 }
 
-void fido_ble_command_send_status_word(uint8_t command_for_response, uint16_t err_status_word)
-{    
-    // ステータスワードを格納
-    uint8_t cmd_response_buffer[2];
-    fido_set_status_word(cmd_response_buffer, err_status_word);
-    
-    // レスポンスを送信
-    fido_ble_send_command_response(command_for_response, cmd_response_buffer, sizeof(cmd_response_buffer));
-}
-
 static void send_ping_response(void)
 {
     // BLE接続情報、BLEヘッダー、APDUの参照を取得
@@ -68,9 +58,9 @@ void fido_ble_command_on_request_received(void)
     if (fido_ble_pairing_mode_get()) {
         if (p_ble_header->CMD == U2F_COMMAND_MSG &&
             p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
-            fido_ble_command_send_status_word(fido_ble_receive_header()->CMD, U2F_SW_NO_ERROR);
+            fido_ble_send_status_word(fido_ble_receive_header()->CMD, U2F_SW_NO_ERROR);
         } else {
-            fido_ble_command_send_status_word(fido_ble_receive_header()->CMD, 0x9601);
+            fido_ble_send_status_word(fido_ble_receive_header()->CMD, 0x9601);
         }
         return;
     }

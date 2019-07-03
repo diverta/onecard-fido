@@ -472,7 +472,7 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
         default:
             // INSが不正の場合は終了
             fido_log_debug("Invalid INS(0x%02x) ", ins);
-            fido_ble_command_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
+            fido_ble_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
             break;
     }
 }

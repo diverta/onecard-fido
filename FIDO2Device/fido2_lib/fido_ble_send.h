@@ -25,6 +25,7 @@ void fido_ble_send_response_retry(void);
 //
 void fido_ble_send_command_response(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length);
 void fido_ble_send_command_response_no_callback(uint8_t cmd, uint8_t status_code);
+void fido_ble_send_status_word(uint8_t command_for_response, uint16_t err_status_word);
 
 #ifdef __cplusplus
 }
