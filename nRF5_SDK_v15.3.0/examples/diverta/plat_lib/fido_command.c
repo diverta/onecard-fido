@@ -58,14 +58,11 @@ void fido_command_on_process_timedout(void)
     fido_idling_led_on();
 }
 
-void fido_command_keepalive_timer_handler(void *p_context)
+void fido_command_keepalive_timer_handler(void)
 {
     // キープアライブ・コマンドを実行する
-    if (p_context == NULL) {
-        fido_ctap2_command_keepalive_timer_handler();
-    } else {
-        fido_ble_command_keepalive_timer_handler(p_context);
-    }
+    fido_ctap2_command_keepalive_timer_handler();
+    fido_u2f_command_keepalive_timer_handler();
 }
 
 void fido_user_presence_terminate(void)
@@ -74,10 +71,10 @@ void fido_user_presence_terminate(void)
     fido_keepalive_interval_timer_stop();
 }
 
-void fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context)
+void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
     // タイマーが生成されていない場合は生成する
-    fido_keepalive_interval_timer_start(timeout_msec, p_context);
+    fido_keepalive_interval_timer_start(timeout_msec);
 
     // LED点滅を開始
     fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);

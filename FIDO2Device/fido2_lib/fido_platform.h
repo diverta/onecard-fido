@@ -41,6 +41,9 @@ typedef enum _LED_LIGHT_MODE {
 #define SSKEY_HASH_SIZE         32
 #define HMAC_SHA_256_SIZE       32
 
+// fido_ble_pairing.c
+bool     fido_ble_pairing_mode_get(void);
+
 //
 // fido_ble_service.c
 //
@@ -67,7 +70,7 @@ void fido_idling_led_off(void);
 // fido_command.c
 //
 void    fido_user_presence_terminate(void);
-void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
+void    fido_user_presence_verify_start(uint32_t timeout_msec);
 uint8_t fido_user_presence_verify_end(void);
 
 //

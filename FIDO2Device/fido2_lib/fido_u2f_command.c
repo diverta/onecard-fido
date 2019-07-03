@@ -148,6 +148,8 @@ bool fido_u2f_command_on_mainsw_event(void)
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
         is_tup_needed = false;
+        // キープアライブを停止
+        fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
         u2f_resume_response_process();
         return true;
@@ -160,6 +162,17 @@ bool fido_u2f_command_on_mainsw_long_push_event(void)
 {
     // NOP
     return true;
+}
+
+void fido_u2f_command_keepalive_timer_handler(void)
+{
+    if (is_tup_needed) {
+        // キープアライブ・コマンドを実行する（BLE限定機能）
+        if (m_transport_type == TRANSPORT_BLE) {
+            // TUP_NEEDED: 0x02
+            fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, 0x02);
+        }
+    }
 }
 
 void fido_u2f_command_send_response(uint8_t *response, size_t length)
@@ -271,7 +284,7 @@ static void u2f_command_register(void)
         is_tup_needed = true;
         fido_log_info("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
         return;
     }
 
@@ -381,7 +394,7 @@ static void u2f_command_authenticate(void)
         is_tup_needed = true;
         fido_log_info("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
         return;
     }
 

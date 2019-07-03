@@ -278,7 +278,7 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
         return;
     }
 
@@ -381,7 +381,7 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorGetAssertion: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
         return;
     }
 

@@ -180,7 +180,7 @@ static bool keepalive_interval_timer_created = false;
 static void keepalive_interval_timeout_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
-    fido_command_keepalive_timer_handler(p_context);
+    fido_command_keepalive_timer_handler();
 }
 
 static ret_code_t keepalive_interval_timer_init(void)

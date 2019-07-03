@@ -10,7 +10,6 @@
 #include "fido_ctap2_command.h"
 #include "fido_maintenance.h"
 #include "fido_u2f_command.h"
-#include "fido_ble_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
