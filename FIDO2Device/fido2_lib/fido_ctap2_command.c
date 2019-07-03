@@ -580,7 +580,7 @@ void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
     }
 }
 
-void fido_ctap2_command_cbor_send_response(fido_flash_event_t const *const p_evt)
+void fido_ctap2_command_cbor_send_response(void const *p_evt)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_command_byte()) {

@@ -4,15 +4,20 @@
  *
  * Created on 2019/02/11, 11:31
  */
-// for FIDO
-#include "ble_u2f.h"
-#include "ble_u2f_command.h"
-#include "ble_ctap2_command.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+//
+// プラットフォーム非依存コード
+//
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
-#include "fido_ble_main.h"
+#include "fido_ble_command.h"
 #include "fido_hid_command.h"
 #include "fido_nfc_command.h"
+
+// 移行中のモジュール
+#include "ble_ctap2_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -20,11 +25,18 @@
 // for keepalive timer
 #include "fido_timer.h"
 
+// for fido_ble_pairing_change_mode
+#include "fido_ble_peripheral.h"
+#include "fido_ble_pairing.h"
+#include "fido_ble_service.h"
+
 void fido_command_on_mainsw_event(void)
 {
     // ボタンが短押しされた時の処理を実行
-    if (ble_u2f_command_on_mainsw_event(fido_ble_get_U2F_context()) == true) {
-        return;
+    if (fido_ble_service_disconnected() == false) {
+        if (fido_ble_command_on_mainsw_event() == true) {
+            return;
+        }
     }
     if (hid_u2f_command_on_mainsw_event() == true) {
         return;
@@ -36,8 +48,10 @@ void fido_command_on_mainsw_event(void)
 void fido_command_on_mainsw_long_push_event(void)
 {
     // ボタンが長押しされた時の処理を実行
-    if (ble_u2f_command_on_mainsw_long_push_event(fido_ble_get_U2F_context()) == true) {
-        return;
+    if (fido_ble_peripheral_mode()) {
+        // BLEペリフェラルが稼働時は、
+        // ペアリングモード変更を実行
+        fido_ble_pairing_change_mode();
     }
 }
 
@@ -59,7 +73,7 @@ void fido_command_keepalive_timer_handler(void *p_context)
     if (p_context == NULL) {
         fido_ctap2_command_keepalive_timer_handler();
     } else {
-        ble_u2f_command_keepalive_timer_handler(p_context);
+        fido_ble_command_keepalive_timer_handler(p_context);
     }
 }
 

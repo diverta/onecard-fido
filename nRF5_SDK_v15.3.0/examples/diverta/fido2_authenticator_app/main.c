@@ -18,6 +18,7 @@
 #include "nrf_log_default_backends.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_event.h"
 #include "fido_ble_peripheral.h"
 #include "fido_ble_peripheral_timer.h"
 #include "fido_hid_channel.h"
@@ -236,8 +237,9 @@ int main(void)
 
     // Enter main loop.
     for (;;) {
-        // U2F HID Reportを処理
+        // 業務処理を実行
         usbd_hid_do_process();
+        fido_ble_do_process();
         idle_state_handle();
     }
 }

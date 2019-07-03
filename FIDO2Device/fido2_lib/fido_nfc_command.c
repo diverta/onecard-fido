@@ -4,22 +4,17 @@
  *
  * Created on 2019/06/03, 15:20
  */
+#include <stdbool.h>
 //
 // プラットフォーム非依存コード
 //
 #include "fido_ctap2_command.h"
+#include "fido_nfc_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_nfc_receive.h"
-
-void fido_nfc_command_on_fs_evt(fido_flash_event_t const *const p_evt)
+void fido_nfc_command_on_fs_evt(void const *p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = fido_nfc_receive_apdu()->INS;

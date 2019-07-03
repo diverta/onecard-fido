@@ -13,16 +13,20 @@
 // for lighting LED
 #include "nrf_gpio.h"
 
+// for logging informations
+#define NRF_LOG_MODULE_NAME fido_board
+#include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
+
 #include "fido_board.h"
 #include "fido_command.h"
 #include "fido_timer.h"
-#include "fido_log.h"
 
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
 
-// for ble_u2f_pairing_mode_get
-#include "ble_u2f_pairing.h"
+// for fido_ble_pairing_mode_get
+#include "fido_ble_pairing.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -134,13 +138,13 @@ void fido_button_init(void)
 
     err_code = app_button_init((app_button_cfg_t*)m_app_buttons, APP_BUTTON_NUM, APP_BUTTON_DELAY);
     if (err_code) {
-        fido_log_error("app_button_init returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("app_button_init returns 0x%02x ", err_code);
     }
     APP_ERROR_CHECK(err_code);
 
     err_code = app_button_enable();
     if (err_code) {
-        fido_log_error("app_button_enable returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("app_button_enable returns 0x%02x ", err_code);
     }
     APP_ERROR_CHECK(err_code);
 }
@@ -162,12 +166,12 @@ static void led_light_pin_set(uint32_t pin_number, bool led_on)
 {
     // LEDを出力設定
     nrf_gpio_cfg_output(pin_number);
-    if (led_on == false) {
+    if (led_on) {
         // LEDを点灯させる
-        nrf_gpio_pin_set(pin_number);
+        nrf_gpio_pin_clear(pin_number);
     } else {
         // LEDを消灯させる
-        nrf_gpio_pin_clear(pin_number);
+        nrf_gpio_pin_set(pin_number);
     }
 }
 
@@ -262,7 +266,7 @@ void fido_idling_led_on(void)
     // LEDを一旦消灯
     fido_idling_led_off();
 
-    if (ble_u2f_pairing_mode_get()) {
+    if (fido_ble_pairing_mode_get()) {
         // ペアリングモードの場合は
         // RED LEDの連続点灯とします。
         m_led_for_processing = LED_FOR_PAIRING_MODE;

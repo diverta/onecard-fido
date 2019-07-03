@@ -53,6 +53,24 @@ static size_t  u2f_response_length;
 static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
 
+//
+// BLEサービス統合までの経過措置
+//
+uint8_t *fido_u2f_command_response_buffer(void)
+{
+    return u2f_response_buffer;
+}
+
+size_t fido_u2f_command_response_buffer_size(void)
+{
+    return sizeof(u2f_response_buffer);
+}
+
+size_t *fido_u2f_command_response_length(void)
+{
+    return &u2f_response_length;
+}
+
 static void u2f_resume_response_process(void)
 {
     uint8_t ins;
