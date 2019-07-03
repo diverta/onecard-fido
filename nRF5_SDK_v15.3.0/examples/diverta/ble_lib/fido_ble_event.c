@@ -39,9 +39,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // 無通信タイマーが既にスタートしている場合は停止させる
     fido_comm_interval_timer_stop();
-
-    // アイドル時点滅処理を停止
-    fido_idling_led_off();
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
@@ -53,9 +50,6 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // ユーザー所在確認を停止(キープアライブを停止)
     fido_user_presence_terminate();
-
-    // アイドル時点滅処理を開始
-    fido_idling_led_on();
     
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     fido_ble_pairing_on_disconnect();

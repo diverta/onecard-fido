@@ -5,7 +5,7 @@
  * Created on 2019/02/18, 11:05
  */
 #include "cbor.h"
-#include "fido_hid_command.h"
+#include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
@@ -13,7 +13,6 @@
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_client_pin_token.h"
-#include "fido_common.h"
 
 // for u2f_crypto_signature_data
 #include "u2f_signature.h"
@@ -418,7 +417,7 @@ static bool check_pin_code_hash(void)
         check_pin_status_code = CTAP2_ERR_PIN_AUTH_BLOCKED;
         // アプリケーション全体をロックし、
         // システムリセットが必要である旨をユーザーに知らせる
-        fido_hid_command_set_abort_flag(true);
+        fido_command_abort_flag_set(true);
 
     } else {
         fido_log_error("PIN code hash matching NG");

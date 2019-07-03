@@ -59,7 +59,6 @@ void fido_ble_send_retry_timer_start(void);
 //
 // fido_board.c
 //
-void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on);
 void fido_led_light_all(bool led_on);
 void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec);
 void fido_processing_led_off(void);
@@ -69,6 +68,8 @@ void fido_idling_led_off(void);
 //
 // fido_command.c
 //
+bool    fido_command_do_abort(void);
+void    fido_command_abort_flag_set(bool flag);
 void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec);
 uint8_t fido_user_presence_verify_end(void);
