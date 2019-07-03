@@ -16,9 +16,6 @@
 #include "fido_hid_command.h"
 #include "fido_nfc_command.h"
 
-// 移行中のモジュール
-#include "ble_ctap2_command.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -38,11 +35,10 @@ void fido_command_on_mainsw_event(void)
             return;
         }
     }
-    if (hid_u2f_command_on_mainsw_event() == true) {
+    if (fido_u2f_command_on_mainsw_event() == true) {
         return;
     }
     fido_ctap2_command_on_mainsw_event();
-    ble_ctap2_command_on_mainsw_event();
 }
 
 void fido_command_on_mainsw_long_push_event(void)

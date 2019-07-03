@@ -110,7 +110,14 @@ static void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buf
     send_info_t.busy = false;
 }
 
-static uint32_t ble_u2f_status_response_send(void)
+//
+// ble_u2f_status_response_send 実行後に、
+// fido_ble_command_on_response_send_completed を
+// 実行しないかどうかを保持するフラグ
+// 
+static bool no_callback_flag;
+
+static uint32_t ble_u2f_status_response_send(bool no_callback)
 {
     uint32_t data_length;
     uint32_t err_code;
@@ -127,6 +134,9 @@ static uint32_t ble_u2f_status_response_send(void)
         fido_log_error("ble_u2f_status_response_send: ble_u2f_status_setup incomplete ");
         return NRF_ERROR_INVALID_DATA;
     }
+    
+    // フラグを退避
+    no_callback_flag = no_callback;
 
     while (send_info_t.sent_length < send_info_t.data_length) {
 
@@ -160,7 +170,9 @@ static uint32_t ble_u2f_status_response_send(void)
         // 最終レコードの場合は、次回リクエストまでの経過秒数監視をスタート
         if (send_info_t.sent_length == send_info_t.data_length) {
             // FIDOレスポンス送信完了時の処理を実行
-            fido_ble_command_on_response_send_completed();
+            if (!no_callback_flag) {
+                fido_ble_command_on_response_send_completed();
+            }
         }
     }
 
@@ -174,7 +186,7 @@ void fido_ble_send_on_tx_complete(void)
         // フラグがbusyの場合、再送のため１回だけ
         // ble_u2f_status_response_send関数を呼び出す
         send_info_t.busy = false;
-        ble_u2f_status_response_send();
+        ble_u2f_status_response_send(no_callback_flag);
     }
 }
 
@@ -187,77 +199,24 @@ void fido_ble_send_response_retry(void)
     }
     
     // レスポンスを送信
-    uint32_t err_code = ble_u2f_status_response_send();
+    uint32_t err_code = ble_u2f_status_response_send(no_callback_flag);
     fido_log_debug("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
 }
 
-//
-// メッセージ送信関連処理
-//
-// レスポンス編集エリア
-static uint8_t  data_buffer[2];
-static uint32_t data_buffer_length;
-
-void fido_ble_send_response_data(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
+void fido_ble_send_command_response(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
 {
     ble_u2f_status_setup(command_for_response, data_buffer, data_buffer_length);
-    ble_u2f_status_response_send();
+    ble_u2f_status_response_send(false);
 }
 
-void fido_ble_send_success_response(uint8_t command_for_response)
+void fido_ble_send_command_response_no_callback(uint8_t cmd, uint8_t status_code) 
 {
-    // レスポンスを生成
-    fido_set_status_word(data_buffer, U2F_SW_NO_ERROR);
-    data_buffer_length = 2;
+    // レスポンスデータを編集 (1 bytes)
+    uint8_t cmd_response_buffer[1] = {status_code};
+    size_t  cmd_response_length = sizeof(cmd_response_buffer); 
 
-    // 生成したレスポンスを戻す
-    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
-}
-
-void fido_ble_send_error_response(uint8_t command_for_response, uint16_t err_status_word)
-{    
-    // ステータスワードを格納
-    fido_set_status_word(data_buffer, err_status_word);
-    data_buffer_length = 2;
-    
-    // レスポンスを送信
-    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
-}
-
-void fido_ble_send_command_error_response(uint8_t err_code)
-{
-    // コマンドを格納
-    uint8_t command_for_response = U2F_COMMAND_ERROR;
-
-    // エラーコードを格納
-    data_buffer[0]     = err_code;
-    data_buffer_length = 1;
-
-    // レスポンスを送信
-    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
-}
-
-void fido_ble_send_keepalive_response(uint8_t keepalive_status_byte)
-{
-    // コマンドを格納
-    uint8_t command_for_response = U2F_COMMAND_KEEPALIVE;
-
-    // エラーコードを格納
-    data_buffer[0]     = keepalive_status_byte;
-    data_buffer_length = 1;
-
-    // レスポンスを送信
-    fido_ble_send_response_data(command_for_response, data_buffer, data_buffer_length);
-}
-
-void fido_ble_send_ping_response(void)
-{
-    // BLE接続情報、BLEヘッダー、APDUの参照を取得
-    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
-    FIDO_APDU_T *p_apdu = fido_ble_receive_apdu();
-
-    // PINGの場合は
-    // リクエストのBLEヘッダーとデータを編集せず
-    // レスポンスとして戻す（エコーバック）
-    fido_ble_send_response_data(p_ble_header->CMD, p_apdu->data, p_apdu->data_length);
+    // FIDO ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    ble_u2f_status_setup(cmd, cmd_response_buffer, cmd_response_length);
+    ble_u2f_status_response_send(true);
 }

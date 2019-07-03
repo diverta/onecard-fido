@@ -137,11 +137,11 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
 #else
         case U2F_COMMAND_HID_INIT:
-            hid_u2f_command_init();
+            fido_u2f_command_hid_init();
             break;
 #endif
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg();
+            fido_u2f_command_msg(TRANSPORT_HID);
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor(TRANSPORT_HID);
@@ -165,7 +165,7 @@ void fido_hid_command_on_fs_evt(void *const p_evt)
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg_send_response(p_evt);
+            fido_u2f_command_msg_send_response(p_evt);
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_send_response(p_evt);
@@ -202,7 +202,7 @@ void fido_hid_command_on_report_completed(void)
             fido_log_info("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
-            hid_u2f_command_msg_report_sent();
+            fido_u2f_command_msg_report_sent();
             break;
         case CTAP2_COMMAND_CBOR:
             fido_ctap2_command_cbor_response_completed();
