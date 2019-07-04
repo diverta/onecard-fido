@@ -57,24 +57,6 @@ static size_t  response_length;
 static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
 
-//
-// BLEサービス統合までの経過措置
-//
-uint8_t *fido_u2f_command_response_buffer(void)
-{
-    return response_buffer;
-}
-
-size_t fido_u2f_command_response_buffer_size(void)
-{
-    return sizeof(response_buffer);
-}
-
-size_t *fido_u2f_command_response_length(void)
-{
-    return &response_length;
-}
-
 static uint8_t get_u2f_command_byte(void)
 {
     uint8_t cmd;
@@ -294,9 +276,6 @@ static void u2f_command_register(void)
 
 static void u2f_register_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
@@ -404,9 +383,6 @@ static void u2f_command_authenticate(void)
 
 static void u2f_authenticate_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = get_receive_apdu()->data;
@@ -472,7 +448,7 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
         default:
             // INSが不正の場合は終了
             fido_log_debug("Invalid INS(0x%02x) ", ins);
-            fido_ble_command_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
+            fido_ble_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
             break;
     }
 }
@@ -506,4 +482,16 @@ void fido_u2f_command_msg_report_sent(void)
     } else if (ins == U2F_AUTHENTICATE) {
         fido_log_info("U2F Authenticate end");
     }
+}
+
+void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
+{
+    // トランスポート種別を保持
+    m_transport_type = transport_type;
+
+    // PINGの場合は
+    // リクエストのヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
+    fido_log_info("U2F Ping done");
 }

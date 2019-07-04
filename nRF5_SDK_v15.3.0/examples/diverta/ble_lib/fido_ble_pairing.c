@@ -45,7 +45,7 @@ void fido_ble_pairing_delete_bonds(void)
         // 失敗した場合はエラーレスポンスを戻す
         fido_log_error("pm_peers_delete returns 0x%02x ", err_code);
         uint8_t cmd = fido_ble_receive_header()->CMD;
-        fido_ble_command_send_status_word(cmd, 0x9101);
+        fido_ble_send_status_word(cmd, 0x9101);
         return;
     }
 }
@@ -60,12 +60,12 @@ bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
     //   いずれかのイベントが発生する
     // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        fido_ble_command_send_status_word(cmd, U2F_SW_NO_ERROR);
+        fido_ble_send_status_word(cmd, U2F_SW_NO_ERROR);
         fido_log_debug("ble_u2f_pairing_delete_bonds end ");
         return true;
     }
     if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        fido_ble_command_send_status_word(cmd, 0x9102);
+        fido_ble_send_status_word(cmd, 0x9102);
         fido_log_error("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
         return true;
     }
@@ -100,7 +100,7 @@ bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
+            fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
             return true;
         }
     }
@@ -351,10 +351,10 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_INTERVAL_MSEC);
+        fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、ペアリングモードLED点滅を停止
-        fido_processing_led_off();
+        fido_led_blink_stop();
     }
 }
 

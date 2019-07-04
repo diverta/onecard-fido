@@ -71,10 +71,10 @@ void fido_command_on_process_timedout(void)
     //
     // 処理中表示LEDが点滅していた場合は
     // ここでLEDを消灯させる
-    fido_processing_led_off();
+    // fido_led_blink_stop();
 
     // アイドル時点滅処理を再開
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 void fido_command_keepalive_timer_handler(void)
@@ -96,13 +96,13 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     fido_keepalive_interval_timer_start(timeout_msec);
 
     // LED点滅を開始
-    fido_processing_led_on(LED_LIGHT_FOR_USER_PRESENCE, LED_ON_OFF_INTERVAL_MSEC);
+    fido_prompt_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
 }
 
 uint8_t fido_user_presence_verify_end(void)
 {
     // LEDを消灯させる
-    fido_processing_led_off();
+    fido_led_blink_stop();
 
     // タイマーを停止する
     fido_keepalive_interval_timer_stop();

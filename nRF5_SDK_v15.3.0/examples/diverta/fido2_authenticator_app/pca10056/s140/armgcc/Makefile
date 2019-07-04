@@ -157,15 +157,15 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
-  $(FD2LIB_DIR)/fido_maintenance.c \
-  $(FD2LIB_DIR)/fido_request_apdu.c \
-  $(FD2LIB_DIR)/fido_u2f_command.c \
   $(FD2LIB_DIR)/fido_hid_command.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
+  $(FD2LIB_DIR)/fido_hid_receive_apdu.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
+  $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_nfc_command.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
+  $(FD2LIB_DIR)/fido_u2f_command.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
   $(CT2LIB_DIR)/ctap2_cbor_parse.c \

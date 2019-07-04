@@ -220,3 +220,14 @@ void fido_ble_send_command_response_no_callback(uint8_t cmd, uint8_t status_code
     ble_u2f_status_setup(cmd, cmd_response_buffer, cmd_response_length);
     ble_u2f_status_response_send(true);
 }
+
+void fido_ble_send_status_word(uint8_t command_for_response, uint16_t err_status_word)
+{    
+    // ステータスワードを格納
+    uint8_t cmd_response_buffer[2];
+    fido_set_status_word(cmd_response_buffer, err_status_word);
+    
+    // レスポンスを送信
+    ble_u2f_status_setup(command_for_response, cmd_response_buffer, sizeof(cmd_response_buffer));
+    ble_u2f_status_response_send(true);
+}

@@ -31,7 +31,7 @@ void fido_nfc_command_on_send_completed(void)
     }
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 void fido_nfc_command_on_request_started(void) 
@@ -43,5 +43,5 @@ void fido_nfc_command_on_request_started(void)
     fido_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
-    fido_idling_led_off();
+    fido_idling_led_blink_stop();
 }

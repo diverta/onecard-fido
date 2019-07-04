@@ -80,7 +80,7 @@ void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_comm_interval_timer_stop();
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
@@ -193,7 +193,7 @@ void fido_hid_command_on_report_completed(void)
     }
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 void fido_hid_command_on_report_started(void) 
@@ -205,5 +205,5 @@ void fido_hid_command_on_report_started(void)
     fido_comm_interval_timer_start();
 
     // アイドル時点滅処理を停止
-    fido_idling_led_off();
+    fido_idling_led_blink_stop();
 }

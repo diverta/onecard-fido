@@ -15,12 +15,7 @@ void fido_u2f_command_msg_report_sent(void);
 void fido_u2f_command_keepalive_timer_handler(void);
 bool fido_u2f_command_on_mainsw_event(void);
 bool fido_u2f_command_on_mainsw_long_push_event(void);
-//
-// BLEサービス統合までの経過措置
-//
-uint8_t *fido_u2f_command_response_buffer(void);
-size_t   fido_u2f_command_response_buffer_size(void);
-size_t  *fido_u2f_command_response_length(void);
+void fido_u2f_command_ping(TRANSPORT_TYPE transport_type);
 
 #ifdef __cplusplus
 }

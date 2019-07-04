@@ -15,14 +15,6 @@
 extern "C" {
 #endif
 
-// LED点灯モード
-typedef enum _LED_LIGHT_MODE {
-    LED_LIGHT_NONE = 0,
-    LED_LIGHT_FOR_PAIRING_MODE,
-    LED_LIGHT_FOR_USER_PRESENCE,
-    LED_LIGHT_FOR_PROCESSING
-} LED_LIGHT_MODE;
-
 // LED点滅間隔の定義
 #define LED_ON_OFF_INTERVAL_MSEC        300
 #define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
@@ -60,10 +52,11 @@ void fido_ble_send_retry_timer_start(void);
 // fido_board.c
 //
 void fido_led_light_all(bool led_on);
-void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec);
-void fido_processing_led_off(void);
-void fido_idling_led_on(void);
-void fido_idling_led_off(void);
+void fido_prompt_led_blink_start(uint32_t on_off_interval_msec);
+void fido_caution_led_blink_start(uint32_t on_off_interval_msec);
+void fido_led_blink_stop(void);
+void fido_idling_led_blink_start(void);
+void fido_idling_led_blink_stop(void);
 
 //
 // fido_command.c
