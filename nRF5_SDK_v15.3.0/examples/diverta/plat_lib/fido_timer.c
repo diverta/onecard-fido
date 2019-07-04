@@ -7,6 +7,7 @@
 #include "sdk_common.h"
 #include "app_timer.h"
 
+#include "fido_ble_event.h"
 #include "fido_board.h"
 #include "fido_command.h"
 #include "fido_log.h"
@@ -25,6 +26,9 @@ static void comm_interval_timeout_handler(void *p_context)
     // 直近のレスポンスから10秒を経過した場合、
     // FIDO機能処理タイムアウト時の処理を実行
     fido_command_on_process_timedout();
+
+    // BLE接続が行われていた場合は、切断等の処理を行う
+    fido_ble_on_process_timedout();
 }
 
 static ret_code_t comm_interval_timer_init(void)
@@ -176,7 +180,7 @@ static bool keepalive_interval_timer_created = false;
 static void keepalive_interval_timeout_handler(void *p_context)
 {
     // キープアライブ・コマンドを実行する
-    fido_command_keepalive_timer_handler(p_context);
+    fido_command_keepalive_timer_handler();
 }
 
 static ret_code_t keepalive_interval_timer_init(void)

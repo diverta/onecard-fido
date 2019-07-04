@@ -46,7 +46,7 @@ static void timeout_handler(void *p_context)
 
     // アイドル時点滅処理を開始
     // USB HID、BLEでアイドル時のLED色を変える
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 static void timer_terminate(void)
