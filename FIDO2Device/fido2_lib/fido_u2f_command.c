@@ -294,9 +294,6 @@ static void u2f_command_register(void)
 
 static void u2f_register_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
@@ -404,9 +401,6 @@ static void u2f_command_authenticate(void)
 
 static void u2f_authenticate_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = get_receive_apdu()->data;

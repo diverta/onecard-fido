@@ -25,7 +25,7 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_ble_send_command_response_no_callback(cmd, status_code);
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 static void send_ping_response(void)
@@ -110,7 +110,7 @@ void fido_ble_command_on_response_send_completed(void)
     }
 
     // アイドル時点滅処理を開始
-    fido_idling_led_on();
+    fido_idling_led_blink_start();
 }
 
 void fido_ble_command_on_request_started(void) 
@@ -119,5 +119,5 @@ void fido_ble_command_on_request_started(void)
     // 先頭フレーム受信時の処理を実行
     // 
     // アイドル時点滅処理を停止
-    fido_idling_led_off();
+    fido_idling_led_blink_stop();
 }

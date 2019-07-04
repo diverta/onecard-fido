@@ -288,9 +288,6 @@ static void command_authenticator_make_credential(void)
 
 static void command_make_credential_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // 本処理を開始
     fido_log_info("authenticatorMakeCredential start");
 
@@ -391,9 +388,6 @@ static void command_authenticator_get_assertion(void)
 
 static void command_get_assertion_resume_process(void)
 {
-    // LEDを消灯させる
-    fido_processing_led_off();
-
     // 本処理を開始
     fido_log_info("authenticatorGetAssertion start");
 
@@ -518,14 +512,11 @@ static void command_authenticator_reset(void)
     fido_log_info("authenticatorReset: waiting to complete the test of user presence");
 
     // 赤色LED高速点滅開始
-    fido_processing_led_on(LED_LIGHT_FOR_PAIRING_MODE, LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    fido_caution_led_blink_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
 }
 
 static void command_authenticator_reset_resume_process(void)
 {
-    // 赤色LED高速点滅停止
-    fido_processing_led_off();
-
     // 本処理を開始
     fido_log_info("authenticatorReset start");
 
