@@ -14,7 +14,7 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_command.h"
 #include "fido_hid_receive.h"
-#include "fido_request_apdu.h"
+#include "fido_hid_receive_apdu.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -101,7 +101,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     } else {
         // コマンドが上記以外の場合
         // APDUヘッダー項目を編集して保持
-        offset += fido_request_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        offset += fido_hid_receive_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
     }
 
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {
@@ -127,10 +127,10 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // データ格納領域を初期化し、アドレスを保持
-    fido_request_apdu_initialize(p_apdu);
+    fido_hid_receive_apdu_initialize(p_apdu);
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_request_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+    fido_hid_receive_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
 
     return true;
 }
@@ -181,7 +181,7 @@ static void extract_and_check_cont_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_request_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
+    fido_hid_receive_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
 static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)

@@ -15,14 +15,6 @@
 extern "C" {
 #endif
 
-// LED点灯モード
-typedef enum _LED_LIGHT_MODE {
-    LED_LIGHT_NONE = 0,
-    LED_LIGHT_FOR_PAIRING_MODE,
-    LED_LIGHT_FOR_USER_PRESENCE,
-    LED_LIGHT_FOR_PROCESSING
-} LED_LIGHT_MODE;
-
 // LED点滅間隔の定義
 #define LED_ON_OFF_INTERVAL_MSEC        300
 #define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
@@ -41,21 +33,38 @@ typedef enum _LED_LIGHT_MODE {
 #define SSKEY_HASH_SIZE         32
 #define HMAC_SHA_256_SIZE       32
 
+// fido_ble_pairing.c
+bool     fido_ble_pairing_mode_get(void);
+
+//
+// fido_ble_service.c
+//
+uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length);
+bool     fido_ble_service_disconnected(void);
+void     fido_ble_service_disconnect_force(void);
+
+//
+// fido_ble_send_retry.c
+//
+void fido_ble_send_retry_timer_start(void);
+
 //
 // fido_board.c
 //
-void fido_led_light(LED_LIGHT_MODE led_light_mode, bool led_on);
 void fido_led_light_all(bool led_on);
-void fido_processing_led_on(LED_LIGHT_MODE led_light_mode, uint32_t on_off_interval_msec);
-void fido_processing_led_off(void);
-void fido_idling_led_on(void);
-void fido_idling_led_off(void);
+void fido_prompt_led_blink_start(uint32_t on_off_interval_msec);
+void fido_caution_led_blink_start(uint32_t on_off_interval_msec);
+void fido_led_blink_stop(void);
+void fido_idling_led_blink_start(void);
+void fido_idling_led_blink_stop(void);
 
 //
 // fido_command.c
 //
+bool    fido_command_do_abort(void);
+void    fido_command_abort_flag_set(bool flag);
 void    fido_user_presence_terminate(void);
-void    fido_user_presence_verify_start(uint32_t timeout_msec, void *p_context);
+void    fido_user_presence_verify_start(uint32_t timeout_msec);
 uint8_t fido_user_presence_verify_end(void);
 
 //
@@ -115,6 +124,22 @@ bool      fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint3
 uint8_t  *fido_flash_client_pin_store_pin_code_hash(void);
 uint32_t  fido_flash_client_pin_store_retry_counter(void);
 bool      fido_flash_client_pin_store_pin_code_exist(void);
+
+//
+// fido_flash_event_t
+//   FDSイベント(Nordic)の読替用構造体
+//
+typedef struct {
+    bool result;
+    bool gc;
+    bool delete_file;
+    bool write_update;
+    bool retry_counter_write;
+    bool token_counter_write;
+    bool skey_cert_write;
+    bool aeskeys_write;
+    bool pairing_mode_write;
+} fido_flash_event_t;
 
 //
 // fido_flash_password.c

@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 //
 // プラットフォーム非依存コード
 //
@@ -63,16 +62,17 @@ static void command_erase_skey_cert(void)
     }
 }
 
-static void command_erase_skey_cert_response(fido_flash_event_t const *const p_evt)
+static void command_erase_skey_cert_response(void const *p_evt)
 {
-    if (p_evt->result == false) {
+    fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
+    if (evt->result == false) {
         // エラーレスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 3);
         fido_log_error("Erase private key and certificate abend");
         return;
     }
 
-    if (p_evt->delete_file) {
+    if (evt->delete_file) {
         if (skey_cert_deleted == false) {
             // 秘密鍵／証明書削除が完了した旨のフラグを設定し、
             // 次のイベント発生を待つ
@@ -90,14 +90,14 @@ static void command_erase_skey_cert_response(fido_flash_event_t const *const p_e
             }
         }
 
-    } else if (p_evt->gc) {
+    } else if (evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
         if (fido_flash_password_generate() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
         }
         
-    } else if (p_evt->write_update) {
+    } else if (evt->write_update && evt->aeskeys_write) {
         // AES秘密鍵生成(fds_record_update/write)完了の場合
         // レスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP1_ERR_SUCCESS);
@@ -150,7 +150,7 @@ static void command_install_skey_cert_response(fido_flash_event_t const *const p
         fido_log_warning("Install private key and certificate retry: FDS GC done ");
         command_install_skey_cert();
 
-    } else if (p_evt->write_update) {
+    } else if (p_evt->write_update && p_evt->skey_cert_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP1_ERR_SUCCESS);
     }
@@ -172,7 +172,7 @@ void fido_maintenance_command(void)
     }
 }
 
-void fido_maintenance_command_send_response(fido_flash_event_t const *const p_evt)
+void fido_maintenance_command_send_response(void const *p_evt)
 {
     // Flash ROM更新完了時の処理を実行
     uint8_t cmd = fido_hid_receive_header()->CMD;
