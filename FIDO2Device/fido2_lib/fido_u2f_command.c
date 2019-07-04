@@ -57,24 +57,6 @@ static size_t  response_length;
 static void u2f_register_resume_process(void);
 static void u2f_authenticate_resume_process(void);
 
-//
-// BLEサービス統合までの経過措置
-//
-uint8_t *fido_u2f_command_response_buffer(void)
-{
-    return response_buffer;
-}
-
-size_t fido_u2f_command_response_buffer_size(void)
-{
-    return sizeof(response_buffer);
-}
-
-size_t *fido_u2f_command_response_length(void)
-{
-    return &response_length;
-}
-
 static uint8_t get_u2f_command_byte(void)
 {
     uint8_t cmd;
@@ -500,4 +482,16 @@ void fido_u2f_command_msg_report_sent(void)
     } else if (ins == U2F_AUTHENTICATE) {
         fido_log_info("U2F Authenticate end");
     }
+}
+
+void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
+{
+    // トランスポート種別を保持
+    m_transport_type = transport_type;
+
+    // PINGの場合は
+    // リクエストのヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
+    fido_log_info("U2F Ping done");
 }
