@@ -243,6 +243,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_receive.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_receive.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_receive_apdu.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_receive_apdu.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
@@ -255,8 +257,6 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_send.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_request_apdu.c</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_request_apdu.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_u2f_command.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_u2f_command.h</itemPath>
     </logicalFolder>
@@ -1027,6 +1027,11 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_receive_apdu.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_hid_send.c"
             ex="false"
             tool="0"
@@ -1089,11 +1094,6 @@
             <pElem>../plat_lib</pElem>
           </incDir>
         </cTool>
-      </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_request_apdu.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_u2f_command.c"
             ex="false"
