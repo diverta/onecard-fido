@@ -134,7 +134,7 @@ static void flash_storage_init(void)
     // FDSイベント発生後に実行される
     // FIDO Authenticator固有の処理を
     // fds_registerで登録
-    fido_command_fds_register();
+    fido_flash_event_fds_register();
 }
 
 

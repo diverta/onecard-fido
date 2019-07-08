@@ -130,6 +130,7 @@ bool      fido_flash_client_pin_store_pin_code_exist(void);
 //   FDSイベント(Nordic)の読替用構造体
 //
 typedef struct {
+    // FDSイベントを判定して設定する項目
     bool result;
     bool gc;
     bool delete_file;
@@ -139,6 +140,8 @@ typedef struct {
     bool skey_cert_write;
     bool aeskeys_write;
     bool pairing_mode_write;
+    // アプリケーションで任意に設定する項目
+    bool gc_forced;
 } fido_flash_event_t;
 
 //

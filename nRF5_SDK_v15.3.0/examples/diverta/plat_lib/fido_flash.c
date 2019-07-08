@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "fido_flash.h"
+#include "fido_flash_event.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash
@@ -57,6 +58,8 @@ bool fido_flash_force_fdc_gc(void)
         APP_ERROR_CHECK(err_code);
     }
 
+    // アプリケーション側でGCを発生させた旨のフラグを設定
+    fido_flash_event_gc_forced();
     return true;
 }
 

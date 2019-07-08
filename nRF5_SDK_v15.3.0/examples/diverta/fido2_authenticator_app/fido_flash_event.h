@@ -11,7 +11,8 @@
 extern "C" {
 #endif
 
-void fido_command_fds_register(void);
+void fido_flash_event_fds_register(void);
+void fido_flash_event_gc_forced(void);
 
 #ifdef __cplusplus
 }
