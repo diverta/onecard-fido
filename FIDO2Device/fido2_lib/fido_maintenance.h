@@ -7,18 +7,18 @@
 #ifndef FIDO_MAINTENANCE_H
 #define FIDO_MAINTENANCE_H
 
-// for Flash ROM event
-#include "fido_flash_event.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void fido_maintenance_command(void);
-void fido_maintenance_command_send_response(void const *p_evt);
 void fido_maintenance_command_report_sent(void);
 void fido_maintenance_command_flash_failed(void);
 void fido_maintenance_command_flash_gc_done(void);
+void fido_maintenance_command_skey_cert_file_deleted(void);
+void fido_maintenance_command_token_counter_file_deleted(void);
+void fido_maintenance_command_aes_password_record_updated(void);
+void fido_maintenance_command_skey_cert_record_updated(void);
 
 #ifdef __cplusplus
 }

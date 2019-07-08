@@ -30,6 +30,7 @@ bool fido_ctap2_command_on_mainsw_long_push_event(void);
 void fido_ctap2_command_on_ble_nus_connected(void);
 void fido_ctap2_command_flash_failed(void);
 void fido_ctap2_command_flash_gc_done(void);
+void fido_ctap2_command_token_counter_file_deleted(void);
 
 #ifdef __cplusplus
 }

@@ -494,16 +494,6 @@ static void command_authenticator_reset_resume_process(void)
     }
 }
 
-static void command_authenticator_reset_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->delete_file) {
-        // トークンカウンター削除完了
-        fido_log_debug("fido_flash_token_counter_delete completed ");
-        // レスポンスを生成してWebAuthnクライアントに戻す
-        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
-    }
-}
-
 void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -573,9 +563,6 @@ void fido_ctap2_command_cbor_send_response(void const *p_evt)
             break;
         case CTAP2_CMD_GET_ASSERTION:
             command_get_assertion_send_response(p_evt);
-            break;
-        case CTAP2_CMD_RESET:
-            command_authenticator_reset_send_response(p_evt);
             break;
         case CTAP2_CMD_CLIENT_PIN:
             command_authenticator_client_pin_send_response(p_evt);
@@ -690,5 +677,20 @@ void fido_ctap2_command_flash_gc_done(void)
             break;
         default:
             break;
+    }
+}
+
+void fido_ctap2_command_token_counter_file_deleted(void)
+{
+    if (verify_ctap2_cbor_command() == false) {
+        // CTAP2 CBORコマンド以外は処理しない
+        return;
+    }
+    
+    if (get_ctap2_command_byte() == CTAP2_CMD_RESET) {
+        // トークンカウンター削除完了
+        fido_log_debug("authenticatorReset: Erase token counter file completed");
+        // レスポンスを生成してWebAuthnクライアントに戻す
+        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
     }
 }

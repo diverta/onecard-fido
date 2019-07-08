@@ -17,9 +17,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// 秘密鍵／証明書削除が完了したかどうかを保持
-static bool skey_cert_deleted = false;
-
 //
 // レスポンスデータ格納領域
 //
@@ -47,21 +44,11 @@ static void send_command_error_response(uint8_t ctap2_status)
 
 static void command_erase_skey_cert(void)
 {
-    // 秘密鍵／証明書削除が完了した旨のフラグをクリア
-    skey_cert_deleted = false;
-
     // 秘密鍵／証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
     fido_log_info("Erase private key and certificate start");
     if (fido_flash_skey_cert_delete() == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 1);
-        return;
-    }
-    // トークンカウンターをFlash ROM領域から削除
-    // (fds_file_deleteが実行される)
-    if (fido_flash_token_counter_delete() == false) {
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 2);
-        return;
     }
 }
 
@@ -77,34 +64,6 @@ static bool generate_random_password(void)
 
     fido_log_debug("Generated random vector for AES password ");
     return true;
-}
-
-static void command_erase_skey_cert_response(void const *p_evt)
-{
-    fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
-    if (evt->delete_file) {
-        if (skey_cert_deleted == false) {
-            // 秘密鍵／証明書削除が完了した旨のフラグを設定し、
-            // 次のイベント発生を待つ
-            skey_cert_deleted = true;
-            fido_log_debug("fido_flash_skey_cert_delete completed ");
-
-        } else {
-            // トークンカウンター削除が完了
-            fido_log_debug("fido_flash_token_counter_delete completed ");
-
-            // 続いて、AES秘密鍵生成処理を行う
-            // (fds_record_update/writeまたはfds_gcが実行される)
-            if (generate_random_password() == false) {
-                send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
-            }
-        }
-        
-    } else if (evt->write_update && evt->aeskeys_write) {
-        // AES秘密鍵生成(fds_record_update/write)完了の場合
-        // レスポンスを生成してU2Fクライアントに戻す
-        send_command_error_response(CTAP1_ERR_SUCCESS);
-    }
 }
 
 static void command_install_skey_cert(void)
@@ -138,14 +97,6 @@ static void command_install_skey_cert(void)
     }
 }
 
-static void command_install_skey_cert_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->skey_cert_write) {
-        // レスポンスを生成してU2Fクライアントに戻す
-        send_command_error_response(CTAP1_ERR_SUCCESS);
-    }
-}
-
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -156,22 +107,6 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             command_install_skey_cert();
-            break;
-        default:
-            break;
-    }
-}
-
-void fido_maintenance_command_send_response(void const *p_evt)
-{
-    // Flash ROM更新完了時の処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
-    switch (cmd) {
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-            command_erase_skey_cert_response(p_evt);
-            break;
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-            command_install_skey_cert_response(p_evt);
             break;
         default:
             break;
@@ -230,5 +165,55 @@ void fido_maintenance_command_flash_gc_done(void)
             break;
         default:
             break;
+    }
+}
+
+void fido_maintenance_command_skey_cert_file_deleted(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
+        // 秘密鍵／証明書削除が完了
+        fido_log_debug("Erase private key and certificate file completed ");
+
+        // 続いて、トークンカウンターをFlash ROM領域から削除
+        // (fds_file_deleteが実行される)
+        if (fido_flash_token_counter_delete() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 2);
+        }
+    }
+}
+
+void fido_maintenance_command_token_counter_file_deleted(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
+        // トークンカウンター削除が完了
+        fido_log_debug("Erase token counter file completed");
+
+        // 続いて、AES秘密鍵生成処理を行う
+        // (fds_record_update/writeまたはfds_gcが実行される)
+        if (generate_random_password() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
+        }
+    }
+}
+
+void fido_maintenance_command_aes_password_record_updated(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
+        // AES秘密鍵生成(fds_record_update/write)完了
+        fido_log_debug("Update AES password record completed ");
+
+        // レスポンスを生成してU2Fクライアントに戻す
+        send_command_error_response(CTAP1_ERR_SUCCESS);
+    }
+}
+
+void fido_maintenance_command_skey_cert_record_updated(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_SKEY_CERT) {
+        // 証明書データ書込完了
+        fido_log_debug("Update private key and certificate record completed ");
+
+        // レスポンスを生成してU2Fクライアントに戻す
+        send_command_error_response(CTAP1_ERR_SUCCESS);
     }
 }

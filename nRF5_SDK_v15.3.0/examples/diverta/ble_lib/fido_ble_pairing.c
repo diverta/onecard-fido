@@ -181,17 +181,14 @@ void fido_ble_pairing_flash_gc_done(void)
     }
 }
 
-void fido_ble_pairing_reflect_mode_change(void const *p_evt)
+void fido_ble_pairing_flash_updated(void)
 {
     if (is_pairing_mode_changing()) {
-        fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
-        if (evt->write_update && evt->pairing_mode_write) {
-            // ble_u2f_pairing_change_modeにより実行した
-            // fds_record_update/writeが正常完了の場合、
-            // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
-            // 変更したペアリングモード設定を反映するため、システムリセットを実行
-            NVIC_SystemReset();
-        }
+        // ble_u2f_pairing_change_modeにより実行した
+        // fds_record_update/writeが正常完了の場合、
+        // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
+        // 変更したペアリングモード設定を反映するため、システムリセットを実行
+        NVIC_SystemReset();
     }
 }
 
@@ -200,7 +197,7 @@ void fido_ble_pairing_get_mode(void)
     // ペアリングモードがFlash ROMに設定されていれば
     // それを取得して設定
     run_as_pairing_mode = fido_flash_pairing_mode_flag();
-    fido_log_info("Run as %s mode",
+    NRF_LOG_INFO("Run as %s mode",
         run_as_pairing_mode ? "pairing" : "non-pairing");
 
     // Flash ROM上は非ペアリングモードに設定
@@ -218,12 +215,12 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
 {
     // LESCペアリング完了時のステータスを確認
     uint8_t auth_status = p_ble_evt->evt.gap_evt.params.auth_status.auth_status;
-    fido_log_info("Authorization status: 0x%02x ", auth_status);
+    NRF_LOG_INFO("Authorization status: 0x%02x ", auth_status);
 
     // ペアリング成功時はペアリングモードをキャンセル
     // （ペアリングキャンセルのためのソフトデバイス再起動は、disconnect時に実行される）
     if (run_as_pairing_mode == true && auth_status == BLE_GAP_SEC_STATUS_SUCCESS) {
-        fido_log_info("Pairing completed with success ");
+        NRF_LOG_INFO("Pairing completed with success ");
         pairing_completed = true;
         
         // ペアリング先から切断されない可能性があるため、
@@ -235,7 +232,7 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
     // ペアリング先から切断されない可能性があるため、
     // 無通信タイムアウトのタイマー（10秒）をスタートさせる
     if (auth_status == BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP) {
-        fido_log_info("Pairing rejected");
+        NRF_LOG_INFO("Pairing rejected");
         fido_comm_interval_timer_start();
     }
 }
