@@ -185,6 +185,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_event.c \
+  $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/nfc_service.c \
