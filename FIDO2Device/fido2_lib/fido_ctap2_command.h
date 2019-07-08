@@ -28,6 +28,7 @@ void fido_ctap2_command_keepalive_timer_handler(void);
 bool fido_ctap2_command_on_mainsw_event(void);
 bool fido_ctap2_command_on_mainsw_long_push_event(void);
 void fido_ctap2_command_on_ble_nus_connected(void);
+void fido_ctap2_command_flash_failed(void);
 
 #ifdef __cplusplus
 }

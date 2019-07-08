@@ -101,6 +101,23 @@ static FIDO_APDU_T *get_receive_apdu(void)
     return p_apdu;
 }
 
+static uint8_t get_u2f_command_ins_byte(void)
+{
+    if (get_u2f_command_byte() != U2F_COMMAND_MSG) {
+        // U2Fコマンド以外はINS未設定とみなす
+        return 0;
+    }
+
+    if (get_receive_apdu() == NULL) {
+        // トランスポート未設定時はINSも未設定とみなす
+        return 0;
+    }
+
+    // u2f_request_buffer の先頭バイトを参照
+    //   [0]CLA [1]INS [2]P1 3[P2]
+    return get_receive_apdu()->INS;
+}
+
 static void u2f_resume_response_process(void)
 {
     uint8_t ins;
@@ -301,13 +318,6 @@ static void u2f_register_resume_process(void)
 
 static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_u2f_error_status_response(0x9404);
-        fido_log_error("U2F Register abend: FDS EVENT");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -407,13 +417,6 @@ static void u2f_authenticate_resume_process(void)
 
 static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_u2f_error_status_response(0x9503);
-        fido_log_error("U2F Authenticate abend");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -434,7 +437,7 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_receive_apdu()->INS;
+    uint8_t ins = get_u2f_command_ins_byte();
     switch (ins) {
         case U2F_REGISTER:
             u2f_command_register();
@@ -455,14 +458,9 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 
 void fido_u2f_command_msg_send_response(fido_flash_event_t *const p_evt)
 {
-    if (get_u2f_command_byte() != U2F_COMMAND_MSG) {
-        // U2Fコマンド以外は処理しない
-        return;
-    }
-
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_receive_apdu()->INS;
+    uint8_t ins = get_u2f_command_ins_byte();
     if (ins == U2F_REGISTER) {
         u2f_register_send_response(p_evt);
 
@@ -475,7 +473,7 @@ void fido_u2f_command_msg_report_sent(void)
 {
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_receive_apdu()->INS;
+    uint8_t ins = get_u2f_command_ins_byte();
     if (ins == U2F_REGISTER) {
         fido_log_info("U2F Register end");
 
@@ -494,4 +492,18 @@ void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
     // レスポンスとして戻す（エコーバック）
     fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
     fido_log_info("U2F Ping done");
+}
+
+void fido_u2f_command_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    uint8_t ins = get_u2f_command_ins_byte();
+    if (ins == U2F_REGISTER) {
+        send_u2f_error_status_response(0x9404);
+        fido_log_error("U2F Register abend");
+
+    } else if (ins == U2F_AUTHENTICATE) {
+        send_u2f_error_status_response(0x9503);
+        fido_log_error("U2F Authenticate abend");
+    }
 }

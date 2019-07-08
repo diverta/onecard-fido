@@ -131,7 +131,6 @@ bool      fido_flash_client_pin_store_pin_code_exist(void);
 //
 typedef struct {
     // FDSイベントを判定して設定する項目
-    bool result;
     bool gc;
     bool delete_file;
     bool write_update;

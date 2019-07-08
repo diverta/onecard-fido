@@ -41,10 +41,30 @@ static void fido_command_send_response(void *const p_evt)
     fido_maintenance_command_send_response(p_evt);
 }
 
+static void fido_flash_event_result_failure(void)
+{
+    // BLEペアリングコマンドの処理を実行
+    fido_ble_pairing_flash_failed();
+
+    // U2Fコマンドの処理を実行
+    fido_u2f_command_flash_failed();
+
+    // CTAP2コマンドの処理を実行
+    fido_ctap2_command_flash_failed();
+
+    // 管理用コマンドの処理を実行
+    fido_maintenance_command_flash_failed();
+}
+
 static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
 {
+    // FDS処理が失敗時
+    if (p_evt->result == FDS_SUCCESS) {
+        fido_flash_event_result_failure();
+        return;
+    }
+
     // 処理結果を構造体に保持
-    flash_event.result = (p_evt->result == FDS_SUCCESS);
     flash_event.delete_file = (p_evt->id == FDS_EVT_DEL_FILE);
     flash_event.write_update = (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE);
     flash_event.retry_counter_write = (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY);

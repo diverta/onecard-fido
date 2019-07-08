@@ -82,13 +82,6 @@ static bool generate_random_password(void)
 static void command_erase_skey_cert_response(void const *p_evt)
 {
     fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
-    if (evt->result == false) {
-        // エラーレスポンスを生成してU2Fクライアントに戻す
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 3);
-        fido_log_error("Erase private key and certificate abend");
-        return;
-    }
-
     if (evt->delete_file) {
         if (skey_cert_deleted == false) {
             // 秘密鍵／証明書削除が完了した旨のフラグを設定し、
@@ -154,13 +147,6 @@ static void command_install_skey_cert(void)
 
 static void command_install_skey_cert_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 9);
-        fido_log_error("Install private key and certificate abend");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -215,6 +201,24 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             fido_log_info("Install private key and certificate end");
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_maintenance_command_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 3);
+            fido_log_error("Erase private key and certificate abend");
+            break;
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 9);
+            fido_log_error("Install private key and certificate abend");
             break;
         default:
             break;

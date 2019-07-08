@@ -17,6 +17,7 @@ extern "C" {
 void fido_maintenance_command(void);
 void fido_maintenance_command_send_response(void const *p_evt);
 void fido_maintenance_command_report_sent(void);
+void fido_maintenance_command_flash_failed(void);
 
 #ifdef __cplusplus
 }

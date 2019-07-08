@@ -326,13 +326,6 @@ static void command_make_credential_resume_process(void)
 
 static void command_make_credential_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
-        fido_log_error("authenticatorMakeCredential abend");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -426,13 +419,6 @@ static void command_get_assertion_resume_process(void)
 
 static void command_get_assertion_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
-        fido_log_error("authenticatorGetAssertion abend");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -485,13 +471,6 @@ static void command_authenticator_client_pin(void)
 
 static void command_authenticator_client_pin_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
-        fido_log_error("authenticatorClientPIN abend");
-        return;
-    }
-
     if (p_evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
@@ -535,13 +514,6 @@ static void command_authenticator_reset_resume_process(void)
 
 static void command_authenticator_reset_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        send_ctap2_command_error_response(CTAP1_ERR_OTHER);
-        fido_log_error("authenticatorReset abend");
-        return;
-    }
-
     if (p_evt->delete_file) {
         // トークンカウンター削除完了
         fido_log_debug("fido_flash_token_counter_delete completed ");
@@ -680,5 +652,35 @@ void fido_ctap2_command_cancel(void)
         //   status: CTAP2_ERR_KEEPALIVE_CANCEL
         send_ctap2_status_response(CTAP2_COMMAND_CBOR, CTAP2_ERR_KEEPALIVE_CANCEL);
         fido_log_info("CTAPHID_CANCEL done with CBOR command");
+    }
+}
+
+void fido_ctap2_command_flash_failed(void)
+{
+    if (verify_ctap2_cbor_command() == false) {
+        // CTAP2 CBORコマンド以外は処理しない
+        return;
+    }
+    
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    switch (get_ctap2_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+            fido_log_error("authenticatorMakeCredential abend");
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+            fido_log_error("authenticatorGetAssertion abend");
+            break;
+        case CTAP2_CMD_RESET:
+            send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+            fido_log_error("authenticatorReset abend");
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            send_ctap2_command_error_response(CTAP1_ERR_OTHER);
+            fido_log_error("authenticatorClientPIN abend");
+            break;
+        default:
+            break;
     }
 }

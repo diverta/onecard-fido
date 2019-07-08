@@ -154,6 +154,13 @@ void fido_ble_pairing_change_mode(void)
     change_pairing_mode = true;
 }
 
+void fido_ble_pairing_flash_failed(void)
+{
+    // Flash ROM処理でエラーが発生時
+    NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend");
+    return;
+}
+
 void fido_ble_pairing_reflect_mode_change(void const *p_evt)
 {
     if (change_pairing_mode == false) {
@@ -162,12 +169,6 @@ void fido_ble_pairing_reflect_mode_change(void const *p_evt)
     change_pairing_mode = false;
 
     fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
-    if (evt->result == false) {
-        // FDS処理でエラーが発生時は以降の処理を行わない
-        NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend");
-        return;
-    }
-
     if (evt->write_update && evt->pairing_mode_write) {
         // ble_u2f_pairing_change_modeにより実行した
         // fds_record_update/writeが正常完了の場合、
