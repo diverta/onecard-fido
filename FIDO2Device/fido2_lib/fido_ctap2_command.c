@@ -457,15 +457,6 @@ static void command_authenticator_client_pin(void)
     ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
 }
 
-static void command_authenticator_client_pin_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->retry_counter_write) {
-        // リトライカウンターのFlash ROM書込処理が完了したら、
-        // レスポンスを生成してCTAP2クライアントに戻す
-        ctap2_client_pin_send_response();
-    }
-}
-
 static void command_authenticator_reset(void)
 {
     // ユーザー所在確認が必要な旨のフラグを設定
@@ -563,9 +554,6 @@ void fido_ctap2_command_cbor_send_response(void const *p_evt)
             break;
         case CTAP2_CMD_GET_ASSERTION:
             command_get_assertion_send_response(p_evt);
-            break;
-        case CTAP2_CMD_CLIENT_PIN:
-            command_authenticator_client_pin_send_response(p_evt);
             break;
         default:
             break;
@@ -682,15 +670,23 @@ void fido_ctap2_command_flash_gc_done(void)
 
 void fido_ctap2_command_token_counter_file_deleted(void)
 {
-    if (verify_ctap2_cbor_command() == false) {
-        // CTAP2 CBORコマンド以外は処理しない
-        return;
+    if (verify_ctap2_cbor_command()) {
+        if (get_ctap2_command_byte() == CTAP2_CMD_RESET) {
+            // トークンカウンター削除完了
+            fido_log_debug("authenticatorReset: Erase token counter file completed");
+            // レスポンスを生成してWebAuthnクライアントに戻す
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
+        }
     }
-    
-    if (get_ctap2_command_byte() == CTAP2_CMD_RESET) {
-        // トークンカウンター削除完了
-        fido_log_debug("authenticatorReset: Erase token counter file completed");
-        // レスポンスを生成してWebAuthnクライアントに戻す
-        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
+}
+
+void fido_ctap2_command_retry_counter_record_updated(void)
+{
+    if (verify_ctap2_cbor_command()) {
+        if (get_ctap2_command_byte() == CTAP2_CMD_CLIENT_PIN) {
+            // リトライカウンターのFlash ROM書込処理が完了したら、
+            // レスポンスを生成してCTAP2クライアントに戻す
+            ctap2_client_pin_send_response();
+        }
     }
 }

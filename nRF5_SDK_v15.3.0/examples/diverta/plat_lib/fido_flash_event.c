@@ -85,6 +85,10 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
     } else if (p_evt->write.record_key == FIDO_SKEY_CERT_RECORD_KEY) {
         // 管理用コマンドの処理を実行
         fido_maintenance_command_skey_cert_record_updated();
+
+    } else if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
+        // CTAP2コマンドの処理を実行
+        fido_ctap2_command_retry_counter_record_updated();
     }
  }
 
@@ -130,7 +134,6 @@ static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
     
     // 処理結果を構造体に保持
     flash_event.write_update = (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE);
-    flash_event.retry_counter_write = (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY);
     flash_event.token_counter_write = (p_evt->write.record_key == FIDO_TOKEN_COUNTER_RECORD_KEY);
 
     // FDS処理完了後の業務レスポンス処理を実行

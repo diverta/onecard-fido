@@ -132,7 +132,6 @@ bool      fido_flash_client_pin_store_pin_code_exist(void);
 typedef struct {
     // FDSイベントを判定して設定する項目
     bool write_update;
-    bool retry_counter_write;
     bool token_counter_write;
 } fido_flash_event_t;
 

@@ -31,6 +31,7 @@ void fido_ctap2_command_on_ble_nus_connected(void);
 void fido_ctap2_command_flash_failed(void);
 void fido_ctap2_command_flash_gc_done(void);
 void fido_ctap2_command_token_counter_file_deleted(void);
+void fido_ctap2_command_retry_counter_record_updated(void);
 
 #ifdef __cplusplus
 }
