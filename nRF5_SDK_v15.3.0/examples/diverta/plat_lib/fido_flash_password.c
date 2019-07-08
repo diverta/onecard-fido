@@ -9,16 +9,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "fds.h"
-#include "fido_crypto.h"
 #include "fido_flash.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash_password
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
-
-// 業務処理／HW依存処理間のインターフェース
-#include "fido_platform.h"
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
@@ -69,21 +65,6 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
 
     return true;
 }
-
-bool fido_flash_password_generate(void)
-{
-    // 32バイトのランダムベクターを生成
-    fido_crypto_generate_random_vector((uint8_t *)m_random_vector, 32);
-
-    // Flash ROMに書き出して保存
-    if (write_random_vector(m_random_vector) == false) {
-        return false;
-    }
-
-    NRF_LOG_DEBUG("Generated random vector for AES password ");
-    return true;
-}
-
 
 static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *data_buffer)
 {
@@ -141,4 +122,13 @@ uint8_t *fido_flash_password_get(void)
     // Flash ROMレコードから取り出したランダムベクターを
     // パスワードに設定
     return (uint8_t *)m_random_vector;
+}
+
+bool fido_flash_password_set(uint8_t *random_vector)
+{
+    // 32バイトのランダムベクターを生成
+    memcpy((uint8_t *)m_random_vector, random_vector, 32);
+
+    // Flash ROMに書き出して保存
+    return write_random_vector(m_random_vector);
 }

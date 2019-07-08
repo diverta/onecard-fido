@@ -25,6 +25,9 @@ static bool skey_cert_deleted = false;
 //
 static uint8_t response_buffer[1024];
 
+// ランダムベクター生成領域
+static uint8_t m_random_vector[32];
+
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信
@@ -62,6 +65,20 @@ static void command_erase_skey_cert(void)
     }
 }
 
+static bool generate_random_password(void)
+{
+    // 32バイトのランダムベクターを生成
+    fido_crypto_generate_random_vector(m_random_vector, sizeof(m_random_vector));
+
+    // Flash ROMに書き出して保存
+    if (fido_flash_password_set(m_random_vector) == false) {
+        return false;
+    }
+
+    fido_log_debug("Generated random vector for AES password ");
+    return true;
+}
+
 static void command_erase_skey_cert_response(void const *p_evt)
 {
     fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
@@ -85,7 +102,7 @@ static void command_erase_skey_cert_response(void const *p_evt)
 
             // 続いて、AES秘密鍵生成処理を行う
             // (fds_record_update/writeまたはfds_gcが実行される)
-            if (fido_flash_password_generate() == false) {
+            if (generate_random_password() == false) {
                 send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
             }
         }
@@ -93,7 +110,7 @@ static void command_erase_skey_cert_response(void const *p_evt)
     } else if (evt->gc) {
         // FDSリソース不足解消のためGCが実行された場合は、
         // GC実行直前の処理を再実行
-        if (fido_flash_password_generate() == false) {
+        if (generate_random_password() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
         }
         

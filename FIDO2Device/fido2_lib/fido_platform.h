@@ -144,8 +144,8 @@ typedef struct {
 //
 // fido_flash_password.c
 //
-bool     fido_flash_password_generate(void);
 uint8_t *fido_flash_password_get(void);
+bool     fido_flash_password_set(uint8_t *random_vector);
 
 //
 // fido_log.h
