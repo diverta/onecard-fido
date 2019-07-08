@@ -154,32 +154,44 @@ void fido_ble_pairing_change_mode(void)
     change_pairing_mode = true;
 }
 
+static bool is_pairing_mode_changing(void)
+{
+    if (change_pairing_mode == false) {
+        return false;
+    }
+    change_pairing_mode = false;
+    return true;
+}
+
 void fido_ble_pairing_flash_failed(void)
 {
     // Flash ROM処理でエラーが発生時
-    NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend");
-    return;
+    if (is_pairing_mode_changing()) {
+        NRF_LOG_ERROR("ble_u2f_pairing_change_mode abend");
+    }
+}
+
+void fido_ble_pairing_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // エラーメッセージを出力
+    if (is_pairing_mode_changing()) {
+        NRF_LOG_ERROR("ble_u2f_pairing_reflect_mode_change abend: FDS GC done ");
+    }
 }
 
 void fido_ble_pairing_reflect_mode_change(void const *p_evt)
 {
-    if (change_pairing_mode == false) {
-        return;
-    }
-    change_pairing_mode = false;
-
-    fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
-    if (evt->write_update && evt->pairing_mode_write) {
-        // ble_u2f_pairing_change_modeにより実行した
-        // fds_record_update/writeが正常完了の場合、
-        // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
-        // 変更したペアリングモード設定を反映するため、システムリセットを実行
-        NVIC_SystemReset();
-
-    } else if (evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // エラーメッセージを出力
-        NRF_LOG_ERROR("ble_u2f_pairing_reflect_mode_change abend: FDS GC done ");
+    if (is_pairing_mode_changing()) {
+        fido_flash_event_t *evt = (fido_flash_event_t *)p_evt;
+        if (evt->write_update && evt->pairing_mode_write) {
+            // ble_u2f_pairing_change_modeにより実行した
+            // fds_record_update/writeが正常完了の場合、
+            // ソフトデバイス起動直後に行われるアドバタイジング設定処理により
+            // 変更したペアリングモード設定を反映するため、システムリセットを実行
+            NVIC_SystemReset();
+        }
     }
 }
 

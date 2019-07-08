@@ -99,13 +99,6 @@ static void command_erase_skey_cert_response(void const *p_evt)
                 send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
             }
         }
-
-    } else if (evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        if (generate_random_password() == false) {
-            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
-        }
         
     } else if (evt->write_update && evt->aeskeys_write) {
         // AES秘密鍵生成(fds_record_update/write)完了の場合
@@ -147,13 +140,7 @@ static void command_install_skey_cert(void)
 
 static void command_install_skey_cert_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("Install private key and certificate retry: FDS GC done ");
-        command_install_skey_cert();
-
-    } else if (p_evt->write_update && p_evt->skey_cert_write) {
+    if (p_evt->write_update && p_evt->skey_cert_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         send_command_error_response(CTAP1_ERR_SUCCESS);
     }
@@ -219,6 +206,27 @@ void fido_maintenance_command_flash_failed(void)
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 9);
             fido_log_error("Install private key and certificate abend");
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_maintenance_command_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+            if (generate_random_password() == false) {
+                send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
+            }
+            break;
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+            fido_log_warning("Install private key and certificate retry: FDS GC done ");
+            command_install_skey_cert();
             break;
         default:
             break;

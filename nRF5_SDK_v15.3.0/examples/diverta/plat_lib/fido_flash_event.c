@@ -26,6 +26,12 @@
 //
 static fido_flash_event_t flash_event;
 
+//
+// GCがアプリケーション（業務処理）から
+// 起動されたかどうかを保持するフラグ
+//
+static bool m_gc_forced;
+
 static void fido_command_send_response(void *const p_evt)
 {
     // BLEペアリングコマンドの処理を実行
@@ -56,12 +62,37 @@ static void fido_flash_event_result_failure(void)
     fido_maintenance_command_flash_failed();
 }
 
+static void fido_flash_event_gc_done(void)
+{
+    // BLEペアリングコマンドの処理を実行
+    fido_ble_pairing_flash_gc_done();
+
+    // U2Fコマンドの処理を実行
+    fido_u2f_command_flash_gc_done();
+    
+    // CTAP2コマンドの処理を実行
+    fido_ctap2_command_flash_gc_done();
+    
+    // 管理用コマンドの処理を実行
+    fido_maintenance_command_flash_gc_done();
+}
+
+
 static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
 {
     // FDS処理が失敗時
-    if (p_evt->result == FDS_SUCCESS) {
+    if (p_evt->result != FDS_SUCCESS) {
         fido_flash_event_result_failure();
         return;
+    }
+
+    // GCの場合は、業務側が発生させたものであれば、イベントを通知するようにする
+    if (m_gc_forced) {
+        m_gc_forced = false;
+        if (p_evt->id == FDS_EVT_GC) {
+            fido_flash_event_gc_done();
+            return;
+        }
     }
 
     // 処理結果を構造体に保持
@@ -72,14 +103,6 @@ static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
     flash_event.skey_cert_write = (p_evt->write.record_key == FIDO_SKEY_CERT_RECORD_KEY);
     flash_event.aeskeys_write = (p_evt->write.record_key == FIDO_AESKEYS_RECORD_KEY);
     flash_event.pairing_mode_write = (p_evt->write.record_key == FIDO_PAIRING_MODE_RECORD_KEY);
-
-    // GCの場合は、業務側が発生させたものであれば、イベントを通知するようにする
-    if (flash_event.gc_forced == true) {
-        flash_event.gc = (p_evt->id == FDS_EVT_GC);
-    } else {
-        flash_event.gc = false;
-    }
-    flash_event.gc_forced = false;
 
     // FDS処理完了後の業務レスポンス処理を実行
     fido_command_send_response(&flash_event);
@@ -95,5 +118,5 @@ void fido_flash_event_fds_register(void)
 void fido_flash_event_gc_forced(void)
 {
     // アプリケーション側でGCを発生させた旨のフラグを設定
-    flash_event.gc_forced = true;
+    m_gc_forced = true;
 }

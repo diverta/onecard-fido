@@ -28,7 +28,7 @@ void    fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt);
 void    fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt);
 void    fido_ble_pairing_on_disconnect(void);
 void    fido_ble_pairing_flash_failed(void);
-
+void    fido_ble_pairing_flash_gc_done(void);
 
 #ifdef __cplusplus
 }

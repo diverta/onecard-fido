@@ -326,13 +326,7 @@ static void command_make_credential_resume_process(void)
 
 static void command_make_credential_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("authenticatorMakeCredential retry: FDS GC done ");
-        ctap2_make_credential_add_token_counter();
-
-    } else if (p_evt->write_update && p_evt->token_counter_write) {
+    if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してWebAuthnクライアントに戻す
         fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
@@ -419,13 +413,7 @@ static void command_get_assertion_resume_process(void)
 
 static void command_get_assertion_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("authenticatorGetAssertion retry: FDS GC done ");
-        ctap2_get_assertion_update_token_counter();
-
-    } else if (p_evt->write_update && p_evt->token_counter_write) {
+    if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してWebAuthnクライアントに戻す
         fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
@@ -471,13 +459,7 @@ static void command_authenticator_client_pin(void)
 
 static void command_authenticator_client_pin_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("authenticatorClientPIN retry: FDS GC done ");
-        ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
-
-    } else if (p_evt->write_update && p_evt->retry_counter_write) {
+    if (p_evt->write_update && p_evt->retry_counter_write) {
         // リトライカウンターのFlash ROM書込処理が完了したら、
         // レスポンスを生成してCTAP2クライアントに戻す
         ctap2_client_pin_send_response();
@@ -519,12 +501,6 @@ static void command_authenticator_reset_send_response(fido_flash_event_t const *
         fido_log_debug("fido_flash_token_counter_delete completed ");
         // レスポンスを生成してWebAuthnクライアントに戻す
         fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, 1);
-
-    } else if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("authenticatorReset retry: FDS GC done ");
-        command_authenticator_reset_resume_process();
     }
 }
 
@@ -679,6 +655,38 @@ void fido_ctap2_command_flash_failed(void)
         case CTAP2_CMD_CLIENT_PIN:
             send_ctap2_command_error_response(CTAP1_ERR_OTHER);
             fido_log_error("authenticatorClientPIN abend");
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_ctap2_command_flash_gc_done(void)
+{
+    if (verify_ctap2_cbor_command() == false) {
+        // CTAP2 CBORコマンド以外は処理しない
+        return;
+    }
+    
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    switch (get_ctap2_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            fido_log_warning("authenticatorMakeCredential retry: FDS GC done ");
+            ctap2_make_credential_add_token_counter();
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            fido_log_warning("authenticatorGetAssertion retry: FDS GC done ");
+            ctap2_get_assertion_update_token_counter();
+            break;
+        case CTAP2_CMD_RESET:
+            fido_log_warning("authenticatorReset retry: FDS GC done ");
+            command_authenticator_reset_resume_process();
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            fido_log_warning("authenticatorClientPIN retry: FDS GC done ");
+            ctap2_client_pin_perform_subcommand(response_buffer, sizeof(response_buffer));
             break;
         default:
             break;

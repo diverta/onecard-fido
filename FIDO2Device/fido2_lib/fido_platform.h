@@ -131,7 +131,6 @@ bool      fido_flash_client_pin_store_pin_code_exist(void);
 //
 typedef struct {
     // FDSイベントを判定して設定する項目
-    bool gc;
     bool delete_file;
     bool write_update;
     bool retry_counter_write;
@@ -139,8 +138,6 @@ typedef struct {
     bool skey_cert_write;
     bool aeskeys_write;
     bool pairing_mode_write;
-    // アプリケーションで任意に設定する項目
-    bool gc_forced;
 } fido_flash_event_t;
 
 //

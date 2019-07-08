@@ -318,14 +318,7 @@ static void u2f_register_resume_process(void)
 
 static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("U2F Register retry: FDS GC done ");
-        uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-        u2f_register_add_token_counter(p_appid_hash);
-
-    } else if (p_evt->write_update && p_evt->token_counter_write) {
+    if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         fido_u2f_command_send_response(response_buffer, response_length);
     }
@@ -417,14 +410,7 @@ static void u2f_authenticate_resume_process(void)
 
 static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt)
 {
-    if (p_evt->gc) {
-        // FDSリソース不足解消のためGCが実行された場合は、
-        // GC実行直前の処理を再実行
-        fido_log_warning("U2F Authenticate retry: FDS GC done ");
-        uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-        u2f_authenticate_update_token_counter(p_appid_hash);
-
-    } else if (p_evt->write_update && p_evt->token_counter_write) {
+    if (p_evt->write_update && p_evt->token_counter_write) {
         // レスポンスを生成してU2Fクライアントに戻す
         fido_u2f_command_send_response(response_buffer, response_length);
     }
@@ -505,5 +491,21 @@ void fido_u2f_command_flash_failed(void)
     } else if (ins == U2F_AUTHENTICATE) {
         send_u2f_error_status_response(0x9503);
         fido_log_error("U2F Authenticate abend");
+    }
+}
+
+void fido_u2f_command_flash_gc_done(void)
+{
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    uint8_t ins = get_u2f_command_ins_byte();
+    if (ins == U2F_REGISTER) {
+        fido_log_warning("U2F Register retry: FDS GC done ");
+        u2f_register_add_token_counter(get_appid_hash_from_u2f_request_apdu());
+
+    } else if (ins == U2F_AUTHENTICATE) {
+        fido_log_warning("U2F Authenticate retry: FDS GC done ");
+        u2f_authenticate_update_token_counter(get_appid_hash_from_u2f_request_apdu());
     }
 }
