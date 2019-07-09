@@ -100,13 +100,17 @@ static void command_install_skey_cert(void)
 static void command_get_flash_stat(void)
 {
     fido_log_info("Get flash ROM statistics start");
-
+    //
     // 統計情報CSVを取得
-    size_t response_size = sizeof(response_buffer);
-    if (fido_flash_get_stat_csv(response_buffer, &response_size) == false) {
+    //  response_bufferの先頭にステータスバイトを格納するため、
+    //  CSV格納領域は、response_bufferの２バイト目を先頭とします。
+    //
+    uint8_t *buffer = response_buffer + 1;
+    size_t   buffer_size = sizeof(response_buffer - 1);
+    if (fido_flash_get_stat_csv(buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
     }
-
+    //
     // レスポンスを送信
     //  データ形式
     //  0-3: CID（0xffffffff）
@@ -115,7 +119,8 @@ static void command_get_flash_stat(void)
     //  7:   ステータスバイト（成功時は 0x00）
     //  8-n: CSVデータ（下記のようなCSV形式のテキスト）
     //       <項目名1>=<値2>,<項目名2>=<値2>,...,<項目名k>=<値k>
-    send_command_response(CTAP1_ERR_SUCCESS, response_size);
+    //
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
 void fido_maintenance_command(void)

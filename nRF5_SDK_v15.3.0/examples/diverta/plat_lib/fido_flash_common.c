@@ -193,10 +193,24 @@ bool fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
     // 格納領域を初期化
     memset(stat_csv_data, 0, *stat_csv_size);
 
-    // nRF5 SDK経由でFlash ROM統計情報を取得したのち、
-    // 各項目をCSV化し、引数のバッファに格納
-    *stat_csv_size = 56;
-    NRF_LOG_DEBUG("fido_flash_fds_stat_csv_get: under construction...");
+    // nRF5 SDK経由でFlash ROM統計情報を取得
+    fds_stat_t stat = {0};
+    ret_code_t ret = fds_stat(&stat);
+    if (ret != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fds_stat returns 0x%02x ", ret);
+        return false;
+    }
 
+    // 各項目をCSV化し、引数のバッファに格納
+    sprintf((char *)stat_csv_data, 
+        "pages_available=%d,words_used=%d,freeable_words=%d,largest_contig=%d,valid_records=%d,dirty_records=%d", 
+        stat.pages_available, 
+        stat.words_used, 
+        stat.freeable_words,
+        stat.largest_contig,
+        stat.valid_records, 
+        stat.dirty_records);
+    *stat_csv_size = strlen((char *)stat_csv_data);
+    NRF_LOG_DEBUG("Flash ROM statistics csv created (%d bytes)", *stat_csv_size);
     return true;
 }
