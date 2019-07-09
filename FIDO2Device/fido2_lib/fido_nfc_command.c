@@ -23,7 +23,7 @@ void fido_nfc_command_on_send_completed(void)
     fido_comm_interval_timer_stop();
 
     // 全フレーム送信後に行われる後続処理を実行
-    fido_ctap2_command_cbor_response_completed();
+    fido_ctap2_command_cbor_response_sent();
 
     if (fido_command_do_abort()) {
         // レスポンス完了後の処理を停止させる場合はここで終了

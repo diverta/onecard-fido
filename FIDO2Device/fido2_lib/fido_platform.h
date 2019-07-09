@@ -126,16 +126,6 @@ uint32_t  fido_flash_client_pin_store_retry_counter(void);
 bool      fido_flash_client_pin_store_pin_code_exist(void);
 
 //
-// fido_flash_event_t
-//   FDSイベント(Nordic)の読替用構造体
-//
-typedef struct {
-    // FDSイベントを判定して設定する項目
-    bool write_update;
-    bool token_counter_write;
-} fido_flash_event_t;
-
-//
 // fido_flash_password.c
 //
 uint8_t *fido_flash_password_get(void);

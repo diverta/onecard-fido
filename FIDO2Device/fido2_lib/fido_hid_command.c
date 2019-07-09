@@ -174,10 +174,10 @@ void fido_hid_command_on_report_completed(void)
             fido_log_info("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
-            fido_u2f_command_msg_report_sent();
+            fido_u2f_command_msg_response_sent();
             break;
         case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor_response_completed();
+            fido_ctap2_command_cbor_response_sent();
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:

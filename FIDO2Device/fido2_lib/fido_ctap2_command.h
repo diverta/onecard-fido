@@ -20,8 +20,6 @@ extern "C" {
 void fido_ctap2_command_hid_init(void);
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length);
 void fido_ctap2_command_cbor(TRANSPORT_TYPE transport_type);
-void fido_ctap2_command_cbor_send_response(void const *p_evt);
-void fido_ctap2_command_cbor_response_completed(void);
 void fido_ctap2_command_tup_cancel(void);
 void fido_ctap2_command_cancel(void);
 void fido_ctap2_command_keepalive_timer_handler(void);
@@ -32,6 +30,8 @@ void fido_ctap2_command_flash_failed(void);
 void fido_ctap2_command_flash_gc_done(void);
 void fido_ctap2_command_token_counter_file_deleted(void);
 void fido_ctap2_command_retry_counter_record_updated(void);
+void fido_ctap2_command_token_counter_record_updated(void);
+void fido_ctap2_command_cbor_response_sent(void);
 
 #ifdef __cplusplus
 }

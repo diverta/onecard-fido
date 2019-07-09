@@ -83,11 +83,11 @@ void fido_ble_command_on_response_send_completed(void)
     if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
         if (fido_ble_receive_apdu()->CLA != 0x00) {
             // CTAP2コマンドを処理する。
-            fido_ctap2_command_cbor_response_completed();
+            fido_ctap2_command_cbor_response_sent();
 
         } else {
             // U2Fコマンド／管理用コマンドを処理する。
-            fido_u2f_command_msg_report_sent();
+            fido_u2f_command_msg_response_sent();
         }
     }
 

@@ -22,24 +22,10 @@
 #include "fido_flash.h"
 
 //
-// FDSから渡されたイベント情報を保持
-//
-static fido_flash_event_t flash_event;
-
-//
 // GCがアプリケーション（業務処理）から
 // 起動されたかどうかを保持するフラグ
 //
 static bool m_gc_forced;
-
-static void fido_command_send_response(void *const p_evt)
-{
-    // U2Fコマンドの処理を実行
-    fido_u2f_command_msg_send_response(p_evt);
-
-    // CTAP2コマンドの処理を実行
-    fido_ctap2_command_cbor_send_response(p_evt);
-}
 
 static void fido_flash_event_result_failure(void)
 {
@@ -89,6 +75,13 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
     } else if (p_evt->write.record_key == FIDO_PIN_RETRY_COUNTER_RECORD_KEY) {
         // CTAP2コマンドの処理を実行
         fido_ctap2_command_retry_counter_record_updated();
+
+    } else if (p_evt->write.record_key == FIDO_TOKEN_COUNTER_RECORD_KEY) {
+        // U2Fコマンドの処理を実行
+        fido_u2f_command_token_counter_record_updated();
+
+        // CTAP2コマンドの処理を実行
+        fido_ctap2_command_token_counter_record_updated();
     }
  }
 
@@ -131,13 +124,6 @@ static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
         // ファイル削除時
         fido_flash_event_file_deleted(p_evt);
     }
-    
-    // 処理結果を構造体に保持
-    flash_event.write_update = (p_evt->id == FDS_EVT_UPDATE || p_evt->id == FDS_EVT_WRITE);
-    flash_event.token_counter_write = (p_evt->write.record_key == FIDO_TOKEN_COUNTER_RECORD_KEY);
-
-    // FDS処理完了後の業務レスポンス処理を実行
-    fido_command_send_response(&flash_event);
 }
 
 void fido_flash_event_fds_register(void)

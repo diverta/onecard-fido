@@ -324,14 +324,6 @@ static void command_make_credential_resume_process(void)
     }
 }
 
-static void command_make_credential_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->token_counter_write) {
-        // レスポンスを生成してWebAuthnクライアントに戻す
-        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
-    }
-}
-
 static void command_authenticator_get_assertion(void)
 {
     // ユーザー所在確認フラグをクリア
@@ -408,14 +400,6 @@ static void command_get_assertion_resume_process(void)
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(ctap2_status);
-    }
-}
-
-static void command_get_assertion_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->token_counter_write) {
-        // レスポンスを生成してWebAuthnクライアントに戻す
-        fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
     }
 }
 
@@ -540,47 +524,6 @@ static bool verify_ctap2_cbor_command(void)
     return false;
 }
 
-void fido_ctap2_command_cbor_send_response(void const *p_evt)
-{
-    if (verify_ctap2_cbor_command() == false) {
-        // CTAP2 CBORコマンド以外は処理しない
-        return;
-    }
-    
-    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    switch (get_ctap2_command_byte()) {
-        case CTAP2_CMD_MAKE_CREDENTIAL:
-            command_make_credential_send_response(p_evt);
-            break;
-        case CTAP2_CMD_GET_ASSERTION:
-            command_get_assertion_send_response(p_evt);
-            break;
-        default:
-            break;
-    }
-}
-
-void fido_ctap2_command_cbor_response_completed(void)
-{
-    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
-    switch (get_ctap2_command_byte()) {
-        case CTAP2_CMD_MAKE_CREDENTIAL:
-            fido_log_info("authenticatorMakeCredential end");
-            break;
-        case CTAP2_CMD_GET_ASSERTION:
-            fido_log_info("authenticatorGetAssertion end");
-            break;
-        case CTAP2_CMD_RESET:
-            fido_log_info("authenticatorReset end");
-            break;
-        case CTAP2_CMD_CLIENT_PIN:
-            fido_log_info("authenticatorClientPIN end");
-            break;
-        default:
-            break;
-    }
-}
-
 void fido_ctap2_command_tup_cancel(void)
 {
     if (is_tup_needed) {
@@ -688,5 +631,48 @@ void fido_ctap2_command_retry_counter_record_updated(void)
             // レスポンスを生成してCTAP2クライアントに戻す
             ctap2_client_pin_send_response();
         }
+    }
+}
+
+void fido_ctap2_command_token_counter_record_updated(void)
+{
+    if (verify_ctap2_cbor_command() == false) {
+        // CTAP2 CBORコマンド以外は処理しない
+        return;
+    }
+    
+    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
+    switch (get_ctap2_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            // レスポンスを生成してWebAuthnクライアントに戻す
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            // レスポンスを生成してWebAuthnクライアントに戻す
+            fido_ctap2_command_send_response(CTAP1_ERR_SUCCESS, response_length);
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_ctap2_command_cbor_response_sent(void)
+{
+    // CTAP2 CBORコマンドを取得し、行うべき処理を判定
+    switch (get_ctap2_command_byte()) {
+        case CTAP2_CMD_MAKE_CREDENTIAL:
+            fido_log_info("authenticatorMakeCredential end");
+            break;
+        case CTAP2_CMD_GET_ASSERTION:
+            fido_log_info("authenticatorGetAssertion end");
+            break;
+        case CTAP2_CMD_RESET:
+            fido_log_info("authenticatorReset end");
+            break;
+        case CTAP2_CMD_CLIENT_PIN:
+            fido_log_info("authenticatorClientPIN end");
+            break;
+        default:
+            break;
     }
 }

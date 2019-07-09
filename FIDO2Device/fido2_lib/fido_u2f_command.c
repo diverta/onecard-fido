@@ -316,14 +316,6 @@ static void u2f_register_resume_process(void)
     }
 }
 
-static void u2f_register_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->token_counter_write) {
-        // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
-    }
-}
-
 static void u2f_command_authenticate(void)
 {
     // ユーザー所在確認フラグをクリア
@@ -408,14 +400,6 @@ static void u2f_authenticate_resume_process(void)
     }
 }
 
-static void u2f_authenticate_send_response(fido_flash_event_t const *const p_evt)
-{
-    if (p_evt->write_update && p_evt->token_counter_write) {
-        // レスポンスを生成してU2Fクライアントに戻す
-        fido_u2f_command_send_response(response_buffer, response_length);
-    }
-}
-
 void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 {
     // トランスポート種別を保持
@@ -439,32 +423,6 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
             fido_log_debug("Invalid INS(0x%02x) ", ins);
             fido_ble_send_status_word(get_u2f_command_byte(), U2F_SW_INS_NOT_SUPPORTED);
             break;
-    }
-}
-
-void fido_u2f_command_msg_send_response(fido_flash_event_t *const p_evt)
-{
-    // u2f_request_buffer の先頭バイトを参照
-    //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_u2f_command_ins_byte();
-    if (ins == U2F_REGISTER) {
-        u2f_register_send_response(p_evt);
-
-    } else if (ins == U2F_AUTHENTICATE) {
-        u2f_authenticate_send_response(p_evt);
-    }
-}
-
-void fido_u2f_command_msg_report_sent(void)
-{
-    // u2f_request_buffer の先頭バイトを参照
-    //   [0]CLA [1]INS [2]P1 3[P2]
-    uint8_t ins = get_u2f_command_ins_byte();
-    if (ins == U2F_REGISTER) {
-        fido_log_info("U2F Register end");
-
-    } else if (ins == U2F_AUTHENTICATE) {
-        fido_log_info("U2F Authenticate end");
     }
 }
 
@@ -507,5 +465,33 @@ void fido_u2f_command_flash_gc_done(void)
     } else if (ins == U2F_AUTHENTICATE) {
         fido_log_warning("U2F Authenticate retry: FDS GC done ");
         u2f_authenticate_update_token_counter(get_appid_hash_from_u2f_request_apdu());
+    }
+}
+
+void fido_u2f_command_token_counter_record_updated(void)
+{
+    // u2f_request_buffer の先頭バイトを参照
+    //   [0]CLA [1]INS [2]P1 3[P2]
+    uint8_t ins = get_u2f_command_ins_byte();
+    if (ins == U2F_REGISTER) {
+        // レスポンスを生成してU2Fクライアントに戻す
+        fido_u2f_command_send_response(response_buffer, response_length);
+
+    } else if (ins == U2F_AUTHENTICATE) {
+        // レスポンスを生成してU2Fクライアントに戻す
+        fido_u2f_command_send_response(response_buffer, response_length);
+    }
+}
+
+void fido_u2f_command_msg_response_sent(void)
+{
+    // u2f_request_buffer の先頭バイトを参照
+    //   [0]CLA [1]INS [2]P1 3[P2]
+    uint8_t ins = get_u2f_command_ins_byte();
+    if (ins == U2F_REGISTER) {
+        fido_log_info("U2F Register end");
+
+    } else if (ins == U2F_AUTHENTICATE) {
+        fido_log_info("U2F Authenticate end");
     }
 }
