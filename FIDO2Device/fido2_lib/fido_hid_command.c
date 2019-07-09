@@ -13,20 +13,14 @@
 #include "ctap2_common.h"
 #include "fido_ctap2_command.h"
 #include "fido_hid_channel.h"
+#include "fido_hid_receive.h"
+#include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "fido_u2f_command.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
-
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_hid_receive.h"
-#include "fido_hid_send.h"
 
 static void hid_fido_command_ping(void)
 {
@@ -174,10 +168,10 @@ void fido_hid_command_on_report_completed(void)
             fido_log_info("CTAPHID_PING end");
             break;
         case U2F_COMMAND_MSG:
-            fido_u2f_command_msg_report_sent();
+            fido_u2f_command_msg_response_sent();
             break;
         case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor_response_completed();
+            fido_ctap2_command_cbor_response_sent();
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:

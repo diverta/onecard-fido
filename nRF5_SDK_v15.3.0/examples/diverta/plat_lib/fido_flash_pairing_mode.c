@@ -1,38 +1,40 @@
 /* 
- * File:   fido_flash_password.c
+ * File:   fido_flash_pairing_mode.c
  * Author: makmorit
  *
- * Created on 2018/12/27, 14:46
+ * Created on 2019/07/08, 9:32
  */
 #include "sdk_common.h"
-
-#include <stdio.h>
-#include <string.h>
 #include "fds.h"
+
 #include "fido_flash.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME fido_flash_password
+#define NRF_LOG_MODULE_NAME fido_flash_pairing_mode
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
 static fds_record_t m_fds_record;
-static uint32_t     m_random_vector[8];
+static uint32_t m_pairing_mode;
 
-static bool write_random_vector(uint32_t *p_fds_record_buffer)
+// Flash ROMに書き込まれる内容の定義
+#define PAIRING_MODE     0x00000001
+#define NON_PAIRING_MODE 0x00000000
+
+static bool write_pairing_mode(void)
 {
     ret_code_t ret;
 
     // 一時領域（確保済み）のアドレスを取得
-    m_fds_record.data.p_data       = p_fds_record_buffer;
-    m_fds_record.data.length_words = 8;
-    m_fds_record.file_id           = FIDO_AESKEYS_FILE_ID;
-    m_fds_record.key               = FIDO_AESKEYS_RECORD_KEY;
+    m_fds_record.data.p_data       = &m_pairing_mode;
+    m_fds_record.data.length_words = 1;
+    m_fds_record.file_id           = FIDO_PAIRING_MODE_FILE_ID;
+    m_fds_record.key               = FIDO_PAIRING_MODE_RECORD_KEY;
 
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
+    ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
@@ -50,7 +52,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
         }
 
     } else {
-        NRF_LOG_DEBUG("fds_record_find returns 0x%02x ", ret);
+        NRF_LOG_DEBUG("write_pairing_mode: fds_record_find returns 0x%02x ", ret);
         return false;
     }
 
@@ -60,18 +62,17 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
         NRF_LOG_ERROR("no space in flash, calling FDS GC ");
         fido_flash_fds_force_gc();
     }
-
+    
     return true;
 }
 
-static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *data_buffer)
+static bool read_pairing_record(fds_record_desc_t *record_desc, uint32_t *data_buffer)
 {
 	fds_flash_record_t flash_record;
 	uint32_t *data;
     uint16_t  data_length;
-    ret_code_t err_code;
 
-    err_code = fds_record_open(record_desc, &flash_record);
+    ret_code_t err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
@@ -89,44 +90,49 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
     return true;
 }
 
-static bool read_random_vector(uint32_t *p_fds_record_buffer)
+static bool read_pairing_mode(void)
 {
+    // 非ペアリングモードで初期化
+    m_pairing_mode = 0;
+    
     // １レコード分読込
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
-    ret_code_t ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
+    ret_code_t ret = fds_record_find(FIDO_PAIRING_MODE_FILE_ID, FIDO_PAIRING_MODE_RECORD_KEY, &record_desc, &ftok);
     if (ret == FDS_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
-        if (read_random_vector_record(&record_desc, p_fds_record_buffer) == false) {
-            // データ格納失敗時
-            return false;
-        }
+        return read_pairing_record(&record_desc, &m_pairing_mode);
+
     } else {
         // レコードが存在しないときや
         // その他エラー発生時
+        NRF_LOG_DEBUG("read_pairing_mode: fds_record_find returns 0x%02x ", ret);
         return false;
     }
-    return true;
 }
 
-uint8_t *fido_flash_password_get(void)
+bool fido_flash_pairing_mode_flag(void)
 {
-    if (read_random_vector(m_random_vector) == false) {
-        // Flash ROMにランダムベクターを格納したレコードが存在しない場合
-        // 処理終了
-        return NULL;
+    if (read_pairing_mode()) {
+        // ペアリングモードレコードの設定内容から
+        // ペアリングモードかどうかを取得
+        return (m_pairing_mode == PAIRING_MODE);
+
+    } else {
+        // レコードが存在しないときや
+        // その他エラー発生時は非ペアリングモード
+        return false;
     }
-
-    // Flash ROMレコードから取り出したランダムベクターを
-    // パスワードに設定
-    return (uint8_t *)m_random_vector;
 }
 
-bool fido_flash_password_set(uint8_t *random_vector)
+void fido_flash_pairing_mode_flag_clear(void)
 {
-    // 32バイトのランダムベクターを生成
-    memcpy((uint8_t *)m_random_vector, random_vector, 32);
+    m_pairing_mode = NON_PAIRING_MODE;
+    write_pairing_mode();
+}
 
-    // Flash ROMに書き出して保存
-    return write_random_vector(m_random_vector);
+void fido_flash_pairing_mode_flag_set(void)
+{
+    m_pairing_mode = PAIRING_MODE;
+    write_pairing_mode();
 }

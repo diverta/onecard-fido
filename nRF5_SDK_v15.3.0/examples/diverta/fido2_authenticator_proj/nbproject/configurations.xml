@@ -604,12 +604,13 @@
       <itemPath>../plat_lib/fido_crypto_aes_cbc_256.c</itemPath>
       <itemPath>../plat_lib/fido_crypto_keypair.c</itemPath>
       <itemPath>../plat_lib/fido_crypto_sskey.c</itemPath>
-      <itemPath>../plat_lib/fido_flash.c</itemPath>
       <itemPath>../plat_lib/fido_flash.h</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
-      <itemPath>../plat_lib/fido_flash_event.c</itemPath>
-      <itemPath>../fido2_authenticator_app/fido_flash_event.h</itemPath>
+      <itemPath>../plat_lib/fido_flash_common.c</itemPath>
+      <itemPath>../plat_lib/fido_flash_pairing_mode.c</itemPath>
       <itemPath>../plat_lib/fido_flash_password.c</itemPath>
+      <itemPath>../plat_lib/fido_flash_skey_cert.c</itemPath>
+      <itemPath>../plat_lib/fido_flash_token_counter.c</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
       <itemPath>../plat_lib/fido_timer.c</itemPath>
       <itemPath>../plat_lib/fido_timer.h</itemPath>
@@ -1318,19 +1319,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/fido_flash.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../plat_lib/fido_flash_client_pin_store.c"
             ex="false"
             tool="0"
@@ -1347,7 +1335,7 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/fido_flash_event.c" ex="false" tool="0" flavor2="2">
+      <item path="../plat_lib/fido_flash_common.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
@@ -1358,6 +1346,11 @@
             <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/fido_flash_pairing_mode.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -1380,6 +1373,13 @@
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/fido_flash_skey_cert.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_token_counter.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
       </item>
       <item path="../plat_lib/fido_timer.c" ex="false" tool="0" flavor2="2">
         <cTool>

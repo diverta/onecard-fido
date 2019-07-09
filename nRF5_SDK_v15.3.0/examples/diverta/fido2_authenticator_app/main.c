@@ -33,7 +33,7 @@
 #include "fido_board.h"
 
 // for FDS event handle
-#include "fido_flash_event.h"
+#include "fido_flash.h"
 
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -134,7 +134,7 @@ static void flash_storage_init(void)
     // FDSイベント発生後に実行される
     // FIDO Authenticator固有の処理を
     // fds_registerで登録
-    fido_command_fds_register();
+    fido_flash_fds_event_register();
 }
 
 

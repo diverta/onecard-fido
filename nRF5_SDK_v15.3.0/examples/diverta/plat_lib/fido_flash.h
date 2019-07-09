@@ -59,8 +59,19 @@ extern "C" {
 #define CERT_WORD_NUM 257
 #define SKEY_CERT_WORD_NUM (SKEY_WORD_NUM+CERT_WORD_NUM)
 
-bool      fido_flash_force_fdc_gc(void);
-bool      fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
+//
+// fido_flash_event.c
+//
+void fido_flash_fds_event_register(void);
+void fido_flash_fds_force_gc(void);
+bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
+
+//
+// fido_flash_pairing_mode.c
+//
+bool fido_flash_pairing_mode_flag(void);
+void fido_flash_pairing_mode_flag_set(void);
+void fido_flash_pairing_mode_flag_clear(void);
 
 #ifdef __cplusplus
 }
