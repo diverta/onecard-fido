@@ -37,7 +37,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_random_vector: fds_record_update returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
@@ -45,22 +45,20 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_random_vector: fds_record_write returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }
 
     } else {
-        NRF_LOG_DEBUG("write_random_vector: fds_record_find returns 0x%02x ", ret);
+        NRF_LOG_DEBUG("fds_record_find returns 0x%02x ", ret);
         return false;
     }
 
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
-        // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("write_random_vector: no space in flash, calling FDS GC ");
-        if (fido_flash_force_fdc_gc() == false) {
-            return false;
-        }
+        // (fds_gcが実行される。NGであればシステムエラー扱い)
+        NRF_LOG_ERROR("no space in flash, calling FDS GC ");
+        fido_flash_fds_force_gc();
     }
 
     return true;
@@ -75,7 +73,7 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
 
     err_code = fds_record_open(record_desc, &flash_record);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("read_random_vector_record: fds_record_open returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
 
@@ -85,7 +83,7 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
 
     err_code = fds_record_close(record_desc);
     if (err_code != FDS_SUCCESS) {
-        NRF_LOG_ERROR("read_random_vector_record: fds_record_close returns 0x%02x ", err_code);
+        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
     return true;

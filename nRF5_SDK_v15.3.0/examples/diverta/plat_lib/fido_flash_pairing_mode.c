@@ -39,7 +39,7 @@ static bool write_pairing_mode(void)
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_pairing_mode: fds_record_update returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
 
@@ -47,7 +47,7 @@ static bool write_pairing_mode(void)
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &m_fds_record);
         if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
-            NRF_LOG_ERROR("write_pairing_mode: fds_record_write returns 0x%02x ", ret);
+            NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }
 
@@ -58,11 +58,9 @@ static bool write_pairing_mode(void)
 
     if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
         // 書込みができない場合、ガベージコレクションを実行
-        // (fds_gcが実行される。NGであればエラー扱い)
-        NRF_LOG_ERROR("write_pairing_mode: no space in flash, calling FDS GC ");
-        if (fido_flash_force_fdc_gc() == false) {
-            return false;
-        }
+        // (fds_gcが実行される。NGであればシステムエラー扱い)
+        NRF_LOG_ERROR("no space in flash, calling FDS GC ");
+        fido_flash_fds_force_gc();
     }
     
     return true;

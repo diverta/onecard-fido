@@ -13,20 +13,14 @@
 #include "ctap2_common.h"
 #include "fido_ctap2_command.h"
 #include "fido_hid_channel.h"
+#include "fido_hid_receive.h"
+#include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "fido_u2f_command.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
-
-//
-// プラットフォーム依存コード
-// ターゲットごとの実装となります。
-//
-#include "fido_flash_event.h"   // for Flash ROM event
-#include "fido_hid_receive.h"
-#include "fido_hid_send.h"
 
 static void hid_fido_command_ping(void)
 {

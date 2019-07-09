@@ -1,9 +1,16 @@
 /* 
- * File:   fido_flash_event.c
+ * File:   fido_flash_common.c
  * Author: makmorit
  *
  * Created on 2019/06/19, 10:10
  */
+#include "sdk_common.h"
+
+// for logging informations
+#define NRF_LOG_MODULE_NAME fido_flash_common
+#include "nrf_log.h"
+NRF_LOG_MODULE_REGISTER();
+
 //
 // プラットフォーム非依存コード
 //
@@ -27,6 +34,9 @@
 //
 static bool m_gc_forced;
 
+//
+// イベント管理
+//
 static void fido_flash_event_result_failure(void)
 {
     // BLEペアリングコマンドの処理を実行
@@ -126,15 +136,51 @@ static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
     }
 }
 
-void fido_flash_event_fds_register(void)
+void fido_flash_fds_event_register(void)
 {
     // FDS処理完了後の処理をFDSに登録
     ret_code_t err_code = fds_register(fido_command_on_fs_evt);
     APP_ERROR_CHECK(err_code);
 }
 
-void fido_flash_event_gc_forced(void)
+//
+// 共通関数
+//
+void fido_flash_fds_force_gc(void)
 {
+    // FDSガベージコレクションを強制実行
+    // NGの場合はシステムエラー扱い（処理続行不可）
+    ret_code_t err_code = fds_gc();
+    if (err_code != FDS_SUCCESS) {
+        APP_ERROR_CHECK(err_code);
+    }
+
     // アプリケーション側でGCを発生させた旨のフラグを設定
     m_gc_forced = true;
+}
+
+bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer)
+{
+	fds_flash_record_t flash_record;
+	uint32_t *data;
+    uint16_t  data_length;
+    ret_code_t err_code;
+
+    err_code = fds_record_open(record_desc, &flash_record);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
+        return false;
+    }
+
+    data = (uint32_t *)flash_record.p_data;
+    data_length = flash_record.p_header->length_words;
+    memcpy(record_buffer, data, data_length * sizeof(uint32_t));
+
+    err_code = fds_record_close(record_desc);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
+        return false;	
+    }
+
+    return true;
 }
