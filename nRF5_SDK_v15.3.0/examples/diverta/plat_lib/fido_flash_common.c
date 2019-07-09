@@ -184,3 +184,19 @@ bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_
 
     return true;
 }
+
+//
+// 業務処理／HW依存処理間のインターフェース
+//
+bool fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
+{
+    // 格納領域を初期化
+    memset(stat_csv_data, 0, *stat_csv_size);
+
+    // nRF5 SDK経由でFlash ROM統計情報を取得したのち、
+    // 各項目をCSV化し、引数のバッファに格納
+    *stat_csv_size = 56;
+    NRF_LOG_DEBUG("fido_flash_fds_stat_csv_get: under construction...");
+
+    return true;
+}

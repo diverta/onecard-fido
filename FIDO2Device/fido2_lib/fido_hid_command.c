@@ -139,6 +139,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_GET_FLASH_STAT:
             fido_maintenance_command();
             break;
         default:
@@ -175,6 +176,7 @@ void fido_hid_command_on_report_completed(void)
             break;
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_GET_FLASH_STAT:
             fido_maintenance_command_report_sent();
             break;
         default:

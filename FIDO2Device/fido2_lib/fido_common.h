@@ -53,6 +53,7 @@ extern "C" {
 #define MNT_COMMAND_BASE                0xc0
 #define MNT_COMMAND_ERASE_SKEY_CERT     0xc0
 #define MNT_COMMAND_INSTALL_SKEY_CERT   0xc1
+#define MNT_COMMAND_GET_FLASH_STAT      0xc2
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {
