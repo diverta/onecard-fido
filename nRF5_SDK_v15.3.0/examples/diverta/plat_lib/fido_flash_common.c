@@ -203,13 +203,14 @@ bool fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
 
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)stat_csv_data, 
-        "pages_available=%d,words_used=%d,freeable_words=%d,largest_contig=%d,valid_records=%d,dirty_records=%d", 
-        stat.pages_available, 
+        "words_available=%d,words_used=%d,freeable_words=%d,largest_contig=%d,valid_records=%d,dirty_records=%d,corruption=%d", 
+        (stat.pages_available - 1) * FDS_VIRTUAL_PAGE_SIZE, 
         stat.words_used, 
         stat.freeable_words,
         stat.largest_contig,
         stat.valid_records, 
-        stat.dirty_records);
+        stat.dirty_records,
+        stat.corruption);
     *stat_csv_size = strlen((char *)stat_csv_data);
     NRF_LOG_DEBUG("Flash ROM statistics csv created (%d bytes)", *stat_csv_size);
     return true;
