@@ -100,6 +100,11 @@ uint8_t *fido_crypto_sskey_hash(void);
 //
 // fido_flash.c
 //
+bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size);
+
+//
+// fido_flash_skey_cert.c
+//
 bool      fido_flash_skey_cert_delete(void);
 bool      fido_flash_skey_cert_write(void);
 bool      fido_flash_skey_cert_read(void);
@@ -110,6 +115,9 @@ uint8_t  *fido_flash_skey_data(void);
 uint8_t  *fido_flash_cert_data(void);
 uint32_t  fido_flash_cert_data_length(void);
 
+//
+// fido_flash_token_counter.c
+//
 bool      fido_flash_token_counter_delete(void);
 bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
 bool      fido_flash_token_counter_read(uint8_t *p_appid_hash);

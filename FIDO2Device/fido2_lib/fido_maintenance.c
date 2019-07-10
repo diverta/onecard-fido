@@ -97,6 +97,32 @@ static void command_install_skey_cert(void)
     }
 }
 
+static void command_get_flash_stat(void)
+{
+    fido_log_info("Get flash ROM statistics start");
+    //
+    // 統計情報CSVを取得
+    //  response_bufferの先頭にステータスバイトを格納するため、
+    //  CSV格納領域は、response_bufferの２バイト目を先頭とします。
+    //
+    uint8_t *buffer = response_buffer + 1;
+    size_t   buffer_size = sizeof(response_buffer - 1);
+    if (fido_flash_get_stat_csv(buffer, &buffer_size) == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+    }
+    //
+    // レスポンスを送信
+    //  データ形式
+    //  0-3: CID（0xffffffff）
+    //  4:   CMD（0xc2）
+    //  5-6: データサイズ（CSVデータの長さ）
+    //  7:   ステータスバイト（成功時は 0x00）
+    //  8-n: CSVデータ（下記のようなCSV形式のテキスト）
+    //       <項目名1>=<値2>,<項目名2>=<値2>,...,<項目名k>=<値k>
+    //
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -107,6 +133,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             command_install_skey_cert();
+            break;
+        case MNT_COMMAND_GET_FLASH_STAT:
+            command_get_flash_stat();
             break;
         default:
             break;
@@ -123,6 +152,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             fido_log_info("Install private key and certificate end");
+            break;
+        case MNT_COMMAND_GET_FLASH_STAT:
+            fido_log_info("Get flash ROM statistics end");
             break;
         default:
             break;
