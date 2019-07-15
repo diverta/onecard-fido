@@ -174,6 +174,16 @@ void fido_u2f_command_keepalive_timer_handler(void)
     }
 }
 
+void fido_u2f_command_tup_cancel(void)
+{
+    if (is_tup_needed) {
+        // ユーザー所在確認待ちの場合はキャンセル
+        is_tup_needed = false;
+        fido_user_presence_verify_end();
+        fido_log_info("Canceled the U2F test of user presence");
+    }
+}
+
 void fido_u2f_command_send_response(uint8_t *response, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信

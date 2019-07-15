@@ -530,7 +530,7 @@ void fido_ctap2_command_tup_cancel(void)
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
         fido_user_presence_verify_end();
-        fido_log_info("canceled the test of user presence");
+        fido_log_info("Canceled the CTAP2 test of user presence");
     }
 }
 

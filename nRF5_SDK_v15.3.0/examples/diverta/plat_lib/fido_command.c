@@ -69,9 +69,10 @@ void fido_command_on_process_timedout(void)
 {
     // 処理タイムアウト発生時の処理を実行
     //
-    // TODO:
-    // ユーザー所在確認が未だ行われていない場合、
+    // ユーザー所在確認が未だ完了していない場合、
     // ここでキャンセルさせる
+    fido_u2f_command_tup_cancel();
+    fido_ctap2_command_tup_cancel();
 
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_status_indicator_idle();
