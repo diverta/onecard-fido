@@ -5,6 +5,7 @@
  * Created on 2019/07/15, 12:27
  */
 #include "fido_board.h"
+#include "fido_ble_peripheral.h"
 
 void fido_status_indicator_none(void)
 {
@@ -14,16 +15,22 @@ void fido_status_indicator_none(void)
 
 void fido_status_indicator_idle(void)
 {
-    // アイドル時点滅処理を開始
-    //  該当のLEDを、２秒ごとに点滅させる
-    fido_idling_led_blink_start();
+    if (fido_ble_peripheral_mode()) {
+        // BLEペリフェラル稼働中かつ
+        // 非ペアリングモード＝BLUE LED点滅
+        fido_idling_led_ble_blink_start();
+
+    } else {
+        // USB HID稼働中＝GREEN LED点滅
+        fido_idling_led_blink_start();
+    }
 }
 
 void fido_status_indicator_no_idle(void)
 {
     // LEDを消灯
-    //  アイドル時点滅処理が行われていた場合は
-    //  停止する
+    // 点滅処理が行われていた場合は停止する
+    fido_led_blink_stop();
     fido_idling_led_blink_stop();
 }
 
@@ -41,13 +48,16 @@ void fido_status_indicator_prompt_tup(void)
 
 void fido_status_indicator_pairing_mode(void)
 {
-    // TODO:
     // ペアリングモードの場合は、
     // RED LEDの連続点灯とします。
+    fido_idling_led_ble_pairing_mode();
 }
 
 void fido_status_indicator_pairing_fail(void)
 {
+    // 点滅処理が行われていた場合は停止する
+    fido_idling_led_blink_stop();
+
     // ペアリングモードLED点滅を開始し、
     // 再度ペアリングが必要であることを通知
     fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);

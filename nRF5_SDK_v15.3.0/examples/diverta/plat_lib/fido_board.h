@@ -32,6 +32,8 @@ void fido_caution_led_blink_start(uint32_t on_off_interval_msec);
 void fido_led_blink_stop(void);
 void fido_idling_led_blink_start(void);
 void fido_idling_led_blink_stop(void);
+void fido_idling_led_ble_blink_start(void);
+void fido_idling_led_ble_pairing_mode(void);
 
 #ifdef __cplusplus
 }
