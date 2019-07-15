@@ -97,9 +97,6 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
         // キャンセルレスポンスを戻す
         fido_ctap2_command_cancel();
         return;
-    } else {
-        // 他のコマンドの場合は所在確認待ちをキャンセル
-        fido_ctap2_command_tup_cancel();
     }
 
     uint32_t cid = fido_hid_receive_header()->CID;

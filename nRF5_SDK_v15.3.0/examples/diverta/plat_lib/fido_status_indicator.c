@@ -15,6 +15,9 @@ void fido_status_indicator_none(void)
 
 void fido_status_indicator_idle(void)
 {
+    // 点滅処理が行われていた場合は停止する
+    fido_led_blink_stop();
+
     if (fido_ble_peripheral_mode()) {
         // BLEペリフェラル稼働中かつ
         // 非ペアリングモード＝BLUE LED点滅

@@ -51,9 +51,9 @@ void fido_ble_send_retry_timer_start(void);
 //
 bool    fido_command_do_abort(void);
 void    fido_command_abort_flag_set(bool flag);
-void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec);
-uint8_t fido_user_presence_verify_end(void);
+void    fido_user_presence_verify_end(void);
+void    fido_user_presence_verify_cancel(void);
 
 //
 // fido_crypto.c

@@ -179,7 +179,7 @@ void fido_u2f_command_tup_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_end();
+        fido_user_presence_verify_cancel();
         fido_log_info("Canceled the U2F test of user presence");
     }
 }

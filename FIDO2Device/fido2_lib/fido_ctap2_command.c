@@ -529,7 +529,7 @@ void fido_ctap2_command_tup_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_end();
+        fido_user_presence_verify_cancel();
         fido_log_info("Canceled the CTAP2 test of user presence");
     }
 }
@@ -539,7 +539,7 @@ void fido_ctap2_command_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_end();
+        fido_user_presence_verify_cancel();
 
         // キャンセルレスポンスを戻す
         //   CMD:    CTAPHID_CBOR

@@ -85,12 +85,6 @@ void fido_command_keepalive_timer_handler(void)
     fido_u2f_command_keepalive_timer_handler();
 }
 
-void fido_user_presence_terminate(void)
-{
-    // タイマーを停止する
-    fido_keepalive_interval_timer_stop();
-}
-
 void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
     // タイマーが生成されていない場合は生成する
@@ -100,14 +94,17 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     fido_status_indicator_prompt_tup();
 }
 
-uint8_t fido_user_presence_verify_end(void)
+void fido_user_presence_verify_end(void)
 {
     // LED制御をユーザー所在確認中-->非アイドル中に変更
     fido_status_indicator_no_idle();
 
     // タイマーを停止する
     fido_keepalive_interval_timer_stop();
-    
-    // User presence byte(0x01)を生成
-    return 0x01;
+}
+
+void fido_user_presence_verify_cancel(void)
+{
+    // タイマーを停止する
+    fido_keepalive_interval_timer_stop();
 }
