@@ -36,9 +36,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // コマンド／リクエストデータ格納領域を初期化する
     fido_ble_receive_init();
-
-    // 無通信タイマーが既にスタートしている場合は停止させる
-    fido_comm_interval_timer_stop();
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)

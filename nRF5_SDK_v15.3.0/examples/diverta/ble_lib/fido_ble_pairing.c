@@ -239,9 +239,12 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
 
 void fido_ble_pairing_on_disconnect(void)
 {
-    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
-    // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
     if (run_as_pairing_mode == true && pairing_completed == true) {
+        // 無通信タイマーが既にスタートしている場合は停止させる
+        fido_comm_interval_timer_stop();
+
+        // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+        // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
         NRF_LOG_DEBUG("ble_u2f_pairing_on_disconnect called. ");
         NVIC_SystemReset();
     }

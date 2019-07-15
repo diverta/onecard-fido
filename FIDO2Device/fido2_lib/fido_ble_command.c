@@ -24,6 +24,9 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     // レスポンスデータを送信パケットに設定し送信
     fido_ble_send_command_response_no_callback(cmd, status_code);
 
+    // 処理タイムアウト監視を停止
+    fido_process_timeout_timer_stop();
+
     // アイドル時点滅処理を開始
     fido_idling_led_blink_start();
 }
@@ -71,13 +74,14 @@ void fido_ble_command_on_request_received(void)
 
 void fido_ble_command_on_response_send_completed(void)
 {
+    // FIDO機能レスポンスの
+    // 全フレーム送信完了時の処理を実行
+    // 
+    // 処理タイムアウト監視を停止
+    fido_process_timeout_timer_stop();
+
     // 受信フレーム数カウンターをクリア
     fido_ble_receive_frame_count_clear();
-
-    // 次回リクエストまでの経過秒数監視をスタート
-    //   レスポンス完了後から10秒経過後も接続されたままの場合、
-    //   nRF52側からBLE接続を強制切断させるための措置
-    fido_comm_interval_timer_start();
 
     // 全フレーム送信後に行われる後続処理を実行
     if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
@@ -105,6 +109,9 @@ void fido_ble_command_on_request_started(void)
     // FIDO機能リクエストの
     // 先頭フレーム受信時の処理を実行
     // 
+    // 処理タイムアウト監視を開始
+    fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
+
     // アイドル時点滅処理を停止
     fido_idling_led_blink_stop();
 }

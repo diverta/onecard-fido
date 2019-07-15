@@ -71,7 +71,7 @@ void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_hid_send_command_response_no_callback(cid, cmd, status_code);
 
     // 処理タイムアウト監視を停止
-    fido_comm_interval_timer_stop();
+    fido_process_timeout_timer_stop();
 
     // アイドル時点滅処理を開始
     fido_idling_led_blink_start();
@@ -157,7 +157,7 @@ void fido_hid_command_on_report_completed(void)
     // 全フレーム送信完了時の処理を実行
     // 
     // 処理タイムアウト監視を停止
-    fido_comm_interval_timer_stop();
+    fido_process_timeout_timer_stop();
 
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = fido_hid_receive_header()->CMD;
@@ -198,7 +198,7 @@ void fido_hid_command_on_report_started(void)
     // 先頭フレーム受信時の処理を実行
     // 
     // 処理タイムアウト監視を開始
-    fido_comm_interval_timer_start();
+    fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
 
     // アイドル時点滅処理を停止
     fido_idling_led_blink_stop();

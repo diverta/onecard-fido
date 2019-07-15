@@ -69,9 +69,9 @@ void fido_command_on_process_timedout(void)
 {
     // 処理タイムアウト発生時の処理を実行
     //
-    // 処理中表示LEDが点滅していた場合は
-    // ここでLEDを消灯させる
-    // fido_led_blink_stop();
+    // TODO:
+    // ユーザー所在確認が未だ行われていない場合、
+    // ここでキャンセルさせる
 
     // アイドル時点滅処理を再開
     fido_idling_led_blink_start();
@@ -93,7 +93,7 @@ void fido_user_presence_terminate(void)
 void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
     // タイマーが生成されていない場合は生成する
-    fido_keepalive_interval_timer_start(timeout_msec);
+    fido_keepalive_interval_timer_start(timeout_msec, NULL);
 
     // LED点滅を開始
     fido_prompt_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
