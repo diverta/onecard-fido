@@ -27,8 +27,8 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     // 処理タイムアウト監視を停止
     fido_process_timeout_timer_stop();
 
-    // アイドル時点滅処理を開始
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 void fido_ble_command_on_request_received(void)
@@ -100,8 +100,8 @@ void fido_ble_command_on_response_send_completed(void)
         return;
     }
 
-    // アイドル時点滅処理を開始
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 void fido_ble_command_on_request_started(void) 
@@ -112,6 +112,6 @@ void fido_ble_command_on_request_started(void)
     // 処理タイムアウト監視を開始
     fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
 
-    // アイドル時点滅処理を停止
-    fido_idling_led_blink_stop();
+    // LED制御をアイドル中-->非アイドル中に変更
+    fido_status_indicator_no_idle();
 }

@@ -35,7 +35,7 @@ bool fido_command_do_abort(void)
     // レスポンス完了後の処理を停止させる場合は、
     // 全色LEDを点灯させたのち、無限ループに入る
     if (abort_flag) {
-        fido_led_light_all(true);
+        fido_status_indicator_abort();
         while(true);
     }
     return abort_flag;
@@ -73,8 +73,8 @@ void fido_command_on_process_timedout(void)
     // ユーザー所在確認が未だ行われていない場合、
     // ここでキャンセルさせる
 
-    // アイドル時点滅処理を再開
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 void fido_command_keepalive_timer_handler(void)
@@ -96,13 +96,13 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     fido_keepalive_interval_timer_start(timeout_msec, NULL);
 
     // LED点滅を開始
-    fido_prompt_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
+    fido_status_indicator_prompt_tup();
 }
 
 uint8_t fido_user_presence_verify_end(void)
 {
-    // LEDを消灯させる
-    fido_led_blink_stop();
+    // LED制御をユーザー所在確認中-->非アイドル中に変更
+    fido_status_indicator_no_idle();
 
     // タイマーを停止する
     fido_keepalive_interval_timer_stop();

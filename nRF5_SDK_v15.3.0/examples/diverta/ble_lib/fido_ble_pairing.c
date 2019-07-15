@@ -101,7 +101,7 @@ bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
+            fido_status_indicator_pairing_fail();
             return true;
         }
     }
@@ -259,10 +259,11 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
+        fido_status_indicator_pairing_fail();
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
-        // ペアリングが有効である場合、ペアリングモードLED点滅を停止
-        fido_led_blink_stop();
+        // ペアリングが有効である場合、LED制御を
+        // ペアリングモード-->非ペアリングモードに変更
+        fido_status_indicator_no_idle();
     }
 }
 

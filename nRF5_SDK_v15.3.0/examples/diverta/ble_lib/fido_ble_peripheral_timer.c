@@ -44,9 +44,9 @@ static void timeout_handler(void *p_context)
         fido_ble_peripheral_advertising_start();
     }
 
-    // アイドル時点滅処理を開始
-    // USB HID、BLEでアイドル時のLED色を変える
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    //  USB HID、BLEでアイドル時のLED色を変える
+    fido_status_indicator_idle();
 }
 
 static void timer_terminate(void)

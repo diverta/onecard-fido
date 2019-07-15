@@ -612,6 +612,7 @@
       <itemPath>../plat_lib/fido_flash_skey_cert.c</itemPath>
       <itemPath>../plat_lib/fido_flash_token_counter.c</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
+      <itemPath>../plat_lib/fido_status_indicator.c</itemPath>
       <itemPath>../plat_lib/fido_timer.c</itemPath>
       <itemPath>../plat_lib/fido_timer.h</itemPath>
       <itemPath>../plat_lib/nfc_service.c</itemPath>
@@ -1377,6 +1378,11 @@
       <item path="../plat_lib/fido_flash_skey_cert.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_flash_token_counter.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_status_indicator.c"
             ex="false"
             tool="0"
             flavor2="0">

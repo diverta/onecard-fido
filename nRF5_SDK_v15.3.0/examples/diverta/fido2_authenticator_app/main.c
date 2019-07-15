@@ -29,7 +29,7 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for lighting LED
+// for fido_button_timers_init
 #include "fido_board.h"
 
 // for FDS event handle

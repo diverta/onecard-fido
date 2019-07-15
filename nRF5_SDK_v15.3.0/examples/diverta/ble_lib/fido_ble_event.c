@@ -178,7 +178,7 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 void fido_ble_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
-    fido_led_light_all(false);
+    fido_status_indicator_none();
 }
 
 void fido_ble_on_process_timedout(void)
