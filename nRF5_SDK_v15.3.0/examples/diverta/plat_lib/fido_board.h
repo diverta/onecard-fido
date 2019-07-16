@@ -4,7 +4,6 @@
  *
  * Created on 2019/06/18, 10:12
  */
-
 #ifndef FIDO_BOARD_H
 #define FIDO_BOARD_H
 
@@ -15,29 +14,23 @@
 extern "C" {
 #endif
 
-// LED点滅間隔の定義
-#define LED_ON_OFF_INTERVAL_MSEC        300
-#define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
-#define LED_BLINK_INTERVAL_MSEC         250
+// LED種別
+typedef enum _LED_COLOR {
+    LED_COLOR_NONE = 0,
+    LED_COLOR_RED,
+    LED_COLOR_GREEN,
+    LED_COLOR_BLUE
+} LED_COLOR;
 
 // 関数群
 void fido_button_timers_init(void);
 void fido_button_init(void);
 void fido_processing_led_timedout_handler(void);
 void fido_idling_led_timedout_handler(void);
-
-void fido_led_light_all(bool led_on);
-void fido_prompt_led_blink_start(uint32_t on_off_interval_msec);
-void fido_caution_led_blink_start(uint32_t on_off_interval_msec);
-void fido_led_blink_stop(void);
-void fido_idling_led_blink_start(void);
-void fido_idling_led_blink_stop(void);
-void fido_idling_led_ble_blink_start(void);
-void fido_idling_led_ble_pairing_mode(void);
+void led_light_pin_set(LED_COLOR led_color, bool led_on);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* FIDO_BOARD_H */
-

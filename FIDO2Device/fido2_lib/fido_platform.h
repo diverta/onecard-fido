@@ -153,8 +153,6 @@ void fido_status_indicator_abort(void);
 //
 void fido_process_timeout_timer_stop(void);
 void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context);
-void fido_processing_led_timer_stop(void);
-void fido_processing_led_timer_start(uint32_t on_off_interval_msec);
 void fido_lock_channel_timer_stop(void);
 void fido_lock_channel_timer_start(uint32_t lock_ms);
 

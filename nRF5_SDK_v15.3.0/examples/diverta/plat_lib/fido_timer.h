@@ -15,6 +15,8 @@ extern "C" {
 
 void fido_comm_interval_timer_stop(void);
 void fido_comm_interval_timer_start(void);
+void fido_processing_led_timer_stop(void);
+void fido_processing_led_timer_start(uint32_t on_off_interval_msec);
 void fido_idling_led_timer_stop(void);
 void fido_idling_led_timer_start(uint32_t on_off_interval_msec);
 void fido_keepalive_interval_timer_stop(void);
