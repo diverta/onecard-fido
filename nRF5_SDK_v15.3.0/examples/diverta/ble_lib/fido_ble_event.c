@@ -36,9 +36,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // コマンド／リクエストデータ格納領域を初期化する
     fido_ble_receive_init();
-
-    // 無通信タイマーが既にスタートしている場合は停止させる
-    fido_comm_interval_timer_stop();
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
@@ -49,7 +46,10 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     p_u2f->conn_handle = BLE_CONN_HANDLE_INVALID;
 
     // ユーザー所在確認を停止(キープアライブを停止)
-    fido_user_presence_terminate();
+    fido_user_presence_verify_cancel();
+
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
     
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     fido_ble_pairing_on_disconnect();
@@ -181,7 +181,7 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 void fido_ble_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
-    fido_led_light_all(false);
+    fido_status_indicator_none();
 }
 
 void fido_ble_on_process_timedout(void)

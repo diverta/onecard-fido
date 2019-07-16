@@ -448,7 +448,7 @@ static void command_authenticator_reset(void)
     fido_log_info("authenticatorReset: waiting to complete the test of user presence");
 
     // 赤色LED高速点滅開始
-    fido_caution_led_blink_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
+    fido_status_indicator_prompt_reset();
 }
 
 static void command_authenticator_reset_resume_process(void)
@@ -529,8 +529,8 @@ void fido_ctap2_command_tup_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_end();
-        fido_log_info("canceled the test of user presence");
+        fido_user_presence_verify_cancel();
+        fido_log_info("Canceled the CTAP2 test of user presence");
     }
 }
 
@@ -539,7 +539,7 @@ void fido_ctap2_command_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_end();
+        fido_user_presence_verify_cancel();
 
         // キャンセルレスポンスを戻す
         //   CMD:    CTAPHID_CBOR

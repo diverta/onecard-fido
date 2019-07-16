@@ -15,10 +15,8 @@
 extern "C" {
 #endif
 
-// LED点滅間隔の定義
-#define LED_ON_OFF_INTERVAL_MSEC        300
-#define LED_ON_OFF_SHORT_INTERVAL_MSEC  100
-#define LED_BLINK_INTERVAL_MSEC         250
+// 業務処理タイムアウト（３０秒）
+#define PROCESS_TIMEOUT_MSEC 30000
 
 // キープアライブ・タイマー
 #define U2F_KEEPALIVE_INTERVAL_MSEC   500
@@ -49,23 +47,13 @@ void     fido_ble_service_disconnect_force(void);
 void fido_ble_send_retry_timer_start(void);
 
 //
-// fido_board.c
-//
-void fido_led_light_all(bool led_on);
-void fido_prompt_led_blink_start(uint32_t on_off_interval_msec);
-void fido_caution_led_blink_start(uint32_t on_off_interval_msec);
-void fido_led_blink_stop(void);
-void fido_idling_led_blink_start(void);
-void fido_idling_led_blink_stop(void);
-
-//
 // fido_command.c
 //
 bool    fido_command_do_abort(void);
 void    fido_command_abort_flag_set(bool flag);
-void    fido_user_presence_terminate(void);
 void    fido_user_presence_verify_start(uint32_t timeout_msec);
-uint8_t fido_user_presence_verify_end(void);
+void    fido_user_presence_verify_end(void);
+void    fido_user_presence_verify_cancel(void);
 
 //
 // fido_crypto.c
@@ -149,12 +137,22 @@ bool     fido_flash_password_set(uint8_t *random_vector);
 #endif
 
 //
+// fido_status_indicator.c
+//
+void fido_status_indicator_none(void);
+void fido_status_indicator_idle(void);
+void fido_status_indicator_no_idle(void);
+void fido_status_indicator_prompt_reset(void);
+void fido_status_indicator_prompt_tup(void);
+void fido_status_indicator_pairing_mode(void);
+void fido_status_indicator_pairing_fail(void);
+void fido_status_indicator_abort(void);
+
+//
 // fido_timer.c
 //
-void fido_comm_interval_timer_stop(void);
-void fido_comm_interval_timer_start(void);
-void fido_processing_led_timer_stop(void);
-void fido_processing_led_timer_start(uint32_t on_off_interval_msec);
+void fido_process_timeout_timer_stop(void);
+void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context);
 void fido_lock_channel_timer_stop(void);
 void fido_lock_channel_timer_start(uint32_t lock_ms);
 

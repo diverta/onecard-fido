@@ -101,7 +101,7 @@ bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
             APP_ERROR_CHECK(code);
             // ペアリングモードLED点滅を開始し、
             // 再度ペアリングが必要であることを通知
-            fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
+            fido_status_indicator_pairing_fail();
             return true;
         }
     }
@@ -239,9 +239,12 @@ void fido_ble_pairing_on_evt_auth_status(ble_evt_t * p_ble_evt)
 
 void fido_ble_pairing_on_disconnect(void)
 {
-    // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
-    // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
     if (run_as_pairing_mode == true && pairing_completed == true) {
+        // 無通信タイマーが既にスタートしている場合は停止させる
+        fido_comm_interval_timer_stop();
+
+        // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
+        // （再起動後は非ペアリングモードで起動し、ディスカバリーができないようになる）
         NRF_LOG_DEBUG("ble_u2f_pairing_on_disconnect called. ");
         NVIC_SystemReset();
     }
@@ -256,10 +259,11 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
     
     if (p_evt->evt_id == PM_EVT_CONN_SEC_FAILED) {
         // ペアリングが無効である場合、ペアリングモードLED点滅を開始
-        fido_caution_led_blink_start(LED_ON_OFF_INTERVAL_MSEC);
+        fido_status_indicator_pairing_fail();
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
-        // ペアリングが有効である場合、ペアリングモードLED点滅を停止
-        fido_led_blink_stop();
+        // ペアリングが有効である場合、LED制御を
+        // ペアリングモード-->非ペアリングモードに変更
+        fido_status_indicator_no_idle();
     }
 }
 

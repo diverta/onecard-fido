@@ -188,6 +188,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_password.c \
   $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
+  $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_hid_service.c \

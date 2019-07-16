@@ -20,7 +20,7 @@ void fido_nfc_command_on_send_completed(void)
     // 全フレーム送信完了時の処理を実行
     //
     // 処理タイムアウト監視を停止
-    fido_comm_interval_timer_stop();
+    fido_process_timeout_timer_stop();
 
     // 全フレーム送信後に行われる後続処理を実行
     fido_ctap2_command_cbor_response_sent();
@@ -30,8 +30,8 @@ void fido_nfc_command_on_send_completed(void)
         return;
     }
 
-    // アイドル時点滅処理を開始
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 void fido_nfc_command_on_request_started(void) 
@@ -40,8 +40,8 @@ void fido_nfc_command_on_request_started(void)
     // 先頭フレーム受信時の処理を実行
     // 
     // 処理タイムアウト監視を開始
-    fido_comm_interval_timer_start();
+    fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
 
-    // アイドル時点滅処理を停止
-    fido_idling_led_blink_stop();
+    // LED制御をアイドル中-->非アイドル中に変更
+    fido_status_indicator_no_idle();
 }
