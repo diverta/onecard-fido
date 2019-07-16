@@ -263,7 +263,7 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、LED制御を
         // ペアリングモード-->非ペアリングモードに変更
-        fido_status_indicator_no_idle();
+        fido_status_indicator_idle();
     }
 }
 
