@@ -22,9 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_command.h"
 #include "fido_timer.h"
 
-// 業務処理／HW依存処理間のインターフェース
-#include "fido_platform.h"
-
 //
 // ボタンのピン番号
 //

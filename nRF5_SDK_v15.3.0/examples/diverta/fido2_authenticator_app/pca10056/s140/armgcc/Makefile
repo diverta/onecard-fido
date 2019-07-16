@@ -154,6 +154,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
+  $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -177,7 +178,6 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(PLTLIB_DIR)/fido_board.c \
-  $(PLTLIB_DIR)/fido_command.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
