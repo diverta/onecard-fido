@@ -32,6 +32,24 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     fido_status_indicator_idle();
 }
 
+static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
+{
+    if (fido_ble_pairing_mode_get()) {
+        if (cmd == U2F_COMMAND_MSG && ins == U2F_INS_INSTALL_PAIRING) {
+            // ペアリングモード時に実行できる
+            // ペアリング機能なら false を戻す
+            return false;
+        } else {
+            // ペアリングモード時に実行できない機能なら 
+            // true を戻す
+            return true;
+        }
+    } else {
+        // 非ペアリングモード時は常に false を戻す
+        return false;
+    }
+}
+
 void fido_ble_command_on_request_received(void)
 {
     // BLEヘッダー、APDUの参照を取得
@@ -47,13 +65,8 @@ void fido_ble_command_on_request_received(void)
     
     // ペアリングモード時はペアリング以外の機能を実行できないようにするため
     // エラーステータスワード (0x9601) を戻す
-    if (fido_ble_pairing_mode_get()) {
-        if (p_ble_header->CMD == U2F_COMMAND_MSG &&
-            p_apdu->INS == U2F_INS_INSTALL_PAIRING) {
-            fido_ble_send_status_word(fido_ble_receive_header()->CMD, U2F_SW_NO_ERROR);
-        } else {
-            fido_ble_send_status_word(fido_ble_receive_header()->CMD, 0x9601);
-        }
+    if (invalid_command_in_pairing_mode(p_ble_header->CMD, p_apdu->INS)) {
+        fido_ble_send_status_word(p_ble_header->CMD, 0x9601);
         return;
     }
 

@@ -429,6 +429,9 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
         case U2F_VERSION:
             u2f_command_version();
             break;
+        case U2F_INS_INSTALL_PAIRING:
+            fido_ble_send_status_word(get_u2f_command_byte(), U2F_SW_NO_ERROR);
+            break;
         default:
             // INSが不正の場合は終了
             fido_log_debug("Invalid INS(0x%02x) ", ins);
