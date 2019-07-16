@@ -8,6 +8,7 @@
 //
 // プラットフォーム非依存コード
 //
+#include "fido_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_nfc_receive.h"
 

@@ -15,6 +15,7 @@
 #include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
+#include "fido_command.h"
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_command.h"

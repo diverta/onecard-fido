@@ -47,15 +47,6 @@ void     fido_ble_service_disconnect_force(void);
 void fido_ble_send_retry_timer_start(void);
 
 //
-// fido_command.c
-//
-bool    fido_command_do_abort(void);
-void    fido_command_abort_flag_set(bool flag);
-void    fido_user_presence_verify_start(uint32_t timeout_msec);
-void    fido_user_presence_verify_end(void);
-void    fido_user_presence_verify_cancel(void);
-
-//
 // fido_crypto.c
 //
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
@@ -153,6 +144,8 @@ void fido_status_indicator_abort(void);
 //
 void fido_process_timeout_timer_stop(void);
 void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context);
+void fido_keepalive_interval_timer_stop(void);
+void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context);
 void fido_lock_channel_timer_stop(void);
 void fido_lock_channel_timer_start(uint32_t lock_ms);
 

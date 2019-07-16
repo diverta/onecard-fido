@@ -17,6 +17,7 @@
 #include "ctap2_common.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
+#include "fido_command.h"
 #include "fido_common.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"

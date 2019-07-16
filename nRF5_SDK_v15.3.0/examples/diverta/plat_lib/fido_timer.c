@@ -11,6 +11,7 @@
 #include "fido_board.h"
 #include "fido_command.h"
 #include "fido_log.h"
+#include "fido_status_indicator.h"
 
 #include "fido_hid_channel.h"
 
@@ -78,7 +79,7 @@ static void process_timeout_handler(void *p_context)
     // リクエストを受け付けてから３０秒以内に
     // 業務処理が行われなかった場合、
     // 処理タイムアウト時の処理を実行
-    fido_command_on_process_timedout();
+    fido_command_process_timeout_handler();
 }
 
 static ret_code_t process_timeout_timer_init(void)

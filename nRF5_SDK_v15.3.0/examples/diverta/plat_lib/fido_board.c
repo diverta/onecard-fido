@@ -22,6 +22,10 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_command.h"
 #include "fido_timer.h"
 
+// for fido_ble_pairing_change_mode
+#include "fido_ble_peripheral.h"
+#include "fido_ble_pairing.h"
+
 //
 // ボタンのピン番号
 //
@@ -78,14 +82,18 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             fido_button_long_push_timer_stop();
             
             // FIDO固有の処理を実行
-            fido_command_on_mainsw_event();
+            fido_command_mainsw_event_handler();
         }
 		break;
 		
 	case APP_BUTTON_ACTION_LONG_PUSH:
         if (pin_no == PIN_MAIN_SW_IN) {
-            // FIDO固有の処理を実行
-            fido_command_on_mainsw_long_push_event();
+            // ボタンが長押しされた時の処理を実行
+            if (fido_ble_peripheral_mode()) {
+                // BLEペリフェラルが稼働時は、
+                // ペアリングモード変更を実行
+                fido_ble_pairing_change_mode();
+            }
         }
 		break;
 		

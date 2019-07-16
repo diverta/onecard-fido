@@ -7,15 +7,26 @@
 #ifndef FIDO_COMMAND_H
 #define FIDO_COMMAND_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void fido_command_on_mainsw_event(void);
-void fido_command_on_mainsw_long_push_event(void);
-void fido_command_on_process_timedout(void);
-void fido_command_long_push_timer_handler(void *p_context);
+//
+// fido_command.c
+//
+bool fido_command_do_abort(void);
+void fido_command_abort_flag_set(bool flag);
+
+void fido_command_mainsw_event_handler(void);
+void fido_command_process_timeout_handler(void);
 void fido_command_keepalive_timer_handler(void);
+
+void fido_user_presence_verify_start(uint32_t timeout_msec);
+void fido_user_presence_verify_end(void);
+void fido_user_presence_verify_cancel(void);
 
 #ifdef __cplusplus
 }

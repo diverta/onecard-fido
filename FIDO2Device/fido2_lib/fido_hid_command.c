@@ -11,6 +11,7 @@
 // プラットフォーム非依存コード
 //
 #include "ctap2_common.h"
+#include "fido_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"

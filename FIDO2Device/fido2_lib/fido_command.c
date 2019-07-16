@@ -19,14 +19,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for keepalive timer
-#include "fido_timer.h"
-
-// for fido_ble_pairing_change_mode
-#include "fido_ble_peripheral.h"
-#include "fido_ble_pairing.h"
-#include "fido_ble_service.h"
-
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
 
@@ -46,7 +38,7 @@ void fido_command_abort_flag_set(bool flag)
     abort_flag = flag;
 }
 
-void fido_command_on_mainsw_event(void)
+void fido_command_mainsw_event_handler(void)
 {
     // ボタンが短押しされた時の処理を実行
     if (fido_u2f_command_on_mainsw_event() == true) {
@@ -55,17 +47,7 @@ void fido_command_on_mainsw_event(void)
     fido_ctap2_command_on_mainsw_event();
 }
 
-void fido_command_on_mainsw_long_push_event(void)
-{
-    // ボタンが長押しされた時の処理を実行
-    if (fido_ble_peripheral_mode()) {
-        // BLEペリフェラルが稼働時は、
-        // ペアリングモード変更を実行
-        fido_ble_pairing_change_mode();
-    }
-}
-
-void fido_command_on_process_timedout(void) 
+void fido_command_process_timeout_handler(void) 
 {
     // 処理タイムアウト発生時の処理を実行
     //

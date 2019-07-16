@@ -12,6 +12,7 @@
 #include "fido_ble_receive.h"
 #include "fido_ble_receive_apdu.h"
 #include "fido_ble_send.h"
+#include "fido_command.h"
 #include "fido_ctap2_command.h"  // for CTAP2 support
 #include "fido_u2f_command.h"    // for U2F support
 
