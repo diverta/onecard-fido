@@ -69,42 +69,40 @@ void fido_comm_interval_timer_start(void)
 }
 
 //
-// 処理タイムアウト監視用タイマー（３０秒）
+// ユーザー所在確認タイムアウト監視用タイマー（３０秒）
 //
-APP_TIMER_DEF(m_process_timeout_timer_id);
-static bool process_timeout_timer_created = false;
+APP_TIMER_DEF(m_user_presence_verify_timer_id);
+static bool user_presence_verify_timer_created = false;
 
-static void process_timeout_handler(void *p_context)
+static void user_presence_verify_timeout_handler(void *p_context)
 {
-    // リクエストを受け付けてから３０秒以内に
-    // 業務処理が行われなかった場合、
-    // 処理タイムアウト時の処理を実行
-    fido_command_process_timeout_handler();
+    // ユーザー所在確認タイムアウト時の処理を実行
+    fido_user_presence_verify_timeout_handler();
 }
 
 static ret_code_t process_timeout_timer_init(void)
 {
-    if (process_timeout_timer_created) {
+    if (user_presence_verify_timer_created) {
         return NRF_SUCCESS;
     }
 
-    // 処理タイムアウト監視用タイマーを生成
-    ret_code_t err_code = app_timer_create(&m_process_timeout_timer_id, APP_TIMER_MODE_SINGLE_SHOT, process_timeout_handler);
+    // ユーザー所在確認タイムアウト監視用タイマーを生成
+    ret_code_t err_code = app_timer_create(&m_user_presence_verify_timer_id, APP_TIMER_MODE_SINGLE_SHOT, user_presence_verify_timeout_handler);
     if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_create(m_process_timeout_timer_id) returns %d ", err_code);
+        fido_log_error("app_timer_create(m_user_presence_verify_timer_id) returns %d ", err_code);
     }
     
-    process_timeout_timer_created = true;
+    user_presence_verify_timer_created = true;
     return err_code;
 }
 
-void fido_process_timeout_timer_stop(void)
+void fido_user_presence_verify_timer_stop(void)
 {
-    // 処理タイムアウト監視用タイマーを停止
-    app_timer_stop(m_process_timeout_timer_id);
+    // ユーザー所在確認タイムアウト監視用タイマーを停止
+    app_timer_stop(m_user_presence_verify_timer_id);
 }
 
-void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context)
+void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
 {
     // タイマー生成
     ret_code_t err_code = process_timeout_timer_init();
@@ -113,12 +111,12 @@ void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context)
     }
 
     // タイマーが既にスタートしている場合は停止させる
-    fido_process_timeout_timer_stop();
+    fido_user_presence_verify_timer_stop();
 
-    // 処理タイムアウト監視用タイマーを停止
-    err_code = app_timer_start(m_process_timeout_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
+    // ユーザー所在確認タイムアウト監視用タイマーを停止
+    err_code = app_timer_start(m_user_presence_verify_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
     if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_start(m_process_timeout_timer_id) returns %d ", err_code);
+        fido_log_error("app_timer_start(m_user_presence_verify_timer_id) returns %d ", err_code);
     }
 }
 

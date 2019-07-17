@@ -21,7 +21,7 @@ bool fido_command_do_abort(void);
 void fido_command_abort_flag_set(bool flag);
 
 void fido_command_mainsw_event_handler(void);
-void fido_command_process_timeout_handler(void);
+void fido_user_presence_verify_timeout_handler(void);
 void fido_command_keepalive_timer_handler(void);
 
 void fido_user_presence_verify_start(uint32_t timeout_msec);

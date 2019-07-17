@@ -31,6 +31,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// キープアライブ・タイマー
+#define U2F_KEEPALIVE_INTERVAL_MSEC 500
+
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 
@@ -181,7 +184,6 @@ void fido_u2f_command_tup_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_cancel();
         fido_log_info("Canceled the U2F test of user presence");
     }
 }

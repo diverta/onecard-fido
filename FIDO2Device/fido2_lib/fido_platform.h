@@ -15,13 +15,6 @@
 extern "C" {
 #endif
 
-// 業務処理タイムアウト（３０秒）
-#define PROCESS_TIMEOUT_MSEC 30000
-
-// キープアライブ・タイマー
-#define U2F_KEEPALIVE_INTERVAL_MSEC   500
-#define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
-
 // crypto関連の定義
 #define RAW_PRIVATE_KEY_SIZE    32
 #define RAW_PUBLIC_KEY_SIZE     64
@@ -141,8 +134,8 @@ void fido_status_indicator_abort(void);
 //
 // fido_timer.c
 //
-void fido_process_timeout_timer_stop(void);
-void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context);
+void fido_user_presence_verify_timer_stop(void);
+void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
 void fido_keepalive_interval_timer_stop(void);
 void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context);
 void fido_lock_channel_timer_stop(void);
