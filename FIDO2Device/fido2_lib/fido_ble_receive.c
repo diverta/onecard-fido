@@ -9,8 +9,8 @@
 //
 #include "u2f.h"
 #include "fido_ble_receive.h"
-#include "fido_ble_receive_apdu.h"
 #include "fido_ble_send.h"
+#include "fido_receive_apdu.h"
 
 // コマンド実行関数群
 #include "fido_command.h"
@@ -143,7 +143,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         } else {
             // コマンドがPING以外で、U2Fの場合
             // APDUヘッダー項目を編集して保持
-            offset += fido_ble_receive_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+            offset += fido_receive_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
         }
     }
 
@@ -169,13 +169,11 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
         return true;
     }
 
-    if (fido_ble_receive_apdu_allocate(p_apdu) == false) {
-        // データ格納領域を初期化し、アドレスを保持
-        return false;
-    }
+    // データ格納領域を初期化し、アドレスを保持
+    fido_receive_apdu_initialize(p_apdu);
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_ble_receive_apdu_from_leading(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+    fido_receive_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
 
     return true;
 }
@@ -230,7 +228,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
     }
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_ble_receive_apdu_from_following(p_apdu, control_point_buffer, control_point_buffer_length);
+    fido_receive_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
 bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
