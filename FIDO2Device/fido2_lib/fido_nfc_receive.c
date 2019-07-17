@@ -152,13 +152,7 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
         fido_log_error("APDU size error: data size in header(%d) <> real data size(%d bytes)", data_in_frame_size, real_size);
         return SW_WRONG_LENGTH;
     }
-    
-    // 一番最初のフレームの場合
-    if (fido_apdu->data_length == 0) {
-        // FIDOリクエスト受信開始時の処理を実行
-        fido_nfc_command_on_request_started();
-    }
-    
+
     // データを抽出して内部変数に退避
     data_in_frame = data + apdu_header_size;
     memcpy(fido_apdu->data + fido_apdu->data_length, data_in_frame, data_in_frame_size);

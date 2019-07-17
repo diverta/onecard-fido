@@ -24,12 +24,6 @@ void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code)
     // U2F ERRORコマンドに対応する
     // レスポンスデータを送信パケットに設定し送信
     fido_ble_send_command_response_no_callback(cmd, status_code);
-
-    // 処理タイムアウト監視を停止
-    fido_process_timeout_timer_stop();
-
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
 }
 
 static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
@@ -91,9 +85,6 @@ void fido_ble_command_on_response_send_completed(void)
     // FIDO機能レスポンスの
     // 全フレーム送信完了時の処理を実行
     // 
-    // 処理タイムアウト監視を停止
-    fido_process_timeout_timer_stop();
-
     // 受信フレーム数カウンターをクリア
     fido_ble_receive_frame_count_clear();
 
@@ -113,19 +104,4 @@ void fido_ble_command_on_response_send_completed(void)
         // レスポンス完了後の処理を停止させる場合はここで終了
         return;
     }
-
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
-}
-
-void fido_ble_command_on_request_started(void) 
-{
-    // FIDO機能リクエストの
-    // 先頭フレーム受信時の処理を実行
-    // 
-    // 処理タイムアウト監視を開始
-    fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
-
-    // LED制御をアイドル中-->非アイドル中に変更
-    fido_status_indicator_no_idle();
 }

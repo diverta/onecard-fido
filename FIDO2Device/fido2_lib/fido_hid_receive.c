@@ -310,9 +310,6 @@ void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request
             // （引数にはHIDヘッダーを含まないデータを渡す）
             receive_request_from_init_frame(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
-            // FIDOリクエスト受信開始時の処理を実行
-            fido_hid_command_on_report_started();
-            
         } else {
             dump_hid_cont_packet(req);
 

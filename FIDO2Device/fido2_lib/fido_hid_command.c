@@ -70,12 +70,6 @@ void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code)
     // レスポンスデータを送信パケットに設定し送信
     uint32_t cid = fido_hid_receive_header()->CID;
     fido_hid_send_command_response_no_callback(cid, cmd, status_code);
-
-    // 処理タイムアウト監視を停止
-    fido_process_timeout_timer_stop();
-
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
 }
 
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
@@ -154,9 +148,6 @@ void fido_hid_command_on_report_completed(void)
     // FIDO機能レスポンスの
     // 全フレーム送信完了時の処理を実行
     // 
-    // 処理タイムアウト監視を停止
-    fido_process_timeout_timer_stop();
-
     // 全フレーム送信後に行われる後続処理を実行
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
@@ -185,19 +176,4 @@ void fido_hid_command_on_report_completed(void)
         // レスポンス完了後の処理を停止させる場合はここで終了
         return;
     }
-
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
-}
-
-void fido_hid_command_on_report_started(void) 
-{
-    // FIDO機能リクエストの
-    // 先頭フレーム受信時の処理を実行
-    // 
-    // 処理タイムアウト監視を開始
-    fido_process_timeout_timer_start(PROCESS_TIMEOUT_MSEC, NULL);
-
-    // LED制御をアイドル中-->非アイドル中に変更
-    fido_status_indicator_no_idle();
 }

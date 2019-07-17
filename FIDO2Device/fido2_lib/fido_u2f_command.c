@@ -147,6 +147,7 @@ bool fido_u2f_command_on_mainsw_event(void)
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
+        // ユーザー所在確認フラグをクリア
         is_tup_needed = false;
         // キープアライブを停止
         fido_user_presence_verify_end();

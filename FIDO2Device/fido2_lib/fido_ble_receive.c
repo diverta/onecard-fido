@@ -257,9 +257,6 @@ bool fido_ble_receive_control_point(uint8_t *data, uint16_t length)
 
             // 先頭パケットに対する処理を行う
             u2f_request_receive_leading_packet(&ble_header_t, &apdu_t);
-
-            // FIDOリクエスト受信開始時の処理を実行
-            fido_ble_command_on_request_started();
         }
 
     } else {

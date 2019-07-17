@@ -132,7 +132,6 @@ bool     fido_flash_password_set(uint8_t *random_vector);
 //
 void fido_status_indicator_none(void);
 void fido_status_indicator_idle(void);
-void fido_status_indicator_no_idle(void);
 void fido_status_indicator_prompt_reset(void);
 void fido_status_indicator_prompt_tup(void);
 void fido_status_indicator_pairing_mode(void);

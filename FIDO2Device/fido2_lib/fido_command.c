@@ -69,24 +69,31 @@ void fido_command_keepalive_timer_handler(void)
 
 void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
-    // タイマーが生成されていない場合は生成する
+    // キープアライブタイマーを開始
     fido_keepalive_interval_timer_start(timeout_msec, NULL);
+
+    // 処理タイムアウト監視を開始（１０秒）
+    fido_process_timeout_timer_start(10000, NULL);
 
     // LED点滅を開始
     fido_status_indicator_prompt_tup();
 }
 
-void fido_user_presence_verify_end(void)
-{
-    // LED制御をユーザー所在確認中-->非アイドル中に変更
-    fido_status_indicator_no_idle();
-
-    // タイマーを停止する
-    fido_keepalive_interval_timer_stop();
-}
-
 void fido_user_presence_verify_cancel(void)
 {
-    // タイマーを停止する
+    // キープアライブタイマーを停止する
     fido_keepalive_interval_timer_stop();
+    
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
+}
+
+void fido_user_presence_verify_end(void)
+{
+    // 処理タイムアウト監視を停止
+    fido_process_timeout_timer_stop();
+    
+    // キープアライブタイマーを停止し、
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_user_presence_verify_cancel();
 }

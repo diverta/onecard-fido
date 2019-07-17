@@ -140,23 +140,17 @@ static void resume_response_process(void)
     }
 }
 
-static void end_verify_tup(void)
-{
-    // ユーザー所在確認フラグをクリア
-    is_tup_needed = false;
-    // キープアライブを停止
-    fido_user_presence_verify_end();
-    // 後続のレスポンス送信処理を実行
-    resume_response_process();
-}
-
 bool fido_ctap2_command_on_mainsw_event(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
-        // 認証処理を続行させる
-        end_verify_tup();
+        // ユーザー所在確認フラグをクリア
+        is_tup_needed = false;
+        // キープアライブを停止
+        fido_user_presence_verify_end();
+        // 後続のレスポンス送信処理を実行
+        resume_response_process();
         return true;
     }
 
