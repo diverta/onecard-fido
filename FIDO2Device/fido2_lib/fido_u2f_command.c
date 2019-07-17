@@ -174,7 +174,7 @@ void fido_u2f_command_keepalive_timer_handler(void)
         // キープアライブ・コマンドを実行する（BLE限定機能）
         if (m_transport_type == TRANSPORT_BLE) {
             // TUP_NEEDED: 0x02
-            fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, 0x02);
+            fido_ble_send_status_response(U2F_COMMAND_KEEPALIVE, 0x02);
         }
     }
 }

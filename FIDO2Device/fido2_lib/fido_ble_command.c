@@ -19,13 +19,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code) 
-{
-    // U2F ERRORコマンドに対応する
-    // レスポンスデータを送信パケットに設定し送信
-    fido_ble_send_command_response_no_callback(cmd, status_code);
-}
-
 static bool invalid_command_in_pairing_mode(uint8_t cmd, uint8_t ins)
 {
     if (fido_ble_pairing_mode_get()) {
@@ -53,7 +46,7 @@ void fido_ble_command_on_request_received(void)
     if (p_ble_header->CMD == U2F_COMMAND_ERROR) {
         // リクエストデータの検査中にエラーが確認された場合、
         // エラーレスポンスを戻す
-        fido_ble_command_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header()->ERROR);
+        fido_ble_send_status_response(U2F_COMMAND_ERROR, fido_ble_receive_header()->ERROR);
         return;
     }
     

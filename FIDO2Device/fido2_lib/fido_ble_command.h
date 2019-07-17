@@ -14,7 +14,6 @@
 extern "C" {
 #endif
 
-void fido_ble_command_send_status_response(uint8_t cmd, uint8_t status_code);
 void fido_ble_command_on_request_received(void);
 
 #ifdef __cplusplus

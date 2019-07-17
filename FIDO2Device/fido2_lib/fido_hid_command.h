@@ -31,10 +31,7 @@ typedef struct {
     uint8_t cflags;
 } HID_INIT_RES_T;
 
-void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code);
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number);
-void fido_hid_command_set_abort_flag(bool flag);
-bool fido_hid_command_is_valid(uint8_t command);
 
 #ifdef __cplusplus
 }

@@ -64,14 +64,6 @@ static void hid_fido_command_lock(void)
     fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
-void fido_hid_command_send_status_response(uint8_t cmd, uint8_t status_code) 
-{
-    // U2F ERRORコマンドに対応する
-    // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = fido_hid_receive_header()->CID;
-    fido_hid_send_command_response_no_callback(cid, cmd, status_code);
-}
-
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     // 受信したフレームから、リクエストデータを取得し、
@@ -81,7 +73,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     uint8_t cmd = fido_hid_receive_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
         // チェック結果がNGの場合はここで処理中止
-        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header()->ERROR);
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header()->ERROR);
         return;
     }
 
@@ -99,7 +91,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
     if (cid != cid_for_lock && cid_for_lock != 0) {
         // ロック対象CID以外からコマンドを受信したら
         // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
-        fido_hid_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
         return;
     }
 
@@ -138,7 +130,7 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             // 不正なコマンドであるため
             // エラーレスポンスを送信
             fido_log_error("Invalid command (0x%02x) ", cmd);
-            fido_hid_command_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
+            fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
             break;
     }
 }

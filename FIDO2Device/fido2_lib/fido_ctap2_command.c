@@ -222,10 +222,10 @@ static void send_ctap2_status_response(uint8_t cmd, uint8_t status_code)
 {
     // CTAP2ステータスコード（１バイト）をレスポンス
     if (m_transport_type == TRANSPORT_HID) {
-        fido_hid_command_send_status_response(cmd, status_code);
+        fido_hid_send_status_response(cmd, status_code);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        fido_ble_command_send_status_response(cmd, status_code);
+        fido_ble_send_status_response(cmd, status_code);
     }
 }
 
@@ -234,11 +234,10 @@ void fido_ctap2_command_keepalive_timer_handler(void)
     if (is_tup_needed) {
         // キープアライブ・コマンドを実行する
         if (m_transport_type == TRANSPORT_HID) {
-            uint32_t cid = fido_hid_receive_header()->CID;
-            fido_hid_send_command_response_no_callback(cid, CTAP2_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
+            fido_hid_send_status_response(CTAP2_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
 
         } else if (m_transport_type == TRANSPORT_BLE) {
-            fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
+            fido_ble_send_status_response(U2F_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
         }
     }
 }
