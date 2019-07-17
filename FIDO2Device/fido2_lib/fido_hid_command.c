@@ -142,38 +142,3 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             break;
     }
 }
-
-void fido_hid_command_on_report_completed(void)
-{
-    // FIDO機能レスポンスの
-    // 全フレーム送信完了時の処理を実行
-    // 
-    // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
-    switch (cmd) {
-        case CTAP2_COMMAND_INIT:
-            fido_log_info("CTAPHID_INIT end");
-            break;
-        case CTAP2_COMMAND_PING:
-            fido_log_info("CTAPHID_PING end");
-            break;
-        case U2F_COMMAND_MSG:
-            fido_u2f_command_msg_response_sent();
-            break;
-        case CTAP2_COMMAND_CBOR:
-            fido_ctap2_command_cbor_response_sent();
-            break;
-        case MNT_COMMAND_ERASE_SKEY_CERT:
-        case MNT_COMMAND_INSTALL_SKEY_CERT:
-        case MNT_COMMAND_GET_FLASH_STAT:
-            fido_maintenance_command_report_sent();
-            break;
-        default:
-            break;
-    }
-
-    if (fido_command_do_abort()) {
-        // レスポンス完了後の処理を停止させる場合はここで終了
-        return;
-    }
-}

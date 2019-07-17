@@ -253,8 +253,6 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_command.c</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.h</itemPath>
@@ -1092,18 +1090,6 @@
           <incDir>
             <pElem>../fido2_authenticator_app</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_command.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../fido2_authenticator_app</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
           </incDir>
         </cTool>

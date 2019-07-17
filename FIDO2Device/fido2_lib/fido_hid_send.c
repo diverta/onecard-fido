@@ -9,8 +9,8 @@
 // プラットフォーム非依存コード
 //
 #include "ctap2_common.h"       // for CTAP2_COMMAND_KEEPALIVE
+#include "fido_command.h"
 #include "fido_hid_channel.h"
-#include "fido_hid_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -168,7 +168,7 @@ void fido_hid_send_input_report_complete()
         // 送信情報を初期化
         memset(&send_info_t, 0x00, sizeof(send_info_t));
         // FIDOレスポンス送信完了時の処理を実行
-        fido_hid_command_on_report_completed();
+        fido_command_on_response_send_completed(TRANSPORT_HID);
         
     } else {
         // 次のフレームの送信を実行

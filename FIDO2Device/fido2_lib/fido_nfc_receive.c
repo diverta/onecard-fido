@@ -9,7 +9,6 @@
 //
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
-#include "fido_nfc_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
 

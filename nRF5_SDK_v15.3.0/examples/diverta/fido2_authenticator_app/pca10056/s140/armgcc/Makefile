@@ -163,7 +163,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_receive_apdu.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
-  $(FD2LIB_DIR)/fido_nfc_command.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \

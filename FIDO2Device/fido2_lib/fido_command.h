@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "fido_common.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +28,8 @@ void fido_command_keepalive_timer_handler(void);
 void fido_user_presence_verify_start(uint32_t timeout_msec);
 void fido_user_presence_verify_end(void);
 void fido_user_presence_verify_cancel(void);
+
+void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type);
 
 #ifdef __cplusplus
 }

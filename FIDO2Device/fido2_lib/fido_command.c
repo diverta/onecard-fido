@@ -13,9 +13,11 @@
 #include "fido_command.h"
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
-#include "fido_ble_command.h"
-#include "fido_hid_command.h"
-#include "fido_nfc_command.h"
+#include "fido_ble_receive.h"
+#include "fido_hid_receive.h"
+#include "fido_maintenance.h"
+#include "ctap2_common.h"
+#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -100,4 +102,76 @@ void fido_user_presence_verify_end(void)
     // キープアライブタイマーを停止し、
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_user_presence_verify_cancel();
+}
+
+//
+// USB HID/BLE/NFCの各トランスポートにより、
+// 全てのレスポンスデータの全フレーム送信が完了した時の処理
+//
+static void on_ble_response_send_completed(void)
+{
+    // 受信フレーム数カウンターをクリア
+    fido_ble_receive_frame_count_clear();
+
+    // 全フレーム送信後に行われる後続処理を実行
+    if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
+        if (fido_ble_receive_apdu()->CLA != 0x00) {
+            // CTAP2コマンドを処理する。
+            fido_ctap2_command_cbor_response_sent();
+
+        } else {
+            // U2Fコマンド／管理用コマンドを処理する。
+            fido_u2f_command_msg_response_sent();
+        }
+    }
+}
+
+void on_hid_response_send_completed(void)
+{
+    // 全フレーム送信後に行われる後続処理を実行
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+        case CTAP2_COMMAND_INIT:
+            fido_log_info("CTAPHID_INIT end");
+            break;
+        case CTAP2_COMMAND_PING:
+            fido_log_info("CTAPHID_PING end");
+            break;
+        case U2F_COMMAND_MSG:
+            fido_u2f_command_msg_response_sent();
+            break;
+        case CTAP2_COMMAND_CBOR:
+            fido_ctap2_command_cbor_response_sent();
+            break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_GET_FLASH_STAT:
+            fido_maintenance_command_report_sent();
+            break;
+        default:
+            break;
+    }
+}
+
+void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
+{
+    switch (transport_type) {
+        case TRANSPORT_HID:
+            on_hid_response_send_completed();
+            break;
+        case TRANSPORT_BLE:
+            on_ble_response_send_completed();
+            break;
+        case TRANSPORT_NFC:
+            // 現在のところ、CTAP2コマンドのみをサポート
+            fido_ctap2_command_cbor_response_sent();
+            break;
+        default:
+            break;
+    }
+
+    if (fido_command_do_abort()) {
+        // レスポンス完了後の処理を停止させる場合はここで終了
+        return;
+    }
 }

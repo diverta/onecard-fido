@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "u2f.h"
+#include "fido_command.h"
 #include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 
@@ -171,7 +172,7 @@ static uint32_t ble_u2f_status_response_send(bool no_callback)
         if (send_info_t.sent_length == send_info_t.data_length) {
             // FIDOレスポンス送信完了時の処理を実行
             if (!no_callback_flag) {
-                fido_ble_command_on_response_send_completed();
+                fido_command_on_response_send_completed(TRANSPORT_BLE);
             }
         }
     }

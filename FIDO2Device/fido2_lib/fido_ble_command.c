@@ -79,29 +79,3 @@ void fido_ble_command_on_request_received(void)
         fido_u2f_command_ping(TRANSPORT_BLE);
     }
 }
-
-void fido_ble_command_on_response_send_completed(void)
-{
-    // FIDO機能レスポンスの
-    // 全フレーム送信完了時の処理を実行
-    // 
-    // 受信フレーム数カウンターをクリア
-    fido_ble_receive_frame_count_clear();
-
-    // 全フレーム送信後に行われる後続処理を実行
-    if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
-        if (fido_ble_receive_apdu()->CLA != 0x00) {
-            // CTAP2コマンドを処理する。
-            fido_ctap2_command_cbor_response_sent();
-
-        } else {
-            // U2Fコマンド／管理用コマンドを処理する。
-            fido_u2f_command_msg_response_sent();
-        }
-    }
-
-    if (fido_command_do_abort()) {
-        // レスポンス完了後の処理を停止させる場合はここで終了
-        return;
-    }
-}
