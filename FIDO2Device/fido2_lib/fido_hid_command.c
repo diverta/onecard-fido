@@ -23,47 +23,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-static void hid_fido_command_ping(void)
-{
-    // PINGの場合は
-    // リクエストのHIDヘッダーとデータを編集せず
-    // レスポンスとして戻す（エコーバック）
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    size_t   length = fido_hid_receive_apdu()->data_length;
-    fido_hid_send_command_response(cid, cmd, data, length);
-}
-
-static void hid_fido_command_wink(void)
-{
-    // ステータスなしでレスポンスする
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    fido_hid_send_command_response_no_payload(cid, cmd);
-}
-
-static void hid_fido_command_lock(void)
-{
-    // ロックコマンドのパラメーターを取得する
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
-
-    if (lock_param > 0) {
-        // パラメーターが指定されていた場合
-        // ロック対象CIDを設定
-        fido_lock_channel_start(cid, lock_param);
-
-    } else {
-        // CIDのロックを解除
-        fido_lock_channel_cancel();
-    }
-
-    // ステータスなしでレスポンスする
-    fido_hid_send_command_response_no_payload(cid, cmd);
-}
-
 void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     // 受信したフレームから、リクエストデータを取得し、
@@ -102,13 +61,13 @@ void fido_hid_command_on_report_received(uint8_t *request_frame_buffer, size_t r
             fido_ctap2_command_hid_init();
             break;
         case CTAP2_COMMAND_PING:
-            hid_fido_command_ping();
+            fido_ctap2_command_ping();
             break;
         case CTAP2_COMMAND_WINK:
-            hid_fido_command_wink();
+            fido_ctap2_command_wink();
             break;
         case CTAP2_COMMAND_LOCK:
-            hid_fido_command_lock();
+            fido_ctap2_command_lock();
             break;
 #else
         case U2F_COMMAND_HID_INIT:

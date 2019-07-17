@@ -166,6 +166,9 @@ bool fido_ctap2_command_on_mainsw_long_push_event(void)
     return true;
 }
 
+//
+// USB HID専用コマンド群
+//
 void fido_ctap2_command_hid_init(void)
 {
     // 編集領域を初期化
@@ -188,6 +191,47 @@ void fido_ctap2_command_hid_init(void)
     uint32_t cid = fido_hid_receive_header()->CID;
     uint8_t cmd = fido_hid_receive_header()->CMD;
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
+}
+
+void fido_ctap2_command_ping(void)
+{
+    // PINGの場合は
+    // リクエストのHIDヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    size_t   length = fido_hid_receive_apdu()->data_length;
+    fido_hid_send_command_response(cid, cmd, data, length);
+}
+
+void fido_ctap2_command_wink(void)
+{
+    // ステータスなしでレスポンスする
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response_no_payload(cid, cmd);
+}
+
+void fido_ctap2_command_lock(void)
+{
+    // ロックコマンドのパラメーターを取得する
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
+
+    if (lock_param > 0) {
+        // パラメーターが指定されていた場合
+        // ロック対象CIDを設定
+        fido_lock_channel_start(cid, lock_param);
+
+    } else {
+        // CIDのロックを解除
+        fido_lock_channel_cancel();
+    }
+
+    // ステータスなしでレスポンスする
+    fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
