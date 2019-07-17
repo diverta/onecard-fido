@@ -8,7 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_common.h"
-#include "fido_ctap2_command.h"
+#include "fido_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
 
@@ -205,7 +205,7 @@ static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
     if (is_last_nfc_frame((APDU_HEADER *)data)) {
         // 最終フレームの場合、受信したデータについて
         // CTAP2コマンド処理を実行する
-        fido_ctap2_command_cbor(TRANSPORT_NFC);
+        fido_command_on_request_receive_completed(TRANSPORT_NFC);
 
     } else {
         // 最終フレームでない場合は、ここでレスポンスを戻す

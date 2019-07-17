@@ -15,6 +15,7 @@
 #include "fido_ctap2_command.h"
 #include "fido_ble_receive.h"
 #include "fido_hid_receive.h"
+#include "fido_hid_send.h"
 #include "fido_maintenance.h"
 #include "ctap2_common.h"
 #include "u2f.h"
@@ -106,7 +107,99 @@ void fido_user_presence_verify_end(void)
 
 //
 // USB HID/BLE/NFCの各トランスポートにより、
-// 全てのレスポンスデータの全フレーム送信が完了した時の処理
+// リクエストデータの全フレーム受信が完了した時の処理
+//
+static void on_hid_request_receive_completed(void)
+{
+    // データ受信後に実行すべき処理を判定
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    switch (cmd) {
+#if CTAP2_SUPPORTED
+        case CTAP2_COMMAND_INIT:
+            fido_ctap2_command_hid_init();
+            break;
+        case CTAP2_COMMAND_PING:
+            fido_ctap2_command_ping();
+            break;
+        case CTAP2_COMMAND_WINK:
+            fido_ctap2_command_wink();
+            break;
+        case CTAP2_COMMAND_LOCK:
+            fido_ctap2_command_lock();
+            break;
+        case CTAP2_COMMAND_CANCEL:
+            // キャンセルコマンドの場合は
+            // ユーザー所在確認待ちをキャンセルしたうえで
+            // キャンセルレスポンスを戻す
+            fido_ctap2_command_cancel();
+            break;
+#else
+        case U2F_COMMAND_HID_INIT:
+            fido_u2f_command_hid_init();
+            break;
+#endif
+        case U2F_COMMAND_MSG:
+            fido_u2f_command_msg(TRANSPORT_HID);
+            break;
+        case CTAP2_COMMAND_CBOR:
+            fido_ctap2_command_cbor(TRANSPORT_HID);
+            break;
+        case MNT_COMMAND_ERASE_SKEY_CERT:
+        case MNT_COMMAND_INSTALL_SKEY_CERT:
+        case MNT_COMMAND_GET_FLASH_STAT:
+            fido_maintenance_command();
+            break;
+        default:
+            // 不正なコマンドであるため
+            // エラーレスポンスを送信
+            fido_log_error("Invalid command (0x%02x) ", cmd);
+            fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_COMMAND);
+            break;
+    }
+}
+
+static void on_ble_request_receive_completed(void)
+{
+    BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
+    FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
+
+    if (p_ble_header->CMD == U2F_COMMAND_MSG) {
+        if (p_apdu->CLA != 0x00) {
+            // CTAP2コマンドを処理する。
+            fido_ctap2_command_cbor(TRANSPORT_BLE);
+
+        } else {
+            // U2Fコマンド／管理用コマンドを処理する。
+            fido_u2f_command_msg(TRANSPORT_BLE);
+        }
+
+    } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
+        // PINGレスポンスを実行
+        fido_u2f_command_ping(TRANSPORT_BLE);
+    }
+}
+
+void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
+{
+    switch (transport_type) {
+        case TRANSPORT_HID:
+            on_hid_request_receive_completed();
+            break;
+        case TRANSPORT_BLE:
+            on_ble_request_receive_completed();
+            break;
+        case TRANSPORT_NFC:
+            // 現在のところ、CTAP2コマンドのみをサポート
+            fido_ctap2_command_cbor(transport_type);
+            break;
+        default:
+            break;
+    }
+}
+
+//
+// USB HID/BLE/NFCの各トランスポートにより、
+// レスポンスデータの全フレーム送信が完了した時の処理
 //
 static void on_ble_response_send_completed(void)
 {

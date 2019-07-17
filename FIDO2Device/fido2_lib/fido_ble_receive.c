@@ -13,8 +13,7 @@
 #include "fido_ble_send.h"
 
 // コマンド実行関数群
-#include "fido_ctap2_command.h"
-#include "fido_u2f_command.h"
+#include "fido_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -333,19 +332,7 @@ void fido_ble_receive_on_request_received(void)
         fido_ble_send_status_word(p_ble_header->CMD, 0x9601);
         return;
     }
-
-    if (p_ble_header->CMD == U2F_COMMAND_MSG) {
-        if (p_apdu->CLA != 0x00) {
-            // CTAP2コマンドを処理する。
-            fido_ctap2_command_cbor(TRANSPORT_BLE);
-
-        } else {
-            // U2Fコマンド／管理用コマンドを処理する。
-            fido_u2f_command_msg(TRANSPORT_BLE);
-        }
-
-    } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
-        // PINGレスポンスを実行
-        fido_u2f_command_ping(TRANSPORT_BLE);
-    }
+    
+    // データ受信後に実行すべき処理
+    fido_command_on_request_receive_completed(TRANSPORT_BLE);
 }
