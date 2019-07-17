@@ -10,7 +10,6 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
-#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "u2f.h"

@@ -150,7 +150,6 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
-  $(FD2LIB_DIR)/fido_ble_command.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
@@ -158,7 +157,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
-  $(FD2LIB_DIR)/fido_hid_command.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_receive_apdu.c \
   $(FD2LIB_DIR)/fido_hid_send.c \

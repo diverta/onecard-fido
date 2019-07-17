@@ -19,7 +19,6 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_timer.h"
 
 #include "fido_command.h"
-#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
@@ -195,5 +194,5 @@ void fido_ble_do_process(void)
     m_report_received = false;
     
     // FIDO BLEサービスを実行
-    fido_ble_command_on_request_received();
+    fido_ble_receive_on_request_received();
 }

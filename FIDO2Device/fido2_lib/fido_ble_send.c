@@ -9,7 +9,6 @@
 //
 #include "u2f.h"
 #include "fido_command.h"
-#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース

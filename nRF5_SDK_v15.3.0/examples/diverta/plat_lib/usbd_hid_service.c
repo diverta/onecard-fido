@@ -16,7 +16,6 @@
 
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
-#include "fido_hid_command.h"
 #include "fido_hid_receive.h"
 
 // for logging informations
@@ -332,5 +331,5 @@ void usbd_hid_do_process(void)
     m_report_received = false;
     
     // FIDO USB HIDサービスを実行
-    fido_hid_command_on_report_received(request_frame_buffer, request_frame_number);
+    fido_hid_receive_on_request_received(request_frame_buffer, request_frame_number);
 }
