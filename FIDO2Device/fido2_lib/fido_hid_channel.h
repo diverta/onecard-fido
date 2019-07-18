@@ -1,12 +1,11 @@
 /* 
- * File:   fido_hid_common.h
+ * File:   fido_hid_channel.h
  * Author: makmorit
  *
  * Created on 2018/12/17, 13:23
  */
-
-#ifndef FIDO_HID_COMMON_H
-#define FIDO_HID_COMMON_H
+#ifndef FIDO_HID_CHANNEL_H
+#define FIDO_HID_CHANNEL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,21 +45,20 @@ typedef struct {
 //
 // 関数群
 //
-void     init_CID(void);
-uint32_t get_current_CID(void);
-uint32_t get_incremented_CID(void);
-uint32_t get_CID(uint8_t *cid);
-void     set_CID(uint8_t *cid, uint32_t _CID);
-size_t   get_payload_length(USB_HID_MSG_T *recv_msg);
+void     fido_hid_channel_initialize_cid(void);
+uint32_t fido_hid_channel_current_cid(void);
+uint32_t fido_hid_channel_new_cid(void);
+uint32_t fido_hid_channel_get_cid_from_bytes(uint8_t *cid);
+void     fido_hid_channel_set_cid_bytes(uint8_t *cid, uint32_t _CID);
+size_t   fido_hid_payload_length_get(USB_HID_MSG_T *recv_msg);
 
-void     fido_lock_channel_timedout_handler(void *context);
-void     fido_lock_channel_start(uint32_t cid, uint8_t lock_param);
-void     fido_lock_channel_cancel(void);
-uint32_t fido_lock_channel_cid(void);
+void     fido_hid_channel_lock_timedout_handler(void *context);
+void     fido_hid_channel_lock_start(uint32_t cid, uint8_t lock_param);
+void     fido_hid_channel_lock_cancel(void);
+uint32_t fido_hid_channel_lock_cid(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* FIDO_HID_COMMON_H */
-
+#endif /* FIDO_HID_CHANNEL_H */

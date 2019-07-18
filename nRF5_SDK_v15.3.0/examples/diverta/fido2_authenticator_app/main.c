@@ -197,7 +197,7 @@ static void application_init(void)
     fido_button_init();
 
     // アプリケーションで使用するCIDを初期化
-    init_CID();
+    fido_hid_channel_initialize_cid();
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_init();

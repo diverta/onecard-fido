@@ -10,7 +10,6 @@
 #include "ble_srv_common.h"
 #include "ble_advertising.h"
 
-#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "u2f.h"
@@ -263,7 +262,7 @@ void fido_ble_pairing_notify_unavailable(pm_evt_t const *p_evt)
     } else if (p_evt->evt_id == PM_EVT_CONN_SEC_SUCCEEDED) {
         // ペアリングが有効である場合、LED制御を
         // ペアリングモード-->非ペアリングモードに変更
-        fido_status_indicator_no_idle();
+        fido_status_indicator_idle();
     }
 }
 

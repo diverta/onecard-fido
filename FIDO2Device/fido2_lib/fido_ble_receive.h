@@ -40,6 +40,8 @@ bool          fido_ble_receive_control_point(uint8_t *data, uint16_t length);
 void          fido_ble_receive_frame_count_clear(void);
 uint8_t       fido_ble_receive_frame_count(void);
 
+void          fido_ble_receive_on_request_received(void);
+
 #ifdef __cplusplus
 }
 #endif

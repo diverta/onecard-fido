@@ -17,20 +17,22 @@
 #include "ctap2_common.h"
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
+#include "fido_command.h"
 #include "fido_common.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
-#include "fido_ble_command.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "fido_hid_command.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
 #include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// キープアライブ・タイマー
+#define CTAP2_KEEPALIVE_INTERVAL_MSEC 500
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
@@ -139,23 +141,17 @@ static void resume_response_process(void)
     }
 }
 
-static void end_verify_tup(void)
-{
-    // ユーザー所在確認フラグをクリア
-    is_tup_needed = false;
-    // キープアライブを停止
-    fido_user_presence_verify_end();
-    // 後続のレスポンス送信処理を実行
-    resume_response_process();
-}
-
 bool fido_ctap2_command_on_mainsw_event(void)
 {
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
-        // 認証処理を続行させる
-        end_verify_tup();
+        // ユーザー所在確認フラグをクリア
+        is_tup_needed = false;
+        // キープアライブを停止
+        fido_user_presence_verify_end();
+        // 後続のレスポンス送信処理を実行
+        resume_response_process();
         return true;
     }
 
@@ -168,6 +164,9 @@ bool fido_ctap2_command_on_mainsw_long_push_event(void)
     return true;
 }
 
+//
+// USB HID専用コマンド群
+//
 void fido_ctap2_command_hid_init(void)
 {
     // 編集領域を初期化
@@ -179,7 +178,7 @@ void fido_ctap2_command_hid_init(void)
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
     memcpy(init_res.nonce, nonce, 8);
-    set_CID(init_res.cid, get_incremented_CID());
+    fido_hid_channel_set_cid_bytes(init_res.cid, fido_hid_channel_new_cid());
     init_res.version_id    = 2;
     init_res.version_major = 5;
     init_res.version_minor = 0;
@@ -190,6 +189,47 @@ void fido_ctap2_command_hid_init(void)
     uint32_t cid = fido_hid_receive_header()->CID;
     uint8_t cmd = fido_hid_receive_header()->CMD;
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
+}
+
+void fido_ctap2_command_ping(void)
+{
+    // PINGの場合は
+    // リクエストのHIDヘッダーとデータを編集せず
+    // レスポンスとして戻す（エコーバック）
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    size_t   length = fido_hid_receive_apdu()->data_length;
+    fido_hid_send_command_response(cid, cmd, data, length);
+}
+
+void fido_ctap2_command_wink(void)
+{
+    // ステータスなしでレスポンスする
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    fido_hid_send_command_response_no_payload(cid, cmd);
+}
+
+void fido_ctap2_command_lock(void)
+{
+    // ロックコマンドのパラメーターを取得する
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint8_t  cmd = fido_hid_receive_header()->CMD;
+    uint8_t  lock_param = fido_hid_receive_apdu()->data[0];
+
+    if (lock_param > 0) {
+        // パラメーターが指定されていた場合
+        // ロック対象CIDを設定
+        fido_hid_channel_lock_start(cid, lock_param);
+
+    } else {
+        // CIDのロックを解除
+        fido_hid_channel_lock_cancel();
+    }
+
+    // ステータスなしでレスポンスする
+    fido_hid_send_command_response_no_payload(cid, cmd);
 }
 
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
@@ -224,10 +264,10 @@ static void send_ctap2_status_response(uint8_t cmd, uint8_t status_code)
 {
     // CTAP2ステータスコード（１バイト）をレスポンス
     if (m_transport_type == TRANSPORT_HID) {
-        fido_hid_command_send_status_response(cmd, status_code);
+        fido_hid_send_status_response(cmd, status_code);
 
     } else if (m_transport_type == TRANSPORT_BLE) {
-        fido_ble_command_send_status_response(cmd, status_code);
+        fido_ble_send_status_response(cmd, status_code);
     }
 }
 
@@ -236,11 +276,10 @@ void fido_ctap2_command_keepalive_timer_handler(void)
     if (is_tup_needed) {
         // キープアライブ・コマンドを実行する
         if (m_transport_type == TRANSPORT_HID) {
-            uint32_t cid = fido_hid_receive_header()->CID;
-            fido_hid_send_command_response_no_callback(cid, CTAP2_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
+            fido_hid_send_status_response(CTAP2_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
 
         } else if (m_transport_type == TRANSPORT_BLE) {
-            fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
+            fido_ble_send_status_response(U2F_COMMAND_KEEPALIVE, CTAP2_STATUS_UPNEEDED);
         }
     }
 }
@@ -529,7 +568,6 @@ void fido_ctap2_command_tup_cancel(void)
     if (is_tup_needed) {
         // ユーザー所在確認待ちの場合はキャンセル
         is_tup_needed = false;
-        fido_user_presence_verify_cancel();
         fido_log_info("Canceled the CTAP2 test of user presence");
     }
 }

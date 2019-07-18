@@ -8,7 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "u2f.h"
-#include "fido_ble_command.h"
+#include "fido_command.h"
 #include "fido_ble_receive.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -171,7 +171,7 @@ static uint32_t ble_u2f_status_response_send(bool no_callback)
         if (send_info_t.sent_length == send_info_t.data_length) {
             // FIDOレスポンス送信完了時の処理を実行
             if (!no_callback_flag) {
-                fido_ble_command_on_response_send_completed();
+                fido_command_on_response_send_completed(TRANSPORT_BLE);
             }
         }
     }
@@ -209,7 +209,7 @@ void fido_ble_send_command_response(uint8_t command_for_response, uint8_t *data_
     ble_u2f_status_response_send(false);
 }
 
-void fido_ble_send_command_response_no_callback(uint8_t cmd, uint8_t status_code) 
+static void fido_ble_send_command_response_no_callback(uint8_t cmd, uint8_t status_code) 
 {
     // レスポンスデータを編集 (1 bytes)
     uint8_t cmd_response_buffer[1] = {status_code};
@@ -230,4 +230,11 @@ void fido_ble_send_status_word(uint8_t command_for_response, uint16_t err_status
     // レスポンスを送信
     ble_u2f_status_setup(command_for_response, cmd_response_buffer, sizeof(cmd_response_buffer));
     ble_u2f_status_response_send(true);
+}
+
+void fido_ble_send_status_response(uint8_t cmd, uint8_t status_code) 
+{
+    // U2F ERRORコマンドに対応する
+    // レスポンスデータを送信パケットに設定し送信
+    fido_ble_send_command_response_no_callback(cmd, status_code);
 }

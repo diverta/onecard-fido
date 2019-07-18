@@ -150,21 +150,18 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(PROJ_DIR)/main.c \
-  $(FD2LIB_DIR)/fido_ble_command.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
-  $(FD2LIB_DIR)/fido_ble_receive_apdu.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
+  $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
-  $(FD2LIB_DIR)/fido_hid_command.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
-  $(FD2LIB_DIR)/fido_hid_receive_apdu.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
-  $(FD2LIB_DIR)/fido_nfc_command.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
+  $(FD2LIB_DIR)/fido_receive_apdu.c \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
   $(CT2LIB_DIR)/ctap2_cbor_encode.c \
@@ -177,7 +174,6 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(PLTLIB_DIR)/fido_board.c \
-  $(PLTLIB_DIR)/fido_command.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \

@@ -96,12 +96,6 @@ void fido_status_indicator_idle(void)
     fido_idling_led_timer_start(LED_BLINK_INTERVAL_MSEC);
 }
 
-void fido_status_indicator_no_idle(void)
-{
-    // すべてのLEDを消灯
-    fido_status_indicator_none();
-}
-
 void fido_status_indicator_prompt_reset(void)
 {
     // LED点滅制御タイマーを停止

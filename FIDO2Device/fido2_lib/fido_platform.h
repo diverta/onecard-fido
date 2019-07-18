@@ -15,13 +15,6 @@
 extern "C" {
 #endif
 
-// 業務処理タイムアウト（３０秒）
-#define PROCESS_TIMEOUT_MSEC 30000
-
-// キープアライブ・タイマー
-#define U2F_KEEPALIVE_INTERVAL_MSEC   500
-#define CTAP2_KEEPALIVE_INTERVAL_MSEC 200
-
 // crypto関連の定義
 #define RAW_PRIVATE_KEY_SIZE    32
 #define RAW_PUBLIC_KEY_SIZE     64
@@ -45,15 +38,6 @@ void     fido_ble_service_disconnect_force(void);
 // fido_ble_send_retry.c
 //
 void fido_ble_send_retry_timer_start(void);
-
-//
-// fido_command.c
-//
-bool    fido_command_do_abort(void);
-void    fido_command_abort_flag_set(bool flag);
-void    fido_user_presence_verify_start(uint32_t timeout_msec);
-void    fido_user_presence_verify_end(void);
-void    fido_user_presence_verify_cancel(void);
 
 //
 // fido_crypto.c
@@ -141,7 +125,6 @@ bool     fido_flash_password_set(uint8_t *random_vector);
 //
 void fido_status_indicator_none(void);
 void fido_status_indicator_idle(void);
-void fido_status_indicator_no_idle(void);
 void fido_status_indicator_prompt_reset(void);
 void fido_status_indicator_prompt_tup(void);
 void fido_status_indicator_pairing_mode(void);
@@ -151,10 +134,12 @@ void fido_status_indicator_abort(void);
 //
 // fido_timer.c
 //
-void fido_process_timeout_timer_stop(void);
-void fido_process_timeout_timer_start(uint32_t timeout_msec, void *p_context);
-void fido_lock_channel_timer_stop(void);
-void fido_lock_channel_timer_start(uint32_t lock_ms);
+void fido_user_presence_verify_timer_stop(void);
+void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
+void fido_keepalive_interval_timer_stop(void);
+void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context);
+void fido_hid_channel_lock_timer_stop(void);
+void fido_hid_channel_lock_timer_start(uint32_t lock_ms);
 
 //
 // nfc_service.c

@@ -9,7 +9,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_common.h"
-#include "fido_nfc_command.h"
+#include "fido_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
 
@@ -145,7 +145,7 @@ void fido_nfc_send_command_response_cont(uint8_t get_response_size)
 
     if (remaining == 0) {
         fido_log_debug("APDU sent completed (%d bytes)", m_responsed_size);
-        fido_nfc_command_on_send_completed();
+        fido_command_on_response_send_completed(TRANSPORT_NFC);
     }
 }
 

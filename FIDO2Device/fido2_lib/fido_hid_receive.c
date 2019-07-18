@@ -12,10 +12,13 @@
 #include "ctap2_common.h"
 #include "fido_common.h"
 #include "fido_hid_channel.h"
-#include "fido_hid_command.h"
 #include "fido_hid_receive.h"
-#include "fido_hid_receive_apdu.h"
+#include "fido_receive_apdu.h"
+#include "fido_hid_send.h"
 #include "u2f.h"
+
+// コマンド実行関数群
+#include "fido_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -101,7 +104,7 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     } else {
         // コマンドが上記以外の場合
         // APDUヘッダー項目を編集して保持
-        offset += fido_hid_receive_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+        offset += fido_receive_apdu_header(p_apdu, control_point_buffer, control_point_buffer_length, offset);
     }
 
     if (p_apdu->Lc > APDU_DATA_MAX_LENGTH) {
@@ -127,10 +130,10 @@ static bool extract_and_check_init_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // データ格納領域を初期化し、アドレスを保持
-    fido_hid_receive_apdu_initialize(p_apdu);
+    fido_receive_apdu_initialize(p_apdu);
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_hid_receive_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
+    fido_receive_apdu_from_init_frame(p_apdu, control_point_buffer, control_point_buffer_length, offset);
 
     return true;
 }
@@ -181,30 +184,30 @@ static void extract_and_check_cont_packet(HID_HEADER_T *p_hid_header, FIDO_APDU_
     }
 
     // パケットからAPDU(データ部分)を取り出し、別途確保した領域に格納
-    fido_hid_receive_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
+    fido_receive_apdu_from_cont_frame(p_apdu, control_point_buffer, control_point_buffer_length);
 }
 
 static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
 {
     uint8_t *cid = recv_msg->cid;
     uint8_t  cmd = recv_msg->pkt.init.cmd;
-    size_t   len = get_payload_length(recv_msg);
+    size_t   len = fido_hid_payload_length_get(recv_msg);
 
     if (cmd == CTAP2_COMMAND_CBOR) {
         // CBORコマンドである場合を想定したログ
         fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) OPTION(0x%02x) LEN(%d)",
-            get_CID(cid), cmd, recv_msg->pkt.init.payload[0], len);
+            fido_hid_channel_get_cid_from_bytes(cid), cmd, recv_msg->pkt.init.payload[0], len);
 
     } else {
         fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
-            get_CID(cid), cmd, len);
+            fido_hid_channel_get_cid_from_bytes(cid), cmd, len);
     }
 }
 
 static void dump_hid_cont_packet(USB_HID_MSG_T *recv_msg)
 {
     fido_log_debug("CONT frame: CID(0x%08x) SEQ(0x%02x)",
-        get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
+        fido_hid_channel_get_cid_from_bytes(recv_msg->cid), recv_msg->pkt.cont.seq);
 }
 
 static void setup_control_point_buffer(uint8_t *payload, size_t payload_size)
@@ -227,7 +230,7 @@ static void check_apdu_data_length(void)
     }
 }
 
-static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
+static void extract_request_from_init_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
 {
     // リクエストフレームを内部バッファに保持
     setup_control_point_buffer(payload, payload_size);
@@ -275,7 +278,7 @@ static void receive_request_from_init_frame(uint32_t cid, uint8_t *payload, size
     check_apdu_data_length();
 }
 
-static void receive_request_from_cont_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
+static void extract_request_from_cont_frame(uint32_t cid, uint8_t *payload, size_t payload_size)
 {
     // リクエストフレームを内部バッファに保持
     setup_control_point_buffer(payload, payload_size);
@@ -288,7 +291,7 @@ static void receive_request_from_cont_frame(uint32_t cid, uint8_t *payload, size
     check_apdu_data_length();
 }
 
-void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number)
+static void extract_request_from_received_frames(uint8_t *request_frame_buffer, size_t request_frame_number)
 {
     static size_t pos;
     static size_t payload_len;
@@ -300,19 +303,16 @@ void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request
             dump_hid_init_packet(req);
 
             // payload長を取得し、リクエストデータ領域に格納
-            payload_len = get_payload_length(req);
+            payload_len = fido_hid_payload_length_get(req);
             pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
 
             // CIDを保持
-            cid = get_CID(req->cid);
+            cid = fido_hid_channel_get_cid_from_bytes(req->cid);
 
             // リクエストデータのチェックと格納
             // （引数にはHIDヘッダーを含まないデータを渡す）
-            receive_request_from_init_frame(cid, (uint8_t *)&req->pkt.init, pos + 3);
+            extract_request_from_init_frame(cid, (uint8_t *)&req->pkt.init, pos + 3);
 
-            // FIDOリクエスト受信開始時の処理を実行
-            fido_hid_command_on_report_started();
-            
         } else {
             dump_hid_cont_packet(req);
 
@@ -323,7 +323,7 @@ void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request
 
             // リクエストデータのチェックと格納
             // （引数にはHIDヘッダーを含まないデータを渡す）
-            receive_request_from_cont_frame(cid, (uint8_t *)&req->pkt.cont, cnt + 1);            
+            extract_request_from_cont_frame(cid, (uint8_t *)&req->pkt.cont, cnt + 1);            
         }        
     }
 }
@@ -372,7 +372,7 @@ bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
 
     if (is_init_frame(cmd, remaining)) {
         // 先頭フレームであればpayload長を取得
-        payload_len = get_payload_length(req);
+        payload_len = fido_hid_payload_length_get(req);
         
         // フレームが最後かどうかを判定するための受信済みデータ長
         pos = (payload_len < USBD_HID_INIT_PAYLOAD_SIZE) ? payload_len : USBD_HID_INIT_PAYLOAD_SIZE;
@@ -403,4 +403,30 @@ bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
         remaining = true;
         return false;
     }
+}
+
+void fido_hid_receive_on_request_received(uint8_t *request_frame_buffer, size_t request_frame_number)
+{
+    // 受信したフレームから、リクエストデータを取得し、
+    // 同時に内容をチェックする
+    extract_request_from_received_frames(request_frame_buffer, request_frame_number);
+
+    uint8_t cmd = fido_hid_receive_header()->CMD;
+    if (cmd == U2F_COMMAND_ERROR) {
+        // チェック結果がNGの場合はここで処理中止
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, fido_hid_receive_header()->ERROR);
+        return;
+    }
+
+    uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cid_for_lock = fido_hid_channel_lock_cid();
+    if (cid != cid_for_lock && cid_for_lock != 0) {
+        // ロック対象CID以外からコマンドを受信したら
+        // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        return;
+    }
+    
+    // データ受信後に実行すべき処理
+    fido_command_on_request_receive_completed(TRANSPORT_HID);
 }
