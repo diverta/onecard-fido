@@ -318,51 +318,51 @@ void fido_button_long_push_timer_start(uint32_t timeout_msec, void *p_context)
 //
 // HIDチャネルロック用タイマー
 // 
-APP_TIMER_DEF(m_lock_channel_timer_id);
-static bool lock_channel_timer_created = false;
+APP_TIMER_DEF(m_hid_channel_lock_timer_id);
+static bool hid_channel_lock_timer_created = false;
 
-static void lock_channel_timeout_handler(void *p_context)
+static void hid_channel_lock_timeout_handler(void *p_context)
 {
-    fido_lock_channel_timedout_handler(p_context);
+    fido_hid_channel_lock_timedout_handler(p_context);
 }
 
-static ret_code_t lock_channel_timer_init(void)
+static ret_code_t hid_channel_lock_timer_init(void)
 {
-    if (lock_channel_timer_created) {
+    if (hid_channel_lock_timer_created) {
         return NRF_SUCCESS;
     }
 
     // 直近レスポンスからの経過秒数監視するためのタイマーを生成
     ret_code_t err_code;
-    err_code = app_timer_create(&m_lock_channel_timer_id, APP_TIMER_MODE_SINGLE_SHOT, lock_channel_timeout_handler);
+    err_code = app_timer_create(&m_hid_channel_lock_timer_id, APP_TIMER_MODE_SINGLE_SHOT, hid_channel_lock_timeout_handler);
     if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_create(m_lock_channel_timer_id) returns %d ", err_code);
+        fido_log_error("app_timer_create(m_hid_channel_lock_timer_id) returns %d ", err_code);
     }
     
-    lock_channel_timer_created = true;
+    hid_channel_lock_timer_created = true;
     return err_code;
 }
 
-void fido_lock_channel_timer_stop(void)
+void fido_hid_channel_lock_timer_stop(void)
 {
     // 直近レスポンスからの経過秒数監視を停止
-    app_timer_stop(m_lock_channel_timer_id);
+    app_timer_stop(m_hid_channel_lock_timer_id);
 }
 
-void fido_lock_channel_timer_start(uint32_t lock_ms)
+void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
 {
     // タイマー生成
-    ret_code_t err_code = lock_channel_timer_init();
+    ret_code_t err_code = hid_channel_lock_timer_init();
     if (err_code != NRF_SUCCESS) {
         return;
     }
 
     // タイマーが既にスタートしている場合は停止させる
-    fido_lock_channel_timer_stop();
+    fido_hid_channel_lock_timer_stop();
 
     // 直近レスポンスからの経過秒数監視を開始
-    err_code = app_timer_start(m_lock_channel_timer_id, APP_TIMER_TICKS(lock_ms), NULL);
+    err_code = app_timer_start(m_hid_channel_lock_timer_id, APP_TIMER_TICKS(lock_ms), NULL);
     if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_start(m_lock_channel_timer_id) returns %d ", err_code);
+        fido_log_error("app_timer_start(m_hid_channel_lock_timer_id) returns %d ", err_code);
     }
 }

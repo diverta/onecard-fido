@@ -41,21 +41,21 @@ static void dump_hid_init_packet(USB_HID_MSG_T *recv_msg)
         return;
     }
 
-    size_t len = get_payload_length(recv_msg);
+    size_t len = fido_hid_payload_length_get(recv_msg);
     if (cmd == CTAP2_COMMAND_INIT || cmd == CTAP2_COMMAND_PING) {
         fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d)",
-            get_CID(cid), cmd, len);
+            fido_hid_channel_get_cid_from_bytes(cid), cmd, len);
     } else {
         // レスポンスの先頭１バイト目＝ステータスコードである場合を想定したログ
         fido_log_debug("INIT frame: CID(0x%08x) CMD(0x%02x) LEN(%d) STATUS(0x%02x)",
-            get_CID(cid), cmd, len, recv_msg->pkt.init.payload[0]);
+            fido_hid_channel_get_cid_from_bytes(cid), cmd, len, recv_msg->pkt.init.payload[0]);
     }
 }
 
 static void dump_hid_cont_packet(USB_HID_MSG_T *recv_msg)
 {
     fido_log_debug("CONT frame: CID(0x%08x) SEQ(0x%02x)",
-        get_CID(recv_msg->cid), recv_msg->pkt.cont.seq);
+        fido_hid_channel_get_cid_from_bytes(recv_msg->cid), recv_msg->pkt.cont.seq);
 }
 
 static void generate_hid_input_report(uint8_t *payload_data, size_t payload_length, 
@@ -73,7 +73,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
     if (offset == 0) {
         // チャネルID、CMD、データ長を設定
-        set_CID(res->cid, cid);
+        fido_hid_channel_set_cid_bytes(res->cid, cid);
         res->pkt.init.cmd   = cmd;
         res->pkt.init.bcnth = (payload_length >> 8) & 0x00ff;
         res->pkt.init.bcntl = payload_length & 0x00ff;
@@ -89,7 +89,7 @@ static void generate_hid_input_report(uint8_t *payload_data, size_t payload_leng
 
     } else {
         // チャネルID、シーケンスを設定
-        set_CID(res->cid, cid);
+        fido_hid_channel_set_cid_bytes(res->cid, cid);
         res->pkt.cont.seq = seq++;
 
         // パケットデータを設定

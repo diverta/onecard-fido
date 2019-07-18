@@ -178,7 +178,7 @@ void fido_ctap2_command_hid_init(void)
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
     memcpy(init_res.nonce, nonce, 8);
-    set_CID(init_res.cid, get_incremented_CID());
+    fido_hid_channel_set_cid_bytes(init_res.cid, fido_hid_channel_new_cid());
     init_res.version_id    = 2;
     init_res.version_major = 5;
     init_res.version_minor = 0;
@@ -221,11 +221,11 @@ void fido_ctap2_command_lock(void)
     if (lock_param > 0) {
         // パラメーターが指定されていた場合
         // ロック対象CIDを設定
-        fido_lock_channel_start(cid, lock_param);
+        fido_hid_channel_lock_start(cid, lock_param);
 
     } else {
         // CIDのロックを解除
-        fido_lock_channel_cancel();
+        fido_hid_channel_lock_cancel();
     }
 
     // ステータスなしでレスポンスする

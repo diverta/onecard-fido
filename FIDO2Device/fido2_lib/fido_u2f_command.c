@@ -214,7 +214,7 @@ void fido_u2f_command_hid_init(void)
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
     memcpy(init_res.nonce, nonce, 8);
-    set_CID(init_res.cid, get_incremented_CID());
+    fido_hid_channel_set_cid_bytes(init_res.cid, fido_hid_channel_new_cid());
     init_res.version_id    = 2;
     init_res.version_major = 1;
     init_res.version_minor = 1;

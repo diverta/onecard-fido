@@ -36,9 +36,7 @@ typedef struct {
 HID_HEADER_T *fido_hid_receive_header(void);
 FIDO_APDU_T  *fido_hid_receive_apdu(void);
 
-void fido_hid_receive_request_data(uint8_t *request_frame_buffer, size_t request_frame_number);
 bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number);
-
 void fido_hid_receive_on_request_received(uint8_t *request_frame_buffer, size_t request_frame_number);
 
 #ifdef __cplusplus
