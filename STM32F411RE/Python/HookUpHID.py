@@ -10,7 +10,7 @@ for d in hid.enumerate(0, 0):
     for key in keys:
         if key != 'usage_page':
             continue
-        if d[key] != 65451:
+        if d[key] != 61904:
             continue
 
         # Retrieve path for U2F hid interface
@@ -22,17 +22,17 @@ if hid_dev is None:
     exit()
 
 '''
-HID device: path=USB_1234_0006_0x7fc742407130, usage_page=65451, usage=512
+HID device: path=USB_f055_0001_0x7ff845e00470, usage_page=61904, usage=1
 '''
-VENDOR_ID  = 1234
-PRODUCT_ID = 0006
+VENDOR_ID  = 61525
+PRODUCT_ID = 1
 
 try:
     print "Opening device"
     h = hid.device(VENDOR_ID, PRODUCT_ID, path=hid_dev['path'])
 
-    # send 8 bytes
-    data = [0] * 8
+    # send 64 bytes
+    data = [0] * 64
     data[0]  = 0xff
     data[1]  = 0xff
     data[2]  = 0xff
@@ -41,19 +41,28 @@ try:
     data[5]  = 0x00
     data[6]  = 0x08
     data[7]  = 0xd4
+    data[8]  = 0xe5
+    data[9]  = 0xf6
+    data[10] = 0x07
+    data[11] = 0x18
+    data[12] = 0x29
+    data[13] = 0x30
+    data[14] = 0x41
 
     h.write(data)
     print "---- sent data ----"
     data_ = bytearray(data)
-    print binascii.hexlify(data_)
+    print binascii.hexlify(data_[:32])
+    print binascii.hexlify(data_[32:])
     print "----"
     print "hid.write done."
 
     # receive 64 bytes
-    rcv = h.read(8)
+    rcv = h.read(64)
     print "---- received data ----"
     data_ = bytearray(rcv)
-    print binascii.hexlify(data_)
+    print binascii.hexlify(data_[:32])
+    print binascii.hexlify(data_[32:])
     print "----"
     print "hid.read done."
 
