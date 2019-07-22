@@ -128,14 +128,6 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
 static bool m_report_pending;
 static bool m_report_received;
 
-//
-// リクエストフレーム、およびフレーム数を
-// 一時的に保持する領域
-// (32フレームまで格納が可能)
-//
-static uint8_t request_frame_buffer[USBD_HID_MAX_PAYLOAD_SIZE];
-static size_t  request_frame_number;
-
 static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 {
     // Output reportが格納されている領域を取得
@@ -152,8 +144,7 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
     // request_frame_bufferに格納
     // 受信フレーム数は、request_frame_numberに設定される
     m_report_received = fido_hid_receive_request_frame(
-        rep_buf->p_buff, rep_buf->size,
-        request_frame_buffer, &request_frame_number);
+        rep_buf->p_buff, rep_buf->size);
 }
 
 /**
@@ -331,5 +322,5 @@ void usbd_hid_do_process(void)
     m_report_received = false;
     
     // FIDO USB HIDサービスを実行
-    fido_hid_receive_on_request_received(request_frame_buffer, request_frame_number);
+    fido_hid_receive_on_request_received();
 }
