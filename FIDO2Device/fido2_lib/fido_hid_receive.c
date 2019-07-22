@@ -47,6 +47,14 @@ static uint16_t control_point_buffer_length;
 static HID_HEADER_T hid_header_t;
 static FIDO_APDU_T  apdu_t;
 
+//
+// リクエストフレーム、およびフレーム数を
+// 一時的に保持する領域
+// (32フレームまで格納が可能)
+//
+static uint8_t request_frame_buffer[USBD_HID_MAX_PAYLOAD_SIZE];
+static size_t  request_frame_number = 0;
+
 HID_HEADER_T *fido_hid_receive_header(void)
 {
     return &hid_header_t;
@@ -357,7 +365,7 @@ static bool is_init_frame(uint8_t cmd, bool remaining)
     }
 }
 
-bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *request_frame_buffer, size_t *request_frame_number)
+bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size)
 {
     static size_t pos;
     static size_t payload_len;
@@ -380,9 +388,17 @@ bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
         // リクエストフレーム全体を一時領域に格納
         memset(request_frame_buffer, 0, USBD_HID_MAX_PAYLOAD_SIZE);
         memcpy(request_frame_buffer, p_buff, size);
-        *request_frame_number = 1;
+        request_frame_number = 1;
 
     } else {
+        if (request_frame_number == 0) {
+        // 先頭フレームを受信しない状態で
+        // 後続フレームが受信された場合は
+        // 単に読み飛ばしとする
+            remaining = false;
+            return false;
+        }
+
         // 後続フレームの場合
         // フレームが最後かどうかを判定するための受信済みデータ長を更新
         size_t remain = payload_len - pos;
@@ -390,9 +406,9 @@ bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
         pos += cnt;
 
         // リクエストフレーム全体を一時領域に格納
-        memcpy(request_frame_buffer + (*request_frame_number) * USBD_HID_PACKET_SIZE, 
+        memcpy(request_frame_buffer + request_frame_number * USBD_HID_PACKET_SIZE, 
             p_buff, size);
-        (*request_frame_number)++;
+        request_frame_number++;
     }
 
     // リクエストデータを全て受信したらtrueを戻す
@@ -405,11 +421,14 @@ bool fido_hid_receive_request_frame(uint8_t *p_buff, size_t size, uint8_t *reque
     }
 }
 
-void fido_hid_receive_on_request_received(uint8_t *request_frame_buffer, size_t request_frame_number)
+void fido_hid_receive_on_request_received(void)
 {
     // 受信したフレームから、リクエストデータを取得し、
     // 同時に内容をチェックする
     extract_request_from_received_frames(request_frame_buffer, request_frame_number);
+    
+    // 受信リクエストフレーム数を初期化
+    request_frame_number = 0;
 
     uint8_t cmd = fido_hid_receive_header()->CMD;
     if (cmd == U2F_COMMAND_ERROR) {
