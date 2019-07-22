@@ -246,7 +246,7 @@ static void extract_request_from_init_frame(uint32_t cid, uint8_t *payload, size
     if (cid == 0) {
         // CIDが不正の場合
         // エラーレスポンスメッセージを作成
-        fido_log_error("Command not allowed on cid 0x00");
+        fido_log_error("Command not allowed on cid 0x%08x", cid);
         hid_header_t.CID =   cid;
         hid_header_t.CMD =   FIDO_COMMAND_ERROR;
         hid_header_t.ERROR = CTAP1_ERR_INVALID_CHANNEL;
@@ -438,10 +438,21 @@ void fido_hid_receive_on_request_received(void)
     }
 
     uint32_t cid = fido_hid_receive_header()->CID;
+    uint32_t cid_curr = fido_hid_channel_current_cid();
+    if (cmd != FIDO_COMMAND_INIT && cmd < MNT_COMMAND_BASE && cid != cid_curr) {
+        // INIT以外のコマンドを受信したら、
+        // INITで発行されたCIDであるかどうかチェックし、
+        // 違っている場合はエラー CTAP1_ERR_INVALID_CHANNEL をレスポンス
+        fido_log_error("Command 0x%02x not allowed on unknown cid 0x%08x", cmd, cid);
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_INVALID_CHANNEL);
+        return;
+    }
+
     uint32_t cid_for_lock = fido_hid_channel_lock_cid();
     if (cid != cid_for_lock && cid_for_lock != 0) {
         // ロック対象CID以外からコマンドを受信したら
         // エラー CTAP1_ERR_CHANNEL_BUSY をレスポンス
+        fido_log_error("Command 0x%02x not allowed on non-locked cid 0x%08x", cmd, cid);
         fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
         return;
     }
