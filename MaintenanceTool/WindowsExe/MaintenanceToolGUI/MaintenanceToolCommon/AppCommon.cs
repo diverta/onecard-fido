@@ -15,6 +15,7 @@ namespace MaintenanceToolCommon
         public const string MSG_FAILURE = "失敗";
 
         // ホーム画面
+        public const string MSG_OCCUR_UNKNOWN_ERROR = "不明なエラーが発生しました。";
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
 
