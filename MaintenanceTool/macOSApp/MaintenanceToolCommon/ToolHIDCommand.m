@@ -20,6 +20,7 @@
 #define HID_CMD_CTAPHID_CBOR        0x90
 #define HID_CMD_ERASE_SKEY_CERT     0xC0
 #define HID_CMD_INSTALL_SKEY_CERT   0xC1
+#define HID_CMD_UNKNOWN_ERROR       0xBF
 
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
@@ -72,9 +73,9 @@
     }
 
     - (void)startResponseTimeoutMonitor {
-        // タイムアウト監視を開始（10秒後にタイムアウト）
+        // タイムアウト監視を開始（30秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
-                                  withObject:nil afterDelay:10.0];
+                                  withObject:nil afterDelay:30.0];
         // for debug
         // NSLog(@"ResponseTimeoutMonitor started");
     }
@@ -89,6 +90,7 @@
 
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時はエラーメッセージを表示
+        NSLog(@"HIDResponse timed out");
         [[self delegate] hidCommandDidProcess:[self command]
                                        result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
@@ -505,6 +507,10 @@
                 break;
             case HID_CMD_CTAPHID_CBOR:
                 [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
+                break;
+            case HID_CMD_UNKNOWN_ERROR:
+                // メッセージを画面表示
+                [self doResponseToAppDelegate:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
             default:
                 break;

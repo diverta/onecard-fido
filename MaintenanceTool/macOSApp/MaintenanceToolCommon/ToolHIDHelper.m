@@ -111,13 +111,14 @@
         remaining -= datalen;
         if (remaining == 0) {
             if (receivedCmd != 0xbb) {
-                // キープアライブレスポンス以外であれば、情報をコンソール出力
+                // キープアライブレスポンス以外であれば、情報をコンソール出力し、
+                // アプリケーションに制御を戻す
                 NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
                       cid, receivedCmd,
                       (unsigned long)[[self hidResponse] length],
                       [self hidResponse]);
+                [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
             }
-            [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
         }
     }
 
