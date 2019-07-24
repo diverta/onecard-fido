@@ -13,6 +13,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
+        public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
         // サブコマンドバイトに関する定義
         public const byte HID_CBORCMD_NONE = 0x00;
         public const byte HID_CBORCMD_MAKE_CREDENTIAL = 0x01;
@@ -124,6 +125,11 @@ namespace MaintenanceToolGUI
                 break;
             case Const.HID_CMD_CTAPHID_CBOR:
                 DoResponseCtapHidCbor(message, length);
+                break;
+            case Const.HID_CMD_UNKNOWN_ERROR:
+                // 画面に制御を戻す
+                mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                mainForm.OnAppMainProcessExited(false);
                 break;
             }
         }
