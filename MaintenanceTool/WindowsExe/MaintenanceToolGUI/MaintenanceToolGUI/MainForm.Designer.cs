@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonQuit = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -44,13 +45,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.commandTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -191,8 +193,15 @@
             this.toolStripMenuItem1,
             this.cTAPHIDINIT実行ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.uSBToolStripMenuItem.Text = "USB";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
+            this.toolStripMenuItem1.Text = "CTAP2ヘルスチェック実行";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // cTAPHIDINIT実行ToolStripMenuItem
             // 
@@ -206,7 +215,7 @@
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DoHealthCheckToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoHealthCheckToolStripMenuItem
@@ -230,13 +239,6 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
-            this.toolStripMenuItem1.Text = "CTAP2ヘルスチェック実行";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // MainForm
             // 
@@ -294,6 +296,7 @@
         private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHealthCheckToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.Timer commandTimer;
     }
 }
 

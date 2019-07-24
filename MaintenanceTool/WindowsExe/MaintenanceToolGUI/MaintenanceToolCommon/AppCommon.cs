@@ -41,6 +41,7 @@ namespace MaintenanceToolCommon
         public const string MSG_HID_CONNECTED = "USB HIDデバイスに接続されました。";
         public const string MSG_HID_RESPONSE_RECEIVED = "USB HIDデバイスからレスポンスを受信しました。";
         public const string MSG_HID_REQUEST_SENT = "USB HIDデバイスにリクエストを送信しました。";
+        public const string MSG_HID_CMD_RESPONSE_TIMEOUT = "認証器からの応答が受信できませんでした。";
         public const string MSG_FORMAT_NOT_INSTALLED = "{0}が導入されていません。";
         public const string MSG_FORMAT_PROCESS_STARTED = "{0}を開始しました: {1} {2}";
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
