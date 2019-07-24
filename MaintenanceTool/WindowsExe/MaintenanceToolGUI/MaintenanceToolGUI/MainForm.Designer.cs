@@ -47,13 +47,13 @@
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
-            this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -212,6 +212,13 @@
             this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
             this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
             // 
+            // flashROM情報取得ToolStripMenuItem
+            // 
+            this.flashROM情報取得ToolStripMenuItem.Name = "flashROM情報取得ToolStripMenuItem";
+            this.flashROM情報取得ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.flashROM情報取得ToolStripMenuItem.Text = "Flash ROM情報取得";
+            this.flashROM情報取得ToolStripMenuItem.Click += new System.EventHandler(this.flashROM情報取得ToolStripMenuItem_Click);
+            // 
             // bLEToolStripMenuItem
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -241,12 +248,6 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
-            // 
-            // flashROM情報取得ToolStripMenuItem
-            // 
-            this.flashROM情報取得ToolStripMenuItem.Name = "flashROM情報取得ToolStripMenuItem";
-            this.flashROM情報取得ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.flashROM情報取得ToolStripMenuItem.Text = "Flash ROM情報取得";
             // 
             // MainForm
             // 
