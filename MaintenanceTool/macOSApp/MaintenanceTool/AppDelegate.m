@@ -182,9 +182,9 @@
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
-        // TODO: Flash ROM情報取得
+        // Flash ROM情報取得
         [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
