@@ -53,6 +53,7 @@
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
+            this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -191,9 +192,10 @@
             // 
             this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.cTAPHIDINIT実行ToolStripMenuItem});
+            this.cTAPHIDINIT実行ToolStripMenuItem,
+            this.flashROM情報取得ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
             // toolStripMenuItem1
@@ -215,7 +217,7 @@
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DoHealthCheckToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoHealthCheckToolStripMenuItem
@@ -239,6 +241,12 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
+            // 
+            // flashROM情報取得ToolStripMenuItem
+            // 
+            this.flashROM情報取得ToolStripMenuItem.Name = "flashROM情報取得ToolStripMenuItem";
+            this.flashROM情報取得ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.flashROM情報取得ToolStripMenuItem.Text = "Flash ROM情報取得";
             // 
             // MainForm
             // 
@@ -297,6 +305,7 @@
         private System.Windows.Forms.ToolStripMenuItem DoHealthCheckToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.Timer commandTimer;
+        private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
     }
 }
 
