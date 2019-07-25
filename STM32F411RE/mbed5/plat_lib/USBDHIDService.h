@@ -31,6 +31,9 @@ class USBDHIDService: public USBHID
         //
         virtual uint8_t * stringIserialDesc();
 
+        void doInitialize();
+        bool doProcess();
+
     protected:
         //
         // Get configuration descriptor
@@ -40,6 +43,10 @@ class USBDHIDService: public USBHID
     private:
         uint8_t output_length;
         uint8_t input_length;
+
+        // This report will contain data to be sent
+        HID_REPORT send_report;
+        HID_REPORT recv_report;
 };
 
 #endif

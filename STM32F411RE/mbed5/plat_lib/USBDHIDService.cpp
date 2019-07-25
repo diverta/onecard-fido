@@ -31,7 +31,8 @@ uint8_t *USBDHIDService::reportDesc()
                                + (1 * HID_DESCRIPTOR_LENGTH) \
                                + (2 * ENDPOINT_DESCRIPTOR_LENGTH))
 
-uint8_t *USBDHIDService::configurationDesc() {
+uint8_t *USBDHIDService::configurationDesc() 
+{
     static uint8_t configurationDescriptor[] = {
         CONFIGURATION_DESCRIPTOR_LENGTH,// bLength
         CONFIGURATION_DESCRIPTOR,       // bDescriptorType
@@ -82,7 +83,8 @@ uint8_t *USBDHIDService::configurationDesc() {
     return configurationDescriptor;
 }
 
-uint8_t *USBDHIDService::stringImanufacturerDesc() {
+uint8_t *USBDHIDService::stringImanufacturerDesc() 
+{
     static uint8_t stringImanufacturerDescriptor[] = {
         26,                 /*bLength*/
         STRING_DESCRIPTOR,  /*bDescriptorType 0x03*/
@@ -102,7 +104,8 @@ uint8_t *USBDHIDService::stringImanufacturerDesc() {
     return stringImanufacturerDescriptor;
 }
 
-uint8_t *USBDHIDService::stringIproductDesc() {
+uint8_t *USBDHIDService::stringIproductDesc() 
+{
     static uint8_t stringIproductDescriptor[] = {
         40,                 /*bLength*/
         STRING_DESCRIPTOR,  /*bDescriptorType 0x03*/
@@ -129,7 +132,8 @@ uint8_t *USBDHIDService::stringIproductDesc() {
     return stringIproductDescriptor;
 }
 
-uint8_t * USBDHIDService::stringIserialDesc() {
+uint8_t * USBDHIDService::stringIserialDesc() 
+{
     static uint8_t stringIserialDescriptor[] = {
         0x16,               /*bLength*/
         STRING_DESCRIPTOR,  /*bDescriptorType 0x03*/
@@ -145,4 +149,37 @@ uint8_t * USBDHIDService::stringIserialDesc() {
         '1',0
     };                      /*bString iSerial*/
     return stringIserialDescriptor;
+}
+
+void USBDHIDService::doInitialize() 
+{
+    printf("USBDHIDService start\r\n");
+    
+    send_report.length = 64;
+}
+
+bool USBDHIDService::doProcess() 
+{
+    // HIDデータフレームを受信
+    if (read(&recv_report)) {
+        printf("recv:");
+        for (int i = 0; i < recv_report.length; i++) {
+            if (i % 16 == 0) {
+                printf("\r\n");
+            }
+            printf("%02x ", recv_report.data[i]);
+
+            // 受信メッセージを送信メッセージ領域にコピー
+            send_report.data[i] = recv_report.data[i];
+        }
+        printf("\r\n");
+
+        // HIDデータフレームを送信
+        // 受信メッセージをecho back
+        sendNB(&send_report);
+        printf("sent: done.\r\n");
+    }
+
+    wait(0.01);
+    return true;
 }
