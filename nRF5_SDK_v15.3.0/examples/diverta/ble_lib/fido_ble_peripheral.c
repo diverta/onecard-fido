@@ -36,6 +36,8 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_service.h"
 #include "fido_ble_event.h"
 
+#include "fido_platform.h"
+
 #if   defined(BOARD_PCA10056)
 #define DEVICE_NAME                         "FIDO_Authenticator_board"              /**< Name of device. Will be included in the advertising data. */
 #elif defined(BOARD_PCA10059)
@@ -428,5 +430,24 @@ void fido_ble_peripheral_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_e
         NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
                      p_evt->conn_handle,
                      p_evt->params.att_mtu_effective);
+    }
+}
+
+void fido_ble_peripheral_start(void)
+{
+    // USB接続・HIDサービスが始動していない場合は
+    // アドバタイジングを開始させ、
+    // BLEペリフェラル・モードに遷移
+    fido_ble_peripheral_advertising_start();
+
+    // LED制御をアイドル中に変更
+    if (fido_ble_pairing_mode_get()) {
+        // ペアリングモードの場合は
+        // RED LEDの連続点灯とします。
+        fido_status_indicator_pairing_mode();
+
+    } else {
+        // 青色LEDを秒間２回点滅
+        fido_status_indicator_idle();
     }
 }

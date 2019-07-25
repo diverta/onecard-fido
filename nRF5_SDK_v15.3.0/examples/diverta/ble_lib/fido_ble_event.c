@@ -18,7 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_pairing.h"
 #include "fido_timer.h"
 
-#include "fido_ble_command.h"
+#include "fido_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 
@@ -36,9 +36,6 @@ static void ble_u2f_on_connect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
 
     // コマンド／リクエストデータ格納領域を初期化する
     fido_ble_receive_init();
-
-    // 無通信タイマーが既にスタートしている場合は停止させる
-    fido_comm_interval_timer_stop();
 }
 
 static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
@@ -48,9 +45,6 @@ static void ble_u2f_on_disconnect(ble_u2f_t *p_u2f, ble_evt_t *p_ble_evt)
     UNUSED_PARAMETER(p_ble_evt);
     p_u2f->conn_handle = BLE_CONN_HANDLE_INVALID;
 
-    // ユーザー所在確認を停止(キープアライブを停止)
-    fido_user_presence_terminate();
-    
     // ペアリングモードをキャンセルするため、ソフトデバイスを再起動
     fido_ble_pairing_on_disconnect();
 }
@@ -181,7 +175,7 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
 void fido_ble_sleep_mode_enter(void)
 {
     // FIDO U2Fで使用しているLEDを消灯
-    fido_led_light_all(false);
+    fido_status_indicator_none();
 }
 
 void fido_ble_on_process_timedout(void)
@@ -200,5 +194,5 @@ void fido_ble_do_process(void)
     m_report_received = false;
     
     // FIDO BLEサービスを実行
-    fido_ble_command_on_request_received();
+    fido_ble_receive_on_request_received();
 }

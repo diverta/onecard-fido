@@ -8,8 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_common.h"
-#include "fido_ctap2_command.h"
-#include "fido_nfc_command.h"
+#include "fido_command.h"
 #include "fido_nfc_common.h"
 #include "fido_nfc_send.h"
 
@@ -152,13 +151,7 @@ static uint16_t process_with_nfc_header(uint8_t *data, size_t data_size, FIDO_AP
         fido_log_error("APDU size error: data size in header(%d) <> real data size(%d bytes)", data_in_frame_size, real_size);
         return SW_WRONG_LENGTH;
     }
-    
-    // 一番最初のフレームの場合
-    if (fido_apdu->data_length == 0) {
-        // FIDOリクエスト受信開始時の処理を実行
-        fido_nfc_command_on_request_started();
-    }
-    
+
     // データを抽出して内部変数に退避
     data_in_frame = data + apdu_header_size;
     memcpy(fido_apdu->data + fido_apdu->data_length, data_in_frame, data_in_frame_size);
@@ -212,7 +205,7 @@ static void perform_fido_ctap2_message(uint8_t *data, size_t data_size)
     if (is_last_nfc_frame((APDU_HEADER *)data)) {
         // 最終フレームの場合、受信したデータについて
         // CTAP2コマンド処理を実行する
-        fido_ctap2_command_cbor(TRANSPORT_NFC);
+        fido_command_on_request_receive_completed(TRANSPORT_NFC);
 
     } else {
         // 最終フレームでない場合は、ここでレスポンスを戻す

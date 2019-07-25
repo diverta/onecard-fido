@@ -22,6 +22,26 @@ namespace MaintenanceToolGUI
 
             // 画面タイトルを設定
             Text = MaintenanceToolTitle;
+
+            // コマンドタイムアウト発生時の処理
+            commandTimer.Interval = 30000;
+            commandTimer.Tick += CommandTimerElapsed;
+        }
+
+        private void CommandTimerElapsed(object sender, EventArgs e)
+        {
+            try {
+                // コマンドタイムアウト発生時は、コマンド終了処理を行う
+                OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+                OnAppMainProcessExited(false);
+                AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+
+            } catch (Exception ex) {
+                AppCommon.OutputLogToFile(ex.Message, true);
+
+            } finally {
+                commandTimer.Stop();
+            }
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
@@ -46,7 +66,7 @@ namespace MaintenanceToolGUI
                 commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
                 app.doPairing();
-
+                return;
             }
             else if (sender.Equals(button2)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
@@ -68,8 +88,13 @@ namespace MaintenanceToolGUI
                 commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
-
             }
+            else {
+                return;
+            }
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
         }
 
         private void DoCommandClientPinSet(object sender, EventArgs e)
@@ -114,6 +139,9 @@ namespace MaintenanceToolGUI
 
             // CTAP2ヘルスチェック実行
             hid.DoCtap2Healthcheck(f.PinCurr);
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -121,6 +149,9 @@ namespace MaintenanceToolGUI
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
             enableButtons(true);
+
+            // コマンドタイムアウト監視終了
+            commandTimer.Stop();
         }
 
         private void button1_Click(object sender, EventArgs e)

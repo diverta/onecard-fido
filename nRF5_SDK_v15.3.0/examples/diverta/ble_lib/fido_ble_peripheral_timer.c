@@ -15,7 +15,7 @@ NRF_LOG_MODULE_REGISTER();
 // for nrf_drv_usbd_is_enabled
 #include "nrf_drv_usbd.h"
 
-// for fido_ble_peripheral_advertising_start
+// for fido_ble_peripheral_start
 #include "fido_ble_peripheral.h"
 
 //業務処理／HW依存処理間のインターフェース
@@ -41,12 +41,12 @@ static void timeout_handler(void *p_context)
         // USB接続・HIDサービスが始動していない場合は
         // アドバタイジングを開始させ、
         // BLEペリフェラル・モードに遷移
-        fido_ble_peripheral_advertising_start();
+        fido_ble_peripheral_start();
+        return;
     }
 
-    // アイドル時点滅処理を開始
-    // USB HID、BLEでアイドル時のLED色を変える
-    fido_idling_led_blink_start();
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 static void timer_terminate(void)

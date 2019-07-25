@@ -15,12 +15,11 @@
 #include "u2f_authenticate.h"
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
+#include "fido_command.h"
 #include "fido_common.h"
 #include "fido_hid_channel.h"
-#include "fido_hid_command.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
-#include "fido_ble_command.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
 #include "fido_nfc_receive.h"
@@ -29,6 +28,9 @@
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// キープアライブ・タイマー
+#define U2F_KEEPALIVE_INTERVAL_MSEC 500
 
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
@@ -146,6 +148,7 @@ bool fido_u2f_command_on_mainsw_event(void)
     if (is_tup_needed) {
         // ユーザー所在確認が必要な場合
         // (＝ユーザーによるボタン押下が行われた場合)
+        // ユーザー所在確認フラグをクリア
         is_tup_needed = false;
         // キープアライブを停止
         fido_user_presence_verify_end();
@@ -169,8 +172,17 @@ void fido_u2f_command_keepalive_timer_handler(void)
         // キープアライブ・コマンドを実行する（BLE限定機能）
         if (m_transport_type == TRANSPORT_BLE) {
             // TUP_NEEDED: 0x02
-            fido_ble_send_command_response_no_callback(U2F_COMMAND_KEEPALIVE, 0x02);
+            fido_ble_send_status_response(U2F_COMMAND_KEEPALIVE, 0x02);
         }
+    }
+}
+
+void fido_u2f_command_tup_cancel(void)
+{
+    if (is_tup_needed) {
+        // ユーザー所在確認待ちの場合はキャンセル
+        is_tup_needed = false;
+        fido_log_info("Canceled the U2F test of user presence");
     }
 }
 
@@ -202,7 +214,7 @@ void fido_u2f_command_hid_init(void)
     // レスポンスデータを編集 (17 bytes)
     //   CIDはインクリメントされたものを設定
     memcpy(init_res.nonce, nonce, 8);
-    set_CID(init_res.cid, get_incremented_CID());
+    fido_hid_channel_set_cid_bytes(init_res.cid, fido_hid_channel_new_cid());
     init_res.version_id    = 2;
     init_res.version_major = 1;
     init_res.version_minor = 1;
@@ -417,6 +429,9 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
             break;
         case U2F_VERSION:
             u2f_command_version();
+            break;
+        case U2F_INS_INSTALL_PAIRING:
+            fido_ble_send_status_word(get_u2f_command_byte(), U2F_SW_NO_ERROR);
             break;
         default:
             // INSが不正の場合は終了

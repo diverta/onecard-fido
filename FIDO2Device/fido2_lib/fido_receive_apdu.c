@@ -1,20 +1,19 @@
 /* 
- * File:   fido_ble_receive_apdu.c
+ * File:   fido_receive_apdu.c
  * Author: makmorit
  *
- * Created on 2019/06/26, 11:32
+ * Created on 2018/11/29, 9:57
  */
-//
-// プラットフォーム非依存コード
-//
-#include "fido_ble_receive.h"
-#include "fido_ble_receive_apdu.h"
+#include "fido_common.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// U2FリクエストAPDU編集用の作業領域（固定長）
-static uint8_t apdu_data_buffer[1024];
+// for debug receiving data
+#define LOG_DEBUG_RECEIVING false
+
+// FIDO機能リクエストAPDU編集用の作業領域（固定長）
+static uint8_t apdu_data_buffer[APDU_DATA_MAX_LENGTH];
 
 static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
@@ -79,7 +78,7 @@ static uint16_t get_apdu_lc_value(FIDO_APDU_T *p_apdu, uint8_t *control_point_bu
     return lc_length;
 }
 
-uint8_t fido_ble_receive_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+uint8_t fido_receive_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     uint8_t apdu_header_length = 4;
     
@@ -105,15 +104,13 @@ uint8_t fido_ble_receive_apdu_header(FIDO_APDU_T *p_apdu, uint8_t *control_point
     return apdu_header_length + lc_length;
 }
 
-bool fido_ble_receive_apdu_allocate(FIDO_APDU_T *p_apdu)
+void fido_receive_apdu_initialize(FIDO_APDU_T *p_apdu)
 {
     // 確保領域は0で初期化
-    memset(apdu_data_buffer, 0, sizeof(apdu_data_buffer));
+    memset(apdu_data_buffer, 0, APDU_DATA_MAX_LENGTH);
 
     // 確保領域のアドレスをAPDU情報にも保持
     p_apdu->data = apdu_data_buffer;
-
-    return true;
 }
 
 static uint16_t get_apdu_le_value(FIDO_APDU_T *p_apdu, uint8_t *received_data, uint16_t received_data_length)
@@ -152,7 +149,7 @@ static uint16_t get_apdu_le_value(FIDO_APDU_T *p_apdu, uint8_t *received_data, u
     return le_length;
 }
 
-void fido_ble_receive_apdu_from_leading(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
+void fido_receive_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length, uint8_t offset)
 {
     // Control Pointに格納されている
     // 受信データの先頭アドレスとデータ長を取得
@@ -171,14 +168,16 @@ void fido_ble_receive_apdu_from_leading(FIDO_APDU_T *p_apdu, uint8_t *control_po
     memcpy(p_apdu->data, received_data, received_data_length);
     p_apdu->data_length = received_data_length;
 
+#if LOG_DEBUG_RECEIVING
     if (p_apdu->data_length < p_apdu->Lc) {
         fido_log_debug("INIT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
         fido_log_debug("INIT frame: received data (%d bytes) ", p_apdu->data_length);
     }
+#endif
 }
 
-void fido_ble_receive_apdu_from_following(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
+void fido_receive_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_point_buffer, uint16_t control_point_buffer_length)
 {
     // 受信データの先頭アドレスとデータ長を取得
     uint8_t *received_data        = control_point_buffer + 1;
@@ -195,5 +194,12 @@ void fido_ble_receive_apdu_from_following(FIDO_APDU_T *p_apdu, uint8_t *control_
     // コピー済みのデータの直後に取得したデータを連結
     memcpy(p_apdu->data + p_apdu->data_length, received_data, received_data_length);
     p_apdu->data_length += received_data_length;
-    fido_log_debug("CONT frame: received data (%d bytes) ", p_apdu->data_length);
+
+#if LOG_DEBUG_RECEIVING
+    if (p_apdu->data_length < p_apdu->Lc) {
+        fido_log_debug("CONT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
+    } else {
+        fido_log_debug("CONT frame: received data (%d bytes) ", p_apdu->data_length);
+    }
+#endif
 }

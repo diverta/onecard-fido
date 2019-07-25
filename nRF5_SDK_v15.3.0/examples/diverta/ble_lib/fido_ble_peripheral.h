@@ -20,6 +20,7 @@ void fido_ble_peripheral_evt_handler(ble_evt_t const *p_ble_evt, void *p_context
 void fido_ble_peripheral_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt);
 void fido_ble_peripheral_advertising_start(void);
 void fido_ble_peripheral_advertising_stop(void);
+void fido_ble_peripheral_start(void);
 
 #ifdef __cplusplus
 }
