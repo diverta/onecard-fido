@@ -4,6 +4,10 @@
  *
  * Created on 2018/11/29, 9:57
  */
+#include <string.h>
+//
+// プラットフォーム非依存コード
+//
 #include "fido_common.h"
 
 // 業務処理／HW依存処理間のインターフェース

@@ -5,6 +5,7 @@
  * Created on 2019/05/29, 11:30
  */
 #include <stdio.h>
+#include <string.h>
 //
 // プラットフォーム非依存コード
 //

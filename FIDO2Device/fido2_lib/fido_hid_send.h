@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-void fido_hid_send_input_report_complete();
+void fido_hid_send_input_report_complete(void);
 void fido_hid_send_command_response(uint32_t cid, uint8_t cmd, uint8_t *response_buffer, size_t response_length);
 void fido_hid_send_command_response_no_payload(uint32_t cid, uint8_t cmd);
 void fido_hid_send_status_response(uint8_t cmd, uint8_t status_code);
