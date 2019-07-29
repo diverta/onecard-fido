@@ -118,22 +118,21 @@ static void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buf
 // 
 static bool no_callback_flag;
 
-static uint32_t ble_u2f_status_response_send(bool no_callback)
+static void ble_u2f_status_response_send(bool no_callback)
 {
     uint32_t data_length;
-    uint32_t err_code;
 
     // フラグがビジーの場合は異常終了
     if (send_info_t.busy == true) {
         fido_log_error("ble_u2f_status_response_send: function is busy ");
-        return NRF_ERROR_INVALID_STATE;
+        return;
     }
 
     // 保持中の情報をチェックし、
     // 完備していない場合は異常終了
     if (send_info_t.data == NULL) {
         fido_log_error("ble_u2f_status_response_send: ble_u2f_status_setup incomplete ");
-        return NRF_ERROR_INVALID_DATA;
+        return;
     }
     
     // フラグを退避
@@ -146,21 +145,7 @@ static uint32_t ble_u2f_status_response_send(bool no_callback)
         data_length = edit_u2f_staus_data(offset);
 
         // u2f_status_bufferに格納されたパケットを送信
-        err_code = fido_ble_response_send(u2f_status_buffer, u2f_status_buffer_length);
-        if (err_code != NRF_SUCCESS) {
-
-            if (err_code == NRF_ERROR_RESOURCES) {
-                // 未送信データが存在する状態の場合は
-                // ビジーと判断して送信中断。
-                // イベントBLE_GATTS_EVT_HVN_TX_COMPLETEが
-                // 通知されたら、本関数を再度呼び出して再送させる。
-                send_info_t.busy = true;
-            } else if (err_code == NRF_ERROR_INVALID_STATE) {
-                // "ATT_MTU exchange is ongoing"状態と判断して送信中断。
-                // リトライタイマーをスタートし、３秒後、本関数を再度呼び出して再送させる。
-                fido_ble_send_retry_timer_start();
-            }
-
+        if (fido_ble_response_send(u2f_status_buffer, u2f_status_buffer_length, &send_info_t.busy) == false) {
             break;
         }
 
@@ -176,8 +161,6 @@ static uint32_t ble_u2f_status_response_send(bool no_callback)
             }
         }
     }
-
-    return err_code;
 }
 
 
@@ -200,8 +183,7 @@ void fido_ble_send_response_retry(void)
     }
     
     // レスポンスを送信
-    uint32_t err_code = ble_u2f_status_response_send(no_callback_flag);
-    fido_log_debug("ble_u2f_status_response_send retry: err_code=0x%02x ", err_code);
+    ble_u2f_status_response_send(no_callback_flag);
 }
 
 void fido_ble_send_command_response(uint8_t command_for_response, uint8_t *data_buffer, uint32_t data_buffer_length)
