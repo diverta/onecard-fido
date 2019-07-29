@@ -32,12 +32,12 @@ static uint8_t CTAP_AAGUID[] = {
     0x2b, 0x2e, 0xcb, 0xb4, 0x59, 0xb4, 0x44, 0xfa, 0x86, 0x8d, 0xa0, 0x72, 0x48, 0x5d, 0x8a, 0xe0
 };
 
-uint8_t *ctap2_cbor_authgetinfo_aaguid()
+uint8_t *ctap2_cbor_authgetinfo_aaguid(void)
 {
     return CTAP_AAGUID;
 }
 
-size_t ctap2_cbor_authgetinfo_aaguid_size()
+size_t ctap2_cbor_authgetinfo_aaguid_size(void)
 {
     return sizeof(CTAP_AAGUID);
 }

@@ -96,9 +96,9 @@ uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *
     }
     // 生成された公開鍵をCOSE形式にエンコードし、
     // mapにセット
-    ret = add_encoded_cosekey_to_map(&map);
-    if (ret != CTAP1_ERR_SUCCESS) {
-        return ret;
+    uint8_t err = add_encoded_cosekey_to_map(&map);
+    if (err != CTAP1_ERR_SUCCESS) {
+        return err;
     }
 
     ret = cbor_encoder_close_container(&encoder, &map);

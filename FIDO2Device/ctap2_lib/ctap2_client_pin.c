@@ -117,6 +117,7 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
     size_t      map_length;
     CborType    type;
     CborError   ret;
+    uint8_t     err;
     uint8_t     i;
     int         key;
     size_t      sz;
@@ -197,16 +198,16 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 break;
             case 3:
                 // keyAgreement (COSE_Key)
-                ret = parse_cose_pubkey(&map, &ctap2_request.cose_key);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_cose_pubkey(&map, &ctap2_request.cose_key);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 4:
                 // pinAuth (Byte Array)
-                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 ctap2_request.pinAuthSize = PIN_AUTH_SIZE;
                 break;
@@ -229,9 +230,9 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
                 break;
             case 6:
                 // pinHashEnc (Byte Array)
-                ret = parse_fixed_byte_string(&map, ctap2_request.pinHashEnc, PIN_HASH_ENC_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_fixed_byte_string(&map, ctap2_request.pinHashEnc, PIN_HASH_ENC_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 ctap2_request.pinHashEncSize = PIN_HASH_ENC_SIZE;
                 break;

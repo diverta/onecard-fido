@@ -11,8 +11,8 @@
 extern "C" {
 #endif
 
-uint8_t *ctap2_cbor_authgetinfo_aaguid();
-size_t   ctap2_cbor_authgetinfo_aaguid_size();
+uint8_t *ctap2_cbor_authgetinfo_aaguid(void);
+size_t   ctap2_cbor_authgetinfo_aaguid_size(void);
 uint8_t  ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *encoded_buff_size);
 
 #ifdef __cplusplus
