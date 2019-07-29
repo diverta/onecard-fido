@@ -17,9 +17,9 @@ bool     fido_ble_pairing_mode_get(void)
 //
 // fido_ble_service.c
 //
-uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length)
+bool     fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy)
 {
-    return 0;
+    return true;
 }
 bool     fido_ble_service_disconnected(void)
 {
