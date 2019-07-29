@@ -5,6 +5,7 @@
  * Created on 2019/01/03, 11:32
  */
 #include <stddef.h>
+#include <string.h>
 
 #include "ctap2_common.h"
 

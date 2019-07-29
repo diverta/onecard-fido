@@ -18,6 +18,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_service.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_pairing.h"
+#include "fido_ble_send_retry.h"
 
 //
 // FIDO Authenticator固有の定義
@@ -365,14 +366,13 @@ ble_u2f_t *fido_ble_get_U2F_context(void)
     return &m_u2f;
 }
 
-uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length)
+bool fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy)
 {
     // U2Fクライアントに対してレスポンスを送信する。
     //   U2Fクライアントと接続されていない場合は
     //   何もしない。
-
     if (m_u2f.conn_handle == BLE_CONN_HANDLE_INVALID) {
-        return NRF_ERROR_INVALID_STATE;
+        return false;
     }
 
     uint16_t hvx_send_length;
@@ -401,13 +401,23 @@ uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_bu
 #endif
         }
 
-    } else if (err_code != NRF_ERROR_RESOURCES) {
-        // 未送信データが存在する状態(NRF_ERROR_RESOURCES)の場合は
-        // 後ほどビジーと判断して再送させるため、エラー扱いとしない
+    } else if (err_code == NRF_ERROR_RESOURCES) {
+        // 未送信データが存在する状態の場合は
+        // ビジーと判断して送信中断。
+        // イベントBLE_GATTS_EVT_HVN_TX_COMPLETEが
+        // 通知されたら、本関数を再度呼び出して再送させる。
+        *busy = true;
+
+    } else if (err_code == NRF_ERROR_INVALID_STATE) {
+        // "ATT_MTU exchange is ongoing"状態と判断して送信中断。
+        // リトライタイマーをスタートし、３秒後、本関数を再度呼び出して再送させる。
+        fido_ble_send_retry_timer_start();
+ 
+    } else {
         NRF_LOG_ERROR("fido_ble_response_send: sd_ble_gatts_hvx failed (err_code=%d) ", err_code);
     }
 
-    return err_code;
+    return (err_code == NRF_SUCCESS);
 }
 
 bool fido_ble_service_disconnected(void)

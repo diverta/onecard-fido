@@ -7,6 +7,7 @@
 #ifndef FIDO_PLATFORM_H
 #define FIDO_PLATFORM_H
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -30,14 +31,9 @@ bool     fido_ble_pairing_mode_get(void);
 //
 // fido_ble_service.c
 //
-uint32_t fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length);
+bool     fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy);
 bool     fido_ble_service_disconnected(void);
 void     fido_ble_service_disconnect_force(void);
-
-//
-// fido_ble_send_retry.c
-//
-void fido_ble_send_retry_timer_start(void);
 
 //
 // fido_crypto.c
@@ -118,6 +114,12 @@ bool     fido_flash_password_set(uint8_t *random_vector);
 // nRF5 SDK依存のマクロ定義をインクルードさせる
 #ifdef NRF52840_XXAA
 #include "fido_log.h"
+#else
+#define fido_log_info(...)                  printf(__VA_ARGS__)
+#define fido_log_warning(...)               printf(__VA_ARGS__)
+#define fido_log_error(...)                 printf(__VA_ARGS__)
+#define fido_log_debug(...)                 printf(__VA_ARGS__)
+#define fido_log_print_hexdump_debug(...)   printf(__VA_ARGS__)
 #endif
 
 //

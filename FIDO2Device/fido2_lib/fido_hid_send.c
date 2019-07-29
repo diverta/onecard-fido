@@ -5,6 +5,7 @@
  * Created on 2018/11/21, 14:21
  */
 #include <stdio.h>
+#include <string.h>
 //
 // プラットフォーム非依存コード
 //
@@ -151,7 +152,7 @@ static void hid_fido_send_input_report(bool no_callback)
     no_callback_input_report_complete = no_callback;
 }
 
-void fido_hid_send_input_report_complete()
+void fido_hid_send_input_report_complete(void)
 {
     if (no_callback_input_report_complete) {
         // 実行する必要がない場合はスキップ

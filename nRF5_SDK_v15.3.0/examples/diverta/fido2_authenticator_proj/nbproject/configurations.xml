@@ -14,6 +14,7 @@
       <itemPath>../ble_lib/fido_ble_peripheral_timer.c</itemPath>
       <itemPath>../ble_lib/fido_ble_peripheral_timer.h</itemPath>
       <itemPath>../ble_lib/fido_ble_send_retry.c</itemPath>
+      <itemPath>../ble_lib/fido_ble_send_retry.h</itemPath>
       <itemPath>../ble_lib/fido_ble_service.c</itemPath>
       <itemPath>../ble_lib/fido_ble_service.h</itemPath>
     </logicalFolder>
@@ -1218,6 +1219,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/timer</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../ble_lib/fido_ble_send_retry.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../ble_lib/fido_ble_service.c" ex="false" tool="0" flavor2="2">
         <cTool>

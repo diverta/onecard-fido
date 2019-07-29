@@ -32,7 +32,7 @@
 // デコードされた
 // authenticatorGetAssertion
 // リクエストデータを保持する構造体
-struct {
+static struct {
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_OPTIONS_T           options;
@@ -88,6 +88,7 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     size_t      map_length;
     CborType    type;
     CborError   ret;
+    uint8_t     err;
     uint8_t     i;
     int         key;
     int         intval;
@@ -149,46 +150,46 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
         switch(key) {
             case 1:
                 // rpId
-                ret = parse_rp_id(&ctap2_request.rp, &map);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_rp_id(&ctap2_request.rp, &map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x01;
                 break;
             case 2:
                 // clientDataHash (Byte Array)
-                ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x02;
                 break;
             case 3:
                 // allowList
-                ret = parse_allow_list(&ctap2_request.allowList, &map);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_allow_list(&ctap2_request.allowList, &map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 4:
                 // extensions (CBOR map)
-                ret = parse_extensions(&map, &ctap2_request.extensions);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_extensions(&map, &ctap2_request.extensions);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 5:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options, &map, false);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_options(&ctap2_request.options, &map, false);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 6:
                 // pinAuth（Byte Array）
-                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 7:
@@ -380,7 +381,7 @@ uint8_t ctap2_get_assertion_generate_response_items(void)
     return CTAP1_ERR_SUCCESS;
 }
 
-static uint8_t add_credential_descriptor(CborEncoder *map, CTAP_CREDENTIAL_DESC_T *cred)
+static CborError add_credential_descriptor(CborEncoder *map, CTAP_CREDENTIAL_DESC_T *cred)
 {
     // Credential (0x01: RESP_credential)
     CborEncoder desc;
@@ -437,7 +438,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     // Credential (0x01: RESP_credential)
     ret = add_credential_descriptor(&map, ctap2_pubkey_credential_restored_id());
     if (ret != CborNoError) {
-        return ret;
+        return CTAP1_ERR_OTHER;
     }
 
     // authData (0x02: RESP_authData)
