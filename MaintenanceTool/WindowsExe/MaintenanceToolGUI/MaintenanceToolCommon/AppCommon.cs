@@ -32,6 +32,12 @@ namespace MaintenanceToolCommon
         public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
         public const string MSG_CTAP2_ERR_PIN_NOT_SET = "PINコードが認証器に設定されていません。PINコードを新規設定してください。";
 
+        // Flash ROM情報取得関連メッセージ
+        public const string MSG_FSTAT_REMAINING_RATE = "Flash ROMの空き容量は{0:0.0}％です。";
+        public const string MSG_FSTAT_NON_REMAINING_RATE = "Flash ROMの空き容量を取得できませんでした。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST = "破損している領域は存在しません。";
+        public const string MSG_FSTAT_CORRUPTING_AREA_EXIST = "破損している領域が存在します。";
+
         // Windows版固有のメッセージ文言
         // USB管理
         public const string MSG_USB_DETECT_FAILED = "USBデバイス検知の開始に失敗しました。";
