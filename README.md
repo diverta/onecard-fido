@@ -14,6 +14,17 @@ FIDO2認証器に、鍵・証明書・PINを導入するために使用する、
 
 ## What's new
 
+#### 2019/07/29（Version 0.1.14）
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
+- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
+
+主な修正点は以下になります。
+- Flash ROM情報取得機能を追加（#213、#214 ご参照 ）
+- ヘルスチェック時に、管理ツールがハングするを防止する（#211 ご参照）
+
 #### 2019/06/13
 
 [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
@@ -23,24 +34,7 @@ FIDO2認証器に、鍵・証明書・PINを導入するために使用する、
 
 また、管理ツールの修正はございません。
 
-#### 2019/05/27（Version 0.1.13）
-
-以下のプログラムを修正しました。<br>
-
-- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.2.0)
-- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
-- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-
-主な修正点は以下になります。
-- CTAP2ヘルスチェック機能を追加（`hmac-secret`検証機能付き）[注1]
-- PIN認証で使用されるPINコードをメンテナンスする機能を追加
-- CTAP2のBLEトランスポート対応[注2]
-- U2F／CTAP2で使用する鍵・証明書管理を、USB HID経由で実行できるよう修正
-- USB HIDサービスとBLEペリフェラルサービスが同居できないよう修正[注3]
-
-[注1] `hmac-secret`検証機能＝ログイン実行ごとに、ブラウザーと認証器でやり取りされる暗号（Salt）の整合性をチェックすることにより、ユーザーや認証器の成り替わり・成りすましを抑止する機能<br>
-[注2] Android Chromeは標準でWebAuthn対応していますが、現時点ではU2F認証が実行されます。<br>
-[注3] USB HIDサービスと、BLE<b>セントラル</b>サービスは同居できるように実装しています。
+#### [過去の更新履歴はこちら](HISTORY.md)
 
 #### CTAP2とは
 
@@ -52,8 +46,6 @@ NFCトランスポートは、後日対応予定です。
 また、Windows環境（Edgeブラウザー）でのWebAuthnは、PINコード（暗証番号）入力が必須となるのですが、こちらの方もすでに対応済みとなっております。
 
 Windows環境による具体的なテスト方法は、別途手順書[「Edgeブラウザーを使用したWebAuthnテスト手順」](Research/FIDO_2_0/EDGETEST.md)をご参照ください。
-
-#### [過去の更新履歴はこちら](HISTORY.md)
 
 ## 以前の仕様
 

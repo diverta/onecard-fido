@@ -355,6 +355,12 @@
                                                 <action selector="menuItemTestHID2DidSelect:" target="494" id="Hpg-Xj-hSr"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="bNE-hB-S6b"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

@@ -38,6 +38,7 @@
 #define PROCESS_NAME_HEALTHCHECK                    @"U2Fヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
 #define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
+#define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_CTAP2_HEALTHCHECK              @"CTAP2ヘルスチェック"
@@ -123,5 +124,11 @@
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1  @"  ユーザー所在確認が必要となりますので、"
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2  @"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"
 #define MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3  @"  MAIN SWを１回押してください."
+
+#pragma mark - Flash ROM情報取得関連メッセージ
+#define MSG_FSTAT_REMAINING_RATE            @"Flash ROMの空き容量は%.1f％です。"
+#define MSG_FSTAT_NON_REMAINING_RATE        @"Flash ROMの空き容量を取得できませんでした。"
+#define MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST @"破損している領域は存在しません。"
+#define MSG_FSTAT_CORRUPTING_AREA_EXIST     @"破損している領域が存在します。"
 
 #endif /* ToolCommonMessage_h */
