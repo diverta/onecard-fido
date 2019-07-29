@@ -11,6 +11,7 @@ PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-f
 * CTAP2ヘルスチェック実行
 * U2Fヘルスチェック実行
 * コマンドテスト機能
+* Flash ROM情報取得機能
 
 ### 画面イメージ
 <img src="../assets/0001.png" width="500">

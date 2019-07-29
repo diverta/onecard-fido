@@ -20,6 +20,7 @@
 #define HID_CMD_CTAPHID_CBOR        0x90
 #define HID_CMD_ERASE_SKEY_CERT     0xC0
 #define HID_CMD_INSTALL_SKEY_CERT   0xC1
+#define HID_CMD_GET_FLASH_STAT      0xC2
 #define HID_CMD_UNKNOWN_ERROR       0xBF
 
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
@@ -181,6 +182,51 @@
         // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
         char *responseBytes = (char *)[hidInitResponseMessage bytes];
         return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    }
+
+    - (void)doHidGetFlashStat {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // コマンド 0xC2 を実行（メッセージはブランクとする）
+        NSData *message = [[NSData alloc] init];
+        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
+        [self doRequest:message CID:cid CMD:HID_CMD_GET_FLASH_STAT];
+    }
+
+    - (void)doResponseHidGetFlashStat:(NSData *)message {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        NSLog(@"Flash ROM statistics: %@", responseCSV);
+        // 情報取得CSVから空き領域に関する情報を抽出
+        NSString *strRemain = @"";
+        NSString *strAvail = @"";
+        NSString *strCorrupt = @"";
+        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
+            NSArray *items = [element componentsSeparatedByString:@"="];
+            NSString *key = [items objectAtIndex:0];
+            NSString *val = [items objectAtIndex:1];
+            if ([key isEqualToString:@"largest_contig"]) {
+                strRemain = val;
+            } else if ([key isEqualToString:@"words_available"]) {
+                strAvail = val;
+            } else if ([key isEqualToString:@"corruption"]) {
+                strCorrupt = val;
+            }
+        }
+        // 空き容量、破損状況を画面に表示
+        NSString *rateText;
+        if ([strRemain length] > 0 && [strAvail length] > 0) {
+            float rate = [strRemain floatValue] / [strAvail floatValue] * 100.0;
+            rateText = [NSString stringWithFormat:MSG_FSTAT_REMAINING_RATE, rate];
+        } else {
+            rateText = MSG_FSTAT_NON_REMAINING_RATE;
+        }
+        NSString *corruptText = [strCorrupt isEqualToString:@"0"] ?
+            MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : MSG_FSTAT_CORRUPTING_AREA_EXIST;
+        // 画面に制御を戻す
+        [self displayMessage:[NSString stringWithFormat:@"  %1$@%2$@", rateText, corruptText]];
+        [self doResponseToAppDelegate:true message:nil];
     }
 
     - (void)doEraseSkeyCert {
@@ -459,6 +505,9 @@
             case COMMAND_TEST_CTAPHID_INIT:
                 [self doTestCtapHidInit];
                 break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                [self doHidGetFlashStat];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -500,6 +549,9 @@
         switch (cmd) {
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
+                break;
+            case HID_CMD_GET_FLASH_STAT:
+                [self doResponseHidGetFlashStat:message];
                 break;
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:

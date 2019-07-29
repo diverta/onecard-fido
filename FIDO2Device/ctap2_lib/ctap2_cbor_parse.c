@@ -43,7 +43,6 @@ uint8_t parse_rp_id(CTAP_RP_ID_T* rp, CborValue *val)
         return CTAP2_ERR_CBOR_PARSING;
     }
 
-    rp->id[RP_ID_MAX_SIZE] = 0;
     rp->id_size = sz;
 
     return CTAP1_ERR_SUCCESS;
@@ -55,6 +54,7 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
     size_t    map_length;
     char      key[16];
     CborError ret;
+    uint8_t   err;
     uint8_t   i;
     CborValue map;
 
@@ -98,9 +98,9 @@ uint8_t parse_rp(CTAP_RP_ID_T *rp, CborValue *val)
         }
 
         if (strcmp(key, "id") == 0) {
-            ret = parse_rp_id(rp, &map);
-            if (ret != CTAP1_ERR_SUCCESS) {
-                return ret;
+            err = parse_rp_id(rp, &map);
+            if (err != CTAP1_ERR_SUCCESS) {
+                return err;
             }
 
         } else if (strcmp(key, "name") == 0) {
@@ -234,7 +234,7 @@ uint8_t check_pub_key_cred_param(CborValue *val)
 
     ret = cbor_value_map_find_value(val, "type", &cred);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_MISSING_PARAMETER;
     }
     if (cbor_value_get_type(&cred) != CborTextStringType) {
         return CTAP2_ERR_MISSING_PARAMETER;
@@ -242,16 +242,16 @@ uint8_t check_pub_key_cred_param(CborValue *val)
 
     ret = cbor_value_map_find_value(val, "alg", &alg);
     if (ret != CborNoError) {
-        return ret;
+        return CTAP2_ERR_MISSING_PARAMETER;
     }
     if (cbor_value_get_type(&alg) != CborIntegerType) {
         return CTAP2_ERR_MISSING_PARAMETER;
     }
 
-    return CborNoError;
+    return CTAP1_ERR_SUCCESS;
 }
 
-uint8_t parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_param)
+CborError parse_pub_key_cred_param(CborValue *val, CTAP_PUBKEY_CRED_PARAM_T *cred_param)
 {
     CborValue cred;
     CborValue alg;
@@ -303,6 +303,7 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
 {
     size_t    arr_length;
     CborError ret;
+    uint8_t   err;
     uint8_t   i;
     CborValue array;
 
@@ -326,9 +327,9 @@ uint8_t parse_pub_key_cred_params(CTAP_PUBKEY_CRED_PARAM_T *cred_param, CborValu
 
     for (i = 0; i < arr_length; i++) {
         // 内容チェックを先に行う
-        ret = check_pub_key_cred_param(&array);
-        if (ret != CborNoError) {
-            return CTAP2_ERR_CBOR_PARSING;
+        err = check_pub_key_cred_param(&array);
+        if (err != CTAP1_ERR_SUCCESS) {
+            return err;
         }
 
         // 内容の解析と取得
@@ -493,6 +494,7 @@ uint8_t parse_credential_descriptor(CborValue *arr, CTAP_CREDENTIAL_DESC_T *cred
 uint8_t parse_verify_exclude_list(CborValue *val)
 {
     CborError ret;
+    uint8_t   err;
     size_t    size;
     CborValue arr;
     uint8_t   i;
@@ -518,9 +520,9 @@ uint8_t parse_verify_exclude_list(CborValue *val)
 #endif
 
     for (i = 0; i < size; i++) {
-        ret = parse_credential_descriptor(&arr, &cred);
-        if (ret != CborNoError) {
-            return CTAP2_ERR_CBOR_PARSING;
+        err = parse_credential_descriptor(&arr, &cred);
+        if (err != CTAP1_ERR_SUCCESS) {
+            return err;
         }
 
 #if NRF_LOG_DEBUG_CRED_DESC
@@ -546,6 +548,7 @@ uint8_t parse_verify_exclude_list(CborValue *val)
 uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
 {
     CborError ret;
+    uint8_t   err;
     CborValue arr;
     size_t    len;
     uint8_t   i;
@@ -571,9 +574,9 @@ uint8_t parse_allow_list(CTAP_ALLOW_LIST_T *allowList, CborValue *it)
         }
         allowList->size += 1;
 
-        ret = parse_credential_descriptor(&arr, &(allowList->list[i]));
-        if (ret != CTAP1_ERR_SUCCESS) {
-            return ret;
+        err = parse_credential_descriptor(&arr, &(allowList->list[i]));
+        if (err != CTAP1_ERR_SUCCESS) {
+            return err;
         }
 
         ret = cbor_value_advance(&arr);

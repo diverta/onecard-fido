@@ -7,6 +7,8 @@
 #ifndef FIDO_HID_CHANNEL_H
 #define FIDO_HID_CHANNEL_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

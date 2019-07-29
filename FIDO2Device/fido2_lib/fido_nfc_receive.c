@@ -4,6 +4,7 @@
  *
  * Created on 2019/05/29, 11:03
  */
+#include <string.h>
 //
 // プラットフォーム非依存コード
 //
@@ -93,8 +94,7 @@ static void perform_read_binary(APDU_HEADER *apdu)
             break;
         default:
             fido_log_error("No binary applet selected");
-            return;
-        break;
+            break;
     }
 }
 

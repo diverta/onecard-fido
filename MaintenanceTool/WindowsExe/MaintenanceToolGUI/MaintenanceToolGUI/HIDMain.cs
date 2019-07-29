@@ -12,6 +12,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_CTAPHID_INIT = 0x86;
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
+        public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
         // サブコマンドバイトに関する定義
@@ -122,6 +123,9 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_ERASE_SKEY_CERT:
             case Const.HID_CMD_INSTALL_SKEY_CERT:
                 DoResponseMaintSkeyCert(message, length);
+                break;
+            case Const.HID_CMD_GET_FLASH_STAT:
+                DoResponseGetFlashStat(message, length);
                 break;
             case Const.HID_CMD_CTAPHID_CBOR:
                 DoResponseCtapHidCbor(message, length);
@@ -243,6 +247,56 @@ namespace MaintenanceToolGUI
             bool result = (message[0] == 0x00);
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
+        }
+
+        public void DoGetFlashStat()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_FLASH_STAT, RequestData, 0);
+        }
+
+        private void DoResponseGetFlashStat(byte[] message, int length)
+        {
+            // 戻りメッセージから、取得情報CSVを抽出
+            byte[] responseBytes = ExtractCBORBytesFromResponse(message, length);
+            string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
+            AppCommon.OutputLogToFile("Flash ROM statistics: " + responseCSV, true);
+
+            // 情報取得CSVから空き領域に関する情報を抽出
+            string[] vars = responseCSV.Split(',');
+            string strRemain = "";
+            string strAvail = "";
+            string strCorrupt = "";
+            foreach (string v in vars) {
+                if (v.StartsWith("largest_contig=")) {
+                    strRemain = v.Split('=')[1];
+                }
+                else if (v.StartsWith("words_available=")) {
+                    strAvail = v.Split('=')[1];
+                }
+                else if (v.StartsWith("corruption=")) {
+                    strCorrupt = v.Split('=')[1];
+                }
+            }
+
+            // 空き容量、破損状況を画面に表示
+            string rateText = "";
+            if (strRemain.Length > 0 && strAvail.Length > 0) {
+                float rate = float.Parse(strRemain) / float.Parse(strAvail) * 100;
+                rateText = string.Format(AppCommon.MSG_FSTAT_REMAINING_RATE, rate);
+            } else {
+                rateText = AppCommon.MSG_FSTAT_NON_REMAINING_RATE;
+            }
+            string corruptText = (strCorrupt.Equals("0")) ? 
+                AppCommon.MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : AppCommon.MSG_FSTAT_CORRUPTING_AREA_EXIST;
+
+            // 画面に制御を戻す
+            mainForm.OnPrintMessageText(string.Format("  {0}{1}", rateText, corruptText));
+            mainForm.OnAppMainProcessExited(true);
         }
 
         public void DoAuthReset()

@@ -178,6 +178,15 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
 
+    - (IBAction)menuItemTestHID3DidSelect:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        // Flash ROM情報取得
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
+    }
+
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // ヘルスチェック実行
         [self enableButtons:false];

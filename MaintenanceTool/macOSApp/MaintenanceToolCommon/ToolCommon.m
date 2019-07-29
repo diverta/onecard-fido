@@ -38,6 +38,9 @@
             case COMMAND_TEST_CTAPHID_INIT:
                 processName = PROCESS_NAME_TEST_CTAPHID_INIT;
                 break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                processName = PROCESS_NAME_GET_FLASH_STAT;
+                break;
             case COMMAND_CLIENT_PIN_SET:
                 processName = PROCESS_NAME_CLIENT_PIN_SET;
                 break;

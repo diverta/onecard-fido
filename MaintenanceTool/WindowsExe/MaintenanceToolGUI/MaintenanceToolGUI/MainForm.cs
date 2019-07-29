@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.13";
+        public const string MaintenanceToolVersion = "Version 0.1.14";
 
         public MainForm()
         {
@@ -82,7 +82,13 @@ namespace MaintenanceToolGUI
             }
             else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
+                DisplayStartMessage(commandTitle);
                 hid.DoTestCtapHidInit();
+            }
+            else if (sender.Equals(flashROM情報取得ToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
+                DisplayStartMessage(commandTitle);
+                hid.DoGetFlashStat();
             }
             else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
@@ -305,6 +311,12 @@ namespace MaintenanceToolGUI
         private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CTAPHID_INITのテストを実行
+            doCommand(sender);
+        }
+
+        private void flashROM情報取得ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Flash ROM情報取得コマンドを実行
             doCommand(sender);
         }
 

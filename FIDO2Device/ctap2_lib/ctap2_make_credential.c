@@ -4,6 +4,8 @@
  *
  * Created on 2018/12/25, 11:33
  */
+#include <string.h>
+
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
@@ -35,7 +37,7 @@
 // デコードされた
 // authenticatorMakeCredential
 // リクエストデータを保持する構造体
-struct {
+static struct {
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_USER_ENTITY_T       user;
@@ -58,6 +60,7 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     size_t      map_length;
     CborType    type;
     CborError   ret;
+    uint8_t     err;
     uint8_t     i;
     int         key;
     int         intval;
@@ -122,61 +125,61 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
         switch(key) {
             case 1:
                 // clientDataHash (Byte Array)
-                ret = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_fixed_byte_string(&map, ctap2_request.clientDataHash, CLIENT_DATA_HASH_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x01;
                 break;
             case 2:
                 // rp (PublicKeyCredentialRpEntity)
-                ret = parse_rp(&ctap2_request.rp, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                err = parse_rp(&ctap2_request.rp, &map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x02;
                 break;
             case 3:
                 // user (PublicKeyCredentialUserEntity)
-                ret = parse_user(&ctap2_request.user, &map);
-                if (ret != CborNoError) {
-                    return CTAP2_ERR_CBOR_PARSING;
+                err = parse_user(&ctap2_request.user, &map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x04;
                 break;
             case 4:
                 // pubKeyCredParams (CBOR Array)
-                ret = parse_pub_key_cred_params(&ctap2_request.cred_param, &map);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_pub_key_cred_params(&ctap2_request.cred_param, &map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 must_item_flag |= 0x08;
                 break;
             case 5:
                 // excludeList (Sequence)
-                ret = parse_verify_exclude_list(&map);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_verify_exclude_list(&map);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 6:
                 // extensions (CBOR map)
-                ret = parse_extensions(&map, &ctap2_request.extensions);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_extensions(&map, &ctap2_request.extensions);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 7:
                 // options (Map of authenticator options)
-                ret = parse_options(&ctap2_request.options, &map, true);
-                if (ret != CTAP1_ERR_SUCCESS) {
-                    return ret;
+                err = parse_options(&ctap2_request.options, &map, true);
+                if (err != CTAP1_ERR_SUCCESS) {
+                    return err;
                 }
                 break;
             case 8:
                 // pinAuth（Byte Array）
-                ret = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
-                if (ret != CTAP1_ERR_SUCCESS) {
+                err = parse_fixed_byte_string(&map, ctap2_request.pinAuth, PIN_AUTH_SIZE);
+                if (err != CTAP1_ERR_SUCCESS) {
                     // PINが正しく設定されていない旨のエラーを戻す
                     return CTAP2_ERR_PIN_NOT_SET;
                 }
