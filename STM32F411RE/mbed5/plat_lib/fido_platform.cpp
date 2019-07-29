@@ -1,10 +1,44 @@
 /* 
- * File:   fido_platform.c
+ * File:   fido_platform.cpp
  * Author: makmorit
  *
  * Created on 2019/07/25, 16:00
  */
+#include "mbed.h"
+#include "usbd_hid_service.h"
+
 #include "fido_platform.h"
+#include "fido_hid_channel.h"
+
+//
+// main.cppとのインターフェース
+//
+void application_initialize(void)
+{
+    //
+    // USB HIDデバイスを初期化
+    //  PC-->mbed: 64バイト
+    //  mbed-->PC: 64バイト
+    //
+    usbd_hid_init();
+
+    // TODO:アプリケーションで使用するボタンの設定
+    // fido_button_init();
+
+    // アプリケーションで使用するCIDを初期化
+    fido_hid_channel_initialize_cid();
+
+    // TODO:PINトークンとキーペアを再生成
+    // ctap2_client_pin_init();
+}
+
+bool application_main(void)
+{
+    usbd_hid_do_process();
+
+    wait(0.01);
+    return true;
+}
 
 //
 // fido_ble_pairing.c
@@ -274,4 +308,5 @@ void nfc_service_data_send(uint8_t *data, size_t data_size)
 //
 void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
 {
+    _usbd_hid_frame_send(buffer_for_send, size);
 }
