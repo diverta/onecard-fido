@@ -36,7 +36,7 @@
 #define NEW_PIN_ENC_MAX_SIZE    256
 #define NEW_PIN_ENC_MIN_SIZE    64
 #define PIN_HASH_ENC_SIZE       16
-struct {
+static struct {
     uint8_t pinProtocol;
     uint8_t subCommand;
     CTAP_COSE_KEY cose_key;
@@ -131,8 +131,8 @@ uint8_t ctap2_client_pin_decode_request(uint8_t *cbor_data_buffer, size_t cbor_d
         fido_log_print_hexdump_debug(cbor_data_buffer + j, (k < 64) ? k : 64);
     }
 #else
-    UNUSED_PARAMETER(cbor_data_buffer);
-    UNUSED_PARAMETER(cbor_data_length);
+    (void)cbor_data_buffer;
+    (void)cbor_data_length;
 #endif
     // 必須項目チェック済みフラグを初期化
     uint8_t must_item_flag = 0;

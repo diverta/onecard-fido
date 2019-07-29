@@ -32,7 +32,7 @@
 // デコードされた
 // authenticatorGetAssertion
 // リクエストデータを保持する構造体
-struct {
+static struct {
     uint8_t                  clientDataHash[CLIENT_DATA_HASH_SIZE];
     CTAP_RP_ID_T             rp;
     CTAP_OPTIONS_T           options;
