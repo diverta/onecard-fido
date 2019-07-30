@@ -698,6 +698,9 @@ void fido_ctap2_command_cbor_response_sent(void)
 {
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_ctap2_command_byte()) {
+        case CTAP2_CMD_GETINFO:
+            fido_log_info("authenticatorGetInfo end");
+            break;
         case CTAP2_CMD_MAKE_CREDENTIAL:
             fido_log_info("authenticatorMakeCredential end");
             break;

@@ -36,15 +36,6 @@ void usbd_hid_do_process(void)
 {
     // HIDデータフレームを受信
     if (usbFIDO->read(&usbFIDO->recv_report)) {
-        printf("recv:");
-        for (int i = 0; i < usbFIDO->recv_report.length; i++) {
-            if (i % 16 == 0) {
-                printf("\r\n");
-            }
-            printf("%02x ", usbFIDO->recv_report.data[i]);
-        }
-        printf("\r\n");
-
         // Output reportから受信フレームを取得し、
         // request_frame_bufferに格納
         // 受信フレーム数は、request_frame_numberに設定される
