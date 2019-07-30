@@ -26,5 +26,9 @@ void fido_log_print_hexdump_debug(uint8_t *data, size_t size);
 }
 #endif
 
-#endif /* FIDO_LOG_H */
+//
+// C --> CPP 呼出用インターフェース
+//
+void _fido_log_print_hexdump_debug(uint8_t *data, size_t size);
 
+#endif /* FIDO_LOG_H */

@@ -5,6 +5,8 @@
  * Created on 2019/07/25, 16:00
  */
 #include "mbed.h"
+
+#include "fido_log.h"
 #include "usbd_hid_service.h"
 
 #include "fido_platform.h"
@@ -243,6 +245,14 @@ uint8_t *fido_flash_password_get(void)
 bool     fido_flash_password_set(uint8_t *random_vector)
 {
     return true;
+}
+
+//
+// fido_log.c
+//
+void fido_log_print_hexdump_debug(uint8_t *data, size_t size)
+{
+    _fido_log_print_hexdump_debug(data, size);
 }
 
 //
