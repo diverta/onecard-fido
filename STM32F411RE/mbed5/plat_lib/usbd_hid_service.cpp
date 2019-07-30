@@ -35,12 +35,13 @@ void usbd_hid_init(void)
 void usbd_hid_do_process(void)
 {
     // HIDデータフレームを受信
-    if (usbFIDO->read(&usbFIDO->recv_report)) {
+    if (usbFIDO->readNB(&usbFIDO->recv_report)) {
         // Output reportから受信フレームを取得し、
         // request_frame_bufferに格納
         // 受信フレーム数は、request_frame_numberに設定される
         m_report_received = fido_hid_receive_request_frame(
             usbFIDO->recv_report.data, usbFIDO->recv_report.length);
+        return;
     }
 
     if (m_report_received) {
@@ -48,6 +49,7 @@ void usbd_hid_do_process(void)
         // FIDO USB HIDサービスを実行
         m_report_received = false;
         fido_hid_receive_on_request_received();
+        return;
     }
 
     if (m_report_sent) {
