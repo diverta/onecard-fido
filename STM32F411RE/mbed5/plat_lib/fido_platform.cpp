@@ -248,6 +248,13 @@ bool     fido_flash_password_set(uint8_t *random_vector)
 //
 // fido_log.h
 //
+//  fido_log_print_hexdump_debugは、
+//  マクロで代替えできないので、
+//  処理の実体を実装する
+//
+void fido_log_print_hexdump_debug(uint8_t *data, size_t size)
+{
+}
 
 //
 // fido_status_indicator.c
