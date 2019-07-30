@@ -174,9 +174,9 @@ void fido_receive_apdu_from_init_frame(FIDO_APDU_T *p_apdu, uint8_t *control_poi
 
 #if LOG_DEBUG_RECEIVING
     if (p_apdu->data_length < p_apdu->Lc) {
-        fido_log_debug("INIT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
+        fido_log_debug("recv INIT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
-        fido_log_debug("INIT frame: received data (%d bytes) ", p_apdu->data_length);
+        fido_log_debug("recv INIT frame: received data (%d bytes) ", p_apdu->data_length);
     }
 #endif
 }
@@ -201,9 +201,9 @@ void fido_receive_apdu_from_cont_frame(FIDO_APDU_T *p_apdu, uint8_t *control_poi
 
 #if LOG_DEBUG_RECEIVING
     if (p_apdu->data_length < p_apdu->Lc) {
-        fido_log_debug("CONT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
+        fido_log_debug("recv CONT frame: received data (%d of %d) ", p_apdu->data_length, p_apdu->Lc);
     } else {
-        fido_log_debug("CONT frame: received data (%d bytes) ", p_apdu->data_length);
+        fido_log_debug("recv CONT frame: received data (%d bytes) ", p_apdu->data_length);
     }
 #endif
 }

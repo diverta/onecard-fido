@@ -98,7 +98,7 @@ static bool u2f_request_receive_leading_packet(BLE_HEADER_T *p_ble_header, FIDO_
                         + control_point_buffer[2]);
     p_ble_header->SEQ = 0xff;
 
-    fido_log_debug("INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
+    fido_log_debug("recv INIT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
     if (is_valid_command(p_ble_header->CMD) == false) {
@@ -219,7 +219,7 @@ static void u2f_request_receive_following_packet(BLE_HEADER_T *p_ble_header, FID
     // シーケンスを更新
     p_ble_header->SEQ = sequence;
 
-    fido_log_debug("CONT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
+    fido_log_debug("recv CONT frame: CMD(0x%02x) LEN(%d) SEQ(%d) ", 
         p_ble_header->CMD, p_ble_header->LEN, p_ble_header->SEQ);
 
     // コピー先となる領域が初期化されていない場合は終了
