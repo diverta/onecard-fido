@@ -6,6 +6,7 @@
  */
 #include "mbed.h"
 
+#include "fido_board.h"
 #include "fido_log.h"
 #include "usbd_hid_service.h"
 
@@ -17,6 +18,9 @@
 //
 void application_initialize(void)
 {
+    // FIDO Authenticator固有のタイマー機能
+    fido_button_timers_init();
+
     //
     // USB HIDデバイスを初期化
     //  PC-->mbed: 64バイト
@@ -25,7 +29,7 @@ void application_initialize(void)
     usbd_hid_init();
 
     // TODO:アプリケーションで使用するボタンの設定
-    // fido_button_init();
+    fido_button_init();
 
     // アプリケーションで使用するCIDを初期化
     fido_hid_channel_initialize_cid();
