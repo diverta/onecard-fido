@@ -8,6 +8,7 @@
 
 #include "fido_board.h"
 #include "fido_log.h"
+#include "fido_status_indicator.h"
 #include "usbd_hid_service.h"
 
 #include "fido_platform.h"
@@ -36,6 +37,9 @@ void application_initialize(void)
 
     // TODO:PINトークンとキーペアを再生成
     // ctap2_client_pin_init();
+    
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
 }
 
 bool application_main(void)
@@ -264,24 +268,31 @@ void fido_log_print_hexdump_debug(uint8_t *data, size_t size)
 //
 void fido_status_indicator_none(void)
 {
+    _fido_status_indicator_none();
 }
 void fido_status_indicator_idle(void)
 {
+    _fido_status_indicator_idle();
 }
 void fido_status_indicator_prompt_reset(void)
 {
+    _fido_status_indicator_prompt_reset();
 }
 void fido_status_indicator_prompt_tup(void)
 {
+    _fido_status_indicator_prompt_tup();
 }
 void fido_status_indicator_pairing_mode(void)
 {
+    _fido_status_indicator_pairing_mode();
 }
 void fido_status_indicator_pairing_fail(void)
 {
+    _fido_status_indicator_pairing_fail();
 }
 void fido_status_indicator_abort(void)
 {
+    _fido_status_indicator_abort();
 }
 
 //
