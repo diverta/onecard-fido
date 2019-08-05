@@ -7,6 +7,7 @@
 #include "mbed.h"
 
 #include "fido_board.h"
+#include "fido_flash.h"
 #include "fido_log.h"
 #include "fido_status_indicator.h"
 #include "usbd_hid_service.h"
@@ -28,8 +29,11 @@ void application_initialize(void)
     //  mbed-->PC: 64バイト
     //
     usbd_hid_init();
+    
+    // アプリケーションで使用するFlash ROM機能の初期化
+    fido_flash_init();
 
-    // TODO:アプリケーションで使用するボタンの設定
+    // アプリケーションで使用するボタンの設定
     fido_button_init();
 
     // アプリケーションで使用するCIDを初期化
