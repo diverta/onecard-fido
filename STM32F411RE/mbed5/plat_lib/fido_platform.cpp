@@ -49,6 +49,7 @@ void application_initialize(void)
 bool application_main(void)
 {
     usbd_hid_do_process();
+    fido_flash_do_process();
 
     wait(0.01);
     return true;
@@ -164,39 +165,39 @@ bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
 //
 bool      fido_flash_skey_cert_delete(void)
 {
-    return true;
+    return _fido_flash_skey_cert_delete();
 }
 bool      fido_flash_skey_cert_write(void)
 {
-    return true;
+    return _fido_flash_skey_cert_write();
 }
 bool      fido_flash_skey_cert_read(void)
 {
-    return true;
+    return _fido_flash_skey_cert_read();
 }
 bool      fido_flash_skey_cert_available(void)
 {
-    return true;
+    return _fido_flash_skey_cert_available();
 }
 bool      fido_flash_skey_cert_data_prepare(uint8_t *data, uint16_t length)
 {
-    return true;
+    return _fido_flash_skey_cert_data_prepare(data, length);
 }
 uint32_t *fido_flash_skey_cert_data(void)
 {
-    return 0;
+    return _fido_flash_skey_cert_data();
 }
 uint8_t  *fido_flash_skey_data(void)
 {
-    return 0;
+    return _fido_flash_skey_data();
 }
 uint8_t  *fido_flash_cert_data(void)
 {
-    return 0;
+    return _fido_flash_cert_data();
 }
 uint32_t  fido_flash_cert_data_length(void)
 {
-    return 0;
+    return _fido_flash_cert_data_length();
 }
 
 //
@@ -204,7 +205,7 @@ uint32_t  fido_flash_cert_data_length(void)
 //
 bool      fido_flash_token_counter_delete(void)
 {
-    return true;
+    return _fido_flash_token_counter_delete();
 }
 bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check)
 {
