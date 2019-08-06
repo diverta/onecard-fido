@@ -7,6 +7,7 @@
 #include "mbed.h"
 
 #include "fido_board.h"
+#include "fido_flash.h"
 #include "fido_log.h"
 #include "fido_status_indicator.h"
 #include "usbd_hid_service.h"
@@ -28,8 +29,11 @@ void application_initialize(void)
     //  mbed-->PC: 64バイト
     //
     usbd_hid_init();
+    
+    // アプリケーションで使用するFlash ROM機能の初期化
+    fido_flash_init();
 
-    // TODO:アプリケーションで使用するボタンの設定
+    // アプリケーションで使用するボタンの設定
     fido_button_init();
 
     // アプリケーションで使用するCIDを初期化
@@ -45,6 +49,7 @@ void application_initialize(void)
 bool application_main(void)
 {
     usbd_hid_do_process();
+    fido_flash_do_process();
 
     wait(0.01);
     return true;
@@ -152,7 +157,7 @@ uint8_t *fido_crypto_sskey_hash(void)
 //
 bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
 {
-    return true;
+    return _fido_flash_get_stat_csv(stat_csv_data, stat_csv_size);
 }
 
 //
@@ -160,39 +165,39 @@ bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
 //
 bool      fido_flash_skey_cert_delete(void)
 {
-    return true;
+    return _fido_flash_skey_cert_delete();
 }
 bool      fido_flash_skey_cert_write(void)
 {
-    return true;
+    return _fido_flash_skey_cert_write();
 }
 bool      fido_flash_skey_cert_read(void)
 {
-    return true;
+    return _fido_flash_skey_cert_read();
 }
 bool      fido_flash_skey_cert_available(void)
 {
-    return true;
+    return _fido_flash_skey_cert_available();
 }
 bool      fido_flash_skey_cert_data_prepare(uint8_t *data, uint16_t length)
 {
-    return true;
+    return _fido_flash_skey_cert_data_prepare(data, length);
 }
 uint32_t *fido_flash_skey_cert_data(void)
 {
-    return 0;
+    return _fido_flash_skey_cert_data();
 }
 uint8_t  *fido_flash_skey_data(void)
 {
-    return 0;
+    return _fido_flash_skey_data();
 }
 uint8_t  *fido_flash_cert_data(void)
 {
-    return 0;
+    return _fido_flash_cert_data();
 }
 uint32_t  fido_flash_cert_data_length(void)
 {
-    return 0;
+    return _fido_flash_cert_data_length();
 }
 
 //
@@ -200,23 +205,23 @@ uint32_t  fido_flash_cert_data_length(void)
 //
 bool      fido_flash_token_counter_delete(void)
 {
-    return true;
+    return _fido_flash_token_counter_delete();
 }
 bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check)
 {
-    return true;
+    return _fido_flash_token_counter_write(p_appid_hash, token_counter, p_hash_for_check);
 }
 bool      fido_flash_token_counter_read(uint8_t *p_appid_hash)
 {
-    return true;
+    return _fido_flash_token_counter_read(p_appid_hash);
 }
 uint32_t  fido_flash_token_counter_value(void)
 {
-    return 0;
+    return _fido_flash_token_counter_value();
 }
 uint8_t  *fido_flash_token_counter_get_check_hash(void)
 {
-    return 0;
+    return _fido_flash_token_counter_get_check_hash();
 }
 
 //
@@ -224,23 +229,23 @@ uint8_t  *fido_flash_token_counter_get_check_hash(void)
 //
 bool      fido_flash_client_pin_store_hash_read(void)
 {
-    return true;
+    return _fido_flash_client_pin_store_hash_read();
 }
 bool      fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter)
 {
-    return true;
+    return _fido_flash_client_pin_store_hash_write(p_pin_code_hash, retry_counter);
 }
 uint8_t  *fido_flash_client_pin_store_pin_code_hash(void)
 {
-    return 0;
+    return _fido_flash_client_pin_store_pin_code_hash();
 }
 uint32_t  fido_flash_client_pin_store_retry_counter(void)
 {
-    return 0;
+    return _fido_flash_client_pin_store_retry_counter();
 }
 bool      fido_flash_client_pin_store_pin_code_exist(void)
 {
-    return true;
+    return _fido_flash_client_pin_store_pin_code_exist();
 }
 
 //
@@ -248,11 +253,11 @@ bool      fido_flash_client_pin_store_pin_code_exist(void)
 //
 uint8_t *fido_flash_password_get(void)
 {
-    return 0;
+    return _fido_flash_password_get();
 }
 bool     fido_flash_password_set(uint8_t *random_vector)
 {
-    return true;
+    return _fido_flash_password_set(random_vector);
 }
 
 //
