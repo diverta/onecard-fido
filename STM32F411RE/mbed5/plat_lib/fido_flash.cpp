@@ -34,9 +34,6 @@
 //
 // データ読込用の作業領域
 //
-#define USER_BUF_SIZE 1024
-static uint32_t user_buf[USER_BUF_SIZE];
-
 // 鍵・証明書データ読込用の作業領域（固定長）
 static uint32_t skey_cert_data[SKEY_CERT_WORD_NUM];
 
@@ -173,7 +170,7 @@ static bool fido_flash_record_read(uint16_t key, void *buf, size_t *size)
     // 該当キーのレコードを探す
     NVStore &nvstore = NVStore::get_instance();
     uint16_t actual_size;
-    int ret = nvstore.get(key, *size, user_buf, actual_size);
+    int ret = nvstore.get(key, *size, buf, actual_size);
     if (ret == NVSTORE_SUCCESS) {
         // レコードが存在するときはレコード長を格納
         *size = actual_size;
@@ -197,7 +194,7 @@ static bool fido_flash_record_delete(uint16_t key)
     // 削除対象のレコードを探す
     NVStore &nvstore = NVStore::get_instance();
     uint16_t actual_size;
-    int ret = nvstore.get(key, USER_BUF_SIZE, user_buf, actual_size);
+    int ret = nvstore.get_item_size(key, actual_size);
     if (ret == NVSTORE_NOT_FOUND) {
         return true;
     } else if (ret != NVSTORE_SUCCESS) {
