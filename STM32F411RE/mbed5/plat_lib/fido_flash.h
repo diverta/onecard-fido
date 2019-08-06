@@ -36,4 +36,7 @@ uint32_t  _fido_flash_cert_data_length(void);
 
 bool      _fido_flash_token_counter_delete(void);
 
+uint8_t  *_fido_flash_password_get(void);
+bool      _fido_flash_password_set(uint8_t *random_vector);
+
 #endif // FIDO_FLASH_H__

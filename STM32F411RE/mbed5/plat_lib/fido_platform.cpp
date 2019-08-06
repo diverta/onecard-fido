@@ -253,11 +253,11 @@ bool      fido_flash_client_pin_store_pin_code_exist(void)
 //
 uint8_t *fido_flash_password_get(void)
 {
-    return 0;
+    return _fido_flash_password_get();
 }
 bool     fido_flash_password_set(uint8_t *random_vector)
 {
-    return true;
+    return _fido_flash_password_set(random_vector);
 }
 
 //

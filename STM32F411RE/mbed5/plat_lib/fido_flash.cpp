@@ -39,12 +39,16 @@ static uint32_t user_buf[1024];
 // 鍵・証明書データ読込用の作業領域（固定長）
 static uint32_t skey_cert_data[SKEY_CERT_WORD_NUM];
 
+// AESパスワード読込用の作業領域
+static uint32_t m_aes_password[8];
+
 //
 // 後続処理判定用のフラグ
 //
 static bool m_token_counter_deleted;
 static bool m_skey_cert_deleted;
 static bool m_skey_cert_updated;
+static bool m_aes_password_updated;
 
 void fido_flash_init(void)
 {
@@ -59,6 +63,7 @@ void fido_flash_init(void)
     m_token_counter_deleted = false;
     m_skey_cert_deleted = false;
     m_skey_cert_updated = false;
+    m_aes_password_updated = false;
 }
 
 void fido_flash_do_process(void)
@@ -86,6 +91,14 @@ void fido_flash_do_process(void)
         fido_ctap2_command_token_counter_file_deleted();
         // 管理用コマンドの処理を実行
         fido_maintenance_command_token_counter_file_deleted();
+        return;
+    }
+
+    if (m_aes_password_updated) {
+        // レコード登録が完了した場合
+        m_aes_password_updated = false;
+        // 管理用コマンドの処理を実行
+        fido_maintenance_command_aes_password_record_updated();
         return;
     }
 }
@@ -275,5 +288,37 @@ bool _fido_flash_token_counter_delete(void)
     }
 
     m_token_counter_deleted = true;
+    return true;
+}
+
+uint8_t *_fido_flash_password_get(void)
+{
+    // １レコード分読込
+    size_t size = sizeof(m_aes_password) * sizeof(uint32_t);
+    if (!fido_flash_record_read(NVSTORE_KEY_AESPSWD, m_aes_password, &size)) {
+        // Flash ROMにAESパスワードが存在しない場合
+        // 処理終了
+        return NULL;
+    }
+
+    // Flash ROMレコードから取り出したAESパスワードの
+    // 格納領域を戻す
+    return (uint8_t *)m_aes_password;
+}
+
+bool _fido_flash_password_set(uint8_t *random_vector)
+{
+    // 32バイトのランダムベクターをAESパスワードとして設定し、
+    // ワーク領域にコピー
+    memcpy((uint8_t *)m_aes_password, random_vector, 32);
+
+    // 既存のデータが存在する場合は上書き
+    // 既存のデータが存在しない場合は新規追加
+    size_t size = sizeof(m_aes_password) * sizeof(uint32_t);
+    if (!fido_flash_record_write(NVSTORE_KEY_AESPSWD, m_aes_password, size)) {
+        return false;
+    }
+    
+    m_aes_password_updated = true;
     return true;
 }
