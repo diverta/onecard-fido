@@ -209,19 +209,19 @@ bool      fido_flash_token_counter_delete(void)
 }
 bool      fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check)
 {
-    return true;
+    return _fido_flash_token_counter_write(p_appid_hash, token_counter, p_hash_for_check);
 }
 bool      fido_flash_token_counter_read(uint8_t *p_appid_hash)
 {
-    return true;
+    return _fido_flash_token_counter_read(p_appid_hash);
 }
 uint32_t  fido_flash_token_counter_value(void)
 {
-    return 0;
+    return _fido_flash_token_counter_value();
 }
 uint8_t  *fido_flash_token_counter_get_check_hash(void)
 {
-    return 0;
+    return _fido_flash_token_counter_get_check_hash();
 }
 
 //
@@ -229,23 +229,23 @@ uint8_t  *fido_flash_token_counter_get_check_hash(void)
 //
 bool      fido_flash_client_pin_store_hash_read(void)
 {
-    return true;
+    return _fido_flash_client_pin_store_hash_read();
 }
 bool      fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter)
 {
-    return true;
+    return _fido_flash_client_pin_store_hash_write(p_pin_code_hash, retry_counter);
 }
 uint8_t  *fido_flash_client_pin_store_pin_code_hash(void)
 {
-    return 0;
+    return _fido_flash_client_pin_store_pin_code_hash();
 }
 uint32_t  fido_flash_client_pin_store_retry_counter(void)
 {
-    return 0;
+    return _fido_flash_client_pin_store_retry_counter();
 }
 bool      fido_flash_client_pin_store_pin_code_exist(void)
 {
-    return true;
+    return _fido_flash_client_pin_store_pin_code_exist();
 }
 
 //
