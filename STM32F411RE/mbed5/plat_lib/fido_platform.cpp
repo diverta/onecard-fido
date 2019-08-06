@@ -51,6 +51,7 @@ bool application_main(void)
 {
     usbd_hid_do_process();
     fido_flash_do_process();
+    fido_timer_do_process();
 
     wait(0.01);
     return true;
