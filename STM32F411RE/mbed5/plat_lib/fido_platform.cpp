@@ -10,6 +10,7 @@
 #include "fido_flash.h"
 #include "fido_log.h"
 #include "fido_status_indicator.h"
+#include "fido_timer.h"
 #include "usbd_hid_service.h"
 
 #include "fido_platform.h"
@@ -305,21 +306,27 @@ void fido_status_indicator_abort(void)
 //
 void fido_user_presence_verify_timer_stop(void)
 {
+    _fido_user_presence_verify_timer_stop();
 }
 void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
 {
+    _fido_user_presence_verify_timer_start(timeout_msec, p_context);
 }
 void fido_keepalive_interval_timer_stop(void)
 {
+    _fido_keepalive_interval_timer_stop();
 }
 void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context)
 {
+    _fido_keepalive_interval_timer_start(timeout_msec, p_context);
 }
 void fido_hid_channel_lock_timer_stop(void)
 {
+    _fido_hid_channel_lock_timer_stop();
 }
 void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
 {
+    _fido_hid_channel_lock_timer_start(lock_ms);
 }
 
 //

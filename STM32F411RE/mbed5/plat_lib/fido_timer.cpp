@@ -106,3 +106,36 @@ void fido_button_long_push_timer_start(uint32_t timeout_msec, void *p_context)
     long_push_timer.attach(&button_long_push_timeout_handler, timeout_sec);
     long_push_timer_attached = true;
 }
+
+//
+// ユーザー所在確認操作タイムアウト検知用タイマー
+//
+void _fido_user_presence_verify_timer_stop(void)
+{
+}
+
+void _fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
+{
+}
+
+//
+// キープアライブタイマー
+//
+void _fido_keepalive_interval_timer_stop(void)
+{
+}
+
+void _fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context)
+{
+}
+
+//
+// HIDチャネルロックタイムアウト検知用タイマー
+//
+void _fido_hid_channel_lock_timer_stop(void)
+{
+}
+
+void _fido_hid_channel_lock_timer_start(uint32_t lock_ms)
+{
+}
