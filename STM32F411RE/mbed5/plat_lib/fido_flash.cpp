@@ -34,13 +34,16 @@
 //
 // データ読込用の作業領域
 //
-static uint32_t user_buf[1024];
+#define USER_BUF_SIZE 1024
+static uint32_t user_buf[USER_BUF_SIZE];
 
 // 鍵・証明書データ読込用の作業領域（固定長）
 static uint32_t skey_cert_data[SKEY_CERT_WORD_NUM];
 
 // AESパスワード読込用の作業領域
-static uint32_t m_aes_password[8];
+#define AES_PASSWORD_WORD 8
+#define AES_PASSWORD_SIZE 32
+static uint32_t m_aes_password[AES_PASSWORD_WORD];
 
 //
 // 後続処理判定用のフラグ
@@ -151,7 +154,7 @@ static bool fido_flash_record_delete(uint16_t key)
     // 削除対象のレコードを探す
     NVStore &nvstore = NVStore::get_instance();
     uint16_t actual_size;
-    int ret = nvstore.get(key, sizeof(user_buf) * sizeof(uint32_t), user_buf, actual_size);
+    int ret = nvstore.get(key, USER_BUF_SIZE, user_buf, actual_size);
     if (ret == NVSTORE_NOT_FOUND) {
         return true;
     } else if (ret != NVSTORE_SUCCESS) {
@@ -172,6 +175,46 @@ static bool fido_flash_record_delete(uint16_t key)
 //
 // C --> CPP 呼出用インターフェース
 //
+bool _fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
+{
+    int      ret;
+    uint16_t actual_size;
+    uint32_t largest_contig;
+    uint8_t  corrupted = 0;
+    
+    // 格納領域を初期化
+    memset(stat_csv_data, 0, *stat_csv_size);
+    
+    // サイズを取得
+    NVStore &nvstore = NVStore::get_instance();
+    size_t nvstore_size = nvstore.size();
+    largest_contig = nvstore_size;
+
+    // 全アイテムの使用領域と破損状況を取得
+    uint16_t max_keys = nvstore.get_max_keys();
+    for (uint16_t k = 0; k < max_keys; k++) {
+        ret = nvstore.get_item_size(k, actual_size);
+        if (ret == NVSTORE_SUCCESS) {
+            largest_contig -= actual_size;
+            fido_log_debug("_fido_flash_get_stat_csv: key(%d) actual_size(%d)", k, actual_size);
+        }
+        if (ret == NVSTORE_DATA_CORRUPT) {
+            fido_log_error("_fido_flash_get_stat_csv: key(%d) data corrupted", k);
+            corrupted = 1;
+        }
+    }
+    
+    // 各項目をCSV化し、引数のバッファに格納
+    sprintf((char *)stat_csv_data, 
+        "words_available=%d,largest_contig=%d,corruption=%d", 
+        nvstore_size,
+        largest_contig,
+        corrupted);
+    *stat_csv_size = strlen((char *)stat_csv_data);
+    fido_log_debug("Flash ROM statistics csv created (%s)", (char *)stat_csv_data);
+    return true;
+}
+
 bool _fido_flash_skey_cert_delete(void)
 {
     // 秘密鍵／証明書をFlash ROM領域から削除
@@ -199,10 +242,10 @@ bool _fido_flash_skey_cert_write(void)
 bool _fido_flash_skey_cert_read(void)
 {
     // 確保領域は0xff（Flash ROM未書込状態）で初期化
-    memset(skey_cert_data, 0xff, sizeof(uint32_t) * SKEY_CERT_WORD_NUM);
+    size_t size = SKEY_CERT_WORD_NUM * sizeof(uint32_t);
+    memset(skey_cert_data, 0xff, size);
 
     // １レコード分読込
-    size_t size = sizeof(skey_cert_data) * sizeof(uint32_t);
     return fido_flash_record_read(NVSTORE_KEY_PRIVKEY, skey_cert_data, &size);
 }
 
@@ -294,7 +337,7 @@ bool _fido_flash_token_counter_delete(void)
 uint8_t *_fido_flash_password_get(void)
 {
     // １レコード分読込
-    size_t size = sizeof(m_aes_password) * sizeof(uint32_t);
+    size_t size = AES_PASSWORD_SIZE;
     if (!fido_flash_record_read(NVSTORE_KEY_AESPSWD, m_aes_password, &size)) {
         // Flash ROMにAESパスワードが存在しない場合
         // 処理終了
@@ -310,15 +353,15 @@ bool _fido_flash_password_set(uint8_t *random_vector)
 {
     // 32バイトのランダムベクターをAESパスワードとして設定し、
     // ワーク領域にコピー
-    memcpy((uint8_t *)m_aes_password, random_vector, 32);
+    size_t size = AES_PASSWORD_SIZE;
+    memcpy((uint8_t *)m_aes_password, random_vector, size);
 
     // 既存のデータが存在する場合は上書き
     // 既存のデータが存在しない場合は新規追加
-    size_t size = sizeof(m_aes_password) * sizeof(uint32_t);
     if (!fido_flash_record_write(NVSTORE_KEY_AESPSWD, m_aes_password, size)) {
         return false;
     }
-    
+
     m_aes_password_updated = true;
     return true;
 }

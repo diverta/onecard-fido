@@ -24,6 +24,7 @@ void fido_flash_do_process(void);
 //
 // C --> CPP 呼出用インターフェース
 //
+bool      _fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size);
 bool      _fido_flash_skey_cert_delete(void);
 bool      _fido_flash_skey_cert_write(void);
 bool      _fido_flash_skey_cert_read(void);

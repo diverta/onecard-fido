@@ -157,7 +157,7 @@ uint8_t *fido_crypto_sskey_hash(void)
 //
 bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
 {
-    return true;
+    return _fido_flash_get_stat_csv(stat_csv_data, stat_csv_size);
 }
 
 //
