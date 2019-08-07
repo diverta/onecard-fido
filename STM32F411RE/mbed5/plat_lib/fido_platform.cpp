@@ -6,6 +6,7 @@
  */
 #include "mbed.h"
 
+#include "ctap2_client_pin.h"
 #include "fido_board.h"
 #include "fido_flash.h"
 #include "fido_log.h"
@@ -40,8 +41,8 @@ void application_initialize(void)
     // アプリケーションで使用するCIDを初期化
     fido_hid_channel_initialize_cid();
 
-    // TODO:PINトークンとキーペアを再生成
-    // ctap2_client_pin_init();
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_init();
     
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_status_indicator_idle();
