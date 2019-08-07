@@ -13,6 +13,11 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 
+//
+// USB HIDフレームのサイズ
+//
+#define HID_FRAME_BYTE_SIZE 64
+
 USBFIDO *usbFIDO;
 
 static bool m_report_received;
@@ -25,7 +30,7 @@ void usbd_hid_init(void)
     //  PC-->mbed: 64バイト
     //  mbed-->PC: 64バイト
     //
-    usbFIDO = new USBFIDO(64, 64);
+    usbFIDO = new USBFIDO(HID_FRAME_BYTE_SIZE, HID_FRAME_BYTE_SIZE);
 
     // フラグをクリア
     m_report_received = false;
@@ -56,7 +61,7 @@ void usbd_hid_do_process(void)
         // 後続のデータがあれば送信
         m_report_sent = false;
         fido_hid_send_input_report_complete();
-    }    
+    }
 }
 
 //

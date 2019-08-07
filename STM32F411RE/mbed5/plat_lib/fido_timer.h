@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 
+void fido_timer_do_process(void);
 void fido_comm_interval_timer_stop(void);
 void fido_comm_interval_timer_start(void);
 void fido_processing_led_timer_stop(void);

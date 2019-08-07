@@ -6,10 +6,12 @@
  */
 #include "mbed.h"
 
+#include "ctap2_client_pin.h"
 #include "fido_board.h"
 #include "fido_flash.h"
 #include "fido_log.h"
 #include "fido_status_indicator.h"
+#include "fido_timer.h"
 #include "usbd_hid_service.h"
 
 #include "fido_platform.h"
@@ -39,8 +41,8 @@ void application_initialize(void)
     // アプリケーションで使用するCIDを初期化
     fido_hid_channel_initialize_cid();
 
-    // TODO:PINトークンとキーペアを再生成
-    // ctap2_client_pin_init();
+    // PINトークンとキーペアを再生成
+    ctap2_client_pin_init();
     
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_status_indicator_idle();
@@ -50,6 +52,7 @@ bool application_main(void)
 {
     usbd_hid_do_process();
     fido_flash_do_process();
+    fido_timer_do_process();
 
     wait(0.01);
     return true;
@@ -305,21 +308,27 @@ void fido_status_indicator_abort(void)
 //
 void fido_user_presence_verify_timer_stop(void)
 {
+    _fido_user_presence_verify_timer_stop();
 }
 void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context)
 {
+    _fido_user_presence_verify_timer_start(timeout_msec, p_context);
 }
 void fido_keepalive_interval_timer_stop(void)
 {
+    _fido_keepalive_interval_timer_stop();
 }
 void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context)
 {
+    _fido_keepalive_interval_timer_start(timeout_msec, p_context);
 }
 void fido_hid_channel_lock_timer_stop(void)
 {
+    _fido_hid_channel_lock_timer_stop();
 }
 void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
 {
+    _fido_hid_channel_lock_timer_start(lock_ms);
 }
 
 //
