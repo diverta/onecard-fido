@@ -13,6 +13,11 @@ extern "C" {
 
 void fido_crypto_init(void);
 
+//
+// C --> CPP 呼出用インターフェース
+//
+void _fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
+
 #ifdef __cplusplus
 }
 #endif

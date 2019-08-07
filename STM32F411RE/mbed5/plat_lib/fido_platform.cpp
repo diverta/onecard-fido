@@ -101,6 +101,7 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *
 }
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
 {
+    _fido_crypto_generate_random_vector(vector_buf, vector_buf_size);
 }
 void fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
 {
