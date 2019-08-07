@@ -8,6 +8,7 @@
 
 #include "ctap2_client_pin.h"
 #include "fido_board.h"
+#include "fido_crypto.h"
 #include "fido_flash.h"
 #include "fido_log.h"
 #include "fido_status_indicator.h"
@@ -34,6 +35,9 @@ void application_initialize(void)
     
     // アプリケーションで使用するFlash ROM機能の初期化
     fido_flash_init();
+    
+    // アプリケーションで使用するCrypto機能の初期化
+    fido_crypto_init();
 
     // アプリケーションで使用するボタンの設定
     fido_button_init();
