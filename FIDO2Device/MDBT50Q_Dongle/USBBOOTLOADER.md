@@ -8,8 +8,6 @@ Nordicのサンプルアプリ[`Open Bootloader with DFU`](https://infocenter.no
 ### 動作確認環境
 
 - macOS Sierra（10.12.6）
-- NetBeans IDE（8.2）
-- Java SE Runtime Environment（1.8.0_131）
 - nRF52840 DK（PCA10056）: プログラムの書込みに使用
 - MDBT50Q Dongle（nRF52840）: プログラムの書込み先となるターゲット基板
 
