@@ -74,5 +74,4 @@ Deviceメニューから「Write」を実行します。
 
 <img src="assets/0006.jpg" width="400">
 
-あとは、nRF52840 Dongleと同じ手順で、ツール「nRF Connect」により、アプリケーションを書込みます。<br>
-手順書「[nRF52840 Dongleプログラミング手順](https://github.com/diverta/onecard-fido/blob/master/Development/nRF52840/NRFCONNECTINST.md)」をご参照願います。
+あとは、nRF52840 Dongleと同じ手順で、ツール「nRF Connect」により、アプリケーションを書込みます。
