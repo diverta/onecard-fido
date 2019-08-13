@@ -1,63 +1,60 @@
 # アプリケーション書込み手順
 
-MDBT50Q Dongleには、USBポート経由でアプリケーションの書込みができるよう、あらかじめ[USBブートローダー](USBBOOTLOADER.md)が書き込まれています。
+nRF52840 DKに同梱されているJ-LinkのSWDインターフェースを使用して、MDBT50Q Dongleにアプリケーションを書き込む手順を掲載いたします。
 
-このUSBブートローダーを使用し、[FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)をMDBT50Q Dongleに書き込む手順を掲載します。
+## 書込み準備
 
-### nRF Connect起動
+### 動作確認時の環境
 
-MDBT50Q DongleをPCのUSBポートに装着後、リセットボタン（下図ご参照）を１回プッシュします。
+- macOS Sierra（10.12.6）
+- nRF52840 DK（PCA10056）: プログラムの書込みに使用
+- MDBT50Q Dongle（nRF52840）: プログラムの書込み先となるターゲット基板
 
-<img src="assets/0007.jpg" width="300">
+### ハードウェアの準備
 
-基板上のLEDが赤色で緩く点滅するのを確認します。
+MDBT50Q DongleをPCのUSBポートに装着後、nRF52840 DKと接続します。<br>
+接続するピンの対応関係は以下の通りです。
 
-<img src="assets/0006.jpg" width="400">
+|ピンの名前 |MDBT50Q Dongle | | nRF52840 DK|
+|:--|:-:|:-:|:-:|
+|0V |GND  | <-->  |GND|
+|SWD IO |PIO  | <-->  |SWDIO|
+|SWD Clock |PCLK  | -->  |SWDCLK|
+|SWD IO Level |VDD  | -->  |VTG|
+|SWD Reset |RST  | -->  |RESET|
 
-あらかじめPCに導入済みのツール「nRF Connect」を起動します。<br>
-（「nRF Connect」導入については、手順書「[nRF52840 Dongleプログラミング手順](https://github.com/diverta/onecard-fido/blob/master/Development/nRF52840/NRFCONNECTINST.md)」ご参照）
+[注1] nRF52840 DK上の「P20」というコネクター（オスピン）に接続します。<br>
+[注2] MDBT50Q Dongleの回路図はこちら（[FIDO2AUTH_001.pdf](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/pcb/FIDO2AUTH_001.pdf)）になります。
 
-### 書込み準備
+下図は実際に両者を接続した時のイメージになります。
 
-nRF Connectを起動します。<br>
-画面上部の「Launch app」ボタンをクリックすると、Programmerという項目が表示されます。<br>
-右横の「Launch」ボタンをクリックします。
+<img src="assets/0001.jpg" width="540">
 
-<img src="assets/0008.png" width="400">
+### ファームウェアの準備
 
-プログラミングツールが起動します。<br>
-画面左上の「Select device」ボタンをクリックし、プルダウンリストのデバイスを選択します。
+NetBeansを立ち上げ、プロジェクト「[fido2_authenticator_proj](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0/examples/diverta)」を開きます。<br>
+（NetBeansにつきましては、手順書「[NetBeansインストール手順](../../nRF5_SDK_v15.3.0/NETBEANSINST.md)」をご参照願います。）
 
-<img src="assets/0009.jpg" width="450">
+Makefileを参照し、４行目が`TARGET_BOARD     := PCA10059`となっていることを<u><b>必ず確認してください</b></u>。
 
-下図のように、メモリーマップが画面左側に表示されます。
+<img src="assets/0007.png" width="500">
 
-<img src="assets/0010.jpg" width="450">
+## 書込み実行
 
-※上図の例は、すでにアプリケーションがMDBT50Q Dongleに書き込まれている状態です。<br>
-アプリケーションが書き込まれていない状態ですと、メモリーマップの青色・緑色部分が表示されません。
+NetBeansのメニュー「プロジェクト(fido2_authenticator_proj)を実行」を実行します。
 
-### 書込み実行
+<img src="assets/0008.jpg" width="600">
 
-以下のプログラム（.hexファイル）を、画面の中央部にドラッグ＆ドロップして、書込みプログラムを指定します。
+ビルドが実施されていない場合はビルド（コンパイル、リンク）が実行され、続いて書き込みが実行されます。<br>
+書き込みが完了すると、「実行 FINISHED; 終了値0;」などと表示されます。
 
-- 格納フォルダー: `${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/
-- ソフトデバイス: `s140_nrf52_6.1.1_softdevice.hex`
-- アプリケーション: `nrf52840_xxaa.hex`
+<img src="assets/0009.png" width="600">
 
-下図は、ソフトデバイス、アプリケーションの.hexファイルをドラッグ＆ドロップした後のイメージになります。
+MDBT50Q Dongleが自動的にリセットされ、アプリケーションがスタートします。<br>
+アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
 
-<img src="assets/0011.jpg" width="450">
+<img src="assets/0014.jpg" width="400">
 
-画面右下の「Write」ボタンをクリックすると、プログラムの書込み（ダウンロード）がスタートします。
-
-<img src="assets/0012.jpg" width="450">
-
-プログラム書込みが終了すると、下図のようなメッセージが表示されます。<br>
-これはnRF52840 Dongleがブートローダーモードではなく、アプリケーションが実行中になっているためのものですので、異常ではありません。
-
-<img src="assets/0013.jpg" width="450">
-
-適宜、nRF Connectを終了させてください。
+緑色LEDの点滅確認が終わったら、適宜、NetBeansを終了させてください。
 
 以上で、MDBT50Q Dongleへのアプリケーション書込みは完了になります。

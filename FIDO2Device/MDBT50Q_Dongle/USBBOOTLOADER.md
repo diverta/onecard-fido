@@ -1,4 +1,4 @@
-# USBブートローダー
+# [ご参考] USBブートローダー
 
 ## dfu/open_bootloader
 
