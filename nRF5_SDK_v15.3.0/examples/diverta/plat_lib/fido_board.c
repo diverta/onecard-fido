@@ -36,7 +36,6 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_BUTTON_DELAY                APP_TIMER_TICKS(100)
 #define APP_BUTTON_ACTION_PUSH          APP_BUTTON_PUSH
 #define APP_BUTTON_ACTION_RELEASE       APP_BUTTON_RELEASE
-#define APP_BUTTON_ACTION_LONG_PUSH     2
 
 #define LONG_PUSH_TIMEOUT               3000
 
@@ -75,6 +74,12 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         }
         if (m_long_pushed) {
             m_long_pushed = false;
+            // ボタンが長押しされた時の処理を実行
+            if (fido_ble_peripheral_mode()) {
+                // BLEペリフェラルが稼働時は、
+                // ペアリングモード変更を実行
+                fido_ble_pairing_change_mode();
+            }
             break;
         }
 
@@ -86,17 +91,6 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         }
 		break;
 		
-	case APP_BUTTON_ACTION_LONG_PUSH:
-        if (pin_no == PIN_MAIN_SW_IN) {
-            // ボタンが長押しされた時の処理を実行
-            if (fido_ble_peripheral_mode()) {
-                // BLEペリフェラルが稼働時は、
-                // ペアリングモード変更を実行
-                fido_ble_pairing_change_mode();
-            }
-        }
-		break;
-		
 	default:
 		break;
 	}
@@ -105,9 +99,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 void fido_command_long_push_timer_handler(void *p_context)
 {
     (void)p_context;
-
 	m_long_pushed = true;
-	on_button_evt(PIN_MAIN_SW_IN, APP_BUTTON_ACTION_LONG_PUSH);
 }
 
 //
