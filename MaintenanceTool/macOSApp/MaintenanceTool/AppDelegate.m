@@ -174,9 +174,9 @@
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
-        // TODO: PINGテスト実行
+        // PINGテスト実行
         [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
@@ -192,6 +192,12 @@
         // ヘルスチェック実行
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
+    }
+
+    - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
+        // BLE PINGテスト実行
+        [self enableButtons:false];
+        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_BLE_PING];
     }
 
 #pragma mark - Call back from ToolFilePanel

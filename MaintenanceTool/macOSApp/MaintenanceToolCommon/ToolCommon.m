@@ -35,8 +35,11 @@
             case COMMAND_TEST_AUTH_USER_PRESENCE:
                 processName = PROCESS_NAME_HEALTHCHECK;
                 break;
-            case COMMAND_TEST_CTAPHID_INIT:
-                processName = PROCESS_NAME_TEST_CTAPHID_INIT;
+            case COMMAND_TEST_CTAPHID_PING:
+                processName = PROCESS_NAME_TEST_CTAPHID_PING;
+                break;
+            case COMMAND_TEST_BLE_PING:
+                processName = PROCESS_NAME_TEST_BLE_PING;
                 break;
             case COMMAND_HID_GET_FLASH_STAT:
                 processName = PROCESS_NAME_GET_FLASH_STAT;
@@ -75,6 +78,19 @@
         }
         
         return convertedBytes;
+    }
+
+    + (NSData *)generateRandomBytesDataOf:(size_t)size {
+        unsigned char *randomBytes = (unsigned char *)malloc(size);
+        
+        for (int i = 0; i < size; i++) {
+            // from 0 to 255
+            randomBytes[i] = (unsigned char)arc4random_uniform(256);
+        }
+        NSData *randomBytesData = [[NSData alloc] initWithBytes:randomBytes length:size];
+        free(randomBytes);
+
+        return randomBytesData;
     }
 
 #pragma mark - Utilities for check entry

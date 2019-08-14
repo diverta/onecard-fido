@@ -368,10 +368,16 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="BLE" id="497">
                                     <items>
-                                        <menuItem title="U2Fヘルスチェック実行" id="500">
+                                        <menuItem title="U2Fヘルスチェック実行" state="on" id="500">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="menuItemTestBLE1DidSelect:" target="494" id="1oW-xs-J50"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="BLE PINGテスト実行" id="rll-on-8pg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestBLE2DidSelect:" target="494" id="vD8-7Y-6DM"/>
                                             </connections>
                                         </menuItem>
                                     </items>

@@ -10,7 +10,8 @@
 #import "ToolCommonMessage.h"
 
 @interface ToolCommand ()
-
+    // 送信PINGデータを保持
+    @property(nonatomic) NSData *pingData;
 @end
 
 @implementation ToolCommand
@@ -38,8 +39,16 @@
     [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
 }
 
-- (NSArray<NSData *> *)generateCommandArrayFrom:(NSData *)dataForCommand {
-    unsigned char initHeader[] = {0x83, 0x00, 0x00};
+- (void)createCommandPing {
+    NSLog(@"BLE ping start");
+    // 100バイトのランダムなPINGデータを生成
+    [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
+    // 分割送信のために64バイトごとのコマンド配列を作成する
+    [self setBleRequestArray:[self generateCommandArrayFrom:[self pingData] cmd:0x81]];
+}
+
+- (NSArray<NSData *> *)generateCommandArrayFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
+    unsigned char initHeader[] = {cmd, 0x00, 0x00};
     unsigned char contHeader[] = {0x00};
 
     NSUInteger dataForCommandLength = [dataForCommand length];
@@ -125,7 +134,7 @@
     
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest cmd:0x83]];
 }
 
 - (NSData *)getKeyHandleDataFrom:(NSData *)registerResponse {
@@ -140,7 +149,7 @@
     
     // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
     NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:p1];
-    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest]];
+    [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest cmd:0x83]];
 }
 
 - (bool)commandArrayIsBlank {
@@ -173,6 +182,9 @@
             break;
         case COMMAND_PAIRING:
             [self createCommandPairing];
+            break;
+        case COMMAND_TEST_BLE_PING:
+            [self createCommandPing];
             break;
         default:
             [self setBleRequestArray:nil];
@@ -234,6 +246,11 @@
         return false;
     }
     
+    // PINGコマンドの場合は成功
+    if ([self command] == COMMAND_TEST_BLE_PING) {
+        return true;
+    }
+    
     // ステータスワード(レスポンスの末尾２バイト)を取得
     NSUInteger statusWord = [self getStatusWordFrom:[self bleResponseData]];
     
@@ -267,6 +284,12 @@
     return false;
 }
 
+- (void)checkPingResponseData {
+    // PINGレスポンスの内容をチェックし、画面に制御を戻す
+    bool result = [[self bleResponseData] isEqualToData:[self pingData]];
+    [self toolCommandDidProcess:result message:@"BLE ping end"];
+}
+
 - (void)toolCommandWillProcessBleResponse {
     // Registerレスポンスは、３件のテストケースで共通使用するため、
     // ここで保持しておく必要がある
@@ -281,6 +304,10 @@
     switch ([self command]) {
         case COMMAND_PAIRING:
             [self toolCommandDidProcess:true message:@"Pairing end"];
+            break;
+        case COMMAND_TEST_BLE_PING:
+            // PINGレスポンスの内容をチェックし、画面に制御を戻す
+            [self checkPingResponseData];
             break;
         case COMMAND_TEST_REGISTER:
             [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];

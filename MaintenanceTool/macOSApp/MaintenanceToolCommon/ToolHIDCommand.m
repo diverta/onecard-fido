@@ -155,7 +155,7 @@
             [self doResponseToAppDelegate:false message:nil];
         }
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_INIT:
+            case COMMAND_TEST_CTAPHID_PING:
                 // 画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
                 break;
@@ -502,7 +502,7 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_CTAPHID_INIT:
+            case COMMAND_TEST_CTAPHID_PING:
                 [self doTestCtapHidInit];
                 break;
             case COMMAND_HID_GET_FLASH_STAT:

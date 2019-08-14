@@ -37,7 +37,8 @@
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
 #define PROCESS_NAME_HEALTHCHECK                    @"U2Fヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
-#define PROCESS_NAME_TEST_CTAPHID_INIT              @"CTAPHID_INITのテスト"
+#define PROCESS_NAME_TEST_CTAPHID_PING              @"PINGテスト"
+#define PROCESS_NAME_TEST_BLE_PING                  @"BLE PINGテスト"
 #define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
@@ -70,6 +71,7 @@
 #define MSG_BLE_NOTIFICATION_FAILED         @"FIDO BLE U2Fサービスからデータを受信できません。"
 #define MSG_BLE_NOTIFICATION_START          @"受信データの監視を開始します。"
 #define MSG_BLE_NOTIFICATION_STOP           @"受信データの監視を停止します。"
+#define MSG_BLE_INVALID_PING                @"BLE経由のPINGコマンドが失敗しました。"
 #define MSG_REQUEST_SENT                    @"リクエストを送信しました。"
 #define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
@@ -94,6 +96,8 @@
 #define MSG_HID_CMD_RESPONSE_TIMEOUT        @"認証器からの応答が受信できませんでした。"
 
 #pragma mark - コマンドテスト関連メッセージ
+#define MSG_CMDTST_INVALID_NONCE            @"CTAPHID_INITコマンドが失敗しました。"
+#define MSG_CMDTST_INVALID_PING             @"CTAPHID_PINGコマンドが失敗しました。"
 #define MSG_CMDTST_PROMPT_USB_PORT_SET      @"FIDO認証器をUSBポートに装着してから実行してください。"
 #define MSG_CMDTST_MENU_NOT_SUPPORTED       @"このメニューは実行できません。"
 
