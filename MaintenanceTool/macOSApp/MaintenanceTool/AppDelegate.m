@@ -174,18 +174,12 @@
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
+        // TODO: PINGテスト実行
         [self enableButtons:false];
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_INIT];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
-            return;
-        }
-        // TODO: PINGコマンド実行
-    }
-
-    - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
