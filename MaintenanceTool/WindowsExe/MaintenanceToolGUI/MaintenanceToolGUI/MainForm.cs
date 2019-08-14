@@ -82,9 +82,9 @@ namespace MaintenanceToolGUI
             }
             else if (sender.Equals(DoPingCommandToolStripMenuItem)) {
                 // CTAPHID_INIT --> CTAPHID_PING の順に実行する
-                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
                 DisplayStartMessage(commandTitle);
-                hid.DoTestCtapHidInit();
+                hid.DoTestCtapHidPing();
             }
             else if (sender.Equals(flashROM情報取得ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;

@@ -40,7 +40,7 @@
         public const string PROCESS_NAME_U2F_HEALTHCHECK = "U2Fヘルスチェック";
         public const string PROCESS_NAME_PAIRING = "ペアリング";
         public const string PROCESS_NAME_CTAP2_HEALTHCHECK = "CTAP2ヘルスチェック";
-        public const string PROCESS_NAME_TEST_CTAPHID_INIT = "CTAPHID_INITのテスト";
+        public const string PROCESS_NAME_TEST_CTAPHID_PING = "PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
