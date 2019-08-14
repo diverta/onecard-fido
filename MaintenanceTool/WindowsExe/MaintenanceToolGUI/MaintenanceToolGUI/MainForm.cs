@@ -96,6 +96,12 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
             }
+            else if (sender.Equals(DoBLEPingCommandToolStripMenuItem)) {
+                // BLE経由でPINGコマンドを実行する
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
+                DisplayStartMessage(commandTitle);
+                app.DoTestBLEPing();
+            }
             else {
                 return;
             }
@@ -324,6 +330,12 @@ namespace MaintenanceToolGUI
         private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // U2Fヘルスチェック実行
+            doCommand(sender);
+        }
+
+        private void DoBLEPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // BLE PINGテストを実行
             doCommand(sender);
         }
 

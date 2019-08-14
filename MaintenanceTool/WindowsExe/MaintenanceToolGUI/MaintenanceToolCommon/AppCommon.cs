@@ -66,6 +66,7 @@ namespace MaintenanceToolCommon
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
+        public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
 
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";

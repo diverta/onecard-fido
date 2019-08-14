@@ -5,9 +5,10 @@ namespace MaintenanceToolCommon
 {
     public class BLEProcess
     {
+        public const int MSG_HEADER_LEN = 3;
+
         internal static class Const
         {
-            public const int MSG_HEADER_LEN = 3;
             public const int INIT_HEADER_LEN = 3;
             public const int CONT_HEADER_LEN = 1;
             public const int BLE_FRAME_LEN = 64;
@@ -126,7 +127,7 @@ namespace MaintenanceToolCommon
                     int dataLenInFrame = (transferMessageLen < maxLen) ? transferMessageLen : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
                         frameData[Const.INIT_HEADER_LEN + i] =
-                            message[Const.MSG_HEADER_LEN + transferred++];
+                            message[MSG_HEADER_LEN + transferred++];
                     }
 
                     // フレーム長を取得
@@ -147,7 +148,7 @@ namespace MaintenanceToolCommon
                     int dataLenInFrame = (remaining < maxLen) ? remaining : maxLen;
                     for (int i = 0; i < dataLenInFrame; i++) {
                         frameData[Const.CONT_HEADER_LEN + i] =
-                            message[Const.MSG_HEADER_LEN + transferred++];
+                            message[MSG_HEADER_LEN + transferred++];
                     }
 
                     // フレーム長を取得
