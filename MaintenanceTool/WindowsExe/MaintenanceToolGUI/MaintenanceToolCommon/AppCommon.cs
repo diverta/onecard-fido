@@ -23,6 +23,8 @@ namespace MaintenanceToolCommon
         public const string PROCESS_NAME_PAIRING = "ペアリング";
 
         // コマンドテスト関連メッセージ
+        public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
 
