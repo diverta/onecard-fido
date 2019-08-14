@@ -314,6 +314,12 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
+        private void cTAPHIDPING実行ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // CTAPHID_PINGのテストを実行
+            doCommand(sender);
+        }
+
         private void flashROM情報取得ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Flash ROM情報取得コマンドを実行

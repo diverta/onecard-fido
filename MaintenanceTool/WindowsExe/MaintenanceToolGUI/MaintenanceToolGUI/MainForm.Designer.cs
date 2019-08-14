@@ -54,6 +54,7 @@
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
+            this.cTAPHIDPING実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,6 +194,7 @@
             this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.cTAPHIDINIT実行ToolStripMenuItem,
+            this.cTAPHIDPING実行ToolStripMenuItem,
             this.flashROM情報取得ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
@@ -248,6 +250,13 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
+            // 
+            // cTAPHIDPING実行ToolStripMenuItem
+            // 
+            this.cTAPHIDPING実行ToolStripMenuItem.Name = "cTAPHIDPING実行ToolStripMenuItem";
+            this.cTAPHIDPING実行ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.cTAPHIDPING実行ToolStripMenuItem.Text = "CTAPHID_PING 実行";
+            this.cTAPHIDPING実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDPING実行ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -307,6 +316,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.Timer commandTimer;
         private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cTAPHIDPING実行ToolStripMenuItem;
     }
 }
 
