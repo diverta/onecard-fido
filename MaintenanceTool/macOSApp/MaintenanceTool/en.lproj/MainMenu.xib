@@ -355,10 +355,16 @@
                                                 <action selector="menuItemTestHID2DidSelect:" target="494" id="Hpg-Xj-hSr"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="CTAPHID_PING 実行" id="XgF-fb-4Z4">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="91v-M5-Rsc"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="bNE-hB-S6b"/>
+                                                <action selector="menuItemTestHID4DidSelect:" target="494" id="7Nd-AF-QN9"/>
                                             </connections>
                                         </menuItem>
                                     </items>

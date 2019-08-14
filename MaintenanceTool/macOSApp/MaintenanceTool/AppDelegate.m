@@ -182,6 +182,13 @@
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
+        // TODO: PINGコマンド実行
+    }
+
+    - (IBAction)menuItemTestHID4DidSelect:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
         // Flash ROM情報取得
         [self enableButtons:false];
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
