@@ -193,6 +193,7 @@ namespace MaintenanceToolGUI
             }
             int hid_init_data_len = 57;
             int hid_cont_data_len = 59;
+            int dumpMessageLen;
             if (frameData[4] > 127) {
                 // INITフレームであると判断
                 receivedCMD = frameData[4];
@@ -211,6 +212,7 @@ namespace MaintenanceToolGUI
                 AppendLogToBuffer(string.Format(
                     "Recv INIT frame: data size={0} length={1} cmd=0x{2:x2}",
                     receivedMessageLen, dataLenInFrame, receivedCMD), true);
+                dumpMessageLen = dataLenInFrame + Const.HID_INIT_HEADER_LEN;
 
             } else {
                 // CONTフレームであると判断
@@ -226,6 +228,7 @@ namespace MaintenanceToolGUI
                 AppendLogToBuffer(string.Format(
                     "Recv CONT frame: seq={0} length={1}", 
                     seq, dataLenInFrame), true);
+                dumpMessageLen = dataLenInFrame + Const.HID_CONT_HEADER_LEN;
             }
 
             // キープアライブレスポンスの場合は無視
@@ -234,7 +237,7 @@ namespace MaintenanceToolGUI
             }
 
             // メッセージをダンプ
-            AppendLogToBuffer(AppCommon.DumpMessage(frameData, frameData.Length), false);
+            AppendLogToBuffer(AppCommon.DumpMessage(frameData, dumpMessageLen), false);
 
             if (received == receivedMessageLen) {
                 // 全フレームを受信できたら、

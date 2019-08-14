@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
             TestRegister,
             TestAuthenticateCheck,
             TestAuthenticate,
+            TestBLEPing,
         };
         private BLERequestType bleRequestType = BLERequestType.None;
 
@@ -39,6 +40,9 @@ namespace MaintenanceToolGUI
         private byte[] nonce = new byte[Const.U2F_NONCE_SIZE];
         private byte[] appid = new byte[Const.U2F_APPID_SIZE];
         private Random random = new Random();
+
+        // PINGバイトを保持
+        private byte[] pingBytes = new byte[100];
 
         // メイン画面の参照を保持
         private MainForm mainForm;
@@ -93,6 +97,9 @@ namespace MaintenanceToolGUI
                 break;
             case BLERequestType.TestAuthenticate:
                 DoResponse(ret, receivedMessage, receivedLen);
+                break;
+            case BLERequestType.TestBLEPing:
+                DoResponseBLEPing(ret, receivedMessage, receivedLen);
                 break;
             default:
                 break;
@@ -264,6 +271,52 @@ namespace MaintenanceToolGUI
 
             // BLE処理を実行し、メッセージを転送
             DoRequest(U2FRequestData, length, type);
+        }
+
+        private int GeneratePingRequestBytes(byte[] u2fRequestData)
+        {
+            // ヘッダーにコマンドをセット
+            u2fRequestData[0] = 0x81;
+
+            // ヘッダーにデータ長をセット
+            u2fRequestData[1] = (byte)(pingBytes.Length / 256);
+            u2fRequestData[2] = (byte)(pingBytes.Length % 256);
+
+            // リクエストデータを配列にセット
+            Array.Copy(pingBytes, 0, u2fRequestData, Const.MSG_HEADER_LEN, pingBytes.Length);
+
+            return Const.MSG_HEADER_LEN + pingBytes.Length;
+        }
+
+        public void DoTestBLEPing()
+        {
+            // ランダムデータを生成
+            new Random().NextBytes(pingBytes);
+
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+            int length = GeneratePingRequestBytes(U2FRequestData);
+
+            // BLE処理を実行し、メッセージを転送
+            DoRequest(U2FRequestData, length, BLERequestType.TestBLEPing);
+        }
+
+        private void DoResponseBLEPing(bool ret, byte[] receivedMessage, int receivedLen)
+        {
+            // PINGバイトの一致チェック
+            //   receivedMessage の先頭には、
+            //   BLEヘッダー（3バイト）が含まれているので
+            //   それをスキップしてチェック
+            bool result = true;
+            for (int i = 0; i < pingBytes.Length; i++) {
+                if (pingBytes[i] != receivedMessage[BLEProcess.MSG_HEADER_LEN + i]) {
+                    // 画面のテキストエリアにメッセージを表示
+                    mainForm.OnPrintMessageText(AppCommon.MSG_BLE_INVALID_PING);
+                    result = false;
+                    break;
+                }
+            }
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(result);
         }
 
         public void doExit()

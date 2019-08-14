@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System;
 
 namespace MaintenanceToolGUI
 {
@@ -9,6 +10,7 @@ namespace MaintenanceToolGUI
         public const int HID_INIT_HEADER_LEN = 7;
         public const int HID_CONT_HEADER_LEN = 5;
         // HIDコマンドバイトに関する定義
+        public const int HID_CMD_CTAPHID_PING = 0x81;
         public const int HID_CMD_CTAPHID_INIT = 0x86;
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
@@ -34,9 +36,14 @@ namespace MaintenanceToolGUI
         // HIDデバイス関連
         private HIDProcess hidProcess = new HIDProcess();
 
-        // ブロードキャストCID、nonceを保持
+        // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
-        private readonly byte[] nonceBytes = {0x71, 0xcb, 0x1c, 0x3b, 0x10, 0x8e, 0xc9, 0x24};
+
+        // nonceを保持
+        private byte[] nonceBytes = new byte[8];
+
+        // PINGバイトを保持
+        private byte[] pingBytes = new byte[100];
 
         // リクエストデータ格納領域
         private byte[] RequestData = new byte[1024];
@@ -75,7 +82,7 @@ namespace MaintenanceToolGUI
         {
             None = 0,
             ClientPinSet,
-            TestCtapHidInit,
+            TestCtapHidPing,
             TestMakeCredential,
             TestGetAssertion,
             AuthReset
@@ -117,6 +124,9 @@ namespace MaintenanceToolGUI
         {
             // HIDデバイスからメッセージ受信時の処理を行う
             switch(hidProcess.receivedCMD) {
+            case Const.HID_CMD_CTAPHID_PING:
+                DoResponseCtapHidPing(message, length);
+                break;
             case Const.HID_CMD_CTAPHID_INIT:
                 DoResponseTestCtapHidInit(message, length);
                 break;
@@ -164,17 +174,41 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        public void DoTestCtapHidInit()
+        public void DoTestCtapHidPing()
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
             // 実行するコマンドを退避
-            requestType = HIDRequestType.TestCtapHidInit;
+            requestType = HIDRequestType.TestCtapHidPing;
             cborCommand = Const.HID_CBORCMD_NONE;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
+        }
+
+        public void DoRequestCtapHidPing(byte[] receivedCID)
+        {
+            // 100バイトのランダムデータを生成
+            new Random().NextBytes(pingBytes);
+
+            // PINGコマンドを実行する
+            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_PING, pingBytes, pingBytes.Length);
+        }
+
+        public void DoResponseCtapHidPing(byte[] message, int length)
+        {
+            // PINGバイトの一致チェック
+            bool result = true;
+            for (int i = 0; i < pingBytes.Length; i++) {
+                if (pingBytes[i] != message[i]) {
+                    PrintMessageText(AppCommon.MSG_CMDTST_INVALID_PING);
+                    result = false;
+                    break;
+                }
+            }
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(result);
         }
 
         private byte[] ExtractReceivedCID(byte[] message)
@@ -187,14 +221,24 @@ namespace MaintenanceToolGUI
             return receivedCID;
         }
 
+        private void DoRequestCtapHidInit()
+        {
+            // 8バイトのランダムデータを生成
+            new Random().NextBytes(nonceBytes);
+
+            // INITコマンドを実行し、nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
         private void DoResponseTestCtapHidInit(byte[] message, int length)
         {
             // nonceの一致チェック
-            bool result = true;
             for (int i = 0; i < nonceBytes.Length; i++) {
                 if (nonceBytes[i] != message[i]) {
-                    result = false;
-                    break;
+                    // nonceが一致しない場合は異常終了
+                    PrintMessageText(AppCommon.MSG_CMDTST_INVALID_NONCE);
+                    mainForm.OnAppMainProcessExited(false);
+                    return;
                 }
             }
             if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
@@ -203,9 +247,9 @@ namespace MaintenanceToolGUI
             } else if (cborCommand == Const.HID_CBORCMD_AUTH_RESET) {
                 // レスポンスされたCIDを抽出し、Reset処理を続行
                 DoRequestAuthReset(ExtractReceivedCID(message));
-            } else { 
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(result);
+            } else {
+                // レスポンスされたCIDを抽出し、PINGコマンドを実行
+                DoRequestCtapHidPing(ExtractReceivedCID(message));
             }
         }
 
@@ -308,8 +352,8 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             requestType = HIDRequestType.AuthReset;
             cborCommand = Const.HID_CBORCMD_AUTH_RESET;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoRequestAuthReset(byte[] receivedCID)
@@ -338,8 +382,8 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             requestType = HIDRequestType.ClientPinSet;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoGetKeyAgreement(byte[] receivedCID)
@@ -499,8 +543,8 @@ namespace MaintenanceToolGUI
             requestType = HIDRequestType.TestMakeCredential;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
             clientPin = pin;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoGetPinToken(byte[] cborBytes)
@@ -602,8 +646,8 @@ namespace MaintenanceToolGUI
             //   ClientPINコマンドを事前実行する必要あり
             requestType = HIDRequestType.TestGetAssertion;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)

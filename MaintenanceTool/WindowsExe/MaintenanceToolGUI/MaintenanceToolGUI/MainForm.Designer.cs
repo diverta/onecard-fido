@@ -46,10 +46,11 @@
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.cTAPHIDINIT実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoBLEPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -192,7 +193,7 @@
             // 
             this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.cTAPHIDINIT実行ToolStripMenuItem,
+            this.DoPingCommandToolStripMenuItem,
             this.flashROM情報取得ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
@@ -205,12 +206,12 @@
             this.toolStripMenuItem1.Text = "CTAP2ヘルスチェック実行";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
-            // cTAPHIDINIT実行ToolStripMenuItem
+            // DoPingCommandToolStripMenuItem
             // 
-            this.cTAPHIDINIT実行ToolStripMenuItem.Name = "cTAPHIDINIT実行ToolStripMenuItem";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.cTAPHIDINIT実行ToolStripMenuItem.Text = "CTAPHID_INIT 実行";
-            this.cTAPHIDINIT実行ToolStripMenuItem.Click += new System.EventHandler(this.cTAPHIDINIT実行ToolStripMenuItem_Click);
+            this.DoPingCommandToolStripMenuItem.Name = "DoPingCommandToolStripMenuItem";
+            this.DoPingCommandToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoPingCommandToolStripMenuItem.Text = "PINGテスト実行";
+            this.DoPingCommandToolStripMenuItem.Click += new System.EventHandler(this.DoPingCommandToolStripMenuItem_Click);
             // 
             // flashROM情報取得ToolStripMenuItem
             // 
@@ -222,7 +223,8 @@
             // bLEToolStripMenuItem
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DoHealthCheckToolStripMenuItem});
+            this.DoHealthCheckToolStripMenuItem,
+            this.DoBLEPingCommandToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
@@ -233,6 +235,13 @@
             this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.DoHealthCheckToolStripMenuItem.Text = "U2Fヘルスチェック実行";
             this.DoHealthCheckToolStripMenuItem.Click += new System.EventHandler(this.DoHealthCheckToolStripMenuItem_Click);
+            // 
+            // DoBLEPingCommandToolStripMenuItem
+            // 
+            this.DoBLEPingCommandToolStripMenuItem.Name = "DoBLEPingCommandToolStripMenuItem";
+            this.DoBLEPingCommandToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DoBLEPingCommandToolStripMenuItem.Text = "BLE PINGテスト実行";
+            this.DoBLEPingCommandToolStripMenuItem.Click += new System.EventHandler(this.DoBLEPingCommandToolStripMenuItem_Click);
             // 
             // その他OToolStripMenuItem
             // 
@@ -301,12 +310,13 @@
         private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem テストTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem uSBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cTAPHIDINIT実行ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoPingCommandToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHealthCheckToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.Timer commandTimer;
         private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoBLEPingCommandToolStripMenuItem;
     }
 }
 

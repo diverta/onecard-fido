@@ -12,7 +12,7 @@ namespace MaintenanceToolGUI
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.14";
+        public const string MaintenanceToolVersion = "Version 0.1.15";
 
         public MainForm()
         {
@@ -33,8 +33,8 @@ namespace MaintenanceToolGUI
             try {
                 // コマンドタイムアウト発生時は、コマンド終了処理を行う
                 OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-                OnAppMainProcessExited(false);
                 AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+                OnAppMainProcessExited(false);
 
             } catch (Exception ex) {
                 AppCommon.OutputLogToFile(ex.Message, true);
@@ -80,10 +80,11 @@ namespace MaintenanceToolGUI
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
-            else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
+            else if (sender.Equals(DoPingCommandToolStripMenuItem)) {
+                // CTAPHID_INIT --> CTAPHID_PING の順に実行する
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
                 DisplayStartMessage(commandTitle);
-                hid.DoTestCtapHidInit();
+                hid.DoTestCtapHidPing();
             }
             else if (sender.Equals(flashROM情報取得ToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
@@ -94,6 +95,12 @@ namespace MaintenanceToolGUI
                 commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 app.doHealthCheck();
+            }
+            else if (sender.Equals(DoBLEPingCommandToolStripMenuItem)) {
+                // BLE経由でPINGコマンドを実行する
+                commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
+                DisplayStartMessage(commandTitle);
+                app.DoTestBLEPing();
             }
             else {
                 return;
@@ -152,12 +159,12 @@ namespace MaintenanceToolGUI
 
         public void OnAppMainProcessExited(bool ret)
         {
+            // コマンドタイムアウト監視終了
+            commandTimer.Stop();
+
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
             enableButtons(true);
-
-            // コマンドタイムアウト監視終了
-            commandTimer.Stop();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -308,9 +315,9 @@ namespace MaintenanceToolGUI
             DoCommandCtap2Healthcheck(sender, e);
         }
 
-        private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // CTAPHID_INITのテストを実行
+            // PINGテストを実行
             doCommand(sender);
         }
 
@@ -323,6 +330,12 @@ namespace MaintenanceToolGUI
         private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // U2Fヘルスチェック実行
+            doCommand(sender);
+        }
+
+        private void DoBLEPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // BLE PINGテストを実行
             doCommand(sender);
         }
 

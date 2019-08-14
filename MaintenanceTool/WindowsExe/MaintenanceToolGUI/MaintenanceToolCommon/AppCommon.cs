@@ -23,6 +23,8 @@ namespace MaintenanceToolCommon
         public const string PROCESS_NAME_PAIRING = "ペアリング";
 
         // コマンドテスト関連メッセージ
+        public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
+        public const string MSG_CMDTST_INVALID_PING = "CTAPHID_PINGコマンドが失敗しました。";
         public const string MSG_CMDTST_PROMPT_USB_PORT_SET = "FIDO認証器をUSBポートに装着してから実行してください。";
         public const string MSG_CMDTST_MENU_NOT_SUPPORTED = "このメニューは実行できません。";
 
@@ -64,6 +66,7 @@ namespace MaintenanceToolCommon
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
+        public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
 
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";
