@@ -33,8 +33,8 @@ namespace MaintenanceToolGUI
             try {
                 // コマンドタイムアウト発生時は、コマンド終了処理を行う
                 OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-                OnAppMainProcessExited(false);
                 AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+                OnAppMainProcessExited(false);
 
             } catch (Exception ex) {
                 AppCommon.OutputLogToFile(ex.Message, true);
@@ -159,12 +159,12 @@ namespace MaintenanceToolGUI
 
         public void OnAppMainProcessExited(bool ret)
         {
+            // コマンドタイムアウト監視終了
+            commandTimer.Stop();
+
             // 処理結果を画面表示し、ボタンを押下可能とする
             displayResultMessage(commandTitle, ret);
             enableButtons(true);
-
-            // コマンドタイムアウト監視終了
-            commandTimer.Stop();
         }
 
         private void button1_Click(object sender, EventArgs e)
