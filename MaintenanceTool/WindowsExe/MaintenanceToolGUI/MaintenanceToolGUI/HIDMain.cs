@@ -36,9 +36,11 @@ namespace MaintenanceToolGUI
         // HIDデバイス関連
         private HIDProcess hidProcess = new HIDProcess();
 
-        // ブロードキャストCID、nonceを保持
+        // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
-        private readonly byte[] nonceBytes = {0x71, 0xcb, 0x1c, 0x3b, 0x10, 0x8e, 0xc9, 0x24};
+
+        // nonceを保持
+        private byte[] nonceBytes = new byte[8];
 
         // PINGバイトを保持
         private byte[] pingBytes = new byte[100];
@@ -181,15 +183,14 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             requestType = HIDRequestType.TestCtapHidPing;
             cborCommand = Const.HID_CBORCMD_NONE;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoRequestCtapHidPing(byte[] receivedCID)
         {
             // 100バイトのランダムデータを生成
-            Random r = new Random();
-            r.NextBytes(pingBytes);
+            new Random().NextBytes(pingBytes);
 
             // PINGコマンドを実行する
             hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_PING, pingBytes, pingBytes.Length);
@@ -218,6 +219,15 @@ namespace MaintenanceToolGUI
                 receivedCID[j] = message[8 + j];
             }
             return receivedCID;
+        }
+
+        private void DoRequestCtapHidInit()
+        {
+            // 8バイトのランダムデータを生成
+            new Random().NextBytes(nonceBytes);
+
+            // INITコマンドを実行し、nonce を送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
         }
 
         private void DoResponseTestCtapHidInit(byte[] message, int length)
@@ -342,8 +352,8 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             requestType = HIDRequestType.AuthReset;
             cborCommand = Const.HID_CBORCMD_AUTH_RESET;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoRequestAuthReset(byte[] receivedCID)
@@ -372,8 +382,8 @@ namespace MaintenanceToolGUI
             // 実行するコマンドを退避
             requestType = HIDRequestType.ClientPinSet;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoGetKeyAgreement(byte[] receivedCID)
@@ -533,8 +543,8 @@ namespace MaintenanceToolGUI
             requestType = HIDRequestType.TestMakeCredential;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
             clientPin = pin;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         public void DoGetPinToken(byte[] cborBytes)
@@ -636,8 +646,8 @@ namespace MaintenanceToolGUI
             //   ClientPINコマンドを事前実行する必要あり
             requestType = HIDRequestType.TestGetAssertion;
             cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            // nonce を送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
 
         private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)
