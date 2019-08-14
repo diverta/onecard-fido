@@ -80,7 +80,8 @@ namespace MaintenanceToolGUI
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
             }
-            else if (sender.Equals(cTAPHIDINIT実行ToolStripMenuItem)) {
+            else if (sender.Equals(DoPingCommandToolStripMenuItem)) {
+                // CTAPHID_INIT --> CTAPHID_PING の順に実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_INIT;
                 DisplayStartMessage(commandTitle);
                 hid.DoTestCtapHidInit();
@@ -308,15 +309,9 @@ namespace MaintenanceToolGUI
             DoCommandCtap2Healthcheck(sender, e);
         }
 
-        private void cTAPHIDINIT実行ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // CTAPHID_INITのテストを実行
-            doCommand(sender);
-        }
-
-        private void cTAPHIDPING実行ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // CTAPHID_PINGのテストを実行
+            // PINGテストを実行
             doCommand(sender);
         }
 
