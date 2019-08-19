@@ -30,9 +30,9 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 - [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
 
 主な修正点は以下になります。
-- PINGテスト機能を追加（#224、#225 ご参照）
-- ボタン長押し判定方法の見直し（#222 ご参照）
-- 一部ソースコードのリファクタリング（#215 ご参照）
+- PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
+- ボタン長押し判定方法の見直し（[#222](https://github.com/diverta/onecard-fido/pull/222) ご参照）
+- 一部ソースコードのリファクタリング（[#215](https://github.com/diverta/onecard-fido/pull/215) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
