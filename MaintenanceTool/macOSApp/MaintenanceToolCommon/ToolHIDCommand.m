@@ -147,8 +147,8 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_INIT];
     }
 
-    - (void)doTestCtapHidInit {
-        // CTAPHID_INITコマンドをテスト実行する
+    - (void)doTestCtapHidPing {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
         [self doRequestCtapHidInit];
     }
 
@@ -522,7 +522,7 @@
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_PING:
-                [self doTestCtapHidInit];
+                [self doTestCtapHidPing];
                 break;
             case COMMAND_HID_GET_FLASH_STAT:
                 [self doHidGetFlashStat];
