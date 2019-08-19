@@ -16,6 +16,7 @@
 #import "FIDODefines.h"
 
 // HIDコマンドバイト
+#define HID_CMD_CTAPHID_PING        0x81
 #define HID_CMD_CTAPHID_INIT        0x86
 #define HID_CMD_CTAPHID_CBOR        0x90
 #define HID_CMD_ERASE_SKEY_CERT     0xC0
@@ -41,6 +42,9 @@
 
     // ログインテストカウンター
     @property (nonatomic) uint8_t   getAssertionCount;
+
+    // 送信PINGデータを保持
+    @property(nonatomic) NSData    *pingData;
 
 @end
 
@@ -156,8 +160,8 @@
         }
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_PING:
-                // 画面に制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
+                // 受領したCIDを使用し、CTAPHID_PINGコマンドを実行
+                [self doRequestCtapHidPing:[self getNewCIDFrom:message]];
                 break;
             case COMMAND_CLIENT_PIN_SET:
             case COMMAND_CLIENT_PIN_CHANGE:
@@ -182,6 +186,21 @@
         // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
         char *responseBytes = (char *)[hidInitResponseMessage bytes];
         return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    }
+
+    - (void)doRequestCtapHidPing:(NSData *)cid {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // 100バイトのランダムなPINGデータを生成
+        [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
+        // メッセージを編集し、CTAPHID_PINGコマンドを実行
+        [self doRequest:[self pingData] CID:cid CMD:HID_CMD_CTAPHID_PING];
+    }
+
+    - (void)doResponseCtapHidPing:(NSData *)message {
+        // PINGレスポンスの内容をチェックし、画面に制御を戻す
+        bool result = [message isEqualToData:[self pingData]];
+        [self doResponseToAppDelegate:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetFlashStat {
@@ -547,6 +566,9 @@
         [self cancelResponseTimeoutMonitor];
         // コマンドに応じ、以下の処理に分岐
         switch (cmd) {
+            case HID_CMD_CTAPHID_PING:
+                [self doResponseCtapHidPing:message];
+                break;
             case HID_CMD_CTAPHID_INIT:
                 [self doResponseCtapHidInit:message];
                 break;
