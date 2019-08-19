@@ -6,7 +6,9 @@
 
 <img src="assets/0000.jpg" width="500">
 
-MDBT50Q Dongleの回路図はこちら --> <b>[FIDO2AUTH_001.pdf](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/pcb/FIDO2AUTH_001.pdf)</b>
+- <b>[MDBT50Q Dongleの概要](HWSUMMARY.md)</b>
+
+- <b>[MDBT50Q Dongle回路図](../pcb/FIDO2AUTH_001.pdf)</b>
 
 ## 使用ファームウェア
 
