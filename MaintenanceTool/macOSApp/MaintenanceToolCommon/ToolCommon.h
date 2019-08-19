@@ -25,7 +25,8 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_USER_PRESENCE,
     COMMAND_U2F_HID_PROCESS,
     COMMAND_PAIRING,
-    COMMAND_TEST_CTAPHID_INIT,
+    COMMAND_TEST_CTAPHID_PING,
+    COMMAND_TEST_BLE_PING,
     COMMAND_HID_GET_FLASH_STAT,
     COMMAND_CLIENT_PIN_SET,
     COMMAND_CLIENT_PIN_CHANGE,
@@ -39,6 +40,7 @@ typedef enum : NSInteger {
 
     + (NSString *)processNameOfCommand:(Command)command;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
+    + (NSData *)generateRandomBytesDataOf:(size_t)size;
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;

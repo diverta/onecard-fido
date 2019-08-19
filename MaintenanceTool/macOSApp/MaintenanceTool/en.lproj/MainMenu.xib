@@ -349,7 +349,7 @@
                                                 <action selector="menuItemTestHID1DidSelect:" target="494" id="lSA-3I-4EY"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="CTAPHID_INIT 実行" id="jXE-Zz-HlF">
+                                        <menuItem title="PINGテスト実行" id="jXE-Zz-HlF">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="menuItemTestHID2DidSelect:" target="494" id="Hpg-Xj-hSr"/>
@@ -358,7 +358,7 @@
                                         <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="bNE-hB-S6b"/>
+                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="M7L-Pa-qvF"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -372,6 +372,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="menuItemTestBLE1DidSelect:" target="494" id="1oW-xs-J50"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="BLE PINGテスト実行" id="rll-on-8pg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestBLE2DidSelect:" target="494" id="vD8-7Y-6DM"/>
                                             </connections>
                                         </menuItem>
                                     </items>
