@@ -19,9 +19,9 @@ MDBT50Q DongleをPCのUSBポートに装着後、nRF52840 DKと接続します�
 |:--|:-:|:-:|:-:|
 |0V |GND  | <-->  |GND|
 |SWD IO |PIO  | <-->  |SWDIO|
-|SWD Clock |PCLK  | -->  |SWDCLK|
+|SWD Clock |PCLK  | <--  |SWDCLK|
 |SWD IO Level |VDD  | -->  |VTG|
-|SWD Reset |RST  | -->  |RESET|
+|SWD Reset |RST  | <--  |RESET|
 
 [注1] nRF52840 DK上の「P20」というコネクター（オスピン）に接続します。<br>
 [注2] MDBT50Q Dongleの回路図はこちら（[FIDO2AUTH_001.pdf](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/pcb/FIDO2AUTH_001.pdf)）になります。

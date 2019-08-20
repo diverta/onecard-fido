@@ -6,35 +6,43 @@ One CardにFIDO U2F／WebAuthn認証機能を実装するプロジェクトで�
 
 - <b>[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)</b><br>
 Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器のファームウェアです。<br>
-nRF52840 DK（開発ボード）、nRF52840 Dongle（USBドングル）の両方に対応しています。
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)をはじめ、nRF52840 DK（開発ボード）、nRF52840 Dongle（USBドングル）に対応しています。
 
 - <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
 FIDO2認証器に、鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
 [Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
+## ハードウェア
+
+- <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
+Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器です。<br>
+日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
+PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
+
+## 新しい試み
+
+- <b>[mbed OS版 FIDO2.0認証器](STM32F411RE)</b><br>
+ST社のマイコン「STM32F411RE」を使用した、FIDO U2F／WebAuthn認証器です。<br>
+mbed OSへのアプリケーション移植のほか、NFCタグIC（自己発電機能あり）、セキュアICを導入する新しい試みになります。
+
 ## What's new
 
-#### 2019/07/29（Version 0.1.14）
+#### 2019/08/19（Version 0.1.15）
 
-FIDO認証器管理ツールを修正しました。<br>
+FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
+- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
 
 主な修正点は以下になります。
-- Flash ROM情報取得機能を追加（#213、#214 ご参照 ）
-- ヘルスチェック時に、管理ツールがハングするを防止する（#211 ご参照）
-
-#### 2019/06/13
-
-[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
-
-なお、[移行前のプログラム](nRF5_SDK_v15.2.0)は、そのまま残してあります。<br>
-（今後はメンテナンスする予定はございません。ご容赦ください）
-
-また、管理ツールの修正はございません。
+- PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
+- ボタン長押し判定方法の見直し（[#222](https://github.com/diverta/onecard-fido/pull/222) ご参照）
+- 一部ソースコードのリファクタリング（[#215](https://github.com/diverta/onecard-fido/pull/215) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
+
+## FIDO2について
 
 #### CTAP2とは
 
