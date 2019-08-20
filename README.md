@@ -19,6 +19,12 @@ Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器で�
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
 PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
+## 新しい試み
+
+- <b>[mbed OS版 FIDO2.0認証器](STM32F411RE)</b><br>
+ST社のマイコン「STM32F411RE」を使用した、FIDO U2F／WebAuthn認証器です。<br>
+mbed OSへのアプリケーション移植のほか、NFCタグIC（自己発電機能あり）、セキュアICを導入する新しい試みになります。
+
 ## What's new
 
 #### 2019/08/19（Version 0.1.15）
@@ -35,6 +41,8 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 - 一部ソースコードのリファクタリング（[#215](https://github.com/diverta/onecard-fido/pull/215) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
+
+## FIDO2について
 
 #### CTAP2とは
 
