@@ -33,6 +33,7 @@
 NRF_LOG_MODULE_REGISTER();
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_central.h"
 #include "fido_ble_service.h"
 #include "fido_ble_event.h"
 
@@ -344,6 +345,9 @@ void fido_ble_peripheral_init(void)
 void fido_ble_peripheral_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 {
     if (ble_peripheral_mode == false) {
+        // セントラル・モードで動作する
+        // FIDO Authenticator固有の処理
+        fido_ble_central_evt_handler(p_ble_evt, p_context);
         return;
     }
 

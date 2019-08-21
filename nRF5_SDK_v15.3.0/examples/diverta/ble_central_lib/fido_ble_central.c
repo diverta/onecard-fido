@@ -12,6 +12,7 @@
 #include "ble_db_discovery.h"
 #include "ble.h"
 #include "ble_gap.h"
+#include "ble_srv_common.h"
 #include "nrf_sdh.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_soc.h"
@@ -23,18 +24,27 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#include "ble_u2f.h"
-
 // for fido_ble_peripheral_mode
 #include "fido_ble_peripheral.h"
 
-// for BLE NUS Client (for testing)
-#include "fido_ble_central_nus.h"
+// BLEパケット項目のサイズ
+#define OPCODE_LENGTH 1
+#define HANDLE_LENGTH 2
 
-#define APP_BLE_CONN_CFG_TAG    1   /**< Tag that refers to the BLE stack configuration set with @ref sd_ble_cfg_set. The default tag is @ref BLE_CONN_CFG_TAG_DEFAULT. */
+// Tag that refers to the BLE stack configuration set with 
+// @ref sd_ble_cfg_set. The default tag is @ref BLE_CONN_CFG_TAG_DEFAULT.
+#define APP_BLE_CONN_CFG_TAG 1   
+
+static ble_uuid_t const m_uuid = {
+    .uuid = BLE_UUID_CURRENT_TIME_SERVICE,
+    .type = BLE_UUID_TYPE_BLE
+};
 
 BLE_DB_DISCOVERY_DEF(m_db_disc);    /**< Database discovery module instance. */
 NRF_BLE_SCAN_DEF(m_scan);           /**< Scanning Module instance. */
+
+// スキャン結果を保持するフラグ
+static bool scan_not_found_flag;
 
 void fido_ble_central_scan_start(void)
 {
@@ -43,6 +53,7 @@ void fido_ble_central_scan_start(void)
     }
 
     ret_code_t ret;
+    scan_not_found_flag = false;
 
     ret = nrf_ble_scan_start(&m_scan);
     APP_ERROR_CHECK(ret);
@@ -64,7 +75,6 @@ void fido_ble_central_scan_stop(void)
 
 static void db_disc_handler(ble_db_discovery_evt_t *p_evt)
 {
-    fido_ble_central_nus_on_db_disc_evt(p_evt);
 }
 
 static void db_discovery_init(void)
@@ -101,8 +111,20 @@ static void scan_evt_handler(scan_evt_t const *p_scan_evt)
             NRF_LOG_ERROR("Scan timed out.");
             break;
 
-         default:
-             break;
+        case NRF_BLE_SCAN_EVT_FILTER_MATCH:
+            NRF_LOG_DEBUG("Scan filter matched");
+            scan_not_found_flag = false;
+            break;
+            
+        case NRF_BLE_SCAN_EVT_NOT_FOUND:
+            if (scan_not_found_flag == false) {
+                scan_not_found_flag = true;
+                NRF_LOG_DEBUG("Scan not found");
+            }
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -119,7 +141,7 @@ static void scan_init(void)
     err_code = nrf_ble_scan_init(&m_scan, &init_scan, scan_evt_handler);
     APP_ERROR_CHECK(err_code);
 
-    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, fido_ble_central_nus_uuid());
+    err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, &m_uuid);
     APP_ERROR_CHECK(err_code);
 
     err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_UUID_FILTER, false);
@@ -133,7 +155,6 @@ void fido_ble_central_init(void)
     }
 
     db_discovery_init();
-    fido_ble_central_nus_init();
     scan_init();
     NRF_LOG_DEBUG("BLE central initialized");
 }
@@ -150,9 +171,6 @@ void fido_ble_central_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
 
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
-            // BLE NUS固有の処理
-            fido_ble_central_nus_evt_connected(p_ble_evt, p_context);
-
             // 接続中の旨を通知
             NRF_LOG_DEBUG("Connected");
 

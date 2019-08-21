@@ -18,6 +18,7 @@
 #include "nrf_log_default_backends.h"
 
 // FIDO Authenticator固有の処理
+#include "fido_ble_central.h"
 #include "fido_ble_event.h"
 #include "fido_ble_peripheral.h"
 #include "fido_ble_peripheral_timer.h"
@@ -217,6 +218,7 @@ int main(void)
 
     // BLE関連の初期化
     gatt_init();
+    fido_ble_central_init();
     fido_ble_peripheral_init();
 
     // USB HIDデバイスクラスを初期化
