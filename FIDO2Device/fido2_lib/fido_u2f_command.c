@@ -277,7 +277,16 @@ static void u2f_command_register(void)
         send_u2f_error_status_response(0x9402);
         return;
     }
-    
+
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを暗号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("U2F Register: AES password is not exist");
+        send_u2f_error_status_response(0x9402);
+        return;
+    }
+
     // control byte (P1) を参照
     uint8_t control_byte = get_receive_apdu()->P1;
     if (control_byte == 0x03) {
@@ -327,6 +336,15 @@ static void u2f_command_authenticate(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
+
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを復号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("U2F Authenticate: AES password is not exist");
+        send_u2f_error_status_response(0x9501);
+        return;
+    }
 
     uint8_t *apdu_data = get_receive_apdu()->data;
     if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {
