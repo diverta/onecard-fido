@@ -270,15 +270,7 @@ static void u2f_command_register(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        fido_log_error("U2F Register: private key and certification read error");
-        send_u2f_error_status_response(0x9401);
-        return;
-    }
-
-    if (fido_flash_skey_cert_available() == false) {
+    if (fido_command_check_skey_cert_exist() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         fido_log_error("U2F Register: private key and certification not available");
@@ -335,14 +327,6 @@ static void u2f_command_authenticate(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
-    
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        fido_log_error("U2F Authenticate: private key and certification read error");
-        send_u2f_error_status_response(0x9501);
-        return;
-    }
 
     uint8_t *apdu_data = get_receive_apdu()->data;
     if (u2f_authenticate_restore_keyhandle(apdu_data) == false) {

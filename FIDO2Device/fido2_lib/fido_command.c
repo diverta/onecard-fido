@@ -45,6 +45,28 @@ void fido_command_abort_flag_set(bool flag)
     abort_flag = flag;
 }
 
+//
+// CTAP2、U2Fで共用する各種処理
+//
+bool fido_command_check_skey_cert_exist(void)
+{
+    if (fido_flash_skey_cert_read() == false) {
+        // 秘密鍵と証明書をFlash ROMから読込
+        // NGであれば、エラーレスポンスを生成して戻す
+        fido_log_error("Private key and certification read error");
+        return false;
+    }
+
+    if (fido_flash_skey_cert_available() == false) {
+        // 秘密鍵と証明書がFlash ROMに登録されていない場合
+        // エラーレスポンスを生成して戻す
+        return false;
+    }
+    
+    // 秘密鍵と証明書が登録されている場合はtrue
+    return true;
+}
+
 void fido_command_mainsw_event_handler(void)
 {
     // ボタンが短押しされた時の処理を実行
