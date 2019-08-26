@@ -49,6 +49,9 @@ extern "C" {
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff
 
+// 独自エラーステータス
+#define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
+
 // 管理コマンドの識別用
 #define MNT_COMMAND_BASE                0xc0
 #define MNT_COMMAND_ERASE_SKEY_CERT     0xc0
