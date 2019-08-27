@@ -25,11 +25,11 @@ namespace MaintenanceToolCommon
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
 
-        public delegate void oneCardPeripheralPairedEvent(bool success);
-        public event oneCardPeripheralPairedEvent OneCardPeripheralPaired;
+        public delegate void FIDOPeripheralPairedEvent(bool success);
+        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
 
-        public delegate void oneCardPeripheralFoundEvent();
-        public event oneCardPeripheralFoundEvent OneCardPeripheralFound;
+        public delegate void FIDOPeripheralFoundEvent();
+        public event FIDOPeripheralFoundEvent FIDOPeripheralFound;
 
         public BLEService()
         {
@@ -77,46 +77,46 @@ namespace MaintenanceToolCommon
 
         public async void Pair()
         {
-            OutputLogToFile("One Cardとのペアリングを開始します。");
+            OutputLogToFile("FIDO認証器とのペアリングを開始します。");
             BluetoothAddress = 0;
             watcher.Start();
 
-            // One Cardがみつかるまで待機（最大10秒）
-            OutputLogToFile("One Cardからのアドバタイズ監視を開始します。");
+            // FIDO認証器がみつかるまで待機（最大10秒）
+            OutputLogToFile("FIDO認証器からのアドバタイズ監視を開始します。");
             for (int i = 0; i < 10 && BluetoothAddress == 0; i++) {
                 await Task.Run(() => System.Threading.Thread.Sleep(1000));
             }
 
             watcher.Stop();
-            OutputLogToFile("One Cardからのアドバタイズ監視を終了しました。");
+            OutputLogToFile("FIDO認証器からのアドバタイズ監視を終了しました。");
 
             if (BluetoothAddress != 0) {
-                // One Cardが見つかった場合はペアリング実行
-                OneCardPeripheralFound();
+                // FIDO認証器が見つかった場合はペアリング実行
+                FIDOPeripheralFound();
             } else {
                 // 画面スレッドに失敗を通知
-                OneCardPeripheralPaired(false);
+                FIDOPeripheralPaired(false);
             }
         }
 
         private void OnAdvertisementReceived(BluetoothLEAdvertisementWatcher watcher, BluetoothLEAdvertisementReceivedEventArgs eventArgs)
         {
-            // One Cardが見つかったら、
+            // FIDO認証器が見つかったら、
             // アドレス情報を保持し、画面スレッドに通知
             string name = eventArgs.Advertisement.LocalName;
             if (name == "OneCard_Peripheral") {
                 BluetoothAddress = eventArgs.BluetoothAddress;
-                OutputLogToFile(string.Format("One Cardが見つかりました: BluetoothAddress={0}", BluetoothAddress));
+                OutputLogToFile(string.Format("FIDO認証器が見つかりました: BluetoothAddress={0}", BluetoothAddress));
             }
         }
 
         private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
         {
-            OutputLogToFile("One Cardとのペアリングが自動的に実行されます。");
+            OutputLogToFile("FIDO認証器とのペアリングが自動的に実行されます。");
             args.Accept();
         }
 
-        public async void PairWithOneCardPeripheral()
+        public async void PairWithFIDOPeripheral()
         {
             bool success = false;
             try {
@@ -135,10 +135,10 @@ namespace MaintenanceToolCommon
                 if (result.Status == DevicePairingResultStatus.Paired ||
                     result.Status == DevicePairingResultStatus.AlreadyPaired) {
                     success = true;
-                    OutputLogToFile("One Cardとのペアリングが成功しました。");
+                    OutputLogToFile("FIDO認証器とのペアリングが成功しました。");
                 } else {
                     success = false;
-                    OutputLogToFile("One Cardとのペアリングが失敗しました。");
+                    OutputLogToFile("FIDO認証器とのペアリングが失敗しました。");
                 }
 
                 // BLEデバイスを解放
@@ -146,11 +146,11 @@ namespace MaintenanceToolCommon
                 device = null;
 
             } catch (Exception e) {
-                OutputLogToFile(string.Format("BLEService.PairWithOneCardPeripheral: {0}", e.Message));
+                OutputLogToFile(string.Format("BLEService.PairWithFIDOPeripheral: {0}", e.Message));
             }
 
             // 画面スレッドに成否を通知
-            OneCardPeripheralPaired(success);
+            FIDOPeripheralPaired(success);
         }
 
         public async Task<bool> StartCommunicate()

@@ -56,7 +56,7 @@ namespace MaintenanceToolGUI
             mainForm = f;
 
             // BLEデバイス関連
-            bleProcess.OneCardPeripheralPaired += new BLEProcess.oneCardPeripheralPairedEvent(OnPairedDevice);
+            bleProcess.FIDOPeripheralPaired += new BLEProcess.FIDOPeripheralPairedEvent(OnPairedDevice);
             bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
 
@@ -71,7 +71,7 @@ namespace MaintenanceToolGUI
 
         public void doPairing()
         {
-            bleProcess.PairWithOneCardPeripheral();
+            bleProcess.PairWithFIDOPeripheral();
         }
 
         public void OnPairedDevice(bool success)
@@ -263,7 +263,7 @@ namespace MaintenanceToolGUI
 
             if (type == BLERequestType.TestAuthenticate) {
                 // BLE U2Fリクエスト転送の前に、
-                // One CardのMAIN SWを押してもらうように促す
+                // FIDO認証器のMAIN SWを押してもらうように促す
                 // メッセージを画面表示
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_START);
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT1);
