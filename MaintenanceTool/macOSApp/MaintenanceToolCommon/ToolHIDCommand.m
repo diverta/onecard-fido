@@ -593,7 +593,7 @@
 
     - (bool)checkStatusCode:(NSData *)responseMessage {
         // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        char *requestBytes = (char *)[responseMessage bytes];
+        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
         switch (requestBytes[0]) {
             case CTAP1_ERR_SUCCESS:
                 return true;
@@ -609,6 +609,9 @@
                 break;
             case CTAP2_ERR_PIN_NOT_SET:
                 [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+                break;
+            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
+                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
                 break;
             default:
                 break;
