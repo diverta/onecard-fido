@@ -457,6 +457,9 @@ namespace MaintenanceToolGUI
             case 0x35:  // CTAP2_ERR_PIN_NOT_SET
                 mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_NOT_SET);
                 break;
+            case 0xfe:  // CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST (CTAP2_ERR_VENDOR_FIRST+0x0e)
+                mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
+                break;
             default:
                 break;
             }
