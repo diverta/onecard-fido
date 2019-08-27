@@ -220,7 +220,7 @@ void fido_maintenance_command_token_counter_file_deleted(void)
         // トークンカウンター削除が完了
         fido_log_debug("Erase token counter file completed");
 
-        // 続いて、AES秘密鍵生成処理を行う
+        // 続いて、AESパスワード生成処理を行う
         // (fds_record_update/writeまたはfds_gcが実行される)
         if (generate_random_password() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
@@ -230,8 +230,9 @@ void fido_maintenance_command_token_counter_file_deleted(void)
 
 void fido_maintenance_command_aes_password_record_updated(void)
 {
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
-        // AES秘密鍵生成(fds_record_update/write)完了
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT ||
+        fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_SKEY_CERT) {
+        // AESパスワード生成(fds_record_update/write)完了
         fido_log_debug("Update AES password record completed ");
 
         // レスポンスを生成してU2Fクライアントに戻す
@@ -245,7 +246,17 @@ void fido_maintenance_command_skey_cert_record_updated(void)
         // 証明書データ書込完了
         fido_log_debug("Update private key and certificate record completed ");
 
-        // レスポンスを生成してU2Fクライアントに戻す
-        send_command_error_response(CTAP1_ERR_SUCCESS);
+        // AESパスワードが生成済みの場合は終了
+        if (fido_flash_password_get() != NULL) {
+            fido_log_debug("AES password record already exists ");
+            send_command_error_response(CTAP1_ERR_SUCCESS);
+            return;
+        }
+
+        // 続いて、AESパスワード生成処理を行う
+        // (fds_record_update/writeまたはfds_gcが実行される)
+        if (generate_random_password() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
+        }
     }
 }
