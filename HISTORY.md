@@ -2,6 +2,19 @@
 
 ## プログラム更新履歴
 
+#### 2019/08/19（Version 0.1.15）
+
+FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
+
+- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
+- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
+- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
+
+主な修正点は以下になります。
+- PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
+- ボタン長押し判定方法の見直し（[#222](https://github.com/diverta/onecard-fido/pull/222) ご参照）
+- 一部ソースコードのリファクタリング（[#215](https://github.com/diverta/onecard-fido/pull/215) ご参照）
+
 #### 2019/07/29（Version 0.1.14）
 
 FIDO認証器管理ツールを修正しました。<br>
