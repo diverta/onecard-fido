@@ -19,15 +19,9 @@ Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器で�
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
 PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
-## 新しい試み
-
-- <b>[mbed OS版 FIDO2.0認証器](STM32F411RE)</b><br>
-ST社のマイコン「STM32F411RE」を使用した、FIDO U2F／WebAuthn認証器です。<br>
-mbed OSへのアプリケーション移植のほか、NFCタグIC（自己発電機能あり）、セキュアICを導入する新しい試みになります。
-
 ## What's new
 
-#### 2019/08/19（Version 0.1.15）
+#### 2019/08/27（Version 0.1.16）
 
 FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
 
@@ -35,14 +29,18 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
 - [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
 
-主な修正点は以下になります。
-- PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
-- ボタン長押し判定方法の見直し（[#222](https://github.com/diverta/onecard-fido/pull/222) ご参照）
-- 一部ソースコードのリファクタリング（[#215](https://github.com/diverta/onecard-fido/pull/215) ご参照）
+修正点は以下になります。
+- 鍵・証明書がない状態でCTAP2ヘルスチェックを実行すると、ハングしてしまう不具合を解消（[#230](https://github.com/diverta/onecard-fido/issues/230) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
 ## FIDO2について
+
+#### イメージ図
+
+<img src="Documents/summary/sys_summary.png" width="600">
+
+<img src="Documents/summary/uc_summary.png" width="600">
 
 #### CTAP2とは
 
@@ -90,3 +88,9 @@ macOS版と、Windows版を用意しました。
 - [調査に関する情報](Research/README.md)
 
 - [障害に関する情報](https://github.com/diverta/onecard-fido/issues)
+
+## 新しい試み
+
+- <b>[mbed OS版 FIDO2.0認証器](STM32F411RE)</b>（対応無期限延期中）<br>
+ST社のマイコン「STM32F411RE」を使用した、FIDO U2F／WebAuthn認証器です。<br>
+mbed OSへのアプリケーション移植のほか、NFCタグIC（自己発電機能あり）、セキュアICを導入する新しい試みになります。

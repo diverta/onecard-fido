@@ -52,5 +52,7 @@
 #define CTAP1_ERR_OTHER                 0x7f
 #define CTAP2_ERR_VENDOR_FIRST          0xf0
 #define CTAP2_ERR_VENDOR_LAST           0xff
+// 独自エラーステータス
+#define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
 #endif /* FIDODefines_h */
