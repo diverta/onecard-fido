@@ -19,7 +19,7 @@ void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, u
     memcpy(keyhandle_base_buffer, p_appid_hash, U2F_APPID_SIZE);
     memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key_value, private_key_length);
 
-    // AES ECB暗号対象のバイト配列＆長さを指定し、
+    // AES暗号化対象のバイト配列＆長さを指定し、
     // Cipher Feedback Modeによる暗号化を実行
     memset(keyhandle_buffer, 0, sizeof(keyhandle_buffer));
     uint16_t data_length = 64;
@@ -35,7 +35,7 @@ void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
     memset(keyhandle_buffer, 0, sizeof(keyhandle_buffer));
     memcpy(keyhandle_buffer, keyhandle_value, keyhandle_length);
 
-    // Cipher Feedback Modeにより暗号化された
+    // Cipher Feedback ModeによりAES暗号化された
     // バイト配列を、同じ手法により復号化
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     uint16_t data_length = 64;

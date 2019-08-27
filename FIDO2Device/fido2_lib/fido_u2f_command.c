@@ -270,22 +270,23 @@ static void u2f_command_register(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    fido_log_info("U2F Register start");
-
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        send_u2f_error_status_response(0x9401);
-        return;
-    }
-
-    if (fido_flash_skey_cert_available() == false) {
+    if (fido_command_check_skey_cert_exist() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
+        fido_log_error("U2F Register: private key and certification not available");
         send_u2f_error_status_response(0x9402);
         return;
     }
-    
+
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを暗号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("U2F Register: AES password is not exist");
+        send_u2f_error_status_response(0x9402);
+        return;
+    }
+
     // control byte (P1) を参照
     uint8_t control_byte = get_receive_apdu()->P1;
     if (control_byte == 0x03) {
@@ -305,6 +306,9 @@ static void u2f_command_register(void)
 
 static void u2f_register_resume_process(void)
 {
+    // 本処理を開始
+    fido_log_info("U2F Register start");
+
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);
@@ -332,12 +336,12 @@ static void u2f_command_authenticate(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
-    
-    fido_log_info("U2F Authenticate start");
 
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを復号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("U2F Authenticate: AES password is not exist");
         send_u2f_error_status_response(0x9501);
         return;
     }
@@ -390,6 +394,9 @@ static void u2f_command_authenticate(void)
 
 static void u2f_authenticate_resume_process(void)
 {
+    // 本処理を開始
+    fido_log_info("U2F Authenticate start");
+
     // U2Fのリクエストデータを取得し、
     // レスポンス・メッセージを生成
     uint8_t *apdu_data = get_receive_apdu()->data;

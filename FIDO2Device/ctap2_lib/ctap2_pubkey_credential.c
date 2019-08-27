@@ -152,7 +152,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 #endif
 
     // 暗号化対象ブロックサイズを設定
-    //   AES ECBの仕様上、16の倍数でなければならない
+    //   AESの仕様上、16の倍数でなければならない
     size_t block_num = offset / 16;
     size_t block_sum = block_num * 16;
     if (offset == block_sum) {
@@ -242,7 +242,7 @@ uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList
 
     // credentialIdリストの先頭から逐一処理
     for (x = 0; x < allowList->size; x++) {
-        // credentialIdをAES ECBで復号化し、
+        // credentialIdをAES CBCで復号化し、
         // Public Key Credential Sourceを取得
         //   Public Key Credential Source + rpIdHash からの
         //   ハッシュ生成も同時に実行

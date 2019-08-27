@@ -289,6 +289,23 @@ static void command_authenticator_make_credential(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
+    if (fido_command_check_skey_cert_exist() == false) {
+        // 秘密鍵と証明書がFlash ROMに登録されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("authenticatorMakeCredential: private key and certification not available");
+        send_ctap2_command_error_response(CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST);
+        return;
+    }
+
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを暗号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("authenticatorMakeCredential: AES password is not exist");
+        send_ctap2_command_error_response(CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST);
+        return;
+    }
+
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = get_cbor_data_buffer();
     size_t   cbor_data_length = get_cbor_data_buffer_size();
@@ -367,6 +384,15 @@ static void command_authenticator_get_assertion(void)
 {
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
+
+    if (fido_flash_password_get() == NULL) {
+        // キーハンドルを復号化するために必要な
+        // AESパスワードが生成されていない場合
+        // エラーレスポンスを生成して戻す
+        fido_log_error("authenticatorGetAssertion: AES password is not exist");
+        send_ctap2_command_error_response(CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST);
+        return;
+    }
 
     // CBORエンコードされたリクエストメッセージをデコード
     uint8_t *cbor_data_buffer = get_cbor_data_buffer();

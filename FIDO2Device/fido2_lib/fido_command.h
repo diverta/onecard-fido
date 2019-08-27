@@ -20,6 +20,7 @@ extern "C" {
 //
 bool fido_command_do_abort(void);
 void fido_command_abort_flag_set(bool flag);
+bool fido_command_check_skey_cert_exist(void);
 
 void fido_command_mainsw_event_handler(void);
 void fido_user_presence_verify_timeout_handler(void);
