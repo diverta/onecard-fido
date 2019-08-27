@@ -276,22 +276,22 @@ namespace MaintenanceToolCommon
             }
             if (statusWord == 0x6a80) {
                 // invalid keyhandleエラーである場合はその旨を通知
-                MessageTextEvent("キーハンドルが存在しません。再度U2F Register(Enroll)を実行してください。");
+                MessageTextEvent(AppCommon.MSG_OCCUR_KEYHANDLE_ERROR);
                 return false;
             }
             if (statusWord == 0x9402) {
                 // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
-                MessageTextEvent("鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。");
+                MessageTextEvent(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
                 return false;
             }
             if (statusWord == 0x9601) {
                 // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
-                MessageTextEvent("ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。");
+                MessageTextEvent(AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR);
                 return false;
             }
             if (statusWord != 0x9000) {
                 // U2Fサービスの戻りコマンドが不正の場合はエラー
-                MessageTextEvent("不明なエラーが発生しました。");
+                MessageTextEvent(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
                 return false;
             }
 

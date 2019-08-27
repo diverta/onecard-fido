@@ -90,12 +90,14 @@ namespace MaintenanceToolGUI
 
             switch (bleRequestType) {
             case BLERequestType.TestRegister:
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
                 DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticateCheck);
                 break;
             case BLERequestType.TestAuthenticateCheck:
                 DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticate);
                 break;
             case BLERequestType.TestAuthenticate:
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_SUCCESS);
                 DoResponse(ret, receivedMessage, receivedLen);
                 break;
             case BLERequestType.TestBLEPing:
@@ -263,10 +265,10 @@ namespace MaintenanceToolGUI
                 // BLE U2Fリクエスト転送の前に、
                 // One CardのMAIN SWを押してもらうように促す
                 // メッセージを画面表示
-                mainForm.OnPrintMessageText("U2F Authenticateを開始します.");
-                mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
-                mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
-                mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_START);
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT1);
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT2);
+                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT3);
             }
 
             // BLE処理を実行し、メッセージを転送
