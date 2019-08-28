@@ -162,7 +162,7 @@ namespace MaintenanceToolCommon
         public async Task<bool> StartCommunicate()
         {
             try {
-                OutputLogToFile(string.Format("U2Fサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
+                OutputLogToFile(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
