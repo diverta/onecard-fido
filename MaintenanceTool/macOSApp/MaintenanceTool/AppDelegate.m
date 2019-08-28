@@ -291,7 +291,10 @@
         // トランザクション完了済とし、接続再試行を回避
         [self setBleTransactionStarted:false];
         // ポップアップ表示させる失敗メッセージとリザルトを保持
-        [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:[[self toolCommand] command]],
+                         MSG_FAILURE];
+        [self setLastCommandMessage:str];
         [self setLastCommandSuccess:false];
         // デバイス接続を切断
         [[self toolBLECentral] centralManagerWillDisconnect];
