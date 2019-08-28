@@ -104,7 +104,7 @@ namespace MaintenanceToolCommon
             // FIDO認証器が見つかったら、
             // アドレス情報を保持し、画面スレッドに通知
             string name = eventArgs.Advertisement.LocalName;
-            OutputLogToFile(string.Format("BLEデバイス {0} が見つかりました: BluetoothAddress={1}, {2} services",
+            OutputLogToFile(string.Format("BLEデバイス[{0}]が見つかりました: BluetoothAddress={1}, {2} services",
                 name, eventArgs.BluetoothAddress, eventArgs.Advertisement.ServiceUuids.Count));
             foreach (Guid g in eventArgs.Advertisement.ServiceUuids) {
                 OutputLogToFile(string.Format("  service={0}", g.ToString()));
@@ -142,9 +142,12 @@ namespace MaintenanceToolCommon
                     result.Status == DevicePairingResultStatus.AlreadyPaired) {
                     success = true;
                     OutputLogToFile("FIDO認証器とのペアリングが成功しました。");
+                } else if (result.Status == DevicePairingResultStatus.Failed) {
+                    success = false;
+                    OutputLogToFile("FIDO認証器とのペアリングが失敗しました。FIDO認証器がペアリングモードでない可能性があります。");
                 } else {
                     success = false;
-                    OutputLogToFile("FIDO認証器とのペアリングが失敗しました。");
+                    OutputLogToFile(string.Format("FIDO認証器とのペアリングが失敗しました: reason={0}", result.Status));
                 }
 
                 // BLEデバイスを解放
