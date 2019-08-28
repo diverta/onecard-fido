@@ -104,9 +104,15 @@ namespace MaintenanceToolCommon
             // FIDO認証器が見つかったら、
             // アドレス情報を保持し、画面スレッドに通知
             string name = eventArgs.Advertisement.LocalName;
-            if (name == "OneCard_Peripheral") {
-                BluetoothAddress = eventArgs.BluetoothAddress;
-                OutputLogToFile(string.Format("FIDO認証器が見つかりました: BluetoothAddress={0}", BluetoothAddress));
+            OutputLogToFile(string.Format("BLEデバイス {0} が見つかりました: BluetoothAddress={1}, {2} services",
+                name, eventArgs.BluetoothAddress, eventArgs.Advertisement.ServiceUuids.Count));
+            foreach (Guid g in eventArgs.Advertisement.ServiceUuids) {
+                OutputLogToFile(string.Format("  service={0}", g.ToString()));
+                if (g.Equals(U2F_BLE_SERVICE_UUID)) {
+                    BluetoothAddress = eventArgs.BluetoothAddress;
+                    OutputLogToFile("FIDO認証器が見つかりました.");
+                    break;
+                }
             }
         }
 
