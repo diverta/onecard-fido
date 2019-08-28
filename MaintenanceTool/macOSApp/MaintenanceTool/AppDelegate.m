@@ -282,6 +282,17 @@
     }
 
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
+        // BLEペアリング処理時のエラーメッセージを、適切なメッセージに変更する
+        if ([[self toolCommand] command] == COMMAND_PAIRING) {
+            if ([message isEqualToString:MSG_U2F_DEVICE_SCAN_TIMEOUT]) {
+                message = MSG_BLE_PARING_ERR_TIMED_OUT;
+            } else if ([message isEqualToString:MSG_BLE_NOTIFICATION_FAILED]) {
+                message = MSG_BLE_PARING_ERR_PAIR_MODE;
+            } else {
+                message = MSG_BLE_PARING_ERR_UNKNOWN;
+            }
+        }
+        
         // コンソールにエラーメッセージを出力
         [self displayErrorMessage:message error:error];
         
