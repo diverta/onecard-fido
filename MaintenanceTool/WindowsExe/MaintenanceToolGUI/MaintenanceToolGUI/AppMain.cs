@@ -76,8 +76,10 @@ namespace MaintenanceToolGUI
 
         public void OnPairedDevice(bool success, string messageOnFail)
         {
-            // メッセージを画面表示させる
-            mainForm.OnPrintMessageText(messageOnFail);
+            if (success == false) {
+                // BLEペアリングエラー時は、メッセージを画面表示させる
+                mainForm.OnPrintMessageText(messageOnFail);
+            }
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
             mainForm.OnAppMainProcessExited(success);
         }

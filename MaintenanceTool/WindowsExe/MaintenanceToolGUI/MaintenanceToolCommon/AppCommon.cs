@@ -81,10 +81,9 @@ namespace MaintenanceToolCommon
 
         // BLEペアリング関連のメッセージ文言
         public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
-        public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器とのペアリングが失敗しました。FIDO認証器が停止している可能性があります。";
-        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器とのペアリングが失敗しました。FIDO認証器がペアリングモードでない可能性があります。";
-        public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリングが失敗しました。";
-        public const string MSG_BLE_PARING_SUCCEEDED = "FIDO認証器とのペアリングが成功しました。";
+        public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
+        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
+        public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
 
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";

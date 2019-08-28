@@ -99,7 +99,7 @@ namespace MaintenanceToolCommon
             if (!bton) {
                 // 画面スレッドに失敗を通知
                 FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
-                OutputLogToFile(AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
+                OutputLogToFile("Bluetoothはオフです。");
                 return;
             }
 
@@ -122,7 +122,7 @@ namespace MaintenanceToolCommon
             } else {
                 // 画面スレッドに失敗を通知
                 FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
-                OutputLogToFile(AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
+                OutputLogToFile("FIDO認証器とのペアリングがタイムアウトしました。");
             }
         }
 
@@ -169,16 +169,15 @@ namespace MaintenanceToolCommon
                 if (result.Status == DevicePairingResultStatus.Paired ||
                     result.Status == DevicePairingResultStatus.AlreadyPaired) {
                     success = true;
-                    messageOnFail = AppCommon.MSG_BLE_PARING_SUCCEEDED;
-                    OutputLogToFile(messageOnFail);
+                    OutputLogToFile("FIDO認証器とのペアリングが成功しました。");
                 } else if (result.Status == DevicePairingResultStatus.Failed) {
                     success = false;
                     messageOnFail = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
-                    OutputLogToFile(messageOnFail);
+                    OutputLogToFile("FIDO認証器とのペアリングが失敗しました。");
                 } else {
                     success = false;
                     messageOnFail = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
-                    OutputLogToFile(string.Format("{0}reason={1}", messageOnFail, result.Status));
+                    OutputLogToFile(string.Format("FIDO認証器とのペアリングが失敗しました。reason={0}", result.Status));
                 }
 
                 // BLEデバイスを解放
