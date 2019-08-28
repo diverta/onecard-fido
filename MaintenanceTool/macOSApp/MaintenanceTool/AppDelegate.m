@@ -288,7 +288,7 @@
                 message = MSG_BLE_PARING_ERR_TIMED_OUT;
             } else if ([message isEqualToString:MSG_BLE_NOTIFICATION_FAILED]) {
                 message = MSG_BLE_PARING_ERR_PAIR_MODE;
-            } else {
+            } else if ([message isEqualToString:MSG_BLE_PARING_ERR_BT_OFF] == false) {
                 message = MSG_BLE_PARING_ERR_UNKNOWN;
             }
         }
