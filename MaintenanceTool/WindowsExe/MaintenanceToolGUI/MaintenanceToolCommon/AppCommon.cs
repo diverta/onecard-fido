@@ -79,6 +79,13 @@ namespace MaintenanceToolCommon
         public const string MSG_RESPONSE_RECEIVED = "レスポンスを受信しました。";
         public const string MSG_BLE_INVALID_PING = "BLE経由のPINGコマンドが失敗しました。";
 
+        // BLEペアリング関連のメッセージ文言
+        public const string MSG_BLE_PARING_ERR_BT_OFF = "Bluetoothがオフになっています。Bluetoothをオンにしてください。";
+        public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器とのペアリングが失敗しました。FIDO認証器が停止している可能性があります。";
+        public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器とのペアリングが失敗しました。FIDO認証器がペアリングモードでない可能性があります。";
+        public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリングが失敗しました。";
+        public const string MSG_BLE_PARING_SUCCEEDED = "FIDO認証器とのペアリングが成功しました。";
+
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";
 

@@ -74,7 +74,7 @@ namespace MaintenanceToolGUI
             bleProcess.PairWithFIDOPeripheral();
         }
 
-        public void OnPairedDevice(bool success)
+        public void OnPairedDevice(bool success, string messageOnFail)
         {
             // メイン画面の参照を経由し、コマンド実行完了時の処理を実行
             mainForm.OnAppMainProcessExited(success);

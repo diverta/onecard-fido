@@ -4,6 +4,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
+using Windows.Devices.Radios;
 using Windows.Storage.Streams;
 
 namespace MaintenanceToolCommon
@@ -25,7 +26,7 @@ namespace MaintenanceToolCommon
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
 
-        public delegate void FIDOPeripheralPairedEvent(bool success);
+        public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
         public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
 
         public delegate void FIDOPeripheralFoundEvent();
@@ -77,6 +78,31 @@ namespace MaintenanceToolCommon
 
         public async void Pair()
         {
+            // Bluetoothがオンになっていることを確認
+            bool bton = false;
+            try {
+                var radios = await Radio.GetRadiosAsync();
+                foreach (var radio in radios) {
+                    if (radio.Kind == RadioKind.Bluetooth) {
+                        if (radio.State == RadioState.On) {
+                            OutputLogToFile("Bluetoothはオンです。");
+                            bton = true;
+                            break;
+                        }
+                    }
+                }
+            } catch {
+                // Bluetoothオン状態が確認できない場合はオフ状態であるとみなす
+                OutputLogToFile("Bluetooth状態を確認できません。");
+            }
+
+            if (!bton) {
+                // 画面スレッドに失敗を通知
+                FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
+                OutputLogToFile(AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
+                return;
+            }
+
             OutputLogToFile("FIDO認証器とのペアリングを開始します。");
             BluetoothAddress = 0;
             watcher.Start();
@@ -95,7 +121,8 @@ namespace MaintenanceToolCommon
                 FIDOPeripheralFound();
             } else {
                 // 画面スレッドに失敗を通知
-                FIDOPeripheralPaired(false);
+                FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
+                OutputLogToFile(AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
             }
         }
 
@@ -125,6 +152,7 @@ namespace MaintenanceToolCommon
         public async void PairWithFIDOPeripheral()
         {
             bool success = false;
+            string messageOnFail = "";
             try {
                 // デバイス情報を取得
                 BluetoothLEDevice device = await BluetoothLEDevice.FromBluetoothAddressAsync(BluetoothAddress);
@@ -141,13 +169,16 @@ namespace MaintenanceToolCommon
                 if (result.Status == DevicePairingResultStatus.Paired ||
                     result.Status == DevicePairingResultStatus.AlreadyPaired) {
                     success = true;
-                    OutputLogToFile("FIDO認証器とのペアリングが成功しました。");
+                    messageOnFail = AppCommon.MSG_BLE_PARING_SUCCEEDED;
+                    OutputLogToFile(messageOnFail);
                 } else if (result.Status == DevicePairingResultStatus.Failed) {
                     success = false;
-                    OutputLogToFile("FIDO認証器とのペアリングが失敗しました。FIDO認証器がペアリングモードでない可能性があります。");
+                    messageOnFail = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
+                    OutputLogToFile(messageOnFail);
                 } else {
                     success = false;
-                    OutputLogToFile(string.Format("FIDO認証器とのペアリングが失敗しました: reason={0}", result.Status));
+                    messageOnFail = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
+                    OutputLogToFile(string.Format("{0}reason={1}", messageOnFail, result.Status));
                 }
 
                 // BLEデバイスを解放
@@ -159,7 +190,7 @@ namespace MaintenanceToolCommon
             }
 
             // 画面スレッドに成否を通知
-            FIDOPeripheralPaired(success);
+            FIDOPeripheralPaired(success, messageOnFail);
         }
 
         public async Task<bool> StartCommunicate()
