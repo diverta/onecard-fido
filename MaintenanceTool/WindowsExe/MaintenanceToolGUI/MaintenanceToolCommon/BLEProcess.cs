@@ -29,30 +29,30 @@ namespace MaintenanceToolCommon
         public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent;
 
         // ペアリング完了時のイベント
-        public delegate void oneCardPeripheralPairedEvent(bool success);
-        public event oneCardPeripheralPairedEvent OneCardPeripheralPaired;
+        public delegate void FIDOPeripheralPairedEvent(bool success);
+        public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
 
         public BLEProcess()
         {
             // BLEデバイスのイベントを登録
             bleService.DataReceived += new BLEService.dataReceivedEvent(BLEDeviceDataReceived);
-            bleService.OneCardPeripheralFound += new BLEService.oneCardPeripheralFoundEvent(OnOneCardPeripheralFound);
-            bleService.OneCardPeripheralPaired += new BLEService.oneCardPeripheralPairedEvent(OnOneCardPeripheralPaired);
+            bleService.FIDOPeripheralFound += new BLEService.FIDOPeripheralFoundEvent(OnFIDOPeripheralFound);
+            bleService.FIDOPeripheralPaired += new BLEService.FIDOPeripheralPairedEvent(OnFIDOPeripheralPaired);
         }
 
-        public void PairWithOneCardPeripheral()
+        public void PairWithFIDOPeripheral()
         {
             bleService.Pair();
         }
 
-        private void OnOneCardPeripheralFound()
+        private void OnFIDOPeripheralFound()
         {
-            bleService.PairWithOneCardPeripheral();
+            bleService.PairWithFIDOPeripheral();
         }
 
-        private void OnOneCardPeripheralPaired(bool success)
+        private void OnFIDOPeripheralPaired(bool success)
         {
-            OneCardPeripheralPaired(success);
+            FIDOPeripheralPaired(success);
         }
 
         public async void DoXferMessage(byte[] message, int length)
@@ -64,7 +64,7 @@ namespace MaintenanceToolCommon
             }
 
             if (isConnected == false) {
-                // 未接続の場合はOne CardとのBLE通信を開始
+                // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
                     AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED, true);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);

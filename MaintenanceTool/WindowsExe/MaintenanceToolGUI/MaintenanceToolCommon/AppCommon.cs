@@ -66,13 +66,13 @@ namespace MaintenanceToolCommon
         public const string MSG_FORMAT_PROCESS_EXITED = "{0}が{1}しました: {2} {3}";
 
         // BLE関連のメッセージ文言
-        public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLE U2Fサービスが見つかりません。";
-        public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLE U2Fサービスが見つかりました。";
-        public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO U2Fデバイスの接続に失敗しました。";
-        public const string MSG_U2F_DEVICE_CONNECTED = "FIDO U2Fデバイスに接続しました。";
-        public const string MSG_U2F_DEVICE_DISCONNECTED = "FIDO U2Fデバイスの接続が切断されました。";
-        public const string MSG_BLE_CHARACT_NOT_DISCOVERED = "FIDO BLE U2Fサービスと通信できません。";
-        public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLE U2Fサービスからデータを受信できません。";
+        public const string MSG_BLE_U2F_SERVICE_NOT_FOUND = "FIDO BLEサービスが見つかりません。";
+        public const string MSG_BLE_U2F_SERVICE_FOUND = "FIDO BLEサービスが見つかりました。";
+        public const string MSG_U2F_DEVICE_CONNECT_FAILED = "FIDO認証器の接続に失敗しました。";
+        public const string MSG_U2F_DEVICE_CONNECTED = "FIDO認証器に接続しました。";
+        public const string MSG_U2F_DEVICE_DISCONNECTED = "FIDO認証器の接続が切断されました。";
+        public const string MSG_BLE_CHARACT_NOT_DISCOVERED = "FIDO BLEサービスと通信できません。";
+        public const string MSG_BLE_NOTIFICATION_FAILED = "FIDO BLEサービスからデータを受信できません。";
         public const string MSG_BLE_NOTIFICATION_START = "受信データの監視を開始します。";
         public const string MSG_REQUEST_SEND_FAILED = "リクエスト送信が失敗しました。";
         public const string MSG_REQUEST_SENT = "リクエストを送信しました。";
