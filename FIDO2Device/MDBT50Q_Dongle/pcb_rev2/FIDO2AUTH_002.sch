@@ -153,81 +153,6 @@
 <libraries>
 <library name="Parts">
 <packages>
-<package name="MDBT50Q-P1M">
-<description>&lt;b&gt;MDBT50Q-P1M&lt;/b&gt;&lt;p&gt;
-PCB SIZE: (L) 15.5 x (W) 10.5 x (H) 2.0 mm&lt;br&gt;</description>
-<text x="-5.27" y="8.17" size="1.27" layer="25">&gt;NAME</text>
-<text x="-5.27" y="-8.13" size="1.27" layer="27" align="top-left">&gt;VALUE</text>
-<rectangle x1="-6.2" y1="3.95" x2="6.2" y2="7.75" layer="39"/>
-<rectangle x1="-2.295" y1="2.745" x2="-0.695" y2="3.945" layer="39"/>
-<wire x1="-5.25" y1="7.75" x2="5.25" y2="7.75" width="0.127" layer="21"/>
-<wire x1="5.25" y1="7.75" x2="5.25" y2="-7.75" width="0.127" layer="21"/>
-<wire x1="5.25" y1="-7.75" x2="-5.25" y2="-7.75" width="0.127" layer="21"/>
-<wire x1="-5.25" y1="-7.75" x2="-5.25" y2="7.75" width="0.127" layer="21"/>
-<smd name="1" x="-4.65" y="3.75" dx="0.6" dy="0.4" layer="1"/>
-<smd name="3" x="-4.65" y="1.85" dx="0.6" dy="0.4" layer="1"/>
-<smd name="4" x="-4.65" y="0.25" dx="0.6" dy="0.4" layer="1"/>
-<smd name="5" x="-3.75" y="-0.15" dx="0.6" dy="0.4" layer="1"/>
-<smd name="7" x="-3.75" y="-0.95" dx="0.6" dy="0.4" layer="1"/>
-<smd name="9" x="-3.75" y="-1.75" dx="0.6" dy="0.4" layer="1"/>
-<smd name="10" x="-4.65" y="-2.15" dx="0.6" dy="0.4" layer="1"/>
-<smd name="11" x="-3.75" y="-2.55" dx="0.6" dy="0.4" layer="1"/>
-<smd name="12" x="-4.65" y="-2.95" dx="0.6" dy="0.4" layer="1"/>
-<smd name="13" x="-3.75" y="-3.35" dx="0.6" dy="0.4" layer="1"/>
-<smd name="14" x="-4.65" y="-3.75" dx="0.6" dy="0.4" layer="1"/>
-<smd name="8" x="-4.65" y="-1.35" dx="0.6" dy="0.4" layer="1"/>
-<smd name="15" x="-4.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="6" x="-4.65" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="16" x="-4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="2" x="-4.65" y="2.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="17" x="-3.2" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="18" x="-2.4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="20" x="-1.6" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="22" x="-0.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="24" x="0" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="26" x="0.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="28" x="1.6" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="21" x="-1.2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="23" x="-0.4" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="25" x="0.4" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="27" x="1.2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="29" x="2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="32" x="4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="30" x="2.4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
-<smd name="31" x="3.2" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="33" x="4.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="34" x="4.65" y="-6.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="35" x="4.65" y="-5.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="37" x="4.65" y="-4.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="38" x="3.75" y="-4.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="40" x="3.75" y="-3.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="39" x="4.65" y="-3.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="36" x="3.75" y="-4.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<text x="-3.61" y="5.68" size="0.8" layer="39">No ground pad</text>
-<text x="-2.24" y="3.25" size="0.1" layer="39">Toplayer no ground pad</text>
-<smd name="19" x="-2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="41" x="4.65" y="-2.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="42" x="3.75" y="-2.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="43" x="3.75" y="-1.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="44" x="4.65" y="-1.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="45" x="3.75" y="-0.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="46" x="4.65" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="47" x="3.75" y="-0.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="48" x="4.65" y="0.25" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="49" x="3.75" y="0.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="50" x="3.75" y="1.45" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="51" x="4.65" y="1.85" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="52" x="3.75" y="2.25" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="53" x="4.65" y="2.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="54" x="3.75" y="3.05" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="55" x="4.65" y="3.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
-<smd name="56" x="-2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="57" x="-1.2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="58" x="-0.4" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="59" x="0.4" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="60" x="1.2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-<smd name="61" x="2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
-</package>
 <package name="NX3215">
 <description>&lt;b&gt;kHz RANGE CRYSTAL UNIT&lt;/b&gt;&lt;p&gt;
 LOW PROFILE SMD&lt;b&gt;</description>
@@ -709,76 +634,6 @@ Wave soldering</description>
 </package>
 </packages>
 <symbols>
-<symbol name="MDBT50">
-<description>&lt;b&gt;MDBT50Q-P1M&lt;/b&gt;&lt;p&gt;</description>
-<wire x1="-25.4" y1="53.34" x2="-25.4" y2="-45.72" width="0.254" layer="94"/>
-<wire x1="-25.4" y1="-45.72" x2="25.4" y2="-45.72" width="0.254" layer="94"/>
-<wire x1="25.4" y1="-45.72" x2="25.4" y2="53.34" width="0.254" layer="94"/>
-<wire x1="25.4" y1="53.34" x2="-25.4" y2="53.34" width="0.254" layer="94"/>
-<pin name="GND@1" x="-30.48" y="27.94" length="middle"/>
-<pin name="P0.25" x="30.48" y="10.16" length="middle" rot="R180"/>
-<pin name="P0.26" x="-12.7" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.27" x="-20.32" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.28/AIN4" x="-30.48" y="-15.24" length="middle"/>
-<pin name="P0.29/AIN5" x="-30.48" y="-7.62" length="middle"/>
-<pin name="P0.30/AIN6" x="-30.48" y="-17.78" length="middle"/>
-<pin name="P0.31/AIN7" x="-30.48" y="-12.7" length="middle"/>
-<pin name="VDD" x="10.16" y="-50.8" length="middle" rot="R90"/>
-<pin name="GND@15" x="-22.86" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.00/XL1" x="-17.78" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.01/XL2" x="-15.24" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.02/AIN0" x="-30.48" y="-10.16" length="middle"/>
-<pin name="P0.03/AIN1" x="-30.48" y="-5.08" length="middle"/>
-<pin name="P0.04/AIN2" x="-10.16" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.05/AIN3" x="-7.62" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.06" x="-5.08" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.07" x="-2.54" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.08" x="0" y="-50.8" length="middle" rot="R90"/>
-<pin name="P1.09" x="5.08" y="-50.8" length="middle" rot="R90"/>
-<pin name="P1.10" x="-30.48" y="17.78" length="middle"/>
-<pin name="GND@33" x="22.86" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.11" x="7.62" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.12" x="12.7" y="-50.8" length="middle" rot="R90"/>
-<pin name="P0.13" x="30.48" y="-22.86" length="middle" rot="R180"/>
-<pin name="P0.14" x="30.48" y="-25.4" length="middle" rot="R180"/>
-<pin name="P0.15" x="30.48" y="-17.78" length="middle" rot="R180"/>
-<pin name="P0.16" x="30.48" y="-20.32" length="middle" rot="R180"/>
-<pin name="P0.17" x="30.48" y="-12.7" length="middle" rot="R180"/>
-<pin name="P0.18/RESET" x="30.48" y="-15.24" length="middle" rot="R180"/>
-<pin name="P0.19" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="P0.20" x="30.48" y="-2.54" length="middle" rot="R180"/>
-<pin name="P0.21" x="30.48" y="-5.08" length="middle" rot="R180"/>
-<pin name="SWDCLK" x="30.48" y="22.86" length="middle" rot="R180"/>
-<pin name="SWDIO" x="30.48" y="17.78" length="middle" rot="R180"/>
-<pin name="P0.22" x="30.48" y="2.54" length="middle" rot="R180"/>
-<pin name="GND@55" x="30.48" y="27.94" length="middle" rot="R180"/>
-<pin name="P0.24" x="30.48" y="7.62" length="middle" rot="R180"/>
-<pin name="P0.23" x="30.48" y="0" length="middle" rot="R180"/>
-<text x="-25.4" y="55.88" size="1.778" layer="95">&gt;NAME</text>
-<text x="-25.4" y="-58.42" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="P1.13" x="-30.48" y="2.54" length="middle"/>
-<pin name="VDDH" x="15.24" y="-50.8" length="middle" rot="R90"/>
-<pin name="P1.08" x="2.54" y="-50.8" length="middle" rot="R90"/>
-<pin name="DCCH" x="17.78" y="-50.8" length="middle" rot="R90"/>
-<pin name="VBUS" x="20.32" y="-50.8" length="middle" rot="R90"/>
-<pin name="P1.15" x="-30.48" y="-2.54" length="middle"/>
-<pin name="P1.14" x="-30.48" y="0" length="middle"/>
-<pin name="P1.12" x="-30.48" y="5.08" length="middle"/>
-<pin name="P1.11" x="-30.48" y="7.62" length="middle"/>
-<pin name="P1.00" x="30.48" y="5.08" length="middle" rot="R180"/>
-<pin name="P1.02" x="30.48" y="15.24" length="middle" rot="R180"/>
-<pin name="P0.09/NFC1" x="30.48" y="20.32" length="middle" rot="R180"/>
-<pin name="P0.10/NFC2" x="30.48" y="25.4" length="middle" rot="R180"/>
-<pin name="P1.01" x="-30.48" y="38.1" length="middle"/>
-<pin name="P1.03" x="-30.48" y="40.64" length="middle"/>
-<pin name="P1.05" x="-30.48" y="43.18" length="middle"/>
-<pin name="P1.07" x="-30.48" y="45.72" length="middle"/>
-<pin name="P1.06" x="-30.48" y="48.26" length="middle"/>
-<pin name="P1.04" x="-30.48" y="50.8" length="middle"/>
-<pin name="D-" x="30.48" y="-30.48" length="middle" rot="R180"/>
-<pin name="D+" x="30.48" y="-27.94" length="middle" rot="R180"/>
-<pin name="GND@2" x="-30.48" y="22.86" length="middle"/>
-</symbol>
 <symbol name="XTAL">
 <description>&lt;b&gt;クリスタル&lt;/b&gt;&lt;p&gt;</description>
 <wire x1="1.016" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
@@ -989,93 +844,6 @@ Wave soldering</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="MDBT50Q-P1M" prefix="U">
-<description>&lt;b&gt;MDBT50Q – P1M (PCB Antenna)&lt;/b&gt;&lt;p&gt;
-Bluetooth 5, IEEE 802.15.4, 2.4 GHz transceiver&lt;br&gt;
-ARM Cortex –M4 32-bit processor with FPU, 64 MHz&lt;br&gt;
-Memory: 1MB flash / 256KB RAM&lt;br&gt;&lt;br&gt;
-‧Supply voltage range 1.7V to 5.5V&lt;br&gt;
-‧On-chip DC/DC and LDO regulators with automated low current modes &lt;br&gt;
-‧Regulated supply for external components from 1.8V to 3.3V&lt;br&gt;
-‧0.4uA at 3V in System OFF mode, no RAM retention&lt;br&gt;
-‧1.5uA at 3V in System ON mode, no RAM retention, wake on RTC&lt;br&gt;&lt;br&gt;
-Working distance&lt;br&gt;
-1Mbps: up to 250 meters in open space&lt;br&gt;
-2Mbps: up to 120 meters in open space&lt;br&gt;</description>
-<gates>
-<gate name="G$1" symbol="MDBT50" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="MDBT50Q-P1M">
-<connects>
-<connect gate="G$1" pin="D+" pad="35"/>
-<connect gate="G$1" pin="D-" pad="34"/>
-<connect gate="G$1" pin="DCCH" pad="31"/>
-<connect gate="G$1" pin="GND@1" pad="1"/>
-<connect gate="G$1" pin="GND@15" pad="15"/>
-<connect gate="G$1" pin="GND@2" pad="2"/>
-<connect gate="G$1" pin="GND@33" pad="33"/>
-<connect gate="G$1" pin="GND@55" pad="55"/>
-<connect gate="G$1" pin="P0.00/XL1" pad="17"/>
-<connect gate="G$1" pin="P0.01/XL2" pad="18"/>
-<connect gate="G$1" pin="P0.02/AIN0" pad="11"/>
-<connect gate="G$1" pin="P0.03/AIN1" pad="9"/>
-<connect gate="G$1" pin="P0.04/AIN2" pad="20"/>
-<connect gate="G$1" pin="P0.05/AIN3" pad="21"/>
-<connect gate="G$1" pin="P0.06" pad="22"/>
-<connect gate="G$1" pin="P0.07" pad="23"/>
-<connect gate="G$1" pin="P0.08" pad="24"/>
-<connect gate="G$1" pin="P0.09/NFC1" pad="52"/>
-<connect gate="G$1" pin="P0.10/NFC2" pad="54"/>
-<connect gate="G$1" pin="P0.11" pad="27"/>
-<connect gate="G$1" pin="P0.12" pad="29"/>
-<connect gate="G$1" pin="P0.13" pad="37"/>
-<connect gate="G$1" pin="P0.14" pad="36"/>
-<connect gate="G$1" pin="P0.15" pad="39"/>
-<connect gate="G$1" pin="P0.16" pad="38"/>
-<connect gate="G$1" pin="P0.17" pad="41"/>
-<connect gate="G$1" pin="P0.18/RESET" pad="40"/>
-<connect gate="G$1" pin="P0.19" pad="42"/>
-<connect gate="G$1" pin="P0.20" pad="44"/>
-<connect gate="G$1" pin="P0.21" pad="43"/>
-<connect gate="G$1" pin="P0.22" pad="46"/>
-<connect gate="G$1" pin="P0.23" pad="45"/>
-<connect gate="G$1" pin="P0.24" pad="48"/>
-<connect gate="G$1" pin="P0.25" pad="49"/>
-<connect gate="G$1" pin="P0.26" pad="19"/>
-<connect gate="G$1" pin="P0.27" pad="16"/>
-<connect gate="G$1" pin="P0.28/AIN4" pad="13"/>
-<connect gate="G$1" pin="P0.29/AIN5" pad="10"/>
-<connect gate="G$1" pin="P0.30/AIN6" pad="14"/>
-<connect gate="G$1" pin="P0.31/AIN7" pad="12"/>
-<connect gate="G$1" pin="P1.00" pad="47"/>
-<connect gate="G$1" pin="P1.01" pad="61"/>
-<connect gate="G$1" pin="P1.02" pad="50"/>
-<connect gate="G$1" pin="P1.03" pad="60"/>
-<connect gate="G$1" pin="P1.04" pad="56"/>
-<connect gate="G$1" pin="P1.05" pad="59"/>
-<connect gate="G$1" pin="P1.06" pad="57"/>
-<connect gate="G$1" pin="P1.07" pad="58"/>
-<connect gate="G$1" pin="P1.08" pad="25"/>
-<connect gate="G$1" pin="P1.09" pad="26"/>
-<connect gate="G$1" pin="P1.10" pad="3"/>
-<connect gate="G$1" pin="P1.11" pad="4"/>
-<connect gate="G$1" pin="P1.12" pad="5"/>
-<connect gate="G$1" pin="P1.13" pad="6"/>
-<connect gate="G$1" pin="P1.14" pad="7"/>
-<connect gate="G$1" pin="P1.15" pad="8"/>
-<connect gate="G$1" pin="SWDCLK" pad="53"/>
-<connect gate="G$1" pin="SWDIO" pad="51"/>
-<connect gate="G$1" pin="VBUS" pad="32"/>
-<connect gate="G$1" pin="VDD" pad="28"/>
-<connect gate="G$1" pin="VDDH" pad="30"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="NX3215SA" prefix="X">
 <description>&lt;b&gt;水晶振動子&lt;/b&gt;&lt;p&gt;
 周波数	32.768kHz&lt;br&gt;
@@ -1466,6 +1234,50 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 </gates>
 <devices>
 <device name="AEA,115" package="SOD323-W">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="APTD1608" prefix="LED">
+<description>&lt;b&gt;発光ダイオード&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="LED" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="LCGCK_" package="CHIPLED_0805">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LSYCK_" package="CHIPLED_0805">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LCGCK" package="CHIPLED_0603">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LSYCK" package="CHIPLED_0603">
 <connects>
 <connect gate="G$1" pin="A" pad="A"/>
 <connect gate="G$1" pin="C" pad="C"/>
@@ -1896,6 +1708,246 @@ TE Connectivity</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="Modules">
+<packages>
+<package name="MDBT50Q-P1M">
+<description>&lt;b&gt;MDBT50Q-P1M&lt;/b&gt;&lt;p&gt;
+PCB SIZE: (L) 15.5 x (W) 10.5 x (H) 2.0 mm&lt;br&gt;</description>
+<text x="-5.27" y="8.17" size="1.27" layer="25">&gt;NAME</text>
+<text x="-5.27" y="-8.13" size="1.27" layer="27" align="top-left">&gt;VALUE</text>
+<rectangle x1="-6.2" y1="3.95" x2="6.2" y2="7.75" layer="39"/>
+<rectangle x1="-2.295" y1="2.745" x2="-0.695" y2="3.945" layer="39"/>
+<wire x1="-5.25" y1="7.75" x2="5.25" y2="7.75" width="0.127" layer="21"/>
+<wire x1="5.25" y1="7.75" x2="5.25" y2="-7.75" width="0.127" layer="21"/>
+<wire x1="5.25" y1="-7.75" x2="-5.25" y2="-7.75" width="0.127" layer="21"/>
+<wire x1="-5.25" y1="-7.75" x2="-5.25" y2="7.75" width="0.127" layer="21"/>
+<smd name="1" x="-4.65" y="3.75" dx="0.6" dy="0.4" layer="1"/>
+<smd name="3" x="-4.65" y="1.85" dx="0.6" dy="0.4" layer="1"/>
+<smd name="4" x="-4.65" y="0.25" dx="0.6" dy="0.4" layer="1"/>
+<smd name="5" x="-3.75" y="-0.15" dx="0.6" dy="0.4" layer="1"/>
+<smd name="7" x="-3.75" y="-0.95" dx="0.6" dy="0.4" layer="1"/>
+<smd name="9" x="-3.75" y="-1.75" dx="0.6" dy="0.4" layer="1"/>
+<smd name="10" x="-4.65" y="-2.15" dx="0.6" dy="0.4" layer="1"/>
+<smd name="11" x="-3.75" y="-2.55" dx="0.6" dy="0.4" layer="1"/>
+<smd name="12" x="-4.65" y="-2.95" dx="0.6" dy="0.4" layer="1"/>
+<smd name="13" x="-3.75" y="-3.35" dx="0.6" dy="0.4" layer="1"/>
+<smd name="14" x="-4.65" y="-3.75" dx="0.6" dy="0.4" layer="1"/>
+<smd name="8" x="-4.65" y="-1.35" dx="0.6" dy="0.4" layer="1"/>
+<smd name="15" x="-4.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="6" x="-4.65" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="16" x="-4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="2" x="-4.65" y="2.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="17" x="-3.2" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="18" x="-2.4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="20" x="-1.6" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="22" x="-0.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="24" x="0" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="26" x="0.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="28" x="1.6" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="21" x="-1.2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="23" x="-0.4" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="25" x="0.4" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="27" x="1.2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="29" x="2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="32" x="4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="30" x="2.4" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R90"/>
+<smd name="31" x="3.2" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="33" x="4.8" y="-7.15" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="34" x="4.65" y="-6.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="35" x="4.65" y="-5.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="37" x="4.65" y="-4.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="38" x="3.75" y="-4.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="40" x="3.75" y="-3.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="39" x="4.65" y="-3.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="36" x="3.75" y="-4.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<text x="-3.61" y="5.68" size="0.8" layer="39">No ground pad</text>
+<text x="-2.24" y="3.25" size="0.1" layer="39">Toplayer no ground pad</text>
+<smd name="19" x="-2" y="-6.25" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="41" x="4.65" y="-2.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="42" x="3.75" y="-2.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="43" x="3.75" y="-1.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="44" x="4.65" y="-1.35" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="45" x="3.75" y="-0.95" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="46" x="4.65" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="47" x="3.75" y="-0.15" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="48" x="4.65" y="0.25" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="49" x="3.75" y="0.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="50" x="3.75" y="1.45" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="51" x="4.65" y="1.85" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="52" x="3.75" y="2.25" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="53" x="4.65" y="2.65" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="54" x="3.75" y="3.05" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="55" x="4.65" y="3.75" dx="0.6" dy="0.4" layer="1" rot="R180"/>
+<smd name="56" x="-2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="57" x="-1.2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="58" x="-0.4" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="59" x="0.4" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="60" x="1.2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+<smd name="61" x="2" y="-0.55" dx="0.6" dy="0.4" layer="1" rot="R270"/>
+</package>
+</packages>
+<symbols>
+<symbol name="MDBT50">
+<description>&lt;b&gt;MDBT50Q-P1M&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="-25.4" y1="53.34" x2="-25.4" y2="-45.72" width="0.254" layer="94"/>
+<wire x1="-25.4" y1="-45.72" x2="25.4" y2="-45.72" width="0.254" layer="94"/>
+<wire x1="25.4" y1="-45.72" x2="25.4" y2="53.34" width="0.254" layer="94"/>
+<wire x1="25.4" y1="53.34" x2="-25.4" y2="53.34" width="0.254" layer="94"/>
+<pin name="GND@1" x="-30.48" y="27.94" length="middle"/>
+<pin name="P0.25" x="30.48" y="10.16" length="middle" rot="R180"/>
+<pin name="P0.26" x="-12.7" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.27" x="-20.32" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.28/AIN4" x="-30.48" y="-15.24" length="middle"/>
+<pin name="P0.29/AIN5" x="-30.48" y="-7.62" length="middle"/>
+<pin name="P0.30/AIN6" x="-30.48" y="-17.78" length="middle"/>
+<pin name="P0.31/AIN7" x="-30.48" y="-12.7" length="middle"/>
+<pin name="VDD" x="10.16" y="-50.8" length="middle" rot="R90"/>
+<pin name="GND@15" x="-22.86" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.00/XL1" x="-17.78" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.01/XL2" x="-15.24" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.02/AIN0" x="-30.48" y="-10.16" length="middle"/>
+<pin name="P0.03/AIN1" x="-30.48" y="-5.08" length="middle"/>
+<pin name="P0.04/AIN2" x="-10.16" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.05/AIN3" x="-7.62" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.06" x="-5.08" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.07" x="-2.54" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.08" x="0" y="-50.8" length="middle" rot="R90"/>
+<pin name="P1.09" x="5.08" y="-50.8" length="middle" rot="R90"/>
+<pin name="P1.10" x="-30.48" y="17.78" length="middle"/>
+<pin name="GND@33" x="22.86" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.11" x="7.62" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.12" x="12.7" y="-50.8" length="middle" rot="R90"/>
+<pin name="P0.13" x="30.48" y="-22.86" length="middle" rot="R180"/>
+<pin name="P0.14" x="30.48" y="-25.4" length="middle" rot="R180"/>
+<pin name="P0.15" x="30.48" y="-17.78" length="middle" rot="R180"/>
+<pin name="P0.16" x="30.48" y="-20.32" length="middle" rot="R180"/>
+<pin name="P0.17" x="30.48" y="-12.7" length="middle" rot="R180"/>
+<pin name="P0.18/RESET" x="30.48" y="-15.24" length="middle" rot="R180"/>
+<pin name="P0.19" x="30.48" y="-10.16" length="middle" rot="R180"/>
+<pin name="P0.20" x="30.48" y="-2.54" length="middle" rot="R180"/>
+<pin name="P0.21" x="30.48" y="-5.08" length="middle" rot="R180"/>
+<pin name="SWDCLK" x="30.48" y="22.86" length="middle" rot="R180"/>
+<pin name="SWDIO" x="30.48" y="17.78" length="middle" rot="R180"/>
+<pin name="P0.22" x="30.48" y="2.54" length="middle" rot="R180"/>
+<pin name="GND@55" x="30.48" y="27.94" length="middle" rot="R180"/>
+<pin name="P0.24" x="30.48" y="7.62" length="middle" rot="R180"/>
+<pin name="P0.23" x="30.48" y="0" length="middle" rot="R180"/>
+<text x="-25.4" y="55.88" size="1.778" layer="95">&gt;NAME</text>
+<text x="-25.4" y="-58.42" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="P1.13" x="-30.48" y="2.54" length="middle"/>
+<pin name="VDDH" x="15.24" y="-50.8" length="middle" rot="R90"/>
+<pin name="P1.08" x="2.54" y="-50.8" length="middle" rot="R90"/>
+<pin name="DCCH" x="17.78" y="-50.8" length="middle" rot="R90"/>
+<pin name="VBUS" x="20.32" y="-50.8" length="middle" rot="R90"/>
+<pin name="P1.15" x="-30.48" y="-2.54" length="middle"/>
+<pin name="P1.14" x="-30.48" y="0" length="middle"/>
+<pin name="P1.12" x="-30.48" y="5.08" length="middle"/>
+<pin name="P1.11" x="-30.48" y="7.62" length="middle"/>
+<pin name="P1.00" x="30.48" y="5.08" length="middle" rot="R180"/>
+<pin name="P1.02" x="30.48" y="15.24" length="middle" rot="R180"/>
+<pin name="P0.09/NFC1" x="30.48" y="20.32" length="middle" rot="R180"/>
+<pin name="P0.10/NFC2" x="30.48" y="25.4" length="middle" rot="R180"/>
+<pin name="P1.01" x="-30.48" y="38.1" length="middle"/>
+<pin name="P1.03" x="-30.48" y="40.64" length="middle"/>
+<pin name="P1.05" x="-30.48" y="43.18" length="middle"/>
+<pin name="P1.07" x="-30.48" y="45.72" length="middle"/>
+<pin name="P1.06" x="-30.48" y="48.26" length="middle"/>
+<pin name="P1.04" x="-30.48" y="50.8" length="middle"/>
+<pin name="D-" x="30.48" y="-30.48" length="middle" rot="R180"/>
+<pin name="D+" x="30.48" y="-27.94" length="middle" rot="R180"/>
+<pin name="GND@2" x="-30.48" y="22.86" length="middle"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="MDBT50Q-P1M" prefix="U">
+<description>&lt;b&gt;MDBT50Q – P1M (PCB Antenna)&lt;/b&gt;&lt;p&gt;
+Bluetooth 5, IEEE 802.15.4, 2.4 GHz transceiver&lt;br&gt;
+ARM Cortex –M4 32-bit processor with FPU, 64 MHz&lt;br&gt;
+Memory: 1MB flash / 256KB RAM&lt;br&gt;&lt;br&gt;
+‧Supply voltage range 1.7V to 5.5V&lt;br&gt;
+‧On-chip DC/DC and LDO regulators with automated low current modes &lt;br&gt;
+‧Regulated supply for external components from 1.8V to 3.3V&lt;br&gt;
+‧0.4uA at 3V in System OFF mode, no RAM retention&lt;br&gt;
+‧1.5uA at 3V in System ON mode, no RAM retention, wake on RTC&lt;br&gt;&lt;br&gt;
+Working distance&lt;br&gt;
+1Mbps: up to 250 meters in open space&lt;br&gt;
+2Mbps: up to 120 meters in open space&lt;br&gt;</description>
+<gates>
+<gate name="G$1" symbol="MDBT50" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MDBT50Q-P1M">
+<connects>
+<connect gate="G$1" pin="D+" pad="35"/>
+<connect gate="G$1" pin="D-" pad="34"/>
+<connect gate="G$1" pin="DCCH" pad="31"/>
+<connect gate="G$1" pin="GND@1" pad="1"/>
+<connect gate="G$1" pin="GND@15" pad="15"/>
+<connect gate="G$1" pin="GND@2" pad="2"/>
+<connect gate="G$1" pin="GND@33" pad="33"/>
+<connect gate="G$1" pin="GND@55" pad="55"/>
+<connect gate="G$1" pin="P0.00/XL1" pad="17"/>
+<connect gate="G$1" pin="P0.01/XL2" pad="18"/>
+<connect gate="G$1" pin="P0.02/AIN0" pad="11"/>
+<connect gate="G$1" pin="P0.03/AIN1" pad="9"/>
+<connect gate="G$1" pin="P0.04/AIN2" pad="20"/>
+<connect gate="G$1" pin="P0.05/AIN3" pad="21"/>
+<connect gate="G$1" pin="P0.06" pad="22"/>
+<connect gate="G$1" pin="P0.07" pad="23"/>
+<connect gate="G$1" pin="P0.08" pad="24"/>
+<connect gate="G$1" pin="P0.09/NFC1" pad="52"/>
+<connect gate="G$1" pin="P0.10/NFC2" pad="54"/>
+<connect gate="G$1" pin="P0.11" pad="27"/>
+<connect gate="G$1" pin="P0.12" pad="29"/>
+<connect gate="G$1" pin="P0.13" pad="37"/>
+<connect gate="G$1" pin="P0.14" pad="36"/>
+<connect gate="G$1" pin="P0.15" pad="39"/>
+<connect gate="G$1" pin="P0.16" pad="38"/>
+<connect gate="G$1" pin="P0.17" pad="41"/>
+<connect gate="G$1" pin="P0.18/RESET" pad="40"/>
+<connect gate="G$1" pin="P0.19" pad="42"/>
+<connect gate="G$1" pin="P0.20" pad="44"/>
+<connect gate="G$1" pin="P0.21" pad="43"/>
+<connect gate="G$1" pin="P0.22" pad="46"/>
+<connect gate="G$1" pin="P0.23" pad="45"/>
+<connect gate="G$1" pin="P0.24" pad="48"/>
+<connect gate="G$1" pin="P0.25" pad="49"/>
+<connect gate="G$1" pin="P0.26" pad="19"/>
+<connect gate="G$1" pin="P0.27" pad="16"/>
+<connect gate="G$1" pin="P0.28/AIN4" pad="13"/>
+<connect gate="G$1" pin="P0.29/AIN5" pad="10"/>
+<connect gate="G$1" pin="P0.30/AIN6" pad="14"/>
+<connect gate="G$1" pin="P0.31/AIN7" pad="12"/>
+<connect gate="G$1" pin="P1.00" pad="47"/>
+<connect gate="G$1" pin="P1.01" pad="61"/>
+<connect gate="G$1" pin="P1.02" pad="50"/>
+<connect gate="G$1" pin="P1.03" pad="60"/>
+<connect gate="G$1" pin="P1.04" pad="56"/>
+<connect gate="G$1" pin="P1.05" pad="59"/>
+<connect gate="G$1" pin="P1.06" pad="57"/>
+<connect gate="G$1" pin="P1.07" pad="58"/>
+<connect gate="G$1" pin="P1.08" pad="25"/>
+<connect gate="G$1" pin="P1.09" pad="26"/>
+<connect gate="G$1" pin="P1.10" pad="3"/>
+<connect gate="G$1" pin="P1.11" pad="4"/>
+<connect gate="G$1" pin="P1.12" pad="5"/>
+<connect gate="G$1" pin="P1.13" pad="6"/>
+<connect gate="G$1" pin="P1.14" pad="7"/>
+<connect gate="G$1" pin="P1.15" pad="8"/>
+<connect gate="G$1" pin="SWDCLK" pad="53"/>
+<connect gate="G$1" pin="SWDIO" pad="51"/>
+<connect gate="G$1" pin="VBUS" pad="32"/>
+<connect gate="G$1" pin="VDD" pad="28"/>
+<connect gate="G$1" pin="VDDH" pad="30"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1906,7 +1958,7 @@ TE Connectivity</description>
 </class>
 </classes>
 <parts>
-<part name="U1" library="Parts" deviceset="MDBT50Q-P1M" device=""/>
+<part name="U1" library="Modules" deviceset="MDBT50Q-P1M" device=""/>
 <part name="FRAME1" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="X1" library="Parts" deviceset="NX3215SA" device="-32.768K"/>
 <part name="C1" library="Parts" deviceset="CAP" device="_0603" value="12pF"/>
@@ -1961,15 +2013,17 @@ TE Connectivity</description>
 <part name="GND18" library="Supply" deviceset="0V" device=""/>
 <part name="CN3" library="Connectors" deviceset="IF_3PIN" device=""/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
+<part name="LED3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
+<part name="R6" library="Parts" deviceset="RESISTOR" device="_0603" value="1.5k"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="152.4" y="152.4" size="2.54" layer="91">32.768kHzクリスタル</text>
 <text x="203.2" y="152.4" size="2.54" layer="91">バイパスコンデンサー</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Breakout</text>
-<text x="166.37" y="11.43" size="2.54" layer="91">nRF52840版FIDO2認証器
-開発用ブレークアウト基板</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
+      （rev2）</text>
 <text x="20.32" y="162.56" size="3.81" layer="91">モジュール部</text>
 <text x="167.64" y="91.44" size="2.54" layer="91">リセット回路</text>
 <text x="167.64" y="50.8" size="2.54" layer="91">MAIN SW</text>
@@ -2209,36 +2263,28 @@ TE Connectivity</description>
 <label x="170.18" y="83.82" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="LED1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P0.06"/>
-<wire x1="68.58" y1="45.72" x2="68.58" y2="27.94" width="0.1524" layer="91"/>
-<wire x1="68.58" y1="27.94" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
-<label x="45.72" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
 <net name="LED2_R" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.08"/>
-<wire x1="73.66" y1="45.72" x2="73.66" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="22.86" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
-<label x="45.72" y="22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="73.66" y1="45.72" x2="73.66" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="12.7" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
+<label x="104.14" y="12.7" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_G" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P1.09"/>
 <wire x1="78.74" y1="45.72" x2="78.74" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="17.78" x2="45.72" y2="17.78" width="0.1524" layer="91"/>
-<label x="45.72" y="17.78" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="78.74" y1="17.78" x2="104.14" y2="17.78" width="0.1524" layer="91"/>
+<label x="104.14" y="17.78" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_B" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.12"/>
-<wire x1="86.36" y1="45.72" x2="86.36" y2="12.7" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="12.7" x2="45.72" y2="12.7" width="0.1524" layer="91"/>
-<label x="45.72" y="12.7" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="86.36" y1="45.72" x2="86.36" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="86.36" y1="22.86" x2="104.14" y2="22.86" width="0.1524" layer="91"/>
+<label x="104.14" y="22.86" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SW1" class="0">
@@ -2265,25 +2311,44 @@ TE Connectivity</description>
 <label x="35.56" y="86.36" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="AIN1" class="0">
+<net name="UART_TX" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P0.03/AIN1"/>
-<wire x1="43.18" y1="91.44" x2="35.56" y2="91.44" width="0.1524" layer="91"/>
-<label x="35.56" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
-<label x="35.56" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P0.06"/>
+<wire x1="68.58" y1="45.72" x2="68.58" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="22.86" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
+<label x="45.72" y="22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="LED1" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P1.10"/>
+<wire x1="43.18" y1="114.3" x2="35.56" y2="114.3" width="0.1524" layer="91"/>
+<label x="35.56" y="114.3" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="LED3" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P0.26"/>
+<wire x1="60.96" y1="45.72" x2="60.96" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="27.94" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
+<label x="45.72" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
 </sheet>
 <sheet>
 <plain>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Breakout</text>
 <text x="30.48" y="162.56" size="3.81" layer="91">USBプラグ部</text>
-<text x="166.37" y="11.43" size="2.54" layer="91">nRF52840版FIDO2認証器
-開発用ブレークアウト基板</text>
 <text x="30.48" y="91.44" size="3.81" layer="91">LED部</text>
-<text x="147.32" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
-<text x="147.32" y="83.82" size="2.54" layer="91">USBブートローダーを初期書込する際に使用します。</text>
+<text x="152.4" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
+<text x="152.4" y="81.28" size="2.54" layer="91">nRF52840アプリケーションを
+書込する際に使用します。</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
+      （rev2）</text>
+<text x="124.46" y="66.04" size="2.54" layer="91">LED（黄色）</text>
+<text x="40.64" y="66.04" size="2.54" layer="91">LED（赤色）</text>
+<text x="76.2" y="66.04" size="2.54" layer="91">LED（３色）</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -2299,17 +2364,22 @@ TE Connectivity</description>
 <instance part="FB3" gate="G$1" x="76.2" y="111.76"/>
 <instance part="D1" gate="G$1" x="114.3" y="124.46"/>
 <instance part="CN1" gate="G$1" x="30.48" y="124.46"/>
-<instance part="LED1" gate="G$1" x="55.88" y="60.96" smashed="yes">
-<attribute name="NAME" x="59.436" y="58.928" size="1.778" layer="95"/>
-<attribute name="VALUE" x="59.055" y="56.388" size="1.778" layer="96"/>
+<instance part="LED1" gate="G$1" x="33.02" y="60.96" smashed="yes">
+<attribute name="NAME" x="36.576" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="36.195" y="56.388" size="1.778" layer="96"/>
 </instance>
-<instance part="LED2" gate="G$1" x="96.52" y="60.96"/>
-<instance part="R2" gate="G$1" x="55.88" y="40.64" rot="R90"/>
-<instance part="R3" gate="G$1" x="86.36" y="40.64" rot="R90"/>
-<instance part="R4" gate="G$1" x="96.52" y="40.64" rot="R90"/>
-<instance part="R5" gate="G$1" x="106.68" y="40.64" rot="R90"/>
+<instance part="LED2" gate="G$1" x="73.66" y="60.96"/>
+<instance part="R2" gate="G$1" x="33.02" y="40.64" rot="R90"/>
+<instance part="R3" gate="G$1" x="63.5" y="40.64" rot="R90"/>
+<instance part="R4" gate="G$1" x="73.66" y="40.64" rot="R90"/>
+<instance part="R5" gate="G$1" x="83.82" y="40.64" rot="R90"/>
 <instance part="CN2" gate="G$1" x="193.04" y="71.12"/>
 <instance part="GND14" gate="1" x="190.5" y="53.34"/>
+<instance part="LED3" gate="G$1" x="119.38" y="60.96" smashed="yes">
+<attribute name="NAME" x="122.936" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="122.555" y="56.388" size="1.778" layer="96"/>
+</instance>
+<instance part="R6" gate="G$1" x="119.38" y="40.64" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -2440,13 +2510,13 @@ TE Connectivity</description>
 <net name="VDD_NRF" class="0">
 <segment>
 <pinref part="LED1" gate="G$1" pin="A"/>
-<wire x1="55.88" y1="63.5" x2="55.88" y2="68.58" width="0.1524" layer="91"/>
-<label x="55.88" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="33.02" y1="63.5" x2="33.02" y2="68.58" width="0.1524" layer="91"/>
+<label x="33.02" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="91.44" y1="63.5" x2="91.44" y2="68.58" width="0.1524" layer="91"/>
-<label x="91.44" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="68.58" y1="63.5" x2="68.58" y2="68.58" width="0.1524" layer="91"/>
+<label x="68.58" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
 <pinref part="CN2" gate="G$1" pin="4"/>
@@ -2454,40 +2524,38 @@ TE Connectivity</description>
 <wire x1="167.64" y1="68.58" x2="167.64" y2="60.96" width="0.1524" layer="91"/>
 <label x="167.64" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
-</net>
-<net name="LED1" class="0">
 <segment>
-<pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="55.88" y1="40.64" x2="55.88" y2="35.56" width="0.1524" layer="91"/>
-<label x="55.88" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="LED3" gate="G$1" pin="A"/>
+<wire x1="119.38" y1="63.5" x2="119.38" y2="68.58" width="0.1524" layer="91"/>
+<label x="119.38" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_R" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="86.36" y1="40.64" x2="86.36" y2="35.56" width="0.1524" layer="91"/>
-<label x="86.36" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<wire x1="63.5" y1="40.64" x2="63.5" y2="35.56" width="0.1524" layer="91"/>
+<label x="63.5" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_G" class="0">
 <segment>
 <pinref part="R4" gate="G$1" pin="1"/>
-<wire x1="96.52" y1="40.64" x2="96.52" y2="35.56" width="0.1524" layer="91"/>
-<label x="96.52" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<wire x1="73.66" y1="40.64" x2="73.66" y2="35.56" width="0.1524" layer="91"/>
+<label x="73.66" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_B" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
-<wire x1="106.68" y1="40.64" x2="106.68" y2="35.56" width="0.1524" layer="91"/>
-<label x="106.68" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<wire x1="83.82" y1="40.64" x2="83.82" y2="35.56" width="0.1524" layer="91"/>
+<label x="83.82" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="N$11" class="0">
 <segment>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="55.88" y1="55.88" x2="55.88" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="55.88" x2="33.02" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SWDIO" class="0">
@@ -2517,40 +2585,61 @@ TE Connectivity</description>
 <net name="N$1" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="86.36" y1="50.8" x2="86.36" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="53.34" x2="91.44" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="50.8" x2="63.5" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="53.34" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="LED2" gate="G$1" pin="CRED"/>
-<wire x1="91.44" y1="53.34" x2="91.44" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="68.58" y1="53.34" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="LED2" gate="G$1" pin="CGREEN"/>
 <pinref part="R4" gate="G$1" pin="2"/>
-<wire x1="96.52" y1="55.88" x2="96.52" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="55.88" x2="73.66" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="LED2" gate="G$1" pin="CBLUE"/>
-<wire x1="101.6" y1="55.88" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="55.88" x2="78.74" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="2"/>
-<wire x1="101.6" y1="53.34" x2="106.68" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="106.68" y1="53.34" x2="106.68" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="53.34" x2="83.82" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="53.34" x2="83.82" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="LED3" gate="G$1" pin="C"/>
+<pinref part="R6" gate="G$1" pin="2"/>
+<wire x1="119.38" y1="55.88" x2="119.38" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="LED3" class="0">
+<segment>
+<pinref part="R6" gate="G$1" pin="1"/>
+<wire x1="119.38" y1="40.64" x2="119.38" y2="35.56" width="0.1524" layer="91"/>
+<label x="119.38" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="LED1" class="0">
+<segment>
+<pinref part="R2" gate="G$1" pin="1"/>
+<wire x1="33.02" y1="40.64" x2="33.02" y2="35.56" width="0.1524" layer="91"/>
+<label x="33.02" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 </nets>
 </sheet>
 <sheet>
 <plain>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Breakout</text>
-<text x="166.37" y="11.43" size="2.54" layer="91">nRF52840版FIDO2認証器
-開発用ブレークアウト基板</text>
 <text x="35.56" y="152.4" size="3.81" layer="91">電源供給部</text>
 <text x="35.56" y="147.32" size="2.54" layer="91" align="top-left">USBポートに装着時は、VBUSの5.0V--&gt;3.3Vに降圧して供給します。
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
 <text x="78.74" y="60.96" size="2.54" layer="91">ボタン乾電池ケースは
 基板の背面に実装</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
+      （rev2）</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -2641,20 +2730,19 @@ TE Connectivity</description>
 <wire x1="99.06" y1="81.28" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="AIN0" class="0">
+<net name="UART_TX" class="0">
 <segment>
 <pinref part="CN3" gate="G$1" pin="2"/>
 <wire x1="203.2" y1="66.04" x2="190.5" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="190.5" y1="66.04" x2="190.5" y2="71.12" width="0.1524" layer="91"/>
-<label x="190.5" y="71.12" size="1.778" layer="95" rot="R90" xref="yes"/>
+<label x="190.5" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="AIN1" class="0">
+<net name="AIN0" class="0">
 <segment>
 <pinref part="CN3" gate="G$1" pin="3"/>
 <wire x1="203.2" y1="68.58" x2="195.58" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="68.58" x2="195.58" y2="71.12" width="0.1524" layer="91"/>
-<label x="195.58" y="71.12" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="195.58" y1="68.58" x2="195.58" y2="76.2" width="0.1524" layer="91"/>
+<label x="195.58" y="76.2" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
 </nets>
