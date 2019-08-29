@@ -55,20 +55,19 @@
 #define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。"
 
 #pragma mark - ToolBLECentralクラス専用メッセージ
-#define MSG_INVALID_BLE_PERIPHERAL          @"BLEが無効化されています。BLEを有効にしてください。"
-#define MSG_U2F_DEVICE_SCAN_START           @"FIDO U2Fデバイスのスキャンを開始します。"
-#define MSG_U2F_DEVICE_SCAN_STOPPED         @"FIDO U2Fデバイスのスキャンを停止しました。"
-#define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO U2Fデバイスのスキャンがタイムアウトしました。"
-#define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO U2Fデバイスの接続要求がタイムアウトしました。"
-#define MSG_U2F_DEVICE_CONNECTED            @"FIDO U2Fデバイスに接続しました。"
-#define MSG_U2F_DEVICE_CONNECT_FAILED       @"FIDO U2Fデバイスの接続に失敗しました。"
-#define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO U2Fデバイスの接続が切断されました。"
+#define MSG_U2F_DEVICE_SCAN_START           @"FIDO認証器のスキャンを開始します。"
+#define MSG_U2F_DEVICE_SCAN_STOPPED         @"FIDO認証器のスキャンを停止しました。"
+#define MSG_U2F_DEVICE_SCAN_TIMEOUT         @"FIDO認証器のスキャンがタイムアウトしました。"
+#define MSG_U2F_DEVICE_CONNREQ_TIMEOUT      @"FIDO認証器の接続要求がタイムアウトしました。"
+#define MSG_U2F_DEVICE_CONNECTED            @"FIDO認証器に接続しました。"
+#define MSG_U2F_DEVICE_CONNECT_FAILED       @"FIDO認証器の接続に失敗しました。"
+#define MSG_U2F_DEVICE_DISCONNECTED         @"FIDO認証器の接続が切断されました。"
 #define MSG_BLE_SERVICE_NOT_DISCOVERED      @"BLEサービスが見つかりません。"
-#define MSG_BLE_U2F_SERVICE_FOUND           @"FIDO BLE U2Fサービスが見つかりました。"
-#define MSG_BLE_U2F_SERVICE_NOT_FOUND       @"FIDO BLE U2Fサービスが見つかりません。"
-#define MSG_BLE_CHARACT_NOT_DISCOVERED      @"FIDO BLE U2Fサービスと通信できません。"
-#define MSG_BLE_CHARACT_NOT_EXIST           @"FIDO BLE U2Fサービスからデータを受信できる項目が存在しません。"
-#define MSG_BLE_NOTIFICATION_FAILED         @"FIDO BLE U2Fサービスからデータを受信できません。"
+#define MSG_BLE_U2F_SERVICE_FOUND           @"FIDO BLEサービスが見つかりました。"
+#define MSG_BLE_U2F_SERVICE_NOT_FOUND       @"FIDO BLEサービスが見つかりません。"
+#define MSG_BLE_CHARACT_NOT_DISCOVERED      @"FIDO BLEサービスと通信できません。"
+#define MSG_BLE_CHARACT_NOT_EXIST           @"FIDO BLEサービスからデータを受信できる項目が存在しません。"
+#define MSG_BLE_NOTIFICATION_FAILED         @"FIDO BLEサービスからデータを受信できません。"
 #define MSG_BLE_NOTIFICATION_START          @"受信データの監視を開始します。"
 #define MSG_BLE_NOTIFICATION_STOP           @"受信データの監視を停止します。"
 #define MSG_BLE_INVALID_PING                @"BLE経由のPINGコマンドが失敗しました。"
@@ -76,9 +75,9 @@
 #define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
-#define MSG_DISCOVER_U2F_SERVICES_TIMEOUT   @"FIDO BLE U2Fサービスの検索がタイムアウトしました。"
-#define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLE U2Fサービス送受信項目の検索がタイムアウトしました。"
-#define MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT    @"FIDO BLE U2Fサービス受信項目の監視ステータス更新がタイムアウトしました。"
+#define MSG_DISCOVER_U2F_SERVICES_TIMEOUT   @"FIDO BLEサービスの検索がタイムアウトしました。"
+#define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLEサービス送受信項目の検索がタイムアウトしました。"
+#define MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT    @"FIDO BLEサービス受信項目の監視ステータス更新がタイムアウトしました。"
 
 #pragma mark - 接続再試行関連メッセージ
 #define MSG_BLE_CONNECTION_RETRY_WITH_CNT   @"処理中にBLE接続が消失しました。接続を再試行しています（%lu回目）"
@@ -134,5 +133,11 @@
 #define MSG_FSTAT_NON_REMAINING_RATE        @"Flash ROMの空き容量を取得できませんでした。"
 #define MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST @"破損している領域は存在しません。"
 #define MSG_FSTAT_CORRUPTING_AREA_EXIST     @"破損している領域が存在します。"
+
+#pragma mark - BLEペアリング関連のメッセージ文言
+#define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
+#define MSG_BLE_PARING_ERR_TIMED_OUT        @"FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。"
+#define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。"
+#define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
 
 #endif /* ToolCommonMessage_h */

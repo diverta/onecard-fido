@@ -316,12 +316,6 @@
             registerReponseData = [[NSData alloc] initWithData:[self bleResponseData]];
             [self setCommand:COMMAND_TEST_AUTH_CHECK];
             [self createCommandTestAuthFrom:registerReponseData P1:0x07];
-            // 後続のU2F Authenticateを開始する前に、
-            // One CardのMAIN SWを押してもらうように促すメッセージを表示
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
-            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
             break;
         case COMMAND_TEST_AUTH_CHECK:
             NSLog(@"Authenticate test (check) success");
@@ -332,6 +326,12 @@
             NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
             [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
             [self createCommandTestAuthFrom:registerReponseData P1:0x03];
+            // 後続のU2F Authenticateを開始する前に、
+            // 基板上のMAIN SWを押してもらうように促すメッセージを表示
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
+            [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
             break;
         case COMMAND_TEST_AUTH_USER_PRESENCE:
             [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];

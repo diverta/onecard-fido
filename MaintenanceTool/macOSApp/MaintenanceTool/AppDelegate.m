@@ -282,6 +282,17 @@
     }
 
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
+        // BLEペアリング処理時のエラーメッセージを、適切なメッセージに変更する
+        if ([[self toolCommand] command] == COMMAND_PAIRING) {
+            if ([message isEqualToString:MSG_U2F_DEVICE_SCAN_TIMEOUT]) {
+                message = MSG_BLE_PARING_ERR_TIMED_OUT;
+            } else if ([message isEqualToString:MSG_BLE_NOTIFICATION_FAILED]) {
+                message = MSG_BLE_PARING_ERR_PAIR_MODE;
+            } else if ([message isEqualToString:MSG_BLE_PARING_ERR_BT_OFF] == false) {
+                message = MSG_BLE_PARING_ERR_UNKNOWN;
+            }
+        }
+        
         // コンソールにエラーメッセージを出力
         [self displayErrorMessage:message error:error];
         
@@ -291,7 +302,10 @@
         // トランザクション完了済とし、接続再試行を回避
         [self setBleTransactionStarted:false];
         // ポップアップ表示させる失敗メッセージとリザルトを保持
-        [self setLastCommandMessage:MSG_OCCUR_BLECONN_ERROR];
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [ToolCommon processNameOfCommand:[[self toolCommand] command]],
+                         MSG_FAILURE];
+        [self setLastCommandMessage:str];
         [self setLastCommandSuccess:false];
         // デバイス接続を切断
         [[self toolBLECentral] centralManagerWillDisconnect];

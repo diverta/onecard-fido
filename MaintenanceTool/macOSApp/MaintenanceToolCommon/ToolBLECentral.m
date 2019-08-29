@@ -61,9 +61,9 @@
         NSAssert(self.serviceUUIDs.count > 0, @"Need to specify services");
         NSAssert(self.characteristicUUIDs.count > 0, @"Need to specify characteristics UUID");
 
-        if (self.manager.state != CBCentralManagerStatePoweredOn) {
+        if ([[self manager] state] != CBCentralManagerStatePoweredOn) {
             // BLEが無効化されている旨をAppDelegateに通知
-            [[self delegate] centralManagerDidFailConnectionWith:MSG_INVALID_BLE_PERIPHERAL error:nil];
+            [[self delegate] centralManagerDidFailConnectionWith:MSG_BLE_PARING_ERR_BT_OFF error:nil];
             return;
         }
 

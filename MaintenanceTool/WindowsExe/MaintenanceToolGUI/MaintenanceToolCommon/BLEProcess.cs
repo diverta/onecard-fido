@@ -29,7 +29,7 @@ namespace MaintenanceToolCommon
         public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent;
 
         // ペアリング完了時のイベント
-        public delegate void FIDOPeripheralPairedEvent(bool success);
+        public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
         public event FIDOPeripheralPairedEvent FIDOPeripheralPaired;
 
         public BLEProcess()
@@ -50,9 +50,9 @@ namespace MaintenanceToolCommon
             bleService.PairWithFIDOPeripheral();
         }
 
-        private void OnFIDOPeripheralPaired(bool success)
+        private void OnFIDOPeripheralPaired(bool success, string messageOnFail)
         {
-            FIDOPeripheralPaired(success);
+            FIDOPeripheralPaired(success, messageOnFail);
         }
 
         public async void DoXferMessage(byte[] message, int length)
