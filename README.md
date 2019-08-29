@@ -21,16 +21,15 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/08/27（Version 0.1.16）
+#### 2019/08/29（Version 0.1.17）
 
-FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
+FIDO認証器管理ツールを修正しました。<br>
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
 
 修正点は以下になります。
-- 鍵・証明書がない状態でCTAP2ヘルスチェックを実行すると、ハングしてしまう不具合を解消（[#230](https://github.com/diverta/onecard-fido/issues/230) ご参照）
+- Windows版管理ツールでBLEペアリングエラーが発生してしまう不具合を解消（[#233](https://github.com/diverta/onecard-fido/issues/233) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
