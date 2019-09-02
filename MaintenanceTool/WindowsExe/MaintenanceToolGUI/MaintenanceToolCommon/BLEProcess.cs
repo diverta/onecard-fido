@@ -244,58 +244,10 @@ namespace MaintenanceToolCommon
                 }
                 int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
 
-                if (receivedMessage[0] == 0x83) {
-                    // コマンドレスポンスの場合はステータスワードをチェック
-                    if (CheckStatusWord(receivedMessage, messageLength) == false) {
-                        // ステータスワードが不正の場合は、BLEを切断し画面に制御を戻す
-                        bleService.Disconnect();
-                        ReceiveBLEMessageEvent(false, null, 0);
-                        return;
-                    }
-                }
-
                 // 受信データを転送
                 AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED, true);
                 ReceiveBLEMessageEvent(true, receivedMessage, messageLength);
             }
-        }
-
-        private bool CheckStatusWord(byte[] receivedMessage, int receivedLen)
-        {
-            // ステータスワードをチェック
-            byte[] statusBytes = new byte[2];
-            Array.Copy(receivedMessage, receivedLen - 2, statusBytes, 0, 2);
-            if (BitConverter.IsLittleEndian) {
-                Array.Reverse(statusBytes);
-            }
-            ushort statusWord = BitConverter.ToUInt16(statusBytes, 0);
-
-            if (statusWord == 0x6985) {
-                // キーハンドルチェックの場合は成功とみなす
-                return true;
-            }
-            if (statusWord == 0x6a80) {
-                // invalid keyhandleエラーである場合はその旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_KEYHANDLE_ERROR);
-                return false;
-            }
-            if (statusWord == 0x9402) {
-                // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
-                return false;
-            }
-            if (statusWord == 0x9601) {
-                // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR);
-                return false;
-            }
-            if (statusWord != 0x9000) {
-                // U2Fサービスの戻りコマンドが不正の場合はエラー
-                MessageTextEvent(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                return false;
-            }
-
-            return true;
         }
 
         public void DisconnectBLE()

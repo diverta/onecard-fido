@@ -95,7 +95,7 @@ namespace MaintenanceToolGUI
 
         private void OnReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
         {
-            if (ret == false) {
+            if (CheckStatusWord(receivedMessage, receivedLen) == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);
                 return;
@@ -116,9 +116,56 @@ namespace MaintenanceToolGUI
             case BLERequestType.TestBLEPing:
                 DoResponseBLEPing(ret, receivedMessage, receivedLen);
                 break;
+            case BLERequestType.TestBLECTAP2:
+                DoResponseBLECTAP2(receivedMessage, receivedLen);
+                break;
             default:
                 break;
             }
+        }
+
+        private bool CheckStatusWord(byte[] receivedMessage, int receivedLen)
+        {
+            if (bleRequestType == BLERequestType.TestRegister &&
+                bleRequestType == BLERequestType.TestAuthenticateCheck &&
+                bleRequestType == BLERequestType.TestAuthenticate) {
+                //
+                // U2F関連コマンドの場合は
+                // ステータスワードチェックを行う。
+                //
+                byte[] statusBytes = new byte[2];
+                Array.Copy(receivedMessage, receivedLen - 2, statusBytes, 0, 2);
+                if (BitConverter.IsLittleEndian) {
+                    Array.Reverse(statusBytes);
+                }
+                ushort statusWord = BitConverter.ToUInt16(statusBytes, 0);
+
+                if (statusWord == 0x6985) {
+                    // キーハンドルチェックの場合は成功とみなす
+                    return true;
+                }
+                if (statusWord == 0x6a80) {
+                    // invalid keyhandleエラーである場合はその旨を通知
+                    OnPrintMessageText(AppCommon.MSG_OCCUR_KEYHANDLE_ERROR);
+                    return false;
+                }
+                if (statusWord == 0x9402) {
+                    // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
+                    OnPrintMessageText(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
+                    return false;
+                }
+                if (statusWord == 0x9601) {
+                    // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
+                    OnPrintMessageText(AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR);
+                    return false;
+                }
+                if (statusWord != 0x9000) {
+                    // U2Fサービスの戻りコマンドが不正の場合はエラー
+                    OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void DoRequest(byte[] requestBytes, int requestLen, BLERequestType type)
@@ -341,51 +388,23 @@ namespace MaintenanceToolGUI
         //
         // BLE CTAP2ヘルスチェック関連処理
         //
-        // 実行機能を保持
-        private enum CTAP2RequestType
-        {
-            None = 0,
-            TestMakeCredential,
-            TestGetAssertion
-        };
-        private CTAP2RequestType requestType;
-
-        // 実行中のサブコマンドを保持
-        private byte cborCommand;
-        private byte cborSubCommand;
-
-        // ヘルスチェック処理の実行引数を退避
-        private string clientPin;
-
-        // CTAP2レスポンスデータを保持
-        private byte Ctap2ResponseCommand;
-        private int Ctap2ResponseLen;
-        private byte[] Ctap2ResponseBytes;
-
-        private void DoGetKeyAgreement()
-        {
-            // 実行するコマンドを退避
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
-            cborSubCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
-
-            // GetKeyAgreementコマンドを生成
-            CBOREncoder cborEncoder = new CBOREncoder();
-            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(cborCommand, cborSubCommand);
-
-            // BLE処理を実行し、メッセージを転送
-            int length = GenerateBLERequestBytes(U2FRequestData, 0x83, getAgreementCbor);
-            DoRequest(U2FRequestData, length, BLERequestType.TestBLEPing);
-        }
-
         public void DoCtap2Healthcheck(string pin)
         {
             // 実行するコマンドと引数を退避
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンド（getKeyAgreement）を
             //   事前実行する必要あり
-            requestType = CTAP2RequestType.TestMakeCredential;
-            clientPin = pin;
-            DoGetKeyAgreement();
+            bleRequestType = BLERequestType.TestBLECTAP2;
+            ctap2.setClientPin(pin);
+            ctap2.setRequestType(Ctap2.RequestType.TestMakeCredential);
+            ctap2.DoGetKeyAgreement();
+        }
+
+        private void DoResponseBLECTAP2(byte[] receivedMessage, int receivedLen)
+        {
+            // BLEヘッダーを除去し、PINGレスポンス処理を実行
+            ExtractResponseData(receivedMessage, receivedLen);
+            ctap2.DoResponseCtapHidCbor(BLEResponseData, BLEResponseLength);
         }
 
         public void doExit()
