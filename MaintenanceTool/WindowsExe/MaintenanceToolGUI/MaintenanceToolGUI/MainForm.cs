@@ -151,7 +151,11 @@ namespace MaintenanceToolGUI
             DisplayStartMessage(commandTitle);
 
             // CTAP2ヘルスチェック実行
-            hid.DoCtap2Healthcheck(f.PinCurr);
+            if (sender.Equals(DoBLECtap2TestToolStripMenuItem)) {
+                app.DoCtap2Healthcheck(f.PinCurr);
+            } else {
+                hid.DoCtap2Healthcheck(f.PinCurr);
+            }
 
             // コマンドタイムアウト監視開始
             commandTimer.Start();
@@ -325,6 +329,12 @@ namespace MaintenanceToolGUI
         {
             // Flash ROM情報取得コマンドを実行
             doCommand(sender);
+        }
+
+        private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // CTAP2ヘルスチェック実行
+            DoCommandCtap2Healthcheck(sender, e);
         }
 
         private void DoHealthCheckToolStripMenuItem_Click(object sender, EventArgs e)

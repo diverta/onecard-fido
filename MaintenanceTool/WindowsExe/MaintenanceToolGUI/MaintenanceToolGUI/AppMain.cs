@@ -12,6 +12,7 @@ namespace MaintenanceToolGUI
             TestAuthenticateCheck,
             TestAuthenticate,
             TestBLEPing,
+            TestBLECTAP2,
         };
         private BLERequestType bleRequestType = BLERequestType.None;
 
@@ -106,6 +107,9 @@ namespace MaintenanceToolGUI
                 break;
             case BLERequestType.TestBLEPing:
                 DoResponseBLEPing(ret, receivedMessage, receivedLen);
+                break;
+            case BLERequestType.TestBLECTAP2:
+                DoResponseBLECTAP2(ret, receivedMessage, receivedLen);
                 break;
             default:
                 break;
@@ -279,19 +283,19 @@ namespace MaintenanceToolGUI
             DoRequest(U2FRequestData, length, type);
         }
 
-        private int GeneratePingRequestBytes(byte[] u2fRequestData)
+        private int GenerateBLERequestBytes(byte[] u2fRequestData, byte cmd, byte[] requestBytes)
         {
             // ヘッダーにコマンドをセット
-            u2fRequestData[0] = 0x81;
+            u2fRequestData[0] = cmd;
 
             // ヘッダーにデータ長をセット
-            u2fRequestData[1] = (byte)(pingBytes.Length / 256);
-            u2fRequestData[2] = (byte)(pingBytes.Length % 256);
+            u2fRequestData[1] = (byte)(requestBytes.Length / 256);
+            u2fRequestData[2] = (byte)(requestBytes.Length % 256);
 
             // リクエストデータを配列にセット
-            Array.Copy(pingBytes, 0, u2fRequestData, Const.MSG_HEADER_LEN, pingBytes.Length);
+            Array.Copy(requestBytes, 0, u2fRequestData, Const.MSG_HEADER_LEN, requestBytes.Length);
 
-            return Const.MSG_HEADER_LEN + pingBytes.Length;
+            return Const.MSG_HEADER_LEN + requestBytes.Length;
         }
 
         public void DoTestBLEPing()
@@ -300,7 +304,7 @@ namespace MaintenanceToolGUI
             new Random().NextBytes(pingBytes);
 
             // リクエストデータ（APDU）を編集しリクエストデータに格納
-            int length = GeneratePingRequestBytes(U2FRequestData);
+            int length = GenerateBLERequestBytes(U2FRequestData, 0x81, pingBytes);
 
             // BLE処理を実行し、メッセージを転送
             DoRequest(U2FRequestData, length, BLERequestType.TestBLEPing);
@@ -323,6 +327,57 @@ namespace MaintenanceToolGUI
             }
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
+        }
+
+        //
+        // BLE CTAP2ヘルスチェック関連処理
+        //
+        // 実行機能を保持
+        private enum CTAP2RequestType
+        {
+            None = 0,
+            TestMakeCredential,
+            TestGetAssertion
+        };
+        private CTAP2RequestType requestType;
+
+        // 実行中のサブコマンドを保持
+        private byte cborCommand;
+        private byte cborSubCommand;
+
+        // ヘルスチェック処理の実行引数を退避
+        private string clientPin;
+
+        private void DoGetKeyAgreement()
+        {
+            // 実行するコマンドを退避
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+            cborSubCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
+
+            // GetKeyAgreementコマンドを生成
+            CBOREncoder cborEncoder = new CBOREncoder();
+            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(cborCommand, cborSubCommand);
+
+            // BLE処理を実行し、メッセージを転送
+            int length = GenerateBLERequestBytes(U2FRequestData, 0x83, getAgreementCbor);
+            DoRequest(U2FRequestData, length, BLERequestType.TestBLEPing);
+        }
+
+        public void DoCtap2Healthcheck(string pin)
+        {
+            // 実行するコマンドと引数を退避
+            //   認証器からPINトークンを取得するため、
+            //   ClientPINコマンド（getKeyAgreement）を
+            //   事前実行する必要あり
+            requestType = CTAP2RequestType.TestMakeCredential;
+            clientPin = pin;
+            DoGetKeyAgreement();
+        }
+
+        private void DoResponseBLECTAP2(bool ret, byte[] receivedMessage, int receivedLen)
+        {
+            // 画面に制御を戻す（仮コードです）
+            mainForm.OnAppMainProcessExited(false);
         }
 
         public void doExit()
