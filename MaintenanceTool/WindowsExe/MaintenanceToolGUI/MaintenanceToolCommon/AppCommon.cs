@@ -8,6 +8,20 @@ namespace MaintenanceToolCommon
 {
     public static class AppCommon
     {
+        //
+        // CTAP2関連共通リソース
+        //
+        // CBORサブコマンドバイトに関する定義
+        public const byte CTAP2_CBORCMD_NONE = 0x00;
+        public const byte CTAP2_CBORCMD_MAKE_CREDENTIAL = 0x01;
+        public const byte CTAP2_CBORCMD_GET_ASSERTION = 0x02;
+        public const byte CTAP2_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte CTAP2_CBORCMD_AUTH_RESET = 0x07;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_SET = 0x03;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
+
         // macOS版と共通のメッセージ文言を使用
         // 共通
         public const string MSG_INVALID_FILE_PATH = "ファイルが存在しません。";

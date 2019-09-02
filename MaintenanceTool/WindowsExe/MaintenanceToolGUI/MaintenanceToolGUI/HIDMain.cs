@@ -17,16 +17,6 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
-        // サブコマンドバイトに関する定義
-        public const byte HID_CBORCMD_NONE = 0x00;
-        public const byte HID_CBORCMD_MAKE_CREDENTIAL = 0x01;
-        public const byte HID_CBORCMD_GET_ASSERTION = 0x02;
-        public const byte HID_CBORCMD_CLIENT_PIN = 0x06;
-        public const byte HID_CBORCMD_AUTH_RESET = 0x07;
-        public const byte HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
-        public const byte HID_SUBCMD_CLIENT_PIN_SET = 0x03;
-        public const byte HID_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
-        public const byte HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
     }
 
     internal class HIDMain
@@ -182,7 +172,7 @@ namespace MaintenanceToolGUI
             }
             // 実行するコマンドを退避
             requestType = HIDRequestType.TestCtapHidPing;
-            cborCommand = Const.HID_CBORCMD_NONE;
+            cborCommand = AppCommon.CTAP2_CBORCMD_NONE;
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
@@ -241,10 +231,10 @@ namespace MaintenanceToolGUI
                     return;
                 }
             }
-            if (cborCommand == Const.HID_CBORCMD_CLIENT_PIN) {
+            if (cborCommand == AppCommon.CTAP2_CBORCMD_CLIENT_PIN) {
                 // レスポンスされたCIDを抽出し、PIN設定処理を続行
                 DoGetKeyAgreement(ExtractReceivedCID(message));
-            } else if (cborCommand == Const.HID_CBORCMD_AUTH_RESET) {
+            } else if (cborCommand == AppCommon.CTAP2_CBORCMD_AUTH_RESET) {
                 // レスポンスされたCIDを抽出し、Reset処理を続行
                 DoRequestAuthReset(ExtractReceivedCID(message));
             } else {
@@ -351,7 +341,7 @@ namespace MaintenanceToolGUI
             }
             // 実行するコマンドを退避
             requestType = HIDRequestType.AuthReset;
-            cborCommand = Const.HID_CBORCMD_AUTH_RESET;
+            cborCommand = AppCommon.CTAP2_CBORCMD_AUTH_RESET;
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
@@ -381,7 +371,7 @@ namespace MaintenanceToolGUI
             clientPinOld = pinOld;
             // 実行するコマンドを退避
             requestType = HIDRequestType.ClientPinSet;
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
@@ -389,8 +379,8 @@ namespace MaintenanceToolGUI
         public void DoGetKeyAgreement(byte[] receivedCID)
         {
             // 実行するコマンドを退避
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            subCommand = Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+            subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
             // GetAgreementコマンドを実行する
             CBOREncoder cborEncoder = new CBOREncoder();
             byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(cborCommand, subCommand);
@@ -419,16 +409,16 @@ namespace MaintenanceToolGUI
             }
 
             switch (cborCommand) {
-            case Const.HID_CBORCMD_CLIENT_PIN:
+            case AppCommon.CTAP2_CBORCMD_CLIENT_PIN:
                 DoResponseCommandClientPin(message, length);
                 break;
-            case Const.HID_CBORCMD_MAKE_CREDENTIAL:
+            case AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL:
                 DoResponseCommandMakeCredential(message, length);
                 break;
-            case Const.HID_CBORCMD_GET_ASSERTION:
+            case AppCommon.CTAP2_CBORCMD_GET_ASSERTION:
                 DoResponseCommandGetAssertion(message, length);
                 break;
-            case Const.HID_CBORCMD_AUTH_RESET:
+            case AppCommon.CTAP2_CBORCMD_AUTH_RESET:
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(true);
                 break;
@@ -472,10 +462,10 @@ namespace MaintenanceToolGUI
             byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
 
             switch (subCommand) {
-            case Const.HID_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
+            case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
                 DoResponseCommandGetKeyAgreement(cborBytes);
                 break;
-            case Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
+            case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
                 DoResponseCommandGetPinToken(cborBytes);
                 break;
             default:
@@ -518,15 +508,15 @@ namespace MaintenanceToolGUI
         public void DoClientPinSetOrChange(byte[] cborBytes)
         {
             // 実行するコマンドを退避
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
             byte[] receivedCID = hidProcess.receivedCID;
 
             if (clientPinOld.Equals(string.Empty)) {
                 // SetPINコマンドを実行する
-                subCommand = Const.HID_SUBCMD_CLIENT_PIN_SET;
+                subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_SET;
             } else {
                 // ChangePINコマンドを実行する
-                subCommand = Const.HID_SUBCMD_CLIENT_PIN_CHANGE;
+                subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_CHANGE;
             }
 
             // リクエストデータ（CBOR）をエンコードして送信
@@ -544,7 +534,7 @@ namespace MaintenanceToolGUI
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンドを事前実行する必要あり
             requestType = HIDRequestType.TestMakeCredential;
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
             clientPin = pin;
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
@@ -553,8 +543,8 @@ namespace MaintenanceToolGUI
         public void DoGetPinToken(byte[] cborBytes)
         {
             // 実行するコマンドを退避
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
-            subCommand = Const.HID_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+            subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
             byte[] receivedCID = hidProcess.receivedCID;
 
             // リクエストデータ（CBOR）をエンコードして送信
@@ -575,11 +565,11 @@ namespace MaintenanceToolGUI
             byte[] requestCbor = null;
             byte[] receivedCID = hidProcess.receivedCID;
             if (requestType == HIDRequestType.TestMakeCredential) {
-                cborCommand = Const.HID_CBORCMD_MAKE_CREDENTIAL;
+                cborCommand = AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL;
                 requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
             } else {
                 // ２回目のGetAssertion実行では、MAIN SW押下によるユーザー所在確認が必要
-                cborCommand = Const.HID_CBORCMD_GET_ASSERTION;
+                cborCommand = AppCommon.CTAP2_CBORCMD_GET_ASSERTION;
                 requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes, AgreementPublicKey, testUserPresenceNeeded);
             }
 
@@ -648,7 +638,7 @@ namespace MaintenanceToolGUI
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンドを事前実行する必要あり
             requestType = HIDRequestType.TestGetAssertion;
-            cborCommand = Const.HID_CBORCMD_CLIENT_PIN;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
