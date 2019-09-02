@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
+    <Compile Include="Ctap2.cs" />
     <Compile Include="HIDDevice.cs" />
     <Compile Include="HIDMain.cs" />
     <Compile Include="HIDProcess.cs" />

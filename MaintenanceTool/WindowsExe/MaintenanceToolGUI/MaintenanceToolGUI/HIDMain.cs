@@ -26,14 +26,17 @@ namespace MaintenanceToolGUI
         // HIDデバイス関連
         private HIDProcess hidProcess = new HIDProcess();
 
+        // CTAP2共通処理
+        private Ctap2 ctap2;
+
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
 
+        // INITコマンドで受信したCIDを保持
+        private byte[] ReceivedCID = null;
+
         // nonceを保持
         private byte[] nonceBytes = new byte[8];
-
-        // PINGバイトを保持
-        private byte[] pingBytes = new byte[100];
 
         // リクエストデータ格納領域
         private byte[] RequestData = new byte[1024];
@@ -92,6 +95,10 @@ namespace MaintenanceToolGUI
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
             hidProcess.OnFormCreate(mainForm.Handle);
+
+            // CTAP2共通処理に各種参照を引き渡す
+            ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_HID);
+            ctap2.setHidMain(this);
         }
 
         public void OnFormDestroy()
@@ -115,7 +122,7 @@ namespace MaintenanceToolGUI
             // HIDデバイスからメッセージ受信時の処理を行う
             switch(hidProcess.receivedCMD) {
             case Const.HID_CMD_CTAPHID_PING:
-                DoResponseCtapHidPing(message, length);
+                ctap2.DoResponsePing(message, length);
                 break;
             case Const.HID_CMD_CTAPHID_INIT:
                 DoResponseTestCtapHidInit(message, length);
@@ -177,28 +184,11 @@ namespace MaintenanceToolGUI
             DoRequestCtapHidInit();
         }
 
-        public void DoRequestCtapHidPing(byte[] receivedCID)
+        public void SendHIDMessage(byte cmd, byte[] message)
         {
-            // 100バイトのランダムデータを生成
-            new Random().NextBytes(pingBytes);
-
-            // PINGコマンドを実行する
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_PING, pingBytes, pingBytes.Length);
-        }
-
-        public void DoResponseCtapHidPing(byte[] message, int length)
-        {
-            // PINGバイトの一致チェック
-            bool result = true;
-            for (int i = 0; i < pingBytes.Length; i++) {
-                if (pingBytes[i] != message[i]) {
-                    PrintMessageText(AppCommon.MSG_CMDTST_INVALID_PING);
-                    result = false;
-                    break;
-                }
+            if (ReceivedCID != null) {
+                hidProcess.SendHIDMessage(ReceivedCID, cmd, message, message.Length);
             }
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(result);
         }
 
         private byte[] ExtractReceivedCID(byte[] message)
@@ -231,15 +221,19 @@ namespace MaintenanceToolGUI
                     return;
                 }
             }
+
+            // レスポンスされたCIDを抽出し、クラス内で保持
+            ReceivedCID = ExtractReceivedCID(message);
+
             if (cborCommand == AppCommon.CTAP2_CBORCMD_CLIENT_PIN) {
                 // レスポンスされたCIDを抽出し、PIN設定処理を続行
-                DoGetKeyAgreement(ExtractReceivedCID(message));
+                DoGetKeyAgreement(ReceivedCID);
             } else if (cborCommand == AppCommon.CTAP2_CBORCMD_AUTH_RESET) {
                 // レスポンスされたCIDを抽出し、Reset処理を続行
-                DoRequestAuthReset(ExtractReceivedCID(message));
+                DoRequestAuthReset(ReceivedCID);
             } else {
-                // レスポンスされたCIDを抽出し、PINGコマンドを実行
-                DoRequestCtapHidPing(ExtractReceivedCID(message));
+                // PINGコマンドを実行
+                ctap2.DoRequestPing();
             }
         }
 

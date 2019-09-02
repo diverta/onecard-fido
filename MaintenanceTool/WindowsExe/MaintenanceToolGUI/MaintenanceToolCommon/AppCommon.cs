@@ -22,6 +22,11 @@ namespace MaintenanceToolCommon
         public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
         public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
 
+        // トランスポート種別
+        public const byte TRANSPORT_NONE = 0x00;
+        public const byte TRANSPORT_BLE = 0x01;
+        public const byte TRANSPORT_HID = 0x02;
+
         // macOS版と共通のメッセージ文言を使用
         // 共通
         public const string MSG_INVALID_FILE_PATH = "ファイルが存在しません。";

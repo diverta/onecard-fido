@@ -42,14 +42,18 @@ namespace MaintenanceToolGUI
         private byte[] appid = new byte[Const.U2F_APPID_SIZE];
         private Random random = new Random();
 
-        // PINGバイトを保持
-        private byte[] pingBytes = new byte[100];
+        // レスポンスデータ格納領域
+        private byte[] BLEResponseData = new byte[1024];
+        private int BLEResponseLength = 0;
 
         // メイン画面の参照を保持
         private MainForm mainForm;
 
         // BLEデバイス関連
         private BLEProcess bleProcess = new BLEProcess();
+
+        // CTAP2共通処理
+        private Ctap2 ctap2;
 
         public AppMain(MainForm f)
         {
@@ -62,6 +66,10 @@ namespace MaintenanceToolGUI
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
 
             AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MainForm.MaintenanceToolTitle), true);
+
+            // CTAP2共通処理に各種参照を引き渡す
+            ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_BLE);
+            ctap2.setBleMain(this);
         }
 
         private void OnPrintMessageText(string message)
@@ -108,9 +116,6 @@ namespace MaintenanceToolGUI
             case BLERequestType.TestBLEPing:
                 DoResponseBLEPing(ret, receivedMessage, receivedLen);
                 break;
-            case BLERequestType.TestBLECTAP2:
-                DoResponseBLECTAP2(ret, receivedMessage, receivedLen);
-                break;
             default:
                 break;
             }
@@ -128,6 +133,15 @@ namespace MaintenanceToolGUI
             // BLEメッセージが返送されて来たら
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(ret);
+        }
+
+        public void SendBLEMessage(byte cmd, byte[] message)
+        {
+            // リクエストデータ（APDU）を編集しリクエストデータに格納
+            int length = GenerateBLERequestBytes(U2FRequestData, cmd, message);
+
+            // BLE処理を実行し、メッセージを転送
+            bleProcess.DoXferMessage(U2FRequestData, length);
         }
 
         private void GenerateNonceBytes()
@@ -283,7 +297,7 @@ namespace MaintenanceToolGUI
             DoRequest(U2FRequestData, length, type);
         }
 
-        private int GenerateBLERequestBytes(byte[] u2fRequestData, byte cmd, byte[] requestBytes)
+        public int GenerateBLERequestBytes(byte[] u2fRequestData, byte cmd, byte[] requestBytes)
         {
             // ヘッダーにコマンドをセット
             u2fRequestData[0] = cmd;
@@ -300,33 +314,28 @@ namespace MaintenanceToolGUI
 
         public void DoTestBLEPing()
         {
-            // ランダムデータを生成
-            new Random().NextBytes(pingBytes);
+            // PINGリクエスト処理を実行
+            bleRequestType = BLERequestType.TestBLEPing;
+            ctap2.DoRequestPing();
+        }
 
-            // リクエストデータ（APDU）を編集しリクエストデータに格納
-            int length = GenerateBLERequestBytes(U2FRequestData, 0x81, pingBytes);
-
-            // BLE処理を実行し、メッセージを転送
-            DoRequest(U2FRequestData, length, BLERequestType.TestBLEPing);
+        private void ExtractResponseData(byte[] receivedMessage, int receivedLen)
+        {
+            // CBORバイト配列を抽出
+            //   receivedMessage の先頭には、
+            //   BLEヘッダー（3バイト）が含まれているので
+            //   それをスキップして新しい配列にコピー
+            byte cnth = receivedMessage[1];
+            byte cntl = receivedMessage[2];
+            BLEResponseLength = cnth * 256 + cntl;
+            Array.Copy(receivedMessage, 3, BLEResponseData, 0, receivedLen - 3);
         }
 
         private void DoResponseBLEPing(bool ret, byte[] receivedMessage, int receivedLen)
         {
-            // PINGバイトの一致チェック
-            //   receivedMessage の先頭には、
-            //   BLEヘッダー（3バイト）が含まれているので
-            //   それをスキップしてチェック
-            bool result = true;
-            for (int i = 0; i < pingBytes.Length; i++) {
-                if (pingBytes[i] != receivedMessage[BLEProcess.MSG_HEADER_LEN + i]) {
-                    // 画面のテキストエリアにメッセージを表示
-                    mainForm.OnPrintMessageText(AppCommon.MSG_BLE_INVALID_PING);
-                    result = false;
-                    break;
-                }
-            }
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(result);
+            // BLEヘッダーを除去し、PINGレスポンス処理を実行
+            ExtractResponseData(receivedMessage, receivedLen);
+            ctap2.DoResponsePing(BLEResponseData, BLEResponseLength);
         }
 
         //
@@ -347,6 +356,11 @@ namespace MaintenanceToolGUI
 
         // ヘルスチェック処理の実行引数を退避
         private string clientPin;
+
+        // CTAP2レスポンスデータを保持
+        private byte Ctap2ResponseCommand;
+        private int Ctap2ResponseLen;
+        private byte[] Ctap2ResponseBytes;
 
         private void DoGetKeyAgreement()
         {
@@ -372,12 +386,6 @@ namespace MaintenanceToolGUI
             requestType = CTAP2RequestType.TestMakeCredential;
             clientPin = pin;
             DoGetKeyAgreement();
-        }
-
-        private void DoResponseBLECTAP2(bool ret, byte[] receivedMessage, int receivedLen)
-        {
-            // 画面に制御を戻す（仮コードです）
-            mainForm.OnAppMainProcessExited(false);
         }
 
         public void doExit()
