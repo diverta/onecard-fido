@@ -36,6 +36,7 @@ namespace MaintenanceToolGUI
 
         // ヘルスチェック処理の実行引数を退避
         private string clientPin;
+        private string clientPinNew;
 
         // 共通鍵を退避
         //   getPinToken時に生成した共通鍵を、
@@ -81,6 +82,11 @@ namespace MaintenanceToolGUI
             clientPin = p;
         }
 
+        public void setClientPinNew(string pn)
+        {
+            clientPinNew = pn;
+        }
+
         //
         // PINGコマンド関連処理
         //
@@ -121,6 +127,33 @@ namespace MaintenanceToolGUI
             mainForm.OnAppMainProcessExited(result);
         }
 
+        // 
+        // INITコマンドの後続処理判定
+        //
+        public void DoResponseCtapHidInit(byte[] message, int length)
+        {
+            switch (requestType) {
+            case RequestType.TestCtapHidPing:
+                // PINGコマンドを実行
+                DoRequestPing();
+                break;
+            case RequestType.TestMakeCredential:
+            case RequestType.TestGetAssertion:
+            case RequestType.ClientPinSet:
+                // PINコード取得処理を続行
+                DoGetKeyAgreement();
+                break;
+            case RequestType.AuthReset:
+                // Reset処理を続行
+                DoRequestAuthReset();
+                break;
+            default:
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(true);
+                break;
+            }
+        }
+
         //
         // CBORコマンド関連処理
         //
@@ -144,8 +177,7 @@ namespace MaintenanceToolGUI
                 DoResponseCommandGetAssertion(message, length);
                 break;
             case AppCommon.CTAP2_CBORCMD_AUTH_RESET:
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
+                DoResponseReset(message, length);
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -184,7 +216,7 @@ namespace MaintenanceToolGUI
         private void DoResponseCommandClientPin(byte[] message, int length)
         {
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
 
             switch (cborSubCommand) {
             case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
@@ -198,18 +230,6 @@ namespace MaintenanceToolGUI
                 mainForm.OnAppMainProcessExited(true);
                 break;
             }
-        }
-
-        private byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
-        {
-            // レスポンスされたCBORを抽出
-            //   CBORバイト配列はレスポンスの２バイト目以降
-            int cborLength = length - 1;
-            byte[] cborBytes = new byte[cborLength];
-            for (int i = 0; i < cborLength; i++) {
-                cborBytes[i] = message[1 + i];
-            }
-            return cborBytes;
         }
 
         //
@@ -246,10 +266,13 @@ namespace MaintenanceToolGUI
                 // PINトークン取得処理を続行
                 DoGetPinToken(cborBytes);
                 break;
-            default:
-                // TODO: 後日移行
+            case RequestType.ClientPinSet:
                 // PIN設定処理を続行
-                // DoClientPinSetOrChange(cborBytes);
+                DoClientPinSetOrChange(cborBytes);
+                break;
+            default:
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
                 break;
             }
         }
@@ -340,13 +363,32 @@ namespace MaintenanceToolGUI
             }
         }
 
+        public void DoClientPinSetOrChange(byte[] cborBytes)
+        {
+            // 実行するコマンドを退避
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+
+            if (clientPin.Equals(string.Empty)) {
+                // 現在登録されているPINが指定されなかった場合
+                // SetPINコマンドを実行する
+                cborSubCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_SET;
+            } else {
+                // ChangePINコマンドを実行する
+                cborSubCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_CHANGE;
+            }
+
+            // リクエストデータ（CBOR）をエンコードして送信
+            byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, cborSubCommand, clientPinNew, clientPin, cborBytes);
+            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, setPinCbor);
+        }
+
         //
         // MakeCredentialコマンド関連処理
         //
         private void DoResponseCommandMakeCredential(byte[] message, int length)
         {
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
             // 次のGetAssertionリクエスト送信に必要となる
             // Credential IDを抽出して退避
             MakeCredentialRes = new CBORDecoder().CreateOrGetCommand(cborBytes, true);
@@ -387,7 +429,7 @@ namespace MaintenanceToolGUI
             bool verifySaltNeeded = (GetAssertionCount == 2);
 
             // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            byte[] cborBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
             // hmac-secret拡張情報からsaltを抽出して保持
             CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
             if (VerifyHmacSecretSalt(resp.HmacSecretRes.Output, verifySaltNeeded) == false) {
@@ -431,6 +473,32 @@ namespace MaintenanceToolGUI
                 DecryptedSaltOrg = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
                 return true;
             }
+        }
+
+        //
+        // Resetコマンド関連処理
+        //
+        private void DoRequestAuthReset()
+        {
+            // コマンドを退避
+            cborCommand = AppCommon.CTAP2_CBORCMD_AUTH_RESET;
+
+            // リクエスト転送の前に、
+            // 基板上ののMAIN SWを押してもらうように促す
+            // メッセージを画面表示
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT1);
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT2);
+            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT3);
+
+            // authenticatorResetコマンドを実行する
+            byte[] commandByte = { AppCommon.CTAP2_CBORCMD_AUTH_RESET };
+            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, commandByte);
+        }
+
+        private void DoResponseReset(byte[] message, int length)
+        {
+            // 画面に制御を戻す
+            mainForm.OnAppMainProcessExited(true);
         }
     }
 }

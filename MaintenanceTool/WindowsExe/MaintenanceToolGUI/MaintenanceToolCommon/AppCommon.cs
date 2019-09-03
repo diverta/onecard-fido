@@ -224,5 +224,17 @@ namespace MaintenanceToolCommon
             };
             return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
         }
+
+        public static byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            //   CBORバイト配列はレスポンスの２バイト目以降
+            int cborLength = length - 1;
+            byte[] cborBytes = new byte[cborLength];
+            for (int i = 0; i < cborLength; i++) {
+                cborBytes[i] = message[1 + i];
+            }
+            return cborBytes;
+        }
     }
 }

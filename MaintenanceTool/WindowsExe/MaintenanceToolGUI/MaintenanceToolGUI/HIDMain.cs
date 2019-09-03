@@ -43,47 +43,6 @@ namespace MaintenanceToolGUI
         // リクエストデータ格納領域
         private byte[] RequestData = new byte[1024];
 
-        // 実行中のサブコマンドを保持
-        private byte cborCommand;
-        private byte subCommand;
-
-        // PINコード設定処理の実行引数を退避
-        private string clientPinNew;
-        private string clientPinOld;
-
-        // ヘルスチェック処理の実行引数を退避
-        private string clientPin;
-
-        // 共通鍵を退避
-        //   getPinToken時に生成した共通鍵を、
-        //   makeCredential、getAssertion実行時まで保持しておく
-        private byte[] SharedSecretKey = null;
-        private KeyAgreement AgreementPublicKey = null;
-
-        // ユーザー登録情報を退避
-        //   makeCredential時に受信したユーザー登録情報を、
-        //   getAssertion実行時まで保持しておく
-        private CreateOrGetCommandResponse MakeCredentialRes = null;
-
-        // GetAssertion実行回数を保持
-        private int GetAssertionCount;
-
-        // １回目のGetAssertion実行時、
-        // hmac-secret拡張から抽出／復号化されたsaltを保持
-        private byte[] DecryptedSaltOrg;
-
-        // 実行機能を保持
-        private enum HIDRequestType
-        {
-            None = 0,
-            ClientPinSet,
-            TestCtapHidPing,
-            TestMakeCredential,
-            TestGetAssertion,
-            AuthReset
-        };
-        private HIDRequestType requestType;
-
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -173,19 +132,6 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        public void DoTestCtapHidPing()
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-            // 実行するコマンドを退避
-            requestType = HIDRequestType.TestCtapHidPing;
-            cborCommand = AppCommon.CTAP2_CBORCMD_NONE;
-            // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
-        }
-
         public void SendHIDMessage(byte cmd, byte[] message)
         {
             if (ReceivedCID != null) {
@@ -193,16 +139,9 @@ namespace MaintenanceToolGUI
             }
         }
 
-        private byte[] ExtractReceivedCID(byte[] message)
-        {
-            // メッセージからCIDを抽出して戻す
-            byte[] receivedCID = new byte[4];
-            for (int j = 0; j < receivedCID.Length; j++) {
-                receivedCID[j] = message[8 + j];
-            }
-            return receivedCID;
-        }
-
+        //
+        // CTAP2HID_INITコマンド関連処理
+        //
         public void DoRequestCtapHidInit()
         {
             // 8バイトのランダムデータを生成
@@ -227,25 +166,18 @@ namespace MaintenanceToolGUI
             // レスポンスされたCIDを抽出し、クラス内で保持
             ReceivedCID = ExtractReceivedCID(message);
 
-            switch (requestType) {
-            case HIDRequestType.TestCtapHidPing:
-                // PINGコマンドを実行
-                ctap2.DoRequestPing();
-                break;
-            case HIDRequestType.TestMakeCredential:
-            case HIDRequestType.TestGetAssertion:
-                // PINコード取得処理を続行
-                ctap2.DoGetKeyAgreement();
-                break;
-            case HIDRequestType.AuthReset:
-                // Reset処理を続行
-                DoRequestAuthReset(ReceivedCID);
-                break;
-            default:
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
-                break;
+            // INITコマンドの後続処理判定
+            ctap2.DoResponseCtapHidInit(message, length);
+        }
+
+        private byte[] ExtractReceivedCID(byte[] message)
+        {
+            // メッセージからCIDを抽出して戻す
+            byte[] receivedCID = new byte[4];
+            for (int j = 0; j < receivedCID.Length; j++) {
+                receivedCID[j] = message[8 + j];
             }
+            return receivedCID;
         }
 
         public void DoEraseSkeyCert()
@@ -301,7 +233,7 @@ namespace MaintenanceToolGUI
         private void DoResponseGetFlashStat(byte[] message, int length)
         {
             // 戻りメッセージから、取得情報CSVを抽出
-            byte[] responseBytes = ExtractCBORBytesFromResponse(message, length);
+            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
             AppCommon.OutputLogToFile("Flash ROM statistics: " + responseCSV, true);
 
@@ -345,24 +277,9 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 実行するコマンドを退避
-            requestType = HIDRequestType.AuthReset;
-            cborCommand = AppCommon.CTAP2_CBORCMD_AUTH_RESET;
+            ctap2.setRequestType(Ctap2.RequestType.AuthReset);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
-        }
-
-        public void DoRequestAuthReset(byte[] receivedCID)
-        {
-            // リクエスト転送の前に、
-            // 基板上ののMAIN SWを押してもらうように促す
-            // メッセージを画面表示
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT1);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT2);
-            mainForm.OnPrintMessageText(ToolGUICommon.MSG_CLEAR_PIN_CODE_COMMENT3);
-
-            // authenticatorResetコマンドを実行する
-            byte[] commandByte = { 0x07 };
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, commandByte, commandByte.Length);
         }
 
         public void DoClientPinSet(string pinNew, string pinOld)
@@ -372,306 +289,48 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 実行引数を退避
-            clientPinNew = pinNew;
-            clientPinOld = pinOld;
+            ctap2.setClientPin(pinOld);
+            ctap2.setClientPinNew(pinNew);
             // 実行するコマンドを退避
-            requestType = HIDRequestType.ClientPinSet;
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+            ctap2.setRequestType(Ctap2.RequestType.ClientPinSet);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
 
-        public void DoGetKeyAgreement(byte[] receivedCID)
-        {
-            // 実行するコマンドを退避
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
-            subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
-            // GetAgreementコマンドを実行する
-            CBOREncoder cborEncoder = new CBOREncoder();
-            byte[] getAgreementCbor = cborEncoder.GetKeyAgreement(cborCommand, subCommand);
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getAgreementCbor, getAgreementCbor.Length);
-        }
-
-        private byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
-        {
-            // レスポンスされたCBORを抽出
-            //   CBORバイト配列はレスポンスの２バイト目以降
-            int cborLength = length - 1;
-            byte[] cborBytes = new byte[cborLength];
-            for (int i = 0; i < cborLength; i++) {
-                cborBytes[i] = message[1 + i];
-            }
-            return cborBytes;
-        }
-
-        private void DoResponseCtapHidCbor(byte[] message, int length)
-        {
-            // ステータスバイトをチェック
-            if (CheckStatusByte(message) == false) {
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-
-            switch (cborCommand) {
-            case AppCommon.CTAP2_CBORCMD_CLIENT_PIN:
-                DoResponseCommandClientPin(message, length);
-                break;
-            case AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL:
-                DoResponseCommandMakeCredential(message, length);
-                break;
-            case AppCommon.CTAP2_CBORCMD_GET_ASSERTION:
-                DoResponseCommandGetAssertion(message, length);
-                break;
-            case AppCommon.CTAP2_CBORCMD_AUTH_RESET:
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
-                break;
-            }
-        }
-
-        private bool CheckStatusByte(byte[] message)
-        {
-            switch (message[0]) {
-            case 0x00:
-                return true;
-            case 0x31:  // CTAP2_ERR_PIN_INVALID
-            case 0x33:  // CTAP2_ERR_PIN_AUTH_INVALID:
-                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_INVALID);
-                break;
-            case 0x32:  // CTAP2_ERR_PIN_BLOCKED
-                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_BLOCKED);
-                break;
-            case 0x34:  // CTAP2_ERR_PIN_AUTH_BLOCKED
-                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_AUTH_BLOCKED);
-                break;
-            case 0x35:  // CTAP2_ERR_PIN_NOT_SET
-                mainForm.OnPrintMessageText(AppCommon.MSG_CTAP2_ERR_PIN_NOT_SET);
-                break;
-            case 0xfe:  // CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST (CTAP2_ERR_VENDOR_FIRST+0x0e)
-                mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
-                break;
-            default:
-                break;
-            }
-            return false;
-        }
-
-        private void DoResponseCommandClientPin(byte[] message, int length)
-        {
-            // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
-
-            switch (subCommand) {
-            case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
-                DoResponseCommandGetKeyAgreement(cborBytes);
-                break;
-            case AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
-                DoResponseCommandGetPinToken(cborBytes);
-                break;
-            default:
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
-                break;
-            }
-        }
-
-        public void DoResponseCommandGetKeyAgreement(byte[] cborBytes)
-        {
-            switch (requestType) {
-            case HIDRequestType.TestMakeCredential:
-            case HIDRequestType.TestGetAssertion:
-                // PINトークン取得処理を続行
-                DoGetPinToken(cborBytes);
-                break;
-            default:
-                // PIN設定処理を続行
-                DoClientPinSetOrChange(cborBytes);
-                break;
-            }
-        }
-
-        public void DoResponseCommandGetPinToken(byte[] cborBytes)
-        {
-            switch (requestType) {
-            case HIDRequestType.TestMakeCredential:
-            case HIDRequestType.TestGetAssertion:
-                // ログイン／認証処理を続行
-                DoResponseGetPinToken(cborBytes);
-                break;
-            default:
-                // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
-                break;
-            }
-        }
-
-        public void DoClientPinSetOrChange(byte[] cborBytes)
-        {
-            // 実行するコマンドを退避
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
-            byte[] receivedCID = hidProcess.receivedCID;
-
-            if (clientPinOld.Equals(string.Empty)) {
-                // SetPINコマンドを実行する
-                subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_SET;
-            } else {
-                // ChangePINコマンドを実行する
-                subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_CHANGE;
-            }
-
-            // リクエストデータ（CBOR）をエンコードして送信
-            byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, subCommand, clientPinNew, clientPinOld, cborBytes);
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, setPinCbor, setPinCbor.Length);
-        }
-
+        //
+        // HID CTAP2ヘルスチェック
+        //
         public void DoCtap2Healthcheck(string pin)
         {
             // USB HID接続がない場合はエラーメッセージを表示
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
+
             // 実行するコマンドと引数を退避
             //   認証器からPINトークンを取得するため、
-            //   ClientPINコマンドを事前実行する必要あり
-            requestType = HIDRequestType.TestMakeCredential;
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
-            clientPin = pin;
+            //   ClientPINコマンド（getKeyAgreement）を
+            //   事前実行する必要あり
+            ctap2.setClientPin(pin);
+            ctap2.setRequestType(Ctap2.RequestType.TestMakeCredential);
+
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
 
-        public void DoGetPinToken(byte[] cborBytes)
+        //
+        // HID PINGテスト
+        //
+        public void DoTestCtapHidPing()
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // 実行するコマンドを退避
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
-            subCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN;
-            byte[] receivedCID = hidProcess.receivedCID;
-
-            // リクエストデータ（CBOR）をエンコードして送信
-            //   この時に生成した共通鍵は、モジュール内で保持しておく
-            CBOREncoder encoder = new CBOREncoder();
-            byte[] getPinTokenCbor = encoder.GetPinToken(cborCommand, subCommand, clientPin, cborBytes);
-            SharedSecretKey = encoder.SharedSecretKey;
-            AgreementPublicKey = encoder.AgreementPublicKey;
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor, getPinTokenCbor.Length);
-        }
-
-        public void DoResponseGetPinToken(byte[] cborBytes)
-        {
-            // GetAssertion実行が２回目かどうか判定
-            bool testUserPresenceNeeded = (GetAssertionCount == 2);
-
-            // リクエストデータ（CBOR）をエンコード
-            byte[] requestCbor = null;
-            byte[] receivedCID = hidProcess.receivedCID;
-            if (requestType == HIDRequestType.TestMakeCredential) {
-                cborCommand = AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL;
-                requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
-            } else {
-                // ２回目のGetAssertion実行では、MAIN SW押下によるユーザー所在確認が必要
-                cborCommand = AppCommon.CTAP2_CBORCMD_GET_ASSERTION;
-                requestCbor = new CBOREncoder().GetAssertion(cborCommand, clientPin, cborBytes, SharedSecretKey, MakeCredentialRes, AgreementPublicKey, testUserPresenceNeeded);
-            }
-
-            if (requestCbor == null) {
-                // 処理失敗時は画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-
-            // リクエスト転送の前に、
-            // 基板上のMAIN SWを押してもらうように促す
-            // メッセージを画面表示
-            if (requestType == HIDRequestType.TestGetAssertion && testUserPresenceNeeded) {
-                mainForm.OnPrintMessageText("ログインテストを開始します.");
-                mainForm.OnPrintMessageText("  ユーザー所在確認が必要となりますので、");
-                mainForm.OnPrintMessageText("  FIDO認証器上のユーザー所在確認LEDが点滅したら、");
-                mainForm.OnPrintMessageText("  MAIN SWを１回押してください.");
-            }
-
-            // リクエストを送信
-            hidProcess.SendHIDMessage(receivedCID, Const.HID_CMD_CTAPHID_CBOR, requestCbor, requestCbor.Length);
-        }
-
-        private void DoResponseCommandMakeCredential(byte[] message, int length)
-        {
-            // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
-            // 次のGetAssertionリクエスト送信に必要となる
-            // Credential IDを抽出して退避
-            MakeCredentialRes = new CBORDecoder().CreateOrGetCommand(cborBytes, true);
-
-            // GetAssertionコマンドを実行する
-            GetAssertionCount = 1;
-            DoRequestCommandGetAssertion();
-        }
-
-        private void DoResponseCommandGetAssertion(byte[] message, int length)
-        {
-            // GetAssertion実行が２回目かどうか判定
-            bool verifySaltNeeded = (GetAssertionCount == 2);
- 
-            // レスポンスされたCBORを抽出
-            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
-            // hmac-secret拡張情報からsaltを抽出して保持
-            CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
-            if (VerifyHmacSecretSalt(resp.HmacSecretRes.Output, verifySaltNeeded) == false) {
-                // salt検証失敗時は画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
-                return;
-            }
-
-            if (verifySaltNeeded) {
-                // ２回目のテストが成功したら画面に制御を戻して終了
-                mainForm.OnAppMainProcessExited(true);
-                return;
-            }
-
-            // GetAssertionコマンドを実行する
-            GetAssertionCount++;
-            DoRequestCommandGetAssertion();
-        }
-
-        private void DoRequestCommandGetAssertion()
-        {
-            // 実行するコマンドと引数を退避
-            //   認証器からPINトークンを取得するため、
-            //   ClientPINコマンドを事前実行する必要あり
-            requestType = HIDRequestType.TestGetAssertion;
-            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+            ctap2.setRequestType(Ctap2.RequestType.TestCtapHidPing);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
-        }
-
-        private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)
-        {
-            // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
-            if (encryptedSalt == null) {
-                return true;
-            }
-
-            if (verifySaltNeeded) {
-                // １回目のGetAssertionの場合はオリジナルSaltと内容を比較し、
-                // 同じ内容であれば検証成功
-                byte[] decryptedSaltCur = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
-                bool success = AppCommon.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
-
-                // 検証結果はログファイル出力する
-                AppCommon.OutputLogToFile(string.Format(
-                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed"),
-                    true);
-                return success;
-
-            } else {
-                // １回目のGetAssertionの場合はオリジナルSaltを抽出して終了
-                DecryptedSaltOrg = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
-                return true;
-            }
         }
     }
 }
