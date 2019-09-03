@@ -62,27 +62,27 @@ namespace MaintenanceToolGUI
             transportType = transportType_;
         }
 
-        public void setHidMain(HIDMain p)
+        public void SetHidMain(HIDMain p)
         {
             hidMain = p;
         }
 
-        public void setBleMain(AppMain a)
+        public void SetBleMain(AppMain a)
         {
             bleMain = a;
         }
 
-        public void setRequestType(RequestType t)
+        public void SetRequestType(RequestType t)
         {
             requestType = t;
         }
 
-        public void setClientPin(string p)
+        public void SetClientPin(string p)
         {
             clientPin = p;
         }
 
-        public void setClientPinNew(string pn)
+        public void SetClientPinNew(string pn)
         {
             clientPinNew = pn;
         }

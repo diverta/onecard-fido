@@ -69,7 +69,7 @@ namespace MaintenanceToolGUI
 
             // CTAP2共通処理に各種参照を引き渡す
             ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_BLE);
-            ctap2.setBleMain(this);
+            ctap2.SetBleMain(this);
         }
 
         private void OnPrintMessageText(string message)
@@ -114,7 +114,7 @@ namespace MaintenanceToolGUI
                 DoResponse(ret, receivedMessage, receivedLen);
                 break;
             case BLERequestType.TestBLEPing:
-                DoResponseBLEPing(ret, receivedMessage, receivedLen);
+                DoResponseBLEPing(receivedMessage, receivedLen);
                 break;
             case BLERequestType.TestBLECTAP2:
                 DoResponseBLECTAP2(receivedMessage, receivedLen);
@@ -359,11 +359,43 @@ namespace MaintenanceToolGUI
             return Const.MSG_HEADER_LEN + requestBytes.Length;
         }
 
+        //
+        // BLE PINGコマンド
+        //
         public void DoTestBLEPing()
         {
             // PINGリクエスト処理を実行
             bleRequestType = BLERequestType.TestBLEPing;
             ctap2.DoRequestPing();
+        }
+
+        private void DoResponseBLEPing(byte[] receivedMessage, int receivedLen)
+        {
+            // BLEヘッダーを除去し、PINGレスポンス処理を実行
+            ExtractResponseData(receivedMessage, receivedLen);
+            ctap2.DoResponsePing(BLEResponseData, BLEResponseLength);
+        }
+
+        //
+        // BLE CTAP2ヘルスチェック
+        //
+        public void DoCtap2Healthcheck(string pin)
+        {
+            // 実行するコマンドと引数を退避
+            //   認証器からPINトークンを取得するため、
+            //   ClientPINコマンド（getKeyAgreement）を
+            //   事前実行する必要あり
+            bleRequestType = BLERequestType.TestBLECTAP2;
+            ctap2.SetClientPin(pin);
+            ctap2.SetRequestType(Ctap2.RequestType.TestMakeCredential);
+            ctap2.DoGetKeyAgreement();
+        }
+
+        private void DoResponseBLECTAP2(byte[] receivedMessage, int receivedLen)
+        {
+            // BLEヘッダーを除去し、PINGレスポンス処理を実行
+            ExtractResponseData(receivedMessage, receivedLen);
+            ctap2.DoResponseCtapHidCbor(BLEResponseData, BLEResponseLength);
         }
 
         private void ExtractResponseData(byte[] receivedMessage, int receivedLen)
@@ -376,35 +408,6 @@ namespace MaintenanceToolGUI
             byte cntl = receivedMessage[2];
             BLEResponseLength = cnth * 256 + cntl;
             Array.Copy(receivedMessage, 3, BLEResponseData, 0, receivedLen - 3);
-        }
-
-        private void DoResponseBLEPing(bool ret, byte[] receivedMessage, int receivedLen)
-        {
-            // BLEヘッダーを除去し、PINGレスポンス処理を実行
-            ExtractResponseData(receivedMessage, receivedLen);
-            ctap2.DoResponsePing(BLEResponseData, BLEResponseLength);
-        }
-
-        //
-        // BLE CTAP2ヘルスチェック関連処理
-        //
-        public void DoCtap2Healthcheck(string pin)
-        {
-            // 実行するコマンドと引数を退避
-            //   認証器からPINトークンを取得するため、
-            //   ClientPINコマンド（getKeyAgreement）を
-            //   事前実行する必要あり
-            bleRequestType = BLERequestType.TestBLECTAP2;
-            ctap2.setClientPin(pin);
-            ctap2.setRequestType(Ctap2.RequestType.TestMakeCredential);
-            ctap2.DoGetKeyAgreement();
-        }
-
-        private void DoResponseBLECTAP2(byte[] receivedMessage, int receivedLen)
-        {
-            // BLEヘッダーを除去し、PINGレスポンス処理を実行
-            ExtractResponseData(receivedMessage, receivedLen);
-            ctap2.DoResponseCtapHidCbor(BLEResponseData, BLEResponseLength);
         }
 
         public void doExit()

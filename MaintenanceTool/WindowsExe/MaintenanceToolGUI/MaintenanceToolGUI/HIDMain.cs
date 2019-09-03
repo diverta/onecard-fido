@@ -59,7 +59,7 @@ namespace MaintenanceToolGUI
 
             // CTAP2共通処理に各種参照を引き渡す
             ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_HID);
-            ctap2.setHidMain(this);
+            ctap2.SetHidMain(this);
         }
 
         public void OnFormDestroy()
@@ -277,7 +277,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 実行するコマンドを退避
-            ctap2.setRequestType(Ctap2.RequestType.AuthReset);
+            ctap2.SetRequestType(Ctap2.RequestType.AuthReset);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
@@ -289,10 +289,10 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 実行引数を退避
-            ctap2.setClientPin(pinOld);
-            ctap2.setClientPinNew(pinNew);
+            ctap2.SetClientPin(pinOld);
+            ctap2.SetClientPinNew(pinNew);
             // 実行するコマンドを退避
-            ctap2.setRequestType(Ctap2.RequestType.ClientPinSet);
+            ctap2.SetRequestType(Ctap2.RequestType.ClientPinSet);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
@@ -311,8 +311,8 @@ namespace MaintenanceToolGUI
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンド（getKeyAgreement）を
             //   事前実行する必要あり
-            ctap2.setClientPin(pin);
-            ctap2.setRequestType(Ctap2.RequestType.TestMakeCredential);
+            ctap2.SetClientPin(pin);
+            ctap2.SetRequestType(Ctap2.RequestType.TestMakeCredential);
 
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
@@ -328,7 +328,7 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 実行するコマンドを退避
-            ctap2.setRequestType(Ctap2.RequestType.TestCtapHidPing);
+            ctap2.SetRequestType(Ctap2.RequestType.TestCtapHidPing);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
