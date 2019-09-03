@@ -51,6 +51,10 @@ namespace MaintenanceToolGUI
         // GetAssertion実行回数を保持
         private int GetAssertionCount;
 
+        // １回目のGetAssertion実行時、
+        // hmac-secret拡張から抽出／復号化されたsaltを保持
+        private byte[] DecryptedSaltOrg;
+
         public Ctap2(MainForm m, byte transportType_)
         {
             mainForm = m;
@@ -136,13 +140,9 @@ namespace MaintenanceToolGUI
             case AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL:
                 DoResponseCommandMakeCredential(message, length);
                 break;
-            /* 
-             * TODO:後日追加
-             * 
             case AppCommon.CTAP2_CBORCMD_GET_ASSERTION:
                 DoResponseCommandGetAssertion(message, length);
                 break;
-            */
             case AppCommon.CTAP2_CBORCMD_AUTH_RESET:
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(true);
@@ -353,8 +353,84 @@ namespace MaintenanceToolGUI
 
             // GetAssertionコマンドを実行する
             GetAssertionCount = 1;
-            //DoRequestCommandGetAssertion();
-            mainForm.OnAppMainProcessExited(true); // 仮コードです
+            DoRequestCommandGetAssertion();
+        }
+
+        //
+        // GetAssertionコマンド関連処理
+        //
+        private void DoRequestCommandGetAssertion()
+        {
+            // 実行するコマンドと引数を退避
+            //   認証器からPINトークンを取得するため、
+            //   ClientPINコマンドを事前実行する必要あり
+            requestType = RequestType.TestGetAssertion;
+            cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
+
+            switch (transportType) {
+            case AppCommon.TRANSPORT_HID:
+                // INITコマンドを実行し、nonce を送信する
+                hidMain.DoRequestCtapHidInit();
+                break;
+            case AppCommon.TRANSPORT_BLE:
+                // 再度、GetKeyAgreementコマンドを実行
+                DoGetKeyAgreement();
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void DoResponseCommandGetAssertion(byte[] message, int length)
+        {
+            // GetAssertion実行が２回目かどうか判定
+            bool verifySaltNeeded = (GetAssertionCount == 2);
+
+            // レスポンスされたCBORを抽出
+            byte[] cborBytes = ExtractCBORBytesFromResponse(message, length);
+            // hmac-secret拡張情報からsaltを抽出して保持
+            CreateOrGetCommandResponse resp = new CBORDecoder().CreateOrGetCommand(cborBytes, false);
+            if (VerifyHmacSecretSalt(resp.HmacSecretRes.Output, verifySaltNeeded) == false) {
+                // salt検証失敗時は画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
+            if (verifySaltNeeded) {
+                // ２回目のテストが成功したら画面に制御を戻して終了
+                mainForm.OnAppMainProcessExited(true);
+                return;
+            }
+
+            // GetAssertionコマンドを実行する
+            GetAssertionCount++;
+            DoRequestCommandGetAssertion();
+        }
+
+        private bool VerifyHmacSecretSalt(byte[] encryptedSalt, bool verifySaltNeeded)
+        {
+            // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
+            if (encryptedSalt == null) {
+                return true;
+            }
+
+            if (verifySaltNeeded) {
+                // １回目のGetAssertionの場合はオリジナルSaltと内容を比較し、
+                // 同じ内容であれば検証成功
+                byte[] decryptedSaltCur = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                bool success = AppCommon.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
+
+                // 検証結果はログファイル出力する
+                AppCommon.OutputLogToFile(string.Format(
+                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed"),
+                    true);
+                return success;
+
+            } else {
+                // １回目のGetAssertionの場合はオリジナルSaltを抽出して終了
+                DecryptedSaltOrg = AppCommon.AES256CBCDecrypt(SharedSecretKey, encryptedSalt);
+                return true;
+            }
         }
     }
 }

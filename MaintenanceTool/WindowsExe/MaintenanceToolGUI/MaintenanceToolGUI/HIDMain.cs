@@ -137,7 +137,7 @@ namespace MaintenanceToolGUI
                 DoResponseGetFlashStat(message, length);
                 break;
             case Const.HID_CMD_CTAPHID_CBOR:
-                DoResponseCtapHidCbor(message, length);
+                ctap2.DoResponseCtapHidCbor(message, length);
                 break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 // 画面に制御を戻す
@@ -203,7 +203,7 @@ namespace MaintenanceToolGUI
             return receivedCID;
         }
 
-        private void DoRequestCtapHidInit()
+        public void DoRequestCtapHidInit()
         {
             // 8バイトのランダムデータを生成
             new Random().NextBytes(nonceBytes);
@@ -227,15 +227,24 @@ namespace MaintenanceToolGUI
             // レスポンスされたCIDを抽出し、クラス内で保持
             ReceivedCID = ExtractReceivedCID(message);
 
-            if (cborCommand == AppCommon.CTAP2_CBORCMD_CLIENT_PIN) {
-                // レスポンスされたCIDを抽出し、PIN設定処理を続行
-                DoGetKeyAgreement(ReceivedCID);
-            } else if (cborCommand == AppCommon.CTAP2_CBORCMD_AUTH_RESET) {
-                // レスポンスされたCIDを抽出し、Reset処理を続行
-                DoRequestAuthReset(ReceivedCID);
-            } else {
+            switch (requestType) {
+            case HIDRequestType.TestCtapHidPing:
                 // PINGコマンドを実行
                 ctap2.DoRequestPing();
+                break;
+            case HIDRequestType.TestMakeCredential:
+            case HIDRequestType.TestGetAssertion:
+                // PINコード取得処理を続行
+                ctap2.DoGetKeyAgreement();
+                break;
+            case HIDRequestType.AuthReset:
+                // Reset処理を続行
+                DoRequestAuthReset(ReceivedCID);
+                break;
+            default:
+                // 画面に制御を戻す
+                mainForm.OnAppMainProcessExited(true);
+                break;
             }
         }
 
