@@ -201,24 +201,33 @@ namespace MaintenanceToolCommon
 
                 infoBLE = null;
                 foreach (DeviceInformation info in collection) {
-                    infoBLE = info;
-                    break;
+                    // 受信データ監視を開始
+                    if (await StartBLENotification(info)) {
+                        OutputLogToFile(string.Format("BLEデバイス [{0}] に接続します。", info.Name));
+                        infoBLE = info;
+                        break;
+                    } else {
+                        OutputLogToFile(string.Format("BLEデバイス [{0}] には接続できません。", info.Name));
+                    }
                 }
                 if (infoBLE == null) {
                     OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
                     return false;
                 }
-                OutputLogToFile(string.Format("{0} (name={1} isEnabled={2})",
-                    AppCommon.MSG_BLE_U2F_SERVICE_FOUND, infoBLE.Name, infoBLE.IsEnabled));
+                OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_FOUND);
+                return true;
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
                 return false;
             }
+        }
 
+        public async Task<bool> StartBLENotification(DeviceInformation deviceInfo)
+        {
             service = null;
             try {
-                service = await GattDeviceService.FromIdAsync(infoBLE.Id);
+                service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
                 if (service == null) {
                     OutputLogToFile(AppCommon.MSG_BLE_CHARACT_NOT_DISCOVERED);
                     return false;
