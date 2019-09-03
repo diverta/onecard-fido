@@ -216,9 +216,15 @@ namespace MaintenanceToolCommon
                 return false;
             }
 
+            // 受信データ監視を開始
+            return await StartBLENotification(infoBLE);
+        }
+
+        public async Task<bool> StartBLENotification(DeviceInformation deviceInfo)
+        {
             service = null;
             try {
-                service = await GattDeviceService.FromIdAsync(infoBLE.Id);
+                service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
                 if (service == null) {
                     OutputLogToFile(AppCommon.MSG_BLE_CHARACT_NOT_DISCOVERED);
                     return false;
