@@ -95,6 +95,12 @@ namespace MaintenanceToolGUI
 
         private void OnReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
         {
+            if (ret == false) {
+                // BLE接続失敗時等のエラー発生時は画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+
             if (CheckStatusWord(receivedMessage, receivedLen) == false) {
                 // 処理結果が不正の場合は画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);
@@ -104,14 +110,15 @@ namespace MaintenanceToolGUI
             switch (bleRequestType) {
             case BLERequestType.TestRegister:
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
-                DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticateCheck);
+                DoTestAuthenticate(receivedMessage, receivedLen, BLERequestType.TestAuthenticateCheck);
                 break;
             case BLERequestType.TestAuthenticateCheck:
-                DoTestAuthenticate(ret, receivedMessage, receivedLen, BLERequestType.TestAuthenticate);
+                DoTestAuthenticate(receivedMessage, receivedLen, BLERequestType.TestAuthenticate);
                 break;
             case BLERequestType.TestAuthenticate:
+                // 画面に制御を戻す
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_SUCCESS);
-                DoResponse(ret, receivedMessage, receivedLen);
+                mainForm.OnAppMainProcessExited(true);
                 break;
             case BLERequestType.TestBLEPing:
                 DoResponseBLEPing(receivedMessage, receivedLen);
@@ -126,8 +133,8 @@ namespace MaintenanceToolGUI
 
         private bool CheckStatusWord(byte[] receivedMessage, int receivedLen)
         {
-            if (bleRequestType == BLERequestType.TestRegister &&
-                bleRequestType == BLERequestType.TestAuthenticateCheck &&
+            if (bleRequestType == BLERequestType.TestRegister ||
+                bleRequestType == BLERequestType.TestAuthenticateCheck ||
                 bleRequestType == BLERequestType.TestAuthenticate) {
                 //
                 // U2F関連コマンドの場合は
@@ -173,13 +180,6 @@ namespace MaintenanceToolGUI
             // BLE処理を実行し、メッセージを転送
             bleRequestType = type;
             bleProcess.DoXferMessage(requestBytes, requestLen);
-        }
-
-        private void DoResponse(bool ret, byte[] receivedMessage, int receivedLen)
-        {
-            // BLEメッセージが返送されて来たら
-            // 画面に制御を戻す
-            mainForm.OnAppMainProcessExited(ret);
         }
 
         public void SendBLEMessage(byte cmd, byte[] message)
@@ -313,13 +313,8 @@ namespace MaintenanceToolGUI
             }
         }
 
-        private void DoTestAuthenticate(bool ret, byte[] receivedMessage, int receivedLen, BLERequestType type)
+        private void DoTestAuthenticate(byte[] receivedMessage, int receivedLen, BLERequestType type)
         {
-            // 先行のRegister処理が失敗時は以降の処理を行わない
-            if (ret == false) {
-                mainForm.OnAppMainProcessExited(ret);
-            }
-
             // Registerレスポンスからキーハンドル
             // (71バイト目から64バイト)を切り出して保持
             Array.Copy(receivedMessage, 70, u2FKeyhandleData, 0, Const.U2F_KEYHANDLE_SIZE);
