@@ -146,14 +146,15 @@ namespace MaintenanceToolGUI
 
             // ボタンを押下不可とする
             enableButtons(false);
-            // 開始メッセージを表示
-            commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
-            DisplayStartMessage(commandTitle);
 
-            // CTAP2ヘルスチェック実行
+            // 開始メッセージを表示し、CTAP2ヘルスチェック実行
             if (sender.Equals(DoBLECtap2TestToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
+                DisplayStartMessage(commandTitle);
                 app.DoCtap2Healthcheck(f.PinCurr);
             } else {
+                commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
+                DisplayStartMessage(commandTitle);
                 hid.DoCtap2Healthcheck(f.PinCurr);
             }
 
