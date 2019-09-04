@@ -28,8 +28,9 @@ namespace MaintenanceToolGUI
         // HIDデバイス関連
         private HIDProcess hidProcess = new HIDProcess();
 
-        // CTAP2共通処理
+        // CTAP2、U2F共通処理
         private Ctap2 ctap2;
+        private U2f u2f;
 
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
@@ -60,6 +61,10 @@ namespace MaintenanceToolGUI
             // CTAP2共通処理に各種参照を引き渡す
             ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_HID);
             ctap2.SetHidMain(this);
+
+            // U2F共通処理に各種参照を引き渡す
+            u2f = new U2f(mainForm, AppCommon.TRANSPORT_HID);
+            u2f.SetHidMain(this);
         }
 
         public void OnFormDestroy()

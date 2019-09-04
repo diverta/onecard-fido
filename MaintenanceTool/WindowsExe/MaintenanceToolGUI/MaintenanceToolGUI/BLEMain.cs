@@ -52,8 +52,9 @@ namespace MaintenanceToolGUI
         // BLEデバイス関連
         private BLEProcess bleProcess = new BLEProcess();
 
-        // CTAP2共通処理
+        // CTAP2、U2F共通処理
         private Ctap2 ctap2;
+        private U2f u2f;
 
         public BLEMain(MainForm f)
         {
@@ -70,6 +71,10 @@ namespace MaintenanceToolGUI
             // CTAP2共通処理に各種参照を引き渡す
             ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_BLE);
             ctap2.SetBleMain(this);
+
+            // U2F共通処理に各種参照を引き渡す
+            u2f = new U2f(mainForm, AppCommon.TRANSPORT_BLE);
+            u2f.SetBleMain(this);
         }
 
         private void OnPrintMessageText(string message)
