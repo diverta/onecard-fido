@@ -130,7 +130,7 @@ namespace MaintenanceToolGUI
         // 
         // INITコマンドの後続処理判定
         //
-        public void DoResponseCtapHidInit(byte[] message, int length)
+        public bool DoResponseCtapHidInit(byte[] message, int length)
         {
             switch (requestType) {
             case RequestType.TestCtapHidPing:
@@ -149,9 +149,10 @@ namespace MaintenanceToolGUI
                 break;
             default:
                 // 画面に制御を戻す
-                mainForm.OnAppMainProcessExited(true);
-                break;
+                return false;
             }
+
+            return true;
         }
 
         //

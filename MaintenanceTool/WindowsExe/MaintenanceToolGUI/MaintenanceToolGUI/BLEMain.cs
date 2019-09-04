@@ -166,6 +166,7 @@ namespace MaintenanceToolGUI
         {
             // U2F Register処理を実行
             bleRequestType = BLERequestType.TestBLEU2F;
+            u2f.SetRequestType(U2f.RequestType.TestRegister);
             u2f.DoRequestRegister();
         }
 

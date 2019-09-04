@@ -76,6 +76,29 @@ namespace MaintenanceToolGUI
         }
 
         // 
+        // INITコマンドの後続処理判定
+        //
+        public bool DoResponseHidInit(byte[] message, int length)
+        {
+            switch (requestType) {
+            case RequestType.TestRegister:
+                // U2F Registerコマンドを実行
+                DoRequestRegister();
+                break;
+            case RequestType.TestAuthenticateCheck:
+            case RequestType.TestAuthenticate:
+                // U2F Authenticate処理を続行
+                DoRequestAuthenticate();
+                break;
+            default:
+                // 画面に制御を戻す
+                return false;
+            }
+
+            return true;
+        }
+
+        // 
         // レスポンスの後続処理判定
         //
         public void DoResponse(byte[] receivedMessage, int receivedLen)
@@ -88,11 +111,10 @@ namespace MaintenanceToolGUI
 
             switch (requestType) {
             case RequestType.TestRegister:
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
-                DoRequestAuthenticate(receivedMessage, receivedLen, RequestType.TestAuthenticateCheck);
+                DoResponseRegister(receivedMessage, receivedLen);
                 break;
             case RequestType.TestAuthenticateCheck:
-                DoRequestAuthenticate(receivedMessage, receivedLen, RequestType.TestAuthenticate);
+                DoResponseAuthenticate(receivedMessage, receivedLen);
                 break;
             case RequestType.TestAuthenticate:
                 // 画面に制御を戻す
@@ -100,6 +122,8 @@ namespace MaintenanceToolGUI
                 mainForm.OnAppMainProcessExited(true);
                 break;
             default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                mainForm.OnAppMainProcessExited(false);
                 break;
             }
         }
@@ -156,9 +180,6 @@ namespace MaintenanceToolGUI
 
             // リクエストデータ（APDU）を編集しリクエストデータに格納
             int length = GenerateU2FRegisterBytes(U2FRequestData);
-
-            // リクエスト種別を設定
-            requestType = RequestType.TestRegister;
 
             // U2F Registerコマンドを実行
             switch (transportType) {
@@ -222,22 +243,43 @@ namespace MaintenanceToolGUI
             return pos;
         }
 
-        //
-        // U2F Authenticateコマンド関連処理
-        //
-        private void DoRequestAuthenticate(byte[] receivedMessage, int receivedLen, RequestType type)
+        private void DoResponseRegister(byte[] message, int length)
         {
             // Registerレスポンスからキーハンドル
             // (68バイト目から64バイト)を切り出して保持
-            Array.Copy(receivedMessage, 67, u2FKeyhandleData, 0, Const.U2F_KEYHANDLE_SIZE);
+            Array.Copy(message, 67, u2FKeyhandleData, 0, Const.U2F_KEYHANDLE_SIZE);
 
+            mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
+
+            // 実行するコマンドを退避
+            requestType = RequestType.TestAuthenticateCheck;
+
+            switch (transportType) {
+            case AppCommon.TRANSPORT_HID:
+                // INITコマンドを実行し、nonce を送信する
+                hidMain.DoRequestCtapHidInit();
+                break;
+            case AppCommon.TRANSPORT_BLE:
+                // U2F Authenticateコマンドを実行
+                DoRequestAuthenticate();
+                break;
+            default:
+                break;
+            }
+        }
+
+        //
+        // U2F Authenticateコマンド関連処理
+        //
+        private void DoRequestAuthenticate()
+        {
             // ランダムなチャレンジデータを生成
             GenerateNonceBytes();
 
             // リクエストデータ（APDU）を編集しリクエストデータに格納
-            int length = GenerateU2FAuthenticateBytes(U2FRequestData, getAuthOption(type));
+            int length = GenerateU2FAuthenticateBytes(U2FRequestData, getAuthOption(requestType));
 
-            if (type == RequestType.TestAuthenticate) {
+            if (requestType == RequestType.TestAuthenticate) {
                 // BLE U2Fリクエスト転送の前に、
                 // FIDO認証器のMAIN SWを押してもらうように促す
                 // メッセージを画面表示
@@ -246,9 +288,6 @@ namespace MaintenanceToolGUI
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT2);
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT3);
             }
-
-            // リクエスト種別を設定
-            requestType = type;
 
             // U2F Authenticateコマンドを実行
             switch (transportType) {
@@ -306,6 +345,25 @@ namespace MaintenanceToolGUI
                 return Const.U2F_AUTH_CHECK_ONLY;
             } else {
                 return Const.U2F_AUTH_ENFORCE;
+            }
+        }
+
+        private void DoResponseAuthenticate(byte[] message, int length)
+        {
+            // 実行するコマンドを退避
+            requestType = RequestType.TestAuthenticate;
+
+            switch (transportType) {
+            case AppCommon.TRANSPORT_HID:
+                // INITコマンドを実行し、nonce を送信する
+                hidMain.DoRequestCtapHidInit();
+                break;
+            case AppCommon.TRANSPORT_BLE:
+                // U2F Authenticateコマンドを実行
+                DoRequestAuthenticate();
+                break;
+            default:
+                break;
             }
         }
     }

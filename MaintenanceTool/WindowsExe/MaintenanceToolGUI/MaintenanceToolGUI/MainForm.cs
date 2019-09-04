@@ -87,8 +87,12 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoInstallSkeyCert(textPath1.Text, textPath2.Text);
 
-            }
-            else if (sender.Equals(DoHIDPingTestToolStripMenuItem)) {
+            } else if (sender.Equals(DoHIDU2fTestToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_HID_U2F_HEALTHCHECK;
+                DisplayStartMessage(commandTitle);
+                hid.DoU2FHealthCheck();
+
+            } else if (sender.Equals(DoHIDPingTestToolStripMenuItem)) {
                 // CTAPHID_INIT --> CTAPHID_PING の順に実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_CTAPHID_PING;
                 DisplayStartMessage(commandTitle);
@@ -100,7 +104,7 @@ namespace MaintenanceToolGUI
                 hid.DoGetFlashStat();
             }
             else if (sender.Equals(DoBLEU2fTestToolStripMenuItem)) {
-                commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
+                commandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 ble.DoU2FHealthCheck();
             }
@@ -164,7 +168,7 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 ble.DoCtap2Healthcheck(f.PinCurr);
             } else {
-                commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
+                commandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
                 hid.DoCtap2Healthcheck(f.PinCurr);
             }

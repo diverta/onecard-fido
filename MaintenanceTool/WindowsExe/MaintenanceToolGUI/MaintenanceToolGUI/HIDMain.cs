@@ -102,6 +102,9 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_CTAPHID_CBOR:
                 ctap2.DoResponseCtapHidCbor(message, length);
                 break;
+            case U2f.Const.BLE_CMD_MSG:
+                u2f.DoResponse(message, length);
+                break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 // 画面に制御を戻す
                 mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -171,7 +174,9 @@ namespace MaintenanceToolGUI
             ReceivedCID = ExtractReceivedCID(message);
 
             // INITコマンドの後続処理判定
-            ctap2.DoResponseCtapHidInit(message, length);
+            if (ctap2.DoResponseCtapHidInit(message, length) == false) {
+                u2f.DoResponseHidInit(message, length);
+            }
         }
 
         private byte[] ExtractReceivedCID(byte[] message)
@@ -318,6 +323,22 @@ namespace MaintenanceToolGUI
             ctap2.SetClientPin(pin);
             ctap2.SetRequestType(Ctap2.RequestType.TestMakeCredential);
 
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
+        }
+
+        //
+        // HID U2Fヘルスチェック
+        //
+        public void DoU2FHealthCheck()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 実行するコマンドを退避
+            ctap2.SetRequestType(Ctap2.RequestType.None);
+            u2f.SetRequestType(U2f.RequestType.TestRegister);
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
