@@ -134,7 +134,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.INIT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("INIT frame: data size={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogToFile(string.Format("Sent INIT frame: data size={0} length={1}\r\n{2}",
                         transferMessageLen, frameLen, dump), true);
 
                 } else {
@@ -155,7 +155,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.CONT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("CONT frame: data seq={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogToFile(string.Format("Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, frameLen, dump), true);
                 }
 
@@ -214,7 +214,7 @@ namespace MaintenanceToolCommon
                 }
 
                 AppCommon.OutputLogToFile(string.Format(
-                    "INIT frame: data size={0} length={1}",
+                    "Recv INIT frame: data size={0} length={1}",
                     receivedMessageLen, dataLenInFrame), true);
 
             } else {
@@ -229,7 +229,7 @@ namespace MaintenanceToolCommon
                 }
 
                 AppCommon.OutputLogToFile(string.Format(
-                    "CONT frame: seq={0} length={1}",
+                    "Recv CONT frame: seq={0} length={1}",
                     seq, dataLenInFrame), true);
             }
 
