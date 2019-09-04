@@ -111,7 +111,9 @@ namespace MaintenanceToolGUI
                 ble.DoTestBLEPing();
             }
             else {
+                // エラーメッセージを画面表示し、ボタンを押下可能とする
                 MessageBox.Show(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, MaintenanceToolTitle);
+                enableButtons(true);
                 return;
             }
 
