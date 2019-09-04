@@ -70,9 +70,6 @@ namespace MaintenanceToolGUI
 
         public void OnUSBDeviceArrival()
         {
-            // BLEデバイスから切断
-            mainForm.DisconnectBLE();
-
             // USB HIDデバイスに接続
             hidProcess.OnUSBDeviceArrival();
         }
