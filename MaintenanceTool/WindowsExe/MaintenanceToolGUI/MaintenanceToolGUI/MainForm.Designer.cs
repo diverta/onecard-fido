@@ -45,17 +45,18 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DoPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHIDPingTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoBLECtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DoBLEPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoBLEU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoBLEPingTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
+            this.DoHIDU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,26 +194,27 @@
             // uSBToolStripMenuItem
             // 
             this.uSBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.DoPingCommandToolStripMenuItem,
+            this.DoHIDCtap2TestToolStripMenuItem,
+            this.DoHIDU2fTestToolStripMenuItem,
+            this.DoHIDPingTestToolStripMenuItem,
             this.flashROM情報取得ToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
-            // toolStripMenuItem1
+            // DoHIDCtap2TestToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
-            this.toolStripMenuItem1.Text = "CTAP2ヘルスチェック実行";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.DoHIDCtap2TestToolStripMenuItem.Name = "DoHIDCtap2TestToolStripMenuItem";
+            this.DoHIDCtap2TestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDCtap2TestToolStripMenuItem.Text = "CTAP2ヘルスチェック実行";
+            this.DoHIDCtap2TestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDCtap2TestToolStripMenuItem_Click);
             // 
-            // DoPingCommandToolStripMenuItem
+            // DoHIDPingTestToolStripMenuItem
             // 
-            this.DoPingCommandToolStripMenuItem.Name = "DoPingCommandToolStripMenuItem";
-            this.DoPingCommandToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.DoPingCommandToolStripMenuItem.Text = "PINGテスト実行";
-            this.DoPingCommandToolStripMenuItem.Click += new System.EventHandler(this.DoPingCommandToolStripMenuItem_Click);
+            this.DoHIDPingTestToolStripMenuItem.Name = "DoHIDPingTestToolStripMenuItem";
+            this.DoHIDPingTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDPingTestToolStripMenuItem.Text = "PINGテスト実行";
+            this.DoHIDPingTestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDPingTestToolStripMenuItem_Click);
             // 
             // flashROM情報取得ToolStripMenuItem
             // 
@@ -225,8 +227,8 @@
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DoBLECtap2TestToolStripMenuItem,
-            this.DoHealthCheckToolStripMenuItem,
-            this.DoBLEPingCommandToolStripMenuItem});
+            this.DoBLEU2fTestToolStripMenuItem,
+            this.DoBLEPingTestToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
@@ -238,19 +240,19 @@
             this.DoBLECtap2TestToolStripMenuItem.Text = "BLE CTAP2ヘルスチェック実行";
             this.DoBLECtap2TestToolStripMenuItem.Click += new System.EventHandler(this.DoBLECtap2TestToolStripMenuItem_Click);
             // 
-            // DoHealthCheckToolStripMenuItem
+            // DoBLEU2fTestToolStripMenuItem
             // 
-            this.DoHealthCheckToolStripMenuItem.Name = "DoHealthCheckToolStripMenuItem";
-            this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DoHealthCheckToolStripMenuItem.Text = "U2Fヘルスチェック実行";
-            this.DoHealthCheckToolStripMenuItem.Click += new System.EventHandler(this.DoHealthCheckToolStripMenuItem_Click);
+            this.DoBLEU2fTestToolStripMenuItem.Name = "DoBLEU2fTestToolStripMenuItem";
+            this.DoBLEU2fTestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.DoBLEU2fTestToolStripMenuItem.Text = "BLE U2Fヘルスチェック実行";
+            this.DoBLEU2fTestToolStripMenuItem.Click += new System.EventHandler(this.DoBLEU2fTestToolStripMenuItem_Click);
             // 
-            // DoBLEPingCommandToolStripMenuItem
+            // DoBLEPingTestToolStripMenuItem
             // 
-            this.DoBLEPingCommandToolStripMenuItem.Name = "DoBLEPingCommandToolStripMenuItem";
-            this.DoBLEPingCommandToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DoBLEPingCommandToolStripMenuItem.Text = "BLE PINGテスト実行";
-            this.DoBLEPingCommandToolStripMenuItem.Click += new System.EventHandler(this.DoBLEPingCommandToolStripMenuItem_Click);
+            this.DoBLEPingTestToolStripMenuItem.Name = "DoBLEPingTestToolStripMenuItem";
+            this.DoBLEPingTestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.DoBLEPingTestToolStripMenuItem.Text = "BLE PINGテスト実行";
+            this.DoBLEPingTestToolStripMenuItem.Click += new System.EventHandler(this.DoBLEPingCommandToolStripMenuItem_Click);
             // 
             // その他OToolStripMenuItem
             // 
@@ -266,6 +268,13 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
+            // 
+            // DoHIDU2fTestToolStripMenuItem
+            // 
+            this.DoHIDU2fTestToolStripMenuItem.Name = "DoHIDU2fTestToolStripMenuItem";
+            this.DoHIDU2fTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDU2fTestToolStripMenuItem.Text = "U2Fヘルスチェック実行";
+            this.DoHIDU2fTestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDU2fTestToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -319,14 +328,15 @@
         private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem テストTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem uSBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DoPingCommandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHIDPingTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DoHealthCheckToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem DoBLEU2fTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHIDCtap2TestToolStripMenuItem;
         private System.Windows.Forms.Timer commandTimer;
         private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DoBLEPingCommandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoBLEPingTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLECtap2TestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHIDU2fTestToolStripMenuItem;
     }
 }
 
