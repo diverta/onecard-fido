@@ -46,6 +46,7 @@
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHIDU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDPingTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +57,6 @@
             this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
-            this.DoHIDU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -209,6 +209,13 @@
             this.DoHIDCtap2TestToolStripMenuItem.Text = "CTAP2ヘルスチェック実行";
             this.DoHIDCtap2TestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDCtap2TestToolStripMenuItem_Click);
             // 
+            // DoHIDU2fTestToolStripMenuItem
+            // 
+            this.DoHIDU2fTestToolStripMenuItem.Name = "DoHIDU2fTestToolStripMenuItem";
+            this.DoHIDU2fTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDU2fTestToolStripMenuItem.Text = "U2Fヘルスチェック実行";
+            this.DoHIDU2fTestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDU2fTestToolStripMenuItem_Click);
+            // 
             // DoHIDPingTestToolStripMenuItem
             // 
             this.DoHIDPingTestToolStripMenuItem.Name = "DoHIDPingTestToolStripMenuItem";
@@ -236,22 +243,22 @@
             // DoBLECtap2TestToolStripMenuItem
             // 
             this.DoBLECtap2TestToolStripMenuItem.Name = "DoBLECtap2TestToolStripMenuItem";
-            this.DoBLECtap2TestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DoBLECtap2TestToolStripMenuItem.Text = "BLE CTAP2ヘルスチェック実行";
+            this.DoBLECtap2TestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoBLECtap2TestToolStripMenuItem.Text = "CTAP2ヘルスチェック実行";
             this.DoBLECtap2TestToolStripMenuItem.Click += new System.EventHandler(this.DoBLECtap2TestToolStripMenuItem_Click);
             // 
             // DoBLEU2fTestToolStripMenuItem
             // 
             this.DoBLEU2fTestToolStripMenuItem.Name = "DoBLEU2fTestToolStripMenuItem";
-            this.DoBLEU2fTestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DoBLEU2fTestToolStripMenuItem.Text = "BLE U2Fヘルスチェック実行";
+            this.DoBLEU2fTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoBLEU2fTestToolStripMenuItem.Text = "U2Fヘルスチェック実行";
             this.DoBLEU2fTestToolStripMenuItem.Click += new System.EventHandler(this.DoBLEU2fTestToolStripMenuItem_Click);
             // 
             // DoBLEPingTestToolStripMenuItem
             // 
             this.DoBLEPingTestToolStripMenuItem.Name = "DoBLEPingTestToolStripMenuItem";
-            this.DoBLEPingTestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DoBLEPingTestToolStripMenuItem.Text = "BLE PINGテスト実行";
+            this.DoBLEPingTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoBLEPingTestToolStripMenuItem.Text = "PINGテスト実行";
             this.DoBLEPingTestToolStripMenuItem.Click += new System.EventHandler(this.DoBLEPingCommandToolStripMenuItem_Click);
             // 
             // その他OToolStripMenuItem
@@ -268,13 +275,6 @@
             this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
             this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
-            // 
-            // DoHIDU2fTestToolStripMenuItem
-            // 
-            this.DoHIDU2fTestToolStripMenuItem.Name = "DoHIDU2fTestToolStripMenuItem";
-            this.DoHIDU2fTestToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.DoHIDU2fTestToolStripMenuItem.Text = "U2Fヘルスチェック実行";
-            this.DoHIDU2fTestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDU2fTestToolStripMenuItem_Click);
             // 
             // MainForm
             // 
