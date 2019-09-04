@@ -10,7 +10,7 @@ namespace MaintenanceToolGUI
 
         // トランスポート別処理の参照を保持
         private HIDMain hidMain;
-        private AppMain bleMain;
+        private BLEMain bleMain;
 
         // メイン画面の参照を保持
         private MainForm mainForm;
@@ -67,7 +67,7 @@ namespace MaintenanceToolGUI
             hidMain = p;
         }
 
-        public void SetBleMain(AppMain a)
+        public void SetBleMain(BLEMain a)
         {
             bleMain = a;
         }

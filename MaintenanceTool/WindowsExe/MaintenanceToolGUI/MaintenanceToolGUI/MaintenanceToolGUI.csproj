@@ -193,7 +193,7 @@
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolGUICommon.cs" />
-    <Compile Include="AppMain.cs" />
+    <Compile Include="BLEMain.cs" />
     <Compile Include="FormUtil.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

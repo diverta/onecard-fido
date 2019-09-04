@@ -6,7 +6,7 @@ namespace MaintenanceToolGUI
 {
     public partial class MainForm : Form
     {
-        private AppMain app;
+        private BLEMain ble;
         private HIDMain hid;
         private string commandTitle = "";
 
@@ -17,7 +17,7 @@ namespace MaintenanceToolGUI
         public MainForm()
         {
             InitializeComponent();
-            app = new AppMain(this);
+            ble = new BLEMain(this);
             hid = new HIDMain(this);
 
             // 画面タイトルを設定
@@ -47,8 +47,16 @@ namespace MaintenanceToolGUI
         private void buttonQuit_Click(object sender, EventArgs e)
         {
             // このアプリケーションを終了する
+            DisconnectBLE();
             hid.OnFormDestroy();
-            app.doExit();
+            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MaintenanceToolTitle), true);
+            Application.Exit();
+        }
+
+        public void DisconnectBLE()
+        {
+            // 接続ずみの場合はBLEデバイスを切断
+            ble.DisconnectBLE();
         }
 
         public void OnPrintMessageText(string messageText)
@@ -65,7 +73,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(button1)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_PAIRING;
                 DisplayStartMessage(commandTitle);
-                app.doPairing();
+                ble.doPairing();
                 return;
             }
             else if (sender.Equals(button2)) {
@@ -94,13 +102,13 @@ namespace MaintenanceToolGUI
             else if (sender.Equals(DoHealthCheckToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
-                app.doHealthCheck();
+                ble.doHealthCheck();
             }
             else if (sender.Equals(DoBLEPingCommandToolStripMenuItem)) {
                 // BLE経由でPINGコマンドを実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
                 DisplayStartMessage(commandTitle);
-                app.DoTestBLEPing();
+                ble.DoTestBLEPing();
             }
             else {
                 return;
@@ -151,7 +159,7 @@ namespace MaintenanceToolGUI
             if (sender.Equals(DoBLECtap2TestToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
-                app.DoCtap2Healthcheck(f.PinCurr);
+                ble.DoCtap2Healthcheck(f.PinCurr);
             } else {
                 commandTitle = ToolGUICommon.PROCESS_NAME_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);

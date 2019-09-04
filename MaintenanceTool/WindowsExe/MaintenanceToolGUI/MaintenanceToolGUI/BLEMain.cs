@@ -3,7 +3,7 @@ using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
 {
-    internal class AppMain
+    internal class BLEMain
     {
         private enum BLERequestType
         {   
@@ -55,7 +55,7 @@ namespace MaintenanceToolGUI
         // CTAP2共通処理
         private Ctap2 ctap2;
 
-        public AppMain(MainForm f)
+        public BLEMain(MainForm f)
         {
             // メイン画面の参照を保持
             mainForm = f;
@@ -405,11 +405,10 @@ namespace MaintenanceToolGUI
             Array.Copy(receivedMessage, 3, BLEResponseData, 0, receivedLen - 3);
         }
 
-        public void doExit()
+        public void DisconnectBLE()
         {
+            // 接続ずみの場合はBLEデバイスを切断
             bleProcess.DisconnectBLE();
-            System.Windows.Forms.Application.Exit();
-            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MainForm.MaintenanceToolTitle), true);
         }
     }
 }
