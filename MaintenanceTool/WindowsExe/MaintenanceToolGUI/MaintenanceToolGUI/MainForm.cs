@@ -102,7 +102,7 @@ namespace MaintenanceToolGUI
             else if (sender.Equals(DoBLEU2fTestToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
-                ble.doHealthCheck();
+                ble.DoU2FHealthCheck();
             }
             else if (sender.Equals(DoBLEPingTestToolStripMenuItem)) {
                 // BLE経由でPINGコマンドを実行する

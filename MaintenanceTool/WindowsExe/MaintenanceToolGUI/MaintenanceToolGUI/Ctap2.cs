@@ -101,10 +101,10 @@ namespace MaintenanceToolGUI
             // PINGコマンドを実行する
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
-                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_PING, pingBytes);
+                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_PING, pingBytes, pingBytes.Length);
                 break;
             case AppCommon.TRANSPORT_BLE:
-                bleMain.SendBLEMessage(Const.HID_CMD_CTAPHID_PING, pingBytes);
+                bleMain.SendBLEMessage(Const.HID_CMD_CTAPHID_PING, pingBytes, pingBytes.Length);
                 break;
             default:
                 break;
@@ -248,10 +248,10 @@ namespace MaintenanceToolGUI
             // GetAgreementコマンドを実行
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
-                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, getAgreementCbor);
+                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, getAgreementCbor, getAgreementCbor.Length);
                 break;
             case AppCommon.TRANSPORT_BLE:
-                bleMain.SendBLEMessage(Const.BLE_CMD_MSG, getAgreementCbor);
+                bleMain.SendBLEMessage(U2f.Const.BLE_CMD_MSG, getAgreementCbor, getAgreementCbor.Length);
                 break;
             default:
                 break;
@@ -293,10 +293,10 @@ namespace MaintenanceToolGUI
             // GetPinTokenコマンドを実行
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
-                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor);
+                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, getPinTokenCbor, getPinTokenCbor.Length);
                 break;
             case AppCommon.TRANSPORT_BLE:
-                bleMain.SendBLEMessage(Const.BLE_CMD_MSG, getPinTokenCbor);
+                bleMain.SendBLEMessage(U2f.Const.BLE_CMD_MSG, getPinTokenCbor, getPinTokenCbor.Length);
                 break;
             default:
                 break;
@@ -353,10 +353,10 @@ namespace MaintenanceToolGUI
             // MakeCredential／GetAssertionコマンドを実行
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
-                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, requestCbor);
+                hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, requestCbor, requestCbor.Length);
                 break;
             case AppCommon.TRANSPORT_BLE:
-                bleMain.SendBLEMessage(Const.BLE_CMD_MSG, requestCbor);
+                bleMain.SendBLEMessage(U2f.Const.BLE_CMD_MSG, requestCbor, requestCbor.Length);
                 break;
             default:
                 break;
@@ -379,7 +379,7 @@ namespace MaintenanceToolGUI
 
             // リクエストデータ（CBOR）をエンコードして送信
             byte[] setPinCbor = new CBOREncoder().SetPIN(cborCommand, cborSubCommand, clientPinNew, clientPin, cborBytes);
-            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, setPinCbor);
+            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, setPinCbor, setPinCbor.Length);
         }
 
         //
@@ -492,7 +492,7 @@ namespace MaintenanceToolGUI
 
             // authenticatorResetコマンドを実行する
             byte[] commandByte = { AppCommon.CTAP2_CBORCMD_AUTH_RESET };
-            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, commandByte);
+            hidMain.SendHIDMessage(Const.HID_CMD_CTAPHID_CBOR, commandByte, commandByte.Length);
         }
 
         private void DoResponseReset(byte[] message, int length)

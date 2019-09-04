@@ -17,8 +17,6 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
-        // BLEコマンドバイトに関する定義
-        public const int BLE_CMD_MSG = 0x83;
     }
 
     internal class HIDMain
@@ -138,10 +136,10 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        public void SendHIDMessage(byte cmd, byte[] message)
+        public void SendHIDMessage(byte cmd, byte[] message, int length)
         {
             if (ReceivedCID != null) {
-                hidProcess.SendHIDMessage(ReceivedCID, cmd, message, message.Length);
+                hidProcess.SendHIDMessage(ReceivedCID, cmd, message, length);
             }
         }
 
