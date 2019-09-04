@@ -187,6 +187,16 @@ namespace MaintenanceToolGUI
             enableButtons(true);
         }
 
+        public void OnBLEConnectionDisabled()
+        {
+            // BLE接続失敗時等のエラー発生時は
+            // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
+            // アプリケーションを再起動させる必要がある旨のメッセージを表示
+            OnAppMainProcessExited(false);
+            OnPrintMessageText("BLE接続が無効となりました。\r\n大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。");
+            bLEToolStripMenuItem.Enabled = false;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             // ペアリング実行

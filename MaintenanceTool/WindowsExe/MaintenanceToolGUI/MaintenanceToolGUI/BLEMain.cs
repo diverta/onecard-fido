@@ -77,7 +77,9 @@ namespace MaintenanceToolGUI
         {
             if (ret == false) {
                 // BLE接続失敗時等のエラー発生時は画面に制御を戻す
-                mainForm.OnAppMainProcessExited(false);
+                // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
+                // アプリケーションを再起動させる必要がある旨のメッセージを表示
+                mainForm.OnBLEConnectionDisabled();
                 return;
             }
 
