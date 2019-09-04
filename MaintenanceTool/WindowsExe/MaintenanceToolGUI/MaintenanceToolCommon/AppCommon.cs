@@ -8,6 +8,25 @@ namespace MaintenanceToolCommon
 {
     public static class AppCommon
     {
+        //
+        // CTAP2関連共通リソース
+        //
+        // CBORサブコマンドバイトに関する定義
+        public const byte CTAP2_CBORCMD_NONE = 0x00;
+        public const byte CTAP2_CBORCMD_MAKE_CREDENTIAL = 0x01;
+        public const byte CTAP2_CBORCMD_GET_ASSERTION = 0x02;
+        public const byte CTAP2_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte CTAP2_CBORCMD_AUTH_RESET = 0x07;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_SET = 0x03;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
+
+        // トランスポート種別
+        public const byte TRANSPORT_NONE = 0x00;
+        public const byte TRANSPORT_BLE = 0x01;
+        public const byte TRANSPORT_HID = 0x02;
+
         // macOS版と共通のメッセージ文言を使用
         // 共通
         public const string MSG_INVALID_FILE_PATH = "ファイルが存在しません。";
@@ -44,6 +63,12 @@ namespace MaintenanceToolCommon
         public const string MSG_CTAP2_ERR_PIN_BLOCKED = "使用中のPINコードが無効となりました。新しいPINコードを設定し直してください。";
         public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
         public const string MSG_CTAP2_ERR_PIN_NOT_SET = "PINコードが認証器に設定されていません。PINコードを新規設定してください。";
+
+        // CTAP2ヘルスチェック関連メッセージ
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_START = "ログインテストを開始します.";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  MAIN SWを１回押してください.";
 
         // Flash ROM情報取得関連メッセージ
         public const string MSG_FSTAT_REMAINING_RATE = "Flash ROMの空き容量は{0:0.0}％です。";
@@ -198,6 +223,18 @@ namespace MaintenanceToolCommon
                 Padding = PaddingMode.None
             };
             return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
+        }
+
+        public static byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            //   CBORバイト配列はレスポンスの２バイト目以降
+            int cborLength = length - 1;
+            byte[] cborBytes = new byte[cborLength];
+            for (int i = 0; i < cborLength; i++) {
+                cborBytes[i] = message[1 + i];
+            }
+            return cborBytes;
         }
     }
 }

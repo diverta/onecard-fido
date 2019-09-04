@@ -49,6 +49,7 @@
             this.DoPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoBLECtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHealthCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoBLEPingCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -223,23 +224,31 @@
             // bLEToolStripMenuItem
             // 
             this.bLEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DoBLECtap2TestToolStripMenuItem,
             this.DoHealthCheckToolStripMenuItem,
             this.DoBLEPingCommandToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
             this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
+            // DoBLECtap2TestToolStripMenuItem
+            // 
+            this.DoBLECtap2TestToolStripMenuItem.Name = "DoBLECtap2TestToolStripMenuItem";
+            this.DoBLECtap2TestToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.DoBLECtap2TestToolStripMenuItem.Text = "BLE CTAP2ヘルスチェック実行";
+            this.DoBLECtap2TestToolStripMenuItem.Click += new System.EventHandler(this.DoBLECtap2TestToolStripMenuItem_Click);
+            // 
             // DoHealthCheckToolStripMenuItem
             // 
             this.DoHealthCheckToolStripMenuItem.Name = "DoHealthCheckToolStripMenuItem";
-            this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DoHealthCheckToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.DoHealthCheckToolStripMenuItem.Text = "U2Fヘルスチェック実行";
             this.DoHealthCheckToolStripMenuItem.Click += new System.EventHandler(this.DoHealthCheckToolStripMenuItem_Click);
             // 
             // DoBLEPingCommandToolStripMenuItem
             // 
             this.DoBLEPingCommandToolStripMenuItem.Name = "DoBLEPingCommandToolStripMenuItem";
-            this.DoBLEPingCommandToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DoBLEPingCommandToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.DoBLEPingCommandToolStripMenuItem.Text = "BLE PINGテスト実行";
             this.DoBLEPingCommandToolStripMenuItem.Click += new System.EventHandler(this.DoBLEPingCommandToolStripMenuItem_Click);
             // 
@@ -317,6 +326,7 @@
         private System.Windows.Forms.Timer commandTimer;
         private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLEPingCommandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoBLECtap2TestToolStripMenuItem;
     }
 }
 

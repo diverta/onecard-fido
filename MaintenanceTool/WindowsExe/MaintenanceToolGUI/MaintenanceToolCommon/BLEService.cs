@@ -249,7 +249,7 @@ namespace MaintenanceToolCommon
                 return true;
 
             } catch (Exception e) {
-                OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
+                OutputLogToFile(string.Format("BLEService.StartBLENotification: {0}", e.Message));
                 StopCommunicate();
                 return false;
             }

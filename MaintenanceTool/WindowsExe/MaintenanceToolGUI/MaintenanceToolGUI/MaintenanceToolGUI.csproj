@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
+    <Compile Include="Ctap2.cs" />
     <Compile Include="HIDDevice.cs" />
     <Compile Include="HIDMain.cs" />
     <Compile Include="HIDProcess.cs" />
@@ -192,7 +193,7 @@
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolGUICommon.cs" />
-    <Compile Include="AppMain.cs" />
+    <Compile Include="BLEMain.cs" />
     <Compile Include="FormUtil.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
