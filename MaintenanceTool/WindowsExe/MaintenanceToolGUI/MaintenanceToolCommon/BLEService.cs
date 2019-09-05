@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
@@ -11,7 +12,7 @@ namespace MaintenanceToolCommon
 {
     public class BLEService
     {
-        private GattDeviceService service;
+        private GattDeviceService BLEservice;
         private GattCharacteristic U2FControlPointChar;
         private GattCharacteristic U2FStatusChar;
 
@@ -21,7 +22,6 @@ namespace MaintenanceToolCommon
 
         private BluetoothLEAdvertisementWatcher watcher;
         private ulong BluetoothAddress;
-        private DeviceInformation infoBLE;
 
         public delegate void dataReceivedEvent(byte[] message, int length);
         public event dataReceivedEvent DataReceived;
@@ -32,10 +32,17 @@ namespace MaintenanceToolCommon
         public delegate void FIDOPeripheralFoundEvent();
         public event FIDOPeripheralFoundEvent FIDOPeripheralFound;
 
+        // 例外が発生したかどうかを保持
+        private bool critical;
+
+        // サービスをディスカバーできたデバイスを保持
+        private List<GattDeviceService> BLEServices = new List<GattDeviceService>();
+
         public BLEService()
         {
             watcher = new BluetoothLEAdvertisementWatcher();
             watcher.Received += OnAdvertisementReceived;
+            FreeResources();
         }
 
         public void Disconnect()
@@ -47,11 +54,13 @@ namespace MaintenanceToolCommon
 
         public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
         {
-            if (service == null) {
+            if (BLEservice == null) {
                 OutputLogToFile(string.Format("BLEService.Send: service is null"));
+                critical = true;
                 return false;
             }
 
+            critical = false;
             try {
                 // リクエストデータを生成
                 DataWriter writer = new DataWriter();
@@ -63,7 +72,6 @@ namespace MaintenanceToolCommon
                 GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
                 if (result != GattCommunicationStatus.Success) {
                     OutputLogToFile(AppCommon.MSG_REQUEST_SEND_FAILED);
-                    StopCommunicate();
                     return false;
                 }
 
@@ -71,7 +79,6 @@ namespace MaintenanceToolCommon
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("BLEService.Send: {0}", e.Message));
-                StopCommunicate();
                 return false;
             }
         }
@@ -194,63 +201,91 @@ namespace MaintenanceToolCommon
 
         public async Task<bool> StartCommunicate()
         {
+            critical = false;
+            try {
+                if (BLEServices.Count == 0) {
+                    // サービスをディスカバー
+                    if (await DiscoverBLEService() == false) {
+                        return false;
+                    }
+                }
+
+                // データ受信監視を開始
+                foreach (GattDeviceService service in BLEServices) {
+                    if (await StartBLENotification(service)) {
+                        OutputLogToFile(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        break;
+                    }
+                    OutputLogToFile(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+                }
+
+                // 接続された場合は true
+                return IsConnected();
+
+            } catch (Exception e) {
+                OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
+                FreeResources();
+                critical = true;
+                return false;
+            }
+        }
+
+        public async Task<bool> DiscoverBLEService()
+        {
+            critical = false;
             try {
                 OutputLogToFile(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
-                infoBLE = null;
                 foreach (DeviceInformation info in collection) {
-                    // 受信データ監視を開始
-                    if (await StartBLENotification(info)) {
-                        OutputLogToFile(string.Format("BLEデバイス [{0}] に接続します。", info.Name));
-                        infoBLE = info;
-                        break;
-                    } else {
-                        OutputLogToFile(string.Format("BLEデバイス [{0}] には接続できません。", info.Name));
+                    GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
+                    if (service != null) {
+                        BLEServices.Add(service);
+                        OutputLogToFile(string.Format("  FIDO BLE service found [{0}]", info.Name));
                     }
                 }
-                if (infoBLE == null) {
+
+                if (BLEServices.Count == 0) {
                     OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
                     return false;
                 }
+
                 OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_FOUND);
                 return true;
 
             } catch (Exception e) {
-                OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
+                OutputLogToFile(string.Format("BLEService.DiscoverBLEService: {0}", e.Message));
+                FreeResources();
+                critical = true;
                 return false;
             }
         }
 
-        public async Task<bool> StartBLENotification(DeviceInformation deviceInfo)
+        public async Task<bool> StartBLENotification(GattDeviceService service)
         {
-            service = null;
+            critical = false;
             try {
-                service = await GattDeviceService.FromIdAsync(deviceInfo.Id);
-                if (service == null) {
-                    OutputLogToFile(AppCommon.MSG_BLE_CHARACT_NOT_DISCOVERED);
-                    return false;
-                }
-
-                U2FControlPointChar = service.GetCharacteristics(U2F_CONTROL_POINT_CHAR_UUID)[0];
                 U2FStatusChar = service.GetCharacteristics(U2F_STATUS_CHAR_UUID)[0];
-                U2FStatusChar.ValueChanged += OnCharacteristicValueChanged;
 
                 GattCommunicationStatus result = await U2FStatusChar.WriteClientCharacteristicConfigurationDescriptorAsync(
                     GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 if (result != GattCommunicationStatus.Success) {
-                    OutputLogToFile(AppCommon.MSG_BLE_NOTIFICATION_FAILED);
-                    StopCommunicate();
+                    BLEservice = null;
                     return false;
                 }
 
-                OutputLogToFile(AppCommon.MSG_BLE_NOTIFICATION_START);
+                U2FControlPointChar = service.GetCharacteristics(U2F_CONTROL_POINT_CHAR_UUID)[0];
+                U2FStatusChar.ValueChanged += OnCharacteristicValueChanged;
+
+                // 監視開始したサービスを退避
+                BLEservice = service;
                 return true;
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("BLEService.StartBLENotification: {0}", e.Message));
-                StopCommunicate();
+                FreeResources();
+                critical = true;
                 return false;
             }
         }
@@ -274,15 +309,47 @@ namespace MaintenanceToolCommon
         private void StopCommunicate()
         {
             try {
-                U2FStatusChar.ValueChanged -= OnCharacteristicValueChanged;
-                service.Dispose();
+                if (U2FStatusChar != null) {
+                    U2FStatusChar.ValueChanged -= OnCharacteristicValueChanged;
+                }
+                if (BLEservice != null) {
+                    BLEservice.Dispose();
+                }
 
             } catch (Exception e) {
                 OutputLogToFile(string.Format("BLEService.StopCommunicate: {0}", e.Message));
+
             } finally {
-                service = null;
-                infoBLE = null;
+                FreeResources();
             }
+        }
+
+        public bool IsConnected()
+        {
+            if (BLEServices.Count == 0) {
+                // 接続されていない場合は false
+                return false;
+            }
+
+            if (BLEservice == null) {
+                // データ受信ができない場合は false
+                return false;
+            }
+
+            // BLE接続されている場合は true
+            return true;
+        }
+
+        public bool IsCritical()
+        {
+            return critical;
+        }
+
+        private void FreeResources()
+        {
+            // オブジェクトへの参照を解除
+            BLEservice = null;
+            U2FStatusChar = null;
         }
 
         private void OutputLogToFile(string message)
