@@ -110,6 +110,10 @@ namespace MaintenanceToolCommon
         public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
         public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
 
+        // BLE接続無効化時のメッセージ文言
+        public const string MSG_BLE_ERR_CONN_DISABLED = "BLE接続が無効となりました。";
+        public const string MSG_BLE_ERR_CONN_DISABLED_SUB1 = "大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。";
+
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";
 

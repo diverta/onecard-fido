@@ -193,7 +193,8 @@ namespace MaintenanceToolGUI
             // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
             // アプリケーションを再起動させる必要がある旨のメッセージを表示
             OnAppMainProcessExited(false);
-            OnPrintMessageText("BLE接続が無効となりました。\r\n大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。");
+            OnPrintMessageText(AppCommon.MSG_BLE_ERR_CONN_DISABLED);
+            OnPrintMessageText(AppCommon.MSG_BLE_ERR_CONN_DISABLED_SUB1);
             bLEToolStripMenuItem.Enabled = false;
         }
 
