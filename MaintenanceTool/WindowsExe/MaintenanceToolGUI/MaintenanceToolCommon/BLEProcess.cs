@@ -14,9 +14,6 @@ namespace MaintenanceToolCommon
             public const int BLE_FRAME_LEN = 64;
         }
 
-        // BLE接続状態を保持
-        private bool isConnected = false;
-
         // BLEデバイス関連
         private BLEService bleService = new BLEService();
 
@@ -25,8 +22,12 @@ namespace MaintenanceToolCommon
         public event MessageTextEventHandler MessageTextEvent;
 
         // BLEメッセージ受信時のイベント
-        public delegate void ReceiveBLEMessageEventHandler(bool ret, byte[] receivedMessage, int receivedLen);
+        public delegate void ReceiveBLEMessageEventHandler(byte[] receivedMessage, int receivedLen);
         public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent;
+
+        // BLEメッセージ受信失敗時のイベント
+        public delegate void ReceiveBLEFailedEventHandler(bool critical, byte reserved);
+        public event ReceiveBLEFailedEventHandler ReceiveBLEFailedEvent;
 
         // ペアリング完了時のイベント
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
@@ -59,28 +60,26 @@ namespace MaintenanceToolCommon
         {
             // メッセージがない場合は終了
             if (message == null || length == 0) {
-                ReceiveBLEMessageEvent(false, null, 0);
+                ReceiveBLEFailedEvent(false, 0);
                 return;
             }
 
-            if (isConnected == false) {
+            if (bleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
                     AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED, true);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    ReceiveBLEMessageEvent(false, null, 0);
+                    ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;
                 }
                 AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED, true);
-                isConnected = true;
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
             if (await SendBLEMessageFrames(message, length) == false) {
-                // 送信失敗時は切断
-                bleService.Disconnect();
+                // 送信失敗時
                 MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
-                ReceiveBLEMessageEvent(false, null, 0);
+                ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                 return;
             }
 
@@ -246,16 +245,15 @@ namespace MaintenanceToolCommon
 
                 // 受信データを転送
                 AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED, true);
-                ReceiveBLEMessageEvent(true, receivedMessage, messageLength);
+                ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
         }
 
         public void DisconnectBLE()
         {
-            if (isConnected) {
+            if (bleService.IsConnected()) {
                 // 接続ずみの場合はBLEデバイスを切断
                 bleService.Disconnect();
-                isConnected = false;
             }
         }
     }
