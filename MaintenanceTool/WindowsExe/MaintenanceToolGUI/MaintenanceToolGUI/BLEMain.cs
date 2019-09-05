@@ -40,6 +40,7 @@ namespace MaintenanceToolGUI
             bleProcess.FIDOPeripheralPaired += new BLEProcess.FIDOPeripheralPairedEvent(OnPairedDevice);
             bleProcess.MessageTextEvent += new BLEProcess.MessageTextEventHandler(OnPrintMessageText);
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
+            bleProcess.ReceiveBLEFailedEvent += new BLEProcess.ReceiveBLEFailedEventHandler(OnReceiveBLEFailed);
 
             AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MainForm.MaintenanceToolTitle), true);
 
@@ -73,16 +74,8 @@ namespace MaintenanceToolGUI
             mainForm.OnAppMainProcessExited(success);
         }
 
-        private void OnReceiveBLEMessage(bool ret, byte[] receivedMessage, int receivedLen)
+        private void OnReceiveBLEMessage(byte[] receivedMessage, int receivedLen)
         {
-            if (ret == false) {
-                // BLE接続失敗時等のエラー発生時は画面に制御を戻す
-                // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
-                // アプリケーションを再起動させる必要がある旨のメッセージを表示
-                mainForm.OnBLEConnectionDisabled();
-                return;
-            }
-
             switch (bleRequestType) {
             case BLERequestType.TestBLEPing:
                 DoResponseBLEPing(receivedMessage, receivedLen);
@@ -96,6 +89,22 @@ namespace MaintenanceToolGUI
             default:
                 break;
             }
+        }
+
+        public void OnReceiveBLEFailed(bool critical, byte reserved)
+        {
+            if (critical) {
+                // BLE接続失敗時等のエラー発生時は画面に制御を戻す
+                // 致命的なエラーとなるため、BLE機能のメニューを使用不可にし、
+                // アプリケーションを再起動させる必要がある旨のメッセージを表示
+                mainForm.OnBLEConnectionDisabled();
+
+            } else {
+                // 画面に制御を戻す
+                // 画面表示するエラーメッセージは、BLEProcessにて設定済み
+                mainForm.OnAppMainProcessExited(false);
+            }
+
         }
 
         public void SendBLEMessage(byte cmd, byte[] message, int messageLen)
