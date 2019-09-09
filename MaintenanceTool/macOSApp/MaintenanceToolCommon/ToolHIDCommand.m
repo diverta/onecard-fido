@@ -63,6 +63,9 @@
         [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
         [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
+        [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
+                                               toolBLECommand:nil
+                                               toolHIDCommand:self];
         return self;
     }
 
@@ -637,7 +640,7 @@
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ダイアログをモーダルで表示
         [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
-                                            parentWindow:parentWindow toolCommand:self];
+                                            parentWindow:parentWindow];
     }
 
     - (void)pinCodeParamWindowDidClose {

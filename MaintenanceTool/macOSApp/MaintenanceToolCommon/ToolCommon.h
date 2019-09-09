@@ -35,6 +35,13 @@ typedef enum : NSInteger {
     COMMAND_AUTH_RESET
 } Command;
 
+// トランスポート種別
+typedef enum : NSInteger {
+    TRANSPORT_NONE = 1,
+    TRANSPORT_BLE,
+    TRANSPORT_HID
+} TransportType;
+
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 

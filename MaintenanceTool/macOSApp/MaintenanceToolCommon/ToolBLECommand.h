@@ -18,6 +18,9 @@
     - (id)initWithDelegate:(id<ToolBLECommandDelegate>)delegate;
     - (void)bleCommandWillProcess:(Command)command;
 
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)pinCodeParamWindowDidClose;
+
 @end
 
 @protocol ToolBLECommandDelegate <NSObject>

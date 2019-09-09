@@ -17,6 +17,8 @@
 
 @interface ToolCTAP2HealthCheckCommand ()
 
+    @property (nonatomic) TransportType       transportType;
+    @property (nonatomic) ToolBLECommand     *toolBLECommand;
     @property (nonatomic) ToolHIDCommand     *toolHIDCommand;
     @property (nonatomic) PinCodeParamWindow *pinCodeParamWindow;
     @property (nonatomic) NSData             *hmacSecretSalt;
@@ -34,6 +36,13 @@
         [self setHmacSecretSalt:[self createHmacSecretSalt]];
         NSLog(@"ToolCTAP2HealthCheckCommand initialized");
         return self;
+    }
+
+    - (void)setTransportParam:(TransportType)type
+               toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid {
+        [self setTransportType:type];
+        [self setToolBLECommand:ble];
+        [self setToolHIDCommand:hid];
     }
 
     - (NSData *)createHmacSecretSalt {
@@ -161,12 +170,10 @@
 
 #pragma mark - Communication with dialog
 
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
-                           toolCommand:(ToolHIDCommand *)toolCommand {
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ダイアログの親ウィンドウを保持
         [[self pinCodeParamWindow] setParentWindow:parentWindow];
         [[self pinCodeParamWindow] setToolCTAP2HealthCheckCommand:self];
-        [self setToolHIDCommand:toolCommand];
         // ダイアログをモーダルで表示
         NSWindow *dialog = [[self pinCodeParamWindow] window];
         ToolCTAP2HealthCheckCommand * __weak weakSelf = self;

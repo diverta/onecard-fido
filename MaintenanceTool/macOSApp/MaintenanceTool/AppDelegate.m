@@ -180,9 +180,8 @@
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
-        // BLE CTAP2ヘルスチェック実行
-        // TODO: 後日実装
-        [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
+        // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
+        [[self toolBLECommand] pinCodeParamWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)menuItemTestBLE2DidSelect:(id)sender {

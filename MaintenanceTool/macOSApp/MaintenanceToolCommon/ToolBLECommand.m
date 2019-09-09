@@ -9,6 +9,7 @@
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolCTAP2HealthCheckCommand.h"
 
 @interface ToolBLECommand () <ToolBLECentralDelegate>
     // コマンドを保持
@@ -24,6 +25,8 @@
     // 送受信データを保持
     @property (nonatomic) NSArray<NSData *> *bleRequestArray;
     @property (nonatomic) NSData            *bleResponseData;
+    // 処理クラス
+    @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
 @end
 
 @implementation ToolBLECommand
@@ -37,6 +40,10 @@
         if (self) {
             [self setDelegate:delegate];
             [self setToolBLECentral:[[ToolBLECentral alloc] initWithDelegate:self]];
+            [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
+            [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
+                                                   toolBLECommand:self
+                                                   toolHIDCommand:nil];
         }
         return self;
     }
@@ -502,6 +509,19 @@
         } else {
             NSLog(@"%@", message);
         }
+    }
+
+#pragma mark - Interface for PinCodeParamWindow
+
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログをモーダルで表示
+        [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
+                                                          parentWindow:parentWindow];
+    }
+
+    - (void)pinCodeParamWindowDidClose {
+        // AppDelegateに制御を戻す
+        [[self delegate] bleCommandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end
