@@ -1,16 +1,16 @@
 //
-//  ToolCommand.m
+//  ToolBLECommand.m
 //  U2FMaintenanceTool
 //
 //  Created by Makoto Morita on 2017/11/20.
 //
 #import <Foundation/Foundation.h>
 #import "ToolBLECentral.h"
-#import "ToolCommand.h"
+#import "ToolBLECommand.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 
-@interface ToolCommand () <ToolBLECentralDelegate>
+@interface ToolBLECommand () <ToolBLECentralDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
     // 送信PINGデータを保持
@@ -26,13 +26,13 @@
     @property (nonatomic) NSData            *bleResponseData;
 @end
 
-@implementation ToolCommand
+@implementation ToolBLECommand
 
     - (id)init {
         return [self initWithDelegate:nil];
     }
 
-    - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate {
+    - (id)initWithDelegate:(id<ToolBLECommandDelegate>)delegate {
         self = [super init];
         if (self) {
             [self setDelegate:delegate];
@@ -186,7 +186,7 @@
 
     #pragma mark - Public methods
 
-    - (void)toolCommandWillCreateBleRequest:(Command)command {
+    - (void)bleCommandWillProcess:(Command)command {
         // コマンドに応じ、以下の処理に分岐
         [self setCommand:command];
         switch (command) {
@@ -437,9 +437,9 @@
         }
         
         // ボタンを活性化し、ポップアップメッセージを表示
-        [[self delegate] toolCommandDidProcess:[self command]
-                                        result:[self lastCommandSuccess]
-                                       message:[self lastCommandMessage]];
+        [[self delegate] bleCommandDidProcess:[self command]
+                                       result:[self lastCommandSuccess]
+                                      message:[self lastCommandMessage]];
     }
 
     - (void)notifyCentralManagerMessage:(NSString *)message {

@@ -1,12 +1,12 @@
 #import "AppDelegate.h"
 #import "ToolHIDCommand.h"
-#import "ToolCommand.h"
+#import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 
 @interface AppDelegate ()
-    <ToolHIDCommandDelegate, ToolCommandDelegate, ToolFilePanelDelegate>
+    <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
 
     @property (assign) IBOutlet NSWindow   *window;
     @property (assign) IBOutlet NSButton   *button1;
@@ -24,7 +24,7 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
 
-    @property (nonatomic) ToolCommand       *toolCommand;
+    @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
 
@@ -34,7 +34,7 @@
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
         self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
-        self.toolCommand    = [[ToolCommand alloc]    initWithDelegate:self];
+        self.toolBLECommand = [[ToolBLECommand alloc]  initWithDelegate:self];
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
@@ -71,7 +71,7 @@
     - (IBAction)button1DidPress:(id)sender {
         // ペアリング実行
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_PAIRING];
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_PAIRING];
     }
 
     - (IBAction)button2DidPress:(id)sender {
@@ -188,13 +188,13 @@
     - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
         // BLE U2Fヘルスチェック実行
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_REGISTER];
     }
 
     - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
         // BLE PINGテスト実行
         [self enableButtons:false];
-        [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_BLE_PING];
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -229,7 +229,7 @@
         }
     }
 
-    - (void)toolCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+    - (void)bleCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
         [self commandDidProcess:command result:result message:message];
     }
 
