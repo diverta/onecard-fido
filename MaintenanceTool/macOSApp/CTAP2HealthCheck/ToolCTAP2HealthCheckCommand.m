@@ -59,6 +59,17 @@
 
 #pragma mark - Command functions
 
+    - (NSData *)generateGetKeyAgreementRequest {
+        // GetKeyAgreementリクエストを生成して戻す
+        uint8_t status_code = ctap2_cbor_encode_get_agreement_key();
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            return nil;
+        }
+    }
+
     - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse {
         // GetKeyAgreementレスポンスから公開鍵を抽出
         uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
@@ -188,11 +199,25 @@
         [[self pinCodeParamWindow] close];
         // キャンセルボタンがクリックされた場合は、そのままAppDelegateに制御を戻す
         if (modalResponse == NSModalResponseCancel) {
-            [[self toolHIDCommand] pinCodeParamWindowDidClose];
+            [self pinCodeParamWindowDidCancel];
             return;
         }
         // CTAP2ヘルスチェックを実行
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_MAKE_CREDENTIAL];
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_MAKE_CREDENTIAL];
+        }
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_MAKE_CREDENTIAL];
+        }
+    }
+
+    - (void)pinCodeParamWindowDidCancel {
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] pinCodeParamWindowDidClose];
+        }
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] pinCodeParamWindowDidClose];
+        }
     }
 
 @end

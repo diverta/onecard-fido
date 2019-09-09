@@ -35,17 +35,6 @@
 
 #pragma mark - Command functions
 
-    - (NSData *)generateGetKeyAgreementRequest:(Command)command {
-        // GetKeyAgreementリクエストを生成して戻す
-        uint8_t status_code = ctap2_cbor_encode_get_agreement_key();
-        if (status_code == CTAP1_ERR_SUCCESS) {
-            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
-                                          length:ctap2_cbor_encode_request_bytes_size()];
-        } else {
-            return nil;
-        }
-    }
-
     - (NSData *)generateClientPinSetRequestWith:(NSData *)keyAgreementResponse {
         // GetKeyAgreementレスポンスから公開鍵を抽出
         uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];

@@ -383,7 +383,7 @@
 
     - (void)doRequestGetKeyAgreement:(NSData *)cid {
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
-        NSData *message = [[self toolClientPINCommand] generateGetKeyAgreementRequest:[self command]];
+        NSData *message = [[self toolCTAP2HealthCheckCommand] generateGetKeyAgreementRequest];
         if (message == nil) {
             [self doResponseToAppDelegate:false message:nil];
             return;

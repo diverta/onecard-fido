@@ -51,6 +51,8 @@
 #pragma mark - Private methods
 
     - (void)createCommandPairing {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
         NSLog(@"Pairing start");
         
         // 書き込むコマンドを編集
@@ -60,6 +62,8 @@
     }
 
     - (void)createCommandPing {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
         NSLog(@"BLE ping start");
         // 100バイトのランダムなPINGデータを生成
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
@@ -147,6 +151,8 @@
     }
 
     - (void)createCommandTestRegister {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
         NSLog(@"Health check start");
 
         // テストデータを編集
@@ -191,7 +197,34 @@
         return statusWord;
     }
 
-    #pragma mark - Public methods
+    - (void)doCtap2HealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
+            [self displayStartMessage];
+        }
+        // まず最初に、GetKeyAgreementコマンドを実行
+        //[self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        //[self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
+        [self doRequestGetKeyAgreement];
+    }
+
+    - (void)doRequestGetKeyAgreement {
+        // メッセージを編集
+        NSData *message = [[self toolCTAP2HealthCheckCommand] generateGetKeyAgreementRequest];
+        if (message == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // GetKeyAgreementサブコマンドを実行
+        [self setBleRequestArray:[self generateCommandArrayFrom:message cmd:0x83]];
+    }
+
+    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
+        // AppDelegateに制御を戻す
+        [[self delegate] bleCommandDidProcess:[self command] result:result message:message];
+    }
+
+#pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
         // コマンドに応じ、以下の処理に分岐
@@ -206,16 +239,17 @@
             case COMMAND_TEST_BLE_PING:
                 [self createCommandPing];
                 break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doCtap2HealthCheck];
+                break;
             default:
                 [self setBleRequestArray:nil];
                 break;
         }
         // コマンド生成時
         if ([self commandArrayIsBlank] == false) {
-            // コマンド開始メッセージを画面表示し、デリゲートに制御を戻す
-            NSString *message = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                                 [ToolCommon processNameOfCommand:command]];
-            [[self delegate] notifyToolCommandMessage:message];
+            // デリゲートに制御を戻す
             [self toolCommandDidCreateBleRequest];
         }
     }
@@ -489,6 +523,18 @@
     }
 
 #pragma mark - Common method
+
+    - (void)displayMessage:(NSString *)string {
+        // メッセージを画面表示
+        [[self delegate] notifyToolCommandMessage:string];
+    }
+
+    - (void)displayStartMessage {
+        // コマンド開始メッセージを画面表示
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                              [ToolCommon processNameOfCommand:[self command]]];
+        [self displayMessage:startMsg];
+    }
 
     - (void)startBleConnection {
         // メッセージ表示用変数を初期化

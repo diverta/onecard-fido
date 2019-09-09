@@ -11,7 +11,7 @@
 
 @protocol ToolBLECommandDelegate;
 
-    @interface ToolBLECommand : NSObject
+@interface ToolBLECommand : NSObject
 
     @property (nonatomic, weak) id<ToolBLECommandDelegate> delegate;
 
