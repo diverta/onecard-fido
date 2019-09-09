@@ -189,12 +189,18 @@
     }
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
-        // ヘルスチェック実行
+        // BLE CTAP2ヘルスチェック実行
+        // TODO: 後日実装
+        [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
+    }
+
+    - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
+        // BLE U2Fヘルスチェック実行
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_REGISTER];
     }
 
-    - (IBAction)menuItemTestBLE2DidSelect:(id)sender {
+    - (IBAction)menuItemTestBLE3DidSelect:(id)sender {
         // BLE PINGテスト実行
         [self enableButtons:false];
         [self.toolCommand toolCommandWillCreateBleRequest:COMMAND_TEST_BLE_PING];
