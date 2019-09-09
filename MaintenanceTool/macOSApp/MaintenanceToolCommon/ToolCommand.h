@@ -15,25 +15,15 @@
 
     @property (nonatomic, weak) id<ToolCommandDelegate> delegate;
 
-    @property (nonatomic) Command command;
-    @property (nonatomic) NSArray<NSData *> *bleRequestArray;
-    @property (nonatomic) NSData            *bleResponseData;
-
     - (id)initWithDelegate:(id<ToolCommandDelegate>)delegate;
     - (void)toolCommandWillCreateBleRequest:(Command)command;
-    - (void)toolCommandWillProcessBleResponse;
-    - (bool)isResponseCompleted:(NSData *)responseData;
 
 @end
 
 @protocol ToolCommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
-
-    - (void)toolCommandDidCreateBleRequest;
-    - (void)toolCommandDidReceive:(Command)command result:(bool)result;
-    - (void)toolCommandDidProcess:(Command)command result:(bool)result
-                          message:(NSString *)message;
+    - (void)toolCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 
