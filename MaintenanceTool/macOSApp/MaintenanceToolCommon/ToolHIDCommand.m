@@ -279,7 +279,7 @@
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self doResponseToAppDelegate:[self checkStatusCode:message] message:nil];
+        [self doResponseToAppDelegate:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
     }
 
     - (void)doClientPin {
@@ -292,7 +292,7 @@
     - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
         // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        if ([self checkStatusCode:message] == false) {
+        if ([[self toolCTAP2HealthCheckCommand] checkStatusCode:message] == false) {
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
@@ -592,34 +592,6 @@
             default:
                 break;
         }
-    }
-
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        switch (requestBytes[0]) {
-            case CTAP1_ERR_SUCCESS:
-                return true;
-            case CTAP2_ERR_PIN_INVALID:
-            case CTAP2_ERR_PIN_AUTH_INVALID:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
-                break;
-            case CTAP2_ERR_PIN_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
-                break;
-            case CTAP2_ERR_PIN_AUTH_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
-                break;
-            case CTAP2_ERR_PIN_NOT_SET:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
-                break;
-            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
-                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
-                break;
-            default:
-                break;
-        }
-        return false;
     }
 
 #pragma mark - Interface for SetPinParamWindow

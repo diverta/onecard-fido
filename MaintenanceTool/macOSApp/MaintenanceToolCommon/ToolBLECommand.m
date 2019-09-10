@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2017/11/20.
 //
 #import <Foundation/Foundation.h>
+#import "FIDODefines.h"
 #import "ToolBLECentral.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
@@ -55,10 +56,10 @@
         [self displayStartMessage];
         NSLog(@"Pairing start");
         
-        // 書き込むコマンドを編集
-        unsigned char arr[] = {0x83, 0x00, 0x04, 0x00, 0x45, 0x00, 0x00};
+        // 書き込むコマンド（APDU）を編集
+        unsigned char arr[] = {0x00, 0x45, 0x00, 0x00};
         NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
-        [self setBleRequestArray:[NSArray arrayWithObject:commandData]];
+        [self doBLECommandRequestFrom:commandData cmd:0x83];
     }
 
     - (void)createCommandPing {
@@ -68,7 +69,19 @@
         // 100バイトのランダムなPINGデータを生成
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
         // 分割送信のために64バイトごとのコマンド配列を作成する
-        [self setBleRequestArray:[self generateCommandArrayFrom:[self pingData] cmd:0x81]];
+        [self doBLECommandRequestFrom:[self pingData] cmd:0x81];
+    }
+
+    - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
+        // 分割送信のために64バイトごとのコマンド配列を作成する
+        [self setBleRequestArray:[self generateCommandArrayFrom:dataForCommand cmd:cmd]];
+        // コマンド配列がブランクの場合は終了
+        if ([self commandArrayIsBlank]) {
+            return;
+        }
+        // 再試行回数をゼロクリアし、BLEデバイス接続処理に移る
+        [self setBleConnectionRetryCount:0];
+        [self startBleConnection];
     }
 
     - (NSArray<NSData *> *)generateCommandArrayFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
@@ -160,7 +173,7 @@
         
         // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
         NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
-        [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest cmd:0x83]];
+        [self doBLECommandRequestFrom:dataForRequest cmd:0x83];
     }
 
     - (NSData *)getKeyHandleDataFrom:(NSData *)registerResponse {
@@ -175,7 +188,7 @@
         
         // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
         NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:p1];
-        [self setBleRequestArray:[self generateCommandArrayFrom:dataForRequest cmd:0x83]];
+        [self doBLECommandRequestFrom:dataForRequest cmd:0x83];
     }
 
     - (bool)commandArrayIsBlank {
@@ -202,21 +215,10 @@
         if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
             [self displayStartMessage];
         }
-        // まず最初に、GetKeyAgreementコマンドを実行
-        //[self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        //[self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
-        [self doRequestGetKeyAgreement];
-    }
-
-    - (void)doRequestGetKeyAgreement {
-        // メッセージを編集
-        NSData *message = [[self toolCTAP2HealthCheckCommand] generateGetKeyAgreementRequest];
-        if (message == nil) {
+        // まず最初にGetKeyAgreementを実行
+        if ([[self toolCTAP2HealthCheckCommand] doGetKeyAgreementCommandRequest:[self command]] == false) {
             [self doResponseToAppDelegate:false message:nil];
-            return;
         }
-        // GetKeyAgreementサブコマンドを実行
-        [self setBleRequestArray:[self generateCommandArrayFrom:message cmd:0x83]];
     }
 
     - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
@@ -241,16 +243,12 @@
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
+                // CTAP2コマンドを生成して実行
                 [self doCtap2HealthCheck];
                 break;
             default:
                 [self setBleRequestArray:nil];
                 break;
-        }
-        // コマンド生成時
-        if ([self commandArrayIsBlank] == false) {
-            // デリゲートに制御を戻す
-            [self toolCommandDidCreateBleRequest];
         }
     }
 
@@ -300,11 +298,6 @@
             return false;
         }
         
-        // PINGコマンドの場合は成功
-        if ([self command] == COMMAND_TEST_BLE_PING) {
-            return true;
-        }
-        
         // ステータスワード(レスポンスの末尾２バイト)を取得
         NSUInteger statusWord = [self getStatusWordFrom:[self bleResponseData]];
         
@@ -345,6 +338,40 @@
     }
 
     - (void)toolCommandWillProcessBleResponse {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                // ステータス（１バイト）をチェック後、レスポンス処理に移る
+                [self toolCommandWillProcessCTAP2Response];
+                break;
+            case COMMAND_PAIRING:
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                // ステータスワード（２バイト）をチェック後、レスポンス処理に移る
+                [self toolCommandWillProcessU2FResponse];
+                break;
+            case COMMAND_TEST_BLE_PING:
+                // PINGレスポンスの内容をチェックし、画面に制御を戻す
+                [self checkPingResponseData];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)toolCommandWillProcessCTAP2Response {
+        if ([[self toolCTAP2HealthCheckCommand]
+             doCTAP2Response:[self command] responseMessage:[self bleResponseData]] == false) {
+            [self toolCommandDidProcess:false message:@"Health check end"];
+        }
+        // TODO: 仮の仕様
+        [self toolCommandDidProcess:true message:@"Health check end"];
+    }
+
+    - (void)toolCommandWillProcessU2FResponse {
         // Registerレスポンスは、３件のテストケースで共通使用するため、
         // ここで保持しておく必要がある
         static NSData *registerReponseData;
@@ -358,10 +385,6 @@
         switch ([self command]) {
             case COMMAND_PAIRING:
                 [self toolCommandDidProcess:true message:@"Pairing end"];
-                break;
-            case COMMAND_TEST_BLE_PING:
-                // PINGレスポンスの内容をチェックし、画面に制御を戻す
-                [self checkPingResponseData];
                 break;
             case COMMAND_TEST_REGISTER:
                 [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
@@ -396,16 +419,6 @@
             default:
                 break;
         }
-        // コマンド生成時は後続処理を実行させる
-        if ([self commandArrayIsBlank] == false) {
-            [self toolCommandDidCreateBleRequest];
-        }
-    }
-
-    - (void)toolCommandDidCreateBleRequest {
-        // 再試行回数をゼロクリアし、BLEデバイス接続処理に移る
-        [self setBleConnectionRetryCount:0];
-        [self startBleConnection];
     }
 
     - (void)toolCommandDidProcess:(bool)result message:(NSString *)message {

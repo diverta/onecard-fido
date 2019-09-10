@@ -22,6 +22,11 @@
     - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse;
     - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up;
     - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt;
+    - (bool)checkStatusCode:(NSData *)responseMessage;
+
+    // Request & Response process
+    - (bool)doCTAP2Response:(Command)command responseMessage:(NSData *)response;
+    - (bool)doGetKeyAgreementCommandRequest:(Command)command;
 
     @property (nonatomic) NSString *pinCur;
 

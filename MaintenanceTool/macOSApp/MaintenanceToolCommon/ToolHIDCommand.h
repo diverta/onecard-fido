@@ -16,6 +16,7 @@
     @property (nonatomic, weak) id<ToolHIDCommandDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolHIDCommandDelegate>)delegate;
+    - (void)displayMessage:(NSString *)string;
     - (void)hidHelperWillProcess:(Command)command;
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;

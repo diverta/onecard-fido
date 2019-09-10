@@ -23,6 +23,11 @@
     @property (nonatomic) PinCodeParamWindow *pinCodeParamWindow;
     @property (nonatomic) NSData             *hmacSecretSalt;
 
+    // 実行対象コマンド／サブコマンドを保持
+    @property (nonatomic) Command   command;
+    @property (nonatomic) uint8_t   cborCommand;
+    @property (nonatomic) uint8_t   subCommand;
+
 @end
 
 @implementation ToolCTAP2HealthCheckCommand
@@ -177,6 +182,78 @@
         } else {
             return true;
         }
+    }
+
+#pragma mark - Command/subcommand process
+
+    - (bool)doCTAP2Response:(Command)command responseMessage:(NSData *)response {
+        // レスポンスをチェックし、内容がNGであれば処理終了
+        if ([self checkStatusCode:response] == false) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    - (bool)checkStatusCode:(NSData *)responseMessage {
+        // レスポンスデータが揃っていない場合はNG
+        if (responseMessage == nil || [responseMessage length] == 0) {
+            [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+            return false;
+        }
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
+        switch (requestBytes[0]) {
+            case CTAP1_ERR_SUCCESS:
+                return true;
+            case CTAP2_ERR_PIN_INVALID:
+            case CTAP2_ERR_PIN_AUTH_INVALID:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
+                break;
+            case CTAP2_ERR_PIN_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_AUTH_BLOCKED:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+                break;
+            case CTAP2_ERR_PIN_NOT_SET:
+                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+                break;
+            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
+                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+                break;
+            default:
+                [self displayMessage:MSG_OCCUR_UNKNOWN_ERROR];
+                break;
+        }
+        return false;
+    }
+
+    - (void)displayMessage:(NSString *)message {
+        // メッセージを画面表示
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] displayMessage:message];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] displayMessage:message];
+        }
+    }
+
+    - (bool)doGetKeyAgreementCommandRequest:(Command)command {
+        // 実行対象サブコマンドを退避
+        [self setCommand:command];
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
+        // メッセージを編集
+        NSData *message = [self generateGetKeyAgreementRequest];
+        if (message == nil) {
+            return false;
+        }
+        // GetKeyAgreementサブコマンドを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] doBLECommandRequestFrom:message cmd:0x83];
+        }
+        return true;
     }
 
 #pragma mark - Communication with dialog

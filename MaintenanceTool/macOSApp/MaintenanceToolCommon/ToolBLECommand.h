@@ -16,7 +16,9 @@
     @property (nonatomic, weak) id<ToolBLECommandDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolBLECommandDelegate>)delegate;
+    - (void)displayMessage:(NSString *)string;
     - (void)bleCommandWillProcess:(Command)command;
+    - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd;
 
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pinCodeParamWindowDidClose;
