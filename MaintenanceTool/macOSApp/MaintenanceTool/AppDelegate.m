@@ -181,6 +181,7 @@
 
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
+        [self enableButtons:false];
         [[self toolBLECommand] pinCodeParamWindowWillOpen:self parentWindow:[self window]];
     }
 

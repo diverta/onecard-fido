@@ -26,6 +26,7 @@
     // 送受信データを保持
     @property (nonatomic) NSArray<NSData *> *bleRequestArray;
     @property (nonatomic) NSData            *bleResponseData;
+    @property (nonatomic) uint8_t            bleResponseCmd;
     // 処理クラス
     @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
 @end
@@ -215,10 +216,8 @@
         if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
             [self displayStartMessage];
         }
-        // まず最初にGetKeyAgreementを実行
-        if ([[self toolCTAP2HealthCheckCommand] doGetKeyAgreementCommandRequest:[self command]] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-        }
+        // まず最初にGetKeyAgreementサブコマンドを実行
+        [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
     }
 
     - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
@@ -260,6 +259,10 @@
         // 後続データの存在有無をチェック
         NSData *dataBLEHeader = [responseData subdataWithRange:NSMakeRange(0, 3)];
         unsigned char *bytesBLEHeader = (unsigned char *)[dataBLEHeader bytes];
+        if (bytesBLEHeader[0] & 0x80) {
+            // INITフレームの場合は、CMDを退避しておく
+            [self setBleResponseCmd:bytesBLEHeader[0]];
+        }
         if (bytesBLEHeader[0] == 0x82) {
             // キープアライブの場合は引き続き次のレスポンスを待つ
             receivedData = nil;
@@ -310,31 +313,31 @@
         
         // invalid keyhandleエラーである場合はその旨を通知
         if (statusWord == 0x6a80) {
-            [self toolCommandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
+            [self commandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
             return false;
         }
         
         // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
         if (statusWord == 0x9402) {
-            [self toolCommandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
+            [self commandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
             return false;
         }
 
         // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
         if (statusWord == 0x9601) {
-            [self toolCommandDidProcess:false message:MSG_OCCUR_PAIRINGMODE_ERROR];
+            [self commandDidProcess:false message:MSG_OCCUR_PAIRINGMODE_ERROR];
             return false;
         }
         
         // ステータスワードチェックがNGの場合
-        [self toolCommandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
+        [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
         return false;
     }
 
     - (void)checkPingResponseData {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [[self bleResponseData] isEqualToData:[self pingData]];
-        [self toolCommandDidProcess:result message:@"BLE ping end"];
+        [self commandDidProcess:result message:@"BLE ping end"];
     }
 
     - (void)toolCommandWillProcessBleResponse {
@@ -343,7 +346,8 @@
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
                 // ステータス（１バイト）をチェック後、レスポンス処理に移る
-                [self toolCommandWillProcessCTAP2Response];
+                [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command]
+                                                    responseMessage:[self bleResponseData]];
                 break;
             case COMMAND_PAIRING:
             case COMMAND_TEST_REGISTER:
@@ -362,15 +366,6 @@
         }
     }
 
-    - (void)toolCommandWillProcessCTAP2Response {
-        if ([[self toolCTAP2HealthCheckCommand]
-             doCTAP2Response:[self command] responseMessage:[self bleResponseData]] == false) {
-            [self toolCommandDidProcess:false message:@"Health check end"];
-        }
-        // TODO: 仮の仕様
-        [self toolCommandDidProcess:true message:@"Health check end"];
-    }
-
     - (void)toolCommandWillProcessU2FResponse {
         // Registerレスポンスは、３件のテストケースで共通使用するため、
         // ここで保持しておく必要がある
@@ -384,7 +379,7 @@
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_PAIRING:
-                [self toolCommandDidProcess:true message:@"Pairing end"];
+                [self commandDidProcess:true message:@"Pairing end"];
                 break;
             case COMMAND_TEST_REGISTER:
                 [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
@@ -414,14 +409,14 @@
                 [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
                 registerReponseData = nil;
                 NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
-                [self toolCommandDidProcess:true message:@"Health check end"];
+                [self commandDidProcess:true message:@"Health check end"];
                 break;
             default:
                 break;
         }
     }
 
-    - (void)toolCommandDidProcess:(bool)result message:(NSString *)message {
+    - (void)commandDidProcess:(bool)result message:(NSString *)message {
         // コマンド配列をブランクに初期化
         [self setBleRequestArray:nil];
         if (message) {

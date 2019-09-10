@@ -19,6 +19,7 @@
     - (void)displayMessage:(NSString *)string;
     - (void)bleCommandWillProcess:(Command)command;
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd;
+    - (void)commandDidProcess:(bool)result message:(NSString *)message;
 
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pinCodeParamWindowDidClose;

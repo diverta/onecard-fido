@@ -25,8 +25,8 @@
     - (bool)checkStatusCode:(NSData *)responseMessage;
 
     // Request & Response process
-    - (bool)doCTAP2Response:(Command)command responseMessage:(NSData *)response;
-    - (bool)doGetKeyAgreementCommandRequest:(Command)command;
+    - (void)doCTAP2Response:(Command)command responseMessage:(NSData *)response;
+    - (void)doCTAP2Request:(Command)command;
 
     @property (nonatomic) NSString *pinCur;
 

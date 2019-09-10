@@ -28,6 +28,9 @@
     @property (nonatomic) uint8_t   cborCommand;
     @property (nonatomic) uint8_t   subCommand;
 
+    // ログインテストカウンター
+    @property (nonatomic) uint8_t   getAssertionCount;
+
 @end
 
 @implementation ToolCTAP2HealthCheckCommand
@@ -186,13 +189,61 @@
 
 #pragma mark - Command/subcommand process
 
-    - (bool)doCTAP2Response:(Command)command responseMessage:(NSData *)response {
+    - (void)doCTAP2Request:(Command)command {
+        // 実行対象コマンドを退避
+        [self setCommand:command];
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self doRequestCommandGetKeyAgreement];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+        }
+    }
+
+    - (void)doCTAP2Response:(Command)command responseMessage:(NSData *)message {
         // レスポンスをチェックし、内容がNGであれば処理終了
-        if ([self checkStatusCode:response] == false) {
-            return false;
+        if ([self checkStatusCode:message] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
         }
         
-        return true;
+        switch ([self cborCommand]) {
+            case CTAP2_CMD_CLIENT_PIN:
+                [self doResponseCommandClientPin:message];
+                break;
+            case CTAP2_CMD_MAKE_CREDENTIAL:
+                [self doResponseCommandMakeCredential:message];
+                break;
+            case CTAP2_CMD_GET_ASSERTION:
+                [self doResponseCommandGetAssertion:message];
+                break;
+            default:
+                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
+                [self doResponseToAppDelegate:false message:nil];
+                break;
+        }
+    }
+
+    - (void)doResponseCommandClientPin:(NSData *)message {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        
+        switch ([self subCommand]) {
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
+                [self doResponseCommandGetKeyAgreement:cborBytes];
+                break;
+            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
+                [self doResponseCommandGetPinToken:cborBytes];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+        }
     }
 
     - (bool)checkStatusCode:(NSData *)responseMessage {
@@ -229,6 +280,155 @@
         return false;
     }
 
+    - (void)doRequestCommandGetKeyAgreement {
+        // 実行対象サブコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
+        // メッセージを編集
+        NSData *message = [self generateGetKeyAgreementRequest];
+        if (message == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // getKeyAgreementサブコマンドを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] doBLECommandRequestFrom:message cmd:0x83];
+        }
+    }
+
+    - (void)doResponseCommandGetKeyAgreement:(NSData *)message {
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                // PINトークン取得処理を続行
+                [self doRequestCommandGetPinToken:message];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+        }
+    }
+
+    - (void)doRequestCommandGetPinToken:(NSData *)message {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
+        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
+        // メッセージを編集
+        NSData *request = [self generateClientPinTokenGetRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // getPINTokenサブコマンドを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+        }
+    }
+
+    - (void)doResponseCommandGetPinToken:(NSData *)message {
+        switch ([self command]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // ユーザー登録テスト処理を続行
+                [self doRequestCommandMakeCredential:message];
+                break;
+            case COMMAND_TEST_GET_ASSERTION:
+                // ログインテスト処理を続行
+                [self doTestGetAssertion:message];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
+        }
+    }
+
+    - (void)doRequestCommandMakeCredential:(NSData *)message {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
+        // メッセージを編集
+        NSData *request = [self generateMakeCredentialRequestWith:message];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // authenticatorMakeCredentialコマンドを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+        }
+    }
+
+    - (void)doResponseCommandMakeCredential:(NSData *)message {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // MakeCredentialレスポンスを解析して保持
+        if ([self parseMakeCredentialResponseWith:cborBytes] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを実行
+        [self setGetAssertionCount:1];
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doCTAP2Request:COMMAND_TEST_GET_ASSERTION];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
+        }
+    }
+
+    - (void)doTestGetAssertion:(NSData *)message {
+        // 実行するコマンドを退避
+        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
+        // メッセージを編集し、GetAssertionコマンドを実行
+        // ２回目のコマンド実行では、MAIN SW押下によるユーザー所在確認が必要
+        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
+        NSData *request = [self generateGetAssertionRequestWith:message
+                                                   userPresence:testUserPresenceNeeded];
+        if (request == nil) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        if (testUserPresenceNeeded) {
+            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+        }
+        // authenticatorGetAssertionコマンドを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+        }
+    }
+
+    - (void)doResponseCommandGetAssertion:(NSData *)message {
+        // レスポンスされたCBORを抽出
+        NSData *cborBytes = [self extractCBORBytesFrom:message];
+        // GetAssertionレスポンスを解析
+        // ２回目のコマンド実行では、認証器から受領したsaltの内容検証が必要
+        bool verifySaltNeeded = ([self getAssertionCount] == 2);
+        if ([self parseGetAssertionResponseWith:cborBytes
+                                     verifySalt:verifySaltNeeded] == false) {
+            [self doResponseToAppDelegate:false message:nil];
+            return;
+        }
+        // ２回目のテストが成功したら画面に制御を戻して終了
+        if (verifySaltNeeded) {
+            [self doResponseToAppDelegate:true message:nil];
+            return;
+        }
+        // CTAP2ヘルスチェックのログインテストを再度実行
+        [self setGetAssertionCount:[self getAssertionCount] + 1];
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self doCTAP2Request:COMMAND_TEST_GET_ASSERTION];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
+        }
+    }
+
+#pragma mark - Common methods
+
     - (void)displayMessage:(NSString *)message {
         // メッセージを画面表示
         if ([self transportType] == TRANSPORT_BLE) {
@@ -239,21 +439,22 @@
         }
     }
 
-    - (bool)doGetKeyAgreementCommandRequest:(Command)command {
-        // 実行対象サブコマンドを退避
-        [self setCommand:command];
-        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
-        // メッセージを編集
-        NSData *message = [self generateGetKeyAgreementRequest];
-        if (message == nil) {
-            return false;
-        }
-        // GetKeyAgreementサブコマンドを実行
+    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
         if ([self transportType] == TRANSPORT_BLE) {
-            [[self toolBLECommand] doBLECommandRequestFrom:message cmd:0x83];
+            // BLE接続を切断してから、アプリケーションに制御を戻す
+            [[self toolBLECommand] commandDidProcess:result message:message];
         }
-        return true;
+        if ([self transportType] == TRANSPORT_HID) {
+            // 即時でアプリケーションに制御を戻す
+            [[[self toolHIDCommand] delegate] hidCommandDidProcess:[self command] result:result message:message];
+        }
+    }
+
+    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
     }
 
 #pragma mark - Communication with dialog
