@@ -1,6 +1,6 @@
 //
 //  ToolHIDCommand.h
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/03/20.
 //
@@ -16,10 +16,14 @@
     @property (nonatomic, weak) id<ToolHIDCommandDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolHIDCommandDelegate>)delegate;
+    - (void)displayMessage:(NSString *)string;
     - (void)hidHelperWillProcess:(Command)command;
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;
+    - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
+    - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid;
+    - (void)commandDidProcess:(bool)result message:(NSString *)message;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowDidClose;
@@ -31,7 +35,7 @@
 @protocol ToolHIDCommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
+    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand result:(bool)result message:(NSString *)message;
 
 @end
 

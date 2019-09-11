@@ -8,19 +8,22 @@
 #define ToolCTAP2HealthCheckCommand_h
 
 #import "ToolCommon.h"
+#import "ToolBLECommand.h"
 #import "ToolHIDCommand.h"
 
 @interface ToolCTAP2HealthCheckCommand : NSObject
 
-    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow
-                           toolCommand:(ToolHIDCommand *)toolCommand;
-    - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse;
-    - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse;
-    - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse;
-    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up;
-    - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt;
+    - (void)setTransportParam:(TransportType)type
+               toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid;
+    - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (bool)checkStatusCode:(NSData *)responseMessage;
+
+    // Request & Response process
+    - (void)doCTAP2Response:(Command)command responseMessage:(NSData *)response;
+    - (void)doCTAP2Request:(Command)command;
 
     @property (nonatomic) NSString *pinCur;
+    @property (nonatomic) NSData   *CID;
 
 @end
 

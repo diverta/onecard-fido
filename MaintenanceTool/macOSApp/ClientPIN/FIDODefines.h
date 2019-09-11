@@ -55,4 +55,16 @@
 // 独自エラーステータス
 #define CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST  (CTAP2_ERR_VENDOR_FIRST+0x0e)
 
+// HIDコマンドバイト
+#define HID_CMD_CTAPHID_PING        0x81
+#define HID_CMD_CTAPHID_INIT        0x86
+#define HID_CMD_CTAPHID_CBOR        0x90
+#define HID_CMD_ERASE_SKEY_CERT     0xC0
+#define HID_CMD_INSTALL_SKEY_CERT   0xC1
+#define HID_CMD_GET_FLASH_STAT      0xC2
+#define HID_CMD_UNKNOWN_ERROR       0xBF
+
+// BLEコマンドバイト
+#define BLE_CMD_MSG                 0x83
+
 #endif /* FIDODefines_h */
