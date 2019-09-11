@@ -11,6 +11,7 @@
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
+#import "ToolU2FHealthCheckCommand.h"
 
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
@@ -31,6 +32,7 @@
     @property (nonatomic) uint8_t            bleResponseCmd;
     // 処理クラス
     @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
+    @property (nonatomic) ToolU2FHealthCheckCommand   *toolU2FHealthCheckCommand;
 @end
 
 @implementation ToolBLECommand
@@ -48,6 +50,10 @@
             [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
                                                    toolBLECommand:self
                                                    toolHIDCommand:nil];
+            [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
+            [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_BLE
+                                                 toolBLECommand:self
+                                                 toolHIDCommand:nil];
         }
         return self;
     }
@@ -133,67 +139,6 @@
         return array;
     }
 
-    - (NSData *)generateAPDUDataFrom:(NSData *)data INS:(unsigned char)ins P1:(unsigned char)p1 {
-        // APDUを編集するための一時領域
-        unsigned char apduHeader[] = {0x00, ins, p1, 0x00, 0x00, 0x00, 0x00};
-        unsigned char apduFooter[] = {0x00, 0x00};
-        
-        // リクエストデータ長を設定
-        NSUInteger dataCertLength = [data length];
-        apduHeader[sizeof(apduHeader)-2] = dataCertLength / 256;
-        apduHeader[sizeof(apduHeader)-1] = dataCertLength % 256;
-        
-        // ヘッダー＋データ＋フッターを連結し、APDUを作成
-        NSMutableData *dataForRequest =
-            [[NSMutableData alloc] initWithBytes:apduHeader length:sizeof(apduHeader)];
-        [dataForRequest appendData:data];
-        [dataForRequest appendBytes:apduFooter length:sizeof(apduFooter)];
-        
-        return dataForRequest;
-    }
-
-    - (NSMutableData *)createTestRequestData {
-        // テストデータから、リクエストデータの先頭部分を生成
-        NSData *challenge =
-            [ToolCommon generateHexBytesFrom:
-                @"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
-        NSData *appIDHash =
-            [ToolCommon generateHexBytesFrom:
-                @"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
-
-        NSMutableData *requestData = [[NSMutableData alloc] initWithData:challenge];
-        [requestData appendData:appIDHash];
-        return requestData;
-    }
-
-    - (void)createCommandTestRegister {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
-        NSLog(@"Health check start");
-
-        // テストデータを編集
-        NSMutableData *requestData = [self createTestRequestData];
-        
-        // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-        NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x01 P1:0x00];
-        [self doBLECommandRequestFrom:dataForRequest cmd:0x83];
-    }
-
-    - (NSData *)getKeyHandleDataFrom:(NSData *)registerResponse {
-        // Registerレスポンスからキーハンドル(67バイト目から65バイト)を切り出し
-        return [registerResponse subdataWithRange:NSMakeRange(66, 65)];
-    }
-
-    - (void)createCommandTestAuthFrom:(NSData *)registerResponse P1:(unsigned char)p1 {
-        // Registerレスポンスからキーハンドルを切り出し、テストデータに連結
-        NSMutableData *requestData = [self createTestRequestData];
-        [requestData appendData:[self getKeyHandleDataFrom:registerResponse]];
-        
-        // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
-        NSData *dataForRequest = [self generateAPDUDataFrom:requestData INS:0x02 P1:p1];
-        [self doBLECommandRequestFrom:dataForRequest cmd:0x83];
-    }
-
     - (bool)commandArrayIsBlank {
         if ([self bleRequestArray]) {
             if ([[self bleRequestArray] count]) {
@@ -201,16 +146,6 @@
             }
         }
         return true;
-    }
-
-    - (NSUInteger)getStatusWordFrom:(NSData *)bleResponseData {
-        // BLEレスポンスデータから、ステータスワードを取得する
-        NSUInteger length = [bleResponseData length];
-        NSData *responseStatusWord = [bleResponseData subdataWithRange:NSMakeRange(length-2, 2)];
-        unsigned char *statusWordChar = (unsigned char *)[responseStatusWord bytes];
-        NSUInteger statusWord = statusWordChar[0] * 256 + statusWordChar[1];
-        
-        return statusWord;
     }
 
     - (void)doCtap2HealthCheck {
@@ -222,6 +157,15 @@
         [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
     }
 
+    - (void)doU2FHealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_REGISTER) {
+            [self displayStartMessage];
+        }
+        // まず最初にU2F Registerコマンドを実行
+        [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
+    }
+
 #pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
@@ -229,7 +173,8 @@
         [self setCommand:command];
         switch (command) {
             case COMMAND_TEST_REGISTER:
-                [self createCommandTestRegister];
+                // U2Fコマンドを生成して実行
+                [self doU2FHealthCheck];
                 break;
             case COMMAND_PAIRING:
                 [self createCommandPairing];
@@ -292,45 +237,6 @@
         }
     }
 
-    - (bool)checkStatusWordOfResponse {
-        // レスポンスデータが揃っていない場合は終了
-        if (![self bleResponseData]) {
-            return false;
-        }
-        
-        // ステータスワード(レスポンスの末尾２バイト)を取得
-        NSUInteger statusWord = [self getStatusWordFrom:[self bleResponseData]];
-        
-        // 成功判定は、キーハンドルチェックの場合0x6985、それ以外は0x9000
-        if (statusWord == 0x6985) {
-            return true;
-        } else if (statusWord == 0x9000) {
-            return true;
-        }
-        
-        // invalid keyhandleエラーである場合はその旨を通知
-        if (statusWord == 0x6a80) {
-            [self commandDidProcess:false message:MSG_OCCUR_KEYHANDLE_ERROR];
-            return false;
-        }
-        
-        // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
-        if (statusWord == 0x9402) {
-            [self commandDidProcess:false message:MSG_OCCUR_SKEYNOEXIST_ERROR];
-            return false;
-        }
-
-        // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
-        if (statusWord == 0x9601) {
-            [self commandDidProcess:false message:MSG_OCCUR_PAIRINGMODE_ERROR];
-            return false;
-        }
-        
-        // ステータスワードチェックがNGの場合
-        [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_BLE_ERROR];
-        return false;
-    }
-
     - (void)checkPingResponseData {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [[self bleResponseData] isEqualToData:[self pingData]];
@@ -352,61 +258,12 @@
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
             case COMMAND_TEST_AUTH_USER_PRESENCE:
                 // ステータスワード（２バイト）をチェック後、レスポンス処理に移る
-                [self toolCommandWillProcessU2FResponse];
+                [[self toolU2FHealthCheckCommand] doU2FResponse:[self command]
+                                                responseMessage:[self bleResponseData]];
                 break;
             case COMMAND_TEST_BLE_PING:
                 // PINGレスポンスの内容をチェックし、画面に制御を戻す
                 [self checkPingResponseData];
-                break;
-            default:
-                break;
-        }
-    }
-
-    - (void)toolCommandWillProcessU2FResponse {
-        // Registerレスポンスは、３件のテストケースで共通使用するため、
-        // ここで保持しておく必要がある
-        static NSData *registerReponseData;
-        
-        // レスポンスをチェックし、内容がNGであれば処理終了
-        if ([self checkStatusWordOfResponse] == false) {
-            return;
-        }
-        
-        // コマンドに応じ、以下の処理に分岐
-        switch ([self command]) {
-            case COMMAND_PAIRING:
-                [self commandDidProcess:true message:@"Pairing end"];
-                break;
-            case COMMAND_TEST_REGISTER:
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
-                NSLog(@"Register test success");
-                // Registerレスポンスを内部で保持して後続処理を実行
-                registerReponseData = [[NSData alloc] initWithData:[self bleResponseData]];
-                [self setCommand:COMMAND_TEST_AUTH_CHECK];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x07];
-                break;
-            case COMMAND_TEST_AUTH_CHECK:
-                NSLog(@"Authenticate test (check) success");
-                [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x08];
-                break;
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-                NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
-                [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x03];
-                // 後続のU2F Authenticateを開始する前に、
-                // 基板上のMAIN SWを押してもらうように促すメッセージを表示
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
-                break;
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [[self delegate] notifyToolCommandMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
-                registerReponseData = nil;
-                NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
-                [self commandDidProcess:true message:@"Health check end"];
                 break;
             default:
                 break;
