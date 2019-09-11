@@ -23,7 +23,6 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_HID_PROCESS,
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_PING,
     COMMAND_TEST_BLE_PING,
@@ -45,7 +44,6 @@ typedef enum : NSInteger {
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 
-    + (NSString *)processNameOfCommand:(Command)command;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
 

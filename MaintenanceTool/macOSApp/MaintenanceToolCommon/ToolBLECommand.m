@@ -540,7 +540,7 @@
     - (void)displayStartMessage {
         // コマンド開始メッセージを画面表示
         NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              [ToolCommon processNameOfCommand:[self command]]];
+                              [self processNameOfCommand]];
         [self displayMessage:startMsg];
     }
 

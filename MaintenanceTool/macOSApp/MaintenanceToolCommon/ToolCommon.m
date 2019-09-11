@@ -16,54 +16,6 @@
 
 @implementation ToolCommon
 
-    + (NSString *)processNameOfCommand:(Command)command {
-        // コマンド種別に対応する処理名称を戻す
-        NSString *processName;
-        switch (command) {
-            case COMMAND_PAIRING:
-                processName = PROCESS_NAME_PAIRING;
-                break;
-            case COMMAND_ERASE_SKEY_CERT:
-                processName = PROCESS_NAME_ERASE_SKEY_CERT;
-                break;
-            case COMMAND_INSTALL_SKEY_CERT:
-                processName = PROCESS_NAME_INSTALL_SKEY_CERT;
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                processName = PROCESS_NAME_HEALTHCHECK;
-                break;
-            case COMMAND_TEST_CTAPHID_PING:
-                processName = PROCESS_NAME_TEST_CTAPHID_PING;
-                break;
-            case COMMAND_TEST_BLE_PING:
-                processName = PROCESS_NAME_TEST_BLE_PING;
-                break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                processName = PROCESS_NAME_GET_FLASH_STAT;
-                break;
-            case COMMAND_CLIENT_PIN_SET:
-                processName = PROCESS_NAME_CLIENT_PIN_SET;
-                break;
-            case COMMAND_CLIENT_PIN_CHANGE:
-                processName = PROCESS_NAME_CLIENT_PIN_CHANGE;
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                processName = PROCESS_NAME_CTAP2_HEALTHCHECK;
-                break;
-            case COMMAND_AUTH_RESET:
-                processName = PROCESS_NAME_AUTH_RESET;
-                break;
-            default:
-                processName = nil;
-                break;
-        }
-        return processName;
-    }
-
     + (NSData *)generateHexBytesFrom:(NSString *)hexString {
         unsigned int  hexInt;
         unsigned char byte;

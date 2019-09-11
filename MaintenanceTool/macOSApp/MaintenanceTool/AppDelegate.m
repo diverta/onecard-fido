@@ -229,25 +229,26 @@
         }
     }
 
-    - (void)bleCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
-        [self commandDidProcess:command result:result message:message];
+    - (void)bleCommandDidProcess:(NSString *)processNameOfCommand
+                          result:(bool)result message:(NSString *)message {
+        [self commandDidProcess:processNameOfCommand result:result message:message];
     }
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
-        [self commandDidProcess:command result:result message:message];
+    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand
+                          result:(bool)result message:(NSString *)message {
+        [self commandDidProcess:processNameOfCommand result:result message:message];
     }
 
 #pragma mark - Common method called by callback
 
-    - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+    - (void)commandDidProcess:(NSString *)processNameOfCommand result:(bool)result message:(NSString *)message {
         // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
         if (result == false) {
             [self notifyToolCommandMessage:message];
         }
         // コマンド名称を取得
-        NSString *processNameOfCommand = [ToolCommon processNameOfCommand:command];
         if (processNameOfCommand) {
             // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
             NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
