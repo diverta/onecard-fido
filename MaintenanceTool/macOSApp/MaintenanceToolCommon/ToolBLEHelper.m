@@ -1,4 +1,10 @@
-#import "ToolBLECentral.h"
+//
+//  ToolBLEHelper.m
+//  MaintenanceTool
+//
+//  Created by Makoto Morita on 2018/03/05.
+//
+#import "ToolBLEHelper.h"
 #import "ToolCommonMessage.h"
 #import "ToolTimer.h"
 
@@ -6,7 +12,7 @@
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
 #define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
 
-@interface ToolBLECentral () <CBCentralManagerDelegate, CBPeripheralDelegate, ToolTimerDelegate>
+@interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate, ToolTimerDelegate>
 
     @property(nonatomic) CBCentralManager *manager;
     @property(nonatomic) CBPeripheral     *connectedPeripheral;
@@ -24,13 +30,13 @@
 
 @end
 
-@implementation ToolBLECentral
+@implementation ToolBLEHelper
 
     - (id)init {
         return [self initWithDelegate:nil];
     }
 
-    - (id)initWithDelegate:(id<ToolBLECentralDelegate>)delegate {
+    - (id)initWithDelegate:(id<ToolBLEHelperDelegate>)delegate {
         self = [super init];
         if (self) {
             self.delegate = delegate;

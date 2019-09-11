@@ -1,24 +1,24 @@
 //
 //  ToolBLECommand.m
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2017/11/20.
 //
 #import <Foundation/Foundation.h>
 #import "FIDODefines.h"
-#import "ToolBLECentral.h"
+#import "ToolBLEHelper.h"
 #import "ToolBLECommand.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 
-@interface ToolBLECommand () <ToolBLECentralDelegate>
+@interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
     // BLE接続に関する情報を保持
-    @property (nonatomic) ToolBLECentral    *toolBLECentral;
+    @property (nonatomic) ToolBLEHelper     *toolBLECentral;
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
     @property (nonatomic) NSString          *lastCommandMessage;
@@ -41,7 +41,7 @@
         self = [super init];
         if (self) {
             [self setDelegate:delegate];
-            [self setToolBLECentral:[[ToolBLECentral alloc] initWithDelegate:self]];
+            [self setToolBLECentral:[[ToolBLEHelper alloc] initWithDelegate:self]];
             [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
             [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
                                                    toolBLECommand:self

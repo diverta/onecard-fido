@@ -1,6 +1,6 @@
 //
 //  ToolCommon.m
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2018/03/05.
 //

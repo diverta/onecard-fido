@@ -1,6 +1,6 @@
 //
 //  ToolHIDCommand.m
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/03/20.
 //

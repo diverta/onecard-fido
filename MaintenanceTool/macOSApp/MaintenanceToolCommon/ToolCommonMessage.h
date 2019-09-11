@@ -1,6 +1,6 @@
 //
 //  ToolCommonMessage.h
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2018/02/26.
 //

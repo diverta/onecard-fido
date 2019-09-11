@@ -1,6 +1,6 @@
 //
 //  ToolBLECommand.h
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2017/11/20.
 //

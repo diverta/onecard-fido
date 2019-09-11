@@ -16,12 +16,6 @@
     - (void)setTransportParam:(TransportType)type
                toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid;
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (NSData *)generateGetKeyAgreementRequest;
-    - (NSData *)generateClientPinTokenGetRequestWith:(NSData *)keyAgreementResponse;
-    - (NSData *)generateMakeCredentialRequestWith:(NSData *)getPinTokenResponse;
-    - (bool)parseMakeCredentialResponseWith:(NSData *)makeCredentialResponse;
-    - (NSData *)generateGetAssertionRequestWith:(NSData *)getPinTokenResponse userPresence:(bool)up;
-    - (bool)parseGetAssertionResponseWith:(NSData *)getAssertionResponse verifySalt:(bool)verifySalt;
     - (bool)checkStatusCode:(NSData *)responseMessage;
 
     // Request & Response process
