@@ -145,6 +145,9 @@
                 [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
                 break;
             default:
+                // 画面に制御を戻す
+                NSLog(@"Unknown command %ld", (long)[self command]);
+                [self commandDidProcess:false message:nil];
                 break;
         }
     }
@@ -293,6 +296,15 @@
         [self doRequestCtapHidInit];
     }
 
+    - (void)doU2FHealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_REGISTER) {
+            [self displayStartMessage];
+        }
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
     - (void)hidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
@@ -318,6 +330,12 @@
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
                 [self doCtap2HealthCheck];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self doU2FHealthCheck];
                 break;
             default:
                 // エラーメッセージを表示
