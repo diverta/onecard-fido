@@ -20,6 +20,8 @@
 
     // 実行対象コマンドを保持
     @property (nonatomic) Command   command;
+    // Registerレスポンスを保持（３件のテストケースで共通使用するため）
+    @property (nonatomic) NSData   *registerReponseData;
 
 @end
 
@@ -36,18 +38,6 @@
         [self setTransportType:type];
         [self setToolBLECommand:ble];
         [self setToolHIDCommand:hid];
-    }
-
-    - (NSData *)createHmacSecretSalt {
-        NSData *salt1 =
-        [ToolCommon generateHexBytesFrom:
-         @"124dc843bb8ba61f035a7d0938251f5dd4cbfc96f5453b130d890a1cdbae3220"];
-        NSData *salt2 =
-        [ToolCommon generateHexBytesFrom:
-         @"23be84e16cd6ae529049f1f1bbe9ebb3a6db3c870c3e99245e0d1c06b747deb3"];
-        NSMutableData *salt = [[NSMutableData alloc] initWithData:salt1];
-        [salt appendData:salt2];
-        return salt;
     }
 
 #pragma mark - Command functions
@@ -99,6 +89,15 @@
             case COMMAND_TEST_REGISTER:
                 [self createCommandTestRegister];
                 break;
+            case COMMAND_TEST_AUTH_CHECK:
+                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x07];
+                break;
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x08];
+                break;
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x03];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
@@ -107,50 +106,24 @@
     }
 
     - (void)doU2FResponse:(Command)command responseMessage:(NSData *)message {
-        // Registerレスポンスは、３件のテストケースで共通使用するため、
-        // ここで保持しておく必要がある
-        static NSData *registerReponseData;
-        
         // レスポンスをチェックし、内容がNGであれば処理終了
         if ([self checkStatusWordOfResponse:message] == false) {
             [self doResponseToAppDelegate:false message:nil];
             return;
         }
-        
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_PAIRING:
-                [self doResponseToAppDelegate:true message:@"Pairing end"];
-                break;
             case COMMAND_TEST_REGISTER:
-                [self displayMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
-                NSLog(@"Register test success");
-                // Registerレスポンスを内部で保持して後続処理を実行
-                registerReponseData = [[NSData alloc] initWithData:message];
-                [self setCommand:COMMAND_TEST_AUTH_CHECK];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x07];
+                [self doResponseCommandRegister:message];
                 break;
             case COMMAND_TEST_AUTH_CHECK:
-                NSLog(@"Authenticate test (check) success");
-                [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x08];
+                [self doResponseCommandAuthenticateCheck:message];
                 break;
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-                NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
-                [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
-                [self createCommandTestAuthFrom:registerReponseData P1:0x03];
-                // 後続のU2F Authenticateを開始する前に、
-                // 基板上のMAIN SWを押してもらうように促すメッセージを表示
-                [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
-                [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
-                [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
-                [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
+                [self doResponseCommandAuthenticateNoUP:message];
                 break;
             case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
-                registerReponseData = nil;
-                NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
-                [self doResponseToAppDelegate:true message:@"Health check end"];
+                [self doResponseCommandAuthenticateUP:message];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -211,7 +184,23 @@
             [[self toolBLECommand] doBLECommandRequestFrom:dataForRequest cmd:BLE_CMD_MSG];
         }
         if ([self transportType] == TRANSPORT_HID) {
-            [[self toolHIDCommand] doRequest:dataForRequest CID:[self CID] CMD:BLE_CMD_MSG];
+            [[self toolHIDCommand] doRequest:dataForRequest CID:[self CID] CMD:HID_CMD_MSG];
+        }
+    }
+
+    - (void)doResponseCommandRegister:(NSData *)message {
+        // 中間メッセージを表示
+        [self displayMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
+        NSLog(@"Register test success");
+        // Registerレスポンスを内部で保持して後続処理を実行
+        [self setRegisterReponseData:[[NSData alloc] initWithData:message]];
+        // U2Fヘルスチェックの後続テストを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self setCommand:COMMAND_TEST_AUTH_CHECK];
+            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x07];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_CHECK];
         }
     }
 
@@ -226,8 +215,49 @@
             [[self toolBLECommand] doBLECommandRequestFrom:dataForRequest cmd:BLE_CMD_MSG];
         }
         if ([self transportType] == TRANSPORT_HID) {
-            [[self toolHIDCommand] doRequest:dataForRequest CID:[self CID] CMD:BLE_CMD_MSG];
+            [[self toolHIDCommand] doRequest:dataForRequest CID:[self CID] CMD:HID_CMD_MSG];
         }
+    }
+
+    - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
+        // 中間メッセージを表示
+        NSLog(@"Authenticate test (check) success");
+        // U2Fヘルスチェックの後続テストを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
+            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x08];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
+        }
+    }
+
+    - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
+        // 中間メッセージを表示
+        NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
+        // 後続のU2F Authenticateを開始する前に、
+        // 基板上のMAIN SWを押してもらうように促すメッセージを表示
+        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
+        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
+        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
+        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
+        // U2Fヘルスチェックの後続テストを実行
+        if ([self transportType] == TRANSPORT_BLE) {
+            [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
+            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x03];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_USER_PRESENCE];
+        }
+    }
+
+    - (void)doResponseCommandAuthenticateUP:(NSData *)message {
+        // 結果メッセージを表示
+        NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
+        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
+        // U2Fヘルスチェック終了
+        [self doResponseToAppDelegate:true message:@"Health check end"];
+        [self setRegisterReponseData:nil];
     }
 
 #pragma mark - Common methods

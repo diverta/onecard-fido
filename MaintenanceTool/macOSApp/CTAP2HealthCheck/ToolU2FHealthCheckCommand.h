@@ -15,6 +15,7 @@
 
     - (void)setTransportParam:(TransportType)type
                toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid;
+    - (bool)checkStatusWordOfResponse:(NSData *)responseMessage;
 
     // Request & Response process
     - (void)doU2FResponse:(Command)command responseMessage:(NSData *)response;

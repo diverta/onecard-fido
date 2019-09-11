@@ -57,6 +57,7 @@
 
 // HIDコマンドバイト
 #define HID_CMD_CTAPHID_PING        0x81
+#define HID_CMD_MSG                 0x83
 #define HID_CMD_CTAPHID_INIT        0x86
 #define HID_CMD_CTAPHID_CBOR        0x90
 #define HID_CMD_ERASE_SKEY_CERT     0xC0

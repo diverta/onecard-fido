@@ -71,6 +71,12 @@
         [self doBLECommandRequestFrom:commandData cmd:0x83];
     }
 
+    - (void)doResponseCommandPairing:(NSData *)message {
+        // ステータスコードを確認し、画面に制御を戻す
+        [self commandDidProcess:[[self toolU2FHealthCheckCommand] checkStatusWordOfResponse:message]
+                        message:nil];
+    }
+
     - (void)createCommandPing {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -253,6 +259,9 @@
                                                     responseMessage:[self bleResponseData]];
                 break;
             case COMMAND_PAIRING:
+                // ステータスワード（２バイト）をチェック後、画面に制御を戻す
+                [self doResponseCommandPairing:[self bleResponseData]];
+                break;
             case COMMAND_TEST_REGISTER:
             case COMMAND_TEST_AUTH_CHECK:
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:

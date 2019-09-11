@@ -12,6 +12,7 @@
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
+#import "ToolU2FHealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 
@@ -22,6 +23,8 @@
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
     @property (nonatomic) ToolCTAP2HealthCheckCommand
                                                *toolCTAP2HealthCheckCommand;
+    @property (nonatomic) ToolU2FHealthCheckCommand
+                                               *toolU2FHealthCheckCommand;
 
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
@@ -52,6 +55,10 @@
         [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
                                                toolBLECommand:nil
                                                toolHIDCommand:self];
+        [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
+        [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_HID
+                                             toolBLECommand:nil
+                                             toolHIDCommand:self];
         return self;
     }
 
@@ -143,6 +150,14 @@
                 // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
                 [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
                 [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                // 受領したCIDを使用し、U2FRegister／Authenticateコマンドを実行
+                [[self toolU2FHealthCheckCommand] setCID:[self getNewCIDFrom:message]];
+                [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
                 break;
             default:
                 // 画面に制御を戻す
@@ -263,6 +278,13 @@
         [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
     }
 
+    - (void)doResponseU2FHidMsg:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        [[self toolU2FHealthCheckCommand] setCID:cid];
+        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
+    }
+
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
@@ -376,6 +398,9 @@
                 break;
             case HID_CMD_CTAPHID_CBOR:
                 [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
+                break;
+            case HID_CMD_MSG:
+                [self doResponseU2FHidMsg:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_UNKNOWN_ERROR:
                 // メッセージを画面表示
