@@ -162,6 +162,15 @@
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
+        // HID U2Fヘルスチェック実行
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_REGISTER];
+    }
+
+    - (IBAction)menuItemTestHID3DidSelect:(id)sender {
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
@@ -170,7 +179,7 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_CTAPHID_PING];
     }
 
-    - (IBAction)menuItemTestHID3DidSelect:(id)sender {
+    - (IBAction)menuItemTestHID4DidSelect:(id)sender {
         if (![[self toolHIDCommand] checkUSBHIDConnection]) {
             return;
         }
