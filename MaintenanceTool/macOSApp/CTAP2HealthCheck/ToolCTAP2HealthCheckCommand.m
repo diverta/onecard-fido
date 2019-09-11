@@ -193,9 +193,14 @@
         // 実行対象コマンドを退避
         [self setCommand:command];
         switch ([self command]) {
+            case COMMAND_CLIENT_PIN_SET:
+            case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
                 [self doRequestCommandGetKeyAgreement];
+                break;
+            case COMMAND_AUTH_RESET:
+                [self doRequestCommandAuthReset];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -221,6 +226,10 @@
             case CTAP2_CMD_GET_ASSERTION:
                 [self doResponseCommandGetAssertion:message];
                 break;
+            case CTAP2_CMD_RESET:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:true message:nil];
+                break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
                 [self doResponseToAppDelegate:false message:nil];
@@ -239,9 +248,14 @@
             case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
                 [self doResponseCommandGetPinToken:cborBytes];
                 break;
-            default:
+            case CTAP2_SUBCMD_CLIENT_PIN_SET:
+            case CTAP2_SUBCMD_CLIENT_PIN_CHANGE:
                 // 画面に制御を戻す
                 [self doResponseToAppDelegate:true message:nil];
+                break;
+            default:
+                // 画面に制御を戻す
+                [self doResponseToAppDelegate:false message:nil];
                 break;
         }
     }
@@ -292,7 +306,10 @@
         }
         // getKeyAgreementサブコマンドを実行
         if ([self transportType] == TRANSPORT_BLE) {
-            [[self toolBLECommand] doBLECommandRequestFrom:message cmd:0x83];
+            [[self toolBLECommand] doBLECommandRequestFrom:message cmd:BLE_CMD_MSG];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] doRequest:message CID:[self CID] CMD:HID_CMD_CTAPHID_CBOR];
         }
     }
 
@@ -302,6 +319,16 @@
             case COMMAND_TEST_GET_ASSERTION:
                 // PINトークン取得処理を続行
                 [self doRequestCommandGetPinToken:message];
+                break;
+            case COMMAND_CLIENT_PIN_SET:
+                // PIN新規設定処理を続行
+                [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_SET];
+                [[self toolHIDCommand] doClientPinSetOrChange:message CID:[self CID]];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                // PIN変更処理を続行
+                [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_CHANGE];
+                [[self toolHIDCommand] doClientPinSetOrChange:message CID:[self CID]];
                 break;
             default:
                 // 画面に制御を戻す
@@ -322,7 +349,10 @@
         }
         // getPINTokenサブコマンドを実行
         if ([self transportType] == TRANSPORT_BLE) {
-            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:BLE_CMD_MSG];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] doRequest:request CID:[self CID] CMD:HID_CMD_CTAPHID_CBOR];
         }
     }
 
@@ -334,7 +364,7 @@
                 break;
             case COMMAND_TEST_GET_ASSERTION:
                 // ログインテスト処理を続行
-                [self doTestGetAssertion:message];
+                [self doRequestCommandGetAssertion:message];
                 break;
             default:
                 // 画面に制御を戻す
@@ -354,7 +384,10 @@
         }
         // authenticatorMakeCredentialコマンドを実行
         if ([self transportType] == TRANSPORT_BLE) {
-            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:BLE_CMD_MSG];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] doRequest:request CID:[self CID] CMD:HID_CMD_CTAPHID_CBOR];
         }
     }
 
@@ -376,7 +409,7 @@
         }
     }
 
-    - (void)doTestGetAssertion:(NSData *)message {
+    - (void)doRequestCommandGetAssertion:(NSData *)message {
         // 実行するコマンドを退避
         [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
         // メッセージを編集し、GetAssertionコマンドを実行
@@ -397,7 +430,10 @@
         }
         // authenticatorGetAssertionコマンドを実行
         if ([self transportType] == TRANSPORT_BLE) {
-            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:0x83];
+            [[self toolBLECommand] doBLECommandRequestFrom:request cmd:BLE_CMD_MSG];
+        }
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] doRequest:request CID:[self CID] CMD:HID_CMD_CTAPHID_CBOR];
         }
     }
 
@@ -424,6 +460,21 @@
         }
         if ([self transportType] == TRANSPORT_HID) {
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
+        }
+    }
+
+    - (void)doRequestCommandAuthReset {
+        // 実行するサブコマンドを退避
+        [self setCborCommand:CTAP2_CMD_RESET];
+        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
+        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
+        // メッセージを編集し、authenticatorResetコマンドを実行
+        char commandByte[] = {CTAP2_CMD_RESET};
+        NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
+        if ([self transportType] == TRANSPORT_HID) {
+            [[self toolHIDCommand] doRequest:message CID:[self CID] CMD:HID_CMD_CTAPHID_CBOR];
         }
     }
 

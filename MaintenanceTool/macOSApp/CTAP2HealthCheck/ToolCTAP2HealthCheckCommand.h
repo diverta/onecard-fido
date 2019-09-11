@@ -29,6 +29,7 @@
     - (void)doCTAP2Request:(Command)command;
 
     @property (nonatomic) NSString *pinCur;
+    @property (nonatomic) NSData   *CID;
 
 @end
 

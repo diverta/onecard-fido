@@ -21,6 +21,8 @@
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;
+    - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
+    - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowDidClose;

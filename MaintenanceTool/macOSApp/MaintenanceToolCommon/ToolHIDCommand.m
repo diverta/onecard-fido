@@ -15,15 +15,6 @@
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 
-// HIDコマンドバイト
-#define HID_CMD_CTAPHID_PING        0x81
-#define HID_CMD_CTAPHID_INIT        0x86
-#define HID_CMD_CTAPHID_CBOR        0x90
-#define HID_CMD_ERASE_SKEY_CERT     0xC0
-#define HID_CMD_INSTALL_SKEY_CERT   0xC1
-#define HID_CMD_GET_FLASH_STAT      0xC2
-#define HID_CMD_UNKNOWN_ERROR       0xBF
-
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
     @property (nonatomic) ToolHIDHelper        *toolHIDHelper;
@@ -35,13 +26,6 @@
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
     @property (nonatomic) NSString *certFilePath;
-
-    // 実行中のサブコマンドを保持
-    @property (nonatomic) uint8_t   cborCommand;
-    @property (nonatomic) uint8_t   subCommand;
-
-    // ログインテストカウンター
-    @property (nonatomic) uint8_t   getAssertionCount;
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
@@ -170,15 +154,10 @@
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
-                // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
-                [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-                [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
-                [self doRequestGetKeyAgreement:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_AUTH_RESET:
-                // 受領したCIDを使用し、authenticatorResetコマンドを実行
-                [self setCborCommand:CTAP2_CMD_RESET];
-                [self doRequestAuthReset:[self getNewCIDFrom:message]];
+                // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
+                [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
+                [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
                 break;
             default:
                 break;
@@ -292,72 +271,11 @@
     - (void)doResponseCtapHidCbor:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
         // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        if ([[self toolCTAP2HealthCheckCommand] checkStatusCode:message] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        switch ([self cborCommand]) {
-            case CTAP2_CMD_CLIENT_PIN:
-                [self doResponseCommandClientPin:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_MAKE_CREDENTIAL:
-                [self doResponseCommandMakeCredential:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_GET_ASSERTION:
-                [self doResponseCommandGetAssertion:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_RESET:
-                // 画面に制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                [self doResponseToAppDelegate:false message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandClientPin:(NSData *)message
-                                   CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        
-        switch ([self subCommand]) {
-            case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
-                [self doResponseCommandGetKeyAgreement:cborBytes CID:cid];
-                break;
-            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
-                [self doResponseCommandGetPinToken:cborBytes CID:cid];
-                break;
-            default:
-                // 画面に制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandGetKeyAgreement:(NSData *)message CID:(NSData *)cid {
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // PINトークン取得処理を続行
-                [self doClientPinTokenGet:message CID:cid];
-                break;
-            default:
-                // PIN設定処理を続行
-                [self doClientPinSetOrChange:message CID:cid];
-                break;
-        }
+        [[self toolCTAP2HealthCheckCommand] setCID:cid];
+        [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
     }
 
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        if ([[[self toolClientPINCommand] pinOld] length] == 0) {
-            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_SET];
-        } else {
-            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_CHANGE];
-        }
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
         if (request == nil) {
@@ -379,135 +297,6 @@
         // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
         NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
         return newCID;
-    }
-
-    - (void)doRequestGetKeyAgreement:(NSData *)cid {
-        // メッセージを編集し、GetKeyAgreementサブコマンドを実行
-        NSData *message = [[self toolCTAP2HealthCheckCommand] generateGetKeyAgreementRequest];
-        if (message == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doClientPinTokenGet:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
-        // メッセージを編集し、getPinTokenサブコマンドを実行
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                                generateClientPinTokenGetRequestWith:message];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandGetPinToken:(NSData *)message CID:(NSData *)cid {
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // ユーザー登録テスト処理を続行
-                [self doTestMakeCredential:message CID:cid];
-                break;
-            case COMMAND_TEST_GET_ASSERTION:
-                // ログインテスト処理を続行
-                [self doTestGetAssertion:message CID:cid];
-                break;
-            default:
-                // PIN設定処理を続行
-                [self doClientPinSetOrChange:message CID:cid];
-                break;
-        }
-    }
-
-    - (void)doTestMakeCredential:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
-        // メッセージを編集し、MakeCredentialコマンドを実行
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateMakeCredentialRequestWith:message];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandMakeCredential:(NSData *)message
-                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        // MakeCredentialレスポンスを解析して保持
-        if ([[self toolCTAP2HealthCheckCommand]
-             parseMakeCredentialResponseWith:cborBytes] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // CTAP2ヘルスチェックのログインテストを実行
-        [self setGetAssertionCount:1];
-        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
-    }
-
-    - (void)doTestGetAssertion:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
-        // メッセージを編集し、GetAssertionコマンドを実行
-        // ２回目のコマンド実行では、MAIN SW押下によるユーザー所在確認が必要
-        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateGetAssertionRequestWith:message
-                           userPresence:testUserPresenceNeeded];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        if (testUserPresenceNeeded) {
-            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandGetAssertion:(NSData *)message
-                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        // GetAssertionレスポンスを解析
-        // ２回目のコマンド実行では、認証器から受領したsaltの内容検証が必要
-        bool verifySaltNeeded = ([self getAssertionCount] == 2);
-        if ([[self toolCTAP2HealthCheckCommand]
-             parseGetAssertionResponseWith:cborBytes
-             verifySalt:verifySaltNeeded] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // ２回目のテストが成功したら画面に制御を戻して終了
-        if (verifySaltNeeded) {
-            [self doResponseToAppDelegate:true message:nil];
-            return;
-        }
-        // CTAP2ヘルスチェックのログインテストを再度実行
-        [self setGetAssertionCount:[self getAssertionCount] + 1];
-        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
-    }
-
-    - (void)doRequestAuthReset:(NSData *)cid {
-        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
-        // メッセージを編集し、authenticatorResetコマンドを実行
-        char commandByte[] = {0x07};
-        NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
-        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)doCtap2HealthCheck {
