@@ -87,16 +87,16 @@
         [self setCommand:command];
         switch ([self command]) {
             case COMMAND_TEST_REGISTER:
-                [self createCommandTestRegister];
+                [self doRequestCommandRegister];
                 break;
             case COMMAND_TEST_AUTH_CHECK:
-                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x07];
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
                 break;
             case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x08];
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
                 break;
             case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self createCommandTestAuthFrom:[self registerReponseData] P1:0x03];
+                [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
                 break;
             default:
                 // 正しくレスポンスされなかったと判断し、画面に制御を戻す
@@ -172,7 +172,7 @@
         return false;
     }
 
-    - (void)createCommandTestRegister {
+    - (void)doRequestCommandRegister {
         NSLog(@"Health check start");
         
         // テストデータを編集
@@ -197,14 +197,14 @@
         // U2Fヘルスチェックの後続テストを実行
         if ([self transportType] == TRANSPORT_BLE) {
             [self setCommand:COMMAND_TEST_AUTH_CHECK];
-            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x07];
+            [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x07];
         }
         if ([self transportType] == TRANSPORT_HID) {
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_CHECK];
         }
     }
 
-    - (void)createCommandTestAuthFrom:(NSData *)registerResponse P1:(unsigned char)p1 {
+    - (void)doRequestCommandAuthenticate:(NSData *)registerResponse P1:(unsigned char)p1 {
         // Registerレスポンスからキーハンドルを切り出し、テストデータに連結
         NSMutableData *requestData = [self createTestRequestData];
         [requestData appendData:[self getKeyHandleDataFrom:registerResponse]];
@@ -225,7 +225,7 @@
         // U2Fヘルスチェックの後続テストを実行
         if ([self transportType] == TRANSPORT_BLE) {
             [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
-            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x08];
+            [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x08];
         }
         if ([self transportType] == TRANSPORT_HID) {
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
@@ -244,7 +244,7 @@
         // U2Fヘルスチェックの後続テストを実行
         if ([self transportType] == TRANSPORT_BLE) {
             [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
-            [self createCommandTestAuthFrom:[self registerReponseData] P1:0x03];
+            [self doRequestCommandAuthenticate:[self registerReponseData] P1:0x03];
         }
         if ([self transportType] == TRANSPORT_HID) {
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_AUTH_USER_PRESENCE];

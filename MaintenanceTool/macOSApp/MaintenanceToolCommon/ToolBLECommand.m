@@ -60,7 +60,7 @@
 
 #pragma mark - Private methods
 
-    - (void)createCommandPairing {
+    - (void)doRequestCommandPairing {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
         NSLog(@"Pairing start");
@@ -77,7 +77,7 @@
                         message:nil];
     }
 
-    - (void)createCommandPing {
+    - (void)doRequestCommandPing {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
         NSLog(@"BLE ping start");
@@ -85,6 +85,12 @@
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
         // 分割送信のために64バイトごとのコマンド配列を作成する
         [self doBLECommandRequestFrom:[self pingData] cmd:0x81];
+    }
+
+    - (void)doResponseCommandPing {
+        // PINGレスポンスの内容をチェックし、画面に制御を戻す
+        bool result = [[self bleResponseData] isEqualToData:[self pingData]];
+        [self commandDidProcess:result message:@"BLE ping end"];
     }
 
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
@@ -183,10 +189,10 @@
                 [self doU2FHealthCheck];
                 break;
             case COMMAND_PAIRING:
-                [self createCommandPairing];
+                [self doRequestCommandPairing];
                 break;
             case COMMAND_TEST_BLE_PING:
-                [self createCommandPing];
+                [self doRequestCommandPing];
                 break;
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
@@ -243,12 +249,6 @@
         }
     }
 
-    - (void)checkPingResponseData {
-        // PINGレスポンスの内容をチェックし、画面に制御を戻す
-        bool result = [[self bleResponseData] isEqualToData:[self pingData]];
-        [self commandDidProcess:result message:@"BLE ping end"];
-    }
-
     - (void)toolCommandWillProcessBleResponse {
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
@@ -272,7 +272,7 @@
                 break;
             case COMMAND_TEST_BLE_PING:
                 // PINGレスポンスの内容をチェックし、画面に制御を戻す
-                [self checkPingResponseData];
+                [self doResponseCommandPing];
                 break;
             default:
                 break;

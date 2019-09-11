@@ -126,11 +126,6 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_INIT];
     }
 
-    - (void)doTestCtapHidPing {
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
     - (void)doResponseCtapHidInit:(NSData *)message {
         if ([self isCorrectNonceBytes:message] == false) {
             // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、
@@ -167,10 +162,9 @@
         }
     }
 
-    - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
-        // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
-        char *responseBytes = (char *)[hidInitResponseMessage bytes];
-        return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    - (void)doTestCtapHidPing {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
     }
 
     - (void)doRequestCtapHidPing:(NSData *)cid {
@@ -271,20 +265,6 @@
         [self doRequestCtapHidInit];
     }
 
-    - (void)doResponseCtapHidCbor:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        [[self toolCTAP2HealthCheckCommand] setCID:cid];
-        [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
-    }
-
-    - (void)doResponseU2FHidMsg:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        [[self toolU2FHealthCheckCommand] setCID:cid];
-        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
-    }
-
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
@@ -296,19 +276,6 @@
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
-    }
-
-    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
-        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
-        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
-        return newCID;
-    }
-
     - (void)doCtap2HealthCheck {
         // コマンド開始メッセージを画面表示
         if ([self command] == COMMAND_TEST_MAKE_CREDENTIAL) {
@@ -318,6 +285,13 @@
         [self doRequestCtapHidInit];
     }
 
+    - (void)doResponseCtapHidCbor:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        [[self toolCTAP2HealthCheckCommand] setCID:cid];
+        [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
+    }
+
     - (void)doU2FHealthCheck {
         // コマンド開始メッセージを画面表示
         if ([self command] == COMMAND_TEST_REGISTER) {
@@ -325,6 +299,13 @@
         }
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
         [self doRequestCtapHidInit];
+    }
+
+    - (void)doResponseU2FHidMsg:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        [[self toolU2FHealthCheckCommand] setCID:cid];
+        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
     }
 
     - (void)hidHelperWillProcess:(Command)command {
@@ -365,15 +346,6 @@
                 [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:false message:nil];
                 break;
         }
-    }
-
-    - (bool)checkUSBHIDConnection {
-        // USBポートに接続されていない場合はfalse
-        if (![[self toolHIDHelper] isDeviceConnected]) {
-            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
-            return false;
-        }
-        return true;
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -465,6 +437,34 @@
     - (void)commandDidProcess:(bool)result message:(NSString *)message {
         // 即時でアプリケーションに制御を戻す
         [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:result message:message];
+    }
+
+    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
+    }
+
+    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
+        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
+        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
+        return newCID;
+    }
+
+    - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
+        // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
+        char *responseBytes = (char *)[hidInitResponseMessage bytes];
+        return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if (![[self toolHIDHelper] isDeviceConnected]) {
+            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Interface for SetPinParamWindow
