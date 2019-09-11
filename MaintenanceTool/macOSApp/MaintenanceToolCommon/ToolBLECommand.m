@@ -15,8 +15,10 @@
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
+    // 処理機能名称を保持
+    @property (nonatomic) NSString *processNameOfCommand;
     // 送信PINGデータを保持
-    @property(nonatomic) NSData    *pingData;
+    @property (nonatomic) NSData   *pingData;
     // BLE接続に関する情報を保持
     @property (nonatomic) ToolBLEHelper     *toolBLECentral;
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
@@ -218,11 +220,6 @@
         }
         // まず最初にGetKeyAgreementサブコマンドを実行
         [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
-    }
-
-    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
-        // AppDelegateに制御を戻す
-        [[self delegate] bleCommandDidProcess:[self command] result:result message:message];
     }
 
 #pragma mark - Public methods
@@ -486,7 +483,7 @@
         }
         
         // ボタンを活性化し、ポップアップメッセージを表示
-        [[self delegate] bleCommandDidProcess:[self command]
+        [[self delegate] bleCommandDidProcess:[self processNameOfCommand]
                                        result:[self lastCommandSuccess]
                                       message:[self lastCommandMessage]];
     }
@@ -538,6 +535,28 @@
     }
 
     - (void)displayStartMessage {
+        // コマンド種別に対応する処理名称を設定
+        switch ([self command]) {
+            case COMMAND_PAIRING:
+                [self setProcessNameOfCommand:PROCESS_NAME_PAIRING];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self setProcessNameOfCommand:PROCESS_NAME_BLE_U2F_HEALTHCHECK];
+                break;
+            case COMMAND_TEST_BLE_PING:
+                [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self setProcessNameOfCommand:PROCESS_NAME_BLE_CTAP2_HEALTHCHECK];
+                break;
+            default:
+                [self setProcessNameOfCommand:nil];
+                break;
+        }
         // コマンド開始メッセージを画面表示
         NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
                               [self processNameOfCommand]];
@@ -574,8 +593,8 @@
     }
 
     - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す
-        [[self delegate] bleCommandDidProcess:COMMAND_NONE result:true message:nil];
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        [[self delegate] bleCommandDidProcess:nil result:true message:nil];
     }
 
 @end

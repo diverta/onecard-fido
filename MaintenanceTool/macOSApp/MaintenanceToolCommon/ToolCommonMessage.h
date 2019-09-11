@@ -35,14 +35,16 @@
 #pragma mark - コマンド種別に対応する処理名称
 #define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書・キーハンドル削除処理"
 #define PROCESS_NAME_INSTALL_SKEY_CERT              @"鍵・証明書インストール"
-#define PROCESS_NAME_HEALTHCHECK                    @"U2Fヘルスチェック"
+#define PROCESS_NAME_HID_U2F_HEALTHCHECK            @"HID U2Fヘルスチェック"
+#define PROCESS_NAME_BLE_U2F_HEALTHCHECK            @"BLE U2Fヘルスチェック"
+#define PROCESS_NAME_HID_CTAP2_HEALTHCHECK          @"HID CTAP2ヘルスチェック"
+#define PROCESS_NAME_BLE_CTAP2_HEALTHCHECK          @"BLE CTAP2ヘルスチェック"
 #define PROCESS_NAME_PAIRING                        @"ペアリング"
 #define PROCESS_NAME_TEST_CTAPHID_PING              @"PINGテスト"
 #define PROCESS_NAME_TEST_BLE_PING                  @"BLE PINGテスト"
 #define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
-#define PROCESS_NAME_CTAP2_HEALTHCHECK              @"CTAP2ヘルスチェック"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
 
 #pragma mark - ToolCommandクラス専用メッセージ

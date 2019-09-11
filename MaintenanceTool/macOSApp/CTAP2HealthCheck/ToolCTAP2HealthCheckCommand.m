@@ -497,7 +497,7 @@
         }
         if ([self transportType] == TRANSPORT_HID) {
             // 即時でアプリケーションに制御を戻す
-            [[[self toolHIDCommand] delegate] hidCommandDidProcess:[self command] result:result message:message];
+            [[self toolHIDCommand] commandDidProcess:result message:message];
         }
     }
 

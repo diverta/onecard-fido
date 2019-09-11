@@ -29,6 +29,8 @@
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
+    // 処理機能名称を保持
+    @property(nonatomic) NSString  *processNameOfCommand;
 
 @end
 
@@ -83,7 +85,7 @@
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時はエラーメッセージを表示
         NSLog(@"HIDResponse timed out");
-        [[self delegate] hidCommandDidProcess:[self command]
+        [[self delegate] hidCommandDidProcess:[self processNameOfCommand]
                                        result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
@@ -103,28 +105,11 @@
 
 #pragma mark - Command functions
 
-    - (void)displayMessage:(NSString *)string {
-        // メッセージを画面表示
-        [[self delegate] notifyToolCommandMessage:string];
-    }
-
-    - (void)displayStartMessage {
-        // コマンド開始メッセージを画面表示
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              [[self delegate] processNameOfCommand]];
-        [self displayMessage:startMsg];
-    }
-
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // HIDデバイスにリクエストを送信
         [[self toolHIDHelper] hidHelperWillSend:message CID:cid CMD:cmd];
         // レスポンスタイムアウトを監視
         [self startResponseTimeoutMonitor];
-    }
-
-    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:[self command] result:result message:message];
     }
 
     - (void)doRequestCtapHidInit {
@@ -143,7 +128,7 @@
         if ([self isCorrectNonceBytes:message] == false) {
             // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、
             // 画面に制御を戻す
-            [self doResponseToAppDelegate:false message:nil];
+            [self commandDidProcess:false message:nil];
         }
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_PING:
@@ -182,7 +167,7 @@
     - (void)doResponseCtapHidPing:(NSData *)message {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [message isEqualToData:[self pingData]];
-        [self doResponseToAppDelegate:result message:MSG_CMDTST_INVALID_PING];
+        [self commandDidProcess:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetFlashStat {
@@ -227,7 +212,7 @@
             MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : MSG_FSTAT_CORRUPTING_AREA_EXIST;
         // 画面に制御を戻す
         [self displayMessage:[NSString stringWithFormat:@"  %1$@%2$@", rateText, corruptText]];
-        [self doResponseToAppDelegate:true message:nil];
+        [self commandDidProcess:true message:nil];
     }
 
     - (void)doEraseSkeyCert {
@@ -247,7 +232,7 @@
                             skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
         if (message == nil) {
             // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self doResponseToAppDelegate:false message:[[self toolInstallCommand] lastErrorMessage]];
+            [self commandDidProcess:false message:[[self toolInstallCommand] lastErrorMessage]];
             return;
         }
 
@@ -258,7 +243,7 @@
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self doResponseToAppDelegate:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
+        [self commandDidProcess:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
     }
 
     - (void)doClientPin {
@@ -279,7 +264,7 @@
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
         if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // コマンドを実行
@@ -337,7 +322,7 @@
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
-                [[self delegate] hidCommandDidProcess:command result:false message:nil];
+                [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:false message:nil];
                 break;
         }
     }
@@ -376,11 +361,67 @@
                 break;
             case HID_CMD_UNKNOWN_ERROR:
                 // メッセージを画面表示
-                [self doResponseToAppDelegate:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
             default:
                 break;
         }
+    }
+
+#pragma mark - Common method
+
+    - (void)displayMessage:(NSString *)string {
+        // メッセージを画面表示
+        [[self delegate] notifyToolCommandMessage:string];
+    }
+
+    - (void)displayStartMessage {
+        // コマンド種別に対応する処理名称を設定
+        switch ([self command]) {
+            case COMMAND_ERASE_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
+                break;
+            case COMMAND_INSTALL_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_INSTALL_SKEY_CERT];
+                break;
+            case COMMAND_TEST_CTAPHID_PING:
+                [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
+                break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
+                break;
+            case COMMAND_CLIENT_PIN_SET:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self setProcessNameOfCommand:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
+                break;
+            case COMMAND_AUTH_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
+                break;
+            default:
+                [self setProcessNameOfCommand:nil];
+                break;
+        }
+        // コマンド開始メッセージを画面表示
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                              [self processNameOfCommand]];
+        [self displayMessage:startMsg];
+    }
+
+    - (void)commandDidProcess:(bool)result message:(NSString *)message {
+        // 即時でアプリケーションに制御を戻す
+        [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:result message:message];
     }
 
 #pragma mark - Interface for SetPinParamWindow
@@ -392,8 +433,8 @@
     }
 
     - (void)setPinParamWindowDidClose {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
     }
 
 #pragma mark - Interface for PinCodeParamWindow
@@ -405,8 +446,8 @@
     }
 
     - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
     }
 
 @end
