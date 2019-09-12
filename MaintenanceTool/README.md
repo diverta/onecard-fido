@@ -1,7 +1,7 @@
 # FIDO認証器管理ツール
 
 ## 概要
-PC環境から、FIDO認証器の動作に必要な鍵・証明書の導入などを行うツールです。
+PC環境から、[FIDO認証器](../nRF5_SDK_v15.3.0)の動作に必要な鍵・証明書の導入などを行うツールです。
 
 macOS版と、Windows版を用意しました。
 
@@ -28,4 +28,4 @@ macOS Sierra (Version 10.12.6)〜
 <img src="assets/0002.png" width="500">
 
 #### 動作環境
-Windows 10 (32bit版／64bit版)
+Windows 10 (64bit版)

@@ -21,7 +21,7 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/08/29（Version 0.1.17）
+#### 2019/09/12（Version 0.1.18）
 
 FIDO認証器管理ツールを修正しました。<br>
 
@@ -29,7 +29,11 @@ FIDO認証器管理ツールを修正しました。<br>
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
 
 修正点は以下になります。
-- Windows版管理ツールでBLEペアリングエラーが発生してしまう不具合を解消（[#233](https://github.com/diverta/onecard-fido/issues/233) ご参照）
+- ヘルスチェック機能を強化（[#202](https://github.com/diverta/onecard-fido/issues/202) ご参照）<br>
+「BLE経由でのCTAP2ヘルスチェック」「USB経由でのU2Fヘルスチェック」を追加しています。
+- Windows版管理ツールで、複数デバイスとペアリング済み時に接続エラーが発生してしまう不具合を解消（[#239](https://github.com/diverta/onecard-fido/issues/239) ご参照）
+
+また、管理ツール関連のドキュメントを最新情報に更新しております。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
@@ -45,17 +49,17 @@ FIDO認証器管理ツールを修正しました。<br>
 
 FIDOの新世代パスワードレス認証（<b>WebAuthn</b>）に対応するために用意された、FIDO 2.0の技術仕様です。
 
-[nRF52840版 FIDO2認証器](nRF5_SDK_v15.2.0)では、既にUSB HIDトランスポート、BLEトランスポートに対応しています。<br>
+[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)では、既にUSB HIDトランスポート、BLEトランスポートに対応しています。<br>
 NFCトランスポートは、後日対応予定です。
 
 また、Windows環境（Edgeブラウザー）でのWebAuthnは、PINコード（暗証番号）入力が必須となるのですが、こちらの方もすでに対応済みとなっております。
 
-Windows環境による具体的なテスト方法は、別途手順書[「Edgeブラウザーを使用したWebAuthnテスト手順」](Research/FIDO_2_0/EDGETEST.md)をご参照ください。
+Windows環境による具体的なテスト方法は、別途手順書[「Edgeブラウザーを使用したWebAuthnテスト手順」](FIDO2Device/MDBT50Q_Dongle/WEBAUTHNTEST.md)をご参照ください。
 
 ## 以前の仕様
 
 以下の項目は、FIDOの旧世代２要素認証（U2F）に関する開発物件になります。<br>
-[nRF52840版 FIDO2認証器](nRF5_SDK_v15.2.0)においては、U2FはCTAP2と同居していますので、現在も稼働させることができます。
+[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)においては、U2FはCTAP2と同居していますので、現在も稼働させることができます。
 
 ただし、U2FはChromeブラウザーのみのサポートであり、かつ将来的にサポートが拡張される予定もないため、現在はメンテナンスをストップさせております。<br>
 何卒ご容赦ください。

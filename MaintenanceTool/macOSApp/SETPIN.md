@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)にPINコード（暗証番号）を設定する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)にPINコード（暗証番号）を設定する手順を掲載します。
 
 ## 管理ツールのインストール
 
@@ -14,7 +14,7 @@
 
 ### PINコードの新規設定
 
-管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)を装着します。<br>
+管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)を装着します。<br>
 その後「PINコード設定」ボタンをクリックします。
 
 <img src="assets/0013.png" width="400">
@@ -85,9 +85,9 @@ PINコードを解除したい場合は、管理ツール画面の「PINコー�
 
 <img src="assets/0026.png" width="400">
 
-認証器上のLEDが高速点滅するので、認証器上のMAIN SW（タクトスイッチ）を１回プッシュしてください。
+認証器上の赤色LEDが高速点滅するので、認証器上のMAIN SW（タクトスイッチ）を１回プッシュしてください。
 
-<img src="assets/0018.png" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0006.jpg" width="400">
 
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 

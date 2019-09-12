@@ -2,6 +2,16 @@
 
 ## プログラム更新履歴
 
+#### 2019/08/29（Version 0.1.17）
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
+- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
+
+修正点は以下になります。
+- Windows版管理ツールでBLEペアリングエラーが発生してしまう不具合を解消（[#233](https://github.com/diverta/onecard-fido/issues/233) ご参照）
+
 #### 2019/08/27（Version 0.1.16）
 
 FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
