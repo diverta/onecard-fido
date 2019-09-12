@@ -20,13 +20,8 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### ファームウェアの書込み
 
-[FIDO2認証器](../../nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
-書込み手順につきましては、<b>[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)</b>をご参照ください。
-
-ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: onecard-fido/nRF5_SDK_v15.2.0/firmwares/
-- アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
-- ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](../../nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
+[FIDO2認証器](../../nRF5_SDK_v15.3.0)のファームウェアを、MDBT50Q Dongleに書込みます。<br>
+書込み手順につきましては、<b>[アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)</b>をご参照ください。
 
 #### 管理ツールを導入
 
@@ -46,7 +41,7 @@ PC環境に導入した管理ツールを使用し、鍵・証明書のインス
 
 ## CTAP2ヘルスチェックの実行
 
-nRF52840 DongleをPCのUSBポートに装着後、管理ツールを起動します。
+MDBT50Q DongleをPCのUSBポートに装着後、管理ツールを起動します。
 
 <img src="assets/0019.png" width="400">
 
@@ -62,7 +57,7 @@ PIN入力画面がポップアップ表示されますので、認証器に設�
 
 <img src="assets/0022.png" width="400">
 
-nRF52840 Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
+MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0014.jpg" width="400">
 
