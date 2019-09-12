@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](../../nRF5_SDK_v15.3.0)のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -14,7 +14,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/MDBT50Q_Dongle/README.md)」を、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用します。
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、[FIDO2認証器](../../nRF5_SDK_v15.3.0)として使用します。
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0000.jpg" width="300">
 
