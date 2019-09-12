@@ -12,17 +12,11 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 ## 認証器の準備
 
-#### 使用できる機材
+#### 使用機材
 
-Nordic社から販売されている開発基板「nRF52840 DK」または「nRF52840 Dongle」が、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用できます。
+本ドキュメントでは「[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/MDBT50Q_Dongle/README.md)」を、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用します。
 
-- nRF52840 DK<br>
-https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/
-
-- nRF52840 Dongle<br>
-https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/
-
-本文では、nRF52840 Dongleを使用するものとしております。
+<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0000.jpg" width="300">
 
 #### ファームウェアの書込み
 
@@ -70,7 +64,7 @@ PIN入力画面がポップアップ表示されますので、認証器に設�
 
 nRF52840 Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
-<img src="assets/0018.png" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0014.jpg" width="400">
 
 ヘルスチェック処理が成功すると「CTAP2ヘルスチェックが成功しました。」というメッセージが表示されます。
 
