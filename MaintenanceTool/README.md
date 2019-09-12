@@ -28,4 +28,4 @@ macOS Sierra (Version 10.12.6)〜
 <img src="assets/0002.png" width="500">
 
 #### 動作環境
-Windows 10 (32bit版／64bit版)
+Windows 10 (64bit版)

@@ -17,7 +17,7 @@ PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-f
 <img src="../assets/0002.png" width="500">
 
 ### 動作環境
-Windows 10（32bit／64bit）
+Windows 10（64bit）
 
 ## 手順書
 
