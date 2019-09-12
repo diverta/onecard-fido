@@ -1,7 +1,7 @@
 # Windows版 FIDO認証器管理ツール
 
 ## 概要
-PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)（以下単にFIDO認証器）の動作に必要な鍵・証明書の導入などを行うツールです。
+PC環境から、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)（以下単にFIDO認証器）の動作に必要な鍵・証明書の導入などを行うツールです。
 
 ### 機能
 * ペアリング実行
@@ -32,6 +32,3 @@ FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載�
 
 - <b>[CTAP2ヘルスチェック実行手順](CTAP2HCHECK.md)</b><br>
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
-
-- <b>[Edgeブラウザーを使用したWebAuthnテスト手順](../../Research/FIDO_2_0/EDGETEST.md)</b><br>
-FIDO認証器と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPINコードにより行う手順を掲載しています。
