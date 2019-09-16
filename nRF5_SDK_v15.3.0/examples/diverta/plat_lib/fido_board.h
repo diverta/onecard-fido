@@ -9,10 +9,29 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <sdk_config.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// ボード情報管理
+//   アプリケーションのバージョン
+#ifndef APP_REV
+#define APP_REV             "0.0.0"
+#endif
+//   ボード名称
+#if   defined(BOARD_PCA10056)
+#define DEVICE_NAME         "FIDO authenticator board"
+#elif defined(BOARD_PCA10059)
+#define DEVICE_NAME         "FIDO authenticator dongle"
+#else
+#define DEVICE_NAME         "FIDO authenticator"
+#endif
+//   Device Information Service（BLE）が提供する情報
+#define MANUFACTURER_NAME   "Diverta Inc."
+#define MODEL_NUM           "0001"
+#define FW_REV              "15.3.0"
 
 // LED種別
 typedef enum _LED_COLOR {

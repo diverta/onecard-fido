@@ -3,6 +3,9 @@ TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10056
 
+# application version info
+CFLAGS += -DAPP_REV=\"0.1.19\"
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
