@@ -166,3 +166,19 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
         nrf_gpio_pin_set(pin_number);
     }
 }
+
+//
+// デバイスのバージョン情報関連
+// 
+bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size)
+{
+    // 格納領域を初期化
+    memset(info_csv_data, 0, *info_csv_size);
+
+    // 各項目をCSV化し、引数のバッファに格納
+    sprintf((char *)info_csv_data, 
+        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",APP_REV=\"%s\"", DEVICE_NAME, FW_REV, APP_REV);
+    *info_csv_size = strlen((char *)info_csv_data);
+    NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
+    return true;
+}
