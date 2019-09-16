@@ -46,9 +46,9 @@ NRF_LOG_MODULE_REGISTER();
 #define DEVICE_NAME                         "Diverta_FIDO_Authenticator"            /**< Name of device. Will be included in the advertising data. */
 #endif
 
-#define MANUFACTURER_NAME                   "Diverta,Inc"                           /**< Manufacturer. Will be passed to Device Information Service. */
+#define MANUFACTURER_NAME                   "Diverta Inc."                           /**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUM                           "Diverta FIDO Authenticator"            /**< Model number. Will be passed to Device Information Service. */
-#define FW_REV                              "15.2.0"                                /**< firmware revision. Will be passed to Device Information Service. */
+#define FW_REV                              "15.3.0"                                /**< firmware revision. Will be passed to Device Information Service. */
 
 #define APP_ADV_INTERVAL                    300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 #define APP_ADV_DURATION                    18000                                   /**< The advertising duration (180 seconds) in units of 10 milliseconds. */

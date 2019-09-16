@@ -3475,7 +3475,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> List of product names that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRINGS_PRODUCT
-#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("U2F USB HID Authenticator")
+#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("Diverta FIDO Authenticator")
 #endif
 
 // </e>
