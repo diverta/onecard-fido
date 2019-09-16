@@ -35,6 +35,11 @@ bool     fido_ble_service_disconnected(void);
 void     fido_ble_service_disconnect_force(void);
 
 //
+// fido_board.c
+//
+bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size);
+
+//
 // fido_crypto.c
 //
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
