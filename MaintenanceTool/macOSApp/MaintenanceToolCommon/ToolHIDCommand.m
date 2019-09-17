@@ -319,6 +319,9 @@
             case COMMAND_HID_GET_FLASH_STAT:
                 [self doHidGetFlashStat];
                 break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self doHidGetFlashStat];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -404,6 +407,9 @@
                 break;
             case COMMAND_HID_GET_FLASH_STAT:
                 [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];

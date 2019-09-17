@@ -367,6 +367,12 @@
                                                 <action selector="menuItemTestHID4DidSelect:" target="494" id="vyY-3J-f9s"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="バージョン情報取得" id="Wfx-0z-Fa6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID5DidSelect:" target="494" id="QMh-LU-o06"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

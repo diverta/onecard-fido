@@ -43,6 +43,7 @@
 #define PROCESS_NAME_TEST_CTAPHID_PING              @"HID PINGテスト"
 #define PROCESS_NAME_TEST_BLE_PING                  @"BLE PINGテスト"
 #define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"
+#define PROCESS_NAME_GET_VERSION_INFO               @"バージョン情報取得"
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"

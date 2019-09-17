@@ -188,6 +188,15 @@
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_FLASH_STAT];
     }
 
+    - (IBAction)menuItemTestHID5DidSelect:(id)sender {
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        // バージョン情報取得
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_INFO];
+    }
+
     - (IBAction)menuItemTestBLE1DidSelect:(id)sender {
         // BLE CTAP2ヘルスチェック実行（PINコード入力画面を開く）
         [self enableButtons:false];
