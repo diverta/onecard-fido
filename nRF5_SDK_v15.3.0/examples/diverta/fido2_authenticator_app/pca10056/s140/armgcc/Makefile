@@ -4,7 +4,9 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
 
 # application version info
-CFLAGS += -DAPP_REV=\"0.1.19\"
+CFLAGS += -DFW_REV=\"0.1.19\"
+# hardware version info
+CFLAGS += -DHW_REV=\"0.1\"
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
