@@ -15,6 +15,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_ERASE_SKEY_CERT = 0xc0;
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
+        public const int HID_CMD_GET_VERSION_INFO = 0xc3;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
@@ -98,6 +99,9 @@ namespace MaintenanceToolGUI
                 break;
             case Const.HID_CMD_GET_FLASH_STAT:
                 DoResponseGetFlashStat(message, length);
+                break;
+            case Const.HID_CMD_GET_VERSION_INFO:
+                DoResponseGetVersionInfo(message, length);
                 break;
             case Const.HID_CMD_CTAPHID_CBOR:
                 ctap2.DoResponseCtapHidCbor(message, length);
@@ -276,6 +280,46 @@ namespace MaintenanceToolGUI
 
             // 画面に制御を戻す
             mainForm.OnPrintMessageText(string.Format("  {0}{1}", rateText, corruptText));
+            mainForm.OnAppMainProcessExited(true);
+        }
+
+        public void DoGetVersionInfo()
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_VERSION_INFO, RequestData, 0);
+        }
+
+        private void DoResponseGetVersionInfo(byte[] message, int length)
+        {
+            // 戻りメッセージから、取得情報CSVを抽出
+            byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
+            string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
+            AppCommon.OutputLogToFile("FIDO authenticator version info: " + responseCSV, true);
+
+            // 情報取得CSVからバージョンに関する情報を抽出
+            string[] vars = responseCSV.Split(',');
+            string strDeviceName = "";
+            string strFWRev = "";
+            string strHWRev = "";
+            foreach (string v in vars) {
+                if (v.StartsWith("DEVICE_NAME=")) {
+                    strDeviceName = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("FW_REV=")) {
+                    strFWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("HW_REV=")) {
+                    strHWRev = v.Split('=')[1].Replace("\"", "");
+                }
+            }
+
+            // 画面に制御を戻す
+            mainForm.OnPrintMessageText(AppCommon.MSG_VERSION_INFO_HEADER);
+            mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_DEVICE_NAME, strDeviceName));
+            mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev));
+            mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_HW_REV, strHWRev));
             mainForm.OnAppMainProcessExited(true);
         }
 

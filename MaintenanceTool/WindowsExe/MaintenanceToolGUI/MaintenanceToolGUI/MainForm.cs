@@ -103,6 +103,11 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoGetFlashStat();
             }
+            else if (sender.Equals(DoHIDGetVersionInfoToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_GET_VERSION_INFO;
+                DisplayStartMessage(commandTitle);
+                hid.DoGetVersionInfo();
+            } 
             else if (sender.Equals(DoBLEU2fTestToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_BLE_U2F_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
@@ -366,10 +371,8 @@ namespace MaintenanceToolGUI
 
         private void DoHIDGetVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: 仮の仕様です。
-            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_HEADER);
-            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_CONTENT1);
-            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_CONTENT2);
+            // バージョン情報取得コマンドを実行
+            doCommand(sender);
         }
 
         private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
