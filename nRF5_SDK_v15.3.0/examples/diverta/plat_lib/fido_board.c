@@ -177,7 +177,7 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
 
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data, 
-        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",APP_REV=\"%s\"", DEVICE_NAME, FW_REV, APP_REV);
+        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", DEVICE_NAME, FW_REV, HW_REV);
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;

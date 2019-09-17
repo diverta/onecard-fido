@@ -17,8 +17,12 @@ extern "C" {
 
 // ボード情報管理
 //   アプリケーションのバージョン
-#ifndef APP_REV
-#define APP_REV             "0.0.0"
+#ifndef FW_REV
+#define FW_REV              "0.0.0"
+#endif
+//   ハードウェアのバージョン
+#ifndef HW_REV
+#define HW_REV              "0.0"
 #endif
 //   ボード名称
 #if   defined(BOARD_PCA10056)
@@ -31,7 +35,6 @@ extern "C" {
 //   Device Information Service（BLE）が提供する情報
 #define MANUFACTURER_NAME   "Diverta Inc."
 #define MODEL_NUM           "0001"
-#define FW_REV              "15.3.0"
 
 // LED種別
 typedef enum _LED_COLOR {
