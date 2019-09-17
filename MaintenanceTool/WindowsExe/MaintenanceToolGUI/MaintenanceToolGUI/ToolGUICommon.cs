@@ -45,6 +45,7 @@
         public const string PROCESS_NAME_HID_U2F_HEALTHCHECK = "HID U2Fヘルスチェック";
         public const string PROCESS_NAME_TEST_CTAPHID_PING = "HID PINGテスト";
         public const string PROCESS_NAME_GET_FLASH_STAT = "Flash ROM情報取得";
+        public const string PROCESS_NAME_GET_VERSION_INFO = "バージョン情報取得";
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "PINコード解除";

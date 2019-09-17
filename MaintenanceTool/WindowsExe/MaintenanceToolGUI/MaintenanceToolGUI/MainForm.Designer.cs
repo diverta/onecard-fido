@@ -48,7 +48,8 @@
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDPingTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.flashROM情報取得ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHIDGetFlashInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoHIDGetVersionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bLEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoBLECtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoBLEU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -197,7 +198,8 @@
             this.DoHIDCtap2TestToolStripMenuItem,
             this.DoHIDU2fTestToolStripMenuItem,
             this.DoHIDPingTestToolStripMenuItem,
-            this.flashROM情報取得ToolStripMenuItem});
+            this.DoHIDGetFlashInfoToolStripMenuItem,
+            this.DoHIDGetVersionInfoToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
             this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
@@ -223,12 +225,19 @@
             this.DoHIDPingTestToolStripMenuItem.Text = "PINGテスト実行";
             this.DoHIDPingTestToolStripMenuItem.Click += new System.EventHandler(this.DoHIDPingTestToolStripMenuItem_Click);
             // 
-            // flashROM情報取得ToolStripMenuItem
+            // DoHIDGetFlashInfoToolStripMenuItem
             // 
-            this.flashROM情報取得ToolStripMenuItem.Name = "flashROM情報取得ToolStripMenuItem";
-            this.flashROM情報取得ToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.flashROM情報取得ToolStripMenuItem.Text = "Flash ROM情報取得";
-            this.flashROM情報取得ToolStripMenuItem.Click += new System.EventHandler(this.flashROM情報取得ToolStripMenuItem_Click);
+            this.DoHIDGetFlashInfoToolStripMenuItem.Name = "DoHIDGetFlashInfoToolStripMenuItem";
+            this.DoHIDGetFlashInfoToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDGetFlashInfoToolStripMenuItem.Text = "Flash ROM情報取得";
+            this.DoHIDGetFlashInfoToolStripMenuItem.Click += new System.EventHandler(this.DoHIDGetFlashInfoToolStripMenuItem_Click);
+            // 
+            // DoHIDGetVersionInfoToolStripMenuItem
+            // 
+            this.DoHIDGetVersionInfoToolStripMenuItem.Name = "DoHIDGetVersionInfoToolStripMenuItem";
+            this.DoHIDGetVersionInfoToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.DoHIDGetVersionInfoToolStripMenuItem.Text = "バージョン情報取得";
+            this.DoHIDGetVersionInfoToolStripMenuItem.Click += new System.EventHandler(this.DoHIDGetVersionInfoToolStripMenuItem_Click);
             // 
             // bLEToolStripMenuItem
             // 
@@ -333,10 +342,11 @@
         private System.Windows.Forms.ToolStripMenuItem DoBLEU2fTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDCtap2TestToolStripMenuItem;
         private System.Windows.Forms.Timer commandTimer;
-        private System.Windows.Forms.ToolStripMenuItem flashROM情報取得ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHIDGetFlashInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLEPingTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLECtap2TestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDU2fTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoHIDGetVersionInfoToolStripMenuItem;
     }
 }
 
