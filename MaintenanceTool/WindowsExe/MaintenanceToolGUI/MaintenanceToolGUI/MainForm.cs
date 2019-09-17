@@ -98,7 +98,7 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoTestCtapHidPing();
             }
-            else if (sender.Equals(flashROM情報取得ToolStripMenuItem)) {
+            else if (sender.Equals(DoHIDGetFlashInfoToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_GET_FLASH_STAT;
                 DisplayStartMessage(commandTitle);
                 hid.DoGetFlashStat();
@@ -358,10 +358,18 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private void flashROM情報取得ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoHIDGetFlashInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Flash ROM情報取得コマンドを実行
             doCommand(sender);
+        }
+
+        private void DoHIDGetVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: 仮の仕様です。
+            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_HEADER);
+            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_CONTENT1);
+            OnPrintMessageText(AppCommon.MSG_VERSION_INFO_CONTENT2);
         }
 
         private void DoBLECtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
