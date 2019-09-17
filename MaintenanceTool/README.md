@@ -13,6 +13,7 @@ macOS版と、Windows版を用意しました。
 * ヘルスチェック実行
 * コマンドテスト機能
 * Flash ROM情報取得機能
+* バージョン情報取得機能
 
 ## [macOS版](macOSApp)
 

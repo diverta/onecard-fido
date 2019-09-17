@@ -227,6 +227,44 @@
         [self commandDidProcess:true message:nil];
     }
 
+    - (void)doHidGetVersionInfo {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // コマンド 0xC3 を実行（メッセージはブランクとする）
+        NSData *message = [[NSData alloc] init];
+        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
+        [self doRequest:message CID:cid CMD:HID_CMD_GET_VERSION_INFO];
+    }
+
+    - (void)doResponseHidGetVersionInfo:(NSData *)message {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        NSLog(@"FIDO authenticator version info: %@", responseCSV);
+        // 情報取得CSVからバージョン情報を抽出
+        NSString *strDeviceName = @"";
+        NSString *strFWRev = @"";
+        NSString *strHWRev = @"";
+        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
+            NSArray *items = [element componentsSeparatedByString:@"="];
+            NSString *key = [items objectAtIndex:0];
+            NSString *val = [items objectAtIndex:1];
+            if ([key isEqualToString:@"DEVICE_NAME"]) {
+                strDeviceName = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"FW_REV"]) {
+                strFWRev = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"HW_REV"]) {
+                strHWRev = [self extractCSVItemFrom:val];
+            }
+        }
+        // 画面に制御を戻す
+        [self displayMessage:MSG_VERSION_INFO_HEADER];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
+        [self commandDidProcess:true message:nil];
+    }
+
     - (void)doEraseSkeyCert {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -319,6 +357,9 @@
             case COMMAND_HID_GET_FLASH_STAT:
                 [self doHidGetFlashStat];
                 break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self doHidGetVersionInfo];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -364,6 +405,9 @@
             case HID_CMD_GET_FLASH_STAT:
                 [self doResponseHidGetFlashStat:message];
                 break;
+            case HID_CMD_GET_VERSION_INFO:
+                [self doResponseHidGetVersionInfo:message];
+                break;
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];
@@ -405,6 +449,9 @@
             case COMMAND_HID_GET_FLASH_STAT:
                 [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
                 break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
                 break;
@@ -444,6 +491,16 @@
         size_t cborLength = [responseMessage length] - 1;
         NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
         return cborBytes;
+    }
+
+    - (NSString *)extractCSVItemFrom:(NSString *)val {
+        // 文字列の前後に２重引用符が含まれていない場合は終了
+        if ([val length] < 2) {
+            return val;
+        }
+        // 取得した項目から、２重引用符を削除
+        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        return item;
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {

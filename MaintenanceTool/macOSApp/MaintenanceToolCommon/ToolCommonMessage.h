@@ -43,6 +43,7 @@
 #define PROCESS_NAME_TEST_CTAPHID_PING              @"HID PINGテスト"
 #define PROCESS_NAME_TEST_BLE_PING                  @"BLE PINGテスト"
 #define PROCESS_NAME_GET_FLASH_STAT                 @"Flash ROM情報取得"
+#define PROCESS_NAME_GET_VERSION_INFO               @"バージョン情報取得"
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
@@ -135,6 +136,12 @@
 #define MSG_FSTAT_NON_REMAINING_RATE        @"Flash ROMの空き容量を取得できませんでした。"
 #define MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST @"破損している領域は存在しません。"
 #define MSG_FSTAT_CORRUPTING_AREA_EXIST     @"破損している領域が存在します。"
+
+#pragma mark - バージョン情報取得関連メッセージ
+#define MSG_VERSION_INFO_HEADER             @"FIDO認証器のバージョン情報"
+#define MSG_VERSION_INFO_DEVICE_NAME        @"  デバイス名: %@"
+#define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@"
+#define MSG_VERSION_INFO_HW_REV             @"  ハードウェアのバージョン: %@"
 
 #pragma mark - BLEペアリング関連のメッセージ文言
 #define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
