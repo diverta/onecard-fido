@@ -137,6 +137,12 @@
 #define MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST @"破損している領域は存在しません。"
 #define MSG_FSTAT_CORRUPTING_AREA_EXIST     @"破損している領域が存在します。"
 
+#pragma mark - バージョン情報取得関連メッセージ
+#define MSG_VERSION_INFO_HEADER             @"FIDO認証器のバージョン情報"
+#define MSG_VERSION_INFO_DEVICE_NAME        @"  デバイス名: %@"
+#define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@"
+#define MSG_VERSION_INFO_HW_REV             @"  ハードウェアのバージョン: %@"
+
 #pragma mark - BLEペアリング関連のメッセージ文言
 #define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
 #define MSG_BLE_PARING_ERR_TIMED_OUT        @"FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。"

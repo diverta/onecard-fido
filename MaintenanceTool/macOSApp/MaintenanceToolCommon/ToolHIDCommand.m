@@ -241,7 +241,27 @@
         NSData *responseBytes = [self extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         NSLog(@"FIDO authenticator version info: %@", responseCSV);
+        // 情報取得CSVからバージョン情報を抽出
+        NSString *strDeviceName = @"";
+        NSString *strFWRev = @"";
+        NSString *strHWRev = @"";
+        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
+            NSArray *items = [element componentsSeparatedByString:@"="];
+            NSString *key = [items objectAtIndex:0];
+            NSString *val = [items objectAtIndex:1];
+            if ([key isEqualToString:@"DEVICE_NAME"]) {
+                strDeviceName = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"FW_REV"]) {
+                strFWRev = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"HW_REV"]) {
+                strHWRev = [self extractCSVItemFrom:val];
+            }
+        }
         // 画面に制御を戻す
+        [self displayMessage:MSG_VERSION_INFO_HEADER];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
         [self commandDidProcess:true message:nil];
     }
 
@@ -471,6 +491,16 @@
         size_t cborLength = [responseMessage length] - 1;
         NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
         return cborBytes;
+    }
+
+    - (NSString *)extractCSVItemFrom:(NSString *)val {
+        // 文字列の前後に２重引用符が含まれていない場合は終了
+        if ([val length] < 2) {
+            return val;
+        }
+        // 取得した項目から、２重引用符を削除
+        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        return item;
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
