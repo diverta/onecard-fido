@@ -36,24 +36,12 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)へのファームウェア書込みについては、別ドキュメント<b>「[アプリケーション書込み手順](../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)」</b>をご参照願います。
 　
-## 動作確認手順
-
-#### WebAuthn
-
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)と、Edgeブラウザー、デモサイトを使用して、WebAuthnのMakeCredential／GetAssertionの動作確認をする場合は、以下の手順で進めるようにします。
-
-- <b>[Edgeブラウザーを使用したWebAuthnテスト手順](../FIDO2Device/MDBT50Q_Dongle/WEBAUTHNTEST.md)</b>
-
-#### U2F
-
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)と、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合は、以下の手順で進めるようにします。
-
-- <b>[Googleアカウントのログイン確認手順（PC）](../nRF5_SDK_v15.3.0/PCCHROME.md)</b>
-
-- <b>[AndroidでのU2F Authenticate確認手順](../nRF5_SDK_v15.2.0/ANDROID.md)</b>
-
 ## 開発環境構築手順
 
 以下の手順書をご参照願います。
 
 - <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
+
+## 動作確認手順
+
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)の関連ドキュメントをご参照願います。

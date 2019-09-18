@@ -6,20 +6,28 @@
 
 <img src="assets/0000.jpg" width="500">
 
-- <b>[MDBT50Q Dongleの概要](HWSUMMARY.md)</b>
+#### [MDBT50Q Dongleの概要](HWSUMMARY.md)
 
-- <b>[MDBT50Q Dongle回路図](../pcb/FIDO2AUTH_001.pdf)</b>
+基板、動作についての概要を説明しています。
+
+#### [MDBT50Q Dongle回路図](../pcb/FIDO2AUTH_001.pdf)
+
+nRF52840 Dongleをベースとし、電池電源の増設と、若干の配線変更を行っております。
 
 ## 使用ファームウェア
 
-MDBT50Q Dongleは、回路がnRF52840 Dongleと同等ですので、本プロジェクトで開発中の[FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)がそのまま利用できます。
+MDBT50Q Dongleは、本プロジェクトで開発中の[FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)が利用できます。
 
-アプリケーションの書込み手順はこちら --> <b>[アプリケーション書込み手順](APPINSTALL.md)</b>
+#### [アプリケーション書込み手順](APPINSTALL.md)
+
+nRF52840 DKに同梱されているJ-LinkのSWDインターフェースを使用して、MDBT50Q Dongleにアプリケーションを書き込む手順を掲載しています。
 
 ## 動作確認手順
 
-### WebAuthn
+#### [Edgeブラウザーを使用したWebAuthnテスト手順（Windows10 PC）](WEBAUTHNTEST.md)
 
-MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAuthnのユーザー登録／ログイン（MakeCredential／GetAssertion）の動作確認をする場合は、以下の手順で進めるようにします。
+MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAuthnのユーザー登録／ログイン（MakeCredential／GetAssertion）の動作確認をする場合の手順を掲載しています。
 
-- <b>[Edgeブラウザーを使用したWebAuthnテスト手順](WEBAUTHNTEST.md)</b>
+#### [Googleアカウントのログイン確認手順（PC）](PCCHROME.md)
+
+MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
