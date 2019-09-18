@@ -13,7 +13,7 @@ FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケ�
 
 FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
-### ハードウェア
+## ハードウェア
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)＋PCのUSBポートの組み合わせによるWebAuthn操作を想定しています。[注1]
 
@@ -23,7 +23,7 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 [注1] PCのUSBポートに装着するとUSB HIDデバイスとして動作しますが、ボタン電池を装着し、USBポートに接続しない状態で使用すると、BLEセントラルデバイスとして稼働するよう実装されています。<br>
 [注2] nRF USB端子をUSBケーブル経由でPCに接続した場合はUSB HIDデバイス、未接続の場合はBLEペリフェラルデバイスとして動作します（プログラムにより自動的に切り替えが行われます）。<br>
 
-### ファームウェア
+## ファームウェア
 
 「nRF52840版 FIDO2.0認証器」で使用するファームウェアは下記の２本になります。<br>
 フォルダー[`firmwares`](firmwares/README.md) に格納しています。
@@ -38,17 +38,17 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 　
 ## 動作確認手順
 
-### WebAuthn
+#### WebAuthn
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)と、Edgeブラウザー、デモサイトを使用して、WebAuthnのMakeCredential／GetAssertionの動作確認をする場合は、以下の手順で進めるようにします。
 
 - <b>[Edgeブラウザーを使用したWebAuthnテスト手順](../FIDO2Device/MDBT50Q_Dongle/WEBAUTHNTEST.md)</b>
 
-### U2F
+#### U2F
 
-nRF52840 Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合は、以下の手順で進めるようにします。
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)と、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合は、以下の手順で進めるようにします。
 
-- <b>[PCでのU2F Register/Authenticate確認手順](../nRF5_SDK_v15.2.0/PCCHROME.md)</b>
+- <b>[Googleアカウントのログイン確認手順（PC）](../nRF5_SDK_v15.3.0/PCCHROME.md)</b>
 
 - <b>[AndroidでのU2F Authenticate確認手順](../nRF5_SDK_v15.2.0/ANDROID.md)</b>
 
