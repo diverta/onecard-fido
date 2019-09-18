@@ -16,11 +16,11 @@ nRF52840 Dongleをベースとし、電池電源の増設と、若干の配線�
 
 ## 使用ファームウェア
 
-MDBT50Q Dongleは、本プロジェクトで開発中の[FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)が利用できます。
+MDBT50Q Dongleのファームウェアは、本プロジェクトで開発中の[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)をご使用ください。
 
 #### [アプリケーション書込み手順](APPINSTALL.md)
 
-nRF52840 DKに同梱されているJ-LinkのSWDインターフェースを使用して、MDBT50Q Dongleにアプリケーションを書き込む手順を掲載しています。
+nRF52840 DKに同梱されているJ-LinkのSWDインターフェースを使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。
 
 ## 動作確認手順
 
