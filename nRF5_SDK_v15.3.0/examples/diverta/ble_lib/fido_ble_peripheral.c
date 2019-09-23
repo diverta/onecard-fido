@@ -328,6 +328,12 @@ void fido_ble_peripheral_init(void)
     //   取得する必要があるための措置
     advertising_init();
     NRF_LOG_INFO("BLE peripheral initialized");
+
+    // ペアリングモードの場合は
+    // このタイミングで黄色LEDを点灯させる
+    if (fido_ble_pairing_mode_get()) {
+        fido_status_indicator_pairing_mode();
+    }
 }
 
 void fido_ble_peripheral_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
@@ -429,14 +435,10 @@ void fido_ble_peripheral_start(void)
     // BLEペリフェラル・モードに遷移
     fido_ble_peripheral_advertising_start();
 
-    // LED制御をアイドル中に変更
-    if (fido_ble_pairing_mode_get()) {
-        // ペアリングモードの場合は
-        // RED LEDの連続点灯とします。
-        fido_status_indicator_pairing_mode();
-
-    } else {
-        // 青色LEDを秒間２回点滅
+    if (fido_ble_pairing_mode_get() == false) {
+        // LED制御をアイドル中に変更
+        //   ペアリングモードでない場合は
+        //   青色LEDを秒間２回点滅
         fido_status_indicator_idle();
     }
 }
