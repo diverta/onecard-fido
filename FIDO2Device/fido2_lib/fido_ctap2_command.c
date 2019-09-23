@@ -512,8 +512,8 @@ static void command_authenticator_reset(void)
     is_tup_needed = true;
     fido_log_info("authenticatorReset: waiting to complete the test of user presence");
 
-    // 赤色LED高速点滅開始
-    fido_status_indicator_prompt_reset();
+    // 赤色LED高速点滅開始し、ボタン押下を待つ
+    fido_user_presence_verify_start_on_reset();
 }
 
 static void command_authenticator_reset_resume_process(void)

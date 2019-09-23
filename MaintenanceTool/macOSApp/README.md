@@ -1,7 +1,7 @@
 # macOS版 FIDO認証器管理ツール
 
 ## 概要
-PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)（以下単にFIDO認証器）の動作に必要な鍵・証明書の導入などを行うツールです。
+PC環境から、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)（以下単にFIDO認証器）の動作に必要な鍵・証明書の導入などを行うツールです。
 
 ### 機能
 * ペアリング実行
@@ -12,6 +12,7 @@ PC環境から、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-f
 * U2Fヘルスチェック実行
 * コマンドテスト機能
 * Flash ROM情報取得機能
+* バージョン情報取得機能
 
 ### 画面イメージ
 <img src="../assets/0001.png" width="500">
@@ -25,7 +26,7 @@ macOS Sierra (Version 10.12.6) 〜
 FIDO認証器管理ツールをmacOS環境にインストールする手順を掲載しています。
 
 - <b>[鍵・証明書の導入手順](INSTALLKEYCRT.md)</b><br>
-FIDO認証器管理ツールに、鍵・証明書をインストールする手順を掲載しています。
+FIDO認証器に、鍵・証明書をインストールする手順を掲載しています。
 
 - <b>[PINコードの設定手順](SETPIN.md)</b><br>
 FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載しています。

@@ -1,6 +1,6 @@
 //
 //  ToolHIDCommand.m
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2019/03/20.
 //
@@ -12,17 +12,9 @@
 #import "ToolInstallCommand.h"
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
+#import "ToolU2FHealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
-
-// HIDコマンドバイト
-#define HID_CMD_CTAPHID_PING        0x81
-#define HID_CMD_CTAPHID_INIT        0x86
-#define HID_CMD_CTAPHID_CBOR        0x90
-#define HID_CMD_ERASE_SKEY_CERT     0xC0
-#define HID_CMD_INSTALL_SKEY_CERT   0xC1
-#define HID_CMD_GET_FLASH_STAT      0xC2
-#define HID_CMD_UNKNOWN_ERROR       0xBF
 
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
@@ -31,20 +23,17 @@
     @property (nonatomic) ToolClientPINCommand *toolClientPINCommand;
     @property (nonatomic) ToolCTAP2HealthCheckCommand
                                                *toolCTAP2HealthCheckCommand;
+    @property (nonatomic) ToolU2FHealthCheckCommand
+                                               *toolU2FHealthCheckCommand;
 
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
     @property (nonatomic) NSString *certFilePath;
 
-    // 実行中のサブコマンドを保持
-    @property (nonatomic) uint8_t   cborCommand;
-    @property (nonatomic) uint8_t   subCommand;
-
-    // ログインテストカウンター
-    @property (nonatomic) uint8_t   getAssertionCount;
-
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
+    // 処理機能名称を保持
+    @property(nonatomic) NSString  *processNameOfCommand;
 
 @end
 
@@ -63,6 +52,13 @@
         [self setToolInstallCommand:[[ToolInstallCommand alloc] init]];
         [self setToolClientPINCommand:[[ToolClientPINCommand alloc] init]];
         [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
+        [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_HID
+                                               toolBLECommand:nil
+                                               toolHIDCommand:self];
+        [self setToolU2FHealthCheckCommand:[[ToolU2FHealthCheckCommand alloc] init]];
+        [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_HID
+                                             toolBLECommand:nil
+                                             toolHIDCommand:self];
         return self;
     }
 
@@ -96,7 +92,7 @@
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時はエラーメッセージを表示
         NSLog(@"HIDResponse timed out");
-        [[self delegate] hidCommandDidProcess:[self command]
+        [[self delegate] hidCommandDidProcess:[self processNameOfCommand]
                                        result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
@@ -116,28 +112,11 @@
 
 #pragma mark - Command functions
 
-    - (void)displayMessage:(NSString *)string {
-        // メッセージを画面表示
-        [[self delegate] notifyToolCommandMessage:string];
-    }
-
-    - (void)displayStartMessage {
-        // コマンド開始メッセージを画面表示
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              [ToolCommon processNameOfCommand:[self command]]];
-        [self displayMessage:startMsg];
-    }
-
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // HIDデバイスにリクエストを送信
         [[self toolHIDHelper] hidHelperWillSend:message CID:cid CMD:cmd];
         // レスポンスタイムアウトを監視
         [self startResponseTimeoutMonitor];
-    }
-
-    - (void)doResponseToAppDelegate:(bool)result message:(NSString *)message {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:[self command] result:result message:message];
     }
 
     - (void)doRequestCtapHidInit {
@@ -147,16 +126,11 @@
         [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_INIT];
     }
 
-    - (void)doTestCtapHidPing {
-        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
-        [self doRequestCtapHidInit];
-    }
-
     - (void)doResponseCtapHidInit:(NSData *)message {
         if ([self isCorrectNonceBytes:message] == false) {
             // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、
             // 画面に制御を戻す
-            [self doResponseToAppDelegate:false message:nil];
+            [self commandDidProcess:false message:nil];
         }
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_PING:
@@ -167,25 +141,30 @@
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
-                // 受領したCIDを使用し、GetKeyAgreementコマンドを実行
-                [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-                [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT];
-                [self doRequestGetKeyAgreement:[self getNewCIDFrom:message]];
-                break;
             case COMMAND_AUTH_RESET:
-                // 受領したCIDを使用し、authenticatorResetコマンドを実行
-                [self setCborCommand:CTAP2_CMD_RESET];
-                [self doRequestAuthReset:[self getNewCIDFrom:message]];
+                // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
+                [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
+                [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                // 受領したCIDを使用し、U2FRegister／Authenticateコマンドを実行
+                [[self toolU2FHealthCheckCommand] setCID:[self getNewCIDFrom:message]];
+                [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
                 break;
             default:
+                // 画面に制御を戻す
+                NSLog(@"Unknown command %ld", (long)[self command]);
+                [self commandDidProcess:false message:nil];
                 break;
         }
     }
 
-    - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
-        // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
-        char *responseBytes = (char *)[hidInitResponseMessage bytes];
-        return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    - (void)doTestCtapHidPing {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
     }
 
     - (void)doRequestCtapHidPing:(NSData *)cid {
@@ -200,7 +179,7 @@
     - (void)doResponseCtapHidPing:(NSData *)message {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [message isEqualToData:[self pingData]];
-        [self doResponseToAppDelegate:result message:MSG_CMDTST_INVALID_PING];
+        [self commandDidProcess:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetFlashStat {
@@ -245,7 +224,45 @@
             MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : MSG_FSTAT_CORRUPTING_AREA_EXIST;
         // 画面に制御を戻す
         [self displayMessage:[NSString stringWithFormat:@"  %1$@%2$@", rateText, corruptText]];
-        [self doResponseToAppDelegate:true message:nil];
+        [self commandDidProcess:true message:nil];
+    }
+
+    - (void)doHidGetVersionInfo {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // コマンド 0xC3 を実行（メッセージはブランクとする）
+        NSData *message = [[NSData alloc] init];
+        NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
+        [self doRequest:message CID:cid CMD:HID_CMD_GET_VERSION_INFO];
+    }
+
+    - (void)doResponseHidGetVersionInfo:(NSData *)message {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        NSLog(@"FIDO authenticator version info: %@", responseCSV);
+        // 情報取得CSVからバージョン情報を抽出
+        NSString *strDeviceName = @"";
+        NSString *strFWRev = @"";
+        NSString *strHWRev = @"";
+        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
+            NSArray *items = [element componentsSeparatedByString:@"="];
+            NSString *key = [items objectAtIndex:0];
+            NSString *val = [items objectAtIndex:1];
+            if ([key isEqualToString:@"DEVICE_NAME"]) {
+                strDeviceName = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"FW_REV"]) {
+                strFWRev = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"HW_REV"]) {
+                strHWRev = [self extractCSVItemFrom:val];
+            }
+        }
+        // 画面に制御を戻す
+        [self displayMessage:MSG_VERSION_INFO_HEADER];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
+        [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
+        [self commandDidProcess:true message:nil];
     }
 
     - (void)doEraseSkeyCert {
@@ -265,7 +282,7 @@
                             skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
         if (message == nil) {
             // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self doResponseToAppDelegate:false message:[[self toolInstallCommand] lastErrorMessage]];
+            [self commandDidProcess:false message:[[self toolInstallCommand] lastErrorMessage]];
             return;
         }
 
@@ -276,7 +293,7 @@
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self doResponseToAppDelegate:[self checkStatusCode:message] message:nil];
+        [self commandDidProcess:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
     }
 
     - (void)doClientPin {
@@ -286,225 +303,15 @@
         [self doRequestCtapHidInit];
     }
 
-    - (void)doResponseCtapHidCbor:(NSData *)message
-                            CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // ステータスコードを確認し、NGの場合は画面に制御を戻す
-        if ([self checkStatusCode:message] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        switch ([self cborCommand]) {
-            case CTAP2_CMD_CLIENT_PIN:
-                [self doResponseCommandClientPin:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_MAKE_CREDENTIAL:
-                [self doResponseCommandMakeCredential:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_GET_ASSERTION:
-                [self doResponseCommandGetAssertion:message CID:cid CMD:cmd];
-                break;
-            case CTAP2_CMD_RESET:
-                // 画面に制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
-                break;
-            default:
-                // 正しくレスポンスされなかったと判断し、画面に制御を戻す
-                [self doResponseToAppDelegate:false message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandClientPin:(NSData *)message
-                                   CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        
-        switch ([self subCommand]) {
-            case CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT:
-                [self doResponseCommandGetKeyAgreement:cborBytes CID:cid];
-                break;
-            case CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN:
-                [self doResponseCommandGetPinToken:cborBytes CID:cid];
-                break;
-            default:
-                // 画面に制御を戻す
-                [self doResponseToAppDelegate:true message:nil];
-                break;
-        }
-    }
-
-    - (void)doResponseCommandGetKeyAgreement:(NSData *)message CID:(NSData *)cid {
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                // PINトークン取得処理を続行
-                [self doClientPinTokenGet:message CID:cid];
-                break;
-            default:
-                // PIN設定処理を続行
-                [self doClientPinSetOrChange:message CID:cid];
-                break;
-        }
-    }
-
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        if ([[[self toolClientPINCommand] pinOld] length] == 0) {
-            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_SET];
-        } else {
-            [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_CHANGE];
-        }
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
         if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
+            [self commandDidProcess:false message:nil];
             return;
         }
         // コマンドを実行
         [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
-    }
-
-    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
-        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
-        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
-        return newCID;
-    }
-
-    - (void)doRequestGetKeyAgreement:(NSData *)cid {
-        // メッセージを編集し、GetKeyAgreementサブコマンドを実行
-        NSData *message = [[self toolClientPINCommand] generateGetKeyAgreementRequest:[self command]];
-        if (message == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doClientPinTokenGet:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_CLIENT_PIN];
-        [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN];
-        // メッセージを編集し、getPinTokenサブコマンドを実行
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                                generateClientPinTokenGetRequestWith:message];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandGetPinToken:(NSData *)message CID:(NSData *)cid {
-        switch ([self command]) {
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-                // ユーザー登録テスト処理を続行
-                [self doTestMakeCredential:message CID:cid];
-                break;
-            case COMMAND_TEST_GET_ASSERTION:
-                // ログインテスト処理を続行
-                [self doTestGetAssertion:message CID:cid];
-                break;
-            default:
-                // PIN設定処理を続行
-                [self doClientPinSetOrChange:message CID:cid];
-                break;
-        }
-    }
-
-    - (void)doTestMakeCredential:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_MAKE_CREDENTIAL];
-        // メッセージを編集し、MakeCredentialコマンドを実行
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateMakeCredentialRequestWith:message];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandMakeCredential:(NSData *)message
-                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        // MakeCredentialレスポンスを解析して保持
-        if ([[self toolCTAP2HealthCheckCommand]
-             parseMakeCredentialResponseWith:cborBytes] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // CTAP2ヘルスチェックのログインテストを実行
-        [self setGetAssertionCount:1];
-        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
-    }
-
-    - (void)doTestGetAssertion:(NSData *)message CID:(NSData *)cid {
-        // 実行するコマンドを退避
-        [self setCborCommand:CTAP2_CMD_GET_ASSERTION];
-        // メッセージを編集し、GetAssertionコマンドを実行
-        // ２回目のコマンド実行では、MAIN SW押下によるユーザー所在確認が必要
-        bool testUserPresenceNeeded = ([self getAssertionCount] == 2);
-        NSData *request = [[self toolCTAP2HealthCheckCommand]
-                           generateGetAssertionRequestWith:message
-                           userPresence:testUserPresenceNeeded];
-        if (request == nil) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        if (testUserPresenceNeeded) {
-            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
-        }
-        // コマンドを実行
-        [self doRequest:request CID:cid CMD:HID_CMD_CTAPHID_CBOR];
-    }
-
-    - (void)doResponseCommandGetAssertion:(NSData *)message
-                                        CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスされたCBORを抽出
-        NSData *cborBytes = [self extractCBORBytesFrom:message];
-        // GetAssertionレスポンスを解析
-        // ２回目のコマンド実行では、認証器から受領したsaltの内容検証が必要
-        bool verifySaltNeeded = ([self getAssertionCount] == 2);
-        if ([[self toolCTAP2HealthCheckCommand]
-             parseGetAssertionResponseWith:cborBytes
-             verifySalt:verifySaltNeeded] == false) {
-            [self doResponseToAppDelegate:false message:nil];
-            return;
-        }
-        // ２回目のテストが成功したら画面に制御を戻して終了
-        if (verifySaltNeeded) {
-            [self doResponseToAppDelegate:true message:nil];
-            return;
-        }
-        // CTAP2ヘルスチェックのログインテストを再度実行
-        [self setGetAssertionCount:[self getAssertionCount] + 1];
-        [self hidHelperWillProcess:COMMAND_TEST_GET_ASSERTION];
-    }
-
-    - (void)doRequestAuthReset:(NSData *)cid {
-        // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを表示
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT1];
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT2];
-        [self displayMessage:MSG_CLEAR_PIN_CODE_COMMENT3];
-        // メッセージを編集し、authenticatorResetコマンドを実行
-        char commandByte[] = {0x07};
-        NSData *message = [[NSData alloc] initWithBytes:commandByte length:sizeof(commandByte)];
-        [self doRequest:message CID:cid CMD:HID_CMD_CTAPHID_CBOR];
     }
 
     - (void)doCtap2HealthCheck {
@@ -514,6 +321,29 @@
         }
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
         [self doRequestCtapHidInit];
+    }
+
+    - (void)doResponseCtapHidCbor:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        [[self toolCTAP2HealthCheckCommand] setCID:cid];
+        [[self toolCTAP2HealthCheckCommand] doCTAP2Response:[self command] responseMessage:message];
+    }
+
+    - (void)doU2FHealthCheck {
+        // コマンド開始メッセージを画面表示
+        if ([self command] == COMMAND_TEST_REGISTER) {
+            [self displayStartMessage];
+        }
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doResponseU2FHidMsg:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // ステータスコードを確認し、NGの場合は画面に制御を戻す
+        [[self toolU2FHealthCheckCommand] setCID:cid];
+        [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
     }
 
     - (void)hidHelperWillProcess:(Command)command {
@@ -526,6 +356,9 @@
                 break;
             case COMMAND_HID_GET_FLASH_STAT:
                 [self doHidGetFlashStat];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self doHidGetVersionInfo];
                 break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
@@ -542,21 +375,18 @@
             case COMMAND_TEST_GET_ASSERTION:
                 [self doCtap2HealthCheck];
                 break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self doU2FHealthCheck];
+                break;
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
-                [[self delegate] hidCommandDidProcess:command result:false message:nil];
+                [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:false message:nil];
                 break;
         }
-    }
-
-    - (bool)checkUSBHIDConnection {
-        // USBポートに接続されていない場合はfalse
-        if (![[self toolHIDHelper] isDeviceConnected]) {
-            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
-            return false;
-        }
-        return true;
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -575,6 +405,9 @@
             case HID_CMD_GET_FLASH_STAT:
                 [self doResponseHidGetFlashStat:message];
                 break;
+            case HID_CMD_GET_VERSION_INFO:
+                [self doResponseHidGetVersionInfo:message];
+                break;
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];
@@ -582,41 +415,113 @@
             case HID_CMD_CTAPHID_CBOR:
                 [self doResponseCtapHidCbor:message CID:cid CMD:cmd];
                 break;
+            case HID_CMD_MSG:
+                [self doResponseU2FHidMsg:message CID:cid CMD:cmd];
+                break;
             case HID_CMD_UNKNOWN_ERROR:
                 // メッセージを画面表示
-                [self doResponseToAppDelegate:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
             default:
                 break;
         }
     }
 
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        switch (requestBytes[0]) {
-            case CTAP1_ERR_SUCCESS:
-                return true;
-            case CTAP2_ERR_PIN_INVALID:
-            case CTAP2_ERR_PIN_AUTH_INVALID:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_INVALID];
+#pragma mark - Common method
+
+    - (void)displayMessage:(NSString *)string {
+        // メッセージを画面表示
+        [[self delegate] notifyToolCommandMessage:string];
+    }
+
+    - (void)displayStartMessage {
+        // コマンド種別に対応する処理名称を設定
+        switch ([self command]) {
+            case COMMAND_ERASE_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
                 break;
-            case CTAP2_ERR_PIN_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_BLOCKED];
+            case COMMAND_INSTALL_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_INSTALL_SKEY_CERT];
                 break;
-            case CTAP2_ERR_PIN_AUTH_BLOCKED:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_AUTH_BLOCKED];
+            case COMMAND_TEST_CTAPHID_PING:
+                [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
                 break;
-            case CTAP2_ERR_PIN_NOT_SET:
-                [self displayMessage:MSG_CTAP2_ERR_PIN_NOT_SET];
+            case COMMAND_HID_GET_FLASH_STAT:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
                 break;
-            case CTAP2_ERR_VENDOR_KEY_CRT_NOT_EXIST:
-                [self displayMessage:MSG_OCCUR_SKEYNOEXIST_ERROR];
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
+            case COMMAND_CLIENT_PIN_SET:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];
+                break;
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                [self setProcessNameOfCommand:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
+                break;
+            case COMMAND_AUTH_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 break;
             default:
+                [self setProcessNameOfCommand:nil];
                 break;
         }
-        return false;
+        // コマンド開始メッセージを画面表示
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                              [self processNameOfCommand]];
+        [self displayMessage:startMsg];
+    }
+
+    - (void)commandDidProcess:(bool)result message:(NSString *)message {
+        // 即時でアプリケーションに制御を戻す
+        [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:result message:message];
+    }
+
+    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
+    }
+
+    - (NSString *)extractCSVItemFrom:(NSString *)val {
+        // 文字列の前後に２重引用符が含まれていない場合は終了
+        if ([val length] < 2) {
+            return val;
+        }
+        // 取得した項目から、２重引用符を削除
+        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        return item;
+    }
+
+    - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {
+        // CTAPHID_INITレスポンスからCID（9〜12バイト目）を抽出
+        NSData *newCID = [hidInitResponseMessage subdataWithRange:NSMakeRange(8, 4)];
+        return newCID;
+    }
+
+    - (bool)isCorrectNonceBytes:(NSData *)hidInitResponseMessage {
+        // レスポンスメッセージのnonce（先頭8バイト）と、リクエスト時のnonceが一致しているか確認
+        char *responseBytes = (char *)[hidInitResponseMessage bytes];
+        return (memcmp(responseBytes, nonceBytes, sizeof(nonceBytes)) == 0);
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        if (![[self toolHIDHelper] isDeviceConnected]) {
+            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Interface for SetPinParamWindow
@@ -628,8 +533,8 @@
     }
 
     - (void)setPinParamWindowDidClose {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
     }
 
 #pragma mark - Interface for PinCodeParamWindow
@@ -637,12 +542,12 @@
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ダイアログをモーダルで表示
         [[self toolCTAP2HealthCheckCommand] pinCodeParamWindowWillOpen:sender
-                                            parentWindow:parentWindow toolCommand:self];
+                                            parentWindow:parentWindow];
     }
 
     - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
     }
 
 @end

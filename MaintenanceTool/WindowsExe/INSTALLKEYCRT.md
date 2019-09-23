@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)に鍵・証明書を導入する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)に鍵・証明書を導入する手順を掲載します。
 
 ## 管理ツールのインストール
 
@@ -10,7 +10,7 @@
 
 ## 鍵・証明書の削除
 
-管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)を装着します。
+管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)を装着します。
 
 <img src="assets/0007.png" width="400">
 

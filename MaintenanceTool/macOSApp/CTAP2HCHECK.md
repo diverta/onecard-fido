@@ -2,37 +2,26 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](../../nRF5_SDK_v15.3.0)のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
 「CTAP2ヘルスチェック実行」は、管理ツールが擬似WebAuthnクライアント（Webブラウザーの代わり）となり、認証器に対して、FIDO 2.0の仕様に準拠したユーザー登録・ログインの各処理を実行する機能です。
 
-CTAP2ヘルスチェックは、USB HID経由で実行されます。
+CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行されます。
 
 ## 認証器の準備
 
-#### 使用できる機材
+#### 使用機材
 
-Nordic社から販売されている開発基板「nRF52840 DK」または「nRF52840 Dongle」が、[FIDO2認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)として使用できます。
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、[FIDO2認証器](../../nRF5_SDK_v15.3.0)として使用します。
 
-- nRF52840 DK<br>
-https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-dev-kit/
-
-- nRF52840 Dongle<br>
-https://www.mouser.jp/new/nordicsemiconductor/nordic-nrf52840-usb-dongle/
-
-本文では、nRF52840 Dongleを使用するものとしております。
+<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0000.jpg" width="300">
 
 #### ファームウェアの書込み
 
-[FIDO2認証器](../../nRF5_SDK_v15.2.0)のファームウェアを、nRF52840 Dongleに書込みます。<br>
-書込み手順につきましては、<b>[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)</b>をご参照ください。
-
-ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: onecard-fido/nRF5_SDK_v15.2.0/firmwares/
-- アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.2.0/firmwares/nrf52840_xxaa.hex)
-- ソフトデバイス: [s140_nrf52_6.1.0_softdevice.hex](../../nRF5_SDK_v15.2.0/firmwares/s140_nrf52_6.1.0_softdevice.hex)
+[FIDO2認証器](../../nRF5_SDK_v15.3.0)のファームウェアを、MDBT50Q Dongleに書込みます。<br>
+書込み手順につきましては、<b>[アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)</b>をご参照ください。
 
 #### 管理ツールを導入
 
@@ -52,7 +41,7 @@ PC環境に導入した管理ツールを使用し、鍵・証明書のインス
 
 ## CTAP2ヘルスチェックの実行
 
-nRF52840 DongleをPCのUSBポートに装着後、管理ツールを起動します。
+MDBT50Q DongleをPCのUSBポートに装着後、管理ツールを起動します。
 
 <img src="assets/0019.png" width="400">
 
@@ -68,9 +57,9 @@ PIN入力画面がポップアップ表示されますので、認証器に設�
 
 <img src="assets/0022.png" width="400">
 
-nRF52840 Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
+MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
-<img src="assets/0018.png" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0014.jpg" width="400">
 
 ヘルスチェック処理が成功すると「CTAP2ヘルスチェックが成功しました。」というメッセージが表示されます。
 

@@ -349,16 +349,28 @@
                                                 <action selector="menuItemTestHID1DidSelect:" target="494" id="lSA-3I-4EY"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="U2Fヘルスチェック実行" id="HJO-wE-AeZ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID2DidSelect:" target="494" id="11w-ct-9jU"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="PINGテスト実行" id="jXE-Zz-HlF">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestHID2DidSelect:" target="494" id="Hpg-Xj-hSr"/>
+                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="5NO-8f-dUF"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Flash ROM情報取得" id="rxS-Ya-8eZ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestHID3DidSelect:" target="494" id="M7L-Pa-qvF"/>
+                                                <action selector="menuItemTestHID4DidSelect:" target="494" id="vyY-3J-f9s"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="バージョン情報取得" id="Wfx-0z-Fa6">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestHID5DidSelect:" target="494" id="QMh-LU-o06"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -368,16 +380,22 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="BLE" id="497">
                                     <items>
+                                        <menuItem title="CTAP2ヘルスチェック実行" id="juh-bR-WOr">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestBLE1DidSelect:" target="494" id="Bo5-LT-bDZ"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="U2Fヘルスチェック実行" id="500">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestBLE1DidSelect:" target="494" id="1oW-xs-J50"/>
+                                                <action selector="menuItemTestBLE2DidSelect:" target="494" id="ibM-r0-Bqa"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="BLE PINGテスト実行" id="rll-on-8pg">
+                                        <menuItem title="PINGテスト実行" id="rll-on-8pg">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="menuItemTestBLE2DidSelect:" target="494" id="vD8-7Y-6DM"/>
+                                                <action selector="menuItemTestBLE3DidSelect:" target="494" id="ls6-Ez-q9g"/>
                                             </connections>
                                         </menuItem>
                                     </items>

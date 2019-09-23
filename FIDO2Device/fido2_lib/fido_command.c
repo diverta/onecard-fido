@@ -96,6 +96,15 @@ void fido_user_presence_verify_timeout_handler(void)
     fido_user_presence_verify_cancel();
 }
 
+void fido_user_presence_verify_start_on_reset(void)
+{
+    // ユーザー所在確認タイムアウト監視を開始
+    fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
+
+    // 赤色LED高速点滅開始
+    fido_status_indicator_prompt_reset();
+}
+
 void fido_user_presence_verify_start(uint32_t timeout_msec)
 {
     // キープアライブタイマーを開始
@@ -169,6 +178,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
+        case MNT_COMMAND_GET_APP_VERSION:
             fido_maintenance_command();
             break;
         default:
@@ -261,6 +271,7 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_ERASE_SKEY_CERT:
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
+        case MNT_COMMAND_GET_APP_VERSION:
             fido_maintenance_command_report_sent();
             break;
         default:

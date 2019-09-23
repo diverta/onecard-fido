@@ -8,6 +8,25 @@ namespace MaintenanceToolCommon
 {
     public static class AppCommon
     {
+        //
+        // CTAP2関連共通リソース
+        //
+        // CBORサブコマンドバイトに関する定義
+        public const byte CTAP2_CBORCMD_NONE = 0x00;
+        public const byte CTAP2_CBORCMD_MAKE_CREDENTIAL = 0x01;
+        public const byte CTAP2_CBORCMD_GET_ASSERTION = 0x02;
+        public const byte CTAP2_CBORCMD_CLIENT_PIN = 0x06;
+        public const byte CTAP2_CBORCMD_AUTH_RESET = 0x07;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT = 0x02;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_SET = 0x03;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_CHANGE = 0x04;
+        public const byte CTAP2_SUBCMD_CLIENT_PIN_GET_PIN_TOKEN = 0x05;
+
+        // トランスポート種別
+        public const byte TRANSPORT_NONE = 0x00;
+        public const byte TRANSPORT_BLE = 0x01;
+        public const byte TRANSPORT_HID = 0x02;
+
         // macOS版と共通のメッセージ文言を使用
         // 共通
         public const string MSG_INVALID_FILE_PATH = "ファイルが存在しません。";
@@ -45,11 +64,23 @@ namespace MaintenanceToolCommon
         public const string MSG_CTAP2_ERR_PIN_AUTH_BLOCKED = "PIN認証が無効となりました。認証器をUSBポートから取り外してください。";
         public const string MSG_CTAP2_ERR_PIN_NOT_SET = "PINコードが認証器に設定されていません。PINコードを新規設定してください。";
 
+        // CTAP2ヘルスチェック関連メッセージ
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_START = "ログインテストを開始します.";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1 = "  ユーザー所在確認が必要となりますので、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
+        public const string MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3 = "  MAIN SWを１回押してください.";
+
         // Flash ROM情報取得関連メッセージ
         public const string MSG_FSTAT_REMAINING_RATE = "Flash ROMの空き容量は{0:0.0}％です。";
         public const string MSG_FSTAT_NON_REMAINING_RATE = "Flash ROMの空き容量を取得できませんでした。";
         public const string MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST = "破損している領域は存在しません。";
         public const string MSG_FSTAT_CORRUPTING_AREA_EXIST = "破損している領域が存在します。";
+
+        // バージョン情報取得関連メッセージ
+        public const string MSG_VERSION_INFO_HEADER = "FIDO認証器のバージョン情報";
+        public const string MSG_VERSION_INFO_DEVICE_NAME = "  デバイス名: {0}";
+        public const string MSG_VERSION_INFO_FW_REV = "  ファームウェアのバージョン: {0}";
+        public const string MSG_VERSION_INFO_HW_REV = "  ハードウェアのバージョン: {0}";
 
         // Windows版固有のメッセージ文言
         // USB管理
@@ -84,6 +115,10 @@ namespace MaintenanceToolCommon
         public const string MSG_BLE_PARING_ERR_TIMED_OUT = "FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。";
         public const string MSG_BLE_PARING_ERR_PAIR_MODE = "FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。";
         public const string MSG_BLE_PARING_ERR_UNKNOWN = "FIDO認証器とのペアリング時に不明なエラーが発生しました。";
+
+        // BLE接続無効化時のメッセージ文言
+        public const string MSG_BLE_ERR_CONN_DISABLED = "BLE接続が無効となりました。";
+        public const string MSG_BLE_ERR_CONN_DISABLED_SUB1 = "大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。";
 
         // ログファイル名称のデフォルト
         public static string logFileName = "MaintenanceToolGUI.log";
@@ -198,6 +233,18 @@ namespace MaintenanceToolCommon
                 Padding = PaddingMode.None
             };
             return aes.CreateDecryptor().TransformFinalBlock(data, 0, data.Length);
+        }
+
+        public static byte[] ExtractCBORBytesFromResponse(byte[] message, int length)
+        {
+            // レスポンスされたCBORを抽出
+            //   CBORバイト配列はレスポンスの２バイト目以降
+            int cborLength = length - 1;
+            byte[] cborBytes = new byte[cborLength];
+            for (int i = 0; i < cborLength; i++) {
+                cborBytes[i] = message[1 + i];
+            }
+            return cborBytes;
         }
     }
 }

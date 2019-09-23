@@ -1,6 +1,6 @@
 //
 //  ToolTimer.m
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2018/04/17.
 //

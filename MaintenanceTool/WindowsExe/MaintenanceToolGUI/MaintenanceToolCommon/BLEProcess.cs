@@ -14,9 +14,6 @@ namespace MaintenanceToolCommon
             public const int BLE_FRAME_LEN = 64;
         }
 
-        // BLE接続状態を保持
-        private bool isConnected = false;
-
         // BLEデバイス関連
         private BLEService bleService = new BLEService();
 
@@ -25,8 +22,12 @@ namespace MaintenanceToolCommon
         public event MessageTextEventHandler MessageTextEvent;
 
         // BLEメッセージ受信時のイベント
-        public delegate void ReceiveBLEMessageEventHandler(bool ret, byte[] receivedMessage, int receivedLen);
+        public delegate void ReceiveBLEMessageEventHandler(byte[] receivedMessage, int receivedLen);
         public event ReceiveBLEMessageEventHandler ReceiveBLEMessageEvent;
+
+        // BLEメッセージ受信失敗時のイベント
+        public delegate void ReceiveBLEFailedEventHandler(bool critical, byte reserved);
+        public event ReceiveBLEFailedEventHandler ReceiveBLEFailedEvent;
 
         // ペアリング完了時のイベント
         public delegate void FIDOPeripheralPairedEvent(bool success, string messageOnFail);
@@ -59,28 +60,26 @@ namespace MaintenanceToolCommon
         {
             // メッセージがない場合は終了
             if (message == null || length == 0) {
-                ReceiveBLEMessageEvent(false, null, 0);
+                ReceiveBLEFailedEvent(false, 0);
                 return;
             }
 
-            if (isConnected == false) {
+            if (bleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
                     AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED, true);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
-                    ReceiveBLEMessageEvent(false, null, 0);
+                    ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;
                 }
                 AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED, true);
-                isConnected = true;
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
             if (await SendBLEMessageFrames(message, length) == false) {
-                // 送信失敗時は切断
-                bleService.Disconnect();
+                // 送信失敗時
                 MessageTextEvent(AppCommon.MSG_REQUEST_SEND_FAILED);
-                ReceiveBLEMessageEvent(false, null, 0);
+                ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                 return;
             }
 
@@ -134,7 +133,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.INIT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("INIT frame: data size={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogToFile(string.Format("Sent INIT frame: data size={0} length={1}\r\n{2}",
                         transferMessageLen, frameLen, dump), true);
 
                 } else {
@@ -155,7 +154,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.CONT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("CONT frame: data seq={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogToFile(string.Format("Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, frameLen, dump), true);
                 }
 
@@ -214,7 +213,7 @@ namespace MaintenanceToolCommon
                 }
 
                 AppCommon.OutputLogToFile(string.Format(
-                    "INIT frame: data size={0} length={1}",
+                    "Recv INIT frame: data size={0} length={1}",
                     receivedMessageLen, dataLenInFrame), true);
 
             } else {
@@ -229,7 +228,7 @@ namespace MaintenanceToolCommon
                 }
 
                 AppCommon.OutputLogToFile(string.Format(
-                    "CONT frame: seq={0} length={1}",
+                    "Recv CONT frame: seq={0} length={1}",
                     seq, dataLenInFrame), true);
             }
 
@@ -244,66 +243,17 @@ namespace MaintenanceToolCommon
                 }
                 int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
 
-                if (receivedMessage[0] == 0x83) {
-                    // コマンドレスポンスの場合はステータスワードをチェック
-                    if (CheckStatusWord(receivedMessage, messageLength) == false) {
-                        // ステータスワードが不正の場合は、BLEを切断し画面に制御を戻す
-                        bleService.Disconnect();
-                        ReceiveBLEMessageEvent(false, null, 0);
-                        return;
-                    }
-                }
-
                 // 受信データを転送
                 AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED, true);
-                ReceiveBLEMessageEvent(true, receivedMessage, messageLength);
+                ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
-        }
-
-        private bool CheckStatusWord(byte[] receivedMessage, int receivedLen)
-        {
-            // ステータスワードをチェック
-            byte[] statusBytes = new byte[2];
-            Array.Copy(receivedMessage, receivedLen - 2, statusBytes, 0, 2);
-            if (BitConverter.IsLittleEndian) {
-                Array.Reverse(statusBytes);
-            }
-            ushort statusWord = BitConverter.ToUInt16(statusBytes, 0);
-
-            if (statusWord == 0x6985) {
-                // キーハンドルチェックの場合は成功とみなす
-                return true;
-            }
-            if (statusWord == 0x6a80) {
-                // invalid keyhandleエラーである場合はその旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_KEYHANDLE_ERROR);
-                return false;
-            }
-            if (statusWord == 0x9402) {
-                // 鍵・証明書がインストールされていない旨のエラーである場合はその旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_SKEYNOEXIST_ERROR);
-                return false;
-            }
-            if (statusWord == 0x9601) {
-                // ペアリングモード時はペアリング以外の機能を実行できない旨を通知
-                MessageTextEvent(AppCommon.MSG_OCCUR_PAIRINGMODE_ERROR);
-                return false;
-            }
-            if (statusWord != 0x9000) {
-                // U2Fサービスの戻りコマンドが不正の場合はエラー
-                MessageTextEvent(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                return false;
-            }
-
-            return true;
         }
 
         public void DisconnectBLE()
         {
-            if (isConnected) {
+            if (bleService.IsConnected()) {
                 // 接続ずみの場合はBLEデバイスを切断
                 bleService.Disconnect();
-                isConnected = false;
             }
         }
     }

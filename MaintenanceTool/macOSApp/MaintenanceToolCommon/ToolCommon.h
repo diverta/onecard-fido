@@ -1,6 +1,6 @@
 //
 //  ToolCommon.h
-//  U2FMaintenanceTool
+//  MaintenanceTool
 //
 //  Created by Makoto Morita on 2018/01/22.
 //
@@ -23,11 +23,11 @@ typedef enum : NSInteger {
     COMMAND_TEST_AUTH_CHECK,
     COMMAND_TEST_AUTH_NO_USER_PRESENCE,
     COMMAND_TEST_AUTH_USER_PRESENCE,
-    COMMAND_U2F_HID_PROCESS,
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_PING,
     COMMAND_TEST_BLE_PING,
     COMMAND_HID_GET_FLASH_STAT,
+    COMMAND_HID_GET_VERSION_INFO,
     COMMAND_CLIENT_PIN_SET,
     COMMAND_CLIENT_PIN_CHANGE,
     COMMAND_TEST_MAKE_CREDENTIAL,
@@ -35,10 +35,16 @@ typedef enum : NSInteger {
     COMMAND_AUTH_RESET
 } Command;
 
+// トランスポート種別
+typedef enum : NSInteger {
+    TRANSPORT_NONE = 1,
+    TRANSPORT_BLE,
+    TRANSPORT_HID
+} TransportType;
+
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 
-    + (NSString *)processNameOfCommand:(Command)command;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
 

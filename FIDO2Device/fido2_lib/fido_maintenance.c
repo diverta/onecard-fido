@@ -123,6 +123,32 @@ static void command_get_flash_stat(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
+static void command_get_app_version(void)
+{
+    fido_log_info("Get application version info start");
+    //
+    // バージョン情報CSVを取得
+    //  response_bufferの先頭にステータスバイトを格納するため、
+    //  CSV格納領域は、response_bufferの２バイト目を先頭とします。
+    //
+    uint8_t *buffer = response_buffer + 1;
+    size_t   buffer_size = sizeof(response_buffer - 1);
+    if (fido_board_get_version_info_csv(buffer, &buffer_size) == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+    }
+    //
+    // レスポンスを送信
+    //  データ形式
+    //  0-3: CID（0xffffffff）
+    //  4:   CMD（0xc3）
+    //  5-6: データサイズ（CSVデータの長さ）
+    //  7:   ステータスバイト（成功時は 0x00）
+    //  8-n: CSVデータ（下記のようなCSV形式のテキスト）
+    //       <項目名1>=<値2>,<項目名2>=<値2>,...,<項目名k>=<値k>
+    //
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -136,6 +162,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_GET_FLASH_STAT:
             command_get_flash_stat();
+            break;
+        case MNT_COMMAND_GET_APP_VERSION:
+            command_get_app_version();
             break;
         default:
             break;
@@ -155,6 +184,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");
+            break;
+        case MNT_COMMAND_GET_APP_VERSION:
+            fido_log_info("Get application version info end");
             break;
         default:
             break;
