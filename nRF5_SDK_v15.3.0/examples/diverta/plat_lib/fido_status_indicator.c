@@ -99,7 +99,24 @@ void fido_status_indicator_idle(void)
     }
 
     // 該当色のLEDを、約２秒ごとに点滅させるタイマーを開始する
+    led_status = 0;
     fido_idling_led_timer_start(LED_BLINK_INTERVAL_MSEC);
+}
+
+void fido_status_indicator_busy(void)
+{
+    // LED点滅制御タイマーを停止
+    stop_led_timers();
+
+    // LEDを事前消灯
+    led_light_pin_set(LED_COLOR_RED,   false);
+    led_light_pin_set(LED_COLOR_GREEN, false);
+    led_light_pin_set(LED_COLOR_BLUE,  false);
+    led_light_pin_set(LED_COLOR_PAIR,  false);
+
+    // ビジーの場合は
+    // 赤色LEDの連続点灯とします。
+    led_light_pin_set(LED_COLOR_BUSY,  true);
 }
 
 void fido_status_indicator_prompt_reset(void)
