@@ -15,6 +15,10 @@ Nordic社から提供されているサンプル「[Open Bootloader with DFU](ht
 
 MDBT50Q Dongleには、J-Link経由で書込みします。
 
+#### [作成手順](NETBEANSPROJ.md)
+
+NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーアプリケーションを作成する手順を記載しています。
+
 ## 公開鍵ファイル
 
 `dfu_public_key.c`は、Nordic社提供サンプルから修正しております。<br>
