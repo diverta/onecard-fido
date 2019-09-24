@@ -6,7 +6,7 @@
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
-#### ファームウェア
+### ファームウェア
 
 ファームウェアは２点で構成されます。
 
@@ -15,7 +15,7 @@ Nordic社から提供されているサンプル「[Open Bootloader with DFU](ht
 
 MDBT50Q Dongleには、J-Link経由で書込みします。
 
-#### [作成手順](NETBEANSPROJ.md)
+### [作成手順](NETBEANSPROJ.md)
 
 NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーアプリケーションを作成する手順を記載しています。
 
