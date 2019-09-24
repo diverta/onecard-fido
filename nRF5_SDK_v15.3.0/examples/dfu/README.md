@@ -6,6 +6,13 @@
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
+#### ファームウェア
+
+ファームウェアは２点で構成されます。
+
+- ディレクトリー：[/nRF5_SDK_v15.3.0/firmwares/open_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/)
+- ファイル：`mbr_nrf52_2.4.1_mbr.hex`、`nrf52840_xxaa.hex`
+
 MDBT50Q Dongleには、J-Link経由で書込みします。
 
 ## 公開鍵ファイル
