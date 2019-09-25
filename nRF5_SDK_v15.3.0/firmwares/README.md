@@ -14,7 +14,7 @@
 - [nrf52840_DK_xxaa.hex](nrf52840_DK_xxaa.hex) - アプリケーション（nRF52840 DK用）
 
 これらのファームウェアは、Nordic社から提供されているアプリ「nRF Connect」を使い、MDBT50Q DongleやnRF52840 DKにダウンロードするようにします。<br>
-「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[nRF52840 Dongleプログラミング手順](../../Development/nRF52840/NRFCONNECTINST.md)」</b>をご参照願います。<br>
+「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)」</b>をご参照願います。<br>
 　
 ## 簡易USBブートローダー
 
