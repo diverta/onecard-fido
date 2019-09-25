@@ -1,8 +1,8 @@
 # nRF52840 ブートローダーアプリケーション
 
-## 概要
+## 簡易USBブートローダー
 
-`open_bootloader`は、簡易USBブートローダーアプリケーションです。
+`open_bootloader`は、簡易USBブートローダーです。
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
@@ -11,13 +11,19 @@ Nordic社から提供されているサンプル「[Open Bootloader with DFU](ht
 ファームウェアは２点で構成されます。
 
 - ディレクトリー：[/nRF5_SDK_v15.3.0/firmwares/open_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/)
-- ファイル：`mbr_nrf52_2.4.1_mbr.hex`、`nrf52840_xxaa.hex`
 
-MDBT50Q Dongleには、J-Link経由で書込みします。
+- ファイル：`mbr_nrf52_2.4.1_mbr.hex`、`nrf52840_xxaa.hex`<br>
+`mbr_nrf52_2.4.1_mbr.hex`は、Nordic社から提供されているものをそのまま使用します。<br>
+`nrf52840_xxaa.hex`は、後述「ファームウェア作成手順」により作成したものを使用します。
 
-### [作成手順](NETBEANSPROJ.md)
 
-NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーアプリケーションを作成する手順を記載しています。
+### [ファームウェア作成手順](NETBEANSPROJ.md)
+
+NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーを作成する手順を記載しています。
+
+### [ファームウェア書込手順](JLINKSWDPROG.md)
+
+MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みする手順を記載しています。
 
 ## 公開鍵ファイル
 
