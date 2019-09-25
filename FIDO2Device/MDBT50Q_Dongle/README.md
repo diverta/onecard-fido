@@ -6,11 +6,11 @@
 
 <img src="assets/0021.jpg" width="500">
 
-#### [MDBT50Q Dongleの概要](HWSUMMARY_2.md)
+### [MDBT50Q Dongleの概要](HWSUMMARY_2.md)
 
 基板、動作についての概要を説明しています。
 
-#### [MDBT50Q Dongle回路図](pcb_rev2/FIDO2AUTH_002.pdf)
+### [MDBT50Q Dongle回路図](pcb_rev2/FIDO2AUTH_002.pdf)
 
 nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、若干の配線変更を行っております。
 
@@ -18,16 +18,21 @@ nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、�
 
 MDBT50Q Dongleのファームウェアは、本プロジェクトで開発中の[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)をご使用ください。
 
-#### [アプリケーション書込み手順](APPINSTALL.md)
+### [アプリケーション書込み手順](APPINSTALL.md)
 
-nRF52840 DKに同梱されているJ-LinkのSWDインターフェースを使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。
+MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。
+
+### [簡易USBブートローダー（ご参考）](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)
+
+PCのUSBポート経由で、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込むことができるようにするためのファームウェアです。<br>
+MDBT50Q Dongleにはすでに導入済みとなっております。
 
 ## 動作確認手順
 
-#### [Edgeブラウザーを使用したWebAuthnテスト手順（Windows10 PC）](WEBAUTHNTEST.md)
+### [Edgeブラウザーを使用したWebAuthnテスト手順（Windows10 PC）](WEBAUTHNTEST.md)
 
 MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAuthnのユーザー登録／ログイン（MakeCredential／GetAssertion）の動作確認をする場合の手順を掲載しています。
 
-#### [Googleアカウントのログイン確認手順（PC）](PCCHROME.md)
+### [Googleアカウントのログイン確認手順（PC）](PCCHROME.md)
 
 MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
