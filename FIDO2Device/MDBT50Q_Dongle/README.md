@@ -1,18 +1,18 @@
-# MDBT50Q Dongle
+# MDBT50Q Dongle（rev2）
 
 ## 概要
 
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作した、USBドングル基板です。
 
-<img src="assets/0000.jpg" width="500">
+<img src="assets/0021.jpg" width="500">
 
-#### [MDBT50Q Dongleの概要](HWSUMMARY.md)
+#### [MDBT50Q Dongleの概要](HWSUMMARY_2.md)
 
 基板、動作についての概要を説明しています。
 
-#### [MDBT50Q Dongle回路図](../pcb/FIDO2AUTH_001.pdf)
+#### [MDBT50Q Dongle回路図](pcb_rev2/FIDO2AUTH_002.pdf)
 
-nRF52840 Dongleをベースとし、電池電源の増設と、若干の配線変更を行っております。
+nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、若干の配線変更を行っております。
 
 ## 使用ファームウェア
 
