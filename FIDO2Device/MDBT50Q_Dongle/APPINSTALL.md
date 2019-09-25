@@ -22,7 +22,7 @@ MDBT50Q DongleをPCのUSBポートに装着し、基板上のスイッチ「SW2�
 ### ファームウェアの準備
 
 ファームウェアは、すでにビルド済みの`.hex`ファイルが、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../../nRF5_SDK_v15.3.0/firmwares)
+- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../nRF5_SDK_v15.3.0/firmwares)
 - アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.3.0/firmwares/nrf52840_xxaa.hex)
 - ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex)
 
