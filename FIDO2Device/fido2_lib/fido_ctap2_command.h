@@ -18,7 +18,6 @@ extern "C" {
 #endif
 
 void fido_ctap2_command_hid_init(void);
-void fido_ctap2_command_ping(void);
 void fido_ctap2_command_wink(void);
 void fido_ctap2_command_lock(void);
 void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length);

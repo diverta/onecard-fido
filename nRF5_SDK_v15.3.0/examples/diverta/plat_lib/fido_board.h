@@ -41,7 +41,9 @@ typedef enum _LED_COLOR {
     LED_COLOR_NONE = 0,
     LED_COLOR_RED,
     LED_COLOR_GREEN,
-    LED_COLOR_BLUE
+    LED_COLOR_BLUE,
+    LED_COLOR_BUSY,
+    LED_COLOR_PAIR
 } LED_COLOR;
 
 // 関数群

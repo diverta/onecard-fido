@@ -26,6 +26,19 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_peripheral.h"
 #include "fido_ble_pairing.h"
 
+#include "fido_platform.h"
+
+//
+// LEDのピン
+//
+#if defined(BOARD_PCA10059)
+#define LED_R   NRF_GPIO_PIN_MAP(1, 10)
+#define LED_Y   NRF_GPIO_PIN_MAP(0, 26)
+#else
+#define LED_R   LED_1
+#define LED_Y   LED_2
+#endif
+
 //
 // ボタンのピン番号
 //
@@ -100,6 +113,12 @@ void fido_command_long_push_timer_handler(void *p_context)
 {
     (void)p_context;
 	m_long_pushed = true;
+    
+    if (fido_ble_peripheral_mode()) {
+        // ペアリングモードに遷移させるための長押しの場合、
+        // このタイミングで、黄色LEDを連続点灯させる
+        fido_status_indicator_pairing_mode();
+    }
 }
 
 //
@@ -151,6 +170,12 @@ void led_light_pin_set(LED_COLOR led_color, bool led_on)
             break;
         case LED_COLOR_BLUE:
             pin_number = LED_4;
+            break;
+        case LED_COLOR_BUSY:
+            pin_number = LED_R;
+            break;
+        case LED_COLOR_PAIR:
+            pin_number = LED_Y;
             break;
         default:
             return;

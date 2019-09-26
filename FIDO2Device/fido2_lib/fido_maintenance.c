@@ -169,6 +169,9 @@ void fido_maintenance_command(void)
         default:
             break;
     }
+    
+    // LEDをビジー状態に遷移
+    fido_status_indicator_busy();
 }
 
 void fido_maintenance_command_report_sent(void)
@@ -191,6 +194,9 @@ void fido_maintenance_command_report_sent(void)
         default:
             break;
     }
+
+    // LEDをアイドル状態に遷移
+    fido_status_indicator_idle();
 }
 
 void fido_maintenance_command_flash_failed(void)
