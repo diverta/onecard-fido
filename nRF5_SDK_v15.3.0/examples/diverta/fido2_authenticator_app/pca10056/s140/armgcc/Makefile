@@ -1,12 +1,12 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 # application version info
-CFLAGS += -DFW_REV=\"0.1.19\"
+CFLAGS += -DFW_REV=\"0.2.1\"
 # hardware version info
-CFLAGS += -DHW_REV=\"0.1\"
+CFLAGS += -DHW_REV=\"0.2\"
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
