@@ -123,6 +123,9 @@ static uint8_t get_ctap2_command_byte(void)
 
 static void resume_response_process(void)
 {
+    // LEDをビジー状態に遷移
+    fido_status_indicator_busy();
+
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
             fido_log_info("authenticatorMakeCredential: completed the test of user presence");
@@ -327,7 +330,7 @@ static void command_authenticator_make_credential(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    command_make_credential_resume_process();
+    resume_response_process();
 }
 
 static void command_make_credential_resume_process(void)
@@ -415,7 +418,7 @@ static void command_authenticator_get_assertion(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    command_get_assertion_resume_process();
+    resume_response_process();
 }
 
 static void command_get_assertion_resume_process(void)
@@ -710,6 +713,9 @@ void fido_ctap2_command_token_counter_record_updated(void)
 
 void fido_ctap2_command_cbor_response_sent(void)
 {
+    // LEDをアイドル状態に遷移
+    fido_status_indicator_idle();
+
     // CTAP2 CBORコマンドを取得し、行うべき処理を判定
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_GETINFO:
