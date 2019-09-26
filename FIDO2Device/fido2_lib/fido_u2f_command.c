@@ -122,6 +122,9 @@ static uint8_t get_u2f_command_ins_byte(void)
 
 static void u2f_resume_response_process(void)
 {
+    // LEDをビジー状態に遷移
+    fido_status_indicator_busy();
+
     uint8_t ins;
     switch (get_u2f_command_byte()) {
         case U2F_COMMAND_MSG:
@@ -301,7 +304,7 @@ static void u2f_command_register(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_register_resume_process();
+    u2f_resume_response_process();
 }
 
 static void u2f_register_resume_process(void)
@@ -389,7 +392,7 @@ static void u2f_command_authenticate(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_authenticate_resume_process();
+    u2f_resume_response_process();
 }
 
 static void u2f_authenticate_resume_process(void)
@@ -510,6 +513,9 @@ void fido_u2f_command_token_counter_record_updated(void)
 
 void fido_u2f_command_msg_response_sent(void)
 {
+    // LEDをアイドル状態に遷移
+    fido_status_indicator_idle();
+
     // u2f_request_buffer の先頭バイトを参照
     //   [0]CLA [1]INS [2]P1 3[P2]
     uint8_t ins = get_u2f_command_ins_byte();

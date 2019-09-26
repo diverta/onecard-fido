@@ -131,9 +131,8 @@ void fido_user_presence_verify_end(void)
     // ユーザー所在確認タイムアウト監視を停止
     fido_user_presence_verify_timer_stop();
     
-    // キープアライブタイマーを停止し、
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_user_presence_verify_cancel();
+    // キープアライブタイマーを停止する
+    fido_keepalive_interval_timer_stop();
 }
 
 //
