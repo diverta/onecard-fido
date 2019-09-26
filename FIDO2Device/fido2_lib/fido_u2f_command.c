@@ -450,6 +450,9 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 
 void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
 {
+    // LEDをビジー状態に遷移
+    fido_status_indicator_busy();
+
     // トランスポート種別を保持
     m_transport_type = transport_type;
 
@@ -516,4 +519,11 @@ void fido_u2f_command_msg_response_sent(void)
     } else if (ins == U2F_AUTHENTICATE) {
         fido_log_info("U2F Authenticate end");
     }
+}
+
+void fido_u2f_command_ping_response_sent(void)
+{
+    // LEDをアイドル状態に遷移
+    fido_status_indicator_idle();
+    fido_log_info("U2F Ping end");
 }

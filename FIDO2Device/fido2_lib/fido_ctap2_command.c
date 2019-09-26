@@ -191,18 +191,6 @@ void fido_ctap2_command_hid_init(void)
     fido_hid_send_command_response(cid, cmd, (uint8_t *)&init_res, sizeof(init_res));
 }
 
-void fido_ctap2_command_ping(void)
-{
-    // PINGの場合は
-    // リクエストのHIDヘッダーとデータを編集せず
-    // レスポンスとして戻す（エコーバック）
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint8_t  cmd = fido_hid_receive_header()->CMD;
-    uint8_t *data = fido_hid_receive_apdu()->data;
-    size_t   length = fido_hid_receive_apdu()->data_length;
-    fido_hid_send_command_response(cid, cmd, data, length);
-}
-
 void fido_ctap2_command_wink(void)
 {
     // ステータスなしでレスポンスする

@@ -150,7 +150,7 @@ static void on_hid_request_receive_completed(void)
             fido_ctap2_command_hid_init();
             break;
         case CTAP2_COMMAND_PING:
-            fido_ctap2_command_ping();
+            fido_u2f_command_ping(TRANSPORT_HID);
             break;
         case CTAP2_COMMAND_WINK:
             fido_ctap2_command_wink();
@@ -249,6 +249,9 @@ static void on_ble_response_send_completed(void)
             fido_u2f_command_msg_response_sent();
         }
     }
+    if (fido_ble_receive_header()->CMD == U2F_COMMAND_PING) {
+        fido_u2f_command_ping_response_sent();
+    }
 }
 
 void on_hid_response_send_completed(void)
@@ -260,7 +263,7 @@ void on_hid_response_send_completed(void)
             fido_log_info("CTAPHID_INIT end");
             break;
         case CTAP2_COMMAND_PING:
-            fido_log_info("CTAPHID_PING end");
+            fido_u2f_command_ping_response_sent();
             break;
         case U2F_COMMAND_MSG:
             fido_u2f_command_msg_response_sent();
