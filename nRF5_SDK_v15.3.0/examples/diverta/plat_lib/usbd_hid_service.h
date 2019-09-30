@@ -14,6 +14,8 @@ extern "C" {
 #endif
 
 void usbd_init(void);
+void usbd_cdc_init(void);
+bool usbd_cdc_buffer_write(const void *p_tx_buffer, size_t size);
 void usbd_hid_init(void (*event_handler_)(app_usbd_event_type_t event));
 void usbd_hid_do_process(void);
 

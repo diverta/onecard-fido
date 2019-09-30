@@ -36,6 +36,80 @@ static void (*event_handler)(app_usbd_event_type_t event);
 #define USBD_POWER_DETECTION true
 #endif
 
+//
+// CDC関連
+//
+#include "app_usbd_cdc_acm.h"
+
+// データ送信用バッファ
+static char m_tx_buffer[NRF_DRV_USBD_EPSIZE];
+
+static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                    app_usbd_cdc_acm_user_event_t event);
+
+#define CDC_ACM_COMM_INTERFACE  1
+#define CDC_ACM_COMM_EPIN       NRF_DRV_USBD_EPIN3
+
+#define CDC_ACM_DATA_INTERFACE  2
+#define CDC_ACM_DATA_EPIN       NRF_DRV_USBD_EPIN2
+#define CDC_ACM_DATA_EPOUT      NRF_DRV_USBD_EPOUT2
+
+APP_USBD_CDC_ACM_GLOBAL_DEF(m_app_cdc_acm,
+                            cdc_acm_user_ev_handler,
+                            CDC_ACM_COMM_INTERFACE,
+                            CDC_ACM_DATA_INTERFACE,
+                            CDC_ACM_COMM_EPIN,
+                            CDC_ACM_DATA_EPIN,
+                            CDC_ACM_DATA_EPOUT,
+                            APP_USBD_CDC_COMM_PROTOCOL_AT_V250
+);
+
+static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                    app_usbd_cdc_acm_user_event_t event)
+{
+    switch (event) {
+        case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_RX_DONE:
+            break;
+        default:
+            break;
+    }
+}
+
+void usbd_cdc_init(void)
+{
+    app_usbd_class_inst_t const * class_cdc_acm = app_usbd_cdc_acm_class_inst_get(&m_app_cdc_acm);
+    ret_code_t ret = app_usbd_class_append(class_cdc_acm);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_usbd_class_append(class_cdc_acm) returns 0x%02x ", ret);
+    }
+    APP_ERROR_CHECK(ret);
+
+    NRF_LOG_DEBUG("usbd_cdc_init() done");
+}
+
+bool usbd_cdc_buffer_write(const void *p_tx_buffer, size_t size)
+{
+    // 内部バッファにコピーしてから出力
+    memcpy(m_tx_buffer, p_tx_buffer, size);
+    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, p_tx_buffer, size);
+    if (ret != NRF_SUCCESS) {
+        // USBポートには装着されているが、
+        // PCのターミナルアプリケーションが受信していない場合
+        // NRF_LOG_ERROR("Log text is not received by terminal app");
+        return false;
+    }
+    return true;
+}
+
+//
+// HID関連
+//
 /**
  * @brief HID generic class interface number.
  * */

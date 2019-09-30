@@ -219,7 +219,8 @@ int main(void)
     gatt_init();
     fido_ble_peripheral_init();
 
-    // USB HIDデバイスクラスを初期化
+    // USB CDC／HIDデバイスクラスを初期化
+    usbd_cdc_init();
     usbd_hid_init(usbd_user_ev_handler);
 
     // NFC関連の初期化（機能閉塞中です）
