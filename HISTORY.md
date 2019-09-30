@@ -2,6 +2,18 @@
 
 ## プログラム更新履歴
 
+#### 2019/09/17（Version 0.1.19）
+
+FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
+
+- [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
+- [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
+- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
+
+修正点は以下になります。
+- MDBT50Q Dongleのバージョン情報を管理ツールから参照できるよう修正（[#248](https://github.com/diverta/onecard-fido/issues/248) ご参照）
+- PINコード解除時にタイムアウト（30秒）が効かない不具合を解消（[#247](https://github.com/diverta/onecard-fido/issues/247) ご参照）
+
 #### 2019/09/12（Version 0.1.18）
 
 FIDO認証器管理ツールを修正しました。<br>
@@ -32,7 +44,7 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
+- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
 
 修正点は以下になります。
 - 鍵・証明書がない状態でCTAP2ヘルスチェックを実行すると、ハングしてしまう不具合を解消（[#230](https://github.com/diverta/onecard-fido/issues/230) ご参照）
@@ -43,7 +55,7 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)
+- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
 
 主な修正点は以下になります。
 - PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
@@ -63,7 +75,7 @@ FIDO認証器管理ツールを修正しました。<br>
 
 #### 2019/06/13
 
-[nRF52840版 FIDO2認証器](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
+[FIDO2アプリケーション](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
 
 なお、[移行前のプログラム](nRF5_SDK_v15.2.0)は、そのまま残してあります。<br>
 （今後はメンテナンスする予定はございません。ご容赦ください）
@@ -74,7 +86,7 @@ FIDO認証器管理ツールを修正しました。<br>
 
 以下のプログラムを修正しました。<br>
 
-- [nRF52840版 FIDO2認証器](nRF5_SDK_v15.2.0)
+- [FIDO2アプリケーション](nRF5_SDK_v15.2.0)
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
 
