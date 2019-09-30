@@ -1,4 +1,4 @@
-# nRF52840版 FIDO2.0認証器
+# nRF52840版 FIDO2アプリケーション
 
 ## 概要
 FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケーションです。
@@ -25,7 +25,7 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 ## ファームウェア
 
-「nRF52840版 FIDO2.0認証器」で使用するファームウェアは下記の２本になります。<br>
+「nRF52840版 FIDO2アプリケーション」で使用するファームウェアは下記の２本になります。<br>
 フォルダー[`firmwares`](firmwares/README.md) に格納しています。
 
 - s140_nrf52_6.1.1_softdevice.hex - ソフトデバイス
