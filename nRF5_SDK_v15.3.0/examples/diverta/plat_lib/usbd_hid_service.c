@@ -13,7 +13,6 @@
 #include "nrf_drv_power.h"
 #include "app_usbd_hid_generic.h"
 #include "app_error.h"
-#include "usbd_hid_service.h"
 
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
@@ -44,7 +43,7 @@ static void (*event_handler)(app_usbd_event_type_t event);
 
 // CDCが使用するバッファ
 static char m_rx_buffer[1];
-static char m_tx_buffer[NRF_DRV_USBD_EPSIZE];
+static bool m_rx_echo_back;
 
 // 連続して読み込まれた文字列を保持
 static char   m_line_buffer[NRF_DRV_USBD_EPSIZE];
@@ -89,7 +88,8 @@ static void usbd_cdc_buffer_char_add(char c)
     m_line_received++;
 
     // echo back
-    usbd_cdc_buffer_write(m_rx_buffer, 1);
+    m_rx_echo_back = true;
+    app_usbd_cdc_acm_write(&m_app_cdc_acm, m_rx_buffer, 1);
 }
 
 static void usbd_cdc_buffer_set(void)
@@ -102,7 +102,8 @@ static void usbd_cdc_buffer_set(void)
     }
 
     // echo back
-    usbd_cdc_buffer_write("\r\n", 2);
+    m_rx_echo_back = true;
+    app_usbd_cdc_acm_write(&m_app_cdc_acm, "\r\n", 2);
 }
 
 static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
@@ -131,6 +132,15 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
     } while (app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1) == NRF_SUCCESS);
 }
 
+static void usbd_cdc_buffer_write(app_usbd_class_inst_t const *p_inst)
+{
+    if (m_rx_echo_back) {
+        m_rx_echo_back = false;
+    } else {
+        NRF_LOG_DEBUG("USB CDC TX buffer sent");
+    }
+}
+
 static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
                                     app_usbd_cdc_acm_user_event_t event)
 {
@@ -143,6 +153,7 @@ static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
             NRF_LOG_DEBUG("USB CDC port closed");
             break;
         case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
+            usbd_cdc_buffer_write(p_inst);
             break;
         case APP_USBD_CDC_ACM_USER_EVT_RX_DONE:
             usbd_cdc_buffer_read(p_inst);
@@ -164,11 +175,11 @@ void usbd_cdc_init(void)
     NRF_LOG_DEBUG("usbd_cdc_init() done");
 }
 
-bool usbd_cdc_buffer_write(const void *p_tx_buffer, size_t size)
+bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
 {
-    // 内部バッファにコピーしてから出力
-    memcpy(m_tx_buffer, p_tx_buffer, size);
-    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, p_tx_buffer, size);
+    // 指定された領域から出力
+    m_rx_echo_back = false;
+    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, buffer_for_send, size);
     if (ret != NRF_SUCCESS) {
         // USBポートには装着されているが、
         // PCのターミナルアプリケーションが受信していない場合
