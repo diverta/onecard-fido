@@ -14,7 +14,7 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_peripheral.h"
-#include "ble_central_service.h"
+#include "ble_service_central.h"
 
 void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
@@ -76,6 +76,10 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
                           p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
+            break;
+
+        case BLE_GAP_EVT_ADV_REPORT:
+            ble_service_central_gap_adv_report(p_ble_evt);
             break;
 
         default:

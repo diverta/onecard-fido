@@ -25,6 +25,7 @@
 #include "usbd_hid_service.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
+#include "ble_service_central.h"
 #include "ble_service_common.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -146,6 +147,9 @@ static void gatt_init(void)
 
     err_code = nrf_ble_gatt_init(&m_gatt, ble_service_common_gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -219,6 +223,7 @@ int main(void)
     // BLE関連の初期化
     gatt_init();
     fido_ble_peripheral_init();
+    ble_service_central_init();
 
     // USB CDC／HIDデバイスクラスを初期化
     usbd_cdc_init();
