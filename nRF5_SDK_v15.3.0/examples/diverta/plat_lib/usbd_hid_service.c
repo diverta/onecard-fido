@@ -36,6 +36,162 @@ static void (*event_handler)(app_usbd_event_type_t event);
 #define USBD_POWER_DETECTION true
 #endif
 
+//
+// CDC関連
+//
+#include "app_usbd_cdc_acm.h"
+
+// CDCが使用するバッファ
+static char m_rx_buffer[1];
+static bool m_rx_echo_back;
+
+// 連続して読み込まれた文字列を保持
+static char   m_line_buffer[NRF_DRV_USBD_EPSIZE];
+static size_t m_line_size;
+static size_t m_line_received;
+
+static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                                    app_usbd_cdc_acm_user_event_t event);
+
+#define CDC_ACM_COMM_INTERFACE  1
+#define CDC_ACM_COMM_EPIN       NRF_DRV_USBD_EPIN3
+
+#define CDC_ACM_DATA_INTERFACE  2
+#define CDC_ACM_DATA_EPIN       NRF_DRV_USBD_EPIN2
+#define CDC_ACM_DATA_EPOUT      NRF_DRV_USBD_EPOUT2
+
+APP_USBD_CDC_ACM_GLOBAL_DEF(m_app_cdc_acm,
+                            cdc_acm_user_ev_handler,
+                            CDC_ACM_COMM_INTERFACE,
+                            CDC_ACM_DATA_INTERFACE,
+                            CDC_ACM_COMM_EPIN,
+                            CDC_ACM_DATA_EPIN,
+                            CDC_ACM_DATA_EPOUT,
+                            APP_USBD_CDC_COMM_PROTOCOL_AT_V250
+);
+
+static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
+{
+    // Setup first transfer
+    app_usbd_cdc_acm_t const *p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
+    app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1);
+
+    // 作業領域を初期化
+    m_line_size = 0;
+    m_line_received = 0;
+}
+
+static void usbd_cdc_buffer_char_add(char c)
+{
+    // 表示可能文字の場合はバッファにセット
+    m_line_buffer[m_line_received] = c;
+    m_line_received++;
+
+    // echo back
+    m_rx_echo_back = true;
+    app_usbd_cdc_acm_write(&m_app_cdc_acm, m_rx_buffer, 1);
+}
+
+static void usbd_cdc_buffer_set(void)
+{
+    if (m_line_received > 0) {
+        m_line_size = m_line_received;
+        m_line_buffer[m_line_size] = 0;
+        NRF_LOG_DEBUG("Received text [%s](%lu bytes)", m_line_buffer, m_line_size);
+        m_line_received = 0;
+    }
+
+    // echo back
+    m_rx_echo_back = true;
+    app_usbd_cdc_acm_write(&m_app_cdc_acm, "\r\n", 2);
+}
+
+static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
+{
+    app_usbd_cdc_acm_t const *p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
+    bool ctrl_char = false;
+    
+    do {
+        // 読み込んだ文字に対して処理を行う
+        char c = m_rx_buffer[0];
+        if (c == '\n' || c == '\r') {
+            // バッファへの文字設定を完了
+            usbd_cdc_buffer_set();
+
+        } else if (c < 32 || c > 126 || ctrl_char) {
+            // 表示不能文字が出現した場合は以降の文字を空読み
+            ctrl_char = true;
+        
+        } else {
+            // 表示可能文字の場合はバッファに文字を追加
+            usbd_cdc_buffer_char_add(c);
+        }
+
+    // 続けて１文字分読込み
+    // バッファ内に入力された場合は、ループを続行
+    } while (app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1) == NRF_SUCCESS);
+}
+
+static void usbd_cdc_buffer_write(app_usbd_class_inst_t const *p_inst)
+{
+    if (m_rx_echo_back) {
+        m_rx_echo_back = false;
+    } else {
+        NRF_LOG_DEBUG("USB CDC TX buffer sent");
+    }
+}
+
+static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
+                                    app_usbd_cdc_acm_user_event_t event)
+{
+    switch (event) {
+        case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
+            NRF_LOG_DEBUG("USB CDC port opened");
+            usbd_cdc_port_open(p_inst);
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
+            NRF_LOG_DEBUG("USB CDC port closed");
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
+            usbd_cdc_buffer_write(p_inst);
+            break;
+        case APP_USBD_CDC_ACM_USER_EVT_RX_DONE:
+            usbd_cdc_buffer_read(p_inst);
+            break;
+        default:
+            break;
+    }
+}
+
+void usbd_cdc_init(void)
+{
+    app_usbd_class_inst_t const * class_cdc_acm = app_usbd_cdc_acm_class_inst_get(&m_app_cdc_acm);
+    ret_code_t ret = app_usbd_class_append(class_cdc_acm);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_usbd_class_append(class_cdc_acm) returns 0x%02x ", ret);
+    }
+    APP_ERROR_CHECK(ret);
+
+    NRF_LOG_DEBUG("usbd_cdc_init() done");
+}
+
+bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
+{
+    // 指定された領域から出力
+    m_rx_echo_back = false;
+    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, buffer_for_send, size);
+    if (ret != NRF_SUCCESS) {
+        // USBポートには装着されているが、
+        // PCのターミナルアプリケーションが受信していない場合
+        // NRF_LOG_ERROR("Log text is not received by terminal app");
+        return false;
+    }
+    return true;
+}
+
+//
+// HID関連
+//
 /**
  * @brief HID generic class interface number.
  * */
@@ -275,6 +431,9 @@ void usbd_hid_init(void (*event_handler_)(app_usbd_event_type_t event))
     APP_ERROR_CHECK(ret);
 
     ret = app_usbd_class_append(class_inst_generic);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_usbd_class_append(class_inst_generic) returns 0x%02x ", ret);
+    }
     APP_ERROR_CHECK(ret);
 
     if (USBD_POWER_DETECTION) {
