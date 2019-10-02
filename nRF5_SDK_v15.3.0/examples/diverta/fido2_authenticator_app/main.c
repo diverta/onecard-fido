@@ -25,6 +25,7 @@
 #include "usbd_hid_service.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
+#include "ble_service_common.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -121,7 +122,7 @@ static void ble_stack_init(void)
     APP_ERROR_CHECK(err_code);
 
     // Register a handler for BLE events.
-    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, fido_ble_peripheral_evt_handler, NULL);
+    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_service_common_evt_handler, NULL);
 }
 
 
@@ -143,7 +144,7 @@ static void gatt_init(void)
 {
     ret_code_t err_code;
 
-    err_code = nrf_ble_gatt_init(&m_gatt, fido_ble_peripheral_gatt_evt_handler);
+    err_code = nrf_ble_gatt_init(&m_gatt, ble_service_common_gatt_evt_handler);
     APP_ERROR_CHECK(err_code);
 }
 

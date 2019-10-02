@@ -16,15 +16,15 @@ extern "C" {
 
 bool fido_ble_peripheral_mode(void);
 void fido_ble_peripheral_init(void);
-void fido_ble_peripheral_evt_handler(ble_evt_t const *p_ble_evt, void *p_context);
-void fido_ble_peripheral_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt);
 void fido_ble_peripheral_advertising_start(void);
 void fido_ble_peripheral_advertising_stop(void);
 void fido_ble_peripheral_start(void);
+
+void ble_peripheral_gap_connected(ble_evt_t const *p_ble_evt);
+void ble_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* FIDO_BLE_PERIPHERAL_H */
-
