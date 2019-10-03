@@ -14,7 +14,6 @@ extern "C" {
 #endif
 
 void ble_service_central_init(void);
-void ble_service_central_scan_filter_set(void);
 void ble_service_central_scan_start(void);
 void ble_service_central_scan_stop(void);
 void ble_service_central_gap_adv_report(ble_evt_t const *p_ble_evt);

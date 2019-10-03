@@ -23,6 +23,8 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_BLE_CONN_CFG_TAG 1
 NRF_BLE_SCAN_DEF(m_scan);
 
+#include "ble_service_central_stat.h"
+
 static void scan_evt_handler(scan_evt_t const *p_scan_evt)
 {
     ret_code_t err_code;
@@ -70,22 +72,12 @@ void ble_service_central_init(void)
     NRF_LOG_DEBUG("BLE central initialized");
 }
 
-void ble_service_central_scan_filter_set(void)
-{
-    ble_uuid_t const uuid = {
-        .uuid = 0x0001,
-        .type = BLE_UUID_TYPE_VENDOR_BEGIN
-    };
-
-    ret_code_t err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, &uuid);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_UUID_FILTER, false);
-    APP_ERROR_CHECK(err_code);
-}
-
 void ble_service_central_scan_start(void)
 {
+    // 統計情報を初期化
+    ble_service_central_stat_info_init();
+
+    // スキャンをスタート
     ret_code_t ret = nrf_ble_scan_start(&m_scan);
     APP_ERROR_CHECK(ret);
 
@@ -98,6 +90,9 @@ void ble_service_central_scan_stop(void)
     // Stop scanning.
     nrf_ble_scan_stop();
     NRF_LOG_DEBUG("Scan stopped");
+    
+    // 統計情報をデバッグ出力
+    ble_service_central_stat_debug_print();
 }
 
 //
@@ -105,6 +100,6 @@ void ble_service_central_scan_stop(void)
 //
 void ble_service_central_gap_adv_report(ble_evt_t const *p_ble_evt)
 {
-    // TODO:
-    // 取得したRSSI値をログ出力対象に設定
+    // 統計情報を更新
+    ble_service_central_stat_adv_report(&p_ble_evt->evt.gap_evt.params.adv_report);
 }

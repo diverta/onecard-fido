@@ -28,6 +28,7 @@
                 <sourceRootElem>../../../../FIDO2Device/u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib</sourceRootElem>
                 <sourceRootElem>../ble_lib</sourceRootElem>
+                <sourceRootElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
