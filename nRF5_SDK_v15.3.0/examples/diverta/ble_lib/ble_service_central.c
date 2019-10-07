@@ -20,6 +20,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug log and hexdump
+#define LOG_HEXDUMP_DEBUG_ADVSTAT   false
+
 #define APP_BLE_CONN_CFG_TAG 1
 NRF_BLE_SCAN_DEF(m_scan);
 
@@ -91,8 +94,10 @@ void ble_service_central_scan_stop(void)
     nrf_ble_scan_stop();
     NRF_LOG_DEBUG("Scan stopped");
     
+#if LOG_HEXDUMP_DEBUG_ADVSTAT
     // 統計情報をデバッグ出力
     ble_service_central_stat_debug_print();
+#endif
 }
 
 //
