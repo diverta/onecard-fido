@@ -1,12 +1,12 @@
-PROJECT_NAME     := ble_app_hrs_pca10059_s140
+PROJECT_NAME     := one_card_app_pca10059_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := ../../../../../..
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
-  LINKER_SCRIPT  := ble_app_hrs_gcc_nrf52.ld
+  LINKER_SCRIPT  := gcc_nrf52.ld
 
 # Source files common to all targets
 SRC_FILES += \
