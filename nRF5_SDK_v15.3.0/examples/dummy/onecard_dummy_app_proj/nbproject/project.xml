@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../onecard_dummy_app</sourceRootElem>
+                <sourceRootElem>../onecard_dummy_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

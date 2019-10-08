@@ -43,9 +43,6 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-#define UART_TX_BUF_SIZE                256                                         /**< UART TX buffer size. */
-#define UART_RX_BUF_SIZE                256                                         /**< UART RX buffer size. */
-
 
 BLE_ONE_CARD_DEF(m_one_card, NRF_SDH_BLE_TOTAL_LINK_COUNT);                         /**< BLE One Card service instance. */
 
@@ -54,7 +51,7 @@ NRF_BLE_QWR_DEF(m_qwr);                                                         
 BLE_ADVERTISING_DEF(m_advertising);                                                 /**< Advertising module instance. */
 
 static uint16_t   m_conn_handle               = BLE_CONN_HANDLE_INVALID;            /**< Handle of the current connection. */
-static uint16_t   m_ble_one_card_max_data_len = BLE_GATT_ATT_MTU_DEFAULT - 3;       /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
+static uint16_t   m_ble_one_card_max_data_len = BLE_GATT_ATT_MTU_DEFAULT - 3;       /**< Maximum length of data (in bytes) that can be transmitted to the peer by the One Card service module. */
 static ble_uuid_t m_adv_uuids[]               =                                     /**< Universally unique service identifier. */
 {
     {BLE_UUID_ONE_CARD_SERVICE, BLE_UUID_TYPE_VENDOR_BEGIN}
