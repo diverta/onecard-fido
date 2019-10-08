@@ -3,14 +3,14 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>one_card_app_proj</name>
+            <name>onecard_dummy_app_proj</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>../one_card_app</sourceRootElem>
+                <sourceRootElem>../onecard_dummy_app</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
