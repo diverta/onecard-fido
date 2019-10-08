@@ -13,7 +13,7 @@
 #include "nrf_ble_qwr.h"
 #include "app_timer.h"
 
-#include "ble_nus.h"
+#include "ble_one_card.h"
 
 #include "app_util_platform.h"
 #include "bsp_btn_ble.h"
@@ -26,7 +26,6 @@
 #define APP_BLE_CONN_CFG_TAG            1                                           /**< A tag identifying the SoftDevice BLE configuration. */
 
 #define DEVICE_NAME                     "OneCard_Dummy"                             /**< Name of device. Will be included in the advertising data. */
-#define NUS_SERVICE_UUID_TYPE           BLE_UUID_TYPE_VENDOR_BEGIN                  /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define APP_BLE_OBSERVER_PRIO           3                                           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 
@@ -48,16 +47,17 @@
 #define UART_RX_BUF_SIZE                256                                         /**< UART RX buffer size. */
 
 
-BLE_NUS_DEF(m_nus, NRF_SDH_BLE_TOTAL_LINK_COUNT);                                   /**< BLE NUS service instance. */
+BLE_ONE_CARD_DEF(m_one_card, NRF_SDH_BLE_TOTAL_LINK_COUNT);                         /**< BLE One Card service instance. */
+
 NRF_BLE_GATT_DEF(m_gatt);                                                           /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                             /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                                 /**< Advertising module instance. */
 
-static uint16_t   m_conn_handle          = BLE_CONN_HANDLE_INVALID;                 /**< Handle of the current connection. */
-static uint16_t   m_ble_nus_max_data_len = BLE_GATT_ATT_MTU_DEFAULT - 3;            /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
-static ble_uuid_t m_adv_uuids[]          =                                          /**< Universally unique service identifier. */
+static uint16_t   m_conn_handle               = BLE_CONN_HANDLE_INVALID;            /**< Handle of the current connection. */
+static uint16_t   m_ble_one_card_max_data_len = BLE_GATT_ATT_MTU_DEFAULT - 3;       /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
+static ble_uuid_t m_adv_uuids[]               =                                     /**< Universally unique service identifier. */
 {
-    {BLE_UUID_NUS_SERVICE, NUS_SERVICE_UUID_TYPE}
+    {BLE_UUID_ONE_CARD_SERVICE, BLE_UUID_TYPE_VENDOR_BEGIN}
 };
 
 
@@ -132,9 +132,9 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
  */
 static void services_init(void)
 {
-    uint32_t           err_code;
-    ble_nus_init_t     nus_init;
-    nrf_ble_qwr_init_t qwr_init = {0};
+    uint32_t            err_code;
+    ble_one_card_init_t one_card_init;
+    nrf_ble_qwr_init_t  qwr_init = {0};
 
     // Initialize Queued Write Module.
     qwr_init.error_handler = nrf_qwr_error_handler;
@@ -142,12 +142,10 @@ static void services_init(void)
     err_code = nrf_ble_qwr_init(&m_qwr, &qwr_init);
     APP_ERROR_CHECK(err_code);
 
-    // Initialize NUS.
-    memset(&nus_init, 0, sizeof(nus_init));
+    // Initialize One Card.
+    memset(&one_card_init, 0, sizeof(one_card_init));
 
-    //nus_init.data_handler = nus_data_handler;
-
-    err_code = ble_nus_init(&m_nus, &nus_init);
+    err_code = ble_one_card_init(&m_one_card, &one_card_init);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -354,8 +352,8 @@ void gatt_evt_handler(nrf_ble_gatt_t * p_gatt, nrf_ble_gatt_evt_t const * p_evt)
 {
     if ((m_conn_handle == p_evt->conn_handle) && (p_evt->evt_id == NRF_BLE_GATT_EVT_ATT_MTU_UPDATED))
     {
-        m_ble_nus_max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
-        NRF_LOG_INFO("Data len is set to 0x%X(%d)", m_ble_nus_max_data_len, m_ble_nus_max_data_len);
+        m_ble_one_card_max_data_len = p_evt->params.att_mtu_effective - OPCODE_LENGTH - HANDLE_LENGTH;
+        NRF_LOG_INFO("Data len is set to 0x%X(%d)", m_ble_one_card_max_data_len, m_ble_one_card_max_data_len);
     }
     NRF_LOG_DEBUG("ATT MTU exchange completed. central 0x%x peripheral 0x%x",
                   p_gatt->att_mtu_desired_central,
