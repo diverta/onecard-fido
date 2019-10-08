@@ -26,7 +26,67 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_BLE_CONN_CFG_TAG 1
 NRF_BLE_SCAN_DEF(m_scan);
 
+#include "ble_service_central.h"
 #include "ble_service_central_stat.h"
+
+//
+// スキャン用タイマー
+//
+#include "app_timer.h"
+APP_TIMER_DEF(m_scan_timer_id);
+static bool scan_timer_created = false;
+static bool scan_timer_started = false;
+
+static void scan_timeout_handler(void *p_context)
+{
+    // スキャンを停止
+    ble_service_central_scan_stop();
+}
+
+static ret_code_t scan_timer_init(void)
+{
+    if (scan_timer_created) {
+        return NRF_SUCCESS;
+    }
+
+    // スキャンタイムアウト監視用タイマーを生成
+    ret_code_t err_code = app_timer_create(&m_scan_timer_id, APP_TIMER_MODE_SINGLE_SHOT, scan_timeout_handler);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_timer_create(m_scan_timer_id) returns %d ", err_code);
+    }
+    
+    scan_timer_created = true;
+    return err_code;
+}
+
+static void scan_timer_stop(void)
+{
+    // スキャンタイムアウト監視用タイマーを停止
+    if (scan_timer_started) {
+        app_timer_stop(m_scan_timer_id);
+        scan_timer_started = false;
+    }
+}
+
+static void scan_timer_start(uint32_t timeout_msec, void *p_context)
+{
+    // タイマー生成
+    ret_code_t err_code = scan_timer_init();
+    if (err_code != NRF_SUCCESS) {
+        return;
+    }
+
+    // タイマーが既にスタートしている場合は停止させる
+    scan_timer_stop();
+
+    // スキャンタイムアウト監視用タイマーを開始
+    err_code = app_timer_start(m_scan_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_timer_start(m_scan_timer_id) returns %d ", err_code);
+    } else {
+        scan_timer_started = true;
+    }
+}
 
 static void scan_evt_handler(scan_evt_t const *p_scan_evt)
 {
@@ -75,7 +135,7 @@ void ble_service_central_init(void)
     NRF_LOG_DEBUG("BLE central initialized");
 }
 
-void ble_service_central_scan_start(void)
+void ble_service_central_scan_start(uint32_t timeout_msec)
 {
     // 統計情報を初期化
     ble_service_central_stat_info_init();
@@ -84,12 +144,25 @@ void ble_service_central_scan_start(void)
     ret_code_t ret = nrf_ble_scan_start(&m_scan);
     APP_ERROR_CHECK(ret);
 
+    if (timeout_msec == 0) {
+        // タイムアウトが無指定の場合
+        // タイマーが既にスタートしている場合は停止させる
+        scan_timer_stop();
+    } else {
+        // タイムアウトを指定し、
+        // スキャンタイマーをスタート
+        scan_timer_start(timeout_msec, NULL);
+    }
+
     // スキャン中の旨を通知
     NRF_LOG_DEBUG("Scan started");
 }
 
 void ble_service_central_scan_stop(void)
 {
+    // タイマーが既にスタートしている場合は停止させる
+    scan_timer_stop();
+
     // Stop scanning.
     nrf_ble_scan_stop();
     NRF_LOG_DEBUG("Scan stopped");
