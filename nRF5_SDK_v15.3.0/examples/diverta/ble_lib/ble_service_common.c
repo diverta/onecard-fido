@@ -14,7 +14,14 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_peripheral.h"
+#include "fido_ble_peripheral_timer.h"
 #include "ble_service_central.h"
+
+// for nrf_drv_usbd_is_enabled
+#include "nrf_drv_usbd.h"
+
+//業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
@@ -102,5 +109,49 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
         NRF_LOG_INFO("BLE: GATT ATT MTU on connection 0x%x changed to %d.",
                      p_evt->conn_handle,
                      p_evt->params.att_mtu_effective);
+    }
+}
+
+void ble_service_common_init(void)
+{
+    fido_ble_peripheral_init();
+    ble_service_central_init();
+}
+
+void ble_service_common_enable_peripheral(void)
+{
+    // BLEペリフェラル始動タイマーを開始し、
+    // 最初の１秒間でUSB接続されなかった場合は
+    // BLEペリフェラル・モードに遷移
+    fido_ble_peripheral_timer_start();
+}
+
+void ble_service_common_start_peripheral(void *p_context)
+{
+    UNUSED_PARAMETER(p_context);
+
+    // USB接続・HIDサービス始動を確認
+    bool enable_usbd = nrf_drv_usbd_is_enabled();
+    NRF_LOG_DEBUG("USB HID is %s", 
+        enable_usbd ? "active, BLE peripheral is inactive" : "inactive: starting BLE peripheral");
+
+    if (enable_usbd == false) {
+        // USB接続・HIDサービスが始動していない場合は
+        // アドバタイジングを開始させ、
+        // BLEペリフェラル・モードに遷移
+        fido_ble_peripheral_start();
+        return;
+    }
+
+    // LED制御をアイドル中（秒間２回点滅）に変更
+    fido_status_indicator_idle();
+}
+
+void ble_service_common_disable_peripheral(void)
+{
+    if (fido_ble_peripheral_mode()) {
+        // BLEペリフェラル稼働中にUSB接続された場合は、
+        // ソフトデバイスを再起動
+        NVIC_SystemReset();
     }
 }

@@ -19,13 +19,10 @@
 
 // FIDO Authenticator固有の処理
 #include "fido_ble_event.h"
-#include "fido_ble_peripheral.h"
-#include "fido_ble_peripheral_timer.h"
 #include "fido_hid_channel.h"
 #include "usbd_hid_service.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
-#include "ble_service_central.h"
 #include "ble_service_common.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -182,12 +179,11 @@ static void idle_state_handle(void)
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
     if (event == APP_USBD_EVT_POWER_DETECTED) {
-        if (fido_ble_peripheral_mode()) {
-            // BLEペリフェラル稼働中にUSB接続された場合は、
-            // ソフトデバイスを再起動
-            NVIC_SystemReset();
-        }
-    }    
+        // BLEペリフェラル稼働中にUSB接続された場合は、
+        // ソフトデバイスを再起動し、
+        // BLEペリフェラルを無効化
+        ble_service_common_disable_peripheral();
+    }
     if (event == APP_USBD_EVT_STOPPED) {
         // 給電が継続している場合は、USBを無効化したのちに
         // ソフトデバイスを再起動
@@ -217,13 +213,12 @@ int main(void)
     usbd_init();
     timers_init();
     power_management_init();
-    ble_stack_init();
     flash_storage_init();
 
     // BLE関連の初期化
+    ble_stack_init();
     gatt_init();
-    fido_ble_peripheral_init();
-    ble_service_central_init();
+    ble_service_common_init();
 
     // USB CDC／HIDデバイスクラスを初期化
     usbd_cdc_init();
@@ -231,9 +226,10 @@ int main(void)
 
     // NFC関連の初期化（機能閉塞中です）
     nfc_service_init(true);
-    
-    // BLEペリフェラル始動タイマーを開始
-    fido_ble_peripheral_timer_start();
+
+    // USBポートに接続されていない場合は、
+    // BLEペリフェラルモードに移行
+    ble_service_common_enable_peripheral();
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
 
     // アプリケーション固有の初期化処理

@@ -12,14 +12,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for nrf_drv_usbd_is_enabled
-#include "nrf_drv_usbd.h"
-
-// for fido_ble_peripheral_start
-#include "fido_ble_peripheral.h"
-
-//業務処理／HW依存処理間のインターフェース
-#include "fido_platform.h"
+#include "ble_service_common.h"
 
 #define TIMER_MSEC 1000
 
@@ -30,23 +23,7 @@ static bool app_timer_started = false;
 
 static void timeout_handler(void *p_context)
 {
-    UNUSED_PARAMETER(p_context);
-
-    // USB接続・HIDサービス始動を確認
-    bool enable_usbd = nrf_drv_usbd_is_enabled();
-    NRF_LOG_DEBUG("USB HID is %s", 
-        enable_usbd ? "active, BLE peripheral is inactive" : "inactive: starting BLE peripheral");
-
-    if (enable_usbd == false) {
-        // USB接続・HIDサービスが始動していない場合は
-        // アドバタイジングを開始させ、
-        // BLEペリフェラル・モードに遷移
-        fido_ble_peripheral_start();
-        return;
-    }
-
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
+    ble_service_common_start_peripheral(p_context);
 }
 
 static void timer_terminate(void)
