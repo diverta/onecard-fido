@@ -201,9 +201,9 @@ SRC_FILES += \
   $(BLELIB_DIR)/ble_service_central.c \
   $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
+  $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
-  $(BLELIB_DIR)/fido_ble_peripheral.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
 

@@ -23,7 +23,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_timer.h"
 
 // for fido_ble_pairing_change_mode
-#include "fido_ble_peripheral.h"
+#include "ble_service_peripheral.h"
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"

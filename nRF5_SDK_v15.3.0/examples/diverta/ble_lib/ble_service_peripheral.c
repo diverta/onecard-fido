@@ -1,5 +1,5 @@
 /* 
- * File:   fido_ble_peripheral.c
+ * File:   ble_service_peripheral.c
  * Author: makmorit
  *
  * Created on 2019/02/11, 15:04
@@ -17,7 +17,7 @@
 #include "nrf_ble_qwr.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME fido_ble_peripheral
+#define NRF_LOG_MODULE_NAME ble_service_peripheral
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -65,16 +65,6 @@ void fido_ble_peripheral_advertising_start(void)
     ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
     NRF_LOG_DEBUG("Advertising started");
-}
-
-void fido_ble_peripheral_advertising_stop(void)
-{
-    if (ble_peripheral_mode == false) {
-        return;
-    }
-
-    (void)sd_ble_gap_adv_stop(m_advertising.adv_handle);
-    NRF_LOG_DEBUG("Advertising stopped");
 }
 
 static void nrf_qwr_error_handler(uint32_t nrf_error)

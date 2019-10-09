@@ -1,5 +1,5 @@
 /* 
- * File:   fido_ble_peripheral.h
+ * File:   ble_service_peripheral.h
  * Author: makmorit
  *
  * Created on 2019/02/11, 15:04
@@ -16,7 +16,6 @@ extern "C" {
 bool fido_ble_peripheral_mode(void);
 void fido_ble_peripheral_init(void);
 void fido_ble_peripheral_advertising_start(void);
-void fido_ble_peripheral_advertising_stop(void);
 void fido_ble_peripheral_start(void);
 void fido_ble_peripheral_timer_start(void);
 

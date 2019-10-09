@@ -5,7 +5,7 @@
  * Created on 2019/07/15, 12:27
  */
 #include "fido_board.h"
-#include "fido_ble_peripheral.h"
+#include "ble_service_peripheral.h"
 #include "fido_timer.h"
 
 //
