@@ -224,6 +224,18 @@ static void resume_function_after_scan(void)
 {
     // 統計情報をデバッグ出力
     ble_service_central_stat_debug_print();
+
+    //
+    // One cardダミーデバイスが見つかったらプリントして終了
+    // （422E0000-E141-11E5-A837-0800200C9A66）
+    //
+    char *one_card_uuid_string = "422E0000-E141-11E5-A837-0800200C9A66";
+    ADV_STAT_INFO_T *info = ble_service_central_stat_match_uuid(one_card_uuid_string);
+    if (info == NULL) {
+        NRF_LOG_DEBUG("One card peripheral device not found.");
+    } else {
+        NRF_LOG_DEBUG("One card peripheral device found: NAME(%s)", info->dev_name);
+    }
 }
 
 static void fido_board_demo_function(void)

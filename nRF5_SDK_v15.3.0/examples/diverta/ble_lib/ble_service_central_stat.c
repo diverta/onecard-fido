@@ -4,6 +4,9 @@
  *
  * Created on 2019/10/03, 16:20
  */
+#include <stdio.h>
+#include <string.h>
+
 #include "nordic_common.h"
 #include "nrf.h"
 #include "app_error.h"
@@ -15,24 +18,14 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+#include "ble_service_central_stat.h"
+
 // for debug log and hexdump
 #define LOG_HEXDUMP_DEBUG_ADVDATA   false
 
-// 最大 3 デバイス分の
+// 最大 5 デバイス分の
 // アドバタイジング情報を保持
-#define ADV_STAT_INFO_SIZE_MAX 3
-#define ADV_STAT_INFO_DATA_MAX_SIZE 32
-#define UUID_BYTES_MAX_SIZE 16
-typedef struct {
-    uint8_t peer_addr[BLE_GAP_ADDR_LEN];
-    int8_t  rssi;
-    int8_t  tx_power;
-    uint8_t ad_type;
-    uint8_t dev_name[ADV_STAT_INFO_DATA_MAX_SIZE];
-    size_t  dev_name_size;
-    uint8_t uuid_bytes[UUID_BYTES_MAX_SIZE];
-    size_t  uuid_bytes_size;
-} ADV_STAT_INFO_T;
+#define ADV_STAT_INFO_SIZE_MAX 5
 static ADV_STAT_INFO_T adv_stat_info[ADV_STAT_INFO_SIZE_MAX];
 static uint8_t         adv_stat_info_size = 0;
 
@@ -141,4 +134,52 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
             return;
         }
     }
+}
+
+//
+// スキャン中に収集されたデバイス統計情報を、128bit UUID文字列で探索する。
+//
+static char uuid_buf[40];
+
+static void uuid_bytes_to_ascii(uint8_t *uuid_bytes, uint8_t uuid_type, char *buff)
+{
+    char buf1[32];
+
+    // 格納領域を初期化（36文字の領域を確保）
+    memset(buff, 0, 37);
+
+    // 128bit UUID以外の場合は処理しない
+    if (uuid_type != 0x07) {
+        return;
+    }
+
+    // ビッグエンディアンのUUID配列を文字列変換する
+    sprintf(buf1, "%02X%02X%02X%02X-", 
+        uuid_bytes[0], uuid_bytes[1], uuid_bytes[2], uuid_bytes[3]);
+    strcat(buff, buf1);
+
+    sprintf(buf1, "%02X%02X-%02X%02X-%02X%02X-", 
+        uuid_bytes[4], uuid_bytes[5], uuid_bytes[6], uuid_bytes[7], uuid_bytes[8], uuid_bytes[9]);
+    strcat(buff, buf1);
+
+    sprintf(buf1, "%02X%02X%02X%02X%02X%02X",
+        uuid_bytes[10], uuid_bytes[11], uuid_bytes[12], uuid_bytes[13], uuid_bytes[14], uuid_bytes[15]);
+    strcat(buff, buf1);
+}
+
+ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
+{
+    for (uint8_t i = 0; i < adv_stat_info_size; i++) {
+        // UUIDを文字列変換
+        ADV_STAT_INFO_T *info = &adv_stat_info[i];
+        uuid_bytes_to_ascii(info->uuid_bytes, info->ad_type, uuid_buf);
+
+        if (strcmp(uuid_buf, uuid_strict_string) == 0) {
+            // 見つかった場合は統計情報格納領域の参照を戻す
+            return info;
+        }
+    }
+    
+    // 見つからなかった場合はNULLを戻す
+    return NULL;
 }
