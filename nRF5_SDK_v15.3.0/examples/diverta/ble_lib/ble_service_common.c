@@ -26,6 +26,9 @@ NRF_LOG_MODULE_REGISTER();
 //業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for Device name
+#include "fido_board.h"
+
 void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     ret_code_t err_code;
@@ -116,7 +119,7 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
 }
 
 //
-// 初期化関連処理
+// 初期化関連処理（Peer Manager）
 // 
 #define SEC_PARAM_BOND                      1                                       /**< Perform bonding. */
 #define SEC_PARAM_MITM                      0                                       /**< Man In The Middle protection not required. */
@@ -179,9 +182,45 @@ static void peer_manager_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+//
+// 初期化関連処理（GAP）
+//
+#define MIN_CONN_INTERVAL                   MSEC_TO_UNITS( 40, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.05 seconds). */
+#define MAX_CONN_INTERVAL                   MSEC_TO_UNITS(150, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.1875 second). */
+#define SLAVE_LATENCY                       0                                       /**< Slave latency. */
+#define CONN_SUP_TIMEOUT                    MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
+
+static void gap_params_init(void)
+{
+    ret_code_t              err_code;
+    ble_gap_conn_params_t   gap_conn_params;
+    ble_gap_conn_sec_mode_t sec_mode;
+
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
+
+    err_code = sd_ble_gap_device_name_set(&sec_mode,
+                                          (const uint8_t *)DEVICE_NAME,
+                                          strlen(DEVICE_NAME));
+    APP_ERROR_CHECK(err_code);
+
+    err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_HEART_RATE_SENSOR_HEART_RATE_BELT);
+    APP_ERROR_CHECK(err_code);
+
+    memset(&gap_conn_params, 0, sizeof(gap_conn_params));
+
+    gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
+    gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
+    gap_conn_params.slave_latency     = SLAVE_LATENCY;
+    gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
+
+    err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
+    APP_ERROR_CHECK(err_code);
+}
+
 void ble_service_common_init(void)
 {
     peer_manager_init();
+    gap_params_init();
 
     fido_ble_peripheral_init();
     ble_service_central_init();
