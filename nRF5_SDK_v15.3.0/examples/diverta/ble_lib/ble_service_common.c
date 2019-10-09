@@ -6,7 +6,7 @@
  */
 #include "nordic_common.h"
 #include "nrf.h"
-
+#include "nrf_ble_gatt.h"
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
 
@@ -17,7 +17,6 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_ble_event.h"
 #include "fido_ble_peripheral.h"
-#include "fido_ble_peripheral_timer.h"
 #include "ble_service_central.h"
 
 // for nrf_drv_usbd_is_enabled
