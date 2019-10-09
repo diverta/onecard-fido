@@ -20,14 +20,14 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for debug log and hexdump
-#define LOG_HEXDUMP_DEBUG_ADVSTAT   false
-
 #define APP_BLE_CONN_CFG_TAG 1
 NRF_BLE_SCAN_DEF(m_scan);
 
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
+
+// スキャン終了後に実行される関数の参照を保持
+static void (*resume_function)(void);
 
 //
 // スキャン用タイマー
@@ -135,7 +135,7 @@ void ble_service_central_init(void)
     NRF_LOG_DEBUG("BLE central initialized");
 }
 
-void ble_service_central_scan_start(uint32_t timeout_msec)
+void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(void))
 {
     // 統計情報を初期化
     ble_service_central_stat_info_init();
@@ -154,6 +154,9 @@ void ble_service_central_scan_start(uint32_t timeout_msec)
         scan_timer_start(timeout_msec, NULL);
     }
 
+    // スキャン終了後に実行される関数の参照を退避
+    resume_function = _resume_function;
+    
     // スキャン中の旨を通知
     NRF_LOG_DEBUG("Scan started");
 }
@@ -166,11 +169,11 @@ void ble_service_central_scan_stop(void)
     // Stop scanning.
     nrf_ble_scan_stop();
     NRF_LOG_DEBUG("Scan stopped");
-    
-#if LOG_HEXDUMP_DEBUG_ADVSTAT
-    // 統計情報をデバッグ出力
-    ble_service_central_stat_debug_print();
-#endif
+
+    if (resume_function != NULL) {
+        // スキャン終了後に実行される関数を実行
+        (*resume_function)();
+    }
 }
 
 //

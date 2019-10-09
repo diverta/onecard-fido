@@ -218,12 +218,19 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
 // デモ機能
 //
 #include "ble_service_central.h"
+#include "ble_service_central_stat.h"
+
+static void resume_function_after_scan(void)
+{
+    // 統計情報をデバッグ出力
+    ble_service_central_stat_debug_print();
+}
 
 static void fido_board_demo_function(void)
 {
     if (ble_service_peripheral_mode() == false) {
         // ボタン押下で、BLEダミーデバイスをスキャンし、
         // 見つかった場合、ログをプリント
-        ble_service_central_scan_start(1000);
+        ble_service_central_scan_start(1000, resume_function_after_scan);
     }
 }
