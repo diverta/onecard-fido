@@ -7,6 +7,9 @@
 #include "nordic_common.h"
 #include "nrf.h"
 
+#include "peer_manager.h"
+#include "peer_manager_handler.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_service_common
 #include "nrf_log.h"
@@ -112,8 +115,74 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
     }
 }
 
+//
+// 初期化関連処理
+// 
+#define SEC_PARAM_BOND                      1                                       /**< Perform bonding. */
+#define SEC_PARAM_MITM                      0                                       /**< Man In The Middle protection not required. */
+#define SEC_PARAM_LESC                      1                                       /**< LE Secure Connections enabled. */
+#define SEC_PARAM_KEYPRESS                  0                                       /**< Keypress notifications not enabled. */
+#define SEC_PARAM_IO_CAPABILITIES           BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
+#define SEC_PARAM_OOB                       0                                       /**< Out Of Band data not available. */
+#define SEC_PARAM_MIN_KEY_SIZE              7                                       /**< Minimum encryption key size. */
+#define SEC_PARAM_MAX_KEY_SIZE              16                                      /**< Maximum encryption key size. */
+
+static void pm_evt_handler(pm_evt_t const * p_evt)
+{
+    // FIDO Authenticator固有の処理
+    if (fido_ble_pm_evt_handler(p_evt)) {
+        return;
+    }
+    
+    pm_handler_on_pm_evt(p_evt);
+    pm_handler_flash_clean(p_evt);
+
+    switch (p_evt->evt_id)
+    {
+        case PM_EVT_PEERS_DELETE_SUCCEEDED:
+            fido_ble_peripheral_advertising_start();
+            break;
+
+        default:
+            break;
+    }
+}
+
+static void peer_manager_init(void)
+{
+    ble_gap_sec_params_t sec_param;
+    ret_code_t           err_code;
+
+    err_code = pm_init();
+    APP_ERROR_CHECK(err_code);
+
+    memset(&sec_param, 0, sizeof(ble_gap_sec_params_t));
+
+    // Security parameters to be used for all security procedures.
+    sec_param.bond           = SEC_PARAM_BOND;
+    sec_param.mitm           = SEC_PARAM_MITM;
+    sec_param.lesc           = SEC_PARAM_LESC;
+    sec_param.keypress       = SEC_PARAM_KEYPRESS;
+    sec_param.io_caps        = SEC_PARAM_IO_CAPABILITIES;
+    sec_param.oob            = SEC_PARAM_OOB;
+    sec_param.min_key_size   = SEC_PARAM_MIN_KEY_SIZE;
+    sec_param.max_key_size   = SEC_PARAM_MAX_KEY_SIZE;
+    sec_param.kdist_own.enc  = 1;
+    sec_param.kdist_own.id   = 1;
+    sec_param.kdist_peer.enc = 1;
+    sec_param.kdist_peer.id  = 1;
+
+    err_code = pm_sec_params_set(&sec_param);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = pm_register(pm_evt_handler);
+    APP_ERROR_CHECK(err_code);
+}
+
 void ble_service_common_init(void)
 {
+    peer_manager_init();
+
     fido_ble_peripheral_init();
     ble_service_central_init();
 }
