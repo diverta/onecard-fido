@@ -88,7 +88,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         if (m_long_pushed) {
             m_long_pushed = false;
             // ボタンが長押しされた時の処理を実行
-            if (fido_ble_peripheral_mode()) {
+            if (ble_service_peripheral_mode()) {
                 // BLEペリフェラルが稼働時は、
                 // ペアリングモード変更を実行
                 fido_ble_pairing_change_mode();
@@ -114,7 +114,7 @@ void fido_command_long_push_timer_handler(void *p_context)
     (void)p_context;
 	m_long_pushed = true;
     
-    if (fido_ble_peripheral_mode()) {
+    if (ble_service_peripheral_mode()) {
         // ペアリングモードに遷移させるための長押しの場合、
         // このタイミングで、黄色LEDを連続点灯させる
         fido_status_indicator_pairing_mode();

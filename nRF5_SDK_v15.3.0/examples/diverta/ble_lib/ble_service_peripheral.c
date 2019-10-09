@@ -51,12 +51,12 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
 // BLEペリフェラルモードかどうかを保持
 static bool ble_peripheral_mode = false;
 
-bool fido_ble_peripheral_mode(void)
+bool ble_service_peripheral_mode(void)
 {
     return ble_peripheral_mode;
 }
 
-void fido_ble_peripheral_advertising_start(void)
+void ble_service_peripheral_advertising_start(void)
 {
     // アドバタイジングをスタートさせた場合は
     // BLEペリフェラルモードに移行
@@ -195,7 +195,7 @@ static void advertising_init(void)
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }
 
-void fido_ble_peripheral_init(void)
+void ble_service_peripheral_init(void)
 {
     // ペリフェラルデバイスとしての
     // 各種初期処理を実行
@@ -217,12 +217,12 @@ void fido_ble_peripheral_init(void)
     }
 }
 
-void fido_ble_peripheral_start(void)
+void ble_service_peripheral_start(void)
 {
     // USB接続・HIDサービスが始動していない場合は
     // アドバタイジングを開始させ、
     // BLEペリフェラル・モードに遷移
-    fido_ble_peripheral_advertising_start();
+    ble_service_peripheral_advertising_start();
 
     if (fido_ble_pairing_mode_get() == false) {
         // LED制御をアイドル中に変更
@@ -235,7 +235,7 @@ void fido_ble_peripheral_start(void)
 //
 // BLE GAPイベント関連処理
 //
-void ble_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
 {
     if (ble_peripheral_mode == false) {
         return;
@@ -245,7 +245,7 @@ void ble_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
     APP_ERROR_CHECK(err_code);
 }
 
-void ble_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)
+void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)
 {
     if (ble_peripheral_mode == false) {
         return;
@@ -305,7 +305,7 @@ static bool timer_init(void)
     return app_timer_created;
 }
 
-void fido_ble_peripheral_timer_start(void)
+void ble_service_peripheral_timer_start(void)
 {
     // タイマー生成・停止
     if (timer_init() == false) {

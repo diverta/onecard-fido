@@ -76,7 +76,7 @@ void fido_status_indicator_idle(void)
     // LED点滅制御タイマーを停止
     stop_led_timers();
 
-    if (fido_ble_peripheral_mode()) {
+    if (ble_service_peripheral_mode()) {
         // LEDを事前消灯
         led_light_pin_set(LED_COLOR_RED,   false);
         led_light_pin_set(LED_COLOR_GREEN, false);

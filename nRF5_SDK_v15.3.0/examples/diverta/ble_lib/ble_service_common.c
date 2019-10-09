@@ -34,13 +34,13 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     switch (p_ble_evt->header.evt_id) {
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
-            ble_peripheral_gap_connected(p_ble_evt);
+            ble_service_peripheral_gap_connected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
-            ble_peripheral_gap_disconnected(p_ble_evt);
+            ble_service_peripheral_gap_disconnected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -101,7 +101,7 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 
     // ペリフェラル・モードで動作する
     // FIDO Authenticator固有の処理
-    if (fido_ble_peripheral_mode()) {
+    if (ble_service_peripheral_mode()) {
         fido_ble_evt_handler(p_ble_evt, p_context);
     }
 }
@@ -142,7 +142,7 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     switch (p_evt->evt_id)
     {
         case PM_EVT_PEERS_DELETE_SUCCEEDED:
-            fido_ble_peripheral_advertising_start();
+            ble_service_peripheral_advertising_start();
             break;
 
         default:
@@ -221,7 +221,7 @@ void ble_service_common_init(void)
     peer_manager_init();
     gap_params_init();
 
-    fido_ble_peripheral_init();
+    ble_service_peripheral_init();
     ble_service_central_init();
 }
 
@@ -230,7 +230,7 @@ void ble_service_common_enable_peripheral(void)
     // BLEペリフェラル始動タイマーを開始し、
     // 最初の１秒間でUSB接続されなかった場合は
     // BLEペリフェラル・モードに遷移
-    fido_ble_peripheral_timer_start();
+    ble_service_peripheral_timer_start();
 }
 
 void ble_service_common_start_peripheral(void *p_context)
@@ -246,7 +246,7 @@ void ble_service_common_start_peripheral(void *p_context)
         // USB接続・HIDサービスが始動していない場合は
         // アドバタイジングを開始させ、
         // BLEペリフェラル・モードに遷移
-        fido_ble_peripheral_start();
+        ble_service_peripheral_start();
         return;
     }
 
@@ -256,7 +256,7 @@ void ble_service_common_start_peripheral(void *p_context)
 
 void ble_service_common_disable_peripheral(void)
 {
-    if (fido_ble_peripheral_mode()) {
+    if (ble_service_peripheral_mode()) {
         // BLEペリフェラル稼働中にUSB接続された場合は、
         // ソフトデバイスを再起動
         NVIC_SystemReset();
