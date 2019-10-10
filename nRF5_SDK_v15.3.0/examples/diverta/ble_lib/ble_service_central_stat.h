@@ -34,6 +34,7 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
 void ble_service_central_stat_debug_print(void);
 
 ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string);
+char            *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes);
 
 #ifdef __cplusplus
 }

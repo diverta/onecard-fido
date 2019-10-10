@@ -169,17 +169,38 @@ static void uuid_bytes_to_ascii(uint8_t *uuid_bytes, uint8_t uuid_type, char *bu
 
 ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
 {
+    ADV_STAT_INFO_T *matched_info = NULL;
+    int8_t           matched_rssi = -128;
+    
     for (uint8_t i = 0; i < adv_stat_info_size; i++) {
         // UUIDを文字列変換
         ADV_STAT_INFO_T *info = &adv_stat_info[i];
         uuid_bytes_to_ascii(info->uuid_bytes, info->ad_type, uuid_buf);
 
-        if (strcmp(uuid_buf, uuid_strict_string) == 0) {
-            // 見つかった場合は統計情報格納領域の参照を戻す
-            return info;
+        if (strcmp(uuid_buf, uuid_strict_string) != 0) {
+            // UUIDがマッチしていない場合は次の統計情報に移る
+            continue;
+        }
+
+        if (info->rssi > matched_rssi) {
+            // より近接している場合は
+            // 当該デバイスの統計情報を退避
+            matched_rssi = info->rssi;
+            matched_info = info;
         }
     }
     
-    // 見つからなかった場合はNULLを戻す
-    return NULL;
+    return matched_info;
+}
+
+//
+// ユーティリティー
+//
+static char bluetooth_address[16];
+
+char *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes)
+{
+    sprintf(bluetooth_address, "%02X%02X%02X%02X%02X%02X", 
+        addr_bytes[5], addr_bytes[4], addr_bytes[3], addr_bytes[2], addr_bytes[1], addr_bytes[0]);
+    return bluetooth_address;
 }

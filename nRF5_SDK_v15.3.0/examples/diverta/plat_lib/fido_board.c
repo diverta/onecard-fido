@@ -234,7 +234,8 @@ static void resume_function_after_scan(void)
     if (info == NULL) {
         NRF_LOG_DEBUG("One card peripheral device not found.");
     } else {
-        NRF_LOG_DEBUG("One card peripheral device found: NAME(%s)", info->dev_name);
+        NRF_LOG_DEBUG("One card peripheral device found: NAME(%s) ADDR(%s)", 
+            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
     }
 }
 
