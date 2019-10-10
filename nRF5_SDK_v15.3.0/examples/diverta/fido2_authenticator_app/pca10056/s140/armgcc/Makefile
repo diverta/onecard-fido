@@ -199,6 +199,7 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
+  $(BLELIB_DIR)/ble_service_central_demo.c \
   $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
   $(BLELIB_DIR)/ble_service_peripheral.c \

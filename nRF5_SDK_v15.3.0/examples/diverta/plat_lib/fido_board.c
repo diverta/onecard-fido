@@ -52,8 +52,13 @@ NRF_LOG_MODULE_REGISTER();
 
 #define LONG_PUSH_TIMEOUT               3000
 
+//
 // デモ機能
-static void fido_board_demo_function(void);
+//
+#define DEMO_FUNCTION_ENABLE false
+#if DEMO_FUNCTION_ENABLE
+#include "ble_service_central_demo.h"
+#endif
 
 //
 // ボタン定義
@@ -105,8 +110,12 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             // FIDO固有の処理を実行
             fido_command_mainsw_event_handler();
 
-            // デモ機能を実行
-            fido_board_demo_function();
+#if DEMO_FUNCTION_ENABLE
+            if (ble_service_peripheral_mode() == false) {
+                // デモ機能を実行
+                ble_service_central_demo_button_pressed();
+            }
+#endif
         }
 		break;
 		
@@ -212,38 +221,4 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;
-}
-
-//
-// デモ機能
-//
-#include "ble_service_central.h"
-#include "ble_service_central_stat.h"
-
-static void resume_function_after_scan(void)
-{
-    // 統計情報をデバッグ出力
-    ble_service_central_stat_debug_print();
-
-    //
-    // One cardダミーデバイスが見つかったらプリントして終了
-    // （422E0000-E141-11E5-A837-0800200C9A66）
-    //
-    char *one_card_uuid_string = "422E0000-E141-11E5-A837-0800200C9A66";
-    ADV_STAT_INFO_T *info = ble_service_central_stat_match_uuid(one_card_uuid_string);
-    if (info == NULL) {
-        NRF_LOG_DEBUG("One card peripheral device not found.");
-    } else {
-        NRF_LOG_DEBUG("One card peripheral device found: NAME(%s) ADDR(%s)", 
-            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
-    }
-}
-
-static void fido_board_demo_function(void)
-{
-    if (ble_service_peripheral_mode() == false) {
-        // ボタン押下で、BLEダミーデバイスをスキャンし、
-        // 見つかった場合、ログをプリント
-        ble_service_central_scan_start(1000, resume_function_after_scan);
-    }
 }
