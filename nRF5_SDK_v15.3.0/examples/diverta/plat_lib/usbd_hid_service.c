@@ -50,6 +50,29 @@ static char   m_line_buffer[NRF_DRV_USBD_EPSIZE];
 static size_t m_line_size;
 static size_t m_line_received;
 
+// エコーバック用バッファ（64byte分用意する）
+static char    m_echo_buff[NRF_DRV_USBD_EPSIZE];
+static uint8_t m_echo_idx = 0;
+
+static void echo_char_init(void)
+{
+    memset(m_echo_buff, 0, sizeof(m_echo_buff));
+    m_echo_idx = 0;
+}
+
+static void echo_char_add(char c)
+{
+    if (m_echo_idx < NRF_DRV_USBD_EPSIZE) {
+        m_echo_buff[m_echo_idx++] = c;
+    }
+}
+
+static void echo_char_print(app_usbd_cdc_acm_t const *p_cdc_acm)
+{
+    m_rx_echo_back = true;
+    app_usbd_cdc_acm_write(p_cdc_acm, m_echo_buff, m_echo_idx);
+}
+
 static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
                                     app_usbd_cdc_acm_user_event_t event);
 
@@ -88,8 +111,7 @@ static void usbd_cdc_buffer_char_add(char c)
     m_line_received++;
 
     // echo back
-    m_rx_echo_back = true;
-    app_usbd_cdc_acm_write(&m_app_cdc_acm, m_rx_buffer, 1);
+    echo_char_add(c);
 }
 
 static void usbd_cdc_buffer_set(void)
@@ -102,21 +124,33 @@ static void usbd_cdc_buffer_set(void)
     }
 
     // echo back
-    m_rx_echo_back = true;
-    app_usbd_cdc_acm_write(&m_app_cdc_acm, "\r\n", 2);
+    echo_char_add('\r');
+    echo_char_add('\n');
 }
 
 static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
 {
     app_usbd_cdc_acm_t const *p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
     bool ctrl_char = false;
+    bool input_cr = false;
+    echo_char_init();
     
     do {
+        if (input_cr) {
+            // 直前の文字がCR文字だった場合
+            // 入力データに改行が含まれていると判断し、
+            // バッファに復帰・改行文字を追加
+            usbd_cdc_buffer_char_add('\r');
+            usbd_cdc_buffer_char_add('\n');
+            input_cr = false;
+        }
+        
         // 読み込んだ文字に対して処理を行う
         char c = m_rx_buffer[0];
-        if (c == '\n' || c == '\r') {
-            // バッファへの文字設定を完了
-            usbd_cdc_buffer_set();
+        if (c == '\r') {
+            // 入力データに含めるかどうかは後判定のため、
+            // ここではフラグを設定するのみ
+            input_cr = true;
 
         } else if (c < 32 || c > 126 || ctrl_char) {
             // 表示不能文字が出現した場合は以降の文字を空読み
@@ -130,6 +164,15 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
     // 続けて１文字分読込み
     // バッファ内に入力された場合は、ループを続行
     } while (app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1) == NRF_SUCCESS);
+    
+    if (m_rx_buffer[0] == '\r') {
+        // 最終文字としてCR文字が入力された場合は、
+        // データ終端とみなし、データ入力を完了
+        usbd_cdc_buffer_set();
+    }
+    
+    // echo back
+    echo_char_print(p_cdc_acm);
 }
 
 static void usbd_cdc_buffer_write(app_usbd_class_inst_t const *p_inst)
