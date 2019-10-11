@@ -1,7 +1,7 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 # application version info
 CFLAGS += -DFW_REV=\"0.2.1\"
@@ -198,10 +198,13 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
+  $(BLELIB_DIR)/ble_service_central.c \
+  $(BLELIB_DIR)/ble_service_central_demo.c \
+  $(BLELIB_DIR)/ble_service_central_stat.c \
+  $(BLELIB_DIR)/ble_service_common.c \
+  $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
-  $(BLELIB_DIR)/fido_ble_peripheral.c \
-  $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
 

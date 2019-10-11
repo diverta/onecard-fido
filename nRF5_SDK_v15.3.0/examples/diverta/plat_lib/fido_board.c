@@ -23,7 +23,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_timer.h"
 
 // for fido_ble_pairing_change_mode
-#include "fido_ble_peripheral.h"
+#include "ble_service_peripheral.h"
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"
@@ -51,6 +51,14 @@ NRF_LOG_MODULE_REGISTER();
 #define APP_BUTTON_ACTION_RELEASE       APP_BUTTON_RELEASE
 
 #define LONG_PUSH_TIMEOUT               3000
+
+//
+// デモ機能
+//
+#define DEMO_FUNCTION_ENABLE false
+#if DEMO_FUNCTION_ENABLE
+#include "ble_service_central_demo.h"
+#endif
 
 //
 // ボタン定義
@@ -88,7 +96,7 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
         if (m_long_pushed) {
             m_long_pushed = false;
             // ボタンが長押しされた時の処理を実行
-            if (fido_ble_peripheral_mode()) {
+            if (ble_service_peripheral_mode()) {
                 // BLEペリフェラルが稼働時は、
                 // ペアリングモード変更を実行
                 fido_ble_pairing_change_mode();
@@ -101,6 +109,13 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             
             // FIDO固有の処理を実行
             fido_command_mainsw_event_handler();
+
+#if DEMO_FUNCTION_ENABLE
+            if (ble_service_peripheral_mode() == false) {
+                // デモ機能を実行
+                ble_service_central_demo_button_pressed();
+            }
+#endif
         }
 		break;
 		
@@ -114,7 +129,7 @@ void fido_command_long_push_timer_handler(void *p_context)
     (void)p_context;
 	m_long_pushed = true;
     
-    if (fido_ble_peripheral_mode()) {
+    if (ble_service_peripheral_mode()) {
         // ペアリングモードに遷移させるための長押しの場合、
         // このタイミングで、黄色LEDを連続点灯させる
         fido_status_indicator_pairing_mode();
