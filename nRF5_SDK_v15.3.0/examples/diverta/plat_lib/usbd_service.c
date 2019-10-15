@@ -1,5 +1,5 @@
 /* 
- * File:   usbd_hid_service.c
+ * File:   usbd_service.c
  * Author: makmorit
  *
  * Created on 2018/11/06, 14:21
@@ -19,22 +19,12 @@
 #include "fido_hid_receive.h"
 
 // for logging informations
-#define NRF_LOG_MODULE_NAME usbd_hid_service
+#define NRF_LOG_MODULE_NAME usbd_service
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
 // for debug hid report
 #define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
-
-// USBイベントハンドラーの参照を待避
-static void (*event_handler)(app_usbd_event_type_t event);
-
-/**
- * @brief Enable USB power detection
- */
-#ifndef USBD_POWER_DETECTION
-#define USBD_POWER_DETECTION true
-#endif
 
 //
 // CDC関連
@@ -119,7 +109,7 @@ static void usbd_cdc_buffer_set(void)
     if (m_line_received > 0) {
         m_line_size = m_line_received;
         m_line_buffer[m_line_size] = 0;
-        NRF_LOG_DEBUG("Received text [%s](%lu bytes)", m_line_buffer, m_line_size);
+        NRF_LOG_DEBUG("USB CDC RX buffer recv [%s](%lu bytes)", m_line_buffer, m_line_size);
         m_line_received = 0;
     }
 
@@ -386,11 +376,62 @@ static void hid_user_ev_handler(app_usbd_class_inst_t const * p_inst,
     }
 }
 
-/**
- * @brief USBD library specific event handler.
- *
- * @param event     USBD library event.
- * */
+static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
+{
+    switch (report_id) {
+        case 0:
+            NRF_LOG_DEBUG("idle_handle(0) called");
+            break;
+        default:
+            return NRF_ERROR_NOT_SUPPORTED;
+    }
+    return NRF_SUCCESS;
+}
+
+void usbd_hid_init(void)
+{ 
+    ret_code_t ret;
+    app_usbd_class_inst_t const * class_inst_generic;
+    class_inst_generic = app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
+
+    ret = hid_generic_idle_handler_set(class_inst_generic, idle_handle);
+    APP_ERROR_CHECK(ret);
+
+    ret = app_usbd_class_append(class_inst_generic);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_ERROR("app_usbd_class_append(class_inst_generic) returns 0x%02x ", ret);
+    }
+    APP_ERROR_CHECK(ret);
+
+    ret = app_usbd_power_events_enable();
+    APP_ERROR_CHECK(ret);
+    
+    NRF_LOG_DEBUG("usbd_hid_init() done");
+}
+
+void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
+{
+    // 64バイトのInput reportを送信
+    app_usbd_class_inst_t const *p_inst = 
+        app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
+    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
+    ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, buffer_for_send, size);    
+    APP_ERROR_CHECK(ret);
+
+    m_report_pending = true;
+    
+#if NRF_LOG_HEXDUMP_DEBUG_REPORT
+    NRF_LOG_DEBUG("Input report: %d bytes", size);
+    NRF_LOG_HEXDUMP_DEBUG(buffer_for_send, size);
+#endif
+}
+
+//
+// USB共通処理
+//
+// USBイベントハンドラーの参照を待避
+static void (*event_handler)(app_usbd_event_type_t event);
+
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
     // アプリケーション固有の処理を実行
@@ -435,19 +476,7 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
-static ret_code_t idle_handle(app_usbd_class_inst_t const * p_inst, uint8_t report_id)
-{
-    switch (report_id) {
-        case 0:
-            NRF_LOG_DEBUG("idle_handle(0) called");
-            break;
-        default:
-            return NRF_ERROR_NOT_SUPPORTED;
-    }
-    return NRF_SUCCESS;
-}
-
-void usbd_init(void)
+void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event))
 {
     ret_code_t ret = nrf_drv_clock_init();
     APP_ERROR_CHECK(ret);
@@ -460,59 +489,14 @@ void usbd_init(void)
     };
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
-    
-    NRF_LOG_DEBUG("usbd_init() done");
-}
-
-void usbd_hid_init(void (*event_handler_)(app_usbd_event_type_t event))
-{ 
-    ret_code_t ret;
-    app_usbd_class_inst_t const * class_inst_generic;
-    class_inst_generic = app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
-
-    ret = hid_generic_idle_handler_set(class_inst_generic, idle_handle);
-    APP_ERROR_CHECK(ret);
-
-    ret = app_usbd_class_append(class_inst_generic);
-    if (ret != NRF_SUCCESS) {
-        NRF_LOG_ERROR("app_usbd_class_append(class_inst_generic) returns 0x%02x ", ret);
-    }
-    APP_ERROR_CHECK(ret);
-
-    if (USBD_POWER_DETECTION) {
-        ret = app_usbd_power_events_enable();
-        APP_ERROR_CHECK(ret);
-        
-    } else {
-        NRF_LOG_DEBUG("No USB power detection enabled. Starting USB now");
-        app_usbd_enable();
-        app_usbd_start();
-    }
 
     // USBイベントハンドラーの参照を待避
     event_handler = event_handler_;
     
-    NRF_LOG_DEBUG("usbd_hid_init() done");
+    NRF_LOG_DEBUG("usbd_init() done");
 }
 
-void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
-{
-    // 64バイトのInput reportを送信
-    app_usbd_class_inst_t const *p_inst = 
-        app_usbd_hid_generic_class_inst_get(&m_app_hid_generic);
-    app_usbd_hid_generic_t const *p_hid = app_usbd_hid_generic_class_get(p_inst);
-    ret_code_t ret = app_usbd_hid_generic_in_report_set(p_hid, buffer_for_send, size);    
-    APP_ERROR_CHECK(ret);
-
-    m_report_pending = true;
-    
-#if NRF_LOG_HEXDUMP_DEBUG_REPORT
-    NRF_LOG_DEBUG("Input report: %d bytes", size);
-    NRF_LOG_HEXDUMP_DEBUG(buffer_for_send, size);
-#endif
-}
-
-void usbd_hid_do_process(void)
+void usbd_service_do_process(void)
 {
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());

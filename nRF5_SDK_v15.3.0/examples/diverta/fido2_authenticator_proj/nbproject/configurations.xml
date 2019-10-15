@@ -1407,8 +1407,8 @@
       <itemPath>../plat_lib/fido_timer.h</itemPath>
       <itemPath>../plat_lib/nfc_service.c</itemPath>
       <itemPath>../plat_lib/nfc_service.h</itemPath>
-      <itemPath>../plat_lib/usbd_hid_service.c</itemPath>
-      <itemPath>../plat_lib/usbd_hid_service.h</itemPath>
+      <itemPath>../plat_lib/usbd_service.c</itemPath>
+      <itemPath>../plat_lib/usbd_service.h</itemPath>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
@@ -3592,7 +3592,7 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/usbd_hid_service.c" ex="false" tool="0" flavor2="2">
+      <item path="../plat_lib/usbd_service.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
             <pElem>../../../../FIDO2Device/fido2_lib</pElem>
