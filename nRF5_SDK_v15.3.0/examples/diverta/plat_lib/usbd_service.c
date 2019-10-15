@@ -33,15 +33,16 @@ NRF_LOG_MODULE_REGISTER();
 
 // CDCが使用するバッファ
 static char m_rx_buffer[1];
-static bool m_rx_echo_back;
 
 // 連続して読み込まれた文字列を保持
-static char   m_line_buffer[NRF_DRV_USBD_EPSIZE];
+// （128文字分用意する。配列サイズは終端文字含む）
+#define CDC_BUFFER_SIZE 128
+static char   m_line_buffer[CDC_BUFFER_SIZE + 1];
 static size_t m_line_size;
 static size_t m_line_received;
 
-// エコーバック用バッファ（64byte分用意する）
-static char    m_echo_buff[NRF_DRV_USBD_EPSIZE];
+// エコーバック用バッファ（128byte分用意する）
+static char    m_echo_buff[CDC_BUFFER_SIZE];
 static uint8_t m_echo_idx = 0;
 
 static void echo_char_init(void)
@@ -52,15 +53,34 @@ static void echo_char_init(void)
 
 static void echo_char_add(char c)
 {
-    if (m_echo_idx < NRF_DRV_USBD_EPSIZE) {
+    if (m_echo_idx < CDC_BUFFER_SIZE) {
         m_echo_buff[m_echo_idx++] = c;
     }
 }
 
+static ret_code_t usbd_cdc_char_print(app_usbd_cdc_acm_t const *p_cdc_acm, void *buff, size_t size)
+{
+    ret_code_t ret = NRF_SUCCESS;
+    for (size_t i = 0; i < size; i++) {
+        do {
+            ret = app_usbd_cdc_acm_write(p_cdc_acm, buff + i, 1);
+        } while (ret == NRF_ERROR_BUSY);
+    }
+    return ret;
+}
+
 static void echo_char_print(app_usbd_cdc_acm_t const *p_cdc_acm)
 {
-    m_rx_echo_back = true;
-    app_usbd_cdc_acm_write(p_cdc_acm, m_echo_buff, m_echo_idx);
+    // １文字づつ出力（BUSYの場合はリトライ）
+    usbd_cdc_char_print(p_cdc_acm, m_echo_buff, m_echo_idx);
+
+#if NRF_LOG_HEXDUMP_DEBUG_REPORT
+    NRF_LOG_DEBUG("echo_char_print(%u bytes) %d", m_echo_idx);
+    NRF_LOG_HEXDUMP_DEBUG(m_echo_buff, m_echo_idx);
+#endif
+
+    // エコーバッファを初期化
+    echo_char_init();
 }
 
 static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
@@ -92,14 +112,16 @@ static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
     // 作業領域を初期化
     m_line_size = 0;
     m_line_received = 0;
+    echo_char_init();
 }
 
 static void usbd_cdc_buffer_char_add(char c)
 {
     // 表示可能文字の場合はバッファにセット
-    m_line_buffer[m_line_received] = c;
-    m_line_received++;
-
+    if (m_line_received < CDC_BUFFER_SIZE) {
+        m_line_buffer[m_line_received] = c;
+        m_line_received++;
+    }
     // echo back
     echo_char_add(c);
 }
@@ -109,7 +131,7 @@ static void usbd_cdc_buffer_set(void)
     if (m_line_received > 0) {
         m_line_size = m_line_received;
         m_line_buffer[m_line_size] = 0;
-        NRF_LOG_DEBUG("USB CDC RX buffer recv [%s](%lu bytes)", m_line_buffer, m_line_size);
+        NRF_LOG_DEBUG("USB CDC recv [%s](%lu bytes)", m_line_buffer, m_line_size);
         m_line_received = 0;
     }
 
@@ -123,7 +145,6 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
     app_usbd_cdc_acm_t const *p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
     bool ctrl_char = false;
     bool input_cr = false;
-    echo_char_init();
     
     do {
         if (input_cr) {
@@ -155,7 +176,7 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
     // バッファ内に入力された場合は、ループを続行
     } while (app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1) == NRF_SUCCESS);
     
-    if (m_rx_buffer[0] == '\r') {
+    if (input_cr) {
         // 最終文字としてCR文字が入力された場合は、
         // データ終端とみなし、データ入力を完了
         usbd_cdc_buffer_set();
@@ -167,11 +188,6 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
 
 static void usbd_cdc_buffer_write(app_usbd_class_inst_t const *p_inst)
 {
-    if (m_rx_echo_back) {
-        m_rx_echo_back = false;
-    } else {
-        NRF_LOG_DEBUG("USB CDC TX buffer sent");
-    }
 }
 
 static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
@@ -211,8 +227,7 @@ void usbd_cdc_init(void)
 bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
 {
     // 指定された領域から出力
-    m_rx_echo_back = false;
-    ret_code_t ret = app_usbd_cdc_acm_write(&m_app_cdc_acm, buffer_for_send, size);
+    ret_code_t ret = usbd_cdc_char_print(&m_app_cdc_acm, buffer_for_send, size);
     if (ret != NRF_SUCCESS) {
         // USBポートには装着されているが、
         // PCのターミナルアプリケーションが受信していない場合
