@@ -14,9 +14,9 @@ FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
-DMOLIB_DIR := $(FIDO_DIR)/demo_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
+DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -200,7 +200,6 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
-  $(BLELIB_DIR)/ble_service_central_demo.c \
   $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
   $(BLELIB_DIR)/ble_service_peripheral.c \

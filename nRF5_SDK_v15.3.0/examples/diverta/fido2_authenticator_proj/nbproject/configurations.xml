@@ -7,8 +7,6 @@
                    root="../ble_lib">
       <itemPath>../ble_lib/ble_service_central.c</itemPath>
       <itemPath>../ble_lib/ble_service_central.h</itemPath>
-      <itemPath>../ble_lib/ble_service_central_demo.c</itemPath>
-      <itemPath>../ble_lib/ble_service_central_demo.h</itemPath>
       <itemPath>../ble_lib/ble_service_central_stat.c</itemPath>
       <itemPath>../ble_lib/ble_service_central_stat.h</itemPath>
       <itemPath>../ble_lib/ble_service_common.c</itemPath>
@@ -50,8 +48,8 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
     <logicalFolder name="demo_lib" displayName="demo_lib" projectFiles="true">
-      <itemPath>../../../../FIDO2Device/demo_lib/demo_cdc_receive.c</itemPath>
-      <itemPath>../../../../FIDO2Device/demo_lib/demo_cdc_receive.h</itemPath>
+      <itemPath>../demo_lib/demo_cdc_receive.c</itemPath>
+      <itemPath>../demo_lib/demo_cdc_receive.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido2_authenticator_app"
                    displayName="fido2_authenticator_app"
@@ -1460,6 +1458,7 @@
     <Elem>../ble_lib</Elem>
     <Elem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</Elem>
     <Elem>../../../../FIDO2Device/demo_lib</Elem>
+    <Elem>../demo_lib</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2875,16 +2874,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../../../../FIDO2Device/demo_lib/demo_cdc_receive.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/demo_lib/demo_cdc_receive.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
             ex="false"
             tool="0"
@@ -3178,16 +3167,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../ble_lib/ble_service_central_demo.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../ble_lib/ble_service_central_demo.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../ble_lib/ble_service_central_stat.c"
             ex="false"
             tool="0"
@@ -3312,6 +3291,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../demo_lib/demo_cdc_receive.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../demo_lib/demo_cdc_receive.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
