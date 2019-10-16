@@ -522,5 +522,11 @@ void usbd_service_do_process(void)
         // デモ機能を実行
         m_cdc_buffer_received = false;
         demo_cdc_receive_on_request_received();
+
+    } else if (demo_cdc_send_response_ready()) {
+        // CDCサービスからレスポンスデータがあった場合、
+        // CDCへ出力
+        char *b = demo_cdc_send_response_buffer_get();
+        usbd_cdc_frame_send((uint8_t *)b, strlen(b));
     }
 }
