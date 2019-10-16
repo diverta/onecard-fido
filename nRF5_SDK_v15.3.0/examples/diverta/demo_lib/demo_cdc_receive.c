@@ -56,6 +56,11 @@ void demo_cdc_receive_char_terminate(void)
 //
 // デモ機能
 //
+static void get_rssi_log(void)
+{
+    fido_log_debug("get_rssi_log called.");
+}
+
 static void resume_function_after_scan(void)
 {
     // 作業領域初期化
@@ -95,7 +100,10 @@ void demo_cdc_receive_on_request_received(void)
     fido_log_debug("USB CDC recv [%s](%lu bytes)", m_cdc_buffer, m_cdc_buffer_size);
 
     // デモ機能用のコマンドを解析
-    if (strcmp(m_cdc_buffer, "onecard_scan_demo") == 0) {
+    if (strcmp(m_cdc_buffer, "get_rssi_log") == 0) {
+        get_rssi_log();
+
+    } else if (strcmp(m_cdc_buffer, "onecard_scan_demo") == 0) {
         onecard_scan_demo();
     }
 }
