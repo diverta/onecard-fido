@@ -23,8 +23,8 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for debug hid report
-#define NRF_LOG_HEXDUMP_DEBUG_REPORT 0
+// for debug hid report/cdc buffer
+#define NRF_LOG_HEXDUMP_DEBUG_REPORT false
 
 //
 // CDC関連
@@ -37,9 +37,17 @@ static char m_rx_buffer[1];
 // 連続して読み込まれた文字列を保持
 // （128文字分用意する。配列サイズは終端文字含む）
 #define CDC_BUFFER_SIZE 128
-static char   m_line_buffer[CDC_BUFFER_SIZE + 1];
-static size_t m_line_size;
-static size_t m_line_received;
+static char   m_cdc_buffer[CDC_BUFFER_SIZE + 1];
+static size_t m_cdc_buffer_size;
+static size_t m_cdc_buffer_size_received;
+static bool   m_cdc_buffer_received = false;
+
+static void cdc_buffer_init(void)
+{
+    memset(m_cdc_buffer, 0, sizeof(m_cdc_buffer));
+    m_cdc_buffer_size = 0;
+    m_cdc_buffer_size_received = 0;
+}
 
 // エコーバック用バッファ（128byte分用意する）
 static char    m_echo_buff[CDC_BUFFER_SIZE];
@@ -110,17 +118,16 @@ static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
     app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1);
 
     // 作業領域を初期化
-    m_line_size = 0;
-    m_line_received = 0;
+    cdc_buffer_init();
     echo_char_init();
 }
 
 static void usbd_cdc_buffer_char_add(char c)
 {
     // 表示可能文字の場合はバッファにセット
-    if (m_line_received < CDC_BUFFER_SIZE) {
-        m_line_buffer[m_line_received] = c;
-        m_line_received++;
+    if (m_cdc_buffer_size_received < CDC_BUFFER_SIZE) {
+        m_cdc_buffer[m_cdc_buffer_size_received] = c;
+        m_cdc_buffer_size_received++;
     }
     // echo back
     echo_char_add(c);
@@ -128,11 +135,12 @@ static void usbd_cdc_buffer_char_add(char c)
 
 static void usbd_cdc_buffer_set(void)
 {
-    if (m_line_received > 0) {
-        m_line_size = m_line_received;
-        m_line_buffer[m_line_size] = 0;
-        NRF_LOG_DEBUG("USB CDC recv [%s](%lu bytes)", m_line_buffer, m_line_size);
-        m_line_received = 0;
+    if (m_cdc_buffer_size_received > 0) {
+        m_cdc_buffer_size = m_cdc_buffer_size_received;
+        m_cdc_buffer[m_cdc_buffer_size] = 0;
+        m_cdc_buffer_size_received = 0;
+    } else {
+        cdc_buffer_init();
     }
 
     // echo back
@@ -184,10 +192,14 @@ static void usbd_cdc_buffer_read(app_usbd_class_inst_t const *p_inst)
     
     // echo back
     echo_char_print(p_cdc_acm);
+    if (input_cr) {
+        m_cdc_buffer_received = true;
+    }
 }
 
 static void usbd_cdc_buffer_write(app_usbd_class_inst_t const *p_inst)
 {
+    (void)p_inst;
 }
 
 static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
@@ -330,7 +342,7 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
  * or invalidates (by USB reset or suspend event).
  */
 static bool m_report_pending;
-static bool m_report_received;
+static bool m_hid_report_received = false;
 
 static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
 {
@@ -347,7 +359,7 @@ static void usbd_output_report_received(app_usbd_class_inst_t const * p_inst)
     // Output reportから受信フレームを取得し、
     // request_frame_bufferに格納
     // 受信フレーム数は、request_frame_numberに設定される
-    m_report_received = fido_hid_receive_request_frame(
+    m_hid_report_received = fido_hid_receive_request_frame(
         rep_buf->p_buff, rep_buf->size);
 }
 
@@ -516,12 +528,16 @@ void usbd_service_do_process(void)
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());
 
-    // 受信データがない場合は終了
-    if (m_report_received == false) {
-        return;
+    if (m_hid_report_received) {
+        // HIDサービスから受信データがあった場合、
+        // FIDO USB HIDサービスを実行
+        m_hid_report_received = false;
+        fido_hid_receive_on_request_received();
     }
-    m_report_received = false;
-    
-    // FIDO USB HIDサービスを実行
-    fido_hid_receive_on_request_received();
+
+    if (m_cdc_buffer_received) {
+        // CDCサービスから受信データがあった場合
+        m_cdc_buffer_received = false;
+        NRF_LOG_DEBUG("USB CDC recv [%s](%lu bytes)", m_cdc_buffer, m_cdc_buffer_size);
+    }
 }
