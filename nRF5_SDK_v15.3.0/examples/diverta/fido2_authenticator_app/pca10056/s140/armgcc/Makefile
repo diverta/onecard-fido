@@ -16,6 +16,7 @@ U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
+DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -110,6 +111,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+  $(SDK_ROOT)/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm.c \
   $(SDK_ROOT)/components/libraries/usbd/class/hid/app_usbd_hid.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
   $(SDK_ROOT)/components/libraries/util/app_error_handler_gcc.c \
@@ -192,17 +194,20 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/nfc_service.c \
-  $(PLTLIB_DIR)/usbd_hid_service.c \
+  $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
+  $(BLELIB_DIR)/ble_service_central.c \
+  $(BLELIB_DIR)/ble_service_central_stat.c \
+  $(BLELIB_DIR)/ble_service_common.c \
+  $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
-  $(BLELIB_DIR)/fido_ble_peripheral.c \
-  $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
+  $(DMOLIB_DIR)/demo_cdc_receive.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -359,6 +364,7 @@ INC_FOLDERS += \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
+  $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets
