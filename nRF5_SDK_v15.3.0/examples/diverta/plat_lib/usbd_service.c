@@ -17,6 +17,7 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
+#include "demo_cdc_receive.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service
@@ -34,23 +35,11 @@ NRF_LOG_MODULE_REGISTER();
 // CDCが使用するバッファ
 static char m_rx_buffer[1];
 
-// 連続して読み込まれた文字列を保持
-// （128文字分用意する。配列サイズは終端文字含む）
-#define CDC_BUFFER_SIZE 128
-static char   m_cdc_buffer[CDC_BUFFER_SIZE + 1];
-static size_t m_cdc_buffer_size;
-static size_t m_cdc_buffer_size_received;
 static bool   m_cdc_buffer_received = false;
 
-static void cdc_buffer_init(void)
-{
-    memset(m_cdc_buffer, 0, sizeof(m_cdc_buffer));
-    m_cdc_buffer_size = 0;
-    m_cdc_buffer_size_received = 0;
-}
-
 // エコーバック用バッファ（128byte分用意する）
-static char    m_echo_buff[CDC_BUFFER_SIZE];
+#define CDC_ECHO_BUFFER_SIZE 128
+static char    m_echo_buff[CDC_ECHO_BUFFER_SIZE];
 static uint8_t m_echo_idx = 0;
 
 static void echo_char_init(void)
@@ -61,7 +50,7 @@ static void echo_char_init(void)
 
 static void echo_char_add(char c)
 {
-    if (m_echo_idx < CDC_BUFFER_SIZE) {
+    if (m_echo_idx < CDC_ECHO_BUFFER_SIZE) {
         m_echo_buff[m_echo_idx++] = c;
     }
 }
@@ -118,30 +107,23 @@ static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
     app_usbd_cdc_acm_read(p_cdc_acm, m_rx_buffer, 1);
 
     // 作業領域を初期化
-    cdc_buffer_init();
+    demo_cdc_receive_init();
     echo_char_init();
 }
 
 static void usbd_cdc_buffer_char_add(char c)
 {
     // 表示可能文字の場合はバッファにセット
-    if (m_cdc_buffer_size_received < CDC_BUFFER_SIZE) {
-        m_cdc_buffer[m_cdc_buffer_size_received] = c;
-        m_cdc_buffer_size_received++;
-    }
+    demo_cdc_receive_char(c);
+
     // echo back
     echo_char_add(c);
 }
 
 static void usbd_cdc_buffer_set(void)
 {
-    if (m_cdc_buffer_size_received > 0) {
-        m_cdc_buffer_size = m_cdc_buffer_size_received;
-        m_cdc_buffer[m_cdc_buffer_size] = 0;
-        m_cdc_buffer_size_received = 0;
-    } else {
-        cdc_buffer_init();
-    }
+    // バッファ設定を完了
+    demo_cdc_receive_char_terminate();
 
     // echo back
     echo_char_add('\r');
@@ -536,8 +518,9 @@ void usbd_service_do_process(void)
     }
 
     if (m_cdc_buffer_received) {
-        // CDCサービスから受信データがあった場合
+        // CDCサービスから受信データがあった場合、
+        // デモ機能を実行
         m_cdc_buffer_received = false;
-        NRF_LOG_DEBUG("USB CDC recv [%s](%lu bytes)", m_cdc_buffer, m_cdc_buffer_size);
+        demo_cdc_receive_on_request_received();
     }
 }

@@ -14,6 +14,7 @@ FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+DMOLIB_DIR := $(FIDO_DIR)/demo_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
@@ -207,6 +208,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
+  $(DMOLIB_DIR)/demo_cdc_receive.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -363,6 +365,7 @@ INC_FOLDERS += \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
   $(BLELIB_DIR) \
+  $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
 
 # Libraries common to all targets

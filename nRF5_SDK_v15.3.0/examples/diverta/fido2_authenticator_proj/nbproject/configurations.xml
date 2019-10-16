@@ -49,6 +49,10 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="demo_lib" displayName="demo_lib" projectFiles="true">
+      <itemPath>../../../../FIDO2Device/demo_lib/demo_cdc_receive.c</itemPath>
+      <itemPath>../../../../FIDO2Device/demo_lib/demo_cdc_receive.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="fido2_authenticator_app"
                    displayName="fido2_authenticator_app"
                    projectFiles="true"
@@ -1455,6 +1459,7 @@
     <Elem>../../../../FIDO2Device/fido2_lib</Elem>
     <Elem>../ble_lib</Elem>
     <Elem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</Elem>
+    <Elem>../../../../FIDO2Device/demo_lib</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2869,6 +2874,16 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/demo_lib/demo_cdc_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/demo_lib/demo_cdc_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
             ex="false"
