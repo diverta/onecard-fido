@@ -150,7 +150,6 @@ void nfc_service_data_send(uint8_t *data, size_t data_size);
 // usbd_hid_service.c
 //
 void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
-bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size);
 
 #ifdef __cplusplus
 }
