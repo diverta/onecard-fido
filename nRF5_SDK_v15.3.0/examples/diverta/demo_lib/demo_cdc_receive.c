@@ -10,6 +10,7 @@
 // プラットフォーム固有のインターフェース
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
+#include "usbd_service.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -54,13 +55,39 @@ void demo_cdc_receive_char_terminate(void)
 }
 
 //
-// デモ機能
+// デモ機能（RSSIログ出力）
 //
-static void get_rssi_log(void)
+static void get_rssi_log_output(void)
 {
-    fido_log_debug("get_rssi_log called.");
+    fido_log_debug("get_rssi_log_output called.");
+
+    sprintf(cdc_response_buff, "get_rssi_log_output called.\r\n");
+    cdc_response_send = true;
 }
 
+static void get_rssi_log_event(void)
+{
+    if (usbd_cdc_port_is_open()) {
+        // 仮想COMポートに接続されている場合は、
+        // ログを出力する
+        get_rssi_log_output();
+
+    } else {
+        // 仮想COMポートから切断されている場合は、
+        // スキャンを停止し、タイマーも停止させる
+        fido_repeat_process_timer_stop();
+    }
+}
+
+static void get_rssi_log(void)
+{
+    // １秒ごとに get_rssi_log_event を呼出
+    fido_repeat_process_timer_start(1000, get_rssi_log_event);
+}
+
+//
+// デモ機能（One Cardスキャン）
+//
 static void resume_function_after_scan(void)
 {
     // 作業領域初期化
@@ -70,7 +97,7 @@ static void resume_function_after_scan(void)
     ble_service_central_stat_debug_print();
 
     //
-    // One cardダミーデバイスが見つかったらプリントして終了
+    // One cardデバイスが見つかったらプリントして終了
     // （422E0000-E141-11E5-A837-0800200C9A66）
     // 複数スキャンされた場合は、最もRSSI値が大きいものが戻ります。
     //
@@ -87,7 +114,7 @@ static void resume_function_after_scan(void)
 
 static void onecard_scan_demo(void)
 {
-    // BLEダミーデバイスをスキャンし、
+    // One Cardデバイスをスキャンし、
     // 見つかった場合、ログをプリント
     ble_service_central_scan_start(1000, resume_function_after_scan);
 }
