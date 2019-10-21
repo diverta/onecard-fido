@@ -57,12 +57,26 @@ void demo_cdc_receive_char_terminate(void)
 //
 // デモ機能（RSSIログ出力）
 //
+// 起動からの通算回数
+static uint32_t serial_num = 0;
+// 起動間隔（秒）
+static uint32_t get_rssi_log_int = 5;  
+
 static void get_rssi_log_output(void)
 {
-    fido_log_debug("get_rssi_log_output called.");
+    // 最大回数を超えたらゼロクリア
+    // (60秒 * 60分 * 24時間 * 365日 = 31,536,000秒)
+    if (++serial_num > (31536000 / get_rssi_log_int)) {
+        serial_num = 1;
+    }
+    fido_log_debug("get_rssi_log_output (%lu)", serial_num);
 
-    sprintf(cdc_response_buff, "get_rssi_log_output called.\r\n");
+    ble_service_central_stat_csv_get(serial_num, cdc_response_buff);
     cdc_response_send = true;
+
+    // ログ編集が完了したら、
+    // 統計情報を初期化
+    ble_service_central_stat_info_init();
 }
 
 static void get_rssi_log_event(void)
@@ -75,14 +89,18 @@ static void get_rssi_log_event(void)
     } else {
         // 仮想COMポートから切断されている場合は、
         // スキャンを停止し、タイマーも停止させる
+        ble_service_central_scan_stop();
         fido_repeat_process_timer_stop();
     }
 }
 
 static void get_rssi_log(void)
 {
-    // １秒ごとに get_rssi_log_event を呼出
-    fido_repeat_process_timer_start(1000, get_rssi_log_event);
+    // get_rssi_log_event をタイマー呼出
+    fido_repeat_process_timer_start((1000 * get_rssi_log_int), get_rssi_log_event);
+
+    // BLEデバイスをスキャン
+    ble_service_central_scan_start(0, NULL);
 }
 
 //
