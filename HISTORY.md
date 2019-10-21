@@ -2,6 +2,18 @@
 
 ## プログラム更新履歴
 
+#### 2019/09/30
+
+MDBT50Q Dongle、およびファームウェアを修正しました。<br>
+
+- <b>[MDBT50Q Dongle（rev2）](FIDO2Device/MDBT50Q_Dongle)</b>
+- <b>[FIDO2アプリケーション（Version 0.2.1）](nRF5_SDK_v15.3.0)</b>
+
+修正点は以下になります。
+- MDBT50Q Dongleの基板（回路）を修正（[#237](https://github.com/diverta/onecard-fido/issues/237) ご参照）
+- MDBT50Q Dongleに簡易USBブートローダーを導入（[#256](https://github.com/diverta/onecard-fido/issues/256) ご参照）
+- MDBT50Q DongleのLED点灯方法を変更（[#255](https://github.com/diverta/onecard-fido/issues/255) ご参照）
+
 #### 2019/09/17（Version 0.1.19）
 
 FIDO認証器管理ツール、およびファームウェアを修正しました。<br>
