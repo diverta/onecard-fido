@@ -207,7 +207,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
-  $(DMOLIB_DIR)/demo_cdc_receive.c \
+  $(DMOLIB_DIR)/demo_cdc_service.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

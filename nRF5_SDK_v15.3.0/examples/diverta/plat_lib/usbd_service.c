@@ -17,7 +17,7 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "demo_cdc_receive.h"
+#include "demo_cdc_service.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service

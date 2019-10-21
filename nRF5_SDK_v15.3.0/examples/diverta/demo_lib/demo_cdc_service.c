@@ -1,5 +1,5 @@
 /* 
- * File:   demo_cdc_receive.c
+ * File:   demo_cdc_service.c
  * Author: makmorit
  *
  * Created on 2019/10/16, 11:12
@@ -57,8 +57,8 @@ void demo_cdc_receive_char_terminate(void)
 //
 // デモ機能（RSSIログ出力）
 //
-// 起動からの通算回数
-static uint32_t serial_num = 0;
+// 通算回数
+static uint32_t serial_num;
 // 起動間隔（秒）
 static uint32_t get_rssi_log_int = 5;  
 
@@ -96,6 +96,9 @@ static void get_rssi_log_event(void)
 
 static void get_rssi_log(void)
 {
+    // 通算回数をリセット
+    serial_num = 0;
+
     // get_rssi_log_event をタイマー呼出
     fido_repeat_process_timer_start((1000 * get_rssi_log_int), get_rssi_log_event);
 

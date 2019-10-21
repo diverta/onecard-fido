@@ -48,8 +48,8 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
     <logicalFolder name="demo_lib" displayName="demo_lib" projectFiles="true">
-      <itemPath>../demo_lib/demo_cdc_receive.c</itemPath>
-      <itemPath>../demo_lib/demo_cdc_receive.h</itemPath>
+      <itemPath>../demo_lib/demo_cdc_service.c</itemPath>
+      <itemPath>../demo_lib/demo_cdc_service.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido2_authenticator_app"
                    displayName="fido2_authenticator_app"
@@ -3292,9 +3292,9 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../demo_lib/demo_cdc_receive.c" ex="false" tool="0" flavor2="0">
+      <item path="../demo_lib/demo_cdc_service.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../demo_lib/demo_cdc_receive.h" ex="false" tool="3" flavor2="0">
+      <item path="../demo_lib/demo_cdc_service.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
       </item>
