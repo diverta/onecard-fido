@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // プラットフォーム固有のインターフェース
 #include "ble_service_central.h"
@@ -61,6 +62,8 @@ void demo_cdc_receive_char_terminate(void)
 static uint32_t serial_num;
 // 起動間隔（秒）
 static uint32_t get_rssi_log_int = 5;  
+// コマンド文字列
+#define GET_RSSI_LOG_COMMAND "get_rssi_log"
 
 static void get_rssi_log_output(void)
 {
@@ -94,8 +97,29 @@ static void get_rssi_log_event(void)
     }
 }
 
-static void get_rssi_log(void)
+static bool get_rssi_log(void)
 {
+    size_t command_len = strlen(GET_RSSI_LOG_COMMAND);
+
+    // デモ機能用のコマンドを解析して実行
+    if (strncmp(m_cdc_buffer, GET_RSSI_LOG_COMMAND, command_len) != 0) {
+        return false;
+    }
+
+    // パラメーターを解析
+    get_rssi_log_int = (uint32_t)atoi(m_cdc_buffer + command_len);
+    fido_log_debug("interval(%d)", get_rssi_log_int);
+    if (strlen(m_cdc_buffer) == command_len) {
+        // 引数指定がない場合はデフォルト５秒間隔とする
+        get_rssi_log_int = 5;
+
+    } else if (get_rssi_log_int < 1 || get_rssi_log_int > 9) {
+        // エラーメッセージを表示する
+        sprintf(cdc_response_buff, "Parameter must be in the range 1 to 9 (sec).\r\n");
+        cdc_response_send = true;
+        return true;
+    }
+
     // 通算回数をリセット
     serial_num = 0;
 
@@ -104,6 +128,7 @@ static void get_rssi_log(void)
 
     // BLEデバイスをスキャン
     ble_service_central_scan_start(0, NULL);
+    return true;
 }
 
 //
@@ -133,11 +158,16 @@ static void resume_function_after_scan(void)
     cdc_response_send = true;
 }
 
-static void onecard_scan_demo(void)
+static bool onecard_scan_demo(void)
 {
+    if (strcmp(m_cdc_buffer, "onecard_scan_demo") != 0) {
+        return false;
+    }
+
     // One Cardデバイスをスキャンし、
     // 見つかった場合、ログをプリント
     ble_service_central_scan_start(1000, resume_function_after_scan);
+    return true;
 }
 
 //
@@ -147,12 +177,12 @@ void demo_cdc_receive_on_request_received(void)
 {
     fido_log_debug("USB CDC recv [%s](%lu bytes)", m_cdc_buffer, m_cdc_buffer_size);
 
-    // デモ機能用のコマンドを解析
-    if (strcmp(m_cdc_buffer, "get_rssi_log") == 0) {
-        get_rssi_log();
-
-    } else if (strcmp(m_cdc_buffer, "onecard_scan_demo") == 0) {
-        onecard_scan_demo();
+    // デモ機能用のコマンドを解析して実行
+    if (onecard_scan_demo()) {
+        return;
+    }
+    if (get_rssi_log()) {
+        return;
     }
 }
 
