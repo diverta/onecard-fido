@@ -203,3 +203,14 @@ char *demo_cdc_send_response_buffer_get(void)
     cdc_response_send = false;
     return cdc_response_buff;
 }
+
+//
+// 仮想COMポートが切断された時の処理
+//
+void demo_cdc_event_disconnected(void)
+{
+    // RSSIログ出力中の場合は、
+    // スキャン／タイマーを停止させるため、
+    // この時点でイベントを発生させる
+    get_rssi_log_event();
+}

@@ -125,6 +125,9 @@ static void usbd_cdc_port_close(app_usbd_class_inst_t const *p_inst)
     (void)p_inst;
     m_cdc_port_open = false;
     NRF_LOG_DEBUG("USB CDC port closed");
+
+    // 仮想COMポートから切断された時の処理を実行
+    demo_cdc_event_disconnected();
 }
 
 static void usbd_cdc_buffer_char_add(char c)

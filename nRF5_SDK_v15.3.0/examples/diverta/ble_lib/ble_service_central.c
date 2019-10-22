@@ -26,6 +26,9 @@ NRF_BLE_SCAN_DEF(m_scan);
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
 
+// for fido_status_indicator
+#include "fido_platform.h"
+
 // スキャン終了後に実行される関数の参照を保持
 static void (*resume_function)(void);
 
@@ -144,6 +147,9 @@ void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_functi
     ret_code_t ret = nrf_ble_scan_start(&m_scan);
     APP_ERROR_CHECK(ret);
 
+    // 赤色LED点滅を開始
+    fido_status_indicator_ble_scanning();
+
     if (timeout_msec == 0) {
         // タイムアウトが無指定の場合
         // タイマーが既にスタートしている場合は停止させる
@@ -163,6 +169,9 @@ void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_functi
 
 void ble_service_central_scan_stop(void)
 {
+    // 赤色LED点滅を停止（アイドル状態表示に戻す）
+    fido_status_indicator_idle();
+
     // タイマーが既にスタートしている場合は停止させる
     scan_timer_stop();
 
