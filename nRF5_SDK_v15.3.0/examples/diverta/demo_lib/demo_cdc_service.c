@@ -7,11 +7,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 // プラットフォーム固有のインターフェース
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
 #include "usbd_service.h"
+#include "demo_cdc_service.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -78,7 +80,7 @@ static void get_rssi_log_output(void)
     fido_log_debug("get_rssi_log_output (%lu)", serial_num);
 
     ble_service_central_stat_csv_get(serial_num, cdc_response_buff);
-    cdc_response_send = true;
+    demo_cdc_send_response_buffer_set("%s\r\n", cdc_response_buff);
 
     // ログ編集が完了したら、
     // 統計情報を初期化
@@ -117,8 +119,7 @@ static bool get_rssi_log(void)
 
     } else if (get_rssi_log_int < 1 || get_rssi_log_int > 9) {
         // エラーメッセージを表示する
-        sprintf(cdc_response_buff, "Parameter must be in the range 1 to 9 (sec).\r\n");
-        cdc_response_send = true;
+        demo_cdc_send_response_buffer_set("Parameter must be in the range 1 to 9 (sec).\r\n");
         return true;
     }
 
@@ -152,12 +153,11 @@ static void resume_function_after_scan(void)
     char *one_card_uuid_string = "422E0000-E141-11E5-A837-0800200C9A66";
     ADV_STAT_INFO_T *info = ble_service_central_stat_match_uuid(one_card_uuid_string);
     if (info == NULL) {
-        sprintf(cdc_response_buff, "One card peripheral device not found.\r\n");
+        demo_cdc_send_response_buffer_set("One card peripheral device not found.\r\n");
     } else {
-        sprintf(cdc_response_buff, "One card peripheral device found (NAME=%s, ADDR=%s)\r\n", 
+        demo_cdc_send_response_buffer_set("One card peripheral device found (NAME=%s, ADDR=%s)\r\n", 
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
     }
-    cdc_response_send = true;
 }
 
 static bool onecard_scan_demo(void)
@@ -196,6 +196,18 @@ void demo_cdc_receive_on_request_received(void)
 //   CDC送信処理は、エコーバック処理と重複を避けるため、
 //   mainループ（usbd_service_do_process）から呼出させるよう実装
 //
+void demo_cdc_send_response_buffer_set(char *fmt, ...)
+{
+    // 送信データを格納
+    va_list va;
+    va_start(va, fmt);
+    vsprintf(cdc_response_buff, fmt, va);
+    va_end(va);
+
+    // 送信データ格納フラグをセット
+    cdc_response_send = true;
+}
+
 bool demo_cdc_send_response_ready(void)
 {
     // 応答文字列有り／無しを示すフラグを戻す

@@ -226,7 +226,7 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
             "%s%s%s", 
             adv_stat_info_string, 
             memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
-            (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "\r\n" : ","
+            (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "" : ","
             );
     }
 

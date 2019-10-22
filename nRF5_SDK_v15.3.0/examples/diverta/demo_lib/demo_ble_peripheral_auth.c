@@ -23,8 +23,10 @@
 #define RESET_AUTH_UUID_COMMAND         "reset_auth_uuid"
 #define SET_AUTH_UUID_SCAN_SEC_COMMAND  "set_auth_uuid_scan_sec"
 
+// 各種定数
 #define UUID_STRING_LEN  36
 #define SCAN_SEC_DEFAULT 3
+#define CDC_OK_RESPONSE  "OK\r\n"
 
 // スキャン対象サービスUUID（文字列形式）、スキャン秒数を保持
 static char    service_uuid_string[UUID_STRING_LEN+1];
@@ -43,11 +45,11 @@ static bool set_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
         // パラメーターが入力されている場合は退避
         //   UUID文字列＝36文字分
         memcpy(service_uuid_string, p_cdc_buffer + len, UUID_STRING_LEN);
-        fido_log_debug("UUID parameter: %s", service_uuid_string);
+        demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
 
     } else {
         // パラメーター入力エラー
-        fido_log_debug("Invalid UUID parameter.");
+        demo_cdc_send_response_buffer_set("Invalid UUID parameter.\r\n");
     }
 
     return true;
@@ -61,7 +63,7 @@ static bool reset_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
 
     // 格納領域を初期化
     memset(service_uuid_string, 0, sizeof(service_uuid_string));
-    fido_log_debug("Reset UUID parameter.");
+    demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
     return true;
 }
 
@@ -74,23 +76,42 @@ static bool set_auth_uuid_scan_sec(char *p_cdc_buffer, size_t cdc_buffer_size)
     }
     
     // パラメーターを解析
-    service_uuid_scan_sec = (uint32_t)atoi(p_cdc_buffer + command_len);
     if (strlen(p_cdc_buffer) == command_len) {
         // 引数がない場合はデフォルトにリセット
         service_uuid_scan_sec = SCAN_SEC_DEFAULT;
-        fido_log_debug("default interval(%d)", service_uuid_scan_sec);
-
-    } else if (service_uuid_scan_sec < 1 || service_uuid_scan_sec > 9) {
-        // エラーメッセージを表示する
-        fido_log_debug("Parameter must be in the range 1 to 9 (sec).", service_uuid_scan_sec);
-        //sprintf(cdc_response_buff, "Parameter must be in the range 1 to 9 (sec).\r\n");
-        //cdc_response_send = true;
+        demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
 
     } else {
-        fido_log_debug("changed interval(%d)", service_uuid_scan_sec);
+        uint8_t sec = (uint32_t)atoi(p_cdc_buffer + command_len);
+        if (sec < 1 || sec > 9) {
+            // エラーメッセージを表示する
+            demo_cdc_send_response_buffer_set("Parameter must be in the range 1 to 9 (sec).\r\n");
+
+        } else {
+            service_uuid_scan_sec = sec;
+            demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
+        }        
     }
 
     return true;
+}
+
+static bool display_param(char *p_cdc_buffer, size_t cdc_buffer_size)
+{
+    if (strcmp(p_cdc_buffer, "auth_uuid") == 0) {
+        if (strlen(service_uuid_string) == 0) {
+            demo_cdc_send_response_buffer_set("Service UUID for scan: not specified\r\n");
+        } else {
+            demo_cdc_send_response_buffer_set("Service UUID for scan: %s\r\n", service_uuid_string);
+        }
+        return true;
+    }
+    if (strcmp(p_cdc_buffer, "auth_uuid_scan_sec") == 0) {
+        demo_cdc_send_response_buffer_set("Service UUID scanning time: %d sec\r\n", service_uuid_scan_sec);
+        return true;
+    }
+
+    return false;
 }
 
 bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_size)
@@ -102,6 +123,9 @@ bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_si
         return true;
     }
     if (reset_auth_uuid(p_cdc_buffer, cdc_buffer_size)) {
+        return true;
+    }
+    if (display_param(p_cdc_buffer, cdc_buffer_size)) {
         return true;
     }
     return false;
