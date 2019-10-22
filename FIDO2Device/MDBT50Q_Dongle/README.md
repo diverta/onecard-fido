@@ -36,3 +36,11 @@ MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAu
 ### [Googleアカウントのログイン確認手順（PC）](PCCHROME.md)
 
 MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
+
+## デモ機能
+
+BLEセントラルサービスを使用したデモンストレーション機能です。
+
+### [RSSIログ出力](DEMOFUNC_1.md)
+
+MDBT50Q Dongleに近接しているBLEデバイスのRSSI値を、指定間隔（１秒〜９秒）ごとに仮想COMポートにログ出力を行います。
