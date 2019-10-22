@@ -48,6 +48,8 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
     <logicalFolder name="demo_lib" displayName="demo_lib" projectFiles="true">
+      <itemPath>../demo_lib/demo_ble_peripheral_auth.c</itemPath>
+      <itemPath>../demo_lib/demo_ble_peripheral_auth.h</itemPath>
       <itemPath>../demo_lib/demo_cdc_service.c</itemPath>
       <itemPath>../demo_lib/demo_cdc_service.h</itemPath>
     </logicalFolder>
@@ -3291,6 +3293,16 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../demo_lib/demo_ble_peripheral_auth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../demo_lib/demo_ble_peripheral_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../demo_lib/demo_cdc_service.c" ex="false" tool="0" flavor2="0">
       </item>

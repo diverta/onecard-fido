@@ -16,6 +16,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// デモ機能（BLEデバイスによる自動認証機能）
+#include "demo_ble_peripheral_auth.h"
+
 // CDC経由で連続して読み込まれた文字列を保持
 // （1024文字分用意する。配列サイズは終端文字含む）
 #define CDC_BUFFER_SIZE 1024
@@ -61,7 +64,7 @@ void demo_cdc_receive_char_terminate(void)
 // 通算回数
 static uint32_t serial_num;
 // 起動間隔（秒）
-static uint32_t get_rssi_log_int = 5;  
+static uint32_t get_rssi_log_int = 5;
 // コマンド文字列
 #define GET_RSSI_LOG_COMMAND "get_rssi_log"
 
@@ -99,9 +102,8 @@ static void get_rssi_log_event(void)
 
 static bool get_rssi_log(void)
 {
-    size_t command_len = strlen(GET_RSSI_LOG_COMMAND);
-
     // デモ機能用のコマンドを解析して実行
+    size_t command_len = strlen(GET_RSSI_LOG_COMMAND);
     if (strncmp(m_cdc_buffer, GET_RSSI_LOG_COMMAND, command_len) != 0) {
         return false;
     }
@@ -182,6 +184,9 @@ void demo_cdc_receive_on_request_received(void)
         return;
     }
     if (get_rssi_log()) {
+        return;
+    }
+    if (demo_ble_peripheral_auth_param_set(m_cdc_buffer, m_cdc_buffer_size)) {
         return;
     }
 }

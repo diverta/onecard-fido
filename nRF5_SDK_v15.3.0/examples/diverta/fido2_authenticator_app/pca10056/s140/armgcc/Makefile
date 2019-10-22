@@ -1,10 +1,10 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
 
 # application version info
-CFLAGS += -DFW_REV=\"0.2.1\"
+CFLAGS += -DFW_REV=\"0.2.2\"
 # hardware version info
 CFLAGS += -DHW_REV=\"0.2\"
 
@@ -208,6 +208,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
+  $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
