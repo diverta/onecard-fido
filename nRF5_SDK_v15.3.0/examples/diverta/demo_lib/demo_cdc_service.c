@@ -222,8 +222,14 @@ char *demo_cdc_send_response_buffer_get(void)
 }
 
 //
-// 仮想COMポートが切断された時の処理
+// 仮想COMポートが接続・切断された時の処理
 //
+void demo_cdc_event_connected(void)
+{
+    // BLEペリフェラルによる自動認証用パラメーターを読み出す
+    demo_ble_peripheral_auth_param_init();
+}
+
 void demo_cdc_event_disconnected(void)
 {
     // RSSIログ出力中の場合は、

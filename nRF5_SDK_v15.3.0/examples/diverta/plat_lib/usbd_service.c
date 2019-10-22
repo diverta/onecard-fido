@@ -117,6 +117,9 @@ static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
     // 仮想COMポートが接続されている状態
     m_cdc_port_open = true;
     NRF_LOG_DEBUG("USB CDC port opened");
+
+    // 仮想COMポートに接続された時の処理を実行
+    demo_cdc_event_connected();
 }
 
 static void usbd_cdc_port_close(app_usbd_class_inst_t const *p_inst)

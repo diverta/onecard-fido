@@ -185,6 +185,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \

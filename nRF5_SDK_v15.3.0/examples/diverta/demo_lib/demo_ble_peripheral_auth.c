@@ -32,6 +32,34 @@
 static char    service_uuid_string[UUID_STRING_LEN+1];
 static uint8_t service_uuid_scan_sec = SCAN_SEC_DEFAULT;
 
+static void save_auth_param(void)
+{
+    uint8_t *p_uuid_string = (uint8_t *)service_uuid_string;
+    uint32_t scan_sec      = (uint32_t)service_uuid_scan_sec;
+
+    if (fido_flash_blp_auth_param_write(p_uuid_string, scan_sec) == false) {
+        demo_cdc_send_response_buffer_set("Failed to save parameter to flash ROM.\r\n");
+    }
+}
+
+static void restore_auth_param(void)
+{
+    if (fido_flash_blp_auth_param_read() == false) {
+        return;
+    }
+
+    char *p_uuid_string = (char *)fido_flash_blp_auth_param_service_uuid_string();
+    if (p_uuid_string[0] != 0) {
+        memcpy(service_uuid_string, p_uuid_string, UUID_STRING_LEN);
+        service_uuid_string[UUID_STRING_LEN] = 0;
+    }
+
+    uint8_t scan_sec = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_sec();
+    if (scan_sec != 0) {
+        service_uuid_scan_sec = scan_sec;
+    }
+}
+
 static bool set_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
 {
     // デモ機能用のコマンドを解析して実行
@@ -42,9 +70,10 @@ static bool set_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
 
     uint8_t len = command_len + 1;
     if (strlen(p_cdc_buffer) == (len + UUID_STRING_LEN)) {
-        // パラメーターが入力されている場合は退避
+        // パラメーターが入力されている場合は退避し、Flash ROMに保存
         //   UUID文字列＝36文字分
         memcpy(service_uuid_string, p_cdc_buffer + len, UUID_STRING_LEN);
+        save_auth_param();
         demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
 
     } else {
@@ -61,8 +90,9 @@ static bool reset_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
         return false;
     }
 
-    // 格納領域を初期化
+    // 格納領域を初期化し、パラメーターを保存
     memset(service_uuid_string, 0, sizeof(service_uuid_string));
+    save_auth_param();
     demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
     return true;
 }
@@ -77,8 +107,10 @@ static bool set_auth_uuid_scan_sec(char *p_cdc_buffer, size_t cdc_buffer_size)
     
     // パラメーターを解析
     if (strlen(p_cdc_buffer) == command_len) {
-        // 引数がない場合はデフォルトにリセット
+        // 引数がない場合はデフォルトにリセットし、
+        // パラメーターをFlash ROMに保存
         service_uuid_scan_sec = SCAN_SEC_DEFAULT;
+        save_auth_param();
         demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
 
     } else {
@@ -88,7 +120,9 @@ static bool set_auth_uuid_scan_sec(char *p_cdc_buffer, size_t cdc_buffer_size)
             demo_cdc_send_response_buffer_set("Parameter must be in the range 1 to 9 (sec).\r\n");
 
         } else {
+            // パラメーターをFlash ROMに保存
             service_uuid_scan_sec = sec;
+            save_auth_param();
             demo_cdc_send_response_buffer_set(CDC_OK_RESPONSE);
         }        
     }
@@ -114,6 +148,16 @@ static bool display_param(char *p_cdc_buffer, size_t cdc_buffer_size)
     return false;
 }
 
+void demo_ble_peripheral_auth_param_init(void)
+{
+    // 初期値を設定
+    memset(service_uuid_string, 0, sizeof(service_uuid_string));
+    service_uuid_scan_sec = SCAN_SEC_DEFAULT;
+
+    // Flash ROMに設定されている場合は読み出す
+    restore_auth_param();
+}
+
 bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_size)
 {
     if (set_auth_uuid_scan_sec(p_cdc_buffer, cdc_buffer_size)) {
@@ -130,4 +174,3 @@ bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_si
     }
     return false;
 }
-
