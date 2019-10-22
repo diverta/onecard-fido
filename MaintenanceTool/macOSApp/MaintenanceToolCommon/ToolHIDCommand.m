@@ -163,13 +163,13 @@
     }
 
     - (void)doTestCtapHidPing {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
         [self doRequestCtapHidInit];
     }
 
     - (void)doRequestCtapHidPing:(NSData *)cid {
-        // コマンド開始メッセージを画面表示
-        [self displayStartMessage];
         // 100バイトのランダムなPINGデータを生成
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
         // メッセージを編集し、CTAPHID_PINGコマンドを実行

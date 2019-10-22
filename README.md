@@ -21,17 +21,16 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/09/30
+#### 2019/10/21
 
-MDBT50Q Dongle、およびファームウェアを修正しました。<br>
+macOS版 FIDO認証器管理ツールを修正しました。<br>
 
-- <b>[MDBT50Q Dongle（rev2）](FIDO2Device/MDBT50Q_Dongle)</b>
-- <b>[FIDO2アプリケーション（Version 0.2.1）](nRF5_SDK_v15.3.0)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.19a）](MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
 修正点は以下になります。
-- MDBT50Q Dongleの基板（回路）を修正（[#237](https://github.com/diverta/onecard-fido/issues/237) ご参照）
-- MDBT50Q Dongleに簡易USBブートローダーを導入（[#256](https://github.com/diverta/onecard-fido/issues/256) ご参照）
-- MDBT50Q DongleのLED点灯方法を変更（[#255](https://github.com/diverta/onecard-fido/issues/255) ご参照）
+- HID PINGテスト機能でタイムアウト発生時、ポップアップメッセージが表示されない不具合を解消（[#264](https://github.com/diverta/onecard-fido/issues/264)、[#265](https://github.com/diverta/onecard-fido/pull/265) ご参照）
+
+Windows版 FIDO認証器管理ツール（Version 0.1.19）の修正はありません。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
