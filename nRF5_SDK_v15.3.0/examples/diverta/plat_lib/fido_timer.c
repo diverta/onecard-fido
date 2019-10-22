@@ -221,57 +221,6 @@ void fido_idling_led_timer_start(uint32_t on_off_interval_msec)
 }
 
 //
-// ユーザー所在確認中のキープアライブ用タイマー
-//
-APP_TIMER_DEF(m_keepalive_interval_timer_id);
-static bool keepalive_interval_timer_created = false;
-
-static void keepalive_interval_timeout_handler(void *p_context)
-{
-    // キープアライブ・コマンドを実行する
-    fido_command_keepalive_timer_handler();
-}
-
-static ret_code_t keepalive_interval_timer_init(void)
-{
-    if (keepalive_interval_timer_created) {
-        return NRF_SUCCESS;
-    }
-
-    ret_code_t err_code = app_timer_create(&m_keepalive_interval_timer_id, APP_TIMER_MODE_REPEATED, keepalive_interval_timeout_handler);
-    if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_create(m_keepalive_interval_timer_id) returns %d ", err_code);
-    }
-    
-    keepalive_interval_timer_created = true;
-    return err_code;
-}
-
-void fido_keepalive_interval_timer_stop(void)
-{
-    // タイマーを停止する
-    app_timer_stop(m_keepalive_interval_timer_id);
-}
-
-void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context)
-{
-    // タイマー生成
-    ret_code_t err_code = keepalive_interval_timer_init();
-    if (err_code != NRF_SUCCESS) {
-        return;
-    }
-
-    // タイマーが既にスタートしている場合は停止させる
-    fido_keepalive_interval_timer_stop();
-
-    // タイマーを開始する
-    err_code = app_timer_start(m_keepalive_interval_timer_id, APP_TIMER_TICKS(timeout_msec), p_context);
-    if (err_code != NRF_SUCCESS) {
-        fido_log_error("app_timer_start(m_keepalive_interval_timer_id) returns %d ", err_code);
-    }
-}
-
-//
 // ボタン長押し検知用タイマー
 //
 APP_TIMER_DEF(m_long_push_timer_id);
@@ -364,5 +313,61 @@ void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
     err_code = app_timer_start(m_hid_channel_lock_timer_id, APP_TIMER_TICKS(lock_ms), NULL);
     if (err_code != NRF_SUCCESS) {
         fido_log_error("app_timer_start(m_hid_channel_lock_timer_id) returns %d ", err_code);
+    }
+}
+
+//
+// 反復処理汎用タイマー
+// 
+APP_TIMER_DEF(m_repeat_process_timer_id);
+static bool repeat_process_timer_created = false;
+static void (*repeat_process_handler)(void);
+
+static void repeat_process_timeout_handler(void *p_context)
+{
+    // ハンドラーを実行する
+    (void)p_context;
+    (*repeat_process_handler)();
+}
+
+static ret_code_t repeat_process_timer_init(void)
+{
+    if (repeat_process_timer_created) {
+        return NRF_SUCCESS;
+    }
+
+    ret_code_t err_code = app_timer_create(&m_repeat_process_timer_id, APP_TIMER_MODE_REPEATED, repeat_process_timeout_handler);
+    if (err_code != NRF_SUCCESS) {
+        fido_log_error("app_timer_create(m_repeat_process_timer_id) returns %d ", err_code);
+    }
+    
+    repeat_process_timer_created = true;
+    return err_code;
+}
+
+void fido_repeat_process_timer_stop(void)
+{
+    // タイマーを停止する
+    app_timer_stop(m_repeat_process_timer_id);
+}
+
+void fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void))
+{
+    // タイマー生成
+    ret_code_t err_code = repeat_process_timer_init();
+    if (err_code != NRF_SUCCESS) {
+        return;
+    }
+
+    // タイマーが既にスタートしている場合は停止させる
+    fido_repeat_process_timer_stop();
+
+    // ハンドラーの参照を保持
+    repeat_process_handler = handler;
+    
+    // タイマーを開始する
+    err_code = app_timer_start(m_repeat_process_timer_id, APP_TIMER_TICKS(timeout_msec), NULL);
+    if (err_code != NRF_SUCCESS) {
+        fido_log_error("app_timer_start(m_repeat_process_timer_id) returns %d ", err_code);
     }
 }
