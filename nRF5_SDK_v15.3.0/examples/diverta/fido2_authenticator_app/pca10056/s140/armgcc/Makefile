@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
 
 # application version info
-CFLAGS += -DFW_REV=\"0.2.1\"
+CFLAGS += -DFW_REV=\"0.2.2\"
 # hardware version info
 CFLAGS += -DHW_REV=\"0.2\"
 
@@ -185,6 +185,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
@@ -208,6 +209,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
+  $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

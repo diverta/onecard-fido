@@ -112,6 +112,14 @@ uint8_t *fido_flash_password_get(void);
 bool     fido_flash_password_set(uint8_t *random_vector);
 
 //
+// fido_flash_blp_auth_param.c
+//
+bool     fido_flash_blp_auth_param_read(void);
+bool     fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec);
+uint8_t *fido_flash_blp_auth_param_service_uuid_string(void);
+uint32_t fido_flash_blp_auth_param_service_uuid_scan_sec(void);
+
+//
 // fido_log.h
 //
 //  プラットフォームに固有なヘッダーファイル

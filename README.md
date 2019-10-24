@@ -21,6 +21,19 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2019/10/24
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[nRF52840ファームウェア（Version 0.2.2）](nRF5_SDK_v15.3.0/firmwares)</b>
+
+修正点は以下になります。
+- BLEデバイスによる自動認証機能（デモ機能）を追加（[#263](https://github.com/diverta/onecard-fido/issues/263) ご参照）<br>
+操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+
+- BLEデバイスのRSSI値のログ出力機能（デモ機能）を追加（[#262](https://github.com/diverta/onecard-fido/issues/262) ご参照）<br>
+操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
+
 #### 2019/10/21
 
 macOS版 FIDO認証器管理ツールを修正しました。<br>

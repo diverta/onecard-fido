@@ -20,7 +20,9 @@ void demo_cdc_receive_on_request_received(void);
 
 bool  demo_cdc_send_response_ready(void);
 char *demo_cdc_send_response_buffer_get(void);
+void  demo_cdc_send_response_buffer_set(char *fmt, ...);
 
+void demo_cdc_event_connected(void);
 void demo_cdc_event_disconnected(void);
 
 #ifdef __cplusplus
