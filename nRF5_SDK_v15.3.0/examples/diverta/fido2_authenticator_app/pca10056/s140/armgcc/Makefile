@@ -110,6 +110,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+  $(SDK_ROOT)/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm.c \
   $(SDK_ROOT)/components/libraries/usbd/class/hid/app_usbd_hid.c \
   $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
   $(SDK_ROOT)/components/libraries/util/app_error_handler_gcc.c \
@@ -197,10 +198,13 @@ SRC_FILES += \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
+  $(BLELIB_DIR)/ble_service_central.c \
+  $(BLELIB_DIR)/ble_service_central_demo.c \
+  $(BLELIB_DIR)/ble_service_central_stat.c \
+  $(BLELIB_DIR)/ble_service_common.c \
+  $(BLELIB_DIR)/ble_service_peripheral.c \
   $(BLELIB_DIR)/fido_ble_event.c \
   $(BLELIB_DIR)/fido_ble_pairing.c \
-  $(BLELIB_DIR)/fido_ble_peripheral.c \
-  $(BLELIB_DIR)/fido_ble_peripheral_timer.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
 

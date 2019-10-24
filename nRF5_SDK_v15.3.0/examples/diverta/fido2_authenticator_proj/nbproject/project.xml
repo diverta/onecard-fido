@@ -11,23 +11,15 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../fido2_authenticator_app</sourceRootElem>
-                <sourceRootElem>../ble_u2f_lib</sourceRootElem>
-                <sourceRootElem>../usbd_hid_u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../components/libraries/usbd</sourceRootElem>
-                <sourceRootElem>../u2f_lib</sourceRootElem>
-                <sourceRootElem>../ctap2_lib</sourceRootElem>
-                <sourceRootElem>../usbd_hid_ctap2_lib</sourceRootElem>
-                <sourceRootElem>../usbd_hid_lib</sourceRootElem>
-                <sourceRootElem>../fido_lib</sourceRootElem>
                 <sourceRootElem>../../../../../tinycbor/src</sourceRootElem>
-                <sourceRootElem>../ble_nus_lib</sourceRootElem>
                 <sourceRootElem>../ble_central_lib</sourceRootElem>
-                <sourceRootElem>../nfc_lib</sourceRootElem>
                 <sourceRootElem>../plat_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/ctap2_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/u2f_lib</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib</sourceRootElem>
                 <sourceRootElem>../ble_lib</sourceRootElem>
+                <sourceRootElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
