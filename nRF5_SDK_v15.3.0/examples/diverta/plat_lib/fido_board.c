@@ -53,14 +53,6 @@ NRF_LOG_MODULE_REGISTER();
 #define LONG_PUSH_TIMEOUT               3000
 
 //
-// デモ機能
-//
-#define DEMO_FUNCTION_ENABLE false
-#if DEMO_FUNCTION_ENABLE
-#include "ble_service_central_demo.h"
-#endif
-
-//
 // ボタン定義
 //
 static void on_button_evt(uint8_t pin_no, uint8_t button_action);
@@ -109,13 +101,6 @@ static void on_button_evt(uint8_t pin_no, uint8_t button_action)
             
             // FIDO固有の処理を実行
             fido_command_mainsw_event_handler();
-
-#if DEMO_FUNCTION_ENABLE
-            if (ble_service_peripheral_mode() == false) {
-                // デモ機能を実行
-                ble_service_central_demo_button_pressed();
-            }
-#endif
         }
 		break;
 		

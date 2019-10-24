@@ -20,7 +20,7 @@
 // FIDO Authenticator固有の処理
 #include "fido_ble_event.h"
 #include "fido_hid_channel.h"
-#include "usbd_hid_service.h"
+#include "usbd_service.h"
 #include "ctap2_client_pin.h"
 #include "nfc_service.h"
 #include "ble_service_common.h"
@@ -210,7 +210,7 @@ int main(void)
 {
     // Initialize.
     log_init();
-    usbd_init();
+    usbd_service_init(usbd_user_ev_handler);
     timers_init();
     power_management_init();
     flash_storage_init();
@@ -222,7 +222,7 @@ int main(void)
 
     // USB CDC／HIDデバイスクラスを初期化
     usbd_cdc_init();
-    usbd_hid_init(usbd_user_ev_handler);
+    usbd_hid_init();
 
     // NFC関連の初期化（機能閉塞中です）
     nfc_service_init(true);
@@ -238,7 +238,7 @@ int main(void)
     // Enter main loop.
     for (;;) {
         // 業務処理を実行
-        usbd_hid_do_process();
+        usbd_service_do_process();
         fido_ble_do_process();
         idle_state_handle();
     }
