@@ -35,6 +35,7 @@ void ble_service_central_stat_debug_print(void);
 
 ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string);
 char            *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes);
+size_t           ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info_string);
 
 #ifdef __cplusplus
 }

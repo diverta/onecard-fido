@@ -127,12 +127,28 @@ void fido_status_indicator_prompt_reset(void)
     // LEDを事前消灯
     led_light_pin_set(LED_COLOR_GREEN, false);
     led_light_pin_set(LED_COLOR_BLUE,  false);
-    led_light_pin_set(LED_COLOR_BUSY,  false);
+    led_light_pin_set(LED_COLOR_RED,   false);
     led_light_pin_set(LED_COLOR_PAIR,  false);
 
     // 赤色LEDを、秒間５回点滅させるタイマーを開始する
-    m_led_for_processing = LED_COLOR_RED;
+    m_led_for_processing = LED_COLOR_BUSY;
     fido_processing_led_timer_start(LED_ON_OFF_SHORT_INTERVAL_MSEC);
+}
+
+void fido_status_indicator_ble_scanning(void)
+{
+    // LED点滅制御タイマーを停止
+    stop_led_timers();
+
+    // LEDを事前消灯
+    led_light_pin_set(LED_COLOR_GREEN, false);
+    led_light_pin_set(LED_COLOR_BLUE,  false);
+    led_light_pin_set(LED_COLOR_BUSY,  false);
+    led_light_pin_set(LED_COLOR_PAIR,  false);
+    
+    // 赤色LEDを、秒間２回点滅させるタイマーを開始する
+    m_led_for_processing = LED_COLOR_RED;
+    fido_processing_led_timer_start(LED_ON_OFF_INTERVAL_MSEC);
 }
 
 void fido_status_indicator_prompt_tup(void)

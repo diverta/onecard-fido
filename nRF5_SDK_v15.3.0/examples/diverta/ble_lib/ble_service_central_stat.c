@@ -197,10 +197,38 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
 // ユーティリティー
 //
 static char bluetooth_address[16];
+static char peer_addr_rssi_buf[64];
 
 char *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes)
 {
     sprintf(bluetooth_address, "%02X%02X%02X%02X%02X%02X", 
         addr_bytes[5], addr_bytes[4], addr_bytes[3], addr_bytes[2], addr_bytes[1], addr_bytes[0]);
     return bluetooth_address;
+}
+
+size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info_string)
+{
+    size_t size;
+
+    // 通番を編集
+    sprintf(adv_stat_info_string, "%lu,", serial_num);
+
+    for (uint8_t idx = 0; idx < ADV_STAT_INFO_SIZE_MAX; idx++) {
+        // Bluetoothアドレス、RSSI値を編集
+        sprintf(peer_addr_rssi_buf, 
+            "\"%s\",%s,%d",
+            adv_stat_info[idx].dev_name,
+            ble_service_central_stat_btaddr_string(adv_stat_info[idx].peer_addr),
+            adv_stat_info[idx].rssi
+            );
+        // CSVデータを編集
+        size = sprintf(adv_stat_info_string, 
+            "%s%s%s", 
+            adv_stat_info_string, 
+            memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
+            (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "\r\n" : ","
+            );
+    }
+
+    return size;
 }

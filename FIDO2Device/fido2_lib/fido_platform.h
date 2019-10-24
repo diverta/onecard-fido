@@ -130,16 +130,17 @@ void fido_status_indicator_prompt_tup(void);
 void fido_status_indicator_pairing_mode(void);
 void fido_status_indicator_pairing_fail(void);
 void fido_status_indicator_abort(void);
+void fido_status_indicator_ble_scanning(void);
 
 //
 // fido_timer.c
 //
 void fido_user_presence_verify_timer_stop(void);
 void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
-void fido_keepalive_interval_timer_stop(void);
-void fido_keepalive_interval_timer_start(uint32_t timeout_msec, void *p_context);
 void fido_hid_channel_lock_timer_stop(void);
 void fido_hid_channel_lock_timer_start(uint32_t lock_ms);
+void fido_repeat_process_timer_stop(void);
+void fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void));
 
 //
 // nfc_service.c
@@ -150,7 +151,6 @@ void nfc_service_data_send(uint8_t *data, size_t data_size);
 // usbd_hid_service.c
 //
 void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
-bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size);
 
 #ifdef __cplusplus
 }

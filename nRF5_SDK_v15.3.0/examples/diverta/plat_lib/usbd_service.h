@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 void usbd_cdc_init(void);
+bool usbd_cdc_port_is_open(void);
 void usbd_hid_init(void);
 void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event));
 void usbd_service_do_process(void);

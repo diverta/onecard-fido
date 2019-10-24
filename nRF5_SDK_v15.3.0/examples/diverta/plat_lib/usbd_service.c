@@ -17,7 +17,7 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "demo_cdc_receive.h"
+#include "demo_cdc_service.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service
@@ -35,7 +35,11 @@ NRF_LOG_MODULE_REGISTER();
 // CDCが使用するバッファ
 static char m_rx_buffer[1];
 
-static bool   m_cdc_buffer_received = false;
+// 仮想COMポートからデータを受信したことを示すフラグ
+static bool m_cdc_buffer_received = false;
+
+// 仮想COMポート接続中を示すフラグ
+static bool m_cdc_port_open = false;
 
 // エコーバック用バッファ（128byte分用意する）
 #define CDC_ECHO_BUFFER_SIZE 128
@@ -109,6 +113,21 @@ static void usbd_cdc_port_open(app_usbd_class_inst_t const *p_inst)
     // 作業領域を初期化
     demo_cdc_receive_init();
     echo_char_init();
+
+    // 仮想COMポートが接続されている状態
+    m_cdc_port_open = true;
+    NRF_LOG_DEBUG("USB CDC port opened");
+}
+
+static void usbd_cdc_port_close(app_usbd_class_inst_t const *p_inst)
+{
+    // 仮想COMポートから切断されている状態
+    (void)p_inst;
+    m_cdc_port_open = false;
+    NRF_LOG_DEBUG("USB CDC port closed");
+
+    // 仮想COMポートから切断された時の処理を実行
+    demo_cdc_event_disconnected();
 }
 
 static void usbd_cdc_buffer_char_add(char c)
@@ -189,11 +208,10 @@ static void cdc_acm_user_ev_handler(app_usbd_class_inst_t const *p_inst,
 {
     switch (event) {
         case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
-            NRF_LOG_DEBUG("USB CDC port opened");
             usbd_cdc_port_open(p_inst);
             break;
         case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
-            NRF_LOG_DEBUG("USB CDC port closed");
+            usbd_cdc_port_close(p_inst);
             break;
         case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
             usbd_cdc_buffer_write(p_inst);
@@ -218,7 +236,7 @@ void usbd_cdc_init(void)
     NRF_LOG_DEBUG("usbd_cdc_init() done");
 }
 
-bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
+static bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
 {
     // 指定された領域から出力
     ret_code_t ret = usbd_cdc_char_print(&m_app_cdc_acm, buffer_for_send, size);
@@ -229,6 +247,12 @@ bool usbd_cdc_frame_send(uint8_t *buffer_for_send, size_t size)
         return false;
     }
     return true;
+}
+
+bool usbd_cdc_port_is_open(void)
+{
+    // 仮想COMポート接続中の場合 true
+    return m_cdc_port_open;
 }
 
 //
@@ -510,23 +534,33 @@ void usbd_service_do_process(void)
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());
 
-    if (m_hid_report_received) {
-        // HIDサービスから受信データがあった場合、
-        // FIDO USB HIDサービスを実行
+    if (usbd_cdc_port_is_open()) {
+        // 仮想COMポート接続中の場合は
+        // HIDサービスを稼働させない
+        if (m_cdc_buffer_received) {
+            // CDCサービスから受信データがあった場合、
+            // デモ機能を実行
+            m_cdc_buffer_received = false;
+            demo_cdc_receive_on_request_received();
+
+        } else if (demo_cdc_send_response_ready()) {
+            // CDCサービスからレスポンスデータがあった場合、
+            // CDCへ出力
+            char *b = demo_cdc_send_response_buffer_get();
+            usbd_cdc_frame_send((uint8_t *)b, strlen(b));
+        }
+
+        // 受信されたHIDリクエストを無効化
         m_hid_report_received = false;
-        fido_hid_receive_on_request_received();
-    }
 
-    if (m_cdc_buffer_received) {
-        // CDCサービスから受信データがあった場合、
-        // デモ機能を実行
-        m_cdc_buffer_received = false;
-        demo_cdc_receive_on_request_received();
-
-    } else if (demo_cdc_send_response_ready()) {
-        // CDCサービスからレスポンスデータがあった場合、
-        // CDCへ出力
-        char *b = demo_cdc_send_response_buffer_get();
-        usbd_cdc_frame_send((uint8_t *)b, strlen(b));
+    } else {
+        // 仮想COMポートから切断されている場合は
+        // HIDサービスを稼働させる
+        if (m_hid_report_received) {
+            // HIDサービスから受信データがあった場合、
+            // FIDO USB HIDサービスを実行
+            m_hid_report_received = false;
+            fido_hid_receive_on_request_received();
+        }
     }
 }
