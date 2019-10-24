@@ -29,6 +29,7 @@ void fido_user_presence_verify_start_on_reset(void);
 void fido_user_presence_verify_start(uint32_t timeout_msec);
 void fido_user_presence_verify_end(void);
 void fido_user_presence_verify_cancel(void);
+void fido_user_presence_verify_on_ble_scan_end(bool success);
 
 void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type);
 void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type);

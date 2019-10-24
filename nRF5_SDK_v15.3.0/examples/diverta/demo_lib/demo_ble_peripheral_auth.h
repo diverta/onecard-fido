@@ -16,6 +16,7 @@ extern "C" {
 
 bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_size);
 void demo_ble_peripheral_auth_param_init(void);
+bool demo_ble_peripheral_auth_start_scan(void);
 
 #ifdef __cplusplus
 }

@@ -20,6 +20,9 @@
 #include "ctap2_common.h"
 #include "u2f.h"
 
+// デモ機能（BLEデバイスによる自動認証機能）
+#include "demo_ble_peripheral_auth.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -113,7 +116,14 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     // ユーザー所在確認タイムアウト監視を開始
     fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
 
-    // LED点滅を開始
+    // 自動認証機能が有効な場合は
+    // ボタンを押す代わりに
+    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
+    if (demo_ble_peripheral_auth_start_scan()) {
+        return;
+    }
+
+    // LED点滅を開始し、ボタンの押下を待つ
     fido_status_indicator_prompt_tup();
 }
 
@@ -133,6 +143,19 @@ void fido_user_presence_verify_end(void)
     
     // キープアライブタイマーを停止する
     fido_repeat_process_timer_stop();
+}
+
+void fido_user_presence_verify_on_ble_scan_end(bool success)
+{
+    // 自動認証機能が有効時、指定のサービスUUIDをもつ
+    // BLEペリフェラルデバイスのスキャン完了時の処理
+    if (success) {
+        // スキャン成功時は、ボタン押下時と等価の処理を実行
+        fido_command_mainsw_event_handler();
+    } else {
+        // スキャン失敗時は、タイムアウト時と等価の処理を実行
+        fido_user_presence_verify_timeout_handler();
+    }
 }
 
 //
