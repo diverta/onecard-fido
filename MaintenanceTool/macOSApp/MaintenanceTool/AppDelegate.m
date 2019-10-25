@@ -215,6 +215,15 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
+    - (IBAction)menuItemPreferencesDidSelect:(id)sender {
+        // ツール設定画面を開く
+        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+            return;
+        }
+        [self enableButtons:false];
+        [[self toolHIDCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
+    }
+
 #pragma mark - Call back from ToolFilePanel
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath

@@ -29,6 +29,8 @@
     - (void)setPinParamWindowDidClose;
     - (void)pinCodeParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pinCodeParamWindowDidClose;
+    - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)toolPreferenceWindowDidClose;
 
 @end
 
