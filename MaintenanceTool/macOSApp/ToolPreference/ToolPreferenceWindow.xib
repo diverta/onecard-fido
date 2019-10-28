@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ToolPreferenceWindow">
             <connections>
+                <outlet property="buttonAuthParamGet" destination="BAx-Wl-9Dm" id="ZxR-bK-RW3"/>
                 <outlet property="buttonAuthParamSet" destination="CSJ-7V-QFp" id="qr2-zf-dX4"/>
                 <outlet property="buttonClose" destination="B5l-qJ-2om" id="dCQ-0g-oBR"/>
                 <outlet property="fieldServiceUUIDScanSec" destination="bab-0v-lpe" id="1ws-PZ-C7h"/>
@@ -65,6 +66,32 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BAx-Wl-9Dm" userLabel="Button Read">
+                                            <rect key="frame" x="269" y="9" width="107" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="95" id="fPT-aD-DBk"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="設定読込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8m-qt-lna">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="buttonAuthParamGetDidPress:" target="-2" id="37D-wP-EYa"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button Write">
+                                            <rect key="frame" x="376" y="8" width="107" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="95" id="YRe-Dp-0qg"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="設定書込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LjE-Kd-uE0">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="buttonAuthParamSetDidPress:" target="-2" id="8wK-yf-u1b"/>
+                                            </connections>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Zq-r8-d7y">
                                             <rect key="frame" x="15" y="19" width="76" height="13"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン秒数" id="xWu-Gf-HHT">
@@ -73,22 +100,6 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button OK">
-                                            <rect key="frame" x="376" y="8" width="107" height="32"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="95" id="YRe-Dp-0qg"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="push" title="設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LjE-Kd-uE0">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                                                <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="buttonAuthParamSetDidPress:" target="-2" id="TuS-xE-I8V"/>
-                                            </connections>
-                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jce-8W-wDg">
                                             <rect key="frame" x="15" y="56" width="154" height="13"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン対象サービスUUID" id="Tse-Tm-YvW">
@@ -108,7 +119,9 @@ DQ
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="baseline" secondItem="jce-8W-wDg" secondAttribute="baseline" id="PVO-d0-dB9"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="top" secondItem="bab-0v-lpe" secondAttribute="bottom" constant="-21" id="QYk-k9-kIz"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="top" secondItem="XcB-Gt-YBA" secondAttribute="bottom" constant="15" id="ZKo-A6-j53"/>
+                                        <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" id="lho-ul-DCr"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="182.5" id="nrV-Bv-rTd"/>
+                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="12" symbolic="YES" id="oAi-hL-ilh"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="baseline" secondItem="8Zq-r8-d7y" secondAttribute="baseline" id="q8L-Cm-5el"/>
                                     </constraints>
                                 </view>
@@ -159,9 +172,6 @@ DQ
                         <buttonCell key="cell" type="push" title="閉じる" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="PPU-3E-VPs">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <string key="keyEquivalent" base64-UTF8="YES">
-Gw
-</string>
                         </buttonCell>
                         <connections>
                             <action selector="buttonCloseDidPress:" target="-2" id="Jvl-cQ-Iif"/>

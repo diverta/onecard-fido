@@ -12,6 +12,7 @@
 
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDString;
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDScanSec;
+    @property (assign) IBOutlet NSButton        *buttonAuthParamGet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamSet;
     @property (assign) IBOutlet NSButton        *buttonClose;
 
@@ -34,6 +35,10 @@
         [[self fieldServiceUUIDString] becomeFirstResponder];
     }
 
+    - (IBAction)buttonAuthParamGetDidPress:(id)sender {
+        [self doAuthParamGet:sender];
+    }
+
     - (IBAction)buttonAuthParamSetDidPress:(id)sender {
         [self doAuthParamSet:sender];
     }
@@ -50,6 +55,11 @@
 
 #pragma mark - Check for entries and process
 
+    - (void) doAuthParamGet:(id)sender {
+        // 自動認証用パラメーター照会コマンドを実行し、スキャン対象サービスUUID、スキャン秒数を読込み、各画面項目に設定
+        // TODO
+    }
+
     - (void) doAuthParamSet:(id)sender {
         // 入力内容チェック
         if ([self checkEntries:sender] == false) {
@@ -61,6 +71,11 @@
 
     - (bool) checkEntries:(id)sender {
         // 長さチェック
+        if ([ToolCommon checkEntrySize:[self fieldServiceUUIDString]
+                               minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
+                       informativeText:MSG_PROMPT_INPUT_CUR_PIN] == false) {
+            return false;
+        }
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDScanSec]
                                minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
                        informativeText:MSG_PROMPT_INPUT_CUR_PIN] == false) {
