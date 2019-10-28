@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2019/10/25.
 //
 #import "ToolPreferenceWindow.h"
+#import "ToolPopupWindow.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 
@@ -83,31 +84,35 @@
 #pragma mark - Subroutines
 
     - (void)initAuthParamFieldsAndButtons {
-        // 画面項目をブランクに設定
+        // 画面項目をブランクに設定・使用不可とする
         [[self fieldServiceUUIDString] setStringValue:@""];
         [[self fieldServiceUUIDScanSec] setStringValue:@""];
+        [[self fieldServiceUUIDString] setEnabled:false];
+        [[self fieldServiceUUIDScanSec] setEnabled:false];
 
         // 設定書込・解除ボタンを押下不可とする
         [[self buttonAuthParamSet] setEnabled:false];
         [[self buttonAuthParamReset] setEnabled:false];
-
-        // 最初の項目にフォーカス
-        [[self fieldServiceUUIDString] becomeFirstResponder];
     }
 
     - (void)setupAuthParamFieldsAndButtons {
         // 画面項目に設定（スキャン対象サービスUUID）
         NSString *strUUID = [[self toolPreferenceCommand] serviceUUIDString];
         [[self fieldServiceUUIDString] setStringValue:strUUID];
+        [[self fieldServiceUUIDString] setEnabled:true];
 
         // 画面項目に設定（スキャン秒数）
         NSString *strSec = [NSString stringWithFormat:@"%d",
                             [[self toolPreferenceCommand] serviceUUIDScanSec]];
         [[self fieldServiceUUIDScanSec] setStringValue:strSec];
+        [[self fieldServiceUUIDScanSec] setEnabled:true];
 
         // 設定書込・解除ボタンを押下可とする
         [[self buttonAuthParamSet] setEnabled:true];
         [[self buttonAuthParamReset] setEnabled:true];
+
+        // 最初の項目にフォーカス
+        [[self fieldServiceUUIDString] becomeFirstResponder];
     }
 
 #pragma mark - Check for entries and process
@@ -127,6 +132,11 @@
     }
 
     - (void) doAuthParamReset:(id)sender {
+        // 処理続行確認ダイアログを開く
+        if ([ToolPopupWindow promptYesNo:MSG_CLEAR_UUID_SCAN_PARAM
+                         informativeText:MSG_PROMPT_CLEAR_UUID_SCAN_PARAM] == false) {
+            return;
+        }
         // 自動認証用パラメーター解除コマンドを実行
         [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_RESET];
     }
@@ -152,6 +162,13 @@
         if ([ToolCommon checkValueInRange:[self fieldServiceUUIDScanSec]
                                  minValue:1 maxValue:9
                           informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE] == false) {
+            return false;
+        }
+        // 入力形式チェック（正規表現チェック）
+        NSString *pattern = @"([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})";
+        if ([ToolCommon checkValueWithPattern:[self fieldServiceUUIDString]
+                                      pattern:pattern
+                              informativeText:MSG_PROMPT_INPUT_UUID_STRING_PATTERN] == false) {
             return false;
         }
         return true;
