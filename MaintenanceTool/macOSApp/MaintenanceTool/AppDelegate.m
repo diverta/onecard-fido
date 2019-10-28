@@ -4,6 +4,7 @@
 #import "ToolFilePanel.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
+#import "ToolPreferenceCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -27,6 +28,7 @@
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
+    @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
 
 @end
 
@@ -38,6 +40,12 @@
         self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
 
         self.textView.font = [NSFont fontWithName:@"Courier" size:12];
+
+        // 設定画面の初期設定
+        [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
+        [[self toolPreferenceCommand] setTransportParam:TRANSPORT_HID
+                                         toolBLECommand:nil
+                                         toolHIDCommand:[self toolHIDCommand]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -217,11 +225,8 @@
 
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
-            return;
-        }
         [self enableButtons:false];
-        [[self toolHIDCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
+        [[self toolPreferenceCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -266,6 +271,12 @@
     - (void)hidCommandDidProcess:(NSString *)processNameOfCommand
                           result:(bool)result message:(NSString *)message {
         [self commandDidProcess:processNameOfCommand result:result message:message];
+    }
+
+#pragma mark - Call back from other class
+
+    - (void)toolPreferenceWindowDidClose {
+        [self commandDidProcess:nil result:true message:nil];
     }
 
 #pragma mark - Common method called by callback

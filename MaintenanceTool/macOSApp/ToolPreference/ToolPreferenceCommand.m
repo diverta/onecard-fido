@@ -8,7 +8,7 @@
 #import "ToolPreferenceCommand.h"
 #import "ToolPreferenceWindow.h"
 
-@interface ToolPreferenceCommand ()
+@interface ToolPreferenceCommand () <ToolHIDCommandDelegate>
 
     @property (nonatomic) TransportType         transportType;
     @property (nonatomic) ToolBLECommand        *toolBLECommand;
@@ -21,7 +21,16 @@
 @implementation ToolPreferenceCommand
 
     - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id)delegate {
         self = [super init];
+        if (self) {
+            [self setDelegate:delegate];
+        }
+        [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
+
         // 使用するダイアログを生成
         [self setToolPreferenceWindow:[[ToolPreferenceWindow alloc]
                                      initWithWindowNibName:@"ToolPreferenceWindow"]];
@@ -35,7 +44,7 @@
         [self setToolHIDCommand:hid];
     }
 
-#pragma mark - Communication with dialog
+#pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // ダイアログの親ウィンドウを保持
@@ -53,10 +62,18 @@
     - (void)toolPreferenceWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self toolPreferenceWindow] close];
-        // AppDelegateに制御を戻す
-        if ([self transportType] == TRANSPORT_HID) {
-            [[self toolHIDCommand] toolPreferenceWindowDidClose];
-        }
+        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
+        AppDelegate *app = (AppDelegate *)[self delegate];
+        [app toolPreferenceWindowDidClose];
+    }
+
+#pragma mark - Call back from ToolHIDCommand
+
+    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand
+                          result:(bool)result message:(NSString *)message {
+    }
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
     }
 
 @end

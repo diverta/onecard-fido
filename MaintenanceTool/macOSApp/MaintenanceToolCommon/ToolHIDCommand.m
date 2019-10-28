@@ -26,8 +26,6 @@
                                                *toolCTAP2HealthCheckCommand;
     @property (nonatomic) ToolU2FHealthCheckCommand
                                                *toolU2FHealthCheckCommand;
-    @property (nonatomic) ToolPreferenceCommand
-                                               *toolPreferenceCommand;
 
     @property (nonatomic) Command   command;
     @property (nonatomic) NSString *skeyFilePath;
@@ -62,10 +60,6 @@
         [[self toolU2FHealthCheckCommand] setTransportParam:TRANSPORT_HID
                                              toolBLECommand:nil
                                              toolHIDCommand:self];
-        [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] init]];
-        [[self toolPreferenceCommand] setTransportParam:TRANSPORT_HID
-                                         toolBLECommand:nil
-                                         toolHIDCommand:self];
         return self;
     }
 
@@ -553,19 +547,6 @@
     }
 
     - (void)pinCodeParamWindowDidClose {
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
-    }
-
-#pragma mark - Interface for PinCodeParamWindow
-
-    - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログをモーダルで表示
-        [[self toolPreferenceCommand] toolPreferenceWindowWillOpen:sender
-                                                      parentWindow:parentWindow];
-    }
-
-    - (void)toolPreferenceWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
         [[self delegate] hidCommandDidProcess:nil result:true message:nil];
     }
