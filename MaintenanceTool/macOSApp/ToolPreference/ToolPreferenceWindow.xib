@@ -9,6 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ToolPreferenceWindow">
             <connections>
                 <outlet property="buttonAuthParamGet" destination="BAx-Wl-9Dm" id="ZxR-bK-RW3"/>
+                <outlet property="buttonAuthParamReset" destination="fKy-hY-Jjn" id="Lau-4B-VOv"/>
                 <outlet property="buttonAuthParamSet" destination="CSJ-7V-QFp" id="qr2-zf-dX4"/>
                 <outlet property="buttonClose" destination="B5l-qJ-2om" id="dCQ-0g-oBR"/>
                 <outlet property="fieldServiceUUIDScanSec" destination="bab-0v-lpe" id="1ws-PZ-C7h"/>
@@ -67,9 +68,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BAx-Wl-9Dm" userLabel="Button Read">
-                                            <rect key="frame" x="269" y="9" width="107" height="32"/>
+                                            <rect key="frame" x="251" y="8" width="82" height="32"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="95" id="fPT-aD-DBk"/>
+                                                <constraint firstAttribute="width" constant="70" id="fPT-aD-DBk"/>
                                             </constraints>
                                             <buttonCell key="cell" type="push" title="設定読込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8m-qt-lna">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -79,17 +80,17 @@
                                                 <action selector="buttonAuthParamGetDidPress:" target="-2" id="37D-wP-EYa"/>
                                             </connections>
                                         </button>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button Write">
-                                            <rect key="frame" x="376" y="8" width="107" height="32"/>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fKy-hY-Jjn" userLabel="Button Reset">
+                                            <rect key="frame" x="401" y="8" width="82" height="32"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="95" id="YRe-Dp-0qg"/>
+                                                <constraint firstAttribute="width" constant="70" id="b3l-M2-5Mx"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="push" title="設定書込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LjE-Kd-uE0">
+                                            <buttonCell key="cell" type="push" title="設定解除" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MVn-tE-1XL" userLabel="設定解除">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                                                <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
-                                                <action selector="buttonAuthParamSetDidPress:" target="-2" id="8wK-yf-u1b"/>
+                                                <action selector="buttonAuthParamResetDidPress:" target="-2" id="Apz-WX-P6R"/>
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Zq-r8-d7y">
@@ -108,20 +109,35 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button Write">
+                                            <rect key="frame" x="326" y="8" width="82" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="70" id="YRe-Dp-0qg"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="設定書込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LjE-Kd-uE0">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="buttonAuthParamSetDidPress:" target="-2" id="8wK-yf-u1b"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="CSJ-7V-QFp" secondAttribute="bottom" constant="15" id="63t-q6-LL3"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="P8L-Hv-IdZ" secondAttribute="leading" constant="186" id="8ys-ut-PmF"/>
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="leading" secondItem="jce-8W-wDg" secondAttribute="trailing" constant="19" id="9p4-Os-Tyl"/>
+                                        <constraint firstItem="fKy-hY-Jjn" firstAttribute="baseline" secondItem="BAx-Wl-9Dm" secondAttribute="baseline" id="En6-Oa-K7p"/>
                                         <constraint firstAttribute="trailing" secondItem="XcB-Gt-YBA" secondAttribute="trailing" constant="17" id="FN8-uJ-Qpn"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="8Zq-r8-d7y" secondAttribute="trailing" constant="97" id="Osi-c6-amE"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="XcB-Gt-YBA" secondAttribute="leading" id="Oyi-to-hSQ"/>
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="baseline" secondItem="jce-8W-wDg" secondAttribute="baseline" id="PVO-d0-dB9"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="top" secondItem="bab-0v-lpe" secondAttribute="bottom" constant="-21" id="QYk-k9-kIz"/>
+                                        <constraint firstItem="fKy-hY-Jjn" firstAttribute="trailing" secondItem="XcB-Gt-YBA" secondAttribute="trailing" id="Ueh-g9-SXG"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="top" secondItem="XcB-Gt-YBA" secondAttribute="bottom" constant="15" id="ZKo-A6-j53"/>
-                                        <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" id="lho-ul-DCr"/>
-                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="182.5" id="nrV-Bv-rTd"/>
-                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="12" symbolic="YES" id="oAi-hL-ilh"/>
+                                        <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" constant="1" id="lho-ul-DCr"/>
+                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="120" id="nrV-Bv-rTd"/>
+                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="5" id="oAi-hL-ilh"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="baseline" secondItem="8Zq-r8-d7y" secondAttribute="baseline" id="q8L-Cm-5el"/>
                                     </constraints>
                                 </view>

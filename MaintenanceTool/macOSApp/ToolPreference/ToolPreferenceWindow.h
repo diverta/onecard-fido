@@ -19,6 +19,9 @@
     @property (nonatomic) NSString              *serviceUUIDString;
     @property (nonatomic) uint8_t               serviceUUIDScanSec;
 
+    - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
+                                    success:(bool)success message:(NSString *)message;
+
 @end
 
 #endif /* ToolPreferenceWindow_h */

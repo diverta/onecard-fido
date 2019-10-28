@@ -14,6 +14,7 @@
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDScanSec;
     @property (assign) IBOutlet NSButton        *buttonAuthParamGet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamSet;
+    @property (assign) IBOutlet NSButton        *buttonAuthParamReset;
     @property (assign) IBOutlet NSButton        *buttonClose;
 
 @end
@@ -43,6 +44,9 @@
         [self doAuthParamSet:sender];
     }
 
+    - (IBAction)buttonAuthParamResetDidPress:(id)sender {
+    }
+
     - (IBAction)buttonCloseDidPress:(id)sender {
         [self terminateWindow:NSModalResponseCancel];
     }
@@ -51,6 +55,12 @@
         // 画面項目を初期化し、この画面を閉じる
         [self initFieldValue];
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+#pragma mark - Interface for main process
+
+    - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
+                                    success:(bool)success message:(NSString *)message {
     }
 
 #pragma mark - Check for entries and process

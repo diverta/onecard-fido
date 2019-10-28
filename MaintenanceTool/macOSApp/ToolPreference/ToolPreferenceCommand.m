@@ -44,6 +44,8 @@
         [self setToolHIDCommand:hid];
     }
 
+#pragma mark - Main process
+
 #pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -65,6 +67,9 @@
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
         AppDelegate *app = (AppDelegate *)[self delegate];
         [app toolPreferenceWindowDidClose];
+    }
+
+    - (void)toolPreferenceCommandWillProcess:(ToolPreferenceCommandType)commandType {
     }
 
 #pragma mark - Call back from ToolHIDCommand
