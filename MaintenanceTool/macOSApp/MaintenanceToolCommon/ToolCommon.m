@@ -103,4 +103,17 @@
         return true;
     }
 
+    + (bool) checkValueInRange:(NSTextField *)textField
+                      minValue:(int)minValue maxValue:(int)maxValue
+               informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        int value = [textField intValue];
+        if (value < minValue || value > maxValue) {
+            [ToolPopupWindow warning:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
 @end

@@ -11,6 +11,7 @@
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
+#define MSG_INVALID_OUT_OF_RANGE    @"入力値の範囲が不正です。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
@@ -148,5 +149,11 @@
 #define MSG_BLE_PARING_ERR_TIMED_OUT        @"FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。"
 #define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。"
 #define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
+
+#pragma mark - ツール設定画面
+#define MSG_PROMPT_INPUT_UUID_STRING_LEN        @"スキャン対象サービスUUIDを36桁で入力してください"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN      @"スキャン秒数を1桁で入力してください"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM      @"スキャン秒数を数字で入力してください"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE    @"スキャン秒数を1〜9の値で入力してください"
 
 #endif /* ToolCommonMessage_h */

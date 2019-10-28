@@ -69,7 +69,19 @@
         [app toolPreferenceWindowDidClose];
     }
 
-    - (void)toolPreferenceCommandWillProcess:(ToolPreferenceCommandType)commandType {
+    - (void)commandWillProcess:(ToolPreferenceCommandType)commandType {
+        switch (commandType) {
+            case COMMAND_AUTH_PARAM_GET:
+                // 仮のコードです。
+                [self setServiceUUIDString:@"422E0000-E141-11E5-A837-0800200C9A66"];
+                [self setServiceUUIDScanSec:5];
+                // 画面に制御を戻す
+                [[self toolPreferenceWindow]
+                    toolPreferenceCommandDidProcess:commandType success:true message:@""];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - Call back from ToolHIDCommand

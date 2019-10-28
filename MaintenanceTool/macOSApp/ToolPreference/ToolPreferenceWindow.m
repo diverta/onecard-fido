@@ -29,11 +29,19 @@
     }
 
     - (void)initFieldValue {
-        // 画面項目を初期値に設定
-        [[self fieldServiceUUIDString] setStringValue:@""];
+        // 画面項目を初期値に設定し、設定書込・解除ボタンを押下不可とする
+        [self initAuthParamFieldsAndButtons];
+    }
+
+    - (void)enableButtons:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonAuthParamGet] setEnabled:enabled];
+        [[self buttonAuthParamSet] setEnabled:enabled];
+        [[self buttonAuthParamReset] setEnabled:enabled];
+        [[self buttonClose] setEnabled:enabled];
         
-        // 最初の項目にフォーカス
-        [[self fieldServiceUUIDString] becomeFirstResponder];
+        [[self fieldServiceUUIDString] setEnabled:enabled];
+        [[self fieldServiceUUIDScanSec] setEnabled:enabled];
     }
 
     - (IBAction)buttonAuthParamGetDidPress:(id)sender {
@@ -45,6 +53,7 @@
     }
 
     - (IBAction)buttonAuthParamResetDidPress:(id)sender {
+        [self doAuthParamReset:sender];
     }
 
     - (IBAction)buttonCloseDidPress:(id)sender {
@@ -61,13 +70,51 @@
 
     - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
                                     success:(bool)success message:(NSString *)message {
+        switch (commandType) {
+            case COMMAND_AUTH_PARAM_GET:
+                // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
+                [self setupAuthParamFieldsAndButtons];
+                break;
+            default:
+                break;
+        }
+    }
+
+#pragma mark - Subroutines
+
+    - (void)initAuthParamFieldsAndButtons {
+        // 画面項目をブランクに設定
+        [[self fieldServiceUUIDString] setStringValue:@""];
+        [[self fieldServiceUUIDScanSec] setStringValue:@""];
+
+        // 設定書込・解除ボタンを押下不可とする
+        [[self buttonAuthParamSet] setEnabled:false];
+        [[self buttonAuthParamReset] setEnabled:false];
+
+        // 最初の項目にフォーカス
+        [[self fieldServiceUUIDString] becomeFirstResponder];
+    }
+
+    - (void)setupAuthParamFieldsAndButtons {
+        // 画面項目に設定（スキャン対象サービスUUID）
+        NSString *strUUID = [[self toolPreferenceCommand] serviceUUIDString];
+        [[self fieldServiceUUIDString] setStringValue:strUUID];
+
+        // 画面項目に設定（スキャン秒数）
+        NSString *strSec = [NSString stringWithFormat:@"%d",
+                            [[self toolPreferenceCommand] serviceUUIDScanSec]];
+        [[self fieldServiceUUIDScanSec] setStringValue:strSec];
+
+        // 設定書込・解除ボタンを押下可とする
+        [[self buttonAuthParamSet] setEnabled:true];
+        [[self buttonAuthParamReset] setEnabled:true];
     }
 
 #pragma mark - Check for entries and process
 
     - (void) doAuthParamGet:(id)sender {
-        // 自動認証用パラメーター照会コマンドを実行し、スキャン対象サービスUUID、スキャン秒数を読込み、各画面項目に設定
-        // TODO
+        // 自動認証用パラメーター照会コマンドを実行し、スキャン対象サービスUUID、スキャン秒数を読込
+        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_GET];
     }
 
     - (void) doAuthParamSet:(id)sender {
@@ -76,24 +123,35 @@
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
-        // TODO
+        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_SET];
+    }
+
+    - (void) doAuthParamReset:(id)sender {
+        // 自動認証用パラメーター解除コマンドを実行
+        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_RESET];
     }
 
     - (bool) checkEntries:(id)sender {
         // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDString]
-                               minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                       informativeText:MSG_PROMPT_INPUT_CUR_PIN] == false) {
+                               minSize:UUID_STRING_SIZE maxSize:UUID_STRING_SIZE
+                       informativeText:MSG_PROMPT_INPUT_UUID_STRING_LEN] == false) {
             return false;
         }
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDScanSec]
-                               minSize:PIN_CODE_SIZE_MIN maxSize:PIN_CODE_SIZE_MAX
-                       informativeText:MSG_PROMPT_INPUT_CUR_PIN] == false) {
+                               minSize:UUID_SCAN_SEC_SIZE maxSize:UUID_SCAN_SEC_SIZE
+                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN] == false) {
             return false;
         }
         // 数字チェック
         if ([ToolCommon checkIsNumeric:[self fieldServiceUUIDScanSec]
-                       informativeText:MSG_PROMPT_INPUT_CUR_PIN_NUM] == false) {
+                       informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM] == false) {
+            return false;
+        }
+        // 範囲チェック
+        if ([ToolCommon checkValueInRange:[self fieldServiceUUIDScanSec]
+                                 minValue:1 maxValue:9
+                          informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE] == false) {
             return false;
         }
         return true;

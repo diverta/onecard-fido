@@ -56,6 +56,9 @@ typedef enum : NSInteger {
     + (bool) checkEntrySize:(NSTextField *)textField
                     minSize:(size_t)minSize maxSize:(size_t)maxSize
             informativeText:(NSString *)informativeText;
+    + (bool) checkValueInRange:(NSTextField *)textField
+                      minValue:(int)minValue maxValue:(int)maxValue
+               informativeText:(NSString *)informativeText;
 
 @end
 
