@@ -30,6 +30,9 @@
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
 
+    // 処理機能名称を保持
+    @property (nonatomic) NSString *processNameOfCommand;
+
 @end
 
 @implementation AppDelegate
@@ -258,36 +261,112 @@
         }
     }
 
-    - (void)bleCommandDidProcess:(NSString *)processNameOfCommand
+    - (void)bleCommandDidProcess:(Command)command
                           result:(bool)result message:(NSString *)message {
-        [self commandDidProcess:processNameOfCommand result:result message:message];
+        [self commandDidProcess:command result:result message:message];
+    }
+
+    - (void)bleCommandStartedProcess:(Command)command {
+        [self commandStartedProcess:command type:TRANSPORT_BLE];
     }
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand
+    - (void)hidCommandDidProcess:(Command)command
                           result:(bool)result message:(NSString *)message {
-        [self commandDidProcess:processNameOfCommand result:result message:message];
+        [self commandDidProcess:command result:result message:message];
+    }
+
+    - (void)hidCommandStartedProcess:(Command)command {
+        [self commandStartedProcess:command type:TRANSPORT_HID];
     }
 
 #pragma mark - Call back from other class
 
     - (void)toolPreferenceWindowDidClose {
-        [self commandDidProcess:nil result:true message:nil];
+        [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Common method called by callback
 
-    - (void)commandDidProcess:(NSString *)processNameOfCommand result:(bool)result message:(NSString *)message {
+    - (void)commandStartedProcess:(Command)command type:(TransportType)type {
+        // コマンド種別に対応する処理名称を設定
+        [self setProcessNameOfCommand:nil];
+        switch (command) {
+            // BLE関連
+            case COMMAND_PAIRING:
+                [self setProcessNameOfCommand:PROCESS_NAME_PAIRING];
+                break;
+            case COMMAND_TEST_BLE_PING:
+                [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
+                break;
+            // HID関連
+            case COMMAND_ERASE_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
+                break;
+            case COMMAND_INSTALL_SKEY_CERT:
+                [self setProcessNameOfCommand:PROCESS_NAME_INSTALL_SKEY_CERT];
+                break;
+            case COMMAND_TEST_CTAPHID_PING:
+                [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
+                break;
+            case COMMAND_HID_GET_FLASH_STAT:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
+                break;
+            case COMMAND_HID_GET_VERSION_INFO:
+                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
+            case COMMAND_CLIENT_PIN_SET:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_CLIENT_PIN_CHANGE:
+                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];
+                break;
+            case COMMAND_AUTH_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
+                break;
+            // BLE、HID共通
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+            case COMMAND_TEST_GET_ASSERTION:
+                if (type == TRANSPORT_BLE) {
+                    [self setProcessNameOfCommand:PROCESS_NAME_BLE_CTAP2_HEALTHCHECK];
+                }
+                if (type == TRANSPORT_HID) {
+                    [self setProcessNameOfCommand:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
+                }
+                break;
+            case COMMAND_TEST_REGISTER:
+            case COMMAND_TEST_AUTH_CHECK:
+            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
+            case COMMAND_TEST_AUTH_USER_PRESENCE:
+                if (type == TRANSPORT_BLE) {
+                    [self setProcessNameOfCommand:PROCESS_NAME_BLE_U2F_HEALTHCHECK];
+                }
+                if (type == TRANSPORT_HID) {
+                    [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
+                }
+                break;
+            default:
+                break;
+        }
+        if ([self processNameOfCommand]) {
+            // コマンド開始メッセージを画面表示
+            NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                                  [self processNameOfCommand]];
+            [self notifyToolCommandMessage:startMsg];
+        }
+    }
+
+    - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
         // 処理失敗時は、引数に格納されたエラーメッセージを画面出力
         if (result == false) {
             [self notifyToolCommandMessage:message];
         }
         // コマンド名称を取得
-        if (processNameOfCommand) {
+        if (command != COMMAND_NONE) {
             // テキストエリアとポップアップの両方に表示させる処理終了メッセージを作成
             NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                             processNameOfCommand,
+                             [self processNameOfCommand],
                              result? MSG_SUCCESS:MSG_FAILURE];
             // メッセージを画面のテキストエリアに表示
             [self notifyToolCommandMessage:str];

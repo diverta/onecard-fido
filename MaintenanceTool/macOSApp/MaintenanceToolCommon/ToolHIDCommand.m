@@ -32,8 +32,6 @@
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
-    // 処理機能名称を保持
-    @property(nonatomic) NSString  *processNameOfCommand;
 
 @end
 
@@ -348,7 +346,7 @@
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
-                [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:false message:nil];
+                [[self delegate] hidCommandDidProcess:[self command] result:false message:nil];
                 break;
         }
     }
@@ -391,7 +389,7 @@
 
     - (void)hidHelperDidResponseTimeout {
         // タイムアウト時はエラーメッセージを表示
-        [[self delegate] hidCommandDidProcess:[self processNameOfCommand]
+        [[self delegate] hidCommandDidProcess:[self command]
                                        result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
@@ -403,55 +401,13 @@
     }
 
     - (void)displayStartMessage {
-        // コマンド種別に対応する処理名称を設定
-        switch ([self command]) {
-            case COMMAND_ERASE_SKEY_CERT:
-                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
-                break;
-            case COMMAND_INSTALL_SKEY_CERT:
-                [self setProcessNameOfCommand:PROCESS_NAME_INSTALL_SKEY_CERT];
-                break;
-            case COMMAND_TEST_CTAPHID_PING:
-                [self setProcessNameOfCommand:PROCESS_NAME_TEST_CTAPHID_PING];
-                break;
-            case COMMAND_HID_GET_FLASH_STAT:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_FLASH_STAT];
-                break;
-            case COMMAND_HID_GET_VERSION_INFO:
-                [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
-                break;
-            case COMMAND_CLIENT_PIN_SET:
-                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
-                break;
-            case COMMAND_CLIENT_PIN_CHANGE:
-                [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];
-                break;
-            case COMMAND_TEST_MAKE_CREDENTIAL:
-            case COMMAND_TEST_GET_ASSERTION:
-                [self setProcessNameOfCommand:PROCESS_NAME_HID_CTAP2_HEALTHCHECK];
-                break;
-            case COMMAND_AUTH_RESET:
-                [self setProcessNameOfCommand:PROCESS_NAME_AUTH_RESET];
-                break;
-            case COMMAND_TEST_REGISTER:
-            case COMMAND_TEST_AUTH_CHECK:
-            case COMMAND_TEST_AUTH_NO_USER_PRESENCE:
-            case COMMAND_TEST_AUTH_USER_PRESENCE:
-                [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
-                break;
-            default:
-                [self setProcessNameOfCommand:nil];
-                break;
-        }
-        // コマンド開始メッセージを画面表示
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              [self processNameOfCommand]];
-        [self displayMessage:startMsg];
+        // 指定コマンド種別の処理開始を通知
+        [[self delegate] hidCommandStartedProcess:[self command]];
     }
 
     - (void)commandDidProcess:(bool)result message:(NSString *)message {
         // 即時でアプリケーションに制御を戻す
-        [[self delegate] hidCommandDidProcess:[self processNameOfCommand] result:result message:message];
+        [[self delegate] hidCommandDidProcess:[self command] result:result message:message];
     }
 
     - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
@@ -502,7 +458,7 @@
 
     - (void)setPinParamWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
+        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Interface for PinCodeParamWindow
@@ -515,7 +471,7 @@
 
     - (void)pinCodeParamWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] hidCommandDidProcess:nil result:true message:nil];
+        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end

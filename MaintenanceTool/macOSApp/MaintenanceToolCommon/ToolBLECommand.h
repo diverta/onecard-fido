@@ -29,7 +29,8 @@
 @protocol ToolBLECommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)bleCommandDidProcess:(NSString *)processNameOfCommand result:(bool)result message:(NSString *)message;
+    - (void)bleCommandStartedProcess:(Command)command;
+    - (void)bleCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 

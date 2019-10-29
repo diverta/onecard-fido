@@ -35,7 +35,8 @@
 @protocol ToolHIDCommandDelegate <NSObject>
 
     - (void)notifyToolCommandMessage:(NSString *)message;
-    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand result:(bool)result message:(NSString *)message;
+    - (void)hidCommandStartedProcess:(Command)command;
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 
