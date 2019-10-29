@@ -13,7 +13,6 @@
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
-#import "ToolPreferenceCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 

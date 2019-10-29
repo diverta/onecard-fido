@@ -9,8 +9,6 @@
 
 #import "AppDelegate.h"
 #import "ToolCommon.h"
-#import "ToolBLECommand.h"
-#import "ToolHIDCommand.h"
 
 // サービスUUID、スキャン秒数の桁数（固定）
 #define UUID_STRING_SIZE    36
@@ -32,8 +30,6 @@ typedef enum : NSInteger {
     @property (nonatomic) uint8_t   serviceUUIDScanSec;
 
     - (id)initWithDelegate:(id)delegate;
-    - (void)setTransportParam:(TransportType)type
-               toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)commandWillProcess:(ToolPreferenceCommandType)commandType;
 

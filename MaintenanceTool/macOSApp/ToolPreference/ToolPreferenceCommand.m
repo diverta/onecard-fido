@@ -8,13 +8,9 @@
 #import "ToolPreferenceCommand.h"
 #import "ToolPreferenceWindow.h"
 
-@interface ToolPreferenceCommand () <ToolHIDCommandDelegate>
+@interface ToolPreferenceCommand ()
 
-    @property (nonatomic) TransportType         transportType;
-    @property (nonatomic) ToolBLECommand        *toolBLECommand;
-    @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
     @property (nonatomic) ToolPreferenceWindow  *toolPreferenceWindow;
-    @property (nonatomic) NSData                *hmacSecretSalt;
 
 @end
 
@@ -29,19 +25,11 @@
         if (self) {
             [self setDelegate:delegate];
         }
-        [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
 
         // 使用するダイアログを生成
         [self setToolPreferenceWindow:[[ToolPreferenceWindow alloc]
                                      initWithWindowNibName:@"ToolPreferenceWindow"]];
         return self;
-    }
-
-    - (void)setTransportParam:(TransportType)type
-               toolBLECommand:(ToolBLECommand *)ble toolHIDCommand:(ToolHIDCommand *)hid {
-        [self setTransportType:type];
-        [self setToolBLECommand:ble];
-        [self setToolHIDCommand:hid];
     }
 
 #pragma mark - Main process

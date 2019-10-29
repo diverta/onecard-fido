@@ -43,9 +43,6 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
-        [[self toolPreferenceCommand] setTransportParam:TRANSPORT_HID
-                                         toolBLECommand:nil
-                                         toolHIDCommand:[self toolHIDCommand]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
