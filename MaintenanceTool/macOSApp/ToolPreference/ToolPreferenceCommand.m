@@ -72,13 +72,4 @@
         }
     }
 
-#pragma mark - Call back from ToolHIDCommand
-
-    - (void)hidCommandDidProcess:(NSString *)processNameOfCommand
-                          result:(bool)result message:(NSString *)message {
-    }
-
-    - (void)notifyToolCommandMessage:(NSString *)message {
-    }
-
 @end
