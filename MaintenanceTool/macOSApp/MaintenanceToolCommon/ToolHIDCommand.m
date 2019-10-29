@@ -62,40 +62,6 @@
         return self;
     }
 
-#pragma mark - Response timeout monitor
-
-    - (void)startTimeoutMonitorForSelector:(SEL)selector withObject:object afterDelay:(NSTimeInterval)delay {
-        [self cancelTimeoutMonitorForSelector:selector withObject:object];
-        [self performSelector:selector withObject:object afterDelay:delay];
-    }
-
-    - (void)cancelTimeoutMonitorForSelector:(SEL)selector withObject:object {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:selector object:object];
-    }
-
-    - (void)startResponseTimeoutMonitor {
-        // タイムアウト監視を開始（30秒後にタイムアウト）
-        [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
-                                  withObject:nil afterDelay:30.0];
-        // for debug
-        // NSLog(@"ResponseTimeoutMonitor started");
-    }
-
-    - (void)cancelResponseTimeoutMonitor {
-        // タイムアウト監視を停止
-        [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
-                                   withObject:nil];
-        // for debug
-        // NSLog(@"ResponseTimeoutMonitor canceled");
-    }
-
-    - (void)responseTimeoutMonitorDidTimeout {
-        // タイムアウト時はエラーメッセージを表示
-        NSLog(@"HIDResponse timed out");
-        [[self delegate] hidCommandDidProcess:[self processNameOfCommand]
-                                       result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
-    }
-
 #pragma mark - Parameter set
 
     - (void)setInstallParameter:(Command)command
@@ -115,8 +81,6 @@
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
         // HIDデバイスにリクエストを送信
         [[self toolHIDHelper] hidHelperWillSend:message CID:cid CMD:cmd];
-        // レスポンスタイムアウトを監視
-        [self startResponseTimeoutMonitor];
     }
 
     - (void)doRequestCtapHidInit {
@@ -392,8 +356,6 @@
 #pragma mark - Call back from ToolHIDHelper
 
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // レスポンスタイムアウト監視を停止
-        [self cancelResponseTimeoutMonitor];
         // コマンドに応じ、以下の処理に分岐
         switch (cmd) {
             case HID_CMD_CTAPHID_PING:
@@ -425,6 +387,12 @@
             default:
                 break;
         }
+    }
+
+    - (void)hidHelperDidResponseTimeout {
+        // タイムアウト時はエラーメッセージを表示
+        [[self delegate] hidCommandDidProcess:[self processNameOfCommand]
+                                       result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
 #pragma mark - Common method
