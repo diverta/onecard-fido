@@ -229,6 +229,26 @@
         [[self toolPreferenceCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
     }
 
+#pragma mark - Interface for ToolPreferenceWindow
+
+    - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data {
+        // コマンド実行のために必要なデータを設定し、コマンドを実行
+        [[self toolHIDCommand] hidHelperWillProcess:command withData:data];
+    }
+
+    - (void)toolPreferenceDidProcess:(Command)command
+                                 CMD:(uint8_t)cmd response:(NSData *)resp
+                              result:(bool)result message:(NSString *)message {
+        // ツール設定画面に応答メッセージを引き渡す
+        [[self toolPreferenceCommand] toolPreferenceDidProcess:command
+            CMD:cmd response:resp result:result message:message];
+    }
+
+    - (void)toolPreferenceWindowDidClose {
+        // ツール設定画面を閉じた時は、ポップアップを表示しない
+        [self commandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
 #pragma mark - Call back from ToolFilePanel
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
@@ -275,17 +295,17 @@
     - (void)hidCommandDidProcess:(Command)command
                              CMD:(uint8_t)cmd response:(NSData *)resp
                           result:(bool)result message:(NSString *)message {
+        if (command == COMMAND_TOOL_PREF_PARAM) {
+            // ツール設定画面に応答メッセージを引き渡す
+            [self toolPreferenceDidProcess:command
+                CMD:cmd response:resp result:result message:message];
+            return;
+        }
         [self commandDidProcess:command result:result message:message];
     }
 
     - (void)hidCommandStartedProcess:(Command)command {
         [self commandStartedProcess:command type:TRANSPORT_HID];
-    }
-
-#pragma mark - Call back from other class
-
-    - (void)toolPreferenceWindowDidClose {
-        [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Common method called by callback

@@ -23,15 +23,20 @@ typedef enum : NSInteger {
 
 @interface ToolPreferenceCommand : NSObject
 
-    @property (nonatomic, weak) id  delegate;
-
     // 認証器の設定値を保持
     @property (nonatomic) NSString  *serviceUUIDString;
     @property (nonatomic) uint8_t   serviceUUIDScanSec;
 
     - (id)initWithDelegate:(id)delegate;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
-    - (void)commandWillProcess:(ToolPreferenceCommandType)commandType;
+
+    // AppDelegate経由でコマンドを実行
+    - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType;
+
+    // AppDelegate経由で実行したコマンドの応答
+    - (void)toolPreferenceDidProcess:(Command)command
+                                 CMD:(uint8_t)cmd response:(NSData *)resp
+                              result:(bool)result message:(NSString *)message;
 
 @end
 

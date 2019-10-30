@@ -119,7 +119,7 @@
 
     - (void) doAuthParamGet:(id)sender {
         // 自動認証用パラメーター照会コマンドを実行し、スキャン対象サービスUUID、スキャン秒数を読込
-        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_GET];
+        [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_GET];
     }
 
     - (void) doAuthParamSet:(id)sender {
@@ -128,7 +128,7 @@
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
-        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_SET];
+        [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_SET];
     }
 
     - (void) doAuthParamReset:(id)sender {
@@ -138,7 +138,7 @@
             return;
         }
         // 自動認証用パラメーター解除コマンドを実行
-        [[self toolPreferenceCommand] commandWillProcess:COMMAND_AUTH_PARAM_RESET];
+        [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_RESET];
     }
 
     - (bool) checkEntries:(id)sender {
