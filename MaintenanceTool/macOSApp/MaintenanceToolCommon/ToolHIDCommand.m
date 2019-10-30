@@ -92,7 +92,7 @@
         if ([self isCorrectNonceBytes:message] == false) {
             // レスポンスメッセージのnonceと、リクエスト時のnonceが一致していない場合は、
             // 画面に制御を戻す
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:[self command] result:false message:nil];
         }
         switch ([self command]) {
             case COMMAND_TEST_CTAPHID_PING:
@@ -119,7 +119,7 @@
             default:
                 // 画面に制御を戻す
                 NSLog(@"Unknown command %ld", (long)[self command]);
-                [self commandDidProcess:false message:nil];
+                [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
     }
@@ -141,7 +141,7 @@
     - (void)doResponseCtapHidPing:(NSData *)message {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [message isEqualToData:[self pingData]];
-        [self commandDidProcess:result message:MSG_CMDTST_INVALID_PING];
+        [self commandDidProcess:[self command] result:result message:MSG_CMDTST_INVALID_PING];
     }
 
     - (void)doHidGetFlashStat {
@@ -186,7 +186,7 @@
             MSG_FSTAT_CORRUPTING_AREA_NOT_EXIST : MSG_FSTAT_CORRUPTING_AREA_EXIST;
         // 画面に制御を戻す
         [self displayMessage:[NSString stringWithFormat:@"  %1$@%2$@", rateText, corruptText]];
-        [self commandDidProcess:true message:nil];
+        [self commandDidProcess:[self command] result:true message:nil];
     }
 
     - (void)doHidGetVersionInfo {
@@ -224,7 +224,7 @@
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
-        [self commandDidProcess:true message:nil];
+        [self commandDidProcess:[self command] result:true message:nil];
     }
 
     - (void)doEraseSkeyCert {
@@ -244,7 +244,7 @@
                             skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
         if (message == nil) {
             // 処理が失敗した場合は、AppDelegateに制御を戻す
-            [self commandDidProcess:false message:[[self toolInstallCommand] lastErrorMessage]];
+            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
             return;
         }
 
@@ -255,7 +255,7 @@
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
         // ステータスコードを確認し、画面に制御を戻す
-        [self commandDidProcess:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
+        [self commandDidProcess:[self command] result:[[self toolCTAP2HealthCheckCommand] checkStatusCode:message] message:nil];
     }
 
     - (void)doClientPin {
@@ -269,7 +269,7 @@
         // メッセージを編集し、GetKeyAgreementサブコマンドを実行
         NSData *request = [[self toolClientPINCommand] generateClientPinSetRequestWith:message];
         if (request == nil) {
-            [self commandDidProcess:false message:nil];
+            [self commandDidProcess:[self command] result:false message:nil];
             return;
         }
         // コマンドを実行
@@ -346,7 +346,7 @@
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
-                [[self delegate] hidCommandDidProcess:[self command] result:false message:nil];
+                [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
     }
@@ -380,7 +380,8 @@
                 break;
             case HID_CMD_UNKNOWN_ERROR:
                 // メッセージを画面表示
-                [self commandDidProcess:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                [[self delegate] hidCommandDidProcess:[self command]
+                    CMD:cmd response:message result:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
             default:
                 break;
@@ -389,8 +390,7 @@
 
     - (void)hidHelperDidResponseTimeout {
         // タイムアウト時はエラーメッセージを表示
-        [[self delegate] hidCommandDidProcess:[self command]
-                                       result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
+        [self commandDidProcess:[self command] result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
 #pragma mark - Common method
@@ -405,9 +405,10 @@
         [[self delegate] hidCommandStartedProcess:[self command]];
     }
 
-    - (void)commandDidProcess:(bool)result message:(NSString *)message {
+    - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
         // 即時でアプリケーションに制御を戻す
-        [[self delegate] hidCommandDidProcess:[self command] result:result message:message];
+        [[self delegate] hidCommandDidProcess:command
+            CMD:0x00 response:nil result:result message:message];
     }
 
     - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
@@ -458,7 +459,7 @@
 
     - (void)setPinParamWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Interface for PinCodeParamWindow
@@ -471,7 +472,7 @@
 
     - (void)pinCodeParamWindowDidClose {
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        [[self delegate] hidCommandDidProcess:COMMAND_NONE result:true message:nil];
+        [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end

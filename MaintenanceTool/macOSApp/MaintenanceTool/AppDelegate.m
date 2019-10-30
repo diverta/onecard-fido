@@ -273,6 +273,7 @@
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)hidCommandDidProcess:(Command)command
+                             CMD:(uint8_t)cmd response:(NSData *)resp
                           result:(bool)result message:(NSString *)message {
         [self commandDidProcess:command result:result message:message];
     }

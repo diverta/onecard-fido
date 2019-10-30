@@ -23,7 +23,7 @@
     - (bool)checkUSBHIDConnection;
     - (void)doRequest:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
     - (void)doClientPinSetOrChange:(NSData *)message CID:(NSData *)cid;
-    - (void)commandDidProcess:(bool)result message:(NSString *)message;
+    - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowDidClose;
@@ -36,7 +36,7 @@
 
     - (void)notifyToolCommandMessage:(NSString *)message;
     - (void)hidCommandStartedProcess:(Command)command;
-    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp result:(bool)result message:(NSString *)message;
 
 @end
 
