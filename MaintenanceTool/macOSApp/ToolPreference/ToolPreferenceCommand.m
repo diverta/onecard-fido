@@ -49,7 +49,7 @@
     - (void)parseResponseCommandAuthParamGet {
         // 仮のコードです。
         [self setServiceUUIDString:@"422E0000-E141-11E5-A837-0800200C9A66"];
-        [self setServiceUUIDScanSec:5];
+        [self setServiceUUIDScanSec:@"5"];
     }
 
 #pragma mark - Interface for AppDelegate

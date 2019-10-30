@@ -152,6 +152,9 @@
 #define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
 
 #pragma mark - ツール設定画面
+#define MSG_LABEL_AUTH_PARAM_GET                @"設定読込"
+#define MSG_LABEL_AUTH_PARAM_SET                @"設定書込"
+#define MSG_LABEL_AUTH_PARAM_RESET              @"設定解除"
 #define MSG_PROMPT_INPUT_UUID_STRING_LEN        @"スキャン対象サービスUUIDを36桁で入力してください"
 #define MSG_PROMPT_INPUT_UUID_STRING_PATTERN    @"UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）"
 #define MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN      @"スキャン秒数を1桁で入力してください"

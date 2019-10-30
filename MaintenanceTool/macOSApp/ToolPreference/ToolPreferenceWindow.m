@@ -18,6 +18,9 @@
     @property (assign) IBOutlet NSButton        *buttonAuthParamReset;
     @property (assign) IBOutlet NSButton        *buttonClose;
 
+    // 処理機能名称を保持
+    @property (nonatomic) NSString *processNameOfCommand;
+
 @end
 
 @implementation ToolPreferenceWindow
@@ -46,14 +49,17 @@
     }
 
     - (IBAction)buttonAuthParamGetDidPress:(id)sender {
+        [self setProcessNameOfCommand:MSG_LABEL_AUTH_PARAM_GET];
         [self doAuthParamGet:sender];
     }
 
     - (IBAction)buttonAuthParamSetDidPress:(id)sender {
+        [self setProcessNameOfCommand:MSG_LABEL_AUTH_PARAM_SET];
         [self doAuthParamSet:sender];
     }
 
     - (IBAction)buttonAuthParamResetDidPress:(id)sender {
+        [self setProcessNameOfCommand:MSG_LABEL_AUTH_PARAM_RESET];
         [self doAuthParamReset:sender];
     }
 
@@ -71,6 +77,14 @@
 
     - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
                                     success:(bool)success message:(NSString *)message {
+        if (success == false) {
+            // 処理失敗時は、引数に格納されたエラーメッセージをポップアップ表示
+            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                             [self processNameOfCommand], MSG_FAILURE];
+            [ToolPopupWindow critical:str informativeText:message];
+            return;
+        }
+ 
         switch (commandType) {
             case COMMAND_AUTH_PARAM_GET:
                 // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
@@ -102,8 +116,7 @@
         [[self fieldServiceUUIDString] setEnabled:true];
 
         // 画面項目に設定（スキャン秒数）
-        NSString *strSec = [NSString stringWithFormat:@"%d",
-                            [[self toolPreferenceCommand] serviceUUIDScanSec]];
+        NSString *strSec = [[self toolPreferenceCommand] serviceUUIDScanSec];
         [[self fieldServiceUUIDScanSec] setStringValue:strSec];
         [[self fieldServiceUUIDScanSec] setEnabled:true];
 

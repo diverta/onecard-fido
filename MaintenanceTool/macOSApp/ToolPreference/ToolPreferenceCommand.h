@@ -25,7 +25,7 @@ typedef enum : NSInteger {
 
     // 認証器の設定値を保持
     @property (nonatomic) NSString  *serviceUUIDString;
-    @property (nonatomic) uint8_t   serviceUUIDScanSec;
+    @property (nonatomic) NSString  *serviceUUIDScanSec;
 
     - (id)initWithDelegate:(id)delegate;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
