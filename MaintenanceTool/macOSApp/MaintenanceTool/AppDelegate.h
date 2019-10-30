@@ -6,7 +6,10 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-#pragma mark - Call back from other class
+
+#pragma mark - Call from other class
+
+    - (bool)checkUSBHIDConnection;
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data;
     - (void)toolPreferenceWindowDidClose;
 

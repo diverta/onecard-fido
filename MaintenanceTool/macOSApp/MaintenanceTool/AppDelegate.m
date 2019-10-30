@@ -83,7 +83,7 @@
     }
 
     - (IBAction)button2DidPress:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         // 鍵・証明書削除
@@ -114,7 +114,7 @@
         if ([self checkPathEntry:self.fieldPath2 messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
             return;
         }
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         // 鍵・証明書インストール
@@ -127,11 +127,16 @@
 
     - (IBAction)button4DidPress:(id)sender {
         // PINコード設定画面を開く
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         [self enableButtons:false];
         [[self toolHIDCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (bool)checkUSBHIDConnection {
+        // USBポートに接続されていない場合はfalse
+        return [[self toolHIDCommand] checkUSBHIDConnection];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -162,7 +167,7 @@
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
         // PINコード入力画面を開く
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         [self enableButtons:false];
@@ -171,7 +176,7 @@
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         [self enableButtons:false];
@@ -179,7 +184,7 @@
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         // PINGテスト実行
@@ -188,7 +193,7 @@
     }
 
     - (IBAction)menuItemTestHID4DidSelect:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         // Flash ROM情報取得
@@ -197,7 +202,7 @@
     }
 
     - (IBAction)menuItemTestHID5DidSelect:(id)sender {
-        if (![[self toolHIDCommand] checkUSBHIDConnection]) {
+        if (![self checkUSBHIDConnection]) {
             return;
         }
         // バージョン情報取得

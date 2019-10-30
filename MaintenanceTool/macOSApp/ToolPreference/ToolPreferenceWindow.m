@@ -141,6 +141,8 @@
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
+        [[self toolPreferenceCommand] setServiceUUIDString:[[self fieldServiceUUIDString] stringValue]];
+        [[self toolPreferenceCommand] setServiceUUIDScanSec:[[self fieldServiceUUIDScanSec] stringValue]];
         [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_SET];
     }
 
