@@ -18,6 +18,7 @@
     - (id)initWithDelegate:(id<ToolHIDCommandDelegate>)delegate;
     - (void)displayMessage:(NSString *)string;
     - (void)hidHelperWillProcess:(Command)command;
+    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data;
     - (void)setInstallParameter:(Command)command
                    skeyFilePath:(NSString *)skeyFilePath certFilePath:(NSString *)certFilePath;
     - (bool)checkUSBHIDConnection;

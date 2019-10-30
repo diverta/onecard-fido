@@ -26,7 +26,9 @@
     @property (nonatomic) ToolU2FHealthCheckCommand
                                                *toolU2FHealthCheckCommand;
 
+    // コマンド、送受信データを保持
     @property (nonatomic) Command   command;
+    @property (nonatomic) NSData   *processData;
     @property (nonatomic) NSString *skeyFilePath;
     @property (nonatomic) NSString *certFilePath;
 
@@ -115,6 +117,9 @@
                 // 受領したCIDを使用し、U2FRegister／Authenticateコマンドを実行
                 [[self toolU2FHealthCheckCommand] setCID:[self getNewCIDFrom:message]];
                 [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
+                break;
+            case COMMAND_TOOL_PREF_PARAM:
+                [self doRequestToolPreferenceParameter:[self getNewCIDFrom:message]];
                 break;
             default:
                 // 画面に制御を戻す
@@ -343,12 +348,40 @@
             case COMMAND_TEST_AUTH_USER_PRESENCE:
                 [self doU2FHealthCheck];
                 break;
+            case COMMAND_TOOL_PREF_PARAM:
+                [self doToolPreferenceParameter];
+                break;
             default:
                 // エラーメッセージを表示
                 [ToolPopupWindow critical:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
+    }
+
+#pragma mark - For tool preference parameters
+
+    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data {
+        // AppDelegateからコマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
+        [self setProcessData:data];
+        [self hidHelperWillProcess:command];
+    }
+
+    - (void)doToolPreferenceParameter {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doRequestToolPreferenceParameter:(NSData *)cid {
+        // メッセージを編集し、コマンドを実行
+        [self doRequest:[self processData] CID:cid CMD:HID_CMD_TOOL_PREF_PARAM];
+    }
+
+    - (void)doResponseToolPreferenceParameter:(NSData *)message
+                            CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // AppDelegateに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
+        [[self delegate] hidCommandDidProcess:[self command]
+            CMD:cmd response:message result:true message:nil];
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -377,6 +410,9 @@
                 break;
             case HID_CMD_MSG:
                 [self doResponseU2FHidMsg:message CID:cid CMD:cmd];
+                break;
+            case HID_CMD_TOOL_PREF_PARAM:
+                [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_UNKNOWN_ERROR:
                 // メッセージを画面表示
