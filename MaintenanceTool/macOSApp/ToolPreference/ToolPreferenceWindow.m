@@ -13,10 +13,12 @@
 
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDString;
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDScanSec;
+    @property (assign) IBOutlet NSTextField     *fieldVersionText;
     @property (assign) IBOutlet NSButton        *buttonAuthParamGet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamSet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamReset;
     @property (assign) IBOutlet NSButton        *buttonClose;
+    @property (assign) IBOutlet NSButton        *buttonCheck;
 
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -35,17 +37,6 @@
     - (void)initFieldValue {
         // 画面項目を初期値に設定し、設定書込・解除ボタンを押下不可とする
         [self initAuthParamFieldsAndButtons];
-    }
-
-    - (void)enableButtons:(bool)enabled {
-        // ボタンや入力欄の使用可能／不可制御
-        [[self buttonAuthParamGet] setEnabled:enabled];
-        [[self buttonAuthParamSet] setEnabled:enabled];
-        [[self buttonAuthParamReset] setEnabled:enabled];
-        [[self buttonClose] setEnabled:enabled];
-        
-        [[self fieldServiceUUIDString] setEnabled:enabled];
-        [[self fieldServiceUUIDScanSec] setEnabled:enabled];
     }
 
     - (IBAction)buttonAuthParamGetDidPress:(id)sender {
@@ -83,12 +74,12 @@
                          success ? MSG_SUCCESS : MSG_FAILURE];
 
         if (success) {
+            // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
+            [self setupAuthParamFieldsAndButtons];
             // 読込成功時はポップアップ表示を省略
             if (commandType != COMMAND_AUTH_PARAM_GET) {
                 [ToolPopupWindow informational:str informativeText:message];
             }
-            // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
-            [self setupAuthParamFieldsAndButtons];
 
         } else {
             // 処理失敗時はメッセージをポップアップ表示
@@ -100,6 +91,7 @@
 
     - (void)initAuthParamFieldsAndButtons {
         // 画面項目をブランクに設定・使用不可とする
+        [[self buttonCheck] setEnabled:false];
         [[self fieldServiceUUIDString] setStringValue:@""];
         [[self fieldServiceUUIDScanSec] setStringValue:@""];
         [[self fieldServiceUUIDString] setEnabled:false];
@@ -120,6 +112,13 @@
         NSString *strSec = [[self toolPreferenceCommand] serviceUUIDScanSec];
         [[self fieldServiceUUIDScanSec] setStringValue:strSec];
         [[self fieldServiceUUIDScanSec] setEnabled:true];
+
+        // 有効化ボタンを設定
+        [[self buttonCheck] setEnabled:true];
+        NSControlStateValue state =
+            [[self toolPreferenceCommand] bleScanAuthEnabled] ?
+                NSControlStateValueOn : NSControlStateValueOff;
+        [[self buttonCheck] setState:state];
 
         // 設定書込・解除ボタンを押下可とする
         [[self buttonAuthParamSet] setEnabled:true];
@@ -142,11 +141,15 @@
             return;
         }
         // 処理続行確認ダイアログを開く
+        NSString *text = ([[self buttonCheck] state] == NSControlStateValueOff) ?
+            MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0 : MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1;
         if ([ToolPopupWindow promptYesNo:MSG_WRITE_UUID_SCAN_PARAM
-                         informativeText:MSG_PROMPT_WRITE_UUID_SCAN_PARAM] == false) {
+                         informativeText:text] == false) {
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
+        [[self toolPreferenceCommand] setBleScanAuthEnabled:
+            ([[self buttonCheck] state] == NSControlStateValueOn)];
         [[self toolPreferenceCommand] setServiceUUIDString:[[self fieldServiceUUIDString] stringValue]];
         [[self toolPreferenceCommand] setServiceUUIDScanSec:[[self fieldServiceUUIDScanSec] stringValue]];
         [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_SET];
@@ -163,12 +166,11 @@
     }
 
     - (bool) checkEntries:(id)sender {
-        // 長さチェック
-        if ([ToolCommon checkEntrySize:[self fieldServiceUUIDString]
-                               minSize:UUID_STRING_SIZE maxSize:UUID_STRING_SIZE
-                       informativeText:MSG_PROMPT_INPUT_UUID_STRING_LEN] == false) {
+        // 関連チェック（自動認証機能が無効化時はUUID入力不要、有効時はUUID入力必須）
+        if ([self checkRelation] == false) {
             return false;
         }
+        // 長さチェック
         if ([ToolCommon checkEntrySize:[self fieldServiceUUIDScanSec]
                                minSize:UUID_SCAN_SEC_SIZE maxSize:UUID_SCAN_SEC_SIZE
                        informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN] == false) {
@@ -185,6 +187,23 @@
                           informativeText:MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE] == false) {
             return false;
         }
+        return true;
+    }
+
+    - (bool) checkRelation {
+        // チェックが付いていない場合で、UUIDがブランクであればチェック不要
+        if ([[self buttonCheck] state] == NSControlStateValueOff) {
+            if ([[[self fieldServiceUUIDString] stringValue] length] == 0) {
+                return true;
+            }
+        }
+
+        // 長さチェック
+        if ([ToolCommon checkEntrySize:[self fieldServiceUUIDString]
+                               minSize:UUID_STRING_SIZE maxSize:UUID_STRING_SIZE
+                       informativeText:MSG_PROMPT_INPUT_UUID_STRING_LEN] == false) {
+            return false;
+        }
         // 入力形式チェック（正規表現チェック）
         NSString *pattern = @"([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})";
         if ([ToolCommon checkValueWithPattern:[self fieldServiceUUIDString]
@@ -192,6 +211,7 @@
                               informativeText:MSG_PROMPT_INPUT_UUID_STRING_PATTERN] == false) {
             return false;
         }
+        // チェックOK
         return true;
     }
 

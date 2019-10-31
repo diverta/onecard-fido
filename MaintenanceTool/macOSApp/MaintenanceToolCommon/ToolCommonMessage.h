@@ -161,7 +161,8 @@
 #define MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM      @"スキャン秒数を数字で入力してください"
 #define MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE    @"スキャン秒数を1〜9の値で入力してください"
 #define MSG_PROMPT_CLEAR_UUID_SCAN_PARAM        @"解除後はBLEデバイススキャンによる自動認証ができなくなります。\n\n設定解除処理を実行しますか？"
-#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM        @"設定書込処理を実行しますか？"
+#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0      @"自動認証機能が無効化されているので、書込後もBLEデバイススキャンによる自動認証はできません。\n\n設定書込処理を実行しますか？"
+#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
 #define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
 #define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
 

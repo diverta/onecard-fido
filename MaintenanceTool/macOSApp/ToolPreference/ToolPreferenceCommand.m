@@ -44,8 +44,9 @@
         char cmd[] = {(char)commandType};
         NSMutableData *requestData = [[NSMutableData alloc] initWithBytes:cmd length:1];
         // ２バイト目以降＝設定するデータ（UUID、スキャン秒数）
-        NSString *csv = [NSString stringWithFormat:@"%@,%@",
-                         [self serviceUUIDString], [self serviceUUIDScanSec]];
+        NSString *csv = [NSString stringWithFormat:@"%d,%@,%@",
+                         [self bleScanAuthEnabled], [self serviceUUIDString], [self serviceUUIDScanSec]
+                         ];
         NSData *data = [csv dataUsingEncoding:NSUTF8StringEncoding];
         // リクエストデータを編集し、内部変数に設定
         if (commandType == COMMAND_AUTH_PARAM_SET) {
@@ -58,6 +59,7 @@
                                     fromData:(NSData *)data {
         if (data == nil || [data length] < 1) {
             // 例外抑止
+            [self setBleScanAuthEnabled:false];
             [self setServiceUUIDString:@""];
             [self setServiceUUIDScanSec:@""];
             return false;
@@ -70,15 +72,15 @@
             return false;
         }
         // CSV＝レスポンスの2バイト目以降
-        NSData *csvString  = [data subdataWithRange:NSMakeRange(1, [data length] - 1)];
+        NSData *csvData  = [data subdataWithRange:NSMakeRange(1, [data length] - 1)];
+        NSString *csvString = [[NSString alloc] initWithData:csvData
+                                                    encoding:NSUTF8StringEncoding];
         // カンマを境にしてCSVを分解
-        NSData *uuid = [csvString subdataWithRange:NSMakeRange(0, [csvString length] - 2)];
-        NSData *sec = [csvString subdataWithRange:NSMakeRange([csvString length] - 1, 1)];
+        NSArray<NSString *> *items = [csvString componentsSeparatedByString:@","];
         // 画面項目に設定
-        [self setServiceUUIDString:[[NSString alloc] initWithData:uuid
-                                                         encoding:NSUTF8StringEncoding]];
-        [self setServiceUUIDScanSec:[[NSString alloc] initWithData:sec
-                                                          encoding:NSUTF8StringEncoding]];
+        [self setBleScanAuthEnabled:[[items objectAtIndex:0] isEqualToString:@"1"]];
+        [self setServiceUUIDString:[items objectAtIndex:1]];
+        [self setServiceUUIDScanSec:[items objectAtIndex:2]];
         return true;
     }
 

@@ -24,6 +24,7 @@ typedef enum : NSInteger {
 @interface ToolPreferenceCommand : NSObject
 
     // 認証器の設定値を保持
+    @property (nonatomic) bool      bleScanAuthEnabled;
     @property (nonatomic) NSString  *serviceUUIDString;
     @property (nonatomic) NSString  *serviceUUIDScanSec;
 

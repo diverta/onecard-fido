@@ -11,9 +11,11 @@
                 <outlet property="buttonAuthParamGet" destination="BAx-Wl-9Dm" id="ZxR-bK-RW3"/>
                 <outlet property="buttonAuthParamReset" destination="fKy-hY-Jjn" id="Lau-4B-VOv"/>
                 <outlet property="buttonAuthParamSet" destination="CSJ-7V-QFp" id="qr2-zf-dX4"/>
+                <outlet property="buttonCheck" destination="nvc-7G-Non" id="mJM-bw-5ad"/>
                 <outlet property="buttonClose" destination="B5l-qJ-2om" id="dCQ-0g-oBR"/>
                 <outlet property="fieldServiceUUIDScanSec" destination="bab-0v-lpe" id="1ws-PZ-C7h"/>
                 <outlet property="fieldServiceUUIDString" destination="XcB-Gt-YBA" id="7oZ-Wt-iFD"/>
+                <outlet property="fieldVersionText" destination="byf-8p-gt6" id="5Lc-u8-h6W"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J96-c3-RlV"/>
             </connections>
         </customObject>
@@ -22,14 +24,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="540" height="215"/>
+            <rect key="contentRect" x="196" y="240" width="540" height="238"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="540" height="215"/>
+                <rect key="frame" x="0.0" y="0.0" width="540" height="238"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BzS-GG-SbY" userLabel="Title">
-                        <rect key="frame" x="34" y="189" width="472" height="17"/>
+                        <rect key="frame" x="34" y="212" width="472" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="KjD-vW-iBt"/>
                         </constraints>
@@ -40,16 +42,16 @@
                         </textFieldCell>
                     </textField>
                     <tabView translatesAutoresizingMaskIntoConstraints="NO" id="89d-sz-6W2">
-                        <rect key="frame" x="13" y="51" width="514" height="136"/>
+                        <rect key="frame" x="13" y="51" width="514" height="159"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="自動認証設定" identifier="" id="TNa-tP-eVW">
                                 <view key="view" id="P8L-Hv-IdZ">
-                                    <rect key="frame" x="10" y="33" width="494" height="90"/>
+                                    <rect key="frame" x="10" y="33" width="494" height="113"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XcB-Gt-YBA">
-                                            <rect key="frame" x="186" y="52" width="291" height="22"/>
+                                            <rect key="frame" x="186" y="49" width="291" height="22"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="uhx-Yq-VhS">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -57,7 +59,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bab-0v-lpe">
-                                            <rect key="frame" x="186" y="15" width="51" height="22"/>
+                                            <rect key="frame" x="186" y="17" width="51" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="51" id="sXb-d2-fJB"/>
                                             </constraints>
@@ -67,21 +69,8 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BAx-Wl-9Dm" userLabel="Button Read">
-                                            <rect key="frame" x="251" y="8" width="82" height="32"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="70" id="fPT-aD-DBk"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="push" title="設定読込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8m-qt-lna">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="buttonAuthParamGetDidPress:" target="-2" id="37D-wP-EYa"/>
-                                            </connections>
-                                        </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fKy-hY-Jjn" userLabel="Button Reset">
-                                            <rect key="frame" x="401" y="8" width="82" height="32"/>
+                                            <rect key="frame" x="401" y="10" width="82" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="b3l-M2-5Mx"/>
                                             </constraints>
@@ -93,8 +82,17 @@
                                                 <action selector="buttonAuthParamResetDidPress:" target="-2" id="Apz-WX-P6R"/>
                                             </connections>
                                         </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BWW-9r-GM9">
+                                            <rect key="frame" x="15" y="84" width="154" height="13"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="自動認証機能を有効化" id="T0h-zA-cL7" userLabel="自動認証機能を有効化">
+                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Zq-r8-d7y">
-                                            <rect key="frame" x="15" y="19" width="76" height="13"/>
+                                            <rect key="frame" x="15" y="21" width="76" height="13"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン秒数" id="xWu-Gf-HHT">
                                                 <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -102,15 +100,23 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jce-8W-wDg">
-                                            <rect key="frame" x="15" y="56" width="154" height="13"/>
+                                            <rect key="frame" x="15" y="53" width="154" height="13"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン対象サービスUUID" id="Tse-Tm-YvW">
                                                 <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nvc-7G-Non">
+                                            <rect key="frame" x="184" y="82" width="61" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="04j-XI-niX">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button Write">
-                                            <rect key="frame" x="326" y="8" width="82" height="32"/>
+                                            <rect key="frame" x="326" y="10" width="82" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="YRe-Dp-0qg"/>
                                             </constraints>
@@ -122,9 +128,22 @@
                                                 <action selector="buttonAuthParamSetDidPress:" target="-2" id="8wK-yf-u1b"/>
                                             </connections>
                                         </button>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BAx-Wl-9Dm" userLabel="Button Read">
+                                            <rect key="frame" x="251" y="10" width="82" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="70" id="fPT-aD-DBk"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="設定読込" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="g8m-qt-lna">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="buttonAuthParamGetDidPress:" target="-2" id="37D-wP-EYa"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="CSJ-7V-QFp" secondAttribute="bottom" constant="15" id="63t-q6-LL3"/>
+                                        <constraint firstAttribute="bottom" secondItem="CSJ-7V-QFp" secondAttribute="bottom" constant="17" id="63t-q6-LL3"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="P8L-Hv-IdZ" secondAttribute="leading" constant="186" id="8ys-ut-PmF"/>
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="leading" secondItem="jce-8W-wDg" secondAttribute="trailing" constant="19" id="9p4-Os-Tyl"/>
                                         <constraint firstItem="fKy-hY-Jjn" firstAttribute="baseline" secondItem="BAx-Wl-9Dm" secondAttribute="baseline" id="En6-Oa-K7p"/>
@@ -134,7 +153,7 @@
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="baseline" secondItem="jce-8W-wDg" secondAttribute="baseline" id="PVO-d0-dB9"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="top" secondItem="bab-0v-lpe" secondAttribute="bottom" constant="-21" id="QYk-k9-kIz"/>
                                         <constraint firstItem="fKy-hY-Jjn" firstAttribute="trailing" secondItem="XcB-Gt-YBA" secondAttribute="trailing" id="Ueh-g9-SXG"/>
-                                        <constraint firstItem="bab-0v-lpe" firstAttribute="top" secondItem="XcB-Gt-YBA" secondAttribute="bottom" constant="15" id="ZKo-A6-j53"/>
+                                        <constraint firstItem="bab-0v-lpe" firstAttribute="top" secondItem="XcB-Gt-YBA" secondAttribute="bottom" constant="10" id="ZKo-A6-j53"/>
                                         <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" constant="1" id="lho-ul-DCr"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="120" id="nrV-Bv-rTd"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="5" id="oAi-hL-ilh"/>
@@ -144,11 +163,11 @@
                             </tabViewItem>
                             <tabViewItem label="バージョン" identifier="" id="D77-m2-w5b">
                                 <view key="view" id="SUw-ai-6v5">
-                                    <rect key="frame" x="10" y="33" width="494" height="90"/>
+                                    <rect key="frame" x="10" y="33" width="494" height="113"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="byf-8p-gt6">
-                                            <rect key="frame" x="134" y="56" width="226" height="13"/>
+                                            <rect key="frame" x="134" y="79" width="226" height="13"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="222" id="asE-lI-qQ7"/>
                                             </constraints>
@@ -159,7 +178,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hIu-ir-PYR">
-                                            <rect key="frame" x="123" y="24" width="249" height="13"/>
+                                            <rect key="frame" x="123" y="47" width="249" height="13"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="245" id="1ZP-ad-6d3"/>
                                             </constraints>
@@ -209,7 +228,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="rKa-vf-chM"/>
             </connections>
-            <point key="canvasLocation" x="157" y="134.5"/>
+            <point key="canvasLocation" x="157" y="146"/>
         </window>
     </objects>
 </document>
