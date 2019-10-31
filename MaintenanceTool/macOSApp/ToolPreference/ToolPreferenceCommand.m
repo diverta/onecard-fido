@@ -54,16 +54,21 @@
         [self setProcessData:requestData];
     }
 
-    - (void)parseResponseCommandAuthParamGet:(ToolPreferenceCommandType)commandType
+    - (bool)parseResponseCommandAuthParamGet:(ToolPreferenceCommandType)commandType
                                     fromData:(NSData *)data {
         if (data == nil || [data length] < 1) {
             // 例外抑止
             [self setServiceUUIDString:@""];
             [self setServiceUUIDScanSec:@""];
-            return;
+            return false;
         }
-        // 仮のコードです。
-        data = [self generateDummyData];
+        // ステータスバイト＝レスポンスの1バイト目
+        NSData *statusByte  = [data subdataWithRange:NSMakeRange(0, 1)];
+        uint8_t *status = (uint8_t *)[statusByte bytes];
+        if (status[0] != 0x00) {
+            // ステータスバイトが0x00以外であればエラー
+            return false;
+        }
         // CSV＝レスポンスの2バイト目以降
         NSData *csvString  = [data subdataWithRange:NSMakeRange(1, [data length] - 1)];
         // カンマを境にしてCSVを分解
@@ -74,16 +79,7 @@
                                                          encoding:NSUTF8StringEncoding]];
         [self setServiceUUIDScanSec:[[NSString alloc] initWithData:sec
                                                           encoding:NSUTF8StringEncoding]];
-    }
-
-    - (NSData *)generateDummyData {
-        // 仮のコードです。後日削除します。
-        char cmd[] = {0x00};
-        NSMutableData *requestData = [[NSMutableData alloc] initWithBytes:cmd length:1];
-        NSString *csv = @"DEADBEEF-E141-11E5-A837-0800200C9A66,3";
-        [requestData appendData:[csv dataUsingEncoding:NSUTF8StringEncoding]];
-        NSLog(@"generateDummyData[%@]", requestData);
-        return requestData;
+        return true;
     }
 
 #pragma mark - Interface for AppDelegate
@@ -110,9 +106,9 @@
         NSLog(@"toolPreferenceDidProcess: cmd[%02x] response[%@]", cmd, resp);
 
         // 取得データを画面項目に設定し、画面に制御を戻す
-        [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
+        bool success = [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
         [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
-                                                             success:result message:message];
+                                                             success:(success & result) message:message];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow

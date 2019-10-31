@@ -77,21 +77,22 @@
 
     - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
                                     success:(bool)success message:(NSString *)message {
-        if (success == false) {
-            // 処理失敗時は、引数に格納されたエラーメッセージをポップアップ表示
-            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                             [self processNameOfCommand], MSG_FAILURE];
+        // 引数に格納されたエラーメッセージをポップアップ表示
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         [self processNameOfCommand],
+                         success ? MSG_SUCCESS : MSG_FAILURE];
+
+        if (success) {
+            // 読込成功時はポップアップ表示を省略
+            if (commandType != COMMAND_AUTH_PARAM_GET) {
+                [ToolPopupWindow informational:str informativeText:message];
+            }
+            // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
+            [self setupAuthParamFieldsAndButtons];
+
+        } else {
+            // 処理失敗時はメッセージをポップアップ表示
             [ToolPopupWindow critical:str informativeText:message];
-            return;
-        }
- 
-        switch (commandType) {
-            case COMMAND_AUTH_PARAM_GET:
-                // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
-                [self setupAuthParamFieldsAndButtons];
-                break;
-            default:
-                break;
         }
     }
 
@@ -138,6 +139,11 @@
     - (void) doAuthParamSet:(id)sender {
         // 入力内容チェック
         if ([self checkEntries:sender] == false) {
+            return;
+        }
+        // 処理続行確認ダイアログを開く
+        if ([ToolPopupWindow promptYesNo:MSG_WRITE_UUID_SCAN_PARAM
+                         informativeText:MSG_PROMPT_WRITE_UUID_SCAN_PARAM] == false) {
             return;
         }
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
