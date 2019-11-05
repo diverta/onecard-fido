@@ -17,9 +17,10 @@ NRF_LOG_MODULE_REGISTER();
 // Flash ROM書込み用データの一時格納領域
 // 
 // BLEペリフェラルによる自動認証パラメーター管理用
-//   レコードサイズ = 10 ワード
+//   レコードサイズ = 11 ワード
 //     スキャン対象サービスUUID文字列: 9ワード（36バイト)
 //     スキャン秒数: 1ワード（4バイト）
+//     自動認証フラグ: 1ワード（4バイト）
 static uint32_t m_blp_auth_param_record[FIDO_BLP_AUTH_PARAM_RECORD_SIZE];
 
 static bool blp_auth_param_record_find(fds_record_desc_t *record_desc)
@@ -61,7 +62,14 @@ uint32_t fido_flash_blp_auth_param_service_uuid_scan_sec(void)
     return m_blp_auth_param_record[9];
 }
 
-bool fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec)
+uint32_t fido_flash_blp_auth_param_service_uuid_scan_enable(void)
+{
+    // 自動認証有効化フラグを取得して戻す
+    // （レコード領域先頭から１１ワード目）
+    return m_blp_auth_param_record[10];
+}
+
+bool fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec, uint32_t scan_enable)
 {
     // Flash ROMから既存データを走査
     bool found = false;
@@ -76,6 +84,9 @@ bool fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec)
 
     // スキャン秒数部 (1ワード)
     m_blp_auth_param_record[9] = scan_sec;
+
+    // 自動認証有効化フラグ部 (1ワード)
+    m_blp_auth_param_record[10] = scan_enable;
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;

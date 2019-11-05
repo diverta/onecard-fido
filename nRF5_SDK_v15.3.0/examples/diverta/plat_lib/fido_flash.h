@@ -53,12 +53,13 @@ extern "C" {
 #define FIDO_PIN_RETRY_COUNTER_RECORD_SIZE  9
 //
 // BLEペリフェラルによる自動認証パラメーター管理用
-//   レコードサイズ = 10 ワード
+//   レコードサイズ = 11 ワード
 //     スキャン対象サービスUUID文字列: 9ワード（36バイト)
 //     スキャン秒数: 1ワード（4バイト）
+//     自動認証フラグ: 1ワード（4バイト）
 #define FIDO_BLP_AUTH_PARAM_FILE_ID         (0xBFF9)
 #define FIDO_BLP_AUTH_PARAM_RECORD_KEY      (0xBFE9)
-#define FIDO_BLP_AUTH_PARAM_RECORD_SIZE     10
+#define FIDO_BLP_AUTH_PARAM_RECORD_SIZE     11
 
 //
 //  鍵・証明書の長さを管理
