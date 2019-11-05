@@ -163,7 +163,6 @@ static void command_preference_parameter_maintenance(void)
         return;
     }
     fido_log_info("Preference parameter maintenance start");
-    fido_log_print_hexdump_debug(data, length);
 
     // データの１バイト目からコマンド種別を取得
     uint8_t cmd_type = data[0];
@@ -180,7 +179,8 @@ static void command_preference_parameter_maintenance(void)
         case 1:
         case 2:
         case 3:
-            ret = demo_ble_peripheral_auth_param_command(cmd_type, buffer, &buffer_size);
+            demo_ble_peripheral_auth_param_request(data, length);
+            ret = demo_ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
             break;
         default:
             fido_log_error("Unknown preference parameter maintenance command type");

@@ -35,11 +35,13 @@
 // 各種定数
 #define UUID_STRING_LEN  36
 #define SCAN_SEC_DEFAULT 3
+#define SCAN_ENABLE_DEFAULT 0
 #define CDC_OK_RESPONSE  "OK\r\n"
 
-// スキャン対象サービスUUID（文字列形式）、スキャン秒数を保持
+// スキャン対象サービスUUID（文字列形式）、スキャン秒数、自動認証有効化フラグを保持
 static char    service_uuid_string[UUID_STRING_LEN+1];
 static uint8_t service_uuid_scan_sec = SCAN_SEC_DEFAULT;
+static uint8_t service_uuid_scan_enable = SCAN_ENABLE_DEFAULT;
 
 static void save_auth_param(void)
 {
@@ -162,24 +164,10 @@ void demo_ble_peripheral_auth_param_init(void)
     // 初期値を設定
     memset(service_uuid_string, 0, sizeof(service_uuid_string));
     service_uuid_scan_sec = SCAN_SEC_DEFAULT;
+    service_uuid_scan_enable = SCAN_ENABLE_DEFAULT;
 
     // Flash ROMに設定されている場合は読み出す
     restore_auth_param();
-}
-
-bool demo_ble_peripheral_auth_param_command(uint8_t cmd_type, uint8_t *response, size_t *response_size)
-{
-    // 仮のコードです。
-    char *test = "1,DEADBEEF-E141-11E5-A837-0800200C9A66,5";
-    if (cmd_type == 3) {
-        // 解除時
-        test = "0,,3";
-    }
-
-    sprintf((char *)response, "%s", test);
-    *response_size = strlen(test);
-
-    return true;
 }
 
 bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_size)
@@ -231,14 +219,97 @@ bool demo_ble_peripheral_auth_start_scan(void)
     }
 
     demo_ble_peripheral_auth_param_init();
-    if (service_uuid_string[0] == 0) {
-        // スキャン対象サービスUUIDが指定されていない場合は
-        // falseを戻す
+    if (service_uuid_string[0] == 0 ||
+        service_uuid_scan_enable == SCAN_ENABLE_DEFAULT) {
+        // スキャン対象サービスUUIDが指定されていない場合、
+        // または自動認証有効化フラグが設定されていない場合は、
+        // 利用不可なので、falseを戻す
         return false;
     }
 
     // 指定したサービスUUIDを使用し、
     // 指定秒数間スキャンを実行
     ble_service_central_scan_start(service_uuid_scan_sec * 1000, resume_function_after_scan);
+    return true;
+}
+
+//
+// 管理ツールから、USB HID経由で実行される設定コマンド
+//
+void parse_auth_param_request(uint8_t *request, size_t request_size)
+{
+    // Flash ROMに設定されている値を読み出す
+    // 未設定の場合は初期値が設定されます
+    demo_ble_peripheral_auth_param_init();
+
+    // CSV各項目を分解
+    // CSVは、リクエストの２バイト目以降
+    // (1) 自動認証有効化フラグ
+    char *s = (char *)(request + 1);
+    char *p = strtok(s, ",");
+    if (p == NULL) {
+        return;
+    }
+    service_uuid_scan_enable = (uint8_t)atoi(p);
+    // (2) スキャン対象サービスUUID
+    p = strtok(NULL, ",");
+    if (p == NULL) {
+        return;
+    }
+    memcpy(service_uuid_string, p, UUID_STRING_LEN);
+    // (3) スキャン秒数
+    p = strtok(NULL, ",");
+    if (p == NULL) {
+        return;
+    }
+    service_uuid_scan_sec = (uint8_t)atoi(p);
+}
+
+void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
+{
+    fido_log_info("BLE peripheral auth param request:");
+    fido_log_print_hexdump_debug(request, request_size);
+
+    // データの１バイト目からコマンド種別を取得
+    switch (request[0]) {
+        case 1:
+            // 読込の場合
+            // Flash ROMに設定されている値を読み出す
+            // 未設定の場合は初期値が設定されます
+            demo_ble_peripheral_auth_param_init();
+            break;
+        case 2:
+            // 書出の場合
+            // CSVを各項目に分解し、内部変数に設定
+            parse_auth_param_request(request, request_size);
+            // パラメーターをFlash ROMに保存
+            save_auth_param();
+            break;
+        case 3:
+            // 解除の場合
+            // 初期値を設定
+            memset(service_uuid_string, 0, sizeof(service_uuid_string));
+            service_uuid_scan_sec = SCAN_SEC_DEFAULT;
+            service_uuid_scan_enable = SCAN_ENABLE_DEFAULT;
+            // パラメーターをFlash ROMに保存
+            save_auth_param();
+            break;
+        default:
+            break;
+    }
+}
+
+bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size)
+{
+    // 領域を初期化
+    memset(response, 0x00, *response_size);
+    //
+    // CSVを編集
+    //   <自動認証有効化フラグ>,<スキャン対象サービスUUID>,<スキャン秒数>
+    //  （解除時は、UUIDに、長さ０の文字列を設定）
+    //
+    sprintf((char *)response, "%d,%s,%d", 
+        service_uuid_scan_enable, service_uuid_string, service_uuid_scan_sec);
+    *response_size = strlen((char *)response);
     return true;
 }
