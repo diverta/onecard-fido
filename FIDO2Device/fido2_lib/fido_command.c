@@ -208,6 +208,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_PREFERENCE_PARAM:
             fido_maintenance_command();
             break;
         default:
@@ -304,6 +305,7 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_PREFERENCE_PARAM:
             fido_maintenance_command_report_sent();
             break;
         default:

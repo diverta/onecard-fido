@@ -149,6 +149,49 @@ static void command_get_app_version(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
+static void command_preference_parameter_maintenance(void)
+{
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    uint16_t length = fido_hid_receive_apdu()->Lc;
+
+    // 元データチェック
+    if (data == NULL || length == 0) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 6);
+        return;
+    }
+    fido_log_info("Preference parameter maintenance start");
+    fido_log_print_hexdump_debug(data, length);
+
+    // データの１バイト目からコマンド種別を取得
+    uint8_t cmd_type = data[0];
+    if (cmd_type == 0) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 6);
+        return;
+    }
+    
+    //
+    // 各種設定用パラメーター管理
+    //
+    char *test = "1,DEADBEEF-E141-11E5-A837-0800200C9A66,5";
+    if (cmd_type == 3) {
+        // 解除時
+        test = "0,,3";
+    }
+    sprintf((char *)response_buffer, "%c%s", 0x00, test);
+    size_t buffer_size = strlen(test);
+    //
+    // レスポンスを送信
+    //  データ形式
+    //  0-3: CID
+    //  4:   CMD（0xc4）
+    //  5-6: データサイズ（CSVデータの長さ）
+    //  7:   ステータスバイト（成功時は 0x00）
+    //  8-n: CSVデータ（下記のようなCSV形式のテキスト）
+    //       <項目名1>=<値2>,<項目名2>=<値2>,...,<項目名k>=<値k>
+    //
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -165,6 +208,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             command_get_app_version();
+            break;
+        case MNT_COMMAND_PREFERENCE_PARAM:
+            command_preference_parameter_maintenance();
             break;
         default:
             break;
@@ -190,6 +236,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             fido_log_info("Get application version info end");
+            break;
+        case MNT_COMMAND_PREFERENCE_PARAM:
+            fido_log_info("Preference parameter maintenance end");
             break;
         default:
             break;
