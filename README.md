@@ -21,6 +21,15 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2019/11/05
+
+FIDO認証器管理ツールのログ参照手順書を作成しました。
+
+- <b>[Windows版 FIDO認証器管理ツール ログ参照手順](MaintenanceTool/WindowsExe/VIEWLOG.md)</b>
+
+- <b>[macOS版 FIDO認証器管理ツール ログ参照手順](MaintenanceTool/macOSApp/VIEWLOG.md)</b><br>
+（こちらは、ログをmacOSのコンソールではなく、所定のログファイルに出力されるよう、後日改修予定です。）
+
 #### 2019/10/24
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
