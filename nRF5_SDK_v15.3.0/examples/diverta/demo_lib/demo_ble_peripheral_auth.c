@@ -47,8 +47,9 @@ static void save_auth_param(void)
 {
     uint8_t *p_uuid_string = (uint8_t *)service_uuid_string;
     uint32_t scan_sec      = (uint32_t)service_uuid_scan_sec;
+    uint32_t scan_enable   = (uint32_t)service_uuid_scan_enable;
 
-    if (fido_flash_blp_auth_param_write(p_uuid_string, scan_sec) == false) {
+    if (fido_flash_blp_auth_param_write(p_uuid_string, scan_sec, scan_enable) == false) {
         demo_cdc_send_response_buffer_set("Failed to save parameter to flash ROM.\r\n");
     }
 }
@@ -69,6 +70,8 @@ static void restore_auth_param(void)
     if (scan_sec != 0) {
         service_uuid_scan_sec = scan_sec;
     }
+
+    service_uuid_scan_enable = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_enable();
 }
 
 static bool set_auth_uuid(char *p_cdc_buffer, size_t cdc_buffer_size)
@@ -251,18 +254,21 @@ void parse_auth_param_request(uint8_t *request, size_t request_size)
         return;
     }
     service_uuid_scan_enable = (uint8_t)atoi(p);
+
     // (2) スキャン対象サービスUUID
-    p = strtok(NULL, ",");
-    if (p == NULL) {
-        return;
-    }
-    memcpy(service_uuid_string, p, UUID_STRING_LEN);
     // (3) スキャン秒数
-    p = strtok(NULL, ",");
-    if (p == NULL) {
-        return;
+    char *p1 = strtok(NULL, ",");
+    char *p2 = strtok(NULL, ",");
+    if (p2 == NULL) {
+        // スキャン対象サービスUUIDがブランクの場合
+        // (設定されない場合、strtok は３つの項目を戻さないための判定)
+        memset(service_uuid_string, 0, sizeof(service_uuid_string));
+        service_uuid_scan_sec = (uint8_t)atoi(p1);
+
+    } else {
+        memcpy(service_uuid_string, p1, strlen(p1));
+        service_uuid_scan_sec = (uint8_t)atoi(p2);
     }
-    service_uuid_scan_sec = (uint8_t)atoi(p);
 }
 
 void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
