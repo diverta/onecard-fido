@@ -167,6 +167,21 @@ void demo_ble_peripheral_auth_param_init(void)
     restore_auth_param();
 }
 
+bool demo_ble_peripheral_auth_param_command(uint8_t cmd_type, uint8_t *response, size_t *response_size)
+{
+    // 仮のコードです。
+    char *test = "1,DEADBEEF-E141-11E5-A837-0800200C9A66,5";
+    if (cmd_type == 3) {
+        // 解除時
+        test = "0,,3";
+    }
+
+    sprintf((char *)response, "%s", test);
+    *response_size = strlen(test);
+
+    return true;
+}
+
 bool demo_ble_peripheral_auth_param_set(char *p_cdc_buffer, size_t cdc_buffer_size)
 {
     if (set_auth_uuid_scan_sec(p_cdc_buffer, cdc_buffer_size)) {
