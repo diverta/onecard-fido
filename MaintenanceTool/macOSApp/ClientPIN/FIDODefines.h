@@ -64,6 +64,7 @@
 #define HID_CMD_INSTALL_SKEY_CERT   0xC1
 #define HID_CMD_GET_FLASH_STAT      0xC2
 #define HID_CMD_GET_VERSION_INFO    0xC3
+#define HID_CMD_TOOL_PREF_PARAM     0xC4
 #define HID_CMD_UNKNOWN_ERROR       0xBF
 
 // BLEコマンドバイト

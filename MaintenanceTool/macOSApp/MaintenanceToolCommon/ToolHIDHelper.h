@@ -23,6 +23,7 @@
 @protocol ToolHIDHelperDelegate <NSObject>
 
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
+    - (void)hidHelperDidResponseTimeout;
 
 @end
 
