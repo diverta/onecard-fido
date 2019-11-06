@@ -146,6 +146,12 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
 
 void fido_user_presence_verify_cancel(void)
 {
+    //
+    // 以下のいずれかの条件で呼び出される
+    // ・ユーザー所在確認ボタン押下待ちタイムアウト
+    // ・自動認証有効時は、BLEデバイスがスキャンできなかった時
+    // ・CTAP2クライアントからキャンセルコマンド送信時
+    //
     // キープアライブタイマーを停止する
     fido_repeat_process_timer_stop();
     
@@ -158,6 +164,11 @@ void fido_user_presence_verify_cancel(void)
 
 void fido_user_presence_verify_end(void)
 {
+    //
+    // 以下のいずれかの条件で呼び出される
+    // ・ユーザー所在確認用ボタン押下時
+    // ・自動認証有効時は、BLEデバイスがスキャンできた時
+    //
     // ユーザー所在確認タイムアウト監視を停止
     fido_user_presence_verify_timer_stop();
     
@@ -178,6 +189,10 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
     } else {
         // スキャン失敗時は、タイムアウト時と等価の処理を実行
         fido_user_presence_verify_timeout_handler();
+        // タイムアウトの旨のステータスを戻す
+        //   BLEデバイススキャン自体が、HID経由で呼び出される処理なので、
+        //   HIDチャネルにレスポンスを送信
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_TIMEOUT);
     }
 }
 
