@@ -93,6 +93,7 @@
 
     - (void)initAuthParamFieldsAndButtons {
         // 画面項目をブランクに設定・使用不可とする
+        [[self buttonCheck] setState:NSControlStateValueOff];
         [[self buttonCheck] setEnabled:false];
         [[self fieldServiceUUIDString] setStringValue:@""];
         [[self fieldServiceUUIDScanSec] setStringValue:@""];
