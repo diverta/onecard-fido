@@ -116,6 +116,11 @@
 #pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // すでにツール設定画面が開いている場合は終了
+        if ([[parentWindow sheets] count] > 0) {
+            NSLog(@"Preference window is already opened");
+            return;
+        }
         // ダイアログの親ウィンドウを保持
         [[self toolPreferenceWindow] setParentWindow:parentWindow];
         [[self toolPreferenceWindow] setToolPreferenceCommand:self];
