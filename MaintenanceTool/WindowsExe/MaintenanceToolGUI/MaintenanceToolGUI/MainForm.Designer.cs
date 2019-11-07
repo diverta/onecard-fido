@@ -55,7 +55,7 @@
             this.DoBLEU2fTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoBLEPingTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.u2F管理ツールについてToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.commandTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
@@ -201,7 +201,7 @@
             this.DoHIDGetFlashInfoToolStripMenuItem,
             this.DoHIDGetVersionInfoToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
             // DoHIDCtap2TestToolStripMenuItem
@@ -246,7 +246,7 @@
             this.DoBLEU2fTestToolStripMenuItem,
             this.DoBLEPingTestToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoBLECtap2TestToolStripMenuItem
@@ -273,17 +273,17 @@
             // その他OToolStripMenuItem
             // 
             this.その他OToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.u2F管理ツールについてToolStripMenuItem});
+            this.ToolPreferenceStripMenuItem});
             this.その他OToolStripMenuItem.Name = "その他OToolStripMenuItem";
             this.その他OToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.その他OToolStripMenuItem.Text = "その他(&O)";
             // 
-            // u2F管理ツールについてToolStripMenuItem
+            // ToolPreferenceStripMenuItem
             // 
-            this.u2F管理ツールについてToolStripMenuItem.Name = "u2F管理ツールについてToolStripMenuItem";
-            this.u2F管理ツールについてToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.u2F管理ツールについてToolStripMenuItem.Text = "管理ツールについて(&A)...";
-            this.u2F管理ツールについてToolStripMenuItem.Click += new System.EventHandler(this.管理ツールについてToolStripMenuItem_Click);
+            this.ToolPreferenceStripMenuItem.Name = "ToolPreferenceStripMenuItem";
+            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
+            this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -334,7 +334,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem その他OToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem u2F管理ツールについてToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ToolPreferenceStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem テストTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem uSBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDPingTestToolStripMenuItem;

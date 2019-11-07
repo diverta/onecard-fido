@@ -329,10 +329,10 @@ namespace MaintenanceToolGUI
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
 
-        private void 管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
         {
-            // バージョン表示画面を表示
-            AboutForm f = new AboutForm();
+            // ツール設定画面を表示
+            ToolPreferenceForm f = new ToolPreferenceForm();
             f.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
             f.ShowDialog();
         }
