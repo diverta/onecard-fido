@@ -9,6 +9,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private string commandTitle = "";
+        private ToolPreferenceForm toolPreferenceForm;
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
@@ -26,6 +27,11 @@ namespace MaintenanceToolGUI
             // コマンドタイムアウト発生時の処理
             commandTimer.Interval = 30000;
             commandTimer.Tick += CommandTimerElapsed;
+
+            // ツール設定画面を生成
+            toolPreferenceForm = new ToolPreferenceForm();
+            toolPreferenceForm.SetMainForm(this);
+            toolPreferenceForm.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
         }
 
         private void CommandTimerElapsed(object sender, EventArgs e)
@@ -182,6 +188,17 @@ namespace MaintenanceToolGUI
             commandTimer.Start();
         }
 
+        public void DoCommandToolPreference(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+
+            // 仮コード：コマンド実行完了時の処理
+            toolPreferenceForm.OnToolPreferenceCommandExecuted(true, "");
+        }
+
         public void OnAppMainProcessExited(bool ret)
         {
             // コマンドタイムアウト監視終了
@@ -209,7 +226,7 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private bool CheckUSBDeviceDisconnected()
+        public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
                 MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
@@ -332,9 +349,7 @@ namespace MaintenanceToolGUI
         private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
         {
             // ツール設定画面を表示
-            ToolPreferenceForm f = new ToolPreferenceForm();
-            f.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
-            f.ShowDialog();
+            toolPreferenceForm.ShowDialog();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

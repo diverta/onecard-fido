@@ -5,10 +5,21 @@ namespace MaintenanceToolGUI
 {
     public partial class ToolPreferenceForm : Form
     {
+        // メイン画面の参照を保持
+        private MainForm mainForm;
+
+        // 実行した機能名を保持
+        private string funcName;
+
         public ToolPreferenceForm()
         {
             InitializeComponent();
             InitFieldValue();
+        }
+
+        public void SetMainForm(MainForm f)
+        {
+            mainForm = f;
         }
 
         public void SetTitleAndVersionText(String toolName, String toolVersion)
@@ -82,7 +93,8 @@ namespace MaintenanceToolGUI
         {
             // 自動認証用パラメーター照会コマンドを実行し、
             // スキャン対象サービスUUID、スキャン秒数を読込
-            SetupFieldValue();
+            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET;
+            mainForm.DoCommandToolPreference(sender, e);
         }
 
         private void buttonWrite_Click(object sender, EventArgs e)
@@ -105,6 +117,8 @@ namespace MaintenanceToolGUI
 
             // スキャン対象サービスUUID、スキャン秒数を設定し、
             // 自動認証用パラメーター設定コマンドを実行
+            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_SET;
+            mainForm.DoCommandToolPreference(sender, e);
         }
 
         private void buttonReset_Click(object sender, EventArgs e)
@@ -118,6 +132,8 @@ namespace MaintenanceToolGUI
             }
 
             // 自動認証用パラメーター解除コマンドを実行
+            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_RESET;
+            mainForm.DoCommandToolPreference(sender, e);
         }
 
         private bool CheckEntries()
@@ -171,6 +187,31 @@ namespace MaintenanceToolGUI
             }
 
             return true;
+        }
+
+        // 
+        // 自動認証設定コマンド実行完了時の処理
+        //
+        public void OnToolPreferenceCommandExecuted(bool success, string errMessage)
+        {
+            // コマンドの実行結果を表示
+            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+                funcName, 
+                success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+
+            // 引数に格納されたエラーメッセージをポップアップ表示
+            if (success) {
+                // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
+                SetupFieldValue();
+                // 読込成功時はポップアップ表示を省略
+                if (funcName != ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET) {
+                    MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+                }
+
+            } else {
+                // 処理失敗時はメッセージをポップアップ表示
+                MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
+            }
         }
     }
 }
