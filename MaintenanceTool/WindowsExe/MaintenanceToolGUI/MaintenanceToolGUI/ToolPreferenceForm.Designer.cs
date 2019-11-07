@@ -86,7 +86,6 @@
             this.textScanSec.Name = "textScanSec";
             this.textScanSec.Size = new System.Drawing.Size(40, 19);
             this.textScanSec.TabIndex = 4;
-            this.textScanSec.Text = "3";
             // 
             // textScanUUID
             // 
@@ -94,7 +93,6 @@
             this.textScanUUID.Name = "textScanUUID";
             this.textScanUUID.Size = new System.Drawing.Size(245, 19);
             this.textScanUUID.TabIndex = 3;
-            this.textScanUUID.Text = "422E0000-E141-11E5-A837-0800200C9A66";
             // 
             // checkScanEnable
             // 
@@ -113,6 +111,7 @@
             this.buttonReset.TabIndex = 7;
             this.buttonReset.Text = "設定解除";
             this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // buttonWrite
             // 
@@ -122,6 +121,7 @@
             this.buttonWrite.TabIndex = 6;
             this.buttonWrite.Text = "設定書込";
             this.buttonWrite.UseVisualStyleBackColor = true;
+            this.buttonWrite.Click += new System.EventHandler(this.buttonWrite_Click);
             // 
             // buttonRead
             // 
@@ -131,6 +131,7 @@
             this.buttonRead.TabIndex = 5;
             this.buttonRead.Text = "設定読込";
             this.buttonRead.UseVisualStyleBackColor = true;
+            this.buttonRead.Click += new System.EventHandler(this.buttonRead_Click);
             // 
             // label5
             // 
@@ -211,6 +212,7 @@
             this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "閉じる";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // ToolPreferenceForm
             // 
