@@ -5,11 +5,14 @@ namespace MaintenanceToolGUI
 {
     public partial class ToolPreferenceForm : Form
     {
-        // メイン画面の参照を保持
-        private MainForm mainForm;
+        // 処理クラスの参照を保持
+        private ToolPreference toolPreference;
 
         // 実行した機能名を保持
         private string funcName;
+
+        // 設定パラメーターを保持
+        private ToolPreferenceParameter parameter = new ToolPreferenceParameter();
 
         public ToolPreferenceForm()
         {
@@ -17,9 +20,9 @@ namespace MaintenanceToolGUI
             InitFieldValue();
         }
 
-        public void SetMainForm(MainForm f)
+        public void SetToolPreferenceRef(ToolPreference tp)
         {
-            mainForm = f;
+            toolPreference = tp;
         }
 
         public void SetTitleAndVersionText(String toolName, String toolVersion)
@@ -91,10 +94,13 @@ namespace MaintenanceToolGUI
 
         private void buttonRead_Click(object sender, EventArgs e)
         {
+            // 機能名を設定
+            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET;
+
             // 自動認証用パラメーター照会コマンドを実行し、
             // スキャン対象サービスUUID、スキャン秒数を読込
-            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET;
-            mainForm.DoCommandToolPreference(sender, e);
+            parameter.CommandType = ToolPreference.CommandType.COMMAND_AUTH_PARAM_GET;
+            toolPreference.DoCommandToolPreference(parameter);
         }
 
         private void buttonWrite_Click(object sender, EventArgs e)
@@ -115,10 +121,16 @@ namespace MaintenanceToolGUI
                 return;
             }
 
+            // 機能名を設定
+            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_SET;
+
             // スキャン対象サービスUUID、スキャン秒数を設定し、
             // 自動認証用パラメーター設定コマンドを実行
-            funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_SET;
-            mainForm.DoCommandToolPreference(sender, e);
+            parameter.CommandType = ToolPreference.CommandType.COMMAND_AUTH_PARAM_SET;
+            parameter.ServiceUUIDString = textScanUUID.Text;
+            parameter.ServiceUUIDScanSec = textScanSec.Text;
+            parameter.BleScanAuthEnabled = checkScanEnable.Checked;
+            toolPreference.DoCommandToolPreference(parameter);
         }
 
         private void buttonReset_Click(object sender, EventArgs e)
@@ -131,9 +143,12 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // 自動認証用パラメーター解除コマンドを実行
+            // 機能名を設定
             funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_RESET;
-            mainForm.DoCommandToolPreference(sender, e);
+
+            // 自動認証用パラメーター解除コマンドを実行
+            parameter.CommandType = ToolPreference.CommandType.COMMAND_AUTH_PARAM_RESET;
+            toolPreference.DoCommandToolPreference(parameter);
         }
 
         private bool CheckEntries()

@@ -20,7 +20,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
 
-    internal class HIDMain
+    public class HIDMain
     {
         // メイン画面の参照を保持
         private MainForm mainForm;
@@ -30,6 +30,9 @@ namespace MaintenanceToolGUI
         // CTAP2、U2F共通処理
         private Ctap2 ctap2;
         private U2f u2f;
+
+        // ツール設定処理
+        private ToolPreference toolPreference;
 
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
@@ -162,6 +165,12 @@ namespace MaintenanceToolGUI
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
         }
 
+        public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
+        {
+            toolPreference = tp;
+            DoRequestCtapHidInit();
+        }
+
         private void DoResponseTestCtapHidInit(byte[] message, int length)
         {
             // nonceの一致チェック
@@ -179,7 +188,9 @@ namespace MaintenanceToolGUI
 
             // INITコマンドの後続処理判定
             if (ctap2.DoResponseCtapHidInit(message, length) == false) {
-                u2f.DoResponseHidInit(message, length);
+                if (u2f.DoResponseHidInit(message, length) == false) {
+                    toolPreference.DoResponseHidInit(message, length);
+                }
             }
         }
 

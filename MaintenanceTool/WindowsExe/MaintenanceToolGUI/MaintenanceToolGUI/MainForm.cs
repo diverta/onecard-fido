@@ -8,8 +8,8 @@ namespace MaintenanceToolGUI
     {
         private BLEMain ble;
         private HIDMain hid;
+        private ToolPreference toolPreference;
         private string commandTitle = "";
-        private ToolPreferenceForm toolPreferenceForm;
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
@@ -29,9 +29,9 @@ namespace MaintenanceToolGUI
             commandTimer.Tick += CommandTimerElapsed;
 
             // ツール設定画面を生成
-            toolPreferenceForm = new ToolPreferenceForm();
-            toolPreferenceForm.SetMainForm(this);
-            toolPreferenceForm.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
+            // タイトル、バージョンを引き渡し
+            toolPreference = new ToolPreference(this, hid);
+            toolPreference.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
         }
 
         private void CommandTimerElapsed(object sender, EventArgs e)
@@ -188,17 +188,6 @@ namespace MaintenanceToolGUI
             commandTimer.Start();
         }
 
-        public void DoCommandToolPreference(object sender, EventArgs e)
-        {
-            // USB HID接続がない場合はエラーメッセージを表示
-            if (CheckUSBDeviceDisconnected()) {
-                return;
-            }
-
-            // 仮コード：コマンド実行完了時の処理
-            toolPreferenceForm.OnToolPreferenceCommandExecuted(true, "");
-        }
-
         public void OnAppMainProcessExited(bool ret)
         {
             // コマンドタイムアウト監視終了
@@ -349,7 +338,7 @@ namespace MaintenanceToolGUI
         private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
         {
             // ツール設定画面を表示
-            toolPreferenceForm.ShowDialog();
+            toolPreference.ShowDialog();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
