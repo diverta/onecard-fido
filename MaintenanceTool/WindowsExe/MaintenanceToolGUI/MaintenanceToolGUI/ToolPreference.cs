@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MaintenanceToolCommon;
+using System;
+using System.Linq;
 
 namespace MaintenanceToolGUI
 {
@@ -31,6 +33,9 @@ namespace MaintenanceToolGUI
             COMMAND_AUTH_PARAM_RESET
         };
 
+        // リクエストパラメーターを保持
+        private ToolPreferenceParameter toolPreferenceParameter = null;
+
         public ToolPreference(MainForm f, HIDMain h)
         {
             // メイン画面の参照を保持
@@ -62,6 +67,13 @@ namespace MaintenanceToolGUI
             if (mainForm.CheckUSBDeviceDisconnected()) {
                 return;
             }
+
+            // コマンドタイムアウト監視開始
+            // TODO
+
+            // 画面から引き渡されたパラメーターを退避
+            toolPreferenceParameter = parameter;
+
             // HID INITコマンドを実行
             hidMain.DoRequestCtapHidInitByToolPreference(this);
         }
@@ -71,9 +83,74 @@ namespace MaintenanceToolGUI
         //
         public bool DoResponseHidInit(byte[] message, int length)
         {
-            // 仮コード：コマンド実行完了時の処理
-            toolPreferenceForm.OnToolPreferenceCommandExecuted(true, "");
+            switch (toolPreferenceParameter.CommandType) {
+            case CommandType.COMMAND_AUTH_PARAM_GET:
+            case CommandType.COMMAND_AUTH_PARAM_SET:
+            case CommandType.COMMAND_AUTH_PARAM_RESET:
+                DoRequestToolPreference();
+                break;
+            default:
+                return false;
+            }
             return true;
+        }
+
+        //
+        // 自動認証設定コマンドのリクエスト処理
+        //
+        public void DoRequestToolPreference()
+        {
+            // コマンド（1 から始まる値です）
+            byte cmd = (byte)toolPreferenceParameter.CommandType;
+
+            // パラメーターからCSVを生成
+            string csv = string.Format("{0},{1},{2}",
+                toolPreferenceParameter.BleScanAuthEnabled ? 1 : 0,
+                toolPreferenceParameter.ServiceUUIDString,
+                toolPreferenceParameter.ServiceUUIDScanSec);
+
+            // リクエストデータを生成
+            byte[] requestData = new byte[] { cmd };
+            if (toolPreferenceParameter.CommandType == CommandType.COMMAND_AUTH_PARAM_SET) {
+                byte[] csvData = System.Text.Encoding.ASCII.GetBytes(csv);
+                requestData = requestData.Concat(csvData).ToArray();
+            }
+
+            // HID経由でリクエストデータを送信
+            hidMain.SendHIDMessage(Const.HID_CMD_TOOL_PREF_PARAM, requestData, requestData.Length);
+        }
+
+        //
+        // 自動認証設定コマンドのレスポンス処理
+        //
+        public void DoResponseToolPreference(byte[] message, int length)
+        {
+            // ステータスをチェックし 0x00 以外ならエラーとする
+            if (message[0] != 0x00) {
+                OnHidMainProcessExited(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                return;
+            }
+
+            // ステータスバイトを除いた残りのデータがCSVデータ
+            byte[] csvData = AppCommon.ExtractCBORBytesFromResponse(message, length);
+
+            // CSVデータをASCII文字列に変換
+            string csv = System.Text.Encoding.ASCII.GetString(csvData);
+
+            // CSVデータを分解して画面項目に設定
+            toolPreferenceForm.SetFields(csv.Split(','));
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            OnHidMainProcessExited(true, "");
+        }
+
+        public void OnHidMainProcessExited(bool ret, string errMessage)
+        {
+            // コマンドタイムアウト監視終了
+            // TODO
+
+            // 処理結果を画面表示し、ボタンを押下可能とする
+            toolPreferenceForm.OnToolPreferenceCommandExecuted(ret, errMessage);
         }
     }
 }

@@ -68,17 +68,8 @@ namespace MaintenanceToolGUI
             buttonReset.Enabled = false;
         }
 
-        private void SetupFieldValue()
+        private void SetupFieldAndButton()
         {
-            // 画面項目に設定（スキャン対象サービスUUID）
-            textScanUUID.Text = "422E0000-E141-11E5-A837-0800200C9A66";
-
-            // 画面項目に設定（スキャン秒数）
-            textScanSec.Text = "3";
-
-            // 有効化チェックボックスを設定
-            checkScanEnable.Checked = false;
-
             // 画面項目を使用可とする
             textScanUUID.Enabled = true;
             textScanSec.Enabled = true;
@@ -204,6 +195,24 @@ namespace MaintenanceToolGUI
             return true;
         }
 
+        //
+        // 自動認証設定コマンド実行結果を画面項目に設定
+        //
+        public void SetFields(string[] fields)
+        {
+            // 例外抑止
+            if (fields.Length != 3) {
+                return;
+            }
+            // 配列の先頭から画面項目に設定
+            //   自動認証機能を有効化
+            checkScanEnable.Checked = (fields[0] == "1");
+            //   スキャン対象UUID
+            textScanUUID.Text = fields[1];
+            //   スキャン秒数
+            textScanSec.Text = fields[2];
+        }
+
         // 
         // 自動認証設定コマンド実行完了時の処理
         //
@@ -216,8 +225,8 @@ namespace MaintenanceToolGUI
 
             // 引数に格納されたエラーメッセージをポップアップ表示
             if (success) {
-                // 取得したパラメーターを画面項目に設定し、設定書込・解除ボタンを押下可とする
-                SetupFieldValue();
+                // 設定書込・解除ボタンを押下可とする
+                SetupFieldAndButton();
                 // 読込成功時はポップアップ表示を省略
                 if (funcName != ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET) {
                     MessageBox.Show(this, formatted, MainForm.MaintenanceToolTitle);
