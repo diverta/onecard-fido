@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.buttonQuit = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -57,7 +56,6 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.commandTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -341,7 +339,6 @@
         private System.Windows.Forms.ToolStripMenuItem bLEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLEU2fTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDCtap2TestToolStripMenuItem;
-        private System.Windows.Forms.Timer commandTimer;
         private System.Windows.Forms.ToolStripMenuItem DoHIDGetFlashInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLEPingTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoBLECtap2TestToolStripMenuItem;

@@ -79,6 +79,8 @@
     </Compile>
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
+    <Compile Include="CommandTimer.cs" />
+    <Compile Include="ToolPreference.cs" />
     <Compile Include="ToolPreferenceForm.cs">
       <SubType>Form</SubType>
     </Compile>
