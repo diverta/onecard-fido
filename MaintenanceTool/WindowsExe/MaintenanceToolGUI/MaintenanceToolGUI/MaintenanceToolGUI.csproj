@@ -77,14 +77,16 @@
     <Compile Include="..\MaintenanceToolCommon\BLEService.cs">
       <Link>BLEService.cs</Link>
     </Compile>
-    <Compile Include="AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
+    <Compile Include="CommandTimer.cs" />
+    <Compile Include="ToolPreference.cs" />
+    <Compile Include="ToolPreferenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolPreferenceForm.Designer.cs">
+      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="U2f.cs" />
     <Compile Include="Ctap2.cs" />
     <Compile Include="HIDDevice.cs" />
@@ -204,9 +206,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetPinParamForm.resx">
       <DependentUpon>SetPinParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolPreferenceForm.resx">
+      <DependentUpon>ToolPreferenceForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

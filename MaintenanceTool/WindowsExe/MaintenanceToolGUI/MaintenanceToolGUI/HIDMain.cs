@@ -16,11 +16,12 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_INSTALL_SKEY_CERT = 0xc1;
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_GET_VERSION_INFO = 0xc3;
+        public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
 
-    internal class HIDMain
+    public class HIDMain
     {
         // メイン画面の参照を保持
         private MainForm mainForm;
@@ -30,6 +31,9 @@ namespace MaintenanceToolGUI
         // CTAP2、U2F共通処理
         private Ctap2 ctap2;
         private U2f u2f;
+
+        // ツール設定処理
+        private ToolPreference toolPreference;
 
         // ブロードキャストCIDを保持
         private readonly byte[] CIDBytes = { 0xff, 0xff, 0xff, 0xff};
@@ -42,6 +46,9 @@ namespace MaintenanceToolGUI
 
         // リクエストデータ格納領域
         private byte[] RequestData = new byte[1024];
+
+        // 当初リクエストされたHIDコマンドを退避
+        private byte requestedCMD;
 
         public HIDMain(MainForm f)
         {
@@ -109,10 +116,18 @@ namespace MaintenanceToolGUI
             case U2f.Const.BLE_CMD_MSG:
                 u2f.DoResponse(message, length);
                 break;
+            case Const.HID_CMD_TOOL_PREF_PARAM:
+                toolPreference.DoResponseToolPreference(message, length);
+                break;
             case Const.HID_CMD_UNKNOWN_ERROR:
-                // 画面に制御を戻す
-                mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
-                mainForm.OnAppMainProcessExited(false);
+                if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
+                    // ツール設定から呼び出された場合は、ツール設定クラスに制御を戻す
+                    toolPreference.OnHidMainProcessExited(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                } else {
+                    // メイン画面に制御を戻す
+                    mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                    mainForm.OnAppMainProcessExited(false);
+                }
                 break;
             }
         }
@@ -146,6 +161,7 @@ namespace MaintenanceToolGUI
         public void SendHIDMessage(byte cmd, byte[] message, int length)
         {
             if (ReceivedCID != null) {
+                requestedCMD = cmd;
                 hidProcess.SendHIDMessage(ReceivedCID, cmd, message, length);
             }
         }
@@ -160,6 +176,12 @@ namespace MaintenanceToolGUI
 
             // INITコマンドを実行し、nonce を送信する
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_CTAPHID_INIT, nonceBytes, nonceBytes.Length);
+        }
+
+        public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
+        {
+            toolPreference = tp;
+            DoRequestCtapHidInit();
         }
 
         private void DoResponseTestCtapHidInit(byte[] message, int length)
@@ -179,7 +201,9 @@ namespace MaintenanceToolGUI
 
             // INITコマンドの後続処理判定
             if (ctap2.DoResponseCtapHidInit(message, length) == false) {
-                u2f.DoResponseHidInit(message, length);
+                if (u2f.DoResponseHidInit(message, length) == false) {
+                    toolPreference.DoResponseHidInit(message, length);
+                }
             }
         }
 

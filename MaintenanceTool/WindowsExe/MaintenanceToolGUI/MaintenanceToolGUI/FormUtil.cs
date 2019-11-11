@@ -115,5 +115,28 @@ namespace MaintenanceToolGUI
             }
             return true;
         }
+
+        public static bool checkValueInRange(TextBox textBox, int minValue, int maxValue, string informativeText)
+        {
+            int value = int.Parse(textBox.Text);
+            if (value < minValue || value > maxValue) {
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        public static bool checkValueWithPattern(TextBox textBox, string pattern, string informativeText)
+        {
+            if (Regex.IsMatch(textBox.Text, pattern) == false) {
+                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBox.Focus();
+                return false;
+            }
+            return true;
+        }
     }
 }

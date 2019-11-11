@@ -8,11 +8,15 @@ namespace MaintenanceToolGUI
     {
         private BLEMain ble;
         private HIDMain hid;
+        private ToolPreference toolPreference;
         private string commandTitle = "";
 
         // 管理ツールの情報
         public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.19";
+        public const string MaintenanceToolVersion = "Version 0.1.20";
+
+        // タイムアウト監視用タイマー
+        private CommandTimer commandTimer = null;
 
         public MainForm()
         {
@@ -24,24 +28,21 @@ namespace MaintenanceToolGUI
             Text = MaintenanceToolTitle;
 
             // コマンドタイムアウト発生時の処理
-            commandTimer.Interval = 30000;
-            commandTimer.Tick += CommandTimerElapsed;
+            commandTimer = new CommandTimer(Name, 30000);
+            commandTimer.CommandTimeoutEvent += CommandTimerElapsed;
+
+            // ツール設定画面を生成
+            // タイトル、バージョンを引き渡し
+            toolPreference = new ToolPreference(this, hid);
+            toolPreference.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
         }
 
         private void CommandTimerElapsed(object sender, EventArgs e)
         {
-            try {
-                // コマンドタイムアウト発生時は、コマンド終了処理を行う
-                OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-                AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
-                OnAppMainProcessExited(false);
-
-            } catch (Exception ex) {
-                AppCommon.OutputLogToFile(ex.Message, true);
-
-            } finally {
-                commandTimer.Stop();
-            }
+            // コマンドタイムアウト発生時は、コマンド終了処理を行う
+            OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+            OnAppMainProcessExited(false);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
@@ -76,7 +77,11 @@ namespace MaintenanceToolGUI
                 ble.doPairing();
                 return;
             }
-            else if (sender.Equals(button2)) {
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+
+            if (sender.Equals(button2)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_SKEY_CERT;
                 DisplayStartMessage(commandTitle);
                 hid.DoEraseSkeyCert();
@@ -122,12 +127,9 @@ namespace MaintenanceToolGUI
             else {
                 // エラーメッセージを画面表示し、ボタンを押下可能とする
                 MessageBox.Show(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, MaintenanceToolTitle);
-                enableButtons(true);
-                return;
+                commandTitle = "";
+                OnAppMainProcessExited(false);
             }
-
-            // コマンドタイムアウト監視開始
-            commandTimer.Start();
         }
 
         private void DoCommandClientPinSet(object sender, EventArgs e)
@@ -144,6 +146,9 @@ namespace MaintenanceToolGUI
             // 開始メッセージを表示
             commandTitle = f.CommandTitle;
             DisplayStartMessage(commandTitle);
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
 
             if (f.PinNew == "" && f.PinOld == "") {
                 // パラメーター画面でPINが指定されなかった場合はPIN解除実行と判断
@@ -167,6 +172,9 @@ namespace MaintenanceToolGUI
             // ボタンを押下不可とする
             enableButtons(false);
 
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+
             // 開始メッセージを表示し、CTAP2ヘルスチェック実行
             if (sender.Equals(DoBLECtap2TestToolStripMenuItem)) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
@@ -177,9 +185,6 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoCtap2Healthcheck(f.PinCurr);
             }
-
-            // コマンドタイムアウト監視開始
-            commandTimer.Start();
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -209,7 +214,7 @@ namespace MaintenanceToolGUI
             doCommand(sender);
         }
 
-        private bool CheckUSBDeviceDisconnected()
+        public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
                 MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
@@ -322,6 +327,10 @@ namespace MaintenanceToolGUI
 
         private void displayResultMessage(string message, bool success)
         {
+            // コマンド名が設定されていない場合は終了
+            if (message == "") {
+                return;
+            }
             // コマンドの実行結果を表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
@@ -329,12 +338,10 @@ namespace MaintenanceToolGUI
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
 
-        private void 管理ツールについてToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToolPreferenceStripMenuItem_Click(object sender, EventArgs e)
         {
-            // バージョン表示画面を表示
-            AboutForm f = new AboutForm();
-            f.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
-            f.ShowDialog();
+            // ツール設定画面を表示
+            toolPreference.ShowDialog();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

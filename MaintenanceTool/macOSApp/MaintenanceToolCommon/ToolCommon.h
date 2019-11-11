@@ -32,7 +32,8 @@ typedef enum : NSInteger {
     COMMAND_CLIENT_PIN_CHANGE,
     COMMAND_TEST_MAKE_CREDENTIAL,
     COMMAND_TEST_GET_ASSERTION,
-    COMMAND_AUTH_RESET
+    COMMAND_AUTH_RESET,
+    COMMAND_TOOL_PREF_PARAM
 } Command;
 
 // トランスポート種別
@@ -56,6 +57,12 @@ typedef enum : NSInteger {
     + (bool) checkEntrySize:(NSTextField *)textField
                     minSize:(size_t)minSize maxSize:(size_t)maxSize
             informativeText:(NSString *)informativeText;
+    + (bool) checkValueInRange:(NSTextField *)textField
+                      minValue:(int)minValue maxValue:(int)maxValue
+               informativeText:(NSString *)informativeText;
+    + (bool) checkValueWithPattern:(NSTextField *)textField
+                           pattern:(NSString *)pattern
+                   informativeText:(NSString *)informativeText;
 
 @end
 
