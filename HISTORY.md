@@ -2,6 +2,17 @@
 
 ## プログラム更新履歴
 
+#### 2019/10/21
+
+macOS版 FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.19a）](MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+修正点は以下になります。
+- HID PINGテスト機能でタイムアウト発生時、ポップアップメッセージが表示されない不具合を解消（[#264](https://github.com/diverta/onecard-fido/issues/264)、[#265](https://github.com/diverta/onecard-fido/pull/265) ご参照）
+
+Windows版 FIDO認証器管理ツール（Version 0.1.19）の修正はありません。
+
 #### 2019/09/30
 
 MDBT50Q Dongle、およびファームウェアを修正しました。<br>

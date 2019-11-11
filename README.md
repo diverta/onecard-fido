@@ -21,6 +21,22 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2019/11/11
+
+FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.20）](MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.20）](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+- <b>[nRF52840ファームウェア（Version 0.2.3）](nRF5_SDK_v15.3.0/firmwares)</b>
+
+修正点は以下になります。
+- BLEデバイスによる自動認証機能に必要なパラメーター登録機能を追加（[#266](https://github.com/diverta/onecard-fido/issues/266) ご参照）<br>
+自動認証機能については、[こちらのドキュメント](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+
+- BLE PING機能失敗時、エラーメッセージが２回表示される不具合を解消（[#271](https://github.com/diverta/onecard-fido/issues/271) ご参照）
+
 #### 2019/11/05
 
 FIDO認証器管理ツールのログ参照手順書を作成しました。
@@ -42,17 +58,6 @@ FIDO認証器管理ツールのログ参照手順書を作成しました。
 
 - BLEデバイスのRSSI値のログ出力機能（デモ機能）を追加（[#262](https://github.com/diverta/onecard-fido/issues/262) ご参照）<br>
 操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
-
-#### 2019/10/21
-
-macOS版 FIDO認証器管理ツールを修正しました。<br>
-
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.19a）](MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
-
-修正点は以下になります。
-- HID PINGテスト機能でタイムアウト発生時、ポップアップメッセージが表示されない不具合を解消（[#264](https://github.com/diverta/onecard-fido/issues/264)、[#265](https://github.com/diverta/onecard-fido/pull/265) ご参照）
-
-Windows版 FIDO認証器管理ツール（Version 0.1.19）の修正はありません。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
