@@ -34,6 +34,21 @@
         public const string MSG_CLEAR_PIN_CODE_COMMENT2 = "  FIDO認証器上のユーザー確認LEDが高速点滅したら、";
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  MAIN SWを１回押してください.";
 
+        // ツール設定画面
+        public const string MSG_LABEL_AUTH_PARAM_GET = "設定読込";
+        public const string MSG_LABEL_AUTH_PARAM_SET = "設定書込";
+        public const string MSG_LABEL_AUTH_PARAM_RESET = "設定解除";
+        public const string MSG_PROMPT_INPUT_UUID_STRING_LEN = "スキャン対象サービスUUIDを36桁で入力してください";
+        public const string MSG_PROMPT_INPUT_UUID_STRING_PATTERN = "UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）";
+        public const string MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN = "スキャン秒数を1桁で入力してください";
+        public const string MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM = "スキャン秒数を数字で入力してください";
+        public const string MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE = "スキャン秒数を1〜9の値で入力してください";
+        public const string MSG_PROMPT_CLEAR_UUID_SCAN_PARAM = "解除後はBLEデバイススキャンによる自動認証ができなくなります。\n\n設定解除処理を実行しますか？";
+        public const string MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0 = "自動認証機能が無効化されているので、書込後もBLEデバイススキャンによる自動認証はできません。\n\n設定書込処理を実行しますか？";
+        public const string MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1 = "書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？";
+        public const string MSG_CLEAR_UUID_SCAN_PARAM = "FIDO認証器上の自動認証設定を解除します。";
+        public const string MSG_WRITE_UUID_SCAN_PARAM = "FIDO認証器上の自動認証設定を変更します。";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
@@ -57,5 +72,10 @@
         // PINコードの最小／最大桁数
         public const int PIN_CODE_SIZE_MIN = 4;
         public const int PIN_CODE_SIZE_MAX = 16;
+
+        // 自動認証設定で使用
+        // サービスUUID、スキャン秒数の桁数（固定）
+        public const int AUTH_PARAM_UUID_STRING_SIZE = 36;
+        public const int AUTH_PARAM_UUID_SCAN_SEC_SIZE = 1;
     }
 }
