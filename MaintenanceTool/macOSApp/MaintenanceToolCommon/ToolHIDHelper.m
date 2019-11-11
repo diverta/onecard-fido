@@ -74,6 +74,39 @@
         return true;
     }
 
+#pragma mark - Response timeout monitor
+
+    - (void)startTimeoutMonitorForSelector:(SEL)selector withObject:object afterDelay:(NSTimeInterval)delay {
+        [self cancelTimeoutMonitorForSelector:selector withObject:object];
+        [self performSelector:selector withObject:object afterDelay:delay];
+    }
+
+    - (void)cancelTimeoutMonitorForSelector:(SEL)selector withObject:object {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:selector object:object];
+    }
+
+    - (void)startResponseTimeoutMonitor {
+        // タイムアウト監視を開始（30秒後にタイムアウト）
+        [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
+                                  withObject:nil afterDelay:30.0];
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor started");
+    }
+
+    - (void)cancelResponseTimeoutMonitor {
+        // タイムアウト監視を停止
+        [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
+                                   withObject:nil];
+        // for debug
+        // NSLog(@"ResponseTimeoutMonitor canceled");
+    }
+
+    - (void)responseTimeoutMonitorDidTimeout {
+        // タイムアウト時は呼出元に制御を戻す
+        NSLog(@"HIDResponse timed out");
+        [[self delegate] hidHelperDidResponseTimeout];
+    }
+
 #pragma mark - Functions for receive messages from HID device
 
     - (void)HIDManagerDidReceiveMessage:(uint8_t *)message length:(long)length {
@@ -111,6 +144,8 @@
         remaining -= datalen;
         if (remaining == 0) {
             if (receivedCmd != 0xbb) {
+                // レスポンスタイムアウト監視を停止
+                [self cancelResponseTimeoutMonitor];
                 // キープアライブレスポンス以外であれば、情報をコンソール出力し、
                 // アプリケーションに制御を戻す
                 NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
@@ -128,7 +163,9 @@
                           CID:(NSData *)cid CMD:(uint8_t)command {
         NSLog(@"hidHelperWillSend(CID=%@, CMD=%02x, %lu bytes): %@",
               cid, command, (unsigned long)[message length], message);
-        
+        // レスポンスタイムアウトを監視
+        [self startResponseTimeoutMonitor];
+
         NSArray<NSData *> *requestFrames =
         [self generateHIDRequestFramesFrom:message CID:cid CMD:command];
         [self HIDManagerWillSendRequestFrames:requestFrames];

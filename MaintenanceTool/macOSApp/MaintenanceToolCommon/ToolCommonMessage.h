@@ -11,6 +11,8 @@
 #define MSG_INVALID_FIELD           @"入力値が不正です。"
 #define MSG_INVALID_FIELD_SIZE      @"入力値の長さが不正です。"
 #define MSG_INVALID_FILE_PATH       @"ファイルが存在しません。"
+#define MSG_INVALID_OUT_OF_RANGE    @"入力値の範囲が不正です。"
+#define MSG_INVALID_PATTERN         @"入力値の形式が不正です。"
 #define MSG_NOT_NUMERIC             @"入力値が数字ではありません。"
 #define MSG_BUTTON_SELECT           @"選択"
 #define MSG_BUTTON_CREATE           @"作成"
@@ -148,5 +150,20 @@
 #define MSG_BLE_PARING_ERR_TIMED_OUT        @"FIDO認証器が停止している可能性があります。FIDO認証器の電源を入れ、PCのUSBポートから外してください。"
 #define MSG_BLE_PARING_ERR_PAIR_MODE        @"FIDO認証器がペアリングモードでない可能性があります。FIDO認証器のMAIN SWを３秒間以上長押して、ペアリングモードに遷移させてください。"
 #define MSG_BLE_PARING_ERR_UNKNOWN          @"FIDO認証器とのペアリング時に不明なエラーが発生しました。"
+
+#pragma mark - ツール設定画面
+#define MSG_LABEL_AUTH_PARAM_GET                @"設定読込"
+#define MSG_LABEL_AUTH_PARAM_SET                @"設定書込"
+#define MSG_LABEL_AUTH_PARAM_RESET              @"設定解除"
+#define MSG_PROMPT_INPUT_UUID_STRING_LEN        @"スキャン対象サービスUUIDを36桁で入力してください"
+#define MSG_PROMPT_INPUT_UUID_STRING_PATTERN    @"UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN      @"スキャン秒数を1桁で入力してください"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_NUM      @"スキャン秒数を数字で入力してください"
+#define MSG_PROMPT_INPUT_UUID_SCAN_SEC_RANGE    @"スキャン秒数を1〜9の値で入力してください"
+#define MSG_PROMPT_CLEAR_UUID_SCAN_PARAM        @"解除後はBLEデバイススキャンによる自動認証ができなくなります。\n\n設定解除処理を実行しますか？"
+#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0      @"自動認証機能が無効化されているので、書込後もBLEデバイススキャンによる自動認証はできません。\n\n設定書込処理を実行しますか？"
+#define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
+#define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
+#define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
 
 #endif /* ToolCommonMessage_h */

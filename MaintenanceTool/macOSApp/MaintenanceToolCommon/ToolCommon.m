@@ -103,4 +103,38 @@
         return true;
     }
 
+    + (bool) checkValueInRange:(NSTextField *)textField
+                      minValue:(int)minValue maxValue:(int)maxValue
+               informativeText:(NSString *)informativeText {
+        // 入力項目が正しく指定されていない場合はfalseを戻す
+        int value = [textField intValue];
+        if (value < minValue || value > maxValue) {
+            [ToolPopupWindow warning:MSG_INVALID_OUT_OF_RANGE informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
+    + (bool) checkValueWithPattern:(NSTextField *)textField
+                           pattern:(NSString *)pattern
+                   informativeText:(NSString *)informativeText {
+        // 入力項目が正規表現にマッチしていない場合はfalseを戻す
+        NSString *value = [textField stringValue];
+        NSError *error = nil;
+        NSRegularExpression* regex =
+        [NSRegularExpression regularExpressionWithPattern:pattern
+                                                  options:NSRegularExpressionCaseInsensitive
+                                                    error:&error];
+        NSTextCheckingResult *match =
+        [regex firstMatchInString:value options:0 range:NSMakeRange(0, value.length)];
+        
+        if (match == nil) {
+            [ToolPopupWindow warning:MSG_INVALID_PATTERN informativeText:informativeText];
+            [textField becomeFirstResponder];
+            return false;
+        }
+        return true;
+    }
+
 @end
