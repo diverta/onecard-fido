@@ -14,6 +14,7 @@
 #include "fido_u2f_command.h"
 #include "fido_ctap2_command.h"
 #include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
@@ -28,6 +29,9 @@
 
 // ユーザー所在確認タイムアウト（３０秒）
 #define USER_PRESENCE_VERIFY_TIMEOUT_MSEC 30000
+
+// ユーザー所在確認待ち状態を示すフラグ
+static bool waiting_for_tup = false;
 
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
@@ -104,6 +108,9 @@ void fido_user_presence_verify_start_on_reset(void)
     // ユーザー所在確認タイムアウト監視を開始
     fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
 
+    // ユーザー所在確認待ち状態に入る
+    waiting_for_tup = true;
+
     // 自動認証機能が有効な場合は
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
@@ -123,6 +130,9 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     // ユーザー所在確認タイムアウト監視を開始
     fido_user_presence_verify_timer_start(USER_PRESENCE_VERIFY_TIMEOUT_MSEC, NULL);
 
+    // ユーザー所在確認待ち状態に入る
+    waiting_for_tup = true;
+
     // 自動認証機能が有効な場合は
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
@@ -136,20 +146,37 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
 
 void fido_user_presence_verify_cancel(void)
 {
+    //
+    // 以下のいずれかの条件で呼び出される
+    // ・ユーザー所在確認ボタン押下待ちタイムアウト
+    // ・自動認証有効時は、BLEデバイスがスキャンできなかった時
+    // ・CTAP2クライアントからキャンセルコマンド送信時
+    //
     // キープアライブタイマーを停止する
     fido_repeat_process_timer_stop();
     
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_status_indicator_idle();
+
+    // ユーザー所在確認待ち完了
+    waiting_for_tup = false;
 }
 
 void fido_user_presence_verify_end(void)
 {
+    //
+    // 以下のいずれかの条件で呼び出される
+    // ・ユーザー所在確認用ボタン押下時
+    // ・自動認証有効時は、BLEデバイスがスキャンできた時
+    //
     // ユーザー所在確認タイムアウト監視を停止
     fido_user_presence_verify_timer_stop();
     
     // キープアライブタイマーを停止する
     fido_repeat_process_timer_stop();
+
+    // ユーザー所在確認待ち完了
+    waiting_for_tup = false;
 }
 
 void fido_user_presence_verify_on_ble_scan_end(bool success)
@@ -162,7 +189,26 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
     } else {
         // スキャン失敗時は、タイムアウト時と等価の処理を実行
         fido_user_presence_verify_timeout_handler();
+        // タイムアウトの旨のステータスを戻す
+        //   BLEデバイススキャン自体が、HID経由で呼び出される処理なので、
+        //   HIDチャネルにレスポンスを送信
+        fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_TIMEOUT);
     }
+}
+
+static bool is_waiting_user_presence_verify(TRANSPORT_TYPE transport_type, uint8_t cmd)
+{
+    if (waiting_for_tup) {
+        // ユーザー所在確認中は、 ビジーである旨のエラーを戻す
+        fido_log_error("Command (0x%02x) cannot perform while testing user presence ", cmd);
+        if (transport_type == TRANSPORT_HID) {
+            fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        } else if (transport_type == TRANSPORT_BLE) {
+            fido_ble_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_CHANNEL_BUSY);
+        }
+        return true;
+    }
+    return false;
 }
 
 //
@@ -173,6 +219,10 @@ static void on_hid_request_receive_completed(void)
 {
     // データ受信後に実行すべき処理を判定
     uint8_t cmd = fido_hid_receive_header()->CMD;
+    if (is_waiting_user_presence_verify(TRANSPORT_HID, cmd)) {
+        // ユーザー所在確認中はエラーを戻す
+        return;
+    }
     switch (cmd) {
 #if CTAP2_SUPPORTED
         case CTAP2_COMMAND_INIT:
@@ -208,6 +258,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_PREFERENCE_PARAM:
             fido_maintenance_command();
             break;
         default:
@@ -224,7 +275,13 @@ static void on_ble_request_receive_completed(void)
     BLE_HEADER_T *p_ble_header = fido_ble_receive_header();
     FIDO_APDU_T  *p_apdu = fido_ble_receive_apdu();
 
-    if (p_ble_header->CMD == U2F_COMMAND_MSG) {
+    // データ受信後に実行すべき処理を判定
+    uint8_t       cmd = p_ble_header->CMD;
+    if (is_waiting_user_presence_verify(TRANSPORT_BLE, cmd)) {
+        // ユーザー所在確認中はエラーを戻す
+        return;
+    }
+    if (cmd == U2F_COMMAND_MSG) {
         if (p_apdu->CLA != 0x00) {
             // CTAP2コマンドを処理する。
             fido_ctap2_command_cbor(TRANSPORT_BLE);
@@ -234,7 +291,7 @@ static void on_ble_request_receive_completed(void)
             fido_u2f_command_msg(TRANSPORT_BLE);
         }
 
-    } else if (p_ble_header->CMD == U2F_COMMAND_PING) {
+    } else if (cmd == U2F_COMMAND_PING) {
         // PINGレスポンスを実行
         fido_u2f_command_ping(TRANSPORT_BLE);
     }
@@ -304,6 +361,7 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_INSTALL_SKEY_CERT:
         case MNT_COMMAND_GET_FLASH_STAT:
         case MNT_COMMAND_GET_APP_VERSION:
+        case MNT_COMMAND_PREFERENCE_PARAM:
             fido_maintenance_command_report_sent();
             break;
         default:

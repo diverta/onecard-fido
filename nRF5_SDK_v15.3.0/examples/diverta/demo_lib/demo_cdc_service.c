@@ -186,9 +186,6 @@ void demo_cdc_receive_on_request_received(void)
     if (get_rssi_log()) {
         return;
     }
-    if (demo_ble_peripheral_auth_param_set(m_cdc_buffer, m_cdc_buffer_size)) {
-        return;
-    }
 }
 
 //

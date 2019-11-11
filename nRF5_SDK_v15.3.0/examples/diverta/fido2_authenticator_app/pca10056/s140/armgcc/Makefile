@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
 
 # application version info
-CFLAGS += -DFW_REV=\"0.2.2\"
+CFLAGS += -DFW_REV=\"0.2.3\"
 # hardware version info
 CFLAGS += -DHW_REV=\"0.2\"
 

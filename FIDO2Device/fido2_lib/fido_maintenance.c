@@ -17,6 +17,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// 自動認証パラメーター設定関連
+#include "demo_ble_peripheral_auth.h"
+
 //
 // レスポンスデータ格納領域
 //
@@ -149,6 +152,56 @@ static void command_get_app_version(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
+static void command_preference_parameter_maintenance(void)
+{
+    uint8_t *data = fido_hid_receive_apdu()->data;
+    uint16_t length = fido_hid_receive_apdu()->Lc;
+
+    // 元データチェック
+    if (data == NULL || length == 0) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 6);
+        return;
+    }
+    fido_log_info("Preference parameter maintenance start");
+
+    // データの１バイト目からコマンド種別を取得
+    uint8_t cmd_type = data[0];
+
+    //
+    // 各種設定用パラメーター管理
+    //  response_bufferの先頭にステータスバイトを格納するため、
+    //  レスポンス格納領域は、response_bufferの２バイト目を先頭とします。
+    //
+    uint8_t *buffer = response_buffer + 1;
+    size_t   buffer_size = sizeof(response_buffer - 1);
+    bool     ret = false;
+    switch (cmd_type) {
+        case 1:
+        case 2:
+        case 3:
+            demo_ble_peripheral_auth_param_request(data, length);
+            ret = demo_ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
+            break;
+        default:
+            fido_log_error("Unknown preference parameter maintenance command type");
+            break;
+    }
+    if (ret == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 11);
+        return;
+    }
+    //
+    // レスポンスを送信
+    //  データ形式
+    //  0-3: CID
+    //  4:   CMD（0xc4）
+    //  5-6: データサイズ（CSVデータの長さ）
+    //  7:   ステータスバイト（成功時は 0x00）
+    //  8-n: CSVデータ
+    //
+    send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -165,6 +218,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             command_get_app_version();
+            break;
+        case MNT_COMMAND_PREFERENCE_PARAM:
+            command_preference_parameter_maintenance();
             break;
         default:
             break;
@@ -190,6 +246,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_GET_APP_VERSION:
             fido_log_info("Get application version info end");
+            break;
+        case MNT_COMMAND_PREFERENCE_PARAM:
+            fido_log_info("Preference parameter maintenance end");
             break;
         default:
             break;
