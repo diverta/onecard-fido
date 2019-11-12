@@ -41,14 +41,12 @@
         // スキャンタイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(scanningTimeoutMonitorDidTimeout)
                                   withObject:nil afterDelay:10.0];
-        NSLog(@"ScanningTimeoutMonitor started");
     }
 
     - (void)cancelScanningTimeoutMonitor {
         // スキャンタイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(scanningTimeoutMonitorDidTimeout)
                                    withObject:nil];
-        NSLog(@"ScanningTimeoutMonitor canceled");
     }
 
     - (void)scanningTimeoutMonitorDidTimeout {
@@ -62,14 +60,12 @@
         // 接続タイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(connectionTimeoutMonitorDidTimeout)
                                   withObject:peripheral afterDelay:10.0];
-        NSLog(@"ConnectionTimeoutMonitor started");
     }
 
     - (void)cancelConnectionTimeoutMonitor:(CBPeripheral *)peripheral {
         // 接続タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(connectionTimeoutMonitorDidTimeout)
                                    withObject:peripheral];
-        NSLog(@"ConnectionTimeoutMonitor canceled");
     }
 
     - (void)connectionTimeoutMonitorDidTimeout {
@@ -102,14 +98,12 @@
         // サービスディスカバータイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(discoverServicesTimeoutMonitorDidTimeout)
                                   withObject:peripheral afterDelay:10.0];
-        NSLog(@"DiscoverServicesTimeoutMonitor started");
     }
 
     - (void)cancelDiscoverServicesTimeoutMonitor:(CBPeripheral *)peripheral {
         // サービスディスカバータイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(discoverServicesTimeoutMonitorDidTimeout)
                                    withObject:peripheral];
-        NSLog(@"DiscoverServicesTimeoutMonitor canceled");
     }
 
     - (void)discoverServicesTimeoutMonitorDidTimeout {
@@ -123,14 +117,12 @@
         // サービスディスカバータイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(discoverCharacteristicsTimeoutMonitorDidTimeout)
                                   withObject:service afterDelay:10.0];
-        NSLog(@"DiscoverCharacteristicsTimeoutMonitor started");
     }
 
     - (void)cancelDiscoverCharacteristicsTimeoutMonitor:(CBService *)service {
         // サービスディスカバータイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(discoverCharacteristicsTimeoutMonitorDidTimeout)
                                    withObject:service];
-        NSLog(@"DiscoverCharacteristicsTimeoutMonitor canceled");
     }
 
     - (void)discoverCharacteristicsTimeoutMonitorDidTimeout {
@@ -144,14 +136,12 @@
         // 監視ステータス更新タイムアウト監視を開始（10秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(subscribeCharacteristicTimeoutMonitorDidTimeout)
                                   withObject:characteristic afterDelay:10.0];
-        NSLog(@"SubscribeCharacteristicTimeoutMonitor started");
     }
 
     - (void)cancelSubscribeCharacteristicTimeoutMonitor:(CBCharacteristic *)characteristic {
         // 監視ステータス更新タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(subscribeCharacteristicTimeoutMonitorDidTimeout)
                                    withObject:characteristic];
-        NSLog(@"SubscribeCharacteristicTimeoutMonitor canceled");
     }
 
     - (void)subscribeCharacteristicTimeoutMonitorDidTimeout {

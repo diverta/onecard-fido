@@ -81,6 +81,7 @@
 #define MSG_REQUEST_SENT                    @"リクエストを送信しました。"
 #define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
+#define MSG_RESPONSE_RECEIVED               @"レスポンスを受信しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
 #define MSG_DISCOVER_U2F_SERVICES_TIMEOUT   @"FIDO BLEサービスの検索がタイムアウトしました。"
 #define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLEサービス送受信項目の検索がタイムアウトしました。"
