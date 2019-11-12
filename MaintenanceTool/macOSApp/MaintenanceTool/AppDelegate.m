@@ -5,6 +5,7 @@
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
+#import "ToolLogFile.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -46,9 +47,14 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
+        // アプリケーションの開始ログを出力
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED,
+         [ToolCommon getAppVersionString]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
+        // アプリケーションの終了ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_APP_TERMINATED];
     }
 
     - (void)appendLogMessage:(NSString *)message {

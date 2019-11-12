@@ -46,6 +46,7 @@ typedef enum : NSInteger {
 // ツールで共通利用する関数群
 @interface ToolCommon : NSObject
 
+    + (NSString *)getAppVersionString;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
 
