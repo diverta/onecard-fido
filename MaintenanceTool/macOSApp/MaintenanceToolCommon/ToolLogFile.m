@@ -93,6 +93,19 @@ static ToolLogFile *sharedInstance;
         va_end(args);
     }
 
+    - (void)hexdump:(NSData *)data {
+        int length = (int)[data length];
+        uint8_t *bytes = (uint8_t *)[data bytes];
+        NSMutableString *hex = [[NSMutableString alloc] init];
+        for (int i = 0; i < length; i++) {
+            [hex appendFormat:@"%02x ", bytes[i]];
+            if ((i % 16 == 15) && (i < length - 1)) {
+                [hex appendString:@"\n"];
+            }
+        }
+        [self outputLogText:hex type:LOG_TYPE_NONE];
+    }
+
 #pragma mark - Private methods
 
     - (id)init {
