@@ -81,6 +81,7 @@
 #define MSG_REQUEST_SENT                    @"リクエストを送信しました。"
 #define MSG_REQUEST_TIMEOUT                 @"リクエストがタイムアウトしました。"
 #define MSG_REQUEST_SEND_FAILED             @"リクエスト送信が失敗しました。"
+#define MSG_RESPONSE_RECEIVED               @"レスポンスを受信しました。"
 #define MSG_RESPONSE_RECEIVE_FAILED         @"レスポンスを受信できませんでした。"
 #define MSG_DISCOVER_U2F_SERVICES_TIMEOUT   @"FIDO BLEサービスの検索がタイムアウトしました。"
 #define MSG_DISCOVER_U2F_CHARAS_TIMEOUT     @"FIDO BLEサービス送受信項目の検索がタイムアウトしました。"
@@ -97,9 +98,6 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT2  @"  FIDO認証器上のユーザー所在確認LEDが点滅したら、"
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
-
-#pragma mark - ToolHIDCommandクラス専用メッセージ
-#define MSG_HID_CMD_RESPONSE_TIMEOUT        @"認証器からの応答が受信できませんでした。"
 
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_INVALID_NONCE            @"CTAPHID_INITコマンドが失敗しました。"
@@ -167,5 +165,12 @@
 #define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
 #define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
 #define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
+
+#pragma mark - USB HID関連
+#define MSG_USB_DETECT_FAILED                   @"USBデバイス検知の開始に失敗しました。"
+#define MSG_USB_DETECT_STARTED                  @"USBデバイス検知を開始しました。"
+#define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
+#define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
+#define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 
 #endif /* ToolCommonMessage_h */
