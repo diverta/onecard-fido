@@ -20,6 +20,8 @@
 #define MSG_FAILURE                 @"失敗"
 
 #pragma mark - ホーム画面
+#define MSG_APP_LAUNCHED            @"FIDO認証器管理ツールを起動しました: Version %@"
+#define MSG_APP_TERMINATED          @"FIDO認証器管理ツールを終了しました。"
 #define MSG_PROMPT_SELECT_PKEY_PATH @"秘密鍵ファイル(PEM)のパスを選択してください"
 #define MSG_PROMPT_SELECT_CRT_PATH  @"証明書ファイル(CRT)のパスを選択してください"
 #define MSG_ERASE_SKEY_CERT         @"FIDO認証器から鍵・証明書・キーハンドルをすべて削除します。"

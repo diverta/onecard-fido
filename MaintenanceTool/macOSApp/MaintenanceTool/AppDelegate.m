@@ -48,13 +48,13 @@
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
         // アプリケーションの開始ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:@"FIDO認証器管理ツールを起動しました: Version %@",
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED,
          [ToolCommon getAppVersionString]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
         // アプリケーションの終了ログを出力
-        [[ToolLogFile defaultLogger] info:@"FIDO認証器管理ツールを終了しました"];
+        [[ToolLogFile defaultLogger] info:MSG_APP_TERMINATED];
     }
 
     - (void)appendLogMessage:(NSString *)message {
