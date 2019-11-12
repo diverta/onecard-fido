@@ -7,6 +7,7 @@
 #import "ToolBLEHelper.h"
 #import "ToolCommonMessage.h"
 #import "ToolTimer.h"
+#import "ToolLogFile.h"
 
 #define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
 #define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
@@ -86,7 +87,7 @@
         // FIDO BLE U2Fサービスを持つペリフェラルをスキャン
         self.connectedPeripheral = nil;
         [self.manager scanForPeripheralsWithServices:nil options:scanningOptions];
-        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_START];
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_START];
         
         // スキャンタイムアウト監視を開始
         [[self toolTimer] startScanningTimeoutMonitor];
@@ -95,7 +96,7 @@
     - (void)cancelScanForPeripherals {
         // スキャンを停止
         [self.manager stopScan];
-        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_SCAN_STOPPED];
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_STOPPED];
     }
 
     - (void)centralManager:(CBCentralManager *)central
@@ -143,12 +144,11 @@
         [[self toolTimer] cancelConnectionTimeoutMonitor:peripheral];
         // すでに接続されている状態の場合は終了
         if (self.connectedPeripheral) {
-            NSLog(@"didConnectPeripheral: already connected to peripheral");
             return;
         }
         // 接続されたペリフェラルの参照を保持
         self.connectedPeripheral = peripheral;
-        [[self delegate] notifyCentralManagerMessage:MSG_U2F_DEVICE_CONNECTED];
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
 
         // FIDO BLE U2Fサービスのディスカバーを開始
         [self discoverServices:peripheral];
@@ -208,7 +208,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         for (CBService *service in peripheral.services) {
             if ([self.serviceUUIDs containsObject:service.UUID]) {
                 self.connectedService = service;
-                [[self delegate] notifyCentralManagerMessage:MSG_BLE_U2F_SERVICE_FOUND];
+                [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
                 break;
             }
         }
@@ -305,7 +305,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 
         if (characteristic.isNotifying) {
             // 一連の接続処理が完了したことをAppDelegateに通知
-            [[self delegate] notifyCentralManagerMessage:MSG_BLE_NOTIFICATION_START];
+            [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
             [self.delegate centralManagerDidConnect];
         } else {
             // 監視が停止している旨をAppDelegateに通知
@@ -362,16 +362,12 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         }
         
         // 送信済みフレーム数を設定
-        NSLog(@"Sent request [frame=%lu] %@",
-              (unsigned long)[self bleRequestFrameNumber],
-              [[self bleRequestFrames] objectAtIndex:[self bleRequestFrameNumber]]
-              );
         [self setBleRequestFrameNumber:([self bleRequestFrameNumber] + 1)];
         
         if ([self bleRequestFrameNumber] == [[self bleRequestFrames] count]) {
             // 全フレームが送信済であれば、U2F Status経由のレスポンス待ち（レスポンスタイムアウト監視開始）
             [self centralManagerWillStartResponseTimeout];
-            [[self delegate] notifyCentralManagerMessage:MSG_REQUEST_SENT];
+            [[ToolLogFile defaultLogger] info:MSG_REQUEST_SENT];
         } else {
             // U2F Control Pointへ、後続フレームの書き込みを実行
             [self connectedPeripheral:peripheral writeValues:nil

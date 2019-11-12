@@ -31,7 +31,6 @@
 @protocol ToolBLEHelperDelegate <NSObject>
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
-    - (void)notifyCentralManagerMessage:(NSString *)message;
 
     - (void)centralManagerDidConnect;
     - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error;
