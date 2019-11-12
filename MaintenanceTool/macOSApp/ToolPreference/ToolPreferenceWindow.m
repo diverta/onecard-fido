@@ -30,8 +30,8 @@
     - (void)windowDidLoad {
         [super windowDidLoad];
         // バージョン文字列を設定
-        NSString *ver = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-        [[self fieldVersionText] setStringValue:[NSString stringWithFormat:@"Version %@", ver]];
+        [[self fieldVersionText] setStringValue:[NSString stringWithFormat:@"Version %@",
+                                                 [ToolCommon getAppVersionString]]];
         // 画面項目を初期化
         [self initFieldValue];
     }
