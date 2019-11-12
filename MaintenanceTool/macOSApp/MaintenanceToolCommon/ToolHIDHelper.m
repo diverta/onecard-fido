@@ -9,6 +9,8 @@
 
 #import "ToolHIDHelper.h"
 #import "ToolCommon.h"
+#import "ToolCommonMessage.h"
+#import "ToolLogFile.h"
 
 #define HID_PACKET_SIZE       64
 #define HID_INIT_HEADER_SIZE  7
@@ -54,7 +56,7 @@
         IOReturn ret = IOHIDManagerOpen(
             [self toolHIDManager], kIOHIDOptionsTypeNone);
         if (ret != kIOReturnSuccess) {
-            NSLog(@"initializeHIDManager: IOHIDManagerOpen failed");
+            [[ToolLogFile defaultLogger] error:MSG_USB_DETECT_FAILED];
             return;
         }
         // ハンドラー定義
@@ -64,7 +66,7 @@
             [self toolHIDManager], &handleDeviceRemoval, (__bridge void *)self);
         IOHIDManagerRegisterInputReportCallback(
             [self toolHIDManager], &handleInputReport, (__bridge void *)self);
-        NSLog(@"initializeHIDManager done");
+        [[ToolLogFile defaultLogger] info:MSG_USB_DETECT_STARTED];
     }
 
     - (bool)isDeviceConnected {
@@ -89,21 +91,17 @@
         // タイムアウト監視を開始（30秒後にタイムアウト）
         [self startTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                   withObject:nil afterDelay:30.0];
-        // for debug
-        // NSLog(@"ResponseTimeoutMonitor started");
     }
 
     - (void)cancelResponseTimeoutMonitor {
         // タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                    withObject:nil];
-        // for debug
-        // NSLog(@"ResponseTimeoutMonitor canceled");
     }
 
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時は呼出元に制御を戻す
-        NSLog(@"HIDResponse timed out");
+        [[ToolLogFile defaultLogger] error:MSG_HID_CMD_RESPONSE_TIMEOUT];
         [[self delegate] hidHelperDidResponseTimeout];
     }
 
@@ -115,9 +113,7 @@
         static uint8_t  receivedCmd;
         
         NSData *reportData = [[NSData alloc] initWithBytes:message length:length];
-        // for debug
-        // NSLog(@"ToolHIDHelper receive: reportLength(%ld) report(%@)", length, reportData);
-        
+
         // CIDは先頭から４バイトを取得
         NSData *cid = [reportData subdataWithRange:NSMakeRange(0, 4)];
         
@@ -146,12 +142,13 @@
             if (receivedCmd != 0xbb) {
                 // レスポンスタイムアウト監視を停止
                 [self cancelResponseTimeoutMonitor];
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes):",
+                 cid, receivedCmd, (unsigned long)[[self hidResponse] length]];
+                [[ToolLogFile defaultLogger] hexdump:[self hidResponse]];
                 // キープアライブレスポンス以外であれば、情報をコンソール出力し、
                 // アプリケーションに制御を戻す
-                NSLog(@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes): %@",
-                      cid, receivedCmd,
-                      (unsigned long)[[self hidResponse] length],
-                      [self hidResponse]);
                 [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
             }
         }
@@ -161,8 +158,11 @@
 
     - (void)hidHelperWillSend:(NSData *)message
                           CID:(NSData *)cid CMD:(uint8_t)command {
-        NSLog(@"hidHelperWillSend(CID=%@, CMD=%02x, %lu bytes): %@",
-              cid, command, (unsigned long)[message length], message);
+        // ログ出力
+        [[ToolLogFile defaultLogger]
+         debugWithFormat:@"hidHelperWillSend(CID=%@, CMD=%02x, %lu bytes):",
+         cid, command, (unsigned long)[message length]];
+        [[ToolLogFile defaultLogger] hexdump:message];
         // レスポンスタイムアウトを監視
         [self startResponseTimeoutMonitor];
 
@@ -239,10 +239,12 @@
             CFIndex  reportLength = [frame length];
             IOReturn ret = IOHIDDeviceSetReport([self toolHIDDevice], kIOHIDReportTypeOutput, 0x00,
                                                 reportBytes, reportLength);
-            // 送信失敗時は情報をコンソール出力
+            // 送信失敗時は情報をログ出力
             if (ret != kIOReturnSuccess) {
-                NSLog(@"ToolHIDHelper send failed: messageLength(%ld) message(%@)",
-                      (long)[frame length], frame);
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"ToolHIDHelper send failed: messageLength(%ld) message:",
+                 (long)[frame length]];
+                [[ToolLogFile defaultLogger] hexdump:frame];
             }
         }
     }
@@ -250,13 +252,13 @@
 #pragma mark - Non Objective-C codes
 
     void handleDeviceMatching(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        NSLog(@"ToolHIDHelper: HID Device detected.");
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // HIDデバイスの参照を保持
         ToolHIDHelper *helperSelf = (__bridge ToolHIDHelper *)context;
         [helperSelf setToolHIDDevice:device];
     }
     void handleDeviceRemoval(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        NSLog(@"ToolHIDHelper: HID Device removed.");
+        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
         // HIDデバイス参照を解除
         ToolHIDHelper *helperSelf = (__bridge ToolHIDHelper *)context;
         [helperSelf setToolHIDDevice:nil];

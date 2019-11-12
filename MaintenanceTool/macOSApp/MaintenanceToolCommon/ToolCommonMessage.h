@@ -98,9 +98,6 @@
 #define MSG_HCHK_U2F_AUTHENTICATE_COMMENT3  @"  MAIN SWを１回押してください."
 #define MSG_HCHK_U2F_AUTHENTICATE_SUCCESS   @"U2F Authenticateが成功しました。"
 
-#pragma mark - ToolHIDCommandクラス専用メッセージ
-#define MSG_HID_CMD_RESPONSE_TIMEOUT        @"認証器からの応答が受信できませんでした。"
-
 #pragma mark - コマンドテスト関連メッセージ
 #define MSG_CMDTST_INVALID_NONCE            @"CTAPHID_INITコマンドが失敗しました。"
 #define MSG_CMDTST_INVALID_PING             @"CTAPHID_PINGコマンドが失敗しました。"
@@ -167,5 +164,12 @@
 #define MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1      @"書込後はBLEデバイススキャンによる自動認証ができるようになります。\n\n設定書込処理を実行しますか？"
 #define MSG_CLEAR_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を解除します。"
 #define MSG_WRITE_UUID_SCAN_PARAM               @"FIDO認証器上の自動認証設定を変更します。"
+
+#pragma mark - USB HID関連
+#define MSG_USB_DETECT_FAILED                   @"USBデバイス検知の開始に失敗しました。"
+#define MSG_USB_DETECT_STARTED                  @"USBデバイス検知を開始しました。"
+#define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
+#define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
+#define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 
 #endif /* ToolCommonMessage_h */

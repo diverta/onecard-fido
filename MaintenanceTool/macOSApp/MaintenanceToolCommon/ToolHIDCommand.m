@@ -123,7 +123,6 @@
                 break;
             default:
                 // 画面に制御を戻す
-                NSLog(@"Unknown command %ld", (long)[self command]);
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
@@ -162,7 +161,6 @@
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [self extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        NSLog(@"Flash ROM statistics: %@", responseCSV);
         // 情報取得CSVから空き領域に関する情報を抽出
         NSString *strRemain = @"";
         NSString *strAvail = @"";
@@ -207,7 +205,6 @@
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [self extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        NSLog(@"FIDO authenticator version info: %@", responseCSV);
         // 情報取得CSVからバージョン情報を抽出
         NSString *strDeviceName = @"";
         NSString *strFWRev = @"";
