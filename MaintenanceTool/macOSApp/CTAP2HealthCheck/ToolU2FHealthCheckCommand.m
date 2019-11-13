@@ -29,7 +29,6 @@
 
     - (id)init {
         self = [super init];
-        NSLog(@"ToolU2FHealthCheckCommand initialized");
         return self;
     }
 

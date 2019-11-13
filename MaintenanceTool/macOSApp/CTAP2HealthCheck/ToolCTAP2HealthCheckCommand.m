@@ -42,7 +42,6 @@
                                     initWithWindowNibName:@"PinCodeParamWindow"]];
         // テストデータ（salt）を生成
         [self setHmacSecretSalt:[self createHmacSecretSalt]];
-        NSLog(@"ToolCTAP2HealthCheckCommand initialized");
         return self;
     }
 

@@ -17,7 +17,6 @@
 
     - (id)init {
         self = [super init];
-        NSLog(@"ToolInstallCommand initialized");
         return self;
     }
 

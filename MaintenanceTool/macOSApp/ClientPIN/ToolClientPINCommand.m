@@ -29,7 +29,6 @@
         // 使用するダイアログを生成
         [self setSetPinParamWindow:[[SetPinParamWindow alloc]
                                     initWithWindowNibName:@"SetPinParamWindow"]];
-        NSLog(@"ToolClientPINCommand initialized");
         return self;
     }
 
