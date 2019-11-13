@@ -30,7 +30,6 @@
     - (NSData *)generateInstallSkeyCertMessage:(Command)command
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath {
-        NSLog(@"Install secure key start");
         NSMutableData *message = [NSMutableData alloc];
 
         // 鍵ファイルから秘密鍵（32バイト）を取得し、レスポンスメッセージ領域に格納
@@ -88,7 +87,7 @@
         
         // ヘッダーが見つからない場合はエラー
         if (headerFound == false) {
-            NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
+            [[ToolLogFile defaultLogger] error:@"Secure key file has no header 'BEGIN EC PRIVATE KEY'"];
             [self setLastErrorMessage:MSG_INVALID_SKEY_CONTENT_IN_PEM];
             return nil;
         }
@@ -139,6 +138,7 @@
         // 証明書ファイルから読み込み
         NSData *data = [NSData dataWithContentsOfFile:certFilePath];
         if (data == nil || [data length] == 0) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Cannot read cert file: %@", certFilePath];
             [self setLastErrorMessage:MSG_CANNOT_READ_CERT_CRT_FILE];
             return nil;
         }
@@ -146,11 +146,11 @@
         // 証明書ファイルの長さが68バイト未満の場合はエラー
         NSUInteger dataCertLength = [data length];
         if (dataCertLength < 68) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Invalid cert length: %@", dataCertLength];
             [self setLastErrorMessage:MSG_INVALID_CERT_LENGTH_IN_CRT];
             return nil;
         }
         
-        NSLog(MSG_READ_NBYTES_FROM_CRT_FILE, dataCertLength);
         return data;
     }
 

@@ -133,7 +133,8 @@
         }
         // レスポンス内に"hmac-secret"拡張が含まれていたらその旨をログ表示
         if (ctap2_cbor_decode_ext_hmac_secret()->flag) {
-            NSLog(@"parseMakeCredentialResponseWith: 'hmac-secret':true");
+            [[ToolLogFile defaultLogger]
+             info:@"authenticatorMakeCredential: HMAC Secret Extension available"];
         }
         return true;
     }
@@ -180,8 +181,9 @@
         // ２回目のGetAssertion時は、認証器から受領したsaltの内容検証を行う
         if (verifySalt) {
             bool success = ctap2_cbor_decode_verify_salt();
-            NSLog(@"parseGetAssertionResponseWith: hmac-secret-salt verify %@",
-                  success ? @"success" : @"failed");
+            [[ToolLogFile defaultLogger]
+             infoWithFormat:@"authenticatorGetAssertion: HMAC Secret verification %@",
+             success ? @"success" : @"failed"];
             return success;
         } else {
             return true;
