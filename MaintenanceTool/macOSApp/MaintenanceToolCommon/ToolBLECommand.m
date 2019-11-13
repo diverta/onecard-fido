@@ -87,15 +87,10 @@
     - (void)doResponseCommandPing {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [[self bleResponseData] isEqualToData:[self pingData]];
-        [self commandDidProcess:result message:@"BLE ping end"];
+        [self commandDidProcess:result message:nil];
     }
 
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
-        // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"BLE request(CMD=%02x, %lu bytes):",
-         cmd, (unsigned long)[dataForCommand length]];
-        [[ToolLogFile defaultLogger] hexdump:dataForCommand];
         // 分割送信のために64バイトごとのコマンド配列を作成する
         [self setBleRequestArray:[self generateCommandArrayFrom:dataForCommand cmd:cmd]];
         // コマンド配列がブランクの場合は終了
@@ -114,6 +109,7 @@
         NSUInteger dataForCommandLength = [dataForCommand length];
         NSUInteger start    = 0;
         char       sequence = 0;
+        uint16_t   dump_data_len;
 
         NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
         while (start < dataForCommandLength) {
@@ -130,22 +126,31 @@
                 initHeader[1] = dataForCommandLength / 256;
                 initHeader[2] = dataForCommandLength % 256;
                 dataHeader = [[NSData alloc] initWithBytes:initHeader length:sizeof(initHeader)];
-
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"BLE Sent INIT frame: data size=%d length=%d", dataForCommandLength, strlen];
+                dump_data_len = strlen + sizeof(initHeader);
+                
             } else {
                 // 最大63バイト分取得する
                 if (strlen > 63) {
                     strlen = 63;
                 }
                 // BLEヘッダーにシーケンス番号を設定する
-                contHeader[0] = sequence++;
+                contHeader[0] = sequence;
                 dataHeader = [[NSData alloc] initWithBytes:contHeader length:sizeof(contHeader)];
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"BLE Sent CONT frame: seq=%d length=%d", sequence++, strlen];
+                dump_data_len = strlen + sizeof(contHeader);
             }
 
             // スタート位置からstrlen文字分切り出して、ヘッダーに連結
             [dataRequest appendData:dataHeader];
             [dataRequest appendData:[dataForCommand subdataWithRange:NSMakeRange(start, strlen)]];
             [array addObject:dataRequest];
-            
+            // フレーム内容をログ出力
+            [[ToolLogFile defaultLogger] hexdump:dataRequest];
             // スタート位置を更新
             start += strlen;
         }
@@ -229,19 +234,23 @@
             // 4バイト目から後ろを切り出して連結
             NSData *tmp  = [responseData subdataWithRange:NSMakeRange(3, [responseData length] - 3)];
             receivedData = [[NSMutableData alloc] initWithData:tmp];
-            
+            // ログ出力
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"BLE Recv INIT frame: data size=%d length=%d", totalLength, [tmp length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
+
         } else {
             // 2バイト目から後ろを切り出して連結
             NSData *tmp  = [responseData subdataWithRange:NSMakeRange(1, [responseData length] - 1)];
             [receivedData appendData:tmp];
+            // ログ出力
+            uint8_t *b = (uint8_t *)[responseData bytes];
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"BLE Recv CONT frame: seq=%d length=%d", b[0], [tmp length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
         }
         
         if (receivedData && ([receivedData length] == totalLength)) {
-            // ログ出力
-            [[ToolLogFile defaultLogger]
-             debugWithFormat:@"BLE response(CMD=%02x, %lu bytes):",
-             [self bleResponseCmd], (unsigned long)[receivedData length]];
-            [[ToolLogFile defaultLogger] hexdump:receivedData];
             // 全受信データを保持
             [self setBleResponseData:[[NSData alloc] initWithData:receivedData]];
             receivedData = nil;
