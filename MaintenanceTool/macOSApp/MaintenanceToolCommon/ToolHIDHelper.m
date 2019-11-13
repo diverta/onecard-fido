@@ -110,6 +110,7 @@
     - (void)HIDManagerDidReceiveMessage:(uint8_t *)message length:(long)length {
         static uint16_t remaining;
         uint16_t        datalen;
+        uint16_t        dump_data_len;
         static uint8_t  receivedCmd;
         
         NSData *reportData = [[NSData alloc] initWithBytes:message length:length];
@@ -129,24 +130,31 @@
              appendData:[reportData subdataWithRange:NSMakeRange(HID_INIT_HEADER_SIZE, datalen)]];
             // コマンドを退避
             receivedCmd = cmd;
-            
+            // ログ出力
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"HID Recv INIT frame: data size=%d length=%d",
+             remaining, datalen];
+            dump_data_len = datalen + HID_INIT_HEADER_SIZE;
+
         } else {
             // CONTフレームから、６バイト目以降のデータを連結（最大59バイト）
             datalen = (remaining < HID_CONT_PAYLOAD_SIZE) ? remaining : HID_CONT_PAYLOAD_SIZE;
             [[self hidResponse]
              appendData:[reportData subdataWithRange:NSMakeRange(HID_CONT_HEADER_SIZE, datalen)]];
+            // ログ出力
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"HID Recv CONT frame: seq=%d length=%d", cmd, datalen];
+            dump_data_len = datalen + HID_CONT_HEADER_SIZE;
         }
+        // フレーム内容をログ出力
+        [[ToolLogFile defaultLogger]
+         hexdump:[reportData subdataWithRange:NSMakeRange(0, dump_data_len)]];
         // パケットをすべて受信したら、データをアプリケーションに引き渡す
         remaining -= datalen;
         if (remaining == 0) {
             if (receivedCmd != 0xbb) {
                 // レスポンスタイムアウト監視を停止
                 [self cancelResponseTimeoutMonitor];
-                // ログ出力
-                [[ToolLogFile defaultLogger]
-                 debugWithFormat:@"hidHelperDidReceive(CID=%@, CMD=%02x, %lu bytes):",
-                 cid, receivedCmd, (unsigned long)[[self hidResponse] length]];
-                [[ToolLogFile defaultLogger] hexdump:[self hidResponse]];
                 // キープアライブレスポンス以外であれば、情報をコンソール出力し、
                 // アプリケーションに制御を戻す
                 [[self delegate] hidHelperDidReceive:[self hidResponse] CID:cid CMD:receivedCmd];
@@ -158,11 +166,6 @@
 
     - (void)hidHelperWillSend:(NSData *)message
                           CID:(NSData *)cid CMD:(uint8_t)command {
-        // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"hidHelperWillSend(CID=%@, CMD=%02x, %lu bytes):",
-         cid, command, (unsigned long)[message length]];
-        [[ToolLogFile defaultLogger] hexdump:message];
         // レスポンスタイムアウトを監視
         [self startResponseTimeoutMonitor];
 
@@ -188,6 +191,11 @@
         [self setCIDBytes:xfer_data CID:cid];
         xfer_data[4] = cmd;
         NSData *xferMessage = [[NSData alloc] initWithBytes:xfer_data length:HID_INIT_HEADER_SIZE];
+        // ログ出力
+        [[ToolLogFile defaultLogger]
+         debug:@"HID Sent INIT frame: data size=0 length=0"];
+        [[ToolLogFile defaultLogger]
+         hexdump:[xferMessage subdataWithRange:NSMakeRange(0, HID_INIT_HEADER_SIZE)]];
         [array addObject:xferMessage];
         return array;
     }
@@ -207,6 +215,7 @@
         char     xfer_data[HID_PACKET_SIZE];
         uint16_t xfer_data_max;
         uint16_t xfer_data_len;
+        uint16_t dump_data_len;
         uint16_t remaining;
         uint16_t seq = 0;
         for (uint16_t i = 0; i < dataLength; i += xfer_data_len) {
@@ -222,11 +231,24 @@
                 xfer_data[5] = (dataLength >> 8) & 0x00ff; // MSB(messageLength)
                 xfer_data[6] = dataLength & 0x00ff;        // LSB(messageLength)
                 memcpy(xfer_data + HID_INIT_HEADER_SIZE, dataBytes + i, xfer_data_len);
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"HID Sent INIT frame: data size=%d length=%d",
+                 dataLength, xfer_data_len];
+                dump_data_len = xfer_data_len + HID_INIT_HEADER_SIZE;
             } else {
-                xfer_data[4] = seq++; // SEQ
+                xfer_data[4] = seq; // SEQ
                 memcpy(xfer_data + HID_CONT_HEADER_SIZE, dataBytes + i, xfer_data_len);
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"HID Sent CONT frame: seq=%d length=%d",
+                 seq++, xfer_data_len];
+                dump_data_len = xfer_data_len + HID_CONT_HEADER_SIZE;
             }
             NSData *xferMessage = [[NSData alloc] initWithBytes:xfer_data length:sizeof(xfer_data)];
+            // フレーム内容をログ出力
+            [[ToolLogFile defaultLogger]
+             hexdump:[xferMessage subdataWithRange:NSMakeRange(0, dump_data_len)]];
             [array addObject:xferMessage];
         }
         return array;
@@ -241,10 +263,7 @@
                                                 reportBytes, reportLength);
             // 送信失敗時は情報をログ出力
             if (ret != kIOReturnSuccess) {
-                [[ToolLogFile defaultLogger]
-                 debugWithFormat:@"ToolHIDHelper send failed: messageLength(%ld) message:",
-                 (long)[frame length]];
-                [[ToolLogFile defaultLogger] hexdump:frame];
+                [[ToolLogFile defaultLogger] error:@"ToolHIDHelper send failed"];
             }
         }
     }
