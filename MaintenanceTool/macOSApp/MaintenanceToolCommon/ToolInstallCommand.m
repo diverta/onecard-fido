@@ -8,6 +8,7 @@
 
 #import "ToolCommonMessage.h"
 #import "ToolInstallCommand.h"
+#import "ToolLogFile.h"
 
 @interface ToolInstallCommand ()
 
@@ -59,7 +60,8 @@
                          encoding:NSUTF8StringEncoding
                          error:&err];
         if (err.code) {
-            NSLog(@"Secure key file read error: %@", err.description);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key file read error: %@", [err description]];
             [self setLastErrorMessage:MSG_CANNOT_READ_SKEY_PEM_FILE];
             return nil;
         }
@@ -104,7 +106,8 @@
         
         // デコードされたデータが39バイト未満の場合はエラー
         if ([decodedPemData length] < 39) {
-            NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key has invalid length: %ld", [decodedPemData length]];
             [self setLastErrorMessage:MSG_INVALID_SKEY_LENGTH_IN_PEM];
             return nil;
         }
@@ -112,7 +115,8 @@
         // 秘密鍵データの先頭6バイト目に「0x0420」というヘッダーがない場合はエラー
         const char *decodedPem = [decodedPemData bytes];
         if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
-            NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]];
             [self setLastErrorMessage:MSG_INVALID_SKEY_HEADER_IN_PEM];
             return nil;
         }

@@ -14,6 +14,7 @@
 #import "CBORDecoder.h"
 #import "CBOREncoder.h"
 #import "debug_log.h"
+#import "ToolLogFile.h"
 
 @interface ToolCTAP2HealthCheckCommand ()
 
@@ -95,7 +96,7 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
-            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
     }
@@ -117,7 +118,7 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
-            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
     }
@@ -157,7 +158,7 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
-            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
     }
@@ -168,7 +169,8 @@
         size_t   responseSize = [getAssertionResponse length];
         uint8_t  status_code = ctap2_cbor_decode_get_assertion(response, responseSize, verifySalt);
         if (status_code != CTAP1_ERR_SUCCESS) {
-            NSLog(@"parseGetAssertionResponseWith failed(0x%02x)", status_code);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"parseGetAssertionResponseWith failed(0x%02x)", status_code];
             return false;
         }
         // レスポンス内に"hmac-secret"拡張が含まれていない場合はここで終了
