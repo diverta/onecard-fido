@@ -210,7 +210,7 @@ namespace MaintenanceToolGUI
 
                 ReceivedLogBuffer = "";
                 AppendLogToBuffer(string.Format(
-                    "Recv INIT frame: data size={0} length={1} cmd=0x{2:x2}",
+                    "HID Recv INIT frame: data size={0} length={1} cmd=0x{2:x2}",
                     receivedMessageLen, dataLenInFrame, receivedCMD), true);
                 dumpMessageLen = dataLenInFrame + Const.HID_INIT_HEADER_LEN;
 
@@ -226,7 +226,7 @@ namespace MaintenanceToolGUI
                 }
 
                 AppendLogToBuffer(string.Format(
-                    "Recv CONT frame: seq={0} length={1}", 
+                    "HID Recv CONT frame: seq={0} length={1}", 
                     seq, dataLenInFrame), true);
                 dumpMessageLen = dataLenInFrame + Const.HID_CONT_HEADER_LEN;
             }
@@ -281,7 +281,7 @@ namespace MaintenanceToolGUI
             frameData[4] = cmd;
 
             OutputLogToFile(string.Format(
-                "Sent INIT frame: data size={0} length={1}",
+                "HID Sent INIT frame: data size={0} length={1}",
                 messageSize, 0));
             DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
 
@@ -342,7 +342,7 @@ namespace MaintenanceToolGUI
                     }
 
                     OutputLogToFile(string.Format(
-                        "Sent INIT frame: data size={0} length={1}",
+                        "HID Sent INIT frame: data size={0} length={1}",
                         messageSize, dataLenInFrame));
                     DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
 
@@ -360,7 +360,7 @@ namespace MaintenanceToolGUI
                     }
 
                     OutputLogToFile(string.Format(
-                        "Sent CONT frame: data seq={0} length={1}",
+                        "HID Sent CONT frame: data seq={0} length={1}",
                         seq++, dataLenInFrame));
                     DumpMessage(frameData, Const.HID_CONT_HEADER_LEN + dataLenInFrame);
                 }
