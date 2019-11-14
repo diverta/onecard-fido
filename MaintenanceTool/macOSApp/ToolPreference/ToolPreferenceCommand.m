@@ -92,6 +92,9 @@
             return;
         }
 
+        // 開始ログを出力
+        [[self toolPreferenceWindow] toolPreferenceCommandDidStart];
+        
         // リクエストデータを編集し、内部変数に設定
         [self setCommandType:commandType];
         [self generateRequestCommandAuthParamGet:[self commandType]];

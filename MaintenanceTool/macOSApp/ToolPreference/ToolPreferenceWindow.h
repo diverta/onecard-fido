@@ -15,6 +15,7 @@
     @property (nonatomic) NSWindow              *parentWindow;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
 
+    - (void)toolPreferenceCommandDidStart;
     - (void)toolPreferenceCommandDidProcess:(ToolPreferenceCommandType)commandType
                                     success:(bool)success message:(NSString *)message;
 
