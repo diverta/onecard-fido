@@ -138,6 +138,30 @@ namespace MaintenanceToolCommon
             }
         }
 
+        public static void OutputLogError(string message)
+        {
+            // メッセージに現在時刻を付加し、ログファイルに出力
+            OutputLogText(string.Format("{0} [error] {1}", DateTime.Now.ToString(), message));
+        }
+
+        public static void OutputLogWarn(string message)
+        {
+            // メッセージに現在時刻を付加し、ログファイルに出力
+            OutputLogText(string.Format("{0} [warn] {1}", DateTime.Now.ToString(), message));
+        }
+
+        public static void OutputLogInfo(string message)
+        {
+            // メッセージに現在時刻を付加し、ログファイルに出力
+            OutputLogText(string.Format("{0} [info] {1}", DateTime.Now.ToString(), message));
+        }
+
+        public static void OutputLogDebug(string message)
+        {
+            // メッセージに現在時刻を付加し、ログファイルに出力
+            OutputLogText(string.Format("{0} [debug] {1}", DateTime.Now.ToString(), message));
+        }
+
         public static void OutputLogToFile(string message)
         {
             // メッセージに現在時刻を付加する

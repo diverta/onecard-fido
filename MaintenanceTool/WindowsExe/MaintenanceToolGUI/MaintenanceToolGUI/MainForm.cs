@@ -23,7 +23,7 @@ namespace MaintenanceToolGUI
             InitializeComponent();
 
             // アプリケーション開始ログを出力
-            AppCommon.OutputLogToFile(String.Format(
+            AppCommon.OutputLogInfo(String.Format(
                 "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
             ble = new BLEMain(this);
@@ -46,7 +46,7 @@ namespace MaintenanceToolGUI
         {
             // コマンドタイムアウト発生時は、コマンド終了処理を行う
             OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+            AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
             OnAppMainProcessExited(false);
         }
 
@@ -55,7 +55,7 @@ namespace MaintenanceToolGUI
             // このアプリケーションを終了する
             DisconnectBLE();
             hid.OnFormDestroy();
-            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MaintenanceToolTitle));
+            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
             Application.Exit();
         }
 
@@ -329,7 +329,7 @@ namespace MaintenanceToolGUI
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
             // ログファイルにも出力
-            AppCommon.OutputLogToFile(formatted);
+            AppCommon.OutputLogInfo(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -342,7 +342,11 @@ namespace MaintenanceToolGUI
             // 画面およびメッセージボックスダイアログに表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
-            AppCommon.OutputLogToFile(formatted);
+            if (success) {
+                AppCommon.OutputLogInfo(formatted);
+            } else {
+                AppCommon.OutputLogError(formatted);
+            }
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }

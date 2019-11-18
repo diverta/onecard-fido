@@ -272,7 +272,7 @@ namespace MaintenanceToolGUI
             // 戻りメッセージから、取得情報CSVを抽出
             byte[] responseBytes = AppCommon.ExtractCBORBytesFromResponse(message, length);
             string responseCSV = System.Text.Encoding.ASCII.GetString(responseBytes);
-            AppCommon.OutputLogToFile("Flash ROM statistics: " + responseCSV);
+            AppCommon.OutputLogDebug("Flash ROM statistics: " + responseCSV);
 
             // 情報取得CSVから空き領域に関する情報を抽出
             string[] vars = responseCSV.Split(',');

@@ -225,7 +225,7 @@ namespace MaintenanceToolGUI
         {
             // 処理開始メッセージをログファイルに出力
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, funcName);
-            AppCommon.OutputLogToFile(formatted);
+            AppCommon.OutputLogInfo(formatted);
         }
 
         // 
@@ -237,8 +237,11 @@ namespace MaintenanceToolGUI
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 funcName, 
                 success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
-            AppCommon.OutputLogToFile(formatted);
-
+            if (success) {
+                AppCommon.OutputLogInfo(formatted);
+            } else {
+                AppCommon.OutputLogError(formatted);
+            }
             // 引数に格納されたエラーメッセージをポップアップ表示
             formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 funcNameShort,
