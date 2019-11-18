@@ -162,15 +162,6 @@ namespace MaintenanceToolCommon
             OutputLogText(string.Format("{0} [debug] {1}", DateTime.Now.ToString(), message));
         }
 
-        public static void OutputLogToFile(string message)
-        {
-            // メッセージに現在時刻を付加する
-            string formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
-
-            // ログファイルにメッセージを出力する
-            OutputLogText(formatted);
-        }
-
         public static string DumpMessage(byte[] message, int length)
         {
             StringBuilder sb = new StringBuilder();

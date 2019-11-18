@@ -141,7 +141,7 @@ namespace MaintenanceToolCommon
             AppCommon.OutputLogInfo(string.Format("BLEデバイス[{0}]が見つかりました: BluetoothAddress={1}, {2} services",
                 name, eventArgs.BluetoothAddress, eventArgs.Advertisement.ServiceUuids.Count));
             foreach (Guid g in eventArgs.Advertisement.ServiceUuids) {
-                AppCommon.OutputLogToFile(string.Format("  service={0}", g.ToString()));
+                AppCommon.OutputLogDebug(string.Format("  service={0}", g.ToString()));
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
                     AppCommon.OutputLogInfo("FIDO認証器が見つかりました.");
@@ -242,7 +242,7 @@ namespace MaintenanceToolCommon
                     GattDeviceService service = await GattDeviceService.FromIdAsync(info.Id);
                     if (service != null) {
                         BLEServices.Add(service);
-                        AppCommon.OutputLogToFile(string.Format("  FIDO BLE service found [{0}]", info.Name));
+                        AppCommon.OutputLogDebug(string.Format("  FIDO BLE service found [{0}]", info.Name));
                     }
                 }
 

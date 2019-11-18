@@ -133,7 +133,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.INIT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogDebug(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
                         transferMessageLen, frameLen, dump));
 
                 } else {
@@ -154,7 +154,7 @@ namespace MaintenanceToolCommon
                     frameLen = Const.CONT_HEADER_LEN + dataLenInFrame;
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
-                    AppCommon.OutputLogToFile(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
+                    AppCommon.OutputLogDebug(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, frameLen, dump));
                 }
 
@@ -215,7 +215,7 @@ namespace MaintenanceToolCommon
                 if (receivedMessage[0] != 0x82) {
                     // キープアライブ以外の場合はログを出力
                     string dump = AppCommon.DumpMessage(message, message.Length);
-                    AppCommon.OutputLogToFile(string.Format(
+                    AppCommon.OutputLogDebug(string.Format(
                         "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
                         receivedMessageLen, dataLenInFrame, dump));
                 }
@@ -232,7 +232,7 @@ namespace MaintenanceToolCommon
                 }
 
                 string dump = AppCommon.DumpMessage(message, message.Length);
-                AppCommon.OutputLogToFile(string.Format(
+                AppCommon.OutputLogDebug(string.Format(
                     "BLE Recv CONT frame: seq={0} length={1}\r\n{2}",
                     seq, dataLenInFrame, dump));
             }

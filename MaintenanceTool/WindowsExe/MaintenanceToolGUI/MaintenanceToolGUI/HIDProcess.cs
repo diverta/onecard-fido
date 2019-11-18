@@ -274,7 +274,7 @@ namespace MaintenanceToolGUI
             frameData[4] = cmd;
 
             string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
-            AppCommon.OutputLogToFile(string.Format(
+            AppCommon.OutputLogDebug(string.Format(
                 "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
                 messageSize, 0, dump));
 
@@ -335,7 +335,7 @@ namespace MaintenanceToolGUI
                     }
 
                     string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
-                    AppCommon.OutputLogToFile(string.Format(
+                    AppCommon.OutputLogDebug(string.Format(
                         "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
                         messageSize, dataLenInFrame, dump));
 
@@ -353,7 +353,7 @@ namespace MaintenanceToolGUI
                     }
 
                     string dump = AppCommon.DumpMessage(frameData, Const.HID_CONT_HEADER_LEN + dataLenInFrame);
-                    AppCommon.OutputLogToFile(string.Format(
+                    AppCommon.OutputLogDebug(string.Format(
                         "HID Sent CONT frame: data seq={0} length={1}\r\n{2}",
                         seq++, dataLenInFrame, dump));
                 }
