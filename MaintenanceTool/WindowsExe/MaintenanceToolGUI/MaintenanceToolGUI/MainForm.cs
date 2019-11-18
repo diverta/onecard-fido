@@ -373,24 +373,40 @@ namespace MaintenanceToolGUI
 
         private void DoHIDU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // U2Fヘルスチェック実行
             doCommand(sender);
         }
 
         private void DoHIDPingTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // PINGテストを実行
             doCommand(sender);
         }
 
         private void DoHIDGetFlashInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // Flash ROM情報取得コマンドを実行
             doCommand(sender);
         }
 
         private void DoHIDGetVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // バージョン情報取得コマンドを実行
             doCommand(sender);
         }
