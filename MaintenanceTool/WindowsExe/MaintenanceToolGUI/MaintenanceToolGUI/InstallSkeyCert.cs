@@ -57,7 +57,7 @@ namespace MaintenanceToolGUI
                     }
                 }
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("ReadLine failed: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("ReadLine failed: {0}", e.Message));
             }
             return text;
         }
@@ -75,7 +75,7 @@ namespace MaintenanceToolGUI
                 return transferMessage;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("Convert.FromBase64String failed: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("Convert.FromBase64String failed: {0}", e.Message));
             }
             return null;
         }
@@ -87,7 +87,7 @@ namespace MaintenanceToolGUI
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("File.ReadAllBytes failed: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("File.ReadAllBytes failed: {0}", e.Message));
             }
 
             return false;
