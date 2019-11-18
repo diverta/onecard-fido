@@ -247,7 +247,7 @@ namespace MaintenanceToolGUI
         private void AppendLogToBuffer(string message)
         {
             // メッセージに現在時刻を付加する
-            string formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
+            string formatted = string.Format("{0} [debug] {1}", DateTime.Now.ToString(), message);
 
             // メッセージを一時領域に連結
             if (ReceivedLogBuffer.Length > 0) {

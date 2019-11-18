@@ -134,7 +134,7 @@ namespace MaintenanceToolCommon
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
                     AppCommon.OutputLogDebug(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
-                        transferMessageLen, frameLen, dump));
+                        transferMessageLen, dataLenInFrame, dump));
 
                 } else {
                     // CONTフレーム
@@ -155,7 +155,7 @@ namespace MaintenanceToolCommon
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
                     AppCommon.OutputLogDebug(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
-                        seq++, frameLen, dump));
+                        seq++, dataLenInFrame, dump));
                 }
 
                 // BLEデバイスにフレームを送信
