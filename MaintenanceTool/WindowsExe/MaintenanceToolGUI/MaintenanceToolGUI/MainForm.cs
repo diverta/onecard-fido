@@ -21,6 +21,10 @@ namespace MaintenanceToolGUI
         public MainForm()
         {
             InitializeComponent();
+
+            // アプリケーション開始ログを出力
+            AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MaintenanceToolTitle));
+
             ble = new BLEMain(this);
             hid = new HIDMain(this);
 
@@ -41,7 +45,7 @@ namespace MaintenanceToolGUI
         {
             // コマンドタイムアウト発生時は、コマンド終了処理を行う
             OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+            AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
             OnAppMainProcessExited(false);
         }
 
@@ -50,7 +54,7 @@ namespace MaintenanceToolGUI
             // このアプリケーションを終了する
             DisconnectBLE();
             hid.OnFormDestroy();
-            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MaintenanceToolTitle), true);
+            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MaintenanceToolTitle));
             Application.Exit();
         }
 

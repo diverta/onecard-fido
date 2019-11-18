@@ -138,15 +138,10 @@ namespace MaintenanceToolCommon
             }
         }
 
-        public static void OutputLogToFile(string message, bool printTimeStamp)
+        public static void OutputLogToFile(string message)
         {
             // メッセージに現在時刻を付加する
-            string formatted;
-            if (printTimeStamp) {
-                formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
-            } else {
-                formatted = string.Format("{0}", message);
-            }
+            string formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
 
             // ログファイルにメッセージを出力する
             OutputLogText(formatted);

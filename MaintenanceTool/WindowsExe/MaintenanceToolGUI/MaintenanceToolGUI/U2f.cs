@@ -201,7 +201,7 @@ namespace MaintenanceToolGUI
 
             // 生成されたランダム値をダンプ
             string dumpNonce = AppCommon.DumpMessage(nonce, nonce.Length);
-            AppCommon.OutputLogToFile(string.Format("doHealthCheck: Challenge\r\n{0}", dumpNonce), true);
+            AppCommon.OutputLogToFile(string.Format("doHealthCheck: Challenge\r\n{0}", dumpNonce));
         }
 
         private void GenerateAppIDBytes()
@@ -211,7 +211,7 @@ namespace MaintenanceToolGUI
 
             // 生成されたランダム値をダンプ
             string dumpAppid = AppCommon.DumpMessage(appid, appid.Length);
-            AppCommon.OutputLogToFile(string.Format("doHealthCheck: AppId\r\n{0}", dumpAppid), true);
+            AppCommon.OutputLogToFile(string.Format("doHealthCheck: AppId\r\n{0}", dumpAppid));
         }
 
         private int GenerateU2FRegisterBytes(byte[] u2fRequestData)

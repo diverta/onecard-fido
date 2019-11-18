@@ -40,10 +40,10 @@ namespace MaintenanceToolGUI
             try {
                 // イベントを送出
                 CommandTimeoutEvent(sender, e);
-                AppCommon.OutputLogToFile(string.Format("CommandTimer({0}) timed out", timerName), true);
+                AppCommon.OutputLogToFile(string.Format("CommandTimer({0}) timed out", timerName));
 
             } catch (Exception ex) {
-                AppCommon.OutputLogToFile(string.Format("CommandTimer({0}): {1}", timerName, ex.Message), true);
+                AppCommon.OutputLogToFile(string.Format("CommandTimer({0}): {1}", timerName, ex.Message));
 
             } finally {
                 Stop();

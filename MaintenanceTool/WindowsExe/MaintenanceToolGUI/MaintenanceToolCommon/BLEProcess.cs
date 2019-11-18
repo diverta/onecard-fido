@@ -67,12 +67,12 @@ namespace MaintenanceToolCommon
             if (bleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
-                    AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED, true);
+                    AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;
                 }
-                AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED, true);
+                AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
@@ -84,7 +84,7 @@ namespace MaintenanceToolCommon
             }
 
             // リクエスト送信完了メッセージを出力
-            AppCommon.OutputLogToFile(AppCommon.MSG_REQUEST_SENT, true);
+            AppCommon.OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
         }
 
         private async Task<bool> SendBLEMessageFrames(byte[] message, int length)
@@ -134,7 +134,7 @@ namespace MaintenanceToolCommon
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
                     AppCommon.OutputLogToFile(string.Format("BLE Sent INIT frame: data size={0} length={1}\r\n{2}",
-                        transferMessageLen, frameLen, dump), true);
+                        transferMessageLen, frameLen, dump));
 
                 } else {
                     // CONTフレーム
@@ -155,7 +155,7 @@ namespace MaintenanceToolCommon
 
                     string dump = AppCommon.DumpMessage(frameData, frameLen);
                     AppCommon.OutputLogToFile(string.Format("BLE Sent CONT frame: data seq={0} length={1}\r\n{2}",
-                        seq++, frameLen, dump), true);
+                        seq++, frameLen, dump));
                 }
 
                 // BLEデバイスにフレームを送信
@@ -212,9 +212,10 @@ namespace MaintenanceToolCommon
                     receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.INIT_HEADER_LEN + i];
                 }
 
+                string dump = AppCommon.DumpMessage(message, message.Length);
                 AppCommon.OutputLogToFile(string.Format(
-                    "BLE Recv INIT frame: data size={0} length={1}",
-                    receivedMessageLen, dataLenInFrame), true);
+                    "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
+                    receivedMessageLen, dataLenInFrame, dump));
 
             } else {
                 // CONTフレームであると判断
@@ -227,13 +228,11 @@ namespace MaintenanceToolCommon
                     receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.CONT_HEADER_LEN + i];
                 }
 
+                string dump = AppCommon.DumpMessage(message, message.Length);
                 AppCommon.OutputLogToFile(string.Format(
-                    "BLE Recv CONT frame: seq={0} length={1}",
-                    seq, dataLenInFrame), true);
+                    "BLE Recv CONT frame: seq={0} length={1}\r\n{2}",
+                    seq, dataLenInFrame, dump));
             }
-
-            // メッセージをダンプ
-            AppCommon.OutputLogToFile(AppCommon.DumpMessage(message, message.Length), false);
 
             // 全フレームがそろった場合
             if (received == receivedMessageLen) {
@@ -244,7 +243,7 @@ namespace MaintenanceToolCommon
                 int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
 
                 // 受信データを転送
-                AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED, true);
+                AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED);
                 ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
         }

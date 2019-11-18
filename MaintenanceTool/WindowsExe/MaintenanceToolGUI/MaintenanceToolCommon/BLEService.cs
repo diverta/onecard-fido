@@ -355,7 +355,7 @@ namespace MaintenanceToolCommon
         private void OutputLogToFile(string message)
         {
             // メッセージに現在時刻を付加し、ログファイルに出力する
-            AppCommon.OutputLogToFile(message, true);
+            AppCommon.OutputLogToFile(message);
         }
     }
 }

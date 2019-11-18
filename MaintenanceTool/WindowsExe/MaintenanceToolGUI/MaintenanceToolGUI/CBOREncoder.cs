@@ -340,7 +340,7 @@ namespace MaintenanceToolGUI
             CBORDecoder cborDecoder = new CBORDecoder();
             byte[] pinTokenEnc = cborDecoder.GetPinTokenEnc(pinTokenCBOR);
             if (pinTokenEnc == null) {
-                AppCommon.OutputLogToFile("Extract encrypted pinToken fail", true);
+                AppCommon.OutputLogToFile("Extract encrypted pinToken fail");
                 return null;
             }
 
@@ -370,8 +370,8 @@ namespace MaintenanceToolGUI
             // 64バイト salt（ランダム値）を生成しておく
             random.NextBytes(Salt);
             // for debug
-            AppCommon.OutputLogToFile("Generated Salt: ", true);
-            AppCommon.OutputLogToFile(AppCommon.DumpMessage(Salt, Salt.Length), false);
+            string dump = AppCommon.DumpMessage(Salt, Salt.Length);
+            AppCommon.OutputLogToFile(string.Format("Generated Salt:\r\n{0}", dump));
         }
 
         private byte[] CreateSaltEnc(byte[] sharedSecret, byte[] salt)
