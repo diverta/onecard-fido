@@ -23,7 +23,8 @@ namespace MaintenanceToolGUI
             InitializeComponent();
 
             // アプリケーション開始ログを出力
-            AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MaintenanceToolTitle));
+            AppCommon.OutputLogToFile(String.Format(
+                "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
 
             ble = new BLEMain(this);
             hid = new HIDMain(this);
