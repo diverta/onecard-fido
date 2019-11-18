@@ -15,6 +15,7 @@
 #import "ToolU2FHealthCheckCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
+#import "ToolLogFile.h"
 
 @interface ToolHIDCommand () <ToolHIDHelperDelegate>
 
@@ -161,6 +162,7 @@
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [self extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
         // 情報取得CSVから空き領域に関する情報を抽出
         NSString *strRemain = @"";
         NSString *strAvail = @"";
