@@ -67,7 +67,7 @@ namespace MaintenanceToolCommon
             if (bleService.IsConnected() == false) {
                 // 未接続の場合はFIDO認証器とのBLE通信を開始
                 if (await bleService.StartCommunicate() == false) {
-                    AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
+                    AppCommon.OutputLogError(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     MessageTextEvent(AppCommon.MSG_U2F_DEVICE_CONNECT_FAILED);
                     ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;

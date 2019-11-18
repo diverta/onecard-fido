@@ -61,7 +61,7 @@ namespace MaintenanceToolGUI
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
                 MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED);
-                AppCommon.OutputLogToFile(AppCommon.MSG_USB_DETECT_FAILED);
+                AppCommon.OutputLogError(AppCommon.MSG_USB_DETECT_FAILED);
                 return;
             }
             AppCommon.OutputLogToFile(AppCommon.MSG_USB_DETECT_STARTED);
@@ -163,7 +163,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージは最低 8 バイト
             if (message.Length < 8) {
-                AppCommon.OutputLogToFile(String.Format(
+                AppCommon.OutputLogError(String.Format(
                     "Device_dataReceived: invalid received message size({0})", message.Length));
                 return;
             }
@@ -286,7 +286,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージがない場合は終了
             if (message == null) {
-                AppCommon.OutputLogToFile("SendHIDMessage: invalid message buffer");
+                AppCommon.OutputLogError("SendHIDMessage: invalid message buffer");
                 return;
             }
             // 

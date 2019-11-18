@@ -55,7 +55,7 @@ namespace MaintenanceToolCommon
         public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
         {
             if (BLEservice == null) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.Send: service is null"));
+                AppCommon.OutputLogError(string.Format("BLEService.Send: service is null"));
                 critical = true;
                 return false;
             }
@@ -71,14 +71,14 @@ namespace MaintenanceToolCommon
                 // リクエストを実行（U2F Control Pointに書込）
                 GattCommunicationStatus result = await U2FControlPointChar.WriteValueAsync(writer.DetachBuffer(), GattWriteOption.WriteWithoutResponse);
                 if (result != GattCommunicationStatus.Success) {
-                    AppCommon.OutputLogToFile(AppCommon.MSG_REQUEST_SEND_FAILED);
+                    AppCommon.OutputLogError(AppCommon.MSG_REQUEST_SEND_FAILED);
                     return false;
                 }
 
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.Send: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.Send: {0}", e.Message));
                 return false;
             }
         }
@@ -100,13 +100,13 @@ namespace MaintenanceToolCommon
                 }
             } catch {
                 // Bluetoothオン状態が確認できない場合はオフ状態であるとみなす
-                AppCommon.OutputLogToFile("Bluetooth状態を確認できません。");
+                AppCommon.OutputLogError("Bluetooth状態を確認できません。");
             }
 
             if (!bton) {
                 // 画面スレッドに失敗を通知
                 FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_BT_OFF);
-                AppCommon.OutputLogToFile("Bluetoothはオフです。");
+                AppCommon.OutputLogError("Bluetoothはオフです。");
                 return;
             }
 
@@ -129,7 +129,7 @@ namespace MaintenanceToolCommon
             } else {
                 // 画面スレッドに失敗を通知
                 FIDOPeripheralPaired(false, AppCommon.MSG_BLE_PARING_ERR_TIMED_OUT);
-                AppCommon.OutputLogToFile("FIDO認証器とのペアリングがタイムアウトしました。");
+                AppCommon.OutputLogError("FIDO認証器とのペアリングがタイムアウトしました。");
             }
         }
 
@@ -180,11 +180,11 @@ namespace MaintenanceToolCommon
                 } else if (result.Status == DevicePairingResultStatus.Failed) {
                     success = false;
                     messageOnFail = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
-                    AppCommon.OutputLogToFile("FIDO認証器とのペアリングが失敗しました。");
+                    AppCommon.OutputLogError("FIDO認証器とのペアリングが失敗しました。");
                 } else {
                     success = false;
                     messageOnFail = AppCommon.MSG_BLE_PARING_ERR_UNKNOWN;
-                    AppCommon.OutputLogToFile(string.Format("FIDO認証器とのペアリングが失敗しました。reason={0}", result.Status));
+                    AppCommon.OutputLogError(string.Format("FIDO認証器とのペアリングが失敗しました。reason={0}", result.Status));
                 }
 
                 // BLEデバイスを解放
@@ -192,7 +192,7 @@ namespace MaintenanceToolCommon
                 device = null;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.PairWithFIDOPeripheral: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.PairWithFIDOPeripheral: {0}", e.Message));
             }
 
             // 画面スレッドに成否を通知
@@ -216,14 +216,14 @@ namespace MaintenanceToolCommon
                         AppCommon.OutputLogToFile(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
                         break;
                     }
-                    AppCommon.OutputLogToFile(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
+                    AppCommon.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
                 }
 
                 // 接続された場合は true
                 return IsConnected();
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.StartCommunicate: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.StartCommunicate: {0}", e.Message));
                 FreeResources();
                 critical = true;
                 return false;
@@ -247,7 +247,7 @@ namespace MaintenanceToolCommon
                 }
 
                 if (BLEServices.Count == 0) {
-                    AppCommon.OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
+                    AppCommon.OutputLogError(AppCommon.MSG_BLE_U2F_SERVICE_NOT_FOUND);
                     return false;
                 }
 
@@ -255,7 +255,7 @@ namespace MaintenanceToolCommon
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.DiscoverBLEService: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.DiscoverBLEService: {0}", e.Message));
                 FreeResources();
                 critical = true;
                 return false;
@@ -283,7 +283,7 @@ namespace MaintenanceToolCommon
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.StartBLENotification: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.StartBLENotification: {0}", e.Message));
                 FreeResources();
                 critical = true;
                 return false;
@@ -302,7 +302,7 @@ namespace MaintenanceToolCommon
                 DataReceived(responseBytes, (int)len);
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.OnCharacteristicValueChanged: {0}", e.Message));
             }
         }
 
@@ -317,7 +317,7 @@ namespace MaintenanceToolCommon
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogToFile(string.Format("BLEService.StopCommunicate: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("BLEService.StopCommunicate: {0}", e.Message));
 
             } finally {
                 FreeResources();
