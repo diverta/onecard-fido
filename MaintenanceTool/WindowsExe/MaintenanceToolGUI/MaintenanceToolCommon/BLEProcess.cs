@@ -212,10 +212,13 @@ namespace MaintenanceToolCommon
                     receivedMessage[Const.INIT_HEADER_LEN + received++] = message[Const.INIT_HEADER_LEN + i];
                 }
 
-                string dump = AppCommon.DumpMessage(message, message.Length);
-                AppCommon.OutputLogToFile(string.Format(
-                    "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
-                    receivedMessageLen, dataLenInFrame, dump));
+                if (receivedMessage[0] != 0x82) {
+                    // キープアライブ以外の場合はログを出力
+                    string dump = AppCommon.DumpMessage(message, message.Length);
+                    AppCommon.OutputLogToFile(string.Format(
+                        "BLE Recv INIT frame: data size={0} length={1}\r\n{2}",
+                        receivedMessageLen, dataLenInFrame, dump));
+                }
 
             } else {
                 // CONTフレームであると判断
