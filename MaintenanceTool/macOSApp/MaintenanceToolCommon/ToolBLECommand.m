@@ -326,9 +326,12 @@
                 message = MSG_BLE_PARING_ERR_UNKNOWN;
             }
         }
-        
-        // コンソールにエラーメッセージを出力
-        [self outputLogMessage:message error:error];
+        // ログをファイル出力
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
+        } else {
+            [[ToolLogFile defaultLogger] error:message];
+        }
         // 画面上のテキストエリアにもメッセージを表示する
         [self setLastCommandMessage:message];
 
@@ -354,9 +357,6 @@
     }
 
     - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
-        // コンソールにエラーメッセージを出力
-        [self outputLogMessage:message error:error];
-        
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;
@@ -418,18 +418,6 @@
         // BLEデバイス接続処理を開始する
         [self setBleTransactionStarted:false];
         [[self toolBLECentral] centralManagerWillConnect];
-    }
-
-    - (void)outputLogMessage:(NSString *)message error:(NSError *)error {
-        if (message == nil) {
-            return;
-        }
-        // ログをファイル出力
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
-        } else {
-            [[ToolLogFile defaultLogger] info:message];
-        }
     }
 
 #pragma mark - Interface for PinCodeParamWindow

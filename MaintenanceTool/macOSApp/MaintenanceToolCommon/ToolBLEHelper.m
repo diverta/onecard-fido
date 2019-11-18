@@ -173,8 +173,14 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
         self.connectedService    = nil;
         self.u2fControlPointChar = nil;
         self.u2fStatusChar       = nil;
+        // ログをファイル出力
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", MSG_U2F_DEVICE_DISCONNECTED, [error description]];
+        } else {
+            [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_DISCONNECTED];
+        }
         // 切断完了
-        [[self delegate] centralManagerDidDisconnectWith:MSG_U2F_DEVICE_DISCONNECTED error:error];
+        [[self delegate] centralManagerDidDisconnectWith:nil error:nil];
     }
 
 #pragma mark - Discover services
