@@ -35,9 +35,9 @@
         public const string MSG_CLEAR_PIN_CODE_COMMENT3 = "  MAIN SWを１回押してください.";
 
         // ツール設定画面
-        public const string MSG_LABEL_AUTH_PARAM_GET = "設定読込";
-        public const string MSG_LABEL_AUTH_PARAM_SET = "設定書込";
-        public const string MSG_LABEL_AUTH_PARAM_RESET = "設定解除";
+        public const string MSG_LABEL_AUTH_PARAM_GET = "自動認証設定の読込";
+        public const string MSG_LABEL_AUTH_PARAM_SET = "自動認証設定の書込";
+        public const string MSG_LABEL_AUTH_PARAM_RESET = "自動認証設定の解除";
         public const string MSG_PROMPT_INPUT_UUID_STRING_LEN = "スキャン対象サービスUUIDを36桁で入力してください";
         public const string MSG_PROMPT_INPUT_UUID_STRING_PATTERN = "UUIDを正しい形式で入力してください。\n（例：422E0000-E141-11E5-A837-0800200C9A66）";
         public const string MSG_PROMPT_INPUT_UUID_SCAN_SEC_LEN = "スキャン秒数を1桁で入力してください";

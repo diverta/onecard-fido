@@ -68,8 +68,8 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // コマンドタイムアウト監視開始
-            // TODO
+            // 処理開始ログ出力
+            toolPreferenceForm.OnToolPreferenceCommandStarted();
 
             // 画面から引き渡されたパラメーターを退避
             toolPreferenceParameter = parameter;

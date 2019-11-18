@@ -328,6 +328,8 @@ namespace MaintenanceToolGUI
             // 処理開始メッセージを表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
+            // ログファイルにも出力
+            AppCommon.OutputLogToFile(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -336,9 +338,11 @@ namespace MaintenanceToolGUI
             if (message == "") {
                 return;
             }
-            // コマンドの実行結果を表示
+            // コマンドの実行結果をログファイルに出力後、
+            // 画面およびメッセージボックスダイアログに表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            AppCommon.OutputLogToFile(formatted);
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
