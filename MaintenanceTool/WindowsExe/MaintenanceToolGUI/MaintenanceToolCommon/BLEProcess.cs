@@ -72,7 +72,7 @@ namespace MaintenanceToolCommon
                     ReceiveBLEFailedEvent(bleService.IsCritical(), 0);
                     return;
                 }
-                AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_CONNECTED);
+                AppCommon.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_CONNECTED);
             }
 
             // BLEデバイスにメッセージをフレーム分割して送信
@@ -84,7 +84,7 @@ namespace MaintenanceToolCommon
             }
 
             // リクエスト送信完了メッセージを出力
-            AppCommon.OutputLogToFile(AppCommon.MSG_REQUEST_SENT);
+            AppCommon.OutputLogInfo(AppCommon.MSG_REQUEST_SENT);
         }
 
         private async Task<bool> SendBLEMessageFrames(byte[] message, int length)
@@ -246,7 +246,7 @@ namespace MaintenanceToolCommon
                 int messageLength = Const.INIT_HEADER_LEN + receivedMessageLen;
 
                 // 受信データを転送
-                AppCommon.OutputLogToFile(AppCommon.MSG_RESPONSE_RECEIVED);
+                AppCommon.OutputLogInfo(AppCommon.MSG_RESPONSE_RECEIVED);
                 ReceiveBLEMessageEvent(receivedMessage, messageLength);
             }
         }

@@ -49,7 +49,7 @@ namespace MaintenanceToolCommon
         {
             // 切断
             StopCommunicate();
-            AppCommon.OutputLogToFile(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
+            AppCommon.OutputLogInfo(AppCommon.MSG_U2F_DEVICE_DISCONNECTED);
         }
 
         public async Task<bool> Send(byte[] u2fRequestFrameData, int frameLen)
@@ -92,7 +92,7 @@ namespace MaintenanceToolCommon
                 foreach (var radio in radios) {
                     if (radio.Kind == RadioKind.Bluetooth) {
                         if (radio.State == RadioState.On) {
-                            AppCommon.OutputLogToFile("Bluetoothはオンです。");
+                            AppCommon.OutputLogInfo("Bluetoothはオンです。");
                             bton = true;
                             break;
                         }
@@ -110,18 +110,18 @@ namespace MaintenanceToolCommon
                 return;
             }
 
-            AppCommon.OutputLogToFile("FIDO認証器とのペアリングを開始します。");
+            AppCommon.OutputLogInfo("FIDO認証器とのペアリングを開始します。");
             BluetoothAddress = 0;
             watcher.Start();
 
             // FIDO認証器がみつかるまで待機（最大10秒）
-            AppCommon.OutputLogToFile("FIDO認証器からのアドバタイズ監視を開始します。");
+            AppCommon.OutputLogInfo("FIDO認証器からのアドバタイズ監視を開始します。");
             for (int i = 0; i < 10 && BluetoothAddress == 0; i++) {
                 await Task.Run(() => System.Threading.Thread.Sleep(1000));
             }
 
             watcher.Stop();
-            AppCommon.OutputLogToFile("FIDO認証器からのアドバタイズ監視を終了しました。");
+            AppCommon.OutputLogInfo("FIDO認証器からのアドバタイズ監視を終了しました。");
 
             if (BluetoothAddress != 0) {
                 // FIDO認証器が見つかった場合はペアリング実行
@@ -138,13 +138,13 @@ namespace MaintenanceToolCommon
             // FIDO認証器が見つかったら、
             // アドレス情報を保持し、画面スレッドに通知
             string name = eventArgs.Advertisement.LocalName;
-            AppCommon.OutputLogToFile(string.Format("BLEデバイス[{0}]が見つかりました: BluetoothAddress={1}, {2} services",
+            AppCommon.OutputLogInfo(string.Format("BLEデバイス[{0}]が見つかりました: BluetoothAddress={1}, {2} services",
                 name, eventArgs.BluetoothAddress, eventArgs.Advertisement.ServiceUuids.Count));
             foreach (Guid g in eventArgs.Advertisement.ServiceUuids) {
                 AppCommon.OutputLogToFile(string.Format("  service={0}", g.ToString()));
                 if (g.Equals(U2F_BLE_SERVICE_UUID)) {
                     BluetoothAddress = eventArgs.BluetoothAddress;
-                    AppCommon.OutputLogToFile("FIDO認証器が見つかりました.");
+                    AppCommon.OutputLogInfo("FIDO認証器が見つかりました.");
                     break;
                 }
             }
@@ -152,7 +152,7 @@ namespace MaintenanceToolCommon
 
         private void CustomOnPairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
         {
-            AppCommon.OutputLogToFile("FIDO認証器とのペアリングが自動的に実行されます。");
+            AppCommon.OutputLogInfo("FIDO認証器とのペアリングが自動的に実行されます。");
             args.Accept();
         }
 
@@ -176,7 +176,7 @@ namespace MaintenanceToolCommon
                 if (result.Status == DevicePairingResultStatus.Paired ||
                     result.Status == DevicePairingResultStatus.AlreadyPaired) {
                     success = true;
-                    AppCommon.OutputLogToFile("FIDO認証器とのペアリングが成功しました。");
+                    AppCommon.OutputLogInfo("FIDO認証器とのペアリングが成功しました。");
                 } else if (result.Status == DevicePairingResultStatus.Failed) {
                     success = false;
                     messageOnFail = AppCommon.MSG_BLE_PARING_ERR_PAIR_MODE;
@@ -213,7 +213,7 @@ namespace MaintenanceToolCommon
                 // データ受信監視を開始
                 foreach (GattDeviceService service in BLEServices) {
                     if (await StartBLENotification(service)) {
-                        AppCommon.OutputLogToFile(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
+                        AppCommon.OutputLogInfo(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_START, service.Device.Name));
                         break;
                     }
                     AppCommon.OutputLogError(string.Format("{0}({1})", AppCommon.MSG_BLE_NOTIFICATION_FAILED, service.Device.Name));
@@ -234,7 +234,7 @@ namespace MaintenanceToolCommon
         {
             critical = false;
             try {
-                AppCommon.OutputLogToFile(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
+                AppCommon.OutputLogInfo(string.Format("FIDO BLEサービス({0})を検索します。", U2F_BLE_SERVICE_UUID));
                 string selector = GattDeviceService.GetDeviceSelectorFromUuid(U2F_BLE_SERVICE_UUID);
                 DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(selector);
 
@@ -251,7 +251,7 @@ namespace MaintenanceToolCommon
                     return false;
                 }
 
-                AppCommon.OutputLogToFile(AppCommon.MSG_BLE_U2F_SERVICE_FOUND);
+                AppCommon.OutputLogInfo(AppCommon.MSG_BLE_U2F_SERVICE_FOUND);
                 return true;
 
             } catch (Exception e) {

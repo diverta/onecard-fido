@@ -64,7 +64,7 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError(AppCommon.MSG_USB_DETECT_FAILED);
                 return;
             }
-            AppCommon.OutputLogToFile(AppCommon.MSG_USB_DETECT_STARTED);
+            AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_STARTED);
 
             // USB HIDデバイスに自動接続
             StartAsyncOperation();
@@ -78,7 +78,7 @@ namespace MaintenanceToolGUI
             // USBデバイス検知を終了
             if (notificationHandle != null) {
                 UnregisterDeviceNotification(notificationHandle);
-                AppCommon.OutputLogToFile(AppCommon.MSG_USB_DETECT_END);
+                AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_END);
             }
         }
 
@@ -141,7 +141,7 @@ namespace MaintenanceToolGUI
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
             MessageTextEvent(AppCommon.MSG_HID_CONNECTED);
-            AppCommon.OutputLogToFile(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
+            AppCommon.OutputLogInfo(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
         }
 
         // 受信データを保持
