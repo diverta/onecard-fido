@@ -134,7 +134,7 @@
         // レスポンス内に"hmac-secret"拡張が含まれていたらその旨をログ表示
         if (ctap2_cbor_decode_ext_hmac_secret()->flag) {
             [[ToolLogFile defaultLogger]
-             info:@"authenticatorMakeCredential: HMAC Secret Extension available"];
+             debug:@"authenticatorMakeCredential: HMAC Secret Extension available"];
         }
         return true;
     }
@@ -182,7 +182,7 @@
         if (verifySalt) {
             bool success = ctap2_cbor_decode_verify_salt();
             [[ToolLogFile defaultLogger]
-             infoWithFormat:@"authenticatorGetAssertion: HMAC Secret verification %@",
+             debugWithFormat:@"authenticatorGetAssertion: HMAC Secret verification %@",
              success ? @"success" : @"failed"];
             return success;
         } else {
