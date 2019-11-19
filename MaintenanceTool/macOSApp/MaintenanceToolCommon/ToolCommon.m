@@ -16,6 +16,10 @@
 
 @implementation ToolCommon
 
+    + (NSString *)getAppVersionString {
+        return [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+    }
+
     + (NSData *)generateHexBytesFrom:(NSString *)hexString {
         unsigned int  hexInt;
         unsigned char byte;
