@@ -12,6 +12,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
+#import "ToolLogFile.h"
 
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
@@ -61,7 +62,6 @@
     - (void)doRequestCommandPairing {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
-        NSLog(@"Pairing start");
         
         // 書き込むコマンド（APDU）を編集
         unsigned char arr[] = {0x00, 0x45, 0x00, 0x00};
@@ -78,7 +78,6 @@
     - (void)doRequestCommandPing {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
-        NSLog(@"BLE ping start");
         // 100バイトのランダムなPINGデータを生成
         [self setPingData:[ToolCommon generateRandomBytesDataOf:100]];
         // 分割送信のために64バイトごとのコマンド配列を作成する
@@ -88,7 +87,7 @@
     - (void)doResponseCommandPing {
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [[self bleResponseData] isEqualToData:[self pingData]];
-        [self commandDidProcess:result message:@"BLE ping end"];
+        [self commandDidProcess:result message:nil];
     }
 
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
@@ -110,6 +109,7 @@
         NSUInteger dataForCommandLength = [dataForCommand length];
         NSUInteger start    = 0;
         char       sequence = 0;
+        uint16_t   dump_data_len;
 
         NSMutableArray<NSData *> *array = [[NSMutableArray alloc] init];
         while (start < dataForCommandLength) {
@@ -126,22 +126,31 @@
                 initHeader[1] = dataForCommandLength / 256;
                 initHeader[2] = dataForCommandLength % 256;
                 dataHeader = [[NSData alloc] initWithBytes:initHeader length:sizeof(initHeader)];
-
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"BLE Sent INIT frame: data size=%d length=%d", dataForCommandLength, strlen];
+                dump_data_len = strlen + sizeof(initHeader);
+                
             } else {
                 // 最大63バイト分取得する
                 if (strlen > 63) {
                     strlen = 63;
                 }
                 // BLEヘッダーにシーケンス番号を設定する
-                contHeader[0] = sequence++;
+                contHeader[0] = sequence;
                 dataHeader = [[NSData alloc] initWithBytes:contHeader length:sizeof(contHeader)];
+                // ログ出力
+                [[ToolLogFile defaultLogger]
+                 debugWithFormat:@"BLE Sent CONT frame: seq=%d length=%d", sequence++, strlen];
+                dump_data_len = strlen + sizeof(contHeader);
             }
 
             // スタート位置からstrlen文字分切り出して、ヘッダーに連結
             [dataRequest appendData:dataHeader];
             [dataRequest appendData:[dataForCommand subdataWithRange:NSMakeRange(start, strlen)]];
             [array addObject:dataRequest];
-            
+            // フレーム内容をログ出力
+            [[ToolLogFile defaultLogger] hexdump:dataRequest];
             // スタート位置を更新
             start += strlen;
         }
@@ -225,13 +234,21 @@
             // 4バイト目から後ろを切り出して連結
             NSData *tmp  = [responseData subdataWithRange:NSMakeRange(3, [responseData length] - 3)];
             receivedData = [[NSMutableData alloc] initWithData:tmp];
-            
+            // ログ出力
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"BLE Recv INIT frame: data size=%d length=%d", totalLength, [tmp length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
+
         } else {
             // 2バイト目から後ろを切り出して連結
             NSData *tmp  = [responseData subdataWithRange:NSMakeRange(1, [responseData length] - 1)];
             [receivedData appendData:tmp];
+            // ログ出力
+            uint8_t *b = (uint8_t *)[responseData bytes];
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"BLE Recv CONT frame: seq=%d length=%d", b[0], [tmp length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
         }
-        NSLog(@"Received response %@", responseData);
         
         if (receivedData && ([receivedData length] == totalLength)) {
             // 全受信データを保持
@@ -281,9 +298,7 @@
         // コマンド配列をブランクに初期化
         [self setBleRequestArray:nil];
         if (message) {
-            // 引数のメッセージをコンソール出力
-            NSLog(@"%@", message);
-            // 画面上のテキストエリアにもメッセージを表示する
+            // 画面上のテキストエリアにメッセージを表示する
             [self setLastCommandMessage:message];
         }
         // ポップアップ表示させるためのリザルトを保持
@@ -311,9 +326,12 @@
                 message = MSG_BLE_PARING_ERR_UNKNOWN;
             }
         }
-        
-        // コンソールにエラーメッセージを出力
-        [self displayErrorMessage:message error:error];
+        // ログをファイル出力
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
+        } else {
+            [[ToolLogFile defaultLogger] error:message];
+        }
         // 画面上のテキストエリアにもメッセージを表示する
         [self setLastCommandMessage:message];
 
@@ -331,6 +349,7 @@
             [self.toolBLECentral centralManagerWillStartResponseTimeout];
         } else {
             // 後続レスポンスがなければ、トランザクション完了と判断
+            [[ToolLogFile defaultLogger] info:MSG_RESPONSE_RECEIVED];
             [self setBleTransactionStarted:false];
             // レスポンスを次処理に引き渡す
             [self toolCommandWillProcessBleResponse];
@@ -338,9 +357,6 @@
     }
 
     - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
-        // コンソールにエラーメッセージを出力
-        [self displayErrorMessage:message error:error];
-        
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;
@@ -352,16 +368,7 @@
                                       message:[self lastCommandMessage]];
     }
 
-    - (void)notifyCentralManagerMessage:(NSString *)message {
-        if (message == nil) {
-            return;
-        }
-        // コンソールログを出力
-        NSLog(@"%@", message);
-    }
-
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
-        NSLog(@"centralManagerDidUpdateState: %ld", state);
     }
 
 #pragma mark - Retry BLE connection
@@ -375,15 +382,16 @@
         if ([self bleConnectionRetryCount] < BLE_CONNECTION_RETRY_MAX_COUNT) {
             // 再試行回数をカウントアップ
             [self setBleConnectionRetryCount:([self bleConnectionRetryCount] + 1)];
-            NSLog(MSG_BLE_CONNECTION_RETRY_WITH_CNT,
-                  (unsigned long)[self bleConnectionRetryCount]);
+            [[ToolLogFile defaultLogger]
+             warnWithFormat:MSG_BLE_CONNECTION_RETRY_WITH_CNT,
+             (unsigned long)[self bleConnectionRetryCount]];
             // BLEデバイス接続処理に移る
             [self startBleConnection];
             return true;
             
         } else {
             // 再試行上限回数に達している場合は、その旨コンソールログに出力
-            NSLog(MSG_BLE_CONNECTION_RETRY_END);
+            [[ToolLogFile defaultLogger] warn:MSG_BLE_CONNECTION_RETRY_END];
             // ポップアップ表示させる失敗メッセージとリザルトを保持
             [self setLastCommandMessage:MSG_BLE_CONNECTION_RETRY_END];
             [self setLastCommandSuccess:false];
@@ -410,18 +418,6 @@
         // BLEデバイス接続処理を開始する
         [self setBleTransactionStarted:false];
         [[self toolBLECentral] centralManagerWillConnect];
-    }
-
-    - (void)displayErrorMessage:(NSString *)message error:(NSError *)error {
-        if (message == nil) {
-            return;
-        }
-        // コンソールログを出力
-        if (error) {
-            NSLog(@"%@ %@", message, [error description]);
-        } else {
-            NSLog(@"%@", message);
-        }
     }
 
 #pragma mark - Interface for PinCodeParamWindow

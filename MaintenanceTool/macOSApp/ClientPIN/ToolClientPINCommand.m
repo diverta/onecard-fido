@@ -14,6 +14,7 @@
 #import "CBORDecoder.h"
 #import "CBOREncoder.h"
 #import "debug_log.h"
+#import "ToolLogFile.h"
 
 @interface ToolClientPINCommand ()
 
@@ -29,7 +30,6 @@
         // 使用するダイアログを生成
         [self setSetPinParamWindow:[[SetPinParamWindow alloc]
                                     initWithWindowNibName:@"SetPinParamWindow"]];
-        NSLog(@"ToolClientPINCommand initialized");
         return self;
     }
 
@@ -61,7 +61,7 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
-            NSLog(@"CBOREncoder error: %s", log_debug_message());
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOREncoder error: %s", log_debug_message()];
             return nil;
         }
     }

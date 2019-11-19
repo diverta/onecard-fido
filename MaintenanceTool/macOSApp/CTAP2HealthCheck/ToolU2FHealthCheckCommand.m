@@ -29,7 +29,6 @@
 
     - (id)init {
         self = [super init];
-        NSLog(@"ToolU2FHealthCheckCommand initialized");
         return self;
     }
 
@@ -173,8 +172,6 @@
     }
 
     - (void)doRequestCommandRegister {
-        NSLog(@"Health check start");
-        
         // テストデータを編集
         NSMutableData *requestData = [self createTestRequestData];
         // APDUを編集し、分割送信のために64バイトごとのコマンド配列を作成する
@@ -191,7 +188,6 @@
     - (void)doResponseCommandRegister:(NSData *)message {
         // 中間メッセージを表示
         [self displayMessage:MSG_HCHK_U2F_REGISTER_SUCCESS];
-        NSLog(@"Register test success");
         // Registerレスポンスを内部で保持して後続処理を実行
         [self setRegisterReponseData:[[NSData alloc] initWithData:message]];
         // U2Fヘルスチェックの後続テストを実行
@@ -220,8 +216,6 @@
     }
 
     - (void)doResponseCommandAuthenticateCheck:(NSData *)message {
-        // 中間メッセージを表示
-        NSLog(@"Authenticate test (check) success");
         // U2Fヘルスチェックの後続テストを実行
         if ([self transportType] == TRANSPORT_BLE) {
             [self setCommand:COMMAND_TEST_AUTH_NO_USER_PRESENCE];
@@ -233,8 +227,6 @@
     }
 
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
-        // 中間メッセージを表示
-        NSLog(@"Authenticate test (dont-enforce-user-presence-and-sign) success");
         // 後続のU2F Authenticateを開始する前に、
         // 基板上のMAIN SWを押してもらうように促すメッセージを表示
         [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
@@ -253,7 +245,6 @@
 
     - (void)doResponseCommandAuthenticateUP:(NSData *)message {
         // 結果メッセージを表示
-        NSLog(@"Authenticate test (enforce-user-presence-and-sign) success");
         [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_SUCCESS];
         // U2Fヘルスチェック終了
         [self doResponseToAppDelegate:true message:@"Health check end"];

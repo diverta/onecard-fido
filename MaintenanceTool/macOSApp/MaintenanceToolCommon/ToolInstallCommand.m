@@ -8,6 +8,7 @@
 
 #import "ToolCommonMessage.h"
 #import "ToolInstallCommand.h"
+#import "ToolLogFile.h"
 
 @interface ToolInstallCommand ()
 
@@ -17,7 +18,6 @@
 
     - (id)init {
         self = [super init];
-        NSLog(@"ToolInstallCommand initialized");
         return self;
     }
 
@@ -30,7 +30,6 @@
     - (NSData *)generateInstallSkeyCertMessage:(Command)command
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath {
-        NSLog(@"Install secure key start");
         NSMutableData *message = [NSMutableData alloc];
 
         // 鍵ファイルから秘密鍵（32バイト）を取得し、レスポンスメッセージ領域に格納
@@ -60,7 +59,8 @@
                          encoding:NSUTF8StringEncoding
                          error:&err];
         if (err.code) {
-            NSLog(@"Secure key file read error: %@", err.description);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key file read error: %@", [err description]];
             [self setLastErrorMessage:MSG_CANNOT_READ_SKEY_PEM_FILE];
             return nil;
         }
@@ -87,7 +87,7 @@
         
         // ヘッダーが見つからない場合はエラー
         if (headerFound == false) {
-            NSLog(@"Secure key file has no header 'BEGIN EC PRIVATE KEY'");
+            [[ToolLogFile defaultLogger] error:@"Secure key file has no header 'BEGIN EC PRIVATE KEY'"];
             [self setLastErrorMessage:MSG_INVALID_SKEY_CONTENT_IN_PEM];
             return nil;
         }
@@ -105,7 +105,8 @@
         
         // デコードされたデータが39バイト未満の場合はエラー
         if ([decodedPemData length] < 39) {
-            NSLog(@"Secure key has invalid length: %ld", [decodedPemData length]);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key has invalid length: %ld", [decodedPemData length]];
             [self setLastErrorMessage:MSG_INVALID_SKEY_LENGTH_IN_PEM];
             return nil;
         }
@@ -113,7 +114,8 @@
         // 秘密鍵データの先頭6バイト目に「0x0420」というヘッダーがない場合はエラー
         const char *decodedPem = [decodedPemData bytes];
         if (!(decodedPem[5] == 0x04 && decodedPem[6] == 0x20)) {
-            NSLog(@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]);
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Secure key has invalid header: 0x%02x%02x", decodedPem[5], decodedPem[6]];
             [self setLastErrorMessage:MSG_INVALID_SKEY_HEADER_IN_PEM];
             return nil;
         }
@@ -136,6 +138,7 @@
         // 証明書ファイルから読み込み
         NSData *data = [NSData dataWithContentsOfFile:certFilePath];
         if (data == nil || [data length] == 0) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Cannot read cert file: %@", certFilePath];
             [self setLastErrorMessage:MSG_CANNOT_READ_CERT_CRT_FILE];
             return nil;
         }
@@ -143,11 +146,11 @@
         // 証明書ファイルの長さが68バイト未満の場合はエラー
         NSUInteger dataCertLength = [data length];
         if (dataCertLength < 68) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"Invalid cert length: %@", dataCertLength];
             [self setLastErrorMessage:MSG_INVALID_CERT_LENGTH_IN_CRT];
             return nil;
         }
         
-        NSLog(MSG_READ_NBYTES_FROM_CRT_FILE, dataCertLength);
         return data;
     }
 

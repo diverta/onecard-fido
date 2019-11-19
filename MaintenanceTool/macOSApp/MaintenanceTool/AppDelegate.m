@@ -39,17 +39,19 @@
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-        self.toolHIDCommand = [[ToolHIDCommand alloc]  initWithDelegate:self];
-        self.toolBLECommand = [[ToolBLECommand alloc]  initWithDelegate:self];
-        self.toolFilePanel  = [[ToolFilePanel alloc]  initWithDelegate:self];
+        // アプリケーション開始ログを出力
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommon getAppVersionString]];
 
-        self.textView.font = [NSFont fontWithName:@"Courier" size:12];
+        // コマンドクラスの初期化
+        [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
+        [self setToolBLECommand:[[ToolBLECommand alloc] initWithDelegate:self]];
+        [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+
+        // テキストエリアの初期化
+        [[self textView] setFont:[NSFont fontWithName:@"Courier" size:12]];
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
-        // アプリケーションの開始ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED,
-         [ToolCommon getAppVersionString]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -382,10 +384,11 @@
                 break;
         }
         if ([self processNameOfCommand]) {
-            // コマンド開始メッセージを画面表示
+            // コマンド開始メッセージを画面表示し、ログファイルにも出力
             NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
                                   [self processNameOfCommand]];
             [self notifyToolCommandMessage:startMsg];
+            [[ToolLogFile defaultLogger] info:startMsg];
         }
     }
 
@@ -402,10 +405,12 @@
                              result? MSG_SUCCESS:MSG_FAILURE];
             // メッセージを画面のテキストエリアに表示
             [self notifyToolCommandMessage:str];
-            // ポップアップを表示
+            // メッセージをログファイルに出力してから、ポップアップを表示
             if (result) {
+                [[ToolLogFile defaultLogger] info:str];
                 [ToolPopupWindow informational:str informativeText:nil];
             } else {
+                [[ToolLogFile defaultLogger] error:str];
                 [ToolPopupWindow critical:str informativeText:nil];
             }
         }

@@ -92,11 +92,12 @@
             return;
         }
 
+        // 開始ログを出力
+        [[self toolPreferenceWindow] toolPreferenceCommandDidStart];
+        
         // リクエストデータを編集し、内部変数に設定
         [self setCommandType:commandType];
         [self generateRequestCommandAuthParamGet:[self commandType]];
-        NSLog(@"toolPreferenceWillProcess: commandType[%ld] request[%@]",
-              (long)commandType, [self processData]);
 
         // AppDelegate経由でコマンドを実行
         [[self delegate] toolPreferenceWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData]];
@@ -105,8 +106,6 @@
     - (void)toolPreferenceDidProcess:(Command)command
                                  CMD:(uint8_t)cmd response:(NSData *)resp
                               result:(bool)result message:(NSString *)message {
-        NSLog(@"toolPreferenceDidProcess: cmd[%02x] response[%@]", cmd, resp);
-
         // 取得データを画面項目に設定し、画面に制御を戻す
         bool success = [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
         [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
@@ -118,7 +117,6 @@
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         // すでにツール設定画面が開いている場合は終了
         if ([[parentWindow sheets] count] > 0) {
-            NSLog(@"Preference window is already opened");
             return;
         }
         // ダイアログの親ウィンドウを保持
