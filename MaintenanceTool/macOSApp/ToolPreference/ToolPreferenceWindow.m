@@ -15,6 +15,7 @@
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDString;
     @property (assign) IBOutlet NSTextField     *fieldServiceUUIDScanSec;
     @property (assign) IBOutlet NSTextField     *fieldVersionText;
+    @property (assign) IBOutlet NSTextField     *fieldCopyrightText;
     @property (assign) IBOutlet NSButton        *buttonAuthParamGet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamSet;
     @property (assign) IBOutlet NSButton        *buttonAuthParamReset;
@@ -34,6 +35,8 @@
         // バージョン文字列を設定
         [[self fieldVersionText] setStringValue:[NSString stringWithFormat:@"Version %@",
                                                  [ToolCommon getAppVersionString]]];
+        // 著作権情報文字列を設定（バンドルに該当項目がないため、ここで管理）
+        [[self fieldCopyrightText] setStringValue:@"Copyright (c) 2017-2019 Diverta Inc."];
         // 画面項目を初期化
         [self initFieldValue];
     }

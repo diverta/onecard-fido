@@ -13,6 +13,7 @@
                 <outlet property="buttonAuthParamSet" destination="CSJ-7V-QFp" id="qr2-zf-dX4"/>
                 <outlet property="buttonCheck" destination="nvc-7G-Non" id="mJM-bw-5ad"/>
                 <outlet property="buttonClose" destination="B5l-qJ-2om" id="dCQ-0g-oBR"/>
+                <outlet property="fieldCopyrightText" destination="hIu-ir-PYR" id="VWi-mK-1rE"/>
                 <outlet property="fieldServiceUUIDScanSec" destination="bab-0v-lpe" id="1ws-PZ-C7h"/>
                 <outlet property="fieldServiceUUIDString" destination="XcB-Gt-YBA" id="7oZ-Wt-iFD"/>
                 <outlet property="fieldVersionText" destination="byf-8p-gt6" id="5Lc-u8-h6W"/>
@@ -182,7 +183,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="245" id="1ZP-ad-6d3"/>
                                             </constraints>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Copywrite (c) 2017-2019 Diverta Inc." id="Rcm-iY-Rin">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Copywrite (c) 2017-2019 Diverta Inc." id="Rcm-iY-Rin" userLabel="Copyright">
                                                 <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
