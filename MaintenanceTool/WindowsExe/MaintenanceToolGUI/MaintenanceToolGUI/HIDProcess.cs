@@ -61,10 +61,10 @@ namespace MaintenanceToolGUI
             notificationHandle = RegisterDeviceNotification(handle, buffer, 0);
             if (notificationHandle == null) {
                 MessageTextEvent(AppCommon.MSG_USB_DETECT_FAILED);
-                OutputLogToFile(AppCommon.MSG_USB_DETECT_FAILED);
+                AppCommon.OutputLogError(AppCommon.MSG_USB_DETECT_FAILED);
                 return;
             }
-            OutputLogToFile(AppCommon.MSG_USB_DETECT_STARTED);
+            AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_STARTED);
 
             // USB HIDデバイスに自動接続
             StartAsyncOperation();
@@ -78,7 +78,7 @@ namespace MaintenanceToolGUI
             // USBデバイス検知を終了
             if (notificationHandle != null) {
                 UnregisterDeviceNotification(notificationHandle);
-                OutputLogToFile(AppCommon.MSG_USB_DETECT_END);
+                AppCommon.OutputLogInfo(AppCommon.MSG_USB_DETECT_END);
             }
         }
 
@@ -141,7 +141,7 @@ namespace MaintenanceToolGUI
             device = new HIDDevice(devicePath);
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
             MessageTextEvent(AppCommon.MSG_HID_CONNECTED);
-            OutputLogToFile(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
+            AppCommon.OutputLogInfo(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
         }
 
         // 受信データを保持
@@ -163,7 +163,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージは最低 8 バイト
             if (message.Length < 8) {
-                OutputLogToFile(String.Format(
+                AppCommon.OutputLogError(String.Format(
                     "Device_dataReceived: invalid received message size({0})", message.Length));
                 return;
             }
@@ -193,7 +193,6 @@ namespace MaintenanceToolGUI
             }
             int hid_init_data_len = 57;
             int hid_cont_data_len = 59;
-            int dumpMessageLen;
             if (frameData[4] > 127) {
                 // INITフレームであると判断
                 receivedCMD = frameData[4];
@@ -209,10 +208,10 @@ namespace MaintenanceToolGUI
                 }
 
                 ReceivedLogBuffer = "";
+                string dump = AppCommon.DumpMessage(frameData, dataLenInFrame + Const.HID_INIT_HEADER_LEN);
                 AppendLogToBuffer(string.Format(
-                    "Recv INIT frame: data size={0} length={1} cmd=0x{2:x2}",
-                    receivedMessageLen, dataLenInFrame, receivedCMD), true);
-                dumpMessageLen = dataLenInFrame + Const.HID_INIT_HEADER_LEN;
+                    "HID Recv INIT frame: data size={0} length={1}\r\n{2}",
+                    receivedMessageLen, dataLenInFrame, dump));
 
             } else {
                 // CONTフレームであると判断
@@ -225,10 +224,10 @@ namespace MaintenanceToolGUI
                     receivedMessage[received++] = frameData[Const.HID_CONT_HEADER_LEN + i];
                 }
 
+                string dump = AppCommon.DumpMessage(frameData, dataLenInFrame + Const.HID_CONT_HEADER_LEN);
                 AppendLogToBuffer(string.Format(
-                    "Recv CONT frame: seq={0} length={1}", 
-                    seq, dataLenInFrame), true);
-                dumpMessageLen = dataLenInFrame + Const.HID_CONT_HEADER_LEN;
+                    "HID Recv CONT frame: seq={0} length={1}\r\n{2}", 
+                    seq, dataLenInFrame, dump));
             }
 
             // キープアライブレスポンスの場合は無視
@@ -236,26 +235,20 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // メッセージをダンプ
-            AppendLogToBuffer(AppCommon.DumpMessage(frameData, dumpMessageLen), false);
-
             if (received == receivedMessageLen) {
                 // 全フレームを受信できたら、
+                // この時点で一括してログ出力を行い、その後
                 // HIDデバイスからのデータをHIDMainに転送
                 AppCommon.OutputLogText(ReceivedLogBuffer);
                 ReceiveHIDMessageEvent(receivedMessage, receivedMessageLen);
             }
         }
 
-        private void AppendLogToBuffer(string message, bool printTimeStamp)
+        private void AppendLogToBuffer(string message)
         {
             // メッセージに現在時刻を付加する
-            string formatted;
-            if (printTimeStamp) {
-                formatted = string.Format("{0} {1}", DateTime.Now.ToString(), message);
-            } else {
-                formatted = string.Format("{0}", message);
-            }
+            string formatted = string.Format("{0} [debug] {1}", DateTime.Now.ToString(), message);
+
             // メッセージを一時領域に連結
             if (ReceivedLogBuffer.Length > 0) {
                 ReceivedLogBuffer += "\r\n";
@@ -280,10 +273,10 @@ namespace MaintenanceToolGUI
             // CMDをコピー
             frameData[4] = cmd;
 
-            OutputLogToFile(string.Format(
-                "Sent INIT frame: data size={0} length={1}",
-                messageSize, 0));
-            DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
+            string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN);
+            AppCommon.OutputLogDebug(string.Format(
+                "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
+                messageSize, 0, dump));
 
             // フレームデータを転送
             device.Write(frameData);
@@ -293,7 +286,7 @@ namespace MaintenanceToolGUI
         {
             // メッセージがない場合は終了
             if (message == null) {
-                OutputLogToFile("SendHIDMessage: invalid message buffer");
+                AppCommon.OutputLogError("SendHIDMessage: invalid message buffer");
                 return;
             }
             // 
@@ -341,10 +334,10 @@ namespace MaintenanceToolGUI
                         frameData[Const.HID_INIT_HEADER_LEN + i] = message[transferred++];
                     }
 
-                    OutputLogToFile(string.Format(
-                        "Sent INIT frame: data size={0} length={1}",
-                        messageSize, dataLenInFrame));
-                    DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
+                    string dump = AppCommon.DumpMessage(frameData, Const.HID_INIT_HEADER_LEN + dataLenInFrame);
+                    AppCommon.OutputLogDebug(string.Format(
+                        "HID Sent INIT frame: data size={0} length={1}\r\n{2}",
+                        messageSize, dataLenInFrame, dump));
 
                 } else {
                     // CONTフレーム
@@ -359,22 +352,15 @@ namespace MaintenanceToolGUI
                         frameData[Const.HID_CONT_HEADER_LEN + i] = message[transferred++];
                     }
 
-                    OutputLogToFile(string.Format(
-                        "Sent CONT frame: data seq={0} length={1}",
-                        seq++, dataLenInFrame));
-                    DumpMessage(frameData, Const.HID_CONT_HEADER_LEN + dataLenInFrame);
+                    string dump = AppCommon.DumpMessage(frameData, Const.HID_CONT_HEADER_LEN + dataLenInFrame);
+                    AppCommon.OutputLogDebug(string.Format(
+                        "HID Sent CONT frame: data seq={0} length={1}\r\n{2}",
+                        seq++, dataLenInFrame, dump));
                 }
 
                 // フレームデータを転送
                 device.Write(frameData);
             }
-        }
-
-        private void DumpMessage(byte[] message, int length)
-        {
-            // メッセージにログファイルに出力する
-            // （現在時刻を付加しない）
-            AppCommon.OutputLogToFile(AppCommon.DumpMessage(message, length), false);
         }
 
         private void CloseDevice()
@@ -384,12 +370,6 @@ namespace MaintenanceToolGUI
             }
             device.Close();
             device = null;
-        }
-
-        private void OutputLogToFile(string message)
-        {
-            // メッセージに現在時刻を付加し、ログファイルに出力する
-            AppCommon.OutputLogToFile(message, true);
         }
     }
 }

@@ -42,8 +42,6 @@ namespace MaintenanceToolGUI
             bleProcess.ReceiveBLEMessageEvent += new BLEProcess.ReceiveBLEMessageEventHandler(OnReceiveBLEMessage);
             bleProcess.ReceiveBLEFailedEvent += new BLEProcess.ReceiveBLEFailedEventHandler(OnReceiveBLEFailed);
 
-            AppCommon.OutputLogToFile(String.Format("{0}を起動しました", MainForm.MaintenanceToolTitle), true);
-
             // CTAP2共通処理に各種参照を引き渡す
             ctap2 = new Ctap2(mainForm, AppCommon.TRANSPORT_BLE);
             ctap2.SetBleMain(this);
@@ -200,7 +198,7 @@ namespace MaintenanceToolGUI
             Array.Copy(receivedMessage, 3, BLEResponseData, 0, receivedLen - 3);
         }
 
-        public void DisconnectBLE()
+        public void OnFormDestroy()
         {
             // 接続ずみの場合はBLEデバイスを切断
             bleProcess.DisconnectBLE();

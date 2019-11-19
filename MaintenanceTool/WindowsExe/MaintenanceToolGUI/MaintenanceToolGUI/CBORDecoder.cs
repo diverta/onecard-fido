@@ -144,8 +144,8 @@ namespace MaintenanceToolGUI
             index += size;
 
             if (CreateOrGetCommandResponse.OutputDebugLog) {
-                AppCommon.OutputLogToFile("rpIdHash: ", true);
-                AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.RpIdHash, size), false);
+                string dump = AppCommon.DumpMessage(response.RpIdHash, size);
+                AppCommon.OutputLogDebug(string.Format("rpIdHash:\r\n{0}", dump));
             }
 
             // flags
@@ -172,8 +172,8 @@ namespace MaintenanceToolGUI
                 index += size;
 
                 if (CreateOrGetCommandResponse.OutputDebugLog) {
-                    AppCommon.OutputLogToFile("CredentialId: ", true);
-                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.CredentialId, size), false);
+                    string dump = AppCommon.DumpMessage(response.CredentialId, size);
+                    AppCommon.OutputLogDebug(string.Format("CredentialId:\r\n{0}", dump));
                 }
 
                 // credentialPublicKey
@@ -182,8 +182,8 @@ namespace MaintenanceToolGUI
                 index += size;
 
                 if (CreateOrGetCommandResponse.OutputDebugLog) {
-                    AppCommon.OutputLogToFile("CredentialPublicKeyByte: ", true);
-                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(response.CredentialPublicKeyByte, size), false);
+                    string dump = AppCommon.DumpMessage(response.CredentialPublicKeyByte, size);
+                    AppCommon.OutputLogDebug(string.Format("CredentialPublicKeyByte:\r\n{0}", dump));
                 }
             }
 
@@ -224,13 +224,13 @@ namespace MaintenanceToolGUI
 
             if (CreateOrGetCommandResponse.OutputDebugLog) {
                 if (response.HmacSecretRes.Flag) {
-                    AppCommon.OutputLogToFile(string.Format("Extensions 'hmac-secret':true"), true);
+                    AppCommon.OutputLogDebug(string.Format("HMAC Secret Extension available"));
                 }
                 if (response.HmacSecretRes.Output != null) {
-                    AppCommon.OutputLogToFile(string.Format("Extensions 'hmac-secret':"), true);
-                    AppCommon.OutputLogToFile(AppCommon.DumpMessage(
+                    string dump = AppCommon.DumpMessage(
                         response.HmacSecretRes.Output,
-                        ExtHmacSecretResponse.OutputSize), false);
+                        ExtHmacSecretResponse.OutputSize);
+                    AppCommon.OutputLogDebug(string.Format("Extensions 'hmac-secret':\r\n{0}", dump));
                 }
             }
         }

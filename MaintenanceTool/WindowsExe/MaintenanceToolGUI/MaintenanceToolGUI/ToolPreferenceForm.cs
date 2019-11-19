@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaintenanceToolCommon;
+using System;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
@@ -10,6 +11,7 @@ namespace MaintenanceToolGUI
 
         // 実行した機能名を保持
         private string funcName;
+        private string funcNameShort;
 
         // 設定パラメーターを保持
         private ToolPreferenceParameter parameter = new ToolPreferenceParameter();
@@ -25,13 +27,16 @@ namespace MaintenanceToolGUI
             toolPreference = tp;
         }
 
-        public void SetTitleAndVersionText(String toolName, String toolVersion)
+        public void SetTitleAndVersionText(String toolName, String toolVersion, String toolCopyright)
         {
             // ツールタイトル表示
             labelToolName.Text = toolName;
 
             // バージョン表示
             labelVersion.Text = toolVersion;
+
+            // 著作権表示
+            labelCopyright.Text = toolCopyright;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -87,6 +92,7 @@ namespace MaintenanceToolGUI
         {
             // 機能名を設定
             funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_GET;
+            funcNameShort = buttonRead.Text;
 
             // 自動認証用パラメーター照会コマンドを実行し、
             // スキャン対象サービスUUID、スキャン秒数を読込
@@ -114,6 +120,7 @@ namespace MaintenanceToolGUI
 
             // 機能名を設定
             funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_SET;
+            funcNameShort = buttonWrite.Text;
 
             // スキャン対象サービスUUID、スキャン秒数を設定し、
             // 自動認証用パラメーター設定コマンドを実行
@@ -136,6 +143,7 @@ namespace MaintenanceToolGUI
 
             // 機能名を設定
             funcName = ToolGUICommon.MSG_LABEL_AUTH_PARAM_RESET;
+            funcNameShort = buttonReset.Text;
 
             // 自動認証用パラメーター解除コマンドを実行
             parameter.CommandType = ToolPreference.CommandType.COMMAND_AUTH_PARAM_RESET;
@@ -213,17 +221,34 @@ namespace MaintenanceToolGUI
             textScanSec.Text = fields[2];
         }
 
+        //
+        // 自動認証設定コマンド実行開始時の処理
+        //
+        public void OnToolPreferenceCommandStarted()
+        {
+            // 処理開始メッセージをログファイルに出力
+            string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, funcName);
+            AppCommon.OutputLogInfo(formatted);
+        }
+
         // 
         // 自動認証設定コマンド実行完了時の処理
         //
         public void OnToolPreferenceCommandExecuted(bool success, string errMessage)
         {
-            // コマンドの実行結果を表示
+            // コマンドの実行結果をログ出力
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 funcName, 
                 success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
-
+            if (success) {
+                AppCommon.OutputLogInfo(formatted);
+            } else {
+                AppCommon.OutputLogError(formatted);
+            }
             // 引数に格納されたエラーメッセージをポップアップ表示
+            formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
+                funcNameShort,
+                success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
             if (success) {
                 // 設定書込・解除ボタンを押下可とする
                 SetupFieldAndButton();

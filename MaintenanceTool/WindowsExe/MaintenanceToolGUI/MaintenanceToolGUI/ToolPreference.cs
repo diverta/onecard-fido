@@ -49,10 +49,13 @@ namespace MaintenanceToolGUI
             toolPreferenceForm.SetToolPreferenceRef(this);
         }
 
-        public void SetTitleAndVersionText(String toolName, String toolVersion)
+        public void SetTitleAndVersionText()
         {
             // ツール名、バージョンを引き渡し
-            toolPreferenceForm.SetTitleAndVersionText(toolName, toolVersion);
+            toolPreferenceForm.SetTitleAndVersionText(
+                MainForm.MaintenanceToolTitle, 
+                MainForm.MaintenanceToolVersion,
+                MainForm.MaintenanceToolCopyright);
         }
 
         public void ShowDialog()
@@ -68,8 +71,8 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // コマンドタイムアウト監視開始
-            // TODO
+            // 処理開始ログ出力
+            toolPreferenceForm.OnToolPreferenceCommandStarted();
 
             // 画面から引き渡されたパラメーターを退避
             toolPreferenceParameter = parameter;

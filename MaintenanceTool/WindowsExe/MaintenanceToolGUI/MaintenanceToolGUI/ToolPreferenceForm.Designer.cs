@@ -40,7 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelCopyright = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelToolName = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -159,7 +159,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label3);
+            this.tabPage2.Controls.Add(this.labelCopyright);
             this.tabPage2.Controls.Add(this.labelVersion);
             this.tabPage2.Controls.Add(this.labelToolName);
             this.tabPage2.Controls.Add(this.pictureBox1);
@@ -171,13 +171,14 @@
             this.tabPage2.Text = "バージョン";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // labelCopywrite
             // 
-            this.label3.Location = new System.Drawing.Point(116, 122);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(200, 12);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Copywrite (c) 2017-2019 Diverta Inc.";
+            this.labelCopyright.Location = new System.Drawing.Point(113, 122);
+            this.labelCopyright.Name = "labelCopywrite";
+            this.labelCopyright.Size = new System.Drawing.Size(226, 12);
+            this.labelCopyright.TabIndex = 7;
+            this.labelCopyright.Text = "labelCopywrite";
+            this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelVersion
             // 
@@ -185,7 +186,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(150, 12);
             this.labelVersion.TabIndex = 6;
-            this.labelVersion.Text = "Version 0.0.0";
+            this.labelVersion.Text = "labelVersion";
             // 
             // labelToolName
             // 
@@ -243,7 +244,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelCopyright;
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.Label labelToolName;
         private System.Windows.Forms.PictureBox pictureBox1;

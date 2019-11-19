@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MaintenanceToolCommon;
+using System;
+using System.Reflection;
 using System.Windows.Forms;
-using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
 {
@@ -12,8 +13,9 @@ namespace MaintenanceToolGUI
         private string commandTitle = "";
 
         // 管理ツールの情報
-        public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.20";
+        public static string MaintenanceToolTitle = "";
+        public static string MaintenanceToolVersion = "";
+        public static string MaintenanceToolCopyright = "";
 
         // タイムアウト監視用タイマー
         private CommandTimer commandTimer = null;
@@ -21,6 +23,14 @@ namespace MaintenanceToolGUI
         public MainForm()
         {
             InitializeComponent();
+            MaintenanceToolTitle = GetMaintenanceToolTitle();
+            MaintenanceToolVersion = String.Format("Version {0}", GetMaintenanceToolVersion());
+            MaintenanceToolCopyright = GetMaintenanceToolCopyright();
+
+            // アプリケーション開始ログを出力
+            AppCommon.OutputLogInfo(String.Format(
+                "{0}を起動しました: {1}", MaintenanceToolTitle, MaintenanceToolVersion));
+
             ble = new BLEMain(this);
             hid = new HIDMain(this);
 
@@ -34,30 +44,65 @@ namespace MaintenanceToolGUI
             // ツール設定画面を生成
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
-            toolPreference.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
+            toolPreference.SetTitleAndVersionText();
+        }
+
+        private static string GetMaintenanceToolTitle()
+        {
+            // タイトルを戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            AssemblyTitleAttribute asmTitle =
+                (AssemblyTitleAttribute)Attribute.GetCustomAttribute(
+                    asm, typeof(AssemblyTitleAttribute));
+            return asmTitle.Title;
+        }
+
+
+        private static string GetMaintenanceToolVersion()
+        {
+            // 製品バージョン文字列を戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo ver =
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(asm.Location);
+            return ver.ProductVersion;
+        }
+
+        private static string GetMaintenanceToolCopyright()
+        {
+            // 著作権情報を戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            AssemblyCopyrightAttribute copyright =
+                (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(
+                    asm, typeof(AssemblyCopyrightAttribute));
+            return copyright.Copyright;
         }
 
         private void CommandTimerElapsed(object sender, EventArgs e)
         {
             // コマンドタイムアウト発生時は、コマンド終了処理を行う
             OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
-            AppCommon.OutputLogToFile(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT, true);
+            AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
             OnAppMainProcessExited(false);
         }
 
         private void buttonQuit_Click(object sender, EventArgs e)
         {
-            // このアプリケーションを終了する
-            DisconnectBLE();
-            hid.OnFormDestroy();
-            AppCommon.OutputLogToFile(String.Format("{0}を終了しました", MaintenanceToolTitle), true);
+            // すべてのフォームを閉じる
             Application.Exit();
         }
 
-        public void DisconnectBLE()
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 接続ずみの場合はBLEデバイスを切断
-            ble.DisconnectBLE();
+            // このアプリケーションを終了する
+            TerminateApplication();
+        }
+
+        private void TerminateApplication()
+        {
+            // このアプリケーションを終了する
+            ble.OnFormDestroy();
+            hid.OnFormDestroy();
+            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
         public void OnPrintMessageText(string messageText)
@@ -323,6 +368,8 @@ namespace MaintenanceToolGUI
             // 処理開始メッセージを表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_START_MESSAGE, message);
             textBox1.AppendText(formatted + "\r\n");
+            // ログファイルにも出力
+            AppCommon.OutputLogInfo(formatted);
         }
 
         private void displayResultMessage(string message, bool success)
@@ -331,9 +378,15 @@ namespace MaintenanceToolGUI
             if (message == "") {
                 return;
             }
-            // コマンドの実行結果を表示
+            // コマンドの実行結果をログファイルに出力後、
+            // 画面およびメッセージボックスダイアログに表示
             string formatted = string.Format(ToolGUICommon.MSG_FORMAT_END_MESSAGE,
                 message, success ? ToolGUICommon.MSG_SUCCESS : ToolGUICommon.MSG_FAILURE);
+            if (success) {
+                AppCommon.OutputLogInfo(formatted);
+            } else {
+                AppCommon.OutputLogError(formatted);
+            }
             textBox1.AppendText(formatted + "\r\n");
             MessageBox.Show(this, formatted, MaintenanceToolTitle);
         }
@@ -342,10 +395,6 @@ namespace MaintenanceToolGUI
         {
             // ツール設定画面を表示
             toolPreference.ShowDialog();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
         }
 
         private void DoHIDCtap2TestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -360,24 +409,40 @@ namespace MaintenanceToolGUI
 
         private void DoHIDU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // U2Fヘルスチェック実行
             doCommand(sender);
         }
 
         private void DoHIDPingTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // PINGテストを実行
             doCommand(sender);
         }
 
         private void DoHIDGetFlashInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // Flash ROM情報取得コマンドを実行
             doCommand(sender);
         }
 
         private void DoHIDGetVersionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
             // バージョン情報取得コマンドを実行
             doCommand(sender);
         }

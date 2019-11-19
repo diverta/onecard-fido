@@ -464,9 +464,9 @@ namespace MaintenanceToolGUI
                 bool success = AppCommon.CompareBytes(decryptedSaltCur, DecryptedSaltOrg, ExtHmacSecretResponse.OutputSize);
 
                 // 検証結果はログファイル出力する
-                AppCommon.OutputLogToFile(string.Format(
-                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed"),
-                    true);
+                AppCommon.OutputLogDebug(string.Format(
+                    "authenticatorGetAssertion: hmac-secret-salt verify {0}", success ? "success" : "failed")
+                    );
                 return success;
 
             } else {
