@@ -49,10 +49,13 @@ namespace MaintenanceToolGUI
             toolPreferenceForm.SetToolPreferenceRef(this);
         }
 
-        public void SetTitleAndVersionText(String toolName, String toolVersion)
+        public void SetTitleAndVersionText()
         {
             // ツール名、バージョンを引き渡し
-            toolPreferenceForm.SetTitleAndVersionText(toolName, toolVersion);
+            toolPreferenceForm.SetTitleAndVersionText(
+                MainForm.MaintenanceToolTitle, 
+                MainForm.MaintenanceToolVersion,
+                MainForm.MaintenanceToolCopyright);
         }
 
         public void ShowDialog()

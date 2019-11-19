@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MaintenanceToolCommon;
+using System;
+using System.Reflection;
 using System.Windows.Forms;
-using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
 {
@@ -12,8 +13,9 @@ namespace MaintenanceToolGUI
         private string commandTitle = "";
 
         // 管理ツールの情報
-        public const string MaintenanceToolTitle = "FIDO認証器管理ツール";
-        public const string MaintenanceToolVersion = "Version 0.1.20";
+        public static string MaintenanceToolTitle = "";
+        public static string MaintenanceToolVersion = "";
+        public static string MaintenanceToolCopyright = "";
 
         // タイムアウト監視用タイマー
         private CommandTimer commandTimer = null;
@@ -21,6 +23,9 @@ namespace MaintenanceToolGUI
         public MainForm()
         {
             InitializeComponent();
+            MaintenanceToolTitle = GetMaintenanceToolTitle();
+            MaintenanceToolVersion = String.Format("Version {0}", GetMaintenanceToolVersion());
+            MaintenanceToolCopyright = GetMaintenanceToolCopyright();
 
             // アプリケーション開始ログを出力
             AppCommon.OutputLogInfo(String.Format(
@@ -39,7 +44,37 @@ namespace MaintenanceToolGUI
             // ツール設定画面を生成
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
-            toolPreference.SetTitleAndVersionText(MaintenanceToolTitle, MaintenanceToolVersion);
+            toolPreference.SetTitleAndVersionText();
+        }
+
+        private static string GetMaintenanceToolTitle()
+        {
+            // タイトルを戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            AssemblyTitleAttribute asmTitle =
+                (AssemblyTitleAttribute)Attribute.GetCustomAttribute(
+                    asm, typeof(AssemblyTitleAttribute));
+            return asmTitle.Title;
+        }
+
+
+        private static string GetMaintenanceToolVersion()
+        {
+            // 製品バージョン文字列を戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo ver =
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(asm.Location);
+            return ver.ProductVersion;
+        }
+
+        private static string GetMaintenanceToolCopyright()
+        {
+            // 著作権情報を戻す
+            Assembly asm = Assembly.GetExecutingAssembly();
+            AssemblyCopyrightAttribute copyright =
+                (AssemblyCopyrightAttribute)Attribute.GetCustomAttribute(
+                    asm, typeof(AssemblyCopyrightAttribute));
+            return copyright.Copyright;
         }
 
         private void CommandTimerElapsed(object sender, EventArgs e)
@@ -52,17 +87,22 @@ namespace MaintenanceToolGUI
 
         private void buttonQuit_Click(object sender, EventArgs e)
         {
-            // このアプリケーションを終了する
-            DisconnectBLE();
-            hid.OnFormDestroy();
-            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
+            // すべてのフォームを閉じる
             Application.Exit();
         }
 
-        public void DisconnectBLE()
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // 接続ずみの場合はBLEデバイスを切断
-            ble.DisconnectBLE();
+            // このアプリケーションを終了する
+            TerminateApplication();
+        }
+
+        private void TerminateApplication()
+        {
+            // このアプリケーションを終了する
+            ble.OnFormDestroy();
+            hid.OnFormDestroy();
+            AppCommon.OutputLogInfo(String.Format("{0}を終了しました", MaintenanceToolTitle));
         }
 
         public void OnPrintMessageText(string messageText)
@@ -355,10 +395,6 @@ namespace MaintenanceToolGUI
         {
             // ツール設定画面を表示
             toolPreference.ShowDialog();
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
         }
 
         private void DoHIDCtap2TestToolStripMenuItem_Click(object sender, EventArgs e)

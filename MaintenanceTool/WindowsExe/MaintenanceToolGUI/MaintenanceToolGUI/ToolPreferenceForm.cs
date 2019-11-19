@@ -27,13 +27,16 @@ namespace MaintenanceToolGUI
             toolPreference = tp;
         }
 
-        public void SetTitleAndVersionText(String toolName, String toolVersion)
+        public void SetTitleAndVersionText(String toolName, String toolVersion, String toolCopyright)
         {
             // ツールタイトル表示
             labelToolName.Text = toolName;
 
             // バージョン表示
             labelVersion.Text = toolVersion;
+
+            // 著作権表示
+            labelCopyright.Text = toolCopyright;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

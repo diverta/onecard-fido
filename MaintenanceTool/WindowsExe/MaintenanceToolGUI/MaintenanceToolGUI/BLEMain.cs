@@ -198,7 +198,7 @@ namespace MaintenanceToolGUI
             Array.Copy(receivedMessage, 3, BLEResponseData, 0, receivedLen - 3);
         }
 
-        public void DisconnectBLE()
+        public void OnFormDestroy()
         {
             // 接続ずみの場合はBLEデバイスを切断
             bleProcess.DisconnectBLE();
