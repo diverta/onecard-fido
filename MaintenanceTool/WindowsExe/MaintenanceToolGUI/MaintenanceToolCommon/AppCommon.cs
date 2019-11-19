@@ -120,14 +120,11 @@ namespace MaintenanceToolCommon
         public const string MSG_BLE_ERR_CONN_DISABLED = "BLE接続が無効となりました。";
         public const string MSG_BLE_ERR_CONN_DISABLED_SUB1 = "大変お手数をお掛けしますが、管理ツールを終了後、再度起動させてください。";
 
-        // ログファイル名称のデフォルト
-        public static string logFileName = "MaintenanceToolGUI.log";
-
         public static void OutputLogText(string logText)
         {
             try {
                 // ログファイルにメッセージを出力する
-                string fname = logFileName;
+                string fname = OutputLogFilePath();
                 StreamWriter sr = new StreamWriter(
                     (new FileStream(fname, FileMode.Append)), Encoding.Default);
                 sr.WriteLine(logText);
@@ -135,6 +132,30 @@ namespace MaintenanceToolCommon
 
             } catch (Exception e) {
                 Console.Write(e.Message);
+            }
+        }
+
+        private static string OutputLogFilePath()
+        {
+            string fileName = "MaintenanceTool.log";
+            try {
+                // ホームディレクトリー配下に生成
+                string dir = string.Format("{0}\\Diverta\\FIDO",
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+
+                // ディレクトリー存在チェック
+                if (Directory.Exists(dir) == false) {
+                    // ディレクトリーが存在しない場合は新規生成
+                    DirectoryInfo dirInfo = Directory.CreateDirectory(dir);
+                    Console.Write(string.Format("outputLogText: Directory created at {0}", dir));
+                }
+
+                // ファイル名を連結して戻す
+                return string.Format("{0}\\{1}", dir, fileName);
+
+            } catch (Exception e) {
+                Console.Write(e.Message);
+                return fileName;
             }
         }
 
