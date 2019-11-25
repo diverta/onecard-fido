@@ -1,7 +1,7 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10056
 
 # application version info
 CFLAGS += -DFW_REV=\"0.2.3\"
@@ -17,6 +17,7 @@ CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
+CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -132,6 +133,7 @@ SRC_FILES += \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_clock.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_rng.c \
+  $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
   $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_clock.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_gpiote.c \
@@ -140,6 +142,8 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rng.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twim.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uart.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_uarte.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
@@ -161,6 +165,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
+  $(FD2LIB_DIR)/fido_cryptoauth.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
@@ -180,6 +185,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
@@ -194,6 +200,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
+  $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
@@ -210,6 +217,15 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
+  $(CRPLIB_DIR)/atca_cfgs.c \
+  $(CRPLIB_DIR)/atca_command.c \
+  $(CRPLIB_DIR)/atca_device.c \
+  $(CRPLIB_DIR)/atca_execution.c \
+  $(CRPLIB_DIR)/atca_iface.c \
+  $(CRPLIB_DIR)/basic/atca_basic.c \
+  $(CRPLIB_DIR)/basic/atca_basic_read.c \
+  $(CRPLIB_DIR)/basic/atca_helpers.c \
+  $(CRPLIB_DIR)/hal/atca_hal.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -368,6 +384,7 @@ INC_FOLDERS += \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
+  $(CRPLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \
@@ -405,6 +422,9 @@ CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 # keep every function in a separate section, this allows linker to discard unused ones
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
+
+# for CRYPTOAUTH library
+CFLAGS += -DATCA_HAL_I2C -Wno-unused-variable
 
 # C++ flags common to all targets
 CXXFLAGS += $(OPT)
