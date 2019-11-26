@@ -16,33 +16,38 @@
 // 設定情報を保持
 static ATCAIfaceCfg m_iface_config;
 
+// 初期化処理実行済みフラグ
+static bool atcab_init_done = false;
+
 // シリアルナンバーを保持
 static uint8_t cryptoauth_serial_num[ATCA_SERIAL_NUM_SIZE];
 
-static void select_device(ATCAIfaceCfg *p_cfg)
+static bool init_device(ATCAIfaceCfg *p_cfg)
 {
-    p_cfg->devtype               = ATECC608A;
-    p_cfg->iface_type            = ATCA_I2C_IFACE;
-    p_cfg->atcai2c.slave_address = 0xc0;
-    p_cfg->atcai2c.bus           = 2;
-    p_cfg->atcai2c.baud          = 400000;
-    p_cfg->wake_delay            = 1500;
-    p_cfg->rx_retries            = 20;
+    if (atcab_init_done) {
+        // 初期化処理が実行済みの場合は終了
+        fido_log_debug("select_device already done");
+        return true;
+    }
 
+    // デバイス設定は、ライブラリーのデフォルトを採用
     *p_cfg = cfg_ateccx08a_i2c_default;
-    p_cfg->devtype = ATECC608A;
-}
 
-static bool get_cryptoauth_serial_num(ATCAIfaceCfg *p_cfg)
-{
+    // デバイスの初期化
     ATCA_STATUS status = atcab_init(p_cfg);
     if (status != ATCA_SUCCESS) {
-        fido_log_error("get_serial_no: atcab_init() failed with ret=0x%08x", status);
+        fido_log_error("select_device failed: atcab_init() returns 0x%08x", status);
         return false;
     }
 
-    status = atcab_read_serial_number(cryptoauth_serial_num);
-    atcab_release();
+    // 初期化処理は実行済み
+    atcab_init_done = true;
+    return true;
+}
+
+static bool get_cryptoauth_serial_num(void)
+{
+    ATCA_STATUS status = atcab_read_serial_number(cryptoauth_serial_num);
     if (status != ATCA_SUCCESS) {
         fido_log_error("get_serial_no: atcab_read_serial_number() failed with ret=0x%08x", status);
         return false;
@@ -56,14 +61,26 @@ bool fido_cryptoauth_init(void)
 {
     fido_log_info("fido_cryptoauth_init start");
 
-    // ATECC608Aからシリアル番号を取得
-    select_device(&m_iface_config);
-    if (get_cryptoauth_serial_num(&m_iface_config)) {
-        fido_log_info("fido_cryptoauth_init success");
-        return true;
-
-    } else {
-        fido_log_error("fido_cryptoauth_init failed");
+    // 初期化処理が未実行の場合、デバイスを初期化
+    if (init_device(&m_iface_config) == false) {
         return false;
+    }
+
+    // ATECC608Aからシリアル番号を取得
+    if (get_cryptoauth_serial_num() == false) {
+        return false;
+    }
+
+    fido_log_info("fido_cryptoauth_init success");
+    return true;
+}
+
+void fido_cryptoauth_release(void)
+{
+    if (atcab_init_done) {
+        // デバイスを解放
+        atcab_release();
+        atcab_init_done = false;
+        fido_log_info("fido_cryptoauth_release done");
     }
 }

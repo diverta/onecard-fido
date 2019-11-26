@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 bool fido_cryptoauth_init(void);
+void fido_cryptoauth_release(void);
     
 #ifdef __cplusplus
 }
