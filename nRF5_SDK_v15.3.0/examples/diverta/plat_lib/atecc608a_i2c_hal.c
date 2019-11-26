@@ -46,14 +46,12 @@ ATCA_STATUS hal_i2c_init(void *hal, ATCAIfaceCfg *cfg)
     m_hal_data.rx_retries = cfg->rx_retries;
     m_hal_data.p_instance = (nrf_drv_twi_t const *)fido_twi_instance_ref();
     ((ATCAHAL_t*)hal)->hal_data = &m_hal_data;
-    
-    NRF_LOG_DEBUG("hal_i2c_init done");
+
     return ATCA_SUCCESS;
 }
 
 ATCA_STATUS hal_i2c_post_init(ATCAIface iface) {
     UNUSED_PARAMETER(iface);
-    NRF_LOG_DEBUG("hal_i2c_post_init done");
     return ATCA_SUCCESS;
 }
 
@@ -71,6 +69,7 @@ ATCA_STATUS hal_i2c_send(ATCAIface iface, uint8_t *data, int length)
     data[0] = 0x3;
     length++;
     if (fido_twi_write(get_twi_address(iface), data, length) == false) {
+        NRF_LOG_ERROR("hal_i2c_send failed");
         return ATCA_TX_FAIL;
     }
 
@@ -90,6 +89,7 @@ ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t *rx_data, uint16_t *rx_leng
         r = fido_twi_read(get_twi_address(iface), length_package, sizeof(length_package));
     }
     if (r == false) {
+        NRF_LOG_ERROR("hal_i2c_receive failed: length read timeout");
         return ATCA_RX_TIMEOUT;
     }
 
@@ -111,6 +111,7 @@ ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t *rx_data, uint16_t *rx_leng
         r = fido_twi_read(get_twi_address(iface), rx_data + 1, bytes_to_read);
     }
     if (r == false) {
+        NRF_LOG_ERROR("hal_i2c_receive failed: package read timeout");
         return ATCA_RX_TIMEOUT;
     }
     *rx_length = length_package[0];
@@ -136,13 +137,16 @@ ATCA_STATUS hal_i2c_wake(ATCAIface iface)
     while (--retries > 0 && r == false) {
         r = fido_twi_read(get_twi_address(iface), rx_buffer, sizeof(rx_buffer));
     }
+    if (r == false) {
+        NRF_LOG_ERROR("hal_i2c_wake failed: ATCA_RX_TIMEOUT");
+        return ATCA_RX_TIMEOUT;
+    }
 
     // 5. Set frequency back to requested one
     const uint8_t expected_response[4]  = {0x04, 0x11, 0x33, 0x43};
     const uint8_t selftest_fail_resp[4] = {0x04, 0x07, 0xC4, 0x40};
 
     if (memcmp(rx_buffer, expected_response, sizeof(expected_response)) == 0) {
-        NRF_LOG_DEBUG("hal_i2c_wake completed");
         return ATCA_SUCCESS;
 
     } else if (memcmp(rx_buffer, selftest_fail_resp, sizeof(selftest_fail_resp)) == 0) {
@@ -150,7 +154,7 @@ ATCA_STATUS hal_i2c_wake(ATCAIface iface)
         return ATCA_STATUS_SELFTEST_ERROR;
 
     } else {
-        NRF_LOG_ERROR("hal_i2c_wake failed");
+        NRF_LOG_ERROR("hal_i2c_wake failed: unknown error");
         return ATCA_WAKE_FAILED;
     }
 }
@@ -161,7 +165,6 @@ ATCA_STATUS hal_i2c_idle(ATCAIface iface)
     uint8_t buffer[1] = {0x2};
     fido_twi_write(get_twi_address(iface), buffer, sizeof(buffer));
 
-    NRF_LOG_DEBUG("hal_i2c_idle done");
     return ATCA_SUCCESS;
 }
 
@@ -171,13 +174,11 @@ ATCA_STATUS hal_i2c_sleep(ATCAIface iface)
     uint8_t buffer[1] = {0x1};
     fido_twi_write(get_twi_address(iface), buffer, sizeof(buffer));
 
-    NRF_LOG_DEBUG("hal_i2c_sleep done");
     return ATCA_SUCCESS;
 }
 
 ATCA_STATUS hal_i2c_release(void *hal_data) {
     UNUSED_PARAMETER(hal_data);
-    NRF_LOG_DEBUG("hal_i2c_release done");
     return ATCA_SUCCESS;
 }
 

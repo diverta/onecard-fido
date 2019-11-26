@@ -18,6 +18,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug data
+#define LOG_DEBUG_HEX_DATA false
+
 // 初期化処理の重複実行抑止フラグ
 static bool twi_init_done = false;
 
@@ -69,8 +72,10 @@ bool fido_twi_read(uint8_t address, uint8_t *p_data, uint8_t length)
         NRF_LOG_ERROR("ATECC608A hal_i2c_receive: nrf_drv_twi_rx returns %d ", err_code);
         return false;
     }
+#if LOG_DEBUG_HEX_DATA
     NRF_LOG_DEBUG("Read from ATECC608A (%d bytes):", length);
     NRF_LOG_HEXDUMP_DEBUG(p_data, length);
+#endif
     return true;
 }
 
@@ -79,14 +84,14 @@ bool fido_twi_verify_nack(uint8_t address)
     static uint8_t tx[1] = {0};
     ret_code_t err_code = nrf_drv_twi_tx(&m_twi, address, tx, 1, false);
     if (err_code == NRF_ERROR_DRV_TWI_ERR_ANACK) {
-        NRF_LOG_DEBUG("verify_nack: nrf_drv_twi_tx returns NRF_ERROR_DRV_TWI_ERR_ANACK");
         return true;
+
     } else if (err_code == NRF_ERROR_DRV_TWI_ERR_DNACK) {
-        NRF_LOG_DEBUG("verify_nack: nrf_drv_twi_tx returns NRF_ERROR_DRV_TWI_ERR_DNACK");
         return true;
+
     } else if (err_code == NRF_SUCCESS) {
-        NRF_LOG_DEBUG("verify_nack: nrf_drv_twi_tx returns %d ", err_code);
         return true;
+
     } else {
         NRF_LOG_ERROR("verify_nack: nrf_drv_twi_tx returns %d ", err_code);
         return false;
