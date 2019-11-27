@@ -93,6 +93,13 @@ ATCA_STATUS hal_i2c_receive(ATCAIface iface, uint8_t *rx_data, uint16_t *rx_leng
         return ATCA_RX_TIMEOUT;
     }
 
+    // NACKの場合（応答データが受信できなかった場合）
+    if (length_package[0] == 0) {
+        NRF_LOG_WARNING("hal_i2c_receive: NACK has occurred");
+        *rx_length = 0;
+        return ATCA_SUCCESS;
+    }
+    
     // データの１バイト目に、受信できるバイト数が格納されています
     uint8_t bytes_to_read = length_package[0] - 1;
     if (bytes_to_read > *rx_length) {
