@@ -1697,6 +1697,7 @@
             </incDir>
             <preprocessorList>
               <Elem>ATCA_HAL_I2C</Elem>
+              <Elem>ATCA_NO_POLL</Elem>
               <Elem>BOARD_PCA10056</Elem>
               <Elem>NRF52840_XXAA</Elem>
               <Elem>POWER_ENABLED</Elem>

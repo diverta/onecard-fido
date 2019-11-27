@@ -223,6 +223,8 @@ SRC_FILES += \
   $(CRPLIB_DIR)/atca_execution.c \
   $(CRPLIB_DIR)/atca_iface.c \
   $(CRPLIB_DIR)/basic/atca_basic.c \
+  $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
+  $(CRPLIB_DIR)/basic/atca_basic_info.c \
   $(CRPLIB_DIR)/basic/atca_basic_read.c \
   $(CRPLIB_DIR)/basic/atca_helpers.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
@@ -424,7 +426,7 @@ CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
 
 # for CRYPTOAUTH library
-CFLAGS += -DATCA_HAL_I2C -Wno-unused-variable
+CFLAGS += -DATCA_HAL_I2C -DATCA_NO_POLL -Wno-unused-variable
 
 # C++ flags common to all targets
 CXXFLAGS += $(OPT)
