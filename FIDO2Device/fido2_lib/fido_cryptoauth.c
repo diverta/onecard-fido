@@ -115,6 +115,7 @@ void fido_cryptoauth_keypair_generate(uint16_t key_id)
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_keypair_generate failed: atcab_genkey(%d) returns 0x%08x", 
             key_id, status);
+
     } else {
         fido_log_debug("fido_cryptoauth_keypair_generate success (key_id=%d)", key_id);
     }
@@ -126,11 +127,13 @@ uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id)
 
     ATCA_STATUS status = atcab_get_pubkey(key_id, public_key_raw_data);
     if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_crypto_keypair_public_key failed: atcab_get_pubkey(%d) returns 0x%08x", 
+        fido_log_error("fido_cryptoauth_keypair_public_key failed: atcab_get_pubkey(%d) returns 0x%08x", 
             key_id, status);
+
+    } else {
+        fido_log_debug("fido_cryptoauth_keypair_public_key (key_id=%d):", key_id);
+        fido_log_print_hexdump_debug(public_key_raw_data, sizeof(public_key_raw_data));
     }
-    fido_log_debug("fido_crypto_keypair_public_key (key_id=%d):", key_id);
-    fido_log_print_hexdump_debug(public_key_raw_data, sizeof(public_key_raw_data));
 
     return public_key_raw_data;
 }
