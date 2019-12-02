@@ -16,6 +16,8 @@
 // for debug hex dump data
 #define LOG_HEXDUMP_DEBUG_CONFIG false
 #define LOG_HEXDUMP_DEBUG_PUBKEY false
+#define LOG_HEXDUMP_DEBUG_SIGN   false
+#define ATCAB_VERIFY_EXTERN      false
 
 // 設定情報を保持
 static ATCAIfaceCfg m_iface_config;
@@ -196,4 +198,40 @@ void fido_cryptoauth_generate_random_vector(uint8_t *vector_buf, size_t vector_b
 
     // 引数で指定のバイト数分、配列に格納
     memcpy(vector_buf, m_random_vector, vector_buf_size);
+}
+
+void fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uint8_t *signature, size_t *signature_size)
+{
+    // 初期化
+    *signature_size = 0;
+    if (fido_cryptoauth_init()== false) {
+        return;
+    }
+
+    // 署名実行
+    ATCA_STATUS status = atcab_sign(key_id, hash_digest, signature);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_ecdsa_sign failed: atcab_sign(%d) returns 0x%02x", 
+            key_id, status);
+
+    } else {
+        *signature_size = ATCA_SIG_SIZE;
+#if LOG_HEXDUMP_DEBUG_SIGN
+        fido_log_debug("fido_cryptoauth_ecdsa_sign (key_id=%d):", key_id);
+        fido_log_print_hexdump_debug(signature, *signature_size);
+#endif
+#if ATCAB_VERIFY_EXTERN
+        // 署名を公開鍵で検証
+        bool is_verified = false;
+        uint8_t *p_public_key = fido_cryptoauth_keypair_public_key(key_id);
+        status = atcab_verify_extern(hash_digest, signature, p_public_key, &is_verified);
+        if (status != ATCA_SUCCESS) {
+            fido_log_error("fido_cryptoauth_ecdsa_sign failed: atcab_verify_extern(%d) returns 0x%02x", 
+                key_id, status);
+        } else {
+            fido_log_debug("fido_cryptoauth_ecdsa_sign verified: %s", 
+                is_verified ? "true" : "false");
+        }
+#endif
+    }
 }
