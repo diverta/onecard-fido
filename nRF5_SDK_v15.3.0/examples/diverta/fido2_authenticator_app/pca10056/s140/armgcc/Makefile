@@ -231,6 +231,7 @@ SRC_FILES += \
   $(CRPLIB_DIR)/basic/atca_basic_sha.c \
   $(CRPLIB_DIR)/basic/atca_basic_sign.c \
   $(CRPLIB_DIR)/basic/atca_basic_verify.c \
+  $(CRPLIB_DIR)/basic/atca_basic_write.c \
   $(CRPLIB_DIR)/basic/atca_helpers.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
 
