@@ -225,7 +225,9 @@ SRC_FILES += \
   $(CRPLIB_DIR)/basic/atca_basic.c \
   $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
   $(CRPLIB_DIR)/basic/atca_basic_info.c \
+  $(CRPLIB_DIR)/basic/atca_basic_random.c \
   $(CRPLIB_DIR)/basic/atca_basic_read.c \
+  $(CRPLIB_DIR)/basic/atca_basic_sha.c \
   $(CRPLIB_DIR)/basic/atca_helpers.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
 
