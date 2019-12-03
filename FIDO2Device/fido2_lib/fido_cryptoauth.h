@@ -20,7 +20,7 @@ size_t   fido_cryptoauth_keypair_private_key_size(void);
 void     fido_cryptoauth_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
 void     fido_cryptoauth_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
 void     fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uint8_t *signature, size_t *signature_size);
-void     fido_cryptoauth_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
+bool     fido_cryptoauth_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
 
 void     fido_cryptoauth_sskey_init(bool force);
 bool     fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data);

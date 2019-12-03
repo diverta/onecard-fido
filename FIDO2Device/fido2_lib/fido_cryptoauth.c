@@ -247,7 +247,7 @@ static uint8_t hmac_sha256_key_tmp[32];
 // HMAC SHA-256ハッシュを生成するために使用するスロット
 static uint16_t key_id_for_hmac = 14;
 
-void fido_cryptoauth_calculate_hmac_sha256(
+bool fido_cryptoauth_calculate_hmac_sha256(
     uint8_t *key_data, size_t key_data_size, 
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
     uint8_t *dest_data)
@@ -256,7 +256,7 @@ void fido_cryptoauth_calculate_hmac_sha256(
     ATCA_STATUS status;
     memset(dest_data, 0x00, HMAC_DIGEST_SIZE);
     if (fido_cryptoauth_init()== false) {
-        return;
+        return false;
     }
 
     // 引数のキーを、一時領域に32バイトまでコピー
@@ -271,7 +271,7 @@ void fido_cryptoauth_calculate_hmac_sha256(
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_write_zone(%d) returns 0x%02x", 
             key_id_for_hmac, status);
-        return;
+        return false;
     }
 
 #if LOG_HEXDUMP_HMAC256_KEY
@@ -281,11 +281,39 @@ void fido_cryptoauth_calculate_hmac_sha256(
 #endif
 
     // HMAC SHA-256ハッシュを計算
-    status = atcab_sha_hmac(src_data, src_data_size, key_id_for_hmac, dest_data, SHA_MODE_TARGET_TEMPKEY);
+    atca_hmac_sha256_ctx_t ctx;
+    status = atcab_sha_hmac_init(&ctx, key_id_for_hmac);
     if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac(%d) returns 0x%02x", 
+        fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_init(%d) returns 0x%02x", 
             key_id_for_hmac, status);
+        return false;
     }
+
+    status = atcab_sha_hmac_update(&ctx, src_data, src_data_size);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[1] returns 0x%02x", 
+            key_id_for_hmac, status);
+        return false;
+    }
+
+    // 2番目の引数を計算対象に設定
+    if (src_data_2 != NULL && src_data_2_size > 0) {
+        status = atcab_sha_hmac_update(&ctx, src_data_2, src_data_2_size);
+        if (status != ATCA_SUCCESS) {
+            fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[2] returns 0x%02x", 
+                key_id_for_hmac, status);
+            return false;
+        }
+    }
+
+    status = atcab_sha_hmac_finish(&ctx, dest_data, SHA_MODE_TARGET_TEMPKEY);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_finish(%d) returns 0x%02x", 
+            key_id_for_hmac, status);
+        return false;
+    }
+
+    return true;
 }
 
 //
