@@ -223,6 +223,7 @@ SRC_FILES += \
   $(CRPLIB_DIR)/atca_execution.c \
   $(CRPLIB_DIR)/atca_iface.c \
   $(CRPLIB_DIR)/basic/atca_basic.c \
+  $(CRPLIB_DIR)/basic/atca_basic_ecdh.c \
   $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
   $(CRPLIB_DIR)/basic/atca_basic_info.c \
   $(CRPLIB_DIR)/basic/atca_basic_nonce.c \

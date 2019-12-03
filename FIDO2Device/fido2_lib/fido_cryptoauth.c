@@ -19,6 +19,7 @@
 #define LOG_HEXDUMP_DEBUG_SIGN   false
 #define ATCAB_VERIFY_EXTERN      false
 #define LOG_HEXDUMP_HMAC256_KEY  false
+#define LOG_HEXDUMP_DEBUG_SSKEY  false
 
 // 設定情報を保持
 static ATCAIfaceCfg m_iface_config;
@@ -280,4 +281,89 @@ void fido_cryptoauth_calculate_hmac_sha256(
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac(%d) returns 0x%02x", 
             key_id, status);
     }
+}
+
+//
+// ECDH共通鍵関連処理
+//
+// 共通鍵格納領域
+//   この領域に格納される共通鍵(Shared secret key)は、
+//   ビッグエンディアン配列となる
+static uint8_t sskey_raw_data[ECDH_KEY_SIZE];
+
+// 共通鍵ハッシュ格納領域
+static uint8_t sskey_hash[ATCA_SHA_DIGEST_SIZE];
+
+// 鍵交換用キーペアが生成済みかどうかを保持
+static bool keypair_generated = false;
+
+// 鍵交換用キーペアを生成するスロット
+static uint16_t key_id_for_sskey = 1;
+
+void fido_cryptoauth_sskey_init(bool force)
+{
+    // 鍵交換用キーペアが生成済みで、かつ
+    // 強制再生成を要求しない場合は終了
+    if (keypair_generated && force == false) {
+        NRF_LOG_DEBUG("Keypair for exchanging key is already exist");
+        return;
+    }
+
+    // 秘密鍵および公開鍵を、1番スロットで生成
+    fido_cryptoauth_keypair_generate(key_id_for_sskey);
+
+    // 生成済みフラグを設定
+    if (!keypair_generated) {
+        NRF_LOG_DEBUG("Keypair for exchanging key generate success");
+    } else {
+        NRF_LOG_DEBUG("Keypair for exchanging key re-generate success");
+    }
+    keypair_generated = true;
+}
+
+bool fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data)
+{
+    // 初期化
+    ATCA_STATUS status;
+    memset(sskey_raw_data, 0x00, sizeof(sskey_raw_data));
+    if (fido_cryptoauth_init()== false) {
+        return false;
+    }
+
+    // 鍵交換用キーペアが未生成の場合は終了
+    if (!keypair_generated) {
+        NRF_LOG_ERROR("Keypair for exchanging key is not exist");
+        return false;
+    }
+
+    // 共通鍵を生成
+    status = atcab_ecdh(key_id_for_sskey, client_public_key_raw_data, sskey_raw_data);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_sskey_generate failed: atcab_ecdh(%d) returns 0x%02x", 
+            key_id_for_sskey, status);
+        return false;
+
+#if LOG_HEXDUMP_DEBUG_SSKEY
+    } else {
+        fido_log_debug("fido_cryptoauth_sskey_generate (key_id=%d):", key_id_for_sskey);
+        fido_log_print_hexdump_debug(sskey_raw_data, sizeof(sskey_raw_data));
+#endif
+    }
+
+    // 生成した共通鍵をSHA-256ハッシュ化し、
+    // 共通鍵ハッシュ（32バイト）を作成
+    size_t sskey_hash_size;
+    fido_cryptoauth_generate_sha256_hash(sskey_raw_data, sizeof(sskey_raw_data), sskey_hash, &sskey_hash_size);
+    return true;
+}
+
+uint8_t *fido_cryptoauth_sskey_public_key(void)
+{
+    // 1番スロットの秘密鍵に対応する公開鍵を取得して戻す
+    return fido_cryptoauth_keypair_public_key(key_id_for_sskey);
+}
+
+uint8_t *fido_cryptoauth_sskey_hash(void)
+{
+    return sskey_hash;
 }
