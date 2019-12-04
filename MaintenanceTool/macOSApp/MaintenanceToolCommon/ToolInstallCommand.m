@@ -10,6 +10,13 @@
 #import "ToolInstallCommand.h"
 #import "ToolLogFile.h"
 
+// for extracting KeyAgreement
+#include "CBORDecoder.h"
+#include "FIDODefines.h"
+
+// for debug
+#define LOG_HEXDUMP_KEY_AGREEMENT true
+
 @interface ToolInstallCommand ()
 
 @end
@@ -25,6 +32,26 @@
 
     - (NSData *)generateEraseSkeyCertMessage:(Command)command {
         return [[NSData alloc] init];
+    }
+
+    - (bool)extractKeyAgreement:(NSData *)keyAgreementResponse {
+        // GetKeyAgreementレスポンスから公開鍵を抽出
+        uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
+        size_t   keyAgreementSize = [keyAgreementResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            [self setLastErrorMessage:@"公開鍵を認証器から受け取ることができませんでした。"];
+            return false;
+        }
+
+#if LOG_HEXDUMP_KEY_AGREEMENT
+        [[ToolLogFile defaultLogger] debugWithFormat:@"pubkey_X %@",
+         [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_X() length:32]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"pubkey_Y %@",
+         [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_Y() length:32]];
+#endif
+
+        return true;
     }
 
     - (NSData *)generateInstallSkeyCertMessage:(Command)command

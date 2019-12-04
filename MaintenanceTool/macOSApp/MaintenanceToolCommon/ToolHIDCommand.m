@@ -107,6 +107,7 @@
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
             case COMMAND_AUTH_RESET:
+            case COMMAND_INSTALL_SKEY_CERT:
                 // 受領したCIDを使用し、GetKeyAgreement／authenticatorResetコマンドを実行
                 [[self toolCTAP2HealthCheckCommand] setCID:[self getNewCIDFrom:message]];
                 [[self toolCTAP2HealthCheckCommand] doCTAP2Request:[self command]];
@@ -124,9 +125,6 @@
                 break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
-                break;
-            case COMMAND_INSTALL_SKEY_CERT:
-                [self doRequestInstallSkeyCert:[self getNewCIDFrom:message]];
                 break;
             default:
                 // 画面に制御を戻す
@@ -257,7 +255,13 @@
         [self doRequestCtapHidInit];
     }
 
-    - (void)doRequestInstallSkeyCert:(NSData *)cid {
+    - (void)doRequestInstallSkeyCert:(NSData *)messageKeyAgreement CID:(NSData *)cid {
+        // 共通鍵を抽出
+        if ([[self toolInstallCommand] extractKeyAgreement:messageKeyAgreement] == false) {
+            // 処理が失敗した場合は、AppDelegateに制御を戻す
+            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
+            return;
+        }
         // メッセージを編集
         NSData *message = [[self toolInstallCommand] generateInstallSkeyCertMessage:[self command]
                             skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
