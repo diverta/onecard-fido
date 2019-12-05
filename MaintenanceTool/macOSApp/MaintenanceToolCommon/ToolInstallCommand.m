@@ -12,10 +12,11 @@
 
 // for extracting KeyAgreement
 #include "CBORDecoder.h"
+#include "CBOREncoder.h"
 #include "FIDODefines.h"
 
 // for debug
-#define LOG_HEXDUMP_KEY_AGREEMENT true
+#define LOG_HEXDUMP_KEY_AGREEMENT false
 
 @interface ToolInstallCommand ()
 
@@ -54,7 +55,26 @@
         return true;
     }
 
-    - (NSData *)generateInstallSkeyCertMessage:(Command)command
+    - (NSData *)generateSkeyCertInstallCbor:(NSData *)skeyCertBinaryData {
+        uint8_t *skeyCertBytes = (uint8_t *)[skeyCertBinaryData bytes];
+        size_t skeyCertBytesLength = [skeyCertBinaryData length];
+
+        uint8_t status_code = maintenance_cbor_encode_install_skey_cert(
+                                    ctap2_cbor_decode_agreement_pubkey_X(),
+                                    ctap2_cbor_decode_agreement_pubkey_Y(),
+                                    skeyCertBytes, skeyCertBytesLength);
+
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            [self setLastErrorMessage:@"鍵・証明書の転送データを暗号化できませんでした。"];
+            return nil;
+        }
+        return nil;
+    }
+
+    - (NSData *)extractSkeyCertBinaryData:(Command)command
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath {
         NSMutableData *message = [NSMutableData alloc];

@@ -256,23 +256,32 @@
     }
 
     - (void)doRequestInstallSkeyCert:(NSData *)messageKeyAgreement CID:(NSData *)cid {
-        // 共通鍵を抽出
+        // 公開鍵を抽出
         if ([[self toolInstallCommand] extractKeyAgreement:messageKeyAgreement] == false) {
             // 処理が失敗した場合は、AppDelegateに制御を戻す
             [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
             return;
         }
-        // メッセージを編集
-        NSData *message = [[self toolInstallCommand] generateInstallSkeyCertMessage:[self command]
-                            skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
-        if (message == nil) {
+        // 鍵ファイル・証明書ファイルから、バイナリーデータを読込んで１本にマージ
+        NSData *skeyCertBinaryData = [[self toolInstallCommand]
+                                      extractSkeyCertBinaryData:[self command]
+                                      skeyFilePath:[self skeyFilePath] certFilePath:[self certFilePath]];
+        if (skeyCertBinaryData == nil) {
+            // 処理が失敗した場合は、AppDelegateに制御を戻す
+            [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
+            return;
+        }
+        // 共通鍵により鍵・証明書を暗号化し、コマンド実行のためのCBORメッセージを生成
+        NSData *skeyCertInstallCbor =
+            [[self toolInstallCommand] generateSkeyCertInstallCbor:skeyCertBinaryData];
+        if (skeyCertInstallCbor == nil) {
             // 処理が失敗した場合は、AppDelegateに制御を戻す
             [self commandDidProcess:[self command] result:false message:[[self toolInstallCommand] lastErrorMessage]];
             return;
         }
 
         // コマンド 0xC1 を実行
-        [self doRequest:message CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
+        [self doRequest:skeyCertInstallCbor CID:cid CMD:HID_CMD_INSTALL_SKEY_CERT];
     }
 
     - (void)doResponseMaintenanceCommand:(NSData *)message {
