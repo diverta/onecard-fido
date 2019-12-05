@@ -897,3 +897,70 @@ uint8_t ctap2_cbor_encode_get_assertion(
     // リクエストCBORを生成
     return generate_get_assertion_cbor(credential_id, credential_id_size, hmac_secret_salt, user_presence);
 }
+
+#pragma mark - 鍵・証明書インストール関連処理
+
+static uint8_t generate_install_skey_cert_cbor(void) {
+    // Mapに格納する要素数
+    size_t map_elements_num = 2;
+    // 作業領域初期化
+    memset(requestBytes, 0x00, sizeof(requestBytes));
+    requestBytesLength = 0;
+    // encoded_buffの１バイト目にCBORコマンドを設定（使用しないので0x00を設定）
+    requestBytes[0] = 0x00;
+    // エンコード結果を格納する領域
+    uint8_t *encoded_buff = (uint8_t *)requestBytes + 1;
+    size_t encoded_buff_size = sizeof(requestBytes) - 1;
+    // CBORエンコーダーを初期化
+    CborEncoder encoder;
+    cbor_encoder_init(&encoder, encoded_buff, encoded_buff_size, 0);
+    // Map初期化
+    CborEncoder map;
+    CborError ret = cbor_encoder_create_map(&encoder, &map, map_elements_num);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // keyAgreement(0x01)
+    ret = cbor_encode_int(&map, 0x01);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = add_encoded_cosekey_to_map(&map);
+    if (ret != CTAP1_ERR_SUCCESS) {
+        return ret;
+    }
+    // skeyCertBytesEnc(0x02)
+    ret = cbor_encode_int(&map, 0x02);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_byte_string(&map, skey_cert_bytes_enc(), skey_cert_bytes_enc_size());
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // Mapクローズ
+    ret = cbor_encoder_close_container(&encoder, &map);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    // CBORバッファの長さを設定
+    encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    requestBytesLength = encoded_buff_size + 1;
+    return CTAP1_ERR_SUCCESS;
+}
+
+uint8_t maintenance_cbor_encode_install_skey_cert(
+    uint8_t *agreement_pubkey_X, uint8_t *agreement_pubkey_Y,
+    uint8_t *skey_cert_bytes, size_t skey_cert_bytes_length) {
+    // ECDHキーペアを新規作成し、受領した公開鍵から共通鍵を生成
+    if (ECDH_create_shared_secret_key(agreement_pubkey_X, agreement_pubkey_Y) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // 暗号化された鍵・証明書バイナリーデータを生成
+    if (generate_skey_cert_bytes_enc(skey_cert_bytes, skey_cert_bytes_length) != CTAP1_ERR_SUCCESS) {
+        return CTAP1_ERR_OTHER;
+    }
+    // リクエストCBORを生成
+    return generate_install_skey_cert_cbor();
+}
+
