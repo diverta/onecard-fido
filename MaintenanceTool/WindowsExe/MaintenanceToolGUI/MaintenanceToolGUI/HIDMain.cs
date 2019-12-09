@@ -50,6 +50,16 @@ namespace MaintenanceToolGUI
         // 当初リクエストされたHIDコマンドを退避
         private byte requestedCMD;
 
+        // 実行機能を保持
+        public enum RequestType
+        {
+            None = 0,
+            EraseSkeyCert,
+            InstallSkeyCert,
+            ToolPreferenceCommand
+        };
+        private RequestType requestType;
+
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -181,6 +191,13 @@ namespace MaintenanceToolGUI
         public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
         {
             toolPreference = tp;
+
+            // 実行するコマンドを退避（CTAP2・U2F機能は閉塞）
+            ctap2.SetRequestType(Ctap2.RequestType.None);
+            u2f.SetRequestType(U2f.RequestType.None);
+            requestType = RequestType.ToolPreferenceCommand;
+
+            // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit();
         }
 
@@ -202,9 +219,28 @@ namespace MaintenanceToolGUI
             // INITコマンドの後続処理判定
             if (ctap2.DoResponseCtapHidInit(message, length) == false) {
                 if (u2f.DoResponseHidInit(message, length) == false) {
-                    toolPreference.DoResponseHidInit(message, length);
+                    DoResponseCtapHidInit(message, length);
                 }
             }
+        }
+
+        public bool DoResponseCtapHidInit(byte[] message, int length)
+        {
+            switch (requestType) {
+            case RequestType.EraseSkeyCert:
+                DoRequestEraseSkeyCert();
+                break;
+            case RequestType.InstallSkeyCert:
+                DoRequestInstallSkeyCert();
+                break;
+            case RequestType.ToolPreferenceCommand:
+                toolPreference.DoResponseHidInit(message, length);
+                break;
+            default:
+                // 画面に制御を戻す
+                return false;
+            }
+            return true;
         }
 
         private byte[] ExtractReceivedCID(byte[] message)
@@ -223,9 +259,25 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+
+            // 実行するコマンドを退避（CTAP2・U2F機能は閉塞）
+            ctap2.SetRequestType(Ctap2.RequestType.None);
+            u2f.SetRequestType(U2f.RequestType.None);
+            requestType = RequestType.EraseSkeyCert;
+            
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
         }
+
+        public void DoRequestEraseSkeyCert()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+        }
+
+        // インストール元の鍵・証明書ファイルパスを保持
+        private string skeyFilePathForInstall;
+        private string certFilePathForInstall;
 
         public void DoInstallSkeyCert(string skeyFilePath, string certFilePath)
         {
@@ -233,20 +285,36 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
+
+            // インストール元の鍵・証明書ファイルパスを保持
+            skeyFilePathForInstall = skeyFilePath;
+            certFilePathForInstall = certFilePath;
+
+            // 実行するコマンドを退避（CTAP2・U2F機能は閉塞）
+            ctap2.SetRequestType(Ctap2.RequestType.None);
+            u2f.SetRequestType(U2f.RequestType.None);
+            requestType = RequestType.InstallSkeyCert;
+
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit();
+        }
+
+        public void DoRequestInstallSkeyCert()
+        {
             // 秘密鍵をファイルから読込
             InstallSkeyCert installSkeyCert = new InstallSkeyCert();
-            if (installSkeyCert.ReadPemFile(skeyFilePath) == false) {
+            if (installSkeyCert.ReadPemFile(skeyFilePathForInstall) == false) {
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
             // 証明書をファイルから読込
-            if (installSkeyCert.ReadCertFile(certFilePath) == false) {
+            if (installSkeyCert.ReadCertFile(certFilePathForInstall) == false) {
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
             // 秘密鍵・証明書の内容を配列にセットし、HIDデバイスに送信
             int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
         }
 
         private void DoResponseMaintSkeyCert(byte[] message, int length)
