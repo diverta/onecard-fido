@@ -41,7 +41,7 @@
         size_t   keyAgreementSize = [keyAgreementResponse length];
         uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
         if (status_code != CTAP1_ERR_SUCCESS) {
-            [self setLastErrorMessage:@"公開鍵を認証器から受け取ることができませんでした。"];
+            [self setLastErrorMessage:MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY];
             return false;
         }
 
@@ -68,7 +68,7 @@
             return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
                                           length:ctap2_cbor_encode_request_bytes_size()];
         } else {
-            [self setLastErrorMessage:@"鍵・証明書の転送データを暗号化できませんでした。"];
+            [self setLastErrorMessage:MSG_CANNOT_CRYPTO_SKEY_CERT_DATA];
             return nil;
         }
         return nil;
