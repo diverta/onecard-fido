@@ -32,6 +32,7 @@ uint8_t  decrypto_pin_token(
 
 uint8_t *skey_cert_bytes_enc(void);
 size_t   skey_cert_bytes_enc_size(void);
+size_t   skey_cert_bytes_size(void);
 uint8_t  generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_bytes_size);
 
 #endif /* fido_crypto_h */

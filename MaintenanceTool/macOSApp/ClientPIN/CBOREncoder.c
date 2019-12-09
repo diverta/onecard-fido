@@ -902,7 +902,7 @@ uint8_t ctap2_cbor_encode_get_assertion(
 
 static uint8_t generate_install_skey_cert_cbor(void) {
     // Mapに格納する要素数
-    size_t map_elements_num = 2;
+    size_t map_elements_num = 3;
     // 作業領域初期化
     memset(requestBytes, 0x00, sizeof(requestBytes));
     requestBytesLength = 0;
@@ -938,6 +938,15 @@ static uint8_t generate_install_skey_cert_cbor(void) {
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
+    // skeyCertBytesSize(0x03)
+    ret = cbor_encode_int(&map, 0x03);
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
+    ret = cbor_encode_uint(&map, skey_cert_bytes_size());
+    if (ret != CborNoError) {
+        return CTAP1_ERR_OTHER;
+    }
     // Mapクローズ
     ret = cbor_encoder_close_container(&encoder, &map);
     if (ret != CborNoError) {
@@ -963,4 +972,3 @@ uint8_t maintenance_cbor_encode_install_skey_cert(
     // リクエストCBORを生成
     return generate_install_skey_cert_cbor();
 }
-

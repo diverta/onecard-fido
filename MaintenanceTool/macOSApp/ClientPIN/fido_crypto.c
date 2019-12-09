@@ -443,6 +443,8 @@ fail:
 //
 // skeyCertBytesEnc: Encrypt private key & certificate using sharedSecret
 //   AES256-CBC(sharedSecret, IV=0, privateKey || certificate)
+static uint8_t skeyCertBytes[1024];
+static size_t  skeyCertBytesSize;
 static uint8_t skeyCertBytesEnc[1024];
 static size_t  skeyCertBytesEncSize;
 
@@ -451,7 +453,13 @@ uint8_t *skey_cert_bytes_enc(void) {
 }
 
 size_t skey_cert_bytes_enc_size(void) {
+    // 16の倍数に整形された後のバイト長を戻す
     return skeyCertBytesEncSize;
+}
+
+size_t skey_cert_bytes_size(void) {
+    // 16の倍数に整形される前のバイト長を戻す
+    return skeyCertBytesSize;
 }
 
 uint8_t generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_bytes_size) {
@@ -461,19 +469,29 @@ uint8_t generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_
     uint8_t      ok = CTAP1_ERR_OTHER;
 
     // 作業領域の確保
+    memset(skeyCertBytes, 0, sizeof(skeyCertBytes));
     memset(skeyCertBytesEnc, 0, sizeof(skeyCertBytesEnc));
     if ((pdata = fido_blob_new()) == NULL ||
         (key = fido_blob_new()) == NULL ||
         (pe = fido_blob_new()) == NULL) {
         goto fail;
     }
+    // オリジナルのバイトデータ長を退避
+    skeyCertBytesSize = skey_cert_bytes_size;
+    // バイトデータを作業領域にコピー
+    memcpy(skeyCertBytes, skey_cert_bytes, skey_cert_bytes_size);
+    // 暗号化に先立ち、暗号化されるバイトデータ長が16の倍数になるよう整形
+    size_t block_size = 16;
+    size_t block_num = skey_cert_bytes_size / block_size;
+    if ((skey_cert_bytes_size % block_size) != 0) {
+        block_num++;
+    }
     // 共通鍵を使用し、鍵・証明書バイナリーデータを暗号化
-    fido_blob_set(pdata, skey_cert_bytes, skey_cert_bytes_size);
+    fido_blob_set(pdata, skeyCertBytes, block_num * block_size);
     fido_blob_set(key, ECDH_shared_secret_key(), 32);
     if (aes256_cbc_enc(key, pdata, pe) < 0) {
         goto fail;
     }
-    
     // 配列に退避
     memcpy(skeyCertBytesEnc, pe->ptr, pe->len);
     skeyCertBytesEncSize = pe->len;
