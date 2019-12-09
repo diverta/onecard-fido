@@ -13,6 +13,7 @@
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
+#include "fido_maintenance_skcert.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -81,6 +82,13 @@ static void command_install_skey_cert(void)
     }
     fido_log_info("Install private key and certificate start");
 
+    // リクエストデータをCBORデコードし、鍵・証明書データを復号化
+    uint8_t *cbor_data_buffer = data + 1;
+    size_t   cbor_data_length = length - 1;
+    if (fido_maintenance_skcert_restore(cbor_data_buffer, cbor_data_length) == false) {
+        return;
+    }
+    
     // Flash ROMに登録済みのデータがあれば領域に読込
     if (fido_flash_skey_cert_read() == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
@@ -88,7 +96,8 @@ static void command_install_skey_cert(void)
     }
 
     // Flash ROMに登録する鍵・証明書データを準備
-    if (fido_flash_skey_cert_data_prepare(data, length) == false) {
+    if (fido_flash_skey_cert_data_prepare(
+        fido_maintenance_skcert_data(), fido_maintenance_skcert_size()) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 8);
         return;
     }
