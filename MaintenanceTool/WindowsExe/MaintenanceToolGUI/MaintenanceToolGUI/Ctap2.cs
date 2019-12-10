@@ -230,6 +230,10 @@ namespace MaintenanceToolGUI
                 // PIN設定処理を続行
                 DoClientPinSetOrChange(cborBytes);
                 break;
+            case AppCommon.RequestType.InstallSkeyCert:
+                // 鍵・証明書インストール処理を続行
+                hidMain.DoRequestInstallSkeyCert(cborBytes);
+                break;
             default:
                 // 画面に制御を戻す
                 mainForm.OnAppMainProcessExited(false);

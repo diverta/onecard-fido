@@ -217,9 +217,6 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.EraseSkeyCert:
                 DoRequestEraseSkeyCert();
                 break;
-            case AppCommon.RequestType.InstallSkeyCert:
-                DoRequestInstallSkeyCert();
-                break;
             case AppCommon.RequestType.ToolPreferenceCommand:
                 toolPreference.DoResponseHidInit(message, length);
                 break;
@@ -239,7 +236,8 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.TestMakeCredential:
             case AppCommon.RequestType.TestGetAssertion:
             case AppCommon.RequestType.ClientPinSet:
-                // PINコード取得処理を続行
+            case AppCommon.RequestType.InstallSkeyCert:
+                // 認証器の公開鍵を取得
                 ctap2.DoGetKeyAgreement(requestType);
                 break;
             case AppCommon.RequestType.AuthReset:
@@ -296,21 +294,34 @@ namespace MaintenanceToolGUI
             DoRequestCtapHidInit(AppCommon.RequestType.InstallSkeyCert);
         }
 
-        public void DoRequestInstallSkeyCert()
+        public void DoRequestInstallSkeyCert(byte[] agreementKeyCBOR)
         {
-            // 秘密鍵をファイルから読込
+            // CBORレスポンスから、公開鍵を抽出
             InstallSkeyCert installSkeyCert = new InstallSkeyCert();
+            if (installSkeyCert.ExtractKeyAgreement(agreementKeyCBOR) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 秘密鍵をファイルから読込
             if (installSkeyCert.ReadPemFile(skeyFilePathForInstall) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_SKEY_PEM_FILE);
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
             // 証明書をファイルから読込
             if (installSkeyCert.ReadCertFile(certFilePathForInstall) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_CERT_CRT_FILE);
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
-            // 秘密鍵・証明書の内容を配列にセットし、HIDデバイスに送信
+            // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
             int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
+            if (RequestDataSize == 0) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_CRYPTO_SKEY_CERT_DATA);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
             hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
         }
 

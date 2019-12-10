@@ -11,6 +11,8 @@ namespace MaintenanceToolGUI
         private byte[] SkeyBytes = new byte[32];
         // 証明書格納領域
         private byte[] CertBytes = null;
+        // CBORエンコーダーの参照を保持
+        private CBOREncoder encoder = new CBOREncoder();
 
         public bool ReadPemFile(string skeyFilePath)
         {
@@ -91,6 +93,12 @@ namespace MaintenanceToolGUI
             }
 
             return false;
+        }
+
+        public bool ExtractKeyAgreement(byte[] agreementKeyCBOR)
+        {
+            // CBORをデコードして公開鍵を抽出し、共通鍵を生成
+            return encoder.CreateSharedSecretKey(agreementKeyCBOR);
         }
 
         public int GenerateInstallSkeyCertBytes(byte[] RequestData)
