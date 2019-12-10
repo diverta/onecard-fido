@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using MaintenanceToolCommon;
+using PeterO.Cbor;
 
 namespace MaintenanceToolGUI
 {
@@ -101,20 +103,69 @@ namespace MaintenanceToolGUI
             return encoder.CreateSharedSecretKey(agreementKeyCBOR);
         }
 
-        public int GenerateInstallSkeyCertBytes(byte[] RequestData)
+        public byte[] GenerateInstallSkeyCertBytes()
         {
+            // 初期化
             int pos = 0;
+            byte[] skeyCertBytes = new byte[1024];
 
-            // リクエストデータを配列にセット
+            // 鍵・証明書バイナリーデータを、１本のバイトデータにマージ
             //   秘密鍵（32バイト）
-            Array.Copy(SkeyBytes, 0, RequestData, pos, SkeyBytes.Length);
+            Array.Copy(SkeyBytes, 0, skeyCertBytes, pos, SkeyBytes.Length);
             pos += SkeyBytes.Length;
             //   証明書（ファイルサイズと同じ）
-            Array.Copy(CertBytes, 0, RequestData, pos, CertBytes.Length);
+            Array.Copy(CertBytes, 0, skeyCertBytes, pos, CertBytes.Length);
             pos += CertBytes.Length;
 
-            // 配列にセットされたバイト数を戻す
-            return pos;
+            // オリジナルの配列長を設定
+            int skeyCertBytesSize = pos;
+
+            // 暗号化に先立ち、暗号化されるバイトデータ長が16の倍数になるよう整形
+            int block_size = 16;
+            int block_num = skeyCertBytesSize / block_size;
+            if ((skeyCertBytesSize % block_size) != 0) {
+                block_num++;
+            }
+
+            // 暗号化されるバイトデータを先頭から抽出
+            int skeyCertBytesEncSize = block_num * block_size;
+            byte[] skeyCertBytes16 = skeyCertBytes.ToList().Take(skeyCertBytesEncSize).ToArray();
+
+            // AES256-CBCで暗号化
+            //   AES256-CBC(sharedSecret, IV=0, privateKey || certificate)
+            byte[] skeyCertBytesEnc = AppCommon.AES256CBCEncrypt(encoder.SharedSecretKey, skeyCertBytes16);
+            if (skeyCertBytesEnc.Length != skeyCertBytesEncSize) {
+                // 暗号化失敗の場合は処理終了
+                return null;
+            }
+
+            // 送信データを生成
+            //   0x01: keyAgreement
+            //   0x02: skeyCertBytesEnc
+            //   0x03: skeyCertBytesSize
+            CBORObject cbor = CBORObject.NewMap();
+
+            CBORObject keyParam = CBORObject.NewMap();
+            keyParam.Add(1, encoder.AgreementPublicKey.Kty);
+            keyParam.Add(3, encoder.AgreementPublicKey.Alg);
+            keyParam.Add(-1, encoder.AgreementPublicKey.Crv);
+            keyParam.Add(-2, encoder.AgreementPublicKey.X);
+            keyParam.Add(-3, encoder.AgreementPublicKey.Y);
+            cbor.Add(0x01, keyParam);
+
+            cbor.Add(0x02, skeyCertBytesEnc);
+            cbor.Add(0x03, (uint)skeyCertBytesSize);
+
+            // エンコードを実行
+            byte[] payload = cbor.EncodeToBytes();
+            byte[] encoded = new byte[] { 0x00 }.Concat(payload).ToArray();
+
+            // for debug
+            // AppCommon.OutputLogDebug("Encoded CBOR request: ");
+            // AppCommon.OutputLogText(AppCommon.DumpMessage(encoded, encoded.Length));
+
+            // エンコードされたCBORバイト配列を戻す
+            return encoded;
         }
     }
 }

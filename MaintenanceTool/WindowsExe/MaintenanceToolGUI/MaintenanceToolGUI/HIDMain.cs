@@ -316,13 +316,13 @@ namespace MaintenanceToolGUI
                 return;
             }
             // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
-            int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
-            if (RequestDataSize == 0) {
+            byte[] cbor = installSkeyCert.GenerateInstallSkeyCertBytes();
+            if (cbor == null) {
                 mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_CRYPTO_SKEY_CERT_DATA);
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
-            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, cbor, cbor.Length);
         }
 
         private void DoResponseMaintSkeyCert(byte[] message, int length)
