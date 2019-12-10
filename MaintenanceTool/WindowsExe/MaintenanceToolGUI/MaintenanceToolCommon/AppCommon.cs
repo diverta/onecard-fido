@@ -277,5 +277,33 @@ namespace MaintenanceToolCommon
             }
             return cborBytes;
         }
+
+        //
+        // 処理区分
+        //
+        public enum RequestType
+        {
+            None = 0,
+            //
+            // メンテナンス機能
+            //
+            EraseSkeyCert,
+            InstallSkeyCert,
+            ToolPreferenceCommand,
+            //
+            // U2F
+            //
+            TestRegister,
+            TestAuthenticateCheck,
+            TestAuthenticate,
+            //
+            // CTAP2
+            //
+            ClientPinSet,
+            TestCtapHidPing,
+            TestMakeCredential,
+            TestGetAssertion,
+            AuthReset
+        };
     }
 }

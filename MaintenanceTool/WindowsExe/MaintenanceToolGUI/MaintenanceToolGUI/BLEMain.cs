@@ -157,8 +157,7 @@ namespace MaintenanceToolGUI
             //   事前実行する必要あり
             bleRequestType = BLERequestType.TestBLECTAP2;
             ctap2.SetClientPin(pin);
-            ctap2.SetRequestType(Ctap2.RequestType.TestMakeCredential);
-            ctap2.DoGetKeyAgreement();
+            ctap2.DoGetKeyAgreement(AppCommon.RequestType.TestMakeCredential);
         }
 
         private void DoResponseBLECTAP2(byte[] receivedMessage, int receivedLen)
@@ -175,8 +174,7 @@ namespace MaintenanceToolGUI
         {
             // U2F Register処理を実行
             bleRequestType = BLERequestType.TestBLEU2F;
-            u2f.SetRequestType(U2f.RequestType.TestRegister);
-            u2f.DoRequestRegister();
+            u2f.DoRequestRegister(AppCommon.RequestType.TestRegister);
         }
 
         private void DoResponseBLEU2F(byte[] receivedMessage, int receivedLen)
