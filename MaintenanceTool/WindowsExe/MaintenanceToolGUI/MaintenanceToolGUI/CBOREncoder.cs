@@ -90,7 +90,7 @@ namespace MaintenanceToolGUI
             return GenerateGetPinTokenCbor(cborCommand, subCommand);
         }
 
-        private bool CreateSharedSecretKey(byte[] agreementKeyCBOR)
+        public bool CreateSharedSecretKey(byte[] agreementKeyCBOR)
         {
             // CBORをデコードして公開鍵を抽出
             CBORDecoder cborDecoder = new CBORDecoder();

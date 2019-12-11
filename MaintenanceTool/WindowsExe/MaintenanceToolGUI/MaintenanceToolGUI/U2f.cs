@@ -32,14 +32,7 @@ namespace MaintenanceToolGUI
         private MainForm mainForm;
 
         // 実行機能を保持
-        public enum RequestType
-        {
-            None = 0,
-            TestRegister,
-            TestAuthenticateCheck,
-            TestAuthenticate,
-        };
-        private RequestType requestType;
+        private AppCommon.RequestType requestType;
 
         // リクエストデータ格納領域
         private byte[] U2FRequestData = new byte[1024];
@@ -70,34 +63,6 @@ namespace MaintenanceToolGUI
             bleMain = a;
         }
 
-        public void SetRequestType(RequestType t)
-        {
-            requestType = t;
-        }
-
-        // 
-        // INITコマンドの後続処理判定
-        //
-        public bool DoResponseHidInit(byte[] message, int length)
-        {
-            switch (requestType) {
-            case RequestType.TestRegister:
-                // U2F Registerコマンドを実行
-                DoRequestRegister();
-                break;
-            case RequestType.TestAuthenticateCheck:
-            case RequestType.TestAuthenticate:
-                // U2F Authenticate処理を続行
-                DoRequestAuthenticate();
-                break;
-            default:
-                // 画面に制御を戻す
-                return false;
-            }
-
-            return true;
-        }
-
         // 
         // レスポンスの後続処理判定
         //
@@ -110,13 +75,13 @@ namespace MaintenanceToolGUI
             }
 
             switch (requestType) {
-            case RequestType.TestRegister:
+            case AppCommon.RequestType.TestRegister:
                 DoResponseRegister(receivedMessage, receivedLen);
                 break;
-            case RequestType.TestAuthenticateCheck:
+            case AppCommon.RequestType.TestAuthenticateCheck:
                 DoResponseAuthenticate(receivedMessage, receivedLen);
                 break;
-            case RequestType.TestAuthenticate:
+            case AppCommon.RequestType.TestAuthenticate:
                 // 画面に制御を戻す
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_SUCCESS);
                 mainForm.OnAppMainProcessExited(true);
@@ -172,8 +137,11 @@ namespace MaintenanceToolGUI
         //
         // U2F Registerコマンド関連処理
         //
-        public void DoRequestRegister()
+        public void DoRequestRegister(AppCommon.RequestType t)
         {
+            // 実行するコマンドを退避
+            requestType = t;
+
             // ランダムなチャレンジデータを生成
             GenerateNonceBytes();
             GenerateAppIDBytes();
@@ -252,12 +220,12 @@ namespace MaintenanceToolGUI
             mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
 
             // 実行するコマンドを退避
-            requestType = RequestType.TestAuthenticateCheck;
+            requestType = AppCommon.RequestType.TestAuthenticateCheck;
 
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
                 // INITコマンドを実行し、nonce を送信する
-                hidMain.DoRequestCtapHidInit();
+                hidMain.DoRequestCtapHidInit(requestType);
                 break;
             case AppCommon.TRANSPORT_BLE:
                 // U2F Authenticateコマンドを実行
@@ -271,7 +239,7 @@ namespace MaintenanceToolGUI
         //
         // U2F Authenticateコマンド関連処理
         //
-        private void DoRequestAuthenticate()
+        public void DoRequestAuthenticate()
         {
             // ランダムなチャレンジデータを生成
             GenerateNonceBytes();
@@ -279,7 +247,7 @@ namespace MaintenanceToolGUI
             // リクエストデータ（APDU）を編集しリクエストデータに格納
             int length = GenerateU2FAuthenticateBytes(U2FRequestData, getAuthOption(requestType));
 
-            if (requestType == RequestType.TestAuthenticate) {
+            if (requestType == AppCommon.RequestType.TestAuthenticate) {
                 // BLE U2Fリクエスト転送の前に、
                 // FIDO認証器のMAIN SWを押してもらうように促す
                 // メッセージを画面表示
@@ -338,10 +306,10 @@ namespace MaintenanceToolGUI
             return pos;
         }
 
-        private byte getAuthOption(RequestType type)
+        private byte getAuthOption(AppCommon.RequestType type)
         {
             // 処理区分からオプションを設定
-            if (type == RequestType.TestAuthenticateCheck) {
+            if (type == AppCommon.RequestType.TestAuthenticateCheck) {
                 return Const.U2F_AUTH_CHECK_ONLY;
             } else {
                 return Const.U2F_AUTH_ENFORCE;
@@ -351,12 +319,12 @@ namespace MaintenanceToolGUI
         private void DoResponseAuthenticate(byte[] message, int length)
         {
             // 実行するコマンドを退避
-            requestType = RequestType.TestAuthenticate;
+            requestType = AppCommon.RequestType.TestAuthenticate;
 
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
                 // INITコマンドを実行し、nonce を送信する
-                hidMain.DoRequestCtapHidInit();
+                hidMain.DoRequestCtapHidInit(requestType);
                 break;
             case AppCommon.TRANSPORT_BLE:
                 // U2F Authenticateコマンドを実行

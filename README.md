@@ -21,39 +21,21 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/11/19
-
-FIDO認証器管理ツールを修正しました。<br>
-
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.21）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-replace-nslog/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
-
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.21）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-refactor-log/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
-
-修正点は以下になります。（[#272](https://github.com/diverta/onecard-fido/issues/272) ご参照）
-- macOS管理ツールのログを、コンソールではなく、ログファイルに出力させるよう修正
-- macOS版管理ツールと、Windows版管理ツールのログ出力内容を整合させるよう修正
-- ログファイルが、ユーザーディレクトリー配下の所定の位置に出力されるよう修正
-
-ログファイルの位置については、下記ドキュメントをご参照願います。
-- [macOS版管理ツールのログファイル](MaintenanceTool/macOSApp/VIEWLOG.md)
-- [Windows版管理ツールのログファイル](MaintenanceTool/WindowsExe/VIEWLOG.md)
-
-
-#### 2019/11/11
+#### 2019/12/11
 
 FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.20）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-demofunc-param/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.22）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-encrypt-pkcert/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.20）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-demofunc-param/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.22）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-encrypt-pkcert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-- <b>[nRF52840ファームウェア（Version 0.2.3）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-demofunc-param/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
 
-修正点は以下になります。
-- BLEデバイスによる自動認証機能に必要なパラメーター登録機能を追加（[#266](https://github.com/diverta/onecard-fido/issues/266) ご参照）<br>
-自動認証機能については、[こちらのドキュメント](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+修正点は以下になります。（[#281](https://github.com/diverta/onecard-fido/issues/281) ご参照）
+- 管理ツールによる秘密鍵転送時に、ECDH共通鍵により暗号化（AES256-CBC）を行うよう修正
+- 管理ツールで鍵・証明書インストール時、確認ダイアログを表示させるよう修正
+- 管理ツールで鍵・証明書削除／インストール時、nRF52840側から発行されたチャネルIDを使用し、USB HID通信を行うよう修正
 
-- BLE PING機能失敗時、エラーメッセージが２回表示される不具合を解消（[#271](https://github.com/diverta/onecard-fido/issues/271) ご参照）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
