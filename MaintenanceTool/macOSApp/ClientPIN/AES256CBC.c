@@ -44,7 +44,7 @@ fail:
     if (ctx != NULL)
         EVP_CIPHER_CTX_free(ctx);
     
-    if (ok < 0) {
+    if (ok != CTAP1_ERR_SUCCESS) {
         free(out->ptr);
         out->ptr = NULL;
         out->len = 0;
@@ -86,7 +86,7 @@ fail:
     if (ctx != NULL)
         EVP_CIPHER_CTX_free(ctx);
     
-    if (ok < 0) {
+    if (ok != CTAP1_ERR_SUCCESS) {
         free(out->ptr);
         out->ptr = NULL;
         out->len = 0;

@@ -11,8 +11,10 @@
 
 @interface ToolInstallCommand : NSObject
 
+    - (bool)extractKeyAgreement:(NSData *)keyAgreementResponse;
+    - (NSData *)generateSkeyCertInstallCbor:(NSData *)skeyCertBinaryData;
     - (NSData *)generateEraseSkeyCertMessage:(Command)command;
-    - (NSData *)generateInstallSkeyCertMessage:(Command)command
+    - (NSData *)extractSkeyCertBinaryData:(Command)command
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath;
 

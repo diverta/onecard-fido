@@ -125,6 +125,11 @@
         if (![self checkUSBHIDConnection]) {
             return;
         }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_INSTALL_SKEY_CERT
+                         informativeText:MSG_PROMPT_INSTL_SKEY_CERT] == false) {
+            return;
+        }
         // 鍵・証明書インストール
         [self enableButtons:false];
         [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY_CERT
