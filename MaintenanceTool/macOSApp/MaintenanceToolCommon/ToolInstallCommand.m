@@ -10,6 +10,14 @@
 #import "ToolInstallCommand.h"
 #import "ToolLogFile.h"
 
+// for extracting KeyAgreement
+#include "CBORDecoder.h"
+#include "CBOREncoder.h"
+#include "FIDODefines.h"
+
+// for debug
+#define LOG_HEXDUMP_KEY_AGREEMENT false
+
 @interface ToolInstallCommand ()
 
 @end
@@ -27,7 +35,46 @@
         return [[NSData alloc] init];
     }
 
-    - (NSData *)generateInstallSkeyCertMessage:(Command)command
+    - (bool)extractKeyAgreement:(NSData *)keyAgreementResponse {
+        // GetKeyAgreementレスポンスから公開鍵を抽出
+        uint8_t *keyAgreement = (uint8_t *)[keyAgreementResponse bytes];
+        size_t   keyAgreementSize = [keyAgreementResponse length];
+        uint8_t  status_code = ctap2_cbor_decode_get_agreement_key(keyAgreement, keyAgreementSize);
+        if (status_code != CTAP1_ERR_SUCCESS) {
+            [self setLastErrorMessage:MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY];
+            return false;
+        }
+
+#if LOG_HEXDUMP_KEY_AGREEMENT
+        [[ToolLogFile defaultLogger] debugWithFormat:@"pubkey_X %@",
+         [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_X() length:32]];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"pubkey_Y %@",
+         [[NSData alloc] initWithBytes:ctap2_cbor_decode_agreement_pubkey_Y() length:32]];
+#endif
+
+        return true;
+    }
+
+    - (NSData *)generateSkeyCertInstallCbor:(NSData *)skeyCertBinaryData {
+        uint8_t *skeyCertBytes = (uint8_t *)[skeyCertBinaryData bytes];
+        size_t skeyCertBytesLength = [skeyCertBinaryData length];
+
+        uint8_t status_code = maintenance_cbor_encode_install_skey_cert(
+                                    ctap2_cbor_decode_agreement_pubkey_X(),
+                                    ctap2_cbor_decode_agreement_pubkey_Y(),
+                                    skeyCertBytes, skeyCertBytesLength);
+
+        if (status_code == CTAP1_ERR_SUCCESS) {
+            return [[NSData alloc] initWithBytes:ctap2_cbor_encode_request_bytes()
+                                          length:ctap2_cbor_encode_request_bytes_size()];
+        } else {
+            [self setLastErrorMessage:MSG_CANNOT_CRYPTO_SKEY_CERT_DATA];
+            return nil;
+        }
+        return nil;
+    }
+
+    - (NSData *)extractSkeyCertBinaryData:(Command)command
                                   skeyFilePath:(NSString *)skeyFilePath
                                   certFilePath:(NSString *)certFilePath {
         NSMutableData *message = [NSMutableData alloc];

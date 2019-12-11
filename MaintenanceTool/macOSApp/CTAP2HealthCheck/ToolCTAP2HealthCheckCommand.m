@@ -200,6 +200,7 @@
             case COMMAND_CLIENT_PIN_CHANGE:
             case COMMAND_TEST_MAKE_CREDENTIAL:
             case COMMAND_TEST_GET_ASSERTION:
+            case COMMAND_INSTALL_SKEY_CERT:
                 [self doRequestCommandGetKeyAgreement];
                 break;
             case COMMAND_AUTH_RESET:
@@ -332,6 +333,10 @@
                 // PIN変更処理を続行
                 [self setSubCommand:CTAP2_SUBCMD_CLIENT_PIN_CHANGE];
                 [[self toolHIDCommand] doClientPinSetOrChange:message CID:[self CID]];
+                break;
+            case COMMAND_INSTALL_SKEY_CERT:
+                // 鍵・証明書インストール処理を続行
+                [[self toolHIDCommand] doRequestInstallSkeyCert:message CID:[self CID]];
                 break;
             default:
                 // 画面に制御を戻す
