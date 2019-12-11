@@ -319,9 +319,16 @@ namespace MaintenanceToolGUI
             {
                 return;
             }
+            // プロンプトで表示されるメッセージ
+            string message = string.Format("{0}\n\n{1}",
+                ToolGUICommon.MSG_INSTALL_SKEY_CERT,
+                ToolGUICommon.MSG_PROMPT_INSTL_SKEY_CERT);
 
             // 鍵・証明書インストール
-            doCommand(sender);
+            // プロンプトを表示し、Yesの場合だけ処理を行う
+            if (FormUtil.DisplayPromptPopup(message)) {
+                doCommand(sender);
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)

@@ -23,16 +23,7 @@ namespace MaintenanceToolGUI
         private byte cborSubCommand;
 
         // 実行機能を保持
-        public enum RequestType
-        {
-            None = 0,
-            ClientPinSet,
-            TestCtapHidPing,
-            TestMakeCredential,
-            TestGetAssertion,
-            AuthReset
-        };
-        private RequestType requestType;
+        private AppCommon.RequestType requestType;
 
         // ヘルスチェック処理の実行引数を退避
         private string clientPin;
@@ -70,11 +61,6 @@ namespace MaintenanceToolGUI
         public void SetBleMain(BLEMain a)
         {
             bleMain = a;
-        }
-
-        public void SetRequestType(RequestType t)
-        {
-            requestType = t;
         }
 
         public void SetClientPin(string p)
@@ -125,34 +111,6 @@ namespace MaintenanceToolGUI
             }
             // 画面に制御を戻す
             mainForm.OnAppMainProcessExited(result);
-        }
-
-        // 
-        // INITコマンドの後続処理判定
-        //
-        public bool DoResponseCtapHidInit(byte[] message, int length)
-        {
-            switch (requestType) {
-            case RequestType.TestCtapHidPing:
-                // PINGコマンドを実行
-                DoRequestPing();
-                break;
-            case RequestType.TestMakeCredential:
-            case RequestType.TestGetAssertion:
-            case RequestType.ClientPinSet:
-                // PINコード取得処理を続行
-                DoGetKeyAgreement();
-                break;
-            case RequestType.AuthReset:
-                // Reset処理を続行
-                DoRequestAuthReset();
-                break;
-            default:
-                // 画面に制御を戻す
-                return false;
-            }
-
-            return true;
         }
 
         //
@@ -236,9 +194,10 @@ namespace MaintenanceToolGUI
         //
         // ClientPINコマンド関連処理
         //
-        public void DoGetKeyAgreement()
+        public void DoGetKeyAgreement(AppCommon.RequestType t)
         {
             // 実行するコマンドを退避
+            requestType = t;
             cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
             cborSubCommand = AppCommon.CTAP2_SUBCMD_CLIENT_PIN_GET_AGREEMENT;
 
@@ -262,14 +221,18 @@ namespace MaintenanceToolGUI
         public void DoResponseCommandGetKeyAgreement(byte[] cborBytes)
         {
             switch (requestType) {
-            case RequestType.TestMakeCredential:
-            case RequestType.TestGetAssertion:
+            case AppCommon.RequestType.TestMakeCredential:
+            case AppCommon.RequestType.TestGetAssertion:
                 // PINトークン取得処理を続行
                 DoGetPinToken(cborBytes);
                 break;
-            case RequestType.ClientPinSet:
+            case AppCommon.RequestType.ClientPinSet:
                 // PIN設定処理を続行
                 DoClientPinSetOrChange(cborBytes);
+                break;
+            case AppCommon.RequestType.InstallSkeyCert:
+                // 鍵・証明書インストール処理を続行
+                hidMain.DoRequestInstallSkeyCert(cborBytes);
                 break;
             default:
                 // 画面に制御を戻す
@@ -307,8 +270,8 @@ namespace MaintenanceToolGUI
         public void DoResponseCommandGetPinToken(byte[] cborBytes)
         {
             switch (requestType) {
-            case RequestType.TestMakeCredential:
-            case RequestType.TestGetAssertion:
+            case AppCommon.RequestType.TestMakeCredential:
+            case AppCommon.RequestType.TestGetAssertion:
                 // ログイン／認証処理を続行
                 DoResponseGetPinToken(cborBytes);
                 break;
@@ -326,7 +289,7 @@ namespace MaintenanceToolGUI
 
             // リクエストデータ（CBOR）をエンコード
             byte[] requestCbor = null;
-            if (requestType == RequestType.TestMakeCredential) {
+            if (requestType == AppCommon.RequestType.TestMakeCredential) {
                 cborCommand = AppCommon.CTAP2_CBORCMD_MAKE_CREDENTIAL;
                 requestCbor = new CBOREncoder().MakeCredential(cborCommand, clientPin, cborBytes, SharedSecretKey);
             } else {
@@ -344,7 +307,7 @@ namespace MaintenanceToolGUI
             // リクエスト転送の前に、
             // 基板上のMAIN SWを押してもらうように促す
             // メッセージを画面表示
-            if (requestType == RequestType.TestGetAssertion && testUserPresenceNeeded) {
+            if (requestType == AppCommon.RequestType.TestGetAssertion && testUserPresenceNeeded) {
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_START);
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1);
                 mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2);
@@ -407,17 +370,17 @@ namespace MaintenanceToolGUI
             // 実行するコマンドと引数を退避
             //   認証器からPINトークンを取得するため、
             //   ClientPINコマンドを事前実行する必要あり
-            requestType = RequestType.TestGetAssertion;
+            requestType = AppCommon.RequestType.TestGetAssertion;
             cborCommand = AppCommon.CTAP2_CBORCMD_CLIENT_PIN;
 
             switch (transportType) {
             case AppCommon.TRANSPORT_HID:
                 // INITコマンドを実行し、nonce を送信する
-                hidMain.DoRequestCtapHidInit();
+                hidMain.DoRequestCtapHidInit(requestType);
                 break;
             case AppCommon.TRANSPORT_BLE:
                 // 再度、GetKeyAgreementコマンドを実行
-                DoGetKeyAgreement();
+                DoGetKeyAgreement(requestType);
                 break;
             default:
                 break;
@@ -479,7 +442,7 @@ namespace MaintenanceToolGUI
         //
         // Resetコマンド関連処理
         //
-        private void DoRequestAuthReset()
+        public void DoRequestAuthReset()
         {
             // コマンドを退避
             cborCommand = AppCommon.CTAP2_CBORCMD_AUTH_RESET;

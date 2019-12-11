@@ -16,6 +16,8 @@
         public const string MSG_PROMPT_SELECT_CRT_PATH = "証明書ファイル(CRT)のパスを選択してください";
         public const string MSG_ERASE_SKEY_CERT = "FIDO認証器から鍵・証明書・キーハンドルをすべて削除します。";
         public const string MSG_PROMPT_ERASE_SKEY_CERT = "削除後はFIDO認証器によるユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_INSTALL_SKEY_CERT = "FIDO認証器に鍵・証明書をインストールします。";
+        public const string MSG_PROMPT_INSTL_SKEY_CERT = "インストールを実行しますか？";
         public const string MSG_FORMAT_START_MESSAGE = "{0}を開始します。";
         public const string MSG_FORMAT_END_MESSAGE = "{0}が{1}しました。";
 
