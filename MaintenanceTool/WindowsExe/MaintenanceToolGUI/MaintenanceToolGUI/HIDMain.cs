@@ -50,6 +50,9 @@ namespace MaintenanceToolGUI
         // 当初リクエストされたHIDコマンドを退避
         private byte requestedCMD;
 
+        // 実行機能を保持
+        private AppCommon.RequestType requestType;
+
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -169,8 +172,11 @@ namespace MaintenanceToolGUI
         //
         // CTAP2HID_INITコマンド関連処理
         //
-        public void DoRequestCtapHidInit()
+        public void DoRequestCtapHidInit(AppCommon.RequestType t)
         {
+            // 実行するコマンドを退避
+            requestType = t;
+
             // 8バイトのランダムデータを生成
             new Random().NextBytes(nonceBytes);
 
@@ -181,7 +187,9 @@ namespace MaintenanceToolGUI
         public void DoRequestCtapHidInitByToolPreference(ToolPreference tp)
         {
             toolPreference = tp;
-            DoRequestCtapHidInit();
+
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.ToolPreferenceCommand);
         }
 
         private void DoResponseTestCtapHidInit(byte[] message, int length)
@@ -200,10 +208,44 @@ namespace MaintenanceToolGUI
             ReceivedCID = ExtractReceivedCID(message);
 
             // INITコマンドの後続処理判定
-            if (ctap2.DoResponseCtapHidInit(message, length) == false) {
-                if (u2f.DoResponseHidInit(message, length) == false) {
-                    toolPreference.DoResponseHidInit(message, length);
-                }
+            DoResponseCtapHidInit(message, length);
+        }
+
+        public void DoResponseCtapHidInit(byte[] message, int length)
+        {
+            switch (requestType) {
+            case AppCommon.RequestType.EraseSkeyCert:
+                DoRequestEraseSkeyCert();
+                break;
+            case AppCommon.RequestType.ToolPreferenceCommand:
+                toolPreference.DoResponseHidInit(message, length);
+                break;
+            case AppCommon.RequestType.TestCtapHidPing:
+                // PINGコマンドを実行
+                ctap2.DoRequestPing();
+                break;
+            case AppCommon.RequestType.TestRegister:
+                // U2F Registerコマンドを実行
+                u2f.DoRequestRegister(requestType);
+                break;
+            case AppCommon.RequestType.TestAuthenticateCheck:
+            case AppCommon.RequestType.TestAuthenticate:
+                // U2F Authenticate処理を続行
+                u2f.DoRequestAuthenticate();
+                break;
+            case AppCommon.RequestType.TestMakeCredential:
+            case AppCommon.RequestType.TestGetAssertion:
+            case AppCommon.RequestType.ClientPinSet:
+            case AppCommon.RequestType.InstallSkeyCert:
+                // 認証器の公開鍵を取得
+                ctap2.DoGetKeyAgreement(requestType);
+                break;
+            case AppCommon.RequestType.AuthReset:
+                // Reset処理を続行
+                ctap2.DoRequestAuthReset();
+                break;
+            default:
+                break;
             }
         }
 
@@ -223,9 +265,19 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // コマンドバイトだけを送信する
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.EraseSkeyCert);
         }
+
+        public void DoRequestEraseSkeyCert()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_SKEY_CERT, RequestData, 0);
+        }
+
+        // インストール元の鍵・証明書ファイルパスを保持
+        private string skeyFilePathForInstall;
+        private string certFilePathForInstall;
 
         public void DoInstallSkeyCert(string skeyFilePath, string certFilePath)
         {
@@ -233,20 +285,44 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // 秘密鍵をファイルから読込
+
+            // インストール元の鍵・証明書ファイルパスを保持
+            skeyFilePathForInstall = skeyFilePath;
+            certFilePathForInstall = certFilePath;
+
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.InstallSkeyCert);
+        }
+
+        public void DoRequestInstallSkeyCert(byte[] agreementKeyCBOR)
+        {
+            // CBORレスポンスから、公開鍵を抽出
             InstallSkeyCert installSkeyCert = new InstallSkeyCert();
-            if (installSkeyCert.ReadPemFile(skeyFilePath) == false) {
+            if (installSkeyCert.ExtractKeyAgreement(agreementKeyCBOR) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            // 秘密鍵をファイルから読込
+            if (installSkeyCert.ReadPemFile(skeyFilePathForInstall) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_SKEY_PEM_FILE);
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
             // 証明書をファイルから読込
-            if (installSkeyCert.ReadCertFile(certFilePath) == false) {
+            if (installSkeyCert.ReadCertFile(certFilePathForInstall) == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_READ_CERT_CRT_FILE);
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
-            // 秘密鍵・証明書の内容を配列にセットし、HIDデバイスに送信
-            int RequestDataSize = installSkeyCert.GenerateInstallSkeyCertBytes(RequestData);
-            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_INSTALL_SKEY_CERT, RequestData, RequestDataSize);
+            // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
+            byte[] cbor = installSkeyCert.GenerateInstallSkeyCertBytes();
+            if (cbor == null) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_CANNOT_CRYPTO_SKEY_CERT_DATA);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_INSTALL_SKEY_CERT, cbor, cbor.Length);
         }
 
         private void DoResponseMaintSkeyCert(byte[] message, int length)
@@ -352,10 +428,8 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // 実行するコマンドを退避
-            ctap2.SetRequestType(Ctap2.RequestType.AuthReset);
             // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            DoRequestCtapHidInit(AppCommon.RequestType.AuthReset);
         }
 
         public void DoClientPinSet(string pinNew, string pinOld)
@@ -367,10 +441,8 @@ namespace MaintenanceToolGUI
             // 実行引数を退避
             ctap2.SetClientPin(pinOld);
             ctap2.SetClientPinNew(pinNew);
-            // 実行するコマンドを退避
-            ctap2.SetRequestType(Ctap2.RequestType.ClientPinSet);
             // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            DoRequestCtapHidInit(AppCommon.RequestType.ClientPinSet);
         }
 
         //
@@ -388,10 +460,9 @@ namespace MaintenanceToolGUI
             //   ClientPINコマンド（getKeyAgreement）を
             //   事前実行する必要あり
             ctap2.SetClientPin(pin);
-            ctap2.SetRequestType(Ctap2.RequestType.TestMakeCredential);
 
             // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            DoRequestCtapHidInit(AppCommon.RequestType.TestMakeCredential);
         }
 
         //
@@ -403,11 +474,8 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // 実行するコマンドを退避
-            ctap2.SetRequestType(Ctap2.RequestType.None);
-            u2f.SetRequestType(U2f.RequestType.TestRegister);
             // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            DoRequestCtapHidInit(AppCommon.RequestType.TestRegister);
         }
 
         //
@@ -419,10 +487,8 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // 実行するコマンドを退避
-            ctap2.SetRequestType(Ctap2.RequestType.TestCtapHidPing);
             // INITコマンドを実行し、nonce を送信する
-            DoRequestCtapHidInit();
+            DoRequestCtapHidInit(AppCommon.RequestType.TestCtapHidPing);
         }
     }
 }

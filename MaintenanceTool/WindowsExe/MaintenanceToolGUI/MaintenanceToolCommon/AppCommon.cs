@@ -41,6 +41,12 @@ namespace MaintenanceToolCommon
         public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
         public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。";
 
+        // 鍵・証明書インストール関連
+        public const string MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY = "公開鍵を認証器から受け取ることができませんでした。";
+        public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
+        public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
+        public const string MSG_CANNOT_CRYPTO_SKEY_CERT_DATA = "鍵・証明書の転送データを暗号化できませんでした。";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";
 
@@ -277,5 +283,33 @@ namespace MaintenanceToolCommon
             }
             return cborBytes;
         }
+
+        //
+        // 処理区分
+        //
+        public enum RequestType
+        {
+            None = 0,
+            //
+            // メンテナンス機能
+            //
+            EraseSkeyCert,
+            InstallSkeyCert,
+            ToolPreferenceCommand,
+            //
+            // U2F
+            //
+            TestRegister,
+            TestAuthenticateCheck,
+            TestAuthenticate,
+            //
+            // CTAP2
+            //
+            ClientPinSet,
+            TestCtapHidPing,
+            TestMakeCredential,
+            TestGetAssertion,
+            AuthReset
+        };
     }
 }
