@@ -256,6 +256,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.h</itemPath>
@@ -3011,6 +3013,16 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_receive.c"
             ex="false"

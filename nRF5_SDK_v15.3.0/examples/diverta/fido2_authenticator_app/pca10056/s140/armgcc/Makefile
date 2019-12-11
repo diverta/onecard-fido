@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059
 
 # application version info
-CFLAGS += -DFW_REV=\"0.2.3\"
+CFLAGS += -DFW_REV=\"0.2.4\"
 # hardware version info
 CFLAGS += -DHW_REV=\"0.2\"
 
@@ -166,6 +166,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
+  $(FD2LIB_DIR)/fido_maintenance_skcert.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
