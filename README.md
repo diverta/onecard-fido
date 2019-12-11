@@ -31,8 +31,11 @@ FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Don
 
 - <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
 
-修正点は以下になります。
-- 管理ツールによる秘密鍵転送時に暗号化を行うよう修正（[#281](https://github.com/diverta/onecard-fido/issues/281) ご参照）
+修正点は以下になります。（[#281](https://github.com/diverta/onecard-fido/issues/281) ご参照）
+- 管理ツールによる秘密鍵転送時に、ECDH共通鍵により暗号化（AES256-CBC）を行うよう修正
+- 管理ツールで鍵・証明書インストール時、確認ダイアログを表示させるよう修正
+- 管理ツールで鍵・証明書削除／インストール時、nRF52840側から発行されたチャネルIDを使用し、USB HID通信を行うよう修正
+
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
