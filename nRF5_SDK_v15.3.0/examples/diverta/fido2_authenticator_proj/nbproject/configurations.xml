@@ -251,6 +251,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
@@ -4080,6 +4082,16 @@
             flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.h"
             ex="false"
             tool="3"
             flavor2="0">

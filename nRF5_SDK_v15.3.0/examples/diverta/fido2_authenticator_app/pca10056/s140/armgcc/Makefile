@@ -166,6 +166,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_cryptoauth.c \
+  $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
   $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -228,11 +229,13 @@ SRC_FILES += \
   $(CRPLIB_DIR)/basic/atca_basic_ecdh.c \
   $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
   $(CRPLIB_DIR)/basic/atca_basic_info.c \
+  $(CRPLIB_DIR)/basic/atca_basic_lock.c \
   $(CRPLIB_DIR)/basic/atca_basic_nonce.c \
   $(CRPLIB_DIR)/basic/atca_basic_random.c \
   $(CRPLIB_DIR)/basic/atca_basic_read.c \
   $(CRPLIB_DIR)/basic/atca_basic_sha.c \
   $(CRPLIB_DIR)/basic/atca_basic_sign.c \
+  $(CRPLIB_DIR)/basic/atca_basic_updateextra.c \
   $(CRPLIB_DIR)/basic/atca_basic_verify.c \
   $(CRPLIB_DIR)/basic/atca_basic_write.c \
   $(CRPLIB_DIR)/basic/atca_helpers.c \

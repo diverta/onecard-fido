@@ -18,11 +18,10 @@ extern "C" {
 //
 // 使用するスロット番号の定義    
 //
-// 以下仮の仕様です。
-//  1: ECDH共通鍵を生成するためのセッション用秘密鍵を収容
 //  8: HMAC-SHA-256ハッシュ生成用のキーを一時収容
-#define KEY_ID_FOR_SHARED_SECRET_KEY    1
+//  9: ECDH共通鍵を生成するためのセッション用秘密鍵を収容
 #define KEY_ID_FOR_HMAC_GENERATE_KEY    8
+#define KEY_ID_FOR_SHARED_SECRET_KEY    9
 
 bool     fido_cryptoauth_init(void);
 void     fido_cryptoauth_release(void);
