@@ -11,8 +11,21 @@
 extern "C" {
 #endif
 
-bool fido_cryptoauth_init(void);
-void fido_cryptoauth_release(void);
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+//
+// 使用するスロット番号の定義    
+//
+// 以下仮の仕様です。
+//  1: ECDH共通鍵を生成するためのセッション用秘密鍵を収容
+//  8: HMAC-SHA-256ハッシュ生成用のキーを一時収容
+#define KEY_ID_FOR_SHARED_SECRET_KEY    1
+#define KEY_ID_FOR_HMAC_GENERATE_KEY    8
+
+bool     fido_cryptoauth_init(void);
+void     fido_cryptoauth_release(void);
 
 void     fido_cryptoauth_keypair_generate(uint16_t key_id);
 uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id);

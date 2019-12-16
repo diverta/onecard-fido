@@ -4,6 +4,11 @@
  *
  * Created on 2019/11/25, 14:43
  */
+//
+// プラットフォーム非依存コード
+//
+#include "fido_cryptoauth.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -35,7 +40,7 @@ static uint8_t cryptoauth_serial_num[ATCA_SERIAL_NUM_SIZE];
 static uint8_t public_key_raw_data[ATCA_PUB_KEY_SIZE];
 
 // ランダムベクターを保持
-static uint8_t m_random_vector[64];
+static uint8_t m_random_vector[RANDOM_NUM_SIZE];
 
 static bool get_cryptoauth_serial_num(void)
 {
@@ -184,22 +189,17 @@ void fido_cryptoauth_generate_random_vector(uint8_t *vector_buf, size_t vector_b
         return;
     }
 
-    // ランダムベクターを２点生成
+    // ランダムベクターを生成
     ATCA_STATUS status = atcab_random(m_random_vector);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_generate_random_vector failed (1): atcab_random returns 0x%02x", 
             status);
         return;
     }
-    status = atcab_random(m_random_vector + RANDOM_NUM_SIZE);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_generate_random_vector failed (2): atcab_random returns 0x%02x", 
-            status);
-        return;
-    }
 
-    // 引数で指定のバイト数分、配列に格納
-    memcpy(vector_buf, m_random_vector, vector_buf_size);
+    // 引数で指定のバイト数分、配列に格納（最大32バイトまで）
+    memcpy(vector_buf, m_random_vector, 
+        vector_buf_size < RANDOM_NUM_SIZE ? vector_buf_size : RANDOM_NUM_SIZE);
 }
 
 void fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uint8_t *signature, size_t *signature_size)
@@ -244,9 +244,6 @@ void fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uin
 // HMAC SHA-256ハッシュ生成用キーの一時格納領域
 static uint8_t hmac_sha256_key_tmp[32];
 
-// HMAC SHA-256ハッシュを生成するために使用するスロット
-static uint16_t key_id_for_hmac = 14;
-
 bool fido_cryptoauth_calculate_hmac_sha256(
     uint8_t *key_data, size_t key_data_size, 
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
@@ -267,10 +264,10 @@ bool fido_cryptoauth_calculate_hmac_sha256(
         key_data_size < max_key_length ? key_data_size : max_key_length);
 
     // スロット14にキーを32バイトまで書き込み
-    status = atcab_write_zone(ATCA_ZONE_DATA, key_id_for_hmac, 0, 0, hmac_sha256_key_tmp, max_key_length);
+    status = atcab_write_zone(ATCA_ZONE_DATA, KEY_ID_FOR_HMAC_GENERATE_KEY, 0, 0, hmac_sha256_key_tmp, max_key_length);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_write_zone(%d) returns 0x%02x", 
-            key_id_for_hmac, status);
+            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
         return false;
     }
 
@@ -282,17 +279,17 @@ bool fido_cryptoauth_calculate_hmac_sha256(
 
     // HMAC SHA-256ハッシュを計算
     atca_hmac_sha256_ctx_t ctx;
-    status = atcab_sha_hmac_init(&ctx, key_id_for_hmac);
+    status = atcab_sha_hmac_init(&ctx, KEY_ID_FOR_HMAC_GENERATE_KEY);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_init(%d) returns 0x%02x", 
-            key_id_for_hmac, status);
+            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
         return false;
     }
 
     status = atcab_sha_hmac_update(&ctx, src_data, src_data_size);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[1] returns 0x%02x", 
-            key_id_for_hmac, status);
+            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
         return false;
     }
 
@@ -301,7 +298,7 @@ bool fido_cryptoauth_calculate_hmac_sha256(
         status = atcab_sha_hmac_update(&ctx, src_data_2, src_data_2_size);
         if (status != ATCA_SUCCESS) {
             fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[2] returns 0x%02x", 
-                key_id_for_hmac, status);
+                KEY_ID_FOR_HMAC_GENERATE_KEY, status);
             return false;
         }
     }
@@ -309,7 +306,7 @@ bool fido_cryptoauth_calculate_hmac_sha256(
     status = atcab_sha_hmac_finish(&ctx, dest_data, SHA_MODE_TARGET_TEMPKEY);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_finish(%d) returns 0x%02x", 
-            key_id_for_hmac, status);
+            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
         return false;
     }
 
@@ -330,9 +327,6 @@ static uint8_t sskey_hash[ATCA_SHA_DIGEST_SIZE];
 // 鍵交換用キーペアが生成済みかどうかを保持
 static bool keypair_generated = false;
 
-// 鍵交換用キーペアを生成するスロット
-static uint16_t key_id_for_sskey = 1;
-
 void fido_cryptoauth_sskey_init(bool force)
 {
     // 鍵交換用キーペアが生成済みで、かつ
@@ -343,7 +337,7 @@ void fido_cryptoauth_sskey_init(bool force)
     }
 
     // 秘密鍵および公開鍵を、1番スロットで生成
-    fido_cryptoauth_keypair_generate(key_id_for_sskey);
+    fido_cryptoauth_keypair_generate(KEY_ID_FOR_SHARED_SECRET_KEY);
 
     // 生成済みフラグを設定
     if (!keypair_generated) {
@@ -370,15 +364,15 @@ bool fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data)
     }
 
     // 共通鍵を生成
-    status = atcab_ecdh(key_id_for_sskey, client_public_key_raw_data, sskey_raw_data);
+    status = atcab_ecdh(KEY_ID_FOR_SHARED_SECRET_KEY, client_public_key_raw_data, sskey_raw_data);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_sskey_generate failed: atcab_ecdh(%d) returns 0x%02x", 
-            key_id_for_sskey, status);
+            KEY_ID_FOR_SHARED_SECRET_KEY, status);
         return false;
 
 #if LOG_HEXDUMP_DEBUG_SSKEY
     } else {
-        fido_log_debug("fido_cryptoauth_sskey_generate (key_id=%d):", key_id_for_sskey);
+        fido_log_debug("fido_cryptoauth_sskey_generate (key_id=%d):", KEY_ID_FOR_SHARED_SECRET_KEY);
         fido_log_print_hexdump_debug(sskey_raw_data, sizeof(sskey_raw_data));
 #endif
     }
@@ -393,7 +387,7 @@ bool fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data)
 uint8_t *fido_cryptoauth_sskey_public_key(void)
 {
     // 1番スロットの秘密鍵に対応する公開鍵を取得して戻す
-    return fido_cryptoauth_keypair_public_key(key_id_for_sskey);
+    return fido_cryptoauth_keypair_public_key(KEY_ID_FOR_SHARED_SECRET_KEY);
 }
 
 uint8_t *fido_cryptoauth_sskey_hash(void)
