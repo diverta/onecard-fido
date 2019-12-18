@@ -11,8 +11,7 @@
 extern "C" {
 #endif
 
-void fido_cryptoauth_setup_config_change(void);
-void fido_cryptoauth_setup_config_lock(void);
+bool fido_cryptoauth_setup_config(void);
 
 #ifdef __cplusplus
 }

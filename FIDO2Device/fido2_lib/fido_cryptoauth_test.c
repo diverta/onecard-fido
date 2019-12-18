@@ -22,27 +22,8 @@
 //
 // for CRYPTOAUTH function test
 //
-#define FIDO_CRYPTOAUTH_TEST_SETUP false
 #define FIDO_CRYPTOAUTH_TEST_FUNC  false
 #define FIDO_CRYPTOAUTH_TEST_PRIVW true
-
-//
-// for CRYPTOAUTH function test
-//   CRYPTOAUTH 各種機能実行のためのテストコード
-//
-#if FIDO_CRYPTOAUTH_TEST_SETUP
-static void test_setup(void)
-{
-    fido_cryptoauth_init();
-
-    // 設定変更とロックを実行
-    fido_cryptoauth_setup_config_change();
-    fido_cryptoauth_setup_config_lock();
-
-    // test end
-    fido_cryptoauth_release();
-}
-#endif // FIDO_CRYPTOAUTH_TEST_SETUP
 
 #if FIDO_CRYPTOAUTH_TEST_FUNC
 static uint8_t data[256];
@@ -219,10 +200,6 @@ static void test_privkey_write(void)
 //
 void fido_cryptoauth_test_functions(void)
 {
-#if FIDO_CRYPTOAUTH_TEST_SETUP
-    test_setup();
-#endif // FIDO_CRYPTOAUTH_TEST_SETUP
-
 #if FIDO_CRYPTOAUTH_TEST_FUNC
     test_functions();
 #endif // FIDO_CRYPTOAUTH_TEST_FUNC

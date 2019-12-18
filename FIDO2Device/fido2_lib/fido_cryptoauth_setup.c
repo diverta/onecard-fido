@@ -19,7 +19,7 @@
 #include "atca_execution.h"
 #include "cryptoauthlib.h"
 
-static uint8_t test_ecc608_configdata[ATCA_ECC_CONFIG_SIZE] = {
+static uint8_t ecc608_configdata[ATCA_ECC_CONFIG_SIZE] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0xEE, 0x01, 0x4D, 0x00,
     0xC0, 0x00, 0x55, 0x00,
@@ -102,56 +102,90 @@ static bool atcau_is_locked(uint8_t zone, bool *is_locked)
     return true;
 }
 
-void fido_cryptoauth_setup_config_change(void)
+static bool lock_config_zone(void)
 {
-    fido_log_info("fido_cryptoauth_setup_config_change start");
+    ATCA_STATUS status = atcab_lock_config_zone();
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("lock_config_zone: atcab_lock_config_zone failed with ret=0x%02x", status);
+        return false;
+    }
+
+    fido_log_info("lock_config_zone success");
+    return true;
+}
+
+static bool lock_data_zone(void)
+{
+    ATCA_STATUS status = atcab_lock_data_zone();
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("lock_data_zone: atcab_lock_data_zone failed with ret=0x%02x", status);
+        return false;
+    }
+
+    fido_log_info("lock_data_zone success");
+    return true;
+}
+
+static bool write_config_zone(void)
+{
+    // Configバイトを書き込み
+    ATCA_STATUS status = atcab_write_config_zone(ecc608_configdata);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("write_config_zone: atcab_write_config_zone failed with ret=0x%02x", status);
+        return false;
+    }
+
+    fido_log_info("write_config_zone success");
+    return true;
+}
+
+bool fido_cryptoauth_setup_config(void)
+{
+    // Config情報を取得
+    if (fido_cryptoauth_get_config_bytes() == false) {
+        return false;
+    }
 
     // ロック状況を取得
     bool is_config_locked;
     bool is_data_locked;
     if (atcau_is_locked(LOCK_ZONE_CONFIG, &is_config_locked) == false) {
-        fido_log_error("fido_cryptoauth_setup_config_change: atcau_is_locked(LOCK_ZONE_CONFIG) failed");
-        return;
+        fido_log_error("fido_cryptoauth_setup_config: atcau_is_locked(LOCK_ZONE_CONFIG) failed");
+        return false;
     }
     if (atcau_is_locked(LOCK_ZONE_DATA, &is_data_locked) == false) {
-        fido_log_error("fido_cryptoauth_setup_config_change: atcau_is_locked(LOCK_ZONE_DATA) failed");
-        return;
+        fido_log_error("fido_cryptoauth_setup_config: atcau_is_locked(LOCK_ZONE_DATA) failed");
+        return false;
     }
     if (is_config_locked && is_data_locked) {
         // Config、Data共にロックされている場合は終了
-        fido_log_info("fido_cryptoauth_setup_config_change: Config is already locked");
-        return;
+        fido_log_info("fido_cryptoauth_setup_config: Config and data zone is already locked");
+        return true;
+    } 
+
+    if (is_config_locked == false) {
+        // Configがロックされていない場合は、
+        // Config変更とロックを実行
+        if (write_config_zone() == false) {
+            return false;
+        }
+        if (lock_config_zone() == false) {
+            return false;
+        }        
+    } 
+
+    if (is_data_locked == false) {
+        // Dataがロックされていない場合はロックを実行
+        if (lock_data_zone() == false) {
+            return false;
+        }        
     }
 
-    // Configバイトを書き込み
-    ATCA_STATUS status = atcab_write_config_zone(test_ecc608_configdata);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_setup_config_change: atcab_write_config_zone failed with ret=0x%02x", status);
-        return;
+    // Config情報を再取得
+    if (fido_cryptoauth_get_config_bytes() == false) {
+        return false;
     }
 
-    fido_log_info("fido_cryptoauth_setup_config_change done");
-}
-
-void fido_cryptoauth_setup_config_lock(void)
-{
-    fido_log_info("fido_cryptoauth_setup_config_lock start");
-
-    // Configロックを実行
-    ATCA_STATUS status = atcab_lock_config_zone();
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_setup_config_lock: atcab_lock_config_zone failed with ret=0x%02x", status);
-        return;
-    }
-    fido_log_debug("fido_cryptoauth_setup_config_lock: atcab_lock_config_zone success");
-
-    // Dataロックを実行
-    status = atcab_lock_data_zone();
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_setup_config_lock: atcab_lock_data_zone failed with ret=0x%02x", status);
-        return;
-    }
-    fido_log_debug("fido_cryptoauth_setup_config_lock: atcab_lock_data_zone success");
-
-    fido_log_info("fido_cryptoauth_setup_config_lock done");
+    fido_log_info("fido_cryptoauth_setup_config done");
+    return true;
 }

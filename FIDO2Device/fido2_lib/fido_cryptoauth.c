@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_cryptoauth.h"
+#include "fido_cryptoauth_setup.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -56,7 +57,7 @@ static bool get_cryptoauth_serial_num(void)
     return true;
 }
 
-static bool get_cryptoauth_config_bytes(void)
+bool fido_cryptoauth_get_config_bytes(void)
 {
     ATCA_STATUS status = atcab_read_config_zone(ateccx08a_config_bytes);
     if (status != ATCA_SUCCESS) {
@@ -65,8 +66,8 @@ static bool get_cryptoauth_config_bytes(void)
     }
 #if LOG_HEXDUMP_DEBUG_CONFIG
     fido_log_debug("Config zone data (128 bytes):");
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes, 80);
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes + 80, 48);
+    fido_log_print_hexdump_debug(ateccx08a_config_bytes,      64);
+    fido_log_print_hexdump_debug(ateccx08a_config_bytes + 64, 64);
 #endif
     return true;
 }
@@ -95,8 +96,8 @@ bool fido_cryptoauth_init(void)
         return false;
     }
 
-    // config情報を取得
-    if (get_cryptoauth_config_bytes() == false) {
+    // Configがデフォルトのままであれば変更を行う
+    if (fido_cryptoauth_setup_config() == false) {
         return false;
     }
 
