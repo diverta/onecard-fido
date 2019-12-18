@@ -22,8 +22,7 @@
 //
 // for CRYPTOAUTH function test
 //
-#define FIDO_CRYPTOAUTH_TEST_FUNC  false
-#define FIDO_CRYPTOAUTH_TEST_PRIVW true
+#define FIDO_CRYPTOAUTH_TEST_FUNC  true
 
 #if FIDO_CRYPTOAUTH_TEST_FUNC
 static uint8_t data[256];
@@ -110,6 +109,56 @@ static void sskey_generate(void)
     fido_cryptoauth_release();
 }
 
+static void test_privkey_write(void)
+{
+    uint8_t public_key[ATCA_PUB_KEY_SIZE];
+    uint8_t public_key_ref[ATCA_PUB_KEY_SIZE];
+
+    // Flash ROMに登録済みのデータがあれば領域に読込
+    if (fido_flash_skey_cert_read() == false) {
+        return;
+    }
+
+    // Flash ROMに導入されている外部証明書を取得し、公開鍵を抽出
+    if (fido_cryptoauth_extract_pubkey_from_cert(public_key_ref, fido_flash_cert_data(), fido_flash_cert_data_length()) == false) {
+        return;
+    }
+
+    // Flash ROMに導入されている外部秘密鍵を取得し、
+    // １４番スロットにインストール
+    uint8_t *private_key = fido_flash_skey_data();
+    if (fido_cryptoauth_install_privkey(private_key) == false) {
+        return;
+    }
+
+    // Flash ROMにインストール済みの外部秘密鍵と公開鍵をダンプ
+    fido_log_debug("Private key of certificate (installed into ATECC608A):");
+    fido_log_print_hexdump_debug(private_key, ATCA_PRIV_KEY_SIZE);
+
+    fido_log_debug("Public key of certificate:");
+    fido_log_print_hexdump_debug(public_key_ref, ATCA_PUB_KEY_SIZE);
+
+    // １４番スロットの秘密鍵から、公開鍵を生成
+    ATCA_STATUS status = atcab_get_pubkey(KEY_ID_FOR_INSTALL_PRIVATE_KEY, public_key);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("test_privkey_write failed: atcab_get_pubkey(%d) returns 0x%02x", 
+            KEY_ID_FOR_INSTALL_PRIVATE_KEY, status);
+        return;
+    }
+
+    // 生成された公開鍵をダンプ
+    fido_log_debug("Public key from ATECC608A:");
+    fido_log_print_hexdump_debug(public_key, ATCA_PUB_KEY_SIZE);
+
+    // 内容を検証
+    if (memcmp(public_key_ref, public_key, sizeof(public_key_ref)) != 0) {
+        fido_log_error("test_privkey_write failed: Invalid public key");
+    }
+
+    // test end
+    fido_cryptoauth_release();
+}
+
 static void test_functions(void)
 {
     //
@@ -119,15 +168,19 @@ static void test_functions(void)
     static uint8_t button_cnt = 0;
     switch (++button_cnt) {
         case 1:
+            // 外部秘密鍵導入テスト
+            test_privkey_write();
+            break;
+        case 2:
             // SHA-256ハッシュ生成テスト
             generate_sha256_hash();
             break;
-        case 2:
+        case 3:
             // ECDSA署名 ＆ HMAC SHA-256ハッシュ生成テスト
             // 秘密鍵は 0 番スロットを使用
             sign_and_calculate_hmac_sha256(0);
             break;
-        case 3:
+        case 4:
             // ECDH共通鍵生成テスト
             sskey_generate();
             break;
@@ -139,60 +192,6 @@ static void test_functions(void)
 }
 #endif // FIDO_CRYPTOAUTH_TEST_FUNC
 
-#if FIDO_CRYPTOAUTH_TEST_PRIVW
-static void test_privkey_write(void)
-{
-    ATCA_STATUS status = ATCA_SUCCESS;
-    //uint8_t key_id       = 0x07;
-    //uint8_t write_key_id = 0x04;
-    uint8_t key_id       = 0x0e;
-    uint8_t write_key_id = 0x0f;
-    uint8_t public_key[64];
-
-    static const uint8_t g_slot4_key[32] = {
-        0x37, 0x80, 0xe6, 0x3d, 0x49, 0x68, 0xad, 0xe5, 0xd8, 0x22, 0xc0, 0x13, 0xfc, 0xc3, 0x23, 0x84,
-        0x5d, 0x1b, 0x56, 0x9f, 0xe7, 0x05, 0xb6, 0x00, 0x06, 0xfe, 0xec, 0x14, 0x5a, 0x0d, 0xb1, 0xe3
-    };
-    static const uint8_t private_key[36] = {
-        0x00, 0x00, 0x00, 0x00,
-        0x87, 0x8F, 0x0A, 0xB6, 0xA5, 0x26, 0xD7, 0x11, 0x1C, 0x26, 0xE6, 0x17, 0x08, 0x10, 0x79, 0x6E,
-        0x7B, 0x33, 0x00, 0x7F, 0x83, 0x2B, 0x8D, 0x64, 0x46, 0x7E, 0xD6, 0xF8, 0x70, 0x53, 0x7A, 0x19
-    };
-    static const uint8_t public_key_ref[64] = {
-        0x8F, 0x8D, 0x18, 0x2B, 0xD8, 0x19, 0x04, 0x85, 0x82, 0xA9, 0x92, 0x7E, 0xA0, 0xC5, 0x6D, 0xEF,
-        0xB4, 0x15, 0x95, 0x48, 0xE1, 0x1C, 0xA5, 0xF7, 0xAB, 0xAC, 0x45, 0xBB, 0xCE, 0x76, 0x81, 0x5B,
-        0xE5, 0xC6, 0x4F, 0xCD, 0x2F, 0xD1, 0x26, 0x98, 0x54, 0x4D, 0xE0, 0x37, 0x95, 0x17, 0x26, 0x66,
-        0x60, 0x73, 0x04, 0x61, 0x19, 0xAD, 0x5E, 0x11, 0xA9, 0x0A, 0xA4, 0x97, 0x73, 0xAE, 0xAC, 0x86
-    };
-
-    fido_cryptoauth_init();
-
-    status = atcab_write_zone(ATCA_ZONE_DATA, write_key_id, 0, 0, g_slot4_key, 32);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("test_privkey_write failed: atcab_write_zone(%d) returns 0x%02x", 
-            write_key_id, status);
-    }
-     
-    status = atcab_priv_write(key_id, private_key, write_key_id, g_slot4_key);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("test_privkey_write failed: atcab_priv_write(%d) returns 0x%02x", 
-            key_id, status);
-    }
-
-    status = atcab_get_pubkey(key_id, public_key);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("test_privkey_write failed: atcab_get_pubkey(%d) returns 0x%02x", 
-            key_id, status);
-    }
-
-    int ret = memcmp(public_key_ref, public_key, sizeof(public_key_ref));
-    fido_log_info("test_privkey_write: memcmp returns %d", ret);
-
-    // test end
-    fido_cryptoauth_release();
-}
-#endif // FIDO_CRYPTOAUTH_TEST_PRIVW
-
 //
 // for CRYPTOAUTH function test
 //   テストコードのエントリーポイント
@@ -203,8 +202,4 @@ void fido_cryptoauth_test_functions(void)
 #if FIDO_CRYPTOAUTH_TEST_FUNC
     test_functions();
 #endif // FIDO_CRYPTOAUTH_TEST_FUNC
-
-#if FIDO_CRYPTOAUTH_TEST_PRIVW
-    test_privkey_write();
-#endif // FIDO_CRYPTOAUTH_TEST_PRIVW
 }
