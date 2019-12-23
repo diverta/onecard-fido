@@ -198,6 +198,7 @@
             this.ViewLogFileToolStripMenuItem.Name = "ViewLogFileToolStripMenuItem";
             this.ViewLogFileToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.ViewLogFileToolStripMenuItem.Text = "管理ツールのログを参照(&L)";
+            this.ViewLogFileToolStripMenuItem.Click += new System.EventHandler(this.ViewLogFileToolStripMenuItem_Click);
             // 
             // テストTToolStripMenuItem
             // 
