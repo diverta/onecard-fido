@@ -43,6 +43,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewLogFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -174,6 +176,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ファイルFToolStripMenuItem,
             this.テストTToolStripMenuItem,
             this.その他OToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -181,6 +184,20 @@
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ファイルFToolStripMenuItem
+            // 
+            this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ViewLogFileToolStripMenuItem});
+            this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
+            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
+            // 
+            // ViewLogFileToolStripMenuItem
+            // 
+            this.ViewLogFileToolStripMenuItem.Name = "ViewLogFileToolStripMenuItem";
+            this.ViewLogFileToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.ViewLogFileToolStripMenuItem.Text = "管理ツールのログを参照(&L)";
             // 
             // テストTToolStripMenuItem
             // 
@@ -346,6 +363,8 @@
         private System.Windows.Forms.ToolStripMenuItem DoBLECtap2TestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDU2fTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DoHIDGetVersionInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewLogFileToolStripMenuItem;
     }
 }
 
