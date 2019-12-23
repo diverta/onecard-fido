@@ -9,10 +9,18 @@ FIDO認証器管理ツールの実行中に出力されるログは、macOSの�
 
 `$HOME/Library/Logs/Diverta/FIDO/MaintenanceTool.log`
 
-具体的には、例えば `/Users/user/Library/Logs/Diverta/FIDO/MaintenanceTool.log` といったパスになります。<br>
-下図のように、`ls -al`コマンドを使用すれば、ログファイルの場所を確認できます。
+具体的には、例えば `/Users/user/Library/Logs/Diverta/FIDO/MaintenanceTool.log` といったパスになります。
 
-<img src="assets02/0001.jpg" width="500">
+### ログファイルの場所を開く
+
+ログファイルの格納場所を、macOSのFinderで開くことができます。<br>
+下図のメニュー「管理ツールのログを参照」を選択します。
+
+<img src="assets02/0002.png" width="400">
+
+ログファイル「MaintenanceTool.log」を格納するディレクトリーが、Finderで表示されます。
+
+<img src="assets02/0003.jpg" width="600">
 
 ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより参照することが可能です。
 

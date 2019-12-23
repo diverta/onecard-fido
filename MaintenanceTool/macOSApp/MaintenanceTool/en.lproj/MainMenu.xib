@@ -74,6 +74,9 @@
                             <menuItem isSeparatorItem="YES" enabled="YES" id="8UF-J7-ozH">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="管理ツールのログを参照" id="ZNn-Z2-Lob">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
