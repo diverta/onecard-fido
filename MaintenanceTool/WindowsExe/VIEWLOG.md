@@ -9,12 +9,20 @@ FIDO認証器管理ツールの実行中に出力されるログは、Windowsの
 
 `%LOCALAPPDATA%\Diverta\FIDO\MaintenanceTool.log`
 
-具体的には、例えば `C:\Users\user\AppData\Local\Diverta\FIDO\MaintenanceTool.log` といったパスになります。<br>
-下図のように、`dir`コマンドを使用すれば、ログファイルの場所を確認できます。
+具体的には、例えば `C:\Users\user\AppData\Local\Diverta\FIDO\MaintenanceTool.log` といったパスになります。
 
-<img src="assets02/0001.png" width="600">
+### ログファイルの場所を開く
 
-ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより参照することが可能です。
+ログファイルの格納場所を、Windowsのエクスプローラで開くことができます。<br>
+下図のメニュー「管理ツールのログを参照」を選択します。
+
+<img src="assets02/0002.png" width="400">
+
+ログファイル「MaintenanceTool.log」を格納するディレクトリーが、Windowsのエクスプローラで表示されます。
+
+<img src="assets02/0003.jpg" width="600">
+
+ログファイルは通常のテキストファイルですので、適宜、テキストエディターにより内容を参照することが可能です。
 
 ## ログファイルの内容
 
