@@ -253,6 +253,10 @@
 
     - (IBAction)menuItemViewLogDidSelect:(id)sender {
         // ログファイル格納ディレクトリーをFinderで表示
+        NSURL *url =
+        [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
+        NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
