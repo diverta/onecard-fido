@@ -25,6 +25,8 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
+    @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -82,6 +84,8 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
+        [self.menuItemPreferences setHidden:!(enabled)];
+        [self.menuItemViewLog setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -245,6 +249,10 @@
         // ツール設定画面を開く
         [self enableButtons:false];
         [[self toolPreferenceCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemViewLogDidSelect:(id)sender {
+        // ログファイル格納ディレクトリーをFinderで表示
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
