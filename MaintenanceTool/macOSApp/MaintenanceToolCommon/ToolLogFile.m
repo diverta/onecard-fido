@@ -106,6 +106,11 @@ static ToolLogFile *sharedInstance;
         [self outputLogText:hex type:LOG_TYPE_NONE];
     }
 
+    - (NSString *)logFilePathString {
+        // ログファイルパス文字列を戻す
+        return [self logFilePath];
+    }
+
 #pragma mark - Private methods
 
     - (id)init {
