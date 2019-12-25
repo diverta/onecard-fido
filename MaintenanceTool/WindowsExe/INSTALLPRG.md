@@ -37,8 +37,18 @@ Windowsのエクスプローラが表示されますので、フォルダー「M
 
 <img src="assets/0006.png" width="300">
 
+インストーラーが起動しますので、指示に従いインストールを進めます。
 
+<img src="assets04/0005.png" width="300">
 
+インストールが正常に完了したら「閉じる」をクリックし、インストーラーを終了させます。
+
+<img src="assets04/0006.png" width="300">
+
+Windowsのスタートメニューに、フォルダー「FIDO Authenticator Tools」とアイコン「FIDO Authenticator Maintenance Tool」が作成されていることを確認します。<br>
+アイコンをクリックし、インストールされたFIDO認証器管理ツールを実行します。
+
+<img src="assets04/0007.jpg" width="600">
 
 FIDO認証器管理ツールの画面が起動すれば、インストールは完了です。
 
