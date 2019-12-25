@@ -21,6 +21,15 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2019/12/25
+
+Windows版 FIDO認証器管理ツールのインストーラーを作成しました。<br>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-make-installer/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+インストール方法につきましては、<b>[こちらの手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-make-installer/MaintenanceTool/WindowsExe/INSTALLPRG.md)</b>をご参照願います。<br>
+なお、ツール本体のプログラム修正はありません。
+
 #### 2019/12/24
 
 FIDO認証器管理ツールを修正しました。<br>
