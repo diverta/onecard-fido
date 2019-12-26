@@ -2,7 +2,7 @@ PROJECT_NAME     := secure_bootloader_usb_mbr_pca10056
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := ../../../../..
+SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../..
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
