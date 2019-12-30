@@ -10,6 +10,7 @@
           <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/boards/boards.c</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/boards/boards.h</itemPath>
           <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/boards/pca10056.h</itemPath>
+          <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/boards/pca10059.h</itemPath>
         </logicalFolder>
         <logicalFolder name="drivers_nrf" displayName="drivers_nrf" projectFiles="true">
           <logicalFolder name="nrf_soc_nosd"
