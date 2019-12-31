@@ -80,6 +80,12 @@
                                     <action selector="menuItemViewLogDidSelect:" target="494" id="qrw-Xf-a6q"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="DFU Test" id="sxt-Mu-jyP">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="menuItemDFUTestDidSelect:" target="494" id="KuA-SO-sVc"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>

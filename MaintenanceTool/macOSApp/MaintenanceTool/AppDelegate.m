@@ -259,6 +259,12 @@
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
+#pragma mark - test for DFU
+
+    - (IBAction)menuItemDFUTestDidSelect:(id)sender {
+        [ToolPopupWindow informational:@"Under construction" informativeText:nil];
+    }
+
 #pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data {
