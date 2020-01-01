@@ -21,7 +21,7 @@ static int file_descriptor;
 // シリアルポート属性を保持
 static struct termios *original_tc_attrs;
 
-bool usb_cdc_open_acm_device(const char *path)
+bool usb_cdc_acm_device_open(const char *path)
 {
     // シリアルポートを開く
     int flags = (O_RDWR | O_NOCTTY);
@@ -51,7 +51,7 @@ bool usb_cdc_open_acm_device(const char *path)
     return true;
 }
 
-void usb_cdc_close_acm_device(void)
+void usb_cdc_acm_device_close(void)
 {
     close(file_descriptor);
     free(original_tc_attrs);

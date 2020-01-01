@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 
-bool usb_cdc_open_acm_device(const char *path);
-void usb_cdc_close_acm_device(void);
+bool usb_cdc_acm_device_open(const char *path);
+void usb_cdc_acm_device_close(void);
 
 #endif /* usb_cdc_util_h */

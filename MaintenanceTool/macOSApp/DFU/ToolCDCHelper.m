@@ -63,7 +63,7 @@
             [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
         }
         // デバイスから切断
-        usb_cdc_close_acm_device();
+        usb_cdc_acm_device_close();
     }
 
     - (bool)connectDeviceTo:(NSString *)ACMDevicePath {
@@ -76,7 +76,7 @@
         }
         
         // デバイス接続を実行
-        if (usb_cdc_open_acm_device(path) == false) {
+        if (usb_cdc_acm_device_open(path) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
             return false;
         }
