@@ -4,13 +4,19 @@
 //
 //  Created by Makoto Morita on 2020/01/01.
 //
+#import <termios.h>
+
 #import <Foundation/Foundation.h>
 #import <IOKit/serial/IOSerialKeys.h>
 
+#import "debug_log.h"
+#import "usb_cdc_util.h"
 #import "ToolCDCHelper.h"
 #import "ToolLogFile.h"
 
 @interface ToolCDCHelper ()
+
+    @property (nonatomic) NSString      *openingDevicePath;
 
 @end
 
@@ -50,6 +56,35 @@
         NSArray *deviceList = [self generateACMDevicePathListFrom:serviceIterator];
         (void)IOObjectRelease(serviceIterator);
         return deviceList;
+    }
+
+    - (void)disconnectDevice {
+        if ([self openingDevicePath]) {
+            [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
+        }
+        // デバイスから切断
+        usb_cdc_close_acm_device();
+    }
+
+    - (bool)connectDeviceTo:(NSString *)ACMDevicePath {
+        [self setOpeningDevicePath:nil];
+        
+        // デバイスの正式パスを取得
+        const char *path = [ACMDevicePath fileSystemRepresentation];
+        if (path == NULL) {
+            return false;
+        }
+        
+        // デバイス接続を実行
+        if (usb_cdc_open_acm_device(path) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            return false;
+        }
+
+        // 現在オープンされているデバイスのパスを保持
+        [self setOpeningDevicePath:ACMDevicePath];
+        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ opened", [self openingDevicePath]];
+        return true;
     }
 
 #pragma mark - Private methods

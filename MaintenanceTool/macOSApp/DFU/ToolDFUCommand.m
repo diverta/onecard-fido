@@ -9,6 +9,7 @@
 
 #import "ToolCDCHelper.h"
 #import "ToolDFUCommand.h"
+#import "ToolLogFile.h"
 
 @interface ToolDFUCommand ()
 
@@ -27,7 +28,16 @@
     }
 
     - (NSString *)testMain {
-        return [self getConnectedDevicePath];
+        NSString *ACMDevicePath = [self getConnectedDevicePath];
+        if (ACMDevicePath == nil) {
+            return @"デバイスが接続されていません.";
+        }
+        if ([[self toolCDCHelper] connectDeviceTo:ACMDevicePath] == false) {
+            return @"デバイス接続に失敗しました.";
+        }
+        // 接続が成功した場合
+        [[self toolCDCHelper] disconnectDevice];
+        return ACMDevicePath;
     }
 
     - (NSString *)getConnectedDevicePath {

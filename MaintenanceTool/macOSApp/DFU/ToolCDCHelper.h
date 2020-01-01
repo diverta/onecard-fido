@@ -10,6 +10,8 @@
 @interface ToolCDCHelper : NSObject
 
     - (NSArray *)createACMDevicePathList;
+    - (bool)connectDeviceTo:(NSString *)ACMDevicePath;
+    - (void)disconnectDevice;
 
 @end
 

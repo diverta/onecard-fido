@@ -19,6 +19,7 @@
 		7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228D226DC24B00FC5F07 /* AES256CBC.c */; };
 		7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */; };
 		7A2BE5EA23BC29B7008EB897 /* ToolCDCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A2BE5E923BC29B7008EB897 /* ToolCDCHelper.m */; };
+		7A2BE5EE23BC6865008EB897 /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A2BE5EC23BC6865008EB897 /* usb_cdc_util.c */; };
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
@@ -72,6 +73,8 @@
 		7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceWindow.m; sourceTree = "<group>"; };
 		7A2BE5E923BC29B7008EB897 /* ToolCDCHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCDCHelper.m; sourceTree = "<group>"; };
 		7A2BE5EB23BC29D8008EB897 /* ToolCDCHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCDCHelper.h; sourceTree = "<group>"; };
+		7A2BE5EC23BC6865008EB897 /* usb_cdc_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = usb_cdc_util.c; sourceTree = "<group>"; };
+		7A2BE5ED23BC6865008EB897 /* usb_cdc_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usb_cdc_util.h; sourceTree = "<group>"; };
 		7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolClientPINCommand.m; sourceTree = "<group>"; };
 		7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
@@ -285,6 +288,8 @@
 		7AEE1DDD23BB3184008A00C7 /* DFU */ = {
 			isa = PBXGroup;
 			children = (
+				7A2BE5ED23BC6865008EB897 /* usb_cdc_util.h */,
+				7A2BE5EC23BC6865008EB897 /* usb_cdc_util.c */,
 				7A2BE5EB23BC29D8008EB897 /* ToolCDCHelper.h */,
 				7A2BE5E923BC29B7008EB897 /* ToolCDCHelper.m */,
 				7AEE1DE023BB3414008A00C7 /* ToolDFUCommand.h */,
@@ -372,6 +377,7 @@
 				7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */,
 				7A2BE5EA23BC29B7008EB897 /* ToolCDCHelper.m in Sources */,
 				7A98E265226858C50007F154 /* CBOREncoder.c in Sources */,
+				7A2BE5EE23BC6865008EB897 /* usb_cdc_util.c in Sources */,
 				7A850B91227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
 				7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */,
