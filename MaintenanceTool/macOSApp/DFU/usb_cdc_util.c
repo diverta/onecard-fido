@@ -51,6 +51,24 @@ bool usb_cdc_acm_device_open(const char *path)
     return true;
 }
 
+bool usb_cdc_acm_device_write(const char *data, size_t size)
+{
+    if (data == NULL || size == 0) {
+        return false;
+    }
+
+    size_t size_wrote = write(file_descriptor, data, size);
+    if (size_wrote != size) {
+        log_debug("%s: write failed (%d bytes wrote, %d bytes to be written)", __func__,
+                  size_wrote, size);
+        return false;
+    }
+
+    log_debug("%s: write success (%d bytes wrote, %d bytes to be written)", __func__,
+              size_wrote, size);
+    return true;
+}
+
 void usb_cdc_acm_device_close(void)
 {
     close(file_descriptor);

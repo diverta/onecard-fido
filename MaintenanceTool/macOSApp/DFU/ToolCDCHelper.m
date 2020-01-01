@@ -58,14 +58,6 @@
         return deviceList;
     }
 
-    - (void)disconnectDevice {
-        if ([self openingDevicePath]) {
-            [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
-        }
-        // デバイスから切断
-        usb_cdc_acm_device_close();
-    }
-
     - (bool)connectDeviceTo:(NSString *)ACMDevicePath {
         [self setOpeningDevicePath:nil];
         
@@ -85,6 +77,25 @@
         [self setOpeningDevicePath:ACMDevicePath];
         [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ opened", [self openingDevicePath]];
         return true;
+    }
+
+    - (bool)writeToDevice:(NSData *)data {
+        // 現在オープンされているデバイスへ、引数のバイト配列を書込み
+        const char *dataBytes = (const char *)[data bytes];
+        NSUInteger dataLength = [data length];
+        if (usb_cdc_acm_device_write(dataBytes, dataLength) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            return false;
+        }
+        return true;
+    }
+
+    - (void)disconnectDevice {
+        if ([self openingDevicePath]) {
+            [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
+        }
+        // デバイスから切断
+        usb_cdc_acm_device_close();
     }
 
 #pragma mark - Private methods

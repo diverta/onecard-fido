@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 bool usb_cdc_acm_device_open(const char *path);
+bool usb_cdc_acm_device_write(const char *data, size_t size);
 void usb_cdc_acm_device_close(void);
 
 #endif /* usb_cdc_util_h */

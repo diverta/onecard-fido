@@ -35,7 +35,17 @@
         if ([[self toolCDCHelper] connectDeviceTo:ACMDevicePath] == false) {
             return @"デバイス接続に失敗しました.";
         }
-        // 接続が成功した場合
+
+        // PING 09 01 C0 -> 60 09 01 01 C0
+        static uint8_t sPingRequest[] = {0x09, 0x01, 0xc0};
+        static uint8_t sPingRequestLen = sizeof(sPingRequest);
+        NSData *data = [NSData dataWithBytes:sPingRequest length:sPingRequestLen];
+        if ([[self toolCDCHelper] writeToDevice:data] == false) {
+            [[self toolCDCHelper] disconnectDevice];
+            return @"デバイスへの書込に失敗しました.";
+        }
+
+        // 処理が全て成功した場合
         [[self toolCDCHelper] disconnectDevice];
         return ACMDevicePath;
     }
