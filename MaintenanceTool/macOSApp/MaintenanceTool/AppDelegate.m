@@ -6,6 +6,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolLogFile.h"
+#import "ToolDFUCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -32,6 +33,7 @@
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
+    @property (nonatomic) ToolDFUCommand    *toolDFUCommand;
 
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -54,6 +56,9 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
+        
+        // DFU機能の初期設定
+        [self setToolDFUCommand:[[ToolDFUCommand alloc] init]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -262,7 +267,7 @@
 #pragma mark - test for DFU
 
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [ToolPopupWindow informational:@"Under construction" informativeText:nil];
+        [self appendLogMessage:[[self toolDFUCommand] testMain]];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
