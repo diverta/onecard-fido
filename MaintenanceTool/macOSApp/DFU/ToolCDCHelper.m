@@ -90,6 +90,18 @@
         return true;
     }
 
+    - (NSData *)readFromDevice {
+        // 現在オープンされているデバイスから、内部バッファにバイト配列を読込
+        if (usb_cdc_acm_device_read() == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            return nil;
+        }
+        // 読込データをNSDataオブジェクトに変換
+        NSData *readData = [[NSData alloc] initWithBytes:usb_cdc_acm_device_read_buffer()
+                                                  length:usb_cdc_acm_device_read_size()];
+        return readData;
+    }
+
     - (void)disconnectDevice {
         if ([self openingDevicePath]) {
             [[ToolLogFile defaultLogger] debugWithFormat:@"ToolCDCHelper: %@ closed", [self openingDevicePath]];
