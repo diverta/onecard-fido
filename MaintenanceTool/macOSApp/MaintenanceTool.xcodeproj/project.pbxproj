@@ -38,6 +38,9 @@
 		7A9F1060226DB4EE007AEB41 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F105E226DB4EE007AEB41 /* fido_blob.c */; };
 		7A9F1063226DB82B007AEB41 /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F1061226DB82B007AEB41 /* debug_log.c */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
+		7AA7464123C2C0B6001938A7 /* nrf52_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7463F23C2C0B6001938A7 /* nrf52_app_image.c */; };
+		7AA7464523C2C4F4001938A7 /* nrf52840_xxaa.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7AA7464323C2C4F4001938A7 /* nrf52840_xxaa.bin */; };
+		7AA7464623C2C4F4001938A7 /* nrf52840_xxaa.dat in Resources */ = {isa = PBXBuildFile; fileRef = 7AA7464423C2C4F4001938A7 /* nrf52840_xxaa.dat */; };
 		7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AB119F223617DB600EEFF6C /* ToolPreferenceWindow.xib */; };
 		7AB119F5236182E900EEFF6C /* ToolPreferenceCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB119F4236182E900EEFF6C /* ToolPreferenceCommand.m */; };
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
@@ -110,6 +113,10 @@
 		7A9F1062226DB82B007AEB41 /* debug_log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug_log.h; sourceTree = "<group>"; };
 		7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolInstallCommand.m; sourceTree = "<group>"; };
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
+		7AA7463F23C2C0B6001938A7 /* nrf52_app_image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = nrf52_app_image.c; sourceTree = "<group>"; };
+		7AA7464023C2C0B6001938A7 /* nrf52_app_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nrf52_app_image.h; sourceTree = "<group>"; };
+		7AA7464323C2C4F4001938A7 /* nrf52840_xxaa.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = nrf52840_xxaa.bin; sourceTree = "<group>"; };
+		7AA7464423C2C4F4001938A7 /* nrf52840_xxaa.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = nrf52840_xxaa.dat; sourceTree = "<group>"; };
 		7AB119F223617DB600EEFF6C /* ToolPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolPreferenceWindow.xib; sourceTree = "<group>"; };
 		7AB119F4236182E900EEFF6C /* ToolPreferenceCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceCommand.m; sourceTree = "<group>"; };
 		7AB119F62361830900EEFF6C /* ToolPreferenceCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPreferenceCommand.h; sourceTree = "<group>"; };
@@ -147,6 +154,7 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7AA7464223C2C400001938A7 /* Resources */,
 				7AEE1DDD23BB3184008A00C7 /* DFU */,
 				7AB119F123617D1700EEFF6C /* ToolPreference */,
 				7A850B89227011B900F7BCD8 /* CTAP2HealthCheck */,
@@ -273,6 +281,15 @@
 			path = MaintenanceToolCommon;
 			sourceTree = "<group>";
 		};
+		7AA7464223C2C400001938A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7AA7464323C2C4F4001938A7 /* nrf52840_xxaa.bin */,
+				7AA7464423C2C4F4001938A7 /* nrf52840_xxaa.dat */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		7AB119F123617D1700EEFF6C /* ToolPreference */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +305,8 @@
 		7AEE1DDD23BB3184008A00C7 /* DFU */ = {
 			isa = PBXGroup;
 			children = (
+				7AA7464023C2C0B6001938A7 /* nrf52_app_image.h */,
+				7AA7463F23C2C0B6001938A7 /* nrf52_app_image.c */,
 				7A2BE5ED23BC6865008EB897 /* usb_cdc_util.h */,
 				7A2BE5EC23BC6865008EB897 /* usb_cdc_util.c */,
 				7A2BE5EB23BC29D8008EB897 /* ToolCDCHelper.h */,
@@ -351,8 +370,10 @@
 			files = (
 				7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
+				7AA7464623C2C4F4001938A7 /* nrf52840_xxaa.dat in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */,
+				7AA7464523C2C4F4001938A7 /* nrf52840_xxaa.bin in Resources */,
 				7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
@@ -380,6 +401,7 @@
 				7A2BE5EE23BC6865008EB897 /* usb_cdc_util.c in Sources */,
 				7A850B91227014D800F7BCD8 /* ToolCTAP2HealthCheckCommand.m in Sources */,
 				7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */,
+				7AA7464123C2C0B6001938A7 /* nrf52_app_image.c in Sources */,
 				7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
 				7A9F1063226DB82B007AEB41 /* debug_log.c in Sources */,
