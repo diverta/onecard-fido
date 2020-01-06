@@ -85,6 +85,10 @@
         if ([self sendSelectDatObjectRequest] == false) {
             return false;
         }
+        if ([self sendCreateObjectRequest:NRF_DFU_BYTE_OBJ_INIT_CMD
+                                imageSize:nrf52_app_image_dat_size()] == false) {
+            return false;
+        }
         return true;
     }
 
@@ -99,33 +103,38 @@
         return resourcePathChar;
     }
 
-    - (bool)sendPingRequest {
+    - (bool)sendPingRequest:(uint8_t)id {
         // PING 09 01 C0 -> 60 09 01 01 C0
-        static uint8_t pingRequest[] = {0x09, 0x01, 0xc0};
+        uint8_t pingRequest[] = {NRF_DFU_OP_PING, id, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:pingRequest length:sizeof(pingRequest)];
         NSData *response = [self sendRequest:data];
-        if (response == nil) {
+        // レスポンスを検証
+        if ([self assertDFUResponseSuccess:response] == false) {
             return false;
         }
-        // レスポンスを検証
+        // IDを比較
         uint8_t *pingResponse = (uint8_t *)[response bytes];
-        return (pingRequest[1] == pingResponse[3]);
+        return (pingResponse[3] == id);
     }
 
     - (bool)sendSetReceiptRequest {
         // SET RECEIPT 02 00 00 C0 -> 60 02 01 C0
-        static uint8_t request[] = {0x02, 0x00, 0x00, 0xc0};
+        static uint8_t request[] = {
+            NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        return ([self sendRequest:data] != nil);
+        NSData *response = [self sendRequest:data];
+        // レスポンスを検証
+        return [self assertDFUResponseSuccess:response];
     }
 
     - (bool)sendGetMtuRequest {
         // Get the preferred MTU size on the request.
         // GET MTU 07 C0 -> 60 07 01 83 00 C0
-        static uint8_t mtuRequest[] = {0x07, 0xc0};
+        static uint8_t mtuRequest[] = {NRF_DFU_OP_MTU_GET, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:mtuRequest length:sizeof(mtuRequest)];
         NSData *response = [self sendRequest:data];
-        if (response == nil) {
+        // レスポンスを検証
+        if ([self assertDFUResponseSuccess:response] == false) {
             return false;
         }
         // レスポンスからMTUを取得（4〜5バイト目）
@@ -138,11 +147,10 @@
 
     - (bool)sendSelectDatObjectRequest {
         // SELECT OBJECT (dat) を実行し、datイメージの最大送信可能サイズを取得
-        uint32_t size = [self sendSelectObjectRequest:0x01];
+        uint32_t size = [self sendSelectObjectRequest:NRF_DFU_BYTE_OBJ_INIT_CMD];
         if (size == 0 || size < nrf52_app_image_dat_size()) {
             return false;
         }
-
         // 内部変数に保持
         [self setMaxDatSize:size];
         [[ToolLogFile defaultLogger]
@@ -150,16 +158,33 @@
         return true;
     }
 
-    - (uint32_t)sendSelectObjectRequest:(uint8_t)object_number {
+    - (uint32_t)sendSelectObjectRequest:(uint8_t)objectType {
         // SELECT OBJECT 06 xx C0 -> 60 06 xx 00 01 00 00 00 00 00 00 00 00 00 00 C0
-        uint8_t request[] = {0x06, object_number, 0xc0};
+        uint8_t request[] = {
+            NRF_DFU_OP_OBJECT_SELECT, objectType,
+            NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
         NSData *response = [self sendRequest:data];
-        if (response == nil) {
+        // レスポンスを検証
+        if ([self assertDFUResponseSuccess:response] == false) {
             return 0;
         }
         // レスポンスから、イメージの最大送信可能サイズを取得（4〜7バイト目）
         return [self convertLEBytesToUint32:[response bytes] offset:3];
+    }
+
+    - (bool)sendCreateObjectRequest:(uint8_t)object_number imageSize:(size_t)imageSize {
+        // CREATE OBJECT 01 xx 87 00 00 00 C0 -> 60 01 01 C0
+        uint8_t createObjectRequest[] = {
+            NRF_DFU_OP_OBJECT_CREATE, object_number, 0x00, 0x00, 0x00, 0x00,
+            NRF_DFU_BYTE_EOM};
+        uint32_t commandObjectLen = (uint32_t)imageSize;
+        [self convertUint32ToLEBytes:commandObjectLen data:createObjectRequest offset:2];
+        
+        NSData *data = [NSData dataWithBytes:createObjectRequest length:sizeof(createObjectRequest)];
+        NSData *response = [self sendRequest:data];
+        // レスポンスを検証
+        return [self assertDFUResponseSuccess:response];
     }
 
     - (uint16_t)convertLEBytesToUint16:(const void *)data offset:(uint16_t)offset {
@@ -173,6 +198,14 @@
         uint32_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8)
             | ((uint32_t)bytes[offset + 2] << 16) | ((uint32_t)bytes[offset + 3] << 24);
         return uint;
+    }
+
+    - (void)convertUint32ToLEBytes:(uint32_t)uint data:(uint8_t *)data offset:(uint16_t)offset {
+        uint8_t *bytes = data + offset;
+        for (uint8_t i = 0; i < 4; i++) {
+            *bytes++ = uint & 0xff;
+            uint = uint >> 8;
+        }
     }
 
     - (NSData *)sendRequest:(NSData *)data {
@@ -196,17 +229,28 @@
         return dataRecv;
     }
 
+    - (bool)assertDFUResponseSuccess:(NSData *)response {
+        // レスポンスを検証
+        if (response == nil) {
+            return false;
+        }
+        // ステータスコードを参照し、処理が成功したかどうかを判定
+        uint8_t *responseBytes = (uint8_t *)[response bytes];
+        return (responseBytes[2] == NRF_DFU_BYTE_RESP_SUCCESS);
+    }
+
     - (NSString *)getConnectedDevicePath {
         // 接続されているUSB CDC ACMデバイスのパスを走査
         NSArray *ACMDevicePathList = [[self toolCDCHelper] createACMDevicePathList];
         if (ACMDevicePathList != nil) {
+            uint8_t id = 0xac;
             for (NSString *ACMDevicePath in ACMDevicePathList) {
                 // 接続を実行
                 if ([[self toolCDCHelper] connectDeviceTo:ACMDevicePath] == false) {
                     return nil;
                 }
                 // DFU PINGを実行
-                if ([self sendPingRequest]) {
+                if ([self sendPingRequest:id]) {
                     // 成功した場合は、接続された状態で、デバイスのパスを戻す
                     [[ToolLogFile defaultLogger]
                      infoWithFormat:@"DFU target device found: %@", ACMDevicePath];
