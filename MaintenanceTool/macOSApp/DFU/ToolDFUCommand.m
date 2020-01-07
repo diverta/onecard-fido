@@ -20,10 +20,6 @@
 
     @property (nonatomic) ToolCDCHelper *toolCDCHelper;
 
-    // デバイスから取得した最大送信可能サイズを保持
-    @property (nonatomic) uint16_t MTU;
-    @property (nonatomic) uint32_t maxDatSize;
-
 @end
 
 @implementation ToolDFUCommand
@@ -82,11 +78,37 @@
             return false;
         }
         // datイメージを転送
-        if ([self sendSelectDatObjectRequest] == false) {
+        if ([self transferDFUImage:NRF_DFU_BYTE_OBJ_INIT_CMD
+                         imageData:nrf52_app_image_dat()
+                         imageSize:nrf52_app_image_dat_size()] == false) {
             return false;
         }
-        if ([self sendCreateObjectRequest:NRF_DFU_BYTE_OBJ_INIT_CMD
-                                imageSize:nrf52_app_image_dat_size()] == false) {
+        [[ToolLogFile defaultLogger] debug:@"ToolDFUCommand: update init command object done"];
+        // binイメージを転送
+        if ([self transferDFUImage:NRF_DFU_BYTE_OBJ_DATA
+                         imageData:nrf52_app_image_bin()
+                         imageSize:nrf52_app_image_bin_size()] == false) {
+            return false;
+        }
+        [[ToolLogFile defaultLogger] debug:@"ToolDFUCommand: update data object done"];
+        return true;
+    }
+
+    - (bool)transferDFUImage:(uint8_t)objectType imageData:(uint8_t *)data imageSize:(size_t)size {
+        if ([self sendSelectObjectRequest:objectType imageSize:size] == false) {
+            return false;
+        }
+        if ([self sendCreateObjectRequest:objectType imageSize:size] == false) {
+            return false;
+        }
+        if ([self sendWriteCommandObjectRequest:objectType
+                                      imageData:data imageSize:size] == false) {
+            return false;
+        }
+        if ([self sendGetCrcRequest:objectType imageSize:size] == false) {
+            return false;
+        }
+        if ([self sendExecuteObjectRequest] == false) {
             return false;
         }
         return true;
@@ -138,27 +160,12 @@
             return false;
         }
         // レスポンスからMTUを取得（4〜5バイト目）
-        [self setMTU:[self convertLEBytesToUint16:[response bytes] offset:3]];
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"ToolDFUCommand: MTU=%d", [self MTU]];
-
+        uint16_t mtu = [self convertLEBytesToUint16:[response bytes] offset:3];
+        usb_dfu_object_set_mtu(mtu);
         return true;
     }
 
-    - (bool)sendSelectDatObjectRequest {
-        // SELECT OBJECT (dat) を実行し、datイメージの最大送信可能サイズを取得
-        uint32_t size = [self sendSelectObjectRequest:NRF_DFU_BYTE_OBJ_INIT_CMD];
-        if (size == 0 || size < nrf52_app_image_dat_size()) {
-            return false;
-        }
-        // 内部変数に保持
-        [self setMaxDatSize:size];
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"ToolDFUCommand: max dat image size=%d", [self maxDatSize]];
-        return true;
-    }
-
-    - (uint32_t)sendSelectObjectRequest:(uint8_t)objectType {
+    - (bool)sendSelectObjectRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
         // SELECT OBJECT 06 xx C0 -> 60 06 xx 00 01 00 00 00 00 00 00 00 00 00 00 C0
         uint8_t request[] = {
             NRF_DFU_OP_OBJECT_SELECT, objectType,
@@ -167,16 +174,21 @@
         NSData *response = [self sendRequest:data];
         // レスポンスを検証
         if ([self assertDFUResponseSuccess:response] == false) {
-            return 0;
+            return false;
         }
         // レスポンスから、イメージの最大送信可能サイズを取得（4〜7バイト目）
-        return [self convertLEBytesToUint32:[response bytes] offset:3];
+        size_t maxSize = (size_t)[self convertLEBytesToUint32:[response bytes] offset:3];
+        // 送信イメージサイズが、最大送信可能サイズを超えている場合はエラー
+        if (maxSize < imageSize) {
+            return false;
+        }
+        return true;
     }
 
-    - (bool)sendCreateObjectRequest:(uint8_t)object_number imageSize:(size_t)imageSize {
+    - (bool)sendCreateObjectRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
         // CREATE OBJECT 01 xx 87 00 00 00 C0 -> 60 01 01 C0
         uint8_t createObjectRequest[] = {
-            NRF_DFU_OP_OBJECT_CREATE, object_number, 0x00, 0x00, 0x00, 0x00,
+            NRF_DFU_OP_OBJECT_CREATE, objectType, 0x00, 0x00, 0x00, 0x00,
             NRF_DFU_BYTE_EOM};
         uint32_t commandObjectLen = (uint32_t)imageSize;
         [self convertUint32ToLEBytes:commandObjectLen data:createObjectRequest offset:2];
@@ -185,6 +197,92 @@
         NSData *response = [self sendRequest:data];
         // レスポンスを検証
         return [self assertDFUResponseSuccess:response];
+    }
+
+    - (bool)sendWriteCommandObjectRequest:(uint8_t)objectType
+                                imageData:(uint8_t *)data imageSize:(size_t)size {
+        // オブジェクト種別に対応するデータ／サイズを設定
+        usb_dfu_object_frame_init(data, size);
+        // 送信フレームを生成
+        while (usb_dfu_object_frame_prepare()) {
+            // フレームを送信
+            NSData *frame = [NSData dataWithBytes:usb_dfu_object_frame_data()
+                                          length:usb_dfu_object_frame_size()];
+            if ([self sendRequestData:frame] == false) {
+                return false;
+            }
+            // ログ出力
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"CDC ACM Send (%d bytes)", [frame length]];
+        }
+        return true;
+    }
+
+    - (bool)sendGetCrcRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
+        // CRC GET 03 C0 -> 60 03 01 87 00 00 00 38 f4 97 72 C0
+        uint8_t request[] = {NRF_DFU_OP_CRC_GET, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [self sendRequest:data];
+        // レスポンスを検証
+        if ([self assertDFUResponseSuccess:response] == false) {
+            return false;
+        }
+        // レスポンスデータから、エスケープシーケンスを取り除く
+        NSData *respUnesc = [self unescapeResponseData:response];
+
+        // 送信データ長を検証
+        size_t recvSize = (size_t)[self convertLEBytesToUint32:[respUnesc bytes] offset:3];
+        if (recvSize != imageSize) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"ToolDFUCommand: send object %d failed (expected %d bytes, recv %d bytes)",
+             objectType, imageSize, recvSize];
+            return false;
+        }
+        // CRCを検証
+        uint32_t checksum = [self convertLEBytesToUint32:[respUnesc bytes] offset:7];
+        if (checksum != usb_dfu_object_checksum()) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"ToolDFUCommand: send object %d failed (checksum error)",
+             objectType];
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)sendExecuteObjectRequest {
+        // EXECUTE OBJECT 04 C0 -> 60 04 01 C0
+        static uint8_t request[] = {NRF_DFU_OP_OBJECT_EXECUTE, NRF_DFU_BYTE_EOM};
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [self sendRequest:data];
+        // レスポンスを検証
+        return [self assertDFUResponseSuccess:response];
+    }
+
+    - (NSData *)unescapeResponseData:(NSData *)response {
+        uint8_t c;
+        NSMutableData *unescaped = [[NSMutableData alloc] init];
+        
+        uint8_t *data = (uint8_t *)[response bytes];
+        size_t   size = [response length];
+        
+        bool escapeChar = false;
+        for (size_t i = 0; i < size; i++) {
+            c = data[i];
+            if (c == 0xdb) {
+                escapeChar = true;
+            } else {
+                if (escapeChar) {
+                    escapeChar = false;
+                    if (c == 0xdc) {
+                        c = 0xc0;
+                    } else if (c == 0xdd) {
+                        c = 0xdb;
+                    }
+                }
+                [unescaped appendBytes:&c length:sizeof(c)];
+            }
+        }
+        return unescaped;
     }
 
     - (uint16_t)convertLEBytesToUint16:(const void *)data offset:(uint16_t)offset {
@@ -213,8 +311,8 @@
         [[ToolLogFile defaultLogger]
          debugWithFormat:@"CDC ACM Send (%d bytes):", [data length]];
         [[ToolLogFile defaultLogger] hexdump:data];
-        // データを送信
-        if ([[self toolCDCHelper] writeToDevice:data] == false) {
+        // データ送信
+        if ([self sendRequestData:data] == false) {
             return nil;
         }
         // データを受信
@@ -227,6 +325,11 @@
          debugWithFormat:@"CDC ACM Recv (%d bytes):", [dataRecv length]];
         [[ToolLogFile defaultLogger] hexdump:dataRecv];
         return dataRecv;
+    }
+
+    - (bool)sendRequestData:(NSData *)data {
+        // データを送信
+        return [[self toolCDCHelper] writeToDevice:data];
     }
 
     - (bool)assertDFUResponseSuccess:(NSData *)response {
