@@ -94,22 +94,42 @@
         return true;
     }
 
-    - (bool)transferDFUImage:(uint8_t)objectType imageData:(uint8_t *)data imageSize:(size_t)size {
-        if ([self sendSelectObjectRequest:objectType imageSize:size] == false) {
+    - (bool)transferDFUImage:(uint8_t)objectType
+                   imageData:(uint8_t *)data imageSize:(size_t)size {
+        // １回あたりの送信データ最大長を取得
+        size_t maxCreateSize;
+        if ([self sendSelectObjectRequest:objectType pMaxCreateSize:&maxCreateSize] == false) {
             return false;
         }
-        if ([self sendCreateObjectRequest:objectType imageSize:size] == false) {
-            return false;
-        }
-        if ([self sendWriteCommandObjectRequest:objectType
-                                      imageData:data imageSize:size] == false) {
-            return false;
-        }
-        if ([self sendGetCrcRequest:objectType imageSize:size] == false) {
-            return false;
-        }
-        if ([self sendExecuteObjectRequest] == false) {
-            return false;
+        [[ToolLogFile defaultLogger]
+         debugWithFormat:@"ToolDFUCommand: object select size=%d, create size max=%d",
+         size, maxCreateSize];
+        // データを分割送信
+        size_t remaining = size;
+        size_t alreadySent = 0;
+        while (remaining > 0) {
+            // 送信サイズを通知
+            size_t sendSize = (maxCreateSize < remaining) ? maxCreateSize : remaining;
+            if ([self sendCreateObjectRequest:objectType imageSize:sendSize] == false) {
+                return false;
+            }
+            // データを送信
+            uint8_t *sendData = data + alreadySent;
+            if ([self sendWriteCommandObjectRequest:objectType
+                                          imageData:sendData imageSize:sendSize] == false) {
+                return false;
+            }
+            // 送信データのチェックサムを検証
+            alreadySent += sendSize;
+            if ([self sendGetCrcRequest:objectType imageSize:alreadySent] == false) {
+                return false;
+            }
+            // 送信データをコミット
+            if ([self sendExecuteObjectRequest] == false) {
+                return false;
+            }
+            // 未送信サイズを更新
+            remaining -= sendSize;
         }
         return true;
     }
@@ -161,11 +181,12 @@
         }
         // レスポンスからMTUを取得（4〜5バイト目）
         uint16_t mtu = [self convertLEBytesToUint16:[response bytes] offset:3];
-        usb_dfu_object_set_mtu(mtu);
+        size_t mtu_size = usb_dfu_object_set_mtu(mtu);
+        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolDFUCommand: MTU=%d", mtu_size];
         return true;
     }
 
-    - (bool)sendSelectObjectRequest:(uint8_t)objectType imageSize:(size_t)imageSize {
+    - (bool)sendSelectObjectRequest:(uint8_t)objectType pMaxCreateSize:(size_t *)pMaxCreateSize {
         // SELECT OBJECT 06 xx C0 -> 60 06 xx 00 01 00 00 00 00 00 00 00 00 00 00 C0
         uint8_t request[] = {
             NRF_DFU_OP_OBJECT_SELECT, objectType,
@@ -177,11 +198,9 @@
             return false;
         }
         // レスポンスから、イメージの最大送信可能サイズを取得（4〜7バイト目）
-        size_t maxSize = (size_t)[self convertLEBytesToUint32:[response bytes] offset:3];
-        // 送信イメージサイズが、最大送信可能サイズを超えている場合はエラー
-        if (maxSize < imageSize) {
-            return false;
-        }
+        *pMaxCreateSize = (size_t)[self convertLEBytesToUint32:[response bytes] offset:3];
+        // チェックサムを初期化
+        usb_dfu_object_checksum_reset();
         return true;
     }
 
@@ -238,9 +257,9 @@
              objectType, imageSize, recvSize];
             return false;
         }
-        // CRCを検証
+        // チェックサムを検証
         uint32_t checksum = [self convertLEBytesToUint32:[respUnesc bytes] offset:7];
-        if (checksum != usb_dfu_object_checksum()) {
+        if (checksum != usb_dfu_object_checksum_get()) {
             [[ToolLogFile defaultLogger]
              errorWithFormat:@"ToolDFUCommand: send object %d failed (checksum error)",
              objectType];

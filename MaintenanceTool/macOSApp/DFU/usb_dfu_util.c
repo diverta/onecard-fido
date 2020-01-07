@@ -8,7 +8,7 @@
 #include "usb_dfu_util.h"
 #include "debug_log.h"
 
-#define REQUEST_BUFF_SIZE   2051
+#define REQUEST_BUFF_SIZE   2560
 #define REQUEST_FRAME_SIZE  64
 
 static uint8_t privateRequestBuf[REQUEST_BUFF_SIZE];
@@ -34,15 +34,24 @@ size_t usb_dfu_object_frame_size(void)
     return privateRequestLen;
 }
 
-uint32_t usb_dfu_object_checksum(void)
+uint32_t usb_dfu_object_checksum_get(void)
 {
     // CRC（内部保持値を反転したもの）を戻す
     return ~privateObjectCrc;
 }
 
-void usb_dfu_object_set_mtu(size_t size)
+void usb_dfu_object_checksum_reset(void)
 {
-    MTU = (uint32_t)size;
+    // CRCを初期設定
+    privateObjectCrc = 0xffffffff;
+}
+
+size_t usb_dfu_object_set_mtu(size_t size)
+{
+    // MTUは４の倍数とする
+    size_t s = (size / 4) * 4;
+    MTU = (uint32_t)s;
+    return s;
 }
 
 static void update_crc(uint8_t b)
@@ -96,7 +105,6 @@ void usb_dfu_object_frame_init(uint8_t *object_data, size_t object_size)
     privateObjectBuf = object_data;
     privateObjectLen = (uint32_t)object_size;
     privateObjectIx = 0;
-    privateObjectCrc = 0xffffffff;
 }
 
 bool usb_dfu_object_frame_prepare(void)
