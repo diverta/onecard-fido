@@ -84,7 +84,7 @@ size_t usb_cdc_acm_device_read_size(void)
     return bytesRead;
 }
 
-static void set_select_timeout(struct timeval *timeout, uint8_t timeout_sec)
+static void set_select_timeout(struct timeval *timeout, double timeout_sec)
 {
     // convert select_timeout --> struct timeval
     int64_t timeout_usec = llround(timeout_sec * 1000000.0);
@@ -92,7 +92,7 @@ static void set_select_timeout(struct timeval *timeout, uint8_t timeout_sec)
     timeout->tv_usec = (__darwin_suseconds_t)(timeout_usec - timeout_sec * 1000000);
 }
 
-bool usb_cdc_acm_device_read(void)
+bool usb_cdc_acm_device_read(double read_timeout_sec)
 {
     // 読込バッファを初期化
     bytesRead = 0;
@@ -103,9 +103,9 @@ bool usb_cdc_acm_device_read(void)
     FD_ZERO(&read_fd);
     FD_SET(file_descriptor, &read_fd);
 
-    // select実行のタイムアウトを１秒に設定
+    // select実行タイムアウトを設定
     struct timeval timeout;
-    set_select_timeout(&timeout, 1);
+    set_select_timeout(&timeout, read_timeout_sec);
 
     // selectを実行し、ポートが読込可能になるまで監視
     int select_result = select(file_descriptor + 1, &read_fd, NULL, NULL, &timeout);
@@ -115,7 +115,7 @@ bool usb_cdc_acm_device_read(void)
         return false;
 
     } else if (select_result == 0) {
-        log_debug("%s: read timed out (select() returns %d)", __func__, select_result);
+        log_debug("%s: read timed out (%d msec)", __func__, lround(read_timeout_sec * 1000.0));
         return false;
     }
 

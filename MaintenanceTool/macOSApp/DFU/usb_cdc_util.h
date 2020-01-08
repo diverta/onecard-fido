@@ -15,6 +15,6 @@ void usb_cdc_acm_device_close(void);
 
 uint8_t *usb_cdc_acm_device_read_buffer(void);
 size_t   usb_cdc_acm_device_read_size(void);
-bool     usb_cdc_acm_device_read(void);
+bool     usb_cdc_acm_device_read(double read_timeout_sec);
 
 #endif /* usb_cdc_util_h */

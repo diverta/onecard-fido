@@ -90,9 +90,9 @@
         return true;
     }
 
-    - (NSData *)readFromDevice {
+    - (NSData *)readFromDevice:(double)timeout_sec {
         // 現在オープンされているデバイスから、内部バッファにバイト配列を読込
-        if (usb_cdc_acm_device_read() == false) {
+        if (usb_cdc_acm_device_read(timeout_sec) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
             return nil;
         }

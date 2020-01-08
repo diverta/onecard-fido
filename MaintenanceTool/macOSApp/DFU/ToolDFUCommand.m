@@ -16,6 +16,11 @@
 #define NRF52_APP_DAT_FILE_NAME @"nrf52840_xxaa.dat"
 #define NRF52_APP_BIN_FILE_NAME @"nrf52840_xxaa.bin"
 
+// 応答タイムアウト
+#define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
+#define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
+#define TIMEOUT_SEC_DFU_EXEC_RESPONSE 30.0
+
 @interface ToolDFUCommand ()
 
     @property (nonatomic) ToolCDCHelper *toolCDCHelper;
@@ -149,7 +154,7 @@
         // PING 09 01 C0 -> 60 09 01 01 C0
         uint8_t pingRequest[] = {NRF_DFU_OP_PING, id, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:pingRequest length:sizeof(pingRequest)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_PING_RESPONSE];
         // レスポンスを検証
         if ([self assertDFUResponseSuccess:response] == false) {
             return false;
@@ -164,7 +169,7 @@
         static uint8_t request[] = {
             NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         return [self assertDFUResponseSuccess:response];
     }
@@ -174,7 +179,7 @@
         // GET MTU 07 C0 -> 60 07 01 83 00 C0
         static uint8_t mtuRequest[] = {NRF_DFU_OP_MTU_GET, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:mtuRequest length:sizeof(mtuRequest)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         if ([self assertDFUResponseSuccess:response] == false) {
             return false;
@@ -192,7 +197,7 @@
             NRF_DFU_OP_OBJECT_SELECT, objectType,
             NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         if ([self assertDFUResponseSuccess:response] == false) {
             return false;
@@ -213,7 +218,7 @@
         [self convertUint32ToLEBytes:commandObjectLen data:createObjectRequest offset:2];
         
         NSData *data = [NSData dataWithBytes:createObjectRequest length:sizeof(createObjectRequest)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         return [self assertDFUResponseSuccess:response];
     }
@@ -241,7 +246,7 @@
         // CRC GET 03 C0 -> 60 03 01 87 00 00 00 38 f4 97 72 C0
         uint8_t request[] = {NRF_DFU_OP_CRC_GET, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         if ([self assertDFUResponseSuccess:response] == false) {
             return false;
@@ -272,7 +277,7 @@
         // EXECUTE OBJECT 04 C0 -> 60 04 01 C0
         static uint8_t request[] = {NRF_DFU_OP_OBJECT_EXECUTE, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        NSData *response = [self sendRequest:data];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_EXEC_RESPONSE];
         // レスポンスを検証
         return [self assertDFUResponseSuccess:response];
     }
@@ -325,7 +330,7 @@
         }
     }
 
-    - (NSData *)sendRequest:(NSData *)data {
+    - (NSData *)sendRequest:(NSData *)data timeoutSec:(double)timeout {
         // ログ出力
         [[ToolLogFile defaultLogger]
          debugWithFormat:@"CDC ACM Send (%d bytes):", [data length]];
@@ -335,7 +340,7 @@
             return nil;
         }
         // データを受信
-        NSData *dataRecv = [[self toolCDCHelper] readFromDevice];
+        NSData *dataRecv = [[self toolCDCHelper] readFromDevice:timeout];
         if (dataRecv == nil) {
             return nil;
         }

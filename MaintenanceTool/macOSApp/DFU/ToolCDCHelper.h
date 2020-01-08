@@ -12,7 +12,7 @@
     - (NSArray *)createACMDevicePathList;
     - (bool)connectDeviceTo:(NSString *)ACMDevicePath;
     - (bool)writeToDevice:(NSData *)data;
-    - (NSData *)readFromDevice;
+    - (NSData *)readFromDevice:(double)timeout_sec;
     - (void)disconnectDevice;
 
 @end
