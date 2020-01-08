@@ -40,6 +40,9 @@
     - (void)hidCommandStartedProcess:(Command)command;
     - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp result:(bool)result message:(NSString *)message;
 
+    - (void)hidCommandDidDetectConnect;
+    - (void)hidCommandDidDetectRemoval;
+
 @end
 
 #endif /* ToolHIDCommand_h */

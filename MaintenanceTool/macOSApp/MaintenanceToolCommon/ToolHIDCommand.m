@@ -455,6 +455,14 @@
         [self commandDidProcess:[self command] result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
     }
 
+    - (void)hidHelperDidDetectConnect {
+        [[self delegate] hidCommandDidDetectConnect];
+    }
+
+    - (void)hidHelperDidDetectRemoval {
+        [[self delegate] hidCommandDidDetectRemoval];
+    }
+
 #pragma mark - Common method
 
     - (void)displayMessage:(NSString *)string {

@@ -349,6 +349,14 @@
         [self commandStartedProcess:command type:TRANSPORT_HID];
     }
 
+    - (void)hidCommandDidDetectConnect {
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
+    }
+
+    - (void)hidCommandDidDetectRemoval {
+        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
+    }
+
 #pragma mark - Common method called by callback
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type {
