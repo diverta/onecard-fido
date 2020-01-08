@@ -11,7 +11,7 @@
 
 @interface ToolDFUCommand : NSObject
 
-    - (NSString *)testMain;
+    - (void)startDFUProcess;
 
 @end
 

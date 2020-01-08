@@ -10,6 +10,7 @@
 #import "nrf52_app_image.h"
 #import "ToolCDCHelper.h"
 #import "ToolDFUCommand.h"
+#import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 // DFU対象ファイル名
@@ -26,6 +27,9 @@
 @interface ToolDFUCommand ()
 
     @property (nonatomic) ToolCDCHelper *toolCDCHelper;
+    // 非同期処理用のキュー（画面用／DFU処理用）
+    @property (nonatomic) dispatch_queue_t mainQueue;
+    @property (nonatomic) dispatch_queue_t subQueue;
 
 @end
 
@@ -33,27 +37,75 @@
 
     - (id)init {
         self = [super init];
-        
         // ToolCDCHelperのインスタンスを生成
         [self setToolCDCHelper:[[ToolCDCHelper alloc] init]];
+        // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
+        [self setMainQueue:dispatch_get_main_queue()];
+        [self setSubQueue:dispatch_queue_create("jp.co.diverta.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
         return self;
     }
 
-    - (NSString *)testMain {
+#pragma mark - Main process
+
+    - (void)startDFUProcess {
+        dispatch_async([self subQueue], ^{
+            // サブスレッドでDFU処理を実行
+            [self performDFUProcess];
+        });
+    }
+
+    - (void)performDFUProcess {
+        // ファームウェア更新処理の開始メッセージを出力
+        [self notifyStartMessage];
         // ファームウェアのイメージファイル（.dat／.bin）から、バイナリーイメージを読込
         if ([self readDFUImages] == false) {
-            return @"DFUに必要なアプリケーションイメージが同梱されていません.";
+            [self notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
+            [self notifyEndMessage:false];
+            return ;
         }
         // DFU対象デバイスに接続
         NSString *ACMDevicePath = [self getConnectedDevicePath];
         if (ACMDevicePath == nil) {
-            return @"DFU対象デバイスが接続されていません.";
+            [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
+            [self notifyEndMessage:false];
+            return;
         }
         // DFUを実行
         bool ret = [self performDFU];
-        // 処理完了
+        if (ret == false) {
+            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
+        }
+        // DFU転送処理完了
         [[self toolCDCHelper] disconnectDevice];
-        return (ret ? @"DFUが成功しました." : @"DFUが失敗しました.");
+        [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+        return;
+    }
+
+#pragma mark - Sub process
+
+    - (void)notifyStartMessage {
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
+                              PROCESS_NAME_USB_DFU];
+        [[ToolLogFile defaultLogger] info:startMsg];
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] info:message];
+    }
+
+    - (void)notifyErrorMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] error:message];
+    }
+
+    - (void)notifyEndMessage:(bool)success {
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
+                         PROCESS_NAME_USB_DFU,
+                         success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success) {
+            [[ToolLogFile defaultLogger] info:str];
+        } else {
+            [[ToolLogFile defaultLogger] error:str];
+        }
     }
 
     - (bool)readDFUImages {

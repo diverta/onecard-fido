@@ -53,6 +53,7 @@
 #define PROCESS_NAME_CLIENT_PIN_SET                 @"PINコード新規設定"
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
+#define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -175,5 +176,11 @@
 #define MSG_HID_REMOVED                         @"USB HIDデバイスが取り外されました。"
 #define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
+
+#pragma mark - USB DFU関連
+#define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"
+#define MSG_DFU_IMAGE_TRANSFER_FAILED           @"更新ファームウェアの転送に失敗しました。"
+#define MSG_DFU_IMAGE_TRANSFER_SUCCESS          @"更新ファームウェアの転送が完了しました。"
+#define MSG_DFU_TARGET_NOT_CONNECTED            @"更新対象のFIDO認証器が接続されていません。"
 
 #endif /* ToolCommonMessage_h */

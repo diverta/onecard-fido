@@ -267,7 +267,7 @@
 #pragma mark - test for DFU
 
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [self appendLogMessage:[[self toolDFUCommand] testMain]];
+        [[self toolDFUCommand] startDFUProcess];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
