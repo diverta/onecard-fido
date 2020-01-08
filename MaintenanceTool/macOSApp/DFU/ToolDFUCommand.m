@@ -19,7 +19,9 @@
 // 応答タイムアウト
 #define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
-#define TIMEOUT_SEC_DFU_EXEC_RESPONSE 30.0
+
+// 詳細ログ出力
+#define CDC_ACM_LOG_DEBUG false
 
 @interface ToolDFUCommand ()
 
@@ -235,9 +237,11 @@
             if ([self sendRequestData:frame] == false) {
                 return false;
             }
+#if CDC_ACM_LOG_DEBUG
             // ログ出力
             [[ToolLogFile defaultLogger]
              debugWithFormat:@"CDC ACM Send (%d bytes)", [frame length]];
+#endif
         }
         return true;
     }
@@ -277,7 +281,7 @@
         // EXECUTE OBJECT 04 C0 -> 60 04 01 C0
         static uint8_t request[] = {NRF_DFU_OP_OBJECT_EXECUTE, NRF_DFU_BYTE_EOM};
         NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
-        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_EXEC_RESPONSE];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
         // レスポンスを検証
         return [self assertDFUResponseSuccess:response];
     }
@@ -331,10 +335,12 @@
     }
 
     - (NSData *)sendRequest:(NSData *)data timeoutSec:(double)timeout {
+#if CDC_ACM_LOG_DEBUG
         // ログ出力
         [[ToolLogFile defaultLogger]
          debugWithFormat:@"CDC ACM Send (%d bytes):", [data length]];
         [[ToolLogFile defaultLogger] hexdump:data];
+#endif
         // データ送信
         if ([self sendRequestData:data] == false) {
             return nil;
@@ -344,10 +350,12 @@
         if (dataRecv == nil) {
             return nil;
         }
+#if CDC_ACM_LOG_DEBUG
         // ログ出力
         [[ToolLogFile defaultLogger]
          debugWithFormat:@"CDC ACM Recv (%d bytes):", [dataRecv length]];
         [[ToolLogFile defaultLogger] hexdump:dataRecv];
+#endif
         return dataRecv;
     }
 
