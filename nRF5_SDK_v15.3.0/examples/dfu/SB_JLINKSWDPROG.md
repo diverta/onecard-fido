@@ -46,86 +46,71 @@ MDBT50Q Dongleに、USBブートローダーをJ-Link経由で書込みする手
 
 ### 書込み用ツールの準備
 
-書込み用ツール「nRF Connect for Desktop」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)をご参照ください。
+書込み用ツール「nRF Command Line Tools」を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書「[NetBeansインストール手順](../../../nRF5_SDK_v15.3.0/NETBEANSINST.md)」内のトピック<b>「nRFコマンドラインツール」</b>をご参照ください。
 
 ## USBブートローダーの書込み
 
-### 書込み準備
+USBブートローダーイメージ（`mdbt50q_dongle.hex`）と、ソフトデバイスイメージ（`s140_nrf52_6.1.1_softdevice.hex`）に分けて書き込みます。
 
-nRF Connectを起動します。<br>
-画面上部の「Launch app」ボタンをクリックすると、Programmerという項目が表示されます。<br>
-右横の「Launch」ボタンをクリックします。
+### USBブートローダーイメージの書込み
 
-<img src="assets03/0001.png" width="450">
-
-プログラミングツールが起動します。<br>
-右側の「File Memory Layout」欄がブランクになっていることを確認します。
-
-ブランクになっていない場合は、右側の「Clear Files」というリンクをクリックして「File Memory Layout」欄をブランクにしてください。
-
-<img src="assets03/0002.png" width="450">
-
-「File Memory Layout」欄に、先述のファイル２点をドラッグ＆ドロップします。<br>
-かならず、 [mbr_nrf52_2.4.1_mbr.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/mbr_nrf52_2.4.1_mbr.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
-
-２点のファイルが、「File Memory Layout」欄に、下図のように配置されることを確認します。
-
-<img src="assets03/0003.png" width="450">
-
-ここで、MDBT50Q DongleをUSBポートに挿します。<br>
-その後、画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
-
-<img src="assets03/0004.png" width="450">
-
-しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているnRF52840のメモリーイメージが表示されます。<br>
-（図では、新品のMDBT50Q Dongleに接続したところですので、メモリーイメージがブランクになっています）
-
-<img src="assets03/0005.png" width="450">
-
-これで書き込み準備は完了です。
-
-### 書込み実行
-
-画面右下部にある「Erase & write」のリンクをクリックし、書込みをスタートさせます。<br>
-下図のように「nRF52840」欄に縞模様が表示され、書込処理が進みます。
-
-<img src="assets03/0006.png" width="450">
-
-しばらくすると、下図のように画面下部のメッセージ欄が赤く変化します。<br>
-画面左上部にあるプルダウンから「Close device」を選択し、MDBT50Q Dongleとの接続をすみやかに切断してください。
-
-<img src="assets03/0007.png" width="450">
-
-切断が完了したら、画面の「Quit」を実行して、nRF Connectを終了させます。
-
-<img src="assets03/0008.png" width="450">
-
-## ソフトデバイスの追加書込み
-
-続いて、ソフトデバイス（s140_nrf52_6.1.1_softdevice.hex）を追加で書込みます。
+まずは、USBブートローダーイメージ（`mdbt50q_dongle.hex`）を書込みます。
 
 「nRF Command Line Tools」というツールの`nrfjprog`を使用し、下記のコマンドを実行します。
 
 ```
 TOOL_DIRECTORY=${HOME}/opt/nRF-Command-Line-Tools_9_8_1_OSX/nrfjprog
-OUTPUT_DIRECTORY=${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader"
 
-${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${OUTPUT_DIRECTORY}/s140_nrf52_6.1.1_softdevice.hex --sectorerase
+${TOOL_DIRECTORY}/nrfjprog -f nrf52 --eraseall
+${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${FIRMWARES_DIR}/mdbt50q_dongle.hex
 ```
-
-
-以下は実行例になります。
+下記は実行例になります。
 
 ```
 MacBookPro-makmorit-jp:~ makmorit$ TOOL_DIRECTORY=${HOME}/opt/nRF-Command-Line-Tools_9_8_1_OSX/nrfjprog
-MacBookPro-makmorit-jp:~ makmorit$ OUTPUT_DIRECTORY=${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader
+MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader"
 MacBookPro-makmorit-jp:~ makmorit$  
-MacBookPro-makmorit-jp:~ makmorit$ ${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${OUTPUT_DIRECTORY}/s140_nrf52_6.1.1_softdevice.hex --sectorerase
+MacBookPro-makmorit-jp:~ makmorit$ ${TOOL_DIRECTORY}/nrfjprog -f nrf52 --eraseall
+Erasing user available code and UICR flash areas.
+Applying system reset.
+MacBookPro-makmorit-jp:~ makmorit$ ${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${FIRMWARES_DIR}/mdbt50q_dongle.hex
+Parsing hex file.
+Reading flash area to program to guarantee it is erased.
+Checking that the area to write is not protected.
+Programming device.
+MacBookPro-makmorit-jp:~ makmorit$
+```
+
+### USBブートローダーの反映
+
+MDBT50Q DongleをPCのUSBポートからいったん外し、再びUSBポートに装着しなおしてください。<br>
+（このとき、<b>nRF52840 DKとの配線は外さないまま</b>にしておいてください）
+
+下図のように、基板上のLED2（緑色）、LED3（黄色）が同時点灯していることを確認できれば、書き込んだUSBブートローダーの反映は完了です。
+
+<img src="assets03/0009.png" width="350">
+
+### ソフトデバイスの追加書込み
+
+続いて、ソフトデバイスイメージ（`s140_nrf52_6.1.1_softdevice.hex`）を追加で書込みます。
+
+`nrfjprog`を使用し、下記のコマンドを実行します。
+
+```
+${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${FIRMWARES_DIR}/s140_nrf52_6.1.1_softdevice.hex --sectorerase
+```
+下記は実行例になります。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ ${TOOL_DIRECTORY}/nrfjprog -f nrf52 --program ${FIRMWARES_DIR}/s140_nrf52_6.1.1_softdevice.hex --sectorerase
 Parsing hex file.
 Erasing page at address 0x0.
 Erasing page at address 0x1000.
+Erasing page at address 0x2000.
 （中略）
+Erasing page at address 0x23000.
 Erasing page at address 0x24000.
 Erasing page at address 0x25000.
 Applying system reset.
@@ -133,7 +118,6 @@ Checking that the area to write is not protected.
 Programming device.
 MacBookPro-makmorit-jp:~ makmorit$
 ```
-
 
 その後、MDBT50Q DongleをPCのUSBポートから外し、nRF52840 DKとの配線を外してください。
 

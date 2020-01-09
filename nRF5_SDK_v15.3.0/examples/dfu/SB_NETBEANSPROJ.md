@@ -124,3 +124,53 @@ NetBeansを起動し、ファイル--->新規プロジェクトを実行しま�
 <img src="assets03/0016.png" width="500">
 
 以上で、ソースファイルからのビルドは完了です。
+
+## ブートローダーイメージを作成
+
+最後に、前述のUSBブートローダー`nrf52840_xxaa.hex`と、マスターブートレコード`mbr_nrf52_2.4.1_mbr.hex`を結合し、１本のブートローダーイメージを作成します。
+
+### hexファイルの結合
+Nordic社が提供している`mergehex`コマンドを使用し、`nrf52840_xxaa.hex`と`mbr_nrf52_2.4.1_mbr.hex`を結合します。
+
+以下のコマンドを実行します。
+
+```
+MERGEHEX="${HOME}/opt/nRF-Command-Line-Tools_9_8_1_OSX/mergehex/mergehex"
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader"
+cd ${FIRMWARES_DIR}
+
+${MERGEHEX} --merge mbr_nrf52_2.4.1_mbr.hex nrf52840_xxaa.hex --output mdbt50q_dongle.hex
+```
+
+下記は実行例になります。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ MERGEHEX="${HOME}/opt/nRF-Command-Line-Tools_9_8_1_OSX/mergehex/mergehex"
+MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares/secure_bootloader"
+MacBookPro-makmorit-jp:~ makmorit$ cd ${FIRMWARES_DIR}
+MacBookPro-makmorit-jp:secure_bootloader makmorit$ ls -al
+total 1248
+drwxr-xr-x   6 makmorit  staff     204  1  9 14:23 .
+drwxr-xr-x  10 makmorit  staff     340  1  9 14:23 ..
+-rwxr-xr-x   1 makmorit  staff    7792  1  9 14:23 mbr_nrf52_2.4.1_mbr.hex
+-rw-r--r--   1 makmorit  staff   99020  1  9 14:23 nrf52840_DK_xxaa.hex
+-rw-r--r--   1 makmorit  staff   99240  1  9 14:23 nrf52840_xxaa.hex
+-rwxr-xr-x   1 makmorit  staff  423104  1  9 14:23 s140_nrf52_6.1.1_softdevice.hex
+MacBookPro-makmorit-jp:secure_bootloader makmorit$ ${MERGEHEX} --merge mbr_nrf52_2.4.1_mbr.hex nrf52840_xxaa.hex --output mdbt50q_dongle.hex
+Parsing input hex files.
+Merging files.
+Storing merged file.
+MacBookPro-makmorit-jp:secure_bootloader makmorit$ ls -al
+total 1464
+drwxr-xr-x   7 makmorit  staff     238  1  9 14:27 .
+drwxr-xr-x  10 makmorit  staff     340  1  9 14:23 ..
+-rwxr-xr-x   1 makmorit  staff    7792  1  9 14:23 mbr_nrf52_2.4.1_mbr.hex
+-rw-r--r--   1 makmorit  staff  109365  1  9 14:27 mdbt50q_dongle.hex
+-rw-r--r--   1 makmorit  staff   99020  1  9 14:23 nrf52840_DK_xxaa.hex
+-rw-r--r--   1 makmorit  staff   99240  1  9 14:23 nrf52840_xxaa.hex
+-rwxr-xr-x   1 makmorit  staff  423104  1  9 14:23 s140_nrf52_6.1.1_softdevice.hex
+MacBookPro-makmorit-jp:secure_bootloader makmorit$
+```
+
+
+以上で、USBブートローダー作成は完了となります。
