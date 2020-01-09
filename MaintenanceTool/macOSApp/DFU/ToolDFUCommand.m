@@ -41,7 +41,7 @@
         [self setToolCDCHelper:[[ToolCDCHelper alloc] init]];
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
-        [self setSubQueue:dispatch_queue_create("jp.co.diverta.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
+        [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
         return self;
     }
 
