@@ -16,9 +16,11 @@
 //
 static uint8_t nrf52_app_dat[256];
 static uint8_t nrf52_app_bin[524288];
+static uint8_t nrf52_app_zip[524288];
 
 static size_t nrf52_app_dat_size;
 static size_t nrf52_app_bin_size;
+static size_t nrf52_app_zip_size;
 
 uint8_t *nrf52_app_image_dat(void)
 {
@@ -40,7 +42,7 @@ size_t nrf52_app_image_bin_size(void)
     return nrf52_app_bin_size;
 }
 
-bool read_app_image_file(const char *file_name, size_t max_size, uint8_t *data, size_t *size)
+static bool read_app_image_file(const char *file_name, size_t max_size, uint8_t *data, size_t *size)
 {
     int c = 0;
     size_t i = 0;
@@ -67,32 +69,75 @@ bool read_app_image_file(const char *file_name, size_t max_size, uint8_t *data, 
     return true;
 }
 
-bool nrf52_app_image_dat_read(const char *dat_file_path)
-{
-    // データバッファ／サイズを初期化
-    memset(nrf52_app_dat, 0, sizeof(nrf52_app_dat));
-    nrf52_app_dat_size = 0;
-
-    // .datファイルを読込
-    size_t max_size = sizeof(nrf52_app_dat);
-    if (read_app_image_file(dat_file_path, max_size, nrf52_app_dat, &nrf52_app_dat_size) == false) {
-        return false;
-    }
-
-    return true;
+static uint16_t convert_le_bytes_to_uint16(uint8_t *data, size_t offset) {
+    uint8_t *bytes = (uint8_t *)data;
+    uint16_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8);
+    return uint;
 }
 
-bool nrf52_app_image_bin_read(const char *bin_file_path)
+static uint32_t convert_le_bytes_to_uint32(uint8_t *data, size_t offset) {
+    uint8_t *bytes = (uint8_t *)data;
+    uint32_t uint = bytes[offset] | ((uint16_t)bytes[offset + 1] << 8)
+    | ((uint32_t)bytes[offset + 2] << 16) | ((uint32_t)bytes[offset + 3] << 24);
+    return uint;
+}
+
+static size_t parse_file(uint8_t *data)
+{
+    char file_name[64];
+    // ファイルのサイズ
+    size_t offset = 18;
+    size_t compressed_size = (size_t)convert_le_bytes_to_uint32(data, offset);
+    offset += 8;
+    // ファイル名のサイズ
+    size_t filename_size = (size_t)convert_le_bytes_to_uint16(data, offset);
+    offset += 2;
+    // コメントのサイズ
+    size_t comment_size = (size_t)convert_le_bytes_to_uint16(data, offset);
+    offset += 2;
+    // ファイル名
+    memset(file_name, 0, sizeof(file_name));
+    strncpy(file_name, (char *)(data + offset), filename_size);
+    offset += filename_size;
+    // コメント
+    offset += comment_size;
+    // ファイルの内容
+    uint8_t *p_data = data + offset;
+    if (strcmp(file_name, NRF52_APP_DAT_FILE_NAME) == 0) {
+        // .datファイルのバイナリーイメージを配列に格納
+        memcpy(nrf52_app_dat, p_data, compressed_size);
+        nrf52_app_dat_size = compressed_size;
+
+    } else if (strcmp(file_name, NRF52_APP_BIN_FILE_NAME) == 0) {
+        // .binファイルのバイナリーイメージを配列に格納
+        memcpy(nrf52_app_bin, p_data, compressed_size);
+        nrf52_app_bin_size = compressed_size;
+    }
+    // 書庫エントリーのサイズを戻す
+    offset += compressed_size;
+    return offset;
+}
+
+bool nrf52_app_image_zip_read(const char *zip_file_path)
 {
     // データバッファ／サイズを初期化
-    memset(nrf52_app_bin, 0, sizeof(nrf52_app_bin));
-    nrf52_app_bin_size = 0;
-
-    // .binファイルを読込
-    size_t max_size = sizeof(nrf52_app_bin);
-    if (read_app_image_file(bin_file_path, max_size, nrf52_app_bin, &nrf52_app_bin_size) == false) {
+    memset(nrf52_app_zip, 0, sizeof(nrf52_app_zip));
+    nrf52_app_zip_size = 0;
+    // .zipファイルを読込
+    size_t max_size = sizeof(nrf52_app_zip);
+    if (read_app_image_file(zip_file_path, max_size, nrf52_app_zip, &nrf52_app_zip_size) == false) {
         return false;
     }
-    
+    // .zip書庫ファイルを解析し、内包されている.bin/.datイメージを抽出
+    size_t i = 0;
+    while (i < nrf52_app_zip_size) {
+        if (nrf52_app_zip[i+0] == 0x50 && nrf52_app_zip[i+1] == 0x4B &&
+            nrf52_app_zip[i+2] == 0x03 && nrf52_app_zip[i+3] == 0x04) {
+            // 書庫エントリーのヘッダー（50 4B 03 04）が見つかった場合
+            i += parse_file(&nrf52_app_zip[i]);
+        } else {
+            i++;
+        }
+    }
     return true;
 }

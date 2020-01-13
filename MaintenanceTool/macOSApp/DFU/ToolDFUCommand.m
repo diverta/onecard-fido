@@ -13,10 +13,6 @@
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
-// DFU対象ファイル名
-#define NRF52_APP_DAT_FILE_NAME @"nrf52840_xxaa.dat"
-#define NRF52_APP_BIN_FILE_NAME @"nrf52840_xxaa.bin"
-
 // 応答タイムアウト
 #define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
@@ -109,21 +105,16 @@
     }
 
     - (bool)readDFUImages {
-        // .datファイルからイメージを読込
-        if (nrf52_app_image_dat_read([self getBundleResourcePathChar:NRF52_APP_DAT_FILE_NAME]) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolDFUCommand: %s", log_debug_message()];
-            return false;
-        }
-        // .binファイルからイメージを読込
-        if (nrf52_app_image_bin_read([self getBundleResourcePathChar:NRF52_APP_BIN_FILE_NAME]) == false) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolDFUCommand: %s", log_debug_message()];
+        // .zipファイルからイメージを読込
+        const char *zip_path = [self getBundleResourcePathChar:@NRF52_APP_ZIP_FILE_NAME];
+        if (nrf52_app_image_zip_read(zip_path) == false) {
             return false;
         }
         // ログ出力
         [[ToolLogFile defaultLogger]
          debugWithFormat:@"ToolDFUCommand: %@(%d bytes), %@(%d bytes)",
-         NRF52_APP_DAT_FILE_NAME, nrf52_app_image_dat_size(),
-         NRF52_APP_BIN_FILE_NAME, nrf52_app_image_bin_size()];
+         @NRF52_APP_DAT_FILE_NAME, nrf52_app_image_dat_size(),
+         @NRF52_APP_BIN_FILE_NAME, nrf52_app_image_bin_size()];
         return true;
     }
 
