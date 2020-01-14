@@ -183,5 +183,6 @@
 #define MSG_DFU_IMAGE_TRANSFER_SUCCESS          @"更新ファームウェアの転送が完了しました。"
 #define MSG_DFU_TARGET_NOT_CONNECTED            @"更新対象のFIDO認証器が接続されていません。"
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED        @"FIDO認証器ファームウェアのバージョンが%@に更新されました。"
+#define MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED @"FIDO認証器ファームウェアのバージョンを%@に更新できませんでした。"
 
 #endif /* ToolCommonMessage_h */

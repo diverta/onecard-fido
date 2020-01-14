@@ -76,9 +76,20 @@
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)notifyFirmwareVersion:(NSString *)strFWRev {
-        // バージョン情報を取得できたら、DFU処理が全て完了
-        [self notifyMessage:[NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, strFWRev]];
-        [self notifyEndMessage:true];
+        char *fw_version = nrf52_app_image_zip_version();
+        NSString *expected = [[NSString alloc] initWithUTF8String:fw_version];
+        if (strcmp([strFWRev UTF8String], fw_version) == 0) {
+            // バージョン情報を比較し、同じであればDFU処理は正常終了とする
+            [self notifyMessage:
+             [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected]];
+            [self notifyEndMessage:true];
+        } else {
+            // バージョンが同じでなければ異常終了とする
+            [self notifyErrorMessage:
+             [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED,
+              expected]];
+            [self notifyEndMessage:false];
+        }
     }
 
 #pragma mark - Main process
@@ -147,8 +158,18 @@
     }
 
     - (bool)readDFUImages {
+        // リソースバンドル・ディレクトリーの絶対パスを取得
+        NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+        // .zipファイル名を取得
+        if (nrf52_app_image_zip_filename_get([resourcePath UTF8String]) == false) {
+            return false;
+        }
+        // ログ出力
+        [[ToolLogFile defaultLogger]
+         debugWithFormat:@"ToolDFUCommand: Firmware version %s",
+         nrf52_app_image_zip_version()];
         // .zipファイルからイメージを読込
-        const char *zip_path = [self getBundleResourcePathChar:@NRF52_APP_ZIP_FILE_NAME];
+        const char *zip_path = nrf52_app_image_zip_filename();
         if (nrf52_app_image_zip_read(zip_path) == false) {
             return false;
         }
@@ -224,17 +245,6 @@
             remaining -= sendSize;
         }
         return true;
-    }
-
-    - (const char *)getBundleResourcePathChar:(NSString *)fileName {
-        // リソースバンドル・ディレクトリーの絶対パスを取得
-        NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
-        // 引数のファイル名を、ディレクトリーパスに連結
-        NSString *resourcePathStr = [[NSString alloc] initWithFormat:@"%@/%@", resourcePath, fileName];
-        // 作成されたファルパスを、const char形式に変換
-        const char *resourcePathChar = (const char *)[resourcePathStr UTF8String];
-        
-        return resourcePathChar;
     }
 
     - (bool)sendPingRequest:(uint8_t)id {
