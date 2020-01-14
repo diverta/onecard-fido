@@ -10,6 +10,7 @@
 #import "nrf52_app_image.h"
 #import "ToolCDCHelper.h"
 #import "ToolDFUCommand.h"
+#import "ToolHIDCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
@@ -22,10 +23,15 @@
 
 @interface ToolDFUCommand ()
 
-    @property (nonatomic) ToolCDCHelper *toolCDCHelper;
+    @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
+    @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t mainQueue;
     @property (nonatomic) dispatch_queue_t subQueue;
+    // バージョン情報照会フラグ
+    @property (nonatomic) bool needVersionInfo;
+    // 更新イメージファイル名から取得したバージョン
+    @property (nonatomic) bool strFWRevFromFile;
 
 @end
 
@@ -38,7 +44,41 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
+        // バージョン情報照会フラグをリセット
+        [self setNeedVersionInfo:false];
         return self;
+    }
+
+#pragma mark - Call back from AppDelegate
+
+    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
+        // バージョン情報照会フラグがセットされている場合（ファームウェア反映待ち）
+        if ([self needVersionInfo]) {
+            // バージョン情報照会フラグをリセット
+            [self setNeedVersionInfo:false];
+            // USB HID経由でバージョン照会コマンドを実行
+            [self queryFirmwareVersion:toolHIDCommandRef];
+        }
+    }
+
+    - (void)queryFirmwareVersion:(id)toolHIDCommandRef {
+        if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
+            return;
+        }
+        [self setToolHIDCommand:(ToolHIDCommand *)toolHIDCommandRef];
+        dispatch_async([self subQueue], ^{
+            // サブスレッドでバージョン情報照会を実行
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_FOR_DFU
+                                               withData:nil forCommand:self];
+        });
+    }
+
+#pragma mark - Call back from ToolHIDCommand
+
+    - (void)notifyFirmwareVersion:(NSString *)strFWRev {
+        // バージョン情報を取得できたら、DFU処理が全て完了
+        [self notifyMessage:[NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, strFWRev]];
+        [self notifyEndMessage:true];
     }
 
 #pragma mark - Main process
@@ -74,6 +114,8 @@
         // DFU転送処理完了
         [[self toolCDCHelper] disconnectDevice];
         [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+        // バージョン情報照会フラグをセット
+        [self setNeedVersionInfo:true];
         return;
     }
 

@@ -351,6 +351,8 @@
 
     - (void)hidCommandDidDetectConnect {
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
+        // DFU処理にHID接続開始を通知
+        [[self toolDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
     }
 
     - (void)hidCommandDidDetectRemoval {

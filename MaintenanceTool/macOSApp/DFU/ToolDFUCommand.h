@@ -12,6 +12,8 @@
 @interface ToolDFUCommand : NSObject
 
     - (void)startDFUProcess;
+    - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
+    - (void)notifyFirmwareVersion:(NSString *)strFWRev;
 
 @end
 
