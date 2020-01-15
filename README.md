@@ -27,7 +27,7 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 - <b>[nRF52840ファームウェア（Version 0.2.5）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/nRF5_SDK_v15.3.0/firmwares)</b>
 
-macOS上で、仮想COMポートドライバー関連の障害が確認されているため、仮想COMポートを使用している機能「[デバイスのRSSI値ログ出力](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)」を、為念で閉塞させていただきたく存じます。<br>
+macOS上で、仮想COMポートドライバー関連の障害が確認されているため、仮想COMポートを使用している機能「[デバイスのRSSI値ログ出力](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)」を、為念で閉塞させていただきたく存じます。<br>
 （[#260](https://github.com/diverta/onecard-fido/issues/260) ご参照。FIDO機能ではなく、デモ機能として追加したものになります。）
 
 #### 2019/12/25
