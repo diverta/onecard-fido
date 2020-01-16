@@ -40,8 +40,7 @@ MDBT50Q Dongleに、USBブートローダーをJ-Link経由で書込みする手
 
 ファームウェアは、すでにビルド済みの`.hex`ファイルが、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)
-- アプリケーション: [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/nrf52840_xxaa.hex)
-- マスターブートレコード: [mbr_nrf52_2.4.1_mbr.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/mbr_nrf52_2.4.1_mbr.hex)
+- USBブートローダー: [mdbt50q_dongle.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/mdbt50q_dongle.hex)
 - ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/s140_nrf52_6.1.1_softdevice.hex)
 
 ### 書込み用ツールの準備
