@@ -44,5 +44,5 @@ FIDO認証器管理ツールから出力されるログファイルについて�
 
 ## 開発情報
 * <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
-[USBブートローダー（暗号化対応版）](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入済の[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
+[USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入済の[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
 2020/01/16現在、機能の実現可能性について調査済ですが、指示画面が未実装です（後日追加対応予定）。<br>
