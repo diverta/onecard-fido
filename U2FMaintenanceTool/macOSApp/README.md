@@ -20,10 +20,6 @@ PC環境から、FIDO2サービスの動作に必要な鍵・証明書の導入�
 macOS Sierra (Version 10.12.6) 〜
 
 ## 開発情報
-
-2019/03/26現在、以下の機能をUSB HID経由で実行できるように改修中です。
-
-* 鍵・証明書削除
-* 鍵・証明書インストール
-
-（[Issue #144](https://github.com/diverta/onecard-fido/issues/144) ご参照）
+* <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
+[USBブートローダー（暗号化対応版）](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入済の[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
+2020/01/16現在、機能の実現可能性について調査済ですが、指示画面が未実装です（後日追加対応予定）。<br>
