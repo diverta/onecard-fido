@@ -14,6 +14,9 @@
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
+// 処理タイムアウト（転送／反映チェック処理）
+#define TIMEOUT_SEC_DFU_PROCESS 30.0
+
 // 応答タイムアウト
 #define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
@@ -32,6 +35,8 @@
     @property (nonatomic) bool needVersionInfo;
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) bool strFWRevFromFile;
+    // タイムアウト監視フラグ
+    @property (nonatomic) bool needTimeoutMonitor;
 
 @end
 
@@ -47,6 +52,31 @@
         // バージョン情報照会フラグをリセット
         [self setNeedVersionInfo:false];
         return self;
+    }
+
+#pragma mark - Process timeout monitor
+
+    - (void)startDFUTimeoutMonitor {
+        // 処理タイムアウト監視を事前停止
+        [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                                 selector:@selector(DFUProcessDidTimeout)
+                                                   object:nil];
+        // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
+        [self performSelector:@selector(DFUProcessDidTimeout)
+                   withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        // 処理タイムアウト検知フラグを設定
+        [self setNeedTimeoutMonitor:true];
+    }
+
+    - (void)DFUProcessDidTimeout {
+        // 処理タイムアウト検知フラグが設定されている場合
+        if ([self needTimeoutMonitor]) {
+            // バージョン情報照会フラグをリセット
+            [self setNeedVersionInfo:false];
+            // 処理タイムアウトを検知したので、異常終了と判断
+            [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
+            [self notifyEndMessage:false];
+        }
     }
 
 #pragma mark - Call back from AppDelegate
@@ -76,10 +106,13 @@
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)notifyFirmwareVersion:(NSString *)strFWRev {
+        // 処理タイムアウト検知を不要とする
+        [self setNeedTimeoutMonitor:false];
+        // バージョン情報を比較
         char *fw_version = nrf52_app_image_zip_version();
         NSString *expected = [[NSString alloc] initWithUTF8String:fw_version];
         if (strcmp([strFWRev UTF8String], fw_version) == 0) {
-            // バージョン情報を比較し、同じであればDFU処理は正常終了とする
+            // バージョンが同じであればDFU処理は正常終了とする
             [self notifyMessage:
              [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected]];
             [self notifyEndMessage:true];
@@ -95,39 +128,46 @@
 #pragma mark - Main process
 
     - (void)startDFUProcess {
+        // 処理タイムアウト監視を開始
+        [self startDFUTimeoutMonitor];
         dispatch_async([self subQueue], ^{
             // サブスレッドでDFU処理を実行
-            [self performDFUProcess];
+            if ([self performDFUProcess] == false) {
+                // 処理失敗時は処理タイムアウト検知を不要とする
+                [self setNeedTimeoutMonitor:false];
+            }
         });
     }
 
-    - (void)performDFUProcess {
+    - (bool)performDFUProcess {
         // ファームウェア更新処理の開始メッセージを出力
         [self notifyStartMessage];
         // ファームウェアのイメージファイル（.dat／.bin）から、バイナリーイメージを読込
         if ([self readDFUImages] == false) {
             [self notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
             [self notifyEndMessage:false];
-            return ;
+            return false;
         }
         // DFU対象デバイスに接続
         NSString *ACMDevicePath = [self getConnectedDevicePath];
         if (ACMDevicePath == nil) {
             [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
             [self notifyEndMessage:false];
-            return;
+            return false;
         }
         // DFUを実行
         bool ret = [self performDFU];
-        if (ret == false) {
-            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
-        }
-        // DFU転送処理完了
+        // DFU対象デバイスから切断
         [[self toolCDCHelper] disconnectDevice];
-        [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
-        // バージョン情報照会フラグをセット
-        [self setNeedVersionInfo:true];
-        return;
+        if (ret == false) {
+            // DFU転送失敗時
+            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
+        } else {
+            // DFU転送成功時は、バージョン情報照会フラグをセット
+            [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+            [self setNeedVersionInfo:true];
+        }
+        return ret;
     }
 
 #pragma mark - Sub process
