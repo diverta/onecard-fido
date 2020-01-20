@@ -16,7 +16,7 @@ MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みす
 
 まず最初に、MDBT50Q Dongleの背面にあるボタン電池ケースに、<b>電池が入っていないこと</b>を必ず確認します。
 
-<img src="assets02/0000.png" width="400">
+<img src="../assets02/0000.png" width="400">
 
 次に、MDBT50Q DongleをPCのUSBポートに装着後、nRF52840 DKと接続します。<br>
 接続するピンの対応関係は以下の通りです。
@@ -34,7 +34,7 @@ MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みす
 
 下図は実際に両者を接続した時のイメージになります。
 
-<img src="assets02/0001.jpg" width="540">
+<img src="../assets02/0001.jpg" width="540">
 
 ### ファームウェアの準備
 
@@ -56,31 +56,31 @@ nRF Connectを起動します。<br>
 画面上部の「Launch app」ボタンをクリックすると、Programmerという項目が表示されます。<br>
 右横の「Launch」ボタンをクリックします。
 
-<img src="assets02/0002.png" width="450">
+<img src="../assets02/0002.png" width="450">
 
 プログラミングツールが起動します。<br>
 右側の「File Memory Layout」欄がブランクになっていることを確認します。
 
 ブランクになっていない場合は、右側の「Clear Files」というリンクをクリックして「File Memory Layout」欄をブランクにしてください。
 
-<img src="assets02/0003.png" width="450">
+<img src="../assets02/0003.png" width="450">
 
 「File Memory Layout」欄に、先述のファイル２点をドラッグ＆ドロップします。<br>
 かならず、 [mbr_nrf52_2.4.1_mbr.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/mbr_nrf52_2.4.1_mbr.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
 
 ２点のファイルが、「File Memory Layout」欄に、下図のように配置されることを確認します。
 
-<img src="assets02/0004.png" width="450">
+<img src="../assets02/0004.png" width="450">
 
 ここで、MDBT50Q DongleをUSBポートに挿します。<br>
 その後、画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
 
-<img src="assets02/0005.png" width="450">
+<img src="../assets02/0005.png" width="450">
 
 しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているnRF52840側のメモリーイメージが表示されます。<br>
 （MDBT50Q Dongle側のメモリーイメージが表示されないのは異常ではありません。ご安心ください）
 
-<img src="assets02/0006.png" width="450">
+<img src="../assets02/0006.png" width="450">
 
 これで書き込み準備は完了です。
 
@@ -89,16 +89,16 @@ nRF Connectを起動します。<br>
 画面右下部にある「Erase & write」のリンクをクリックし、書込みをスタートさせます。<br>
 下図のように「nRF52840」欄に縞模様が表示され、書込処理が進みます。
 
-<img src="assets02/0007.png" width="450">
+<img src="../assets02/0007.png" width="450">
 
 しばらくすると、下図のように画面下部のメッセージ欄が赤く変化します。<br>
 画面左上部にあるプルダウンから「Close device」を選択し、MDBT50Q Dongleとの接続をすみやかに切断してください。
 
-<img src="assets02/0008.png" width="450">
+<img src="../assets02/0008.png" width="450">
 
 切断が完了したら、画面の「Quit」を実行して、nRF Connectを終了させます。
 
-<img src="assets02/0009.png" width="450">
+<img src="../assets02/0009.png" width="450">
 
 その後、MDBT50Q DongleをPCのUSBポートから外し、nRF52840 DKとの配線を外してください。
 

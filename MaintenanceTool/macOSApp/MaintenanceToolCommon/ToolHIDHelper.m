@@ -271,16 +271,18 @@
 #pragma mark - Non Objective-C codes
 
     void handleDeviceMatching(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // HIDデバイスの参照を保持
         ToolHIDHelper *helperSelf = (__bridge ToolHIDHelper *)context;
         [helperSelf setToolHIDDevice:device];
+        // コマンドクラスに通知
+        [[helperSelf delegate] hidHelperDidDetectConnect];
     }
     void handleDeviceRemoval(void *context, IOReturn result, void *sender, IOHIDDeviceRef device) {
-        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
         // HIDデバイス参照を解除
         ToolHIDHelper *helperSelf = (__bridge ToolHIDHelper *)context;
         [helperSelf setToolHIDDevice:nil];
+        // コマンドクラスに通知
+        [[helperSelf delegate] hidHelperDidDetectRemoval];
     }
     void handleInputReport(void *context, IOReturn result, void *sender, IOHIDReportType type,
                            uint32_t reportID, uint8_t *report, CFIndex reportLength) {

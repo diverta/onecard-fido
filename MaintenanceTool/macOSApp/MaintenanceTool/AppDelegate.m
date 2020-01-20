@@ -6,6 +6,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolLogFile.h"
+#import "ToolDFUCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -32,6 +33,7 @@
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
+    @property (nonatomic) ToolDFUCommand    *toolDFUCommand;
 
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -54,6 +56,9 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
+        
+        // DFU機能の初期設定
+        [self setToolDFUCommand:[[ToolDFUCommand alloc] init]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -259,6 +264,12 @@
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
+#pragma mark - test for DFU
+
+    - (IBAction)menuItemDFUTestDidSelect:(id)sender {
+        [[self toolDFUCommand] startDFUProcess];
+    }
+
 #pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data {
@@ -336,6 +347,16 @@
 
     - (void)hidCommandStartedProcess:(Command)command {
         [self commandStartedProcess:command type:TRANSPORT_HID];
+    }
+
+    - (void)hidCommandDidDetectConnect {
+        [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
+        // DFU処理にHID接続開始を通知
+        [[self toolDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
+    }
+
+    - (void)hidCommandDidDetectRemoval {
+        [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
     }
 
 #pragma mark - Common method called by callback

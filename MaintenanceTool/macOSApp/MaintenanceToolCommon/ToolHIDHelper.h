@@ -25,6 +25,9 @@
     - (void)hidHelperDidReceive:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd;
     - (void)hidHelperDidResponseTimeout;
 
+    - (void)hidHelperDidDetectConnect;
+    - (void)hidHelperDidDetectRemoval;
+
 @end
 
 #endif /* ToolHIDHelper_h */

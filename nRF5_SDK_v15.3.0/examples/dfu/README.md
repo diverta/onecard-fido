@@ -1,31 +1,28 @@
 # nRF52840 ブートローダーアプリケーション
 
+PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、[nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/firmwares/README.md)を書き込むためのファームウェアです。
+
 ## 簡易USBブートローダー
 
 `open_bootloader`は、簡易USBブートローダーです。
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
-### ファームウェア
+- <b>[ファームウェア作成手順](open_bootloader/README.md)</b><br>
+NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
-ファームウェアは２点で構成されます。
+## USBブートローダー（署名機能付き）
 
-- ディレクトリー：[/nRF5_SDK_v15.3.0/firmwares/open_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/)
+`secure_bootloader`は、署名機能付きのUSBブートローダー（セキュア・ブートローダー）です。
 
-- ファイル：`mbr_nrf52_2.4.1_mbr.hex`、`nrf52840_xxaa.hex`<br>
-`mbr_nrf52_2.4.1_mbr.hex`は、Nordic社から提供されているものをそのまま使用します。<br>
-`nrf52840_xxaa.hex`は、後述「ファームウェア作成手順」により作成したものを使用します。
+Nordic社から提供されているサンプル「[Secure DFU Bootloader over Serial Link (UART/USB)](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.3.0/sdk_app_serial_dfu_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
-
-### [ファームウェア作成手順](NETBEANSPROJ.md)
-
-NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーを作成する手順を記載しています。
-
-### [ファームウェア書込手順](JLINKSWDPROG.md)
-
-MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みする手順を記載しています。
+- <b>[ファームウェア作成手順](secure_bootloader/README.md)</b><br>
+NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
 ## 公開鍵ファイル
+
+前述２点のブートローダーを作成するために必要となるファイルです。
 
 `dfu_public_key.c`は、Nordic社提供サンプルから修正しております。<br>
 下記のようなコマンドを実行して作成されたものです。
