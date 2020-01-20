@@ -161,11 +161,6 @@ uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id)
     return public_key_raw_data;
 }
 
-size_t fido_cryptoauth_keypair_private_key_size(void)
-{
-    return sizeof(public_key_raw_data);
-}
-
 void fido_cryptoauth_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
 {
     // 初期化
@@ -340,7 +335,7 @@ void fido_cryptoauth_sskey_init(bool force)
         return;
     }
 
-    // 秘密鍵および公開鍵を、1番スロットで生成
+    // 秘密鍵および公開鍵を、所定のスロットで生成
     fido_cryptoauth_keypair_generate(KEY_ID_FOR_SHARED_SECRET_KEY);
 
     // 生成済みフラグを設定
@@ -390,7 +385,7 @@ bool fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data)
 
 uint8_t *fido_cryptoauth_sskey_public_key(void)
 {
-    // 1番スロットの秘密鍵に対応する公開鍵を取得して戻す
+    // ECDH共通鍵生成時の秘密鍵に対応する公開鍵を取得して戻す
     return fido_cryptoauth_keypair_public_key(KEY_ID_FOR_SHARED_SECRET_KEY);
 }
 
