@@ -1,20 +1,20 @@
 # ファームウェア更新機能
 
 ## 概要
-[USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入済の[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
+[USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入した[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
 nRF52 SDKのDFU機能（[Secure DFU Bootloader over Serial Link (UART/USB)](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.3.0/sdk_app_serial_dfu_bootloader.html)）を使用して実装されています。
 
 ## 前提
 
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)が導入されていることが前提となります。<br>
 USBブートローダーの導入手順は、下記手順書をご参照願います。
-- <b>[USBブートローダー書込手順](../../nRF5_SDK_v15.3.0/examples/dfu/SB_JLINKSWDPROG.md)</b>
+- <b>[USBブートローダー書込手順](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/SB_JLINKSWDPROG.md)</b>
 
 #### USBブートローダーのイメージ
 
 USBブートローダーのイメージ（[mdbt50q_dongle.hex](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/mdbt50q_dongle.hex)）は、すでに下記手順により作成済です。
 
-- <b>[USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/SB_NETBEANSPROJ.md)</b>
+- <b>[USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/secure_bootloader/README.md)</b>
 
 
 ## 操作方法
