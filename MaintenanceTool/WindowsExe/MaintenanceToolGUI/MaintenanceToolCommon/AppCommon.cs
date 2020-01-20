@@ -143,7 +143,12 @@ namespace MaintenanceToolCommon
 
         private static string OutputLogFilePath()
         {
-            string fileName = "MaintenanceTool.log";
+            // ファイル名を連結して戻す
+            return string.Format("{0}\\MaintenanceTool.log", OutputLogFileDirectoryPath());
+        }
+
+        public static string OutputLogFileDirectoryPath()
+        {
             try {
                 // ホームディレクトリー配下に生成
                 string dir = string.Format("{0}\\Diverta\\FIDO",
@@ -156,12 +161,12 @@ namespace MaintenanceToolCommon
                     Console.Write(string.Format("outputLogText: Directory created at {0}", dir));
                 }
 
-                // ファイル名を連結して戻す
-                return string.Format("{0}\\{1}", dir, fileName);
+                // ディレクトリーを戻す
+                return dir;
 
             } catch (Exception e) {
                 Console.Write(e.Message);
-                return fileName;
+                return ".";
             }
         }
 

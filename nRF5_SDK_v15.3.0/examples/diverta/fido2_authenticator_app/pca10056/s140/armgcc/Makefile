@@ -4,7 +4,8 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10056
 
 # application version info
-CFLAGS += -DFW_REV=\"0.2.4\"
+FW_REV := 0.2.5
+CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"0.2\"
 
@@ -489,10 +490,10 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
 LIB_FILES += -lc -lnosys -lm
 
 
-.PHONY: default help
+.PHONY: default help secure_pkg
 
 # Default target - first one defined
-default: nrf52840_xxaa
+default: $(TARGETS) secure_pkg
 
 # Print all targets that can be built
 help:
@@ -501,6 +502,10 @@ help:
 	@echo		flash_softdevice
 	@echo		sdk_config - starting external tool for editing sdk_config.h
 	@echo		flash      - flashing binary
+
+secure_pkg:
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(OUTPUT_DIRECTORY)/app_dfu_package.$(FW_REV).zip
+	@echo Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
 

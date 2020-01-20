@@ -1,5 +1,6 @@
 ﻿using MaintenanceToolCommon;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -470,6 +471,13 @@ namespace MaintenanceToolGUI
         {
             // BLE PINGテストを実行
             doCommand(sender);
+        }
+
+        private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 管理ツールのログファイルを格納している
+            // フォルダーを、Windowsのエクスプローラで参照
+            Process.Start(AppCommon.OutputLogFileDirectoryPath());
         }
 
         protected override void WndProc(ref Message m)
