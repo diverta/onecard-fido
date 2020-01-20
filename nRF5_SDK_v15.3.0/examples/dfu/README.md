@@ -8,8 +8,7 @@ PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
-#### [ファームウェア作成手順](open_bootloader/README.md)
-
+- <b>[ファームウェア作成手順](open_bootloader/README.md)</b><br>
 NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
 ## USBブートローダー（署名機能付き）
@@ -18,8 +17,7 @@ NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する
 
 Nordic社から提供されているサンプル「[Secure DFU Bootloader over Serial Link (UART/USB)](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.3.0/sdk_app_serial_dfu_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
-#### [ファームウェア作成手順](secure_bootloader/README.md)
-
+- <b>[ファームウェア作成手順](secure_bootloader/README.md)</b><br>
 NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
 ## 公開鍵ファイル

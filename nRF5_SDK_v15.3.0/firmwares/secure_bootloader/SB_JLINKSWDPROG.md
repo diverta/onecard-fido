@@ -1,6 +1,6 @@
 # USBブートローダー書込手順
 
-MDBT50Q Dongleに、USBブートローダーをJ-Link経由で書込みする手順を記載します。
+MDBT50Q Dongleに、ブートローダー本体／ソフトデバイスをJ-Link経由で書込みする手順を記載します。
 
 ## 書込み準備
 
@@ -16,7 +16,7 @@ MDBT50Q Dongleに、USBブートローダーをJ-Link経由で書込みする手
 
 まず最初に、MDBT50Q Dongleの背面にあるボタン電池ケースに、<b>電池が入っていないこと</b>を必ず確認します。
 
-<img src="assets02/0000.png" width="400">
+<img src="../assets02/0000.png" width="400">
 
 次に、MDBT50Q DongleをPCのUSBポートに装着後、nRF52840 DKと接続します。<br>
 接続するピンの対応関係は以下の通りです。
@@ -34,14 +34,14 @@ MDBT50Q Dongleに、USBブートローダーをJ-Link経由で書込みする手
 
 下図は実際に両者を接続した時のイメージになります。
 
-<img src="assets02/0001.jpg" width="540">
+<img src="../assets02/0001.jpg" width="540">
 
 ### ファームウェアの準備
 
 ファームウェアは、すでにビルド済みの`.hex`ファイルが、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)
-- USBブートローダー: [mdbt50q_dongle.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/mdbt50q_dongle.hex)
-- ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/s140_nrf52_6.1.1_softdevice.hex)
+- USBブートローダー: [mdbt50q_dongle.hex](mdbt50q_dongle.hex)
+- ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](s140_nrf52_6.1.1_softdevice.hex)
 
 ### 書込み用ツールの準備
 
@@ -89,7 +89,7 @@ MDBT50Q DongleをPCのUSBポートからいったん外し、再びUSBポート�
 
 下図のように、基板上のLED2（緑色）、LED3（黄色）が同時点灯していることを確認できれば、書き込んだUSBブートローダーの反映は完了です。
 
-<img src="assets03/0009.png" width="350">
+<img src="../../../nRF5_SDK_v15.3.0/examples/dfu/assets03/0009.png" width="350">
 
 ### ソフトデバイスの追加書込み
 
@@ -126,6 +126,6 @@ MDBT50Q Dongleが、PCのUSBポートに装着されている状態で、MDBT50Q
 
 下図のように、基板上のLED2（緑色）、LED3（黄色）が同時点灯していることを確認してください。
 
-<img src="assets03/0009.png" width="350">
+<img src="../../../nRF5_SDK_v15.3.0/examples/dfu/assets03/0009.png" width="350">
 
 これで、USBブートローダーの書込みは完了となります。
