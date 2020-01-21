@@ -111,7 +111,6 @@ static void sskey_generate(void)
 
 static void test_privkey_write(void)
 {
-    uint8_t public_key[ATCA_PUB_KEY_SIZE];
     uint8_t public_key_ref[ATCA_PUB_KEY_SIZE];
 
     // Flash ROMに登録済みのデータがあれば領域に読込
@@ -139,19 +138,14 @@ static void test_privkey_write(void)
     fido_log_print_hexdump_debug(public_key_ref, ATCA_PUB_KEY_SIZE);
 
     // １４番スロットの秘密鍵から、公開鍵を生成
-    ATCA_STATUS status = atcab_get_pubkey(KEY_ID_FOR_INSTALL_PRIVATE_KEY, public_key);
-    if (status != ATCA_SUCCESS) {
-        fido_log_error("test_privkey_write failed: atcab_get_pubkey(%d) returns 0x%02x", 
-            KEY_ID_FOR_INSTALL_PRIVATE_KEY, status);
-        return;
-    }
+    uint8_t *p_public_key = fido_cryptoauth_keypair_public_key(KEY_ID_FOR_INSTALL_PRIVATE_KEY);
 
     // 生成された公開鍵をダンプ
     fido_log_debug("Public key from ATECC608A:");
-    fido_log_print_hexdump_debug(public_key, ATCA_PUB_KEY_SIZE);
+    fido_log_print_hexdump_debug(p_public_key, ATCA_PUB_KEY_SIZE);
 
     // 内容を検証
-    if (memcmp(public_key_ref, public_key, sizeof(public_key_ref)) != 0) {
+    if (memcmp(public_key_ref, p_public_key, sizeof(public_key_ref)) != 0) {
         fido_log_error("test_privkey_write failed: Invalid public key");
     }
 
@@ -159,7 +153,12 @@ static void test_privkey_write(void)
     fido_cryptoauth_release();
 }
 
-static void test_functions(void)
+//
+// for CRYPTOAUTH function test
+//   テストコードのエントリーポイント
+//   基板上のMAIN SWを押下すると実行されます。
+//
+void fido_cryptoauth_test_functions(void)
 {
     //
     // ボタンを押下するごとに機能を実行します。
@@ -191,15 +190,3 @@ static void test_functions(void)
     }
 }
 #endif // FIDO_CRYPTOAUTH_TEST_FUNC
-
-//
-// for CRYPTOAUTH function test
-//   テストコードのエントリーポイント
-//   基板上のMAIN SWを押下すると実行されます。
-//
-void fido_cryptoauth_test_functions(void)
-{
-#if FIDO_CRYPTOAUTH_TEST_FUNC
-    test_functions();
-#endif // FIDO_CRYPTOAUTH_TEST_FUNC
-}
