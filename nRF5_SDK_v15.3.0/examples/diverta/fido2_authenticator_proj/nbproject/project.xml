@@ -22,6 +22,7 @@
                 <sourceRootElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/demo_lib</sourceRootElem>
                 <sourceRootElem>../demo_lib</sourceRootElem>
+                <sourceRootElem>../../../../../cryptoauthlib/lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
