@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_cryptoauth.h"
+#include "fido_cryptoauth_setup.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -39,6 +40,9 @@ static uint8_t cryptoauth_serial_num[ATCA_SERIAL_NUM_SIZE];
 // 公開鍵を保持
 static uint8_t public_key_raw_data[ATCA_PUB_KEY_SIZE];
 
+// 秘密鍵を保持（atcab_priv_write で使用）
+static uint8_t private_key_buffer[4 + ATCA_PRIV_KEY_SIZE];
+
 // ランダムベクターを保持
 static uint8_t m_random_vector[RANDOM_NUM_SIZE];
 
@@ -56,7 +60,7 @@ static bool get_cryptoauth_serial_num(void)
     return true;
 }
 
-static bool get_cryptoauth_config_bytes(void)
+bool fido_cryptoauth_get_config_bytes(void)
 {
     ATCA_STATUS status = atcab_read_config_zone(ateccx08a_config_bytes);
     if (status != ATCA_SUCCESS) {
@@ -65,8 +69,8 @@ static bool get_cryptoauth_config_bytes(void)
     }
 #if LOG_HEXDUMP_DEBUG_CONFIG
     fido_log_debug("Config zone data (128 bytes):");
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes, 80);
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes + 80, 48);
+    fido_log_print_hexdump_debug(ateccx08a_config_bytes,      64);
+    fido_log_print_hexdump_debug(ateccx08a_config_bytes + 64, 64);
 #endif
     return true;
 }
@@ -95,8 +99,8 @@ bool fido_cryptoauth_init(void)
         return false;
     }
 
-    // config情報を取得
-    if (get_cryptoauth_config_bytes() == false) {
+    // Configがデフォルトのままであれば変更を行う
+    if (fido_cryptoauth_setup_config() == false) {
         return false;
     }
 
@@ -155,11 +159,6 @@ uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id)
     }
 
     return public_key_raw_data;
-}
-
-size_t fido_cryptoauth_keypair_private_key_size(void)
-{
-    return sizeof(public_key_raw_data);
 }
 
 void fido_cryptoauth_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
@@ -336,7 +335,7 @@ void fido_cryptoauth_sskey_init(bool force)
         return;
     }
 
-    // 秘密鍵および公開鍵を、1番スロットで生成
+    // 秘密鍵および公開鍵を、所定のスロットで生成
     fido_cryptoauth_keypair_generate(KEY_ID_FOR_SHARED_SECRET_KEY);
 
     // 生成済みフラグを設定
@@ -386,11 +385,79 @@ bool fido_cryptoauth_sskey_generate(uint8_t *client_public_key_raw_data)
 
 uint8_t *fido_cryptoauth_sskey_public_key(void)
 {
-    // 1番スロットの秘密鍵に対応する公開鍵を取得して戻す
+    // ECDH共通鍵生成時の秘密鍵に対応する公開鍵を取得して戻す
     return fido_cryptoauth_keypair_public_key(KEY_ID_FOR_SHARED_SECRET_KEY);
 }
 
 uint8_t *fido_cryptoauth_sskey_hash(void)
 {
     return sskey_hash;
+}
+
+//
+// 外部秘密鍵導入関連処理
+//
+bool fido_cryptoauth_install_privkey(uint8_t *private_key_raw_data)
+{
+    // 初期化
+    ATCA_STATUS status;
+    if (fido_cryptoauth_init()== false) {
+        return false;
+    }
+
+    // 32バイトの一時キーを生成
+    status = atcab_random(m_random_vector);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_install_privkey failed: atcab_random returns 0x%02x", 
+            status);
+        return false;
+    }
+
+    // 一時キーを１５番スロットに書込み
+    status = atcab_write_zone(ATCA_ZONE_DATA, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, 0, 0, m_random_vector, ATCA_BLOCK_SIZE);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_install_privkey failed: atcab_write_zone(%d) returns 0x%02x", 
+            KEY_ID_FOR_INSTALL_PRV_TMP_KEY, status);
+        return false;
+    }
+
+    // 秘密鍵を一時バッファにセット（先頭の４バイトは 0 埋めとする）
+    memset(private_key_buffer, 0x00, sizeof(private_key_buffer));
+    memcpy(private_key_buffer + 4, private_key_raw_data, ATCA_PRIV_KEY_SIZE);
+
+    // 秘密鍵を１４番スロットに書込み
+    //   １５番スロットには、１４番スロットに書込まれた
+    //   秘密鍵を暗号化するキーが上書き保存されます。
+    //   １４・１５番スロットの内容は、
+    //   いかなる手段によっても参照することができません。
+    status = atcab_priv_write(KEY_ID_FOR_INSTALL_PRIVATE_KEY, private_key_buffer, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, m_random_vector);
+    if (status != ATCA_SUCCESS) {
+        fido_log_error("fido_cryptoauth_install_privkey failed: atcab_priv_write(%d) returns 0x%02x", 
+            KEY_ID_FOR_INSTALL_PRIVATE_KEY, status);
+        return false;
+    }
+
+    return true;
+}
+
+bool fido_cryptoauth_extract_pubkey_from_cert(uint8_t *public_key, uint8_t *cert_data, size_t cert_data_length)
+{
+    // 開始バイトが不正な場合は終了
+    if (cert_data[0] != 0x30) {
+        fido_log_error("fido_cryptoauth_extract_pubkey_from_cert failed: Invalid certificate");
+        return false;
+    }
+
+    for (size_t i = 3; i < cert_data_length; i++) {
+        if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
+            cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
+            // 03 42 00 04 というシーケンスが発見されたら、
+            // その後ろから64バイト分のデータをコピー
+            memcpy(public_key, cert_data + i + 1, ATCA_PUB_KEY_SIZE);
+            return true;
+        }
+    }
+    
+    fido_log_error("fido_cryptoauth_extract_pubkey_from_cert failed: Public key not found");
+    return false;
 }

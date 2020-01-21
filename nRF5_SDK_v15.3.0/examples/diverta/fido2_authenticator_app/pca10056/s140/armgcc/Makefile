@@ -167,6 +167,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_cryptoauth.c \
+  $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
   $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -227,17 +228,24 @@ SRC_FILES += \
   $(CRPLIB_DIR)/atca_iface.c \
   $(CRPLIB_DIR)/basic/atca_basic.c \
   $(CRPLIB_DIR)/basic/atca_basic_ecdh.c \
+  $(CRPLIB_DIR)/basic/atca_basic_gendig.c \
   $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
   $(CRPLIB_DIR)/basic/atca_basic_info.c \
+  $(CRPLIB_DIR)/basic/atca_basic_lock.c \
   $(CRPLIB_DIR)/basic/atca_basic_nonce.c \
+  $(CRPLIB_DIR)/basic/atca_basic_privwrite.c \
   $(CRPLIB_DIR)/basic/atca_basic_random.c \
   $(CRPLIB_DIR)/basic/atca_basic_read.c \
   $(CRPLIB_DIR)/basic/atca_basic_sha.c \
   $(CRPLIB_DIR)/basic/atca_basic_sign.c \
+  $(CRPLIB_DIR)/basic/atca_basic_updateextra.c \
   $(CRPLIB_DIR)/basic/atca_basic_verify.c \
   $(CRPLIB_DIR)/basic/atca_basic_write.c \
   $(CRPLIB_DIR)/basic/atca_helpers.c \
+  $(CRPLIB_DIR)/crypto/atca_crypto_sw_sha2.c \
+  $(CRPLIB_DIR)/crypto/hashes/sha2_routines.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
+  $(CRPLIB_DIR)/host/atca_host.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \

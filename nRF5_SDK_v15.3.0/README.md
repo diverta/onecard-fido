@@ -45,3 +45,9 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 ## 動作確認手順
 
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)の関連ドキュメントをご参照願います。
+
+## 開発情報
+* <b>[セキュアIC組込み対応](CRYPTOAUTHEMBD.md)</b><br>
+Microchip社のセキュアIC「[ATECC608A](https://www.mouser.jp/ProductDetail/Microchip-Technology/ATECC608A-MAHDA-T?qs=sGAEpiMZZMve4%2FbfQkoj%252BNx3hPbDs5d66otQ2I4K6nk%3D)」を、[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に追加導入します。<br>
+この対応により、nRF52840内部のFlash ROMにより管理されていた秘密鍵等の機密データが、（ハードウェア仕様的に秘密鍵等を外部漏洩不可としている）ATECC608Aにより管理されることとなり、結果としてセキュリティー性が向上することになると思われます。<br>
+2020/01/21現在、実現可能性について調査済ですが、組込後の基板が未実装です（後日追加対応予定）。<br>
