@@ -22,9 +22,6 @@
 //
 // for CRYPTOAUTH function test
 //
-#define FIDO_CRYPTOAUTH_TEST_FUNC  true
-
-#if FIDO_CRYPTOAUTH_TEST_FUNC
 static uint8_t data[256];
 static uint8_t hash_digest[ATCA_SHA_DIGEST_SIZE];
 static size_t  hash_digest_size = ATCA_SHA_DIGEST_SIZE;
@@ -189,4 +186,3 @@ void fido_cryptoauth_test_functions(void)
             break;
     }
 }
-#endif // FIDO_CRYPTOAUTH_TEST_FUNC

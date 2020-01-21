@@ -18,6 +18,14 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// Arduino board mappings for pca10059
+#ifndef ARDUINO_SCL_PIN
+#define ARDUINO_SCL_PIN             27    // SCL signal pin
+#endif
+#ifndef ARDUINO_SDA_PIN
+#define ARDUINO_SDA_PIN             26    // SDA signal pin
+#endif
+
 // for debug data
 #define LOG_DEBUG_HEX_DATA false
 
