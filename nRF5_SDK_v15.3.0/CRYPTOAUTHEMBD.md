@@ -48,5 +48,6 @@ ATECC608Aを、[FIDO認証器アプリケーション](../nRF5_SDK_v15.3.0)か�
 
 関数一覧および、関数の使用方法については、下記ドキュメントをご参照願います。
 - <b>[ATECC608A関数群について](../Research/CRYPTOAUTH/CRYPTOAUTHFUNC.md)</b>
+- <b>[ATECC608A関数テストモジュールについて](../Research/CRYPTOAUTH/CRYPTOAUTHTEST.md)</b>
 
 なお、ATECC608A操作関数群を使用することにより、前項の「ATECC608A設定カスタマイズ」の処理は、関数内部で自動的に実行されます。
