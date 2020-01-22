@@ -24,6 +24,9 @@
 // デモ機能（BLEデバイスによる自動認証機能）
 #include "demo_ble_peripheral_auth.h"
 
+// for cryptoauth function test
+#include "fido_cryptoauth_test.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -81,6 +84,9 @@ void fido_command_mainsw_event_handler(void)
         return;
     }
     fido_ctap2_command_on_mainsw_event();
+
+    // for CRYPTOAUTH function test
+    fido_cryptoauth_test_functions();
 }
 
 void fido_command_keepalive_timer_handler(void)

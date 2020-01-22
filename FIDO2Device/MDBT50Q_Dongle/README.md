@@ -41,10 +41,6 @@ MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して
 
 BLEセントラルサービスを使用したデモンストレーション機能です。
 
-### [RSSIログ出力](DEMOFUNC_1.md)
-
-MDBT50Q Dongleに近接しているBLEデバイスのRSSI値を、指定間隔（１秒〜９秒）ごとに仮想COMポートにログ出力を行います。
-
 ### [BLEデバイスによる自動認証](DEMOFUNC_2.md)
 
 FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。

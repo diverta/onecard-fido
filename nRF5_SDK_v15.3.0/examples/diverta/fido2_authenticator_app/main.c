@@ -220,8 +220,7 @@ int main(void)
     gatt_init();
     ble_service_common_init();
 
-    // USB CDC／HIDデバイスクラスを初期化
-    usbd_cdc_init();
+    // USB HIDデバイスクラスを初期化
     usbd_hid_init();
 
     // NFC関連の初期化（機能閉塞中です）

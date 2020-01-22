@@ -47,7 +47,10 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="demo_lib" displayName="demo_lib" projectFiles="true">
+    <logicalFolder name="demo_lib"
+                   displayName="demo_lib"
+                   projectFiles="true"
+                   root="../demo_lib">
       <itemPath>../demo_lib/demo_ble_peripheral_auth.c</itemPath>
       <itemPath>../demo_lib/demo_ble_peripheral_auth.h</itemPath>
       <itemPath>../demo_lib/demo_cdc_service.c</itemPath>
@@ -246,6 +249,12 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_common.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_ctap2_command.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_channel.c</itemPath>
@@ -274,6 +283,190 @@
                    projectFiles="true"
                    root="../../../components/libraries/usbd/class/hid/generic">
       <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="lib"
+                   displayName="lib"
+                   projectFiles="true"
+                   root="../../../../../cryptoauthlib/lib">
+      <logicalFolder name="atcacert" displayName="atcacert" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_client.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_client.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_date.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_date.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_def.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_def.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_der.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_der.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_host_hw.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_host_hw.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_host_sw.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_host_sw.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_pem.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/atcacert/atcacert_pem.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="basic" displayName="basic" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/basic/README.md</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes_cbc.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes_cmac.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes_ctr.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes_gcm.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_aes_gcm.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_checkmac.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_counter.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_derivekey.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_ecdh.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_gendig.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_genkey.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_hmac.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_info.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_kdf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_lock.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_mac.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_nonce.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_privwrite.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_random.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_read.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_secureboot.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_selftest.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_sha.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_sign.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_updateextra.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_verify.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_basic_write.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_helpers.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/basic/atca_helpers.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
+        <logicalFolder name="hashes" displayName="hashes" projectFiles="true">
+          <itemPath>../../../../../cryptoauthlib/lib/crypto/hashes/sha1_routines.c</itemPath>
+          <itemPath>../../../../../cryptoauthlib/lib/crypto/hashes/sha1_routines.h</itemPath>
+          <itemPath>../../../../../cryptoauthlib/lib/crypto/hashes/sha2_routines.c</itemPath>
+          <itemPath>../../../../../cryptoauthlib/lib/crypto/hashes/sha2_routines.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/README.md</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_rand.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_rand.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="hal" displayName="hal" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/hal/90-cryptohid.rules</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/README.md</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/atca_hal.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/atca_hal.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/atca_start_config.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/atca_start_iface.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_all_platforms_kit_hidapi.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_all_platforms_kit_hidapi.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_at90usb1287_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_at90usb1287_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_at90usb1287_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_esp32_i2c.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_esp32_timer.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_freertos.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_i2c_bitbang.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_i2c_bitbang.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_i2c_start.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_i2c_start.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_i2c_userspace.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_i2c_userspace.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_kit_cdc.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_kit_cdc.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_kit_hid.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_kit_hid.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_linux_timer.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mx695f512h_i2c.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mx695f512h_i2c.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mx695f512h_timer.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mz2048efm_i2c.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mz2048efm_i2c.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_pic32mz2048efm_timer.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_sam4s_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_sam4s_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_sam4s_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samb11_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samb11_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samb11_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samd21_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samd21_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samd21_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samg55_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samg55_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samg55_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samv71_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samv71_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_samv71_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_swi_bitbang.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_swi_bitbang.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_swi_uart.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_swi_uart.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_timer_start.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_uc3_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_uc3_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_uc3_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_win_kit_cdc.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_win_kit_cdc.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_win_kit_hid.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_win_kit_hid.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_win_timer.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_xmega_a3bu_i2c_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_xmega_a3bu_i2c_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/hal_xmega_a3bu_timer_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/i2c_bitbang_samd21.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/i2c_bitbang_samd21.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/kit_phy.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/kit_protocol.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/kit_protocol.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_bitbang_samd21.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_bitbang_samd21.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_at90usb1287_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_at90usb1287_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_samd21_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_samd21_asf.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_start.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_start.h</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_xmega_a3bu_asf.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/hal/swi_uart_xmega_a3bu_asf.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="host" displayName="host" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/host/atca_host.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/host/atca_host.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="jwt" displayName="jwt" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/jwt/atca_jwt.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/jwt/atca_jwt.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+        <itemPath>../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_ecdh.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_ecdsa.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_wrap.c</itemPath>
+        <itemPath>../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_wrap.h</itemPath>
+      </logicalFolder>
+      <itemPath>../../../../../cryptoauthlib/lib/CMakeLists.txt</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_bool.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_cfgs.c</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_cfgs.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_command.c</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_command.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_compiler.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_device.c</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_device.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_devtypes.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_execution.c</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_execution.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_iface.c</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_iface.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/atca_status.h</itemPath>
+      <itemPath>../../../../../cryptoauthlib/lib/cryptoauthlib.h</itemPath>
     </logicalFolder>
     <logicalFolder name="makmorit"
                    displayName="makmorit"
@@ -357,7 +550,11 @@
               </logicalFolder>
               <logicalFolder name="s140" displayName="s140" projectFiles="true">
                 <logicalFolder name="headers" displayName="headers" projectFiles="true">
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers/ble_hci.h</itemPath>
                   <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers/nrf_error.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers/nrf_error_soc.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers/nrf_nvic.h</itemPath>
+                  <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers/nrf_svc.h</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
@@ -407,6 +604,7 @@
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/types.h</itemPath>
             </logicalFolder>
             <logicalFolder name="sys" displayName="sys" projectFiles="true">
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_default_fcntl.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_intsup.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_pthreadtypes.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_sigset.h</itemPath>
@@ -417,15 +615,18 @@
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/cdefs.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/config.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/errno.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/fcntl.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/features.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/sched.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/select.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stat.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/stdio.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/string.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/timespec.h</itemPath>
               <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/types.h</itemPath>
+              <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/unistd.h</itemPath>
             </logicalFolder>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_ansi.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/_newlib_version.h</itemPath>
@@ -433,6 +634,7 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/assert.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/ctype.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/errno.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/fcntl.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/inttypes.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/limits.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/malloc.h</itemPath>
@@ -443,7 +645,9 @@
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/stdlib.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/string.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/strings.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/termios.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/time.h</itemPath>
+            <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/unistd.h</itemPath>
             <itemPath>../../../../../../opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/xlocale.h</itemPath>
           </logicalFolder>
         </logicalFolder>
@@ -1314,10 +1518,15 @@
           <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
             <logicalFolder name="include" displayName="include" projectFiles="true">
               <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+                <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/aes.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/bignum.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/ccm.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/check_config.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/cmac.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/config.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/ecp.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/gcm.h</itemPath>
+                <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/platform.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/sha256.h</itemPath>
                 <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include/mbedtls/sha512.h</itemPath>
               </logicalFolder>
@@ -1325,6 +1534,8 @@
           </logicalFolder>
           <logicalFolder name="nrf_cc310" displayName="nrf_cc310" projectFiles="true">
             <logicalFolder name="include" displayName="include" projectFiles="true">
+              <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include/crys_aesccm.h</itemPath>
+              <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include/crys_chacha_poly.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include/crys_ec_edw_api.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include/crys_ec_mont_api.h</itemPath>
               <itemPath>../../../../../../opt/nRF5_SDK_15.3.0/external/nrf_cc310/include/crys_ecpki_dh.h</itemPath>
@@ -1392,6 +1603,7 @@
                    displayName="plat_lib"
                    projectFiles="true"
                    root="../plat_lib">
+      <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
@@ -1412,6 +1624,8 @@
       <itemPath>../plat_lib/fido_status_indicator.h</itemPath>
       <itemPath>../plat_lib/fido_timer.c</itemPath>
       <itemPath>../plat_lib/fido_timer.h</itemPath>
+      <itemPath>../plat_lib/fido_twi.c</itemPath>
+      <itemPath>../plat_lib/fido_twi.h</itemPath>
       <itemPath>../plat_lib/nfc_service.c</itemPath>
       <itemPath>../plat_lib/nfc_service.h</itemPath>
       <itemPath>../plat_lib/usbd_service.c</itemPath>
@@ -1464,6 +1678,7 @@
     <Elem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</Elem>
     <Elem>../../../../FIDO2Device/demo_lib</Elem>
     <Elem>../demo_lib</Elem>
+    <Elem>../../../../../cryptoauthlib/lib</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -1483,7 +1698,12 @@
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
           <cTool>
+            <incDir>
+              <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
+            </incDir>
             <preprocessorList>
+              <Elem>ATCA_HAL_I2C</Elem>
+              <Elem>ATCA_NO_POLL</Elem>
               <Elem>BOARD_PCA10056</Elem>
               <Elem>NRF52840_XXAA</Elem>
               <Elem>POWER_ENABLED</Elem>
@@ -1515,6 +1735,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1567,6 +1789,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1584,6 +1809,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1601,6 +1829,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1613,6 +1844,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1646,6 +1879,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1656,6 +1892,8 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1686,6 +1924,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52832/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1709,6 +1949,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52832/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1728,6 +1971,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52832/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1846,6 +2092,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1863,6 +2113,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1882,6 +2136,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1896,6 +2154,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1908,6 +2169,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1927,6 +2190,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1944,6 +2210,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1962,6 +2232,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -1980,6 +2254,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2012,6 +2290,11 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_hw</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cifra</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/sha256</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2031,6 +2314,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2049,6 +2336,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2065,6 +2356,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/ble_services/eddystone</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2081,6 +2376,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/ble_services/eddystone</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2102,6 +2401,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2115,6 +2418,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2126,6 +2432,9 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2139,6 +2448,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2156,6 +2468,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2170,6 +2485,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2186,6 +2504,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2197,6 +2518,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2217,6 +2540,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2233,6 +2559,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2249,6 +2578,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2265,6 +2597,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2281,6 +2616,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2297,6 +2635,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2309,6 +2650,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2321,6 +2664,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2333,6 +2678,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2351,6 +2698,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2367,6 +2717,8 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2380,6 +2732,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/timer</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2395,6 +2749,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2405,6 +2761,8 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2434,6 +2792,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2448,6 +2808,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2461,6 +2823,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2474,6 +2838,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2487,6 +2853,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/sha256</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2500,6 +2870,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2514,6 +2886,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2526,6 +2900,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2541,6 +2917,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2559,6 +2937,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2571,6 +2952,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/atomic_flags</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2585,6 +2968,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2599,8 +2984,744 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atca_cfgs.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atca_command.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atca_device.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atca_execution.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atca_iface.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_client.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_date.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_def.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_der.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_host_hw.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_host_sw.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/atcacert/atcacert_pem.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_aes.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_aes_cbc.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_aes_cmac.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_aes_ctr.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_aes_gcm.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_checkmac.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_counter.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_derivekey.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_ecdh.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_gendig.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_genkey.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_hmac.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_info.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_kdf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_lock.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_mac.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_nonce.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_privwrite.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_random.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_read.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_secureboot.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_selftest.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_sha.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_sign.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_updateextra.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_verify.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_basic_write.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/basic/atca_helpers.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_rand.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/hashes/sha1_routines.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/crypto/hashes/sha2_routines.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/atca_hal.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_all_platforms_kit_hidapi.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_at90usb1287_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_at90usb1287_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_esp32_i2c.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_esp32_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_freertos.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/freertos/source/include</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_i2c_bitbang.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_i2c_start.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/802_15_4/api/HAL</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_linux_i2c_userspace.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_linux_kit_cdc.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_linux_kit_hid.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_linux_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_pic32mx695f512h_i2c.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_pic32mx695f512h_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_pic32mz2048efm_i2c.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_pic32mz2048efm_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_sam4s_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_sam4s_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samb11_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samb11_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samd21_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samd21_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samg55_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samg55_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samv71_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_samv71_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_swi_bitbang.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_swi_uart.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_timer_start.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/802_15_4/api/HAL</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_uc3_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_uc3_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_win_kit_cdc.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_win_kit_hid.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_win_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_xmega_a3bu_i2c_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/drivers_nrf/twi_master/deprecated</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/hal_xmega_a3bu_timer_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/i2c_bitbang_samd21.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/kit_protocol.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/swi_bitbang_samd21.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/swi_uart_at90usb1287_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/swi_uart_samd21_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/swi_uart_start.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/hal/swi_uart_xmega_a3bu_asf.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/host/atca_host.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/jwt/atca_jwt.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_ecdh.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_ecdsa.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../../../../cryptoauthlib/lib/mbedtls/atca_mbedtls_wrap.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
       </item>
       <item path="../../../../../tinycbor/src/cborencoder.c"
             ex="false"
@@ -2666,6 +3787,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2683,6 +3806,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2717,6 +3842,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2743,6 +3870,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2769,6 +3898,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2795,6 +3926,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2822,6 +3955,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2849,6 +3984,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2876,6 +4013,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2891,6 +4030,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2906,6 +4047,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2923,6 +4066,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2930,6 +4075,36 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_setup.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_cryptoauth_test.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c"
             ex="false"
@@ -2948,6 +4123,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2963,6 +4140,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2978,6 +4157,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -2994,6 +4175,8 @@
             <pElem>../plat_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3011,6 +4194,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3036,6 +4221,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3052,6 +4239,8 @@
             <pElem>../plat_lib</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3067,6 +4256,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3085,6 +4276,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3102,6 +4295,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3118,6 +4313,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3135,6 +4332,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3160,6 +4359,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3179,6 +4380,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3196,6 +4400,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3209,6 +4416,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3234,6 +4445,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3252,6 +4466,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3273,6 +4490,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3287,6 +4506,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3304,24 +4526,22 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
       <item path="../demo_lib/demo_ble_peripheral_auth.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
       </item>
-      <item path="../demo_lib/demo_ble_peripheral_auth.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../demo_lib/demo_cdc_service.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="../demo_lib/demo_cdc_service.h" ex="false" tool="3" flavor2="0">
+      <item path="../demo_lib/demo_cdc_service.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/fido_board.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -3344,6 +4564,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3370,6 +4594,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/sha256</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3401,6 +4628,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/sha256</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3425,6 +4655,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3451,13 +4684,25 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/sha256</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
       <item path="../plat_lib/fido_flash_blp_auth_param.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../plat_lib/fido_flash_client_pin_store.c"
             ex="false"
@@ -3475,6 +4720,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3496,6 +4743,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3514,6 +4763,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3539,6 +4790,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3553,6 +4806,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3570,6 +4825,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3581,6 +4838,7 @@
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/nrf_ble_gatt</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3601,6 +4859,23 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../plat_lib/fido_twi.c" ex="false" tool="0" flavor2="2">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3617,6 +4892,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3640,9 +4918,24 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/cdc/acm</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/cdc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates/nRF51</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/hid</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/queue</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </item>
+      <folder path="demo_lib">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+          </incDir>
+        </cTool>
+      </folder>
       <folder path="fido2_authenticator_app">
         <cTool>
           <incDir>
@@ -3678,6 +4971,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3695,6 +4991,48 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/hid</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/queue</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="lib/basic">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="lib/crypto">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="lib/host">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="lib/jwt">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="lib/mbedtls">
+        <cTool>
+          <incDir>
+            <pElem>../../../../../cryptoauthlib/lib</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3707,6 +5045,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3718,6 +5058,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3728,6 +5070,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3737,6 +5082,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3744,6 +5091,7 @@
         <cTool>
           <incDir>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3753,6 +5101,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3765,6 +5115,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3774,6 +5126,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3783,6 +5137,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3799,6 +5155,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3809,6 +5167,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3818,6 +5178,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3832,6 +5194,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/boards</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s140/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/hal</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3841,6 +5207,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3850,6 +5218,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3862,6 +5232,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/nrf_ble_gatt</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3871,6 +5243,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3880,6 +5254,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3889,6 +5265,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3898,6 +5276,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3907,6 +5287,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3916,6 +5298,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3925,6 +5309,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3934,6 +5320,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3943,6 +5331,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3956,6 +5346,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3965,6 +5357,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3974,6 +5368,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -3983,6 +5379,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -4001,6 +5399,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -4015,6 +5415,9 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -4031,6 +5434,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -4041,6 +5446,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble/common</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -4052,6 +5459,8 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
           </incDir>
         </cTool>
       </folder>

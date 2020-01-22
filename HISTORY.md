@@ -2,6 +2,21 @@
 
 ## プログラム更新履歴
 
+#### 2019/12/11
+
+FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.22）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-encrypt-pkcert/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.22）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-encrypt-pkcert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+- <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
+
+修正点は以下になります。（[#281](https://github.com/diverta/onecard-fido/issues/281) ご参照）
+- 管理ツールによる秘密鍵転送時に、ECDH共通鍵により暗号化（AES256-CBC）を行うよう修正
+- 管理ツールで鍵・証明書インストール時、確認ダイアログを表示させるよう修正
+- 管理ツールで鍵・証明書削除／インストール時、nRF52840側から発行されたチャネルIDを使用し、USB HID通信を行うよう修正
+
 #### 2019/11/19
 
 FIDO認証器管理ツールを修正しました。<br>

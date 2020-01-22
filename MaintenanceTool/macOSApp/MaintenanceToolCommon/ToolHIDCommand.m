@@ -13,6 +13,7 @@
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
+#import "ToolDFUCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -35,6 +36,9 @@
 
     // 送信PINGデータを保持
     @property(nonatomic) NSData    *pingData;
+
+    // 呼び出し元のコマンドオブジェクト参照を保持
+    @property(nonatomic, weak) id   toolCommandRef;
 
 @end
 
@@ -201,6 +205,11 @@
     - (void)doHidGetVersionInfo {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
+        // バージョン照会リクエストを実行
+        [self doHidGetVersionInfoRequest];
+    }
+
+    - (void)doHidGetVersionInfoRequest {
         // コマンド 0xC3 を実行（メッセージはブランクとする）
         NSData *message = [[NSData alloc] init];
         NSData *cid = [[NSData alloc] initWithBytes:cidBytes length:sizeof(cidBytes)];
@@ -226,6 +235,14 @@
             } else if ([key isEqualToString:@"HW_REV"]) {
                 strHWRev = [self extractCSVItemFrom:val];
             }
+        }
+        if ([self command] == COMMAND_HID_GET_VERSION_FOR_DFU) {
+            if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
+                // DFUコマンドにファームウェアバージョンを戻す
+                ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
+                [toolDFUCommand notifyFirmwareVersion:strFWRev];
+            }
+            return;
         }
         // 画面に制御を戻す
         [self displayMessage:MSG_VERSION_INFO_HEADER];
@@ -353,6 +370,9 @@
             case COMMAND_HID_GET_VERSION_INFO:
                 [self doHidGetVersionInfo];
                 break;
+            case COMMAND_HID_GET_VERSION_FOR_DFU:
+                [self doHidGetVersionInfoRequest];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -383,6 +403,15 @@
                 [self commandDidProcess:[self command] result:false message:nil];
                 break;
         }
+    }
+
+#pragma mark - For process from other command
+
+    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
+        // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
+        [self setToolCommandRef:commandRef];
+        [self setProcessData:data];
+        [self hidHelperWillProcess:command];
     }
 
 #pragma mark - For tool preference parameters
@@ -453,6 +482,14 @@
     - (void)hidHelperDidResponseTimeout {
         // タイムアウト時はエラーメッセージを表示
         [self commandDidProcess:[self command] result:false message:MSG_HID_CMD_RESPONSE_TIMEOUT];
+    }
+
+    - (void)hidHelperDidDetectConnect {
+        [[self delegate] hidCommandDidDetectConnect];
+    }
+
+    - (void)hidHelperDidDetectRemoval {
+        [[self delegate] hidCommandDidDetectRemoval];
     }
 
 #pragma mark - Common method
