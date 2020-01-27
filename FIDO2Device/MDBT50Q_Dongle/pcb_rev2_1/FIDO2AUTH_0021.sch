@@ -2179,34 +2179,26 @@ Working distance&lt;br&gt;
 </net>
 <net name="LED2_R" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P0.08"/>
-<wire x1="73.66" y1="45.72" x2="73.66" y2="12.7" width="0.1524" layer="91"/>
-<wire x1="73.66" y1="12.7" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
-<label x="104.14" y="12.7" size="1.778" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P1.15"/>
+<wire x1="43.18" y1="93.98" x2="35.56" y2="93.98" width="0.1524" layer="91"/>
+<label x="35.56" y="93.98" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_G" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P1.09"/>
-<wire x1="78.74" y1="45.72" x2="78.74" y2="17.78" width="0.1524" layer="91"/>
-<wire x1="78.74" y1="17.78" x2="104.14" y2="17.78" width="0.1524" layer="91"/>
-<label x="104.14" y="17.78" size="1.778" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P1.13"/>
+<wire x1="43.18" y1="99.06" x2="35.56" y2="99.06" width="0.1524" layer="91"/>
+<label x="35.56" y="99.06" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="LED2_B" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P0.12"/>
-<wire x1="86.36" y1="45.72" x2="86.36" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="22.86" x2="104.14" y2="22.86" width="0.1524" layer="91"/>
-<label x="104.14" y="22.86" size="1.778" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P1.11"/>
+<wire x1="43.18" y1="104.14" x2="35.56" y2="104.14" width="0.1524" layer="91"/>
+<label x="35.56" y="104.14" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="SW1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P1.06"/>
-<wire x1="43.18" y1="144.78" x2="35.56" y2="144.78" width="0.1524" layer="91"/>
-<label x="35.56" y="144.78" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
 <segment>
 <pinref part="SW1" gate="G$1" pin="P"/>
 <wire x1="193.04" y1="43.18" x2="185.42" y2="43.18" width="0.1524" layer="91"/>
@@ -2217,13 +2209,17 @@ Working distance&lt;br&gt;
 <wire x1="185.42" y1="40.64" x2="185.42" y2="43.18" width="0.1524" layer="91"/>
 <junction x="185.42" y="43.18"/>
 </segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="P1.10"/>
+<wire x1="43.18" y1="114.3" x2="35.56" y2="114.3" width="0.1524" layer="91"/>
+<label x="35.56" y="114.3" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
 </net>
 <net name="LED3" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P0.04/AIN2"/>
-<wire x1="63.5" y1="45.72" x2="63.5" y2="12.7" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="12.7" x2="45.72" y2="12.7" width="0.1524" layer="91"/>
-<label x="45.72" y="12.7" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P0.29/AIN5"/>
+<wire x1="43.18" y1="88.9" x2="35.56" y2="88.9" width="0.1524" layer="91"/>
+<label x="35.56" y="88.9" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="TWI_SCL" class="0">
