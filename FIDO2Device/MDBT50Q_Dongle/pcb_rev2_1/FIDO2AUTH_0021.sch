@@ -307,6 +307,7 @@ Metric Code Size 1005</description>
 <rectangle x1="0.7112" y1="0.635" x2="1.1684" y2="1.3208" layer="51"/>
 <rectangle x1="-1.143" y1="0.635" x2="-0.6858" y2="1.3208" layer="51"/>
 <rectangle x1="-1.1938" y1="-1.3208" x2="-0.3048" y2="-0.635" layer="51"/>
+<rectangle x1="-2.12" y1="-1.7" x2="-1.72" y2="-1.3" layer="21"/>
 </package>
 <package name="RESISTOR_0411_600MIL">
 <description>&lt;b&gt;RESISTOR&lt;/b&gt;&lt;p&gt;
@@ -568,7 +569,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <smd name="C" x="0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
 <smd name="A" x="-0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
 <text x="-0.873125" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-0.79375" y="-1.905" size="0.7112" layer="27">&gt;VALUE</text>
+<text x="-0.79375" y="-2.005" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="0.675" y1="0.275" x2="0.875" y2="0.425" layer="51" rot="R270"/>
 <rectangle x1="0.55" y1="0.225" x2="0.6" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="0.5125" y1="0.2375" x2="0.5625" y2="0.6125" layer="51" rot="R270"/>
@@ -579,7 +580,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.7375" y1="-0.1125" x2="-0.1875" y2="0.1125" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="0.175" x2="-0.55" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="-0.275" x2="-0.55" y2="-0.175" layer="51" rot="R270"/>
-<rectangle x1="0.238125" y1="-0.91875" x2="0.488125" y2="-0.66875" layer="21" rot="R270"/>
+<rectangle x1="0.9" y1="-1.2" x2="1.3" y2="-0.8" layer="21"/>
 </package>
 <package name="APHF1608LSEEQBDZGKC">
 <description>&lt;b&gt;1.6 x 0.8 mm Full-Color Surface Mount LED&lt;/b&gt;&lt;p&gt;</description>
@@ -597,7 +598,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="0.35" y1="0.1" x2="0.95" y2="0.6" layer="29"/>
 <rectangle x1="0.35" y1="-0.6" x2="0.95" y2="-0.1" layer="29"/>
 <rectangle x1="-0.95" y1="-0.6" x2="-0.35" y2="-0.1" layer="29"/>
-<rectangle x1="-1.349375" y1="0.748125" x2="-1.099375" y2="0.998125" layer="21"/>
+<rectangle x1="-1.3" y1="0.9" x2="-0.9" y2="1.3" layer="21"/>
 <wire x1="-0.8" y1="0.4" x2="-0.7" y2="0.4" width="0.127" layer="51"/>
 <wire x1="-0.7" y1="0.4" x2="-0.6" y2="0.4" width="0.127" layer="51"/>
 <wire x1="-0.6" y1="0.4" x2="0.6" y2="0.4" width="0.127" layer="51"/>
@@ -1840,6 +1841,7 @@ Working distance&lt;br&gt;
 <wire x1="0.65" y1="0.75" x2="0.65" y2="-0.75" width="0.127" layer="51"/>
 <wire x1="0.65" y1="-0.75" x2="-0.65" y2="-0.75" width="0.127" layer="51"/>
 <wire x1="-0.65" y1="-0.75" x2="-0.65" y2="0.75" width="0.127" layer="51"/>
+<rectangle x1="-1.7" y1="-2" x2="-1.3" y2="-1.6" layer="21"/>
 </package>
 </packages>
 <symbols>
