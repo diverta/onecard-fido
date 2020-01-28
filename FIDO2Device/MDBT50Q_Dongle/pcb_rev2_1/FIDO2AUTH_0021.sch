@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -525,12 +525,12 @@ ALPS SKTADAE010</description>
 <smd name="4" x="1.325" y="-0.375" dx="0.55" dy="0.55" layer="1"/>
 <smd name="2" x="1.325" y="0.375" dx="0.55" dy="0.55" layer="1"/>
 <wire x1="-1.3" y1="-0.8" x2="-1.3" y2="0.8" width="0.127" layer="51"/>
-<wire x1="-0.8" y1="0.8" x2="0.8" y2="0.8" width="0.127" layer="21"/>
 <wire x1="1.3" y1="0.8" x2="1.3" y2="-0.8" width="0.127" layer="51"/>
-<wire x1="0.8" y1="-0.8" x2="-0.8" y2="-0.8" width="0.127" layer="21"/>
 <text x="-1.349375" y="1.190625" size="0.7112" layer="25" ratio="11">&gt;NAME</text>
 <text x="-1.349375" y="-1.285875" size="0.7112" layer="27" ratio="11" align="top-left">&gt;VALUE</text>
 <circle x="0" y="0" radius="0.5" width="0.127" layer="21"/>
+<wire x1="-1.3" y1="0.8" x2="1.3" y2="0.8" width="0.127" layer="51"/>
+<wire x1="-1.3" y1="-0.8" x2="1.3" y2="-0.8" width="0.127" layer="51"/>
 </package>
 <package name="CHIPLED_0805">
 <description>&lt;b&gt;CHIPLED&lt;/b&gt;&lt;p&gt;
@@ -598,6 +598,25 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="0.35" y1="-0.6" x2="0.95" y2="-0.1" layer="29"/>
 <rectangle x1="-0.95" y1="-0.6" x2="-0.35" y2="-0.1" layer="29"/>
 <rectangle x1="-1.349375" y1="0.748125" x2="-1.099375" y2="0.998125" layer="21"/>
+<wire x1="-0.8" y1="0.4" x2="-0.7" y2="0.4" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="0.4" x2="-0.6" y2="0.4" width="0.127" layer="51"/>
+<wire x1="-0.6" y1="0.4" x2="0.6" y2="0.4" width="0.127" layer="51"/>
+<wire x1="0.6" y1="0.4" x2="0.8" y2="0.4" width="0.127" layer="51"/>
+<wire x1="0.8" y1="0.4" x2="0.8" y2="0.2" width="0.127" layer="51"/>
+<wire x1="0.8" y1="0.2" x2="0.8" y2="-0.2" width="0.127" layer="51"/>
+<wire x1="0.8" y1="-0.2" x2="0.8" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="0.8" y1="-0.4" x2="0.6" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="0.6" y1="-0.4" x2="-0.6" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.6" y1="-0.4" x2="-0.7" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="-0.4" x2="-0.8" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.8" y1="-0.4" x2="-0.8" y2="0.4" width="0.127" layer="51"/>
+<wire x1="0.6" y1="0.4" x2="0.8" y2="0.2" width="0.127" layer="51"/>
+<wire x1="0.6" y1="-0.4" x2="0.8" y2="-0.2" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="0.4" x2="-0.7" y2="0.3" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="0.3" x2="-0.7" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="-0.3" x2="-0.7" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="0.3" x2="-0.6" y2="0.4" width="0.127" layer="51"/>
+<wire x1="-0.7" y1="-0.3" x2="-0.6" y2="-0.4" width="0.127" layer="51"/>
 </package>
 <package name="SOT23">
 <description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
@@ -609,11 +628,10 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
 <rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
 <rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
-<wire x1="-0.25" y1="-0.66" x2="0.25" y2="-0.66" width="0.127" layer="21"/>
-<wire x1="-1.425" y1="0.66" x2="-1.425" y2="-0.2" width="0.127" layer="21"/>
-<wire x1="-1.425" y1="0.66" x2="-0.7" y2="0.66" width="0.127" layer="21"/>
-<wire x1="1.425" y1="0.66" x2="1.425" y2="-0.2" width="0.127" layer="21"/>
-<wire x1="0.7" y1="0.66" x2="1.425" y2="0.66" width="0.127" layer="21"/>
+<wire x1="-1.4" y1="0.65" x2="-1.4" y2="-0.65" width="0.127" layer="51"/>
+<wire x1="-1.4" y1="-0.65" x2="1.4" y2="-0.65" width="0.127" layer="51"/>
+<wire x1="1.4" y1="-0.65" x2="1.4" y2="0.65" width="0.127" layer="51"/>
+<wire x1="1.4" y1="0.65" x2="-1.4" y2="0.65" width="0.127" layer="51"/>
 </package>
 <package name="SOD323-W">
 <description>&lt;b&gt;SOD323 &lt;/b&gt; &lt;p&gt;
@@ -1153,7 +1171,7 @@ Source: http://document.sharpsma.com/files/GM1WA55311A_SS.pdf</description>
 </devices>
 </deviceset>
 <deviceset name="XC6206" prefix="U">
-<description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;
+<description>&lt;b&gt;電圧レギュレータ&lt;/b&gt;&lt;p&gt;
 出力電圧: 3.3 V &lt;br&gt;
 出力電流: 200 mA&lt;br&gt;
 入力電圧最大値: 6 V &lt;br&gt;
@@ -1798,6 +1816,30 @@ Working distance&lt;br&gt;
 <rectangle x1="-0.225" y1="1.25" x2="0.725" y2="1.65" layer="29" rot="R90"/>
 <rectangle x1="-0.725" y1="1.25" x2="0.225" y2="1.65" layer="29" rot="R90"/>
 <rectangle x1="-1.225" y1="1.25" x2="-0.275" y2="1.65" layer="29" rot="R90"/>
+<wire x1="-1" y1="1.5" x2="-0.75" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="1.5" x2="-0.25" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-0.25" y1="1.5" x2="0.25" y2="1.5" width="0.127" layer="51"/>
+<wire x1="0.25" y1="1.5" x2="0.75" y2="1.5" width="0.127" layer="51"/>
+<wire x1="0.75" y1="1.5" x2="1" y2="1.5" width="0.127" layer="51"/>
+<wire x1="1" y1="1.5" x2="1" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="1" y1="-1.5" x2="0.75" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="0.75" y1="-1.5" x2="0.25" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="0.25" y1="-1.5" x2="-0.25" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-0.25" y1="-1.5" x2="-0.75" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="-1.5" x2="-1" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-1" y1="-1.5" x2="-1" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="1.5" x2="-0.75" y2="1.1" width="0.127" layer="51"/>
+<wire x1="-0.25" y1="1.5" x2="-0.25" y2="1.1" width="0.127" layer="51"/>
+<wire x1="0.25" y1="1.5" x2="0.25" y2="1.1" width="0.127" layer="51"/>
+<wire x1="0.75" y1="1.5" x2="0.75" y2="1.1" width="0.127" layer="51"/>
+<wire x1="0.75" y1="-1.1" x2="0.75" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="0.25" y1="-1.1" x2="0.25" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-0.25" y1="-1.1" x2="-0.25" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="-1.1" x2="-0.75" y2="-1.5" width="0.127" layer="51"/>
+<wire x1="-0.65" y1="0.75" x2="0.65" y2="0.75" width="0.127" layer="51"/>
+<wire x1="0.65" y1="0.75" x2="0.65" y2="-0.75" width="0.127" layer="51"/>
+<wire x1="0.65" y1="-0.75" x2="-0.65" y2="-0.75" width="0.127" layer="51"/>
+<wire x1="-0.65" y1="-0.75" x2="-0.65" y2="0.75" width="0.127" layer="51"/>
 </package>
 </packages>
 <symbols>
