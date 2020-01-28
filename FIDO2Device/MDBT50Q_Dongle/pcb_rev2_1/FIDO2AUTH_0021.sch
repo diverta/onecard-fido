@@ -648,7 +648,7 @@ Wave soldering</description>
 <rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
 <text x="-1.16125" y="1.0875" size="0.7112" layer="25">&gt;NAME</text>
 <text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
-<rectangle x1="-1.1" y1="-1.5" x2="-0.7" y2="-1.1" layer="21"/>
+<rectangle x1="-1.5" y1="-1.4" x2="-1.1" y2="-1" layer="21"/>
 </package>
 </packages>
 <symbols>
