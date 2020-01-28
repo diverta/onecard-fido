@@ -1980,9 +1980,9 @@ Working distance&lt;br&gt;
 <plain>
 <text x="152.4" y="152.4" size="2.54" layer="91">32.768kHzクリスタル</text>
 <text x="203.2" y="152.4" size="2.54" layer="91">バイパスコンデンサー</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+      （rev2.1）</text>
 <text x="20.32" y="162.56" size="3.81" layer="91">モジュール部</text>
 <text x="167.64" y="91.44" size="2.54" layer="91">リセット回路</text>
 <text x="167.64" y="50.8" size="2.54" layer="91">MAIN SW</text>
@@ -2291,9 +2291,9 @@ Working distance&lt;br&gt;
 <text x="152.4" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
 <text x="152.4" y="81.28" size="2.54" layer="91">USBブートローダーを
 書込する際に使用します。</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+      （rev2.1）</text>
 <text x="124.46" y="66.04" size="2.54" layer="91">LED（黄色）</text>
 <text x="76.2" y="66.04" size="2.54" layer="91">LED（３色）</text>
 </plain>
@@ -2552,9 +2552,9 @@ Working distance&lt;br&gt;
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
 <text x="78.74" y="60.96" size="2.54" layer="91">ボタン乾電池ケースは
 基板の背面に実装</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+      （rev2.1）</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -2641,9 +2641,9 @@ Working distance&lt;br&gt;
 </sheet>
 <sheet>
 <plain>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+      （rev2.1）</text>
 <text x="45.72" y="134.62" size="3.81" layer="91">セキュリティーIC部</text>
 </plain>
 <instances>
