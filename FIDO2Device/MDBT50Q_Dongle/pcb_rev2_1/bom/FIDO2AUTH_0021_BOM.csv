@@ -23,7 +23,7 @@ Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,
 17,"R7, R8",2,Vishay,CRCW04023K60FKEDC,"Resistor, 3.6k ohm 1% 1/16W",0402,SMD,
 18,SW1,1,ALPS,SKRPACE011,Surface Mount Type TACT Switch,4pos,SMD,"SKRPASE010, SKRPANE010, SKRPABE010, SKRPADE010 as alternative"
 19,SW2,1,ALPS,SKTADAE010,Surface Mount Type TACT Switch,4pos,SMD,"SKTAAAE010, SKTAACE010 as alternative"
-20,U1,1,Raytac Corporation,MDBT50Q-P1M,MDBT50Q 鈥?P1M (PCB Antenna),LGA,SMD,See: https://www.raytac.com/product/ins.php?index_id=47
+20,U1,1,Raytac Corporation,MDBT50Q-P1MV2,MDBT50Q-P1MV2 (PCB Antenna),LGA,SMD,See: https://www.raytac.com/product/ins.php?index_id=47
 21,U2,1,Torex Semiconductor,XC6206P332MR-G,Voltage Regulator,SOT23,SMD,
 22,U3,1,Microchip Technology,ATECC608A-MAHDA-S,Cryptographic device,8pad_UDFN,SMD,
 23,X1,1,NDK,NX3215SA-32.768K-STD-MUA-9,"Crystal, 32.768kHz 9pF SMD",XTAL_3215,SMD,
