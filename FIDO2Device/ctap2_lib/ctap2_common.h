@@ -98,7 +98,6 @@ typedef struct {
     uint8_t type;
     size_t  credential_id_size;
     uint8_t credential_id[CREDENTIAL_ID_MAX_SIZE];
-    CTAP_USER_ENTITY_T user_entity;
 } CTAP_CREDENTIAL_DESC_T;
 
 typedef struct {

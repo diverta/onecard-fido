@@ -167,6 +167,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_cryptoauth.c \
+  $(FD2LIB_DIR)/fido_cryptoauth_aes_cbc.c \
   $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
   $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
@@ -495,7 +496,11 @@ LIB_FILES += -lc -lnosys -lm
 .PHONY: default help secure_pkg
 
 # Default target - first one defined
-default: $(TARGETS) secure_pkg
+ifeq ("$(TARGET_BOARD)","PCA10056")
+    default: $(TARGETS)
+else
+    default: $(TARGETS) secure_pkg
+endif
 
 # Print all targets that can be built
 help:
