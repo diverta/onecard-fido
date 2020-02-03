@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_cryptoauth.h"
+#include "fido_cryptoauth_aes_cbc.h"
 #include "fido_cryptoauth_setup.h"
 #include "fido_cryptoauth_test.h"
 
@@ -18,6 +19,8 @@
 // ATECCx08A関連
 //
 #include "cryptoauthlib.h"
+
+#define CREATE_NEW_PASSWORD false
 
 //
 // for CRYPTOAUTH function test
@@ -30,6 +33,16 @@ static uint8_t signature[ATCA_SIG_SIZE];
 static size_t  signature_size = ATCA_SIG_SIZE;
 static uint8_t *p_public_key;
 static uint8_t hmac_digest[HMAC_DIGEST_SIZE];
+
+// for AES-128-CBC test
+static uint8_t g_plaintext[64] = {
+    0x76, 0x49, 0xAB, 0xAC, 0x81, 0x19, 0xB2, 0x46, 0xCE, 0xE9, 0x8E, 0x9B, 0x12, 0xE9, 0x19, 0x7D,
+    0x50, 0x86, 0xCB, 0x9B, 0x50, 0x72, 0x19, 0xEE, 0x95, 0xDB, 0x11, 0x3A, 0x91, 0x76, 0x78, 0xB2,
+    0x73, 0xBE, 0xD6, 0xB8, 0xE3, 0xC1, 0x74, 0x3B, 0x71, 0x16, 0xE6, 0x9E, 0x22, 0x22, 0x95, 0x16,
+    0x3F, 0xF1, 0xCA, 0xA1, 0x68, 0x1F, 0xAC, 0x09, 0x12, 0x0E, 0xCA, 0x30, 0x75, 0x86, 0xE1, 0xA7
+};
+static uint8_t ciphertext[64];
+static uint8_t decrypttext[64];
 
 static void generate_sha256_hash(void)
 {
@@ -150,6 +163,32 @@ static void test_privkey_write(void)
     fido_cryptoauth_release();
 }
 
+static void test_aes_cbc(void)
+{
+#if CREATE_NEW_PASSWORD
+    // AESパスワード新規生成
+    if (fido_cryptoauth_aes_cbc_new_password() == false) {
+        return;
+    }
+#endif
+
+    // AESパスワードで暗号化
+    size_t size = sizeof(g_plaintext);
+    if (fido_cryptoauth_aes_cbc_encrypt(g_plaintext, ciphertext, &size) == false) {
+        return;
+    }
+    fido_log_debug("Plain text:");
+    fido_log_print_hexdump_debug(g_plaintext, sizeof(g_plaintext));
+
+    // AESパスワードで復号化
+    size = sizeof(decrypttext);
+    if (fido_cryptoauth_aes_cbc_decrypt(ciphertext, decrypttext, &size) == false) {
+        return;
+    }
+    fido_log_debug("Decrypted text:");
+    fido_log_print_hexdump_debug(decrypttext, sizeof(decrypttext));
+}
+
 //
 // for CRYPTOAUTH function test
 //   テストコードのエントリーポイント
@@ -179,6 +218,10 @@ void fido_cryptoauth_test_functions(void)
         case 4:
             // ECDH共通鍵生成テスト
             sskey_generate();
+            break;
+        case 5:
+            // AESパスワードによる暗号化／復号化テスト
+            test_aes_cbc();
             break;
         default:
             button_cnt = 0;
