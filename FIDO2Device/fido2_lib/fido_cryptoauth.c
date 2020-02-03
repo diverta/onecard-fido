@@ -262,11 +262,13 @@ bool fido_cryptoauth_calculate_hmac_sha256(
     memcpy(hmac_sha256_key_tmp, key_data, 
         key_data_size < max_key_length ? key_data_size : max_key_length);
 
-    // スロット14にキーを32バイトまで書き込み
-    status = atcab_write_zone(ATCA_ZONE_DATA, KEY_ID_FOR_HMAC_GENERATE_KEY, 0, 0, hmac_sha256_key_tmp, max_key_length);
+    // 8番スロットにキーを32バイトまで書き込み
+    uint16_t key_id = KEY_ID_FOR_CONFIDENTIAL_DATA;
+    status = atcab_write_zone(ATCA_ZONE_DATA, key_id, 
+        BLOCK_IDX_FOR_HMAC_GENERATE_KEY, 0, hmac_sha256_key_tmp, max_key_length);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_write_zone(%d) returns 0x%02x", 
-            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
+            key_id, status);
         return false;
     }
 
@@ -278,17 +280,17 @@ bool fido_cryptoauth_calculate_hmac_sha256(
 
     // HMAC SHA-256ハッシュを計算
     atca_hmac_sha256_ctx_t ctx;
-    status = atcab_sha_hmac_init(&ctx, KEY_ID_FOR_HMAC_GENERATE_KEY);
+    status = atcab_sha_hmac_init(&ctx, key_id);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_init(%d) returns 0x%02x", 
-            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
+            key_id, status);
         return false;
     }
 
     status = atcab_sha_hmac_update(&ctx, src_data, src_data_size);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[1] returns 0x%02x", 
-            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
+            key_id, status);
         return false;
     }
 
@@ -297,7 +299,7 @@ bool fido_cryptoauth_calculate_hmac_sha256(
         status = atcab_sha_hmac_update(&ctx, src_data_2, src_data_2_size);
         if (status != ATCA_SUCCESS) {
             fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_update(%d)[2] returns 0x%02x", 
-                KEY_ID_FOR_HMAC_GENERATE_KEY, status);
+                key_id, status);
             return false;
         }
     }
@@ -305,7 +307,7 @@ bool fido_cryptoauth_calculate_hmac_sha256(
     status = atcab_sha_hmac_finish(&ctx, dest_data, SHA_MODE_TARGET_TEMPKEY);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_calculate_hmac_sha256 failed: atcab_sha_hmac_finish(%d) returns 0x%02x", 
-            KEY_ID_FOR_HMAC_GENERATE_KEY, status);
+            key_id, status);
         return false;
     }
 

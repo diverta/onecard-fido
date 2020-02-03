@@ -18,14 +18,21 @@ extern "C" {
 //
 // 使用するスロット番号の定義    
 //
-//  8: HMAC-SHA-256ハッシュ生成用のキーを一時収容
+//  8: 一時キーやパスワード等の機密データを収容
 //  9: ECDH共通鍵を生成するためのセッション用秘密鍵を収容
 // 14: FIDO認証器固有の秘密鍵を収容
 // 15: 14番スロットを暗号化するためのキーを収容
-#define KEY_ID_FOR_HMAC_GENERATE_KEY    8
+#define KEY_ID_FOR_CONFIDENTIAL_DATA    8
 #define KEY_ID_FOR_SHARED_SECRET_KEY    9
 #define KEY_ID_FOR_INSTALL_PRIVATE_KEY  14
 #define KEY_ID_FOR_INSTALL_PRV_TMP_KEY  15
+//
+// 8番スロット内のブロックインデックス定義
+//  0: HMAC-SHA-256ハッシュ生成用のキーを一時収容
+//  1: AESパスワードを収容（キーハンドル／クレデンシャルIDの暗号／復号化用）
+//
+#define BLOCK_IDX_FOR_HMAC_GENERATE_KEY 0
+#define BLOCK_IDX_FOR_AES_PASSWORD      1
 
 bool     fido_cryptoauth_init(void);
 void     fido_cryptoauth_release(void);

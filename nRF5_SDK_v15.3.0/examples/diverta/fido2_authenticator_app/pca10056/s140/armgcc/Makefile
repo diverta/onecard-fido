@@ -1,7 +1,7 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 # application version info
 FW_REV := 0.2.5
@@ -167,6 +167,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_cryptoauth.c \
+  $(FD2LIB_DIR)/fido_cryptoauth_aes_cbc.c \
   $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
   $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
@@ -227,6 +228,8 @@ SRC_FILES += \
   $(CRPLIB_DIR)/atca_execution.c \
   $(CRPLIB_DIR)/atca_iface.c \
   $(CRPLIB_DIR)/basic/atca_basic.c \
+  $(CRPLIB_DIR)/basic/atca_basic_aes.c \
+  $(CRPLIB_DIR)/basic/atca_basic_aes_cbc.c \
   $(CRPLIB_DIR)/basic/atca_basic_ecdh.c \
   $(CRPLIB_DIR)/basic/atca_basic_gendig.c \
   $(CRPLIB_DIR)/basic/atca_basic_genkey.c \
@@ -493,7 +496,11 @@ LIB_FILES += -lc -lnosys -lm
 .PHONY: default help secure_pkg
 
 # Default target - first one defined
-default: $(TARGETS) secure_pkg
+ifeq ("$(TARGET_BOARD)","PCA10056")
+    default: $(TARGETS)
+else
+    default: $(TARGETS) secure_pkg
+endif
 
 # Print all targets that can be built
 help:
