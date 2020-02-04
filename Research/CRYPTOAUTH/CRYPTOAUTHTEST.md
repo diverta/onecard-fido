@@ -51,6 +51,7 @@ MAIN SWを押すたびに下記のテスト項目が実行されます。
 - SHA-256ハッシュ生成テスト
 - ECDSA署名 ＆ HMAC SHA-256ハッシュ生成テスト
 - ECDH共通鍵生成テスト
+- AESパスワードによる暗号化／復号化テスト
 
 ボタンを押下するごとに機能を実行するのは、一息に実行させると、nRF52840からのUARTログが途切れてしまう不具合を回避するための措置になります。
 
@@ -175,6 +176,49 @@ ECDH共通鍵生成のテストが行われます。<br>
 <debug> app:  70 B8 44 E0 E1 42 80 7E|p.D..B.~
 <debug> app:  6C 04 E1 96 BE E7 63 2F|l.....c/
 <debug> app:  85 62 36 35 57 75 B5 E7|.b65Wu..
+<info> app: fido_cryptoauth_release done
+```
+
+#### AESパスワードによる暗号化／復号化テスト
+AESパスワードによる暗号化／復号化テストが行われます。<br>
+あらかじめ8番スロットに作成したAESパスワードを使用し、AES-128-CBCによる暗号化、復号化が行われます。
+
+下記はテスト時のログになります。<br>
+暗号化前のデータ（`Plain text`）から、暗号化済みデータ（`Encrypted text`）が作成されます。<br>
+その後、暗号化済みデータが復号化され、復号化後のデータ（`Decrypted text`）が作成されます。<br>
+`Plain text`と`Decrypted text`を比較し、内容が同一であれば、処理はOKです。
+
+```
+<info> app: fido_cryptoauth_init start
+<info> app: fido_cryptoauth_setup_config: Config and data zone is already locked
+<info> app: fido_cryptoauth_init success
+<debug> app: Plain text:
+<debug> app:  FE 25 DE 44 76 7F F9 79|.%.Dv..y
+<debug> app:  5B CD 0A 4B 26 E2 07 AA|[..K&...
+<debug> app:  B8 B5 CA F7 EE 06 1F 28|.......(
+<debug> app:  30 6C 06 22 8B 89 22 23|0l.".."#
+<debug> app:  1B E1 6C 09 FD 9D AA 9A|..l.....
+<debug> app:  C4 4E 30 12 60 69 D2 54|.N0.`i.T
+<debug> app:  E3 BE 75 68 85 5D E3 87|..uh.]..
+<debug> app:  92 CF 64 12 29 90 B0 06|..d.)...
+<debug> app: Encrypted text:
+<debug> app:  D5 E4 D5 E9 35 46 DA E4|....5F..
+<debug> app:  44 A3 9F D6 98 1B 7D AD|D.....}.
+<debug> app:  5E 1B 70 17 3B EE 8A BA|^.p.;...
+<debug> app:  2F B0 29 A8 64 3E D1 F1|/.).d>..
+<debug> app:  16 C2 D1 56 C6 97 54 D2|...V..T.
+<debug> app:  1A 5B CB AB 3F 24 27 59|.[..?$'Y
+<debug> app:  07 48 28 C1 B7 2E 70 12|.H(...p.
+<debug> app:  E1 C0 6C 39 1D 6F 21 84|..l9.o!.
+<debug> app: Decrypted text:
+<debug> app:  FE 25 DE 44 76 7F F9 79|.%.Dv..y
+<debug> app:  5B CD 0A 4B 26 E2 07 AA|[..K&...
+<debug> app:  B8 B5 CA F7 EE 06 1F 28|.......(
+<debug> app:  30 6C 06 22 8B 89 22 23|0l.".."#
+<debug> app:  1B E1 6C 09 FD 9D AA 9A|..l.....
+<debug> app:  C4 4E 30 12 60 69 D2 54|.N0.`i.T
+<debug> app:  E3 BE 75 68 85 5D E3 87|..uh.]..
+<debug> app:  92 CF 64 12 29 90 B0 06|..d.)...
 <info> app: fido_cryptoauth_release done
 ```
 
