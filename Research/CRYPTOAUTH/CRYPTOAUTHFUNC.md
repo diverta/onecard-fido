@@ -36,20 +36,28 @@
 |4-1|fido_cryptoauth_generate_sha256_hash|指定されたデータを使用し、SHA-256ハッシュを生成します。|
 |4-2|fido_cryptoauth_ecdsa_sign|所定のスロットに格納された秘密鍵を使用し、<br>指定されたSHA-256ハッシュにECDSA署名を行います。|
 
+#### 暗号化関連
+
+|#|関数名|説明|
+|:---:|:---|:---|
+|5-1|fido_cryptoauth_aes_cbc_new_password|機密データの暗号化／復号化に使用するAESパスワードを<br>新規生成のうえ、8番スロットに格納します。|
+|5-2|fido_cryptoauth_aes_cbc_encrypt|前述のAESパスワードを使用し、機密データを暗号化<br>（AES-128-CBC）します。|
+|5-3|fido_cryptoauth_aes_cbc_decrypt|前述のAESパスワードを使用し、暗号化済み機密データを<br>復号化（AES-128-CBC）します。|
+
 #### その他業務関連
 
 |#|関数名|説明|
 |:---:|:---|:---|
-|5-1|fido_cryptoauth_generate_random_vector|32バイトのランダムなバイトデータを生成します。|
-|5-1|fido_cryptoauth_calculate_hmac_sha256|指定されたデータとキーを使用し、<br>HMAC-SHA-256ハッシュを生成します。|
+|6-1|fido_cryptoauth_generate_random_vector|32バイトのランダムなバイトデータを生成します。|
+|6-1|fido_cryptoauth_calculate_hmac_sha256|指定されたデータとキーを使用し、<br>HMAC-SHA-256ハッシュを生成します。|
 
 #### 共通関数
 
 |#|関数名|説明|
 |:---:|:---|:---|
-|6-1|fido_cryptoauth_init|デバイスを初期化し、ATECC608A用関数群を使用可能にします。|
-|6-2|fido_cryptoauth_release|デバイスを解放します。|
-|6-3|fido_cryptoauth_get_config_bytes|ATECC608A設定内容のバイトデータを取得します。|
+|7-1|fido_cryptoauth_init|デバイスを初期化し、ATECC608A用関数群を使用可能にします。|
+|7-2|fido_cryptoauth_release|デバイスを解放します。|
+|7-3|fido_cryptoauth_get_config_bytes|ATECC608A設定内容のバイトデータを取得します。|
 
 ## 関数の使用方法
 
@@ -184,7 +192,7 @@ void generate_keypair(uint16_t priv_key_id)
 
 ### 署名の生成
 
-FIDO機能においては、既にATECC608A内に格納されている秘密鍵と、署名対象データのSHA=256ハッシュを使用して、ECDSA署名を生成し、公開鍵と一緒にWebAuthnクライアントへ転送します。
+FIDO機能においては、既にATECC608A内に格納されている秘密鍵と、署名対象データのSHA-256ハッシュを使用して、ECDSA署名を生成し、公開鍵と一緒にWebAuthnクライアントへ転送します。
 
 ```
 // 生成されるSHA-256ハッシュの格納領域
@@ -216,6 +224,69 @@ void generate_sign(uint16_t priv_key_id)
     ：
     // デバイス解放
     fido_cryptoauth_release();
+}
+```
+
+### 機密データの暗号化／復号化
+
+FIDO機能でのユーザー登録時は、ログイン可能ユーザー情報（機密データ）であるキーハンドル（U2F）／クレデンシャルID（CTAP2）を、認証器側で暗号化して生成し、WebAuthnクライアントへ転送します。<br>
+他方、FIDO機能でのユーザー認証（ログイン）時は、WebAuthnクライアントから暗号化済みキーハンドル／クレデンシャルIDを含むリクエストデータが送信されて来ますので、認証器側で復号化して、ユーザーがログイン可能かどうかを判定します。
+
+暗号化／復号化は、ATECC608Aにハードウェア実装されている「AES-128-CBC」を使用して実行します。<br>
+また、暗号化／復号化に使用するパスワードは、ATECC608Aの８番スロットに保管します。<br>
+したがって、nRF52840のFlash ROM上には保管しないようにします。
+
+まずは、管理ツールによる鍵・証明書インストール時、同時にAESパスワードを新規作成し、AESパスワードをATECC608Aに保管します。
+```
+// 証明書データFlash ROM書込完了時の処理
+void fido_maintenance_command_skey_cert_record_updated(void)
+{
+    if (fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_SKEY_CERT) {
+        // 証明書データ書込完了
+        fido_log_debug("Update private key and certificate record completed ");
+
+        // 続いて、AESパスワード生成処理を行う
+        if (fido_cryptoauth_aes_cbc_new_password() == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
+        }
+        ：
+    }
+}
+```
+
+U2F、CTAP2におけるユーザー登録時は、キーハンドル（U2F）／クレデンシャルID（CTAP2）を、AESパスワードで暗号化して生成します。
+```
+// CTAP2におけるユーザー登録時の処理
+bool ctap2_pubkey_credential_generate_id(void)
+{
+    // Public Key Credential Sourceを
+    // AES CBCで暗号化し、
+    // credentialIdを生成する
+    memset(credential_id, 0x00, sizeof(credential_id));
+    size_t size = pubkey_cred_source_block_size;
+    if (fido_cryptoauth_aes_cbc_encrypt(pubkey_cred_source, credential_id, &size) == false) {
+        return false;
+    }
+
+    credential_id_size = size;
+    return true;
+}
+```
+
+U2F、CTAP2におけるユーザー認証（ログイン）時は、WebAuthnクライアントから送信されて来た暗号化済みキーハンドル（U2F）／クレデンシャルID（CTAP2）を、AESパスワードで復号化します。
+```
+// CTAP2におけるユーザー認証（ログイン）時の処理
+static bool ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_t credential_id_size)
+{
+    // authenticatorGetAssertionリクエストから取得した
+    // credentialIdを復号化
+    memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
+    size_t size = credential_id_size;
+    if (fido_cryptoauth_aes_cbc_decrypt(credential_id, pubkey_cred_source, &size) == false) {
+        return false;
+    }
+    :
+    return true;
 }
 ```
 

@@ -8,6 +8,7 @@
 // プラットフォーム非依存コード
 //
 #include "fido_cryptoauth.h"
+#include "fido_cryptoauth_aes_cbc.h"
 #include "fido_cryptoauth_setup.h"
 #include "fido_cryptoauth_test.h"
 
@@ -18,6 +19,8 @@
 // ATECCx08A関連
 //
 #include "cryptoauthlib.h"
+
+#define CREATE_NEW_PASSWORD false
 
 //
 // for CRYPTOAUTH function test
@@ -30,6 +33,11 @@ static uint8_t signature[ATCA_SIG_SIZE];
 static size_t  signature_size = ATCA_SIG_SIZE;
 static uint8_t *p_public_key;
 static uint8_t hmac_digest[HMAC_DIGEST_SIZE];
+
+// for AES-128-CBC test
+static uint8_t plaintext[64];
+static uint8_t ciphertext[64];
+static uint8_t decrypttext[64];
 
 static void generate_sha256_hash(void)
 {
@@ -150,6 +158,41 @@ static void test_privkey_write(void)
     fido_cryptoauth_release();
 }
 
+static void test_aes_cbc(void)
+{
+#if CREATE_NEW_PASSWORD
+    // AESパスワード新規生成
+    if (fido_cryptoauth_aes_cbc_new_password() == false) {
+        return;
+    }
+#endif
+
+    // 64バイトのランダムベクターを作成
+    fido_cryptoauth_generate_random_vector(plaintext, 32);
+    fido_cryptoauth_generate_random_vector(plaintext + 32, 32);
+    fido_log_debug("Plain text:");
+    fido_log_print_hexdump_debug(plaintext, sizeof(plaintext));
+
+    // AESパスワードで暗号化
+    size_t size = sizeof(plaintext);
+    if (fido_cryptoauth_aes_cbc_encrypt(plaintext, ciphertext, &size) == false) {
+        return;
+    }
+    fido_log_debug("Encrypted text:");
+    fido_log_print_hexdump_debug(ciphertext, sizeof(ciphertext));
+
+    // AESパスワードで復号化
+    size = sizeof(decrypttext);
+    if (fido_cryptoauth_aes_cbc_decrypt(ciphertext, decrypttext, &size) == false) {
+        return;
+    }
+    fido_log_debug("Decrypted text:");
+    fido_log_print_hexdump_debug(decrypttext, sizeof(decrypttext));
+
+    // test end
+    fido_cryptoauth_release();
+}
+
 //
 // for CRYPTOAUTH function test
 //   テストコードのエントリーポイント
@@ -179,6 +222,10 @@ void fido_cryptoauth_test_functions(void)
         case 4:
             // ECDH共通鍵生成テスト
             sskey_generate();
+            break;
+        case 5:
+            // AESパスワードによる暗号化／復号化テスト
+            test_aes_cbc();
             break;
         default:
             button_cnt = 0;
