@@ -4,7 +4,6 @@
  *
  * Created on 2019/11/25, 14:43
  */
-#if ATECC608A_ENABLED
 //
 // プラットフォーム非依存コード
 //
@@ -464,5 +463,3 @@ bool fido_cryptoauth_extract_pubkey_from_cert(uint8_t *public_key, uint8_t *cert
     fido_log_error("fido_cryptoauth_extract_pubkey_from_cert failed: Public key not found");
     return false;
 }
-
-#endif // ATECC608A_ENABLED

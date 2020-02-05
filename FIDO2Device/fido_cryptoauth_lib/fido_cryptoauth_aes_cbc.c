@@ -4,7 +4,6 @@
  *
  * Created on 2020/02/03, 9:33
  */
-#if ATECC608A_ENABLED
 //
 // プラットフォーム非依存コード
 //
@@ -188,5 +187,3 @@ bool fido_cryptoauth_aes_cbc_decrypt(uint8_t *encrypted, uint8_t *decrypted, siz
 
     return true;   
 }
-
-#endif // ATECC608A_ENABLED

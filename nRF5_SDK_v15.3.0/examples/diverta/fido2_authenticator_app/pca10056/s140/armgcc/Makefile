@@ -16,12 +16,9 @@ FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
-FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
-PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
-CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 
 # tinycbor root directory
@@ -189,11 +186,6 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
-  $(FCALIB_DIR)/fido_cryptoauth.c \
-  $(FCALIB_DIR)/fido_cryptoauth_aes_cbc.c \
-  $(FCALIB_DIR)/fido_cryptoauth_setup.c \
-  $(FCALIB_DIR)/fido_cryptoauth_test.c \
-  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
@@ -205,12 +197,6 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_token_counter.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
@@ -225,6 +211,26 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
+
+# source control for former hardware version
+ifeq ("$(HW_REV)","0.2")
+  PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
+  SRC_FILES += \
+  $(PLTLIB_REV2_DIR)/fido_crypto.c \
+  $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_token_counter.c \
+
+else
+  FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
+  CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
+  SRC_FILES += \
+  $(FCALIB_DIR)/fido_cryptoauth.c \
+  $(FCALIB_DIR)/fido_cryptoauth_aes_cbc.c \
+  $(FCALIB_DIR)/fido_cryptoauth_setup.c \
+  $(FCALIB_DIR)/fido_cryptoauth_test.c \
   $(CRPLIB_DIR)/atca_cfgs.c \
   $(CRPLIB_DIR)/atca_command.c \
   $(CRPLIB_DIR)/atca_device.c \
@@ -252,6 +258,9 @@ SRC_FILES += \
   $(CRPLIB_DIR)/crypto/hashes/sha2_routines.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
   $(CRPLIB_DIR)/host/atca_host.c \
+  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+
+endif
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -404,7 +413,6 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/soc \
   $(PROJ_DIR) \
   $(PLTLIB_DIR) \
-  $(PLTLIB_REV2_DIR) \
   $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
@@ -412,7 +420,17 @@ INC_FOLDERS += \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
+
+# source control for former hardware version
+ifeq ("$(HW_REV)","0.2")
+  INC_FOLDERS += \
+  $(PLTLIB_REV2_DIR) \
+
+else
+  INC_FOLDERS += \
   $(CRPLIB_DIR) \
+
+endif
 
 # Libraries common to all targets
 LIB_FILES += \
@@ -453,13 +471,6 @@ CFLAGS += -fno-builtin -fshort-enums
 
 # for CRYPTOAUTH library
 CFLAGS += -DATCA_HAL_I2C -DATCA_NO_POLL -Wno-unused-variable
-
-# source control for former hardware version
-ifeq ("$(HW_REV)","0.2")
-    CFLAGS += -DATECC608A_ENABLED=0
-else
-    CFLAGS += -DATECC608A_ENABLED=1
-endif
 
 # C++ flags common to all targets
 CXXFLAGS += $(OPT)
