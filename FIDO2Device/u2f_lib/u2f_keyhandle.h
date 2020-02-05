@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 
-void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length);
+void u2f_keyhandle_generate(uint8_t *p_appid_hash);
 void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length);
 
 // キーハンドル生成・格納用領域

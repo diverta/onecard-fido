@@ -11,8 +11,13 @@
 uint8_t keyhandle_base_buffer[64];
 uint8_t keyhandle_buffer[64];
 
-void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length)
+void u2f_keyhandle_generate(uint8_t *p_appid_hash)
 {
+    // nrf_cc310により、キーペアを新規生成する
+    fido_crypto_keypair_generate();
+    uint8_t *private_key_value = fido_crypto_keypair_private_key();
+    uint32_t private_key_length = fido_crypto_keypair_private_key_size();
+
     // Register/Authenticateリクエストから取得した
     // appIdHash、秘密鍵を指定の領域に格納
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));

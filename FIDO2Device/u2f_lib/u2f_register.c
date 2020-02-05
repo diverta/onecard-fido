@@ -185,12 +185,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
 
 void u2f_register_generate_keyhandle(uint8_t *p_appid_hash)
 {
-    // nrf_cc310により、キーペアを新規生成する
-    fido_crypto_keypair_generate();
-    uint8_t *private_key_raw_data = fido_crypto_keypair_private_key();
-    size_t   private_key_raw_data_size = fido_crypto_keypair_private_key_size();
-
-    // APDUから取得したappIdHash、秘密鍵を使用し、
+    // APDUから取得したappIdHashを使用し、
     // キーハンドルを新規生成する
-    u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
+    u2f_keyhandle_generate(p_appid_hash);
 }
