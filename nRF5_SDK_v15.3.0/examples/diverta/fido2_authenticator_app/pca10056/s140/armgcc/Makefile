@@ -7,7 +7,8 @@ TARGET_BOARD     := PCA10059
 FW_REV := 0.2.5
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
-CFLAGS += -DHW_REV=\"0.2\"
+HW_REV := 0.2
+CFLAGS += -DHW_REV=\"$(HW_REV)\"
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
@@ -448,6 +449,13 @@ CFLAGS += -fno-builtin -fshort-enums
 
 # for CRYPTOAUTH library
 CFLAGS += -DATCA_HAL_I2C -DATCA_NO_POLL -Wno-unused-variable
+
+# source control for former hardware version
+ifeq ("$(HW_REV)","0.2")
+    CFLAGS += -DATECC608A_ENABLED=0
+else
+    CFLAGS += -DATECC608A_ENABLED=1
+endif
 
 # C++ flags common to all targets
 CXXFLAGS += $(OPT)

@@ -4,6 +4,8 @@
  *
  * Created on 2019/11/25, 12:45
  */
+#if ATECC608A_ENABLED
+
 #include "sdk_common.h"
 #include "nrf_drv_twi.h"
 #include "nrf_delay.h"
@@ -216,3 +218,5 @@ void atca_delay_ms(uint32_t delay)
 {
     nrf_delay_ms(delay);
 }
+
+#endif // ATECC608A_ENABLED

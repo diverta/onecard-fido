@@ -4,6 +4,7 @@
  *
  * Created on 2019/12/16, 10:20
  */
+#if ATECC608A_ENABLED
 //
 // プラットフォーム非依存コード
 //
@@ -233,3 +234,5 @@ void fido_cryptoauth_test_functions(void)
             break;
     }
 }
+
+#endif // ATECC608A_ENABLED
