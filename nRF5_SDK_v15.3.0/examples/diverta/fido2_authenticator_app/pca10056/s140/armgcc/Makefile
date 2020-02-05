@@ -16,6 +16,7 @@ FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
@@ -167,10 +168,6 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
-  $(FD2LIB_DIR)/fido_cryptoauth.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_aes_cbc.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
@@ -191,6 +188,10 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(FCALIB_DIR)/fido_cryptoauth.c \
+  $(FCALIB_DIR)/fido_cryptoauth_aes_cbc.c \
+  $(FCALIB_DIR)/fido_cryptoauth_setup.c \
+  $(FCALIB_DIR)/fido_cryptoauth_test.c \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -405,6 +406,7 @@ INC_FOLDERS += \
   $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
+  $(FCALIB_DIR) \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
