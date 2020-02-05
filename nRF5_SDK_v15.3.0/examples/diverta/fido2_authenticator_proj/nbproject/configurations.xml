@@ -1618,7 +1618,6 @@
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
       <itemPath>../plat_lib/fido_flash_common.c</itemPath>
       <itemPath>../plat_lib/fido_flash_pairing_mode.c</itemPath>
-      <itemPath>../plat_lib/fido_flash_token_counter.c</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
       <itemPath>../plat_lib/fido_status_indicator.c</itemPath>
       <itemPath>../plat_lib/fido_status_indicator.h</itemPath>
@@ -1640,6 +1639,7 @@
       <itemPath>../plat_rev2_lib/fido_crypto_sskey.c</itemPath>
       <itemPath>../plat_rev2_lib/fido_flash_password.c</itemPath>
       <itemPath>../plat_rev2_lib/fido_flash_skey_cert.c</itemPath>
+      <itemPath>../plat_rev2_lib/fido_flash_token_counter.c</itemPath>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
@@ -4706,25 +4706,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_lib/fido_flash_token_counter.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../plat_lib/fido_status_indicator.c"
             ex="false"
             tool="0"
@@ -4842,6 +4823,11 @@
             flavor2="0">
       </item>
       <item path="../plat_rev2_lib/fido_flash_skey_cert.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_rev2_lib/fido_flash_token_counter.c"
             ex="false"
             tool="0"
             flavor2="0">

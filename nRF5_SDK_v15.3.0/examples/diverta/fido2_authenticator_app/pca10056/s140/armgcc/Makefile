@@ -200,7 +200,6 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
-  $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
@@ -211,6 +210,7 @@ SRC_FILES += \
   $(PL2LIB_DIR)/fido_crypto_sskey.c \
   $(PL2LIB_DIR)/fido_flash_password.c \
   $(PL2LIB_DIR)/fido_flash_skey_cert.c \
+  $(PL2LIB_DIR)/fido_flash_token_counter.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
