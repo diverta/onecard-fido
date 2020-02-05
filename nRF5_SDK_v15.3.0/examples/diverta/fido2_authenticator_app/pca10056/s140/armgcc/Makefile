@@ -18,6 +18,7 @@ U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
+PL2LIB_DIR := $(PROJ_DIR)/../plat_rev2_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
@@ -194,22 +195,22 @@ SRC_FILES += \
   $(FCALIB_DIR)/fido_cryptoauth_test.c \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
   $(PLTLIB_DIR)/fido_board.c \
-  $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
-  $(PLTLIB_DIR)/fido_crypto_keypair.c \
-  $(PLTLIB_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
-  $(PLTLIB_DIR)/fido_flash_password.c \
-  $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
+  $(PL2LIB_DIR)/fido_crypto.c \
+  $(PL2LIB_DIR)/fido_crypto_keypair.c \
+  $(PL2LIB_DIR)/fido_crypto_sskey.c \
+  $(PL2LIB_DIR)/fido_flash_password.c \
+  $(PL2LIB_DIR)/fido_flash_skey_cert.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
@@ -403,6 +404,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/modules/nrfx/soc \
   $(PROJ_DIR) \
   $(PLTLIB_DIR) \
+  $(PL2LIB_DIR) \
   $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
