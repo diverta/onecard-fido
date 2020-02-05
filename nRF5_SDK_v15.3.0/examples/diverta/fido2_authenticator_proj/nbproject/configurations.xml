@@ -1630,16 +1630,16 @@
       <itemPath>../plat_lib/usbd_service.c</itemPath>
       <itemPath>../plat_lib/usbd_service.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="plat_rev2_lib"
-                   displayName="plat_rev2_lib"
+    <logicalFolder name="plat_lib_rev2"
+                   displayName="plat_lib_rev2"
                    projectFiles="true">
-      <itemPath>../plat_rev2_lib/fido_crypto.c</itemPath>
-      <itemPath>../plat_rev2_lib/fido_crypto.h</itemPath>
-      <itemPath>../plat_rev2_lib/fido_crypto_keypair.c</itemPath>
-      <itemPath>../plat_rev2_lib/fido_crypto_sskey.c</itemPath>
-      <itemPath>../plat_rev2_lib/fido_flash_password.c</itemPath>
-      <itemPath>../plat_rev2_lib/fido_flash_skey_cert.c</itemPath>
-      <itemPath>../plat_rev2_lib/fido_flash_token_counter.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_crypto.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_crypto.h</itemPath>
+      <itemPath>../plat_lib_rev2/fido_crypto_keypair.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_crypto_sskey.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_flash_password.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_flash_skey_cert.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_flash_token_counter.c</itemPath>
     </logicalFolder>
     <df root="../../../../../tinycbor/src" name="0">
       <in>cborencoder.c</in>
@@ -1691,6 +1691,7 @@
     <Elem>../../../../../cryptoauthlib/lib</Elem>
     <Elem>../../../../FIDO2Device/fido_cryptoauth_lib</Elem>
     <Elem>../plat_rev2_lib</Elem>
+    <Elem>../plat_lib_rev2</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -4803,31 +4804,31 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../plat_rev2_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
+      <item path="../plat_lib_rev2/fido_crypto.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
+      <item path="../plat_lib_rev2/fido_crypto.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_crypto_keypair.c"
+      <item path="../plat_lib_rev2/fido_crypto_keypair.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_crypto_sskey.c"
+      <item path="../plat_lib_rev2/fido_crypto_sskey.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_flash_password.c"
+      <item path="../plat_lib_rev2/fido_flash_password.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_flash_skey_cert.c"
+      <item path="../plat_lib_rev2/fido_flash_skey_cert.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../plat_rev2_lib/fido_flash_token_counter.c"
+      <item path="../plat_lib_rev2/fido_flash_token_counter.c"
             ex="false"
             tool="0"
             flavor2="0">
