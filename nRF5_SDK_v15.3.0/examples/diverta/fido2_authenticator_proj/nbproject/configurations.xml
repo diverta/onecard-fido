@@ -259,8 +259,8 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.h</itemPath>
@@ -4182,12 +4182,12 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c"
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c"
             ex="false"
             tool="0"
             flavor2="0">
       </item>
-      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h"
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h"
             ex="false"
             tool="3"
             flavor2="0">
