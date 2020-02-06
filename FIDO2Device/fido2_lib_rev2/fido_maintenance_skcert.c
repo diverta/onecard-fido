@@ -12,6 +12,7 @@
 //
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
+#include "fido_command_common.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_cryption.h"
 
@@ -224,7 +225,7 @@ void fido_maintenance_command_skey_cert_record_updated(void)
         fido_log_debug("Update private key and certificate record completed ");
 
         // AESパスワードが生成済みの場合は終了
-        if (fido_flash_password_get() != NULL) {
+        if (fido_command_check_aes_password_exist()) {
             fido_log_debug("AES password record already exists ");
             send_command_error_response(CTAP1_ERR_SUCCESS);
             return;

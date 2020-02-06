@@ -217,6 +217,7 @@ ifeq ("$(HW_REV)","0.2")
   FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
   PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
   SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/fido_command_common.c \
   $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
   $(PLTLIB_REV2_DIR)/fido_crypto.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \

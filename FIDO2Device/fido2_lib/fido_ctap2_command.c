@@ -18,6 +18,7 @@
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
@@ -288,7 +289,7 @@ static void command_authenticator_make_credential(void)
         return;
     }
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを暗号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -376,7 +377,7 @@ static void command_authenticator_get_assertion(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを復号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -514,7 +515,7 @@ static void command_authenticator_reset_resume_process(void)
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 
     // トークンカウンターをFlash ROM領域から削除
     // (fds_file_deleteが実行される)

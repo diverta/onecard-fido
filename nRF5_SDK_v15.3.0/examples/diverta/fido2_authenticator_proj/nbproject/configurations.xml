@@ -275,6 +275,8 @@
                    displayName="fido2_lib_rev2"
                    projectFiles="true"
                    root="../../../../FIDO2Device/fido2_lib_rev2">
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_platform.h</itemPath>
@@ -4341,6 +4343,16 @@
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.c"
             ex="false"

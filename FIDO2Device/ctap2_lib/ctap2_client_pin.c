@@ -6,6 +6,7 @@
  */
 #include "cbor.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "ctap2_common.h"
@@ -284,7 +285,7 @@ void perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // 鍵交換用キーペアが未生成の場合は新規生成
     // (再生成は要求しない)
-    fido_crypto_sskey_init(false);
+    fido_command_sskey_init(false);
 
     // レスポンスをエンコード
     uint8_t ctap2_status = ctap2_cbor_encode_response_key_agreement(encoded_buff, encoded_buff_size);
@@ -404,7 +405,7 @@ static bool check_pin_code_hash(void)
     }
 
     // 一致しない場合はキーペアを再生成
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 
     // エラーレスポンスを待避
     if (retry_counter == 0) {
@@ -637,5 +638,5 @@ void ctap2_client_pin_init(void)
 {
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 }

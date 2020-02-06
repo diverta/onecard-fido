@@ -16,6 +16,7 @@
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
@@ -281,7 +282,7 @@ static void u2f_command_register(void)
         return;
     }
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを暗号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -340,7 +341,7 @@ static void u2f_command_authenticate(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを復号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
