@@ -214,8 +214,10 @@ SRC_FILES += \
 
 # source control for former hardware version
 ifeq ("$(HW_REV)","0.2")
+  FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
   PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
   SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
   $(PLTLIB_REV2_DIR)/fido_crypto.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
@@ -424,6 +426,7 @@ INC_FOLDERS += \
 # source control for former hardware version
 ifeq ("$(HW_REV)","0.2")
   INC_FOLDERS += \
+  $(FD2LIB_REV2_DIR) \
   $(PLTLIB_REV2_DIR) \
 
 else

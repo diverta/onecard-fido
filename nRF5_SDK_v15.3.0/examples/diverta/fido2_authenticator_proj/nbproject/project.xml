@@ -26,6 +26,7 @@
                 <sourceRootElem>../../../../FIDO2Device/fido_cryptoauth_lib</sourceRootElem>
                 <sourceRootElem>../plat_rev2_lib</sourceRootElem>
                 <sourceRootElem>../plat_lib_rev2</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
