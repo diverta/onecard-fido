@@ -185,7 +185,6 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
-  $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
@@ -198,9 +197,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
-  $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
-  $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
   $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
@@ -217,8 +214,11 @@ ifeq ("$(HW_REV)","0.2")
   FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
   PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
   SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/ctap2_pubkey_credential.c \
   $(FD2LIB_REV2_DIR)/fido_command_common.c \
   $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
+  $(FD2LIB_REV2_DIR)/u2f_keyhandle.c \
+  $(FD2LIB_REV2_DIR)/u2f_signature.c \
   $(PLTLIB_REV2_DIR)/fido_crypto.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \

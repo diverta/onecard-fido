@@ -44,8 +44,6 @@
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.c</itemPath>
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.h</itemPath>
-      <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c</itemPath>
-      <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
     </logicalFolder>
     <logicalFolder name="demo_lib"
                    displayName="demo_lib"
@@ -273,13 +271,18 @@
     </logicalFolder>
     <logicalFolder name="fido2_lib_rev2"
                    displayName="fido2_lib_rev2"
-                   projectFiles="true"
-                   root="../../../../FIDO2Device/fido2_lib_rev2">
+                   projectFiles="true">
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/ctap2_pubkey_credential.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/ctap2_pubkey_credential.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_platform.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.c</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido_cryptoauth_lib"
                    displayName="fido_cryptoauth_lib"
@@ -1719,12 +1722,8 @@
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f.h</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
-      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_keyhandle.c</itemPath>
-      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_keyhandle.h</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_register.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_register.h</itemPath>
-      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
-      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -4069,36 +4068,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../plat_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/fds</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
             ex="false"
             tool="0"
@@ -4344,6 +4313,16 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/ctap2_pubkey_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/ctap2_pubkey_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_command_common.c"
             ex="false"
             tool="0"
@@ -4357,7 +4336,37 @@
       <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.c"
             ex="false"
             tool="0"
-            flavor2="2">
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_maintenance_skcert.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/fido_platform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido_cryptoauth_lib/fido_cryptoauth.c"
             ex="false"
@@ -4399,25 +4408,6 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_keyhandle.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
-          </incDir>
-        </cTool>
-      </item>
       <item path="../../../../FIDO2Device/u2f_lib/u2f_register.c"
             ex="false"
             tool="0"
@@ -4432,34 +4422,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.c"
-            ex="false"
-            tool="0"
-            flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/mbedtls</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/oberon</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/cc310_bl</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/nrf_sw</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/micro_ecc</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/crypto/backend/optiga</pElem>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/strerror</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log/src</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
@@ -4966,13 +4928,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers/include</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52810/headers</pElem>
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="fido2_lib_rev2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../FIDO2Device/fido2_lib</pElem>
           </incDir>
         </cTool>
       </folder>
