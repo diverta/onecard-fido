@@ -294,3 +294,9 @@ CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
     // 秘密鍵の取出し元であるcredential IDの格納領域
     return pkey_credential_desc;
 }
+
+void ctap2_pubkey_credential_do_sign(void)
+{
+    // credential IDから取り出した秘密鍵を使用し、署名を生成
+    u2f_signature_do_sign(ctap2_pubkey_credential_private_key());
+}

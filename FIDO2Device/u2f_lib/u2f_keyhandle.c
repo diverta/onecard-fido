@@ -3,14 +3,36 @@
 
 #include "fido_command_common.h"
 #include "u2f.h"
+#include "u2f_signature.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 // キーハンドル生成・格納用領域
 // Register, Authenticateで共通使用
-uint8_t keyhandle_base_buffer[64];
-uint8_t keyhandle_buffer[64];
+//   keyhandle_base_buffer
+//     暗号化される前（＝復合化された後）のキーハンドル
+//     この中に、AppIDHash、秘密鍵を格納
+//   keyhandle_buffer
+//     暗号化された後のキーハンドル。
+//     U2Fサーバー／クライアントとの受け渡しに使用
+static uint8_t keyhandle_base_buffer[64];
+static uint8_t keyhandle_buffer[64];
+
+uint8_t *u2f_keyhandle_base_buffer(void)
+{
+    return keyhandle_base_buffer;
+}
+
+uint8_t *u2f_keyhandle_buffer(void)
+{
+    return keyhandle_buffer;
+}
+
+size_t u2f_keyhandle_buffer_size(void)
+{
+    return sizeof(keyhandle_buffer);
+}
 
 void u2f_keyhandle_generate(uint8_t *p_appid_hash)
 {
@@ -32,7 +54,6 @@ void u2f_keyhandle_generate(uint8_t *p_appid_hash)
     fido_command_aes_cbc_encrypt(keyhandle_base_buffer, data_length, keyhandle_buffer);
 }
 
-
 void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
 {
     // Authenticateリクエストから取得した
@@ -45,4 +66,12 @@ void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     uint16_t data_length = 64;
     fido_command_aes_cbc_decrypt(keyhandle_buffer, data_length, keyhandle_base_buffer);
- }
+}
+
+void u2f_keyhandle_do_sign(void)
+{
+    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
+    uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
+    // キーハンドルから取り出した秘密鍵により署名を生成
+    u2f_signature_do_sign(private_key_be);
+}

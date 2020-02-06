@@ -59,13 +59,8 @@ void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size)
     fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
 }
 
-bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be)
+void ctap2_generate_signature_base(uint8_t *client_data_hash)
 {
-    // 例外抑止
-    if (private_key_be == NULL) {
-        return false;
-    }
-
     // 署名生成用バッファの格納領域を取得
     size_t  offset = 0;
     uint8_t *signature_base_buffer = u2f_signature_data_buffer();
@@ -80,18 +75,6 @@ bool ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be
 
     // メッセージのバイト数をセット
     u2f_signature_base_data_size_set(offset);
-
-    // 署名用の秘密鍵を使用し、署名を生成
-    u2f_signature_do_sign(private_key_be);
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
-        return false;
-    }
-
-    return true;
 }
 
 uint8_t ctap2_flags_value(void)

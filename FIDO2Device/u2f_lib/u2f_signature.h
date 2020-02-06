@@ -14,6 +14,7 @@ size_t   u2f_signature_data_size(void);
 void     u2f_signature_base_data_size_set(size_t size);
 void     u2f_signature_do_sign(uint8_t *private_key_be);
 bool     u2f_signature_convert_to_asn1(void);
+void     u2f_signature_do_sign_with_privkey(void);
 
 
 #ifdef __cplusplus

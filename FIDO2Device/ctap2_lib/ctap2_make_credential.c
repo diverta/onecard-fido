@@ -349,10 +349,17 @@ static uint8_t generate_sign(void)
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, fido_flash_skey_data()) == false) {
-        // 署名を実行
-        // NGであれば、エラーレスポンスを生成して戻す
-        return CTAP2_ERR_VENDOR_FIRST;
+    // 署名ベースを生成
+    ctap2_generate_signature_base(ctap2_request.clientDataHash);
+
+    // 認証器固有の秘密鍵を使用して署名生成
+    u2f_signature_do_sign_with_privkey();
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1() == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
     }
 
 #if LOG_DEBUG_SIGN_BUFF

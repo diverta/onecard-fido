@@ -323,10 +323,17 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    // 署名を実行
-    if (ctap2_generate_signature(
-        ctap2_request.clientDataHash, ctap2_pubkey_credential_private_key()) == false) {
-        return CTAP2_ERR_VENDOR_FIRST;
+    // 署名ベースを生成
+    ctap2_generate_signature_base(ctap2_request.clientDataHash);
+
+    // サイト固有の秘密鍵を使用し、署名を生成
+    ctap2_pubkey_credential_do_sign();
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1() == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
     }
 
 #if LOG_DEBUG_SIGN_BUFF

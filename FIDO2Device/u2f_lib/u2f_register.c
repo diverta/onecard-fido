@@ -89,8 +89,8 @@ static bool create_register_signature_base(uint8_t *p_apdu)
     offset += copied_size;
 
     // キーハンドルを格納
-    copied_size = sizeof(keyhandle_buffer);
-    memcpy(signature_base_buffer + offset, keyhandle_buffer, copied_size);
+    copied_size = u2f_keyhandle_buffer_size();
+    memcpy(signature_base_buffer + offset, u2f_keyhandle_buffer(), copied_size);
     offset += copied_size;
 
     // 公開鍵を格納
@@ -117,11 +117,11 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     offset += copy_publickey_data(response_message_buffer + offset);
 
     // キーハンドル長
-    uint8_t keyhandle_length = sizeof(keyhandle_buffer);
+    uint8_t keyhandle_length = u2f_keyhandle_buffer_size();
     response_message_buffer[offset++] = keyhandle_length;
 
     // キーハンドル
-    memcpy(response_message_buffer + offset, keyhandle_buffer, keyhandle_length);
+    memcpy(response_message_buffer + offset, u2f_keyhandle_buffer(), keyhandle_length);
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
@@ -166,8 +166,8 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
         return false;
     }
 
-    // 署名用の秘密鍵を取得し、署名を生成
-    u2f_signature_do_sign(fido_flash_skey_data());
+    // 認証器固有の秘密鍵を使用して署名生成
+    u2f_signature_do_sign_with_privkey();
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1() == false) {

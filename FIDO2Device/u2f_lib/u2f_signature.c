@@ -184,3 +184,9 @@ bool u2f_signature_convert_to_asn1(void)
     fido_log_debug("Create ASN.1 signature end ");
     return true;
 }
+
+void u2f_signature_do_sign_with_privkey(void)
+{
+    // 認証器固有の秘密鍵を使用して署名生成
+    u2f_signature_do_sign(fido_flash_skey_data());
+}

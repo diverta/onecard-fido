@@ -139,7 +139,7 @@ extern size_t  authenticator_data_size;
 uint8_t *ctap2_generated_rpid_hash(void);
 size_t   ctap2_generated_rpid_hash_size(void);
 void     ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
-bool     ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
+void     ctap2_generate_signature_base(uint8_t *client_data_hash);
 uint32_t ctap2_current_sign_count(void);
 void     ctap2_set_sign_count(uint32_t count);
 uint8_t  ctap2_flags_value(void);
