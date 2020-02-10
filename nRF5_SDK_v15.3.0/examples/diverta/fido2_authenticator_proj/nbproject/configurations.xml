@@ -281,8 +281,6 @@
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/fido_platform.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_keyhandle.h</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.c</itemPath>
-      <itemPath>../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.h</itemPath>
     </logicalFolder>
     <logicalFolder name="fido_cryptoauth_lib"
                    displayName="fido_cryptoauth_lib"
@@ -1724,6 +1722,8 @@
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_register.c</itemPath>
       <itemPath>../../../../FIDO2Device/u2f_lib/u2f_register.h</itemPath>
+      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
+      <itemPath>../../../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -4358,16 +4358,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../FIDO2Device/fido2_lib_rev2/u2f_signature.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../../FIDO2Device/fido_cryptoauth_lib/fido_cryptoauth.c"
             ex="false"
             tool="0"
@@ -4427,6 +4417,16 @@
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
             ex="false"
