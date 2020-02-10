@@ -5,6 +5,7 @@
  * Created on 2019/05/20, 10:30
  */
 #include "cbor.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
@@ -74,8 +75,7 @@ uint8_t verify_salt_auth(CTAP_EXTENSIONS_T *ext)
     // 共通鍵ハッシュを利用し、
     // CTAP2クライアントから受領したsaltEncを
     // HMAC SHA-256アルゴリズムでハッシュ化
-    fido_crypto_calculate_hmac_sha256(
-        fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
+    fido_command_sskey_calculate_hmac_sha256(
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, NULL, 0, hmac);
 
     // クライアントから受信したsaltAuth（16バイト）を、
@@ -135,7 +135,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
     // （ClientPIN1における共通鍵ハッシュ生成処理と同様の処理）
-    uint8_t ret = fido_crypto_sskey_generate((uint8_t *)&ext->hmac_secret.keyAgreement.key);
+    uint8_t ret = fido_command_sskey_generate((uint8_t *)&ext->hmac_secret.keyAgreement.key);
     if (ret != CTAP1_ERR_SUCCESS) {
         fido_log_error("generate sharedSecret from keyAgreement failed");
         return ret;
@@ -151,7 +151,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
 
     // CTAP2クライアントから受け取ったsaltEncを、
     // 共通鍵ハッシュを使用して復号化
-    size_t salt_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    size_t salt_size = fido_command_sskey_aes_256_cbc_decrypt(
         ext->hmac_secret.saltEnc, ext->hmac_secret.saltLen, salt);
     if (salt_size != ext->hmac_secret.saltLen) {
         fido_log_error("saltEnc decrpytion failed");
@@ -167,7 +167,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     }
 
     // 計算されたoutputを、共通鍵ハッシュを使用して暗号化
-    size_t encrypted_size = fido_crypto_aes_cbc_256_encrypt(fido_crypto_sskey_hash(), 
+    size_t encrypted_size = fido_command_sskey_aes_256_cbc_encrypt(
         output, salt_size, encrypted_output);
     if (encrypted_size != salt_size) {
         fido_log_error("output encrpytion failed");

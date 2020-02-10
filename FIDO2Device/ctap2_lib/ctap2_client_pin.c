@@ -307,8 +307,7 @@ uint8_t verify_pin_auth(void)
     // 共通鍵ハッシュを利用し、
     // CTAP2クライアントから受領したPINデータを
     // HMAC SHA-256アルゴリズムでハッシュ化
-    fido_crypto_calculate_hmac_sha256(
-        fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
+    fido_command_sskey_calculate_hmac_sha256(
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, 
         hmac);
@@ -385,7 +384,7 @@ static bool check_pin_code_hash(void)
 
     // CTAP2クライアントから受け取った旧いPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_command_sskey_aes_256_cbc_decrypt(
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, pin_code);
     if (pin_code_size != ctap2_request.pinHashEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -442,7 +441,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 {
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    uint8_t ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    uint8_t ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -470,7 +469,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_command_sskey_aes_256_cbc_decrypt(
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
     if (pin_code_size != ctap2_request.newPinEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -528,7 +527,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
 
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    uint8_t ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    uint8_t ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -546,7 +545,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
     }
 
     // pinTokenを共通鍵で暗号化
-    ctap2_status = ctap2_client_pin_token_encode(fido_crypto_sskey_hash());
+    ctap2_status = ctap2_client_pin_token_encode();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(ctap2_status, 1);

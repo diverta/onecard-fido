@@ -19,8 +19,17 @@ bool     fido_command_check_skey_cert_exist(void);
 bool     fido_command_check_aes_password_exist(void);
 size_t   fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
 size_t   fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
-void     fido_command_sskey_init(bool force);
 uint8_t *fido_command_keypair_public_key(void);
+
+//
+// 共通鍵関連
+//
+void     fido_command_sskey_init(bool force);
+uint8_t *fido_command_sskey_public_key(void);
+uint8_t  fido_command_sskey_generate(uint8_t *client_public_key_raw_data);
+size_t   fido_command_sskey_aes_256_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
+size_t   fido_command_sskey_aes_256_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
+void     fido_command_sskey_calculate_hmac_sha256(uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
 
 #ifdef __cplusplus
 }

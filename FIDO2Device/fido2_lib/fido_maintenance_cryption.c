@@ -10,6 +10,7 @@
 #include "cbor.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_common.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 
@@ -187,7 +188,7 @@ bool fido_maintenance_cryption_restore(uint8_t *cbor_data_buffer, size_t cbor_da
 
     // 管理ツールから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -197,7 +198,7 @@ bool fido_maintenance_cryption_restore(uint8_t *cbor_data_buffer, size_t cbor_da
 
     // 管理ツールから受け取った暗号化済みデータを、
     // 共通鍵ハッシュを使用して復号化
-    size_t cryption_bytes_enc_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(),
+    size_t cryption_bytes_enc_size = fido_command_sskey_aes_256_cbc_decrypt(
         ctap2_request.cryption_bytes_enc, ctap2_request.cryption_bytes_enc_size, cryption_data);
     if (cryption_bytes_enc_size != ctap2_request.cryption_bytes_enc_size) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
