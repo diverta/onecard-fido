@@ -25,7 +25,6 @@
 #include "fido_ble_send.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
-#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

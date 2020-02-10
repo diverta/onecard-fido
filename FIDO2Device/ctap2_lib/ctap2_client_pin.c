@@ -16,12 +16,6 @@
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_client_pin_token.h"
 
-// for u2f_crypto_signature_data
-#include "u2f_signature.h"
-
-// for u2f_securekey_skey_be
-#include "u2f_register.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
