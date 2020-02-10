@@ -198,6 +198,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_register.c \
+  $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
   $(BLELIB_DIR)/ble_service_central_stat.c \
   $(BLELIB_DIR)/ble_service_common.c \
@@ -218,7 +219,6 @@ ifeq ("$(HW_REV)","0.2")
   $(FD2LIB_REV2_DIR)/fido_command_common.c \
   $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
   $(FD2LIB_REV2_DIR)/u2f_keyhandle.c \
-  $(FD2LIB_REV2_DIR)/u2f_signature.c \
   $(PLTLIB_REV2_DIR)/fido_crypto.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
