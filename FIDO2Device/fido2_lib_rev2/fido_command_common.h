@@ -15,6 +15,7 @@
 extern "C" {
 #endif
 
+void     fido_command_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
 bool     fido_command_check_skey_cert_exist(void);
 bool     fido_command_check_aes_password_exist(void);
 size_t   fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);

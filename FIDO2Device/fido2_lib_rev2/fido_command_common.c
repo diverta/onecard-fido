@@ -14,6 +14,11 @@
 //
 // CTAP2、U2Fで共用する各種処理
 //
+void fido_command_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
+{
+    fido_crypto_generate_random_vector(vector_buf, vector_buf_size);
+}
+
 bool fido_command_check_skey_cert_exist(void)
 {
     if (fido_flash_skey_cert_read() == false) {

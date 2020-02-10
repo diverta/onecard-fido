@@ -57,7 +57,7 @@ static void command_erase_skey_cert(void)
 static bool generate_random_password(void)
 {
     // 32バイトのランダムベクターを生成
-    fido_crypto_generate_random_vector(m_random_vector, sizeof(m_random_vector));
+    fido_command_generate_random_vector(m_random_vector, sizeof(m_random_vector));
 
     // Flash ROMに書き出して保存
     if (fido_flash_password_set(m_random_vector) == false) {

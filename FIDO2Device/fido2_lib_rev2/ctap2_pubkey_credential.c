@@ -130,7 +130,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     offset += user->id_size;
 
     // CredRandom（32バイトのランダムなバイト配列）をセット
-    fido_crypto_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
+    fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
 #if LOG_DEBUG_CRED_SOURCE

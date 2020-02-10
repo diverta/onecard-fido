@@ -38,7 +38,7 @@ void ctap2_client_pin_token_init(bool force)
     }
 
     // 16バイトのランダムベクターを生成
-    fido_crypto_generate_random_vector(m_pin_token, PIN_TOKEN_SIZE);
+    fido_command_generate_random_vector(m_pin_token, PIN_TOKEN_SIZE);
 
     // 生成済みフラグを設定
     if (!pin_token_generated) {
