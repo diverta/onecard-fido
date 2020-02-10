@@ -168,12 +168,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
     }
 
     // 認証器固有の秘密鍵を使用して署名生成
-    u2f_signature_do_sign_with_privkey();
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
+    if (fido_command_do_sign_with_privkey() == false) {
         return false;
     }
 

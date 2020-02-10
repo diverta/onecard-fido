@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_signature.h"
@@ -162,12 +163,7 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
     }
 
     // サイト固有の秘密鍵を使用し、署名を生成
-    u2f_keyhandle_do_sign();
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
+    if (fido_command_do_sign_with_keyhandle() == false) {
         return false;
     }
 

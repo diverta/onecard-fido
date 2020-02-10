@@ -67,11 +67,3 @@ void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
     uint16_t data_length = 64;
     fido_command_aes_cbc_decrypt(keyhandle_buffer, data_length, keyhandle_base_buffer);
 }
-
-void u2f_keyhandle_do_sign(void)
-{
-    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
-    uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
-    // キーハンドルから取り出した秘密鍵により署名を生成
-    u2f_signature_do_sign(private_key_be);
-}

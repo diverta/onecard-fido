@@ -43,6 +43,13 @@ size_t   fido_command_sskey_aes_256_cbc_decrypt(uint8_t *p_encrypted, size_t enc
 size_t   fido_command_sskey_aes_256_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
 void     fido_command_sskey_calculate_hmac_sha256(uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
 
+//
+// 署名関連
+//
+bool     fido_command_do_sign_with_privkey(void);
+bool     fido_command_do_sign_with_keyhandle(void);
+bool     fido_command_do_sign_with_credential_id(void);
+
 #ifdef __cplusplus
 }
 #endif

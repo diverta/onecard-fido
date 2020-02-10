@@ -8,6 +8,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// for ECDSA
+#include "u2f_signature.h"
+
+// for U2F keyhandle, CTAP2 credential id
+#include "u2f.h"
+#include "u2f_keyhandle.h"
+#include "ctap2_pubkey_credential.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -131,4 +139,55 @@ void fido_command_sskey_calculate_hmac_sha256(
     return fido_command_calc_hash_hmac_sha256(
         fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
         src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
+}
+
+//
+// 署名関連
+//
+static bool do_sign_with_privkey(uint8_t *private_key_be)
+{
+    // 署名ベースからハッシュデータを生成
+    u2f_signature_generate_hash_for_sign();
+
+    // ハッシュデータと秘密鍵により、署名データ作成
+    uint8_t *hash_digest = u2f_signature_hash_for_sign();
+    uint8_t *signature = u2f_signature_data_buffer();
+    size_t signature_size = ECDSA_SIGNATURE_SIZE;
+    fido_crypto_ecdsa_sign(private_key_be, hash_digest, SHA_256_HASH_SIZE, signature, &signature_size);
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1() == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
+    }
+
+    return true;
+}
+
+bool fido_command_do_sign_with_privkey(void)
+{
+    // 認証器固有の秘密鍵を取得
+    uint8_t *private_key_be = fido_flash_skey_data();
+
+    // 署名ベースと秘密鍵により、署名データ作成
+    return do_sign_with_privkey(private_key_be);
+}
+
+bool fido_command_do_sign_with_keyhandle(void)
+{
+    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
+    uint8_t *private_key_be = u2f_keyhandle_base_buffer() + U2F_APPID_SIZE;
+
+    // 署名ベースと秘密鍵により、署名データ作成
+    return do_sign_with_privkey(private_key_be);
+}
+
+bool fido_command_do_sign_with_credential_id(void)
+{
+    // credential IDから秘密鍵を取り出す
+    uint8_t *private_key_be = ctap2_pubkey_credential_private_key();
+
+    // 署名ベースと秘密鍵により、署名データ作成
+    return do_sign_with_privkey(private_key_be);
 }
