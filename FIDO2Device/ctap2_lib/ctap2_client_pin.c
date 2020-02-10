@@ -354,7 +354,7 @@ uint8_t calculate_pin_code_hash(void)
     // PINコードをSHA-256ハッシュ化し、
     // PINコードハッシュ（32バイト）を作成
     pin_code_hash_size = SHA_256_HASH_SIZE;
-    fido_crypto_generate_sha256_hash(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
+    fido_command_calc_hash_sha256(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
 
 #if LOG_DEBUG_PIN_CODE
     fido_log_debug("PIN code(%dbytes):", pin_len);

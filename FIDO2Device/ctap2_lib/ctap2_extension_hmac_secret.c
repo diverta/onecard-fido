@@ -161,9 +161,9 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_get(CTAP_EXTENSIONS_T *ext)
     // CredRandomとsaltから、outputを計算
     uint8_t *key_data = ctap2_pubkey_credential_cred_random();
     size_t   key_size = CRED_RANDOM_SIZE;
-    fido_crypto_calculate_hmac_sha256(key_data, key_size, salt, 32, NULL, 0, output);
+    fido_command_calc_hash_hmac_sha256(key_data, key_size, salt, 32, NULL, 0, output);
     if (salt_size == 64) {
-        fido_crypto_calculate_hmac_sha256(key_data, key_size, salt + 32, 32, NULL, 0, output + 32);
+        fido_command_calc_hash_hmac_sha256(key_data, key_size, salt + 32, 32, NULL, 0, output + 32);
     }
 
     // 計算されたoutputを、共通鍵ハッシュを使用して暗号化

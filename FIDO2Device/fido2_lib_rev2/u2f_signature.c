@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "fido_command_common.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -104,7 +106,7 @@ void u2f_signature_do_sign(uint8_t *private_key_be)
 #endif
 
     size_t digest_size = sizeof(hash_digest);
-    fido_crypto_generate_sha256_hash(signature_base_buffer, signature_base_buffer_length, hash_digest, &digest_size);
+    fido_command_calc_hash_sha256(signature_base_buffer, signature_base_buffer_length, hash_digest, &digest_size);
 
     // ハッシュデータと秘密鍵により、署名データ作成
     signature_size = sizeof(signature);

@@ -83,7 +83,7 @@ uint8_t ctap2_client_pin_token_encode(void)
 uint8_t ctap2_client_pin_token_verify_pin_auth(uint8_t *clientDataHash, uint8_t *pinAuth)
 {
     // clientDataHashからHMAC SHA-256ハッシュを計算
-    fido_crypto_calculate_hmac_sha256(m_pin_token, PIN_TOKEN_SIZE, 
+    fido_command_calc_hash_hmac_sha256(m_pin_token, PIN_TOKEN_SIZE, 
         clientDataHash, CLIENT_DATA_HASH_SIZE, NULL, 0, hmac);
 
     // クライアントから受信したpinAuth（16バイト）を、

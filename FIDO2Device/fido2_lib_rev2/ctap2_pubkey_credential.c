@@ -83,7 +83,7 @@ static void generate_credential_source_hash()
     // SHA-256ハッシュ値（32バイト）を生成
     size_t hash_source_size = pubkey_cred_source_size + ctap2_rpid_hash_size;
     credential_source_hash_size = sizeof(credential_source_hash);
-    fido_crypto_generate_sha256_hash(
+    fido_command_calc_hash_sha256(
         hash_source_buffer, hash_source_size, credential_source_hash, &credential_source_hash_size);
 }
 

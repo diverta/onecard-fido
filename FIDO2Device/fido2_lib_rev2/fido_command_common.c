@@ -57,6 +57,23 @@ size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size,
 }
 
 //
+// ハッシュ計算関連
+//
+void fido_command_calc_hash_sha256(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
+{
+    fido_crypto_generate_sha256_hash(data, data_size, hash_digest, hash_digest_size);
+}
+
+void fido_command_calc_hash_hmac_sha256(
+    uint8_t *key_data, size_t key_data_size, 
+    uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
+    uint8_t *dest_data)
+{
+    fido_crypto_calculate_hmac_sha256(key_data, key_data_size, 
+        src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
+}
+
+//
 // 公開鍵関連
 //
 bool fido_command_keypair_generate(void)
@@ -106,7 +123,7 @@ void fido_command_sskey_calculate_hmac_sha256(
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
     uint8_t *dest_data)
 {
-    return fido_crypto_calculate_hmac_sha256(
+    return fido_command_calc_hash_hmac_sha256(
         fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
         src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
 }

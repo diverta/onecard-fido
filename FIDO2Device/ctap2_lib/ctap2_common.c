@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "ctap2_common.h"
+#include "fido_command_common.h"
 
 // for u2f_crypto_sign & other
 #include "u2f_signature.h"
@@ -56,7 +57,7 @@ void ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size)
 {
     // RP IDからSHA-256ハッシュ（32バイト）を生成 
     ctap2_rpid_hash_size = sizeof(ctap2_rpid_hash);
-    fido_crypto_generate_sha256_hash(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
+    fido_command_calc_hash_sha256(rpid, rpid_size, ctap2_rpid_hash, &ctap2_rpid_hash_size);
 }
 
 void ctap2_generate_signature_base(uint8_t *client_data_hash)
