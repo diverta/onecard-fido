@@ -87,6 +87,21 @@ void fido_command_calc_hash_hmac_sha256(
 }
 
 //
+// 証明書関連
+//
+uint8_t *fido_command_cert_data(void)
+{
+    // 証明書データ格納領域の開始アドレスを取得
+    return fido_flash_cert_data();
+}
+
+uint32_t fido_command_cert_data_length(void)
+{
+    // 証明書データ格納領域の長さを取得
+    return fido_flash_cert_data_length();
+}
+
+//
 // 公開鍵関連
 //
 bool fido_command_keypair_generate(void)

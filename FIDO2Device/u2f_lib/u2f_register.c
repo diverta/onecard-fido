@@ -126,8 +126,8 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
-    uint8_t *cert_buffer = fido_flash_cert_data();
-    uint32_t cert_buffer_length = fido_flash_cert_data_length();
+    uint8_t *cert_buffer = fido_command_cert_data();
+    uint32_t cert_buffer_length = fido_command_cert_data_length();
 
     // 証明書格納領域からコピー
     memcpy(response_message_buffer + offset, cert_buffer, cert_buffer_length);

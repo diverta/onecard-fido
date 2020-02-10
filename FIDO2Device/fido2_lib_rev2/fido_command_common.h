@@ -28,6 +28,12 @@ void     fido_command_calc_hash_sha256(uint8_t *data, size_t data_size, uint8_t 
 void     fido_command_calc_hash_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
 
 //
+// 証明書関連
+//
+uint8_t *fido_command_cert_data(void);
+uint32_t fido_command_cert_data_length(void);
+
+//
 // 公開鍵関連
 //
 bool     fido_command_keypair_generate(void);

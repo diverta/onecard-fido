@@ -483,8 +483,8 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
             // 証明書格納領域と長さを取得
-            uint8_t *cert_buffer = fido_flash_cert_data();
-            uint32_t cert_buffer_length = fido_flash_cert_data_length();
+            uint8_t *cert_buffer = fido_command_cert_data();
+            uint32_t cert_buffer_length = fido_command_cert_data_length();
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {
