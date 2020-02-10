@@ -56,6 +56,15 @@ size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size,
     return fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), p_plaintext, plaintext_size, encrypted);
 }
 
+//
+// 公開鍵関連
+//
+bool fido_command_keypair_generate(void)
+{
+    fido_crypto_keypair_generate();
+    return true;
+}
+
 uint8_t *fido_command_keypair_public_key(void)
 {
     return fido_crypto_keypair_public_key();

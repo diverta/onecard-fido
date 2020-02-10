@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_signature.h"
@@ -56,7 +57,7 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は public_key_raw_data に
     // ビッグエンディアンで格納される
-    uint8_t *p_publickey = fido_crypto_keypair_public_key();
+    uint8_t *p_publickey = fido_command_keypair_public_key();
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
