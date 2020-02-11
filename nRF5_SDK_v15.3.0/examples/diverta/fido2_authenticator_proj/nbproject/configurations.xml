@@ -1670,11 +1670,12 @@
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
       <itemPath>../plat_lib/fido_crypto_aes_cbc_256.c</itemPath>
-      <itemPath>../plat_lib/fido_flash.h</itemPath>
       <itemPath>../plat_lib/fido_flash_blp_auth_param.c</itemPath>
       <itemPath>../plat_lib/fido_flash_client_pin_store.c</itemPath>
       <itemPath>../plat_lib/fido_flash_common.c</itemPath>
+      <itemPath>../plat_lib/fido_flash_common.h</itemPath>
       <itemPath>../plat_lib/fido_flash_pairing_mode.c</itemPath>
+      <itemPath>../plat_lib/fido_flash_pairing_mode.h</itemPath>
       <itemPath>../plat_lib/fido_log.h</itemPath>
       <itemPath>../plat_lib/fido_status_indicator.c</itemPath>
       <itemPath>../plat_lib/fido_status_indicator.h</itemPath>
@@ -1695,6 +1696,8 @@
       <itemPath>../plat_lib_rev2/fido_crypto.h</itemPath>
       <itemPath>../plat_lib_rev2/fido_crypto_keypair.c</itemPath>
       <itemPath>../plat_lib_rev2/fido_crypto_sskey.c</itemPath>
+      <itemPath>../plat_lib_rev2/fido_flash.h</itemPath>
+      <itemPath>../plat_lib_rev2/fido_flash_event.c</itemPath>
       <itemPath>../plat_lib_rev2/fido_flash_password.c</itemPath>
       <itemPath>../plat_lib_rev2/fido_flash_skey_cert.c</itemPath>
       <itemPath>../plat_lib_rev2/fido_flash_token_counter.c</itemPath>
@@ -4624,8 +4627,6 @@
             tool="0"
             flavor2="0">
       </item>
-      <item path="../plat_lib/fido_flash.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../plat_lib/fido_flash_blp_auth_param.c"
             ex="false"
             tool="0"
@@ -4638,9 +4639,16 @@
       </item>
       <item path="../plat_lib/fido_flash_common.c" ex="false" tool="0" flavor2="0">
       </item>
+      <item path="../plat_lib/fido_flash_common.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../plat_lib/fido_flash_pairing_mode.c"
             ex="false"
             tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_pairing_mode.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../plat_lib/fido_log.h" ex="false" tool="3" flavor2="0">
@@ -4687,6 +4695,13 @@
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib_rev2/fido_flash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib_rev2/fido_flash_event.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
       </item>
       <item path="../plat_lib_rev2/fido_flash_password.c"
             ex="false"

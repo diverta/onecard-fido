@@ -223,6 +223,7 @@ ifeq ("$(HW_REV)","0.2")
   $(PLTLIB_REV2_DIR)/fido_crypto.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
   $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
   $(PLTLIB_REV2_DIR)/fido_flash_password.c \
   $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_REV2_DIR)/fido_flash_token_counter.c \

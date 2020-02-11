@@ -8,8 +8,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "fds.h"
+
 #include "fido_flash.h"
+#include "fido_flash_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash_password

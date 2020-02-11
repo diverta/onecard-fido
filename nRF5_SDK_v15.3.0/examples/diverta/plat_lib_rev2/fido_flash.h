@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include "fds.h"
-
 // Flash ROMに保存するための
 // ファイルID、レコードKey
 //
@@ -71,16 +69,8 @@ extern "C" {
 //
 // fido_flash_event.c
 //
+void fido_flash_event_set_gc_forced(void);
 void fido_flash_fds_event_register(void);
-void fido_flash_fds_force_gc(void);
-bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
-
-//
-// fido_flash_pairing_mode.c
-//
-bool fido_flash_pairing_mode_flag(void);
-void fido_flash_pairing_mode_flag_set(void);
-void fido_flash_pairing_mode_flag_clear(void);
 
 #ifdef __cplusplus
 }
