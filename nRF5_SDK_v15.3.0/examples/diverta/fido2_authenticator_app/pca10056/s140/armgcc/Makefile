@@ -20,6 +20,7 @@ PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
 
 # tinycbor root directory
 TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor
@@ -520,13 +521,13 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
 LIB_FILES += -lc -lnosys -lm
 
 
-.PHONY: default help secure_pkg
+.PHONY: default help deploy_dk deploy secure_pkg
 
 # Default target - first one defined
 ifeq ("$(TARGET_BOARD)","PCA10056")
-    default: $(TARGETS)
+    default: $(TARGETS) deploy_dk
 else
-    default: $(TARGETS) secure_pkg
+    default: $(TARGETS) deploy secure_pkg
 endif
 
 # Print all targets that can be built
@@ -537,8 +538,16 @@ help:
 	@echo		sdk_config - starting external tool for editing sdk_config.h
 	@echo		flash      - flashing binary
 
+deploy_dk:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_DK_xxaa.hex
+	@echo Application hex file for NRF52840 DK is now available.
+
+deploy:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_xxaa.hex
+	@echo Application hex file for MDBT50Q Dongle is now available.
+
 secure_pkg:
-	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(OUTPUT_DIRECTORY)/app_dfu_package.$(FW_REV).zip
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/app_dfu_package.$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
