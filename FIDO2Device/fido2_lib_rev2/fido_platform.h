@@ -15,29 +15,8 @@
 extern "C" {
 #endif
 
-// crypto関連の定義
-#define RAW_PRIVATE_KEY_SIZE    32
-#define RAW_PUBLIC_KEY_SIZE     64
-#define SHARED_SECRET_SIZE      32
-#define ECDSA_SIGNATURE_SIZE    64
-#define SHA_256_HASH_SIZE       32
-#define SSKEY_HASH_SIZE         32
-#define HMAC_SHA_256_SIZE       32
-
-// fido_ble_pairing.c
-bool     fido_ble_pairing_mode_get(void);
-
-//
-// fido_ble_service.c
-//
-bool     fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy);
-bool     fido_ble_service_disconnected(void);
-void     fido_ble_service_disconnect_force(void);
-
-//
-// fido_board.c
-//
-bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size);
+// ハードウェアの差異に依存しない定義を集約
+#include "fido_platform_common.h"
 
 //
 // fido_crypto.c
@@ -46,12 +25,6 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
 void fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size);
 void fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
-
-//
-// fido_crypto_aes_cbc_256.c
-//
-size_t fido_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted);
-size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted);
 
 //
 // fido_crypto_keypair.c
@@ -68,11 +41,6 @@ void     fido_crypto_sskey_init(bool force);
 uint8_t  fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data);
 uint8_t *fido_crypto_sskey_public_key(void);
 uint8_t *fido_crypto_sskey_hash(void);
-
-//
-// fido_flash.c
-//
-bool      fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size);
 
 //
 // fido_flash_skey_cert.c
@@ -97,69 +65,10 @@ uint32_t  fido_flash_token_counter_value(void);
 uint8_t  *fido_flash_token_counter_get_check_hash(void);
 
 //
-// fido_flash_client_pin_store.c
-//
-bool      fido_flash_client_pin_store_hash_read(void);
-bool      fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter);
-uint8_t  *fido_flash_client_pin_store_pin_code_hash(void);
-uint32_t  fido_flash_client_pin_store_retry_counter(void);
-bool      fido_flash_client_pin_store_pin_code_exist(void);
-
-//
 // fido_flash_password.c
 //
 uint8_t *fido_flash_password_get(void);
 bool     fido_flash_password_set(uint8_t *random_vector);
-
-//
-// fido_flash_blp_auth_param.c
-//
-bool     fido_flash_blp_auth_param_read(void);
-bool     fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec, uint32_t scan_enable);
-uint8_t *fido_flash_blp_auth_param_service_uuid_string(void);
-uint32_t fido_flash_blp_auth_param_service_uuid_scan_sec(void);
-uint32_t fido_flash_blp_auth_param_service_uuid_scan_enable(void);
-
-//
-// fido_log.h
-//
-//  プラットフォームに固有なヘッダーファイル
-//  "fido_log.h"を用意し、それをインクルード
-// 
-#include "fido_log.h"
-
-//
-// fido_status_indicator.c
-//
-void fido_status_indicator_none(void);
-void fido_status_indicator_idle(void);
-void fido_status_indicator_busy(void);
-void fido_status_indicator_prompt_reset(void);
-void fido_status_indicator_prompt_tup(void);
-void fido_status_indicator_pairing_mode(void);
-void fido_status_indicator_pairing_fail(void);
-void fido_status_indicator_abort(void);
-void fido_status_indicator_ble_scanning(void);
-
-//
-// fido_timer.c
-//
-void fido_user_presence_verify_timer_stop(void);
-void fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
-void fido_hid_channel_lock_timer_stop(void);
-void fido_hid_channel_lock_timer_start(uint32_t lock_ms);
-void fido_repeat_process_timer_stop(void);
-void fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void));
-
-//
-// nfc_service.c
-//
-void nfc_service_data_send(uint8_t *data, size_t data_size);
-
-//
-// usbd_hid_service.c
-//
-void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
 
 #ifdef __cplusplus
 }

@@ -264,6 +264,7 @@
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_receive.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_send.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_nfc_send.h</itemPath>
+      <itemPath>../../../../FIDO2Device/fido2_lib/fido_platform_common.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_receive_apdu.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_receive_apdu.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido2_lib/fido_u2f_command.c</itemPath>
@@ -4273,6 +4274,11 @@
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_platform_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/fido2_lib/fido_receive_apdu.c"
             ex="false"
