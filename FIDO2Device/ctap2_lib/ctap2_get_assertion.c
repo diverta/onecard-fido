@@ -10,6 +10,7 @@
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_extension_hmac_secret.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 
 // for u2f_crypto_signature_data
@@ -323,10 +324,12 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    // 署名を実行
-    if (ctap2_generate_signature(
-        ctap2_request.clientDataHash, ctap2_pubkey_credential_private_key()) == false) {
-        return CTAP2_ERR_VENDOR_FIRST;
+    // 署名ベースを生成
+    ctap2_generate_signature_base(ctap2_request.clientDataHash);
+
+    // サイト固有の秘密鍵を使用し、署名を生成
+    if (fido_command_do_sign_with_credential_id() == false) {
+        return false;
     }
 
 #if LOG_DEBUG_SIGN_BUFF

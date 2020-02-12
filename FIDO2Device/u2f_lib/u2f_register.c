@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_signature.h"
@@ -56,7 +57,7 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は public_key_raw_data に
     // ビッグエンディアンで格納される
-    uint8_t *p_publickey = fido_crypto_keypair_public_key();
+    uint8_t *p_publickey = fido_command_keypair_public_key();
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
@@ -89,8 +90,8 @@ static bool create_register_signature_base(uint8_t *p_apdu)
     offset += copied_size;
 
     // キーハンドルを格納
-    copied_size = sizeof(keyhandle_buffer);
-    memcpy(signature_base_buffer + offset, keyhandle_buffer, copied_size);
+    copied_size = u2f_keyhandle_buffer_size();
+    memcpy(signature_base_buffer + offset, u2f_keyhandle_buffer(), copied_size);
     offset += copied_size;
 
     // 公開鍵を格納
@@ -117,16 +118,16 @@ static bool create_registration_response_message(uint8_t *response_message_buffe
     offset += copy_publickey_data(response_message_buffer + offset);
 
     // キーハンドル長
-    uint8_t keyhandle_length = sizeof(keyhandle_buffer);
+    uint8_t keyhandle_length = u2f_keyhandle_buffer_size();
     response_message_buffer[offset++] = keyhandle_length;
 
     // キーハンドル
-    memcpy(response_message_buffer + offset, keyhandle_buffer, keyhandle_length);
+    memcpy(response_message_buffer + offset, u2f_keyhandle_buffer(), keyhandle_length);
     offset += keyhandle_length;
 
     // 証明書格納領域と長さを取得
-    uint8_t *cert_buffer = fido_flash_cert_data();
-    uint32_t cert_buffer_length = fido_flash_cert_data_length();
+    uint8_t *cert_buffer = fido_command_cert_data();
+    uint32_t cert_buffer_length = fido_command_cert_data_length();
 
     // 証明書格納領域からコピー
     memcpy(response_message_buffer + offset, cert_buffer, cert_buffer_length);
@@ -166,13 +167,8 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
         return false;
     }
 
-    // 署名用の秘密鍵を取得し、署名を生成
-    u2f_signature_do_sign(fido_flash_skey_data());
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
+    // 認証器固有の秘密鍵を使用して署名生成
+    if (fido_command_do_sign_with_privkey() == false) {
         return false;
     }
 
@@ -185,12 +181,7 @@ bool u2f_register_response_message(uint8_t *request_buffer, uint8_t *response_bu
 
 void u2f_register_generate_keyhandle(uint8_t *p_appid_hash)
 {
-    // nrf_cc310により、キーペアを新規生成する
-    fido_crypto_keypair_generate();
-    uint8_t *private_key_raw_data = fido_crypto_keypair_private_key();
-    size_t   private_key_raw_data_size = fido_crypto_keypair_private_key_size();
-
-    // APDUから取得したappIdHash、秘密鍵を使用し、
+    // APDUから取得したappIdHashを使用し、
     // キーハンドルを新規生成する
-    u2f_keyhandle_generate(p_appid_hash, private_key_raw_data, private_key_raw_data_size);
+    u2f_keyhandle_generate(p_appid_hash);
 }

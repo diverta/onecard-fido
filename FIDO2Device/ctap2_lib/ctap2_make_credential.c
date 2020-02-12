@@ -13,6 +13,7 @@
 #include "ctap2_client_pin_token.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 
 // for u2f_crypto_signature_data
@@ -242,7 +243,7 @@ bool ctap2_make_credential_is_tup_needed(void)
     return (ctap2_request.options.up == 1);
 }
 
-static uint8_t generate_credential_pubkey(void)
+static uint8_t generate_credential_pubkey(uint8_t *keypair_public_key)
 {
     // CBORエンコーダー初期化
     CborEncoder encoder;
@@ -250,8 +251,8 @@ static uint8_t generate_credential_pubkey(void)
     cbor_encoder_init(&encoder, credential_pubkey, sizeof(credential_pubkey), 0);
 
     // CBORエンコード実行
-    uint8_t *x = fido_crypto_keypair_public_key();
-    uint8_t *y = fido_crypto_keypair_public_key() + 32;
+    uint8_t *x = keypair_public_key;
+    uint8_t *y = keypair_public_key + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
     uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
@@ -342,22 +343,18 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        return CTAP2_ERR_VENDOR_FIRST;
-    }
-
-    if (fido_flash_skey_cert_available() == false) {
+    if (fido_command_check_skey_cert_exist() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, fido_flash_skey_data()) == false) {
-        // 署名を実行
-        // NGであれば、エラーレスポンスを生成して戻す
-        return CTAP2_ERR_VENDOR_FIRST;
+    // 署名ベースを生成
+    ctap2_generate_signature_base(ctap2_request.clientDataHash);
+
+    // 認証器固有の秘密鍵を使用して署名生成
+    if (fido_command_do_sign_with_privkey() == false) {
+        return false;
     }
 
 #if LOG_DEBUG_SIGN_BUFF
@@ -396,7 +393,8 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     ctap2_pubkey_credential_generate_id();
 
     // credentialPublicKey(CBOR)を生成
-    uint8_t ret = generate_credential_pubkey();
+    uint8_t *pubkey = fido_command_keypair_public_key();
+    uint8_t ret = generate_credential_pubkey(pubkey);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
@@ -485,8 +483,8 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
             // 証明書格納領域と長さを取得
-            uint8_t *cert_buffer = fido_flash_cert_data();
-            uint32_t cert_buffer_length = fido_flash_cert_data_length();
+            uint8_t *cert_buffer = fido_command_cert_data();
+            uint32_t cert_buffer_length = fido_command_cert_data_length();
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {

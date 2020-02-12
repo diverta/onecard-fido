@@ -14,7 +14,7 @@
 #include "fido_ble_send.h"
 #include "u2f.h"
 
-#include "fido_flash.h"
+#include "fido_flash_pairing_mode.h"
 #include "fido_timer.h"
 
 // for logging informations

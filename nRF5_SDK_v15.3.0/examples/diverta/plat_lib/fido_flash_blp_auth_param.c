@@ -5,9 +5,9 @@
  * Created on 2019/10/22, 13:18
  */
 #include "sdk_common.h"
-#include "fds.h"
 
 #include "fido_flash.h"
+#include "fido_flash_common.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME fido_flash_blp_auth_param

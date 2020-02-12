@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
 
@@ -37,7 +38,7 @@ void ctap2_client_pin_token_init(bool force)
     }
 
     // 16バイトのランダムベクターを生成
-    fido_crypto_generate_random_vector(m_pin_token, PIN_TOKEN_SIZE);
+    fido_command_generate_random_vector(m_pin_token, PIN_TOKEN_SIZE);
 
     // 生成済みフラグを設定
     if (!pin_token_generated) {
@@ -66,10 +67,10 @@ size_t ctap2_client_pin_token_encoded_size(void)
     return PIN_TOKEN_SIZE;
 }
 
-uint8_t ctap2_client_pin_token_encode(uint8_t *p_key)
+uint8_t ctap2_client_pin_token_encode(void)
 {
     // PINトークンを、共通鍵ハッシュを使用して復号化
-    encoded_pin_token_size = fido_crypto_aes_cbc_256_encrypt(p_key, 
+    encoded_pin_token_size = fido_command_sskey_aes_256_cbc_encrypt(
         m_pin_token, PIN_TOKEN_SIZE, encoded_pin_token);
     if (encoded_pin_token_size != PIN_TOKEN_SIZE) {
         // 処理NGの場合はエラーコードを戻す
@@ -82,7 +83,7 @@ uint8_t ctap2_client_pin_token_encode(uint8_t *p_key)
 uint8_t ctap2_client_pin_token_verify_pin_auth(uint8_t *clientDataHash, uint8_t *pinAuth)
 {
     // clientDataHashからHMAC SHA-256ハッシュを計算
-    fido_crypto_calculate_hmac_sha256(m_pin_token, PIN_TOKEN_SIZE, 
+    fido_command_calc_hash_hmac_sha256(m_pin_token, PIN_TOKEN_SIZE, 
         clientDataHash, CLIENT_DATA_HASH_SIZE, NULL, 0, hmac);
 
     // クライアントから受信したpinAuth（16バイト）を、

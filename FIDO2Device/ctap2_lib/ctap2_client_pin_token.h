@@ -16,7 +16,7 @@ extern "C" {
 void     ctap2_client_pin_token_init(bool force);
 uint8_t *ctap2_client_pin_token_encoded(void);
 size_t   ctap2_client_pin_token_encoded_size(void);
-uint8_t  ctap2_client_pin_token_encode(uint8_t *p_key);
+uint8_t  ctap2_client_pin_token_encode(void);
 uint8_t  ctap2_client_pin_token_verify_pin_auth(uint8_t *clientDataHash, uint8_t *pinAuth);
 
 #ifdef __cplusplus
