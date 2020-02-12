@@ -27,6 +27,8 @@ size_t   ctap2_pubkey_credential_source_hash_size(void);
 uint8_t *ctap2_pubkey_credential_id(void);
 size_t   ctap2_pubkey_credential_id_size(void);
 
+void     ctap2_pubkey_credential_do_sign(void);
+
 #ifdef __cplusplus
 }
 #endif

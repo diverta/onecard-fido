@@ -7,7 +7,8 @@ TARGET_BOARD     := PCA10059
 FW_REV := 0.2.5
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
-CFLAGS += -DHW_REV=\"0.2\"
+HW_REV := 0.2
+CFLAGS += -DHW_REV=\"$(HW_REV)\"
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
@@ -18,8 +19,8 @@ CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
-CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
 
 # tinycbor root directory
 TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor
@@ -166,16 +167,12 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_command.c \
   $(FD2LIB_DIR)/fido_common.c \
-  $(FD2LIB_DIR)/fido_cryptoauth.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_aes_cbc.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_setup.c \
-  $(FD2LIB_DIR)/fido_cryptoauth_test.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
   $(FD2LIB_DIR)/fido_hid_receive.c \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
-  $(FD2LIB_DIR)/fido_maintenance_skcert.c \
+  $(FD2LIB_DIR)/fido_maintenance_cryption.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
@@ -189,27 +186,18 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
-  $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
-  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
   $(PLTLIB_DIR)/fido_board.c \
-  $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
-  $(PLTLIB_DIR)/fido_crypto_keypair.c \
-  $(PLTLIB_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
-  $(PLTLIB_DIR)/fido_flash_password.c \
-  $(PLTLIB_DIR)/fido_flash_skey_cert.c \
-  $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
-  $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
@@ -222,6 +210,32 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
+
+# source control for former hardware version
+ifeq ("$(HW_REV)","0.2")
+  FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
+  PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
+  SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/ctap2_pubkey_credential.c \
+  $(FD2LIB_REV2_DIR)/fido_command_common.c \
+  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
+  $(FD2LIB_REV2_DIR)/u2f_keyhandle.c \
+  $(PLTLIB_REV2_DIR)/fido_crypto.c \
+  $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_token_counter.c \
+
+else
+  FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
+  CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
+  SRC_FILES += \
+  $(FCALIB_DIR)/fido_cryptoauth.c \
+  $(FCALIB_DIR)/fido_cryptoauth_aes_cbc.c \
+  $(FCALIB_DIR)/fido_cryptoauth_setup.c \
+  $(FCALIB_DIR)/fido_cryptoauth_test.c \
   $(CRPLIB_DIR)/atca_cfgs.c \
   $(CRPLIB_DIR)/atca_command.c \
   $(CRPLIB_DIR)/atca_device.c \
@@ -249,6 +263,9 @@ SRC_FILES += \
   $(CRPLIB_DIR)/crypto/hashes/sha2_routines.c \
   $(CRPLIB_DIR)/hal/atca_hal.c \
   $(CRPLIB_DIR)/host/atca_host.c \
+  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+
+endif
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -286,7 +303,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/ble/nrf_ble_qwr \
   $(SDK_ROOT)/components/ble/nrf_ble_scan \
   $(SDK_ROOT)/components/ble/peer_manager \
-  $(SDK_ROOT)/components/boards \
+  $(SDK_CUSTOM_ROOT)/components/boards \
   $(SDK_ROOT)/components/libraries/atomic \
   $(SDK_ROOT)/components/libraries/atomic_fifo \
   $(SDK_ROOT)/components/libraries/atomic_flags \
@@ -404,10 +421,22 @@ INC_FOLDERS += \
   $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
+  $(FCALIB_DIR) \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
+
+# source control for former hardware version
+ifeq ("$(HW_REV)","0.2")
+  INC_FOLDERS += \
+  $(FD2LIB_REV2_DIR) \
+  $(PLTLIB_REV2_DIR) \
+
+else
+  INC_FOLDERS += \
   $(CRPLIB_DIR) \
+
+endif
 
 # Libraries common to all targets
 LIB_FILES += \
@@ -493,13 +522,13 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
 LIB_FILES += -lc -lnosys -lm
 
 
-.PHONY: default help secure_pkg
+.PHONY: default help deploy_dk deploy secure_pkg
 
 # Default target - first one defined
 ifeq ("$(TARGET_BOARD)","PCA10056")
-    default: $(TARGETS)
+    default: $(TARGETS) deploy_dk
 else
-    default: $(TARGETS) secure_pkg
+    default: $(TARGETS) deploy secure_pkg
 endif
 
 # Print all targets that can be built
@@ -510,8 +539,16 @@ help:
 	@echo		sdk_config - starting external tool for editing sdk_config.h
 	@echo		flash      - flashing binary
 
+deploy_dk:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_DK_xxaa.hex
+	@echo Application hex file for NRF52840 DK is now available.
+
+deploy:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_xxaa.hex
+	@echo Application hex file for MDBT50Q Dongle is now available.
+
 secure_pkg:
-	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(OUTPUT_DIRECTORY)/app_dfu_package.$(FW_REV).zip
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/app_dfu_package.$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc

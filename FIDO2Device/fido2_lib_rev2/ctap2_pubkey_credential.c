@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "ctap2_common.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 
 // for u2f_crypto_signature_data
@@ -82,7 +83,7 @@ static void generate_credential_source_hash()
     // SHA-256ハッシュ値（32バイト）を生成
     size_t hash_source_size = pubkey_cred_source_size + ctap2_rpid_hash_size;
     credential_source_hash_size = sizeof(credential_source_hash);
-    fido_crypto_generate_sha256_hash(
+    fido_command_calc_hash_sha256(
         hash_source_buffer, hash_source_size, credential_source_hash, &credential_source_hash_size);
 }
 
@@ -118,7 +119,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // Credential private key
     // キーペアを新規生成し、秘密鍵を格納
-    fido_crypto_keypair_generate();
+    fido_command_keypair_generate();
     memcpy(pubkey_cred_source + offset, 
         fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
     offset += fido_crypto_keypair_private_key_size();
@@ -129,7 +130,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     offset += user->id_size;
 
     // CredRandom（32バイトのランダムなバイト配列）をセット
-    fido_crypto_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
+    fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
 #if LOG_DEBUG_CRED_SOURCE
@@ -168,8 +169,7 @@ void ctap2_pubkey_credential_generate_id(void)
     // AES CBCで暗号化し、
     // credentialIdを生成する
     memset(credential_id, 0x00, sizeof(credential_id));
-    fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), 
-        pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
+    fido_command_aes_cbc_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
 #if LOG_DEBUG_CREDENTIAL_ID
@@ -183,8 +183,7 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // authenticatorGetAssertionリクエストから取得した
     // credentialIdを復号化
     memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
-    fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), 
-        credential_id, credential_id_size, pubkey_cred_source);
+    fido_command_aes_cbc_decrypt(credential_id, credential_id_size, pubkey_cred_source);
 
     // Public Key Credential Sourceから
     // SHA-256ハッシュ値（32バイト）を生成

@@ -1,18 +1,46 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "u2f.h"
+#include "u2f_signature.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 // キーハンドル生成・格納用領域
 // Register, Authenticateで共通使用
-uint8_t keyhandle_base_buffer[64];
-uint8_t keyhandle_buffer[64];
+//   keyhandle_base_buffer
+//     暗号化される前（＝復合化された後）のキーハンドル
+//     この中に、AppIDHash、秘密鍵を格納
+//   keyhandle_buffer
+//     暗号化された後のキーハンドル。
+//     U2Fサーバー／クライアントとの受け渡しに使用
+static uint8_t keyhandle_base_buffer[64];
+static uint8_t keyhandle_buffer[64];
 
-void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length)
+uint8_t *u2f_keyhandle_base_buffer(void)
 {
+    return keyhandle_base_buffer;
+}
+
+uint8_t *u2f_keyhandle_buffer(void)
+{
+    return keyhandle_buffer;
+}
+
+size_t u2f_keyhandle_buffer_size(void)
+{
+    return sizeof(keyhandle_buffer);
+}
+
+void u2f_keyhandle_generate(uint8_t *p_appid_hash)
+{
+    // nrf_cc310により、キーペアを新規生成する
+    fido_crypto_keypair_generate();
+    uint8_t *private_key_value = fido_crypto_keypair_private_key();
+    uint32_t private_key_length = fido_crypto_keypair_private_key_size();
+
     // Register/Authenticateリクエストから取得した
     // appIdHash、秘密鍵を指定の領域に格納
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
@@ -23,10 +51,8 @@ void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, u
     // Cipher Feedback Modeによる暗号化を実行
     memset(keyhandle_buffer, 0, sizeof(keyhandle_buffer));
     uint16_t data_length = 64;
-    fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), 
-        keyhandle_base_buffer, data_length, keyhandle_buffer);
+    fido_command_aes_cbc_encrypt(keyhandle_base_buffer, data_length, keyhandle_buffer);
 }
-
 
 void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
 {
@@ -39,6 +65,5 @@ void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
     // バイト配列を、同じ手法により復号化
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     uint16_t data_length = 64;
-    fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), 
-        keyhandle_buffer, data_length, keyhandle_base_buffer);
- }
+    fido_command_aes_cbc_decrypt(keyhandle_buffer, data_length, keyhandle_base_buffer);
+}

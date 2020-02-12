@@ -1,5 +1,5 @@
 /* 
- * File:   fido_maintenance_skcert.c
+ * File:   fido_maintenance_cryption.c
  * Author: makmorit
  *
  * Created on 2019/12/09, 12:01
@@ -10,6 +10,7 @@
 #include "cbor.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_common.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 
@@ -18,29 +19,29 @@
 
 // for debug data
 #define LOG_DEBUG_CBOR_REQUEST      false
-#define LOG_DEBUG_SKEY_CERT_DATA    false
+#define LOG_DEBUG_CRYPTION_DATA     false
 
-// 鍵・証明書データ読込用の作業領域
-#define SKEY_CERT_DATA_MAX_SIZE 1024
-static uint8_t skey_cert_data[SKEY_CERT_DATA_MAX_SIZE];
-static size_t  skey_cert_size;
+// 暗号化データ読込用の作業領域
+#define CRYPTION_DATA_MAX_SIZE 1024
+static uint8_t cryption_data[CRYPTION_DATA_MAX_SIZE];
+static size_t  cryption_size;
 
 // デコードされたリクエストデータを保持する構造体
 static struct {
     CTAP_COSE_KEY cose_key;
-    uint8_t skey_cert_bytes_enc[SKEY_CERT_DATA_MAX_SIZE];
-    size_t  skey_cert_bytes_enc_size;
-    size_t  skey_cert_bytes_size;
+    uint8_t cryption_bytes_enc[CRYPTION_DATA_MAX_SIZE];
+    size_t  cryption_bytes_enc_size;
+    size_t  cryption_bytes_size;
 } ctap2_request;
 
-uint8_t *fido_maintenance_skcert_data(void)
+uint8_t *fido_maintenance_cryption_data(void)
 {
-    return skey_cert_data;
+    return cryption_data;
 }
 
-size_t fido_maintenance_skcert_size(void)
+size_t fido_maintenance_cryption_size(void)
 {
-    return skey_cert_size;
+    return cryption_size;
 }
 
 #if LOG_DEBUG_CBOR_REQUEST
@@ -51,16 +52,16 @@ static void debug_decoded_request()
     fido_log_print_hexdump_debug(ctap2_request.cose_key.key.x, 32);
     fido_log_print_hexdump_debug(ctap2_request.cose_key.key.y, 32);
 
-    fido_log_debug("skeyCertBytesEnc(%d bytes):", ctap2_request.skey_cert_bytes_enc_size);
+    fido_log_debug("cryptionBytesEnc(%d bytes):", ctap2_request.cryption_bytes_enc_size);
     int j, k;
-    int max = (ctap2_request.skey_cert_bytes_enc_size < SKEY_CERT_DATA_MAX_SIZE) 
-                ? ctap2_request.skey_cert_bytes_enc_size : SKEY_CERT_DATA_MAX_SIZE;
+    int max = (ctap2_request.cryption_bytes_enc_size < CRYPTION_DATA_MAX_SIZE) 
+                ? ctap2_request.cryption_bytes_enc_size : CRYPTION_DATA_MAX_SIZE;
     for (j = 0; j < 128; j += 64) {
         k = max - j;
-        fido_log_print_hexdump_debug(ctap2_request.skey_cert_bytes_enc + j, (k < 64) ? k : 64);
+        fido_log_print_hexdump_debug(ctap2_request.cryption_bytes_enc + j, (k < 64) ? k : 64);
     }
 
-    fido_log_debug("skeyCertBytesSize(%d bytes)", ctap2_request.skey_cert_bytes_size);
+    fido_log_debug("cryptionBytesSize(%d bytes)", ctap2_request.cryption_bytes_size);
 }
 #endif
 
@@ -128,26 +129,26 @@ static uint8_t decode_request_cbor(uint8_t *cbor_data_buffer, size_t cbor_data_l
                 must_item_flag |= 0x01;
                 break;
             case 2:
-                // skeyCertBytesEnc (Variable length Byte Array)
+                // cryptionBytesEnc (Variable length Byte Array)
                 if (cbor_value_get_type(&map) != CborByteStringType) {
                     return CTAP2_ERR_INVALID_CBOR_TYPE;
                 }
                 if (cbor_value_calculate_string_length(&map, &sz) != CborNoError) {
                     return CTAP2_ERR_CBOR_PARSING;
                 }
-                ctap2_request.skey_cert_bytes_enc_size = sz;
-                sz = SKEY_CERT_DATA_MAX_SIZE;
-                if (cbor_value_copy_byte_string(&map, ctap2_request.skey_cert_bytes_enc, &sz, NULL) != CborNoError) {
+                ctap2_request.cryption_bytes_enc_size = sz;
+                sz = CRYPTION_DATA_MAX_SIZE;
+                if (cbor_value_copy_byte_string(&map, ctap2_request.cryption_bytes_enc, &sz, NULL) != CborNoError) {
                     return CTAP2_ERR_CBOR_PARSING;
                 }
                 must_item_flag |= 0x02;
                 break;
             case 3:
-                // skeyCertBytesSize (Unsigned Integer)
+                // cryptionBytesSize (Unsigned Integer)
                 if (cbor_value_get_type(&map) != CborIntegerType) {
                     return CTAP2_ERR_INVALID_CBOR_TYPE;
                 }
-                if (cbor_value_get_int_checked(&map, (int *)&ctap2_request.skey_cert_bytes_size) != CborNoError) {
+                if (cbor_value_get_int_checked(&map, (int *)&ctap2_request.cryption_bytes_size) != CborNoError) {
                     return CTAP2_ERR_CBOR_PARSING;
                 }
                 must_item_flag |= 0x04;
@@ -174,20 +175,20 @@ static uint8_t decode_request_cbor(uint8_t *cbor_data_buffer, size_t cbor_data_l
     return CTAP1_ERR_SUCCESS;
 }
 
-bool fido_maintenance_skcert_restore(uint8_t *cbor_data_buffer, size_t cbor_data_length)
+bool fido_maintenance_cryption_restore(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
-    // リクエストCBORから、暗号化済み鍵・証明書データを抽出
+    // リクエストCBORから、暗号化済みデータを抽出
     uint8_t ctap2_status = decode_request_cbor(cbor_data_buffer, cbor_data_length);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // NGであれば、エラーレスポンスを生成して戻す
-        fido_log_error("fido_maintenance_skcert_restore: failed to decode CBOR request");
+        fido_log_error("fido_maintenance_cryption_restore: failed to decode CBOR request");
         fido_ctap2_command_send_response(ctap2_status, 1);
         return false;
     }
 
     // 管理ツールから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -195,21 +196,21 @@ bool fido_maintenance_skcert_restore(uint8_t *cbor_data_buffer, size_t cbor_data
         return false;
     }
 
-    // 管理ツールから受け取った暗号化済み鍵・証明書データを、
+    // 管理ツールから受け取った暗号化済みデータを、
     // 共通鍵ハッシュを使用して復号化
-    size_t skey_cert_bytes_enc_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(),
-        ctap2_request.skey_cert_bytes_enc, ctap2_request.skey_cert_bytes_enc_size, skey_cert_data);
-    if (skey_cert_bytes_enc_size != ctap2_request.skey_cert_bytes_enc_size) {
+    size_t cryption_bytes_enc_size = fido_command_sskey_aes_256_cbc_decrypt(
+        ctap2_request.cryption_bytes_enc, ctap2_request.cryption_bytes_enc_size, cryption_data);
+    if (cryption_bytes_enc_size != ctap2_request.cryption_bytes_enc_size) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(CTAP1_ERR_OTHER, 1);
         return false;
     }
-#if LOG_DEBUG_SKEY_CERT_DATA
-    fido_log_debug("Private key and certificate data(%d bytes):", skey_cert_bytes_enc_size);
-    fido_log_print_hexdump_debug(skey_cert_data, 64);
+#if LOG_DEBUG_CRYPTION_DATA
+    fido_log_debug("Decrypted data(%d bytes):", cryption_bytes_enc_size);
+    fido_log_print_hexdump_debug(cryption_data, 64);
 #endif
 
     // データ長を設定
-    skey_cert_size = ctap2_request.skey_cert_bytes_size;
+    cryption_size = ctap2_request.cryption_bytes_size;
     return true;
 }

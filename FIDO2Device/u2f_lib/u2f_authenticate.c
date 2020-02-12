@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "u2f.h"
 #include "u2f_signature.h"
@@ -161,16 +162,8 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
         return false;
     }
 
-    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
-    uint8_t *private_key_be = keyhandle_base_buffer + U2F_APPID_SIZE;
-
-    // キーハンドルから取り出した秘密鍵により署名を生成
-    u2f_signature_do_sign(private_key_be);
-
-    // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
-        // 生成された署名をASN.1形式署名に変換する
-        // 変換失敗の場合終了
+    // サイト固有の秘密鍵を使用し、署名を生成
+    if (fido_command_do_sign_with_keyhandle() == false) {
         return false;
     }
 
@@ -197,7 +190,7 @@ bool u2f_authenticate_restore_keyhandle(uint8_t *apdu_data)
     // リクエストデータからappIDHashを取得
     // キーハンドルに含まれているものと異なる場合はエラー
     uint8_t *p_appid_hash = u2f_authenticate_get_appid(apdu_data);
-    if (strncmp((char *)keyhandle_base_buffer, (char *)p_appid_hash, U2F_APPID_SIZE) != 0) {
+    if (strncmp((char *)u2f_keyhandle_base_buffer(), (char *)p_appid_hash, U2F_APPID_SIZE) != 0) {
         return false;
     }
 
