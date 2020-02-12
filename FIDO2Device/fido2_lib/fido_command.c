@@ -180,6 +180,11 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
 static bool is_waiting_user_presence_verify(TRANSPORT_TYPE transport_type, uint8_t cmd)
 {
     if (waiting_for_tup) {
+        // キャンセルコマンドの場合は受け付ける
+        if (cmd == CTAP2_COMMAND_CANCEL) {
+            fido_log_info("Command (0x%02x) accepted while testing user presence ", cmd);
+            return false;
+        }
         // ユーザー所在確認中は、 ビジーである旨のエラーを戻す
         fido_log_error("Command (0x%02x) cannot perform while testing user presence ", cmd);
         if (transport_type == TRANSPORT_HID) {
