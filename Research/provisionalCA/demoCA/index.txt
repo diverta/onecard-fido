@@ -1,1 +1,1 @@
-V	200128025730Z		00	unknown	/C=JP/ST=Tokyo/O=Diverta Inc./OU=Authenticator Attestation/CN=authr.diverta.co.jp
+V	300209034955Z		00	unknown	/C=JP/ST=Tokyo/O=Diverta Inc./OU=Authenticator Attestation/CN=authr.diverta.co.jp

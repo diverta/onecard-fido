@@ -292,7 +292,8 @@ MacBookPro-makmorit-jp:provisionalCA makmorit$
 これではFIDO認証器で使用することができないため、下記コマンドを実行してDERエンコードします。
 
 ```
-openssl x509 -in demoCA/newcerts/00.pem  -inform PEM -out fido2test.crt -outform DER
+openssl x509 -in fido2test.crt.pem -inform PEM -out fido2test.crt -outform DER
+rm fido2test.crt.pem
 ```
 
 #### macOSでの実行例
@@ -321,6 +322,8 @@ drwxr-xr-x  13 makmorit  staff   442  1 28 11:57 demoCA
 -rw-r--r--   1 makmorit  staff   521  1 28 11:56 fido2test.csr
 -rw-r--r--   1 makmorit  staff   302  1 28 11:56 fido2test.pem
 -rw-r--r--   1 makmorit  staff   167  1 28 11:56 v3_client
+MacBookPro-makmorit-jp:provisionalCA makmorit$
+MacBookPro-makmorit-jp:provisionalCA makmorit$ rm fido2test.crt.pem
 MacBookPro-makmorit-jp:provisionalCA makmorit$
 ```
 
