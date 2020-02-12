@@ -10,9 +10,8 @@
 // for debug data
 #define DEBUG_VERIFY_SIGN false
 
-// ハッシュ化データ、署名データに関する情報
+// ハッシュ化データに関する情報
 static uint8_t hash_digest[SHA_256_HASH_SIZE];
-static uint8_t signature[ECDSA_SIGNATURE_SIZE];
 
 // ASN.1形式に変換された署名を格納する領域の大きさ
 #define ASN1_SIGNATURE_MAXLEN 72
@@ -62,7 +61,7 @@ uint8_t *u2f_signature_hash_for_sign(void)
     return hash_digest;
 }
 
-bool u2f_signature_convert_to_asn1(void)
+bool u2f_signature_convert_to_asn1(uint8_t *p_signature_value)
 {
     // 格納領域を確保
     uint8_t *asn1_signature = signature_data_buffer;
@@ -80,7 +79,6 @@ bool u2f_signature_convert_to_asn1(void)
     // その直前に 0x00 を挿入する必要がある
     // (MSBを参照して判定)
     int part_length = 32;
-    uint8_t *p_signature_value = signature;
     uint8_t *rbytes = p_signature_value;
     uint8_t *sbytes = p_signature_value + part_length;
     

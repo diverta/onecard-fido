@@ -159,6 +159,7 @@ void fido_command_sskey_calculate_hmac_sha256(
 //
 // 署名関連
 //
+static uint8_t signature[ECDSA_SIGNATURE_SIZE];
 static bool do_sign_with_privkey(uint8_t *private_key_be)
 {
     // 署名ベースからハッシュデータを生成
@@ -166,12 +167,11 @@ static bool do_sign_with_privkey(uint8_t *private_key_be)
 
     // ハッシュデータと秘密鍵により、署名データ作成
     uint8_t *hash_digest = u2f_signature_hash_for_sign();
-    uint8_t *signature = u2f_signature_data_buffer();
     size_t signature_size = ECDSA_SIGNATURE_SIZE;
     fido_crypto_ecdsa_sign(private_key_be, hash_digest, SHA_256_HASH_SIZE, signature, &signature_size);
 
     // ASN.1形式署名を格納する領域を準備
-    if (u2f_signature_convert_to_asn1() == false) {
+    if (u2f_signature_convert_to_asn1(signature) == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
         return false;

@@ -14,7 +14,7 @@ size_t   u2f_signature_data_size(void);
 void     u2f_signature_base_data_size_set(size_t size);
 void     u2f_signature_generate_hash_for_sign(void);
 uint8_t *u2f_signature_hash_for_sign(void);
-bool     u2f_signature_convert_to_asn1(void);
+bool     u2f_signature_convert_to_asn1(uint8_t *p_signature_value);
 
 
 #ifdef __cplusplus
