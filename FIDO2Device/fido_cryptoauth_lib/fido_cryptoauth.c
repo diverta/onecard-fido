@@ -222,6 +222,8 @@ void fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uin
 #if LOG_HEXDUMP_DEBUG_SIGN
         fido_log_debug("fido_cryptoauth_ecdsa_sign (key_id=%d):", key_id);
         fido_log_print_hexdump_debug(signature, *signature_size);
+#else
+        fido_log_debug("fido_cryptoauth_ecdsa_sign success (key_id=%d)", key_id);
 #endif
 #if ATCAB_VERIFY_EXTERN
         // 署名を公開鍵で検証
