@@ -312,6 +312,13 @@ static void u2f_register_resume_process(void)
     // 本処理を開始
     fido_log_info("U2F Register start");
 
+    // 秘密鍵を新規生成
+    if (fido_command_keypair_generate_for_keyhandle() == false) {
+        // 処理NGの場合、エラーレスポンスを生成して終了
+        send_u2f_error_status_response(0x9405);
+        return;
+    }
+
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
     u2f_register_generate_keyhandle(p_appid_hash);

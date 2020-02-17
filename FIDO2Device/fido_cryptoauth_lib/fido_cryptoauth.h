@@ -38,7 +38,7 @@ bool     fido_cryptoauth_init(void);
 void     fido_cryptoauth_release(void);
 bool     fido_cryptoauth_get_config_bytes(void);
 
-void     fido_cryptoauth_keypair_generate(uint16_t key_id);
+bool     fido_cryptoauth_keypair_generate(uint16_t key_id);
 uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id);
 void     fido_cryptoauth_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
 void     fido_cryptoauth_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);

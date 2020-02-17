@@ -36,8 +36,7 @@ size_t u2f_keyhandle_buffer_size(void)
 
 void u2f_keyhandle_generate(uint8_t *p_appid_hash)
 {
-    // nrf_cc310により、キーペアを新規生成する
-    fido_crypto_keypair_generate();
+    // nrf_cc310により新規生成されたキーペアの秘密鍵を取得
     uint8_t *private_key_value = fido_crypto_keypair_private_key();
     uint32_t private_key_length = fido_crypto_keypair_private_key_size();
 

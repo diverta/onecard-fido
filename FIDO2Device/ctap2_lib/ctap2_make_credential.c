@@ -385,6 +385,11 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     // sign counterをゼロクリア
     ctap2_set_sign_count(0);
 
+    // 秘密鍵を新規生成
+    if (fido_command_keypair_generate_for_credential_id() == false) {
+        return CTAP1_ERR_OTHER;
+    }
+
     // Public Key Credential Sourceを編集する
     ctap2_pubkey_credential_generate_source(
         &ctap2_request.cred_param, &ctap2_request.user);
