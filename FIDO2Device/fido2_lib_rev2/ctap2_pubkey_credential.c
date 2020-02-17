@@ -119,7 +119,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // Credential private key
     // キーペアを新規生成し、秘密鍵を格納
-    fido_command_keypair_generate();
+    fido_command_keypair_generate_for_credential_id();
     memcpy(pubkey_cred_source + offset, 
         fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
     offset += fido_crypto_keypair_private_key_size();

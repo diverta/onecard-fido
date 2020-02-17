@@ -36,8 +36,10 @@ uint32_t fido_command_cert_data_length(void);
 //
 // 公開鍵関連
 //
-bool     fido_command_keypair_generate(void);
-uint8_t *fido_command_keypair_public_key(void);
+bool     fido_command_keypair_generate_for_keyhandle(void);
+uint8_t *fido_command_keypair_pubkey_for_keyhandle(void);
+bool     fido_command_keypair_generate_for_credential_id(void);
+uint8_t *fido_command_keypair_pubkey_for_credential_id(void);
 
 //
 // 共通鍵関連

@@ -393,7 +393,7 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     ctap2_pubkey_credential_generate_id();
 
     // credentialPublicKey(CBOR)を生成
-    uint8_t *pubkey = fido_command_keypair_public_key();
+    uint8_t *pubkey = fido_command_keypair_pubkey_for_credential_id();
     uint8_t ret = generate_credential_pubkey(pubkey);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;

@@ -57,7 +57,7 @@ static uint16_t copy_publickey_data(uint8_t *p_dest_buffer)
 {
     // 公開鍵は public_key_raw_data に
     // ビッグエンディアンで格納される
-    uint8_t *p_publickey = fido_command_keypair_public_key();
+    uint8_t *p_publickey = fido_command_keypair_pubkey_for_keyhandle();
     uint16_t copied_size = 0;
 
     // 1バイト目＝0x04
