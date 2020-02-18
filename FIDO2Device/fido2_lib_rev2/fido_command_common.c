@@ -16,6 +16,9 @@
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
 
+// for token counter
+#include "fido_flash_token_counter.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -216,4 +219,43 @@ bool fido_command_do_sign_with_credential_id(void)
 
     // 署名ベースと秘密鍵により、署名データ作成
     return do_sign_with_privkey(private_key_be);
+}
+
+//
+// 署名カウンター関連
+//
+bool fido_command_sign_counter_delete(void)
+{
+    return fido_flash_token_counter_delete();
+}
+
+bool fido_command_sign_counter_create(uint8_t *unique_key, uint8_t *rpid_hash, uint8_t *username)
+{
+    // カウンターを０として新規レコードを生成
+    return fido_flash_token_counter_write(unique_key, 0, rpid_hash);
+}
+
+bool fido_command_sign_counter_read(uint8_t *unique_key)
+{
+    return fido_flash_token_counter_read(unique_key);
+}
+
+bool fido_command_sign_counter_update(uint8_t *unique_key, uint32_t counter)
+{
+    return fido_flash_token_counter_write(unique_key, counter, NULL);
+}
+
+uint32_t fido_command_sign_counter_value(void)
+{
+    return fido_flash_token_counter_value();
+}
+
+uint8_t *fido_command_sign_counter_get_rpid_hash(void)
+{
+    return fido_flash_token_counter_get_check_hash();
+}
+
+uint8_t *fido_command_sign_counter_get_username(void)
+{
+    return NULL;
 }

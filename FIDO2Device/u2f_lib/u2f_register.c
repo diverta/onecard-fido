@@ -28,8 +28,7 @@ bool u2f_register_add_token_counter(uint8_t *p_appid_hash)
     //   appIdHashの開始位置は
     //   APDUの33バイト目から末尾までの32バイト
     //   counterの値は0とする
-    uint32_t token_counter = 0;
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
+    if (fido_command_sign_counter_create(p_appid_hash, p_appid_hash, NULL) == false) {
         return false;
     }
 

@@ -58,6 +58,17 @@ bool     fido_command_do_sign_with_privkey(void);
 bool     fido_command_do_sign_with_keyhandle(void);
 bool     fido_command_do_sign_with_credential_id(void);
 
+//
+// 署名カウンター関連
+//
+bool     fido_command_sign_counter_delete(void);
+bool     fido_command_sign_counter_create(uint8_t *unique_key, uint8_t *rpid_hash, uint8_t *username);
+bool     fido_command_sign_counter_read(uint8_t *unique_key);
+bool     fido_command_sign_counter_update(uint8_t *unique_key, uint32_t counter);
+uint32_t fido_command_sign_counter_value(void);
+uint8_t *fido_command_sign_counter_get_rpid_hash(void);
+uint8_t *fido_command_sign_counter_get_username(void);
+
 #ifdef __cplusplus
 }
 #endif

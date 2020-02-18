@@ -539,8 +539,8 @@ uint8_t ctap2_make_credential_add_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを追加する
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
-    if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
+    uint8_t *p_rpid_hash = ctap2_generated_rpid_hash();
+    if (fido_command_sign_counter_create(p_hash, p_rpid_hash, ctap2_request.user.name) == false) {
         return CTAP1_ERR_OTHER;
     }
 

@@ -369,14 +369,14 @@ static void u2f_command_authenticate(void)
     // appIdHashをリクエストデータから取得し、
     // それに紐づくトークンカウンターを検索
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-    if (fido_flash_token_counter_read(p_appid_hash) == false) {
+    if (fido_command_sign_counter_read(p_appid_hash) == false) {
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("U2F Authenticate: token counter not found ");
         send_u2f_error_status_response(U2F_SW_WRONG_DATA);
         return;
     }
-    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
+    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_command_sign_counter_value());
 
     // control byte (P1) を参照
     uint8_t control_byte = get_receive_apdu()->P1;

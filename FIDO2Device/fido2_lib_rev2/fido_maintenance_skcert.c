@@ -184,9 +184,9 @@ void fido_maintenance_command_skey_cert_file_deleted(void)
         // 秘密鍵／証明書削除が完了
         fido_log_debug("Erase private key and certificate file completed ");
 
-        // 続いて、トークンカウンターをFlash ROM領域から削除
+        // 続いて、署名カウンター情報をFlash ROM領域から削除
         // (fds_file_deleteが実行される)
-        if (fido_flash_token_counter_delete() == false) {
+        if (fido_command_sign_counter_delete() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 2);
         }
     }
@@ -195,7 +195,7 @@ void fido_maintenance_command_skey_cert_file_deleted(void)
 void fido_maintenance_command_token_counter_file_deleted(void)
 {
     if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
-        // トークンカウンター削除が完了
+        // 署名カウンター情報削除が完了
         fido_log_debug("Erase token counter file completed");
 
         // 続いて、AESパスワード生成処理を行う

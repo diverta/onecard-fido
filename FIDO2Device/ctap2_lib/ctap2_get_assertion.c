@@ -238,29 +238,29 @@ static uint8_t read_token_counter(void)
 
     // Public Key Credential Sourceから
     // 生成されたSHA-256ハッシュ値をキーとし、
-    // トークンカウンターレコードを検索
+    // 署名カウンター情報を検索
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    if (fido_flash_token_counter_read(p_hash) == false) {
-        // 紐づくトークンカウンターがない場合は
+    if (fido_command_sign_counter_read(p_hash) == false) {
+        // 紐づく署名カウンター情報がない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("sign counter not found");
         return CTAP2_ERR_NO_CREDENTIALS;
     }
 
     // CTAP2クライアントから受信したrpIdHashと、
-    // トークンカウンターレコードに紐づくrpIdHashを比較
+    // 署名カウンター情報に紐づくrpIdHashを比較
     char *ctap2_rpid_hash = (char *)ctap2_generated_rpid_hash();
-    char *hash_for_check = (char *)fido_flash_token_counter_get_check_hash();
+    char *hash_for_check = (char *)fido_command_sign_counter_get_rpid_hash();
     if (strncmp(ctap2_rpid_hash, hash_for_check, 32) != 0) {
-        // 紐づくトークンカウンターがない場合は
+        // 紐づく署名カウンター情報がない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("unavailable sign counter");
         return CTAP2_ERR_NO_CREDENTIALS;
     }
-    fido_log_debug("sign counter found (value=%d)", fido_flash_token_counter_value());
+    fido_log_debug("sign counter found (value=%d)", fido_command_sign_counter_value());
 
     // +1 してctap2_sign_countに設定
-    uint32_t ctap2_sign_count = fido_flash_token_counter_value();
+    uint32_t ctap2_sign_count = fido_command_sign_counter_value();
     ctap2_set_sign_count(++ctap2_sign_count);
 
     return CTAP1_ERR_SUCCESS;
@@ -507,8 +507,7 @@ uint8_t ctap2_get_assertion_update_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを更新
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
-    if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
+    if (fido_command_sign_counter_update(p_hash, ctap2_current_sign_count()) == false) {
         // NGであれば終了
         return CTAP1_ERR_OTHER;
     }

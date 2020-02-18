@@ -249,10 +249,10 @@ uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList
 
         // Public Key Credential Source + rpIdHash から
         // 生成されたSHA-256ハッシュ値をキーとし、
-        // トークンカウンターレコードを検索
+        // 署名カウンター情報を検索
         uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-        if (fido_flash_token_counter_read(p_hash) == false) {
-            // 紐づくトークンカウンターがない場合は
+        if (fido_command_sign_counter_read(p_hash) == false) {
+            // 紐づく署名カウンター情報がない場合は
             // 次のリスト要素をチェック
             continue;
         }
