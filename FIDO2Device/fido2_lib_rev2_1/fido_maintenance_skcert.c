@@ -221,7 +221,7 @@ void fido_maintenance_command_skey_cert_file_deleted(void)
 
         // 続いて、トークンカウンターをFlash ROM領域から削除
         // (fds_file_deleteが実行される)
-        if (fido_flash_token_counter_delete() == false) {
+        if (fido_command_sign_counter_delete() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 2);
         }
     }
