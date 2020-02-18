@@ -20,7 +20,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // Flash ROM書込み用データの一時格納領域
 static uint32_t m_token_counter_record_buffer[FIDO_TOKEN_COUNTER_RECORD_SIZE];
-static uint32_t m_token_counter;
 
 bool fido_flash_token_counter_delete(void)
 {
@@ -70,6 +69,19 @@ uint8_t *fido_flash_token_counter_get_check_hash(void)
     return hash_for_check;
 }
 
+uint8_t *fido_flash_token_counter_user_name(void)
+{
+    // ユーザー名が格納されている先頭アドレスを戻す
+    // バッファ先頭からのオフセットは17ワード分
+    return (uint8_t *)(m_token_counter_record_buffer + 17);
+}
+
+uint16_t fido_flash_token_counter_key_id(void)
+{
+    // 秘密鍵スロット番号を取得して戻す
+    return (uint16_t)m_token_counter_record_buffer[25];
+}
+
 bool fido_flash_token_counter_read(uint8_t *p_unique_key)
 {
     // Flash ROMから既存データを読込み、
@@ -79,24 +91,45 @@ bool fido_flash_token_counter_read(uint8_t *p_unique_key)
     return token_counter_record_find(p_unique_key, &record_desc);
 }
 
-bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counter, uint8_t *p_rpid_hash)
+bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counter, uint8_t *p_rpid_hash, 
+    uint8_t *p_username, size_t username_size, uint16_t key_id)
 {
     // Flash ROMから既存データを走査
     bool found = false;
     fds_record_desc_t record_desc;
     found = token_counter_record_find(p_unique_key, &record_desc);
     
+    // 新規登録の場合はデータ格納領域を初期化
+    if (token_counter == 0) {
+        memset((uint8_t *)m_token_counter_record_buffer, 0, FIDO_TOKEN_COUNTER_RECORD_SIZE * 4);
+    }
+
     // ユニークキー部 (8ワード)
     memcpy((uint8_t *)m_token_counter_record_buffer, p_unique_key, 32);
 
     // トークンカウンター部 (1ワード)
-    m_token_counter = token_counter;
-    m_token_counter_record_buffer[8] = m_token_counter;
+    m_token_counter_record_buffer[8] = token_counter;
 
     // rpIdHash部 (8ワード)
     // バッファ先頭からのオフセットは９ワード（36バイト）分
     if (p_rpid_hash != NULL) {
-        memcpy((uint8_t *)m_token_counter_record_buffer + 36, p_rpid_hash, 32);
+        uint8_t *_rpid_hash = (uint8_t *)m_token_counter_record_buffer + 36;
+        memcpy(_rpid_hash, p_rpid_hash, 32);
+    }
+
+    // username部 (8ワード) 
+    // バッファ先頭からのオフセットは17ワード（68バイト）分
+    // 最大31バイトセットできるものとする
+    if (p_username != NULL) {
+        size_t max_size = (username_size < 31) ? username_size : 31;
+        uint8_t *_username = (uint8_t *)m_token_counter_record_buffer + 68;
+        memcpy(_username, p_username, max_size);
+    }
+
+    // 秘密鍵スロット番号部 (1ワード)
+    // 新規登録時のみ設定する
+    if (token_counter == 0) {
+        m_token_counter_record_buffer[25] = key_id;
     }
 
     // Flash ROMに書込むレコードを生成

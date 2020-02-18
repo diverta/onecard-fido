@@ -248,7 +248,9 @@ bool fido_command_sign_counter_delete(void)
 bool fido_command_sign_counter_create(uint8_t *unique_key, uint8_t *rpid_hash, uint8_t *username)
 {
     // カウンターを０として新規レコードを生成
-    return fido_flash_token_counter_write(unique_key, 0, rpid_hash);
+    uint16_t key_id = 2; // <-- temporary
+    size_t size = (username == NULL) ? 0 : strlen((char *)username);
+    return fido_flash_token_counter_write(unique_key, 0, rpid_hash, username, size, key_id);
 }
 
 bool fido_command_sign_counter_read(uint8_t *unique_key)
@@ -258,7 +260,7 @@ bool fido_command_sign_counter_read(uint8_t *unique_key)
 
 bool fido_command_sign_counter_update(uint8_t *unique_key, uint32_t counter)
 {
-    return fido_flash_token_counter_write(unique_key, counter, NULL);
+    return fido_flash_token_counter_write(unique_key, counter, NULL, NULL, 0, 0);
 }
 
 uint32_t fido_command_sign_counter_value(void)
