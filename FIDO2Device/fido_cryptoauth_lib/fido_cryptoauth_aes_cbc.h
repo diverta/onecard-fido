@@ -16,6 +16,8 @@ extern "C" {
 #endif
 
 bool fido_cryptoauth_aes_cbc_new_password(void);
+bool fido_cryptoauth_aes_cbc_erase_password(void);
+bool fido_cryptoauth_aes_cbc_check_password_exist(bool *exist);
 bool fido_cryptoauth_aes_cbc_encrypt(uint8_t *plaintext, uint8_t *encrypted, size_t *encrypt_size);
 bool fido_cryptoauth_aes_cbc_decrypt(uint8_t *encrypted, uint8_t *decrypted, size_t *decrypt_size);
 

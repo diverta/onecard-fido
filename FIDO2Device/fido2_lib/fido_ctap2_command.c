@@ -517,9 +517,9 @@ static void command_authenticator_reset_resume_process(void)
     ctap2_client_pin_token_init(true);
     fido_command_sskey_init(true);
 
-    // トークンカウンターをFlash ROM領域から削除
+    // 署名カウンター情報をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    if (fido_flash_token_counter_delete() == false) {
+    if (fido_command_sign_counter_delete() == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(CTAP1_ERR_OTHER);
         return;

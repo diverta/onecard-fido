@@ -31,12 +31,12 @@ bool u2f_authenticate_update_token_counter(uint8_t *p_appid_hash)
     fido_log_debug("update_token_counter start ");
 
     // 現在のトークンカウンターを取得し、＋１する
-    uint32_t token_counter = fido_flash_token_counter_value();
+    uint32_t token_counter = fido_command_sign_counter_value();
     token_counter++;
 
     // appIdHashをキーとして、
     // トークンカウンターレコードを更新する
-    if (fido_flash_token_counter_write(p_appid_hash, token_counter, p_appid_hash) == false) {
+    if (fido_command_sign_counter_update(p_appid_hash, token_counter) == false) {
         // NGであれば、エラーレスポンスを生成して終了
         return false;
     }
@@ -154,7 +154,7 @@ bool u2f_authenticate_response_message(uint8_t *request_buffer, uint8_t *respons
     uint8_t user_presence_byte = 0x01;
 
     // 現在のトークンカウンターを取得し、＋１する
-    uint32_t token_counter = fido_flash_token_counter_value();
+    uint32_t token_counter = fido_command_sign_counter_value();
     token_counter++;
     
     // 署名ベースを生成

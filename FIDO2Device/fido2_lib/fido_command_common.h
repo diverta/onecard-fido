@@ -36,8 +36,12 @@ uint32_t fido_command_cert_data_length(void);
 //
 // 公開鍵関連
 //
-bool     fido_command_keypair_generate(void);
-uint8_t *fido_command_keypair_public_key(void);
+bool     fido_command_keypair_generate_for_keyhandle(void);
+uint8_t *fido_command_keypair_privkey_for_keyhandle(void);
+uint8_t *fido_command_keypair_pubkey_for_keyhandle(void);
+bool     fido_command_keypair_generate_for_credential_id(void);
+uint8_t *fido_command_keypair_privkey_for_credential_id(void);
+uint8_t *fido_command_keypair_pubkey_for_credential_id(void);
 
 //
 // 共通鍵関連
@@ -55,6 +59,17 @@ void     fido_command_sskey_calculate_hmac_sha256(uint8_t *src_data, size_t src_
 bool     fido_command_do_sign_with_privkey(void);
 bool     fido_command_do_sign_with_keyhandle(void);
 bool     fido_command_do_sign_with_credential_id(void);
+
+//
+// 署名カウンター関連
+//
+bool     fido_command_sign_counter_delete(void);
+bool     fido_command_sign_counter_create(uint8_t *unique_key, uint8_t *rpid_hash, uint8_t *username);
+bool     fido_command_sign_counter_read(uint8_t *unique_key);
+bool     fido_command_sign_counter_update(uint8_t *unique_key, uint32_t counter);
+uint32_t fido_command_sign_counter_value(void);
+uint8_t *fido_command_sign_counter_get_rpid_hash(void);
+uint8_t *fido_command_sign_counter_get_username(void);
 
 #ifdef __cplusplus
 }

@@ -120,21 +120,23 @@ void fido_cryptoauth_release(void)
     }
 }
 
-void fido_cryptoauth_keypair_generate(uint16_t key_id)
+bool fido_cryptoauth_keypair_generate(uint16_t key_id)
 {
     // 初期化
     memset(public_key_raw_data, 0x00, sizeof(public_key_raw_data));
     if (fido_cryptoauth_init()== false) {
-        return;
+        return false;
     }
 
     ATCA_STATUS status = atcab_genkey(key_id, public_key_raw_data);
     if (status != ATCA_SUCCESS) {
         fido_log_error("fido_cryptoauth_keypair_generate failed: atcab_genkey(%d) returns 0x%02x", 
             key_id, status);
+        return false;
 
     } else {
         fido_log_debug("fido_cryptoauth_keypair_generate success (key_id=%d)", key_id);
+        return true;
     }
 }
 
@@ -220,6 +222,8 @@ void fido_cryptoauth_ecdsa_sign(uint16_t key_id, uint8_t const *hash_digest, uin
 #if LOG_HEXDUMP_DEBUG_SIGN
         fido_log_debug("fido_cryptoauth_ecdsa_sign (key_id=%d):", key_id);
         fido_log_print_hexdump_debug(signature, *signature_size);
+#else
+        fido_log_debug("fido_cryptoauth_ecdsa_sign success (key_id=%d)", key_id);
 #endif
 #if ATCAB_VERIFY_EXTERN
         // 署名を公開鍵で検証

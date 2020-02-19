@@ -118,11 +118,10 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     pubkey_cred_source[offset++] = param->publicKeyCredentialType;
 
     // Credential private key
-    // キーペアを新規生成し、秘密鍵を格納
-    fido_command_keypair_generate();
+    // 新規生成したキーペアの秘密鍵を格納
     memcpy(pubkey_cred_source + offset, 
-        fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
-    offset += fido_crypto_keypair_private_key_size();
+        fido_command_keypair_privkey_for_credential_id(), CTAP2_PRIVKEY_SIZE);
+    offset += CTAP2_PRIVKEY_SIZE;
 
     // User Id (size & buffer)
     pubkey_cred_source[offset++] = user->id_size;
@@ -250,10 +249,10 @@ uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList
 
         // Public Key Credential Source + rpIdHash から
         // 生成されたSHA-256ハッシュ値をキーとし、
-        // トークンカウンターレコードを検索
+        // 署名カウンター情報を検索
         uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-        if (fido_flash_token_counter_read(p_hash) == false) {
-            // 紐づくトークンカウンターがない場合は
+        if (fido_command_sign_counter_read(p_hash) == false) {
+            // 紐づく署名カウンター情報がない場合は
             // 次のリスト要素をチェック
             continue;
         }

@@ -27,6 +27,8 @@
                 <sourceRootElem>../plat_rev2_lib</sourceRootElem>
                 <sourceRootElem>../plat_lib_rev2</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2</sourceRootElem>
+                <sourceRootElem>../plat_lib_rev2_1</sourceRootElem>
+                <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2_1</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

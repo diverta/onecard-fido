@@ -16,6 +16,8 @@ extern "C" {
 #endif
 
 // 各種処理用の定数
+#define CTAP2_PRIVKEY_SIZE          32
+#define CTAP2_PUBKEY_SIZE           64
 #define CLIENT_DATA_HASH_SIZE       32
 #define RP_ID_MAX_SIZE              128
 #define RP_NAME_MAX_SIZE            32

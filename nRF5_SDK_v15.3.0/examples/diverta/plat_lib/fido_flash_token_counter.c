@@ -34,7 +34,7 @@ bool fido_flash_token_counter_delete(void)
     return true;
 }
 
-static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *record_desc)
+static bool token_counter_record_find(uint8_t *p_unique_key, fds_record_desc_t *record_desc)
 {
     ret_code_t ret;
     
@@ -44,9 +44,9 @@ static bool token_counter_record_find(uint8_t *p_appid_hash, fds_record_desc_t *
     do {
         ret = fds_record_find(FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, record_desc, &ftok);
         if (ret == FDS_SUCCESS) {
-            // 同じappIdHashのレコードかどうか判定 (先頭32バイトを比較)
+            // 同じキーのレコードかどうか判定 (先頭32バイトを比較)
             fido_flash_fds_record_get(record_desc, m_token_counter_record_buffer);
-            if (strncmp((char *)p_appid_hash, (char *)m_token_counter_record_buffer, 32) == 0) {
+            if (strncmp((char *)p_unique_key, (char *)m_token_counter_record_buffer, 32) == 0) {
                 found = true;
             }
         }
@@ -70,32 +70,34 @@ uint8_t *fido_flash_token_counter_get_check_hash(void)
     return hash_for_check;
 }
 
-bool fido_flash_token_counter_read(uint8_t *p_appid_hash)
+bool fido_flash_token_counter_read(uint8_t *p_unique_key)
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データを
     // m_token_counter_record_bufferに読込む
     fds_record_desc_t record_desc;
-    return token_counter_record_find(p_appid_hash, &record_desc);
+    return token_counter_record_find(p_unique_key, &record_desc);
 }
 
-bool fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check)
+bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counter, uint8_t *p_rpid_hash)
 {
     // Flash ROMから既存データを走査
     bool found = false;
     fds_record_desc_t record_desc;
-    found = token_counter_record_find(p_appid_hash, &record_desc);
+    found = token_counter_record_find(p_unique_key, &record_desc);
     
-    // ユニークキーとなるappIdHash部 (8ワード)
-    memcpy((uint8_t *)m_token_counter_record_buffer, p_appid_hash, 32);
+    // ユニークキー部 (8ワード)
+    memcpy((uint8_t *)m_token_counter_record_buffer, p_unique_key, 32);
 
     // トークンカウンター部 (1ワード)
     m_token_counter = token_counter;
     m_token_counter_record_buffer[8] = m_token_counter;
 
-    // チェック用のIdHash部 (8ワード)
+    // rpIdHash部 (8ワード)
     // バッファ先頭からのオフセットは９ワード（36バイト）分
-    memcpy((uint8_t *)m_token_counter_record_buffer + 36, p_hash_for_check, 32);
+    if (p_rpid_hash != NULL) {
+        memcpy((uint8_t *)m_token_counter_record_buffer + 36, p_rpid_hash, 32);
+    }
 
     // Flash ROMに書込むレコードを生成
     fds_record_t record;

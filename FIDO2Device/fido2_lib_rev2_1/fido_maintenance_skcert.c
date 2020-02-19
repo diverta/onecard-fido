@@ -15,9 +15,17 @@
 #include "fido_command_common.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_cryption.h"
+#include "fido_maintenance_skcert.h"
+
+// for ATECC608A
+#include "fido_cryptoauth.h"
+#include "fido_cryptoauth_aes_cbc.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+// for debug hex dump data
+#define LOG_HEXDUMP_DEBUG_PUBKEY false
 
 //
 // レスポンスデータ格納領域
@@ -26,6 +34,9 @@ static uint8_t response_buffer[4];
 
 // ランダムベクター生成領域
 static uint8_t m_random_vector[32];
+
+// 証明書検証用の公開鍵
+static uint8_t public_key_ref[RAW_PUBLIC_KEY_SIZE];
 
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
@@ -46,25 +57,41 @@ static void send_command_error_response(uint8_t ctap2_status)
 
 static void command_erase_skey_cert(void)
 {
-    // 秘密鍵／証明書をFlash ROM領域から削除
+    // 証明書をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    fido_log_info("Erase private key and certificate start");
+    fido_log_info("Erase certificate start");
     if (fido_flash_skey_cert_delete() == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 1);
     }
 }
 
-static bool generate_random_password(void)
+static bool verify_cert(uint8_t *cert_data, size_t cert_size)
 {
-    // 32バイトのランダムベクターを生成
-    fido_command_generate_random_vector(m_random_vector, sizeof(m_random_vector));
-
-    // Flash ROMに書き出して保存
-    if (fido_flash_password_set(m_random_vector) == false) {
+    // 外部証明書から公開鍵を抽出
+    if (fido_cryptoauth_extract_pubkey_from_cert(public_key_ref, cert_data, cert_size) == false) {
         return false;
     }
 
-    fido_log_debug("Generated random vector for AES password ");
+#if LOG_HEXDUMP_DEBUG_PUBKEY
+    fido_log_debug("Public key of certificate:");
+    fido_log_print_hexdump_debug(public_key_ref, RAW_PUBLIC_KEY_SIZE);
+#endif
+
+    // １４番スロットの秘密鍵から、公開鍵を生成
+    uint8_t *p_public_key = fido_cryptoauth_keypair_public_key(KEY_ID_FOR_INSTALL_PRIVATE_KEY);
+
+#if LOG_HEXDUMP_DEBUG_PUBKEY
+    // 生成された公開鍵をダンプ
+    fido_log_debug("Public key from ATECC608A:");
+    fido_log_print_hexdump_debug(p_public_key, RAW_PUBLIC_KEY_SIZE);
+#endif
+
+    // 内容を検証
+    if (memcmp(public_key_ref, p_public_key, sizeof(public_key_ref)) != 0) {
+        fido_log_error("verify_cert failed: Invalid public key");
+        return false;
+    }
+
     return true;
 }
 
@@ -86,9 +113,17 @@ static void command_install_skey_cert(void)
     if (fido_maintenance_cryption_restore(cbor_data_buffer, cbor_data_length) == false) {
         return;
     }
-    
-    // Flash ROMに登録済みのデータがあれば領域に読込
-    if (fido_flash_skey_cert_read() == false) {
+
+    // 秘密鍵をATECC608Aに保管
+    if (fido_cryptoauth_install_privkey(fido_maintenance_cryption_data()) == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
+        return;
+    }
+
+    // 証明書を検証
+    uint8_t *cert_data = fido_maintenance_cryption_data() + RAW_PRIVATE_KEY_SIZE;
+    size_t   cert_size = fido_maintenance_cryption_size() - RAW_PRIVATE_KEY_SIZE;
+    if (verify_cert(cert_data, cert_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
         return;
     }
@@ -129,7 +164,7 @@ void fido_maintenance_command_skey_cert_report_sent(void)
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
-            fido_log_info("Erase private key and certificate end");
+            fido_log_info("Erase certificate end");
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             fido_log_info("Install private key and certificate end");
@@ -146,7 +181,7 @@ void fido_maintenance_command_flash_failed(void)
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 3);
-            fido_log_error("Erase private key and certificate abend");
+            fido_log_error("Erase certificate abend");
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 9);
@@ -165,9 +200,9 @@ void fido_maintenance_command_flash_gc_done(void)
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case MNT_COMMAND_ERASE_SKEY_CERT:
-            if (generate_random_password() == false) {
-                send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 5);
-            }
+            fido_log_warning("Erase certificate retry: FDS GC done ");
+            command_erase_skey_cert();
+            break;
             break;
         case MNT_COMMAND_INSTALL_SKEY_CERT:
             fido_log_warning("Install private key and certificate retry: FDS GC done ");
@@ -181,10 +216,10 @@ void fido_maintenance_command_flash_gc_done(void)
 void fido_maintenance_command_skey_cert_file_deleted(void)
 {
     if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
-        // 秘密鍵／証明書削除が完了
-        fido_log_debug("Erase private key and certificate file completed ");
+        // 証明書削除が完了
+        fido_log_debug("Erase certificate file completed ");
 
-        // 続いて、署名カウンター情報をFlash ROM領域から削除
+        // 続いて、トークンカウンターをFlash ROM領域から削除
         // (fds_file_deleteが実行される)
         if (fido_command_sign_counter_delete() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 2);
@@ -195,25 +230,16 @@ void fido_maintenance_command_skey_cert_file_deleted(void)
 void fido_maintenance_command_token_counter_file_deleted(void)
 {
     if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT) {
-        // 署名カウンター情報削除が完了
+        // トークンカウンター削除が完了
         fido_log_debug("Erase token counter file completed");
 
-        // 続いて、AESパスワード生成処理を行う
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        if (generate_random_password() == false) {
+        // 続いて、AESパスワード消去処理を行う
+        if (fido_cryptoauth_aes_cbc_erase_password() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
+            return;
         }
-    }
-}
-
-void fido_maintenance_command_aes_password_record_updated(void)
-{
-    if (fido_hid_receive_header()->CMD == MNT_COMMAND_ERASE_SKEY_CERT ||
-        fido_hid_receive_header()->CMD == MNT_COMMAND_INSTALL_SKEY_CERT) {
-        // AESパスワード生成(fds_record_update/write)完了
-        fido_log_debug("Update AES password record completed ");
-
-        // レスポンスを生成してU2Fクライアントに戻す
+        // AESパスワード生成完了
+        fido_log_debug("Erase AES password completed ");
         send_command_error_response(CTAP1_ERR_SUCCESS);
     }
 }
@@ -226,15 +252,18 @@ void fido_maintenance_command_skey_cert_record_updated(void)
 
         // AESパスワードが生成済みの場合は終了
         if (fido_command_check_aes_password_exist()) {
-            fido_log_debug("AES password record already exists ");
+            fido_log_debug("AES password already exists ");
             send_command_error_response(CTAP1_ERR_SUCCESS);
             return;
         }
 
         // 続いて、AESパスワード生成処理を行う
-        // (fds_record_update/writeまたはfds_gcが実行される)
-        if (generate_random_password() == false) {
+        if (fido_cryptoauth_aes_cbc_new_password() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 4);
+            return;
         }
+        // AESパスワード生成完了
+        fido_log_debug("Generate new AES password completed ");
+        send_command_error_response(CTAP1_ERR_SUCCESS);
     }
 }
