@@ -31,18 +31,33 @@ static uint8_t m_password[AES_PASSWORD_SIZE];
 // イニシャルベクターを保持（16バイト）
 static uint8_t m_initial_vector[AES_DATA_SIZE];
 
-bool fido_cryptoauth_aes_cbc_new_password(void)
+static bool aes_128_write_password(void)
 {
-    // AESパスワード生成（32バイトのランダムベクターを作成）
-    fido_cryptoauth_generate_random_vector(m_password, sizeof(m_password));
+    // 初期化
+    if (fido_cryptoauth_init()== false) {
+        return false;
+    }
 
     // AESパスワードを、8番スロットの33バイト目(2ブロック目)以降に格納
     uint16_t key_id = KEY_ID_FOR_CONFIDENTIAL_DATA;
     ATCA_STATUS status = atcab_write_zone(ATCA_ZONE_DATA, key_id, 
         BLOCK_IDX_FOR_AES_PASSWORD, 0, m_password, AES_PASSWORD_SIZE);
     if (status != ATCA_SUCCESS) {
-        fido_log_error("fido_cryptoauth_aes_cbc_new_password failed: atcab_write_zone(%d) returns 0x%02x",
+        fido_log_error("aes_128_write_password failed: atcab_write_zone(%d) returns 0x%02x",
             key_id, status);
+        return false;
+    }
+
+    return true;
+}
+
+bool fido_cryptoauth_aes_cbc_new_password(void)
+{
+    // AESパスワード生成（32バイトのランダムベクターを作成）
+    fido_cryptoauth_generate_random_vector(m_password, sizeof(m_password));
+
+    // AESパスワードを、8番スロットの33バイト目(2ブロック目)以降に格納
+    if (aes_128_write_password() == false) {
         return false;
     }
 
@@ -50,6 +65,19 @@ bool fido_cryptoauth_aes_cbc_new_password(void)
     fido_log_debug("fido_cryptoauth_aes_cbc_new_password (%d bytes):", sizeof(m_password));
     fido_log_print_hexdump_debug(m_password, sizeof(m_password));
 #endif
+
+    return true;
+}
+
+bool fido_cryptoauth_aes_cbc_erase_password(void)
+{
+    // AESパスワードを 0xff で初期化
+    memset(m_password, 0xff, sizeof(m_password));
+
+    // AESパスワードを、8番スロットの33バイト目(2ブロック目)以降に格納
+    if (aes_128_write_password() == false) {
+        return false;
+    }
 
     return true;
 }
@@ -77,6 +105,24 @@ static bool aes_128_read_password(void)
     fido_log_print_hexdump_debug(m_password, sizeof(m_password));
 #endif
 
+    return true;
+}
+
+bool fido_cryptoauth_aes_cbc_check_password_exist(bool *exist)
+{
+    // パスワードを読出し
+    if (aes_128_read_password()== false) {
+        return false;
+    }
+
+    // パスワードが初期値（0xff）の場合は、exist に false を設定
+    *exist = false;
+    for (size_t i = 0; i < AES_PASSWORD_SIZE; i++) {
+        if (m_password[i] != 0xff) {
+            *exist = true;
+            break;
+        }
+    }
     return true;
 }
 

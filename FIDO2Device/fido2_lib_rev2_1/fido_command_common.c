@@ -15,8 +15,13 @@
 #include "u2f.h"
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
+#include "fido_common.h"
 
-// for token counter
+// for ATECC608A
+#include "fido_cryptoauth.h"
+#include "fido_cryptoauth_aes_cbc.h"
+
+// for Flash ROM
 #include "fido_flash_token_counter.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -51,25 +56,29 @@ bool fido_command_check_skey_cert_exist(void)
 
 bool fido_command_check_aes_password_exist(void)
 {
-    if (fido_flash_password_get() == NULL) {
-        // キーハンドルを暗号化するために必要な
-        // AESパスワードが生成されていない場合
-        // エラーレスポンスを生成して戻す
+    bool exist;
+    if (fido_cryptoauth_aes_cbc_check_password_exist(&exist) == false) {
         return false;
     }
-
-    // AESパスワードが生成されている場合はtrue
-    return true;
+    return exist;
 }
 
 size_t fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted)
 {
-    return fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), p_encrypted, encrypted_size, decrypted);
+    size_t size = encrypted_size;
+    if (fido_cryptoauth_aes_cbc_decrypt(p_encrypted, decrypted, &size) == false) {
+        return 0;
+    }
+    return size;
 }
 
 size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted)
 {
-    return fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), p_plaintext, plaintext_size, encrypted);
+    size_t size = plaintext_size;
+    if (fido_cryptoauth_aes_cbc_encrypt(p_plaintext, encrypted, &size) == false) {
+        return 0;
+    }
+    return size;
 }
 
 //
@@ -206,11 +215,22 @@ static bool do_sign_with_privkey(uint8_t *private_key_be)
 
 bool fido_command_do_sign_with_privkey(void)
 {
-    // 認証器固有の秘密鍵を取得
-    uint8_t *private_key_be = fido_flash_skey_data();
+    // 署名ベースからハッシュデータを生成
+    u2f_signature_generate_hash_for_sign();
 
-    // 署名ベースと秘密鍵により、署名データ作成
-    return do_sign_with_privkey(private_key_be);
+    // ハッシュデータと秘密鍵により、署名データ作成
+    uint8_t *hash_digest = u2f_signature_hash_for_sign();
+    size_t signature_size = ECDSA_SIGNATURE_SIZE;
+    fido_cryptoauth_ecdsa_sign(KEY_ID_FOR_INSTALL_PRIVATE_KEY, hash_digest, signature, &signature_size);
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1(signature) == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
+    }
+
+    return true;
 }
 
 bool fido_command_do_sign_with_keyhandle(void)
