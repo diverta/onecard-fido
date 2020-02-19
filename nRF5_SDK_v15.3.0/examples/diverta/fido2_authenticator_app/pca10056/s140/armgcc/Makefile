@@ -186,18 +186,24 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
+  $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(PLTLIB_DIR)/fido_board.c \
+  $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
+  $(PLTLIB_DIR)/fido_crypto_keypair.c \
+  $(PLTLIB_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
+  $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
+  $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
   $(U2FLIB_DIR)/u2f_signature.c \
   $(BLELIB_DIR)/ble_service_central.c \
@@ -216,26 +222,25 @@ ifeq ("$(HW_REV)","0.2")
   FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
   PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
   SRC_FILES += \
-  $(FD2LIB_REV2_DIR)/ctap2_pubkey_credential.c \
   $(FD2LIB_REV2_DIR)/fido_command_common.c \
   $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
-  $(FD2LIB_REV2_DIR)/u2f_keyhandle.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto_keypair.c \
-  $(PLTLIB_REV2_DIR)/fido_crypto_sskey.c \
   $(PLTLIB_REV2_DIR)/fido_flash_event.c \
   $(PLTLIB_REV2_DIR)/fido_flash_password.c \
   $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_token_counter.c \
 
 else
+  FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2_1
+  PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2_1
   FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
   CRPLIB_DIR := $(HOME)/GitHub/cryptoauthlib/lib
   SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/fido_command_common.c \
+  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
   $(FCALIB_DIR)/fido_cryptoauth.c \
   $(FCALIB_DIR)/fido_cryptoauth_aes_cbc.c \
   $(FCALIB_DIR)/fido_cryptoauth_setup.c \
-  $(FCALIB_DIR)/fido_cryptoauth_test.c \
   $(CRPLIB_DIR)/atca_cfgs.c \
   $(CRPLIB_DIR)/atca_command.c \
   $(CRPLIB_DIR)/atca_device.c \
@@ -434,6 +439,8 @@ ifeq ("$(HW_REV)","0.2")
 
 else
   INC_FOLDERS += \
+  $(FD2LIB_REV2_DIR) \
+  $(PLTLIB_REV2_DIR) \
   $(CRPLIB_DIR) \
 
 endif

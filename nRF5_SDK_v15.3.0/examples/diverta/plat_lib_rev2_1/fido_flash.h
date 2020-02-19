@@ -23,7 +23,7 @@ extern "C" {
 #define FIDO_PAIRING_MODE_RECORD_KEY  (0xBFED)
 //
 //  トークンカウンター管理用
-//  レコードサイズ = 26 ワード
+//  レコードサイズ = 17 ワード
 //    レコードキー: 8ワード（32バイト）
 //      U2Fの場合＝appIdHash
 //      CTAP2の場合＝Public Key Credential Sourceから生成されたSHA-256ハッシュ値
@@ -32,11 +32,9 @@ extern "C" {
 //    Webサイト情報: 8ワード（32バイト）
 //      U2Fの場合＝appIdHash
 //      CTAP2の場合＝rpIdHash
-//    ユーザー名: 8ワード（32バイト）
-//    秘密鍵スロット番号: 1ワード（4バイト)
-#define FIDO_TOKEN_COUNTER_FILE_ID          (0xBFFB)
-#define FIDO_TOKEN_COUNTER_RECORD_KEY       (0xBFEB)
-#define FIDO_TOKEN_COUNTER_RECORD_SIZE      26
+#define FIDO_TOKEN_COUNTER_FILE_ID    (0xBFFB)
+#define FIDO_TOKEN_COUNTER_RECORD_KEY (0xBFEB)
+#define FIDO_TOKEN_COUNTER_RECORD_SIZE 17
 //
 //  PINリトライカウンター管理用
 //  トークンカウンター管理と同一ファイルで管理
