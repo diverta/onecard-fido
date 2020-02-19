@@ -113,6 +113,11 @@ bool fido_command_keypair_generate_for_keyhandle(void)
     return true;
 }
 
+uint8_t *fido_command_keypair_privkey_for_keyhandle(void)
+{
+    return fido_crypto_keypair_private_key();
+}
+
 uint8_t *fido_command_keypair_pubkey_for_keyhandle(void)
 {
     return fido_crypto_keypair_public_key();
@@ -122,6 +127,11 @@ bool fido_command_keypair_generate_for_credential_id(void)
 {
     fido_crypto_keypair_generate();
     return true;
+}
+
+uint8_t *fido_command_keypair_privkey_for_credential_id(void)
+{
+    return fido_crypto_keypair_private_key();
 }
 
 uint8_t *fido_command_keypair_pubkey_for_credential_id(void)
