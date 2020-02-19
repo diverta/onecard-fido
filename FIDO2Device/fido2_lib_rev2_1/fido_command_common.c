@@ -32,7 +32,7 @@
 //
 void fido_command_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
 {
-    fido_cryptoauth_generate_random_vector(vector_buf, vector_buf_size);
+    fido_crypto_generate_random_vector(vector_buf, vector_buf_size);
 }
 
 bool fido_command_check_skey_cert_exist(void)
@@ -86,7 +86,7 @@ size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size,
 //
 void fido_command_calc_hash_sha256(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
 {
-    fido_cryptoauth_generate_sha256_hash(data, data_size, hash_digest, hash_digest_size);
+    fido_crypto_generate_sha256_hash(data, data_size, hash_digest, hash_digest_size);
 }
 
 void fido_command_calc_hash_hmac_sha256(
@@ -94,7 +94,7 @@ void fido_command_calc_hash_hmac_sha256(
     uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size,
     uint8_t *dest_data)
 {
-    fido_cryptoauth_calculate_hmac_sha256(key_data, key_data_size, 
+    fido_crypto_calculate_hmac_sha256(key_data, key_data_size, 
         src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
 }
 
@@ -118,28 +118,34 @@ uint32_t fido_command_cert_data_length(void)
 //
 bool fido_command_keypair_generate_for_keyhandle(void)
 {
-    // 未割り当てのスロットに、秘密鍵を新規生成
-    return fido_cryptoauth_keypair_generate(u2f_keyhandle_new_privkey_id());
+    fido_crypto_keypair_generate();
+    return true;
+}
+
+uint8_t *fido_command_keypair_privkey_for_keyhandle(void)
+{
+    return fido_crypto_keypair_private_key();
 }
 
 uint8_t *fido_command_keypair_pubkey_for_keyhandle(void)
 {
-    // fido_command_keypair_generate_for_keyhandle の
-    // 実行により割り当てられたスロットの秘密鍵から、公開鍵を生成
-    return fido_cryptoauth_keypair_public_key(u2f_keyhandle_get_privkey_id());
+    return fido_crypto_keypair_public_key();
 }
 
 bool fido_command_keypair_generate_for_credential_id(void)
 {
-    // 未割り当てのスロットに、秘密鍵を新規生成
-    return fido_cryptoauth_keypair_generate(ctap2_pubkey_credential_new_privkey_id());
+    fido_crypto_keypair_generate();
+    return true;
+}
+
+uint8_t *fido_command_keypair_privkey_for_credential_id(void)
+{
+    return fido_crypto_keypair_private_key();
 }
 
 uint8_t *fido_command_keypair_pubkey_for_credential_id(void)
 {
-    // fido_command_keypair_generate_for_credential_id の
-    // 実行により割り当てられたスロットの秘密鍵から、公開鍵を生成
-    return fido_cryptoauth_keypair_public_key(ctap2_pubkey_credential_get_privkey_id());
+    return fido_crypto_keypair_public_key();
 }
 
 //
@@ -151,30 +157,27 @@ uint8_t *fido_command_keypair_pubkey_for_credential_id(void)
 //
 void fido_command_sskey_init(bool force) 
 {
-    fido_cryptoauth_sskey_init(force);
+    fido_crypto_sskey_init(force);
 }
 
 uint8_t *fido_command_sskey_public_key(void)
 {
-    return fido_cryptoauth_sskey_public_key();
+    return fido_crypto_sskey_public_key();
 }
 
 uint8_t fido_command_sskey_generate(uint8_t *client_public_key_raw_data)
 {
-    if (fido_cryptoauth_sskey_generate(client_public_key_raw_data) == false) {
-        return CTAP1_ERR_OTHER;
-    }
-    return CTAP1_ERR_SUCCESS;
+    return fido_crypto_sskey_generate(client_public_key_raw_data);
 }
 
 size_t fido_command_sskey_aes_256_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted)
 {
-    return fido_crypto_aes_cbc_256_decrypt(fido_cryptoauth_sskey_hash(), p_encrypted, encrypted_size, decrypted);
+    return fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), p_encrypted, encrypted_size, decrypted);
 }
 
 size_t fido_command_sskey_aes_256_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted)
 {
-    return fido_crypto_aes_cbc_256_encrypt(fido_cryptoauth_sskey_hash(), p_plaintext, plaintext_size, encrypted);
+    return fido_crypto_aes_cbc_256_encrypt(fido_crypto_sskey_hash(), p_plaintext, plaintext_size, encrypted);
 }
 
 void fido_command_sskey_calculate_hmac_sha256(
@@ -182,7 +185,7 @@ void fido_command_sskey_calculate_hmac_sha256(
     uint8_t *dest_data)
 {
     return fido_command_calc_hash_hmac_sha256(
-        fido_cryptoauth_sskey_hash(), SSKEY_HASH_SIZE,
+        fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
         src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
 }
 
@@ -190,7 +193,7 @@ void fido_command_sskey_calculate_hmac_sha256(
 // 署名関連
 //
 static uint8_t signature[ECDSA_SIGNATURE_SIZE];
-static bool do_sign_with_privkey(uint16_t key_id)
+static bool do_sign_with_privkey(uint8_t *private_key_be)
 {
     // 署名ベースからハッシュデータを生成
     u2f_signature_generate_hash_for_sign();
@@ -198,7 +201,7 @@ static bool do_sign_with_privkey(uint16_t key_id)
     // ハッシュデータと秘密鍵により、署名データ作成
     uint8_t *hash_digest = u2f_signature_hash_for_sign();
     size_t signature_size = ECDSA_SIGNATURE_SIZE;
-    fido_cryptoauth_ecdsa_sign(key_id, hash_digest, signature, &signature_size);
+    fido_crypto_ecdsa_sign(private_key_be, hash_digest, SHA_256_HASH_SIZE, signature, &signature_size);
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1(signature) == false) {
@@ -212,29 +215,40 @@ static bool do_sign_with_privkey(uint16_t key_id)
 
 bool fido_command_do_sign_with_privkey(void)
 {
-    // 認証器固有の秘密鍵スロット番号を取得
-    uint16_t private_key_id = KEY_ID_FOR_INSTALL_PRIVATE_KEY;
+    // 署名ベースからハッシュデータを生成
+    u2f_signature_generate_hash_for_sign();
 
-    // 署名ベースと秘密鍵により、署名データ作成
-    return do_sign_with_privkey(private_key_id);
+    // ハッシュデータと秘密鍵により、署名データ作成
+    uint8_t *hash_digest = u2f_signature_hash_for_sign();
+    size_t signature_size = ECDSA_SIGNATURE_SIZE;
+    fido_cryptoauth_ecdsa_sign(KEY_ID_FOR_INSTALL_PRIVATE_KEY, hash_digest, signature, &signature_size);
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1(signature) == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
+    }
+
+    return true;
 }
 
 bool fido_command_do_sign_with_keyhandle(void)
 {
-    // キーハンドルから秘密鍵スロット番号を取り出す
-    uint16_t private_key_id = u2f_keyhandle_privkey_id();
+    // キーハンドルから秘密鍵を取り出す(33バイト目以降)
+    uint8_t *private_key_be = u2f_keyhandle_base_buffer() + U2F_APPID_SIZE;
 
     // 署名ベースと秘密鍵により、署名データ作成
-    return do_sign_with_privkey(private_key_id);
+    return do_sign_with_privkey(private_key_be);
 }
 
 bool fido_command_do_sign_with_credential_id(void)
 {
-    // credential IDから秘密鍵スロット番号を取り出す
-    uint16_t private_key_id = ctap2_pubkey_credential_privkey_id();
+    // credential IDから秘密鍵を取り出す
+    uint8_t *private_key_be = ctap2_pubkey_credential_private_key();
 
     // 署名ベースと秘密鍵により、署名データ作成
-    return do_sign_with_privkey(private_key_id);
+    return do_sign_with_privkey(private_key_be);
 }
 
 //
@@ -248,9 +262,7 @@ bool fido_command_sign_counter_delete(void)
 bool fido_command_sign_counter_create(uint8_t *unique_key, uint8_t *rpid_hash, uint8_t *username)
 {
     // カウンターを０として新規レコードを生成
-    uint16_t key_id = 2; // <-- temporary
-    size_t size = (username == NULL) ? 0 : strlen((char *)username);
-    return fido_flash_token_counter_write(unique_key, 0, rpid_hash, username, size, key_id);
+    return fido_flash_token_counter_write(unique_key, 0, rpid_hash);
 }
 
 bool fido_command_sign_counter_read(uint8_t *unique_key)
@@ -260,7 +272,7 @@ bool fido_command_sign_counter_read(uint8_t *unique_key)
 
 bool fido_command_sign_counter_update(uint8_t *unique_key, uint32_t counter)
 {
-    return fido_flash_token_counter_write(unique_key, counter, NULL, NULL, 0, 0);
+    return fido_flash_token_counter_write(unique_key, counter, NULL);
 }
 
 uint32_t fido_command_sign_counter_value(void)

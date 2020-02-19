@@ -15,7 +15,9 @@ extern "C" {
 #include "fido_platform_common.h"
 
 // ハードウェアの差異に依存する定義を集約
-#include "fido_flash_token_counter.h"
+#include "fido_crypto.h"
+#include "fido_crypto_keypair.h"
+#include "fido_crypto_sskey.h"
 #include "fido_flash_skey_cert.h"
     
 #ifdef __cplusplus
