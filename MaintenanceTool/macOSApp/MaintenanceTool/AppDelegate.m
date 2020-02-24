@@ -28,6 +28,7 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
+    @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -58,7 +59,7 @@
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
         
         // DFU機能の初期設定
-        [self setToolDFUCommand:[[ToolDFUCommand alloc] init]];
+        [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -91,6 +92,7 @@
         [self.menuItemTestBLE setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
+        [self.menuItemDFU setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -267,7 +269,12 @@
 #pragma mark - test for DFU
 
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [[self toolDFUCommand] startDFUProcess];
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        [self enableButtons:false];
+        [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]
+                                           hidCommand:[self toolHIDCommand]];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
@@ -288,6 +295,13 @@
     - (void)toolPreferenceWindowDidClose {
         // ツール設定画面を閉じた時は、ポップアップを表示しない
         [self commandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
+#pragma mark - Interface for ToolDFUCommand
+
+    - (void)toolDFUCommandDidTerminate:(bool)result message:(NSString *)message {
+        // DFU処理完了時は、ポップアップを表示しない
+        [self commandDidProcess:COMMAND_NONE result:result message:message];
     }
 
 #pragma mark - Call back from ToolFilePanel
