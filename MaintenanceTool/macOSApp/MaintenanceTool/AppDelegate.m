@@ -266,15 +266,9 @@
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
-#pragma mark - test for DFU
-
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        if (![self checkUSBHIDConnection]) {
-            return;
-        }
         [self enableButtons:false];
-        [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]
-                                           hidCommand:[self toolHIDCommand]];
+        [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
@@ -297,11 +291,16 @@
         [self commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
-#pragma mark - Interface for ToolDFUCommand
+#pragma mark - Call back from ToolDFUCommand
 
-    - (void)toolDFUCommandDidTerminate:(bool)result message:(NSString *)message {
-        // DFU処理完了時は、ポップアップを表示しない
-        [self commandDidProcess:COMMAND_NONE result:result message:message];
+    - (void)toolDFUCommandDidStart {
+        // DFU処理開始時
+        [self commandStartedProcess:COMMAND_USB_DFU type:TRANSPORT_HID];
+    }
+
+    - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // DFU処理完了時
+        [self commandDidProcess:command result:result message:message];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -404,6 +403,9 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_USB_DFU:
+                [self setProcessNameOfCommand:PROCESS_NAME_USB_DFU];
                 break;
             case COMMAND_CLIENT_PIN_CHANGE:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];

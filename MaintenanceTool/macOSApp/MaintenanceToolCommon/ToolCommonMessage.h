@@ -178,6 +178,7 @@
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 
 #pragma mark - USB DFU関連
+#define MSG_DFU_CONNECTION_NOT_AVAILABLE        @"FIDO認証器をブートローダーモードに変更してから実行してください。"
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
 #define MSG_DFU_IMAGE_FILENAME_CANNOT_GET       @"更新ファームウェアファイル名の取得に失敗しました。"
 #define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"

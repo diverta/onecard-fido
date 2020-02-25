@@ -12,7 +12,8 @@
     - (bool)checkUSBHIDConnection;
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data;
     - (void)toolPreferenceWindowDidClose;
-    - (void)toolDFUCommandDidTerminate:(bool)result message:(NSString *)message;
+    - (void)toolDFUCommandDidStart;
+    - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
 
