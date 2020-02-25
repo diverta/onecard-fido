@@ -206,13 +206,14 @@
     }
 
     - (void)verifyDFUConnection {
-        // DFU対象デバイスに接続
+        // DFU対象デバイスの接続検査
         NSString *ACMDevicePath = [self getConnectedDevicePath];
         dispatch_async([self mainQueue], ^{
             if (ACMDevicePath == nil) {
-                // デバイス未接続の場合はキャンセル
+                // DFU対象デバイスが未接続の場合はキャンセル
                 [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
-                [ToolPopupWindow critical:MSG_DFU_CONNECTION_NOT_AVAILABLE informativeText:nil];
+                [ToolPopupWindow critical:MSG_DFU_TARGET_NOT_CONNECTED
+                          informativeText:MSG_DFU_CONNECTION_NOT_AVAILABLE];
                 [self notifyCancel];
                 return;
             } else {
