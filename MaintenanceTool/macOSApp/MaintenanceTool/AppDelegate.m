@@ -267,8 +267,10 @@
     }
 
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [self enableButtons:false];
-        [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
+        if ([self checkUSBHIDConnection]) {
+            [self enableButtons:false];
+            [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
+        }
     }
 
 #pragma mark - Interface for ToolPreferenceWindow

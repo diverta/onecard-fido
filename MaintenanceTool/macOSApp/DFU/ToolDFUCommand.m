@@ -178,6 +178,7 @@
         [[self dfuProcessingWindow] setParentWindow:parentWindow];
         // すでにツール設定画面が開いている場合は終了
         if ([[parentWindow sheets] count] > 0) {
+            [self notifyCancel];
             return;
         }
         if ([self dfuImageIsAvailable] == false) {
@@ -185,44 +186,25 @@
             [self notifyCancel];
             return;
         }
-        // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
-        dispatch_async([self subQueue], ^{
-            [self verifyDFUConnection];
-        });
+        // 処理開始画面（ダイアログ）をモーダルで表示
+        [self dfuStartWindowWillOpen];
     }
 
     - (bool)dfuImageIsAvailable {
         // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
         if ([[self updateVersionFromImage] length] == 0) {
-            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:nil];
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
+                      informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
             return false;
         }
         // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
         if ([[self currentVersion] length] == 0) {
-            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
+                      informativeText:MSG_DFU_CURRENT_VERSION_UNKNOWN];
             return false;
         }
         return true;
     }
-
-    - (void)verifyDFUConnection {
-        // DFU対象デバイスの接続検査
-        NSString *ACMDevicePath = [self getConnectedDevicePath];
-        dispatch_async([self mainQueue], ^{
-            if (ACMDevicePath == nil) {
-                // DFU対象デバイスが未接続の場合はキャンセル
-                [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
-                [ToolPopupWindow critical:MSG_DFU_TARGET_NOT_CONNECTED
-                          informativeText:MSG_DFU_CONNECTION_NOT_AVAILABLE];
-                [self notifyCancel];
-                return;
-            } else {
-                // 処理開始画面（ダイアログ）をモーダルで表示
-                [self dfuStartWindowWillOpen];
-            }
-        });
-    }
-
 
 #pragma mark - Interface for DFUStartWindow
 
