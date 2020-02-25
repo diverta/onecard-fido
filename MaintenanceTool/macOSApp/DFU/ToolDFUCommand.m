@@ -13,6 +13,10 @@
 #import "ToolHIDCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
+#import "ToolPopupWindow.h"
+#import "AppDelegate.h"
+#import "DFUStartWindow.h"
+#import "DFUProcessingWindow.h"
 
 // 処理タイムアウト（転送／反映チェック処理）
 #define TIMEOUT_SEC_DFU_PROCESS 30.0
@@ -28,13 +32,19 @@
 
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
     @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
+    // 画面の参照を保持
+    @property (nonatomic, weak) AppDelegate    *delegate;
+    @property (nonatomic) DFUStartWindow       *dfuStartWindow;
+    @property (nonatomic) DFUProcessingWindow  *dfuProcessingWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t mainQueue;
     @property (nonatomic) dispatch_queue_t subQueue;
-    // バージョン情報照会フラグ
-    @property (nonatomic) bool needVersionInfo;
+    // バージョン更新判定フラグ
+    @property (nonatomic) bool needCompareUpdateVersion;
     // 更新イメージファイル名から取得したバージョン
-    @property (nonatomic) bool strFWRevFromFile;
+    @property (nonatomic) NSString *updateVersionFromImage;
+    // 認証器からHID経由で取得したバージョン
+    @property (nonatomic) NSString *currentVersion;
     // タイムアウト監視フラグ
     @property (nonatomic) bool needTimeoutMonitor;
 
@@ -43,15 +53,45 @@
 @implementation ToolDFUCommand
 
     - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id)delegate {
         self = [super init];
+        if (self) {
+            [self setDelegate:delegate];
+        }
+        // 内部保持バージョンをクリア
+        [self setCurrentVersion:@""];
+        [self setUpdateVersionFromImage:@""];
+        // 画面のインスタンスを生成
+        [self setDfuStartWindow:[[DFUStartWindow alloc]
+                                 initWithWindowNibName:@"DFUStartWindow"]];
+        [self setDfuProcessingWindow:[[DFUProcessingWindow alloc]
+                                      initWithWindowNibName:@"DFUProcessingWindow"]];
         // ToolCDCHelperのインスタンスを生成
         [self setToolCDCHelper:[[ToolCDCHelper alloc] init]];
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
-        // バージョン情報照会フラグをリセット
-        [self setNeedVersionInfo:false];
+        // バージョン更新判定フラグをリセット
+        [self setNeedCompareUpdateVersion:false];
+        // ファームウェア更新イメージファイルから、更新バージョンを取得
+        [self getUpdateVersionFromDFUImage];
         return self;
+    }
+
+    - (void)getUpdateVersionFromDFUImage {
+        // 別スレッドで実行
+        dispatch_async([self subQueue], ^{
+            // ファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if ([self readDFUImages]) {
+                // パッケージに同梱されている更新イメージのバージョンを取得
+                NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
+                // 更新バージョンを保持
+                [self setUpdateVersionFromImage:update];
+            }
+        });
     }
 
 #pragma mark - Process timeout monitor
@@ -71,8 +111,8 @@
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウト検知フラグが設定されている場合
         if ([self needTimeoutMonitor]) {
-            // バージョン情報照会フラグをリセット
-            [self setNeedVersionInfo:false];
+            // バージョン更新判定フラグをリセット
+            [self setNeedCompareUpdateVersion:false];
             // 処理タイムアウトを検知したので、異常終了と判断
             [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
             [self notifyEndMessage:false];
@@ -82,22 +122,15 @@
 #pragma mark - Call back from AppDelegate
 
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
-        // バージョン情報照会フラグがセットされている場合（ファームウェア反映待ち）
-        if ([self needVersionInfo]) {
-            // バージョン情報照会フラグをリセット
-            [self setNeedVersionInfo:false];
-            // USB HID経由でバージョン照会コマンドを実行
-            [self queryFirmwareVersion:toolHIDCommandRef];
-        }
-    }
-
-    - (void)queryFirmwareVersion:(id)toolHIDCommandRef {
+        // 認証器の現在バージョンをクリア
+        [self setCurrentVersion:@""];
+        // USB HID経由でバージョン照会コマンドを実行
         if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
             return;
         }
         [self setToolHIDCommand:(ToolHIDCommand *)toolHIDCommandRef];
         dispatch_async([self subQueue], ^{
-            // サブスレッドでバージョン情報照会を実行
+            // サブスレッドでバージョン情報照会を実行 --> notifyFirmwareVersionが呼び出される
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_FOR_DFU
                                                withData:nil forCommand:self];
         });
@@ -106,12 +139,24 @@
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)notifyFirmwareVersion:(NSString *)strFWRev {
+        // 認証器の現在バージョンを保持
+        [self setCurrentVersion:strFWRev];
+        // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
+        if ([self needCompareUpdateVersion]) {
+            // バージョン情報を比較して終了判定
+            [self compareUpdateVersion:strFWRev];
+        }
+    }
+
+    - (void)compareUpdateVersion:(NSString *)update {
+        // バージョン更新判定フラグをリセット
+        [self setNeedCompareUpdateVersion:false];
         // 処理タイムアウト検知を不要とする
         [self setNeedTimeoutMonitor:false];
         // バージョン情報を比較
         char *fw_version = nrf52_app_image_zip_version();
         NSString *expected = [[NSString alloc] initWithUTF8String:fw_version];
-        if (strcmp([strFWRev UTF8String], fw_version) == 0) {
+        if (strcmp([update UTF8String], fw_version) == 0) {
             // バージョンが同じであればDFU処理は正常終了とする
             [self notifyMessage:
              [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected]];
@@ -123,6 +168,106 @@
               expected]];
             [self notifyEndMessage:false];
         }
+    }
+
+#pragma mark - Interface for Main Process
+
+    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログの親ウィンドウを保持
+        [[self dfuStartWindow] setParentWindow:parentWindow];
+        [[self dfuProcessingWindow] setParentWindow:parentWindow];
+        // すでにツール設定画面が開いている場合は終了
+        if ([[parentWindow sheets] count] > 0) {
+            return;
+        }
+        if ([self dfuImageIsAvailable] == false) {
+            // バージョンチェックが不正の場合はキャンセル
+            [self notifyCancel];
+            return;
+        }
+        // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
+        dispatch_async([self subQueue], ^{
+            [self verifyDFUConnection];
+        });
+    }
+
+    - (bool)dfuImageIsAvailable {
+        // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
+        if ([[self updateVersionFromImage] length] == 0) {
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:nil];
+            return false;
+        }
+        // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
+        if ([[self currentVersion] length] == 0) {
+            [ToolPopupWindow critical:MSG_CMDTST_PROMPT_USB_PORT_SET informativeText:nil];
+            return false;
+        }
+        return true;
+    }
+
+    - (void)verifyDFUConnection {
+        // DFU対象デバイスに接続
+        NSString *ACMDevicePath = [self getConnectedDevicePath];
+        dispatch_async([self mainQueue], ^{
+            if (ACMDevicePath == nil) {
+                // デバイス未接続の場合はキャンセル
+                [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
+                [ToolPopupWindow critical:MSG_DFU_CONNECTION_NOT_AVAILABLE informativeText:nil];
+                [self notifyCancel];
+                return;
+            } else {
+                // 処理開始画面（ダイアログ）をモーダルで表示
+                [self dfuStartWindowWillOpen];
+            }
+        });
+    }
+
+
+#pragma mark - Interface for DFUStartWindow
+
+    - (void)dfuStartWindowWillOpen {
+        NSWindow *dialog = [[self dfuStartWindow] window];
+        ToolDFUCommand * __weak weakSelf = self;
+        [[[self dfuStartWindow] parentWindow] beginSheet:dialog
+                                       completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuStartWindowDidClose:[self delegate] modalResponse:response];
+        }];
+        // バージョン情報を、ダイアログの該当欄に設定
+        [[self dfuStartWindow] setLabelVersion:[self currentVersion]
+                                 updateVersion:[self updateVersionFromImage]];
+    }
+
+    - (void)dfuStartWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self dfuStartWindow] close];
+        if (modalResponse == NSModalResponseCancel) {
+            // キャンセルボタンがクリックされた場合は、ポップアップ画面を出さずに終了
+            [self notifyCancel];
+            return;
+        }
+        // 処理進捗画面（ダイアログ）をモーダルで表示
+        [self dfuProcessingWindowWillOpen];
+        // サブスレッドでDFU処理を実行開始
+        [self startDFUProcess];
+    }
+
+#pragma mark - Interface for DFUProcessingWindow
+
+    - (void)dfuProcessingWindowWillOpen {
+        NSWindow *dialog = [[self dfuProcessingWindow] window];
+        ToolDFUCommand * __weak weakSelf = self;
+        [[[self dfuProcessingWindow] parentWindow] beginSheet:dialog
+                                            completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuProcessingWindowDidClose:[self delegate] modalResponse:response];
+        }];
+    }
+
+    - (void)dfuProcessingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
+        [[self dfuProcessingWindow] close];
+        [self notifyCancel];
     }
 
 #pragma mark - Main process
@@ -137,24 +282,13 @@
                 [self setNeedTimeoutMonitor:false];
             }
         });
+        dispatch_async([self mainQueue], ^{
+            // メイン画面に開始メッセージを出力
+            [[self delegate] toolDFUCommandDidStart];
+        });
     }
 
     - (bool)performDFUProcess {
-        // ファームウェア更新処理の開始メッセージを出力
-        [self notifyStartMessage];
-        // ファームウェアのイメージファイル（.dat／.bin）から、バイナリーイメージを読込
-        if ([self readDFUImages] == false) {
-            [self notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
-            [self notifyEndMessage:false];
-            return false;
-        }
-        // DFU対象デバイスに接続
-        NSString *ACMDevicePath = [self getConnectedDevicePath];
-        if (ACMDevicePath == nil) {
-            [self notifyErrorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
-            [self notifyEndMessage:false];
-            return false;
-        }
         // DFUを実行
         bool ret = [self performDFU];
         // DFU対象デバイスから切断
@@ -163,20 +297,14 @@
             // DFU転送失敗時
             [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
         } else {
-            // DFU転送成功時は、バージョン情報照会フラグをセット
+            // DFU転送成功時は、バージョン更新判定フラグをセット
             [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
-            [self setNeedVersionInfo:true];
+            [self setNeedCompareUpdateVersion:true];
         }
         return ret;
     }
 
 #pragma mark - Sub process
-
-    - (void)notifyStartMessage {
-        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE,
-                              PROCESS_NAME_USB_DFU];
-        [[ToolLogFile defaultLogger] info:startMsg];
-    }
 
     - (void)notifyMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] info:message];
@@ -187,14 +315,21 @@
     }
 
     - (void)notifyEndMessage:(bool)success {
-        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE,
-                         PROCESS_NAME_USB_DFU,
-                         success ? MSG_SUCCESS : MSG_FAILURE];
-        if (success) {
-            [[ToolLogFile defaultLogger] info:str];
-        } else {
-            [[ToolLogFile defaultLogger] error:str];
-        }
+        // 処理進捗画面が表示中の場合は閉じる
+        [[self dfuProcessingWindow] close];
+        // AppDelegateに制御を戻す
+        dispatch_async([self mainQueue], ^{
+            AppDelegate *app = (AppDelegate *)[self delegate];
+            [app toolDFUCommandDidTerminate:COMMAND_USB_DFU result:success message:nil];
+        });
+    }
+
+    - (void)notifyCancel {
+        // AppDelegateに制御を戻す（ポップアップメッセージを表示しない）
+        dispatch_async([self mainQueue], ^{
+            AppDelegate *app = (AppDelegate *)[self delegate];
+            [app toolDFUCommandDidTerminate:COMMAND_NONE result:true message:nil];
+        });
     }
 
     - (bool)readDFUImages {
@@ -202,6 +337,7 @@
         NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
         // .zipファイル名を取得
         if (nrf52_app_image_zip_filename_get([resourcePath UTF8String]) == false) {
+            [self notifyErrorMessage:MSG_DFU_IMAGE_FILENAME_CANNOT_GET];
             return false;
         }
         // ログ出力
@@ -211,6 +347,7 @@
         // .zipファイルからイメージを読込
         const char *zip_path = nrf52_app_image_zip_filename();
         if (nrf52_app_image_zip_read(zip_path) == false) {
+            [self notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
             return false;
         }
         // ログ出力
