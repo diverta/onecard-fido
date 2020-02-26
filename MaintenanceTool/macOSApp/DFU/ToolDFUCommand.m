@@ -233,6 +233,8 @@
         }
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self dfuProcessingWindowWillOpen];
+        // 処理進捗画面にDFU処理開始を通知
+        [[self dfuProcessingWindow] commandDidStartDFUProcess];
         // サブスレッドでDFU処理を実行開始
         [self startDFUProcess];
     }

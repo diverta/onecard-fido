@@ -41,6 +41,10 @@
     - (void)commandDidStartDFUProcess {
         // 画面項目を初期化
         [self initFieldValue];
+        // プログレスバーの進捗カウントアップを開始
+        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self
+                                       selector:@selector(countupProgressValue:)
+                                       userInfo:nil repeats:YES];
     }
 
     - (void)commandDidNotifyDFUProcess:(NSString *)message {
@@ -53,6 +57,18 @@
             [self terminateWindow:NSModalResponseOK];
         } else {
             [self terminateWindow:NSModalResponseAbort];
+        }
+    }
+
+#pragma mark - progress timer
+
+    - (void)countupProgressValue:(NSTimer *)timer {
+        // プログレスバーの進捗を１秒ごとにカウントアップ
+        NSInteger progress = [[self levelIndicator] integerValue] + 1;
+        [[self levelIndicator] setIntegerValue:progress];
+        if (progress == [[self levelIndicator] maxValue]) {
+            // プログレスバーの右端に到達した場合は、タイマーを無効化
+            [timer invalidate];
         }
     }
 

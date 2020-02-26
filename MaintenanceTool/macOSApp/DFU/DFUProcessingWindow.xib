@@ -49,7 +49,7 @@
                     </textField>
                     <levelIndicator verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Trg-eO-TjT" userLabel="LevelIndicator">
                         <rect key="frame" x="18" y="89" width="338" height="16"/>
-                        <levelIndicatorCell key="cell" alignment="left" doubleValue="10" maxValue="20" levelIndicatorStyle="continuousCapacity" id="sYE-cE-mWL"/>
+                        <levelIndicatorCell key="cell" alignment="left" maxValue="20" levelIndicatorStyle="continuousCapacity" id="sYE-cE-mWL"/>
                     </levelIndicator>
                 </subviews>
                 <constraints>
