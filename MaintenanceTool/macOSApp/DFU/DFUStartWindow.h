@@ -8,12 +8,16 @@
 #define DFUStartWindow_h
 
 #import <Cocoa/Cocoa.h>
+#import "ToolDFUCommand.h"
 
 @interface DFUStartWindow : NSWindowController
 
     @property (nonatomic) NSWindow *parentWindow;
 
-    - (void)setLabelVersion:(NSString *)current updateVersion:(NSString *)update;
+    - (void)setWindowParameter:(ToolDFUCommand *)command
+                currentVersion:(NSString *)current
+                 updateVersion:(NSString *)update;
+    - (void)commandDidVerifyDFUConnection:(bool)available;
 
 @end
 

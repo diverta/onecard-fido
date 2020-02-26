@@ -144,11 +144,12 @@
         // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
         if ([self needCompareUpdateVersion]) {
             // バージョン情報を比較して終了判定
-            [self compareUpdateVersion:strFWRev];
+            bool result = [self compareUpdateVersion:strFWRev];
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:result];
         }
     }
 
-    - (void)compareUpdateVersion:(NSString *)update {
+    - (bool)compareUpdateVersion:(NSString *)update {
         // バージョン更新判定フラグをリセット
         [self setNeedCompareUpdateVersion:false];
         // 処理タイムアウト検知を不要とする
@@ -160,13 +161,13 @@
             // バージョンが同じであればDFU処理は正常終了とする
             [self notifyMessage:
              [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected]];
-            [self notifyEndMessage:true];
+            return true;
         } else {
             // バージョンが同じでなければ異常終了とする
             [self notifyErrorMessage:
              [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED,
               expected]];
-            [self notifyEndMessage:false];
+            return false;
         }
     }
 
@@ -217,8 +218,9 @@
             [weakSelf dfuStartWindowDidClose:[self delegate] modalResponse:response];
         }];
         // バージョン情報を、ダイアログの該当欄に設定
-        [[self dfuStartWindow] setLabelVersion:[self currentVersion]
-                                 updateVersion:[self updateVersionFromImage]];
+        [[self dfuStartWindow] setWindowParameter:self
+                                   currentVersion:[self currentVersion]
+                                    updateVersion:[self updateVersionFromImage]];
     }
 
     - (void)dfuStartWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
@@ -235,6 +237,18 @@
         [self startDFUProcess];
     }
 
+    - (void)commandWillVerifyDFUConnection {
+        // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
+        dispatch_async([self subQueue], ^{
+            // DFU対象デバイスの接続検査
+            NSString *ACMDevicePath = [self getConnectedDevicePath];
+            dispatch_async([self mainQueue], ^{
+                // チェック結果を処理開始画面に引き渡す
+                [[self dfuStartWindow] commandDidVerifyDFUConnection:(ACMDevicePath != nil)];
+            });
+        });
+    }
+
 #pragma mark - Interface for DFUProcessingWindow
 
     - (void)dfuProcessingWindowWillOpen {
@@ -248,9 +262,26 @@
     }
 
     - (void)dfuProcessingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
-        // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
         [[self dfuProcessingWindow] close];
-        [self notifyCancel];
+        switch (modalResponse) {
+            case NSModalResponseOK:
+                [self notifyEndMessage:true];
+                break;
+            case NSModalResponseAbort:
+                [self notifyEndMessage:false];
+                break;
+            default:
+                // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
+                [self notifyCancel];
+                break;
+        }
+    }
+
+    - (void)notifyProgress:(NSString *)message {
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に進捗を通知
+            [[self dfuProcessingWindow] commandDidNotifyDFUProcess:message];
+        });
     }
 
 #pragma mark - Main process
@@ -273,6 +304,7 @@
 
     - (bool)performDFUProcess {
         // DFUを実行
+        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
         bool ret = [self performDFU];
         // DFU対象デバイスから切断
         [[self toolCDCHelper] disconnectDevice];
@@ -283,6 +315,7 @@
             // DFU転送成功時は、バージョン更新判定フラグをセット
             [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
             [self setNeedCompareUpdateVersion:true];
+            [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
         }
         return ret;
     }
@@ -298,8 +331,6 @@
     }
 
     - (void)notifyEndMessage:(bool)success {
-        // 処理進捗画面が表示中の場合は閉じる
-        [[self dfuProcessingWindow] close];
         // AppDelegateに制御を戻す
         dispatch_async([self mainQueue], ^{
             AppDelegate *app = (AppDelegate *)[self delegate];

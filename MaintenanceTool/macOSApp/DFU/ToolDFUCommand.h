@@ -16,6 +16,8 @@
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
     - (void)notifyFirmwareVersion:(NSString *)strFWRev;
 
+    - (void)commandWillVerifyDFUConnection;
+
 @end
 
 #endif /* ToolDFU_h */

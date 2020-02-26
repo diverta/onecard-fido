@@ -14,6 +14,10 @@
 
     @property (nonatomic) NSWindow *parentWindow;
 
+    - (void)commandDidStartDFUProcess;
+    - (void)commandDidNotifyDFUProcess:(NSString *)message;
+    - (void)commandDidTerminateDFUProcess:(bool)result;
+
 @end
 
 #endif /* DFUProcessingWindow_h */

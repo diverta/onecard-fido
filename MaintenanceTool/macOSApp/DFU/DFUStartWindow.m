@@ -12,6 +12,7 @@
 
 @interface DFUStartWindow ()
 
+    @property (nonatomic, weak) ToolDFUCommand  *toolDFUCommand;
     @property (assign) IBOutlet NSTextField     *labelUpdateVersion;
     @property (assign) IBOutlet NSTextField     *labelCurrentVersion;
 
@@ -31,14 +32,19 @@
         [[self labelCurrentVersion] setStringValue:@""];
     }
 
-    - (void)setLabelVersion:(NSString *)current updateVersion:(NSString *)update {
+- (void)setWindowParameter:(ToolDFUCommand *)command
+            currentVersion:(NSString *)current
+             updateVersion:(NSString *)update{
+        // DFU処理クラスの参照を設定
+        [self setToolDFUCommand:command];
         // バージョンラベルを設定
         [[self labelUpdateVersion] setStringValue:update];
         [[self labelCurrentVersion] setStringValue:current];
     }
 
     - (IBAction)buttonOKDidPress:(id)sender {
-        [self terminateWindow:NSModalResponseOK];
+        // DFU対象デバイスの接続チェック
+        [[self toolDFUCommand] commandWillVerifyDFUConnection];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -49,6 +55,24 @@
         // 画面項目を初期化し、この画面を閉じる
         [self initFieldValue];
         [[self parentWindow] endSheet:[self window] returnCode:response];
+    }
+
+#pragma mark - Interface for ToolDFUCommand
+
+    - (void)commandDidVerifyDFUConnection:(bool)available {
+        if (available == false) {
+            // DFU対象デバイスの接続チェックがNGの場合、エラーメッセージをポップアップ表示
+            [ToolPopupWindow critical:MSG_DFU_TARGET_NOT_CONNECTED
+                      informativeText:nil];
+            return;
+        }
+        // DFU処理を開始するかどうかのプロンプトを表示
+        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
+                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+            return;
+        }
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK];
     }
 
 @end
