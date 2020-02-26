@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="labelProgress" destination="fcq-yN-nDr" id="pUx-a3-Yt9"/>
                 <outlet property="labelTitle" destination="CC3-FK-I4B" id="4VM-Yt-iTm"/>
+                <outlet property="levelIndicator" destination="Trg-eO-TjT" id="dEs-PS-GZw"/>
                 <outlet property="window" destination="JpZ-aP-hsO" id="zzh-6J-3OX"/>
             </connections>
         </customObject>
@@ -18,14 +19,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="JpZ-aP-hsO">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="158" width="358" height="185"/>
+            <rect key="contentRect" x="131" y="158" width="378" height="166"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="0t2-Vg-eLM">
-                <rect key="frame" x="0.0" y="0.0" width="378" height="185"/>
+                <rect key="frame" x="0.0" y="0.0" width="378" height="166"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CC3-FK-I4B" userLabel="LabelTitle">
-                        <rect key="frame" x="4" y="159" width="370" height="17"/>
+                        <rect key="frame" x="4" y="140" width="370" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="c7B-CF-eeO"/>
                         </constraints>
@@ -35,21 +36,8 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Uwe-zX-jMI" userLabel="ButtonCancel">
-                        <rect key="frame" x="148" y="13" width="82" height="32"/>
-                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tfD-f1-Ex9">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <string key="keyEquivalent" base64-UTF8="YES">
-Gw
-</string>
-                        </buttonCell>
-                        <connections>
-                            <action selector="buttonCancelDidPress:" target="-2" id="nLy-uH-dSQ"/>
-                        </connections>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fcq-yN-nDr" userLabel="LabelProgress">
-                        <rect key="frame" x="142" y="77" width="94" height="17"/>
+                        <rect key="frame" x="18" y="37" width="340" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="Oto-lb-8aq"/>
                         </constraints>
@@ -60,28 +48,26 @@ Gw
                         </textFieldCell>
                     </textField>
                     <levelIndicator verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Trg-eO-TjT" userLabel="LevelIndicator">
-                        <rect key="frame" x="18" y="102" width="338" height="16"/>
+                        <rect key="frame" x="18" y="89" width="338" height="16"/>
                         <levelIndicatorCell key="cell" alignment="left" doubleValue="10" maxValue="20" levelIndicatorStyle="continuousCapacity" id="sYE-cE-mWL"/>
                     </levelIndicator>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="CC3-FK-I4B" firstAttribute="centerX" secondItem="Uwe-zX-jMI" secondAttribute="centerX" id="28o-hF-hLl"/>
-                    <constraint firstAttribute="bottom" secondItem="Uwe-zX-jMI" secondAttribute="bottom" constant="20" symbolic="YES" id="7Jg-JQ-AHH"/>
-                    <constraint firstAttribute="trailing" secondItem="fcq-yN-nDr" secondAttribute="trailing" constant="144" id="IMi-rz-q2U"/>
-                    <constraint firstItem="fcq-yN-nDr" firstAttribute="top" secondItem="0t2-Vg-eLM" secondAttribute="top" constant="91" id="M0v-Tb-eh3"/>
+                    <constraint firstAttribute="trailing" secondItem="fcq-yN-nDr" secondAttribute="trailing" constant="22" id="IMi-rz-q2U"/>
+                    <constraint firstItem="fcq-yN-nDr" firstAttribute="top" secondItem="0t2-Vg-eLM" secondAttribute="top" constant="112" id="M0v-Tb-eh3"/>
                     <constraint firstItem="CC3-FK-I4B" firstAttribute="top" secondItem="0t2-Vg-eLM" secondAttribute="top" constant="9" id="aJn-1D-Jza"/>
-                    <constraint firstItem="fcq-yN-nDr" firstAttribute="centerX" secondItem="Trg-eO-TjT" secondAttribute="centerX" constant="2" id="chq-Nj-zpp"/>
-                    <constraint firstItem="fcq-yN-nDr" firstAttribute="leading" secondItem="0t2-Vg-eLM" secondAttribute="leading" constant="144" id="hoD-JM-pxc"/>
+                    <constraint firstItem="fcq-yN-nDr" firstAttribute="centerX" secondItem="Trg-eO-TjT" secondAttribute="centerX" constant="1" id="chq-Nj-zpp"/>
+                    <constraint firstItem="fcq-yN-nDr" firstAttribute="leading" secondItem="0t2-Vg-eLM" secondAttribute="leading" constant="20" id="hoD-JM-pxc"/>
                     <constraint firstItem="Trg-eO-TjT" firstAttribute="leading" secondItem="0t2-Vg-eLM" secondAttribute="leading" constant="18" id="mHG-de-JQL"/>
                     <constraint firstItem="CC3-FK-I4B" firstAttribute="centerX" secondItem="0t2-Vg-eLM" secondAttribute="centerX" id="rvK-ZL-zB6"/>
-                    <constraint firstItem="fcq-yN-nDr" firstAttribute="top" secondItem="Trg-eO-TjT" secondAttribute="bottom" constant="8" symbolic="YES" id="tdk-Bn-dk0"/>
+                    <constraint firstItem="fcq-yN-nDr" firstAttribute="top" secondItem="Trg-eO-TjT" secondAttribute="bottom" constant="35" id="tdk-Bn-dk0"/>
                     <constraint firstItem="CC3-FK-I4B" firstAttribute="leading" secondItem="0t2-Vg-eLM" secondAttribute="leading" constant="6" id="zcm-JJ-5I7"/>
                 </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="O93-HU-lM6"/>
             </connections>
-            <point key="canvasLocation" x="122" y="410.5"/>
+            <point key="canvasLocation" x="122" y="401"/>
         </window>
     </objects>
 </document>
