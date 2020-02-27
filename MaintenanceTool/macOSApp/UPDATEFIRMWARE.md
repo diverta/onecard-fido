@@ -20,15 +20,15 @@
 <img src="assets02/0004.png" width="400">
 
 処理開始画面が表示されます。<br>
-認証器の現在バージョンと、更新するバージョンが表示されます。
+MDBT50Q Dongleに導入されているファームウェアのバージョンと、更新するバージョンが表示されます。
 
 <img src="assets02/0005.jpg" width="400">
 
-ここで、認証器のRESETボタン（SW2）を１回押します。
+ここで、MDBT50Q DongleのRESETボタン（SW2）を１回押します。
 
 <img src="assets02/0011.jpg" width="400">
 
-認証器がブートローダーモードに遷移します。<br>
+MDBT50Q Dongleがブートローダーモードに遷移します。<br>
 MDBT50Q Dongleの赤色LEDが点滅していることを確認します。
 
 <img src="assets02/0012.jpg" width="400">
@@ -43,7 +43,7 @@ MDBT50Q Dongleの赤色LEDが点滅していることを確認します。
 
 <img src="assets02/0007.jpg" width="400">
 
-次に、認証器内で、転送されたファームウェア更新イメージが反映中であることを知らせています。
+次に、MDBT50Q Dongle内で、転送されたファームウェア更新イメージが反映中であることを知らせています。
 
 <img src="assets02/0008.jpg" width="400">
 
