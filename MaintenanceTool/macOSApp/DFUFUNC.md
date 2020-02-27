@@ -10,7 +10,7 @@ nRF52 SDKのDFU機能（[Secure DFU Bootloader over Serial Link (UART/USB)](http
 
 - <b>[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/open_bootloader)</b><br>
 [MDBT50Q Dongle（Rev2）](../../FIDO2Device/MDBT50Q_Dongle/HWSUMMARY_2.md)に搭載されているブートローダーです。<br>
-作成手順 --> [USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/open_bootloader/README.md)br>
+作成手順 --> [USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/open_bootloader/README.md)<br>
 導入手順 --> [USBブートローダー書込手順](../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/JLINKSWDPROG.md)
 
 - <b>[USBブートローダー（署名機能付き）](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)</b><br>
@@ -54,7 +54,7 @@ IBAction（メニュー選択）により、メソッド`dfuProcessWillStart`を
 }
 ```
 
-`dfuProcessWillStart`で、処理開始画面（下図ご参照）をモーダル表示しています。
+`dfuProcessWillStart`が呼び出されると、処理開始画面（下図ご参照）がモーダル表示されます。
 
 ```
 - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -184,7 +184,7 @@ DFU処理クラスは、処理開始画面クローズ時に、処理進捗画�
 ```
 
 処理進捗画面は、進捗通知（`notifyProgress`）により、画面上の進捗メッセージを切り替えます。<br>
-下図は、更新イメージ転送が完了したことをあらわす文言になります。
+下図は、ファームウェア更新イメージ転送が完了後、MDBT50Q Dongleでファームウェア更新が反映されるのを待機している様子です。
 
 <img src="assets02/0008.jpg" width="400">
 
