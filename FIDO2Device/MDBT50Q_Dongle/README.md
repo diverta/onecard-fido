@@ -14,18 +14,13 @@
 
 nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、若干の配線変更を行っております。
 
-## 使用ファームウェア
+### [FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)
 
-MDBT50Q Dongleのファームウェアは、本プロジェクトで開発中の[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)をご使用ください。
+MDBT50Q Dongleで使用するファームウェアです。
 
-### [アプリケーション書込み手順](APPINSTALL.md)
+### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 
-MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。
-
-### [簡易USBブートローダー（ご参考）](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)
-
-PCのUSBポート経由で、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込むことができるようにするためのファームウェアです。<br>
-MDBT50Q Dongleにはすでに導入済みとなっております。
+MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール（macOS版）](MaintenanceTool/macOSApp)により更新する手順について説明しています。
 
 ## 動作確認手順
 
@@ -44,3 +39,28 @@ BLEセントラルサービスを使用したデモンストレーション機�
 ### [BLEデバイスによる自動認証](DEMOFUNC_2.md)
 
 FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
+
+## 開発情報
+
+ただいま、<b>次期バージョン（rev2.1）</b>を開発中です。<br>
+基板小型化と、セキュアIC導入が主な特色になります。
+
+- <b>基板の小型化</b><br>
+不要な機能／部品を排除した結果、rev2に比して、幅4mm、奥行き7mmのサイズ縮小を実現します。
+
+- <b>セキュアIC「ATECC608A」を基板に新規導入</b><br>
+認証器固有の秘密鍵を、nRF52840のFlash ROMではなく、セキュアICに格納します。<br>
+（サイト固有の認証情報を暗号化／復号化するためのパスワードも、セキュアICに格納します）<br>
+rev2と同様、管理ツールにより秘密鍵インストールが可能ですが、一度インストールされた秘密鍵は、いかなる手段によっても参照できなくなります。
+
+## ご参考情報
+
+### [アプリケーション書込み手順](APPINSTALL.md)
+
+MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を経由し、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
+（ファームウェア単体開発時の運用になります）
+
+### [簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)
+
+PCのUSBポート経由で、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込むことができるようにするためのファームウェアです。<br>
+MDBT50Q Dongleにはすでに導入済みとなっております。
