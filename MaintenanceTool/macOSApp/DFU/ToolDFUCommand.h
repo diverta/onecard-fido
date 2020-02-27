@@ -11,9 +11,12 @@
 
 @interface ToolDFUCommand : NSObject
 
-    - (void)startDFUProcess;
+    - (id)initWithDelegate:(id)delegate;
+    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
     - (void)notifyFirmwareVersion:(NSString *)strFWRev;
+
+    - (void)commandWillVerifyDFUConnection;
 
 @end
 

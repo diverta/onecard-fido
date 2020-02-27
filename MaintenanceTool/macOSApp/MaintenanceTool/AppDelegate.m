@@ -28,6 +28,7 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
+    @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -58,7 +59,7 @@
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
         
         // DFU機能の初期設定
-        [self setToolDFUCommand:[[ToolDFUCommand alloc] init]];
+        [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
     }
 
     - (void)applicationWillTerminate:(NSNotification *)notification {
@@ -91,6 +92,7 @@
         [self.menuItemTestBLE setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
+        [self.menuItemDFU setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -264,10 +266,11 @@
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
     }
 
-#pragma mark - test for DFU
-
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [[self toolDFUCommand] startDFUProcess];
+        if ([self checkUSBHIDConnection]) {
+            [self enableButtons:false];
+            [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
+        }
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
@@ -288,6 +291,18 @@
     - (void)toolPreferenceWindowDidClose {
         // ツール設定画面を閉じた時は、ポップアップを表示しない
         [self commandDidProcess:COMMAND_NONE result:true message:nil];
+    }
+
+#pragma mark - Call back from ToolDFUCommand
+
+    - (void)toolDFUCommandDidStart {
+        // DFU処理開始時
+        [self commandStartedProcess:COMMAND_USB_DFU type:TRANSPORT_HID];
+    }
+
+    - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // DFU処理完了時
+        [self commandDidProcess:command result:result message:message];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -390,6 +405,9 @@
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
+                break;
+            case COMMAND_USB_DFU:
+                [self setProcessNameOfCommand:PROCESS_NAME_USB_DFU];
                 break;
             case COMMAND_CLIENT_PIN_CHANGE:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_CHANGE];

@@ -80,7 +80,7 @@
                                     <action selector="menuItemViewLogDidSelect:" target="494" id="qrw-Xf-a6q"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="DFU Test" hidden="YES" id="sxt-Mu-jyP">
+                            <menuItem title="ファームウェアを更新" id="sxt-Mu-jyP">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="menuItemDFUTestDidSelect:" target="494" id="KuA-SO-sVc"/>
@@ -639,6 +639,7 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
+                <outlet property="menuItemDFU" destination="sxt-Mu-jyP" id="LgB-99-JI9"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
