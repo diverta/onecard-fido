@@ -120,7 +120,7 @@ static uint8_t get_u2f_command_ins_byte(void)
     return get_receive_apdu()->INS;
 }
 
-static void u2f_resume_response_process(void)
+static void u2f_resume_response_process(bool tup_done)
 {
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
@@ -132,11 +132,11 @@ static void u2f_resume_response_process(void)
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = get_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
-                fido_log_info("U2F Register: completed the test of user presence");
+                fido_user_presence_verify_end_message("U2F Register", tup_done);
                 u2f_register_resume_process();
                 
             } else if (ins == U2F_AUTHENTICATE) {
-                fido_log_info("U2F Authenticate: completed the test of user presence");
+                fido_user_presence_verify_end_message("U2F Authenticate", tup_done);
                 u2f_authenticate_resume_process();
             }
             break;
@@ -156,7 +156,7 @@ bool fido_u2f_command_on_mainsw_event(void)
         // キープアライブを停止
         fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
-        u2f_resume_response_process();
+        u2f_resume_response_process(true);
         return true;
     }
 
@@ -304,7 +304,7 @@ static void u2f_command_register(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_resume_response_process();
+    u2f_resume_response_process(false);
 }
 
 static void u2f_register_resume_process(void)
@@ -399,7 +399,7 @@ static void u2f_command_authenticate(void)
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_resume_response_process();
+    u2f_resume_response_process(false);
 }
 
 static void u2f_authenticate_resume_process(void)

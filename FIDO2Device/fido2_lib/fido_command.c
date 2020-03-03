@@ -177,6 +177,17 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
     }
 }
 
+void fido_user_presence_verify_end_message(const char *func_name, bool tup_done)
+{
+    if (tup_done) {
+        // ユーザー所在確認完了時のメッセージを出力
+        fido_log_info("%s: completed the test of user presence", func_name);
+    } else {
+        // ユーザー所在確認省略時のメッセージを出力
+        fido_log_info("%s: omitted the test of user presence", func_name);
+    }
+}
+
 static bool is_waiting_user_presence_verify(TRANSPORT_TYPE transport_type, uint8_t cmd)
 {
     if (waiting_for_tup) {
