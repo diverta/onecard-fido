@@ -92,13 +92,6 @@ void fido_user_presence_verify_start_on_reset(void)
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
 
-    // 自動認証機能が有効な場合は
-    // ボタンを押す代わりに
-    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
-        return;
-    }
-
     // 赤色LED高速点滅開始
     fido_status_indicator_prompt_reset();
 }
