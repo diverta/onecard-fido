@@ -21,9 +21,6 @@
 #include "ctap2_common.h"
 #include "u2f.h"
 
-// デモ機能（BLEデバイスによる自動認証機能）
-#include "demo_ble_peripheral_auth.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
