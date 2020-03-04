@@ -106,7 +106,7 @@ static void resume_function_after_scan(void)
     }
 }
 
-bool demo_ble_peripheral_auth_start_scan(void)
+bool demo_ble_peripheral_auth_scan_enable(void)
 {
     if (ble_service_peripheral_mode()) {
         // BLEペリフェラルモードである場合は
@@ -114,12 +114,21 @@ bool demo_ble_peripheral_auth_start_scan(void)
         return false;
     }
 
-    demo_ble_peripheral_auth_param_init();
     if (service_uuid_string[0] == 0 ||
         service_uuid_scan_enable == SCAN_ENABLE_DEFAULT) {
         // スキャン対象サービスUUIDが指定されていない場合、
         // または自動認証有効化フラグが設定されていない場合は、
         // 利用不可なので、falseを戻す
+        return false;
+    }
+
+    return true;
+}
+
+bool demo_ble_peripheral_auth_start_scan(void)
+{
+    if (demo_ble_peripheral_auth_scan_enable() == false) {
+        // BLE自動認証が利用できない場合は false を戻し終了
         return false;
     }
 

@@ -268,6 +268,26 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
     return p_appid_hash;
 }
 
+static bool u2f_command_register_is_tup_needed(void)
+{
+    // BLEデバイスによる自動認証が有効化されている場合は、
+    // リクエストパラメーターの内容に関係なく、
+    // ユーザー所在確認の代わりとなる
+    // BLEデバイススキャンが行われるようにする
+    // （管理ツールの設定画面で設定したサービスUUIDを使用）
+    demo_ble_peripheral_auth_param_init();
+    if (demo_ble_peripheral_auth_scan_enable()) {
+        return true;
+    }
+
+    // BLEデバイスによる自動認証が有効化されていない場合は、
+    // リクエストパラメーター（P1）により、
+    // ユーザー所在確認の必要／不要を判定
+    // 条件：P1 == 0x03 ("enforce-user-presence-and-sign")
+    uint8_t control_byte = get_receive_apdu()->P1;
+    return (control_byte == 0x03);
+}
+
 static void u2f_command_register(void)
 {
     // ユーザー所在確認フラグをクリア
@@ -290,10 +310,7 @@ static void u2f_command_register(void)
         return;
     }
 
-    // control byte (P1) を参照
-    uint8_t control_byte = get_receive_apdu()->P1;
-    if (control_byte == 0x03) {
-        // 0x03 ("enforce-user-presence-and-sign")
+    if (u2f_command_register_is_tup_needed()) {
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
