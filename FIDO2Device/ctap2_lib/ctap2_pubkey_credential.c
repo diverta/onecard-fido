@@ -110,6 +110,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
     size_t offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
@@ -202,9 +203,12 @@ static bool get_private_key_from_credential_id(void)
     // Public Key Credential Sourceから
     // rpId(Relying Party Identifier)を取り出す。
     //  index
+    //  0: Public Key Credential Source自体のサイズ
+    //  1: Public Key Credential Type
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
 #if LOG_DEBUG_CRED_SOURCE
     size_t offset = 34;
@@ -226,9 +230,11 @@ static bool get_private_key_from_credential_id(void)
 #endif
 
     // CredRandom領域を取り出す
-    // （末尾から32バイト分）
-    uint8_t size = pubkey_cred_source[0];
-    cred_random = pubkey_cred_source + size - CRED_RANDOM_SIZE;
+    // （ユーザーID末尾の次から32バイト分）
+    uint8_t index = 34;
+    uint8_t userid_size = pubkey_cred_source[index];
+    index += (1 + userid_size);
+    cred_random = pubkey_cred_source + index;
 
     return true;
 }
