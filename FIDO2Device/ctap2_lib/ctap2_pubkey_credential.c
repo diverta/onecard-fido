@@ -154,13 +154,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // 暗号化対象ブロックサイズを設定
     //   AESの仕様上、16の倍数でなければならない
-    size_t block_num = offset / 16;
-    size_t block_sum = block_num * 16;
-    if (offset == block_sum) {
-        pubkey_cred_source_block_size = offset;
-    } else {
-        pubkey_cred_source_block_size = (block_num + 1) * 16;
-    } 
+    pubkey_cred_source_block_size = fido_calculate_aes_block_size(offset);
 }
 
 void ctap2_pubkey_credential_generate_id(void)

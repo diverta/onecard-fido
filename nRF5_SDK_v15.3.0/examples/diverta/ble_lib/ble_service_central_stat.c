@@ -202,7 +202,7 @@ static char peer_addr_rssi_buf[64];
 char *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes)
 {
     sprintf(bluetooth_address, "%02X%02X%02X%02X%02X%02X", 
-        addr_bytes[5], addr_bytes[4], addr_bytes[3], addr_bytes[2], addr_bytes[1], addr_bytes[0]);
+        addr_bytes[0], addr_bytes[1], addr_bytes[2], addr_bytes[3], addr_bytes[4], addr_bytes[5]);
     return bluetooth_address;
 }
 
