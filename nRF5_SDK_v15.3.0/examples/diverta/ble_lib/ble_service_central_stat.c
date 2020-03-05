@@ -41,12 +41,12 @@ void ble_service_central_stat_info_init(void)
 static void debug_print_adv_stat_info(ADV_STAT_INFO_T *info)
 {
     NRF_LOG_DEBUG("Bluetooth address:%02x%02x%02x%02x%02x%02x",
-        info->peer_addr[5],
-        info->peer_addr[4],
-        info->peer_addr[3],
-        info->peer_addr[2],
+        info->peer_addr[0],
         info->peer_addr[1],
-        info->peer_addr[0]
+        info->peer_addr[2],
+        info->peer_addr[3],
+        info->peer_addr[4],
+        info->peer_addr[5]
         );
     NRF_LOG_DEBUG("Device name:%s (TX power=%d, RSSI=%d), UUID(%d bytes):", 
         info->dev_name, info->tx_power, info->rssi, info->uuid_bytes_size);
@@ -188,6 +188,34 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
             matched_rssi = info->rssi;
             matched_info = info;
         }
+    }
+    
+    return matched_info;
+}
+
+ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *p_scan_param)
+{
+    // BLEスキャンパラメーター
+    //  UUID: 先頭2バイト目から16バイト
+    //  Bluetoothアドレス: 先頭18バイト目から6バイト
+    uint8_t *uuid_bytes = p_scan_param + 1;
+    uint8_t *peer_addr = p_scan_param + 17;
+
+    // スキャン結果の統計情報についてチェック
+    ADV_STAT_INFO_T *matched_info = NULL;
+    for (uint8_t i = 0; i < adv_stat_info_size; i++) {
+        ADV_STAT_INFO_T *info = &adv_stat_info[i];
+        if (memcmp(info->uuid_bytes, uuid_bytes, info->uuid_bytes_size) != 0) {
+            // UUIDがマッチしていない場合は次の統計情報に移る
+            continue;
+        }
+        if (memcmp(info->peer_addr, peer_addr, 6) != 0) {
+            // アドレスがマッチしていない場合は次の統計情報に移る
+            continue;
+        }
+        // マッチしたデバイスの統計情報を退避
+        matched_info = info;
+        break;
     }
     
     return matched_info;
