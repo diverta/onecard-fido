@@ -25,6 +25,7 @@
 
 // for debug log and hexdump
 #define LOG_HEXDUMP_DEBUG_ADVDATA   false
+#define LOG_HEXDUMP_DEBUG_SCANPARAM false
 
 // コマンド文字列
 #define SET_AUTH_UUID_COMMAND           "set_auth_uuid"
@@ -35,11 +36,19 @@
 #define UUID_STRING_LEN  36
 #define SCAN_SEC_DEFAULT 3
 #define SCAN_ENABLE_DEFAULT 0
+#define PEER_ADDR_SIZE 6
 
 // スキャン対象サービスUUID（文字列形式）、スキャン秒数、自動認証有効化フラグを保持
 static char    service_uuid_string[UUID_STRING_LEN+1];
 static uint8_t service_uuid_scan_sec = SCAN_SEC_DEFAULT;
 static uint8_t service_uuid_scan_enable = SCAN_ENABLE_DEFAULT;
+
+// キーハンドル／クレデンシャルIDに格納される
+// BLEスキャン用パラメーター
+//   0 - 15: サービスUUID（16バイト）
+//  16 - 21: Bluetoothアドレス（6バイト）
+static uint8_t scan_param_bytes[32];
+static size_t  scan_param_bytes_size;
 
 static void save_auth_param(void)
 {
@@ -83,6 +92,35 @@ void demo_ble_peripheral_auth_param_init(void)
     restore_auth_param();
 }
 
+static void scan_parameter_buffer_set(ADV_STAT_INFO_T *info)
+{
+    // 領域の初期化
+    size_t offset = 0;
+    memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
+
+    if (info == NULL) {
+        // スキャン結果が指定されていない場合は、データ長をゼロクリア
+        scan_param_bytes_size = 0;
+        return;
+    }
+
+    // ログイン処理時に必要なBLEスキャンパラメーターを、
+    // キーハンドル／クレデンシャルID生成用の一時バッファに保持
+    //   スキャンされたBLEデバイスのUUID
+    memcpy(scan_param_bytes, info->uuid_bytes, info->uuid_bytes_size);
+    offset += info->uuid_bytes_size;
+    //   Bluetoothアドレス
+    memcpy(scan_param_bytes + offset, info->peer_addr, PEER_ADDR_SIZE);
+    offset += PEER_ADDR_SIZE;
+    //   パラメーター長
+    scan_param_bytes_size = offset;
+
+#if LOG_HEXDUMP_DEBUG_SCANPARAM
+    fido_log_debug("BLE peripheral device scan parameter byte (%d bytes):", scan_param_bytes_size);
+    fido_log_print_hexdump_debug(scan_param_bytes, scan_param_bytes_size);
+#endif
+}
+
 static void resume_function_after_scan(void)
 {
 #if LOG_HEXDUMP_DEBUG_ADVDATA
@@ -102,6 +140,7 @@ static void resume_function_after_scan(void)
         // 複数スキャンされた場合は、最もRSSI値が大きいBLEデバイスが戻ります。
         fido_log_debug("BLE peripheral device (for FIDO authenticate) found (NAME=%s, ADDR=%s)", 
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
+        scan_parameter_buffer_set(info);
         fido_user_presence_verify_on_ble_scan_end(true);
     }
 }
@@ -127,6 +166,9 @@ bool demo_ble_peripheral_auth_scan_enable(void)
 
 bool demo_ble_peripheral_auth_start_scan(void)
 {
+    // BLEスキャンパラメーターを事前にクリア
+    scan_parameter_buffer_set(NULL);
+
     if (demo_ble_peripheral_auth_scan_enable() == false) {
         // BLE自動認証が利用できない場合は false を戻し終了
         return false;
