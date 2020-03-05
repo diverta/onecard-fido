@@ -14,6 +14,7 @@ size_t   u2f_keyhandle_buffer_size(void);
 void     u2f_keyhandle_generate(uint8_t *p_appid_hash);
 void     u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length);
 void     u2f_keyhandle_do_sign(void);
+uint8_t *u2f_keyhandle_ble_auth_scan_param(void);
 
 #ifdef __cplusplus
 }

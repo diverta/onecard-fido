@@ -133,6 +133,11 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
+    // BLE自動認証機能用のスキャンパラメーターを末尾に追加
+    //  先頭バイト: パラメーター長
+    //  後続バイト: パラメーターのバイト配列を格納
+    offset += demo_ble_peripheral_auth_scan_param_prepare(pubkey_cred_source + offset);
+
 #if LOG_DEBUG_CRED_SOURCE
     fido_log_debug("Public Key Credential Source contents");
     fido_log_debug("USER ID (%d bytes):", user->id_size);
@@ -292,4 +297,18 @@ CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
 {
     // 秘密鍵の取出し元であるcredential IDの格納領域
     return pkey_credential_desc;
+}
+
+uint8_t *ctap2_pubkey_credential_ble_auth_scan_param(void)
+{
+    // Public Key Credential Source における
+    // User Id（バイト配列）のサイズを取得
+    size_t offset = 34;
+    size_t src_user_id_size = pubkey_cred_source[offset];
+
+    // BLEスキャンパラメーター格納領域の開始インデックスを取得
+    offset = offset + 1 + src_user_id_size + 32;
+
+    // BLEスキャンパラメーター格納領域の先頭を戻す
+    return (pubkey_cred_source + offset);
 }

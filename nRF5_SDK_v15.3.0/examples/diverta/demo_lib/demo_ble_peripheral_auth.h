@@ -20,6 +20,9 @@ bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response
 bool demo_ble_peripheral_auth_scan_enable(void);
 bool demo_ble_peripheral_auth_start_scan(void);
 
+// for U2F keyhandle, CTAP2 credential ID
+size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff);
+
 #ifdef __cplusplus
 }
 #endif

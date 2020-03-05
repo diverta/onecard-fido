@@ -50,6 +50,11 @@ void u2f_keyhandle_generate(uint8_t *p_appid_hash)
     memcpy(keyhandle_base_buffer + U2F_APPID_SIZE, private_key_value, private_key_length);
     size_t offset = U2F_APPID_SIZE + U2F_PRIVKEY_SIZE;
 
+    // BLE自動認証機能用のスキャンパラメーターを末尾に追加
+    //  先頭バイト: パラメーター長
+    //  後続バイト: パラメーターのバイト配列を格納
+    offset += demo_ble_peripheral_auth_scan_param_prepare(keyhandle_base_buffer + offset);
+
     // 暗号化対象ブロックサイズを設定
     //   AESの仕様上、16の倍数でなければならない
     keyhandle_buffer_block_size = fido_calculate_aes_block_size(offset);
@@ -69,4 +74,10 @@ void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length)
     // AES暗号化されたバイト配列を復号化
     memset(keyhandle_base_buffer, 0, sizeof(keyhandle_base_buffer));
     fido_command_aes_cbc_decrypt(keyhandle_buffer, keyhandle_length, keyhandle_base_buffer);
+}
+
+uint8_t *u2f_keyhandle_ble_auth_scan_param(void)
+{
+    // BLEスキャンパラメーター格納領域の先頭を戻す
+    return (keyhandle_base_buffer + U2F_APPID_SIZE + U2F_PRIVKEY_SIZE);
 }

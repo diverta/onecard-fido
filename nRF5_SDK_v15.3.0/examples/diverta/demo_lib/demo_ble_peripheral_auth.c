@@ -92,6 +92,25 @@ void demo_ble_peripheral_auth_param_init(void)
     restore_auth_param();
 }
 
+size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
+{
+    // BLE自動認証機能用のスキャンパラメーターを、
+    // 引数で指定された領域に格納
+    // 先頭にパラメーター長を設定
+    p_buff[0] = (uint8_t)scan_param_bytes_size;
+    size_t offset = 1;
+
+    if (scan_param_bytes > 0) {
+        // スキャンが成功している場合
+        // 後続バイトに、スキャンパラメーターのバイト配列を格納
+        memcpy(p_buff + offset, scan_param_bytes, scan_param_bytes_size);
+        offset += scan_param_bytes_size;
+    }
+
+    // パラメーター領域の長さを戻す
+    return offset;
+}
+
 static void scan_parameter_buffer_set(ADV_STAT_INFO_T *info)
 {
     // 領域の初期化
