@@ -83,7 +83,7 @@ FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Don
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能に必要なパラメーター登録機能を追加（[#266](https://github.com/diverta/onecard-fido/issues/266) ご参照）<br>
-自動認証機能については、[こちらのドキュメント](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+自動認証機能については、[こちらのドキュメント](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-demofunc-param/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
 
 - BLE PING機能失敗時、エラーメッセージが２回表示される不具合を解消（[#271](https://github.com/diverta/onecard-fido/issues/271) ご参照）
 
@@ -104,10 +104,10 @@ FIDO認証器管理ツールのログ参照手順書を作成しました。
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能（デモ機能）を追加（[#263](https://github.com/diverta/onecard-fido/issues/263) ご参照）<br>
-操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+操作方法は、[こちらの手順書](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
 
 - BLEデバイスのRSSI値のログ出力機能（デモ機能）を追加（[#262](https://github.com/diverta/onecard-fido/issues/262) ご参照）<br>
-操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
+操作方法は、[こちらの手順書](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
 
 #### 2019/10/21
 
