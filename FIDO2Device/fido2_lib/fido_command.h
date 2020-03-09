@@ -25,7 +25,7 @@ void fido_command_mainsw_event_handler(void);
 void fido_user_presence_verify_timeout_handler(void);
 
 void fido_user_presence_verify_start_on_reset(void);
-void fido_user_presence_verify_start(uint32_t timeout_msec);
+void fido_user_presence_verify_start(uint32_t timeout_msec, void *context);
 void fido_user_presence_verify_end(void);
 void fido_user_presence_verify_cancel(void);
 void fido_user_presence_verify_on_ble_scan_end(bool success);

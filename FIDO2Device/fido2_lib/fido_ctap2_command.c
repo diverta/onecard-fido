@@ -28,6 +28,7 @@
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
 #include "u2f.h"
+#include "ctap2_pubkey_credential.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -326,7 +327,7 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
@@ -414,7 +415,8 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorGetAssertion: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC,
+            ctap2_pubkey_credential_ble_auth_scan_param());
         return;
     }
 

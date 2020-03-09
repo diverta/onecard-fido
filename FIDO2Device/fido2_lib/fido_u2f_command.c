@@ -316,7 +316,7 @@ static void u2f_command_register(void)
         is_tup_needed = true;
         fido_log_info("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
@@ -411,7 +411,8 @@ static void u2f_command_authenticate(void)
         is_tup_needed = true;
         fido_log_info("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC,
+            u2f_keyhandle_ble_auth_scan_param());
         return;
     }
 

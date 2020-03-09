@@ -93,7 +93,7 @@ void fido_user_presence_verify_start_on_reset(void)
     fido_status_indicator_prompt_reset();
 }
 
-void fido_user_presence_verify_start(uint32_t timeout_msec)
+void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
 {
     // キープアライブタイマーを開始
     fido_repeat_process_timer_start(timeout_msec, fido_command_keepalive_timer_handler);
@@ -107,7 +107,7 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     // 自動認証機能が有効な場合は
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
+    if (demo_ble_peripheral_auth_start_scan(context)) {
         return;
     }
 

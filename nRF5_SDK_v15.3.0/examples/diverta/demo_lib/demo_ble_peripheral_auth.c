@@ -50,6 +50,9 @@ static uint8_t service_uuid_scan_enable = SCAN_ENABLE_DEFAULT;
 static uint8_t scan_param_bytes[32];
 static size_t  scan_param_bytes_size;
 
+// 関数プロトタイプ
+static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
+
 static void save_auth_param(void)
 {
     uint8_t *p_uuid_string = (uint8_t *)service_uuid_string;
@@ -151,13 +154,13 @@ static void resume_function_after_scan(void)
     ADV_STAT_INFO_T *info = ble_service_central_stat_match_uuid(service_uuid_string);
     if (info == NULL) {
         // 見つからなかった時の処理
-        fido_log_debug("BLE peripheral device (for FIDO authenticate) not found.");
+        fido_log_debug("BLE peripheral device (for FIDO register) not found.");
         fido_user_presence_verify_on_ble_scan_end(false);
 
     } else {
         // 見つかった時の処理
         // 複数スキャンされた場合は、最もRSSI値が大きいBLEデバイスが戻ります。
-        fido_log_debug("BLE peripheral device (for FIDO authenticate) found (NAME=%s, ADDR=%s)", 
+        fido_log_debug("BLE peripheral device (for FIDO register) found (NAME=%s, ADDR=%s)", 
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
         scan_parameter_buffer_set(info);
         fido_user_presence_verify_on_ble_scan_end(true);
@@ -183,8 +186,14 @@ bool demo_ble_peripheral_auth_scan_enable(void)
     return true;
 }
 
-bool demo_ble_peripheral_auth_start_scan(void)
+bool demo_ble_peripheral_auth_start_scan(void *context)
 {
+    if (context != NULL) {
+        // ログイン処理の場合は、
+        // BLEスキャンパラメーターを引き渡す
+        return demo_ble_peripheral_auth_start_second_scan((uint8_t *)context);
+    }
+    
     // BLEスキャンパラメーターを事前にクリア
     scan_parameter_buffer_set(NULL);
 
@@ -196,6 +205,45 @@ bool demo_ble_peripheral_auth_start_scan(void)
     // 指定したサービスUUIDを使用し、
     // 指定秒数間スキャンを実行
     ble_service_central_scan_start(service_uuid_scan_sec * 1000, resume_function_after_scan);
+    return true;
+}
+
+static void resume_function_after_second_scan(void)
+{
+#if LOG_HEXDUMP_DEBUG_ADVDATA
+    // 統計情報をデバッグ出力
+    ble_service_central_stat_debug_print();
+#endif
+
+    // BLEスキャンパラメーターと同じUUID／アドレスを持つ
+    // BLEデバイスが、スキャン統計情報に含まれているかどうかチェック
+    ADV_STAT_INFO_T *info = ble_service_central_stat_match_scan_param(scan_param_bytes);
+    if (info == NULL) {
+        // 見つからなかった時の処理
+        fido_log_debug("BLE peripheral device (for FIDO authenticate) not found.");
+        fido_user_presence_verify_on_ble_scan_end(false);
+
+    } else {
+        // 見つかった時の処理
+        fido_log_debug("BLE peripheral device (for FIDO authenticate) found (NAME=%s, ADDR=%s)", 
+            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
+        fido_user_presence_verify_on_ble_scan_end(true);
+    }
+}
+
+static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param)
+{
+    // BLEスキャンパラメーターが設定されていない場合は終了
+    size_t param_size = (size_t)p_scan_param[0];
+    if (param_size == 0) {
+        return false;
+    }
+    
+    // BLEスキャンパラメーターを保持
+    memcpy(scan_param_bytes, p_scan_param, 1 + param_size);
+
+    // 指定したサービスUUIDを使用し、指定秒数間スキャンを実行
+    ble_service_central_scan_start(service_uuid_scan_sec * 1000, resume_function_after_second_scan);
     return true;
 }
 
