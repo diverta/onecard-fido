@@ -59,7 +59,7 @@ rev2の[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/READ
 
 ## ご参考情報
 
-### [アプリケーション書込み手順](APPINSTALL.md)
+### [アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)
 
 MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を経由し、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
 （ファームウェア単体開発時の運用になります）
