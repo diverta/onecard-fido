@@ -17,7 +17,11 @@ extern "C" {
 void demo_ble_peripheral_auth_param_init(void);
 void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_size);
 bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size);
-bool demo_ble_peripheral_auth_start_scan(void);
+bool demo_ble_peripheral_auth_scan_enable(void);
+bool demo_ble_peripheral_auth_start_scan(void *context);
+
+// for U2F keyhandle, CTAP2 credential ID
+size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff);
 
 #ifdef __cplusplus
 }

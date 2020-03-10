@@ -19,7 +19,7 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 #### アプリケーションを導入
 
 [FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)を、MDBT50Q Dongleに書込みます。<br>
-書込み手順につきましては、<b>[アプリケーション書込み手順](APPINSTALL.md)</b>をご参照ください。
+書込み手順につきましては、<b>[アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)</b>をご参照ください。
 
 ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: onecard-fido/nRF5_SDK_v15.3.0/firmwares/

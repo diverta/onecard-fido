@@ -7,6 +7,7 @@
 #ifndef BLE_SERVICE_CENTRAL_STAT_H
 #define BLE_SERVICE_CENTRAL_STAT_H
 
+#include <stdbool.h>
 #include "ble_gap.h"
 
 #ifdef __cplusplus
@@ -34,6 +35,7 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
 void ble_service_central_stat_debug_print(void);
 
 ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string);
+ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *p_scan_param);
 char            *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes);
 size_t           ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info_string);
 

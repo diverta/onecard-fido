@@ -110,6 +110,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
     size_t offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
@@ -132,6 +133,11 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
 
+    // BLE自動認証機能用のスキャンパラメーターを末尾に追加
+    //  先頭バイト: パラメーター長
+    //  後続バイト: パラメーターのバイト配列を格納
+    offset += demo_ble_peripheral_auth_scan_param_prepare(pubkey_cred_source + offset);
+
 #if LOG_DEBUG_CRED_SOURCE
     fido_log_debug("Public Key Credential Source contents");
     fido_log_debug("USER ID (%d bytes):", user->id_size);
@@ -153,13 +159,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // 暗号化対象ブロックサイズを設定
     //   AESの仕様上、16の倍数でなければならない
-    size_t block_num = offset / 16;
-    size_t block_sum = block_num * 16;
-    if (offset == block_sum) {
-        pubkey_cred_source_block_size = offset;
-    } else {
-        pubkey_cred_source_block_size = (block_num + 1) * 16;
-    } 
+    pubkey_cred_source_block_size = fido_calculate_aes_block_size(offset);
 }
 
 void ctap2_pubkey_credential_generate_id(void)
@@ -202,9 +202,12 @@ static bool get_private_key_from_credential_id(void)
     // Public Key Credential Sourceから
     // rpId(Relying Party Identifier)を取り出す。
     //  index
+    //  0: Public Key Credential Source自体のサイズ
+    //  1: Public Key Credential Type
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
 #if LOG_DEBUG_CRED_SOURCE
     size_t offset = 34;
@@ -226,9 +229,11 @@ static bool get_private_key_from_credential_id(void)
 #endif
 
     // CredRandom領域を取り出す
-    // （末尾から32バイト分）
-    uint8_t size = pubkey_cred_source[0];
-    cred_random = pubkey_cred_source + size - CRED_RANDOM_SIZE;
+    // （ユーザーID末尾の次から32バイト分）
+    uint8_t index = 34;
+    uint8_t userid_size = pubkey_cred_source[index];
+    index += (1 + userid_size);
+    cred_random = pubkey_cred_source + index;
 
     return true;
 }
@@ -292,4 +297,18 @@ CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
 {
     // 秘密鍵の取出し元であるcredential IDの格納領域
     return pkey_credential_desc;
+}
+
+uint8_t *ctap2_pubkey_credential_ble_auth_scan_param(void)
+{
+    // Public Key Credential Source における
+    // User Id（バイト配列）のサイズを取得
+    size_t offset = 34;
+    size_t src_user_id_size = pubkey_cred_source[offset];
+
+    // BLEスキャンパラメーター格納領域の開始インデックスを取得
+    offset = offset + 1 + src_user_id_size + 32;
+
+    // BLEスキャンパラメーター格納領域の先頭を戻す
+    return (pubkey_cred_source + offset);
 }

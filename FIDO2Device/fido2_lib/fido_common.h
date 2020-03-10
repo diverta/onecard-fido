@@ -8,6 +8,7 @@
 #define FIDO_COMMON_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -105,9 +106,10 @@ typedef struct {
 } HID_INIT_RES_T;
 
 // 関数群
-void fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
-void fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
-void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
+void   fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
+void   fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
+void   fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
+size_t fido_calculate_aes_block_size(size_t buffer_size);
 
 #ifdef __cplusplus
 }
