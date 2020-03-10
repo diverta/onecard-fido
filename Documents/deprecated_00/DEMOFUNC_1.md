@@ -27,7 +27,7 @@ MDBT50Q Dongleに近接しているBLEデバイスのRSSI値を、指定間隔�
 ### 仮想COMポートに接続
 
 ターミナルアプリ「Tera Term」を使用し、仮想COMポートに接続します。<br>
-手順につきましては、手順書「[仮想COMポートへの接続手順](../../FIDO2Device/MDBT50Q_Dongle/CDCCONNECT.md)」をご参照願います。
+手順につきましては、手順書「[仮想COMポートへの接続手順](CDCCONNECT.md)」をご参照願います。
 
 ### ログの出力
 

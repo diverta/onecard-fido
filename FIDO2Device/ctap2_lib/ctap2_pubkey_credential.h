@@ -20,6 +20,7 @@ uint8_t  ctap2_pubkey_credential_number(void);
 uint8_t *ctap2_pubkey_credential_private_key(void);
 uint8_t *ctap2_pubkey_credential_cred_random(void);
 CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void);
+uint8_t *ctap2_pubkey_credential_ble_auth_scan_param(void);
 
 uint8_t *ctap2_pubkey_credential_source_hash(void);
 size_t   ctap2_pubkey_credential_source_hash_size(void);
