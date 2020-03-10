@@ -1,10 +1,10 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 # application version info
-FW_REV := 0.2.5
+FW_REV := 0.2.6
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 HW_REV := 0.2
