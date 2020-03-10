@@ -2,6 +2,15 @@
 
 ## プログラム更新履歴
 
+#### 2020/2/27
+
+macOS版 FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.24）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+修正点は以下になります。（[#292](https://github.com/diverta/onecard-fido/issues/292) ご参照）
+- FIDO認証器のファームウェア更新を、FIDO認証器管理ツールから実行できるようにする機能を追加
+
 #### 2020/1/15
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
