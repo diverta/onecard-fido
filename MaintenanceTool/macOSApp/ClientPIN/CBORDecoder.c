@@ -28,6 +28,10 @@ static CTAP_EXT_HMAC_SECRET_RES hmac_secret_res;
 static uint8_t decrypted_salt_org[64];
 static uint8_t decrypted_salt_cur[64];
 
+// authData一時格納領域
+static uint8_t auth_data_bytes[512];
+static size_t  auth_data_size;
+
 static uint8_t parse_fixed_byte_string(CborValue *map, uint8_t *dst, int len)
 {
     if (cbor_value_get_type(map) != CborByteStringType) {
@@ -419,10 +423,6 @@ static uint8_t ctap2_cbor_decode_response_create_or_get(
     CborError   ret;
     uint8_t     i;
     int         key;
-
-    // authData格納領域
-    uint8_t auth_data_bytes[256];
-    size_t  auth_data_size;
 
     // CBOR parser初期化
     ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
