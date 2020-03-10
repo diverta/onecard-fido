@@ -21,17 +21,19 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/2/27
+#### 2020/03/10
 
-macOS版 FIDO認証器管理ツールを修正しました。<br>
+[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.24）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.25）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+（MDBT50Q_Dongleの最新ファームウェアは、macOS版 FIDO認証器管理ツールに同梱されております）
 
-修正点は以下になります。（[#292](https://github.com/diverta/onecard-fido/issues/292) ご参照）
-- FIDO認証器のファームウェア更新を、FIDO認証器管理ツールから実行できるようにする機能を追加
+修正点は以下になります。（[#307](https://github.com/diverta/onecard-fido/issues/307) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を有効化した場合は、ユーザー登録時に、必ずユーザー所在確認のためのBLEデバイススキャンが行われるよう、ファームウェアを修正
+- 前項修正により、認証データのサイズが拡張されたため、管理ツールのプログラムを修正
 
 <b>【ご注意】</b><br>
-このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照いただき、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
+このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照いただき、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
