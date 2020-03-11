@@ -2,6 +2,17 @@
 
 ## プログラム更新履歴
 
+#### 2020/03/10
+
+[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.25）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+（MDBT50Q_Dongleの最新ファームウェアは、macOS版 FIDO認証器管理ツールに同梱されております）
+
+修正点は以下になります。（[#307](https://github.com/diverta/onecard-fido/issues/307) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を有効化した場合は、ユーザー登録時に、必ずユーザー所在確認のためのBLEデバイススキャンが行われるよう、ファームウェアを修正
+- 前項修正により、認証データのサイズが拡張されたため、管理ツールのプログラムを修正
+
 #### 2020/2/27
 
 macOS版 FIDO認証器管理ツールを修正しました。<br>
