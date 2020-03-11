@@ -103,7 +103,7 @@ size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
     p_buff[0] = (uint8_t)scan_param_bytes_size;
     size_t offset = 1;
 
-    if (scan_param_bytes > 0) {
+    if (scan_param_bytes_size > 0) {
         // スキャンが成功している場合
         // 後続バイトに、スキャンパラメーターのバイト配列を格納
         memcpy(p_buff + offset, scan_param_bytes, scan_param_bytes_size);
@@ -240,7 +240,8 @@ static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param)
     }
     
     // BLEスキャンパラメーターを保持
-    memcpy(scan_param_bytes, p_scan_param, 1 + param_size);
+    // （バイト長を保持している先頭１バイトは不要）
+    memcpy(scan_param_bytes, p_scan_param + 1, param_size);
 
     // 指定したサービスUUIDを使用し、指定秒数間スキャンを実行
     ble_service_central_scan_start(service_uuid_scan_sec * 1000, resume_function_after_second_scan);
