@@ -84,6 +84,13 @@ static void restore_auth_param(void)
     service_uuid_scan_enable = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_enable();
 }
 
+static void clear_scan_parameter(void)
+{
+    // BLEスキャンパラメーターをクリア
+    scan_param_bytes_size = 0;
+    memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
+}
+
 void demo_ble_peripheral_auth_param_init(void)
 {
     // 初期値を設定
@@ -93,6 +100,9 @@ void demo_ble_peripheral_auth_param_init(void)
 
     // Flash ROMに設定されている場合は読み出す
     restore_auth_param();
+    
+    // BLEスキャンパラメーターを事前にクリア
+    clear_scan_parameter();
 }
 
 size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
@@ -118,11 +128,10 @@ static void scan_parameter_buffer_set(ADV_STAT_INFO_T *info)
 {
     // 領域の初期化
     size_t offset = 0;
-    memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
+    clear_scan_parameter();
 
     if (info == NULL) {
-        // スキャン結果が指定されていない場合は、データ長をゼロクリア
-        scan_param_bytes_size = 0;
+        // スキャン結果が指定されていない場合は終了
         return;
     }
 
