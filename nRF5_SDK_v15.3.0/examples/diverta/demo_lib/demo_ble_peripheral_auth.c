@@ -84,6 +84,13 @@ static void restore_auth_param(void)
     service_uuid_scan_enable = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_enable();
 }
 
+static void clear_scan_parameter(void)
+{
+    // BLEスキャンパラメーターをクリア
+    scan_param_bytes_size = 0;
+    memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
+}
+
 void demo_ble_peripheral_auth_param_init(void)
 {
     // 初期値を設定
@@ -93,6 +100,9 @@ void demo_ble_peripheral_auth_param_init(void)
 
     // Flash ROMに設定されている場合は読み出す
     restore_auth_param();
+    
+    // BLEスキャンパラメーターを事前にクリア
+    clear_scan_parameter();
 }
 
 size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
@@ -103,7 +113,7 @@ size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
     p_buff[0] = (uint8_t)scan_param_bytes_size;
     size_t offset = 1;
 
-    if (scan_param_bytes > 0) {
+    if (scan_param_bytes_size > 0) {
         // スキャンが成功している場合
         // 後続バイトに、スキャンパラメーターのバイト配列を格納
         memcpy(p_buff + offset, scan_param_bytes, scan_param_bytes_size);
@@ -118,11 +128,10 @@ static void scan_parameter_buffer_set(ADV_STAT_INFO_T *info)
 {
     // 領域の初期化
     size_t offset = 0;
-    memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
+    clear_scan_parameter();
 
     if (info == NULL) {
-        // スキャン結果が指定されていない場合は、データ長をゼロクリア
-        scan_param_bytes_size = 0;
+        // スキャン結果が指定されていない場合は終了
         return;
     }
 
@@ -240,7 +249,8 @@ static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param)
     }
     
     // BLEスキャンパラメーターを保持
-    memcpy(scan_param_bytes, p_scan_param, 1 + param_size);
+    // （バイト長を保持している先頭１バイトは不要）
+    memcpy(scan_param_bytes, p_scan_param + 1, param_size);
 
     // 指定したサービスUUIDを使用し、指定秒数間スキャンを実行
     ble_service_central_scan_start(service_uuid_scan_sec * 1000, resume_function_after_second_scan);
