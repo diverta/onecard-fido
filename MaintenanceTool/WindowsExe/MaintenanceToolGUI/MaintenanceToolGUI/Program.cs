@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -12,12 +13,23 @@ namespace MaintenanceToolGUI
         [STAThread]
         static void Main()
         {
+            // このプログラムの名称を取得
+            string title = MainForm.GetMaintenanceToolTitle();
+
+            // 管理者として実行されていない場合は
+            // FIDO認証器と通信ができないため、
+            // プログラムを起動させない
+            if (CheckAdministratorRoll() == false) {
+                MessageBox.Show(ToolGUICommon.MSG_INVALID_USER_ROLL, title);
+                return;
+            }
+
             // Mutexを生成し、プログラムの多重起動を抑止
-            string mutexName = "U2FMaintenanceToolGUI.exe";
+            string mutexName = "MaintenanceToolGUI.exe";
             bool createdNew;
             Mutex mutex = new Mutex(true, mutexName, out createdNew);
             if (createdNew == false) {
-                MessageBox.Show("U2F管理ツールは既に起動されています.");
+                MessageBox.Show(ToolGUICommon.MSG_ERROR_DOUBLE_START, title);
                 mutex.Close();
                 return;
             }
@@ -30,6 +42,14 @@ namespace MaintenanceToolGUI
                 mutex.ReleaseMutex();
                 mutex.Close();
             }
+        }
+        static bool CheckAdministratorRoll()
+        {
+            // このプログラムが管理者として
+            // 実行されている場合はtrueを戻す
+            WindowsIdentity wid = WindowsIdentity.GetCurrent();
+            WindowsPrincipal wp = new WindowsPrincipal(wid);
+            return wp.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
