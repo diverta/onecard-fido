@@ -15,7 +15,6 @@ namespace MaintenanceToolGUI
             public const int U2F_AUTH_CHECK_ONLY = 0x07;
             public const int U2F_APPID_SIZE = 32;
             public const int U2F_NONCE_SIZE = 32;
-            public const int U2F_KEYHANDLE_SIZE = 64;
 
             // BLEコマンドバイトに関する定義
             public const byte BLE_CMD_MSG = 0x83;
@@ -40,6 +39,7 @@ namespace MaintenanceToolGUI
         // U2Fキーハンドルデータを保持
         // (ヘルスチェック処理で使用)
         private byte[] u2FKeyhandleData = new byte[128];
+        private int U2FKeyhandleSize;
 
         // 生成されたランダムなチャレンジ、AppIDを保持
         // (ヘルスチェック処理で使用)
@@ -213,9 +213,12 @@ namespace MaintenanceToolGUI
 
         private void DoResponseRegister(byte[] message, int length)
         {
+            // Registerレスポンスからキーハンドル長(67バイト目)を取得
+            U2FKeyhandleSize = message[66];
+
             // Registerレスポンスからキーハンドル
-            // (68バイト目から64バイト)を切り出して保持
-            Array.Copy(message, 67, u2FKeyhandleData, 0, Const.U2F_KEYHANDLE_SIZE);
+            // (68バイト目以降)を切り出して保持
+            Array.Copy(message, 67, u2FKeyhandleData, 0, U2FKeyhandleSize);
 
             mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_REGISTER_SUCCESS);
 
@@ -281,7 +284,7 @@ namespace MaintenanceToolGUI
             u2fRequestData[3] = 0x00;
             u2fRequestData[4] = 0x00;
             u2fRequestData[5] = 0x00;
-            u2fRequestData[6] = Const.U2F_NONCE_SIZE + Const.U2F_APPID_SIZE + Const.U2F_KEYHANDLE_SIZE + 1;
+            u2fRequestData[6] = (byte)(Const.U2F_NONCE_SIZE + Const.U2F_APPID_SIZE + U2FKeyhandleSize + 1);
 
             // challengeを設定
             pos = 7;
@@ -293,11 +296,11 @@ namespace MaintenanceToolGUI
             pos += Const.U2F_APPID_SIZE;
 
             // キーハンドル長を設定
-            u2fRequestData[pos++] = Const.U2F_KEYHANDLE_SIZE;
+            u2fRequestData[pos++] = (byte)U2FKeyhandleSize;
 
             // キーハンドルを設定
-            Array.Copy(u2FKeyhandleData, 0, u2fRequestData, pos, Const.U2F_KEYHANDLE_SIZE);
-            pos += Const.U2F_KEYHANDLE_SIZE;
+            Array.Copy(u2FKeyhandleData, 0, u2fRequestData, pos, U2FKeyhandleSize);
+            pos += U2FKeyhandleSize;
 
             // Leを設定
             u2fRequestData[pos++] = 0x00;
