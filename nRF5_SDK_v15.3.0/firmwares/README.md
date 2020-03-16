@@ -8,7 +8,7 @@
 このフォルダー（`firmwares`）に格納しています。
 
 以下のファームウェアは、Nordic社から提供されているアプリ「nRF Connect」を使い、MDBT50Q DongleやnRF52840 DKにダウンロードするようにします。<br>
-「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)」</b>をご参照願います。<br>
+「nRF Connect」を使用したダウンロード手順は、別ドキュメント<b>「[アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)」</b>をご参照願います。<br>
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|

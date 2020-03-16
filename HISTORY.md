@@ -2,6 +2,26 @@
 
 ## プログラム更新履歴
 
+#### 2020/03/10
+
+[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.25）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+（MDBT50Q_Dongleの最新ファームウェアは、macOS版 FIDO認証器管理ツールに同梱されております）
+
+修正点は以下になります。（[#307](https://github.com/diverta/onecard-fido/issues/307) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を有効化した場合は、ユーザー登録時に、必ずユーザー所在確認のためのBLEデバイススキャンが行われるよう、ファームウェアを修正
+- 前項修正により、認証データのサイズが拡張されたため、管理ツールのプログラムを修正
+
+#### 2020/2/27
+
+macOS版 FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.24）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+修正点は以下になります。（[#292](https://github.com/diverta/onecard-fido/issues/292) ご参照）
+- FIDO認証器のファームウェア更新を、FIDO認証器管理ツールから実行できるようにする機能を追加
+
 #### 2020/1/15
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
@@ -83,7 +103,7 @@ FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Don
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能に必要なパラメーター登録機能を追加（[#266](https://github.com/diverta/onecard-fido/issues/266) ご参照）<br>
-自動認証機能については、[こちらのドキュメント](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+自動認証機能については、[こちらのドキュメント](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-demofunc-param/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
 
 - BLE PING機能失敗時、エラーメッセージが２回表示される不具合を解消（[#271](https://github.com/diverta/onecard-fido/issues/271) ご参照）
 
@@ -104,10 +124,10 @@ FIDO認証器管理ツールのログ参照手順書を作成しました。
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能（デモ機能）を追加（[#263](https://github.com/diverta/onecard-fido/issues/263) ご参照）<br>
-操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
+操作方法は、[こちらの手順書](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)に記載しております。
 
 - BLEデバイスのRSSI値のログ出力機能（デモ機能）を追加（[#262](https://github.com/diverta/onecard-fido/issues/262) ご参照）<br>
-操作方法は、[こちらの手順書](FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
+操作方法は、[こちらの手順書](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)に記載しております。
 
 #### 2019/10/21
 

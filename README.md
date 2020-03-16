@@ -21,17 +21,30 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/2/27
+#### 2020/03/16
 
-macOS版 FIDO認証器管理ツールを修正しました。<br>
+[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)を修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.24）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23.1）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-starting-message/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-修正点は以下になります。（[#292](https://github.com/diverta/onecard-fido/issues/292) ご参照）
-- FIDO認証器のファームウェア更新を、FIDO認証器管理ツールから実行できるようにする機能を追加
+修正点は以下になります。
+- 2020/03/10におけるファームウェア修正により、認証データのサイズが拡張されたため、Windows版管理ツールのプログラムを修正<br>
+（[#312](https://github.com/diverta/onecard-fido/pull/312) ご参照）
+- Windows版管理ツールの起動時、管理者として実行されているかどうかのチェック処理を追加<br>
+（[#311](https://github.com/diverta/onecard-fido/issues/311)、[#315](https://github.com/diverta/onecard-fido/pull/315) ご参照）
 
-<b>【ご注意】</b><br>
-このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-dfufunc-01/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照いただき、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
+#### 2020/03/11
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+お手数ですが[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)を使用し、<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照のうえ、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.26）](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.7）が、macOS版 FIDO認証器管理ツールに同梱されております。
+
+修正点は以下になります。（[#313](https://github.com/diverta/onecard-fido/issues/313) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を２度連続して実行時、ユーザー登録時に使用したBLEデバイスのスキャンが失敗する不具合を解消（ファームウェアを修正）
+- BLEデバイスによる自動認証機能を無効化した後にヘルスチェックを再実行時、BLEデバイスがスキャンされてしまう不具合を解消（ファームウェアを修正）
+- 管理ツール自体に、修正はございません。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

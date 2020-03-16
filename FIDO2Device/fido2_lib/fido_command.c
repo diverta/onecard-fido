@@ -21,9 +21,6 @@
 #include "ctap2_common.h"
 #include "u2f.h"
 
-// デモ機能（BLEデバイスによる自動認証機能）
-#include "demo_ble_peripheral_auth.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -92,18 +89,11 @@ void fido_user_presence_verify_start_on_reset(void)
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
 
-    // 自動認証機能が有効な場合は
-    // ボタンを押す代わりに
-    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
-        return;
-    }
-
     // 赤色LED高速点滅開始
     fido_status_indicator_prompt_reset();
 }
 
-void fido_user_presence_verify_start(uint32_t timeout_msec)
+void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
 {
     // キープアライブタイマーを開始
     fido_repeat_process_timer_start(timeout_msec, fido_command_keepalive_timer_handler);
@@ -117,7 +107,7 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     // 自動認証機能が有効な場合は
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
+    if (demo_ble_peripheral_auth_start_scan(context)) {
         return;
     }
 
@@ -174,6 +164,17 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
         //   BLEデバイススキャン自体が、HID経由で呼び出される処理なので、
         //   HIDチャネルにレスポンスを送信
         fido_hid_send_status_response(U2F_COMMAND_ERROR, CTAP1_ERR_TIMEOUT);
+    }
+}
+
+void fido_user_presence_verify_end_message(const char *func_name, bool tup_done)
+{
+    if (tup_done) {
+        // ユーザー所在確認完了時のメッセージを出力
+        fido_log_info("%s: completed the test of user presence", func_name);
+    } else {
+        // ユーザー所在確認省略時のメッセージを出力
+        fido_log_info("%s: omitted the test of user presence", func_name);
     }
 }
 

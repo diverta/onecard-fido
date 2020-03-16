@@ -24,6 +24,7 @@
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
+		7A618C872418D74700BEC655 /* app_dfu_package.0.2.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A618C862418D74600BEC655 /* app_dfu_package.0.2.7.zip */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A84EFA22254440500DF449D /* SetPinParamWindow.xib */; };
 		7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A84EFA522544F7000DF449D /* SetPinParamWindow.m */; };
@@ -33,7 +34,6 @@
 		7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A8AEBE824034F380098FE35 /* DFUProcessingWindow.xib */; };
 		7A8AEBEB240358760098FE35 /* DFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8AEBEA240358760098FE35 /* DFUStartWindow.m */; };
 		7A8AEBF1240393E00098FE35 /* DFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8AEBF0240393E00098FE35 /* DFUProcessingWindow.m */; };
-		7A8AEBF32403A8CE0098FE35 /* app_dfu_package.0.2.5.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A8AEBF22403A8CE0098FE35 /* app_dfu_package.0.2.5.zip */; };
 		7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E0E2623791A2D00B47026 /* ToolLogFile.m */; };
 		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
@@ -90,6 +90,7 @@
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A54339B2328C3D000F2FCA5 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
 		7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolU2FHealthCheckCommand.m; sourceTree = "<group>"; };
+		7A618C862418D74600BEC655 /* app_dfu_package.0.2.7.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = app_dfu_package.0.2.7.zip; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		7A84EFA22254440500DF449D /* SetPinParamWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetPinParamWindow.xib; sourceTree = "<group>"; };
 		7A84EFA422544F7000DF449D /* SetPinParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPinParamWindow.h; sourceTree = "<group>"; };
@@ -104,7 +105,6 @@
 		7A8AEBEC240358960098FE35 /* DFUStartWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUStartWindow.h; sourceTree = "<group>"; };
 		7A8AEBEF2403933B0098FE35 /* DFUProcessingWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DFUProcessingWindow.h; sourceTree = "<group>"; };
 		7A8AEBF0240393E00098FE35 /* DFUProcessingWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUProcessingWindow.m; sourceTree = "<group>"; };
-		7A8AEBF22403A8CE0098FE35 /* app_dfu_package.0.2.5.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = app_dfu_package.0.2.5.zip; sourceTree = "<group>"; };
 		7A8E0E2523791A0A00B47026 /* ToolLogFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolLogFile.h; sourceTree = "<group>"; };
 		7A8E0E2623791A2D00B47026 /* ToolLogFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolLogFile.m; sourceTree = "<group>"; };
 		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7A8AEBF22403A8CE0098FE35 /* app_dfu_package.0.2.5.zip */,
+				7A618C862418D74600BEC655 /* app_dfu_package.0.2.7.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -386,13 +386,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A8AEBF32403A8CE0098FE35 /* app_dfu_package.0.2.5.zip in Resources */,
 				7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */,
 				7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */,
 				7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */,
+				7A618C872418D74700BEC655 /* app_dfu_package.0.2.7.zip in Resources */,
 				7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);

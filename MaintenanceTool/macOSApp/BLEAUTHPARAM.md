@@ -2,7 +2,7 @@
 
 ## 概要
 
-[BLEデバイスを使用した自動認証機能](../../FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_2.md)の各種パラメーターを設定する手順を掲載します。
+[BLEデバイスを使用した自動認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載します。
 
 #### 自動認証機能
 

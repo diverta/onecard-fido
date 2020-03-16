@@ -75,8 +75,10 @@
     }
 
     - (NSData *)getKeyHandleDataFrom:(NSData *)registerResponse {
-        // Registerレスポンスからキーハンドル(67バイト目から65バイト)を切り出し
-        return [registerResponse subdataWithRange:NSMakeRange(66, 65)];
+        // Registerレスポンスからキーハンドル(67バイト目以降)を切り出し
+        uint8_t *res = (uint8_t *)[registerResponse bytes];
+        uint8_t keyhandleSize = res[66];
+        return [registerResponse subdataWithRange:NSMakeRange(66, keyhandleSize+1)];
     }
 
 #pragma mark - Command/subcommand process

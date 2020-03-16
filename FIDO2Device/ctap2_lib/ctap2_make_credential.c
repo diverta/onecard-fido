@@ -240,6 +240,19 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 
 bool ctap2_make_credential_is_tup_needed(void)
 {
+    // BLEデバイスによる自動認証が有効化されている場合は、
+    // リクエストパラメーターの内容に関係なく、
+    // ユーザー所在確認の代わりとなる
+    // BLEデバイススキャンが行われるようにする
+    // （管理ツールの設定画面で設定したサービスUUIDを使用）
+    demo_ble_peripheral_auth_param_init();
+    if (demo_ble_peripheral_auth_scan_enable()) {
+        return true;
+    }
+
+    // BLEデバイスによる自動認証が有効化されていない場合は、
+    // リクエストパラメーターにより、
+    // ユーザー所在確認の必要／不要を判定
     return (ctap2_request.options.up == 1);
 }
 

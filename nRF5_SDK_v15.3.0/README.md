@@ -34,7 +34,7 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 - nrf52840_DK_xxaa.hex - アプリケーション（nRF52840 DK用）
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)へのファームウェア書込みについては、別ドキュメント<b>「[アプリケーション書込み手順](../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)」</b>をご参照願います。
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)へのファームウェア書込みについては、別ドキュメント<b>「[アプリケーション書込み手順](APPINSTALL.md)」</b>をご参照願います。
 　
 ## 開発環境構築手順
 

@@ -28,6 +28,7 @@
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
 #include "u2f.h"
+#include "ctap2_pubkey_credential.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -122,22 +123,22 @@ static uint8_t get_ctap2_command_byte(void)
     return ctap2_command_byte;
 }
 
-static void resume_response_process(void)
+static void resume_response_process(bool tup_done)
 {
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
 
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
-            fido_log_info("authenticatorMakeCredential: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorMakeCredential", tup_done);
             command_make_credential_resume_process();
             break;
         case CTAP2_CMD_GET_ASSERTION:
-            fido_log_info("authenticatorGetAssertion: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorGetAssertion", tup_done);
             command_get_assertion_resume_process();
             break;
         case CTAP2_CMD_RESET:
-            fido_log_info("authenticatorReset: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorReset", tup_done);
             command_authenticator_reset_resume_process();
             break;
         default:
@@ -155,7 +156,7 @@ bool fido_ctap2_command_on_mainsw_event(void)
         // キープアライブを停止
         fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
-        resume_response_process();
+        resume_response_process(true);
         return true;
     }
 
@@ -326,12 +327,12 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    resume_response_process();
+    resume_response_process(false);
 }
 
 static void command_make_credential_resume_process(void)
@@ -414,12 +415,13 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorGetAssertion: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC,
+            ctap2_pubkey_credential_ble_auth_scan_param());
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    resume_response_process();
+    resume_response_process(false);
 }
 
 static void command_get_assertion_resume_process(void)

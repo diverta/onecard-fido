@@ -36,11 +36,11 @@ MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAu
 
 MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
 
-## デモ機能
+## オプション機能
 
-BLEセントラルサービスを使用したデモンストレーション機能です。
+BLEセントラルサービスを使用したオプション機能です。
 
-### [BLEデバイスによる自動認証](DEMOFUNC_2.md)
+### [BLEデバイスによる自動認証](BLEDAUTH.md)
 
 FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
 
@@ -63,7 +63,7 @@ rev2の[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/READ
 
 ## ご参考情報
 
-### [アプリケーション書込み手順](APPINSTALL.md)
+### [アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)
 
 MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を経由し、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
 （ファームウェア単体開発時の運用になります）
