@@ -21,6 +21,18 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2020/03/16
+
+[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)を修正しました。<br>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23.1）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-starting-message/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。
+- 2020/03/10におけるファームウェア修正により、認証データのサイズが拡張されたため、Windows版管理ツールのプログラムを修正<br>
+（[#312](https://github.com/diverta/onecard-fido/pull/312) ご参照）
+- Windows版管理ツールの起動時、管理者として実行されているかどうかのチェック処理を追加<br>
+（[#311](https://github.com/diverta/onecard-fido/issues/311)、[#315](https://github.com/diverta/onecard-fido/pull/315) ご参照）
+
 #### 2020/03/10
 
 [FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
