@@ -84,6 +84,18 @@
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
+    <Compile Include="DFUProcessingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DFUProcessingForm.Designer.cs">
+      <DependentUpon>DFUProcessingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DFUStartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DFUStartForm.Designer.cs">
+      <DependentUpon>DFUStartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolPreference.cs" />
     <Compile Include="ToolPreferenceForm.cs">
       <SubType>Form</SubType>
@@ -210,6 +222,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DFUProcessingForm.resx">
+      <DependentUpon>DFUProcessingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DFUStartForm.resx">
+      <DependentUpon>DFUStartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
