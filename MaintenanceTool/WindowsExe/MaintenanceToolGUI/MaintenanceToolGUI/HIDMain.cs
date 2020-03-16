@@ -53,6 +53,13 @@ namespace MaintenanceToolGUI
         // 実行機能を保持
         private AppCommon.RequestType requestType;
 
+        // DFU処理
+        public ToolDFU ToolDFURef;
+
+        // バージョン照会の処理区分
+        // true=HID接続完了時に実行, false=メニューからの実行
+        private bool GetVersionInfoForDFU;
+
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -62,6 +69,7 @@ namespace MaintenanceToolGUI
             // イベントの登録
             hidProcess.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             hidProcess.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
+            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDConnected);
 
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
@@ -91,6 +99,10 @@ namespace MaintenanceToolGUI
         public void OnUSBDeviceRemoveComplete()
         {
             hidProcess.OnUSBDeviceRemoveComplete();
+
+            // DFU処理クラス内で保持している
+            // 「認証器に導入中のバージョン」をクリア
+            ToolDFURef.CurrentVersion = "";
         }
 
         private void ReceiveHIDMessage(byte[] message, int length)
@@ -133,6 +145,13 @@ namespace MaintenanceToolGUI
                 }
                 break;
             }
+        }
+
+        private void NotifyHIDConnected()
+        {
+            // HID接続処理が完了したら、
+            // 認証器に導入中のバージョンを照会
+            DoGetVersionInfoForDFU();
         }
 
         private void PrintMessageText(string messageText)
@@ -390,6 +409,14 @@ namespace MaintenanceToolGUI
                 return;
             }
             // コマンドバイトだけを送信する
+            GetVersionInfoForDFU = false;
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_VERSION_INFO, RequestData, 0);
+        }
+
+        public void DoGetVersionInfoForDFU()
+        {
+            // コマンドバイトだけを送信する
+            GetVersionInfoForDFU = true;
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_VERSION_INFO, RequestData, 0);
         }
 
@@ -412,6 +439,14 @@ namespace MaintenanceToolGUI
                 } else if (v.StartsWith("HW_REV=")) {
                     strHWRev = v.Split('=')[1].Replace("\"", "");
                 }
+            }
+
+            if (GetVersionInfoForDFU) {
+                // DFU処理のためのバージョン照会
+                // (HID接続完了時の処理) である場合、
+                // DFU処理クラスにバージョンを保持させて終了
+                ToolDFURef.CurrentVersion = strFWRev;
+                return;
             }
 
             // 画面に制御を戻す

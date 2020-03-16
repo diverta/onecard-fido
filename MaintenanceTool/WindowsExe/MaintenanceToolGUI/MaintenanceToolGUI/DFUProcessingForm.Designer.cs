@@ -39,6 +39,7 @@
             this.LevelIndicator.Size = new System.Drawing.Size(285, 25);
             this.LevelIndicator.Step = 1;
             this.LevelIndicator.TabIndex = 0;
+            this.LevelIndicator.UseWaitCursor = true;
             // 
             // LabelProgress
             // 
@@ -48,6 +49,7 @@
             this.LabelProgress.TabIndex = 12;
             this.LabelProgress.Text = "LabelProgress";
             this.LabelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelProgress.UseWaitCursor = true;
             // 
             // DFUProcessingForm
             // 
@@ -56,8 +58,14 @@
             this.ClientSize = new System.Drawing.Size(309, 126);
             this.Controls.Add(this.LabelProgress);
             this.Controls.Add(this.LevelIndicator);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "DFUProcessingForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ファームウェアを更新しています";
+            this.UseWaitCursor = true;
             this.ResumeLayout(false);
 
         }

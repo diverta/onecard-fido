@@ -41,6 +41,10 @@ namespace MaintenanceToolGUI
         public delegate void ReceiveHIDMessageEventHandler(byte[] message, int length);
         public event ReceiveHIDMessageEventHandler ReceiveHIDMessageEvent;
 
+        // HID接続完了時のイベント
+        public delegate void HIDConnectedEventHandler();
+        public event HIDConnectedEventHandler HIDConnectedEvent;
+
         public HIDProcess()
         {
         }
@@ -142,6 +146,10 @@ namespace MaintenanceToolGUI
             device.dataReceived += new HIDDevice.dataReceivedEvent(Device_dataReceived);
             MessageTextEvent(AppCommon.MSG_HID_CONNECTED);
             AppCommon.OutputLogInfo(string.Format(AppCommon.MSG_HID_CONNECTED + "{0}", devicePath));
+
+            // 認証器に導入中のバージョンをHID経由で照会するため、
+            // HIDデバイスとの接続完了をHIDMainに通知
+            HIDConnectedEvent();
         }
 
         // 受信データを保持

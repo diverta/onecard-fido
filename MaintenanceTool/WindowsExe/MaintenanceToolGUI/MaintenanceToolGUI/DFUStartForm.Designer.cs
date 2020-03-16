@@ -28,8 +28,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.LabelCurrentVersion = new System.Windows.Forms.Label();
             this.LabelUpdateVersion = new System.Windows.Forms.Label();
+            this.LabelCurrentVersion = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.LabelComment = new System.Windows.Forms.Label();
@@ -40,8 +40,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.LabelCurrentVersion);
             this.groupBox1.Controls.Add(this.LabelUpdateVersion);
+            this.groupBox1.Controls.Add(this.LabelCurrentVersion);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(23, 12);
@@ -51,23 +51,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "バージョン情報";
             // 
-            // LabelCurrentVersion
-            // 
-            this.LabelCurrentVersion.Location = new System.Drawing.Point(172, 51);
-            this.LabelCurrentVersion.Name = "LabelCurrentVersion";
-            this.LabelCurrentVersion.Size = new System.Drawing.Size(75, 12);
-            this.LabelCurrentVersion.TabIndex = 13;
-            this.LabelCurrentVersion.Text = "0.00.00";
-            this.LabelCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // LabelUpdateVersion
             // 
-            this.LabelUpdateVersion.Location = new System.Drawing.Point(172, 25);
+            this.LabelUpdateVersion.Location = new System.Drawing.Point(172, 51);
             this.LabelUpdateVersion.Name = "LabelUpdateVersion";
             this.LabelUpdateVersion.Size = new System.Drawing.Size(75, 12);
-            this.LabelUpdateVersion.TabIndex = 12;
+            this.LabelUpdateVersion.TabIndex = 13;
             this.LabelUpdateVersion.Text = "0.00.00";
             this.LabelUpdateVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelCurrentVersion
+            // 
+            this.LabelCurrentVersion.Location = new System.Drawing.Point(172, 25);
+            this.LabelCurrentVersion.Name = "LabelCurrentVersion";
+            this.LabelCurrentVersion.Size = new System.Drawing.Size(75, 12);
+            this.LabelCurrentVersion.TabIndex = 12;
+            this.LabelCurrentVersion.Text = "0.00.00";
+            this.LabelCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
@@ -103,6 +103,7 @@
             this.ButtonCancel.TabIndex = 12;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
+            this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // ButtonOK
             // 
@@ -112,6 +113,7 @@
             this.ButtonOK.TabIndex = 13;
             this.ButtonOK.Text = "OK";
             this.ButtonOK.UseVisualStyleBackColor = true;
+            this.ButtonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
             // DFUStartForm
             // 
@@ -122,7 +124,12 @@
             this.Controls.Add(this.ButtonOK);
             this.Controls.Add(this.LabelComment);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "DFUStartForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ファームウェアを更新";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -132,8 +139,8 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label LabelCurrentVersion;
         private System.Windows.Forms.Label LabelUpdateVersion;
+        private System.Windows.Forms.Label LabelCurrentVersion;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label LabelComment;

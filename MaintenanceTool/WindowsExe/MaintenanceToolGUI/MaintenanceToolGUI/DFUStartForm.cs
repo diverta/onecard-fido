@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
@@ -20,25 +13,33 @@ namespace MaintenanceToolGUI
             InitializeComponent();
         }
 
-        public void OpenForm(ToolDFU td)
+        public bool OpenForm(ToolDFU td)
         {
+            // DFU処理クラスを参照し、バージョン文字列をラベルに設定
             ToolDFURef = td;
-            LabelCurrentVersion.Text = ToolDFURef.CurrentVersion;
             LabelUpdateVersion.Text = ToolDFURef.UpdateVersion;
-            ShowDialog();
+            LabelCurrentVersion.Text = ToolDFURef.CurrentVersion;
+
+            // 処理開始画面を開く
+            DialogResult = DialogResult.Cancel;
+            return (ShowDialog() == DialogResult.OK);
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void TerminateWindow()
         {
-            // この画面を閉じる
-            TerminateWindow(DialogResult.Cancel);
-        }
-
-        private void TerminateWindow(DialogResult dialogResult)
-        {
-            // この画面を閉じる
-            DialogResult = dialogResult;
+            // 処理開始画面を閉じる
             Close();
+        }
+
+        private void ButtonOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            TerminateWindow();
+        }
+
+        private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            TerminateWindow();
         }
     }
 }
