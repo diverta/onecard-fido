@@ -48,7 +48,7 @@ namespace MaintenanceToolGUI
             toolPreference.SetTitleAndVersionText();
         }
 
-        private static string GetMaintenanceToolTitle()
+        public static string GetMaintenanceToolTitle()
         {
             // タイトルを戻す
             Assembly asm = Assembly.GetExecutingAssembly();
