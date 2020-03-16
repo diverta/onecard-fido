@@ -33,19 +33,18 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 - Windows版管理ツールの起動時、管理者として実行されているかどうかのチェック処理を追加<br>
 （[#311](https://github.com/diverta/onecard-fido/issues/311)、[#315](https://github.com/diverta/onecard-fido/pull/315) ご参照）
 
-#### 2020/03/10
+#### 2020/03/11
 
-[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+お手数ですが[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)を使用し、<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照のうえ、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.25）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
-（MDBT50Q_Dongleの最新ファームウェアは、macOS版 FIDO認証器管理ツールに同梱されております）
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.26）](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.7）が、macOS版 FIDO認証器管理ツールに同梱されております。
 
-修正点は以下になります。（[#307](https://github.com/diverta/onecard-fido/issues/307) ご参照）
-- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を有効化した場合は、ユーザー登録時に、必ずユーザー所在確認のためのBLEデバイススキャンが行われるよう、ファームウェアを修正
-- 前項修正により、認証データのサイズが拡張されたため、管理ツールのプログラムを修正
-
-<b>【ご注意】</b><br>
-このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-authdata-extension/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照いただき、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
+修正点は以下になります。（[#313](https://github.com/diverta/onecard-fido/issues/313) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を２度連続して実行時、ユーザー登録時に使用したBLEデバイスのスキャンが失敗する不具合を解消（ファームウェアを修正）
+- BLEデバイスによる自動認証機能を無効化した後にヘルスチェックを再実行時、BLEデバイスがスキャンされてしまう不具合を解消（ファームウェアを修正）
+- 管理ツール自体に、修正はございません。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

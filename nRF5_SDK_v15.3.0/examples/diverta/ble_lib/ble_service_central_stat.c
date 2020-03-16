@@ -193,13 +193,13 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
     return matched_info;
 }
 
-ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *p_scan_param)
+ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes)
 {
-    // BLEスキャンパラメーター
-    //  UUID: 先頭2バイト目から16バイト
-    //  Bluetoothアドレス: 先頭18バイト目から6バイト
-    uint8_t *uuid_bytes = p_scan_param + 1;
-    uint8_t *peer_addr = p_scan_param + 17;
+    // BLEスキャン用パラメーター
+    //   0 - 15: サービスUUID（16バイト）
+    //  16 - 21: Bluetoothアドレス（6バイト）
+    uint8_t *uuid_bytes = scan_param_bytes;
+    uint8_t *peer_addr = scan_param_bytes + 16;
 
     // スキャン結果の統計情報についてチェック
     ADV_STAT_INFO_T *matched_info = NULL;
