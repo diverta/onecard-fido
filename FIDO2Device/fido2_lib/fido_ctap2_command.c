@@ -18,6 +18,7 @@
 #include "ctap2_get_assertion.h"
 #include "ctap2_make_credential.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
@@ -27,6 +28,7 @@
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
 #include "u2f.h"
+#include "ctap2_pubkey_credential.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -121,22 +123,22 @@ static uint8_t get_ctap2_command_byte(void)
     return ctap2_command_byte;
 }
 
-static void resume_response_process(void)
+static void resume_response_process(bool tup_done)
 {
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
 
     switch (get_ctap2_command_byte()) {
         case CTAP2_CMD_MAKE_CREDENTIAL:
-            fido_log_info("authenticatorMakeCredential: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorMakeCredential", tup_done);
             command_make_credential_resume_process();
             break;
         case CTAP2_CMD_GET_ASSERTION:
-            fido_log_info("authenticatorGetAssertion: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorGetAssertion", tup_done);
             command_get_assertion_resume_process();
             break;
         case CTAP2_CMD_RESET:
-            fido_log_info("authenticatorReset: completed the test of user presence");
+            fido_user_presence_verify_end_message("authenticatorReset", tup_done);
             command_authenticator_reset_resume_process();
             break;
         default:
@@ -154,7 +156,7 @@ bool fido_ctap2_command_on_mainsw_event(void)
         // キープアライブを停止
         fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
-        resume_response_process();
+        resume_response_process(true);
         return true;
     }
 
@@ -288,7 +290,7 @@ static void command_authenticator_make_credential(void)
         return;
     }
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを暗号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -325,12 +327,12 @@ static void command_authenticator_make_credential(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorMakeCredential: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    resume_response_process();
+    resume_response_process(false);
 }
 
 static void command_make_credential_resume_process(void)
@@ -376,7 +378,7 @@ static void command_authenticator_get_assertion(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを復号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -413,12 +415,13 @@ static void command_authenticator_get_assertion(void)
         is_tup_needed = true;
         // キープアライブ送信を開始
         fido_log_info("authenticatorGetAssertion: waiting to complete the test of user presence");
-        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(CTAP2_KEEPALIVE_INTERVAL_MSEC,
+            ctap2_pubkey_credential_ble_auth_scan_param());
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    resume_response_process();
+    resume_response_process(false);
 }
 
 static void command_get_assertion_resume_process(void)
@@ -514,11 +517,11 @@ static void command_authenticator_reset_resume_process(void)
 
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 
-    // トークンカウンターをFlash ROM領域から削除
+    // 署名カウンター情報をFlash ROM領域から削除
     // (fds_file_deleteが実行される)
-    if (fido_flash_token_counter_delete() == false) {
+    if (fido_command_sign_counter_delete() == false) {
         // NGであれば、エラーレスポンスを生成して戻す
         send_ctap2_command_error_response(CTAP1_ERR_OTHER);
         return;

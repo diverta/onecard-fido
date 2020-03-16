@@ -1,27 +1,20 @@
 #ifndef U2F_CRYPTO_ECB_H__
 #define U2F_CRYPTO_ECB_H__
 
-//#include <stdint.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-void u2f_keyhandle_generate(uint8_t *p_appid_hash, uint8_t *private_key_value, uint32_t private_key_length);
-void u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length);
-
-// キーハンドル生成・格納用領域
-// Register, Authenticateで共通使用
-//   keyhandle_base_buffer
-//     暗号化される前（＝復合化された後）のキーハンドル
-//     この中に、AppIDHash、秘密鍵を格納
-//   keyhandle_buffer
-//     暗号化された後のキーハンドル。
-//     U2Fサーバー／クライアントとの受け渡しに使用
-extern uint8_t keyhandle_base_buffer[64];
-extern uint8_t keyhandle_buffer[64];
-
+uint8_t *u2f_keyhandle_base_buffer(void);
+uint8_t *u2f_keyhandle_buffer(void);
+size_t   u2f_keyhandle_buffer_size(void);
+void     u2f_keyhandle_generate(uint8_t *p_appid_hash);
+void     u2f_keyhandle_restore(uint8_t *keyhandle_value, uint32_t keyhandle_length);
+void     u2f_keyhandle_do_sign(void);
+uint8_t *u2f_keyhandle_ble_auth_scan_param(void);
 
 #ifdef __cplusplus
 }

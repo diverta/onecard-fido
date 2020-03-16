@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "ctap2_common.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 
 // for u2f_crypto_signature_data
@@ -82,7 +83,7 @@ static void generate_credential_source_hash()
     // SHA-256ハッシュ値（32バイト）を生成
     size_t hash_source_size = pubkey_cred_source_size + ctap2_rpid_hash_size;
     credential_source_hash_size = sizeof(credential_source_hash);
-    fido_crypto_generate_sha256_hash(
+    fido_command_calc_hash_sha256(
         hash_source_buffer, hash_source_size, credential_source_hash, &credential_source_hash_size);
 }
 
@@ -109,6 +110,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
     size_t offset = 1;
     memset(pubkey_cred_source, 0x00, sizeof(pubkey_cred_source));
@@ -117,11 +119,10 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     pubkey_cred_source[offset++] = param->publicKeyCredentialType;
 
     // Credential private key
-    // キーペアを新規生成し、秘密鍵を格納
-    fido_crypto_keypair_generate();
+    // 新規生成したキーペアの秘密鍵を格納
     memcpy(pubkey_cred_source + offset, 
-        fido_crypto_keypair_private_key(), fido_crypto_keypair_private_key_size());
-    offset += fido_crypto_keypair_private_key_size();
+        fido_command_keypair_privkey_for_credential_id(), CTAP2_PRIVKEY_SIZE);
+    offset += CTAP2_PRIVKEY_SIZE;
 
     // User Id (size & buffer)
     pubkey_cred_source[offset++] = user->id_size;
@@ -129,8 +130,13 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
     offset += user->id_size;
 
     // CredRandom（32バイトのランダムなバイト配列）をセット
-    fido_crypto_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
+    fido_command_generate_random_vector(pubkey_cred_source + offset, CRED_RANDOM_SIZE);
     offset += CRED_RANDOM_SIZE;
+
+    // BLE自動認証機能用のスキャンパラメーターを末尾に追加
+    //  先頭バイト: パラメーター長
+    //  後続バイト: パラメーターのバイト配列を格納
+    offset += demo_ble_peripheral_auth_scan_param_prepare(pubkey_cred_source + offset);
 
 #if LOG_DEBUG_CRED_SOURCE
     fido_log_debug("Public Key Credential Source contents");
@@ -153,13 +159,7 @@ void ctap2_pubkey_credential_generate_source(CTAP_PUBKEY_CRED_PARAM_T *param, CT
 
     // 暗号化対象ブロックサイズを設定
     //   AESの仕様上、16の倍数でなければならない
-    size_t block_num = offset / 16;
-    size_t block_sum = block_num * 16;
-    if (offset == block_sum) {
-        pubkey_cred_source_block_size = offset;
-    } else {
-        pubkey_cred_source_block_size = (block_num + 1) * 16;
-    } 
+    pubkey_cred_source_block_size = fido_calculate_aes_block_size(offset);
 }
 
 void ctap2_pubkey_credential_generate_id(void)
@@ -168,8 +168,7 @@ void ctap2_pubkey_credential_generate_id(void)
     // AES CBCで暗号化し、
     // credentialIdを生成する
     memset(credential_id, 0x00, sizeof(credential_id));
-    fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), 
-        pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
+    fido_command_aes_cbc_encrypt(pubkey_cred_source, pubkey_cred_source_block_size, credential_id);
     credential_id_size = pubkey_cred_source_block_size;
 
 #if LOG_DEBUG_CREDENTIAL_ID
@@ -183,8 +182,7 @@ static void ctap2_pubkey_credential_restore_source(uint8_t *credential_id, size_
     // authenticatorGetAssertionリクエストから取得した
     // credentialIdを復号化
     memset(pubkey_cred_source, 0, sizeof(pubkey_cred_source));
-    fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), 
-        credential_id, credential_id_size, pubkey_cred_source);
+    fido_command_aes_cbc_decrypt(credential_id, credential_id_size, pubkey_cred_source);
 
     // Public Key Credential Sourceから
     // SHA-256ハッシュ値（32バイト）を生成
@@ -204,9 +202,12 @@ static bool get_private_key_from_credential_id(void)
     // Public Key Credential Sourceから
     // rpId(Relying Party Identifier)を取り出す。
     //  index
+    //  0: Public Key Credential Source自体のサイズ
+    //  1: Public Key Credential Type
     //  2 - 33: Credential private key（秘密鍵）
     //  34: User Id（バイト配列）のサイズ
     //  35 - n: User Id（バイト配列）
+    //  n+1 - n+32: CredRandom（32バイト）
     // 
 #if LOG_DEBUG_CRED_SOURCE
     size_t offset = 34;
@@ -228,9 +229,11 @@ static bool get_private_key_from_credential_id(void)
 #endif
 
     // CredRandom領域を取り出す
-    // （末尾から32バイト分）
-    uint8_t size = pubkey_cred_source[0];
-    cred_random = pubkey_cred_source + size - CRED_RANDOM_SIZE;
+    // （ユーザーID末尾の次から32バイト分）
+    uint8_t index = 34;
+    uint8_t userid_size = pubkey_cred_source[index];
+    index += (1 + userid_size);
+    cred_random = pubkey_cred_source + index;
 
     return true;
 }
@@ -251,10 +254,10 @@ uint8_t ctap2_pubkey_credential_restore_private_key(CTAP_ALLOW_LIST_T *allowList
 
         // Public Key Credential Source + rpIdHash から
         // 生成されたSHA-256ハッシュ値をキーとし、
-        // トークンカウンターレコードを検索
+        // 署名カウンター情報を検索
         uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-        if (fido_flash_token_counter_read(p_hash) == false) {
-            // 紐づくトークンカウンターがない場合は
+        if (fido_command_sign_counter_read(p_hash) == false) {
+            // 紐づく署名カウンター情報がない場合は
             // 次のリスト要素をチェック
             continue;
         }
@@ -294,4 +297,18 @@ CTAP_CREDENTIAL_DESC_T *ctap2_pubkey_credential_restored_id(void)
 {
     // 秘密鍵の取出し元であるcredential IDの格納領域
     return pkey_credential_desc;
+}
+
+uint8_t *ctap2_pubkey_credential_ble_auth_scan_param(void)
+{
+    // Public Key Credential Source における
+    // User Id（バイト配列）のサイズを取得
+    size_t offset = 34;
+    size_t src_user_id_size = pubkey_cred_source[offset];
+
+    // BLEスキャンパラメーター格納領域の開始インデックスを取得
+    offset = offset + 1 + src_user_id_size + 32;
+
+    // BLEスキャンパラメーター格納領域の先頭を戻す
+    return (pubkey_cred_source + offset);
 }

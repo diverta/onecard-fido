@@ -16,6 +16,8 @@ extern "C" {
 // "u2f.h"より抜粋
 #define U2F_APPID_SIZE          32
 #define U2F_CHAL_SIZE           32
+#define U2F_PRIVKEY_SIZE        32
+#define U2F_PUBKEY_SIZE         64
 
 #define U2F_POINT_UNCOMPRESSED  0x04
 

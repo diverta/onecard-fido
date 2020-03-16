@@ -18,17 +18,19 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 <img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0000.jpg" width="300">
 
-#### ファームウェアの書込み
-
-[FIDO2認証器](../../nRF5_SDK_v15.3.0)のファームウェアを、MDBT50Q Dongleに書込みます。<br>
-書込み手順につきましては、<b>[アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/APPINSTALL.md)</b>をご参照ください。
-
 #### 管理ツールを導入
 
 [FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
+
+#### ファームウェアを更新
+
+[FIDO2認証器](../../nRF5_SDK_v15.3.0)の最新ファームウェアを、MDBT50Q Dongleに書込み、ファームウェアを更新します。<br>
+（最新ファームウェアは、FIDO認証器管理ツールに同梱されています）
+
+ファームウェアの更新手順につきましては、<b>[ファームウェア更新手順書](UPDATEFIRMWARE.md)</b>をご参照ください。
 
 #### 鍵・証明書導入／PIN設定
 

@@ -71,6 +71,10 @@
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
         public const string FILTER_SELECT_CRT_PATH = "証明書ファイル (*.crt)|*.crt";
 
+        // 起動時のメッセージ文言
+        public const string MSG_INVALID_USER_ROLL = "このツールは、管理者として実行してください。\n\nプログラムアイコンを右クリックして、\nメニューから「管理者として実行」を選択します。";
+        public const string MSG_ERROR_DOUBLE_START = "既に起動されています。";
+
         // PINコードの最小／最大桁数
         public const int PIN_CODE_SIZE_MIN = 4;
         public const int PIN_CODE_SIZE_MAX = 16;

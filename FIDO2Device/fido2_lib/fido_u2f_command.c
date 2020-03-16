@@ -16,6 +16,7 @@
 #include "u2f_keyhandle.h"
 #include "u2f_register.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
@@ -24,7 +25,6 @@
 #include "fido_ble_send.h"
 #include "fido_nfc_receive.h"
 #include "fido_nfc_send.h"
-#include "u2f.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -120,7 +120,7 @@ static uint8_t get_u2f_command_ins_byte(void)
     return get_receive_apdu()->INS;
 }
 
-static void u2f_resume_response_process(void)
+static void u2f_resume_response_process(bool tup_done)
 {
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
@@ -132,11 +132,11 @@ static void u2f_resume_response_process(void)
             //   [0]CLA [1]INS [2]P1 3[P2]
             ins = get_receive_apdu()->INS;
             if (ins == U2F_REGISTER) {
-                fido_log_info("U2F Register: completed the test of user presence");
+                fido_user_presence_verify_end_message("U2F Register", tup_done);
                 u2f_register_resume_process();
                 
             } else if (ins == U2F_AUTHENTICATE) {
-                fido_log_info("U2F Authenticate: completed the test of user presence");
+                fido_user_presence_verify_end_message("U2F Authenticate", tup_done);
                 u2f_authenticate_resume_process();
             }
             break;
@@ -156,7 +156,7 @@ bool fido_u2f_command_on_mainsw_event(void)
         // キープアライブを停止
         fido_user_presence_verify_end();
         // 後続のレスポンス送信処理を実行
-        u2f_resume_response_process();
+        u2f_resume_response_process(true);
         return true;
     }
 
@@ -268,6 +268,26 @@ static uint8_t *get_appid_hash_from_u2f_request_apdu(void)
     return p_appid_hash;
 }
 
+static bool u2f_command_register_is_tup_needed(void)
+{
+    // BLEデバイスによる自動認証が有効化されている場合は、
+    // リクエストパラメーターの内容に関係なく、
+    // ユーザー所在確認の代わりとなる
+    // BLEデバイススキャンが行われるようにする
+    // （管理ツールの設定画面で設定したサービスUUIDを使用）
+    demo_ble_peripheral_auth_param_init();
+    if (demo_ble_peripheral_auth_scan_enable()) {
+        return true;
+    }
+
+    // BLEデバイスによる自動認証が有効化されていない場合は、
+    // リクエストパラメーター（P1）により、
+    // ユーザー所在確認の必要／不要を判定
+    // 条件：P1 == 0x03 ("enforce-user-presence-and-sign")
+    uint8_t control_byte = get_receive_apdu()->P1;
+    return (control_byte == 0x03);
+}
+
 static void u2f_command_register(void)
 {
     // ユーザー所在確認フラグをクリア
@@ -281,7 +301,7 @@ static void u2f_command_register(void)
         return;
     }
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを暗号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -290,27 +310,31 @@ static void u2f_command_register(void)
         return;
     }
 
-    // control byte (P1) を参照
-    uint8_t control_byte = get_receive_apdu()->P1;
-    if (control_byte == 0x03) {
-        // 0x03 ("enforce-user-presence-and-sign")
+    if (u2f_command_register_is_tup_needed()) {
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
         fido_log_info("U2F Register: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC, NULL);
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_resume_response_process();
+    u2f_resume_response_process(false);
 }
 
 static void u2f_register_resume_process(void)
 {
     // 本処理を開始
     fido_log_info("U2F Register start");
+
+    // 秘密鍵を新規生成
+    if (fido_command_keypair_generate_for_keyhandle() == false) {
+        // 処理NGの場合、エラーレスポンスを生成して終了
+        send_u2f_error_status_response(0x9405);
+        return;
+    }
 
     // キーハンドルを新規生成
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
@@ -340,7 +364,7 @@ static void u2f_command_authenticate(void)
     // ユーザー所在確認フラグをクリア
     is_tup_needed = false;
 
-    if (fido_flash_password_get() == NULL) {
+    if (fido_command_check_aes_password_exist() == false) {
         // キーハンドルを復号化するために必要な
         // AESパスワードが生成されていない場合
         // エラーレスポンスを生成して戻す
@@ -362,14 +386,14 @@ static void u2f_command_authenticate(void)
     // appIdHashをリクエストデータから取得し、
     // それに紐づくトークンカウンターを検索
     uint8_t *p_appid_hash = get_appid_hash_from_u2f_request_apdu();
-    if (fido_flash_token_counter_read(p_appid_hash) == false) {
+    if (fido_command_sign_counter_read(p_appid_hash) == false) {
         // appIdHashに紐づくトークンカウンターがない場合は
         // エラーレスポンスを生成して戻す
         fido_log_error("U2F Authenticate: token counter not found ");
         send_u2f_error_status_response(U2F_SW_WRONG_DATA);
         return;
     }
-    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_flash_token_counter_value());
+    fido_log_debug("U2F Authenticate: token counter value=%d ", fido_command_sign_counter_value());
 
     // control byte (P1) を参照
     uint8_t control_byte = get_receive_apdu()->P1;
@@ -387,12 +411,13 @@ static void u2f_command_authenticate(void)
         is_tup_needed = true;
         fido_log_info("U2F Authenticate: waiting to complete the test of user presence");
         // LED点滅を開始
-        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC);
+        fido_user_presence_verify_start(U2F_KEEPALIVE_INTERVAL_MSEC,
+            u2f_keyhandle_ble_auth_scan_param());
         return;
     }
 
     // ユーザー所在確認不要の場合は、後続のレスポンス送信処理を実行
-    u2f_resume_response_process();
+    u2f_resume_response_process(false);
 }
 
 static void u2f_authenticate_resume_process(void)

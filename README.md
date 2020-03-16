@@ -21,43 +21,30 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/1/15
+#### 2020/03/16
+
+[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)を修正しました。<br>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23.1）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-starting-message/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。
+- 2020/03/10におけるファームウェア修正により、認証データのサイズが拡張されたため、Windows版管理ツールのプログラムを修正<br>
+（[#312](https://github.com/diverta/onecard-fido/pull/312) ご参照）
+- Windows版管理ツールの起動時、管理者として実行されているかどうかのチェック処理を追加<br>
+（[#311](https://github.com/diverta/onecard-fido/issues/311)、[#315](https://github.com/diverta/onecard-fido/pull/315) ご参照）
+
+#### 2020/03/11
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+お手数ですが[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)を使用し、<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照のうえ、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
 
-- <b>[nRF52840ファームウェア（Version 0.2.5）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.26）](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.7）が、macOS版 FIDO認証器管理ツールに同梱されております。
 
-修正点は以下になります。（[#299](https://github.com/diverta/onecard-fido/pull/299) ご参照）
-- MDBT50Q Dongleの仮想COMポートを閉塞<br>
-macOS上で、仮想COMポートドライバー関連の障害が確認されているため、仮想COMポートを使用している機能「[デバイスのRSSI値ログ出力](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/FIDO2Device/MDBT50Q_Dongle/DEMOFUNC_1.md)」を、為念で閉塞させていただきたく存じます。<br>
-（[#260](https://github.com/diverta/onecard-fido/issues/260) ご参照。FIDO機能ではなく、デモ機能として追加したものになります。）
-
-#### 2019/12/25
-
-Windows版 FIDO認証器管理ツールのインストーラーを作成しました。<br>
-
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-make-installer/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
-
-インストール方法につきましては、<b>[こちらの手順書](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-make-installer/MaintenanceTool/WindowsExe/INSTALLPRG.md)</b>をご参照願います。<br>
-なお、ツール本体のプログラム修正はありません。
-
-#### 2019/12/24
-
-FIDO認証器管理ツールを修正しました。<br>
-
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.23）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-view-log-file/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
-
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.23）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-view-log-file/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
-
-修正点は以下になります。（[#278](https://github.com/diverta/onecard-fido/issues/278) ご参照）
-- 管理ツールに、ログファイルが格納されているディレクトリーを開いて参照できるようにする機能を追加
-
-<b>【ご注意】<br>
-このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが、合わせて[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを下記バージョンに更新いただきたくお願いします。</b><br>
-（鍵・証明書インストール時、管理ツール側で転送内容を暗号化するように修正したため、ファームウェア側が旧バージョンのままだと、転送内容が復号化されず、鍵・証明書インストールが正しく実行できません）
-
-- <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
-
+修正点は以下になります。（[#313](https://github.com/diverta/onecard-fido/issues/313) ご参照）
+- [BLEデバイスによる自動認証機能](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を２度連続して実行時、ユーザー登録時に使用したBLEデバイスのスキャンが失敗する不具合を解消（ファームウェアを修正）
+- BLEデバイスによる自動認証機能を無効化した後にヘルスチェックを再実行時、BLEデバイスがスキャンされてしまう不具合を解消（ファームウェアを修正）
+- 管理ツール自体に、修正はございません。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Diverta Inc.")]
 [assembly: AssemblyProduct("MaintenanceTool")]
-[assembly: AssemblyCopyright("Copyright © 2017-2019 Diverta Inc.")]
+[assembly: AssemblyCopyright("Copyright © 2017-2020 Diverta Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.23")]
-[assembly: AssemblyFileVersion("0.1.23")]
+[assembly: AssemblyVersion("0.1.23.1")]
+[assembly: AssemblyFileVersion("0.1.23.1")]

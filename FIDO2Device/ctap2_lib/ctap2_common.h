@@ -16,6 +16,8 @@ extern "C" {
 #endif
 
 // 各種処理用の定数
+#define CTAP2_PRIVKEY_SIZE          32
+#define CTAP2_PUBKEY_SIZE           64
 #define CLIENT_DATA_HASH_SIZE       32
 #define RP_ID_MAX_SIZE              128
 #define RP_NAME_MAX_SIZE            32
@@ -98,7 +100,6 @@ typedef struct {
     uint8_t type;
     size_t  credential_id_size;
     uint8_t credential_id[CREDENTIAL_ID_MAX_SIZE];
-    CTAP_USER_ENTITY_T user_entity;
 } CTAP_CREDENTIAL_DESC_T;
 
 typedef struct {
@@ -140,7 +141,7 @@ extern size_t  authenticator_data_size;
 uint8_t *ctap2_generated_rpid_hash(void);
 size_t   ctap2_generated_rpid_hash_size(void);
 void     ctap2_generate_rpid_hash(uint8_t *rpid, size_t rpid_size);
-bool     ctap2_generate_signature(uint8_t *client_data_hash, uint8_t *private_key_be);
+void     ctap2_generate_signature_base(uint8_t *client_data_hash);
 uint32_t ctap2_current_sign_count(void);
 void     ctap2_set_sign_count(uint32_t count);
 uint8_t  ctap2_flags_value(void);

@@ -6,6 +6,7 @@
  */
 #include "cbor.h"
 #include "fido_command.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_ctap2_command.h"
 #include "ctap2_common.h"
@@ -14,12 +15,6 @@
 #include "ctap2_cbor_encode.h"
 #include "ctap2_pubkey_credential.h"
 #include "ctap2_client_pin_token.h"
-
-// for u2f_crypto_signature_data
-#include "u2f_signature.h"
-
-// for u2f_securekey_skey_be
-#include "u2f_register.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -284,7 +279,7 @@ void perform_get_key_agreement(uint8_t *encoded_buff, size_t *encoded_buff_size)
 {
     // 鍵交換用キーペアが未生成の場合は新規生成
     // (再生成は要求しない)
-    fido_crypto_sskey_init(false);
+    fido_command_sskey_init(false);
 
     // レスポンスをエンコード
     uint8_t ctap2_status = ctap2_cbor_encode_response_key_agreement(encoded_buff, encoded_buff_size);
@@ -306,8 +301,7 @@ uint8_t verify_pin_auth(void)
     // 共通鍵ハッシュを利用し、
     // CTAP2クライアントから受領したPINデータを
     // HMAC SHA-256アルゴリズムでハッシュ化
-    fido_crypto_calculate_hmac_sha256(
-        fido_crypto_sskey_hash(), SSKEY_HASH_SIZE,
+    fido_command_sskey_calculate_hmac_sha256(
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize,
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, 
         hmac);
@@ -354,7 +348,7 @@ uint8_t calculate_pin_code_hash(void)
     // PINコードをSHA-256ハッシュ化し、
     // PINコードハッシュ（32バイト）を作成
     pin_code_hash_size = SHA_256_HASH_SIZE;
-    fido_crypto_generate_sha256_hash(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
+    fido_command_calc_hash_sha256(pin_code, pin_code_size, pin_code_hash, &pin_code_hash_size);
 
 #if LOG_DEBUG_PIN_CODE
     fido_log_debug("PIN code(%dbytes):", pin_len);
@@ -384,7 +378,7 @@ static bool check_pin_code_hash(void)
 
     // CTAP2クライアントから受け取った旧いPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_command_sskey_aes_256_cbc_decrypt(
         ctap2_request.pinHashEnc, ctap2_request.pinHashEncSize, pin_code);
     if (pin_code_size != ctap2_request.pinHashEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -404,7 +398,7 @@ static bool check_pin_code_hash(void)
     }
 
     // 一致しない場合はキーペアを再生成
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 
     // エラーレスポンスを待避
     if (retry_counter == 0) {
@@ -441,7 +435,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 {
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    uint8_t ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    uint8_t ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -469,7 +463,7 @@ void perform_set_pin(uint8_t *encoded_buff, size_t *encoded_buff_size, bool pin_
 
     // CTAP2クライアントから受け取ったPINコードを、
     // 共通鍵ハッシュを使用して復号化
-    pin_code_size = fido_crypto_aes_cbc_256_decrypt(fido_crypto_sskey_hash(), 
+    pin_code_size = fido_command_sskey_aes_256_cbc_decrypt(
         ctap2_request.newPinEnc, ctap2_request.newPinEncSize, pin_code);
     if (pin_code_size != ctap2_request.newPinEncSize) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
@@ -527,7 +521,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
 
     // CTAP2クライアントから受け取った公開鍵と、
     // 鍵交換用キーペアの秘密鍵を使用し、共通鍵ハッシュを生成
-    uint8_t ctap2_status = fido_crypto_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
+    uint8_t ctap2_status = fido_command_sskey_generate((uint8_t *)&ctap2_request.cose_key.key);
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 鍵交換用キーペアが未生成の場合は
         // エラーレスポンスを生成して戻す
@@ -545,7 +539,7 @@ void perform_get_pin_token(uint8_t *encoded_buff, size_t *encoded_buff_size)
     }
 
     // pinTokenを共通鍵で暗号化
-    ctap2_status = ctap2_client_pin_token_encode(fido_crypto_sskey_hash());
+    ctap2_status = ctap2_client_pin_token_encode();
     if (ctap2_status != CTAP1_ERR_SUCCESS) {
         // 処理NGの場合はエラーレスポンスを生成して戻す
         fido_ctap2_command_send_response(ctap2_status, 1);
@@ -637,5 +631,5 @@ void ctap2_client_pin_init(void)
 {
     // PINトークンとキーペアを再生成
     ctap2_client_pin_token_init(true);
-    fido_crypto_sskey_init(true);
+    fido_command_sskey_init(true);
 }

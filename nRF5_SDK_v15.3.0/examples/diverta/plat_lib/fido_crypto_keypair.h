@@ -7,9 +7,18 @@
 #ifndef FIDO_CRYPTO_KEYPAIR_H
 #define FIDO_CRYPTO_KEYPAIR_H
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void     fido_crypto_keypair_generate(void);
+uint8_t *fido_crypto_keypair_private_key(void);
+uint8_t *fido_crypto_keypair_public_key(void);
+size_t   fido_crypto_keypair_private_key_size(void);
 
 #ifdef __cplusplus
 }

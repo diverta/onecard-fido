@@ -13,6 +13,7 @@
 #include "ctap2_client_pin_token.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
+#include "fido_command_common.h"
 #include "fido_common.h"
 
 // for u2f_crypto_signature_data
@@ -239,10 +240,23 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
 
 bool ctap2_make_credential_is_tup_needed(void)
 {
+    // BLEデバイスによる自動認証が有効化されている場合は、
+    // リクエストパラメーターの内容に関係なく、
+    // ユーザー所在確認の代わりとなる
+    // BLEデバイススキャンが行われるようにする
+    // （管理ツールの設定画面で設定したサービスUUIDを使用）
+    demo_ble_peripheral_auth_param_init();
+    if (demo_ble_peripheral_auth_scan_enable()) {
+        return true;
+    }
+
+    // BLEデバイスによる自動認証が有効化されていない場合は、
+    // リクエストパラメーターにより、
+    // ユーザー所在確認の必要／不要を判定
     return (ctap2_request.options.up == 1);
 }
 
-static uint8_t generate_credential_pubkey(void)
+static uint8_t generate_credential_pubkey(uint8_t *keypair_public_key)
 {
     // CBORエンコーダー初期化
     CborEncoder encoder;
@@ -250,8 +264,8 @@ static uint8_t generate_credential_pubkey(void)
     cbor_encoder_init(&encoder, credential_pubkey, sizeof(credential_pubkey), 0);
 
     // CBORエンコード実行
-    uint8_t *x = fido_crypto_keypair_public_key();
-    uint8_t *y = fido_crypto_keypair_public_key() + 32;
+    uint8_t *x = keypair_public_key;
+    uint8_t *y = keypair_public_key + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
     uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
@@ -342,22 +356,18 @@ static void generate_authenticator_data(void)
 
 static uint8_t generate_sign(void)
 {
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        return CTAP2_ERR_VENDOR_FIRST;
-    }
-
-    if (fido_flash_skey_cert_available() == false) {
+    if (fido_command_check_skey_cert_exist() == false) {
         // 秘密鍵と証明書がFlash ROMに登録されていない場合
         // エラーレスポンスを生成して戻す
         return CTAP2_ERR_VENDOR_FIRST;
     }
 
-    if (ctap2_generate_signature(ctap2_request.clientDataHash, fido_flash_skey_data()) == false) {
-        // 署名を実行
-        // NGであれば、エラーレスポンスを生成して戻す
-        return CTAP2_ERR_VENDOR_FIRST;
+    // 署名ベースを生成
+    ctap2_generate_signature_base(ctap2_request.clientDataHash);
+
+    // 認証器固有の秘密鍵を使用して署名生成
+    if (fido_command_do_sign_with_privkey() == false) {
+        return false;
     }
 
 #if LOG_DEBUG_SIGN_BUFF
@@ -388,6 +398,11 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     // sign counterをゼロクリア
     ctap2_set_sign_count(0);
 
+    // 秘密鍵を新規生成
+    if (fido_command_keypair_generate_for_credential_id() == false) {
+        return CTAP1_ERR_OTHER;
+    }
+
     // Public Key Credential Sourceを編集する
     ctap2_pubkey_credential_generate_source(
         &ctap2_request.cred_param, &ctap2_request.user);
@@ -396,7 +411,8 @@ uint8_t ctap2_make_credential_generate_response_items(void)
     ctap2_pubkey_credential_generate_id();
 
     // credentialPublicKey(CBOR)を生成
-    uint8_t ret = generate_credential_pubkey();
+    uint8_t *pubkey = fido_command_keypair_pubkey_for_credential_id();
+    uint8_t ret = generate_credential_pubkey(pubkey);
     if (ret != CTAP1_ERR_SUCCESS) {
         return ret;
     }
@@ -485,8 +501,8 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
         ret = cbor_encoder_create_array(&stmtmap, &x5carr, 1);
         if (ret == CborNoError) {
             // 証明書格納領域と長さを取得
-            uint8_t *cert_buffer = fido_flash_cert_data();
-            uint32_t cert_buffer_length = fido_flash_cert_data_length();
+            uint8_t *cert_buffer = fido_command_cert_data();
+            uint32_t cert_buffer_length = fido_command_cert_data_length();
             // 証明書を格納
             ret = cbor_encode_byte_string(&x5carr, cert_buffer, cert_buffer_length);
             if (ret != CborNoError) {
@@ -536,8 +552,8 @@ uint8_t ctap2_make_credential_add_token_counter(void)
     // 生成されたSHA-256ハッシュ値をキーとし、
     // トークンカウンターレコードを追加する
     uint8_t *p_hash = ctap2_pubkey_credential_source_hash();
-    uint8_t *p_hash_for_check = ctap2_generated_rpid_hash();
-    if (fido_flash_token_counter_write(p_hash, ctap2_current_sign_count(), p_hash_for_check) == false) {
+    uint8_t *p_rpid_hash = ctap2_generated_rpid_hash();
+    if (fido_command_sign_counter_create(p_hash, p_rpid_hash, ctap2_request.user.name) == false) {
         return CTAP1_ERR_OTHER;
     }
 

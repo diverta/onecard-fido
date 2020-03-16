@@ -21,9 +21,6 @@
 #include "ctap2_common.h"
 #include "u2f.h"
 
-// デモ機能（BLEデバイスによる自動認証機能）
-#include "demo_ble_peripheral_auth.h"
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -55,25 +52,6 @@ void fido_command_abort_flag_set(bool flag)
 //
 // CTAP2、U2Fで共用する各種処理
 //
-bool fido_command_check_skey_cert_exist(void)
-{
-    if (fido_flash_skey_cert_read() == false) {
-        // 秘密鍵と証明書をFlash ROMから読込
-        // NGであれば、エラーレスポンスを生成して戻す
-        fido_log_error("Private key and certification read error");
-        return false;
-    }
-
-    if (fido_flash_skey_cert_available() == false) {
-        // 秘密鍵と証明書がFlash ROMに登録されていない場合
-        // エラーレスポンスを生成して戻す
-        return false;
-    }
-    
-    // 秘密鍵と証明書が登録されている場合はtrue
-    return true;
-}
-
 void fido_command_mainsw_event_handler(void)
 {
     // ボタンが短押しされた時の処理を実行
@@ -111,18 +89,11 @@ void fido_user_presence_verify_start_on_reset(void)
     // ユーザー所在確認待ち状態に入る
     waiting_for_tup = true;
 
-    // 自動認証機能が有効な場合は
-    // ボタンを押す代わりに
-    // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
-        return;
-    }
-
     // 赤色LED高速点滅開始
     fido_status_indicator_prompt_reset();
 }
 
-void fido_user_presence_verify_start(uint32_t timeout_msec)
+void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
 {
     // キープアライブタイマーを開始
     fido_repeat_process_timer_start(timeout_msec, fido_command_keepalive_timer_handler);
@@ -136,7 +107,7 @@ void fido_user_presence_verify_start(uint32_t timeout_msec)
     // 自動認証機能が有効な場合は
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
-    if (demo_ble_peripheral_auth_start_scan()) {
+    if (demo_ble_peripheral_auth_start_scan(context)) {
         return;
     }
 
@@ -196,9 +167,25 @@ void fido_user_presence_verify_on_ble_scan_end(bool success)
     }
 }
 
+void fido_user_presence_verify_end_message(const char *func_name, bool tup_done)
+{
+    if (tup_done) {
+        // ユーザー所在確認完了時のメッセージを出力
+        fido_log_info("%s: completed the test of user presence", func_name);
+    } else {
+        // ユーザー所在確認省略時のメッセージを出力
+        fido_log_info("%s: omitted the test of user presence", func_name);
+    }
+}
+
 static bool is_waiting_user_presence_verify(TRANSPORT_TYPE transport_type, uint8_t cmd)
 {
     if (waiting_for_tup) {
+        // キャンセルコマンドの場合は受け付ける
+        if (cmd == CTAP2_COMMAND_CANCEL) {
+            fido_log_info("Command (0x%02x) accepted while testing user presence ", cmd);
+            return false;
+        }
         // ユーザー所在確認中は、 ビジーである旨のエラーを戻す
         fido_log_error("Command (0x%02x) cannot perform while testing user presence ", cmd);
         if (transport_type == TRANSPORT_HID) {

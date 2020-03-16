@@ -15,7 +15,11 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug hex dump data
+#define LOG_HEXDUMP_DEBUG_SSKEY false
+
 // for initial key pair generate
+#include "fido_command_common.h"
 #include "fido_common.h"
 #include "fido_crypto.h"
 
@@ -110,10 +114,15 @@ uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
         &self_private_key, &client_public_key, sskey_raw_data, &sskey_raw_data_size);
     app_error_check("nrf_crypto_ecdh_compute", err_code);
 
+#if LOG_HEXDUMP_DEBUG_SSKEY
+    NRF_LOG_DEBUG("fido_crypto_sskey_generate:");
+    NRF_LOG_HEXDUMP_DEBUG(sskey_raw_data, sskey_raw_data_size);
+#endif
+
     // 生成した共通鍵をSHA-256ハッシュ化し、
     // 共通鍵ハッシュ（32バイト）を作成
     sskey_hash_size = NRF_CRYPTO_HASH_SIZE_SHA256;
-    fido_crypto_generate_sha256_hash(sskey_raw_data, sskey_raw_data_size, sskey_hash, &sskey_hash_size);
+    fido_command_calc_hash_sha256(sskey_raw_data, sskey_raw_data_size, sskey_hash, &sskey_hash_size);
     return CTAP1_ERR_SUCCESS;
 }
 
