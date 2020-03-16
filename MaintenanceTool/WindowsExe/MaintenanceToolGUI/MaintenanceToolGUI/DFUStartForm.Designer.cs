@@ -28,7 +28,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.LabelCurrentVersion = new System.Windows.Forms.Label();
             this.LabelUpdateVersion = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -40,7 +40,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.LabelCurrentVersion);
             this.groupBox1.Controls.Add(this.LabelUpdateVersion);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
@@ -51,14 +51,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "バージョン情報";
             // 
-            // label3
+            // LabelCurrentVersion
             // 
-            this.label3.Location = new System.Drawing.Point(172, 51);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 12);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "0.00.00";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelCurrentVersion.Location = new System.Drawing.Point(172, 51);
+            this.LabelCurrentVersion.Name = "LabelCurrentVersion";
+            this.LabelCurrentVersion.Size = new System.Drawing.Size(75, 12);
+            this.LabelCurrentVersion.TabIndex = 13;
+            this.LabelCurrentVersion.Text = "0.00.00";
+            this.LabelCurrentVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelUpdateVersion
             // 
@@ -132,7 +132,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label LabelCurrentVersion;
         private System.Windows.Forms.Label LabelUpdateVersion;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

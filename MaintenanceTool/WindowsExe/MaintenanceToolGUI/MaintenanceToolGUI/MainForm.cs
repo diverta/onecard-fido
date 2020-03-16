@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPreference toolPreference;
+        private ToolDFU toolDFU;
         private string commandTitle = "";
 
         // 管理ツールの情報
@@ -46,6 +47,9 @@ namespace MaintenanceToolGUI
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
             toolPreference.SetTitleAndVersionText();
+
+            // DFU処理クラスを生成
+            toolDFU = new ToolDFU(this, hid);
         }
 
         public static string GetMaintenanceToolTitle()
@@ -478,6 +482,16 @@ namespace MaintenanceToolGUI
             // 管理ツールのログファイルを格納している
             // フォルダーを、Windowsのエクスプローラで参照
             Process.Start(AppCommon.OutputLogFileDirectoryPath());
+        }
+
+        private void DFUToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // DFU処理を実行
+            toolDFU.OpenDFUStartForm();
         }
 
         protected override void WndProc(ref Message m)

@@ -59,6 +59,7 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.DFUToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -188,7 +189,8 @@
             // ファイルFToolStripMenuItem
             // 
             this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ViewLogFileToolStripMenuItem});
+            this.ViewLogFileToolStripMenuItem,
+            this.DFUToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
             this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
@@ -218,7 +220,7 @@
             this.DoHIDGetFlashInfoToolStripMenuItem,
             this.DoHIDGetVersionInfoToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
             // DoHIDCtap2TestToolStripMenuItem
@@ -263,7 +265,7 @@
             this.DoBLEU2fTestToolStripMenuItem,
             this.DoBLEPingTestToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoBLECtap2TestToolStripMenuItem
@@ -298,9 +300,16 @@
             // ToolPreferenceStripMenuItem
             // 
             this.ToolPreferenceStripMenuItem.Name = "ToolPreferenceStripMenuItem";
-            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
             this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
+            // 
+            // DFUToolStripMenuItem
+            // 
+            this.DFUToolStripMenuItem.Name = "DFUToolStripMenuItem";
+            this.DFUToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.DFUToolStripMenuItem.Text = "ファームウェアを更新";
+            this.DFUToolStripMenuItem.Click += new System.EventHandler(this.DFUToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -366,6 +375,7 @@
         private System.Windows.Forms.ToolStripMenuItem DoHIDGetVersionInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewLogFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DFUToolStripMenuItem;
     }
 }
 

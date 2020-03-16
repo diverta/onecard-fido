@@ -96,6 +96,7 @@
     <Compile Include="DFUStartForm.Designer.cs">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolPreference.cs" />
     <Compile Include="ToolPreferenceForm.cs">
       <SubType>Form</SubType>
@@ -259,6 +260,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\app_dfu_package.0.2.7.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
