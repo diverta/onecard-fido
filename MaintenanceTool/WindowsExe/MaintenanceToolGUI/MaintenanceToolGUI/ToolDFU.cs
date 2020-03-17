@@ -35,8 +35,8 @@
             hidMain.ToolDFURef = this;
 
             // 処理開始／進捗画面を生成
-            dfuStartForm = new DFUStartForm();
-            dfuProcessingForm = new DFUProcessingForm();
+            dfuStartForm = new DFUStartForm(this);
+            dfuProcessingForm = new DFUProcessingForm(this);
 
             // ファームウェア更新イメージファイルから、更新バージョンを取得
             GetDFUImageFileResourceName();
@@ -79,12 +79,12 @@
         public void OpenDFUStartForm()
         {
             // バージョンチェックが不正の場合は処理を終了
-            if (DFUImageIsUnavailable() == false) {
+            if (DFUImageIsUnavailable()) {
                 return;
             }
 
             // 処理開始画面を表示
-            if (dfuStartForm.OpenForm(this)) {
+            if (dfuStartForm.OpenForm()) {
                 // 処理開始画面でOKボタンがクリックされた場合、
                 // 処理進捗画面を表示
                 dfuProcessingForm.ShowDialog();
@@ -95,11 +95,17 @@
         {
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion == "") {
+                FormUtil.ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, 
+                    ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
                 return true;
             }
 
             // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
             if (CurrentVersion == "") {
+                FormUtil.ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
                 return true;
             }
 

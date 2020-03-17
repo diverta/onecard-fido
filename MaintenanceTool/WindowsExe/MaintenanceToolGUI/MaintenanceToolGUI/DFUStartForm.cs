@@ -8,15 +8,15 @@ namespace MaintenanceToolGUI
         // DFU処理クラスの参照を保持
         private ToolDFU ToolDFURef;
 
-        public DFUStartForm()
+        public DFUStartForm(ToolDFU td)
         {
             InitializeComponent();
+            ToolDFURef = td;
         }
 
-        public bool OpenForm(ToolDFU td)
+        public bool OpenForm()
         {
             // DFU処理クラスを参照し、バージョン文字列をラベルに設定
-            ToolDFURef = td;
             LabelUpdateVersion.Text = ToolDFURef.UpdateVersion;
             LabelCurrentVersion.Text = ToolDFURef.CurrentVersion;
 
