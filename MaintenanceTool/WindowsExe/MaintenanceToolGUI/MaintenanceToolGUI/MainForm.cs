@@ -267,7 +267,7 @@ namespace MaintenanceToolGUI
         public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
-                MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
+                FormUtil.ShowWarningMessage(MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 return true;
             }
             return false;
@@ -302,8 +302,7 @@ namespace MaintenanceToolGUI
 
             // 未入力の場合はポップアップメッセージを表示して
             // テキストボックスにフォーカスを移す
-            MessageBox.Show(errorMessage, MaintenanceToolTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            FormUtil.ShowWarningMessage(MaintenanceToolTitle, errorMessage);
             textBox.Focus();
 
             return false;
