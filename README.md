@@ -36,7 +36,7 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 #### 2020/03/11
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
-お手数ですが[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)を使用し、<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照のうえ、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
+お手数ですが[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)を使用し、<b>[ファームウェア更新手順書](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)</b>をご参照のうえ、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを更新いただくようお願いします。
 
 - <b>[macOS版 FIDO認証器管理ツール（Version 0.1.26）](https://github.com/diverta/onecard-fido/blob/bug-nRF52840-BLE-auth-scanparam/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
 MDBT50Q_Dongleの最新ファームウェア（Version 0.2.7）が、macOS版 FIDO認証器管理ツールに同梱されております。
