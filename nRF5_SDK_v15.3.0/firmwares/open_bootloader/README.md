@@ -7,9 +7,6 @@
 
 このフォルダー（`firmwares/open_bootloader`）に格納しています。
 
-- [mbr_nrf52_2.4.1_mbr.hex](mbr_nrf52_2.4.1_mbr.hex) - マスターブートレコード<br>
-Nordic社から提供されているものをそのまま使用しています。
-
 - [nrf52840_xxaa.hex](nrf52840_xxaa.hex) - アプリケーション（USBブートローダー本体）<br>
 後述「ファームウェア作成手順」により作成したものを使用します。
 
