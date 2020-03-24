@@ -22,7 +22,7 @@ nRF5 SDKのサンプルアプリケーション・フォルダー（/nRF5_SDK_15
 
 今回の作成にあたっては、[`<リポジトリールート>/nRF5_SDK_v15.3.0/examples/dfu`](../../../../nRF5_SDK_v15.3.0/examples/dfu)配下に配置いたしました。
 
-#### メイクファイルのパス修正
+#### メイクファイルの修正
 
 メイクファイル「[Makefile](../../../../nRF5_SDK_v15.3.0/examples/dfu/open_bootloader/pca10059_usb/armgcc/Makefile)」の下記部分を修正します。
 
@@ -33,8 +33,15 @@ SDK_ROOT := ../../../../..
 
 <b>修正後</b>
 ```
+# Pin for DFU mode
+CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_BUTTON=0
+CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_GPREGRET=1
+CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_PINRESET=0
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 ```
+
+[注] `-DNRF_BL_DFU_ENTER_METHOD_xxxx`の定義は、ブートローダーの開始設定を修正している部分です。すなわち、ブートローダーモードに遷移させるためには、nRF52840アプリケーション側で、レジスター`GPREGRET`に所定の値を設定することが必要となります（リセットボタンやユーザーボタンによるブートローダーモード遷移は不可能です）。
 
 ### ソースファイルからビルド
 

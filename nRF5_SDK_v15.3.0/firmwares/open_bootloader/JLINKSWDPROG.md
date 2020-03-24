@@ -1,6 +1,6 @@
 # 簡易USBブートローダー書込手順
 
-MDBT50Q Dongleに、簡易USBブートローダー（Open Bootloader）をJ-Link経由で書込みする手順を記載します。
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、簡易USBブートローダー（Open Bootloader）をJ-Link経由で書込みする手順を記載します。
 
 ## 書込み準備
 
@@ -30,9 +30,10 @@ MDBT50Q Dongleに、簡易USBブートローダー（Open Bootloader）をJ-Link
 |SWD Reset |RST  | <--  |RESET|
 
 [注1] nRF52840 DK上の「P20」というコネクター（オスピン）に接続します。<br>
-[注2] MDBT50Q Dongleの回路図はこちら（[FIDO2AUTH_001.pdf](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/pcb/FIDO2AUTH_001.pdf)）になります。
+[注2] MDBT50Q Dongle（rev2）の回路図はこちら（[FIDO2AUTH_001.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/FIDO2AUTH_002.pdf)）になります。
 
-下図は実際に両者を接続した時のイメージになります。
+下図は実際に両者を接続した時のイメージになります。<br>
+この時、MDBT50Q Dongleは、PCのUSBポートに装着しておいてください。
 
 <img src="../assets02/0001.jpg" width="540">
 
@@ -71,12 +72,11 @@ nRF Connectを起動します。<br>
 
 <img src="../assets02/0004.jpg" width="450">
 
-ここで、MDBT50Q DongleをUSBポートに挿します。<br>
-その後、画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
+画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
 
 <img src="../assets02/0005.jpg" width="450">
 
-しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているnRF52840側のメモリーイメージが表示されます。<br>
+しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているMDBT50Q Dongle側のメモリーイメージが表示されます。<br>
 （下図例ではメモリーイメージが表示されていませんが、これは事前に全領域が消去済みであったためです）
 
 <img src="../assets02/0006.jpg" width="450">
@@ -91,7 +91,7 @@ nRF Connectを起動します。<br>
 <img src="../assets02/0007.jpg" width="450">
 
 しばらくすると、下図のように画面下部のメッセージ欄が赤く変化します。<br>
-画面左上部にあるプルダウンから「Close device」を選択し、MDBT50Q Dongleとの接続をすみやかに切断してください。
+画面左上部にあるプルダウンから「Close device」を選択し、nRF52840 DKとの接続をすみやかに切断してください。
 
 <img src="../assets02/0008.jpg" width="450">
 
