@@ -1,4 +1,4 @@
-# アプリケーション書込み手順
+# [開発運用] アプリケーション書込み手順
 
 MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
 
@@ -10,10 +10,28 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 
 <img src="assets02/0000.png" width="400">
 
+MDBT50Q DongleをPCのUSBポートに装着したら、Pythonスクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、ブートローダー遷移コマンドを投入します。<br>
+下記は実行例になります。
 
-MDBT50Q DongleをPCのUSBポートに装着し、基板上のスイッチ「SW2」を１回プッシュします。
-
-<img src="assets02/0001.jpg" width="400">
+```
+MacBookPro-makmorit-jp:~ makmorit$ python HookUpHIDBLMode.py
+HID device: path=USB_f055_0001_0x7fe684c062f0, usage_page=61904, usage=1
+---- sent data ----
+ffffffff860008d4e5f607182930410000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- received data ----
+ffffffff860011d4e5f607182930410100330102050002070000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- INIT done ----
+---- sent data ----
+01003301c5000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- received data ----
+01003301c5000100000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- command done ----
+MacBookPro-makmorit-jp:~ makmorit$
+```
 
 基板上のLED2（赤色）が緩く点滅し始め、USBブートローダーモード（USBポート経由でアプリケーション書込が可能なモード）に遷移します。
 
@@ -21,61 +39,38 @@ MDBT50Q DongleをPCのUSBポートに装着し、基板上のスイッチ「SW2�
 
 ### ファームウェアの準備
 
-ファームウェアは、すでにビルド済みの`.hex`ファイルが、GitHubリポジトリーの以下の場所に格納されています。
+ビルド済みのファームウェア更新イメージファイルが、GitHubリポジトリーの以下の場所に格納されています。
 - ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../nRF5_SDK_v15.3.0/firmwares)
-- アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.3.0/firmwares/nrf52840_xxaa.hex)
-- ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex)
+- ファームウェア更新イメージファイル: `app_dfu_package.nn.nn.nn.zip`
+
+`app_dfu_package.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
+例えば、バージョン`0.2.8`のファームウェア更新イメージファイル名は、`app_dfu_package.0.2.8.zip`となります。
 
 ### 書込み用ツールの準備
 
-書込み用ツール「nRF Connect for Desktop」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)をご参照ください。
+書込み用ツール「nRFコマンドラインツール」を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書[「NetBeansインストール手順」](../../nRF5_SDK_v15.3.0/NETBEANSINST.md)の該当部分をご参照ください。
 
 ## アプリケーションの書込み
 
-### 書込み準備
-
-nRF Connectを起動します。<br>
-画面上部の「Launch app」ボタンをクリックすると、Programmerという項目が表示されます。<br>
-右横の「Launch」ボタンをクリックします。
-
-<img src="assets02/0003.png" width="450">
-
-プログラミングツールが起動します。<br>
-右側の「File Memory Layout」欄がブランクになっていることを確認します。
-
-ブランクになっていない場合は、右側の「Clear Files」というリンクをクリックして「File Memory Layout」欄をブランクにしてください。
-
-<img src="assets02/0004.png" width="450">
-
-「File Memory Layout」欄に、先述の`.hex`ファイル２点をドラッグ＆ドロップします。<br>
-かならず、[s140_nrf52_6.1.1_softdevice.hex](../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex) --> [nrf52840_xxaa.hex](../../nRF5_SDK_v15.3.0/firmwares/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
-
-２点のファイルが、「File Memory Layout」欄に、下図のように配置されることを確認します。
-
-<img src="assets02/0005.png" width="450">
-
-画面左上部の「Select device」プルダウンをクリックして、シリアルポート（下図例では`/dev/tty.usbmodem1421`）を選択します。
-
-<img src="assets02/0006.png" width="450">
-
-しばらくすると、左側の「nRF52840」欄に、MDBT50Q Dongle側のメモリーイメージが表示されます。
-
-<img src="assets02/0007.png" width="450">
-
-これで書き込み準備は完了です。
-
 ### 書込み実行
 
-画面右下部にある<b>「Write」</b>のリンクをクリックし、書込みをスタートさせます。<br>
-下図のように「nRF52840」欄に斜めの縞模様が表示され、書込処理が進みます。
+nRFコマンドラインツールで`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、ファームウェア更新イメージファイルを転送します。<br>
+下記は実行例になります。
 
-<img src="assets02/0008.png" width="450">
+```
+MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
+MacBookPro-makmorit-jp:~ makmorit$ cd ${FIRMWARES_DIR}
+MacBookPro-makmorit-jp:firmwares makmorit$ ls -al /dev/tty.*
+crw-rw-rw-  1 root  wheel   20,   0  3 24 08:31 /dev/tty.Bluetooth-Incoming-Port
+crw-rw-rw-  1 root  wheel   20,  38  3 24 15:59 /dev/tty.usbmodem1421
+MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg app_dfu_package.0.2.7.zip -p /dev/tty.usbmodem1421
+  [####################################]  100%          
+Device programmed.
+MacBookPro-makmorit-jp:firmwares makmorit$
+```
 
-しばらくすると、下図のように画面下部のメッセージ欄が赤く変化し、自動的にMDBT50Q Dongleから切断されます。<br>
-画面の「Quit」を実行して、nRF Connectを終了させます。
-
-<img src="assets02/0009.png" width="450">
+### 書込み完了
 
 書込処理が終了すると、MDBT50Q Dongleが自動的にリセットされ、アプリケーションがスタートします。<br>
 アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
