@@ -65,7 +65,7 @@ nRF Connectを起動します。<br>
 <img src="../assets02/0003.jpg" width="450">
 
 「File Memory Layout」欄に、先述のファイル２点をドラッグ＆ドロップします。<br>
-かならず、[s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
+かならず、[s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
 
 ２点のファイルが、「File Memory Layout」欄に、下図のように配置されることを確認します。
 
