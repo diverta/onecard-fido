@@ -365,13 +365,17 @@
     }
 
     - (void)hidCommandDidDetectConnect {
+        [self notifyToolCommandMessage:MSG_HID_CONNECTED];
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // DFU処理にHID接続開始を通知
         [[self toolDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
     }
 
     - (void)hidCommandDidDetectRemoval {
+        [self notifyToolCommandMessage:MSG_HID_REMOVED];
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
+        // DFU処理にHID接続切断を通知
+        [[self toolDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
     }
 
 #pragma mark - Common method called by callback
