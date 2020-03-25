@@ -80,8 +80,11 @@ IBAction（メニュー選択）により、メソッド`dfuProcessWillStart`を
 }
 ```
 
-`commandWillVerifyDFUConnection`では、MDBT50Q Dongleがブートローダーモードに遷移しているかどうかのチェックを行います。<br>
-注意点として、この処理は別スレッドで実行されます。
+`commandWillVerifyDFUConnection`では、MDBT50Q Dongleに対し、ブートローダー遷移コマンドが実行されます。<br>
+MDBT50Q Dongleから応答が戻ると、管理ツールは即座にUSB HID接続を解消し、１秒ウェイトします。
+
+その後、MDBT50Q Dongleがブートローダーモードに遷移しているかどうかのチェックを行います。<br>
+注意点として、このチェック処理は、別スレッドで実行されます。
 
 完了すると、チェック結果を処理開始画面に引き渡すため、`commandDidVerifyDFUConnection`を呼び出します。
 
