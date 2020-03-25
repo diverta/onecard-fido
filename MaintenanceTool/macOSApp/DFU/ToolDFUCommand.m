@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "FIDODefines.h"
 #import "debug_log.h"
 #import "nrf52_app_image.h"
 #import "ToolCDCHelper.h"
@@ -39,6 +40,8 @@
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t mainQueue;
     @property (nonatomic) dispatch_queue_t subQueue;
+    // ブートローダーモード遷移判定フラグ
+    @property (nonatomic) bool needCheckBootloaderMode;
     // バージョン更新判定フラグ
     @property (nonatomic) bool needCompareUpdateVersion;
     // 更新イメージファイル名から取得したバージョン
@@ -74,6 +77,8 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
+        // ブートローダーモード遷移判定フラグをリセット
+        [self setNeedCheckBootloaderMode:false];
         // バージョン更新判定フラグをリセット
         [self setNeedCompareUpdateVersion:false];
         // ファームウェア更新イメージファイルから、更新バージョンを取得
@@ -136,6 +141,16 @@
         });
     }
 
+    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef {
+        // ブートローダーモード遷移判定フラグがセットされている場合（モード遷移完了待ち）
+        if ([self needCheckBootloaderMode]) {
+            // ブートローダーモード遷移判定フラグをリセット
+            [self setNeedCheckBootloaderMode:false];
+            // サブスレッドでブートローダー接続テストを実行
+            [self VerifyDFUConnection];
+        }
+    }
+
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)notifyFirmwareVersion:(NSString *)strFWRev {
@@ -168,6 +183,22 @@
              [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED,
               expected]];
             return false;
+        }
+    }
+
+    - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd {
+        // ブートローダーモード遷移コマンド成功時
+        if (cmd == HID_CMD_BOOTLOADER_MODE) {
+            // ブートローダーモード遷移判定フラグをセット --> hidCommandDidDetectRemovalが呼び出される
+            [self setNeedCheckBootloaderMode:true];
+
+        } else {
+            // ブートローダーモード遷移コマンド失敗時は、ブートローダーモード遷移判定フラグをリセット
+            [self setNeedCheckBootloaderMode:false];
+            dispatch_async([self mainQueue], ^{
+                // チェック結果を処理開始画面に引き渡す
+                [[self dfuStartWindow] commandDidVerifyDFUConnection:false];
+            });
         }
     }
 
@@ -240,15 +271,43 @@
     }
 
     - (void)commandWillVerifyDFUConnection {
+        dispatch_async([self subQueue], ^{
+            // ブートローダー遷移コマンドを実行 --> notifyBootloaderModeResponseが呼び出される
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                               withData:nil forCommand:self];
+        });
+    }
+
+    - (bool)checkUSBHIDConnection {
+        return [[self toolHIDCommand] checkUSBHIDConnection];
+    }
+
+    - (void)VerifyDFUConnection {
         // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
         dispatch_async([self subQueue], ^{
             // DFU対象デバイスの接続検査
-            NSString *ACMDevicePath = [self getConnectedDevicePath];
+            bool verified = [self searchACMDevicePath];
             dispatch_async([self mainQueue], ^{
                 // チェック結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidVerifyDFUConnection:(ACMDevicePath != nil)];
+                [[self dfuStartWindow] commandDidVerifyDFUConnection:verified];
             });
         });
+    }
+
+    - (bool)searchACMDevicePath {
+        // 最大５秒間繰り返す
+        for (int i = 0; i < 10; i++) {
+            // 0.5秒間ウェイト
+            [NSThread sleepForTimeInterval:0.5];
+            // DFU対象デバイスの接続検査
+            NSString *ACMDevicePath = [self getConnectedDevicePath];
+            if (ACMDevicePath != nil) {
+                // 接続デバイスが見つかった場合はtrue
+                return true;
+            }
+        }
+        // 接続デバイスが見つからなかった場合はfalse
+        return false;
     }
 
 #pragma mark - Interface for DFUProcessingWindow
