@@ -43,8 +43,10 @@
     }
 
     - (IBAction)buttonOKDidPress:(id)sender {
-        // DFU対象デバイスの接続チェック
-        [[self toolDFUCommand] commandWillVerifyDFUConnection];
+        if ([[self toolDFUCommand] checkUSBHIDConnection]) {
+            // HID接続がある場合は、DFU対象デバイスの接続チェック
+            [[self toolDFUCommand] commandWillVerifyDFUConnection];
+        }
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
@@ -64,11 +66,7 @@
             // DFU対象デバイスの接続チェックがNGの場合、エラーメッセージをポップアップ表示
             [ToolPopupWindow critical:MSG_DFU_TARGET_NOT_CONNECTED
                       informativeText:nil];
-            return;
-        }
-        // DFU処理を開始するかどうかのプロンプトを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
-                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+            [self terminateWindow:NSModalResponseCancel];
             return;
         }
         // このウィンドウを終了
