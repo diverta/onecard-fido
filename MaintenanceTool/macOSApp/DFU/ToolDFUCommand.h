@@ -19,7 +19,7 @@
     - (void)notifyFirmwareVersion:(NSString *)strFWRev;
     - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd;
 
-    - (void)commandWillVerifyDFUConnection;
+    - (void)commandWillChangeToBootloaderMode;
 
 @end
 

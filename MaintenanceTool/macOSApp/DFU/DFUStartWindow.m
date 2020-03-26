@@ -44,8 +44,8 @@
 
     - (IBAction)buttonOKDidPress:(id)sender {
         if ([[self toolDFUCommand] checkUSBHIDConnection]) {
-            // HID接続がある場合は、DFU対象デバイスの接続チェック
-            [[self toolDFUCommand] commandWillVerifyDFUConnection];
+            // HID接続がある場合は、DFU対象デバイスをブートローダーモードに遷移させる
+            [[self toolDFUCommand] commandWillChangeToBootloaderMode];
         }
     }
 
@@ -61,9 +61,9 @@
 
 #pragma mark - Interface for ToolDFUCommand
 
-    - (void)commandDidVerifyDFUConnection:(bool)available {
+    - (void)commandDidChangeToBootloaderMode:(bool)available {
         if (available == false) {
-            // DFU対象デバイスの接続チェックがNGの場合、エラーメッセージをポップアップ表示
+            // ブートローダーモード遷移処理がNGの場合、エラーメッセージをポップアップ表示
             [ToolPopupWindow critical:MSG_DFU_TARGET_NOT_CONNECTED
                       informativeText:nil];
             [self terminateWindow:NSModalResponseCancel];

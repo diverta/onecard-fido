@@ -26,6 +26,10 @@
 #define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
 
+// CDC ACM接続処理用の試行回数・インターバル
+#define MAX_CNT_FOR_ACM_CONNECT        10
+#define INTERVAL_SEC_FOR_ACM_CONNECT   0.5
+
 // 詳細ログ出力
 #define CDC_ACM_LOG_DEBUG false
 
@@ -146,8 +150,8 @@
         if ([self needCheckBootloaderMode]) {
             // ブートローダーモード遷移判定フラグをリセット
             [self setNeedCheckBootloaderMode:false];
-            // サブスレッドでブートローダー接続テストを実行
-            [self VerifyDFUConnection];
+            // サブスレッドでDFU対象デバイスへの接続処理を実行
+            [self EstablishDFUConnection];
         }
     }
 
@@ -197,7 +201,7 @@
             [self setNeedCheckBootloaderMode:false];
             dispatch_async([self mainQueue], ^{
                 // チェック結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidVerifyDFUConnection:false];
+                [[self dfuStartWindow] commandDidChangeToBootloaderMode:false];
             });
         }
     }
@@ -270,7 +274,7 @@
         [self startDFUProcess];
     }
 
-    - (void)commandWillVerifyDFUConnection {
+    - (void)commandWillChangeToBootloaderMode {
         dispatch_async([self subQueue], ^{
             // ブートローダー遷移コマンドを実行 --> notifyBootloaderModeResponseが呼び出される
             [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
@@ -282,27 +286,26 @@
         return [[self toolHIDCommand] checkUSBHIDConnection];
     }
 
-    - (void)VerifyDFUConnection {
-        // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
+    - (void)EstablishDFUConnection {
         dispatch_async([self subQueue], ^{
-            // DFU対象デバイスの接続検査
-            bool verified = [self searchACMDevicePath];
+            // サブスレッドで、DFU対象デバイスに対し、USB CDC ACM接続を実行
+            bool result = [self searchACMDevicePath];
             dispatch_async([self mainQueue], ^{
-                // チェック結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidVerifyDFUConnection:verified];
+                // 処理結果を処理開始画面に引き渡す
+                [[self dfuStartWindow] commandDidChangeToBootloaderMode:result];
             });
         });
     }
 
     - (bool)searchACMDevicePath {
         // 最大５秒間繰り返す
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < MAX_CNT_FOR_ACM_CONNECT; i++) {
             // 0.5秒間ウェイト
-            [NSThread sleepForTimeInterval:0.5];
-            // DFU対象デバイスの接続検査
+            [NSThread sleepForTimeInterval:INTERVAL_SEC_FOR_ACM_CONNECT];
+            // DFU対象デバイスに接続
             NSString *ACMDevicePath = [self getConnectedDevicePath];
             if (ACMDevicePath != nil) {
-                // 接続デバイスが見つかった場合はtrue
+                // DFU対象デバイスに接続された場合はtrue
                 return true;
             }
         }
