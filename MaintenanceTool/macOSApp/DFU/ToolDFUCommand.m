@@ -310,10 +310,13 @@
             NSString *ACMDevicePath = [self getConnectedDevicePath];
             if (ACMDevicePath != nil) {
                 // DFU対象デバイスに接続された場合はtrue
+                [[ToolLogFile defaultLogger]
+                 infoWithFormat:@"DFU target device found: %@", ACMDevicePath];
                 return true;
             }
         }
         // 接続デバイスが見つからなかった場合はfalse
+        [[ToolLogFile defaultLogger] error:@"DFU target device not found"];
         return false;
     }
 
@@ -741,8 +744,6 @@
                 // DFU PINGを実行
                 if ([self sendPingRequest:id]) {
                     // 成功した場合は、接続された状態で、デバイスのパスを戻す
-                    [[ToolLogFile defaultLogger]
-                     infoWithFormat:@"DFU target device found: %@", ACMDevicePath];
                     return ACMDevicePath;
                 } else {
                     // 失敗した場合は、接続を閉じ、次のデバイスに移る
@@ -751,7 +752,6 @@
             }
         }
         // デバイスが未接続の場合は、NULLを戻す
-        [[ToolLogFile defaultLogger] error:@"DFU target device not found"];
         return nil;
     }
 
