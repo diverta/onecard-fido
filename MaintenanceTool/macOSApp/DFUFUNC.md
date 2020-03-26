@@ -71,50 +71,74 @@ IBAction（メニュー選択）により、メソッド`dfuProcessWillStart`を
 
 #### 処理開始画面〜処理進捗画面の表示
 
-処理開始画面上でOKボタンをクリックすると、DFU処理クラスのメソッド`commandWillVerifyDFUConnection`が呼び出されます。
+処理開始画面上でOKボタンをクリックすると、DFU処理クラスのメソッド`commandWillChangeToBootloaderMode`が呼び出されます。
 
 ```
 - (IBAction)buttonOKDidPress:(id)sender {
-    // DFU対象デバイスの接続チェック
-    [[self toolDFUCommand] commandWillVerifyDFUConnection];
+    if ([[self toolDFUCommand] checkUSBHIDConnection]) {
+        // HID接続がある場合は、DFU対象デバイスをブートローダーモードに遷移させる
+        [[self toolDFUCommand] commandWillChangeToBootloaderMode];
+    }
 }
 ```
 
-`commandWillVerifyDFUConnection`では、MDBT50Q Dongleに対し、ブートローダー遷移コマンドが実行されます。<br>
-MDBT50Q Dongleから応答が戻ると、管理ツールは即座にUSB HID接続を解消し、１秒ウェイトします。
-
-その後、MDBT50Q Dongleがブートローダーモードに遷移しているかどうかのチェックを行います。<br>
-注意点として、このチェック処理は、別スレッドで実行されます。
-
-完了すると、チェック結果を処理開始画面に引き渡すため、`commandDidVerifyDFUConnection`を呼び出します。
+`commandWillChangeToBootloaderMode`では、MDBT50Q Dongleに対し、ブートローダーモード遷移コマンドをHID経由で投入します。<br>
+MDBT50Q Dongleからレスポンスが戻ると、`notifyBootloaderModeResponse`が呼び出されます。
 
 ```
-- (void)commandWillVerifyDFUConnection {
-    // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
+- (void)commandWillChangeToBootloaderMode {
     dispatch_async([self subQueue], ^{
-        // DFU対象デバイスの接続検査
-        NSString *ACMDevicePath = [self getConnectedDevicePath];
+        // ブートローダー遷移コマンドを実行 --> notifyBootloaderModeResponseが呼び出される
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                           withData:nil forCommand:self];
+    });
+}
+
+- (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd {
+    // ブートローダーモード遷移コマンド成功時
+    if (cmd == HID_CMD_BOOTLOADER_MODE) {
+        // ブートローダーモード遷移判定フラグをセット --> hidCommandDidDetectRemovalが呼び出される
+        [self setNeedCheckBootloaderMode:true];
+        ：
+    }
+}
+```
+他方、MDBT50Q Dongleがブートローダーモードに遷移すると、今まで接続状態だったUSB HID接続が無効化され、代わりに仮想COMポートがオープンされます。<br>
+管理ツールでは、このイベントを関数`hidCommandDidDetectRemoval`で検知します。
+
+```
+- (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef {
+    // ブートローダーモード遷移判定フラグがセットされている場合（モード遷移完了待ち）
+    if ([self needCheckBootloaderMode]) {
+        // ブートローダーモード遷移判定フラグをリセット
+        [self setNeedCheckBootloaderMode:false];
+        // サブスレッドでDFU対象デバイスへの接続処理を実行
+        [self EstablishDFUConnection];
+    }
+}
+```
+
+USB HID接続無効化を検知したら、関数`EstablishDFUConnection`で、ブートローダーモードに遷移したMDBT50Q Dongleに対し、仮想COMポート経由でUSB CDC ACM接続を実行します。<br>
+完了すると、処理結果を処理開始画面に引き渡すため、`commandDidVerifyDFUConnection`を呼び出します。
+
+```
+- (void)EstablishDFUConnection {
+    dispatch_async([self subQueue], ^{
+        // サブスレッドで、DFU対象デバイスに対し、USB CDC ACM接続を実行
+        bool result = [self searchACMDevicePath];
         dispatch_async([self mainQueue], ^{
-            // チェック結果を処理開始画面に引き渡す
-            [[self dfuStartWindow] commandDidVerifyDFUConnection:(ACMDevicePath != nil)];
+            // 処理結果を処理開始画面に引き渡す
+            [[self dfuStartWindow] commandDidChangeToBootloaderMode:result];
         });
     });
 }
 ```
-チェック結果がOKの場合は、処理開始を確認するメッセージ（下図ご参照）がポップアップ表示されます。
 
-<img src="assets02/0006.jpg" width="400">
-
-Yesボタンがクリックされると、処理開始画面が閉じられます。
+この後、処理開始画面が自動的に閉じられます。
 
 ```
-- (void)commandDidVerifyDFUConnection:(bool)available {
-    :
-    // DFU処理を開始するかどうかのプロンプトを表示
-    if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
-                     informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
-        return;
-    }
+- (void)commandDidChangeToBootloaderMode:(bool)available {
+    ：
     // このウィンドウを終了
     [self terminateWindow:NSModalResponseOK];
 }
