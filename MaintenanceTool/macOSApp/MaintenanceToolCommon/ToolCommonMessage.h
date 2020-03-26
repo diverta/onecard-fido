@@ -183,7 +183,7 @@
 #define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"
 #define MSG_DFU_IMAGE_TRANSFER_FAILED           @"更新ファームウェアの転送に失敗しました。"
 #define MSG_DFU_IMAGE_TRANSFER_SUCCESS          @"更新ファームウェアの転送が完了しました。"
-#define MSG_DFU_TARGET_NOT_BOOTLOADER_MODE      @"FIDO認証器はブートローダーモードに遷移できません。"
+#define MSG_DFU_TARGET_NOT_BOOTLOADER_MODE      @"FIDO認証器をブートローダーモードに遷移させることができません。"
 #define MSG_DFU_TARGET_NOT_CONNECTED            @"FIDO認証器がブートローダーモードに遷移していません。"
 #define MSG_DFU_UPDATE_VERSION_UNKNOWN          @"FIDO認証器ファームウェアの更新バージョンが不明です。"
 #define MSG_DFU_CURRENT_VERSION_UNKNOWN         @"FIDO認証器ファームウェアの現在バージョンが不明です。"

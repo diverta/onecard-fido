@@ -201,7 +201,9 @@
             [self setNeedCheckBootloaderMode:false];
             dispatch_async([self mainQueue], ^{
                 // チェック結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidChangeToBootloaderMode:false];
+                [[self dfuStartWindow]
+                 commandDidChangeToBootloaderMode:false
+                 errorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
             });
         }
     }
@@ -292,7 +294,9 @@
             bool result = [self searchACMDevicePath];
             dispatch_async([self mainQueue], ^{
                 // 処理結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidChangeToBootloaderMode:result];
+                [[self dfuStartWindow]
+                 commandDidChangeToBootloaderMode:result
+                 errorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
             });
         });
     }

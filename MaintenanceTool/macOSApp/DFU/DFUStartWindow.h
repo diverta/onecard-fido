@@ -17,7 +17,7 @@
     - (void)setWindowParameter:(ToolDFUCommand *)command
                 currentVersion:(NSString *)current
                  updateVersion:(NSString *)update;
-    - (void)commandDidChangeToBootloaderMode:(bool)available;
+    - (void)commandDidChangeToBootloaderMode:(bool)success errorMessage:(NSString *)errorMessage;
 
 @end
 
