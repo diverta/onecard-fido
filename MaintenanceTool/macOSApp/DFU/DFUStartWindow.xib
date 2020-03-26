@@ -9,6 +9,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="DFUStartWindow">
             <connections>
+                <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="NlF-yn-gO0"/>
+                <outlet property="buttonOK" destination="y4V-cK-FxX" id="cHH-8J-6VL"/>
                 <outlet property="labelCurrentVersion" destination="IzL-CG-LOW" id="FnX-gv-ksM"/>
                 <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
@@ -139,7 +141,11 @@ Gw
                         </constraints>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="zOw-l6-6Ye">
                             <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <string key="title">OKボタンをクリックすると、ファームウェア更新処理が開始されます。処理が完了するまでは、FIDO認証器をUSBポートから外さないでください。</string>
+                            <string key="title">OKボタンをクリックすると、
+ファームウェア更新処理が開始されます。
+
+処理が完了するまでは、FIDO認証器を
+USBポートから外さないでください。</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>

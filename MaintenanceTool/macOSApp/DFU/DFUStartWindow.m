@@ -13,6 +13,8 @@
 @interface DFUStartWindow ()
 
     @property (nonatomic, weak) ToolDFUCommand  *toolDFUCommand;
+    @property (assign) IBOutlet NSButton        *buttonOK;
+    @property (assign) IBOutlet NSButton        *buttonCancel;
     @property (assign) IBOutlet NSTextField     *labelUpdateVersion;
     @property (assign) IBOutlet NSTextField     *labelCurrentVersion;
 
@@ -45,6 +47,7 @@
     - (IBAction)buttonOKDidPress:(id)sender {
         if ([[self toolDFUCommand] checkUSBHIDConnection]) {
             // HID接続がある場合は、DFU対象デバイスをブートローダーモードに遷移させる
+            [self enableButtons:false];
             [[self toolDFUCommand] commandWillChangeToBootloaderMode];
         }
     }
@@ -53,9 +56,15 @@
         [self terminateWindow:NSModalResponseCancel];
     }
 
+    - (void)enableButtons:(bool)enabled {
+        [[self buttonOK] setEnabled:enabled];
+        [[self buttonCancel] setEnabled:enabled];
+    }
+
     - (void)terminateWindow:(NSModalResponse)response {
         // 画面項目を初期化し、この画面を閉じる
         [self initFieldValue];
+        [self enableButtons:true];
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
