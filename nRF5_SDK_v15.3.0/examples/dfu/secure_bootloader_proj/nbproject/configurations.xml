@@ -1843,13 +1843,13 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx</pElem>
-            <pElem>../secure_bootloader/pca10056_usb/config</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056_usb/config</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/integration/nrfx/legacy</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/soc</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/mbr/nrf52840/headers</pElem>
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/drivers_nrf/nrf_soc_nosd</pElem>
-            <pElem>../secure_bootloader/pca10056_usb/armgcc</pElem>
+            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056_usb/armgcc</pElem>
           </incDir>
         </cTool>
       </folder>
