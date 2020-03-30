@@ -70,10 +70,11 @@
 
 #pragma mark - Interface for ToolDFUCommand
 
-    - (void)commandDidChangeToBootloaderMode:(bool)success errorMessage:(NSString *)errorMessage {
+    - (void)commandDidChangeToBootloaderMode:(bool)success errorMessage:(NSString *)errorMessage
+                                 informative:(NSString *)informative {
         if (success == false) {
             // ブートローダーモード遷移処理がNGの場合、エラーメッセージをポップアップ表示
-            [ToolPopupWindow critical:errorMessage informativeText:nil];
+            [ToolPopupWindow critical:errorMessage informativeText:informative];
             [self terminateWindow:NSModalResponseCancel];
             return;
         }

@@ -203,7 +203,8 @@
                 // チェック結果を処理開始画面に引き渡す
                 [[self dfuStartWindow]
                  commandDidChangeToBootloaderMode:false
-                 errorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE];
+                 errorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE
+                 informative:MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER];
             });
         }
     }
@@ -296,7 +297,8 @@
                 // 処理結果を処理開始画面に引き渡す
                 [[self dfuStartWindow]
                  commandDidChangeToBootloaderMode:result
-                 errorMessage:MSG_DFU_TARGET_NOT_CONNECTED];
+                 errorMessage:MSG_DFU_TARGET_NOT_CONNECTED
+                 informative:nil];
             });
         });
     }
