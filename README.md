@@ -21,6 +21,18 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2020/03/30
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[nRF52840ファームウェア（Version 0.2.8）](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares)</b>
+
+修正点は以下になります。
+- ブートローダーモード遷移コマンドを追加実装<br>（[#318](https://github.com/diverta/onecard-fido/pull/318) ご参照）<br>
+MDBT50Q Dongle基板上の物理的な操作無しで、MDBT50Q Dongleをブートローダーモードに遷移させるためのUSB HIDコマンド「ブートローダーモード遷移コマンド」を新設しています。<br>
+「ブートローダーモード遷移コマンド」は、別途「[署名付きUSBブートローダー](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares/secure_bootloader)」を導入したMDBT50Q Dongleで、実行可能です。<br>
+その他の業務処理につきましては、前回（[Version 0.2.7](https://github.com/diverta/onecard-fido/tree/bug-nRF52840-BLE-auth-scanparam/nRF5_SDK_v15.3.0/firmwares)）から変更は一切ありません。
+
 #### 2020/03/16
 
 [FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)を修正しました。<br>

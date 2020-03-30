@@ -184,12 +184,6 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
         // BLEペリフェラルを無効化
         ble_service_common_disable_peripheral();
     }
-    if (event == APP_USBD_EVT_STOPPED) {
-        // 給電が継続している場合は、USBを無効化したのちに
-        // ソフトデバイスを再起動
-        app_usbd_disable();
-        NVIC_SystemReset();
-    }
 }
 
 static void application_init(void)
