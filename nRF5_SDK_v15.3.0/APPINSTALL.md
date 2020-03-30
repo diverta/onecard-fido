@@ -1,6 +1,6 @@
 # [開発運用] アプリケーション書込み手順
 
-MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
+MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../nRF5_SDK_v15.3.0/firmwares/open_bootloader/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
 
 ## 書込み準備
 
@@ -10,28 +10,9 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 
 <img src="assets02/0000.png" width="400">
 
-MDBT50Q DongleをPCのUSBポートに装着したら、Pythonスクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、ブートローダー遷移コマンドを投入します。<br>
-下記は実行例になります。
+<b><u>基板上のスイッチ「SW2」を押しながら</b></u>、MDBT50Q DongleをPCのUSBポートに装着します。
 
-```
-MacBookPro-makmorit-jp:~ makmorit$ python HookUpHIDBLMode.py
-HID device: path=USB_f055_0001_0x7fe684c062f0, usage_page=61904, usage=1
----- sent data ----
-ffffffff860008d4e5f607182930410000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
----- received data ----
-ffffffff860011d4e5f607182930410100330102050002070000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
----- INIT done ----
----- sent data ----
-01003301c5000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
----- received data ----
-01003301c5000100000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
----- command done ----
-MacBookPro-makmorit-jp:~ makmorit$
-```
+<img src="assets02/0001.jpg" width="400">
 
 基板上のLED2（赤色）が緩く点滅し始め、USBブートローダーモード（USBポート経由でアプリケーション書込が可能なモード）に遷移します。
 
