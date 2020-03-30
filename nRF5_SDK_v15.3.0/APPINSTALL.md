@@ -21,7 +21,7 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 ### ファームウェアの準備
 
 ビルド済みのファームウェア更新イメージファイルが、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../nRF5_SDK_v15.3.0/firmwares)
+- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../nRF5_SDK_v15.3.0/firmwares)
 - ファームウェア更新イメージファイル: `app_dfu_package.nn.nn.nn.zip`
 
 `app_dfu_package.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
@@ -30,22 +30,35 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 ### 書込み用ツールの準備
 
 書込み用ツール「nRFコマンドラインツール」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「NetBeansインストール手順」](../../nRF5_SDK_v15.3.0/NETBEANSINST.md)の該当部分をご参照ください。
+詳細につきましては、手順書[「NetBeansインストール手順」](../nRF5_SDK_v15.3.0/NETBEANSINST.md)の該当部分をご参照ください。
 
 ## アプリケーションの書込み
 
 ### 書込み実行
 
 nRFコマンドラインツールで`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、ファームウェア更新イメージファイルを転送します。<br>
+具体的には、以下のコマンドを投入します。
+
+```
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
+cd ${FIRMWARES_DIR}
+ls -al *.zip
+ls -al /dev/tty.*
+nrfutil dfu usb-serial -pkg <"ls -al *.zip"で確認したzipファイル名> -p <"ls -al /dev/tty.*"で確認した仮想COMポート>
+```
+
 下記は実行例になります。
 
 ```
 MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
 MacBookPro-makmorit-jp:~ makmorit$ cd ${FIRMWARES_DIR}
+MacBookPro-makmorit-jp:firmwares makmorit$ ls -al *.zip
+-rw-r--r--  1 makmorit  staff  242685  3 30 13:22 app_dfu_package.0.2.8.zip
 MacBookPro-makmorit-jp:firmwares makmorit$ ls -al /dev/tty.*
-crw-rw-rw-  1 root  wheel   20,   0  3 24 08:31 /dev/tty.Bluetooth-Incoming-Port
-crw-rw-rw-  1 root  wheel   20,  38  3 24 15:59 /dev/tty.usbmodem1421
-MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg app_dfu_package.0.2.7.zip -p /dev/tty.usbmodem1421
+crw-rw-rw-  1 root  wheel   20,   0  3 30 12:38 /dev/tty.Bluetooth-Incoming-Port
+crw-rw-rw-  1 root  wheel   20,   6  3 30 13:28 /dev/tty.usbmodem1411
+MacBookPro-makmorit-jp:firmwares makmorit$
+MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg app_dfu_package.0.2.8.zip -p /dev/tty.usbmodem1411
   [####################################]  100%          
 Device programmed.
 MacBookPro-makmorit-jp:firmwares makmorit$
