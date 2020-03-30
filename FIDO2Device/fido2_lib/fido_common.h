@@ -60,6 +60,7 @@ extern "C" {
 #define MNT_COMMAND_GET_FLASH_STAT      0xc2
 #define MNT_COMMAND_GET_APP_VERSION     0xc3
 #define MNT_COMMAND_PREFERENCE_PARAM    0xc4
+#define MNT_COMMAND_BOOTLOADER_MODE     0xc5
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {

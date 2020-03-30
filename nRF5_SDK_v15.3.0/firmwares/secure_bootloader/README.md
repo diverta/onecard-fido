@@ -7,11 +7,8 @@
 
 このフォルダー（`firmwares/secure_bootloader`）に格納しています。
 
-- [mdbt50q_dongle.hex](mdbt50q_dongle.hex) - ブートローダー本体<br>
+- [nrf52840_xxaa.hex](nrf52840_xxaa.hex) - ブートローダー本体<br>
 後述「ファームウェア作成手順」により作成したものを使用します。
-
-- [s140_nrf52_6.1.1_softdevice.hex](s140_nrf52_6.1.1_softdevice.hex) - ソフトデバイス<br>
-Nordic社から提供されているものをそのまま使用します。
 
 ## [ファームウェア作成手順](../../../nRF5_SDK_v15.3.0/examples/dfu/secure_bootloader/README.md)
 

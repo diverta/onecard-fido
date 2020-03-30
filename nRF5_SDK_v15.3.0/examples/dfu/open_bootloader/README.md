@@ -2,6 +2,8 @@
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
+Nordic社製の開発基板「nRF52840 Dongle」にあらかじめセットアップされているブートローダーと、同じ仕様になっております。
+
 ## 作成手順
 
 NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーを作成する手順を記載します。
@@ -22,7 +24,7 @@ nRF5 SDKのサンプルアプリケーション・フォルダー（/nRF5_SDK_15
 
 今回の作成にあたっては、[`<リポジトリールート>/nRF5_SDK_v15.3.0/examples/dfu`](../../../../nRF5_SDK_v15.3.0/examples/dfu)配下に配置いたしました。
 
-#### メイクファイルのパス修正
+#### メイクファイルの修正
 
 メイクファイル「[Makefile](../../../../nRF5_SDK_v15.3.0/examples/dfu/open_bootloader/pca10059_usb/armgcc/Makefile)」の下記部分を修正します。
 
