@@ -10,8 +10,7 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 
 <img src="assets02/0000.png" width="400">
 
-
-MDBT50Q DongleをPCのUSBポートに装着し、基板上のスイッチ「SW2」を１回プッシュします。
+<b><u>基板上のスイッチ「SW2」を押しながら</b></u>、MDBT50Q DongleをPCのUSBポートに装着します。
 
 <img src="assets02/0001.jpg" width="400">
 
