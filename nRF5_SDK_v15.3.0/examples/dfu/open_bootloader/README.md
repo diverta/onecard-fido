@@ -2,6 +2,8 @@
 
 Nordic社から提供されているサンプル「[Open Bootloader with DFU](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v15.2.0/ble_sdk_app_open_bootloader.html)」を小修正し、[MDBT50Q Dongle](../../../../FIDO2Device/MDBT50Q_Dongle/README.md)で利用できるようにしたものです。
 
+Nordic社製の開発基板「nRF52840 Dongle」にあらかじめセットアップされているブートローダーと、同じ仕様になっております。
+
 ## 作成手順
 
 NetBeansとARM GCC、nRF5 SDKを使用し、簡易USBブートローダーを作成する手順を記載します。
@@ -33,15 +35,8 @@ SDK_ROOT := ../../../../..
 
 <b>修正後</b>
 ```
-# Pin for DFU mode
-CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_BUTTON=0
-CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_GPREGRET=1
-CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_PINRESET=0
-
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 ```
-
-[注] `-DNRF_BL_DFU_ENTER_METHOD_xxxx`の定義は、ブートローダーの開始設定を修正している部分です。すなわち、ブートローダーモードに遷移させるためには、nRF52840アプリケーション側で、レジスター`GPREGRET`に所定の値を設定することが必要となります（リセットボタンやユーザーボタンによるブートローダーモード遷移は不可能です）。
 
 ### ソースファイルからビルド
 
