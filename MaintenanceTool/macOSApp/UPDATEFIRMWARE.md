@@ -17,28 +17,19 @@
 
 管理ツールを起動し、ファイルメニューから「ファームウェアを更新」を選択します。
 
-<img src="assets02/0004.png" width="400">
+<img src="assets02/0004.jpg" width="400">
 
 処理開始画面が表示されます。<br>
 MDBT50Q Dongleに導入されているファームウェアのバージョンと、更新するバージョンが表示されます。
 
 <img src="assets02/0005.jpg" width="400">
 
-ここで、MDBT50Q DongleのRESETボタン（SW2）を１回押します。
+上図、処理開始画面の「OK」ボタンをクリックすると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
+MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
 
-<img src="assets02/0011.jpg" width="400">
+<img src="assets02/0011.jpg" width="300">
 
-MDBT50Q Dongleがブートローダーモードに遷移します。<br>
-MDBT50Q Dongleの赤色LEDが点滅していることを確認します。
-
-<img src="assets02/0012.jpg" width="400">
-
-その後、処理開始画面下部の「OK」をクリックすると、処理続行を確認するダイアログが表示されます。<br>
-「Yes」をクリックすると、ファームウェア更新処理が開始されます。
-
-<img src="assets02/0006.jpg" width="300">
-
-現在の進捗を示すダイアログが表示されます。<br>
+ほどなく、現在の進捗を示すダイアログが表示されます。<br>
 まずはファームウェア更新イメージが転送中であることを知らせています。
 
 <img src="assets02/0007.jpg" width="400">
