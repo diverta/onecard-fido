@@ -32,15 +32,15 @@ MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認
 ほどなく、現在の進捗を示すダイアログが表示されます。<br>
 まずはファームウェア更新イメージが転送中であることを知らせています。
 
-<img src="assets02/0007.jpg" width="400">
+<img src="assets02/0006.jpg" width="400">
 
 次に、MDBT50Q Dongle内で、転送されたファームウェア更新イメージが反映中であることを知らせています。
 
-<img src="assets02/0008.jpg" width="400">
+<img src="assets02/0007.jpg" width="400">
 
 ファームウェア更新処理が正常終了すると、下図のようなポップアップが表示され、処理が成功したことを知らせます。
 
-<img src="assets02/0009.jpg" width="400">
+<img src="assets02/0008.jpg" width="400">
 
 再び、MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 
