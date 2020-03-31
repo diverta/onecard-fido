@@ -29,6 +29,7 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
+    @property (assign) IBOutlet NSMenuItem  *menuItemDFUNew;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -93,6 +94,7 @@
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
+        [self.menuItemDFUNew setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -273,6 +275,11 @@
         }
     }
 
+    - (IBAction)menuItemDFUNewDidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
+    }
+
 #pragma mark - Interface for ToolPreferenceWindow
 
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data {
@@ -365,13 +372,17 @@
     }
 
     - (void)hidCommandDidDetectConnect {
+        [self notifyToolCommandMessage:MSG_HID_CONNECTED];
         [[ToolLogFile defaultLogger] info:MSG_HID_CONNECTED];
         // DFU処理にHID接続開始を通知
         [[self toolDFUCommand] hidCommandDidDetectConnect:[self toolHIDCommand]];
     }
 
     - (void)hidCommandDidDetectRemoval {
+        [self notifyToolCommandMessage:MSG_HID_REMOVED];
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
+        // DFU処理にHID接続切断を通知
+        [[self toolDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
     }
 
 #pragma mark - Common method called by callback

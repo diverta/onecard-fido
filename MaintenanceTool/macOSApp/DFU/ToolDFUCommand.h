@@ -12,11 +12,15 @@
 @interface ToolDFUCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (bool)checkUSBHIDConnection;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
+    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
     - (void)notifyFirmwareVersion:(NSString *)strFWRev;
+    - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd;
 
-    - (void)commandWillVerifyDFUConnection;
+    - (void)commandWillChangeToBootloaderMode;
 
 @end
 

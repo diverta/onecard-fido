@@ -127,6 +127,9 @@
             case COMMAND_TOOL_PREF_PARAM:
                 [self doRequestToolPreferenceParameter:[self getNewCIDFrom:message]];
                 break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self doRequestHidBootloaderMode:[self getNewCIDFrom:message]];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
                 break;
@@ -252,6 +255,25 @@
         [self commandDidProcess:[self command] result:true message:nil];
     }
 
+    - (void)doHidBootloaderMode {
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doRequestHidBootloaderMode:(NSData *)cid {
+        // コマンド 0xC5 を実行（メッセージはブランクとする）
+        NSData *message = [[NSData alloc] init];
+        [self doRequest:message CID:cid CMD:HID_CMD_BOOTLOADER_MODE];
+    }
+
+    - (void)doResponseHidBootloaderMode:(NSData *)message CMD:(uint8_t)cmd {
+        if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
+            // DFUコマンドに制御を戻す
+            ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
+            [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
+        }
+    }
+
     - (void)doEraseSkeyCert {
         // コマンド開始メッセージを画面表示
         [self displayStartMessage];
@@ -373,6 +395,9 @@
             case COMMAND_HID_GET_VERSION_FOR_DFU:
                 [self doHidGetVersionInfoRequest];
                 break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self doHidBootloaderMode];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -456,6 +481,9 @@
             case HID_CMD_GET_VERSION_INFO:
                 [self doResponseHidGetVersionInfo:message];
                 break;
+            case HID_CMD_BOOTLOADER_MODE:
+                [self doResponseHidBootloaderMode:message CMD:cmd];
+                break;
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];
@@ -470,11 +498,24 @@
                 [self doResponseToolPreferenceParameter:message CID:cid CMD:cmd];
                 break;
             case HID_CMD_UNKNOWN_ERROR:
+                [self hidHelperDidReceiveUnknownError:message CID:cid CMD:cmd];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)hidHelperDidReceiveUnknownError:(NSData *)message CID:(NSData *)cid CMD:(uint8_t)cmd {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_HID_BOOTLOADER_MODE:
+                // DFU処理クラスに制御を戻す
+                [self doResponseHidBootloaderMode:message CMD:cmd];
+                break;
+            default:
                 // メッセージを画面表示
                 [[self delegate] hidCommandDidProcess:[self command]
                     CMD:cmd response:message result:false message:MSG_OCCUR_UNKNOWN_ERROR];
-                break;
-            default:
                 break;
         }
     }

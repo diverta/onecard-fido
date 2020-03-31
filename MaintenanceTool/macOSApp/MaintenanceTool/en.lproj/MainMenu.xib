@@ -86,6 +86,12 @@
                                     <action selector="menuItemDFUTestDidSelect:" target="494" id="KuA-SO-sVc"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="ファームウェアを新規導入" id="83P-ZN-a21" userLabel="MenuItemDFUNew">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="menuItemDFUNewDidSelect:" target="494" id="a8l-t4-qcI"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
@@ -640,6 +646,7 @@
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
                 <outlet property="menuItemDFU" destination="sxt-Mu-jyP" id="LgB-99-JI9"/>
+                <outlet property="menuItemDFUNew" destination="83P-ZN-a21" id="0iQ-xm-DGo"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
