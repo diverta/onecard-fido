@@ -2,7 +2,13 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[ファームウェア](../../nRF5_SDK_v15.3.0)を新規導入する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[アプリケーション・ファームウェア](../../nRF5_SDK_v15.3.0)を新規導入する手順を掲載します。
+
+### ご注意
+
+[「署名機能付きUSBブートローダー移行手順書」](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)に記載の、ブートローダー導入手順により、[署名機能付きUSBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)だけが導入されている状態のMDBT50Q Dongleをご使用ください。
+
+既にアプリケーション・ファームウェアが導入されているMDBT50Q Dongleに対しては、本機能は使用できません。
 
 ## 操作方法
 
@@ -10,7 +16,7 @@
 
 <img src="../../nRF5_SDK_v15.3.0/firmwares/assets02/0000.png" width="400">
 
-次に、MDBT50Q DongleをPCのUSBポートに装着します。<br>
+次に、署名機能付きUSBブートローダーだけが導入されている状態のMDBT50Q Dongleを、PCのUSBポートに装着します。<br>
 MDBT50Q Dongleは、自動的にブートローダーモードに遷移します。
 
 MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
