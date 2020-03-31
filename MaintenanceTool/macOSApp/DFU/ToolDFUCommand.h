@@ -14,6 +14,7 @@
     - (id)initWithDelegate:(id)delegate;
     - (bool)checkUSBHIDConnection;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
     - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
     - (void)notifyFirmwareVersion:(NSString *)strFWRev;

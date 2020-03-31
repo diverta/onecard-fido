@@ -29,6 +29,7 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
+    @property (assign) IBOutlet NSMenuItem  *menuItemDFUNew;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -93,6 +94,7 @@
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
+        [self.menuItemDFUNew setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -271,6 +273,11 @@
             [self enableButtons:false];
             [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
         }
+    }
+
+    - (IBAction)menuItemDFUNewDidSelect:(id)sender {
+        [self enableButtons:false];
+        [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
     }
 
 #pragma mark - Interface for ToolPreferenceWindow

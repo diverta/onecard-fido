@@ -212,21 +212,33 @@
 #pragma mark - Interface for Main Process
 
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログの親ウィンドウを保持
-        [[self dfuStartWindow] setParentWindow:parentWindow];
-        [[self dfuProcessingWindow] setParentWindow:parentWindow];
-        // すでにツール設定画面が開いている場合は終了
-        if ([[parentWindow sheets] count] > 0) {
+        // 処理前のチェック
+        if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
             return;
         }
-        if ([self dfuImageIsAvailable] == false) {
+        if ([self versionCheckForDFU] == false) {
             // バージョンチェックが不正の場合はキャンセル
             [self notifyCancel];
             return;
         }
         // 処理開始画面（ダイアログ）をモーダルで表示
         [self dfuStartWindowWillOpen];
+    }
+
+    - (bool)setupBeforeProcess:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログの親ウィンドウを保持
+        [[self dfuStartWindow] setParentWindow:parentWindow];
+        [[self dfuProcessingWindow] setParentWindow:parentWindow];
+        if ([[parentWindow sheets] count] > 0) {
+            // すでにツール設定画面が開いている場合は終了
+            return false;
+        }
+        if ([self dfuImageIsAvailable] == false) {
+            // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
+            return false;
+        }
+        return true;
     }
 
     - (bool)dfuImageIsAvailable {
@@ -236,6 +248,10 @@
                       informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
             return false;
         }
+        return true;
+    }
+
+    - (bool)versionCheckForDFU {
         // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
         if ([[self currentVersion] length] == 0) {
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
@@ -243,6 +259,36 @@
             return false;
         }
         return true;
+    }
+
+    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 処理前のチェック
+        if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
+            [self notifyCancel];
+            return;
+        }
+        // DFU処理を開始するかどうかのプロンプトを表示
+        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
+                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+            [self notifyCancel];
+            return;
+        }
+        // ファームウェア新規導入処理
+        dispatch_async([self subQueue], ^{
+            // サブスレッドで、DFU対象デバイスに対し、USB CDC ACM接続を実行
+            bool result = [self searchACMDevicePath];
+            dispatch_async([self mainQueue], ^{
+                if (result) {
+                    // DFU処理開始
+                    [self invokeDFUProcess];
+                } else {
+                    // エラーメッセージを表示して終了
+                    [ToolPopupWindow critical:MSG_DFU_TARGET_CONNECTION_FAILED
+                              informativeText:nil];
+                    [self notifyCancel];
+                }
+            });
+        });
     }
 
 #pragma mark - Interface for DFUStartWindow
@@ -269,6 +315,11 @@
             [self notifyCancel];
             return;
         }
+        // DFU処理開始
+        [self invokeDFUProcess];
+    }
+
+    - (void)invokeDFUProcess {
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self dfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
