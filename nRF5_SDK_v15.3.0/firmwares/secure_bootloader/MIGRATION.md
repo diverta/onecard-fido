@@ -74,11 +74,11 @@
 
 ### 管理ツールの準備
 
-署名機能付きUSBブートローダーをブートローダーモードに遷移させるために必要となる、アプリケーション・ファームウェアは、[FIDO認証器管理ツール](../../../MaintenanceTool/README.md)（以下「管理ツール」）を使用して導入します。<br>
+署名機能付きUSBブートローダーをブートローダーモードに遷移させるために必要となる、アプリケーション・ファームウェアは、[FIDO認証器管理ツール（macOS版）](../../../MaintenanceTool/macOSApp/README.md)（以下「管理ツール」）を使用して導入します。<br>
 アプリケーション・ファームウェアの更新イメージファイル（[app_dfu_package.0.2.8.zip](../../../nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.8.zip)）は、管理ツールに同梱されております。
 
-[バージョン0.1.27](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-cmd-BLmode/MaintenanceTool)以降の管理ツールを、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「インストール手順」](MaintenanceTool/macOSApp/INSTALLPRG.md)をご参照ください。
+[バージョン0.1.27](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-cmd-BLmode/MaintenanceTool)以降の[管理ツール](../../../MaintenanceTool/macOSApp)を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書[「インストール手順」](../../../MaintenanceTool/macOSApp/INSTALLPRG.md)をご参照ください。
 
 ## ブートローダーの導入
 
