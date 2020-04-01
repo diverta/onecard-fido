@@ -518,7 +518,7 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public void OnDFUStarted(bool ret)
+        public void OnDFUStarted()
         {
             // 開始メッセージを表示
             DisplayStartMessage(commandTitle);
