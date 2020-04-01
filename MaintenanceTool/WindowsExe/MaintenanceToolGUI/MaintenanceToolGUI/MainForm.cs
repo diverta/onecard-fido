@@ -490,7 +490,47 @@ namespace MaintenanceToolGUI
                 return;
             }
             // DFU処理を実行
-            toolDFU.OpenDFUStartForm();
+            DoCommandDFU(sender, e);
+        }
+
+        private void DFUNewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // DFU処理を実行
+            DoCommandDFU(sender, e);
+        }
+
+        //
+        // DFU関連インターフェース
+        //
+        private void DoCommandDFU(object sender, EventArgs e)
+        {
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // 処理名称を設定し、処理を開始
+            commandTitle = ToolGUICommon.PROCESS_NAME_USB_DFU;
+            if (sender.Equals(DFUNewToolStripMenuItem)) {
+                // ファームウェア新規導入
+                toolDFU.DoCommandDFUNew();
+            } else {
+                // ファームウェア更新
+                toolDFU.DoCommandDFU();
+            }
+        }
+
+        public void OnDFUStarted(bool ret)
+        {
+            // 開始メッセージを表示
+            DisplayStartMessage(commandTitle);
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+        }
+
+        public void OnDFUCanceled()
+        {
+            // ボタンを押下可能とする
+            enableButtons(true);
         }
 
         protected override void WndProc(ref Message m)

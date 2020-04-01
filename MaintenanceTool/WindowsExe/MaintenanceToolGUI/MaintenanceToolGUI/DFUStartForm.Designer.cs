@@ -87,17 +87,16 @@
             // 
             // LabelComment
             // 
-            this.LabelComment.Location = new System.Drawing.Point(23, 108);
+            this.LabelComment.Location = new System.Drawing.Point(23, 106);
             this.LabelComment.Name = "LabelComment";
-            this.LabelComment.Size = new System.Drawing.Size(264, 79);
+            this.LabelComment.Size = new System.Drawing.Size(264, 72);
             this.LabelComment.TabIndex = 11;
-            this.LabelComment.Text = "FIDO認証器をUSBポートに装着した状態で、\r\nRESETボタンを押すと、ブートローダーモードに遷移し、\r\n基板上の黄色・緑色LEDが連続点灯します。\r\n\r\nこ" +
-    "の状態を確認したのち、OKボタンをクリックすると、\r\nファームウェア更新が開始されます。";
+            this.LabelComment.Text = "OKボタンをクリックすると、\r\nファームウェア更新処理が開始されます。\r\n\r\n処理が完了するまでは、FIDO認証器を\r\nUSBポートから外さないでください。";
             this.LabelComment.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ButtonCancel
             // 
-            this.ButtonCancel.Location = new System.Drawing.Point(166, 203);
+            this.ButtonCancel.Location = new System.Drawing.Point(163, 194);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(75, 23);
             this.ButtonCancel.TabIndex = 12;
@@ -107,7 +106,7 @@
             // 
             // ButtonOK
             // 
-            this.ButtonOK.Location = new System.Drawing.Point(68, 203);
+            this.ButtonOK.Location = new System.Drawing.Point(69, 194);
             this.ButtonOK.Name = "ButtonOK";
             this.ButtonOK.Size = new System.Drawing.Size(75, 23);
             this.ButtonOK.TabIndex = 13;
@@ -119,7 +118,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(309, 241);
+            this.ClientSize = new System.Drawing.Size(309, 229);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonOK);
             this.Controls.Add(this.LabelComment);

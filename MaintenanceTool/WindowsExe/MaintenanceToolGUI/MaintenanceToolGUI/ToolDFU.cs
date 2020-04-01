@@ -76,10 +76,14 @@
             UpdateVersion = resName.Replace(ResourceNamePrefix, "").Replace(ResourceNameSuffix, "");
         }
 
-        public void OpenDFUStartForm()
+        //
+        // メイン画面用のインターフェース
+        //
+        public void DoCommandDFU()
         {
             // バージョンチェックが不正の場合は処理を終了
-            if (DFUImageIsUnavailable()) {
+            if (DfuImageIsAvailable() == false) {
+                NotifyCancel();
                 return;
             }
 
@@ -88,27 +92,63 @@
                 // 処理開始画面でOKボタンがクリックされた場合、
                 // 処理進捗画面を表示
                 dfuProcessingForm.ShowDialog();
+            } else {
+                // キャンセルボタンがクリックされた場合は
+                // メイン画面に通知
+                NotifyCancel();
             }
         }
 
-        private bool DFUImageIsUnavailable()
+        public void DoCommandDFUNew()
         {
-            // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
-            if (UpdateVersion == "") {
-                FormUtil.ShowWarningMessage(
-                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, 
-                    ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
-                return true;
+            // バージョンチェックが不正の場合は処理を終了
+            if (DfuImageIsAvailable() == false) {
+                NotifyCancel();
+                return;
             }
 
+            // DFU処理を開始するかどうかのプロンプトを表示
+            string message = string.Format("{0}\n\n{1}",
+                ToolGUICommon.MSG_COMMENT_START_DFU_PROCESS,
+                ToolGUICommon.MSG_PROMPT_START_DFU_PROCESS
+                );
+            if (FormUtil.DisplayPromptPopup(message) == false) {
+                NotifyCancel();
+                return;
+            }
+
+            // ファームウェア新規導入処理を開始する
+            // TODO: 下記は仮コードです。
+            NotifyCancel();
+        }
+
+        private void NotifyCancel()
+        {
+            // メイン画面に制御を戻す
+            mainForm.OnDFUCanceled();
+        }
+
+        private bool DfuImageIsAvailable()
+        {
+            // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
+            if (UpdateVersion.Equals("")) {
+                FormUtil.ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
+                return false;
+            }
+            return true;
+        }
+
+        private bool VersionCheckForDFU()
+        {
             // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
-            if (CurrentVersion == "") {
+            if (CurrentVersion.Equals("")) {
                 FormUtil.ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
                 return true;
             }
-
             return false;
         }
     }

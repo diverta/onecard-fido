@@ -67,8 +67,8 @@
         public const string MSG_DFU_PROCESS_TITLE_END = "ファームウェアの更新が完了しました";
         public const string MSG_DFU_PROCESS_TRANSFER_IMAGE = "更新ファームウェアを転送中です。";
         public const string MSG_DFU_PROCESS_WAITING_UPDATE = "転送された更新ファームウェアの反映を待機中です。";
-        public const string MSG_PROMPT_START_DFU_PROCESS = "ファームウェア更新処理を開始しますか？";
-        public const string MSG_COMMENT_START_DFU_PROCESS = "OKボタンをクリックすると、ファームウェア更新処理が開始されます。";
+        public const string MSG_PROMPT_START_DFU_PROCESS = "ファームウェア新規導入処理を開始しますか？";
+        public const string MSG_COMMENT_START_DFU_PROCESS = "署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の黄色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち「はい」ボタンをクリックすると、\nファームウェア新規導入処理が開始されます。";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
@@ -85,6 +85,7 @@
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "PINコード解除";
+        public const string PROCESS_NAME_USB_DFU = "FIDO認証器のファームウェア更新";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
