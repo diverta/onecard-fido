@@ -62,6 +62,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DFUProcessingForm";
+            this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ファームウェアを更新しています";
