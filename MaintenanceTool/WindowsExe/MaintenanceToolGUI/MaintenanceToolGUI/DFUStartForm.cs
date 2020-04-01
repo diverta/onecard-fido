@@ -28,17 +28,43 @@ namespace MaintenanceToolGUI
         private void TerminateWindow()
         {
             // 処理開始画面を閉じる
+            EnableButtons(true);
             Close();
+        }
+
+        private void EnableButtons(bool b)
+        {
+            ButtonOK.Enabled = b;
+            ButtonCancel.Enabled = b;
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            TerminateWindow();
+            if (ToolDFURef.ChangeToBootloaderMode()) {
+                // HID接続がある場合は、DFU対象デバイスをブートローダーモードに遷移させる
+                EnableButtons(false);
+            }
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
+            TerminateWindow();
+        }
+
+        //
+        // DFU処理用のインターフェース
+        //
+        public void OnChangeToBootloaderMode(bool success, string captionMessage, string errorMessage)
+        {
+            if (success) {
+                // ブートローダーモード遷移処理がOKの場合
+                DialogResult = DialogResult.OK;
+            } else {
+                // ブートローダーモード遷移処理がNGの場合、エラーメッセージをポップアップ表示
+                MessageBox.Show(this, errorMessage, captionMessage,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            // このウィンドウを終了
             TerminateWindow();
         }
     }
