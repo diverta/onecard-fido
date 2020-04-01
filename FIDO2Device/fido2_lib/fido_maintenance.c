@@ -148,6 +148,18 @@ static void command_preference_parameter_maintenance(void)
     send_command_response(CTAP1_ERR_SUCCESS, buffer_size + 1);
 }
 
+static void command_bootloader_mode(void)
+{
+    // 最初にレスポンスを送信
+    send_command_response(CTAP1_ERR_SUCCESS, 1);
+}
+
+static void jump_to_bootloader_mode(void)
+{
+    // ブートローダーモードに遷移させるための処理を実行
+    usbd_service_stop_for_bootloader();
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -161,6 +173,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_PREFERENCE_PARAM:
             command_preference_parameter_maintenance();
+            break;
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            command_bootloader_mode();
             break;
         default:
             break;
@@ -186,6 +201,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_PREFERENCE_PARAM:
             fido_log_info("Preference parameter maintenance end");
+            break;
+        case MNT_COMMAND_BOOTLOADER_MODE:
+            jump_to_bootloader_mode();
             break;
         default:
             break;

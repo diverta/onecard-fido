@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "FIDODefines.h"
 #import "debug_log.h"
 #import "nrf52_app_image.h"
 #import "ToolCDCHelper.h"
@@ -25,6 +26,10 @@
 #define TIMEOUT_SEC_DFU_PING_RESPONSE  1.0
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
 
+// CDC ACM接続処理用の試行回数・インターバル
+#define MAX_CNT_FOR_ACM_CONNECT        10
+#define INTERVAL_SEC_FOR_ACM_CONNECT   0.5
+
 // 詳細ログ出力
 #define CDC_ACM_LOG_DEBUG false
 
@@ -39,6 +44,8 @@
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t mainQueue;
     @property (nonatomic) dispatch_queue_t subQueue;
+    // ブートローダーモード遷移判定フラグ
+    @property (nonatomic) bool needCheckBootloaderMode;
     // バージョン更新判定フラグ
     @property (nonatomic) bool needCompareUpdateVersion;
     // 更新イメージファイル名から取得したバージョン
@@ -74,6 +81,8 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.dfu", DISPATCH_QUEUE_SERIAL)];
+        // ブートローダーモード遷移判定フラグをリセット
+        [self setNeedCheckBootloaderMode:false];
         // バージョン更新判定フラグをリセット
         [self setNeedCompareUpdateVersion:false];
         // ファームウェア更新イメージファイルから、更新バージョンを取得
@@ -136,6 +145,16 @@
         });
     }
 
+    - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef {
+        // ブートローダーモード遷移判定フラグがセットされている場合（モード遷移完了待ち）
+        if ([self needCheckBootloaderMode]) {
+            // ブートローダーモード遷移判定フラグをリセット
+            [self setNeedCheckBootloaderMode:false];
+            // サブスレッドでDFU対象デバイスへの接続処理を実行
+            [self EstablishDFUConnection];
+        }
+    }
+
 #pragma mark - Call back from ToolHIDCommand
 
     - (void)notifyFirmwareVersion:(NSString *)strFWRev {
@@ -171,24 +190,55 @@
         }
     }
 
+    - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd {
+        // ブートローダーモード遷移コマンド成功時
+        if (cmd == HID_CMD_BOOTLOADER_MODE) {
+            // ブートローダーモード遷移判定フラグをセット --> hidCommandDidDetectRemovalが呼び出される
+            [self setNeedCheckBootloaderMode:true];
+
+        } else {
+            // ブートローダーモード遷移コマンド失敗時は、ブートローダーモード遷移判定フラグをリセット
+            [self setNeedCheckBootloaderMode:false];
+            dispatch_async([self mainQueue], ^{
+                // チェック結果を処理開始画面に引き渡す
+                [[self dfuStartWindow]
+                 commandDidChangeToBootloaderMode:false
+                 errorMessage:MSG_DFU_TARGET_NOT_BOOTLOADER_MODE
+                 informative:MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER];
+            });
+        }
+    }
+
 #pragma mark - Interface for Main Process
 
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // ダイアログの親ウィンドウを保持
-        [[self dfuStartWindow] setParentWindow:parentWindow];
-        [[self dfuProcessingWindow] setParentWindow:parentWindow];
-        // すでにツール設定画面が開いている場合は終了
-        if ([[parentWindow sheets] count] > 0) {
+        // 処理前のチェック
+        if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
             return;
         }
-        if ([self dfuImageIsAvailable] == false) {
+        if ([self versionCheckForDFU] == false) {
             // バージョンチェックが不正の場合はキャンセル
             [self notifyCancel];
             return;
         }
         // 処理開始画面（ダイアログ）をモーダルで表示
         [self dfuStartWindowWillOpen];
+    }
+
+    - (bool)setupBeforeProcess:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ダイアログの親ウィンドウを保持
+        [[self dfuStartWindow] setParentWindow:parentWindow];
+        [[self dfuProcessingWindow] setParentWindow:parentWindow];
+        if ([[parentWindow sheets] count] > 0) {
+            // すでにツール設定画面が開いている場合は終了
+            return false;
+        }
+        if ([self dfuImageIsAvailable] == false) {
+            // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
+            return false;
+        }
+        return true;
     }
 
     - (bool)dfuImageIsAvailable {
@@ -198,6 +248,10 @@
                       informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
             return false;
         }
+        return true;
+    }
+
+    - (bool)versionCheckForDFU {
         // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
         if ([[self currentVersion] length] == 0) {
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
@@ -205,6 +259,36 @@
             return false;
         }
         return true;
+    }
+
+    - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 処理前のチェック
+        if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
+            [self notifyCancel];
+            return;
+        }
+        // DFU処理を開始するかどうかのプロンプトを表示
+        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_DFU_PROCESS
+                         informativeText:MSG_COMMENT_START_DFU_PROCESS] == false) {
+            [self notifyCancel];
+            return;
+        }
+        // ファームウェア新規導入処理
+        dispatch_async([self subQueue], ^{
+            // サブスレッドで、DFU対象デバイスに対し、USB CDC ACM接続を実行
+            bool result = [self searchACMDevicePath];
+            dispatch_async([self mainQueue], ^{
+                if (result) {
+                    // DFU処理開始
+                    [self invokeDFUProcess];
+                } else {
+                    // エラーメッセージを表示して終了
+                    [ToolPopupWindow critical:MSG_DFU_TARGET_CONNECTION_FAILED
+                              informativeText:nil];
+                    [self notifyCancel];
+                }
+            });
+        });
     }
 
 #pragma mark - Interface for DFUStartWindow
@@ -231,6 +315,11 @@
             [self notifyCancel];
             return;
         }
+        // DFU処理開始
+        [self invokeDFUProcess];
+    }
+
+    - (void)invokeDFUProcess {
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self dfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
@@ -239,16 +328,49 @@
         [self startDFUProcess];
     }
 
-    - (void)commandWillVerifyDFUConnection {
-        // DFU可能な状態かどうか検証（USB CDC ACM接続テスト）
+    - (void)commandWillChangeToBootloaderMode {
         dispatch_async([self subQueue], ^{
-            // DFU対象デバイスの接続検査
-            NSString *ACMDevicePath = [self getConnectedDevicePath];
+            // ブートローダー遷移コマンドを実行 --> notifyBootloaderModeResponseが呼び出される
+            [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                               withData:nil forCommand:self];
+        });
+    }
+
+    - (bool)checkUSBHIDConnection {
+        return [[self toolHIDCommand] checkUSBHIDConnection];
+    }
+
+    - (void)EstablishDFUConnection {
+        dispatch_async([self subQueue], ^{
+            // サブスレッドで、DFU対象デバイスに対し、USB CDC ACM接続を実行
+            bool result = [self searchACMDevicePath];
             dispatch_async([self mainQueue], ^{
-                // チェック結果を処理開始画面に引き渡す
-                [[self dfuStartWindow] commandDidVerifyDFUConnection:(ACMDevicePath != nil)];
+                // 処理結果を処理開始画面に引き渡す
+                [[self dfuStartWindow]
+                 commandDidChangeToBootloaderMode:result
+                 errorMessage:MSG_DFU_TARGET_NOT_CONNECTED
+                 informative:nil];
             });
         });
+    }
+
+    - (bool)searchACMDevicePath {
+        // 最大５秒間繰り返す
+        for (int i = 0; i < MAX_CNT_FOR_ACM_CONNECT; i++) {
+            // 0.5秒間ウェイト
+            [NSThread sleepForTimeInterval:INTERVAL_SEC_FOR_ACM_CONNECT];
+            // DFU対象デバイスに接続
+            NSString *ACMDevicePath = [self getConnectedDevicePath];
+            if (ACMDevicePath != nil) {
+                // DFU対象デバイスに接続された場合はtrue
+                [[ToolLogFile defaultLogger]
+                 infoWithFormat:@"DFU target device found: %@", ACMDevicePath];
+                return true;
+            }
+        }
+        // 接続デバイスが見つからなかった場合はfalse
+        [[ToolLogFile defaultLogger] error:@"DFU target device not found"];
+        return false;
     }
 
 #pragma mark - Interface for DFUProcessingWindow
@@ -675,8 +797,6 @@
                 // DFU PINGを実行
                 if ([self sendPingRequest:id]) {
                     // 成功した場合は、接続された状態で、デバイスのパスを戻す
-                    [[ToolLogFile defaultLogger]
-                     infoWithFormat:@"DFU target device found: %@", ACMDevicePath];
                     return ACMDevicePath;
                 } else {
                     // 失敗した場合は、接続を閉じ、次のデバイスに移る
@@ -685,7 +805,6 @@
             }
         }
         // デバイスが未接続の場合は、NULLを戻す
-        [[ToolLogFile defaultLogger] error:@"DFU target device not found"];
         return nil;
     }
 

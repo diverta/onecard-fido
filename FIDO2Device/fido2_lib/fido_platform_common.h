@@ -111,6 +111,7 @@ void nfc_service_data_send(uint8_t *data, size_t data_size);
 // usbd_hid_service.c
 //
 void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
+void usbd_service_stop_for_bootloader(void);
 
 #ifdef __cplusplus
 }

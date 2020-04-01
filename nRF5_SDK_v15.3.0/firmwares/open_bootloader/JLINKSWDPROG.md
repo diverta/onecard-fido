@@ -1,6 +1,6 @@
 # 簡易USBブートローダー書込手順
 
-MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みする手順を記載します。
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に、簡易USBブートローダー（Open Bootloader）をJ-Link経由で書込みする手順を記載します。
 
 ## 書込み準備
 
@@ -30,18 +30,18 @@ MDBT50Q Dongleに、簡易USBブートローダーをJ-Link経由で書込みす
 |SWD Reset |RST  | <--  |RESET|
 
 [注1] nRF52840 DK上の「P20」というコネクター（オスピン）に接続します。<br>
-[注2] MDBT50Q Dongleの回路図はこちら（[FIDO2AUTH_001.pdf](https://github.com/diverta/onecard-fido/blob/master/FIDO2Device/pcb/FIDO2AUTH_001.pdf)）になります。
+[注2] MDBT50Q Dongle（rev2）の回路図はこちら（[FIDO2AUTH_001.pdf](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/FIDO2AUTH_002.pdf)）になります。
 
-下図は実際に両者を接続した時のイメージになります。
+下図は実際に両者を接続した時のイメージになります。<br>
+この時、MDBT50Q Dongleは、PCのUSBポートに装着しておいてください。
 
 <img src="../assets02/0001.jpg" width="540">
 
 ### ファームウェアの準備
 
 ファームウェアは、すでにビルド済みの`.hex`ファイルが、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/open_bootloader/](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader)
-- アプリケーション: [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)
-- マスターブートレコード: [mbr_nrf52_2.4.1_mbr.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/mbr_nrf52_2.4.1_mbr.hex)
+- ブートローダー: [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)
+- ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex)
 
 ### 書込み用ツールの準備
 
@@ -56,49 +56,48 @@ nRF Connectを起動します。<br>
 画面上部の「Launch app」ボタンをクリックすると、Programmerという項目が表示されます。<br>
 右横の「Launch」ボタンをクリックします。
 
-<img src="../assets02/0002.png" width="450">
+<img src="../assets02/0002.jpg" width="450">
 
 プログラミングツールが起動します。<br>
 右側の「File Memory Layout」欄がブランクになっていることを確認します。
 
 ブランクになっていない場合は、右側の「Clear Files」というリンクをクリックして「File Memory Layout」欄をブランクにしてください。
 
-<img src="../assets02/0003.png" width="450">
+<img src="../assets02/0003.jpg" width="450">
 
 「File Memory Layout」欄に、先述のファイル２点をドラッグ＆ドロップします。<br>
-かならず、 [mbr_nrf52_2.4.1_mbr.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/mbr_nrf52_2.4.1_mbr.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
+かならず、[s140_nrf52_6.1.1_softdevice.hex](../../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex) --> [nrf52840_xxaa.hex](../../../nRF5_SDK_v15.3.0/firmwares/open_bootloader/nrf52840_xxaa.hex)の順でドラッグ＆ドロップしてください。
 
 ２点のファイルが、「File Memory Layout」欄に、下図のように配置されることを確認します。
 
-<img src="../assets02/0004.png" width="450">
+<img src="../assets02/0004.jpg" width="450">
 
-ここで、MDBT50Q DongleをUSBポートに挿します。<br>
-その後、画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
+画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
 
-<img src="../assets02/0005.png" width="450">
+<img src="../assets02/0005.jpg" width="450">
 
-しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているnRF52840側のメモリーイメージが表示されます。<br>
-（MDBT50Q Dongle側のメモリーイメージが表示されないのは異常ではありません。ご安心ください）
+しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているMDBT50Q Dongle側のメモリーイメージが表示されます。<br>
+（下図例ではメモリーイメージが表示されていませんが、これは事前に全領域が消去済みであったためです）
 
-<img src="../assets02/0006.png" width="450">
+<img src="../assets02/0006.jpg" width="450">
 
 これで書き込み準備は完了です。
 
 ### 書込み実行
 
-画面右下部にある「Erase & write」のリンクをクリックし、書込みをスタートさせます。<br>
-下図のように「nRF52840」欄に縞模様が表示され、書込処理が進みます。
+画面右下部にある「Write」のリンクをクリックし、書込みをスタートさせます。<br>
+下図のように「nRF52840」欄に淡い縞模様が表示され、書込処理が進みます。
 
-<img src="../assets02/0007.png" width="450">
+<img src="../assets02/0007.jpg" width="450">
 
 しばらくすると、下図のように画面下部のメッセージ欄が赤く変化します。<br>
-画面左上部にあるプルダウンから「Close device」を選択し、MDBT50Q Dongleとの接続をすみやかに切断してください。
+画面左上部にあるプルダウンから「Close device」を選択し、nRF52840 DKとの接続をすみやかに切断してください。
 
-<img src="../assets02/0008.png" width="450">
+<img src="../assets02/0008.jpg" width="450">
 
 切断が完了したら、画面の「Quit」を実行して、nRF Connectを終了させます。
 
-<img src="../assets02/0009.png" width="450">
+<img src="../assets02/0009.jpg" width="450">
 
 その後、MDBT50Q DongleをPCのUSBポートから外し、nRF52840 DKとの配線を外してください。
 
