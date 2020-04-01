@@ -301,6 +301,7 @@ namespace MaintenanceToolCommon
             EraseSkeyCert,
             InstallSkeyCert,
             ToolPreferenceCommand,
+            ChangeToBootloaderMode,
             //
             // U2F
             //
