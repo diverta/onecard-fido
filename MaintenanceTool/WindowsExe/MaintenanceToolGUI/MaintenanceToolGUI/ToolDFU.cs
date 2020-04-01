@@ -1,4 +1,6 @@
-﻿namespace MaintenanceToolGUI
+﻿using System.Threading.Tasks;
+
+namespace MaintenanceToolGUI
 {
     public class ToolDFU
     {
@@ -9,6 +11,7 @@
 
         // 処理クラスの参照を保持
         private HIDMain hidMain;
+        private DFUDevice dfuDevice;
 
         // リソース名称検索用キーワード
         private const string ResourceNamePrefix = "MaintenanceToolGUI.Resources.app_dfu_package.";
@@ -39,6 +42,12 @@
 
             // HID処理クラスに、本クラスの参照を設定
             hidMain.ToolDFURef = this;
+
+            // DFUデバイスクラスを初期化
+            dfuDevice = new DFUDevice(this);
+
+            // イベントの登録
+            dfuDevice.DFUConnectionEstablishedEvent += new DFUDevice.DFUConnectionEstablishedEventHandler(DFUConnectionEstablished);
 
             // 処理開始／進捗画面を生成
             dfuStartForm = new DFUStartForm(this);
@@ -195,8 +204,7 @@
                 NeedCheckBootloaderMode = false;
 
                 // DFU対象デバイスへの接続処理を実行
-                // TODO: これは仮の処理です。
-                dfuStartForm.OnChangeToBootloaderMode(true, "", "");
+                EstablishDFUConnection();
             }
         }
 
@@ -225,6 +233,23 @@
                 // バージョン情報を比較して終了判定
                 // TODO: 後日実装予定です。
             }
+        }
+
+        //
+        // DFU対象デバイス接続処理
+        //
+        public async void EstablishDFUConnection()
+        {
+            // DFU対象デバイスに接続（USB CDC ACM接続）
+            await Task.Run(() => dfuDevice.SearchACMDevicePath());
+        }
+
+        public void DFUConnectionEstablished(bool success)
+        {
+            // 処理開始画面に制御を戻す
+            dfuStartForm.OnChangeToBootloaderMode(success, 
+                MainForm.GetMaintenanceToolTitle(), 
+                ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
         }
 
         //

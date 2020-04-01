@@ -84,6 +84,7 @@
     <Compile Include="CBORDecoder.cs" />
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
+    <Compile Include="DFUDevice.cs" />
     <Compile Include="DFUProcessingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -260,7 +261,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\app_dfu_package.0.2.7.zip" />
+    <EmbeddedResource Include="Resources\app_dfu_package.0.2.8.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
