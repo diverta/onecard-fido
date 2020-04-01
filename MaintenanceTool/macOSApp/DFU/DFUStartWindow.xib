@@ -9,6 +9,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="DFUStartWindow">
             <connections>
+                <outlet property="buttonCancel" destination="8IE-Qs-RbR" id="NlF-yn-gO0"/>
+                <outlet property="buttonOK" destination="y4V-cK-FxX" id="cHH-8J-6VL"/>
                 <outlet property="labelCurrentVersion" destination="IzL-CG-LOW" id="FnX-gv-ksM"/>
                 <outlet property="labelUpdateVersion" destination="YSw-Da-Bdc" id="RRu-Fb-Rir"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="kQi-jq-K5C"/>
@@ -19,14 +21,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="358" height="267"/>
+            <rect key="contentRect" x="196" y="240" width="358" height="254"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="358" height="267"/>
+                <rect key="frame" x="0.0" y="0.0" width="358" height="254"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kD7-1A-1Hy" userLabel="Title">
-                        <rect key="frame" x="4" y="241" width="350" height="17"/>
+                        <rect key="frame" x="4" y="228" width="350" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="IrE-nt-wVk"/>
                         </constraints>
@@ -36,25 +38,8 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="S5S-JP-fCE" userLabel="Title">
-                        <rect key="frame" x="18" y="59" width="322" height="78"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="78" id="iSM-mC-jwW"/>
-                        </constraints>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="zOw-l6-6Ye">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <string key="title">FIDO認証器をUSBポートに装着した状態で、
-RESETボタンを押すと、ブートローダーモードに遷移し、
-基板上の黄色・緑色LEDが連続点灯します。
-
-この状態を確認したのち、OKボタンをクリックすると、
-ファームウェア更新が開始されます。</string>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <box boxType="secondary" title="バージョン情報" translatesAutoresizingMaskIntoConstraints="NO" id="B1y-5G-Fg0">
-                        <rect key="frame" x="17" y="152" width="324" height="83"/>
+                        <rect key="frame" x="17" y="139" width="324" height="83"/>
                         <view key="contentView" id="HzA-xp-MO5">
                             <rect key="frame" x="2" y="2" width="320" height="66"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -149,6 +134,22 @@ Gw
                             <action selector="buttonCancelDidPress:" target="-2" id="0XR-bp-Xdl"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="S5S-JP-fCE" userLabel="Title">
+                        <rect key="frame" x="57" y="59" width="244" height="65"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="65" id="iSM-mC-jwW"/>
+                        </constraints>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="zOw-l6-6Ye">
+                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <string key="title">OKボタンをクリックすると、
+ファームウェア更新処理が開始されます。
+
+処理が完了するまでは、FIDO認証器を
+USBポートから外さないでください。</string>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="S5S-JP-fCE" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="130" id="00W-Ae-5ib"/>
@@ -163,14 +164,14 @@ Gw
                     <constraint firstItem="y4V-cK-FxX" firstAttribute="top" secondItem="8IE-Qs-RbR" secondAttribute="top" id="fQ0-Qo-TPx"/>
                     <constraint firstItem="kD7-1A-1Hy" firstAttribute="centerX" secondItem="EiT-Mj-1SZ" secondAttribute="centerX" id="gLv-qF-EhC"/>
                     <constraint firstItem="y4V-cK-FxX" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="96" id="gvo-2e-mVF"/>
-                    <constraint firstAttribute="trailing" secondItem="S5S-JP-fCE" secondAttribute="trailing" constant="20" id="j12-NL-NVc"/>
-                    <constraint firstItem="S5S-JP-fCE" firstAttribute="leading" secondItem="kD7-1A-1Hy" secondAttribute="leading" constant="14" id="nZH-Pn-E0k"/>
+                    <constraint firstAttribute="trailing" secondItem="S5S-JP-fCE" secondAttribute="trailing" constant="59" id="j12-NL-NVc"/>
+                    <constraint firstItem="S5S-JP-fCE" firstAttribute="leading" secondItem="kD7-1A-1Hy" secondAttribute="leading" constant="53" id="nZH-Pn-E0k"/>
                 </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="jld-Yn-4aF"/>
             </connections>
-            <point key="canvasLocation" x="122" y="160.5"/>
+            <point key="canvasLocation" x="122" y="154"/>
         </window>
     </objects>
 </document>

@@ -19,6 +19,10 @@
 #include "fido_hid_receive.h"
 #include "demo_cdc_service.h"
 
+// for BOOTLOADER_DFU_START
+#include "nrf_bootloader_info.h"
+#include "nrf_delay.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service
 #include "nrf_log.h"
@@ -468,6 +472,44 @@ void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
 // USBイベントハンドラーの参照を待避
 static void (*event_handler)(app_usbd_event_type_t event);
 
+void usbd_service_stop_for_bootloader(void)
+{
+    // ブートローダーモードに遷移させるため、
+    // GPREGRETレジスターにその旨の値を設定
+    // 
+    // Write BOOTLOADER_DFU_START (0xb1) 
+    // to the the GPREGRET REGISTER and reset the chip
+    uint32_t err_code = sd_power_gpregret_set(0, BOOTLOADER_DFU_START);
+    APP_ERROR_CHECK(err_code);
+    
+    // USBDサービスを停止
+    app_usbd_stop();
+}
+
+static void usbd_service_stopped(void)
+{
+    // USBを無効化
+    app_usbd_disable();
+    nrf_delay_ms(500);
+
+    // Get contents of the general purpose retention registers 
+    // (NRF_POWER->GPREGRET*)
+    uint32_t gpregret;
+    uint32_t err_code = sd_power_gpregret_get(0, &gpregret);
+    APP_ERROR_CHECK(err_code);
+    
+    if (gpregret == BOOTLOADER_DFU_START) {
+        // GPREGRETレジスターに値が設定されている場合、
+        // ブートローダーモードに遷移させる
+        // （ソフトデバイス経由でリセットを実行）
+        sd_nvic_SystemReset();
+
+    } else {
+        // リセットを実行
+        NVIC_SystemReset();
+    }
+}
+
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
     // アプリケーション固有の処理を実行
@@ -491,7 +533,7 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
             m_report_pending = false;
             break;
         case APP_USBD_EVT_STOPPED:
-            app_usbd_disable();
+            usbd_service_stopped();
             break;
         case APP_USBD_EVT_POWER_DETECTED:
             NRF_LOG_DEBUG("USB power detected");
