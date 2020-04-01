@@ -238,13 +238,13 @@ namespace MaintenanceToolGUI
         //
         // DFU対象デバイス接続処理
         //
-        public async void EstablishDFUConnection()
+        private async void EstablishDFUConnection()
         {
             // DFU対象デバイスに接続（USB CDC ACM接続）
             await Task.Run(() => dfuDevice.SearchACMDevicePath());
         }
 
-        public void DFUConnectionEstablished(bool success)
+        private void DFUConnectionEstablished(bool success)
         {
             // 処理開始画面に制御を戻す
             dfuStartForm.OnChangeToBootloaderMode(success, 
