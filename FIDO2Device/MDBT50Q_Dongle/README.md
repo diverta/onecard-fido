@@ -1,4 +1,4 @@
-# MDBT50Q Dongle（rev2.1）
+# MDBT50Q Dongle（rev2）
 
 ## 概要
 
@@ -6,15 +6,11 @@
 
 <img src="assets/0021.jpg" width="500">
 
-旧バージョンの説明は、下記リンクをご参照願います。<br>
-・[MDBT50Q Dongle（rev2）](README_2.md)<br>
-・[MDBT50Q Dongle（rev1）](HWSUMMARY.md)
-
-### [MDBT50Q Dongleの概要](HWSUMMARY_2_1.md)
+### [MDBT50Q Dongleの概要](HWSUMMARY_2.md)
 
 基板、動作についての概要を説明しています。
 
-### [MDBT50Q Dongle回路図](pcb_rev2_1/FIDO2AUTH_0021.pdf)
+### [MDBT50Q Dongle回路図](pcb_rev2/FIDO2AUTH_002.pdf)
 
 nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、若干の配線変更を行っております。
 

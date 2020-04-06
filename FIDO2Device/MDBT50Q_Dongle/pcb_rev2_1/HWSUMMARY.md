@@ -6,30 +6,30 @@
 
 #### rev2からの変更点
 
-[MDBT50Q Dongle（rev2）](HWSUMMARY_2.md)からの変更点は以下になります。
+[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/HWSUMMARY_2.md)からの変更点は以下になります。
 
 - <b>セキュアIC「ATECC608A」を搭載</b><br>
 FIDO機能で使用する秘密鍵を、Flash ROMではなく、セキュアICで管理するよう変更しました。<br>
 セキュアICに格納されている秘密鍵は、いかなる手段によっても参照できないようになります。
 
 - <b>基板の小型化</b><br>
-[MDBT50Q Dongle（rev2）](HWSUMMARY_2.md)と比して、幅4mm、長さ約7mmの小型化を実現しました。<br>
+MDBT50Q Dongle（rev2）と比して、幅4mm、長さ約7mmの小型化を実現しました。<br>
 それにともない、LED2／LED3、およびボタンの配置を変更し、LED1（赤色）を廃止しました。
 
 - <b>USBブートローダー（署名機能付き）を搭載</b><br>
-署名機能が付いた[USBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を新規採用しました。<br>
-[管理ツール](../../MaintenanceTool/README.md)を使用し、MDBT50Q Dongleのファームウェア更新ができるようになります。
+署名機能が付いた[USBブートローダー](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を新規採用しました。<br>
+[管理ツール](../../../MaintenanceTool/README.md)を使用し、MDBT50Q Dongleのファームウェア更新ができるようになります。
 
 - <b>一部のスルーホールを廃止</b><br>
 汎用I/O、UART TX、外部RESETのスルーホールを廃止しました。
 
 #### 表面
 
-<img src="assets/0022.jpg" width="680">
+<img src="../assets/0022.jpg" width="680">
 
 #### 裏面
 
-<img src="assets/0023.jpg" width="530">
+<img src="../assets/0023.jpg" width="530">
 
 ## 動作の概要
 
@@ -43,25 +43,25 @@ FIDO機能で使用する秘密鍵を、Flash ROMではなく、セキュアIC�
 PCのUSBポートに装着すると、USB HIDデバイスとして動作します。[注1][注2]<br>
 アイドル時は３色LEDが緑色で点滅します。
 
-<img src="assets/0024.jpg" width="400">
+<img src="../assets/0024.jpg" width="400">
 
 #### BLEペリフェラルモード（非ペアリングモード）
 
 基板背面の電池ホルダーにボタン乾電池（CR1225）をセットすると、BLEペリフェラルデバイスとして動作します。[注2]<br>
 アイドル時は３色LEDが青色で点滅します。
 
-<img src="assets/0018.jpg" width="400">
+<img src="../assets/0018.jpg" width="400">
 
 #### BLEペリフェラルモード（ペアリングモード）
 
 前述の非ペアリングモードの状態で、ボタンを３秒以上長押しすると、ペアリングモードに遷移します。[注3]<br>
 下図のように、ペアリングモードであることを示す、黄色LEDが点灯します。[注4]
 
-<img src="assets/0020.jpg" width="400">
+<img src="../assets/0020.jpg" width="400">
 
 [注1] ボタン乾電池がセットされていない場合は、PCのUSBから電源を取得し、USB HIDデバイスとして動作します。<br>
 [注2] ボタン乾電池がセットされている状態でも、PCのUSBポートに装着している間は、常にUSB HIDデバイスとして動作します。<br>
-[注3] [管理ツール](../../MaintenanceTool/README.md)を使用し、macOS、Windowsとのペアリングができるようになります。<br>
+[注3] [管理ツール](../../../MaintenanceTool/README.md)を使用し、macOS、Windowsとのペアリングができるようになります。<br>
 [注4] ボタン長押しから３秒経過すると黄色LEDが点灯し、その後ボタンから指を話すと、いったん黄色LEDが消灯してしまいますが、プログラム制御（リセット実行）による動きであり、異常ではありません。
 
 #### USBブートローダーモード
@@ -69,10 +69,10 @@ PCのUSBポートに装着すると、USB HIDデバイスとして動作しま�
 管理ツールでファームウェア新規導入／更新[注5]を実行時、自動的にUSBブートローダーモードに遷移します。[注6]<br>
 下図のように、緑色LEDと黄色LEDが同時点灯し、USBブートローダーモードであることを示します。
 
-<img src="assets/0025.jpg" width="400">
+<img src="../assets/0025.jpg" width="400">
 
-[注5] [管理ツール](../../MaintenanceTool/README.md)を使用し、MDBT50Q Dongleのファームウェア更新ができるようになります。ファームウェア更新イメージは、管理ツールに同梱されています。<br>
-[注6] 管理ツールから、HID経由でブートローダーモード遷移コマンドを実行すると、MDBT50Q DongleのファームウェアがUSBブートローダーモードに遷移させる仕組みとなっています。[MDBT50Q Dongle（rev2）](HWSUMMARY_2.md)と違い、RESETボタンを押しても、ブートローダーモードに遷移しません。
+[注5] [管理ツール](../../../MaintenanceTool/README.md)を使用し、MDBT50Q Dongleのファームウェア更新ができるようになります。[ファームウェア更新イメージ](../../../nRF5_SDK_v15.3.0/firmwares)（app_dfu_package.xxx.zip）は、管理ツールに同梱されています。<br>
+[注6] 管理ツールから、HID経由でブートローダーモード遷移コマンドを実行すると、MDBT50Q DongleのファームウェアがUSBブートローダーモードに遷移させる仕組みとなっています。[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/HWSUMMARY_2.md)と違い、RESETボタンを押しても、ブートローダーモードに遷移しません。
 
 ### LED点灯制御
 
