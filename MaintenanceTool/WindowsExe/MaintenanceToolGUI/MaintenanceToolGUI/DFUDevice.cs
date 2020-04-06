@@ -53,6 +53,9 @@ namespace MaintenanceToolGUI
         public delegate void DFUResponseReceivedEventHandler(bool success, byte[] response);
         public event DFUResponseReceivedEventHandler DFUResponseReceivedEvent;
 
+        // 送受信同期フラグ
+        private bool waiting = false;
+
         public void SearchACMDevicePath()
         {
             // 最大５秒間繰り返す
@@ -61,7 +64,9 @@ namespace MaintenanceToolGUI
                 Thread.Sleep(500);
                 // DFU対象デバイスに接続
                 if (GetACMDevicePath()) {
-                    // DFU対象デバイスに接続された場合
+                    // DFU対象デバイスに接続された場合はDFU PINGを実行
+                    byte id = 0xac;
+                    SendPingRequest(id);
                     // 接続を閉じる
                     CloseDFUDevice();
                     AppCommon.OutputLogDebug(string.Format(
@@ -149,6 +154,35 @@ namespace MaintenanceToolGUI
             }
         }
 
+        private bool SendPingRequest(byte id)
+        {
+            try {
+                // PINGコマンドを生成（DFUリクエスト）
+                byte[] b = new byte[] {
+                    NRFDfuConst.NRF_DFU_OP_PING, id, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+                // DFUリクエストを送信
+                waiting = true;
+                SerialPortRef.Write(b, 0, b.Length);
+
+                // for debug
+                string dump = AppCommon.DumpMessage(b, b.Length);
+                AppCommon.OutputLogDebug(string.Format("DFUDevice.Write:\r\n{0}", dump));
+
+                // DTR, RTSをOnに変更
+                SerialPortRef.DtrEnable = true;
+                SerialPortRef.RtsEnable = true;
+
+                // レスポンス受信まで wait
+                while (waiting) ;
+                return true;
+
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("DFUDevice.Write: {0}", e.Message));
+                return false;
+            }
+        }
+
         private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs a)
         {
             // シリアルポートをオープンしていない場合は何もしない
@@ -166,9 +200,6 @@ namespace MaintenanceToolGUI
                 Byte[] response = new Byte[SerialPortRef.BytesToRead];
                 SerialPortRef.Read(response, 0, response.GetLength(0));
 
-                string dump = AppCommon.DumpMessage(response, response.GetLength(0));
-                AppCommon.OutputLogDebug(string.Format("DFUDevice.serialPortDataReceived:\r\n{0}", dump));
-
                 // DFUレスポンス受信時の処理を実行
                 DFUResponseReceivedEvent(true, response);
 
@@ -180,6 +211,12 @@ namespace MaintenanceToolGUI
 
         private void OnDFUResponseReceived(bool success, byte[] response)
         {
+            // for debug
+            string dump = AppCommon.DumpMessage(response, response.GetLength(0));
+            AppCommon.OutputLogDebug(string.Format("DFUDevice.OnDFUResponseReceived:\r\n{0}", dump));
+
+            // 送受信同期フラグをクリア
+            waiting = false;
         }
     }
 }
