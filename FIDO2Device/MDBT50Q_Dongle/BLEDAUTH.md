@@ -2,7 +2,9 @@
 
 ## 概要
 
-FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させる機能です。
+FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させる機能です。
+
+<img src="assets01/0000.jpg" width="640">
 
 ### 事前設定
 
@@ -41,7 +43,7 @@ BLEビーコンなど、サービスUUIDを持たないBLEデバイスは利用�
 
 あらかじめ、One CardなどのBLEデバイスに電源を入れ（もしくはスリープ中であればボタンを押下してスリープ解除し）ておきます。
 
-その後、以下の手順で、FIDO認証（WebAuthn／U2F）を実行します。
+その後、以下の手順で、FIDO認証（WebAuthn）を実行します。
 - 「[Edgeブラウザーを使用したWebAuthnテスト手順](WEBAUTHNTEST.md)」
 - 「[Googleアカウントのログイン確認手順（PC）](PCCHROME.md)」
 
