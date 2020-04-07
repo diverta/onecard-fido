@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using MaintenanceToolCommon;
+using System.Threading.Tasks;
 
 namespace MaintenanceToolGUI
 {
@@ -238,10 +239,10 @@ namespace MaintenanceToolGUI
         //
         // DFU対象デバイス接続処理
         //
-        private async void EstablishDFUConnection()
+        private void EstablishDFUConnection()
         {
             // DFU対象デバイスに接続（USB CDC ACM接続）
-            await Task.Run(() => dfuDevice.SearchACMDevicePath());
+            dfuDevice.SearchACMDevicePath();
         }
 
         private void DFUConnectionEstablished(bool success)
@@ -272,9 +273,102 @@ namespace MaintenanceToolGUI
         // 
         private void InvokeDFUProcess()
         {
-            // TODO: これは仮の処理です。
+            // メイン画面に主処理開始を通知
             mainForm.OnDFUStarted();
-            mainForm.OnAppMainProcessExited(true);
+
+            // DFU対象デバイスの通知設定
+            SendSetReceiptRequest();
+        }
+
+        private void SendSetReceiptRequest()
+        {
+            // SET RECEIPTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (dfuDevice.SendDFURequest(b) == false) {
+                TerminateDFUProcess(false);
+            }
+        }
+
+        private void ReceiveSetReceiptRequest(byte[] response)
+        {
+            // レスポンスがNGの場合は処理終了
+            if (AssertDFUResponseSuccess(response) == false) {
+                TerminateDFUProcess(false);
+            }
+
+            // DFU対象デバイスからMTUを取得
+            SendGetMtuRequest();
+        }
+
+        private void SendGetMtuRequest()
+        {
+            // GET MTUコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_MTU_GET, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (dfuDevice.SendDFURequest(b) == false) {
+                TerminateDFUProcess(false);
+            }
+        }
+
+        private void ReceiveGetMtuRequest(byte[] response)
+        {
+            // レスポンスがNGの場合は処理終了
+            if (AssertDFUResponseSuccess(response) == false) {
+                TerminateDFUProcess(false);
+            }
+
+            // これは仮の処理です。
+            TerminateDFUProcess(true);
+        }
+
+        private void TerminateDFUProcess(bool success)
+        {
+            // DFUデバイスから切断
+            dfuDevice.CloseDFUDevice();
+
+            // メイン画面に制御を戻す
+            mainForm.OnAppMainProcessExited(success);
+        }
+
+        //
+        // DFUレスポンス受信時の処理
+        //
+        public void OnReceiveDFUResponse(bool success, byte[] response)
+        {
+            // 失敗時はメイン画面に制御を戻す
+            if (success == false) {
+                TerminateDFUProcess(false);
+                return;
+            }
+
+            // レスポンスの２バイト目（コマンドバイト）で処理分岐
+            byte cmd = response[1];
+            switch (cmd) {
+            case NRFDfuConst.NRF_DFU_OP_RECEIPT_NOTIF_SET:
+                ReceiveSetReceiptRequest(response);
+                break;
+            case NRFDfuConst.NRF_DFU_OP_MTU_GET:
+                ReceiveGetMtuRequest(response);
+                break;
+            default:
+                break;
+            }
+        }
+
+        private bool AssertDFUResponseSuccess(byte[] response)
+        {
+            // レスポンスを検証
+            if (response == null || response.Length == 0) {
+                return false;
+            }
+
+            // ステータスコードを参照し、処理が成功したかどうかを判定
+            return (response[2] == NRFDfuConst.NRF_DFU_BYTE_RESP_SUCCESS);
         }
     }
 }

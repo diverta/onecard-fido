@@ -42,7 +42,7 @@ namespace MaintenanceToolGUI
             ToolDFURef = td;
 
             // イベントの登録
-            this.DFUResponseReceivedEvent += new DFUResponseReceivedEventHandler(OnDFUResponseReceived);
+            DFUResponseReceivedEvent += new DFUResponseReceivedEventHandler(OnDFUResponseReceived);
         }
 
         // DFU接続完了時のイベント
@@ -50,60 +50,132 @@ namespace MaintenanceToolGUI
         public event DFUConnectionEstablishedEventHandler DFUConnectionEstablishedEvent;
 
         // DFU応答時のイベント
-        public delegate void DFUResponseReceivedEventHandler(bool success, byte[] response);
-        public event DFUResponseReceivedEventHandler DFUResponseReceivedEvent;
+        private delegate void DFUResponseReceivedEventHandler(bool success, byte[] response);
+        private event DFUResponseReceivedEventHandler DFUResponseReceivedEvent;
 
-        // DFU応答データを保持
-        private byte[] DFUResponseBytes = null;
+        // 仮想COMポート名の検索回数
+        private int ResumeRemaining;
+
+        // 仮想COMポートリストの参照を保持
+        private string[] COMPortNameList;
+
+        // 仮想COMポートリストの現在探索インデックス
+        private int COMPortIndex;
 
         public void SearchACMDevicePath()
         {
-            // 最大５秒間繰り返す
-            for (int i = 0; i < 10; i++) {
-                // 0.5秒間ウェイト
-                Thread.Sleep(500);
-                // DFU対象デバイスに接続
-                if (GetACMDevicePath()) {
-                    // DFU対象デバイスに接続された場合はDFU PINGを実行
-                    byte id = 0xac;
-                    SendPingRequest(id);
-                    // 接続を閉じる
-                    CloseDFUDevice();
-                    AppCommon.OutputLogDebug(string.Format(
-                        "DFUDevice.SearchACMDevicePath: DFU target device found: {0}", 
-                        SerialPortName));
-                    DFUConnectionEstablishedEvent(true);
-                    return;
-                }
-            }
-            AppCommon.OutputLogError("DFUDevice.SearchACMDevicePath: DFU target device not found");
-            DFUConnectionEstablishedEvent(false);
+            // 最大10回繰り返す
+            ResumeRemaining = 10;
+
+            // COMポート検索処理を続行
+            ResumeSearchACMDevicePath();
         }
 
-        private bool GetACMDevicePath()
+        private void ResumeSearchACMDevicePath()
+        {
+            if (ResumeRemaining == 0) {
+                // 最大繰り返し回数に達した場合は終了
+                AppCommon.OutputLogError("DFUDevice.SearchACMDevicePath: DFU target device not found");
+                DFUConnectionEstablishedEvent(false);
+                return;
+            }
+
+            // 0.5秒間ウェイト
+            Thread.Sleep(500);
+
+            // COMポートリストを取得
+            if (GetCOMPortNameList() == false) {
+                // COMポートリストが空の場合はリトライ
+                ResumeRemaining--;
+                AppCommon.OutputLogDebug(string.Format(
+                    "DFUDevice.SearchACMDevicePath retry: remaining {0} times", ResumeRemaining));
+                ResumeSearchACMDevicePath();
+                return;
+            }
+
+            // １番目のCOMポートの処理
+            COMPortIndex = 0;
+            SearchCOMPort();
+        }
+
+        private bool GetCOMPortNameList()
         {
             string[] PortList = SerialPort.GetPortNames();
             if (PortList.Length == 0) {
-                // 接続されているデバイスがない場合は終了
-                AppCommon.OutputLogDebug("DFUDevice.GetDFUDevicePath: SerialPortList is empty");
-                SerialPortName = "";
+                // 接続されているデバイスがない場合
+                COMPortNameList = null;
                 return false;
             }
 
-            // 接続されているUSB CDC ACMデバイスのパスを走査
-            foreach (string port in PortList) {
-                AppCommon.OutputLogDebug(string.Format(
-                    "DFUDevice.GetDFUDevicePath: SerialPort = {0}", port));
-                // 接続を実行
-                if (OpenDFUDevice(port)) {
-                    SerialPortName = port;
-                    return true;
-                }
-            }
-            SerialPortName = "";
-            return false;
+            // リストの参照を保持
+            COMPortNameList = PortList;
+            return true;
         }
 
+        private void SearchCOMPort()
+        {
+            if (COMPortIndex == COMPortNameList.Length) {
+                // リストの最終端に達した場合は終了
+                return;
+            }
+
+            // COMポート名を取得
+            string port = COMPortNameList[COMPortIndex];
+
+            // 接続を実行
+            if (OpenDFUDevice(port) == false) {
+                // 接続できない場合は次のCOMポートの処理に移る
+                COMPortIndex++;
+                SearchCOMPort();
+                return;
+            }
+
+            // 接続されているポート名を退避
+            SerialPortName = port;
+
+            // DFU対象デバイスに接続された場合はDFU PINGを実行
+            if (SendPingRequest() == false) {
+                // 接続を閉じる
+                CloseDFUDevice();
+                // 送信できない場合は次のCOMポートの処理に移る
+                COMPortIndex++;
+                SearchCOMPort();
+                return;
+            }
+        }
+
+        private bool SendPingRequest()
+        {
+            // PINGコマンドを生成（DFUリクエスト）
+            byte id = 0xac;
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_PING, id, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            return SendDFURequest(b);
+        }
+
+        private void ReceivePingRequest(bool success, byte[] response)
+        {
+            if (success == false) {
+                // 接続を閉じる
+                CloseDFUDevice();
+                // PING失敗の場合は次のCOMポートの処理に移る
+                COMPortIndex++;
+                SearchCOMPort();
+                return;
+            }
+
+            // PING成功の場合は検索処理を終了（接続はキープする）
+            AppCommon.OutputLogDebug(string.Format(
+                "DFUDevice: DFU target device found on {0}",
+                SerialPortName));
+            DFUConnectionEstablishedEvent(true);
+        }
+
+        //
+        // DFUデバイスの接続／切断処理
+        //
         private bool OpenDFUDevice(string port)
         {
             try {
@@ -133,7 +205,7 @@ namespace MaintenanceToolGUI
             return false;
         }
 
-        private void CloseDFUDevice()
+        public void CloseDFUDevice()
         {
             if (SerialPortRef == null) {
                 AppCommon.OutputLogDebug("DFUDevice.CloseDFUDevice: SerialPortRef is null");
@@ -154,34 +226,28 @@ namespace MaintenanceToolGUI
             }
         }
 
-        private bool SendPingRequest(byte id)
+        //
+        // DFUリクエスト／レスポンス処理
+        //
+        private byte[] DFURequestBytes;
+        private byte[] DFUResponseBytes;
+
+        public bool SendDFURequest(byte[] b)
         {
             try {
-                // PINGコマンドを生成（DFUリクエスト）
-                byte[] b = new byte[] {
-                    NRFDfuConst.NRF_DFU_OP_PING, id, NRFDfuConst.NRF_DFU_BYTE_EOM };
+                // 送信リクエストを保持
+                DFURequestBytes = b;
 
                 // DFUリクエストを送信
-                DFUResponseBytes = null;
                 SerialPortRef.Write(b, 0, b.Length);
 
                 // DTR, RTSをOnに変更
                 SerialPortRef.DtrEnable = true;
                 SerialPortRef.RtsEnable = true;
-
-                // レスポンス受信まで wait
-                while (DFUResponseBytes == null) ;
-
-                // for debug
-                string dumpReq = AppCommon.DumpMessage(b, b.Length);
-                string dumpRes = AppCommon.DumpMessage(DFUResponseBytes, DFUResponseBytes.Length);
-                AppCommon.OutputLogDebug(string.Format("DFUDevice.Write:\r\n{0}", dumpReq));
-                AppCommon.OutputLogDebug(string.Format("DFUDevice.Read:\r\n{0}", dumpRes));
-
                 return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DFUDevice.Write: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: {0}", e.Message));
                 return false;
             }
         }
@@ -203,6 +269,9 @@ namespace MaintenanceToolGUI
                 Byte[] response = new Byte[SerialPortRef.BytesToRead];
                 SerialPortRef.Read(response, 0, response.GetLength(0));
 
+                // 受信レスポンスを保持
+                DFUResponseBytes = response;
+
                 // DFUレスポンス受信時の処理を実行
                 DFUResponseReceivedEvent(true, response);
 
@@ -214,11 +283,18 @@ namespace MaintenanceToolGUI
 
         private void OnDFUResponseReceived(bool success, byte[] response)
         {
-            if (success) {
-                DFUResponseBytes = response;
+            // for debug
+            string dumpReq = AppCommon.DumpMessage(DFURequestBytes, DFURequestBytes.Length);
+            string dumpRes = AppCommon.DumpMessage(DFUResponseBytes, DFUResponseBytes.Length);
+            AppCommon.OutputLogDebug(string.Format("DFUDevice Sent:\r\n{0}", dumpReq));
+            AppCommon.OutputLogDebug(string.Format("DFUDevice Recv:\r\n{0}", dumpRes));
 
+            // レスポンスの２バイト目（コマンドバイト）で処理分岐
+            byte cmd = response[1];
+            if (cmd == NRFDfuConst.NRF_DFU_OP_PING) {
+                ReceivePingRequest(success, response);
             } else {
-                DFUResponseBytes = new byte[0];
+                ToolDFURef.OnReceiveDFUResponse(success, response);
             }
         }
     }
