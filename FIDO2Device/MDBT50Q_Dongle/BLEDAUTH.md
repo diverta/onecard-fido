@@ -4,9 +4,9 @@
 
 FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させる機能です。
 
-<img src="assets01/0000.jpg" width="720">
-<img src="assets01/0001.jpg" width="720">
-<img src="assets01/0002.jpg" width="720">
+<img src="assets01/0000.jpg">
+<img src="assets01/0001.jpg">
+<img src="assets01/0002.jpg">
 
 ### 事前設定
 
