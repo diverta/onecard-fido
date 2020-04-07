@@ -33,6 +33,10 @@ namespace MaintenanceToolGUI
         // バージョン更新判定フラグ
         private bool NeedCompareUpdateVersion;
 
+        // DFUで使用する各種パラメーター
+        private int MTU;
+        private int MaxCreateSize;
+
         public ToolDFU(MainForm f, HIDMain h)
         {
             // メイン画面の参照を保持
@@ -322,6 +326,42 @@ namespace MaintenanceToolGUI
                 TerminateDFUProcess(false);
             }
 
+            // レスポンスからMTUを取得（4〜5バイト目、リトルエンディアン）
+            MTU = AppCommon.ToInt16(response, 3, false);
+            AppCommon.OutputLogError(string.Format("TooDFU.ReceiveGetMtuRequest: MTU={0}", MTU));
+
+            // DATイメージ転送処理の開始
+            // １回あたりの送信データ最大長を取得
+            SendSelectObjectRequest(NRFDfuConst.NRF_DFU_BYTE_OBJ_INIT_CMD);
+        }
+
+        private void SendSelectObjectRequest(byte objectType)
+        {
+            // SELECT OBJECTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_OBJECT_SELECT, objectType, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (dfuDevice.SendDFURequest(b) == false) {
+                TerminateDFUProcess(false);
+            }
+        }
+
+        private void ReceiveSelectObjectRequest(byte[] response)
+        {
+            // レスポンスがNGの場合は処理終了
+            if (AssertDFUResponseSuccess(response) == false) {
+                TerminateDFUProcess(false);
+            }
+
+            // レスポンスから種別を取得（3バイト目）
+            byte objectType = response[2];
+
+            // レスポンスからMaxCreateSizeを取得（4〜7バイト目、リトルエンディアン）
+            MaxCreateSize = AppCommon.ToInt32(response, 3, false);
+            AppCommon.OutputLogError(string.Format("TooDFU.ReceiveGetMtuRequest: ObjectType={0}, MaxCreateSize={1}",
+                objectType, MaxCreateSize));
+
             // これは仮の処理です。
             TerminateDFUProcess(true);
         }
@@ -354,6 +394,9 @@ namespace MaintenanceToolGUI
                 break;
             case NRFDfuConst.NRF_DFU_OP_MTU_GET:
                 ReceiveGetMtuRequest(response);
+                break;
+            case NRFDfuConst.NRF_DFU_OP_OBJECT_SELECT:
+                ReceiveSelectObjectRequest(response);
                 break;
             default:
                 break;
