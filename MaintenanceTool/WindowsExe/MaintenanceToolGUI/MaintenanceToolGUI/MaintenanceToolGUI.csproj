@@ -98,6 +98,7 @@
       <DependentUpon>DFUStartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolDFU.cs" />
+    <Compile Include="ToolDFUImage.cs" />
     <Compile Include="ToolPreference.cs" />
     <Compile Include="ToolPreferenceForm.cs">
       <SubType>Form</SubType>

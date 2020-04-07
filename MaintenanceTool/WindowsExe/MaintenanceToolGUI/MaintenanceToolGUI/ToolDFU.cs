@@ -1,5 +1,4 @@
 ﻿using MaintenanceToolCommon;
-using System.Threading.Tasks;
 
 namespace MaintenanceToolGUI
 {
@@ -14,12 +13,8 @@ namespace MaintenanceToolGUI
         private HIDMain hidMain;
         private DFUDevice dfuDevice;
 
-        // リソース名称検索用キーワード
-        private const string ResourceNamePrefix = "MaintenanceToolGUI.Resources.app_dfu_package.";
-        private const string ResourceNameSuffix = ".zip";
-
-        // 更新イメージファイルのリソース名称
-        private string DFUImageResourceName;
+        // 更新イメージクラス
+        private ToolDFUImage toolDFUImage;
 
         // 更新イメージファイル名から取得したバージョン
         public string UpdateVersion { get; set; }
@@ -58,48 +53,17 @@ namespace MaintenanceToolGUI
             dfuStartForm = new DFUStartForm(this);
             dfuProcessingForm = new DFUProcessingForm(this);
 
+            // 更新イメージクラスを初期化
+            toolDFUImage = new ToolDFUImage();
+
             // ファームウェア更新イメージファイルから、更新バージョンを取得
-            GetDFUImageFileResourceName();
-            ExtractUpdateVersion(DFUImageResourceName);
+            UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
 
             // ブートローダーモード遷移判定フラグをリセット
             NeedCheckBootloaderMode = false;
 
             // バージョン更新判定フラグをリセット
             NeedCompareUpdateVersion = false;
-        }
-
-        private void GetDFUImageFileResourceName()
-        {
-            // リソース名称を初期化
-            DFUImageResourceName = "";
-
-            // このアプリケーションに同梱されているリソース名を取得
-            System.Reflection.Assembly myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-            string[] resnames = myAssembly.GetManifestResourceNames();
-            foreach (string resName in resnames) {
-                // リソース名が
-                // "MaintenanceToolGUI.Resources.app_dfu_package."
-                // という名称で始まっている場合は、
-                // ファームウェア更新イメージファイルと判定
-                if (resName.StartsWith(ResourceNamePrefix)) {
-                    DFUImageResourceName = resName;
-                }
-            }
-        }
-
-        private void ExtractUpdateVersion(string resName)
-        {
-            // バージョン文字列を初期化
-            UpdateVersion = "";
-            if (resName.Equals("")) {
-                return;
-            }
-            if (resName.EndsWith(ResourceNameSuffix) == false) {
-                return;
-            }
-            // リソース名称文字列から、バージョン文字列だけを抽出
-            UpdateVersion = resName.Replace(ResourceNamePrefix, "").Replace(ResourceNameSuffix, "");
         }
 
         //
