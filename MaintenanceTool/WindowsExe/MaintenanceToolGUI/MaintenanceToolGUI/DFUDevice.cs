@@ -53,8 +53,8 @@ namespace MaintenanceToolGUI
         public delegate void DFUResponseReceivedEventHandler(bool success, byte[] response);
         public event DFUResponseReceivedEventHandler DFUResponseReceivedEvent;
 
-        // 送受信同期フラグ
-        private bool waiting = false;
+        // DFU応答データを保持
+        private byte[] DFUResponseBytes = null;
 
         public void SearchACMDevicePath()
         {
@@ -162,19 +162,22 @@ namespace MaintenanceToolGUI
                     NRFDfuConst.NRF_DFU_OP_PING, id, NRFDfuConst.NRF_DFU_BYTE_EOM };
 
                 // DFUリクエストを送信
-                waiting = true;
+                DFUResponseBytes = null;
                 SerialPortRef.Write(b, 0, b.Length);
-
-                // for debug
-                string dump = AppCommon.DumpMessage(b, b.Length);
-                AppCommon.OutputLogDebug(string.Format("DFUDevice.Write:\r\n{0}", dump));
 
                 // DTR, RTSをOnに変更
                 SerialPortRef.DtrEnable = true;
                 SerialPortRef.RtsEnable = true;
 
                 // レスポンス受信まで wait
-                while (waiting) ;
+                while (DFUResponseBytes == null) ;
+
+                // for debug
+                string dumpReq = AppCommon.DumpMessage(b, b.Length);
+                string dumpRes = AppCommon.DumpMessage(DFUResponseBytes, DFUResponseBytes.Length);
+                AppCommon.OutputLogDebug(string.Format("DFUDevice.Write:\r\n{0}", dumpReq));
+                AppCommon.OutputLogDebug(string.Format("DFUDevice.Read:\r\n{0}", dumpRes));
+
                 return true;
 
             } catch (Exception e) {
@@ -211,12 +214,12 @@ namespace MaintenanceToolGUI
 
         private void OnDFUResponseReceived(bool success, byte[] response)
         {
-            // for debug
-            string dump = AppCommon.DumpMessage(response, response.GetLength(0));
-            AppCommon.OutputLogDebug(string.Format("DFUDevice.OnDFUResponseReceived:\r\n{0}", dump));
+            if (success) {
+                DFUResponseBytes = response;
 
-            // 送受信同期フラグをクリア
-            waiting = false;
+            } else {
+                DFUResponseBytes = new byte[0];
+            }
         }
     }
 }
