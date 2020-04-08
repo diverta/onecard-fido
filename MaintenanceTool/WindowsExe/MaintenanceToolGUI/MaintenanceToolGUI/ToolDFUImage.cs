@@ -13,13 +13,13 @@ namespace MaintenanceToolGUI
         // nRF52840アプリケーションファームウェアのバイナリーイメージを保持。
         // .dat=256バイト、.bin=512Kバイトと見積っています。
         //
-        private byte[] nrf52AppDat;
-        private byte[] nrf52AppBin;
-        private byte[] nrf52AppZip = new byte[524288];
+        public byte[] NRF52AppDat;
+        public byte[] NRF52AppBin;
+        private byte[] NRF52AppZip = new byte[524288];
 
-        public int nrf52AppDatSize { get; set; }
-        public int nrf52AppBinSize { get; set; }
-        public int nrf52AppZipSize { get; set; }
+        public int NRF52AppDatSize { get; set; }
+        public int NRF52AppBinSize { get; set; }
+        private int NRF52AppZipSize { get; set; }
 
         // 更新イメージファイルのリソース名称
         private string DFUImageResourceName;
@@ -53,8 +53,8 @@ namespace MaintenanceToolGUI
             // ログ出力
             AppCommon.OutputLogDebug(string.Format("ToolDFUImage: Firmware version {0}", UpdateVersion));
             AppCommon.OutputLogDebug(string.Format("ToolDFUImage: {0}({1} bytes), {2}({3} bytes)",
-                NRF52_APP_DAT_FILE_NAME, nrf52AppDatSize,
-                NRF52_APP_BIN_FILE_NAME, nrf52AppBinSize
+                NRF52_APP_DAT_FILE_NAME, NRF52AppDatSize,
+                NRF52_APP_BIN_FILE_NAME, NRF52AppBinSize
                 ));
             return UpdateVersion;
         }
@@ -81,9 +81,9 @@ namespace MaintenanceToolGUI
         private void ReadDFUImage()
         {
             // ファイルサイズをゼロクリア
-            nrf52AppDatSize = 0;
-            nrf52AppBinSize = 0;
-            nrf52AppZipSize = 0;
+            NRF52AppDatSize = 0;
+            NRF52AppBinSize = 0;
+            NRF52AppZipSize = 0;
 
             // リソースファイルを開く
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -94,7 +94,7 @@ namespace MaintenanceToolGUI
 
             try {
                 // リソースファイルを配列に読込
-                nrf52AppZipSize = stream.Read(nrf52AppZip, 0, (int)stream.Length);
+                NRF52AppZipSize = stream.Read(NRF52AppZip, 0, (int)stream.Length);
 
                 // リソースファイルを閉じる
                 stream.Close();
@@ -107,17 +107,17 @@ namespace MaintenanceToolGUI
         private void ExtractDFUImage()
         {
             // 例外抑止
-            if (nrf52AppZipSize == 0) {
+            if (NRF52AppZipSize == 0) {
                 return;
             }
 
             // .zip書庫ファイルを解析し、内包されている.bin/.datイメージを抽出
             int i = 0;
-            while (i < nrf52AppZipSize) {
-                if (nrf52AppZip[i + 0] == 0x50 && nrf52AppZip[i + 1] == 0x4B &&
-                    nrf52AppZip[i + 2] == 0x03 && nrf52AppZip[i + 3] == 0x04) {
+            while (i < NRF52AppZipSize) {
+                if (NRF52AppZip[i + 0] == 0x50 && NRF52AppZip[i + 1] == 0x4B &&
+                    NRF52AppZip[i + 2] == 0x03 && NRF52AppZip[i + 3] == 0x04) {
                     // 書庫エントリーのヘッダー（50 4B 03 04）が見つかった場合
-                    i += ParseImage(nrf52AppZip, i);
+                    i += ParseImage(NRF52AppZip, i);
                 } else {
                     i++;
                 }
@@ -150,13 +150,13 @@ namespace MaintenanceToolGUI
             // ファイルの内容
             if (fileNameStr.Equals(NRF52_APP_DAT_FILE_NAME)) {
                 // .datファイルのバイナリーイメージを配列に格納
-                nrf52AppDat = data.Skip(index + offset).Take(compressedSize).ToArray();
-                nrf52AppDatSize = compressedSize;
+                NRF52AppDat = data.Skip(index + offset).Take(compressedSize).ToArray();
+                NRF52AppDatSize = compressedSize;
 
             } else if (fileNameStr.Equals(NRF52_APP_BIN_FILE_NAME)) {
                 // .binファイルのバイナリーイメージを配列に格納
-                nrf52AppBin = data.Skip(index + offset).Take(compressedSize).ToArray();
-                nrf52AppBinSize = compressedSize;
+                NRF52AppBin = data.Skip(index + offset).Take(compressedSize).ToArray();
+                NRF52AppBinSize = compressedSize;
             }
 
             // 書庫エントリーのサイズを戻す
