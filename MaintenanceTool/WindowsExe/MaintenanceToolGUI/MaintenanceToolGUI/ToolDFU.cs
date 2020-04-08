@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System;
 
 namespace MaintenanceToolGUI
 {
@@ -323,8 +324,55 @@ namespace MaintenanceToolGUI
 
             // レスポンスからMaxCreateSizeを取得（4〜7バイト目、リトルエンディアン）
             MaxCreateSize = AppCommon.ToInt32(response, 3, false);
-            AppCommon.OutputLogError(string.Format("TooDFU.ReceiveGetMtuRequest: ObjectType={0}, MaxCreateSize={1}",
-                objectType, MaxCreateSize));
+
+            // データサイズを設定
+            if (objectType == NRFDfuConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
+                RemainingToSend = toolDFUImage.nrf52AppDatSize;
+            } else {
+                RemainingToSend = toolDFUImage.nrf52AppBinSize;
+            }
+            AppCommon.OutputLogError(string.Format("ToolDFUCommand: object({0}) select size={1}, create size max={2}",
+                objectType, RemainingToSend, MaxCreateSize));
+
+            // データ分割送信開始
+            SendCreateObjectRequest(objectType, RemainingToSend);
+        }
+
+        //
+        // データ分割送信処理
+        //
+        private int RemainingToSend;
+        private int AlreadySent;
+
+        private void SendCreateObjectRequest(byte objectType, int imageSize)
+        {
+            // 送信すべきデータがない場合は終了
+            if (RemainingToSend < 1) {
+                return;
+            }
+
+            // 送信サイズを通知
+            int sendSize = (MaxCreateSize < RemainingToSend) ? MaxCreateSize : RemainingToSend;
+
+            // CREATE OBJECTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_OBJECT_CREATE, objectType, 0x00, 0x00, 0x00, 0x00,
+                NRFDfuConst.NRF_DFU_BYTE_EOM};
+            int offset = 2;
+            AppCommon.ConvertUint32ToLEBytes((UInt32)imageSize, b, offset);
+
+            // DFUリクエストを送信
+            if (dfuDevice.SendDFURequest(b) == false) {
+                TerminateDFUProcess(false);
+            }
+        }
+
+        private void ReceiveCreateObjectResponse(byte[] response)
+        {
+            // レスポンスがNGの場合は処理終了
+            if (AssertDFUResponseSuccess(response) == false) {
+                TerminateDFUProcess(false);
+            }
 
             // これは仮の処理です。
             TerminateDFUProcess(true);
@@ -361,6 +409,9 @@ namespace MaintenanceToolGUI
                 break;
             case NRFDfuConst.NRF_DFU_OP_OBJECT_SELECT:
                 ReceiveSelectObjectRequest(response);
+                break;
+            case NRFDfuConst.NRF_DFU_OP_OBJECT_CREATE:
+                ReceiveCreateObjectResponse(response);
                 break;
             default:
                 break;
