@@ -23,15 +23,14 @@ namespace MaintenanceToolGUI
         // 認証器からHID経由で取得したバージョン
         public string CurrentVersion { get; set; }
 
+        // 転送処理クラス
+        private ToolDFUProcess toolDFUProcess;
+
         // ブートローダーモード遷移判定フラグ
         private bool NeedCheckBootloaderMode;
 
         // バージョン更新判定フラグ
         private bool NeedCompareUpdateVersion;
-
-        // DFUで使用する各種パラメーター
-        private int MTU;
-        private int MaxCreateSize;
 
         public ToolDFU(MainForm f, HIDMain h)
         {
@@ -45,7 +44,7 @@ namespace MaintenanceToolGUI
             hidMain.ToolDFURef = this;
 
             // DFUデバイスクラスを初期化
-            dfuDevice = new DFUDevice(this);
+            dfuDevice = new DFUDevice();
 
             // イベントの登録
             dfuDevice.DFUConnectionEstablishedEvent += new DFUDevice.DFUConnectionEstablishedEventHandler(DFUConnectionEstablished);
@@ -59,6 +58,12 @@ namespace MaintenanceToolGUI
 
             // ファームウェア更新イメージファイルから、更新バージョンを取得
             UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
+
+            // DFU転送処理クラスを初期化
+            toolDFUProcess = new ToolDFUProcess(dfuDevice, toolDFUImage);
+
+            // イベントの登録
+            toolDFUProcess.DFUProcessTerminatedEvent += new ToolDFUProcess.DFUProcessTerminatedEventHandler(DFUProcessTerminated);
 
             // ブートローダーモード遷移判定フラグをリセット
             NeedCheckBootloaderMode = false;
@@ -245,188 +250,17 @@ namespace MaintenanceToolGUI
             // メイン画面に主処理開始を通知
             mainForm.OnDFUStarted();
 
-            // DFU対象デバイスの通知設定
-            SendSetReceiptRequest();
+            // DFU主処理を開始
+            toolDFUProcess.PerformDFU();
         }
 
-        private void SendSetReceiptRequest()
-        {
-            // SET RECEIPTコマンドを生成（DFUリクエスト）
-            byte[] b = new byte[] {
-                NRFDfuConst.NRF_DFU_OP_RECEIPT_NOTIF_SET, 0x00, 0x00, NRFDfuConst.NRF_DFU_BYTE_EOM };
-
-            // DFUリクエストを送信
-            if (dfuDevice.SendDFURequest(b) == false) {
-                TerminateDFUProcess(false);
-            }
-        }
-
-        private void ReceiveSetReceiptRequest(byte[] response)
-        {
-            // レスポンスがNGの場合は処理終了
-            if (AssertDFUResponseSuccess(response) == false) {
-                TerminateDFUProcess(false);
-            }
-
-            // DFU対象デバイスからMTUを取得
-            SendGetMtuRequest();
-        }
-
-        private void SendGetMtuRequest()
-        {
-            // GET MTUコマンドを生成（DFUリクエスト）
-            byte[] b = new byte[] {
-                NRFDfuConst.NRF_DFU_OP_MTU_GET, NRFDfuConst.NRF_DFU_BYTE_EOM };
-
-            // DFUリクエストを送信
-            if (dfuDevice.SendDFURequest(b) == false) {
-                TerminateDFUProcess(false);
-            }
-        }
-
-        private void ReceiveGetMtuRequest(byte[] response)
-        {
-            // レスポンスがNGの場合は処理終了
-            if (AssertDFUResponseSuccess(response) == false) {
-                TerminateDFUProcess(false);
-            }
-
-            // レスポンスからMTUを取得（4〜5バイト目、リトルエンディアン）
-            MTU = AppCommon.ToInt16(response, 3, false);
-            AppCommon.OutputLogError(string.Format("TooDFU.ReceiveGetMtuRequest: MTU={0}", MTU));
-
-            // DATイメージ転送処理の開始
-            // １回あたりの送信データ最大長を取得
-            SendSelectObjectRequest(NRFDfuConst.NRF_DFU_BYTE_OBJ_INIT_CMD);
-        }
-
-        private void SendSelectObjectRequest(byte objectType)
-        {
-            // SELECT OBJECTコマンドを生成（DFUリクエスト）
-            byte[] b = new byte[] {
-                NRFDfuConst.NRF_DFU_OP_OBJECT_SELECT, objectType, NRFDfuConst.NRF_DFU_BYTE_EOM };
-
-            // DFUリクエストを送信
-            if (dfuDevice.SendDFURequest(b) == false) {
-                TerminateDFUProcess(false);
-            }
-        }
-
-        private void ReceiveSelectObjectRequest(byte[] response)
-        {
-            // レスポンスがNGの場合は処理終了
-            if (AssertDFUResponseSuccess(response) == false) {
-                TerminateDFUProcess(false);
-            }
-
-            // レスポンスから種別を取得（3バイト目）
-            byte objectType = response[2];
-
-            // レスポンスからMaxCreateSizeを取得（4〜7バイト目、リトルエンディアン）
-            MaxCreateSize = AppCommon.ToInt32(response, 3, false);
-
-            // データサイズを設定
-            if (objectType == NRFDfuConst.NRF_DFU_BYTE_OBJ_INIT_CMD) {
-                RemainingToSend = toolDFUImage.nrf52AppDatSize;
-            } else {
-                RemainingToSend = toolDFUImage.nrf52AppBinSize;
-            }
-            AppCommon.OutputLogError(string.Format("ToolDFUCommand: object({0}) select size={1}, create size max={2}",
-                objectType, RemainingToSend, MaxCreateSize));
-
-            // データ分割送信開始
-            SendCreateObjectRequest(objectType, RemainingToSend);
-        }
-
-        //
-        // データ分割送信処理
-        //
-        private int RemainingToSend;
-        private int AlreadySent;
-
-        private void SendCreateObjectRequest(byte objectType, int imageSize)
-        {
-            // 送信すべきデータがない場合は終了
-            if (RemainingToSend < 1) {
-                return;
-            }
-
-            // 送信サイズを通知
-            int sendSize = (MaxCreateSize < RemainingToSend) ? MaxCreateSize : RemainingToSend;
-
-            // CREATE OBJECTコマンドを生成（DFUリクエスト）
-            byte[] b = new byte[] {
-                NRFDfuConst.NRF_DFU_OP_OBJECT_CREATE, objectType, 0x00, 0x00, 0x00, 0x00,
-                NRFDfuConst.NRF_DFU_BYTE_EOM};
-            int offset = 2;
-            AppCommon.ConvertUint32ToLEBytes((UInt32)imageSize, b, offset);
-
-            // DFUリクエストを送信
-            if (dfuDevice.SendDFURequest(b) == false) {
-                TerminateDFUProcess(false);
-            }
-        }
-
-        private void ReceiveCreateObjectResponse(byte[] response)
-        {
-            // レスポンスがNGの場合は処理終了
-            if (AssertDFUResponseSuccess(response) == false) {
-                TerminateDFUProcess(false);
-            }
-
-            // これは仮の処理です。
-            TerminateDFUProcess(true);
-        }
-
-        private void TerminateDFUProcess(bool success)
+        private void DFUProcessTerminated(bool success)
         {
             // DFUデバイスから切断
             dfuDevice.CloseDFUDevice();
 
             // メイン画面に制御を戻す
             mainForm.OnAppMainProcessExited(success);
-        }
-
-        //
-        // DFUレスポンス受信時の処理
-        //
-        public void OnReceiveDFUResponse(bool success, byte[] response)
-        {
-            // 失敗時はメイン画面に制御を戻す
-            if (success == false) {
-                TerminateDFUProcess(false);
-                return;
-            }
-
-            // レスポンスの２バイト目（コマンドバイト）で処理分岐
-            byte cmd = response[1];
-            switch (cmd) {
-            case NRFDfuConst.NRF_DFU_OP_RECEIPT_NOTIF_SET:
-                ReceiveSetReceiptRequest(response);
-                break;
-            case NRFDfuConst.NRF_DFU_OP_MTU_GET:
-                ReceiveGetMtuRequest(response);
-                break;
-            case NRFDfuConst.NRF_DFU_OP_OBJECT_SELECT:
-                ReceiveSelectObjectRequest(response);
-                break;
-            case NRFDfuConst.NRF_DFU_OP_OBJECT_CREATE:
-                ReceiveCreateObjectResponse(response);
-                break;
-            default:
-                break;
-            }
-        }
-
-        private bool AssertDFUResponseSuccess(byte[] response)
-        {
-            // レスポンスを検証
-            if (response == null || response.Length == 0) {
-                return false;
-            }
-
-            // ステータスコードを参照し、処理が成功したかどうかを判定
-            return (response[2] == NRFDfuConst.NRF_DFU_BYTE_RESP_SUCCESS);
         }
     }
 }
