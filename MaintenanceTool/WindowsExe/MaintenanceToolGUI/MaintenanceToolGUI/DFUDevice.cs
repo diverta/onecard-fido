@@ -29,18 +29,12 @@ namespace MaintenanceToolGUI
 
     class DFUDevice
     {
-        // DFU処理クラスの参照を保持
-        private ToolDFU ToolDFURef;
-
         // 仮想COMポート
         private SerialPort SerialPortRef = null;
         private string SerialPortName = "";
 
-        public DFUDevice(ToolDFU td)
+        public DFUDevice()
         {
-            // DFU処理クラスの参照を保持
-            ToolDFURef = td;
-
             // イベントの登録
             DFUResponseReceivedEvent += new DFUResponseReceivedEventHandler(OnDFUResponseReceived);
         }
@@ -52,6 +46,10 @@ namespace MaintenanceToolGUI
         // DFU応答時のイベント
         private delegate void DFUResponseReceivedEventHandler(bool success, byte[] response);
         private event DFUResponseReceivedEventHandler DFUResponseReceivedEvent;
+
+        // DFU応答時の外部通知イベント
+        public delegate void NotifyDFUResponseEventHandler(bool success, byte[] response);
+        public event NotifyDFUResponseEventHandler NotifyDFUResponseEvent;
 
         // 仮想COMポート名の検索回数
         private int ResumeRemaining;
@@ -292,9 +290,12 @@ namespace MaintenanceToolGUI
             // レスポンスの２バイト目（コマンドバイト）で処理分岐
             byte cmd = response[1];
             if (cmd == NRFDfuConst.NRF_DFU_OP_PING) {
+                // DFU PING応答時の処理
                 ReceivePingRequest(success, response);
+
             } else {
-                ToolDFURef.OnReceiveDFUResponse(success, response);
+                // DFU PING以外の応答時は、外部に通知
+                NotifyDFUResponseEvent(success, response);
             }
         }
     }
