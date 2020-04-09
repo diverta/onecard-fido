@@ -1,7 +1,4 @@
-﻿using MaintenanceToolCommon;
-using System;
-
-namespace MaintenanceToolGUI
+﻿namespace MaintenanceToolGUI
 {
     public class ToolDFU
     {

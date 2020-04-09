@@ -281,12 +281,6 @@ namespace MaintenanceToolGUI
 
         private void OnDFUResponseReceived(bool success, byte[] response)
         {
-            // for debug
-            string dumpReq = AppCommon.DumpMessage(DFURequestBytes, DFURequestBytes.Length);
-            string dumpRes = AppCommon.DumpMessage(DFUResponseBytes, DFUResponseBytes.Length);
-            AppCommon.OutputLogDebug(string.Format("DFUDevice Sent:\r\n{0}", dumpReq));
-            AppCommon.OutputLogDebug(string.Format("DFUDevice Recv:\r\n{0}", dumpRes));
-
             // レスポンスの２バイト目（コマンドバイト）で処理分岐
             byte cmd = response[1];
             if (cmd == NRFDfuConst.NRF_DFU_OP_PING) {
