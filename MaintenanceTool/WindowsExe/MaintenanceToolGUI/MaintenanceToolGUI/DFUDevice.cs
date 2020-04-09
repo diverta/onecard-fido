@@ -150,7 +150,11 @@ namespace MaintenanceToolGUI
                 NRFDfuConst.NRF_DFU_OP_PING, id, NRFDfuConst.NRF_DFU_BYTE_EOM };
 
             // DFUリクエストを送信
-            return SendDFURequest(b);
+            if (SendDFURequest(b)) {
+                return DTROperation();
+            } else {
+                return false;
+            }
         }
 
         private void ReceivePingRequest(bool success, byte[] response)
@@ -186,7 +190,7 @@ namespace MaintenanceToolGUI
                 }
                 SerialPortRef.WriteTimeout = 1000;
                 SerialPortRef.ReadTimeout = 1000;
-                SerialPortRef.BaudRate = 115200;
+                SerialPortRef.BaudRate = 9600;
 
                 // ポートを開く
                 SerialPortRef.DataReceived += new SerialDataReceivedEventHandler(SerialPortDataReceived);
@@ -217,7 +221,7 @@ namespace MaintenanceToolGUI
                 }
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DFUDevice.CloseDFUDevice: {0}", e.Message));
+                AppCommon.OutputLogDebug(string.Format("DFUDevice.CloseDFUDevice: {0}", e.Message));
 
             } finally {
                 SerialPortRef = null;
@@ -238,23 +242,25 @@ namespace MaintenanceToolGUI
             try {
                 // DFUリクエストを送信
                 SerialPortRef.Write(b, 0, b.Length);
+                return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: Write exception {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: {0}", e.Message));
                 return false;
             }
+        }
 
+        public bool DTROperation()
+        {
             try {
-                // DTR, RTSをOnに変更
+                // DTRをOnに変更
                 SerialPortRef.DtrEnable = true;
-                SerialPortRef.RtsEnable = true;
+                return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: DTR operation exception {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("DFUDevice.DTROperation: {0}", e.Message));
                 return false;
             }
-
-            return true;
         }
 
         private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs a)
@@ -271,8 +277,15 @@ namespace MaintenanceToolGUI
 
             try {
                 // DFUレスポンスデータを読込
-                Byte[] response = new Byte[SerialPortRef.BytesToRead];
-                SerialPortRef.Read(response, 0, response.GetLength(0));
+                int bytesToRead = SerialPortRef.BytesToRead;
+                if (bytesToRead == 0) {
+                    AppCommon.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialPortRef.BytesToRead is zero");
+                    DFUResponseReceivedEvent(false, null);
+                    return;
+                }
+
+                Byte[] response = new Byte[bytesToRead];
+                SerialPortRef.Read(response, 0, bytesToRead);
 
                 // 受信レスポンスを保持
                 DFUResponseBytes = response;
