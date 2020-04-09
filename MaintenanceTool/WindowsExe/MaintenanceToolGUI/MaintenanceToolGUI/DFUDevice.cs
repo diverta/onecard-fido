@@ -232,22 +232,29 @@ namespace MaintenanceToolGUI
 
         public bool SendDFURequest(byte[] b)
         {
-            try {
-                // 送信リクエストを保持
-                DFURequestBytes = b;
+            // 送信リクエストを保持
+            DFURequestBytes = b;
 
+            try {
                 // DFUリクエストを送信
                 SerialPortRef.Write(b, 0, b.Length);
 
+            } catch (Exception e) {
+                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: Write exception {0}", e.Message));
+                return false;
+            }
+
+            try {
                 // DTR, RTSをOnに変更
                 SerialPortRef.DtrEnable = true;
                 SerialPortRef.RtsEnable = true;
-                return true;
 
             } catch (Exception e) {
-                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: {0}", e.Message));
+                AppCommon.OutputLogError(string.Format("DFUDevice.SendDFURequest: DTR operation exception {0}", e.Message));
                 return false;
             }
+
+            return true;
         }
 
         private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs a)
