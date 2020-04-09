@@ -1,4 +1,6 @@
-﻿namespace MaintenanceToolGUI
+﻿using MaintenanceToolCommon;
+
+namespace MaintenanceToolGUI
 {
     public class ToolDFU
     {
@@ -203,8 +205,26 @@
                 NeedCompareUpdateVersion = false;
 
                 // バージョン情報を比較して終了判定
-                // TODO: 後日実装予定です。
+                mainForm.OnAppMainProcessExited(CompareUpdateVersion());
             }
+        }
+
+        private bool CompareUpdateVersion()
+        {
+            // バージョン情報を比較
+            bool versionEqual = (CurrentVersion == UpdateVersion);
+            if (versionEqual) {
+                // バージョンが同じであればDFU処理は正常終了
+                AppCommon.OutputLogInfo(string.Format(
+                    ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED, UpdateVersion));
+
+            } else {
+                // バージョンが同じでなければ異常終了
+                AppCommon.OutputLogError(ToolGUICommon.MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED);
+            }
+
+            // メイン画面に制御を戻す
+            return versionEqual;
         }
 
         //
@@ -256,8 +276,14 @@
             // DFUデバイスから切断
             dfuDevice.CloseDFUDevice();
 
-            // メイン画面に制御を戻す
-            mainForm.OnAppMainProcessExited(success);
+            if (success) {
+                // DFU転送成功時は、バージョン更新判定フラグをセット
+                NeedCompareUpdateVersion = true;
+
+            } else {
+                // DFU転送失敗時はメイン画面に制御を戻す
+                mainForm.OnAppMainProcessExited(success);
+            }
         }
     }
 }
