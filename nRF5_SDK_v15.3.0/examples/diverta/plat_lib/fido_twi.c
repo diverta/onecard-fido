@@ -18,13 +18,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// Arduino board mappings for pca10059
-#ifndef ARDUINO_SCL_PIN
-#define ARDUINO_SCL_PIN             27    // SCL signal pin
-#endif
-#ifndef ARDUINO_SDA_PIN
-#define ARDUINO_SDA_PIN             26    // SDA signal pin
-#endif
+// SCL/SDA signal pin
+#define TWI_SCL_PIN     NRF_GPIO_PIN_MAP(0, 4)
+#define TWI_SDA_PIN     NRF_GPIO_PIN_MAP(0, 26)
 
 // for debug data
 #define LOG_DEBUG_HEX_DATA false
@@ -51,8 +47,8 @@ void fido_twi_init (void)
     }
 
     const nrf_drv_twi_config_t twi_config = {
-       .scl                = ARDUINO_SCL_PIN,
-       .sda                = ARDUINO_SDA_PIN,
+       .scl                = TWI_SCL_PIN,
+       .sda                = TWI_SDA_PIN,
        .frequency          = NRF_DRV_TWI_FREQ_100K,
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH,
        .clear_bus_init     = false

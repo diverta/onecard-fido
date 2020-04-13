@@ -33,7 +33,7 @@ NRF_LOG_MODULE_REGISTER();
 //
 #if defined(BOARD_PCA10059)
 #define LED_R   NRF_GPIO_PIN_MAP(1, 10)
-#define LED_Y   NRF_GPIO_PIN_MAP(0, 26)
+#define LED_Y   LED1_G
 #else
 #define LED_R   LED_1
 #define LED_Y   LED_2
