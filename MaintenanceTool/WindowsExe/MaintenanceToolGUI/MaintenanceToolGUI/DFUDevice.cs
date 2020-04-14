@@ -265,6 +265,11 @@ namespace MaintenanceToolGUI
 
         private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs a)
         {
+            // EOF受信時は何もしない
+            if (a.EventType.Equals(SerialData.Eof)) {
+                AppCommon.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialData is EOF");
+                return;
+            }
             // シリアルポートをオープンしていない場合は何もしない
             if (SerialPortRef == null) {
                 AppCommon.OutputLogDebug("DFUDevice.SerialPortDataReceived: SerialPortRef is null");
