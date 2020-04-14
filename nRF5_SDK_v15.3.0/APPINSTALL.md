@@ -1,6 +1,6 @@
 # [開発運用] アプリケーション書込み手順
 
-MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../nRF5_SDK_v15.3.0/firmwares/open_bootloader/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
+MDBT50Q Dongleにプレインストールされている[USBブートローダー（署名機能付き）](../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
 
 ## 書込み準備
 
@@ -10,13 +10,10 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 
 <img src="assets02/0000.png" width="400">
 
-<b><u>基板上のスイッチ「SW2」を押しながら</b></u>、MDBT50Q DongleをPCのUSBポートに装着します。
+MDBT50Q DongleをPCのUSBポートに装着します。<br>
+アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
 
-<img src="assets02/0001.jpg" width="400">
-
-基板上のLED2（赤色）が緩く点滅し始め、USBブートローダーモード（USBポート経由でアプリケーション書込が可能なモード）に遷移します。
-
-<img src="assets02/0002.jpg" width="400">
+<img src="assets02/0010.jpg" width="400">
 
 ### ファームウェアの準備
 
@@ -34,6 +31,45 @@ MDBT50Q Dongleにプレインストールされている[簡易USBブートロ�
 
 ## アプリケーションの書込み
 
+### ブートローダーモードに遷移
+
+Pythonスクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
+以下のコマンドを実行します。
+
+```
+GITHUB_DIR=${HOME}/GitHub/onecard-fido
+python ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
+```
+
+下記は実行例になります。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ GITHUB_DIR=${HOME}/GitHub/onecard-fido
+MacBookPro-makmorit-jp:~ makmorit$ python ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
+HID device: path=USB_f055_0001_0x7f95e25070f0, usage_page=61904, usage=1
+---- sent data ----
+ffffffff860008d4e5f607182930410000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- received data ----
+ffffffff860011d4e5f607182930410100330102050002070000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- INIT done ----
+---- sent data ----
+01003301c5000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- received data ----
+01003301c5000100000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+---- command done ----
+MacBookPro-makmorit-jp:~ makmorit$
+```
+
+コマンド実行が完了すると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
+MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
+
+<img src="../MaintenanceTool/macOSApp/assets02/0011.jpg" width="300">
+
+
 ### 書込み実行
 
 nRFコマンドラインツールで`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、ファームウェア更新イメージファイルを転送します。<br>
@@ -42,9 +78,10 @@ nRFコマンドラインツールで`nrfutil dfu usb-serial`コマンドを実�
 ```
 FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
 cd ${FIRMWARES_DIR}
-ls -al *.zip
-ls -al /dev/tty.*
-nrfutil dfu usb-serial -pkg <"ls -al *.zip"で確認したzipファイル名> -p <"ls -al /dev/tty.*"で確認した仮想COMポート>
+PACKAGE=`ls *.zip`
+PORTNAME=`ls /dev/tty.usbmodem*`
+echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 ```
 
 下記は実行例になります。
@@ -52,16 +89,15 @@ nrfutil dfu usb-serial -pkg <"ls -al *.zip"で確認したzipファイル名> -p
 ```
 MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
 MacBookPro-makmorit-jp:~ makmorit$ cd ${FIRMWARES_DIR}
-MacBookPro-makmorit-jp:firmwares makmorit$ ls -al *.zip
--rw-r--r--  1 makmorit  staff  242685  3 30 13:22 app_dfu_package.0.2.8.zip
-MacBookPro-makmorit-jp:firmwares makmorit$ ls -al /dev/tty.*
-crw-rw-rw-  1 root  wheel   20,   0  3 30 12:38 /dev/tty.Bluetooth-Incoming-Port
-crw-rw-rw-  1 root  wheel   20,   6  3 30 13:28 /dev/tty.usbmodem1411
-MacBookPro-makmorit-jp:firmwares makmorit$
-MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg app_dfu_package.0.2.8.zip -p /dev/tty.usbmodem1411
+MacBookPro-makmorit-jp:firmwares makmorit$ PACKAGE=`ls *.zip`
+MacBookPro-makmorit-jp:firmwares makmorit$ PORTNAME=`ls /dev/tty.usbmodem*`
+MacBookPro-makmorit-jp:firmwares makmorit$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+command [nrfutil dfu usb-serial -pkg app_dfu_package.0.2.8.zip -p /dev/tty.usbmodem1421]
+MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.
 MacBookPro-makmorit-jp:firmwares makmorit$
+
 ```
 
 ### 書込み完了
