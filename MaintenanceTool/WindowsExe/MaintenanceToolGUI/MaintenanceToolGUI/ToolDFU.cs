@@ -1,4 +1,5 @@
 ﻿using MaintenanceToolCommon;
+using System.Threading.Tasks;
 
 namespace MaintenanceToolGUI
 {
@@ -50,7 +51,7 @@ namespace MaintenanceToolGUI
 
             // 処理開始／進捗画面を生成
             dfuStartForm = new DFUStartForm(this);
-            dfuProcessingForm = new DFUProcessingForm(this);
+            dfuProcessingForm = new DFUProcessingForm();
 
             // 更新イメージクラスを初期化
             toolDFUImage = new ToolDFUImage();
@@ -86,7 +87,7 @@ namespace MaintenanceToolGUI
             if (dfuStartForm.OpenForm()) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
                 // DFU主処理開始
-                InvokeDFUProcess();
+                DoProcessDFU();
             } else {
                 // キャンセルボタンがクリックされた場合は
                 // メイン画面に通知
@@ -205,7 +206,8 @@ namespace MaintenanceToolGUI
                 NeedCompareUpdateVersion = false;
 
                 // バージョン情報を比較して終了判定
-                mainForm.OnAppMainProcessExited(CompareUpdateVersion());
+                // --> 判定結果を処理進捗画面に戻す
+                dfuProcessingForm.NotifyTerminateDFUProcess(CompareUpdateVersion());
             }
         }
 
@@ -262,8 +264,26 @@ namespace MaintenanceToolGUI
         // 
         // DFU主処理
         // 
+        private void DoProcessDFU()
+        {
+            // DFU主処理を起動
+            Task task = Task.Run(() => {
+                InvokeDFUProcess();
+            });
+
+            // 処理進捗画面を表示
+            bool ret = dfuProcessingForm.OpenForm();
+
+            // 処理結果（成功 or 失敗）をメイン画面に戻す
+            mainForm.OnAppMainProcessExited(ret);
+        }
+
         private void InvokeDFUProcess()
         {
+            // 処理進捗画面にDFU処理開始を通知
+            dfuProcessingForm.NotifyStartDFUProcess();
+            dfuProcessingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_TRANSFER_IMAGE);
+
             // メイン画面に主処理開始を通知
             mainForm.OnDFUStarted();
 
@@ -277,12 +297,15 @@ namespace MaintenanceToolGUI
             dfuDevice.CloseDFUDevice();
 
             if (success) {
+                // 処理進捗画面に通知
+                dfuProcessingForm.NotifyDFUProcess(ToolGUICommon.MSG_DFU_PROCESS_WAITING_UPDATE);
+
                 // DFU転送成功時は、バージョン更新判定フラグをセット
                 NeedCompareUpdateVersion = true;
 
             } else {
-                // DFU転送失敗時はメイン画面に制御を戻す
-                mainForm.OnAppMainProcessExited(success);
+                // DFU転送失敗時は処理進捗画面に制御を戻す
+                dfuProcessingForm.NotifyTerminateDFUProcess(success);
             }
         }
     }

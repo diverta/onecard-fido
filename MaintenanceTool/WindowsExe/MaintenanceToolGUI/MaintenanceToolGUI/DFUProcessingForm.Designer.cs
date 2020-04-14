@@ -34,7 +34,7 @@
             // LevelIndicator
             // 
             this.LevelIndicator.Location = new System.Drawing.Point(12, 26);
-            this.LevelIndicator.Maximum = 20;
+            this.LevelIndicator.Maximum = 22;
             this.LevelIndicator.Name = "LevelIndicator";
             this.LevelIndicator.Size = new System.Drawing.Size(285, 25);
             this.LevelIndicator.Step = 1;
@@ -56,6 +56,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(309, 126);
+            this.ControlBox = false;
             this.Controls.Add(this.LabelProgress);
             this.Controls.Add(this.LevelIndicator);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
