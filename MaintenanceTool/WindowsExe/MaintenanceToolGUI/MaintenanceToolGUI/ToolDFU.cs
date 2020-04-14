@@ -8,6 +8,7 @@ namespace MaintenanceToolGUI
         // 画面の参照を保持
         private MainForm mainForm;
         private DFUStartForm dfuStartForm;
+        private DFUNewStartForm dfuNewStartForm;
         private DFUProcessingForm dfuProcessingForm;
 
         // 処理クラスの参照を保持
@@ -32,6 +33,14 @@ namespace MaintenanceToolGUI
         // バージョン更新判定フラグ
         private bool NeedCompareUpdateVersion;
 
+        // 処理区分
+        private enum ToolDFUCommand
+        {
+            CommandDFU = 0,
+            CommandDFUNew
+        };
+        private ToolDFUCommand Command;
+
         public ToolDFU(MainForm f, HIDMain h)
         {
             // メイン画面の参照を保持
@@ -51,6 +60,7 @@ namespace MaintenanceToolGUI
 
             // 処理開始／進捗画面を生成
             dfuStartForm = new DFUStartForm(this);
+            dfuNewStartForm = new DFUNewStartForm(this);
             dfuProcessingForm = new DFUProcessingForm();
 
             // 更新イメージクラスを初期化
@@ -83,6 +93,9 @@ namespace MaintenanceToolGUI
                 return;
             }
 
+            // 処理区分を設定
+            Command = ToolDFUCommand.CommandDFU;
+
             // 処理開始画面を表示
             if (dfuStartForm.OpenForm()) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
@@ -103,19 +116,19 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // DFU処理を開始するかどうかのプロンプトを表示
-            string message = string.Format("{0}\n\n{1}",
-                ToolGUICommon.MSG_COMMENT_START_DFU_PROCESS,
-                ToolGUICommon.MSG_PROMPT_START_DFU_PROCESS
-                );
-            if (FormUtil.DisplayPromptPopup(message) == false) {
-                NotifyCancel();
-                return;
-            }
+            // 処理区分を設定
+            Command = ToolDFUCommand.CommandDFUNew;
 
-            // ファームウェア新規導入処理を開始する
-            // TODO: 下記は仮コードです。
-            NotifyCancel();
+            // 処理開始画面を表示
+            if (dfuNewStartForm.OpenForm()) {
+                // 処理開始画面でOKクリック-->DFU接続成功の場合、
+                // DFU主処理開始
+                DoProcessDFU();
+            } else {
+                // キャンセルボタンがクリックされた場合は
+                // メイン画面に通知
+                NotifyCancel();
+            }
         }
 
         private void NotifyCancel()
@@ -232,7 +245,7 @@ namespace MaintenanceToolGUI
         //
         // DFU対象デバイス接続処理
         //
-        private void EstablishDFUConnection()
+        public void EstablishDFUConnection()
         {
             // DFU対象デバイスに接続（USB CDC ACM接続）
             dfuDevice.SearchACMDevicePath();
@@ -240,10 +253,18 @@ namespace MaintenanceToolGUI
 
         private void DFUConnectionEstablished(bool success)
         {
-            // 処理開始画面に制御を戻す
-            dfuStartForm.OnChangeToBootloaderMode(success, 
-                MainForm.GetMaintenanceToolTitle(), 
-                ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
+            if (Command == ToolDFUCommand.CommandDFUNew) {
+                // 処理開始画面に制御を戻す
+                dfuNewStartForm.OnDFUConnectionEstablished(success,
+                    MainForm.GetMaintenanceToolTitle(),
+                    ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
+
+            } else {
+                // 処理開始画面に制御を戻す
+                dfuStartForm.OnChangeToBootloaderMode(success,
+                    MainForm.GetMaintenanceToolTitle(),
+                    ToolGUICommon.MSG_DFU_TARGET_NOT_CONNECTED);
+            }
         }
 
         //
