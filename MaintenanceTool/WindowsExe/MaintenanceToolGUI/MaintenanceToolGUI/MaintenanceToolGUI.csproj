@@ -85,6 +85,12 @@
     <Compile Include="CBOREncoder.cs" />
     <Compile Include="CommandTimer.cs" />
     <Compile Include="DFUDevice.cs" />
+    <Compile Include="DFUNewStartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DFUNewStartForm.Designer.cs">
+      <DependentUpon>DFUNewStartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DFUProcessingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -227,6 +233,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DFUNewStartForm.resx">
+      <DependentUpon>DFUNewStartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DFUProcessingForm.resx">
       <DependentUpon>DFUProcessingForm.cs</DependentUpon>
     </EmbeddedResource>
