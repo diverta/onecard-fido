@@ -45,6 +45,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewLogFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DFUToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,6 +60,7 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.DFUNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -188,7 +190,9 @@
             // ファイルFToolStripMenuItem
             // 
             this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ViewLogFileToolStripMenuItem});
+            this.ViewLogFileToolStripMenuItem,
+            this.DFUToolStripMenuItem,
+            this.DFUNewToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
             this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
@@ -199,6 +203,13 @@
             this.ViewLogFileToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.ViewLogFileToolStripMenuItem.Text = "管理ツールのログを参照(&L)";
             this.ViewLogFileToolStripMenuItem.Click += new System.EventHandler(this.ViewLogFileToolStripMenuItem_Click);
+            // 
+            // DFUToolStripMenuItem
+            // 
+            this.DFUToolStripMenuItem.Name = "DFUToolStripMenuItem";
+            this.DFUToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.DFUToolStripMenuItem.Text = "ファームウェアを更新";
+            this.DFUToolStripMenuItem.Click += new System.EventHandler(this.DFUToolStripMenuItem_Click);
             // 
             // テストTToolStripMenuItem
             // 
@@ -302,6 +313,13 @@
             this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
             this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
             // 
+            // DFUNewToolStripMenuItem
+            // 
+            this.DFUNewToolStripMenuItem.Name = "DFUNewToolStripMenuItem";
+            this.DFUNewToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.DFUNewToolStripMenuItem.Text = "ファームウェアを新規導入";
+            this.DFUNewToolStripMenuItem.Click += new System.EventHandler(this.DFUNewToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -366,6 +384,8 @@
         private System.Windows.Forms.ToolStripMenuItem DoHIDGetVersionInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewLogFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DFUToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DFUNewToolStripMenuItem;
     }
 }
 

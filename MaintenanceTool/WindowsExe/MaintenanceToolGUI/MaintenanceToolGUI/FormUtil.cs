@@ -1,11 +1,20 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MaintenanceToolGUI
 {
     class FormUtil
     {
+        public static void ShowErrorMessage(string captionText, string messageText)
+        {
+            MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public static void ShowWarningMessage(string captionText, string messageText)
+        {
+            MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
         public static bool DisplayPromptPopup(string message)
         {
             DialogResult dialogResult = MessageBox.Show(
@@ -31,62 +40,10 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public static string createFilePath(
-            SaveFileDialog dialog, string title, string fileName, string filter)
-        {
-            // ファイル保存ダイアログで生成されたパスを戻す
-            dialog.FileName = fileName;
-            dialog.Title = title;
-            dialog.Filter = filter;
-            dialog.FilterIndex = 0;
-            dialog.RestoreDirectory = true;
-            if (dialog.ShowDialog() != DialogResult.OK) {
-                return string.Empty;
-            }
-            return dialog.FileName;
-        }
-
-        public static bool checkMustEntry(TextBox textBox, string informativeText)
-        {
-            if (textBox.Text.Equals(string.Empty))
-            {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox.Focus();
-                return false;
-            }
-            return true;
-        }
-
-        public static bool checkFileExist(TextBox textBox, string informativeText)
-        {
-            if (File.Exists(textBox.Text) == false)
-            {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox.Focus();
-                return false;
-            }
-            return true;
-        }
-
-        public static bool checkIsNumber(TextBox textBox, string informativeText)
-        {
-            if (Regex.IsMatch(textBox.Text, "^[1-9]{1}[0-9]*$") == false)
-            {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBox.Focus();
-                return false;
-            }
-            return true;
-        }
-
         public static bool checkIsNumeric(TextBox textBox, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, "^[0-9]*$") == false) {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -98,8 +55,7 @@ namespace MaintenanceToolGUI
             if (destText.Text.Equals(srcText.Text)) {
                 return true;
             }
-            MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
             destText.Focus();
             return false;
         }
@@ -108,8 +64,7 @@ namespace MaintenanceToolGUI
         {
             int size = textBox.Text.Length;
             if (size < minSize || size > maxSize) {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -120,8 +75,7 @@ namespace MaintenanceToolGUI
         {
             int value = int.Parse(textBox.Text);
             if (value < minValue || value > maxValue) {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
@@ -131,8 +85,7 @@ namespace MaintenanceToolGUI
         public static bool checkValueWithPattern(TextBox textBox, string pattern, string informativeText)
         {
             if (Regex.IsMatch(textBox.Text, pattern) == false) {
-                MessageBox.Show(informativeText, MainForm.MaintenanceToolTitle,
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowWarningMessage(MainForm.MaintenanceToolTitle, informativeText);
                 textBox.Focus();
                 return false;
             }
