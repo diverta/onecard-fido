@@ -59,11 +59,15 @@ MDBT50Q Dongle基板上の物理的な操作無しで、MDBT50Q Dongleをブー�
 
 ## FIDO2について
 
-#### イメージ図
+最新バージョンのプログラムにより使用可能となった新機能「BLEデバイスによる自動認証機能（パスワードレス・ボタンレス）」のイメージです。
 
-<img src="Documents/summary/sys_summary.png" width="600">
+<img src="FIDO2Device/MDBT50Q_Dongle/assets01/0000.jpg" width="720">
+<img src="FIDO2Device/MDBT50Q_Dongle/assets01/0001.jpg" width="720">
+<img src="FIDO2Device/MDBT50Q_Dongle/assets01/0002.jpg" width="720">
 
-<img src="Documents/summary/uc_summary.png" width="600">
+FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させる機能です。
+
+詳細につきましてはドキュメント<b>「[BLEデバイスによる自動認証機能](FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)」</b>をご参照願います。
 
 #### CTAP2とは
 
