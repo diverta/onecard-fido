@@ -21,6 +21,14 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2020/04/15
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェア導入・更新が、[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)により実行できるようになりました（[#300](https://github.com/diverta/onecard-fido/pull/300) ご参照）。<br>
+下記のバージョンをご使用願います。
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.27）](https://github.com/diverta/onecard-fido/blob/research-FIDO2MT-Windows-update-firmware-01/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.8）は、Windows版 FIDO認証器管理ツールに同梱されております。
+
 #### 2020/03/31
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェア導入・更新が、[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)により実行できるようになりました（[#319](https://github.com/diverta/onecard-fido/pull/319) ご参照）。<br>
@@ -29,8 +37,11 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 - <b>[macOS版 FIDO認証器管理ツール（Version 0.1.27）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-cmd-BLmode/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
 MDBT50Q_Dongleの最新ファームウェア（Version 0.2.8）は、macOS版 FIDO認証器管理ツールに同梱されております。
 
-macOS版管理ツールを使用して、MDBT50Q Dongleにファームウェア導入・更新を実行するためには、MDBT50Q Dongleに、新規制作した[「署名機能付きUSBブートローダー」](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-cmd-BLmode/nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入する必要がございます。<br>
-手順につきましては<b>[「署名機能付きUSBブートローダー移行手順書」](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-cmd-BLmode/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)</b>をご参照願います。
+#### ご注意
+
+管理ツールを使用して、MDBT50Q Dongleにファームウェア導入・更新を実行するためには、MDBT50Q Dongleに、新規制作した[「署名機能付きUSBブートローダー」](https://github.com/diverta/onecard-fido/tree/research-FIDO2MT-Windows-update-firmware-01/nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入する必要がございます。<br>
+手順につきましては<b>[「署名機能付きUSBブートローダー移行手順書」](https://github.com/diverta/onecard-fido/blob/research-FIDO2MT-Windows-update-firmware-01/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)</b>をご参照願います。
+
 
 #### 2020/03/30
 
