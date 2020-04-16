@@ -11,6 +11,7 @@ namespace MaintenanceToolGUI
         private BLEMain ble;
         private HIDMain hid;
         private ToolPreference toolPreference;
+        private ToolDFU toolDFU;
         private string commandTitle = "";
 
         // 管理ツールの情報
@@ -46,6 +47,9 @@ namespace MaintenanceToolGUI
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
             toolPreference.SetTitleAndVersionText();
+
+            // DFU処理クラスを生成
+            toolDFU = new ToolDFU(this, hid);
         }
 
         public static string GetMaintenanceToolTitle()
@@ -263,7 +267,7 @@ namespace MaintenanceToolGUI
         public bool CheckUSBDeviceDisconnected()
         {
             if (hid.IsUSBDeviceDisconnected()) {
-                MessageBox.Show(AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET, MaintenanceToolTitle);
+                FormUtil.ShowWarningMessage(MaintenanceToolTitle, AppCommon.MSG_CMDTST_PROMPT_USB_PORT_SET);
                 return true;
             }
             return false;
@@ -298,8 +302,7 @@ namespace MaintenanceToolGUI
 
             // 未入力の場合はポップアップメッセージを表示して
             // テキストボックスにフォーカスを移す
-            MessageBox.Show(errorMessage, MaintenanceToolTitle,
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            FormUtil.ShowWarningMessage(MaintenanceToolTitle, errorMessage);
             textBox.Focus();
 
             return false;
@@ -478,6 +481,56 @@ namespace MaintenanceToolGUI
             // 管理ツールのログファイルを格納している
             // フォルダーを、Windowsのエクスプローラで参照
             Process.Start(AppCommon.OutputLogFileDirectoryPath());
+        }
+
+        private void DFUToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // DFU処理を実行
+            DoCommandDFU(sender, e);
+        }
+
+        private void DFUNewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // DFU処理を実行
+            DoCommandDFU(sender, e);
+        }
+
+        //
+        // DFU関連インターフェース
+        //
+        private void DoCommandDFU(object sender, EventArgs e)
+        {
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // 処理名称を設定し、処理を開始
+            commandTitle = ToolGUICommon.PROCESS_NAME_USB_DFU;
+            if (sender.Equals(DFUNewToolStripMenuItem)) {
+                // ファームウェア新規導入
+                toolDFU.DoCommandDFUNew();
+            } else {
+                // ファームウェア更新
+                toolDFU.DoCommandDFU();
+            }
+        }
+
+        public void OnDFUStarted()
+        {
+            // 開始メッセージを表示
+            DisplayStartMessage(commandTitle);
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+        }
+
+        public void OnDFUCanceled()
+        {
+            // ボタンを押下可能とする
+            enableButtons(true);
         }
 
         protected override void WndProc(ref Message m)

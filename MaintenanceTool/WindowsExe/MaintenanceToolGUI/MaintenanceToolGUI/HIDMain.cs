@@ -17,6 +17,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_GET_FLASH_STAT = 0xc2;
         public const int HID_CMD_GET_VERSION_INFO = 0xc3;
         public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
+        public const int HID_CMD_BOOTLOADER_MODE = 0xc5;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
@@ -53,6 +54,13 @@ namespace MaintenanceToolGUI
         // 実行機能を保持
         private AppCommon.RequestType requestType;
 
+        // DFU処理
+        public ToolDFU ToolDFURef;
+
+        // バージョン照会の処理区分
+        // true=HID接続完了時に実行, false=メニューからの実行
+        private bool GetVersionInfoForDFU;
+
         public HIDMain(MainForm f)
         {
             // メイン画面の参照を保持
@@ -62,6 +70,7 @@ namespace MaintenanceToolGUI
             // イベントの登録
             hidProcess.MessageTextEvent += new HIDProcess.MessageTextEventHandler(PrintMessageText);
             hidProcess.ReceiveHIDMessageEvent += new HIDProcess.ReceiveHIDMessageEventHandler(ReceiveHIDMessage);
+            hidProcess.HIDConnectedEvent += new HIDProcess.HIDConnectedEventHandler(NotifyHIDConnected);
 
             // FIDOデバイスに接続
             //  ウィンドウのハンドルを引き渡す
@@ -91,6 +100,7 @@ namespace MaintenanceToolGUI
         public void OnUSBDeviceRemoveComplete()
         {
             hidProcess.OnUSBDeviceRemoveComplete();
+            ToolDFURef.OnUSBDeviceRemoveComplete();
         }
 
         private void ReceiveHIDMessage(byte[] message, int length)
@@ -122,10 +132,16 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_TOOL_PREF_PARAM:
                 toolPreference.DoResponseToolPreference(message, length);
                 break;
+            case Const.HID_CMD_BOOTLOADER_MODE:
+                ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
+                break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
                     // ツール設定から呼び出された場合は、ツール設定クラスに制御を戻す
                     toolPreference.OnHidMainProcessExited(false, AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
+                } else if (requestType == AppCommon.RequestType.ChangeToBootloaderMode) {
+                    // DFU処理から呼び出された場合は、DFU処理クラスに制御を戻す
+                    ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
                 } else {
                     // メイン画面に制御を戻す
                     mainForm.OnPrintMessageText(AppCommon.MSG_OCCUR_UNKNOWN_ERROR);
@@ -133,6 +149,12 @@ namespace MaintenanceToolGUI
                 }
                 break;
             }
+        }
+
+        private void NotifyHIDConnected()
+        {
+            // HID接続処理が完了したら、DFU処理に通知
+            ToolDFURef.OnUSBDeviceArrival();
         }
 
         private void PrintMessageText(string messageText)
@@ -243,6 +265,10 @@ namespace MaintenanceToolGUI
             case AppCommon.RequestType.AuthReset:
                 // Reset処理を続行
                 ctap2.DoRequestAuthReset();
+                break;
+            case AppCommon.RequestType.ChangeToBootloaderMode:
+                // ブートローダー遷移コマンドを実行
+                DoRequestCommandBootloaderMode();
                 break;
             default:
                 break;
@@ -390,6 +416,14 @@ namespace MaintenanceToolGUI
                 return;
             }
             // コマンドバイトだけを送信する
+            GetVersionInfoForDFU = false;
+            hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_VERSION_INFO, RequestData, 0);
+        }
+
+        public void DoGetVersionInfoForDFU()
+        {
+            // コマンドバイトだけを送信する
+            GetVersionInfoForDFU = true;
             hidProcess.SendHIDMessage(CIDBytes, Const.HID_CMD_GET_VERSION_INFO, RequestData, 0);
         }
 
@@ -412,6 +446,14 @@ namespace MaintenanceToolGUI
                 } else if (v.StartsWith("HW_REV=")) {
                     strHWRev = v.Split('=')[1].Replace("\"", "");
                 }
+            }
+
+            if (GetVersionInfoForDFU) {
+                // DFU処理のためのバージョン照会
+                // (HID接続完了時の処理) である場合、
+                // DFU処理クラスにバージョンを通知
+                ToolDFURef.NotifyFirmwareVersionResponse(strFWRev);
+                return;
             }
 
             // 画面に制御を戻す
@@ -489,6 +531,21 @@ namespace MaintenanceToolGUI
             }
             // INITコマンドを実行し、nonce を送信する
             DoRequestCtapHidInit(AppCommon.RequestType.TestCtapHidPing);
+        }
+
+        //
+        // ブートローダー遷移コマンド
+        //
+        public void DoCommandChangeToBootloaderMode()
+        {
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.ChangeToBootloaderMode);
+        }
+
+        private void DoRequestCommandBootloaderMode()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
         }
     }
 }

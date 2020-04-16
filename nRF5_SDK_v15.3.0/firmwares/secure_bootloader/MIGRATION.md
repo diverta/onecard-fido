@@ -160,6 +160,9 @@ nRF Connectを起動します。<br>
 ## アプリケーション・ファームウェアの新規導入
 
 続いて、管理ツールにより、[アプリケーション・ファームウェア](../../../nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.8.zip)を導入してください。<br>
-詳細につきましては、手順書[「ファームウェア新規導入手順」](../../../MaintenanceTool/macOSApp/INSTALLFIRMWARE.md)をご参照願います。
+詳細につきましては、下記の手順書をご参照願います。
+
+- <b>[ファームウェア新規導入手順（macOS版）](../../../MaintenanceTool/macOSApp/INSTALLFIRMWARE.md)</b>
+- <b>[ファームウェア新規導入手順（Windows版）](../../../MaintenanceTool/WindowsExe/INSTALLFIRMWARE.md)</b>
 
 アプリケーション・ファームウェアの新規導入が終わりましたら、MDBT50Q Dongleの「署名機能付きUSBブートローダー」への移行作業は完了になります。

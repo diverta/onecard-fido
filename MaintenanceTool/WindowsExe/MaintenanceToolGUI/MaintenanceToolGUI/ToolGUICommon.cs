@@ -51,6 +51,27 @@
         public const string MSG_CLEAR_UUID_SCAN_PARAM = "FIDO認証器上の自動認証設定を解除します。";
         public const string MSG_WRITE_UUID_SCAN_PARAM = "FIDO認証器上の自動認証設定を変更します。";
 
+        // USB DFU関連
+        public const string MSG_DFU_IMAGE_NOT_AVAILABLE = "ファームウェア更新機能が利用できません。";
+        public const string MSG_DFU_IMAGE_FILENAME_CANNOT_GET = "更新ファームウェアファイル名の取得に失敗しました。";
+        public const string MSG_DFU_IMAGE_READ_FAILED = "更新ファームウェアの読込に失敗しました。";
+        public const string MSG_DFU_IMAGE_TRANSFER_FAILED = "更新ファームウェアの転送に失敗しました。";
+        public const string MSG_DFU_IMAGE_TRANSFER_SUCCESS = "更新ファームウェアの転送が完了しました。";
+        public const string MSG_DFU_TARGET_NOT_BOOTLOADER_MODE = "FIDO認証器をブートローダーモードに遷移させることができません。";
+        public const string MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER = "FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。";
+        public const string MSG_DFU_TARGET_NOT_CONNECTED = "FIDO認証器がブートローダーモードに遷移していません。";
+        public const string MSG_DFU_UPDATE_VERSION_UNKNOWN = "FIDO認証器ファームウェアの更新バージョンが不明です。";
+        public const string MSG_DFU_CURRENT_VERSION_UNKNOWN = "FIDO認証器ファームウェアの現在バージョンが不明です。";
+        public const string MSG_DFU_FIRMWARE_VERSION_UPDATED = "FIDO認証器ファームウェアのバージョンが{0}に更新されました。";
+        public const string MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED = "FIDO認証器ファームウェアのバージョンを{0}に更新できませんでした。";
+        public const string MSG_DFU_PROCESS_TIMEOUT = "FIDO認証器ファームウェアの更新処理がタイムアウトしました。";
+        public const string MSG_DFU_PROCESS_TITLE_GOING = "ファームウェアを更新しています";
+        public const string MSG_DFU_PROCESS_TITLE_END = "ファームウェアの更新が完了しました";
+        public const string MSG_DFU_PROCESS_TRANSFER_IMAGE = "更新ファームウェアを転送中です。";
+        public const string MSG_DFU_PROCESS_WAITING_UPDATE = "転送された更新ファームウェアの反映を待機中です。";
+        public const string MSG_PROMPT_START_DFU_PROCESS = "ファームウェア新規導入処理を開始しますか？";
+        public const string MSG_COMMENT_START_DFU_PROCESS = "署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の黄色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち「はい」ボタンをクリックすると、\nファームウェア新規導入処理が開始されます。";
+
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_ERASE_SKEY_CERT = "鍵・証明書・キーハンドル削除処理";
         public const string PROCESS_NAME_INSTALL_SKEY_CERT = "鍵・証明書インストール";
@@ -66,6 +87,7 @@
         public const string PROCESS_NAME_CLIENT_PIN_SET = "PINコード新規設定";
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "PINコード解除";
+        public const string PROCESS_NAME_USB_DFU = "FIDO認証器のファームウェア更新";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";
