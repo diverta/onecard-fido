@@ -10,6 +10,13 @@ CFLAGS += -DFW_REV=\"$(FW_REV)\"
 HW_REV := 0.2
 CFLAGS += -DHW_REV=\"$(HW_REV)\"
 
+# enable log output on PCA10056
+ifeq ("$(TARGET_BOARD)","PCA10056")
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+else
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device

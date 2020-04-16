@@ -18,9 +18,8 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// SCL/SDA signal pin
-#define TWI_SCL_PIN     NRF_GPIO_PIN_MAP(0, 4)
-#define TWI_SDA_PIN     NRF_GPIO_PIN_MAP(0, 26)
+// for pin assign
+#include "fido_board.h"
 
 // for debug data
 #define LOG_DEBUG_HEX_DATA false

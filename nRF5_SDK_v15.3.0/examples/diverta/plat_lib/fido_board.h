@@ -36,6 +36,21 @@ extern "C" {
 #define MANUFACTURER_NAME   "Diverta Inc."
 #define MODEL_NUM           "0001"
 
+// SCL/SDA signal pin
+#define TWI_SCL_PIN     NRF_GPIO_PIN_MAP(0,2)   // rev2 AIN0
+#define TWI_SDA_PIN     NRF_GPIO_PIN_MAP(0,6)   // rev2 UART_TX
+
+//
+// LEDのピン
+//
+#if defined(BOARD_PCA10059)
+#define LED_R   NRF_GPIO_PIN_MAP(1,10)  // rev2 LED1
+#define LED_Y   LED1_G                  // rev2 LED3
+#else
+#define LED_R   LED_1
+#define LED_Y   LED_2
+#endif
+
 // LED種別
 typedef enum _LED_COLOR {
     LED_COLOR_NONE = 0,
