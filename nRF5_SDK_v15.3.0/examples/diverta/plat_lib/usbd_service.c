@@ -15,6 +15,7 @@
 #include "app_error.h"
 
 #include "usbd_service.h"
+#include "usbd_service_ccid.h"
 #include "usbd_service_cdc.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
@@ -230,6 +231,7 @@ void usbd_service_start(void)
 {
     // USBデバイスクラスを初期化
     usbd_hid_init();
+    usbd_ccid_init();
     
     // USBデバイスを開始
     ret_code_t ret = app_usbd_power_events_enable();
