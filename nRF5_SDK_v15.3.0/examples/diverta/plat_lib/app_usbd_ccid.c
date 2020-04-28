@@ -76,6 +76,50 @@ static void ccid_reset_port(app_usbd_class_inst_t const *p_inst)
 }
 
 /**
+ * @brief Internal SETUP standard IN request handler.
+ *
+ * @param[in] p_inst        Generic class instance.
+ * @param[in] p_setup_ev    Setup event.
+ *
+ * @return Standard error code.
+ */
+static ret_code_t setup_req_std_in(app_usbd_class_inst_t const *p_inst,
+                                   app_usbd_setup_evt_t const *p_setup_ev)
+{
+    app_usbd_setup_reqrec_t req_rec = app_usbd_setup_req_rec(p_setup_ev->setup.bmRequestType);
+    NRF_LOG_DEBUG("bmRequestType=%u, bRequest=%u", req_rec, p_setup_ev->setup.bRequest);
+    
+    // Only Get Descriptor standard IN request is supported by CCID class
+    if ((req_rec == APP_USBD_SETUP_REQREC_DEVICE) &&
+        (p_setup_ev->setup.bRequest == APP_USBD_SETUP_STDREQ_GET_DESCRIPTOR)) {
+        size_t dsc_len = 0;
+        size_t max_size;
+        uint8_t *p_trans_buff = app_usbd_core_setup_transfer_buff_get(&max_size);
+
+        // Try to find descriptor in class internals
+        NRF_LOG_DEBUG("Try to find descriptor in class internals: type=%02x, index=%02x", 
+            p_setup_ev->setup.wValue.hb, p_setup_ev->setup.wValue.lb);
+        ret_code_t ret = app_usbd_class_descriptor_find(
+            p_inst,
+            p_setup_ev->setup.wValue.hb,
+            p_setup_ev->setup.wValue.lb,
+            p_trans_buff,
+            &dsc_len);
+
+        if (ret != NRF_ERROR_NOT_FOUND) {
+            ASSERT(dsc_len < NRF_DRV_USBD_EPSIZE);
+            NRF_LOG_DEBUG("Found descriptor in class internals");
+            return app_usbd_core_setup_rsp(&(p_setup_ev->setup), p_trans_buff, dsc_len);
+
+        } else {
+            NRF_LOG_ERROR("Unable to find descriptor in class internals");
+        }
+    }
+
+    return NRF_ERROR_NOT_SUPPORTED;
+}
+
+/**
  * @brief Control endpoint handler.
  *
  * @param[in] p_inst        Generic class instance.
@@ -93,6 +137,7 @@ static ret_code_t setup_event_handler(app_usbd_class_inst_t const *p_inst,
     if (app_usbd_setup_req_dir(p_setup_ev->setup.bmRequestType) == APP_USBD_SETUP_REQDIR_IN) {
         switch (app_usbd_setup_req_typ(p_setup_ev->setup.bmRequestType)) {
             case APP_USBD_SETUP_REQTYPE_STD:
+                setup_req_std_in(p_inst, p_setup_ev);
                 NRF_LOG_DEBUG("setup_req_std_in");
                 break;
             case APP_USBD_SETUP_REQTYPE_CLASS:
@@ -132,18 +177,19 @@ static ret_code_t setup_event_handler(app_usbd_class_inst_t const *p_inst,
 static ret_code_t ccid_endpoint_ev(app_usbd_class_inst_t const *p_inst,
                                    app_usbd_complex_evt_t const *p_event)
 {
-    NRF_LOG_DEBUG("ccid_endpoint_ev called");
-
     ret_code_t ret = NRF_SUCCESS;
     if (NRF_USBD_EPIN_CHECK(p_event->drv_evt.data.eptransfer.ep)) {
+        NRF_LOG_DEBUG("NRF_USBD_EPIN: %d", p_event->drv_evt.data.eptransfer.status);
         switch (p_event->drv_evt.data.eptransfer.status) {
             case NRF_USBD_EP_OK:
                 NRF_LOG_DEBUG("EPIN_DATA: %02x done", p_event->drv_evt.data.eptransfer.ep);
                 user_event_handler(p_inst, APP_USBD_CCID_USER_EVT_TX_DONE);
                 break;
             case NRF_USBD_EP_ABORTED:
+                NRF_LOG_DEBUG("NRF_USBD_EPIN: NRF_USBD_EP_ABORTED");
                 break;
             default:
+                NRF_LOG_DEBUG("NRF_USBD_EPIN: %u", p_event->drv_evt.data.eptransfer.status);
                 ret = NRF_ERROR_INTERNAL;
                 break;
         }
@@ -155,14 +201,19 @@ static ret_code_t ccid_endpoint_ev(app_usbd_class_inst_t const *p_inst,
                 user_event_handler(p_inst, APP_USBD_CCID_USER_EVT_RX_DONE);
                 break;
             case NRF_USBD_EP_WAITING:
+                NRF_LOG_DEBUG("NRF_USBD_EPOUT: NRF_USBD_EP_WAITING");
+                break;
             case NRF_USBD_EP_ABORTED:
+                NRF_LOG_DEBUG("NRF_USBD_EPOUT: NRF_USBD_EP_ABORTED");
                 break;
             default:
+                NRF_LOG_DEBUG("NRF_USBD_EPOUT: %u", p_event->drv_evt.data.eptransfer.status);
                 ret = NRF_ERROR_INTERNAL;
                 break;
         }
 
     } else {
+        NRF_LOG_ERROR("unknown ep: %u", p_event->drv_evt.data.eptransfer.status);
         ret = NRF_ERROR_NOT_SUPPORTED;
     }
 
@@ -177,6 +228,7 @@ static ret_code_t ccid_event_handler(app_usbd_class_inst_t const *p_inst,
 {
     ASSERT(p_inst != NULL);
     ASSERT(p_event != NULL);
+    NRF_LOG_DEBUG("ccid_event_handler: type=%d", p_event->app_evt.type);
 
     ret_code_t ret = NRF_SUCCESS;
     switch (p_event->app_evt.type) {
@@ -185,15 +237,20 @@ static ret_code_t ccid_event_handler(app_usbd_class_inst_t const *p_inst,
         case APP_USBD_EVT_DRV_RESET:
             ccid_reset_port(p_inst);
             break;
+        case APP_USBD_EVT_DRV_SUSPEND:
+            break;
+        case APP_USBD_EVT_DRV_RESUME:
+            break;
+        case APP_USBD_EVT_DRV_WUREQ:
+            break;
         case APP_USBD_EVT_DRV_SETUP:
             ret = setup_event_handler(p_inst, (app_usbd_setup_evt_t const *)p_event);
             break;
         case APP_USBD_EVT_DRV_EPTRANSFER:
             ret = ccid_endpoint_ev(p_inst, p_event);
             break;
-        case APP_USBD_EVT_DRV_SUSPEND:
-            break;
-        case APP_USBD_EVT_DRV_RESUME:
+        case APP_USBD_EVT_POWER_REMOVED:
+            ccid_reset_port(p_inst);
             break;
         case APP_USBD_EVT_INST_APPEND:
             break;
@@ -202,9 +259,6 @@ static ret_code_t ccid_event_handler(app_usbd_class_inst_t const *p_inst,
         case APP_USBD_EVT_STARTED:
             break;
         case APP_USBD_EVT_STOPPED:
-            break;
-        case APP_USBD_EVT_POWER_REMOVED:
-            ccid_reset_port(p_inst);
             break;
         default:
             ret = NRF_ERROR_NOT_SUPPORTED;
