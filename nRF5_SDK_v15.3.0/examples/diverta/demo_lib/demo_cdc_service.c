@@ -12,7 +12,7 @@
 // プラットフォーム固有のインターフェース
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
-#include "usbd_service.h"
+#include "usbd_service_cdc.h"
 #include "demo_cdc_service.h"
 
 // 業務処理／HW依存処理間のインターフェース
