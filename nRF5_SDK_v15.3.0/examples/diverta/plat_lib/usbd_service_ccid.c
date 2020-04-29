@@ -40,4 +40,6 @@ void usbd_ccid_init(void)
         NRF_LOG_ERROR("app_usbd_class_append(class_ccid) returns 0x%02x ", ret);
     }
     APP_ERROR_CHECK(ret);
+
+    NRF_LOG_DEBUG("usbd_ccid_init() done");
 }

@@ -15,10 +15,6 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-#define APP_USBD_CCID_DATA_IFACE_IDX 1    /**< CCID class data interface index. */
-#define APP_USBD_CCID_DATA_EPIN_IDX  0    /**< CCID data class endpoint IN index. */
-#define APP_USBD_CCID_DATA_EPOUT_IDX 1    /**< CCID data class endpoint OUT index. */
-
 /**
  * @brief Auxiliary function to access ccid class instance data.
  *

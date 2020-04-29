@@ -202,6 +202,8 @@ static void usbd_hid_init(void)
         NRF_LOG_ERROR("app_usbd_class_append(class_inst_generic) returns 0x%02x ", ret);
     }
     APP_ERROR_CHECK(ret);
+
+    NRF_LOG_DEBUG("usbd_hid_init() done");
 }
 
 void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
@@ -231,7 +233,11 @@ void usbd_service_start(void)
 {
     // USBデバイスクラスを初期化
     usbd_hid_init();
-    usbd_ccid_init();
+    if (false) {
+        // 現在閉塞中
+        usbd_ccid_init();
+        usbd_cdc_init();
+    }
     
     // USBデバイスを開始
     ret_code_t ret = app_usbd_power_events_enable();
