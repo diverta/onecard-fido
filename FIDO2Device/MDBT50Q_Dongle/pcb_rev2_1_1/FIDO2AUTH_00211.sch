@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -276,18 +276,6 @@ Metric Code Size 1005</description>
 <smd name="2" x="0.6" y="0" dx="0.925" dy="0.74" layer="1"/>
 <text x="-1.190625" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
 <text x="-1.214375" y="-1.370625" size="0.7112" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.5" y1="-0.25" x2="-0.225" y2="0.25" layer="51"/>
-<rectangle x1="0.225" y1="-0.25" x2="0.5" y2="0.25" layer="51"/>
-</package>
-<package name="C0402K@1">
-<description>&lt;b&gt;Ceramic Chip Capacitor KEMET 0204 Reflow solder&lt;/b&gt;&lt;p&gt;
-Metric Code Size 1005</description>
-<wire x1="-0.425" y1="0.2" x2="0.425" y2="0.2" width="0.1016" layer="51"/>
-<wire x1="0.425" y1="-0.2" x2="-0.425" y2="-0.2" width="0.1016" layer="51"/>
-<smd name="1" x="-0.6" y="0" dx="0.925" dy="0.74" layer="1"/>
-<smd name="2" x="0.6" y="0" dx="0.925" dy="0.74" layer="1"/>
-<text x="-1.214375" y="0.821875" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-1.373125" y="-1.45" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="-0.5" y1="-0.25" x2="-0.225" y2="0.25" layer="51"/>
 <rectangle x1="0.225" y1="-0.25" x2="0.5" y2="0.25" layer="51"/>
 </package>
@@ -632,6 +620,22 @@ Wave soldering</description>
 <text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
 <rectangle x1="-1.1" y1="-1.5" x2="-0.7" y2="-1.1" layer="21"/>
 </package>
+<package name="C0402">
+<description>&lt;b&gt;Capacitor&lt;/b&gt;</description>
+<wire x1="-0.245" y1="0.224" x2="0.245" y2="0.224" width="0.1524" layer="51"/>
+<wire x1="0.245" y1="-0.224" x2="-0.245" y2="-0.224" width="0.1524" layer="51"/>
+<wire x1="-1.473" y1="0.483" x2="1.473" y2="0.483" width="0.0508" layer="39"/>
+<wire x1="1.473" y1="0.483" x2="1.473" y2="-0.483" width="0.0508" layer="39"/>
+<wire x1="1.473" y1="-0.483" x2="-1.473" y2="-0.483" width="0.0508" layer="39"/>
+<wire x1="-1.473" y1="-0.483" x2="-1.473" y2="0.483" width="0.0508" layer="39"/>
+<smd name="1" x="-0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
+<smd name="2" x="0.65" y="0" dx="0.7" dy="0.9" layer="1"/>
+<text x="-0.555625" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-0.555625" y="-1.42875" size="0.7112" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.554" y1="-0.3048" x2="-0.254" y2="0.2951" layer="51"/>
+<rectangle x1="0.2588" y1="-0.3048" x2="0.5588" y2="0.2951" layer="51"/>
+<rectangle x1="-0.1999" y1="-0.4001" x2="0.1999" y2="0.4001" layer="35"/>
+</package>
 </packages>
 <symbols>
 <symbol name="XTAL">
@@ -944,7 +948,16 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <technology name=""/>
 </technologies>
 </device>
-<device name="_0402" package="C0402K">
+<device name="_0402K" package="C0402K">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_0402" package="C0402">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -961,7 +974,16 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <gate name="G$1" symbol="FERRITE_BEAD" x="0" y="0"/>
 </gates>
 <devices>
-<device name="121SN1D" package="C0402K@1">
+<device name="121SN1D_" package="C0402K">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="121SN1D" package="C0402">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -1975,18 +1997,18 @@ Working distance&lt;br&gt;
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="C5" library="Parts" deviceset="CAP" device="_0603" value="0.01uF"/>
+<part name="C5" library="Parts" deviceset="CAP" device="_0402" value="0.01uF"/>
 <part name="C6" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
-<part name="C7" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
-<part name="C8" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
+<part name="C7" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="C8" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
 <part name="FB3" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="CN1" library="Connectors" deviceset="TE-1734028" device=""/>
-<part name="R1" library="Parts" deviceset="RESISTOR" device="_0603" value="10k"/>
-<part name="C9" library="Parts" deviceset="CAP" device="_0603" value="0.1uF"/>
+<part name="R1" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
+<part name="C9" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
 <part name="GND11" library="Supply" deviceset="0V" device=""/>
 <part name="SW1" library="Parts" deviceset="SKRPACE010" device=""/>
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
@@ -1994,10 +2016,10 @@ Working distance&lt;br&gt;
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
 <part name="LED1" library="Parts" deviceset="APHD1608" device="LSURCK"/>
 <part name="LED2" library="Parts" deviceset="APHF1608" device="LSEEQBDZGKC"/>
-<part name="R2" library="Parts" deviceset="RESISTOR" device="_0603" value="1.5k"/>
-<part name="R3" library="Parts" deviceset="RESISTOR" device="_0603" value="1.2k"/>
-<part name="R4" library="Parts" deviceset="RESISTOR" device="_0603" value="2.2k"/>
-<part name="R5" library="Parts" deviceset="RESISTOR" device="_0603" value="390"/>
+<part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
+<part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
+<part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="2.2k"/>
+<part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
 <part name="CN2" library="Connectors" deviceset="IF_5PIN" device="_H"/>
 <part name="GND14" library="Supply" deviceset="0V" device=""/>
 <part name="FRAME3" library="Generic" deviceset="A4L-LOC" device=""/>
@@ -2014,16 +2036,17 @@ Working distance&lt;br&gt;
 <part name="CN3" library="Connectors" deviceset="IF_3PIN" device=""/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
 <part name="LED3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
-<part name="R6" library="Parts" deviceset="RESISTOR" device="_0603" value="1.5k"/>
+<part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
+<part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="152.4" y="152.4" size="2.54" layer="91">32.768kHzクリスタル</text>
 <text x="203.2" y="152.4" size="2.54" layer="91">バイパスコンデンサー</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+    （rev2.1.1）</text>
 <text x="20.32" y="162.56" size="3.81" layer="91">モジュール部</text>
 <text x="167.64" y="91.44" size="2.54" layer="91">リセット回路</text>
 <text x="167.64" y="50.8" size="2.54" layer="91">MAIN SW</text>
@@ -2343,9 +2366,9 @@ Working distance&lt;br&gt;
 <text x="152.4" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
 <text x="152.4" y="81.28" size="2.54" layer="91">nRF52840アプリケーションを
 書込する際に使用します。</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+    （rev2.1.1）</text>
 <text x="124.46" y="66.04" size="2.54" layer="91">LED（黄色）</text>
 <text x="40.64" y="66.04" size="2.54" layer="91">LED（赤色）</text>
 <text x="76.2" y="66.04" size="2.54" layer="91">LED（３色）</text>
@@ -2637,9 +2660,9 @@ Working distance&lt;br&gt;
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
 <text x="78.74" y="60.96" size="2.54" layer="91">ボタン乾電池ケースは
 基板の背面に実装</text>
-<text x="218.44" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-      （rev2）</text>
+    （rev2.1.1）</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -2745,6 +2768,21 @@ Working distance&lt;br&gt;
 <label x="195.58" y="76.2" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
+</nets>
+</sheet>
+<sheet>
+<plain>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
+<text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
+    （rev2.1.1）</text>
+<text x="45.72" y="142.24" size="3.81" layer="91">セキュリティーIC部</text>
+</plain>
+<instances>
+<instance part="FRAME4" gate="G$1" x="0" y="0"/>
+</instances>
+<busses>
+</busses>
+<nets>
 </nets>
 </sheet>
 </sheets>
