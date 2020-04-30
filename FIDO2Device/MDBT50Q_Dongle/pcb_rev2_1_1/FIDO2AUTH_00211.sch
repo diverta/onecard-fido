@@ -613,12 +613,12 @@ Wave soldering</description>
 <wire x1="-0.5" y1="0" x2="0.1" y2="0.4" width="0.1524" layer="51"/>
 <wire x1="0.1" y1="0.4" x2="0.1" y2="-0.4" width="0.1524" layer="51"/>
 <wire x1="0.1" y1="-0.4" x2="-0.5" y2="0" width="0.1524" layer="51"/>
-<smd name="C" x="-1.45" y="0" dx="1.5" dy="1.2" layer="1"/>
-<smd name="A" x="1.45" y="0" dx="1.5" dy="1.2" layer="1"/>
+<smd name="C" x="-1.2" y="0" dx="1" dy="1.2" layer="1"/>
+<smd name="A" x="1.2" y="0" dx="1" dy="1.2" layer="1"/>
 <rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
 <text x="-1.16125" y="1.0875" size="0.7112" layer="25">&gt;NAME</text>
 <text x="-1.16125" y="-1.64625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
-<rectangle x1="-1.1" y1="-1.5" x2="-0.7" y2="-1.1" layer="21"/>
+<rectangle x1="-1.5" y1="-1.4" x2="-1.1" y2="-1" layer="21"/>
 </package>
 <package name="C0402">
 <description>&lt;b&gt;Capacitor&lt;/b&gt;</description>
@@ -1991,7 +1991,7 @@ Working distance&lt;br&gt;
 <part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
 <part name="BAT1" library="Connectors" deviceset="BAT-HLD-012-SMT" device=""/>
 <part name="GND18" library="Supply" deviceset="0V" device=""/>
-<part name="CN3" library="Connectors" deviceset="IF_3PIN" device=""/>
+<part name="CN3" library="Connectors" deviceset="IF_3PIN" device="_SOL" value="IF_3PIN_SOL"/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
 <part name="LED3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
 <part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
