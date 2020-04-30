@@ -209,6 +209,8 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
+  $(PLTLIB_DIR)/usbd_service_ccid.c \
+  $(PLTLIB_DIR)/usbd_service_cdc.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
@@ -223,6 +225,7 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
+  $(PLTLIB_DIR)/app_usbd_ccid.c \
 
 # source control for former hardware version
 ifeq ("$(HW_REV)","0.2")
