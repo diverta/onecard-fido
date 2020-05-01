@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1973,8 +1973,8 @@ Working distance&lt;br&gt;
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
 <part name="SW2" library="Parts" deviceset="SKTADAE010" device=""/>
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
-<part name="LED1" library="Parts" deviceset="APHD1608" device="LSURCK"/>
-<part name="LED2" library="Parts" deviceset="APHF1608" device="LSEEQBDZGKC"/>
+<part name="LD1" library="Parts" deviceset="APHD1608" device="LSURCK"/>
+<part name="LD2" library="Parts" deviceset="APHF1608" device="LSEEQBDZGKC"/>
 <part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="2.2k"/>
@@ -1993,7 +1993,7 @@ Working distance&lt;br&gt;
 <part name="GND18" library="Supply" deviceset="0V" device=""/>
 <part name="CN3" library="Connectors" deviceset="IF_3PIN" device="_SOL" value="IF_3PIN_SOL"/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
-<part name="LED3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
+<part name="LD3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
 <part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
 <part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="CN4" library="Connectors" deviceset="IF_3PIN" device="_SOL" value="IF_3PIN_SOL"/>
@@ -2318,18 +2318,18 @@ Working distance&lt;br&gt;
 <label x="45.72" y="27.94" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="P0.03" class="0">
+<net name="P0.25" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P0.03/AIN1"/>
-<wire x1="43.18" y1="91.44" x2="35.56" y2="91.44" width="0.1524" layer="91"/>
-<label x="35.56" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P0.25"/>
+<wire x1="104.14" y1="106.68" x2="114.3" y2="106.68" width="0.1524" layer="91"/>
+<label x="114.3" y="106.68" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="P1.14" class="0">
+<net name="P1.02" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="P1.14"/>
-<wire x1="43.18" y1="96.52" x2="35.56" y2="96.52" width="0.1524" layer="91"/>
-<label x="35.56" y="96.52" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="P1.02"/>
+<wire x1="104.14" y1="111.76" x2="114.3" y2="111.76" width="0.1524" layer="91"/>
+<label x="114.3" y="111.76" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -2362,17 +2362,17 @@ Working distance&lt;br&gt;
 <instance part="FB3" gate="G$1" x="76.2" y="111.76"/>
 <instance part="D1" gate="G$1" x="114.3" y="124.46"/>
 <instance part="CN1" gate="G$1" x="30.48" y="124.46"/>
-<instance part="LED1" gate="G$1" x="33.02" y="60.96" smashed="yes">
+<instance part="LD1" gate="G$1" x="33.02" y="60.96" smashed="yes">
 <attribute name="NAME" x="36.576" y="58.928" size="1.778" layer="95"/>
 <attribute name="VALUE" x="36.195" y="56.388" size="1.778" layer="96"/>
 </instance>
-<instance part="LED2" gate="G$1" x="73.66" y="60.96"/>
+<instance part="LD2" gate="G$1" x="73.66" y="60.96"/>
 <instance part="R2" gate="G$1" x="33.02" y="40.64" rot="R90"/>
 <instance part="R3" gate="G$1" x="63.5" y="40.64" rot="R90"/>
 <instance part="R4" gate="G$1" x="73.66" y="40.64" rot="R90"/>
 <instance part="R5" gate="G$1" x="83.82" y="40.64" rot="R90"/>
 <instance part="GND14" gate="1" x="190.5" y="53.34"/>
-<instance part="LED3" gate="G$1" x="119.38" y="60.96" smashed="yes">
+<instance part="LD3" gate="G$1" x="119.38" y="60.96" smashed="yes">
 <attribute name="NAME" x="122.936" y="58.928" size="1.778" layer="95"/>
 <attribute name="VALUE" x="122.555" y="56.388" size="1.778" layer="96"/>
 </instance>
@@ -2507,12 +2507,12 @@ Working distance&lt;br&gt;
 </net>
 <net name="VDD_NRF" class="0">
 <segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="LD1" gate="G$1" pin="A"/>
 <wire x1="33.02" y1="63.5" x2="33.02" y2="68.58" width="0.1524" layer="91"/>
 <label x="33.02" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 <segment>
-<pinref part="LED2" gate="G$1" pin="A"/>
+<pinref part="LD2" gate="G$1" pin="A"/>
 <wire x1="68.58" y1="63.5" x2="68.58" y2="68.58" width="0.1524" layer="91"/>
 <label x="68.58" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
@@ -2523,7 +2523,7 @@ Working distance&lt;br&gt;
 <wire x1="195.58" y1="66.04" x2="182.88" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="LED3" gate="G$1" pin="A"/>
+<pinref part="LD3" gate="G$1" pin="A"/>
 <wire x1="119.38" y1="63.5" x2="119.38" y2="68.58" width="0.1524" layer="91"/>
 <label x="119.38" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
@@ -2551,7 +2551,7 @@ Working distance&lt;br&gt;
 </net>
 <net name="N$11" class="0">
 <segment>
-<pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="LD1" gate="G$1" pin="C"/>
 <pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="33.02" y1="55.88" x2="33.02" y2="50.8" width="0.1524" layer="91"/>
 </segment>
@@ -2577,20 +2577,20 @@ Working distance&lt;br&gt;
 <pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="63.5" y1="50.8" x2="63.5" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="63.5" y1="53.34" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="LED2" gate="G$1" pin="CRED"/>
+<pinref part="LD2" gate="G$1" pin="CRED"/>
 <wire x1="68.58" y1="53.34" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
-<pinref part="LED2" gate="G$1" pin="CGREEN"/>
+<pinref part="LD2" gate="G$1" pin="CGREEN"/>
 <pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="73.66" y1="55.88" x2="73.66" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
-<pinref part="LED2" gate="G$1" pin="CBLUE"/>
+<pinref part="LD2" gate="G$1" pin="CBLUE"/>
 <wire x1="78.74" y1="55.88" x2="78.74" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="78.74" y1="53.34" x2="83.82" y2="53.34" width="0.1524" layer="91"/>
@@ -2599,7 +2599,7 @@ Working distance&lt;br&gt;
 </net>
 <net name="N$8" class="0">
 <segment>
-<pinref part="LED3" gate="G$1" pin="C"/>
+<pinref part="LD3" gate="G$1" pin="C"/>
 <pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="119.38" y1="55.88" x2="119.38" y2="50.8" width="0.1524" layer="91"/>
 </segment>
@@ -2743,7 +2743,7 @@ Working distance&lt;br&gt;
 <label x="195.58" y="76.2" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
-<net name="P0.03" class="0">
+<net name="P0.25" class="0">
 <segment>
 <pinref part="CN4" gate="G$1" pin="3"/>
 <wire x1="203.2" y1="116.84" x2="195.58" y2="116.84" width="0.1524" layer="91"/>
@@ -2751,7 +2751,7 @@ Working distance&lt;br&gt;
 <label x="195.58" y="124.46" size="1.778" layer="95" rot="R90" xref="yes"/>
 </segment>
 </net>
-<net name="P1.14" class="0">
+<net name="P1.02" class="0">
 <segment>
 <pinref part="CN4" gate="G$1" pin="2"/>
 <wire x1="203.2" y1="114.3" x2="190.5" y2="114.3" width="0.1524" layer="91"/>
