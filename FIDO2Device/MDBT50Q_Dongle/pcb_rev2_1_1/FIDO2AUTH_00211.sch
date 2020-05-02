@@ -1507,6 +1507,83 @@ CR1216/1225&lt;br&gt;
 <smd name="2" x="2.54" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
 <smd name="3" x="5.08" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
 </package>
+<package name="DF61-2P-2.2V">
+<description>&lt;b&gt;DF61 Series&lt;/b&gt;&lt;p&gt;
+2.2mm pitch, Low Profile Wire-to-Board Connectors</description>
+<text x="3.35" y="1.5" size="0.8128" layer="25">&gt;NAME</text>
+<text x="3.35" y="0.4" size="0.8128" layer="27">&gt;VALUE</text>
+<rectangle x1="1.575" y1="3.95" x2="2.925" y2="5.85" layer="29"/>
+<rectangle x1="1.475" y1="0" x2="2.825" y2="1.24" layer="1"/>
+<rectangle x1="-2.825" y1="0" x2="-1.475" y2="1.24" layer="1"/>
+<rectangle x1="1.525" y1="0.05" x2="2.775" y2="1.19" layer="31"/>
+<rectangle x1="-2.875" y1="-0.05" x2="-1.425" y2="1.29" layer="29"/>
+<smd name="2" x="2.25" y="4.9" dx="1.15" dy="1.7" layer="1" stop="no" cream="no"/>
+<smd name="1" x="-2.25" y="4.9" dx="1.15" dy="1.7" layer="1" stop="no" cream="no"/>
+<rectangle x1="1.725" y1="4.1" x2="2.775" y2="5.7" layer="31"/>
+<rectangle x1="-2.925" y1="3.95" x2="-1.575" y2="5.85" layer="29"/>
+<rectangle x1="-2.775" y1="4.1" x2="-1.725" y2="5.7" layer="31"/>
+<rectangle x1="-2.775" y1="0.05" x2="-1.525" y2="1.19" layer="31"/>
+<rectangle x1="1.425" y1="-0.05" x2="2.875" y2="1.29" layer="29"/>
+<wire x1="2.55" y1="0.295" x2="2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0.945" x2="2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0.295" x2="2.55" y2="0.295" width="0.127" layer="51"/>
+<wire x1="1.925" y1="0" x2="1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="1.925" y1="1.4" x2="2.55" y2="1.4" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.8" x2="2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="2.55" y1="3.7" x2="2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.445" x2="2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="2.55" y1="4.325" x2="2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="2.25" y1="4.325" x2="2.55" y2="4.325" width="0.127" layer="51"/>
+<wire x1="-2.25" y1="5.8" x2="-2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="3.7" x2="-2.25" y2="4.1" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="1.4" x2="-1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="-1.925" y1="0" x2="-1.925" y2="1.4" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.295" x2="-2.55" y2="0.945" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.945" x2="-1.925" y2="0.945" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="0.295" x2="-1.925" y2="0.295" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="4.325" x2="-2.55" y2="5.445" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.445" x2="-2.25" y2="5.445" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="4.325" x2="-2.25" y2="4.325" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.8" x2="-2.55" y2="6" width="0.127" layer="51"/>
+<wire x1="2.55" y1="5.8" x2="2.55" y2="6" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="5.8" x2="-2.25" y2="5.8" width="0.127" layer="51"/>
+<wire x1="2.25" y1="5.8" x2="2.55" y2="5.8" width="0.127" layer="51"/>
+<wire x1="-2.55" y1="7.35" x2="2.55" y2="7.35" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="3.7" x2="-2.55" y2="1.5" width="0.127" layer="21"/>
+<wire x1="2.55" y1="3.7" x2="2.55" y2="1.5" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="7.35" x2="-2.55" y2="6" width="0.127" layer="21"/>
+<wire x1="2.55" y1="7.35" x2="2.55" y2="6" width="0.127" layer="21"/>
+<wire x1="-2.55" y1="1.4" x2="-2.55" y2="1.5" width="0.127" layer="51"/>
+<wire x1="2.55" y1="1.4" x2="2.55" y2="1.5" width="0.127" layer="51"/>
+<wire x1="-1.9" y1="0" x2="-1.2" y2="0" width="0.127" layer="51"/>
+<wire x1="1.2" y1="0" x2="1.9" y2="0" width="0.127" layer="51"/>
+<wire x1="-1.2" y1="0" x2="1.2" y2="0" width="0.127" layer="21"/>
+</package>
+<package name="SOLPAD-2P">
+<description>&lt;b&gt;Pads for soldering&lt;/b&gt;&lt;p&gt;</description>
+<smd name="1" x="-2.54" y="0" dx="2.54" dy="5.08" layer="1" roundness="100"/>
+<smd name="2" x="2.54" y="0" dx="2.54" dy="5.08" layer="1" roundness="100"/>
+<text x="-1.96" y="3.23" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.96" y="-4.5" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="HEADER_2PIN">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<wire x1="-1.27" y1="-1.27" x2="-1.27" y2="1.27" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.127" layer="21"/>
+<wire x1="3.81" y1="1.27" x2="3.81" y2="-1.27" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-1.27" x2="-1.27" y2="-1.27" width="0.127" layer="21"/>
+<pad name="1" x="0" y="0" drill="0.889" diameter="1.651" shape="square" rot="R90"/>
+<pad name="2" x="2.54" y="0" drill="0.889" diameter="1.651" rot="R90"/>
+<text x="-1.905" y="-1.27" size="0.889" layer="27" ratio="11" rot="R90">&gt;value</text>
+<text x="5.08" y="-1.27" size="0.889" layer="25" ratio="11" rot="R90">&gt;name</text>
+<rectangle x1="-1.27" y1="-1.27" x2="3.81" y2="1.27" layer="39"/>
+</package>
+<package name="SOLPAD_2PIN">
+<text x="-1.27" y="1.27" size="0.889" layer="25" ratio="11">&gt;name</text>
+<text x="-1.27" y="-1.27" size="0.889" layer="27" ratio="11" align="top-left">&gt;value</text>
+<smd name="1" x="0" y="0" dx="1.6" dy="1.6" layer="1" cream="no"/>
+<smd name="2" x="2.54" y="0" dx="1.6" dy="1.6" layer="1" roundness="100" cream="no"/>
+</package>
 </packages>
 <symbols>
 <symbol name="USB_CON_MALE_A">
@@ -1587,6 +1664,19 @@ CR1216/1225&lt;br&gt;
 <pin name="4" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
 <wire x1="3.81" y1="-5.08" x2="5.08" y2="-5.08" width="0.6096" layer="94"/>
 <wire x1="3.81" y1="-7.62" x2="5.08" y2="-7.62" width="0.6096" layer="94"/>
+</symbol>
+<symbol name="IF_2PIN">
+<description>&lt;b&gt;2-pin インターフェース&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="15.24" y1="-5.08" x2="3.175" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
+<wire x1="3.81" y1="0" x2="5.08" y2="0" width="0.6096" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="3.175" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="15.24" y1="-5.08" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="3.175" y1="2.54" x2="15.24" y2="2.54" width="0.4064" layer="94"/>
+<text x="2.54" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="0" y="0" length="middle" direction="pas" swaplevel="1"/>
+<pin name="1" x="0" y="-2.54" length="middle" direction="pas" swaplevel="1"/>
+<text x="2.54" y="3.81" size="1.778" layer="95">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -1680,6 +1770,50 @@ TE Connectivity</description>
 <connect gate="G$1" pin="2" pad="2"/>
 <connect gate="G$1" pin="3" pad="3"/>
 <connect gate="G$1" pin="4" pad="4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="IF_2PIN" prefix="CN">
+<description>&lt;b&gt;2-pin インターフェース&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="IF_2PIN" x="0" y="0"/>
+</gates>
+<devices>
+<device name="_" package="DF61-2P-2.2V">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_PAD" package="SOLPAD-2P">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_H" package="HEADER_2PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_SOL" package="SOLPAD_2PIN">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -1996,9 +2130,8 @@ Working distance&lt;br&gt;
 <part name="LD3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
 <part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
 <part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
-<part name="CN4" library="Connectors" deviceset="IF_3PIN" device="_SOL" value="IF_3PIN_SOL"/>
-<part name="GND20" library="Supply" deviceset="0V" device=""/>
 <part name="CN2" library="Connectors" deviceset="IF_4PIN" device=""/>
+<part name="CN5" library="Connectors" deviceset="IF_2PIN" device="_SOL" value="IF_2PIN_SOL"/>
 </parts>
 <sheets>
 <sheet>
@@ -2645,8 +2778,7 @@ Working distance&lt;br&gt;
 <instance part="GND18" gate="1" x="66.04" y="71.12"/>
 <instance part="CN3" gate="G$1" x="203.2" y="68.58"/>
 <instance part="GND19" gate="1" x="195.58" y="55.88"/>
-<instance part="CN4" gate="G$1" x="203.2" y="116.84"/>
-<instance part="GND20" gate="1" x="195.58" y="104.14"/>
+<instance part="CN5" gate="G$1" x="203.2" y="111.76"/>
 </instances>
 <busses>
 </busses>
@@ -2679,12 +2811,6 @@ Working distance&lt;br&gt;
 <pinref part="GND19" gate="1" pin="0V"/>
 <wire x1="203.2" y1="63.5" x2="195.58" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="195.58" y1="63.5" x2="195.58" y2="58.42" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="CN4" gate="G$1" pin="1"/>
-<wire x1="203.2" y1="111.76" x2="195.58" y2="111.76" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="111.76" x2="195.58" y2="106.68" width="0.1524" layer="91"/>
-<pinref part="GND20" gate="1" pin="0V"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -2745,17 +2871,17 @@ Working distance&lt;br&gt;
 </net>
 <net name="P0.25" class="0">
 <segment>
-<pinref part="CN4" gate="G$1" pin="3"/>
-<wire x1="203.2" y1="116.84" x2="195.58" y2="116.84" width="0.1524" layer="91"/>
-<wire x1="195.58" y1="116.84" x2="195.58" y2="124.46" width="0.1524" layer="91"/>
-<label x="195.58" y="124.46" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="195.58" y1="111.76" x2="195.58" y2="119.38" width="0.1524" layer="91"/>
+<label x="195.58" y="119.38" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="CN5" gate="G$1" pin="2"/>
+<wire x1="203.2" y1="111.76" x2="195.58" y2="111.76" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="P1.02" class="0">
 <segment>
-<pinref part="CN4" gate="G$1" pin="2"/>
-<wire x1="203.2" y1="114.3" x2="190.5" y2="114.3" width="0.1524" layer="91"/>
-<label x="190.5" y="114.3" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="190.5" y="109.22" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="CN5" gate="G$1" pin="1"/>
+<wire x1="190.5" y1="109.22" x2="203.2" y2="109.22" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
