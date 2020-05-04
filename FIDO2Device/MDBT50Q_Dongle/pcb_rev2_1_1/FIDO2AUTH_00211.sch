@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -272,8 +272,8 @@ Metric Code Size 1608</description>
 Metric Code Size 1005</description>
 <wire x1="-0.425" y1="0.2" x2="0.425" y2="0.2" width="0.1016" layer="51"/>
 <wire x1="0.425" y1="-0.2" x2="-0.425" y2="-0.2" width="0.1016" layer="51"/>
-<smd name="1" x="-0.6" y="0" dx="0.925" dy="0.74" layer="1"/>
-<smd name="2" x="0.6" y="0" dx="0.925" dy="0.74" layer="1"/>
+<smd name="1" x="-0.65" y="0" dx="0.925" dy="0.74" layer="1"/>
+<smd name="2" x="0.65" y="0" dx="0.925" dy="0.74" layer="1"/>
 <text x="-1.190625" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
 <text x="-1.214375" y="-1.370625" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="-0.5" y1="-0.25" x2="-0.225" y2="0.25" layer="51"/>
@@ -974,16 +974,7 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 <gate name="G$1" symbol="FERRITE_BEAD" x="0" y="0"/>
 </gates>
 <devices>
-<device name="121SN1D_" package="C0402K">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="121SN1D" package="C0402">
+<device name="121SN1D" package="C0402K">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -2102,10 +2093,10 @@ Working distance&lt;br&gt;
 <part name="FRAME2" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="FB1" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
 <part name="FB2" library="Parts" deviceset="BLM15AG" device="121SN1D"/>
-<part name="C5" library="Parts" deviceset="CAP" device="_0402" value="0.01uF"/>
+<part name="C5" library="Parts" deviceset="CAP" device="_0402K" value="0.01uF"/>
 <part name="C6" library="Parts" deviceset="CAP" device="_0603" value="10uF"/>
-<part name="C7" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
-<part name="C8" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="C7" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
+<part name="C8" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
 <part name="GND8" library="Supply" deviceset="0V" device=""/>
 <part name="GND9" library="Supply" deviceset="0V" device=""/>
 <part name="GND10" library="Supply" deviceset="0V" device=""/>
@@ -2113,7 +2104,7 @@ Working distance&lt;br&gt;
 <part name="D1" library="Parts" deviceset="PRTR5V0U2X" device=""/>
 <part name="CN1" library="Connectors" deviceset="TE-1734028" device=""/>
 <part name="R1" library="Parts" deviceset="RESISTOR" device="_0402" value="10k"/>
-<part name="C9" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="C9" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
 <part name="GND11" library="Supply" deviceset="0V" device=""/>
 <part name="SW1" library="Parts" deviceset="SKRPACE010" device=""/>
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
@@ -2144,7 +2135,7 @@ Working distance&lt;br&gt;
 <part name="CN5" library="Connectors" deviceset="IF_2PIN" device="_SOL" value="IF_2PIN_SOL"/>
 <part name="U3" library="ICs" deviceset="ATECC608A" device="-MAHDA-S"/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
-<part name="C12" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
+<part name="C12" library="Parts" deviceset="CAP" device="_0402K" value="0.1uF"/>
 <part name="GND20" library="Supply" deviceset="0V" device=""/>
 <part name="R7" library="Parts" deviceset="RESISTOR" device="_0402" value="3.6k"/>
 <part name="R8" library="Parts" deviceset="RESISTOR" device="_0402" value="3.6k"/>
