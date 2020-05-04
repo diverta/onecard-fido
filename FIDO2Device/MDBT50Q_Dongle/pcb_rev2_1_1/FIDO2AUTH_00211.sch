@@ -1977,13 +1977,10 @@ Working distance&lt;br&gt;
 <smd name="6" x="0.25" y="1.45" dx="0.85" dy="0.3" layer="1" rot="R90" stop="no" cream="no"/>
 <smd name="7" x="-0.25" y="1.45" dx="0.85" dy="0.3" layer="1" rot="R90" stop="no" cream="no"/>
 <smd name="8" x="-0.75" y="1.45" dx="0.85" dy="0.3" layer="1" rot="R90" stop="no" cream="no"/>
-<smd name="EXP" x="0" y="0" dx="1.4" dy="1.6" layer="1" rot="R90" stop="no" cream="no"/>
 <text x="-1" y="2.3" size="0.7112" layer="25">&gt;NAME</text>
 <text x="-1" y="-2.9" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="-1.225" y1="-1.65" x2="-0.275" y2="-1.25" layer="29" rot="R90"/>
 <rectangle x1="-1.15" y1="-1.575" x2="-0.35" y2="-1.325" layer="31" rot="R90"/>
-<rectangle x1="-0.85" y1="-0.75" x2="0.85" y2="0.75" layer="29"/>
-<rectangle x1="-0.75" y1="-0.65" x2="0.75" y2="0.65" layer="31"/>
 <rectangle x1="-0.65" y1="-1.575" x2="0.15" y2="-1.325" layer="31" rot="R90"/>
 <rectangle x1="-0.15" y1="-1.575" x2="0.65" y2="-1.325" layer="31" rot="R90"/>
 <rectangle x1="0.35" y1="-1.575" x2="1.15" y2="-1.325" layer="31" rot="R90"/>
@@ -2018,23 +2015,19 @@ Working distance&lt;br&gt;
 <wire x1="0.25" y1="-1.1" x2="0.25" y2="-1.5" width="0.127" layer="51"/>
 <wire x1="-0.25" y1="-1.1" x2="-0.25" y2="-1.5" width="0.127" layer="51"/>
 <wire x1="-0.75" y1="-1.1" x2="-0.75" y2="-1.5" width="0.127" layer="51"/>
-<wire x1="-0.65" y1="0.75" x2="0.65" y2="0.75" width="0.127" layer="51"/>
-<wire x1="0.65" y1="0.75" x2="0.65" y2="-0.75" width="0.127" layer="51"/>
-<wire x1="0.65" y1="-0.75" x2="-0.65" y2="-0.75" width="0.127" layer="51"/>
-<wire x1="-0.65" y1="-0.75" x2="-0.65" y2="0.75" width="0.127" layer="51"/>
 <rectangle x1="-1.7" y1="-2" x2="-1.3" y2="-1.6" layer="21"/>
 </package>
 </packages>
 <symbols>
 <symbol name="ATECCX08A">
 <description>&lt;b&gt;Microchip CryptoAuthentication(TM) Device&lt;/b&gt;&lt;p&gt;</description>
-<wire x1="27.305" y1="-12.7" x2="3.175" y2="-12.7" width="0.4064" layer="94"/>
+<wire x1="27.305" y1="-7.62" x2="3.175" y2="-7.62" width="0.4064" layer="94"/>
 <wire x1="3.81" y1="2.54" x2="5.08" y2="2.54" width="0.6096" layer="94"/>
 <wire x1="3.81" y1="-5.08" x2="5.08" y2="-5.08" width="0.6096" layer="94"/>
-<wire x1="3.175" y1="5.08" x2="3.175" y2="-12.7" width="0.4064" layer="94"/>
-<wire x1="27.305" y1="-12.7" x2="27.305" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="3.175" y1="5.08" x2="3.175" y2="-7.62" width="0.4064" layer="94"/>
+<wire x1="27.305" y1="-7.62" x2="27.305" y2="5.08" width="0.4064" layer="94"/>
 <wire x1="3.175" y1="5.08" x2="27.305" y2="5.08" width="0.4064" layer="94"/>
-<text x="2.54" y="-15.24" size="1.778" layer="96">&gt;VALUE</text>
+<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
 <text x="2.54" y="6.35" size="1.778" layer="95">&gt;NAME</text>
 <pin name="GND" x="0" y="-5.08" length="middle" direction="pas" swaplevel="1"/>
 <pin name="SCL" x="30.48" y="-2.54" length="middle" swaplevel="1" rot="R180"/>
@@ -2050,8 +2043,6 @@ Working distance&lt;br&gt;
 <wire x1="3.81" y1="-2.54" x2="5.08" y2="-2.54" width="0.6096" layer="94"/>
 <pin name="NC3" x="30.48" y="0" length="middle" direction="pas" swaplevel="1" rot="R180"/>
 <wire x1="25.4" y1="0" x2="26.67" y2="0" width="0.6096" layer="94"/>
-<wire x1="3.81" y1="-10.16" x2="5.08" y2="-10.16" width="0.6096" layer="94"/>
-<pin name="EXP" x="0" y="-10.16" length="middle" direction="pas" swaplevel="1"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -2067,7 +2058,6 @@ Working distance&lt;br&gt;
 <devices>
 <device name="-MAHDA-S" package="DFN-2X3">
 <connects>
-<connect gate="G$1" pin="EXP" pad="EXP"/>
 <connect gate="G$1" pin="GND" pad="4"/>
 <connect gate="G$1" pin="NC0" pad="1"/>
 <connect gate="G$1" pin="NC1" pad="2"/>
@@ -2152,7 +2142,6 @@ Working distance&lt;br&gt;
 <part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="CN2" library="Connectors" deviceset="IF_4PIN" device=""/>
 <part name="CN5" library="Connectors" deviceset="IF_2PIN" device="_SOL" value="IF_2PIN_SOL"/>
-<part name="CN3" library="Connectors" deviceset="IF_2PIN" device="_SOL"/>
 <part name="U3" library="ICs" deviceset="ATECC608A" device="-MAHDA-S"/>
 <part name="GND19" library="Supply" deviceset="0V" device=""/>
 <part name="C12" library="Parts" deviceset="CAP" device="_0402" value="0.1uF"/>
@@ -2803,8 +2792,7 @@ Working distance&lt;br&gt;
 <instance part="D3" gate="G$1" x="121.92" y="81.28"/>
 <instance part="BAT1" gate="G$1" x="93.98" y="81.28"/>
 <instance part="GND18" gate="1" x="66.04" y="71.12"/>
-<instance part="CN5" gate="G$1" x="203.2" y="111.76"/>
-<instance part="CN3" gate="G$1" x="203.2" y="68.58"/>
+<instance part="CN5" gate="G$1" x="187.96" y="83.82"/>
 </instances>
 <busses>
 </busses>
@@ -2874,34 +2862,19 @@ Working distance&lt;br&gt;
 <wire x1="99.06" y1="81.28" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="TWI_SDA" class="0">
-<segment>
-<wire x1="195.58" y1="68.58" x2="195.58" y2="76.2" width="0.1524" layer="91"/>
-<label x="195.58" y="76.2" size="1.778" layer="95" rot="R90" xref="yes"/>
-<pinref part="CN3" gate="G$1" pin="2"/>
-<wire x1="203.2" y1="68.58" x2="195.58" y2="68.58" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="TWI_SCL" class="0">
-<segment>
-<label x="190.5" y="66.04" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="CN3" gate="G$1" pin="1"/>
-<wire x1="203.2" y1="66.04" x2="190.5" y2="66.04" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="P0.25" class="0">
 <segment>
-<wire x1="195.58" y1="111.76" x2="195.58" y2="119.38" width="0.1524" layer="91"/>
-<label x="195.58" y="119.38" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="180.34" y1="83.82" x2="180.34" y2="91.44" width="0.1524" layer="91"/>
+<label x="180.34" y="91.44" size="1.778" layer="95" rot="R90" xref="yes"/>
 <pinref part="CN5" gate="G$1" pin="2"/>
-<wire x1="203.2" y1="111.76" x2="195.58" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="187.96" y1="83.82" x2="180.34" y2="83.82" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="P1.02" class="0">
 <segment>
-<label x="190.5" y="109.22" size="1.778" layer="95" rot="R180" xref="yes"/>
+<label x="175.26" y="81.28" size="1.778" layer="95" rot="R180" xref="yes"/>
 <pinref part="CN5" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="109.22" x2="203.2" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="175.26" y1="81.28" x2="187.96" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -2927,14 +2900,10 @@ Working distance&lt;br&gt;
 <nets>
 <net name="0V" class="0">
 <segment>
-<pinref part="U3" gate="G$1" pin="EXP"/>
 <pinref part="GND19" gate="1" pin="0V"/>
-<wire x1="99.06" y1="83.82" x2="91.44" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="83.82" x2="91.44" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="88.9" x2="91.44" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="U3" gate="G$1" pin="GND"/>
 <wire x1="99.06" y1="88.9" x2="91.44" y2="88.9" width="0.1524" layer="91"/>
-<wire x1="91.44" y1="88.9" x2="91.44" y2="83.82" width="0.1524" layer="91"/>
-<junction x="91.44" y="83.82"/>
 </segment>
 <segment>
 <pinref part="GND20" gate="1" pin="0V"/>
