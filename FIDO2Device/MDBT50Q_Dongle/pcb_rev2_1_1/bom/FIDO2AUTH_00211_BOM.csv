@@ -1,0 +1,30 @@
+,,,,,,,,
+,,,FIDO2AUTH 1PCS BOM  (Bill of Materials),,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Item #,*Ref Des,*Qty,Manufacturer,*Mfg Part #,Description / Value,*Package,Type,Your Instructions / Notes
+1,"C1, C2",2,KEMET,C0603C120G5GACTU,"MLCC, 12pF 50V C0G","0603",SMD,
+2,"C10, C11",2,KEMET,C0603C105K3RAC7411,"MLCC, 1uF 25V X7R","0603",SMD,
+3,"C3, C4",2,Murata Electronics,GRM188Z71A475ME15D,"MLCC, 4.7uF 10V X7R","0603",SMD,
+4,C5,1,KEMET,C0402C103K5RAC7411,"MLCC, 0.01uF 50V X7R","0402",SMD,
+5,C6,1,KEMET,C0603C106M8PACTU,"MLCC, 10uF 10V X5R","0603",SMD,
+6,"C7, C8, C9, C12",4,Taiyo Yuden,UMK105B7104KV-FR,"MLCC, 0.1uF 50V X7R","0402",SMD,04025C104KAT2A (AVX Corporation) as alternative
+7,D1,1,NXP,PRTR5V0U2X,ESD protection diode,SOT143B,SMD,
+8,"D2, D3",2,Nexperia,"PMEG2005AEA,115",Schottky Rectifier,SOD323-W,SMD,
+9,"FB1, FB2, FB3",3,Murata Electronics,BLM15AG121SN1D,"Ferrite Bead, 120 Ohm @ 100MHz, 850mA, 150mOhm max","0402",SMD,
+10,LD1,1,Kingbright Company LLC,APHD1608LSURCK,Chip LED Red,"0603",SMD,
+11,LD2,1,Kingbright Company LLC,APHF1608LSEEQBDZGKC,Chip LED RGB,"0603",SMD,
+12,LD3,1,Kingbright Company LLC,APTD1608LSYCK,Chip LED yellow,"0603",SMD,
+13,R1,1,Vishay,CRCW040210K0FKEDC,"Resistor, 10k ohm 1% 1/16W","0402",SMD,
+14,"R2, R6",2,Vishay,CRCW04021K50FKEDC,"Resistor, 1.5k ohm 1% 1/16W","0402",SMD,
+15,R3,1,Vishay,CRCW04021K20FKEDC,"Resistor, 1.2k ohm 1% 1/16W","0402",SMD,
+16,R4,1,Vishay,CRCW04022K20FKEDC,"Resistor, 2.2k ohm 1% 1/16W","0402",SMD,
+17,R5,1,Vishay,CRCW0402390RFKEDC,"Resistor, 390 ohm 1% 1/16W","0402",SMD,
+18,"R7, R8",2,Vishay,CRCW04023K60FKEDC,"Resistor, 3.6k ohm 1% 1/16W","0402",SMD,
+19,SW1,1,ALPS,SKRPACE011,Surface Mount Type TACT Switch,4pos,SMD,"SKRPASE010, SKRPANE010, SKRPABE010, SKRPADE010 as alternative"
+20,SW2,1,ALPS,SKTADAE010,Surface Mount Type TACT Switch,4pos,SMD,"SKTAAAE010, SKTAACE010 as alternative"
+21,U1,1,Raytac Corporation,MDBT50Q-P1MV2,MDBT50Q-P1MV2 (PCB Antenna),LGA,SMD,See: https://www.raytac.com/product/ins.php?index_id=47
+22,U2,1,Torex Semiconductor,XC6206P332MR-G,Voltage Regulator,SOT23,SMD,
+23,U3,1,Microchip Technology,ATECC608A-MAHDA-S,Cryptographic device,8pad_UDFN,SMD,
+24,X1,1,NDK,NX3215SA-32.768K-STD-MUA-9,"Crystal, 32.768kHz 9pF SMD",XTAL_3215,SMD,
