@@ -1,0 +1,1188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../../../../../canokey-stm32/build" name="4">
+      <df name="canokey-core">
+        <df name="canokey-crypto">
+          <df name="CMakeFiles">
+            <df name="canokey-crypto.dir">
+              <df name="ed25519-donna">
+              </df>
+              <df name="src">
+              </df>
+            </df>
+          </df>
+          <df name="mbed-crypto">
+            <df name="3rdparty">
+              <df name="CMakeFiles">
+              </df>
+              <df name="everest">
+                <df name="CMakeFiles">
+                </df>
+              </df>
+            </df>
+            <df name="CMakeFiles">
+              <df name="apidoc.dir">
+              </df>
+            </df>
+            <df name="include">
+              <df name="CMakeFiles">
+              </df>
+            </df>
+            <df name="library">
+              <df name="CMakeFiles">
+                <df name="crypto_lib.dir">
+                </df>
+                <df name="mbedcrypto.dir">
+                  <df name="__">
+                    <df name="3rdparty">
+                      <df name="everest">
+                        <df name="library">
+                        </df>
+                      </df>
+                    </df>
+                  </df>
+                </df>
+              </df>
+            </df>
+          </df>
+        </df>
+        <df name="CMakeFiles">
+          <df name="canokey-core.dir">
+            <df name="applets">
+              <df name="admin">
+              </df>
+              <df name="ctap">
+              </df>
+              <df name="oath">
+              </df>
+              <df name="openpgp">
+              </df>
+              <df name="piv">
+              </df>
+            </df>
+            <df name="interfaces">
+              <df name="NFC">
+              </df>
+              <df name="USB">
+                <df name="class">
+                  <df name="ccid">
+                  </df>
+                  <df name="ctaphid">
+                  </df>
+                  <df name="kbdhid">
+                  </df>
+                  <df name="webusb">
+                  </df>
+                </df>
+                <df name="core">
+                  <df name="src">
+                  </df>
+                </df>
+                <df name="device">
+                </df>
+              </df>
+            </df>
+            <df name="littlefs">
+            </df>
+            <df name="src">
+            </df>
+            <df name="tinycbor">
+              <df name="src">
+              </df>
+            </df>
+          </df>
+        </df>
+      </df>
+      <df name="CMakeFiles">
+        <df name="3.12.4">
+          <df name="CompilerIdASM">
+          </df>
+          <df name="CompilerIdC">
+            <df name="tmp">
+            </df>
+            <in>CMakeCCompilerId.c</in>
+          </df>
+        </df>
+        <df name="canokey.bin.dir">
+        </df>
+        <df name="canokey.dir">
+          <df name="Drivers">
+            <df name="STM32L4xx_HAL_Driver">
+              <df name="Src">
+              </df>
+            </df>
+          </df>
+          <df name="Gen">
+          </df>
+          <df name="Src">
+          </df>
+        </df>
+        <df name="CMakeTmp">
+        </df>
+        <df name="cubeflash.dir">
+        </df>
+        <df name="dfu.dir">
+        </df>
+        <df name="flash.dir">
+        </df>
+        <df name="git_hash.dir">
+        </df>
+        <in>feature_tests.c</in>
+      </df>
+    </df>
+    <df root="../../../../../canokey-stm32/canokey-core" name="2">
+      <df name="applets">
+        <df name="admin">
+          <in>admin.c</in>
+        </df>
+        <df name="ctap">
+          <in>cose-key.h</in>
+          <in>ctap-errors.h</in>
+          <in>ctap-internal.h</in>
+          <in>ctap-parser.c</in>
+          <in>ctap-parser.h</in>
+          <in>ctap.c</in>
+          <in>secret.c</in>
+          <in>secret.h</in>
+          <in>u2f.c</in>
+          <in>u2f.h</in>
+        </df>
+        <df name="oath">
+          <in>oath.c</in>
+        </df>
+        <df name="openpgp">
+          <in>key.c</in>
+          <in>key.h</in>
+          <in>openpgp.c</in>
+        </df>
+        <df name="piv">
+          <in>piv.c</in>
+        </df>
+      </df>
+      <df name="canokey-crypto">
+        <df name="cmake">
+          <df name="Modules">
+          </df>
+        </df>
+        <df name="ed25519-donna">
+          <in>curve25519-donna-32bit.c</in>
+          <in>curve25519-donna-32bit.h</in>
+          <in>curve25519-donna-helpers.c</in>
+          <in>curve25519-donna-helpers.h</in>
+          <in>curve25519-donna-scalarmult-base.c</in>
+          <in>curve25519-donna-scalarmult-base.h</in>
+          <in>ed25519-donna-32bit-tables.c</in>
+          <in>ed25519-donna-32bit-tables.h</in>
+          <in>ed25519-donna-basepoint-table.c</in>
+          <in>ed25519-donna-basepoint-table.h</in>
+          <in>ed25519-donna-impl-base.c</in>
+          <in>ed25519-donna-impl-base.h</in>
+          <in>ed25519-donna-portable.h</in>
+          <in>ed25519-donna.h</in>
+          <in>ed25519-hash.c</in>
+          <in>ed25519-hash.h</in>
+          <in>ed25519.c</in>
+          <in>modm-donna-32bit.c</in>
+          <in>modm-donna-32bit.h</in>
+        </df>
+        <df name="include">
+          <in>aes.h</in>
+          <in>block-cipher.h</in>
+          <in>crypto-util.h</in>
+          <in>des.h</in>
+          <in>ecc.h</in>
+          <in>ed25519.h</in>
+          <in>hmac.h</in>
+          <in>memzero.h</in>
+          <in>rand.h</in>
+          <in>rsa.h</in>
+          <in>sha.h</in>
+        </df>
+        <df name="mbed-crypto">
+          <df name=".github">
+          </df>
+          <df name="3rdparty">
+            <df name="everest">
+              <df name="include">
+                <df name="everest">
+                  <df name="kremlib">
+                    <in>FStar_UInt128.h</in>
+                    <in>FStar_UInt64_FStar_UInt32_FStar_UInt16_FStar_UInt8.h</in>
+                  </df>
+                  <df name="kremlin">
+                    <df name="internal">
+                      <in>builtin.h</in>
+                      <in>callconv.h</in>
+                      <in>compat.h</in>
+                      <in>debug.h</in>
+                      <in>target.h</in>
+                      <in>types.h</in>
+                      <in>wasmsupport.h</in>
+                    </df>
+                    <in>c_endianness.h</in>
+                  </df>
+                  <df name="vs2010">
+                    <in>Hacl_Curve25519.h</in>
+                    <in>inttypes.h</in>
+                    <in>stdbool.h</in>
+                  </df>
+                  <in>Hacl_Curve25519.h</in>
+                  <in>everest.h</in>
+                  <in>kremlib.h</in>
+                  <in>x25519.h</in>
+                </df>
+              </df>
+              <df name="library">
+                <df name="kremlib">
+                  <in>FStar_UInt128_extracted.c</in>
+                  <in>FStar_UInt64_FStar_UInt32_FStar_UInt16_FStar_UInt8.c</in>
+                </df>
+                <df name="legacy">
+                  <in>Hacl_Curve25519.c</in>
+                </df>
+                <in>Hacl_Curve25519.c</in>
+                <in>Hacl_Curve25519_joined.c</in>
+                <in>everest.c</in>
+                <in>x25519.c</in>
+              </df>
+            </df>
+          </df>
+          <df name="configs">
+            <in>config-no-entropy.h</in>
+            <in>config-psa-crypto.h</in>
+            <in>config-suite-b.h</in>
+          </df>
+          <df name="docs">
+            <df name="architecture">
+            </df>
+          </df>
+          <df name="doxygen">
+            <df name="input">
+              <in>doc_encdec.h</in>
+              <in>doc_hashing.h</in>
+              <in>doc_mainpage.h</in>
+              <in>doc_rng.h</in>
+            </df>
+          </df>
+          <df name="include">
+            <df name="mbedtls">
+              <in>aes.h</in>
+              <in>aesni.h</in>
+              <in>arc4.h</in>
+              <in>aria.h</in>
+              <in>asn1.h</in>
+              <in>asn1write.h</in>
+              <in>base64.h</in>
+              <in>bignum.h</in>
+              <in>blowfish.h</in>
+              <in>bn_mul.h</in>
+              <in>camellia.h</in>
+              <in>ccm.h</in>
+              <in>chacha20.h</in>
+              <in>chachapoly.h</in>
+              <in>check_config.h</in>
+              <in>cipher.h</in>
+              <in>cipher_internal.h</in>
+              <in>cmac.h</in>
+              <in>compat-1.3.h</in>
+              <in>config.h</in>
+              <in>ctr_drbg.h</in>
+              <in>des.h</in>
+              <in>dhm.h</in>
+              <in>ecdh.h</in>
+              <in>ecdsa.h</in>
+              <in>ecjpake.h</in>
+              <in>ecp.h</in>
+              <in>ecp_internal.h</in>
+              <in>entropy.h</in>
+              <in>entropy_poll.h</in>
+              <in>error.h</in>
+              <in>gcm.h</in>
+              <in>havege.h</in>
+              <in>hkdf.h</in>
+              <in>hmac_drbg.h</in>
+              <in>md.h</in>
+              <in>md2.h</in>
+              <in>md4.h</in>
+              <in>md5.h</in>
+              <in>md_internal.h</in>
+              <in>memory_buffer_alloc.h</in>
+              <in>nist_kw.h</in>
+              <in>oid.h</in>
+              <in>padlock.h</in>
+              <in>pem.h</in>
+              <in>pk.h</in>
+              <in>pk_internal.h</in>
+              <in>pkcs12.h</in>
+              <in>pkcs5.h</in>
+              <in>platform.h</in>
+              <in>platform_time.h</in>
+              <in>platform_util.h</in>
+              <in>poly1305.h</in>
+              <in>psa_util.h</in>
+              <in>ripemd160.h</in>
+              <in>rsa.h</in>
+              <in>rsa_internal.h</in>
+              <in>sha1.h</in>
+              <in>sha256.h</in>
+              <in>sha512.h</in>
+              <in>threading.h</in>
+              <in>timing.h</in>
+              <in>version.h</in>
+              <in>xtea.h</in>
+            </df>
+            <df name="psa">
+              <in>crypto.h</in>
+              <in>crypto_accel_driver.h</in>
+              <in>crypto_driver_common.h</in>
+              <in>crypto_entropy_driver.h</in>
+              <in>crypto_extra.h</in>
+              <in>crypto_platform.h</in>
+              <in>crypto_se_driver.h</in>
+              <in>crypto_sizes.h</in>
+              <in>crypto_struct.h</in>
+              <in>crypto_types.h</in>
+              <in>crypto_values.h</in>
+            </df>
+          </df>
+          <df name="library">
+            <in>aes.c</in>
+            <in>aesni.c</in>
+            <in>arc4.c</in>
+            <in>aria.c</in>
+            <in>asn1parse.c</in>
+            <in>asn1write.c</in>
+            <in>base64.c</in>
+            <in>bignum.c</in>
+            <in>blowfish.c</in>
+            <in>camellia.c</in>
+            <in>ccm.c</in>
+            <in>chacha20.c</in>
+            <in>chachapoly.c</in>
+            <in>cipher.c</in>
+            <in>cipher_wrap.c</in>
+            <in>cmac.c</in>
+            <in>ctr_drbg.c</in>
+            <in>des.c</in>
+            <in>dhm.c</in>
+            <in>ecdh.c</in>
+            <in>ecdsa.c</in>
+            <in>ecjpake.c</in>
+            <in>ecp.c</in>
+            <in>ecp_curves.c</in>
+            <in>entropy.c</in>
+            <in>entropy_poll.c</in>
+            <in>error.c</in>
+            <in>gcm.c</in>
+            <in>havege.c</in>
+            <in>hkdf.c</in>
+            <in>hmac_drbg.c</in>
+            <in>md.c</in>
+            <in>md2.c</in>
+            <in>md4.c</in>
+            <in>md5.c</in>
+            <in>md_wrap.c</in>
+            <in>memory_buffer_alloc.c</in>
+            <in>nist_kw.c</in>
+            <in>oid.c</in>
+            <in>padlock.c</in>
+            <in>pem.c</in>
+            <in>pk.c</in>
+            <in>pk_wrap.c</in>
+            <in>pkcs12.c</in>
+            <in>pkcs5.c</in>
+            <in>pkparse.c</in>
+            <in>pkwrite.c</in>
+            <in>platform.c</in>
+            <in>platform_util.c</in>
+            <in>poly1305.c</in>
+            <in>psa_crypto.c</in>
+            <in>psa_crypto_core.h</in>
+            <in>psa_crypto_invasive.h</in>
+            <in>psa_crypto_its.h</in>
+            <in>psa_crypto_se.c</in>
+            <in>psa_crypto_se.h</in>
+            <in>psa_crypto_service_integration.h</in>
+            <in>psa_crypto_slot_management.c</in>
+            <in>psa_crypto_slot_management.h</in>
+            <in>psa_crypto_storage.c</in>
+            <in>psa_crypto_storage.h</in>
+            <in>psa_its_file.c</in>
+            <in>ripemd160.c</in>
+            <in>rsa.c</in>
+            <in>rsa_internal.c</in>
+            <in>sha1.c</in>
+            <in>sha256.c</in>
+            <in>sha512.c</in>
+            <in>threading.c</in>
+            <in>timing.c</in>
+            <in>version.c</in>
+            <in>version_features.c</in>
+            <in>xtea.c</in>
+          </df>
+          <df name="programs">
+            <df name="aes">
+              <in>aescrypt2.c</in>
+              <in>crypt_and_hash.c</in>
+            </df>
+            <df name="hash">
+              <in>generic_sum.c</in>
+              <in>hello.c</in>
+            </df>
+            <df name="pkey">
+              <in>dh_genprime.c</in>
+              <in>ecdh_curve25519.c</in>
+              <in>ecdsa.c</in>
+              <in>gen_key.c</in>
+              <in>key_app.c</in>
+              <in>key_app_writer.c</in>
+              <in>mpi_demo.c</in>
+              <in>pk_decrypt.c</in>
+              <in>pk_encrypt.c</in>
+              <in>pk_sign.c</in>
+              <in>pk_verify.c</in>
+              <in>rsa_decrypt.c</in>
+              <in>rsa_encrypt.c</in>
+              <in>rsa_genkey.c</in>
+              <in>rsa_sign.c</in>
+              <in>rsa_sign_pss.c</in>
+              <in>rsa_verify.c</in>
+              <in>rsa_verify_pss.c</in>
+            </df>
+            <df name="psa">
+              <in>crypto_examples.c</in>
+              <in>key_ladder_demo.c</in>
+              <in>psa_constant_names.c</in>
+            </df>
+            <df name="random">
+              <in>gen_entropy.c</in>
+              <in>gen_random_ctr_drbg.c</in>
+              <in>gen_random_havege.c</in>
+            </df>
+            <df name="test">
+              <df name="cmake_subproject">
+                <in>cmake_subproject.c</in>
+              </df>
+              <in>benchmark.c</in>
+              <in>cpp_dummy_build.cpp</in>
+              <in>query_compile_time_config.c</in>
+              <in>query_config.c</in>
+              <in>selftest.c</in>
+              <in>zeroize.c</in>
+            </df>
+            <df name="util">
+              <in>pem2der.c</in>
+              <in>strerror.c</in>
+            </df>
+            <in>wince_main.c</in>
+          </df>
+          <df name="scripts">
+            <df name="data_files">
+            </df>
+          </df>
+          <df name="tests">
+            <df name=".jenkins">
+            </df>
+            <df name="data_files">
+            </df>
+            <df name="docker">
+              <df name="bionic">
+              </df>
+            </df>
+            <df name="git-scripts">
+            </df>
+            <df name="scripts">
+            </df>
+            <df name="suites">
+            </df>
+            <in>psa_crypto_helpers.h</in>
+            <in>psa_helpers.h</in>
+          </df>
+          <df name="visualc">
+            <df name="VS2010">
+            </df>
+          </df>
+        </df>
+        <df name="src">
+          <in>aes.c</in>
+          <in>bignum.c</in>
+          <in>bignum.h</in>
+          <in>block-cipher.c</in>
+          <in>crypto-util.c</in>
+          <in>des.c</in>
+          <in>ecc.c</in>
+          <in>ecdsa-generic.c</in>
+          <in>ecdsa-generic.h</in>
+          <in>hmac.c</in>
+          <in>memzero.c</in>
+          <in>nist256p1.c</in>
+          <in>nist256p1.h</in>
+          <in>rand.c</in>
+          <in>rsa.c</in>
+          <in>secp256k1.c</in>
+          <in>secp256k1.h</in>
+          <in>sha.c</in>
+          <in>sha2-generic.c</in>
+          <in>sha2-generic.h</in>
+          <in>sha3.c</in>
+          <in>sha3.h</in>
+        </df>
+        <df name="test">
+          <in>test_25519.c</in>
+          <in>test_aes.c</in>
+          <in>test_des.c</in>
+          <in>test_ecdsa.c</in>
+          <in>test_sha.c</in>
+        </df>
+      </df>
+      <df name="cmake">
+        <df name="Modules">
+        </df>
+      </df>
+      <df name="fuzzer">
+        <in>honggfuzz-fuzzer.c</in>
+      </df>
+      <df name="fuzzing">
+        <df name="applet0">
+          <df name="data">
+          </df>
+        </df>
+        <df name="applet1">
+          <df name="data">
+          </df>
+        </df>
+        <df name="applet2">
+          <df name="data">
+          </df>
+        </df>
+        <df name="applet3">
+          <df name="data">
+          </df>
+        </df>
+        <df name="applet4">
+          <df name="data">
+          </df>
+        </df>
+      </df>
+      <df name="include">
+        <in>admin.h</in>
+        <in>apdu.h</in>
+        <in>common.h</in>
+        <in>ctap.h</in>
+        <in>device.h</in>
+        <in>fs.h</in>
+        <in>nfc.h</in>
+        <in>oath.h</in>
+        <in>openpgp.h</in>
+        <in>pin.h</in>
+        <in>piv.h</in>
+      </df>
+      <df name="interfaces">
+        <df name="NFC">
+          <in>nfc.c</in>
+        </df>
+        <df name="USB">
+          <df name="class">
+            <df name="ccid">
+              <in>ccid.c</in>
+              <in>ccid.h</in>
+              <in>usbd_ccid.c</in>
+              <in>usbd_ccid.h</in>
+            </df>
+            <df name="ctaphid">
+              <in>ctaphid.c</in>
+              <in>ctaphid.h</in>
+              <in>usbd_ctaphid.c</in>
+              <in>usbd_ctaphid.h</in>
+            </df>
+            <df name="kbdhid">
+              <in>kbdhid.c</in>
+              <in>kbdhid.h</in>
+              <in>usbd_kbdhid.c</in>
+              <in>usbd_kbdhid.h</in>
+            </df>
+            <df name="webusb">
+              <in>webusb.c</in>
+              <in>webusb.h</in>
+            </df>
+          </df>
+          <df name="core">
+            <df name="inc">
+              <in>usbd_core.h</in>
+              <in>usbd_ctlreq.h</in>
+              <in>usbd_def.h</in>
+              <in>usbd_ioreq.h</in>
+            </df>
+            <df name="src">
+              <in>usbd_core.c</in>
+              <in>usbd_ctlreq.c</in>
+              <in>usbd_ioreq.c</in>
+            </df>
+          </df>
+          <df name="device">
+            <in>usb_device.c</in>
+            <in>usb_device.h</in>
+            <in>usbd_canokey.c</in>
+            <in>usbd_canokey.h</in>
+            <in>usbd_conf.h</in>
+            <in>usbd_desc.c</in>
+            <in>usbd_desc.h</in>
+          </df>
+        </df>
+      </df>
+      <df name="littlefs">
+        <df name="emubd">
+          <in>lfs_emubd.c</in>
+          <in>lfs_emubd.h</in>
+        </df>
+        <df name="scripts">
+        </df>
+        <df name="tests">
+        </df>
+        <in>lfs.c</in>
+        <in>lfs.h</in>
+        <in>lfs_util.c</in>
+        <in>lfs_util.h</in>
+      </df>
+      <df name="src">
+        <in>apdu.c</in>
+        <in>common.c</in>
+        <in>device.c</in>
+        <in>fs.c</in>
+        <in>pin.c</in>
+      </df>
+      <df name="test">
+        <in>test_apdu.c</in>
+        <in>test_oath.c</in>
+        <in>test_openpgp.c</in>
+      </df>
+      <df name="test-via-pcsc">
+      </df>
+      <df name="tinycbor">
+        <df name="examples">
+          <in>simplereader.c</in>
+        </df>
+        <df name="scripts">
+        </df>
+        <df name="src">
+          <in>cbor.h</in>
+          <in>cborencoder.c</in>
+          <in>cborencoder_close_container_checked.c</in>
+          <in>cborerrorstrings.c</in>
+          <in>cborinternal_p.h</in>
+          <in>cborjson.h</in>
+          <in>cborparser.c</in>
+          <in>cborparser_dup_string.c</in>
+          <in>cborpretty.c</in>
+          <in>cborpretty_stdio.c</in>
+          <in>cbortojson.c</in>
+          <in>cborvalidation.c</in>
+          <in>compilersupport_p.h</in>
+          <in>open_memstream.c</in>
+          <in>tinycbor-version.h</in>
+          <in>utf8_p.h</in>
+        </df>
+        <df name="tests">
+          <df name="c90">
+            <in>tst_c90.c</in>
+          </df>
+          <df name="cpp">
+            <in>tst_cpp.cpp</in>
+          </df>
+          <df name="encoder">
+            <in>tst_encoder.cpp</in>
+          </df>
+          <df name="parser">
+            <in>tst_parser.cpp</in>
+          </df>
+          <df name="tojson">
+            <in>tst_tojson.cpp</in>
+          </df>
+        </df>
+        <df name="tools">
+          <df name="cbordump">
+            <in>cbordump.c</in>
+          </df>
+          <df name="json2cbor">
+            <in>json2cbor.c</in>
+          </df>
+        </df>
+      </df>
+      <df name="virt-card">
+        <in>dummy.c</in>
+        <in>fabrication.c</in>
+        <in>fabrication.h</in>
+        <in>fido-hid-over-udp.c</in>
+        <in>ifdhandler.c</in>
+      </df>
+    </df>
+    <df root="../../../../../canokey-stm32/Drivers" name="3">
+      <df name="CMSIS">
+        <df name="Core">
+          <df name="Include">
+            <in>cmsis_armcc.h</in>
+            <in>cmsis_armclang.h</in>
+            <in>cmsis_compiler.h</in>
+            <in>cmsis_gcc.h</in>
+            <in>cmsis_iccarm.h</in>
+            <in>cmsis_version.h</in>
+            <in>core_armv8mbl.h</in>
+            <in>core_armv8mml.h</in>
+            <in>core_cm0.h</in>
+            <in>core_cm0plus.h</in>
+            <in>core_cm1.h</in>
+            <in>core_cm23.h</in>
+            <in>core_cm3.h</in>
+            <in>core_cm33.h</in>
+            <in>core_cm4.h</in>
+            <in>core_cm7.h</in>
+            <in>core_sc000.h</in>
+            <in>core_sc300.h</in>
+            <in>mpu_armv7.h</in>
+            <in>mpu_armv8.h</in>
+            <in>tz_context.h</in>
+          </df>
+          <df name="Template">
+            <df name="ARMv8-M">
+              <in>main_s.c</in>
+              <in>tz_context.c</in>
+            </df>
+          </df>
+        </df>
+        <df name="Device">
+          <df name="ST">
+            <df name="STM32L4xx">
+              <df name="Include">
+                <in>stm32l412xx.h</in>
+                <in>stm32l422xx.h</in>
+                <in>stm32l431xx.h</in>
+                <in>stm32l432xx.h</in>
+                <in>stm32l433xx.h</in>
+                <in>stm32l442xx.h</in>
+                <in>stm32l443xx.h</in>
+                <in>stm32l451xx.h</in>
+                <in>stm32l452xx.h</in>
+                <in>stm32l462xx.h</in>
+                <in>stm32l471xx.h</in>
+                <in>stm32l475xx.h</in>
+                <in>stm32l476xx.h</in>
+                <in>stm32l485xx.h</in>
+                <in>stm32l486xx.h</in>
+                <in>stm32l496xx.h</in>
+                <in>stm32l4a6xx.h</in>
+                <in>stm32l4r5xx.h</in>
+                <in>stm32l4r7xx.h</in>
+                <in>stm32l4r9xx.h</in>
+                <in>stm32l4s5xx.h</in>
+                <in>stm32l4s7xx.h</in>
+                <in>stm32l4s9xx.h</in>
+                <in>stm32l4xx.h</in>
+                <in>system_stm32l4xx.h</in>
+              </df>
+              <df name="Source">
+                <df name="Templates">
+                  <df name="arm">
+                    <in>startup_stm32l412xx.s</in>
+                    <in>startup_stm32l422xx.s</in>
+                    <in>startup_stm32l431xx.s</in>
+                    <in>startup_stm32l432xx.s</in>
+                    <in>startup_stm32l433xx.s</in>
+                    <in>startup_stm32l442xx.s</in>
+                    <in>startup_stm32l443xx.s</in>
+                    <in>startup_stm32l451xx.s</in>
+                    <in>startup_stm32l452xx.s</in>
+                    <in>startup_stm32l462xx.s</in>
+                    <in>startup_stm32l471xx.s</in>
+                    <in>startup_stm32l475xx.s</in>
+                    <in>startup_stm32l476xx.s</in>
+                    <in>startup_stm32l485xx.s</in>
+                    <in>startup_stm32l486xx.s</in>
+                    <in>startup_stm32l496xx.s</in>
+                    <in>startup_stm32l4a6xx.s</in>
+                    <in>startup_stm32l4r5xx.s</in>
+                    <in>startup_stm32l4r7xx.s</in>
+                    <in>startup_stm32l4r9xx.s</in>
+                    <in>startup_stm32l4s5xx.s</in>
+                    <in>startup_stm32l4s7xx.s</in>
+                    <in>startup_stm32l4s9xx.s</in>
+                  </df>
+                  <df name="gcc">
+                    <in>startup_stm32l412xx.s</in>
+                    <in>startup_stm32l422xx.s</in>
+                    <in>startup_stm32l431xx.s</in>
+                    <in>startup_stm32l432xx.s</in>
+                    <in>startup_stm32l433xx.s</in>
+                    <in>startup_stm32l442xx.s</in>
+                    <in>startup_stm32l443xx.s</in>
+                    <in>startup_stm32l451xx.s</in>
+                    <in>startup_stm32l452xx.s</in>
+                    <in>startup_stm32l462xx.s</in>
+                    <in>startup_stm32l471xx.s</in>
+                    <in>startup_stm32l475xx.s</in>
+                    <in>startup_stm32l476xx.s</in>
+                    <in>startup_stm32l485xx.s</in>
+                    <in>startup_stm32l486xx.s</in>
+                    <in>startup_stm32l496xx.s</in>
+                    <in>startup_stm32l4a6xx.s</in>
+                    <in>startup_stm32l4r5xx.s</in>
+                    <in>startup_stm32l4r7xx.s</in>
+                    <in>startup_stm32l4r9xx.s</in>
+                    <in>startup_stm32l4s5xx.s</in>
+                    <in>startup_stm32l4s7xx.s</in>
+                    <in>startup_stm32l4s9xx.s</in>
+                  </df>
+                  <df name="iar">
+                    <df name="linker">
+                    </df>
+                    <in>startup_stm32l412xx.s</in>
+                    <in>startup_stm32l422xx.s</in>
+                    <in>startup_stm32l431xx.s</in>
+                    <in>startup_stm32l432xx.s</in>
+                    <in>startup_stm32l433xx.s</in>
+                    <in>startup_stm32l442xx.s</in>
+                    <in>startup_stm32l443xx.s</in>
+                    <in>startup_stm32l451xx.s</in>
+                    <in>startup_stm32l452xx.s</in>
+                    <in>startup_stm32l462xx.s</in>
+                    <in>startup_stm32l471xx.s</in>
+                    <in>startup_stm32l475xx.s</in>
+                    <in>startup_stm32l476xx.s</in>
+                    <in>startup_stm32l485xx.s</in>
+                    <in>startup_stm32l486xx.s</in>
+                    <in>startup_stm32l496xx.s</in>
+                    <in>startup_stm32l4a6xx.s</in>
+                    <in>startup_stm32l4r5xx.s</in>
+                    <in>startup_stm32l4r7xx.s</in>
+                    <in>startup_stm32l4r9xx.s</in>
+                    <in>startup_stm32l4s5xx.s</in>
+                    <in>startup_stm32l4s7xx.s</in>
+                    <in>startup_stm32l4s9xx.s</in>
+                  </df>
+                  <in>system_stm32l4xx.c</in>
+                </df>
+              </df>
+            </df>
+          </df>
+        </df>
+        <df name="Include">
+          <in>cmsis_armcc.h</in>
+          <in>cmsis_armclang.h</in>
+          <in>cmsis_compiler.h</in>
+          <in>cmsis_gcc.h</in>
+          <in>cmsis_iccarm.h</in>
+          <in>cmsis_version.h</in>
+          <in>core_armv8mbl.h</in>
+          <in>core_armv8mml.h</in>
+          <in>core_cm0.h</in>
+          <in>core_cm0plus.h</in>
+          <in>core_cm1.h</in>
+          <in>core_cm23.h</in>
+          <in>core_cm3.h</in>
+          <in>core_cm33.h</in>
+          <in>core_cm4.h</in>
+          <in>core_cm7.h</in>
+          <in>core_sc000.h</in>
+          <in>core_sc300.h</in>
+          <in>mpu_armv7.h</in>
+          <in>mpu_armv8.h</in>
+          <in>tz_context.h</in>
+        </df>
+        <df name="Lib">
+          <df name="ARM">
+          </df>
+          <df name="GCC">
+          </df>
+          <df name="IAR">
+          </df>
+        </df>
+      </df>
+      <df name="STM32L4xx_HAL_Driver">
+        <df name="Inc">
+          <df name="Legacy">
+            <in>stm32_hal_legacy.h</in>
+            <in>stm32l4xx_hal_can_legacy.h</in>
+          </df>
+          <in>stm32_assert_template.h</in>
+          <in>stm32l4xx_hal.h</in>
+          <in>stm32l4xx_hal_adc.h</in>
+          <in>stm32l4xx_hal_adc_ex.h</in>
+          <in>stm32l4xx_hal_can.h</in>
+          <in>stm32l4xx_hal_comp.h</in>
+          <in>stm32l4xx_hal_conf_template.h</in>
+          <in>stm32l4xx_hal_cortex.h</in>
+          <in>stm32l4xx_hal_crc.h</in>
+          <in>stm32l4xx_hal_crc_ex.h</in>
+          <in>stm32l4xx_hal_cryp.h</in>
+          <in>stm32l4xx_hal_cryp_ex.h</in>
+          <in>stm32l4xx_hal_dac.h</in>
+          <in>stm32l4xx_hal_dac_ex.h</in>
+          <in>stm32l4xx_hal_dcmi.h</in>
+          <in>stm32l4xx_hal_def.h</in>
+          <in>stm32l4xx_hal_dfsdm.h</in>
+          <in>stm32l4xx_hal_dfsdm_ex.h</in>
+          <in>stm32l4xx_hal_dma.h</in>
+          <in>stm32l4xx_hal_dma2d.h</in>
+          <in>stm32l4xx_hal_dma_ex.h</in>
+          <in>stm32l4xx_hal_dsi.h</in>
+          <in>stm32l4xx_hal_exti.h</in>
+          <in>stm32l4xx_hal_firewall.h</in>
+          <in>stm32l4xx_hal_flash.h</in>
+          <in>stm32l4xx_hal_flash_ex.h</in>
+          <in>stm32l4xx_hal_flash_ramfunc.h</in>
+          <in>stm32l4xx_hal_gfxmmu.h</in>
+          <in>stm32l4xx_hal_gpio.h</in>
+          <in>stm32l4xx_hal_gpio_ex.h</in>
+          <in>stm32l4xx_hal_hash.h</in>
+          <in>stm32l4xx_hal_hash_ex.h</in>
+          <in>stm32l4xx_hal_hcd.h</in>
+          <in>stm32l4xx_hal_i2c.h</in>
+          <in>stm32l4xx_hal_i2c_ex.h</in>
+          <in>stm32l4xx_hal_irda.h</in>
+          <in>stm32l4xx_hal_irda_ex.h</in>
+          <in>stm32l4xx_hal_iwdg.h</in>
+          <in>stm32l4xx_hal_lcd.h</in>
+          <in>stm32l4xx_hal_lptim.h</in>
+          <in>stm32l4xx_hal_ltdc.h</in>
+          <in>stm32l4xx_hal_ltdc_ex.h</in>
+          <in>stm32l4xx_hal_mmc.h</in>
+          <in>stm32l4xx_hal_mmc_ex.h</in>
+          <in>stm32l4xx_hal_nand.h</in>
+          <in>stm32l4xx_hal_nor.h</in>
+          <in>stm32l4xx_hal_opamp.h</in>
+          <in>stm32l4xx_hal_opamp_ex.h</in>
+          <in>stm32l4xx_hal_ospi.h</in>
+          <in>stm32l4xx_hal_pcd.h</in>
+          <in>stm32l4xx_hal_pcd_ex.h</in>
+          <in>stm32l4xx_hal_pwr.h</in>
+          <in>stm32l4xx_hal_pwr_ex.h</in>
+          <in>stm32l4xx_hal_qspi.h</in>
+          <in>stm32l4xx_hal_rcc.h</in>
+          <in>stm32l4xx_hal_rcc_ex.h</in>
+          <in>stm32l4xx_hal_rng.h</in>
+          <in>stm32l4xx_hal_rtc.h</in>
+          <in>stm32l4xx_hal_rtc_ex.h</in>
+          <in>stm32l4xx_hal_sai.h</in>
+          <in>stm32l4xx_hal_sai_ex.h</in>
+          <in>stm32l4xx_hal_sd.h</in>
+          <in>stm32l4xx_hal_sd_ex.h</in>
+          <in>stm32l4xx_hal_smartcard.h</in>
+          <in>stm32l4xx_hal_smartcard_ex.h</in>
+          <in>stm32l4xx_hal_smbus.h</in>
+          <in>stm32l4xx_hal_spi.h</in>
+          <in>stm32l4xx_hal_spi_ex.h</in>
+          <in>stm32l4xx_hal_sram.h</in>
+          <in>stm32l4xx_hal_swpmi.h</in>
+          <in>stm32l4xx_hal_tim.h</in>
+          <in>stm32l4xx_hal_tim_ex.h</in>
+          <in>stm32l4xx_hal_tsc.h</in>
+          <in>stm32l4xx_hal_uart.h</in>
+          <in>stm32l4xx_hal_uart_ex.h</in>
+          <in>stm32l4xx_hal_usart.h</in>
+          <in>stm32l4xx_hal_usart_ex.h</in>
+          <in>stm32l4xx_hal_wwdg.h</in>
+          <in>stm32l4xx_ll_adc.h</in>
+          <in>stm32l4xx_ll_bus.h</in>
+          <in>stm32l4xx_ll_comp.h</in>
+          <in>stm32l4xx_ll_cortex.h</in>
+          <in>stm32l4xx_ll_crc.h</in>
+          <in>stm32l4xx_ll_crs.h</in>
+          <in>stm32l4xx_ll_dac.h</in>
+          <in>stm32l4xx_ll_dma.h</in>
+          <in>stm32l4xx_ll_dma2d.h</in>
+          <in>stm32l4xx_ll_dmamux.h</in>
+          <in>stm32l4xx_ll_exti.h</in>
+          <in>stm32l4xx_ll_fmc.h</in>
+          <in>stm32l4xx_ll_gpio.h</in>
+          <in>stm32l4xx_ll_i2c.h</in>
+          <in>stm32l4xx_ll_iwdg.h</in>
+          <in>stm32l4xx_ll_lptim.h</in>
+          <in>stm32l4xx_ll_lpuart.h</in>
+          <in>stm32l4xx_ll_opamp.h</in>
+          <in>stm32l4xx_ll_pwr.h</in>
+          <in>stm32l4xx_ll_rcc.h</in>
+          <in>stm32l4xx_ll_rng.h</in>
+          <in>stm32l4xx_ll_rtc.h</in>
+          <in>stm32l4xx_ll_sdmmc.h</in>
+          <in>stm32l4xx_ll_spi.h</in>
+          <in>stm32l4xx_ll_swpmi.h</in>
+          <in>stm32l4xx_ll_system.h</in>
+          <in>stm32l4xx_ll_tim.h</in>
+          <in>stm32l4xx_ll_usart.h</in>
+          <in>stm32l4xx_ll_usb.h</in>
+          <in>stm32l4xx_ll_utils.h</in>
+          <in>stm32l4xx_ll_wwdg.h</in>
+        </df>
+        <df name="Src">
+          <in>stm32l4xx_hal.c</in>
+          <in>stm32l4xx_hal_adc.c</in>
+          <in>stm32l4xx_hal_adc_ex.c</in>
+          <in>stm32l4xx_hal_can.c</in>
+          <in>stm32l4xx_hal_comp.c</in>
+          <in>stm32l4xx_hal_cortex.c</in>
+          <in>stm32l4xx_hal_crc.c</in>
+          <in>stm32l4xx_hal_crc_ex.c</in>
+          <in>stm32l4xx_hal_cryp.c</in>
+          <in>stm32l4xx_hal_cryp_ex.c</in>
+          <in>stm32l4xx_hal_dac.c</in>
+          <in>stm32l4xx_hal_dac_ex.c</in>
+          <in>stm32l4xx_hal_dcmi.c</in>
+          <in>stm32l4xx_hal_dfsdm.c</in>
+          <in>stm32l4xx_hal_dfsdm_ex.c</in>
+          <in>stm32l4xx_hal_dma.c</in>
+          <in>stm32l4xx_hal_dma2d.c</in>
+          <in>stm32l4xx_hal_dma_ex.c</in>
+          <in>stm32l4xx_hal_dsi.c</in>
+          <in>stm32l4xx_hal_exti.c</in>
+          <in>stm32l4xx_hal_firewall.c</in>
+          <in>stm32l4xx_hal_flash.c</in>
+          <in>stm32l4xx_hal_flash_ex.c</in>
+          <in>stm32l4xx_hal_flash_ramfunc.c</in>
+          <in>stm32l4xx_hal_gfxmmu.c</in>
+          <in>stm32l4xx_hal_gpio.c</in>
+          <in>stm32l4xx_hal_hash.c</in>
+          <in>stm32l4xx_hal_hash_ex.c</in>
+          <in>stm32l4xx_hal_hcd.c</in>
+          <in>stm32l4xx_hal_i2c.c</in>
+          <in>stm32l4xx_hal_i2c_ex.c</in>
+          <in>stm32l4xx_hal_irda.c</in>
+          <in>stm32l4xx_hal_iwdg.c</in>
+          <in>stm32l4xx_hal_lcd.c</in>
+          <in>stm32l4xx_hal_lptim.c</in>
+          <in>stm32l4xx_hal_ltdc.c</in>
+          <in>stm32l4xx_hal_ltdc_ex.c</in>
+          <in>stm32l4xx_hal_mmc.c</in>
+          <in>stm32l4xx_hal_mmc_ex.c</in>
+          <in>stm32l4xx_hal_nand.c</in>
+          <in>stm32l4xx_hal_nor.c</in>
+          <in>stm32l4xx_hal_opamp.c</in>
+          <in>stm32l4xx_hal_opamp_ex.c</in>
+          <in>stm32l4xx_hal_ospi.c</in>
+          <in>stm32l4xx_hal_pcd.c</in>
+          <in>stm32l4xx_hal_pcd_ex.c</in>
+          <in>stm32l4xx_hal_pwr.c</in>
+          <in>stm32l4xx_hal_pwr_ex.c</in>
+          <in>stm32l4xx_hal_qspi.c</in>
+          <in>stm32l4xx_hal_rcc.c</in>
+          <in>stm32l4xx_hal_rcc_ex.c</in>
+          <in>stm32l4xx_hal_rng.c</in>
+          <in>stm32l4xx_hal_rtc.c</in>
+          <in>stm32l4xx_hal_rtc_ex.c</in>
+          <in>stm32l4xx_hal_sai.c</in>
+          <in>stm32l4xx_hal_sai_ex.c</in>
+          <in>stm32l4xx_hal_sd.c</in>
+          <in>stm32l4xx_hal_sd_ex.c</in>
+          <in>stm32l4xx_hal_smartcard.c</in>
+          <in>stm32l4xx_hal_smartcard_ex.c</in>
+          <in>stm32l4xx_hal_smbus.c</in>
+          <in>stm32l4xx_hal_spi.c</in>
+          <in>stm32l4xx_hal_spi_ex.c</in>
+          <in>stm32l4xx_hal_sram.c</in>
+          <in>stm32l4xx_hal_swpmi.c</in>
+          <in>stm32l4xx_hal_tim.c</in>
+          <in>stm32l4xx_hal_tim_ex.c</in>
+          <in>stm32l4xx_hal_tsc.c</in>
+          <in>stm32l4xx_hal_uart.c</in>
+          <in>stm32l4xx_hal_uart_ex.c</in>
+          <in>stm32l4xx_hal_usart.c</in>
+          <in>stm32l4xx_hal_usart_ex.c</in>
+          <in>stm32l4xx_hal_wwdg.c</in>
+          <in>stm32l4xx_ll_adc.c</in>
+          <in>stm32l4xx_ll_comp.c</in>
+          <in>stm32l4xx_ll_crc.c</in>
+          <in>stm32l4xx_ll_crs.c</in>
+          <in>stm32l4xx_ll_dac.c</in>
+          <in>stm32l4xx_ll_dma.c</in>
+          <in>stm32l4xx_ll_dma2d.c</in>
+          <in>stm32l4xx_ll_exti.c</in>
+          <in>stm32l4xx_ll_fmc.c</in>
+          <in>stm32l4xx_ll_gpio.c</in>
+          <in>stm32l4xx_ll_i2c.c</in>
+          <in>stm32l4xx_ll_lptim.c</in>
+          <in>stm32l4xx_ll_lpuart.c</in>
+          <in>stm32l4xx_ll_opamp.c</in>
+          <in>stm32l4xx_ll_pwr.c</in>
+          <in>stm32l4xx_ll_rcc.c</in>
+          <in>stm32l4xx_ll_rng.c</in>
+          <in>stm32l4xx_ll_rtc.c</in>
+          <in>stm32l4xx_ll_sdmmc.c</in>
+          <in>stm32l4xx_ll_spi.c</in>
+          <in>stm32l4xx_ll_swpmi.c</in>
+          <in>stm32l4xx_ll_tim.c</in>
+          <in>stm32l4xx_ll_usart.c</in>
+          <in>stm32l4xx_ll_usb.c</in>
+          <in>stm32l4xx_ll_utils.c</in>
+        </df>
+      </df>
+    </df>
+    <df root="../../../../../canokey-stm32/Inc" name="1">
+      <in>check_config.h</in>
+      <in>device-stm32.h</in>
+      <in>lfs_init.h</in>
+      <in>main.h</in>
+      <in>mbedtls-config.h</in>
+      <in>stm32l4xx_hal_conf.h</in>
+      <in>stm32l4xx_it.h</in>
+    </df>
+    <df root="../../../../../canokey-stm32/Src" name="0">
+      <in>device.c</in>
+      <in>fm.c</in>
+      <in>lfs_init.c</in>
+      <in>main.c</in>
+      <in>retarget.c</in>
+      <in>stm32l4xx_hal_msp.c</in>
+      <in>stm32l4xx_it.c</in>
+      <in>system_stm32l4xx.c</in>
+      <in>usbd_conf.c</in>
+    </df>
+  </logicalFolder>
+  <projectmakefile>../../../../../canokey-stm32/build/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>4</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>make canokey.bin</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>make canokey.bin</runcommand>
+        <rundir>../../../../../canokey-stm32/build</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>
