@@ -18,6 +18,12 @@ STM32の評価基板である「NUCLEO-L432KC」で動作します。<br>
 「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」は、本プロジェクトと同様、Netbeansプロジェクトを作成してバイナリーを作成後、NUCLEOに書き込みます。<br>
 具体的な手順等の情報は、手順書</b>「[canokey-stm32動作確認手順](../../Research/CCID/reference/README.md)」</b>をご参照願います。
 
+
+## 2020/05/14までの調査内容・結果
+
+canokey-stm32で初期データ投入を試行したのですが、失敗に終わっています。<br>
+内容については別紙</b>「[参考：OpenSCコマンド実行時ログ](../../Research/CCID/OPENSCTOOLLOG.md)」</b>に掲載しております。
+
 ## 2020/05/11までの調査内容・結果
 
 Yubikey NEOとcanokey-stm32間の動作相違の解析をした結果、以下の機密データが、canokey-stm32にセットアップされていないため、macOSで接続ができないと切り分けています。[注1]
