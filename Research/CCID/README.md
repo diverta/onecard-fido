@@ -16,19 +16,26 @@ STM32の評価基板である「NUCLEO-L432KC」で動作します。<br>
 #### サンプルアプリを動かすまでの手順
 
 「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」は、本プロジェクトと同様、Netbeansプロジェクトを作成してバイナリーを作成後、NUCLEOに書き込みます。<br>
-具体的な手順等の情報は、手順書</b>「[canokey-stm32動作確認手順](../../Research/CCID/reference/README.md)」</b>をご参照願います。
+具体的な手順等の情報は、手順書<b>「[canokey-stm32動作確認手順](../../Research/CCID/reference/README.md)」</b>をご参照願います。
+
+## 2020/05/18までの調査内容・結果
+
+Yubico PIV Toolを使い、canokey-stm32へ、初期データを投入するところまで行いました。<br>
+内容については別紙<b>「[Yubico PIV Toolによる初期データ導入手順](../../Research/CCID/SETUPYKPIV.md)」</b>に掲載しております。
+
+この結果、macOSからPIVスマートカードとして認識されるようになったことを確認しています。
 
 ## 2020/05/15までの調査内容・結果
 
 Yubico PIV Toolという、ソースコードが公開されているPCツールを取得し、ビルドまで行いました。<br>
-内容については別紙</b>「[参考：Yubico PIV Toolビルド手順](../../Research/CCID/BUILDYKPIV.md)」</b>に掲載しております。
+内容については別紙<b>「[参考：Yubico PIV Toolビルド手順](../../Research/CCID/BUILDYKPIV.md)」</b>に掲載しております。
 
 このプログラムを適宜改修して、ビルドしなおせば、canokey-stm32に対する初期データ投入ができるようになると考えております。
 
 ## 2020/05/14までの調査内容・結果
 
 OpenSCに付属しているユーティリティーで、canokey-stm32で初期データ投入を試行したのですが、失敗に終わっています。<br>
-内容については別紙</b>「[参考：OpenSCコマンド実行時ログ](../../Research/CCID/OPENSCTOOLLOG.md)」</b>に掲載しております。
+内容については別紙<b>「[参考：OpenSCコマンド実行時ログ](../../Research/CCID/OPENSCTOOLLOG.md)」</b>に掲載しております。
 
 ## 2020/05/11までの調査内容・結果
 
