@@ -18,6 +18,21 @@ STM32の評価基板である「NUCLEO-L432KC」で動作します。<br>
 「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」は、本プロジェクトと同様、Netbeansプロジェクトを作成してバイナリーを作成後、NUCLEOに書き込みます。<br>
 具体的な手順等の情報は、手順書<b>「[canokey-stm32動作確認手順](../../Research/CCID/reference/README.md)」</b>をご参照願います。
 
+## 2020/05/19までの調査内容・結果
+
+macOS環境下では、NUCLEOのRESET後から１０秒ほど経過すると、canokey-stm32との接続が切れてしまいます。<br>
+この影響で、macOSでスマートカードペアリングを手動で行う際に、ダイアログが途中で落ちてしまいます。
+
+他方、pcsc-liteを導入しているLinux環境下では、接続がキープされます。<br>
+OpenSCとpcsc-liteの間での違いを調査する必要があると思われます。
+
+また、Yubikey NEOはmacOS環境下でも接続がキープされます。<br>
+よくみていると、３秒ごとにRESETが繰り返されている動きに見えます。
+
+以上の観察結果から、下記観点について調査を続行したいと思います。
+- スマートカードデバイスの仕様として、３秒〜５秒程度の間隔でRESETやキープアライブなどが必要となるものか？
+- OpenSCで、キープアライブや無通信タイムアウトなどの設定項目が存在するか？
+
 ## 2020/05/18までの調査内容・結果
 
 Yubico PIV Toolを使い、canokey-stm32へ、初期データを投入するところまで行いました。<br>
