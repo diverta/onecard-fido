@@ -1,4 +1,3 @@
-
 # 参考：OpenSCコマンド実行時ログ
 
 OpenSCに付属のコマンドツールを、NUCLEO（[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)）に対して実行し、挙動を確認した時のログになります。

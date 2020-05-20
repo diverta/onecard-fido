@@ -1,4 +1,3 @@
-
 # Yubico PIV Toolによる初期データ導入手順
 
 Yubico PIV Toolを使用して、PIVデバイスの参考実装「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」に対し、鍵・証明書・PINなどの機密データを初期導入する手順を掲載します。
@@ -308,7 +307,7 @@ Slot 9d:
 	Not After:	May 20 06:15:37 2021 GMT
 PIN tries left:	3
 Disconnect card #1588739612.
-MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$ 
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 
 以上で、機密データの初期導入はひとまず終了となります。

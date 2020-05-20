@@ -26,6 +26,9 @@ STM32の評価基板である「NUCLEO-L432KC」で動作します。<br>
 この件ですが、参考実装「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」にバグがあり、そのためにファームウェアがフリーズしてしまうことが原因のようです。<br>
 ファームウェアをこちらで修正したところ、接続がキープされるようになったことを確認いたしました。
 
+また、macOSにcanokey-stm32を使用し、PINでログインできることも、合わせて確認しております。<br>
+具体的な手順等の情報は、手順書<b>「[PIVデバイスを使用したmacOSログイン手順](../../Research/CCID/MACPIVLOGIN.md)」</b>をご参照願います。
+
 ## 2020/05/19までの調査内容・結果
 
 macOS環境下では、NUCLEOのRESET後から１０秒ほど経過すると、canokey-stm32との接続が切れてしまいます。<br>

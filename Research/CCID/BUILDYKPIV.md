@@ -1,4 +1,3 @@
-
 # 参考：Yubico PIV Toolビルド手順
 
 PIVカード管理ツールとして、ソースコードが公開されているYubico PIV Toolを、macOS環境上で利用できるよう、ビルド手順を整理しました。
