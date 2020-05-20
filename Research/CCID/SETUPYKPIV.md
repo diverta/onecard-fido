@@ -132,6 +132,7 @@ MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -s 9a -A RSA2048 -a generate -o pub_9a.pem
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -s 9c -A RSA2048 -a generate -o pub_9c.pem
+tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -s 9d -A RSA2048 -a generate -o pub_9d.pem
 ```
 
 以下は実行例になります。
@@ -153,15 +154,24 @@ Now processing for action 'generate'.
 Successfully generated a new private key.
 Disconnect card #1588739612.
 MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$ tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -s 9d -A RSA2048 -a generate -o pub_9d.pem
+Connect reader 'Kingtrust Multi-Reader' matching 'Kingtrust Multi-Reader'.
+Authenticating since action 'generate' needs that.
+Successful application authentication.
+Now processing for action 'generate'.
+Successfully generated a new private key.
+Disconnect card #1588739612.
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 
-[注1] Slot 9a: PIV Authentication, Slot 9c: Digital Signature
+[注1] Slot 9a: PIV Authentication, Slot 9c: Digital Signature, 9d: Key Management
 
 #### 自己署名証明書の作成
 
 ```
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a verify-pin -P 000000 -a selfsign-certificate -s 9a -S "/CN=pivauth.divert.co.jp/" -i pub_9a.pem -o cert_9a.pem
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a verify-pin -P 000000 -a selfsign-certificate -s 9c -S "/CN=digsign.divert.co.jp/" -i pub_9c.pem -o cert_9c.pem
+tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a verify-pin -P 000000 -a selfsign-certificate -s 9d -S "/CN=keymgmt.divert.co.jp/" -i pub_9d.pem -o cert_9d.pem
 ```
 
 以下は実行例になります。
@@ -187,6 +197,16 @@ Now processing for action 'selfsign-certificate'.
 Successfully generated a new self signed certificate.
 Disconnect card #1588739612.
 MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$ tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a verify-pin -P 000000 -a selfsign-certificate -s 9d -S "/CN=keymgmt.divert.co.jp/" -i pub_9d.pem -o cert_9d.pem
+Connect reader 'Kingtrust Multi-Reader' matching 'Kingtrust Multi-Reader'.
+Action 'verify-pin' does not need authentication.
+Action 'selfsign-certificate' does not need authentication.
+Now processing for action 'verify-pin'.
+Successfully verified PIN.
+Now processing for action 'selfsign-certificate'.
+Successfully generated a new self signed certificate.
+Disconnect card #1588739612.
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 
 #### 証明書の導入
@@ -197,6 +217,7 @@ MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a import-certificate -s 9a -i cert_9a.pem
 tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a import-certificate -s 9c -i cert_9c.pem
+tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a import-certificate -s 9d -i cert_9d.pem
 ```
 
 以下は実行例になります。<br>
@@ -240,6 +261,14 @@ Now processing for action 'import-certificate'.
 Successfully imported a new certificate.
 Disconnect card #1588739612.
 MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$ tool/yubico-piv-tool -v --reader="Kingtrust Multi-Reader" -a import-certificate -s 9d -i cert_9d.pem
+Connect reader 'Kingtrust Multi-Reader' matching 'Kingtrust Multi-Reader'.
+Authenticating since action 'import-certificate' needs that.
+Successful application authentication.
+Now processing for action 'import-certificate'.
+Successfully imported a new certificate.
+Disconnect card #1588739612.
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
 ```
 
 #### 導入結果の確認
@@ -254,7 +283,7 @@ Action 'status' does not need authentication.
 Now processing for action 'status'.
 Version:	5.0.0
 Serial Number:	1588739612
-CHUID:	3019d4e739da739ced39ce739d836858210842108421c84210c3eb34107f0563c809a4cf5e04d618af5d67cbe8350832303330303130313e00fe00
+CHUID:	3019d4e739da739ced39ce739d836858210842108421c84210c3eb34104c8d536a86aa98a5ce20d53557776e58350832303330303130313e00fe00
 CCC:	f015a000000116ff02e2771ce957476a8c9f40efdd2ecef10121f20121f300f40100f50110f600f700fa00fb00fc00fd00fe00
 Slot 9a:
 	Algorithm:	RSA2048
@@ -270,9 +299,16 @@ Slot 9c:
 	Fingerprint:	28b7be8ada3504e2cb22acb32ec53d0bd0ccd0baf444010f27b87eb05e95555a
 	Not Before:	May 18 06:07:56 2020 GMT
 	Not After:	May 18 06:07:56 2021 GMT
+Slot 9d:
+	Algorithm:	RSA2048
+	Subject DN:	CN=keymgmt.divert.co.jp
+	Issuer DN:	CN=keymgmt.divert.co.jp
+	Fingerprint:	07b879e12ac0c82d31599684fc265b5ddbbc14f02477e0b2e3459f4fc72775fb
+	Not Before:	May 20 06:15:37 2020 GMT
+	Not After:	May 20 06:15:37 2021 GMT
 PIN tries left:	3
 Disconnect card #1588739612.
-MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$
+MacBookPro-makmorit-jp:yubico-piv-tool-2.0.0 makmorit$ 
 ```
 
 以上で、機密データの初期導入はひとまず終了となります。
