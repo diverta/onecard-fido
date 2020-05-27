@@ -98,6 +98,13 @@ static inline app_usbd_ccid_t const *app_usbd_ccid_class_get(app_usbd_class_inst
     return (app_usbd_ccid_t const *)p_inst;
 }
 
+//
+// 関数群
+//
+uint8_t *app_usbd_ccid_ep_output_buffer(void);
+size_t   app_usbd_ccid_ep_output_buffer_size(void);
+void     app_usbd_ccid_ep_input_from_buffer(void *p_buf, size_t size);
+
 #ifdef __cplusplus
 }
 #endif
