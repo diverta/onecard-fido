@@ -18,6 +18,11 @@ STM32の評価基板である「NUCLEO-L432KC」で動作します。<br>
 「[canokeys/canokey-stm32](https://github.com/canokeys/canokey-stm32)」は、本プロジェクトと同様、Netbeansプロジェクトを作成してバイナリーを作成後、NUCLEOに書き込みます。<br>
 具体的な手順等の情報は、手順書<b>「[canokey-stm32動作確認手順](../../Research/CCID/reference/README.md)」</b>をご参照願います。
 
+## 2020/05/27までの調査内容・結果
+
+macOSでサポート外となっているCCIDデバイスを新たにサポートさせるため、macOSにプレインストールされているCCIDドライバーを修正ビルド／インストールしました。<br>
+具体的な手順等の情報は、手順書<b>「[CCIDドライバー修正ビルド手順](../../Research/CCID/BUILDCCIDDRV.md)」</b>をご参照願います。
+
 ## 2020/05/20までの調査内容・結果
 
 > macOS環境下では、NUCLEOのRESET後から１０秒ほど経過すると、canokey-stm32との接続が切れてしまいます。<br>
