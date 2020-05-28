@@ -32,7 +32,11 @@ static uint8_t bulkin_data[1280];
 // データ受信用一時変数
 static size_t apdu_size_received;
 static size_t apdu_size_expected;
-static volatile uint8_t bulkout_state;
+
+// 読込中の状態をあらわすフラグ
+//   0:先頭フレーム受信待ち
+//   1:継続フレーム受信待ち
+static uint8_t bulkout_state;
 
 static void clear_value(void)
 {
@@ -45,10 +49,21 @@ static void clear_value(void)
 // ATR
 // Fi=372, Di=1, 372 cycles/ETU 10752 bits/s at 4.00 MHz
 // BWT = 5.7s
-static const uint8_t atr_ccid[] = {
+static uint8_t atr_ccid[] = {
     0x3B, 0xF7, 0x11, 0x00, 0x00, 0x81, 0x31, 0xFE, 0x65, 
     0x43, 0x61, 0x6E, 0x6F, 0x6B, 0x65, 0x79, 
     0x99};
+
+//
+// 各種業務処理（仮実装）
+//
+void applet_poweroff(void)
+{
+}
+
+void process_apdu(void)
+{
+}
 
 //
 // APDU処理（仮実装）
@@ -65,80 +80,200 @@ static void hex32_to_le_bytes(uint32_t u, uint8_t *data)
     memcpy(data, &u, 4);
 }
 
-static void icc_power_on(uint8_t *received_data)
+static void set_bulkin_data_apdu(uint8_t *data, size_t size)
 {
-    // レスポンス編集
-    // bMessageType
-    bulkin_data[0] = RDR_TO_PC_DATABLOCK;
-
-    // dwLength
-    uint32_t u = sizeof(atr_ccid);
-    hex32_to_le_bytes(u, bulkin_data + 1);
     // APDU
-    uint8_t const *apdu = atr_ccid;
-    size_t apdu_size = sizeof(atr_ccid);
-    memcpy(bulkin_data + CCID_CMD_HEADER_SIZE, apdu, apdu_size);
-
-    // bStatus
-    // BM_COMMAND_STATUS_NO_ERROR(0x00) | BM_ICC_PRESENT_ACTIVE(0x00)
-    bulkin_data[7] = (0x00 | 0x00);
-    // bError
-    bulkin_data[8] = SLOT_NO_ERROR;
-    // bSpecific
-    bulkin_data[9] = 0;
-
-    // レスポンス送信
-    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE + apdu_size);
+    uint8_t *apdu = bulkin_data + CCID_CMD_HEADER_SIZE;
+    memcpy(apdu, data, size);
 }
 
-static void get_slot_status(uint8_t error, uint8_t *received_data)
+static void set_bulkin_data_dw_length(size_t size)
 {
-    // レスポンス編集
+    // dwLength
+    uint32_t u = (uint32_t)size;
+    hex32_to_le_bytes(u, bulkin_data + 1);
+}
+
+static void set_bulkin_data_status(uint8_t cmd_status, uint8_t icc_status)
+{
+    // bStatus
+    bulkin_data[7] = (cmd_status | icc_status);
+}
+
+uint8_t *usbd_ccid_command_apdu_data(void)
+{
+    // 受信APDUの先頭アドレスを戻す
+    return bulkout_data + CCID_CMD_HEADER_SIZE;
+}
+
+size_t usbd_ccid_command_apdu_size(void)
+{
+    // 受信APDUのデータ超を戻す
+    size_t apdu_size = (size_t)le_bytes_to_hex32(bulkout_data + 1);
+    return apdu_size;
+}
+
+//
+// リクエスト処理（PC --> Reader）
+//
+static uint8_t pc_to_reader_icc_power_on(void) 
+{
+    NRF_LOG_DEBUG("Slot power on");
+
+    // bSpecific_0
+    uint8_t voltage = bulkout_data[7];
+    if (voltage != 0x00) {
+        // dwLength
+        set_bulkin_data_dw_length(0);
+        // bStatus
+        set_bulkin_data_status(BM_COMMAND_STATUS_FAILED, BM_ICC_PRESENT_ACTIVE);
+        NRF_LOG_ERROR("Bad power select");
+        return SLOTERROR_BAD_POWERSELECT;
+    }
+
+    // APDU
+    set_bulkin_data_apdu(atr_ccid, sizeof(atr_ccid));
+    // dwLength
+    set_bulkin_data_dw_length(sizeof(atr_ccid));
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
+    return SLOT_NO_ERROR;
+}
+
+static uint8_t pc_to_reader_icc_power_off(void) 
+{
+    NRF_LOG_DEBUG("Slot power off");
+
+    // Appletを停止
+    applet_poweroff();
+
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_INACTIVE);
+    return SLOT_NO_ERROR;
+}
+
+static uint8_t pc_to_reader_get_slot_status(void) 
+{
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
+    return SLOT_NO_ERROR;
+}
+
+static uint8_t pc_to_reader_xfr_block(void)
+{
+    // 受信APDUに対する処理を実行する
+    process_apdu();
+
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
+    return SLOT_NO_ERROR;
+}
+
+static uint8_t pc_to_reader_get_parameters(void) 
+{
+    NRF_LOG_DEBUG("Slot get param");
+
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
+    return SLOT_NO_ERROR;
+}
+
+//
+// レスポンス処理（Reader --> PC）
+//
+static void reader_to_pc_slot_status(uint8_t error) 
+{
+    // これは仮の処理です。
+    if (bulkout_data[6] > 0x05) {
+        return;
+    }
+    
     // bMessageType
     bulkin_data[0] = RDR_TO_PC_SLOTSTATUS;
     // dwLength
-    uint32_t u = 0;
-    hex32_to_le_bytes(u, bulkin_data + 1);
+    set_bulkin_data_dw_length(0);
+    // bError
+    bulkin_data[8] = error;
+    // bSpecific
+    bulkin_data[9] = 0;
+    
+    // レスポンス送信
+    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE);
+}
 
-    // bStatus
-    // BM_COMMAND_STATUS_NO_ERROR(0x00) | BM_ICC_PRESENT_ACTIVE(0x00)
-    bulkin_data[7] = (0x00 | 0x00);
+static void reader_to_pc_data_block(uint8_t error) 
+{
+    // bMessageType
+    bulkin_data[0] = RDR_TO_PC_DATABLOCK;
     // bError
     bulkin_data[8] = error;
     // bSpecific
     bulkin_data[9] = 0;
 
     // レスポンス送信
-    if (received_data[6] < 0x05) {
-        usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE);
+    size_t apdu_size = (size_t)le_bytes_to_hex32(bulkin_data + 1);
+    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE + apdu_size);
+}
+
+static void reader_to_pc_parameters(uint8_t error) 
+{
+    // dwLength
+    if (error == SLOT_NO_ERROR) {
+        set_bulkin_data_dw_length(7);
+    } else {
+        set_bulkin_data_dw_length(0);
     }
+
+    // APDU
+    uint8_t *apdu = bulkin_data + CCID_CMD_HEADER_SIZE;
+    apdu[0] = 0x11; // Fi=372, Di=1
+    apdu[1] = 0x10; // Checksum: LRC, Convention: direct, ignored by CCID
+    apdu[2] = 0x00; // No extra guard time
+    apdu[3] = 0x15; // BWI = 1, CWI = 5
+    apdu[4] = 0x00; // Stopping the Clock is not allowed
+    apdu[5] = 0xFE; // IFSC = 0xFE
+    apdu[6] = 0x00; // NAD
+
+    // bMessageType
+    bulkin_data[0] = RDR_TO_PC_PARAMETERS;
+    // bError
+    bulkin_data[8] = error;
+    // bSpecific
+    bulkin_data[9] = 0x01;
+
+    // レスポンス送信
+    size_t apdu_size = (size_t)le_bytes_to_hex32(bulkin_data + 1);
+    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE + apdu_size);
 }
 
 static void apdu_received(void)
 {
-    uint8_t bMessageType = bulkout_data[0];
-    switch (bMessageType) {
+    uint8_t error;
+
+    // bMessageType で処理分岐
+    switch (bulkout_data[0]) {
         case PC_TO_RDR_ICCPOWERON:
-            NRF_LOG_DEBUG("Slot power on");
-            icc_power_on(bulkout_data);
+            error = pc_to_reader_icc_power_on();
+            reader_to_pc_data_block(error);
             break;
         case PC_TO_RDR_ICCPOWEROFF:
-            // TODO: 後日実装
-            NRF_LOG_DEBUG("Slot power off");
+            error = pc_to_reader_icc_power_off();
+            reader_to_pc_slot_status(error);
             break;
         case PC_TO_RDR_GETSLOTSTATUS:
-            get_slot_status(SLOT_NO_ERROR, bulkout_data);
+            error = pc_to_reader_get_slot_status();
+            reader_to_pc_slot_status(error);
             break;
         case PC_TO_RDR_XFRBLOCK:
-            // TODO: 後日実装
-            NRF_LOG_DEBUG("PC_TO_RDR_XFRBLOCK requested");
+            error = pc_to_reader_xfr_block();
+            reader_to_pc_data_block(error);
             break;
         case PC_TO_RDR_GETPARAMETERS:
-            // TODO: 後日実装
-            NRF_LOG_DEBUG("Slot get param");
+            error = pc_to_reader_get_parameters();
+            reader_to_pc_parameters(error);
             break;
         default:
-            get_slot_status(SLOTERROR_CMD_NOT_SUPPORTED, bulkout_data);
+            reader_to_pc_slot_status(SLOTERROR_CMD_NOT_SUPPORTED);
             break;
     }
 }
@@ -155,7 +290,7 @@ static void usbd_ccid_data_frame_received(void)
     // APDU格納領域
     uint8_t *apdu_data = bulkout_data + CCID_CMD_HEADER_SIZE;
 
-    // 初回フレームの場合
+    // 先頭フレーム待ちの場合
     if (bulkout_state == 0) {
         if (len < CCID_CMD_HEADER_SIZE) {
             // 受信フレームにヘッダー（10バイト）が含まれていない場合は終了
@@ -196,7 +331,7 @@ static void usbd_ccid_data_frame_received(void)
             bulkout_state = 0;
         }
 
-    // 継続フレームの場合
+    // 継続フレーム待ちの場合
     } else if (bulkout_state == 1) {
         if (apdu_size_received + len < apdu_size_expected) {
             memcpy(apdu_data + apdu_size_received, data, len);

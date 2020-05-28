@@ -42,12 +42,25 @@ extern "C" {
 // エラーステータス
 #define SLOT_NO_ERROR               0x81
 #define SLOTERROR_CMD_NOT_SUPPORTED 0x00
+#define SLOTERROR_BAD_POWERSELECT   0x07
+
+// 各種ステータス
+#define BM_ICC_PRESENT_ACTIVE       0x00
+#define BM_ICC_PRESENT_INACTIVE     0x01
+
+#define BM_COMMAND_STATUS_NO_ERROR  0x00
+#define BM_COMMAND_STATUS_OFFSET    0x06
+#define BM_COMMAND_STATUS_FAILED    (0x01 << BM_COMMAND_STATUS_OFFSET)
+#define BM_COMMAND_STATUS_TIME_EXTN (0x02 << BM_COMMAND_STATUS_OFFSET)
 
 //
 // 関数群
 //
 void usbd_ccid_init(void);
 void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size);
+
+uint8_t *usbd_ccid_command_apdu_data(void);
+size_t   usbd_ccid_command_apdu_size(void);
 
 #ifdef __cplusplus
 }
