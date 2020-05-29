@@ -13,9 +13,11 @@ CFLAGS += -DHW_REV=\"$(HW_REV)\"
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
+CCID_DIR := $(PROJ_DIR)/../../../../CCID
 FD2LIB_DIR := $(FIDO_DIR)/fido2_lib
 U2FLIB_DIR := $(FIDO_DIR)/u2f_lib
 CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
+CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
@@ -187,6 +189,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_get_assertion.c \
   $(CT2LIB_DIR)/ctap2_make_credential.c \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+  $(CIDLIB_DIR)/ccid_main.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
@@ -429,6 +432,7 @@ INC_FOLDERS += \
   $(FD2LIB_DIR) \
   $(U2FLIB_DIR) \
   $(CT2LIB_DIR) \
+  $(CIDLIB_DIR) \
   $(FCALIB_DIR) \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \

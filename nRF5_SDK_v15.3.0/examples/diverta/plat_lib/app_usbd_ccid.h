@@ -13,12 +13,8 @@ extern "C" {
 #include "app_usbd.h"
 #include "app_usbd_core.h"
 
+#include "ccid.h"
 #include "app_usbd_ccid_internal.h"
-
-#define APDU_BUFFER_SIZE        1280
-#define ABDATA_SIZE             (APDU_BUFFER_SIZE + 2)
-#define CCID_CMD_HEADER_SIZE    10
-#define CCID_NUMBER_OF_SLOTS    1
 
 #define LO(x) ((uint8_t)((x)&0x00FF))
 #define HI(x) ((uint8_t)(((x)&0xFF00) >> 8))

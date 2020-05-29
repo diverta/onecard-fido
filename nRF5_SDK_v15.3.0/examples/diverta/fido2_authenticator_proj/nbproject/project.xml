@@ -29,6 +29,7 @@
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2</sourceRootElem>
                 <sourceRootElem>../plat_lib_rev2_1</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2_1</sourceRootElem>
+                <sourceRootElem>../../../../CCID/ccid_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
