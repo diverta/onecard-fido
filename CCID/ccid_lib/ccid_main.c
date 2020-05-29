@@ -5,6 +5,7 @@
  * Created on 2020/05/29, 12:37
  */
 #include "ccid.h"
+#include "ccid_apdu.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -40,17 +41,6 @@ static uint8_t atr_ccid[] = {
     0x3B, 0xF7, 0x11, 0x00, 0x00, 0x81, 0x31, 0xFE, 0x65, 
     0x43, 0x61, 0x6E, 0x6F, 0x6B, 0x65, 0x79, 
     0x99};
-
-//
-// 各種業務処理（仮実装）
-//
-void applet_poweroff(void)
-{
-}
-
-void process_apdu(void)
-{
-}
 
 //
 // APDU処理（仮実装）
@@ -132,7 +122,7 @@ static uint8_t pc_to_reader_icc_power_off(void)
     fido_log_debug("Slot power off");
 
     // Appletを停止
-    applet_poweroff();
+    ccid_apdu_stop_applet();
 
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_INACTIVE);
@@ -149,7 +139,7 @@ static uint8_t pc_to_reader_get_slot_status(void)
 static uint8_t pc_to_reader_xfr_block(void)
 {
     // 受信APDUに対する処理を実行する
-    process_apdu();
+    ccid_apdu_process();
 
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);

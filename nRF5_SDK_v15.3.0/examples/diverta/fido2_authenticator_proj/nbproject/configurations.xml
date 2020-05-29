@@ -24,6 +24,8 @@
     </logicalFolder>
     <logicalFolder name="ccid_lib" displayName="ccid_lib" projectFiles="true">
       <itemPath>../../../../CCID/ccid_lib/ccid.h</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_apdu.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_apdu.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
@@ -3871,6 +3873,16 @@
             flavor2="2">
       </item>
       <item path="../../../../CCID/ccid_lib/ccid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_apdu.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_apdu.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../CCID/ccid_lib/ccid_main.c"
             ex="false"
