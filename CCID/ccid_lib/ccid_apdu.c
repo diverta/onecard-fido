@@ -37,6 +37,9 @@ enum APPLET {
 };
 static enum APPLET current_applet;
 
+// Appletをあらわすバイト配列
+static uint8_t applet_id_piv[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
+
 void ccid_apdu_stop_applet(void) 
 {
     switch (current_applet) {
@@ -202,6 +205,51 @@ static bool parse_command_apdu(void)
     return true;
 }
 
+static bool command_is_applet_selection(void)
+{
+    return (capdu_cla == 0x00 && capdu_ins == 0xA4 && capdu_p1 == 0x04 && capdu_p2 == 0x00);
+}
+
+static bool select_applet(void)
+{
+    if (capdu_lc >= sizeof(applet_id_piv) 
+        && memcmp(capdu_data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
+        // PIV
+        if (current_applet != APPLET_PIV) {
+            ccid_apdu_stop_applet();
+        }
+        current_applet = APPLET_PIV;
+        fido_log_debug("select_applet: applet switched to PIV");
+        return true;
+    }
+
+    // appletを選択できなかった場合
+    rapdu_len = 0;
+    rapdu_sw = SW_FILE_NOT_FOUND;
+    fido_log_error("select_applet: applet not found");
+    return false;
+}
+
+static void process_applet(void)
+{
+    if (command_is_applet_selection()) {
+        if (select_applet() == false) {
+            return;
+        }
+    }
+    switch (current_applet) {
+        case APPLET_PIV:
+            // TODO: 具体的な処理は後日実装
+            rapdu_len = 0;
+            rapdu_sw = SW_NO_ERROR;
+            break;
+        default:
+            rapdu_len = 0;
+            rapdu_sw = SW_FILE_NOT_FOUND;
+            break;
+    }
+}
+
 void ccid_apdu_process(void)
 {
 #if LOG_DEBUG_APDU_BUFF
@@ -220,12 +268,12 @@ void ccid_apdu_process(void)
 
     } else {
         // 受信APDUコマンドに対応する処理を実行
-        // TODO: 具体的な処理は後日実装
         fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
             capdu_cla, capdu_ins, capdu_p1, capdu_p2, capdu_lc, capdu_le);
 #if LOG_DEBUG_APDU_DATA_BUFF
         print_hexdump_debug(capdu_data, capdu_data_size);
 #endif
+        process_applet();
     }
 
     // ステータスワードを設定（APDUの末尾２バイトを使用）
