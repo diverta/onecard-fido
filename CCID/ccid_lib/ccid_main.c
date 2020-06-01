@@ -85,9 +85,21 @@ uint8_t *ccid_command_apdu_data(void)
 
 size_t ccid_command_apdu_size(void)
 {
-    // 受信APDUのデータ超を戻す
+    // 受信APDUのデータ長を戻す
     size_t apdu_size = (size_t)le_bytes_to_hex32(bulkout_data + 1);
     return apdu_size;
+}
+
+uint8_t *ccid_response_apdu_data(void)
+{
+    // 送信APDUの先頭アドレスを戻す
+    return bulkin_data + CCID_CMD_HEADER_SIZE;
+}
+
+void ccid_response_apdu_size_set(size_t size)
+{
+    // 送信APDUのデータ長を設定
+    set_bulkin_data_dw_length(size);
 }
 
 //

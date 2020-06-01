@@ -61,12 +61,20 @@ extern "C" {
 #define BM_COMMAND_STATUS_TIME_EXTN (0x02 << BM_COMMAND_STATUS_OFFSET)
 
 //
+// マクロ
+//
+#define LO(x) ((uint8_t)((x)&0x00FF))
+#define HI(x) ((uint8_t)(((x)&0xFF00) >> 8))
+
+//
 // 関数群
 //
 void      ccid_initialize_value(void);
 void      ccid_data_frame_received(uint8_t *data, size_t len);
 uint8_t  *ccid_command_apdu_data(void);
 size_t    ccid_command_apdu_size(void);
+uint8_t  *ccid_response_apdu_data(void);
+void      ccid_response_apdu_size_set(size_t size);
 
 #ifdef __cplusplus
 }

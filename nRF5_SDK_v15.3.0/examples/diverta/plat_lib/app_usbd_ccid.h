@@ -16,9 +16,6 @@ extern "C" {
 #include "ccid.h"
 #include "app_usbd_ccid_internal.h"
 
-#define LO(x) ((uint8_t)((x)&0x00FF))
-#define HI(x) ((uint8_t)(((x)&0xFF00) >> 8))
-
 /**
  * @brief CCID class instance type.
  *
