@@ -27,6 +27,8 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_apdu.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_apdu.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_main.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
       <itemPath>../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
@@ -3887,6 +3889,16 @@
       <item path="../../../../CCID/ccid_lib/ccid_main.c"
             ex="false"
             tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c"

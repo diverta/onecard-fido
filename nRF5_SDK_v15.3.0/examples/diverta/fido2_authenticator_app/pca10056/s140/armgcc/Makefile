@@ -191,6 +191,7 @@ SRC_FILES += \
   $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
   $(CIDLIB_DIR)/ccid_apdu.c \
   $(CIDLIB_DIR)/ccid_main.c \
+  $(CIDLIB_DIR)/ccid_piv.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \

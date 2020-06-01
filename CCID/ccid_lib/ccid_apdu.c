@@ -5,7 +5,7 @@
  * Created on 2020/05/29, 15:21
  */
 #include "ccid.h"
-#include "ccid_apdu.h"
+#include "ccid_piv.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -60,26 +60,11 @@ void ccid_apdu_stop_applet(void)
 //
 // 受信したAPDU（Command APDU）を保持
 //
-typedef struct command_apdu {
-    uint8_t  cla;
-    uint8_t  ins;
-    uint8_t  p1;
-    uint8_t  p2;
-    size_t   lc;
-    size_t   le;
-    uint8_t *data;
-    size_t   data_size;
-} command_apdu_t;
 static command_apdu_t capdu;
 
 //
 // 送信するAPDU（Response APDU）を保持
 //
-typedef struct response_apdu {
-    uint8_t *data;
-    uint16_t len;
-    uint16_t sw;
-} response_apdu_t;
 static response_apdu_t rapdu;
 
 static void initialize_apdu_values(void)
@@ -237,9 +222,7 @@ static void process_applet(void)
     }
     switch (current_applet) {
         case APPLET_PIV:
-            // TODO: 具体的な処理は後日実装
-            rapdu.len = 0;
-            rapdu.sw = SW_NO_ERROR;
+            ccid_piv_apdu_process(&capdu, &rapdu);
             break;
         default:
             rapdu.len = 0;

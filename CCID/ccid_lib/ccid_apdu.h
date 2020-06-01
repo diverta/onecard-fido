@@ -7,6 +7,10 @@
 #ifndef CCID_APDU_H
 #define CCID_APDU_H
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,6 +35,26 @@ extern "C" {
 #define SW_INS_NOT_SUPPORTED        0x6D00
 #define SW_CLA_NOT_SUPPORTED        0x6E00
 #define SW_CHECKING_ERROR           0x6F00
+
+//
+// 構造体定義
+//
+typedef struct command_apdu {
+    uint8_t  cla;
+    uint8_t  ins;
+    uint8_t  p1;
+    uint8_t  p2;
+    size_t   lc;
+    size_t   le;
+    uint8_t *data;
+    size_t   data_size;
+} command_apdu_t;
+
+typedef struct response_apdu {
+    uint8_t *data;
+    uint16_t len;
+    uint16_t sw;
+} response_apdu_t;
 
 //
 // 関数群
