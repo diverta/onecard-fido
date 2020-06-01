@@ -10,6 +10,22 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for debug apdu data
+#define LOG_DEBUG_APDU_BUFF       false
+#define LOG_DEBUG_APDU_DATA_BUFF  false
+#define LOG_DEBUG_BUFF (LOG_DEBUG_APDU_BUFF || LOG_DEBUG_APDU_DATA_BUFF)
+
+#if LOG_DEBUG_BUFF
+static void print_hexdump_debug(uint8_t *buff, size_t size)
+{
+    int j, k;
+    for (j = 0; j < size; j += 64) {
+        k = size - j;
+        fido_log_print_hexdump_debug(buff + j, (k < 64) ? k : 64);
+    }
+}
+#endif
+
 //
 // Applet
 //
@@ -57,7 +73,25 @@ static uint8_t *rapdu_data;
 static uint16_t rapdu_len;
 static uint16_t rapdu_sw;
 
-static bool parse_capdu(void) 
+static void initialize_apdu_values(void)
+{
+    // 受信APDU（Command APDU）を初期化
+    capdu_cla = 0;
+    capdu_ins = 0;
+    capdu_p1 = 0;
+    capdu_p2 = 0;
+    capdu_lc = 0;
+    capdu_le = 0;
+    capdu_data = NULL;
+    capdu_data_size = 0;
+
+    // 送信APDU（Response APDU）を初期化
+    rapdu_data = ccid_response_apdu_data();;
+    rapdu_len = 0;
+    rapdu_sw = 0;
+}
+
+static bool parse_command_apdu(void) 
 {
     // 受信APDUの先頭アドレス、長さを取得
     uint8_t *cmd = ccid_command_apdu_data();
@@ -170,20 +204,28 @@ static bool parse_capdu(void)
 
 void ccid_apdu_process(void)
 {
-    NRF_LOG_DEBUG("APDU received(%d bytes):", ccid_command_apdu_size());
-    NRF_LOG_HEXDUMP_DEBUG(ccid_command_apdu_data(), ccid_command_apdu_size());
-    
+#if LOG_DEBUG_APDU_BUFF
+    fido_log_debug("APDU received(%d bytes):", ccid_command_apdu_size());
+    print_hexdump_debug(ccid_command_apdu_data(), ccid_command_apdu_size());
+#endif
+
+    // APDUデータ保持領域を初期化
+    initialize_apdu_values();
+
     // 受信したAPDUを解析
-    if (parse_capdu() == false) {
+    if (parse_command_apdu() == false) {
         // APDUが不正の場合はエラー扱い
         rapdu_len = 0;
         rapdu_sw = SW_CHECKING_ERROR;
 
     } else {
+        // 受信APDUコマンドに対応する処理を実行
         // TODO: 具体的な処理は後日実装
         fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
             capdu_cla, capdu_ins, capdu_p1, capdu_p2, capdu_lc, capdu_le);
-        fido_log_print_hexdump_debug(capdu_data, capdu_data_size);
+#if LOG_DEBUG_APDU_DATA_BUFF
+        print_hexdump_debug(capdu_data, capdu_data_size);
+#endif
     }
 
     // ステータスワードを設定（APDUの末尾２バイトを使用）
