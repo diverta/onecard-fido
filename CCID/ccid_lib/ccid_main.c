@@ -102,6 +102,12 @@ void ccid_response_apdu_size_set(size_t size)
     set_bulkin_data_dw_length(size);
 }
 
+size_t ccid_response_apdu_size_max(void)
+{
+    // 送信APDUの最大格納可能データ長を設定
+    return (sizeof(bulkin_data) - CCID_CMD_HEADER_SIZE);
+}
+
 //
 // リクエスト処理（PC --> Reader）
 //

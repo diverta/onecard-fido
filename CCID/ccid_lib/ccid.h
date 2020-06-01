@@ -75,6 +75,7 @@ uint8_t  *ccid_command_apdu_data(void);
 size_t    ccid_command_apdu_size(void);
 uint8_t  *ccid_response_apdu_data(void);
 void      ccid_response_apdu_size_set(size_t size);
+size_t    ccid_response_apdu_size_max(void);
 
 #ifdef __cplusplus
 }

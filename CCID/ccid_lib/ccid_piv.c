@@ -12,6 +12,7 @@
 
 static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
+static const uint8_t pin_policy[] = {0x40, 0x10};
 
 static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
@@ -38,6 +39,99 @@ static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
+bool ccid_piv_object_get(uint8_t file_tag, uint8_t *buffer, size_t *size)
+{
+    // パラメーターチェック
+    if (*size < 1) {
+        return false;
+    }
+    
+    // TODO: 正式な処理は後日実装予定
+    switch (file_tag) {
+        case 0x01: 
+            // X.509 Certificate for Card Authentication
+            break;
+        case 0x02: 
+            // Card Holder Unique Identifier
+            fido_log_debug("ccid_piv_object_get is requested file: Card Holder Unique Identifier");
+            *size = 0;
+            break;
+        case 0x05: 
+            // X.509 Certificate for PIV Authentication
+            break;
+        case 0x07: 
+            // Card Capability Container
+            break;
+        case 0x0A: 
+            // X.509 Certificate for Digital Signature
+            break;
+        case 0x0B: 
+            // X.509 Certificate for Key Management
+            break;
+        default:
+            return false;
+    }
+    
+    // 正常終了
+    return true;
+}
+
+static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // 送受信APDUデータの格納領域
+    uint8_t *data = capdu->data;
+    uint8_t *rdata = rapdu->data;
+
+    // パラメーターのチェック
+    if (capdu->p1 != 0x3f || capdu->p2 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
+    if (data[0] != 0x5c) {
+        return SW_WRONG_DATA;
+    }
+    if (data[1] + 2 != capdu->lc) {
+        return SW_WRONG_LENGTH;
+    }
+
+    if (data[1] == 1) {
+        if (data[2] != 0x7e) {
+            return SW_FILE_NOT_FOUND;
+        }
+        // For the Discovery Object, the 0x7e template nests two data elements:
+        // 1) tag 0x4f contains the AID of the PIV Card Application and
+        // 2) tag 0x5f2f lists the PIN Usage Policy.
+        rdata[0] = 0x7e;
+        rdata[1] = 5 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+        rdata[2] = 0x4f;
+        rdata[3] = sizeof(rid) + sizeof(pix);
+        memcpy(rdata + 4, rid, sizeof(rid));
+        memcpy(rdata + 4 + sizeof(rid), pix, sizeof(pix));
+        rdata[4 + sizeof(rid) + sizeof(pix)] = 0x5f;
+        rdata[5 + sizeof(rid) + sizeof(pix)] = 0x2f;
+        rdata[6 + sizeof(rid) + sizeof(pix)] = sizeof(pin_policy);
+        memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), pin_policy, sizeof(pin_policy));
+        rapdu->len = 7 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+
+    } else if (data[1] == 3) {
+        if (capdu->lc != 5 || data[2] != 0x5f || data[3] != 0xc1) {
+            return SW_FILE_NOT_FOUND;
+        }
+        // ファイル種別を取得し、
+        // ファイルの内容を送信APDUデータに格納
+        size_t size = ccid_response_apdu_size_max();
+        if (ccid_piv_object_get(data[4], rdata, &size) == false) {
+            return SW_FILE_NOT_FOUND;
+        }
+        rapdu->len = (uint16_t)size;
+
+    } else {
+        return SW_FILE_NOT_FOUND;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -54,8 +148,15 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case PIV_INS_SELECT:
             rapdu->sw = piv_ins_select(capdu, rapdu);
             break;
+        case PIV_INS_GET_DATA:
+            rapdu->sw = piv_ins_get_data(capdu, rapdu);
+            break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
             break;
     }
+}
+
+void ccid_piv_stop_applet(void)
+{
 }

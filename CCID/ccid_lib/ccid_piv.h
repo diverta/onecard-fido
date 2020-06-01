@@ -32,6 +32,7 @@ extern "C" {
 // 関数群
 //
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
+void ccid_piv_stop_applet(void);
 
 #ifdef __cplusplus
 }

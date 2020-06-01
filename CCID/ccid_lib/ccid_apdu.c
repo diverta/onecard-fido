@@ -44,7 +44,7 @@ void ccid_apdu_stop_applet(void)
 {
     switch (current_applet) {
         case APPLET_PIV:
-            // TODO: 後日実装
+            ccid_piv_stop_applet();
             break;
         case APPLET_OATH:
             // TODO: 後日実装
