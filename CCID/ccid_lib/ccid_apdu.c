@@ -60,38 +60,36 @@ void ccid_apdu_stop_applet(void)
 //
 // 受信したAPDU（Command APDU）を保持
 //
-static uint8_t  capdu_cla;
-static uint8_t  capdu_ins;
-static uint8_t  capdu_p1;
-static uint8_t  capdu_p2;
-static size_t   capdu_lc;
-static size_t   capdu_le;
-static uint8_t *capdu_data;
-static size_t   capdu_data_size;
+typedef struct command_apdu {
+    uint8_t  cla;
+    uint8_t  ins;
+    uint8_t  p1;
+    uint8_t  p2;
+    size_t   lc;
+    size_t   le;
+    uint8_t *data;
+    size_t   data_size;
+} command_apdu_t;
+static command_apdu_t capdu;
 
 //
 // 送信するAPDU（Response APDU）を保持
 //
-static uint8_t *rapdu_data;
-static uint16_t rapdu_len;
-static uint16_t rapdu_sw;
+typedef struct response_apdu {
+    uint8_t *data;
+    uint16_t len;
+    uint16_t sw;
+} response_apdu_t;
+static response_apdu_t rapdu;
 
 static void initialize_apdu_values(void)
 {
     // 受信APDU（Command APDU）を初期化
-    capdu_cla = 0;
-    capdu_ins = 0;
-    capdu_p1 = 0;
-    capdu_p2 = 0;
-    capdu_lc = 0;
-    capdu_le = 0;
-    capdu_data = NULL;
-    capdu_data_size = 0;
+    memset(&capdu, 0x00, sizeof(command_apdu_t));
 
     // 送信APDU（Response APDU）を初期化
-    rapdu_data = ccid_response_apdu_data();;
-    rapdu_len = 0;
-    rapdu_sw = 0;
+    memset(&rapdu, 0x00, sizeof(response_apdu_t));
+    rapdu.data = ccid_response_apdu_data();
 }
 
 static bool parse_command_apdu(void) 
@@ -105,12 +103,12 @@ static bool parse_command_apdu(void)
     }
 
     // ヘッダー部からコマンドを取得
-    capdu_cla = cmd[0];
-    capdu_ins = cmd[1];
-    capdu_p1 = cmd[2];
-    capdu_p2 = cmd[3];
-    capdu_lc = 0;
-    capdu_le = 0;
+    capdu.cla = cmd[0];
+    capdu.ins = cmd[1];
+    capdu.p1 = cmd[2];
+    capdu.p2 = cmd[3];
+    capdu.lc = 0;
+    capdu.le = 0;
 
     if (len == 4) {
         // APDUデータなし
@@ -123,36 +121,36 @@ static bool parse_command_apdu(void)
         // APDUデータなし
         // Lc = 未指定
         // Le = 1 byte encodingで指定あり
-        capdu_le = cmd[4];
-        capdu_lc = 0;
-        if (capdu_le == 0) {
-            capdu_le = 0x100;
+        capdu.le = cmd[4];
+        capdu.lc = 0;
+        if (capdu.le == 0) {
+            capdu.le = 0x100;
         }
         return true;
     }
 
     if (cmd[4] > 0) {
         // Lc が 1 byte encoding指定である場合
-        capdu_lc = cmd[4];
-        if (len == 5 + capdu_lc) {
+        capdu.lc = cmd[4];
+        if (len == 5 + capdu.lc) {
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 未指定
-            //memmove(capdu_data, cmd + 5, capdu_lc);
-            capdu_data = cmd + 5;
-            capdu_data_size = capdu_lc;
-            capdu_le = 0x100;
+            //memmove(capdu.data, cmd + 5, capdu.lc);
+            capdu.data = cmd + 5;
+            capdu.data_size = capdu.lc;
+            capdu.le = 0x100;
 
-        } else if (len == 6 + capdu_lc) {
+        } else if (len == 6 + capdu.lc) {
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 1 byte encodingで指定あり
-            //memmove(capdu_data, cmd + 5, capdu_lc);
-            capdu_data = cmd + 5;
-            capdu_data_size = capdu_lc;
-            capdu_le = cmd[5 + capdu_lc];
-            if (capdu_le == 0) {
-                capdu_le = 0x100;
+            //memmove(capdu.data, cmd + 5, capdu.lc);
+            capdu.data = cmd + 5;
+            capdu.data_size = capdu.lc;
+            capdu.le = cmd[5 + capdu.lc];
+            if (capdu.le == 0) {
+                capdu.le = 0x100;
             }
 
         } else {
@@ -166,35 +164,35 @@ static bool parse_command_apdu(void)
             // APDUデータなし
             // Lc = 未指定
             // Le = 3 byte encodingで指定あり
-            capdu_le = (cmd[5] << 8) | cmd[6];
-            if (capdu_le == 0) {
-                capdu_le = 0x10000;
+            capdu.le = (cmd[5] << 8) | cmd[6];
+            if (capdu.le == 0) {
+                capdu.le = 0x10000;
             }
 
         } else {
-            capdu_lc = (cmd[5] << 8) | cmd[6];
-            if (capdu_lc == 0) {
+            capdu.lc = (cmd[5] << 8) | cmd[6];
+            if (capdu.lc == 0) {
                 return false;
             }
-            if (len == 7 + capdu_lc) {
+            if (len == 7 + capdu.lc) {
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 未指定
-                //memmove(capdu_data, cmd + 7, capdu_lc);
-                capdu_data = cmd + 7;
-                capdu_data_size = capdu_lc;
-                capdu_le = 0x10000;
+                //memmove(capdu.data, cmd + 7, capdu.lc);
+                capdu.data = cmd + 7;
+                capdu.data_size = capdu.lc;
+                capdu.le = 0x10000;
 
-            } else if (len == 9 + capdu_lc) {
+            } else if (len == 9 + capdu.lc) {
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 2 byte encodingで指定あり
-                //memmove(capdu_data, cmd + 7, capdu_lc);
-                capdu_data = cmd + 7;
-                capdu_data_size = capdu_lc;
-                capdu_le = (cmd[7 + capdu_lc] << 8) | cmd[8 + capdu_lc];
-                if (capdu_le == 0) {
-                    capdu_le = 0x10000;
+                //memmove(capdu.data, cmd + 7, capdu.lc);
+                capdu.data = cmd + 7;
+                capdu.data_size = capdu.lc;
+                capdu.le = (cmd[7 + capdu.lc] << 8) | cmd[8 + capdu.lc];
+                if (capdu.le == 0) {
+                    capdu.le = 0x10000;
                 }
 
             } else {
@@ -207,13 +205,13 @@ static bool parse_command_apdu(void)
 
 static bool command_is_applet_selection(void)
 {
-    return (capdu_cla == 0x00 && capdu_ins == 0xA4 && capdu_p1 == 0x04 && capdu_p2 == 0x00);
+    return (capdu.cla == 0x00 && capdu.ins == 0xA4 && capdu.p1 == 0x04 && capdu.p2 == 0x00);
 }
 
 static bool select_applet(void)
 {
-    if (capdu_lc >= sizeof(applet_id_piv) 
-        && memcmp(capdu_data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
+    if (capdu.lc >= sizeof(applet_id_piv) 
+        && memcmp(capdu.data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
         // PIV
         if (current_applet != APPLET_PIV) {
             ccid_apdu_stop_applet();
@@ -224,8 +222,8 @@ static bool select_applet(void)
     }
 
     // appletを選択できなかった場合
-    rapdu_len = 0;
-    rapdu_sw = SW_FILE_NOT_FOUND;
+    rapdu.len = 0;
+    rapdu.sw = SW_FILE_NOT_FOUND;
     fido_log_error("select_applet: applet not found");
     return false;
 }
@@ -240,12 +238,12 @@ static void process_applet(void)
     switch (current_applet) {
         case APPLET_PIV:
             // TODO: 具体的な処理は後日実装
-            rapdu_len = 0;
-            rapdu_sw = SW_NO_ERROR;
+            rapdu.len = 0;
+            rapdu.sw = SW_NO_ERROR;
             break;
         default:
-            rapdu_len = 0;
-            rapdu_sw = SW_FILE_NOT_FOUND;
+            rapdu.len = 0;
+            rapdu.sw = SW_FILE_NOT_FOUND;
             break;
     }
 }
@@ -263,24 +261,24 @@ void ccid_apdu_process(void)
     // 受信したAPDUを解析
     if (parse_command_apdu() == false) {
         // APDUが不正の場合はエラー扱い
-        rapdu_len = 0;
-        rapdu_sw = SW_CHECKING_ERROR;
+        rapdu.len = 0;
+        rapdu.sw = SW_CHECKING_ERROR;
 
     } else {
         // 受信APDUコマンドに対応する処理を実行
         fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
-            capdu_cla, capdu_ins, capdu_p1, capdu_p2, capdu_lc, capdu_le);
+            capdu.cla, capdu.ins, capdu.p1, capdu.p2, capdu.lc, capdu.le);
 #if LOG_DEBUG_APDU_DATA_BUFF
-        print_hexdump_debug(capdu_data, capdu_data_size);
+        print_hexdump_debug(capdu.data, capdu.data_size);
 #endif
         process_applet();
     }
 
     // ステータスワードを設定（APDUの末尾２バイトを使用）
     uint8_t *apdu_data = ccid_response_apdu_data();
-    apdu_data[rapdu_len] = HI(rapdu_sw);
-    apdu_data[rapdu_len + 1] = LO(rapdu_sw);
+    apdu_data[rapdu.len] = HI(rapdu.sw);
+    apdu_data[rapdu.len + 1] = LO(rapdu.sw);
 
     // レスポンスデータに、APDU長を設定
-    ccid_response_apdu_size_set(rapdu_len + 2);
+    ccid_response_apdu_size_set(rapdu.len + 2);
 }
