@@ -15,7 +15,7 @@
 //   1280バイトを上限とします。
 //
 static uint8_t bulkout_data[1280];
-static uint8_t bulkin_data[1280];
+static uint8_t bulkin_data[288];
 
 // データ受信用一時変数
 static size_t apdu_size_received;
@@ -178,11 +178,6 @@ static uint8_t pc_to_reader_get_parameters(void)
 //
 static void reader_to_pc_slot_status(uint8_t error) 
 {
-    // これは仮の処理です。
-    if (bulkout_data[6] > 0x05) {
-        return;
-    }
-    
     // bMessageType
     bulkin_data[0] = RDR_TO_PC_SLOTSTATUS;
     // dwLength

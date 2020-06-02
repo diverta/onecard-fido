@@ -51,9 +51,10 @@ typedef struct command_apdu {
 } command_apdu_t;
 
 typedef struct response_apdu {
-    uint8_t *data;
+    uint8_t  data[1280];
     uint16_t len;
     uint16_t sw;
+    size_t   already_sent;
 } response_apdu_t;
 
 //
