@@ -6,6 +6,7 @@
  */
 #include "ccid.h"
 #include "ccid_piv.h"
+#include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -46,34 +47,48 @@ bool ccid_piv_object_get(uint8_t file_tag, uint8_t *buffer, size_t *size)
         return false;
     }
     
-    // TODO: 正式な処理は後日実装予定
+    // PIVデータのタグごとに処理を分岐
+    bool success = false;
     switch (file_tag) {
-        case 0x01: 
+        case 0x01:
             // X.509 Certificate for Card Authentication
+            success = ccid_piv_object_cert_cauth_get(buffer, size);
             break;
-        case 0x02: 
+        case 0x02:
             // Card Holder Unique Identifier
-            fido_log_debug("ccid_piv_object_get is requested file: Card Holder Unique Identifier");
-            *size = 0;
+            success = ccid_piv_object_chuid_get(buffer, size);
             break;
-        case 0x05: 
+        case 0x05:
             // X.509 Certificate for PIV Authentication
+            success = ccid_piv_object_cert_pauth_get(buffer, size);
             break;
-        case 0x07: 
+        case 0x07:
             // Card Capability Container
+            success = ccid_piv_object_ccc_get(buffer, size);
             break;
-        case 0x0A: 
+        case 0x0A:
             // X.509 Certificate for Digital Signature
+            success = ccid_piv_object_cert_digsig_get(buffer, size);
             break;
-        case 0x0B: 
+        case 0x0B:
             // X.509 Certificate for Key Management
+            success = ccid_piv_object_cert_keyman_get(buffer, size);
+            break;
+        case 0x0C:
+            // Key History Object
+            success = ccid_piv_object_key_history_get(buffer, size);
             break;
         default:
-            return false;
+            break;
+    }
+    
+    if (success == false) {
+        // 処理失敗時は長さをゼロクリア
+        *size = 0;
     }
     
     // 正常終了
-    return true;
+    return success;
 }
 
 static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
@@ -111,6 +126,8 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         rdata[6 + sizeof(rid) + sizeof(pix)] = sizeof(pin_policy);
         memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), pin_policy, sizeof(pin_policy));
         rapdu->len = 7 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+
+        fido_log_debug("Discovery Object is requested (%d bytes)", rapdu->len);
 
     } else if (data[1] == 3) {
         if (capdu->lc != 5 || data[2] != 0x5f || data[3] != 0xc1) {

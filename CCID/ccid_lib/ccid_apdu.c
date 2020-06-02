@@ -264,4 +264,10 @@ void ccid_apdu_process(void)
 
     // レスポンスデータに、APDU長を設定
     ccid_response_apdu_size_set(rapdu.len + 2);
+
+    // 送信APDUレスポンスのログ
+    fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", rapdu.sw, rapdu.len);
+#if LOG_DEBUG_APDU_DATA_BUFF
+    print_hexdump_debug(rapdu.data, rapdu.len);
+#endif
 }
