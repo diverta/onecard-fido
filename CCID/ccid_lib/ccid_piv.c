@@ -149,6 +149,49 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
+static uint16_t piv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != 0) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // レスポンスデータを編集
+    uint8_t *rdata = rapdu->data;
+    rdata[0] = 0x05;
+    rdata[1] = 0x00;
+    rdata[2] = 0x00;
+    rapdu->len = 3;
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
+static uint16_t piv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != 0) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // ファイルの内容を送信APDUデータに格納
+    uint8_t *rdata = rapdu->data;
+    size_t size = ccid_response_apdu_size_max();
+    if (ccid_piv_object_sn_get(rdata, &size) == false) {
+        return SW_FILE_NOT_FOUND;
+    }
+    rapdu->len = (uint16_t)size;
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -167,6 +210,12 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_GET_DATA:
             rapdu->sw = piv_ins_get_data(capdu, rapdu);
+            break;
+        case PIV_INS_GET_VERSION:
+            rapdu->sw = piv_ins_get_version(capdu, rapdu);
+            break;
+        case PIV_INS_GET_SERIAL:
+            rapdu->sw = piv_ins_get_serial(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
