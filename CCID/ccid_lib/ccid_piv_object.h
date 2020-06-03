@@ -23,6 +23,7 @@ bool ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size);
 bool ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size);
 bool ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
 bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size);
+bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size);
 
 #ifdef __cplusplus
 }
