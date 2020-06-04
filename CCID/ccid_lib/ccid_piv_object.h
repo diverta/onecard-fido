@@ -15,15 +15,16 @@
 extern "C" {
 #endif
 
-bool ccid_piv_object_sn_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size);
-bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_sn_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size);
+uint8_t ccid_piv_object_card_admin_key_alg_get(void);
 
 #ifdef __cplusplus
 }

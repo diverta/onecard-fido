@@ -160,6 +160,7 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/bignum.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
+  $(SDK_ROOT)/external/mbedtls/library/des.c \
   $(SDK_ROOT)/external/mbedtls/library/ecp.c \
   $(SDK_ROOT)/external/mbedtls/library/ecp_curves.c \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
@@ -192,6 +193,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_apdu.c \
   $(CIDLIB_DIR)/ccid_main.c \
   $(CIDLIB_DIR)/ccid_piv.c \
+  $(CIDLIB_DIR)/ccid_piv_general_auth.c \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -473,6 +475,7 @@ CFLAGS += -DBOARD_$(TARGET_BOARD)
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DMBEDTLS_CONFIG_FILE=\"nrf_crypto_mbedtls_config.h\"
+CFLAGS += -DMBEDTLS_DES_C
 CFLAGS += -DNRF52840_XXAA
 CFLAGS += -DNRF_CRYPTO_MAX_INSTANCE_COUNT=1
 CFLAGS += -DNRF_SD_BLE_API_VERSION=6

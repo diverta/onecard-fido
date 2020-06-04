@@ -6,6 +6,7 @@
  */
 #include "ccid.h"
 #include "ccid_piv.h"
+#include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -216,6 +217,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_GET_SERIAL:
             rapdu->sw = piv_ins_get_serial(capdu, rapdu);
+            break;
+        case PIV_INS_GENERAL_AUTHENTICATE:
+            rapdu->sw = piv_ins_general_authenticate(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

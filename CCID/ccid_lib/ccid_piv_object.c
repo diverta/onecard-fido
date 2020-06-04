@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ccid_piv.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -117,4 +118,13 @@ bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size)
     *size = convert_hexstring_to_bytes(card_admin_key_temp, buffer);
     fido_log_debug("Card administration key is requested (%d bytes)", *size);
     return true;
+}
+
+uint8_t ccid_piv_object_card_admin_key_alg_get(void)
+{
+    // 仮の仕様です。
+    // 0x03: 3-key triple DEA
+    // 0x07: ALG_RSA_2048
+    // 0x11: ALG_ECC_256
+    return 0x03;
 }
