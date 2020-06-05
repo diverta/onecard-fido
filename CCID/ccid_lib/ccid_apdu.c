@@ -67,7 +67,7 @@ static command_apdu_t capdu;
 //
 static response_apdu_t rapdu;
 
-static bool parse_command_apdu(void) 
+static bool parse_command_apdu(command_apdu_t *p_capdu) 
 {
     // 受信APDUの先頭アドレス、長さを取得
     uint8_t *cmd = ccid_command_apdu_data();
@@ -78,12 +78,12 @@ static bool parse_command_apdu(void)
     }
 
     // ヘッダー部からコマンドを取得
-    capdu.cla = cmd[0];
-    capdu.ins = cmd[1];
-    capdu.p1 = cmd[2];
-    capdu.p2 = cmd[3];
-    capdu.lc = 0;
-    capdu.le = 0;
+    p_capdu->cla = cmd[0];
+    p_capdu->ins = cmd[1];
+    p_capdu->p1 = cmd[2];
+    p_capdu->p2 = cmd[3];
+    p_capdu->lc = 0;
+    p_capdu->le = 0;
 
     if (len == 4) {
         // APDUデータなし
@@ -96,36 +96,36 @@ static bool parse_command_apdu(void)
         // APDUデータなし
         // Lc = 未指定
         // Le = 1 byte encodingで指定あり
-        capdu.le = cmd[4];
-        capdu.lc = 0;
-        if (capdu.le == 0) {
-            capdu.le = 0x100;
+        p_capdu->le = cmd[4];
+        p_capdu->lc = 0;
+        if (p_capdu->le == 0) {
+            p_capdu->le = 0x100;
         }
         return true;
     }
 
     if (cmd[4] > 0) {
         // Lc が 1 byte encoding指定である場合
-        capdu.lc = cmd[4];
-        if (len == 5 + capdu.lc) {
+        p_capdu->lc = cmd[4];
+        if (len == 5 + p_capdu->lc) {
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 未指定
             //memmove(capdu.data, cmd + 5, capdu.lc);
-            capdu.data = cmd + 5;
-            capdu.data_size = capdu.lc;
-            capdu.le = 0x100;
+            p_capdu->data = cmd + 5;
+            p_capdu->data_size = p_capdu->lc;
+            p_capdu->le = 0x100;
 
-        } else if (len == 6 + capdu.lc) {
+        } else if (len == 6 + p_capdu->lc) {
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 1 byte encodingで指定あり
             //memmove(capdu.data, cmd + 5, capdu.lc);
-            capdu.data = cmd + 5;
-            capdu.data_size = capdu.lc;
-            capdu.le = cmd[5 + capdu.lc];
-            if (capdu.le == 0) {
-                capdu.le = 0x100;
+            p_capdu->data = cmd + 5;
+            p_capdu->data_size = p_capdu->lc;
+            p_capdu->le = cmd[5 + p_capdu->lc];
+            if (p_capdu->le == 0) {
+                p_capdu->le = 0x100;
             }
 
         } else {
@@ -139,35 +139,35 @@ static bool parse_command_apdu(void)
             // APDUデータなし
             // Lc = 未指定
             // Le = 3 byte encodingで指定あり
-            capdu.le = (cmd[5] << 8) | cmd[6];
-            if (capdu.le == 0) {
-                capdu.le = 0x10000;
+            p_capdu->le = (cmd[5] << 8) | cmd[6];
+            if (p_capdu->le == 0) {
+                p_capdu->le = 0x10000;
             }
 
         } else {
-            capdu.lc = (cmd[5] << 8) | cmd[6];
-            if (capdu.lc == 0) {
+            p_capdu->lc = (cmd[5] << 8) | cmd[6];
+            if (p_capdu->lc == 0) {
                 return false;
             }
-            if (len == 7 + capdu.lc) {
+            if (len == 7 + p_capdu->lc) {
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 未指定
                 //memmove(capdu.data, cmd + 7, capdu.lc);
-                capdu.data = cmd + 7;
-                capdu.data_size = capdu.lc;
-                capdu.le = 0x10000;
+                p_capdu->data = cmd + 7;
+                p_capdu->data_size = p_capdu->lc;
+                p_capdu->le = 0x10000;
 
-            } else if (len == 9 + capdu.lc) {
+            } else if (len == 9 + p_capdu->lc) {
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 2 byte encodingで指定あり
                 //memmove(capdu.data, cmd + 7, capdu.lc);
-                capdu.data = cmd + 7;
-                capdu.data_size = capdu.lc;
-                capdu.le = (cmd[7 + capdu.lc] << 8) | cmd[8 + capdu.lc];
-                if (capdu.le == 0) {
-                    capdu.le = 0x10000;
+                p_capdu->data = cmd + 7;
+                p_capdu->data_size = p_capdu->lc;
+                p_capdu->le = (cmd[7 + p_capdu->lc] << 8) | cmd[8 + p_capdu->lc];
+                if (p_capdu->le == 0) {
+                    p_capdu->le = 0x10000;
                 }
 
             } else {
@@ -283,7 +283,7 @@ void ccid_apdu_process(void)
     memset(&capdu, 0x00, sizeof(command_apdu_t));
 
     // 受信したAPDUを解析
-    if (parse_command_apdu() == false) {
+    if (parse_command_apdu(&capdu) == false) {
         // APDUが不正の場合はエラー扱い
         rapdu.len = 0;
         rapdu.sw = SW_CHECKING_ERROR;
