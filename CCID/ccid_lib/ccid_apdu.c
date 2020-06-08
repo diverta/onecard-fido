@@ -60,12 +60,12 @@ void ccid_apdu_stop_applet(void)
 //
 // 受信したAPDU（Command APDU）を保持
 //
-static command_apdu_t capdu;
+static command_apdu_t command_apdu;
 
 //
 // 送信するAPDU（Response APDU）を保持
 //
-static response_apdu_t rapdu;
+static response_apdu_t response_apdu;
 
 static bool parse_command_apdu(command_apdu_t *p_capdu) 
 {
@@ -111,7 +111,7 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 未指定
-            //memmove(capdu.data, cmd + 5, capdu.lc);
+            //memmove(capdu->data, cmd + 5, capdu->lc);
             p_capdu->data = cmd + 5;
             p_capdu->data_size = p_capdu->lc;
             p_capdu->le = 0x100;
@@ -120,7 +120,7 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
             // APDUデータあり
             // Lc = 1 byte encodingで指定あり
             // Le = 1 byte encodingで指定あり
-            //memmove(capdu.data, cmd + 5, capdu.lc);
+            //memmove(capdu->data, cmd + 5, capdu->lc);
             p_capdu->data = cmd + 5;
             p_capdu->data_size = p_capdu->lc;
             p_capdu->le = cmd[5 + p_capdu->lc];
@@ -153,7 +153,7 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 未指定
-                //memmove(capdu.data, cmd + 7, capdu.lc);
+                //memmove(capdu->data, cmd + 7, capdu->lc);
                 p_capdu->data = cmd + 7;
                 p_capdu->data_size = p_capdu->lc;
                 p_capdu->le = 0x10000;
@@ -162,7 +162,7 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
                 // APDUデータあり
                 // Lc = 3 bytes encodingで指定あり
                 // Le = 2 byte encodingで指定あり
-                //memmove(capdu.data, cmd + 7, capdu.lc);
+                //memmove(capdu->data, cmd + 7, capdu->lc);
                 p_capdu->data = cmd + 7;
                 p_capdu->data_size = p_capdu->lc;
                 p_capdu->le = (cmd[7 + p_capdu->lc] << 8) | cmd[8 + p_capdu->lc];
@@ -178,38 +178,38 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
     return true;
 }
 
-static void generate_response_apdu(void)
+static void generate_response_apdu(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // Leで指定されたサイズを、最大送信可能バイト数とする
-    size_t max_size = (capdu.le < APDU_BUFFER_SIZE) ? capdu.le : APDU_BUFFER_SIZE;
+    size_t max_size = (capdu->le < APDU_BUFFER_SIZE) ? capdu->le : APDU_BUFFER_SIZE;
 
     // 今回送信するフレームサイズを計算
-    uint16_t size_to_send = rapdu.len - rapdu.already_sent;
+    uint16_t size_to_send = rapdu->len - rapdu->already_sent;
     if (size_to_send > max_size) {
         size_to_send = max_size;
     }
 
     // データバイトを格納（APDUの先頭からコピー）
     uint8_t *apdu_data = ccid_response_apdu_data();
-    memcpy(apdu_data, rapdu.data + rapdu.already_sent, size_to_send);
+    memcpy(apdu_data, rapdu->data + rapdu->already_sent, size_to_send);
 
     // APDU長を設定
     // （ステータスワードの２バイト分を含む）
     ccid_response_apdu_size_set(size_to_send + 2);
 
     // 送信済みバイト数を更新
-    rapdu.already_sent += size_to_send;
+    rapdu->already_sent += size_to_send;
 
     // ステータスワードを生成
     uint16_t sw;
-    if (rapdu.already_sent < rapdu.len) {
-        if (rapdu.len - rapdu.already_sent > 0xff) {
+    if (rapdu->already_sent < rapdu->len) {
+        if (rapdu->len - rapdu->already_sent > 0xff) {
             sw = 0x61ff;
         } else {
-            sw = 0x6100 + (rapdu.len - rapdu.already_sent);
+            sw = 0x6100 + (rapdu->len - rapdu->already_sent);
         }
     } else {
-        sw = rapdu.sw;
+        sw = rapdu->sw;
     }
 
     // ステータスワードバイトを格納（APDUの末尾２バイトを使用）
@@ -217,27 +217,27 @@ static void generate_response_apdu(void)
     apdu_data[size_to_send + 1] = LO(sw);
 
     // 送信APDUレスポンスのログ
-    if (capdu.ins == 0xc0) {
+    if (capdu->ins == 0xc0) {
         fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes, total %d bytes)", 
-            sw, size_to_send, rapdu.len);
+            sw, size_to_send, rapdu->len);
     } else {
         fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", 
-            sw, rapdu.len);
+            sw, rapdu->len);
     }
 }
 
 //
 // Applet選択関連
 //
-static bool command_is_applet_selection(void)
+static bool command_is_applet_selection(command_apdu_t *capdu)
 {
-    return (capdu.cla == 0x00 && capdu.ins == 0xA4 && capdu.p1 == 0x04 && capdu.p2 == 0x00);
+    return (capdu->cla == 0x00 && capdu->ins == 0xA4 && capdu->p1 == 0x04 && capdu->p2 == 0x00);
 }
 
-static bool select_applet(void)
+static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
-    if (capdu.lc >= sizeof(applet_id_piv) 
-        && memcmp(capdu.data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
+    if (capdu->lc >= sizeof(applet_id_piv) 
+        && memcmp(capdu->data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
         // PIV
         if (current_applet != APPLET_PIV) {
             ccid_apdu_stop_applet();
@@ -248,74 +248,82 @@ static bool select_applet(void)
     }
 
     // appletを選択できなかった場合
-    rapdu.len = 0;
-    rapdu.sw = SW_FILE_NOT_FOUND;
+    rapdu->len = 0;
+    rapdu->sw = SW_FILE_NOT_FOUND;
     fido_log_error("select_applet: applet not found");
     return false;
 }
 
-static void process_applet(void)
+static void process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
-    if (command_is_applet_selection()) {
-        if (select_applet() == false) {
+    if (command_is_applet_selection(capdu)) {
+        if (select_applet(capdu, rapdu) == false) {
             return;
         }
     }
     switch (current_applet) {
         case APPLET_PIV:
-            ccid_piv_apdu_process(&capdu, &rapdu);
+            ccid_piv_apdu_process(capdu, rapdu);
             break;
         default:
-            rapdu.len = 0;
-            rapdu.sw = SW_FILE_NOT_FOUND;
+            rapdu->len = 0;
+            rapdu->sw = SW_FILE_NOT_FOUND;
             break;
+    }
+}
+
+static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // 受信APDUコマンドに対応する処理を実行
+    fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
+        capdu->cla, capdu->ins, capdu->p1, capdu->p2, capdu->lc, capdu->le);
+#if LOG_DEBUG_APDU_DATA_BUFF
+    print_hexdump_debug(capdu->data, capdu->data_size);
+#endif
+    if ((capdu->cla == 0x80 || capdu->cla == 0x00) && capdu->ins == 0xc0) {
+        // GET RESPONSEの場合、
+        // レスポンスAPDUを生成
+        generate_response_apdu(capdu, rapdu);
+        return;
+
+    } else {
+        // 送信APDU（Response APDU）を初期化
+        memset(rapdu, 0x00, sizeof(response_apdu_t));
+
+        // Applet処理を実行
+        process_applet(capdu, rapdu);
     }
 }
 
 void ccid_apdu_process(void)
 {
+    command_apdu_t *capdu = &command_apdu;
+    response_apdu_t *rapdu = &response_apdu;
 #if LOG_DEBUG_APDU_BUFF
     fido_log_debug("APDU received(%d bytes):", ccid_command_apdu_size());
     print_hexdump_debug(ccid_command_apdu_data(), ccid_command_apdu_size());
 #endif
 
     // 受信APDU（Command APDU）を初期化
-    memset(&capdu, 0x00, sizeof(command_apdu_t));
+    memset(capdu, 0x00, sizeof(command_apdu_t));
 
     // 受信したAPDUを解析
-    if (parse_command_apdu(&capdu) == false) {
+    if (parse_command_apdu(capdu) == false) {
         // APDUが不正の場合はエラー扱い
-        rapdu.len = 0;
-        rapdu.sw = SW_CHECKING_ERROR;
+        rapdu->len = 0;
+        rapdu->sw = SW_CHECKING_ERROR;
 
     } else {
         // 受信APDUコマンドに対応する処理を実行
-        fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
-            capdu.cla, capdu.ins, capdu.p1, capdu.p2, capdu.lc, capdu.le);
-#if LOG_DEBUG_APDU_DATA_BUFF
-        print_hexdump_debug(capdu.data, capdu.data_size);
-#endif
-        if ((capdu.cla == 0x80 || capdu.cla == 0x00) && capdu.ins == 0xc0) {
-            // GET RESPONSEの場合、
-            // レスポンスAPDUを生成
-            generate_response_apdu();
-            return;
-
-        } else {
-            // 送信APDU（Response APDU）を初期化
-            memset(&rapdu, 0x00, sizeof(response_apdu_t));
-            
-            // Applet処理を実行
-            process_applet();
-        }
+        get_response_or_process_applet(capdu, rapdu);
     }
 
 #if LOG_DEBUG_APDU_DATA_BUFF
     // 送信APDUレスポンスのログ
-    fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", rapdu.sw, rapdu.len);
-    print_hexdump_debug(rapdu.data, rapdu.len);
+    fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", rapdu->sw, rapdu->len);
+    print_hexdump_debug(rapdu->data, rapdu->len);
 #endif
 
     // レスポンスAPDUを生成
-    generate_response_apdu();
+    generate_response_apdu(capdu, rapdu);
 }
