@@ -282,9 +282,8 @@ static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_
 #endif
     if ((capdu->cla == 0x80 || capdu->cla == 0x00) && capdu->ins == 0xc0) {
         // GET RESPONSEの場合、
-        // レスポンスAPDUを生成
-        generate_response_apdu(capdu, rapdu);
-        return;
+        // レスポンスAPDUを生成するだけなので、
+        // ここでは何も行わない
 
     } else {
         // 送信APDU（Response APDU）を初期化
