@@ -178,8 +178,36 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
     return true;
 }
 
+static void generate_response_status(response_apdu_t *rapdu)
+{
+    // データバイトの参照
+    uint8_t *apdu_data = ccid_response_apdu_data();
+
+    // ステータスワードバイトを格納
+    uint16_t sw = rapdu->sw;
+    apdu_data[0] = HI(sw);
+    apdu_data[1] = LO(sw);
+
+    // APDU長を設定
+    // （ステータスワードの２バイト）
+    ccid_response_apdu_size_set(2);
+
+    // 送信APDUレスポンスのログ
+    fido_log_debug("APDU send: SW(%04x)", sw);
+}
+
 static void generate_response_apdu(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
+    //
+    // レスポンスAPDUを生成し、
+    // CCID I/F出力(BULK IN)バッファに格納
+    //
+    // LL=0（ステータス出力）の場合はステータスワードのみレスポンス
+    if (rapdu->len == 0) {
+        generate_response_status(rapdu);
+        return ;
+    }
+
     // Leで指定されたサイズを、最大送信可能バイト数とする
     size_t max_size = (capdu->le < APDU_BUFFER_SIZE) ? capdu->le : APDU_BUFFER_SIZE;
 
@@ -218,10 +246,10 @@ static void generate_response_apdu(command_apdu_t *capdu, response_apdu_t *rapdu
 
     // 送信APDUレスポンスのログ
     if (capdu->ins == 0xc0) {
-        fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes, total %d bytes)", 
+        fido_log_debug("APDU send: SW(%04x) data(%d, total %d)", 
             sw, size_to_send, rapdu->len);
     } else {
-        fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", 
+        fido_log_debug("APDU send: SW(%04x) data(%d)", 
             sw, rapdu->len);
     }
 }
@@ -275,7 +303,7 @@ static void process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // 受信APDUコマンドに対応する処理を実行
-    fido_log_debug("APDU received: CLA(0x%02x) INS(0x%02x) P1(0x%02x) P2(0x%02x) Lc(%d bytes) Le(%d bytes)", 
+    fido_log_debug("APDU recv: CLA INS P1 P2(%02x %02x %02x %02x) Lc(%d) Le(%d)", 
         capdu->cla, capdu->ins, capdu->p1, capdu->p2, capdu->lc, capdu->le);
 #if LOG_DEBUG_APDU_DATA_BUFF
     print_hexdump_debug(capdu->data, capdu->data_size);
