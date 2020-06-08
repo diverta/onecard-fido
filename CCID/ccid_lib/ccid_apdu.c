@@ -77,6 +77,10 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
         return false;
     }
 
+    // 受信APDU（Command APDU）
+    // １ブロック分の格納領域を初期化
+    memset(p_capdu, 0x00, sizeof(command_apdu_t));
+
     // ヘッダー部からコマンドを取得
     p_capdu->cla = cmd[0];
     p_capdu->ins = cmd[1];
@@ -330,9 +334,6 @@ void ccid_apdu_process(void)
     fido_log_debug("APDU received(%d bytes):", ccid_command_apdu_size());
     print_hexdump_debug(ccid_command_apdu_data(), ccid_command_apdu_size());
 #endif
-
-    // 受信APDU（Command APDU）を初期化
-    memset(capdu, 0x00, sizeof(command_apdu_t));
 
     // 受信したAPDUを解析
     if (parse_command_apdu(capdu) == false) {
