@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "ccid.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,11 +49,10 @@ typedef struct command_apdu {
     size_t   lc;
     size_t   le;
     uint8_t *data;
-    size_t   data_size;
 } command_apdu_t;
 
 typedef struct response_apdu {
-    uint8_t  data[1280];
+    uint8_t  data[APDU_BUFFER_SIZE];
     uint16_t len;
     uint16_t sw;
     size_t   already_sent;

@@ -301,7 +301,7 @@ void ccid_data_frame_received(uint8_t *data, size_t len)
             apdu_received();
 
         } else if (apdu_size_received < apdu_size_expected) {
-            if (apdu_size_expected > ABDATA_SIZE) {
+            if (apdu_size_expected > APDU_DATA_SIZE) {
                 // 受信データは無効
                 bulkout_state = 0;
             } else {

@@ -19,7 +19,7 @@ extern "C" {
 // CCID関連定義
 //
 #define APDU_BUFFER_SIZE            1280
-#define ABDATA_SIZE                 (APDU_BUFFER_SIZE + 2)
+#define APDU_DATA_SIZE              (APDU_BUFFER_SIZE + 2)
 #define CCID_CMD_HEADER_SIZE        10
 #define CCID_NUMBER_OF_SLOTS        1
 

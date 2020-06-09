@@ -120,7 +120,6 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
             // Le = 未指定
             //memmove(capdu->data, cmd + 5, capdu->lc);
             p_capdu->data = cmd + 5;
-            p_capdu->data_size = p_capdu->lc;
             p_capdu->le = 0x100;
 
         } else if (len == 6 + p_capdu->lc) {
@@ -129,7 +128,6 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
             // Le = 1 byte encodingで指定あり
             //memmove(capdu->data, cmd + 5, capdu->lc);
             p_capdu->data = cmd + 5;
-            p_capdu->data_size = p_capdu->lc;
             p_capdu->le = cmd[5 + p_capdu->lc];
             if (p_capdu->le == 0) {
                 p_capdu->le = 0x100;
@@ -162,7 +160,6 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
                 // Le = 未指定
                 //memmove(capdu->data, cmd + 7, capdu->lc);
                 p_capdu->data = cmd + 7;
-                p_capdu->data_size = p_capdu->lc;
                 p_capdu->le = 0x10000;
 
             } else if (len == 9 + p_capdu->lc) {
@@ -171,7 +168,6 @@ static bool parse_command_apdu(command_apdu_t *p_capdu)
                 // Le = 2 byte encodingで指定あり
                 //memmove(capdu->data, cmd + 7, capdu->lc);
                 p_capdu->data = cmd + 7;
-                p_capdu->data_size = p_capdu->lc;
                 p_capdu->le = (cmd[7 + p_capdu->lc] << 8) | cmd[8 + p_capdu->lc];
                 if (p_capdu->le == 0) {
                     p_capdu->le = 0x10000;
