@@ -1728,6 +1728,8 @@
       <itemPath>../plat_lib/usbd_service_ccid.h</itemPath>
       <itemPath>../plat_lib/usbd_service_cdc.c</itemPath>
       <itemPath>../plat_lib/usbd_service_cdc.h</itemPath>
+      <itemPath>../plat_lib/usbd_service_hid.c</itemPath>
+      <itemPath>../plat_lib/usbd_service_hid.h</itemPath>
     </logicalFolder>
     <logicalFolder name="plat_lib_rev2"
                    displayName="plat_lib_rev2"
@@ -4485,6 +4487,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/usbd_service_hid.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_hid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib_rev2/fido_flash_event.c"
             ex="false"

@@ -212,6 +212,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/usbd_service.c \
   $(PLTLIB_DIR)/usbd_service_ccid.c \
   $(PLTLIB_DIR)/usbd_service_cdc.c \
+  $(PLTLIB_DIR)/usbd_service_hid.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
   $(U2FLIB_DIR)/u2f_register.c \
