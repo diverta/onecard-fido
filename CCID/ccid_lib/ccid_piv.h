@@ -33,6 +33,8 @@ extern "C" {
 //
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
 void ccid_piv_stop_applet(void);
+bool ccid_piv_admin_mode_get(void);
+void ccid_piv_admin_mode_set(bool mode);
 
 #ifdef __cplusplus
 }

@@ -4,7 +4,7 @@
  *
  * Created on 2020/06/03, 14:55
  */
-#include "ccid.h"
+#include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
 
@@ -69,11 +69,6 @@ static uint8_t  crypto_alg;
 static uint16_t input_data_length;
 static uint16_t pos_for_tag[6];
 static int16_t  len_for_tag[6];
-
-//
-// 管理コマンド実行可能ステータスを保持
-//
-static uint8_t in_admin_status;
 
 static uint16_t tlv_get_length(const uint8_t *data) 
 {
@@ -170,7 +165,7 @@ static uint16_t mutual_authenticate_request(void)
 
     // 変数の初期化
     authenticate_reset();
-    in_admin_status = 0;
+    ccid_piv_admin_mode_set(false);
 
     // パラメーターのチェック
     if (capdu->p2 != 0x9b) {
@@ -273,7 +268,7 @@ static uint16_t mutual_authenticate_response(void)
 
     // 変数の初期化
     authenticate_reset();
-    in_admin_status = 1;
+    ccid_piv_admin_mode_set(true);
 
     // 正常終了
     return SW_NO_ERROR;

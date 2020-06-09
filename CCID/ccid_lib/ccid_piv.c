@@ -16,6 +16,21 @@ static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
 static const uint8_t pin_policy[] = {0x40, 0x10};
 
+//
+// 管理コマンドが実行可能かどうかを保持
+//
+static bool admin_mode;
+
+bool ccid_piv_admin_mode_get(void)
+{
+    return admin_mode;
+}
+
+void ccid_piv_admin_mode_set(bool mode)
+{
+    admin_mode = mode;
+}
+
 static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // パラメーターのチェック
@@ -193,6 +208,21 @@ static uint16_t piv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu
     return SW_NO_ERROR;
 }
 
+static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // 管理コマンドが実行可能でない場合は終了
+    if (ccid_piv_admin_mode_get() == false) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+
+    //
+    // TODO: ここに処理を記述
+    //
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -221,6 +251,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case PIV_INS_GENERAL_AUTHENTICATE:
             rapdu->sw = piv_ins_general_authenticate(capdu, rapdu);
             break;
+        case PIV_INS_PUT_DATA:
+            rapdu->sw = piv_ins_put_data(capdu, rapdu);
+            break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
             break;
@@ -229,4 +262,5 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 
 void ccid_piv_stop_applet(void)
 {
+    ccid_piv_admin_mode_set(false);
 }
