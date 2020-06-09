@@ -60,7 +60,10 @@ void ccid_apdu_stop_applet(void)
 //
 // 受信したAPDU（Command APDU）を保持
 //
+//  全ブロック分を格納
 static command_apdu_t command_apdu;
+//  １ブロック分を格納
+static command_apdu_t capdu_work;
 
 //
 // 送信するAPDU（Response APDU）を保持
@@ -304,6 +307,13 @@ static void process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
+static bool merge_command_apdu(command_apdu_t *capdu_merged, command_apdu_t *capdu_work, response_apdu_t *rapdu)
+{
+    // TODO: 仮の実装です。
+    *capdu_merged = *capdu_work;
+    return true;
+}
+
 static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // 受信APDUコマンドに対応する処理を実行
@@ -316,19 +326,28 @@ static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_
         // GET RESPONSEの場合、
         // レスポンスAPDUを生成するだけなので、
         // ここでは何も行わない
-
-    } else {
-        // 送信APDU（Response APDU）を初期化
-        memset(rapdu, 0x00, sizeof(response_apdu_t));
-
-        // Applet処理を実行
-        process_applet(capdu, rapdu);
+        return;
     }
+
+    // 受信APDUのブロック分割受信を行う
+    command_apdu_t *capdu_merged = &command_apdu;
+    if (merge_command_apdu(capdu_merged, capdu, rapdu) == false) {
+        // ブロックが継続する場合は
+        // レスポンスAPDUを生成するだけなので、
+        // ここでは何も行わない
+        return;
+    }
+
+    // 送信APDU（Response APDU）を初期化
+    memset(rapdu, 0x00, sizeof(response_apdu_t));
+
+    // Applet処理を実行
+    process_applet(capdu_merged, rapdu);
 }
 
 void ccid_apdu_process(void)
 {
-    command_apdu_t *capdu = &command_apdu;
+    command_apdu_t *capdu = &capdu_work;
     response_apdu_t *rapdu = &response_apdu;
 #if LOG_DEBUG_APDU_BUFF
     fido_log_debug("APDU received(%d bytes):", ccid_command_apdu_size());

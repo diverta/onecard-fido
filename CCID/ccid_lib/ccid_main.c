@@ -11,10 +11,9 @@
 #include "fido_platform.h"
 
 //
-// Extended APDUフォーマットに対応するための一時バッファ
-//   1280バイトを上限とします。
+// 送受信データ格納用の一時バッファ
 //
-static uint8_t bulkout_data[1280];
+static uint8_t bulkout_data[288];
 static uint8_t bulkin_data[288];
 
 // データ受信用一時変数
