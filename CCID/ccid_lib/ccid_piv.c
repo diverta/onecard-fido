@@ -4,6 +4,8 @@
  *
  * Created on 2020/06/01, 9:55
  */
+#include <stdlib.h>
+
 #include "ccid.h"
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
@@ -175,11 +177,22 @@ static uint16_t piv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapd
         return SW_WRONG_LENGTH;
     }
 
+    // バージョン文字列 "xx.xx.xx" を分割
+    uint8_t v[] = {0x00, 0x00, 0x00};
+#ifdef FW_REV
+    char *version_str = FW_REV;
+    char *tp = strtok(version_str, ".");
+    for (int i = 0; tp != NULL; i++) {
+        v[i] = atoi(tp);
+        tp = strtok(NULL, ".");
+    }    
+#endif
+    
     // レスポンスデータを編集
     uint8_t *rdata = rapdu->data;
-    rdata[0] = 0x05;
-    rdata[1] = 0x00;
-    rdata[2] = 0x00;
+    rdata[0] = v[0];
+    rdata[1] = v[1];
+    rdata[2] = v[2];
     rapdu->len = 3;
 
     // 正常終了
