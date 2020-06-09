@@ -64,6 +64,10 @@ void ccid_apdu_stop_applet(void)
 static command_apdu_t command_apdu;
 //  １ブロック分を格納
 static command_apdu_t capdu_work;
+//  全ブロック分のAPDUデータを格納
+static uint8_t capdu_data[APDU_BUFFER_SIZE];
+// ブロック分割受信中をあらわすフラグ
+static bool capdu_merging = false;
 
 //
 // 送信するAPDU（Response APDU）を保持
@@ -303,19 +307,88 @@ static void process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 }
 
+static void initialize_all_block_apdu(command_apdu_t *capdu_merged, command_apdu_t *capdu_work)
+{
+    // 受信APDU（Command APDU）を初期化
+    memset(capdu_merged, 0x00, sizeof(command_apdu_t));
+    memset(capdu_data, 0x00, sizeof(capdu_data));
+    capdu_merged->data = capdu_data;
+    capdu_merged->lc = 0;
+
+    // APDUヘッダーを初期化
+    capdu_merged->cla = capdu_work->cla & 0xEF;
+    capdu_merged->ins = capdu_work->ins;
+    capdu_merged->p1 = capdu_work->p1;
+    capdu_merged->p2 = capdu_work->p2;
+}
+
+static bool is_apdu_block_control_break(command_apdu_t *capdu_merged, command_apdu_t *capdu_work)
+{
+    uint8_t cla_work = capdu_work->cla & 0xEF;
+    if (capdu_merged->cla != cla_work) {
+        return true;
+    }
+    if (capdu_merged->ins != capdu_work->ins) {
+        return true;
+    }
+    if (capdu_merged->p1 != capdu_work->p1) {
+        return true;
+    }
+    if (capdu_merged->p2 != capdu_work->p2) {
+        return true;
+    }
+    return false;
+}
+
 static bool merge_command_apdu(command_apdu_t *capdu_merged, command_apdu_t *capdu_work, response_apdu_t *rapdu)
 {
-    // TODO: 仮の実装です。
-    *capdu_merged = *capdu_work;
+    if (capdu_merging == false) {
+        // 最初のブロックとして扱う
+        initialize_all_block_apdu(capdu_merged, capdu_work);
+
+    } else if (is_apdu_block_control_break(capdu_merged, capdu_work)) {
+        // コントロールブレーク判定し、最初のブロックとして扱う
+        initialize_all_block_apdu(capdu_merged, capdu_work);
+    }
+
+    // ブロック受信中フラグを設定
+    capdu_merging = true;
+    if (capdu_merged->lc + capdu_work->lc > sizeof(capdu_data)) {
+        // オーバーフローしてしまった場合は
+        // 処理を行わず、エラーレスポンス
+        rapdu->len = 0;
+        rapdu->sw = SW_CHECKING_ERROR;
+        return false;
+    }
+
+    // APDUデータを格納領域にコピー
+    memcpy(capdu_data + capdu_merged->lc, capdu_work->data, capdu_work->lc);
+    capdu_merged->lc += capdu_work->lc;
+
+    if (capdu_work->cla & 0x10) {
+        // 継続ブロック受信時は処理を行わず、正常レスポンス
+        rapdu->len = 0;
+        rapdu->sw = SW_NO_ERROR;
+        return false;
+    }
+
+    // 最終ブロック受信時は、業務処理を継続
+    capdu_merging = false;
+    capdu_merged->le = (capdu_work->le < APDU_BUFFER_SIZE) ? capdu_work->le : APDU_BUFFER_SIZE;
+
+    command_apdu_t *capdu = capdu_merged;
+    fido_log_debug("APDU recv: CLA INS P1 P2(%02x %02x %02x %02x) Lc(%d) Le(%d)", 
+        capdu->cla, capdu->ins, capdu->p1, capdu->p2, capdu->lc, capdu->le);
+
     return true;
 }
 
 static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // 受信APDUコマンドに対応する処理を実行
+#if LOG_DEBUG_APDU_DATA_BUFF
     fido_log_debug("APDU recv: CLA INS P1 P2(%02x %02x %02x %02x) Lc(%d) Le(%d)", 
         capdu->cla, capdu->ins, capdu->p1, capdu->p2, capdu->lc, capdu->le);
-#if LOG_DEBUG_APDU_DATA_BUFF
     print_hexdump_debug(capdu->data, capdu->data_size);
 #endif
     if ((capdu->cla == 0x80 || capdu->cla == 0x00) && capdu->ins == 0xc0) {
