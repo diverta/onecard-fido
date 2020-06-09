@@ -11,7 +11,11 @@
 extern "C" {
 #endif
 
+//
+// 関数群
+//
 void usbd_ccid_init(void);
+void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size);
 
 #ifdef __cplusplus
 }

@@ -4,27 +4,36 @@
  *
  * Created on 2020/04/27, 11:04
  */
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-
 #include "app_error.h"
 
+//
+// CCID関連
+//
 #include "usbd_service.h"
+#include "app_usbd_ccid.h"
+#include "ccid.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME usbd_service_ccid
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-//
-// CCID関連
-//
-#include "app_usbd_ccid.h"
+// for debug buffer
+#define NRF_LOG_HEXDUMP_DEBUG_BUFFER false
 
 static void ccid_user_ev_handler(app_usbd_class_inst_t const *p_inst, enum app_usbd_ccid_user_event_e event)
 {
     switch (event) {
+        case APP_USBD_CCID_USER_EVT_RX_DONE:
+#if NRF_LOG_HEXDUMP_DEBUG_BUFFER
+            NRF_LOG_DEBUG("usbd_ccid_data_frame_received(%d bytes):", app_usbd_ccid_ep_output_buffer_size());
+            NRF_LOG_HEXDUMP_DEBUG(app_usbd_ccid_ep_output_buffer(), app_usbd_ccid_ep_output_buffer_size());
+#endif
+            // 受信フレームデータを処理
+            ccid_data_frame_received(
+                app_usbd_ccid_ep_output_buffer(), 
+                app_usbd_ccid_ep_output_buffer_size());
+            break;
         default:
             break;
     }
@@ -41,5 +50,17 @@ void usbd_ccid_init(void)
     }
     APP_ERROR_CHECK(ret);
 
+    // モジュール変数を初期化
+    ccid_initialize_value();
     NRF_LOG_DEBUG("usbd_ccid_init() done");
+}
+
+void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size)
+{
+    app_usbd_ccid_ep_input_from_buffer(p_data, size);
+
+#if NRF_LOG_HEXDUMP_DEBUG_BUFFER
+    NRF_LOG_DEBUG("usbd_ccid_send_data_frame(%d bytes)", size);
+    NRF_LOG_HEXDUMP_DEBUG(p_data, size);
+#endif
 }

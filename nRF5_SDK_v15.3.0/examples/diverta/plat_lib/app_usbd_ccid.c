@@ -15,6 +15,19 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for debug hid report
+#define NRF_LOG_HEXDUMP_DEBUG_RX false
+#define NRF_LOG_HEXDUMP_DEBUG_TX false
+
+// for endpoint address
+#include "usbd_service.h"
+
+// データ送受信用
+static nrf_drv_usbd_transfer_t _transfer;
+static uint8_t _rx_buf[64];
+static size_t  _rx_buf_size;
+static uint8_t _tx_buf[64];
+
 /**
  * @brief Auxiliary function to access ccid class instance data.
  *
@@ -202,9 +215,6 @@ static ret_code_t setup_event_handler(app_usbd_class_inst_t const *p_inst,
     return ret;
 }
 
-static nrf_drv_usbd_transfer_t _transfer;
-static uint8_t _rx_buf[64];
-
 static void prepare_ep_output_buffer(app_usbd_class_inst_t const *p_inst, app_usbd_complex_evt_t const *p_event) 
 {
     nrf_drv_usbd_ep_t ep_addr = p_event->drv_evt.data.eptransfer.ep;
@@ -212,8 +222,39 @@ static void prepare_ep_output_buffer(app_usbd_class_inst_t const *p_inst, app_us
     _transfer.size = nrf_drv_usbd_epout_size_get(ep_addr);
 
     ret_code_t ret = nrf_drv_usbd_ep_transfer(ep_addr, &_transfer);
-    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer returns %d", ret);
-    NRF_LOG_HEXDUMP_DEBUG(_rx_buf, sizeof(_rx_buf));
+    _rx_buf_size = _transfer.size;
+
+#if NRF_LOG_HEXDUMP_DEBUG_RX
+    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", _rx_buf_size, ret);
+    NRF_LOG_HEXDUMP_DEBUG(_rx_buf, _rx_buf_size);
+#endif
+}
+
+uint8_t *app_usbd_ccid_ep_output_buffer(void)
+{
+    return _rx_buf;
+}
+
+size_t app_usbd_ccid_ep_output_buffer_size(void)
+{
+    return _rx_buf_size;
+}
+
+void app_usbd_ccid_ep_input_from_buffer(void *p_buf, size_t size)
+{
+    memcpy(_tx_buf, p_buf, size);
+    
+    nrf_drv_usbd_ep_t ep_addr = CCID_DATA_EPIN;
+    _transfer.p_data.tx = _tx_buf;
+    _transfer.size = size;
+    _transfer.flags = 0;
+
+    ret_code_t ret = nrf_drv_usbd_ep_transfer(ep_addr, &_transfer);
+
+#if NRF_LOG_HEXDUMP_DEBUG_TX
+    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", _transfer.size, ret);
+    NRF_LOG_HEXDUMP_DEBUG(_transfer.p_data.tx, _transfer.size);
+#endif
 }
 
 /**
@@ -229,14 +270,12 @@ static ret_code_t ccid_endpoint_ev(app_usbd_class_inst_t const *p_inst,
 {
     ret_code_t ret = NRF_SUCCESS;
     if (NRF_USBD_EPIN_CHECK(p_event->drv_evt.data.eptransfer.ep)) {
-        NRF_LOG_DEBUG("NRF_USBD_EPIN: %d", p_event->drv_evt.data.eptransfer.status);
         switch (p_event->drv_evt.data.eptransfer.status) {
             case NRF_USBD_EP_OK:
-                NRF_LOG_DEBUG("EPIN_DATA: %02x done", p_event->drv_evt.data.eptransfer.ep);
                 user_event_handler(p_inst, APP_USBD_CCID_USER_EVT_TX_DONE);
                 break;
             case NRF_USBD_EP_ABORTED:
-                NRF_LOG_DEBUG("NRF_USBD_EPIN: NRF_USBD_EP_ABORTED");
+                NRF_LOG_ERROR("NRF_USBD_EPIN: NRF_USBD_EP_ABORTED");
                 break;
             default:
                 NRF_LOG_DEBUG("NRF_USBD_EPIN: %u", p_event->drv_evt.data.eptransfer.status);
@@ -247,14 +286,13 @@ static ret_code_t ccid_endpoint_ev(app_usbd_class_inst_t const *p_inst,
     } else if (NRF_USBD_EPOUT_CHECK(p_event->drv_evt.data.eptransfer.ep)) {
         switch (p_event->drv_evt.data.eptransfer.status) {
             case NRF_USBD_EP_OK:
-                NRF_LOG_DEBUG("EPOUT_DATA: %02x done", p_event->drv_evt.data.eptransfer.ep);
                 user_event_handler(p_inst, APP_USBD_CCID_USER_EVT_RX_DONE);
                 break;
             case NRF_USBD_EP_WAITING:
                 prepare_ep_output_buffer(p_inst, p_event);
                 break;
             case NRF_USBD_EP_ABORTED:
-                NRF_LOG_DEBUG("NRF_USBD_EPOUT: NRF_USBD_EP_ABORTED");
+                NRF_LOG_ERROR("NRF_USBD_EPOUT: NRF_USBD_EP_ABORTED");
                 break;
             default:
                 NRF_LOG_DEBUG("NRF_USBD_EPOUT: %u", p_event->drv_evt.data.eptransfer.status);
@@ -278,7 +316,6 @@ static ret_code_t ccid_event_handler(app_usbd_class_inst_t const *p_inst,
 {
     ASSERT(p_inst != NULL);
     ASSERT(p_event != NULL);
-    NRF_LOG_DEBUG("ccid_event_handler: type=%d", p_event->app_evt.type);
 
     ret_code_t ret = NRF_SUCCESS;
     switch (p_event->app_evt.type) {
@@ -378,8 +415,8 @@ static bool ccid_feed_descriptors(app_usbd_class_descriptor_ctx_t *p_ctx,
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x04);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);  // bNumDataRatesSupported : no setting from PC
-        APP_USBD_CLASS_DESCRIPTOR_WRITE(LO(ABDATA_SIZE)); // dwMaxIFSD, B3
-        APP_USBD_CLASS_DESCRIPTOR_WRITE(HI(ABDATA_SIZE)); // dwMaxIFSD, B2
+        APP_USBD_CLASS_DESCRIPTOR_WRITE(LO(APDU_DATA_SIZE)); // dwMaxIFSD, B3
+        APP_USBD_CLASS_DESCRIPTOR_WRITE(HI(APDU_DATA_SIZE)); // dwMaxIFSD, B2
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);  // dwMaxIFSD, B1B0
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);  // dwSynchProtocols
@@ -394,8 +431,8 @@ static bool ccid_feed_descriptors(app_usbd_class_descriptor_ctx_t *p_ctx,
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x04);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);
-        APP_USBD_CLASS_DESCRIPTOR_WRITE(LO(ABDATA_SIZE + CCID_CMD_HEADER_SIZE)); // dwMaxCCIDMessageLength, B3
-        APP_USBD_CLASS_DESCRIPTOR_WRITE(HI(ABDATA_SIZE + CCID_CMD_HEADER_SIZE)); // dwMaxCCIDMessageLength, B2
+        APP_USBD_CLASS_DESCRIPTOR_WRITE(LO(APDU_DATA_SIZE + CCID_CMD_HEADER_SIZE)); // dwMaxCCIDMessageLength, B3
+        APP_USBD_CLASS_DESCRIPTOR_WRITE(HI(APDU_DATA_SIZE + CCID_CMD_HEADER_SIZE)); // dwMaxCCIDMessageLength, B2
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);  // dwMaxCCIDMessageLength, B1B0
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0x00);
         APP_USBD_CLASS_DESCRIPTOR_WRITE(0xFF);  // bClassGetResponse
