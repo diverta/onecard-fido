@@ -14,7 +14,7 @@ macOSでは、CCIDドライバーのサポートデバイス一覧[注1]に、�
 このため、本件CCIDインターフェースの動作確認を行うにあたり、<b>カスタマイズしたCCIDドライバーを、事前にmacOSに導入</b>しています。<br>
 CCIDドライバーのカスタマイズおよび導入手順につきましては、別ドキュメント<b>「[CCIDドライバー修正ビルド手順](../../Research/CCID/BUILDCCIDDRV.md)」</b>をご参照願います。
 
-[注1]macOSにプレインストールされているCCIDドライバーは`/usr/libexec/SmartCardServices/drivers/ifd-ccid.bundle`です。このフパッケージは、`Info.plist`というファイルに、サポートデバイス一覧を内包しています。<br>
+[注1]macOSにプレインストールされているCCIDドライバーは`/usr/libexec/SmartCardServices/drivers/ifd-ccid.bundle`です。このパッケージは、`Info.plist`というファイルに、サポートデバイス一覧を内包しています。<br>
 [注2]カスタマイズしたCCIDドライバーは、`/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle`に導入します。これにより、別段支障なくプレインストール版ドライバーと共存できるようです。
 
 ## 構成
