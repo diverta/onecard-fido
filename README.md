@@ -21,6 +21,19 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2020/06/10
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[nRF52840ファームウェア（Version 0.2.9）](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.9.zip)</b>
+
+修正点は以下になります。[注1]
+- USB CCIDインタフェースを追加実装 [注2]<br>（[#323](https://github.com/diverta/onecard-fido/issues/323)、[#327](https://github.com/diverta/onecard-fido/pull/327) ご参照）
+
+[注1] FIDO機能には修正はありませんので、管理ツールには同梱していません。[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に導入の際は<b>「[[開発運用] アプリケーション書込み手順](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/APPINSTALL.md)」</b>をご参照願います。<br>
+[注2] macOSとのCCID接続機能のみの実装であり、業務アプリケーション（PIV、OpenPGP、OATH等が候補）は未実装となります。今後の作業で実装予定です。
+
+
 #### 2020/04/15
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェア導入・更新が、[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)により実行できるようになりました（[#300](https://github.com/diverta/onecard-fido/pull/300) ご参照）。<br>
