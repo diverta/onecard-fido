@@ -47,9 +47,11 @@ CCIDドライバーのカスタマイズおよび導入手順につきまして�
 
 |#|名称|説明|
 |:---:|:---|:---|
-|1|PIV<br>(Personal Identification Verification)|macOS等のスマートカード認証をエミュレートする機能。<br>nRF52840をUSBに装着すると、NFCカードリーダーに<br>スマートカードを置いた状態と等価になります。|
-|2|OpenPGP|（サポート機能は検討中）|
+|1|PIV<br>(Personal Identification Verification)|PIV Cardをエミュレートする機能。[注1]<br>使用例：<br>・macOSでの、PIN番号を使用したログイン認証<br>・ECDSA鍵を使用したSSHの実行<br>・etc...|
+|2|OpenPGP|OpenPGP Cardをエミュレートする機能。[注1]<br>GnuPG等のPGPアプリケーションを使用し、電子署名や<br>暗号／復号化といったセキュア処理ができます。|
 |3|OATH|（サポート機能は検討中）|
+
+[注1]nRF52840をUSBに装着すると、NFCカードリーダーにスマートカード（PIV CardやOpenPGP Card）を置いた状態と等価になります。
 
 ### PIVの仕様
 PIVに関する仕様は下記の通りです。
