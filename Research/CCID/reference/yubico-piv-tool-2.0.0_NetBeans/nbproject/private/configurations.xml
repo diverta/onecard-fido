@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../../../../../../opt/yubico-piv-tool-2.0.0" name="0">
+      <df name="build-aux">
+      </df>
+      <df name="doc">
+        <df name="Actions">
+        </df>
+        <df name="YKCS11">
+          <df name="Supported_applications">
+            <df name="images">
+            </df>
+          </df>
+        </df>
+      </df>
+      <df name="lib">
+        <df name=".deps">
+        </df>
+        <df name=".libs">
+        </df>
+        <df name="tests">
+          <df name=".deps">
+          </df>
+          <in>api.c</in>
+          <in>basic.c</in>
+          <in>parse_key.c</in>
+        </df>
+        <in>error.c</in>
+        <in>internal.c</in>
+        <in>internal.h</in>
+        <in>util.c</in>
+        <in>version.c</in>
+        <in>ykpiv-version.h</in>
+        <in>ykpiv.c</in>
+        <in>ykpiv.h</in>
+      </df>
+      <df name="m4">
+      </df>
+      <df name="tool">
+        <df name=".deps">
+        </df>
+        <df name=".libs">
+        </df>
+        <df name="tests">
+          <df name=".deps">
+          </df>
+          <in>parse_name.c</in>
+          <in>test_inout.c</in>
+        </df>
+        <in>cmdline.c</in>
+        <in>cmdline.h</in>
+        <in>openssl-compat.c</in>
+        <in>openssl-compat.h</in>
+        <in>util.c</in>
+        <in>util.h</in>
+        <in>yubico-piv-tool.c</in>
+      </df>
+      <df name="tools">
+      </df>
+      <df name="ykcs11">
+        <df name=".deps">
+        </df>
+        <df name=".libs">
+        </df>
+        <df name="tests">
+          <df name=".deps">
+          </df>
+          <in>ykcs11_tests.c</in>
+          <in>ykcs11_tests_util.c</in>
+          <in>ykcs11_tests_util.h</in>
+        </df>
+        <in>debug.h</in>
+        <in>mechanisms.c</in>
+        <in>mechanisms.h</in>
+        <in>obj_types.h</in>
+        <in>objects.c</in>
+        <in>objects.h</in>
+        <in>openssl_types.h</in>
+        <in>openssl_utils.c</in>
+        <in>openssl_utils.h</in>
+        <in>pkcs11.h</in>
+        <in>pkcs11y.h</in>
+        <in>token.c</in>
+        <in>token.h</in>
+        <in>utils.c</in>
+        <in>utils.h</in>
+        <in>ykcs11-version.h</in>
+        <in>ykcs11.c</in>
+        <in>ykcs11.h</in>
+      </df>
+    </df>
+  </logicalFolder>
+  <projectmakefile>../../../../../../opt/yubico-piv-tool-2.0.0/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>4</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>../../../../../../opt/yubico-piv-tool-2.0.0</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>
