@@ -65,6 +65,7 @@
 #define MSG_READ_NBYTES_FROM_CRT_FILE       @"証明書ファイル(%ldバイト)を読込みました。"
 #define MSG_CANNOT_CRYPTO_SKEY_CERT_DATA    @"鍵・証明書の転送データを暗号化できませんでした。"
 #define MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY   @"公開鍵を認証器から受け取ることができませんでした。"
+#define MSG_INVALID_SKEY_OR_CERT            @"秘密鍵または公開鍵の内容が不正です。"
 #pragma mark - ToolBLECentralクラス専用メッセージ
 #define MSG_U2F_DEVICE_SCAN_START           @"FIDO認証器のスキャンを開始します。"
 #define MSG_U2F_DEVICE_SCAN_STOPPED         @"FIDO認証器のスキャンを停止しました。"

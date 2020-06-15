@@ -506,3 +506,7 @@ fail:
     return ok;
 }
 
+uint8_t validate_skey_cert(uint8_t *skey_bytes, size_t skey_bytes_size,
+                           uint8_t *cert_bytes, size_t cert_bytes_size) {
+    return CTAP1_ERR_SUCCESS;
+}
