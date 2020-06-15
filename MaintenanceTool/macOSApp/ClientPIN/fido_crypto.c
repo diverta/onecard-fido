@@ -447,6 +447,7 @@ static uint8_t skeyCertBytes[1024];
 static size_t  skeyCertBytesSize;
 static uint8_t skeyCertBytesEnc[1024];
 static size_t  skeyCertBytesEncSize;
+static uint8_t pubkey_from_cert[64];
 
 uint8_t *skey_cert_bytes_enc(void) {
     return skeyCertBytesEnc;
@@ -506,7 +507,32 @@ fail:
     return ok;
 }
 
+static bool extract_pubkey_from_cert(uint8_t *public_key, uint8_t *cert_data, size_t cert_data_length)
+{
+    // 開始バイトが不正な場合は終了
+    if (cert_data[0] != 0x30) {
+        return false;
+    }
+    
+    for (size_t i = 3; i < cert_data_length; i++) {
+        if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
+            cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
+            // 03 42 00 04 というシーケンスが発見されたら、
+            // その後ろから64バイト分のデータをコピー
+            memcpy(public_key, cert_data + i + 1, 64);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 uint8_t validate_skey_cert(uint8_t *skey_bytes, size_t skey_bytes_size,
                            uint8_t *cert_bytes, size_t cert_bytes_size) {
+    // 証明書から公開鍵を抽出
+    if (extract_pubkey_from_cert(pubkey_from_cert, cert_bytes, cert_bytes_size) == false) {
+        return CTAP1_ERR_OTHER;
+    }
+    
     return CTAP1_ERR_SUCCESS;
 }
