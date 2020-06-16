@@ -97,6 +97,41 @@ namespace MaintenanceToolGUI
             return false;
         }
 
+        public bool ValidateSkeyCert()
+        {
+            // 証明書から公開鍵を抽出
+            byte[] pubkeyFromCert = ExtractPubkeyFromCert();
+            if (pubkeyFromCert == null) {
+                return false;
+            }
+            // for debug
+            // AppCommon.OutputLogDebug("Public key from certification: ");
+            // AppCommon.OutputLogText(AppCommon.DumpMessage(pubkeyFromCert, pubkeyFromCert.Length));
+
+            return true;
+        }
+
+        private byte[] ExtractPubkeyFromCert()
+        {
+            // 開始バイトが不正な場合は終了
+            if (CertBytes[0] != 0x30) {
+                return null;
+            }
+
+            for (int i = 3; i < CertBytes.Length; i++) {
+                if (CertBytes[i - 3] == 0x03 && CertBytes[i - 2] == 0x42 &&
+                    CertBytes[i - 1] == 0x00 && CertBytes[i] == 0x04) {
+                    // 03 42 00 04 というシーケンスが発見されたら、
+                    // その後ろから64バイト分のデータをコピー
+                    byte[] skeyCertBytes = new byte[64];
+                    Array.Copy(CertBytes, i + 1, skeyCertBytes, 0, 64);
+                    return skeyCertBytes;
+                }
+            }
+
+            return null;
+        }
+
         public bool ExtractKeyAgreement(byte[] agreementKeyCBOR)
         {
             // CBORをデコードして公開鍵を抽出し、共通鍵を生成
