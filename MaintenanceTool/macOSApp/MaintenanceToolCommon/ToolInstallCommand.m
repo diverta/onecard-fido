@@ -17,6 +17,7 @@
 
 // for validate key and cert
 #include "fido_crypto.h"
+#include "debug_log.h"
 
 // for debug
 #define LOG_HEXDUMP_KEY_AGREEMENT false
@@ -97,6 +98,8 @@
         // 秘密鍵と証明書の整合性検証を行う
         if (validate_skey_cert((uint8_t *)[dataSkey bytes], [dataSkey length],
                                (uint8_t *)[dataCert bytes], [dataCert length]) != CTAP1_ERR_SUCCESS) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Public key validation failed: %s", log_debug_message()];
             [self setLastErrorMessage:MSG_INVALID_SKEY_OR_CERT];
             return nil;
         }
