@@ -120,7 +120,7 @@
         while ((serialService = IOIteratorNext(serviceIterator)) != 0) {
             NSString *serialTypeString = [self getSerialTypeString:serialService];
             if (serialTypeString) {
-                if ([serialTypeString isEqualToString:@kIOSerialBSDModemType]) {
+                if ([serialTypeString isEqualToString:@"usbmodem"]) {
                     NSString *devicePathString = [self getDevicePathString:serialService];
                     if (devicePathString) {
                         // USB CDC ACMデバイスである場合、そのパスをリストに格納
@@ -136,7 +136,7 @@
 
     - (NSString *)getSerialTypeString:(io_object_t)serialService {
         NSString *serialTypeString = nil;
-        CFStringRef serialType = (CFStringRef)IORegistryEntryCreateCFProperty(serialService, CFSTR(kIOSerialBSDTypeKey), kCFAllocatorDefault, 0);
+        CFStringRef serialType = (CFStringRef)IORegistryEntryCreateCFProperty(serialService, CFSTR(kIOTTYBaseNameKey), kCFAllocatorDefault, 0);
         if (serialType) {
             serialTypeString = [[NSString alloc] initWithString:(__bridge NSString *)serialType];
             CFRelease(serialType);
