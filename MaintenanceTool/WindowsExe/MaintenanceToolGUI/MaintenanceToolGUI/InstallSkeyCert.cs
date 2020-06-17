@@ -13,6 +13,8 @@ namespace MaintenanceToolGUI
         private byte[] SkeyBytes = new byte[32];
         // 証明書格納領域
         private byte[] CertBytes = null;
+        // PEMファイルから読込んだ秘密鍵データの格納領域
+        private byte[] PemBytes = null;
         // CBORエンコーダーの参照を保持
         private CBOREncoder encoder = new CBOREncoder();
 
@@ -23,15 +25,16 @@ namespace MaintenanceToolGUI
                 return false;
             }
 
-            byte[] pemBytes = DecodeB64EncodedString(pemText);
-            if (pemBytes == null) {
+            // PEMファイルから読込んだ秘密鍵データを保持
+            PemBytes = DecodeB64EncodedString(pemText);
+            if (PemBytes == null) {
                 return false;
             }
 
             // 秘密鍵はPEMファイルの先頭8バイト目から32バイトなので、
             // 先頭からビッグエンディアン形式で配置
             for (int i = 0; i < 32; i++) {
-                SkeyBytes[i] = pemBytes[7 + i];
+                SkeyBytes[i] = PemBytes[7 + i];
             }
 
             return true;
@@ -100,32 +103,46 @@ namespace MaintenanceToolGUI
         public bool ValidateSkeyCert()
         {
             // 証明書から公開鍵を抽出
-            byte[] pubkeyFromCert = ExtractPubkeyFromCert();
+            byte[] pubkeyFromCert = ExtractPubkeyFromDer(CertBytes);
             if (pubkeyFromCert == null) {
                 return false;
             }
+
+            // 秘密鍵から公開鍵を生成
+            byte[] pubkeyFromPrivkey = ExtractPubkeyFromDer(PemBytes);
+            if (pubkeyFromPrivkey == null) {
+                return false;
+            }
+
             // for debug
             // AppCommon.OutputLogDebug("Public key from certification: ");
             // AppCommon.OutputLogText(AppCommon.DumpMessage(pubkeyFromCert, pubkeyFromCert.Length));
+            // AppCommon.OutputLogDebug("Public key from private key: ");
+            // AppCommon.OutputLogText(AppCommon.DumpMessage(pubkeyFromPrivkey, pubkeyFromPrivkey.Length));
+
+            // 両者の公開鍵を比較し、同じでない場合はエラー
+            if (Enumerable.SequenceEqual(pubkeyFromCert, pubkeyFromPrivkey) == false) {
+                return false;
+            }
 
             return true;
         }
 
-        private byte[] ExtractPubkeyFromCert()
+        private byte[] ExtractPubkeyFromDer(byte[] derBytes)
         {
             // 開始バイトが不正な場合は終了
-            if (CertBytes[0] != 0x30) {
+            if (derBytes[0] != 0x30) {
                 return null;
             }
 
-            for (int i = 3; i < CertBytes.Length; i++) {
-                if (CertBytes[i - 3] == 0x03 && CertBytes[i - 2] == 0x42 &&
-                    CertBytes[i - 1] == 0x00 && CertBytes[i] == 0x04) {
+            for (int i = 3; i < derBytes.Length; i++) {
+                if (derBytes[i - 3] == 0x03 && derBytes[i - 2] == 0x42 &&
+                    derBytes[i - 1] == 0x00 && derBytes[i] == 0x04) {
                     // 03 42 00 04 というシーケンスが発見されたら、
                     // その後ろから64バイト分のデータをコピー
-                    byte[] skeyCertBytes = new byte[64];
-                    Array.Copy(CertBytes, i + 1, skeyCertBytes, 0, 64);
-                    return skeyCertBytes;
+                    byte[] pubkeyBytes = new byte[64];
+                    Array.Copy(derBytes, i + 1, pubkeyBytes, 0, 64);
+                    return pubkeyBytes;
                 }
             }
 
