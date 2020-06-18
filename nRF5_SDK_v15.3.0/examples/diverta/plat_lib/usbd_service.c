@@ -38,9 +38,9 @@ void usbd_service_start(void)
 {
     // USBデバイスクラスを初期化
     usbd_hid_init();
-    usbd_ccid_init();
     if (false) {
         // 現在閉塞中
+        usbd_ccid_init();
         usbd_cdc_init();
     }
     
