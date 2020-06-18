@@ -341,6 +341,12 @@ namespace MaintenanceToolGUI
                 mainForm.OnAppMainProcessExited(false);
                 return;
             }
+            // 秘密鍵と証明書の整合性検証を行う
+            if (installSkeyCert.ValidateSkeyCert() == false) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_INVALID_SKEY_OR_CERT);
+                mainForm.OnAppMainProcessExited(false);
+                return;
+            }
             // 秘密鍵・証明書の内容を暗号化して配列にセットし、HIDデバイスに送信
             byte[] cbor = installSkeyCert.GenerateInstallSkeyCertBytes();
             if (cbor == null) {
