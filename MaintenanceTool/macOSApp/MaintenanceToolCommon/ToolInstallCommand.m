@@ -15,6 +15,10 @@
 #include "CBOREncoder.h"
 #include "FIDODefines.h"
 
+// for validate key and cert
+#include "fido_crypto.h"
+#include "debug_log.h"
+
 // for debug
 #define LOG_HEXDUMP_KEY_AGREEMENT false
 
@@ -84,15 +88,25 @@
         if (dataSkey == nil) {
             return nil;
         }
-        [message appendData:dataSkey];
 
         // 証明書ファイルから内容を取得
         NSData *dataCert = [self readCertFromFile:certFilePath];
         if (dataCert == nil) {
             return nil;
         }
-        [message appendData:dataCert];
 
+        // 秘密鍵と証明書の整合性検証を行う
+        if (validate_skey_cert((uint8_t *)[dataSkey bytes], [dataSkey length],
+                               (uint8_t *)[dataCert bytes], [dataCert length]) != CTAP1_ERR_SUCCESS) {
+            [[ToolLogFile defaultLogger]
+             errorWithFormat:@"Public key validation failed: %s", log_debug_message()];
+            [self setLastErrorMessage:MSG_INVALID_SKEY_OR_CERT];
+            return nil;
+        }
+
+        // 秘密鍵を証明書をマージ
+        [message appendData:dataSkey];
+        [message appendData:dataCert];
         return message;
     }
 
