@@ -1,7 +1,9 @@
 # One Card FIDO対応
 
-One CardにFIDO U2F／WebAuthn認証機能を実装するプロジェクトです。<br>
-（開発TODOは<b>[こちらのドキュメント](TODO.md)</b>ご参照）
+One CardにFIDO U2F／WebAuthn認証機能を実装するプロジェクトです。
+
+## [開発TODO](TODO.md)
+現在進行中、もしくは将来予定している開発案件についての概要を掲載しています。
 
 ## プログラム
 
