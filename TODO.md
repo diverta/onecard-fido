@@ -7,7 +7,19 @@
 基板上にATECC608Aを追加実装し、秘密鍵を読出し不可にするための対応を行います。<br>
 （[#245](https://github.com/diverta/onecard-fido/issues/245) ご参照）
 
+#### ソフトウェアの開発状況
+nRF52840アプリケーションへの追加実装と、ATECC608A単体の実機動作確認は、ほぼ完了しています。<br>
+作業中のアプリケーションは以下の場所に格納しています。<br>
+コード格納場所（プラットフォーム非依存）--->[fido_cryptoauth_lib](FIDO2Device/fido_cryptoauth_lib)<br>
+コード格納場所（プラットフォーム依存）--->[plat_lib_rev2_1](nRF5_SDK_v15.3.0/examples/diverta/plat_lib_rev2_1)
+
+後日、後述「スロット構成変更」を実施しようと考えています。
+
+#### 評価基板の製作状況
 現状、製造外注に大幅な遅れが出ています。
+
+#### 今後必要な対応
+- ATECC608Aスロット構成の変更（FIDO以外の業務アプリケーションでも使用できるようにするための拡張対応）
 
 ## MDBT50Q Dongleの極小化対応
 MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで、基板をさらに極小化する試みになります。<br>
@@ -16,6 +28,15 @@ MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで
 ## CCIDインターフェース追加対応
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションに必要な基盤技術を確立します。<br>
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
+
+#### ソフトウェアの開発状況
+nRF52840アプリケーションへの追加実装と、macOS環境上での実機動作確認は、概ね完了しています。<br>
+作業中のアプリケーションは以下の場所に格納しています。<br>
+コード格納場所（プラットフォーム非依存）--->[ccid_lib](CCID/ccid_lib)<br>
+コード格納場所（プラットフォーム依存）--->[app_usbd_ccid](nRF5_SDK_v15.3.0/examples/diverta/plat_lib/app_usbd_ccid.c)
+
+Windows環境上での実機動作確認はできていません。<br>
+（Windows環境固有の対応が追加で必要となります）
 
 #### 今後必要な対応
 - CCID I/FのWindows環境固有対応
