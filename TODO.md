@@ -16,10 +16,17 @@ nRF52840アプリケーションへの追加実装と、ATECC608A単体の実機
 後日、後述「スロット構成変更」を実施しようと考えています。
 
 #### 評価基板の製作状況
-現状、製造外注に大幅な遅れが出ています。
+完成イメージは下図の通りですが、現状、製造外注に大幅な遅れが出ています。<br>
+
+<img src="assets/0080.jpg" width="400">
 
 #### 今後必要な対応
 - ATECC608Aスロット構成の変更（FIDO以外の業務アプリケーションでも使用できるようにするための拡張対応）
+
+#### 各種調査結果
+- [ATECC608A関数群について](Research/CRYPTOAUTH/CRYPTOAUTHFUNC.md)
+- [ATECC608A関数テストモジュールについて](Research/CRYPTOAUTH/CRYPTOAUTHTEST.md)
+- [ATECC608Aの設定カスタマイズについて](Research/CRYPTOAUTH/CRYPTOAUTHCONF.md)
 
 ## MDBT50Q Dongleの極小化対応
 MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで、基板をさらに極小化する試みになります。<br>
