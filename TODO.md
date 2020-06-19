@@ -17,9 +17,28 @@ MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションに必要な基盤技術を確立します。<br>
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
 
+#### 今後必要な対応
+- CCID I/FのWindows環境固有対応
+- macOS環境専用ドライバー（インストーラー含む）の開発
+- 業務アプリケーション（PIV／OpenPGP）の開発
+- CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
+
+#### 各種調査結果
+- [USB CCIDインターフェース](CCID/ccid_lib/README.md)
+- [Yubico PIV Toolによる初期データ導入手順](Research/CCID/SETUPYKPIV.md)
+- [CCIDインターフェースに関する調査](Research/CCID/README.md)
+
+#### 利用事例
+- [PIVデバイスを使用したmacOSログイン手順](Research/CCID/MACPIVLOGIN.md)
+
 ## ワンタイムパスワード対応
 TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレンダー）」の追加実装可能性について調査します。<br>
 （[#329](https://github.com/diverta/onecard-fido/issues/329) ご参照）
+
+#### 今後必要な対応
+- HID Keyboard I/Fの追加実装（前述・スマートカードエミュレート機能でも必要になる可能性あり）
+- 業務アプリケーション（OATH-TOTP）の開発
+- RTCC評価用の基板製作（I2Cコマンド検証用／バックアップ機能検証用／etc...）
 
 ## その他
 優先度は低くなります
