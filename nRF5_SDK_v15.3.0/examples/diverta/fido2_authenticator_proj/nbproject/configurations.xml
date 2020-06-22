@@ -37,6 +37,24 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="components" displayName="components" projectFiles="true">
+      <logicalFolder name="boards" displayName="boards" projectFiles="true">
+        <itemPath>../../../components/boards/boards.h</itemPath>
+        <itemPath>../../../components/boards/pca10056.h</itemPath>
+        <itemPath>../../../components/boards/pca10059.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
+        <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
+          <logicalFolder name="class" displayName="class" projectFiles="true">
+            <logicalFolder name="hid" displayName="hid" projectFiles="true">
+              <logicalFolder name="generic" displayName="generic" projectFiles="true">
+                <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="ctap2_lib"
                    displayName="ctap2_lib"
                    projectFiles="true"
@@ -318,12 +336,6 @@
       <itemPath>../../../../FIDO2Device/fido_cryptoauth_lib/fido_cryptoauth_setup.h</itemPath>
       <itemPath>../../../../FIDO2Device/fido_cryptoauth_lib/fido_cryptoauth_test.c</itemPath>
       <itemPath>../../../../FIDO2Device/fido_cryptoauth_lib/fido_cryptoauth_test.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="generic"
-                   displayName="generic"
-                   projectFiles="true"
-                   root="../../../components/libraries/usbd/class/hid/generic">
-      <itemPath>../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c</itemPath>
     </logicalFolder>
     <logicalFolder name="lib"
                    displayName="lib"
@@ -1786,7 +1798,6 @@
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
     <Elem>../fido2_authenticator_app</Elem>
-    <Elem>../../../components/libraries/usbd</Elem>
     <Elem>../../../../../tinycbor/src</Elem>
     <Elem>../ble_central_lib</Elem>
     <Elem>../plat_lib</Elem>
@@ -1805,6 +1816,7 @@
     <Elem>../plat_lib_rev2_1</Elem>
     <Elem>../../../../FIDO2Device/fido2_lib_rev2_1</Elem>
     <Elem>../../../../CCID/ccid_lib</Elem>
+    <Elem>../../../components</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -4117,10 +4129,25 @@
             tool="0"
             flavor2="2">
       </item>
+      <item path="../../../components/boards/boards.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../components/boards/pca10056.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../components/boards/pca10059.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
             ex="false"
             tool="0"
-            flavor2="2">
+            flavor2="0">
       </item>
       <item path="../ble_lib/ble_service_central.c" ex="false" tool="0" flavor2="2">
         <cTool>
@@ -4606,28 +4633,6 @@
         <cTool>
           <incDir>
             <pElem>../../../../FIDO2Device/fido2_lib_rev2</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="generic">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.2.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../fido2_authenticator_app/pca10056/s140/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/hid/generic</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/log</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/templates</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/experimental_section_vars</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/toolchain/cmsis/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/drivers/include</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/util</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/usbd/class/hid</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/libraries/queue</pElem>
           </incDir>
         </cTool>
       </folder>
