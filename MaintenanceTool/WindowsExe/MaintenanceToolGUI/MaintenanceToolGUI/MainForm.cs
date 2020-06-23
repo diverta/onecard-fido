@@ -84,9 +84,17 @@ namespace MaintenanceToolGUI
 
         private void CommandTimerElapsed(object sender, EventArgs e)
         {
-            // コマンドタイムアウト発生時は、コマンド終了処理を行う
+            // コマンドタイムアウト発生時
+            // その旨を画面・ログファイルに出力
             OnPrintMessageText(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
             AppCommon.OutputLogError(AppCommon.MSG_HID_CMD_RESPONSE_TIMEOUT);
+
+            // コマンド固有の後処理を行う
+            if (DoCommandTimedOut(sender, e)) {
+                return;
+            }
+
+            //　コマンド終了処理を行う
             OnAppMainProcessExited(false);
         }
 
@@ -180,6 +188,20 @@ namespace MaintenanceToolGUI
                 commandTitle = "";
                 OnAppMainProcessExited(false);
             }
+        }
+
+        private bool DoCommandTimedOut(object sender, EventArgs e)
+        {
+            if (commandTitle.Equals(ToolGUICommon.PROCESS_NAME_USB_DFU)) {
+                // DFU処理の場合、ToolDFU内で終了処理を行う
+                //  最終的に、OnAppMainProcessExitedを経由して
+                //  MainFormに異常終了が通知されます。
+                toolDFU.DoCommandTimedOut();
+                return true;
+            }
+
+            // MainForm内で終了処理を継続する
+            return false;
         }
 
         private void DoCommandClientPinSet(object sender, EventArgs e)
