@@ -6,14 +6,9 @@
 
 #### 要件確定済み
 
-- [[障害] Windows版管理ツールの問題点を解消する](https://github.com/diverta/onecard-fido/issues/334)
-
 - [[改善] BLE自動認証有効時のヘルスチェック動作を改善](https://github.com/diverta/onecard-fido/issues/302)
 
 #### 要件未確定
-
-- [改善] macOS版管理ツールの問題点を解消する<br>
-ファームウェア更新ダイアログが閉じないことがある問題あり、現在再現待ち
 
 - [改善] nRF52840アプリケーションのソースコードを圧縮する<br>
 不要コードを削除／重複実装コードを整理／etc...

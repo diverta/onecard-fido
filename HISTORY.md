@@ -2,6 +2,17 @@
 
 ## プログラム更新履歴
 
+#### 2019/06/18
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-verify-cert/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-Windows-verify-cert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。（[#295](https://github.com/diverta/onecard-fido/issues/295) ご参照）
+- 鍵・証明書をインストール時、両者の整合性検証を行うようにする機能を追加
+
 #### 2020/06/10
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
