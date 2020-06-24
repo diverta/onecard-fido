@@ -52,6 +52,7 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../../../components/libraries/usbd/app_usbd_core.c</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -4142,6 +4143,11 @@
       <item path="../../../components/boards/pca10059.h"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../components/libraries/usbd/app_usbd_core.c"
+            ex="false"
+            tool="0"
             flavor2="0">
       </item>
       <item path="../../../components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c"
