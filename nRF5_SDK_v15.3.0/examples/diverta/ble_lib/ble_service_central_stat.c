@@ -250,9 +250,10 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
             adv_stat_info[idx].rssi
             );
         // CSVデータを編集
+        char *adv_stat_info_string_ = adv_stat_info_string;
         size = sprintf(adv_stat_info_string, 
             "%s%s%s", 
-            adv_stat_info_string, 
+            adv_stat_info_string_, 
             memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
             (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "" : ","
             );
