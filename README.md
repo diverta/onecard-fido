@@ -24,16 +24,17 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/06/18
+#### 2019/06/24
 
 FIDO認証器管理ツールを修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-verify-cert/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.29）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-macOS-20200623/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-Windows-verify-cert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.29）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200622/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-修正点は以下になります。（[#295](https://github.com/diverta/onecard-fido/issues/295) ご参照）
-- 鍵・証明書をインストール時、両者の整合性検証を行うようにする機能を追加
+修正点は以下になります。（[#334](https://github.com/diverta/onecard-fido/issues/334) ご参照）
+- ファームウェア更新中に表示されるポップアップが閉じられない不具合を解消
+- インストーラーで更新インストールができない不具合を解消（Windows版のみ）
 
 #### ご注意
 

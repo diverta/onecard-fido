@@ -197,6 +197,17 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // 更新イメージファイル転送完了
+        // ～バージョン照会処理完了の間に
+        // MainFormがタイムアウト検知した場合の処理
+        //
+        public void DoCommandTimedOut()
+        {
+            // DFU処理失敗の旨を処理進捗画面に通知
+            dfuProcessingForm.NotifyTerminateDFUProcess(false);
+        }
+
+        //
         // バージョン照会処理
         //
         public void OnUSBDeviceArrival()
