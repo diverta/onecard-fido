@@ -46,6 +46,7 @@ namespace MaintenanceToolCommon
         public const string MSG_CANNOT_READ_SKEY_PEM_FILE = "鍵ファイルを読み込むことができません。";
         public const string MSG_CANNOT_READ_CERT_CRT_FILE = "証明書ファイルを読み込むことができません。";
         public const string MSG_CANNOT_CRYPTO_SKEY_CERT_DATA = "鍵・証明書の転送データを暗号化できませんでした。";
+        public const string MSG_INVALID_SKEY_OR_CERT = "秘密鍵または公開鍵の内容が不正です。";
 
         // コマンド種別に対応する処理名称
         public const string PROCESS_NAME_PAIRING = "ペアリング";

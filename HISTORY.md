@@ -2,6 +2,65 @@
 
 ## プログラム更新履歴
 
+#### 2019/06/18
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-macOS-verify-cert/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.28）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2MT-Windows-verify-cert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。（[#295](https://github.com/diverta/onecard-fido/issues/295) ご参照）
+- 鍵・証明書をインストール時、両者の整合性検証を行うようにする機能を追加
+
+#### 2020/06/10
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[nRF52840ファームウェア（Version 0.2.9）](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.9.zip)</b>
+
+修正点は以下になります。[注1]
+- USB CCIDインタフェースを追加実装 [注2]<br>
+（[#323](https://github.com/diverta/onecard-fido/issues/323)、[#327](https://github.com/diverta/onecard-fido/pull/327) ご参照）<br>
+実装内容につきましては、別ドキュメント<b>「[USB CCIDインターフェース](https://github.com/diverta/onecard-fido/blob/doc-20200610/CCID/ccid_lib/README.md)」</b>をご参照願います。
+
+[注1] FIDO機能には修正はありませんので、管理ツールには同梱していません。[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に導入の際は<b>「[[開発運用] アプリケーション書込み手順](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/APPINSTALL.md)」</b>をご参照願います。<br>
+[注2] macOSとのCCID接続機能のみの実装であり、業務アプリケーション（PIV、OpenPGP、OATH等が候補）は未実装となります。今後の作業で実装予定です。
+
+
+#### 2020/04/15
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェア導入・更新が、[FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)により実行できるようになりました（[#300](https://github.com/diverta/onecard-fido/pull/300) ご参照）。<br>
+下記のバージョンをご使用願います。
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.27）](https://github.com/diverta/onecard-fido/blob/research-FIDO2MT-Windows-update-firmware-01/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.8）は、Windows版 FIDO認証器管理ツールに同梱されております。
+
+#### 2020/03/31
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェア導入・更新が、[FIDO認証器管理ツール(macOS版)](MaintenanceTool/macOSApp)により実行できるようになりました（[#319](https://github.com/diverta/onecard-fido/pull/319) ご参照）。<br>
+下記のバージョンをご使用願います。
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.27）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-cmd-BLmode/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b><br>
+MDBT50Q_Dongleの最新ファームウェア（Version 0.2.8）は、macOS版 FIDO認証器管理ツールに同梱されております。
+
+#### ご注意
+
+管理ツールを使用して、MDBT50Q Dongleにファームウェア導入・更新を実行するためには、MDBT50Q Dongleに、新規制作した[「署名機能付きUSBブートローダー」](https://github.com/diverta/onecard-fido/tree/research-FIDO2MT-Windows-update-firmware-01/nRF5_SDK_v15.3.0/firmwares/secure_bootloader)を導入する必要がございます。<br>
+手順につきましては<b>[「署名機能付きUSBブートローダー移行手順書」](https://github.com/diverta/onecard-fido/blob/research-FIDO2MT-Windows-update-firmware-01/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)</b>をご参照願います。
+
+
+#### 2020/03/30
+
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
+
+- <b>[nRF52840ファームウェア（Version 0.2.8）](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares)</b>
+
+修正点は以下になります。
+- ブートローダーモード遷移コマンドを追加実装<br>（[#318](https://github.com/diverta/onecard-fido/pull/318) ご参照）<br>
+MDBT50Q Dongle基板上の物理的な操作無しで、MDBT50Q Dongleをブートローダーモードに遷移させるためのUSB HIDコマンド「ブートローダーモード遷移コマンド」を新設しています。<br>
+「ブートローダーモード遷移コマンド」は、別途新規制作した「[署名機能付きUSBブートローダー](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares/secure_bootloader)」を導入したMDBT50Q Dongleで、実行可能です。<br>
+その他の業務処理につきましては、前回（[Version 0.2.7](https://github.com/diverta/onecard-fido/tree/bug-nRF52840-BLE-auth-scanparam/nRF5_SDK_v15.3.0/firmwares)）から変更は一切ありません。
 #### 2020/03/16
 
 [FIDO認証器管理ツール(Windows版)](MaintenanceTool/WindowsExe)を修正しました。<br>

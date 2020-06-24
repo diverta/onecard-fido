@@ -34,5 +34,6 @@ uint8_t *skey_cert_bytes_enc(void);
 size_t   skey_cert_bytes_enc_size(void);
 size_t   skey_cert_bytes_size(void);
 uint8_t  generate_skey_cert_bytes_enc(uint8_t *skey_cert_bytes, size_t skey_cert_bytes_size);
+uint8_t  validate_skey_cert(uint8_t *skey_bytes, size_t skey_bytes_size, uint8_t *cert_bytes, size_t cert_bytes_size);
 
 #endif /* fido_crypto_h */

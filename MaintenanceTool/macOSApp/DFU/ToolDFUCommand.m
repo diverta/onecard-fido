@@ -124,7 +124,8 @@
             [self setNeedCompareUpdateVersion:false];
             // 処理タイムアウトを検知したので、異常終了と判断
             [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-            [self notifyEndMessage:false];
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
         }
     }
 
@@ -164,6 +165,7 @@
         if ([self needCompareUpdateVersion]) {
             // バージョン情報を比較して終了判定
             bool result = [self compareUpdateVersion:strFWRev];
+            // 処理進捗画面に対し、処理結果を通知する
             [[self dfuProcessingWindow] commandDidTerminateDFUProcess:result];
         }
     }
@@ -418,6 +420,8 @@
             if ([self performDFUProcess] == false) {
                 // 処理失敗時は処理タイムアウト検知を不要とする
                 [self setNeedTimeoutMonitor:false];
+                // 処理進捗画面に対し、処理失敗の旨を通知する
+                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
             }
         });
         dispatch_async([self mainQueue], ^{

@@ -17,6 +17,7 @@
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228A226DBE6F00FC5F07 /* fido_crypto.c */; };
 		7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228D226DC24B00FC5F07 /* AES256CBC.c */; };
+		7A167C8B249B2C77004C9BD2 /* app_dfu_package.0.2.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A167C8A249B2C77004C9BD2 /* app_dfu_package.0.2.8.zip */; };
 		7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */; };
 		7A261BC123C4128500A9CE86 /* usb_dfu_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A261BBF23C4128500A9CE86 /* usb_dfu_util.c */; };
 		7A2BE5EA23BC29B7008EB897 /* ToolCDCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A2BE5E923BC29B7008EB897 /* ToolCDCHelper.m */; };
@@ -49,7 +50,6 @@
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
 		7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55375226D572D003FA435 /* CBORDecoder.c */; };
 		7AB5537A226D75BA003FA435 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55378226D75BA003FA435 /* ECDH.c */; };
-		7AC45967242C543C00A4A5AA /* app_dfu_package.0.2.8.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AC45966242C543C00A4A5AA /* app_dfu_package.0.2.8.zip */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
@@ -76,6 +76,7 @@
 		7A16228B226DBE6F00FC5F07 /* fido_crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
 		7A16228D226DC24B00FC5F07 /* AES256CBC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
 		7A16228E226DC24B00FC5F07 /* AES256CBC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AES256CBC.h; sourceTree = "<group>"; };
+		7A167C8A249B2C77004C9BD2 /* app_dfu_package.0.2.8.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = app_dfu_package.0.2.8.zip; sourceTree = "<group>"; };
 		7A1718CB23628821002507DD /* ToolPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPreferenceWindow.h; sourceTree = "<group>"; };
 		7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceWindow.m; sourceTree = "<group>"; };
 		7A261BBF23C4128500A9CE86 /* usb_dfu_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = usb_dfu_util.c; sourceTree = "<group>"; };
@@ -136,7 +137,6 @@
 		7AB55376226D572D003FA435 /* CBORDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBORDecoder.h; sourceTree = "<group>"; };
 		7AB55378226D75BA003FA435 /* ECDH.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ECDH.c; sourceTree = "<group>"; };
 		7AB55379226D75BA003FA435 /* ECDH.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
-		7AC45966242C543C00A4A5AA /* app_dfu_package.0.2.8.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = app_dfu_package.0.2.8.zip; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -295,7 +295,7 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7AC45966242C543C00A4A5AA /* app_dfu_package.0.2.8.zip */,
+				7A167C8A249B2C77004C9BD2 /* app_dfu_package.0.2.8.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -386,7 +386,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AC45967242C543C00A4A5AA /* app_dfu_package.0.2.8.zip in Resources */,
+				7A167C8B249B2C77004C9BD2 /* app_dfu_package.0.2.8.zip in Resources */,
 				7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */,
 				7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */,
 				7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */,
