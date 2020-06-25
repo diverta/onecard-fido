@@ -228,7 +228,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
-  $(PLTLIB_DIR)/app_usbd_ccid.c \
 
 # source control for former hardware version
 ifeq ("$(HW_REV)","0.2")

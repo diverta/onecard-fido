@@ -1705,8 +1705,6 @@
                    displayName="plat_lib"
                    projectFiles="true"
                    root="../plat_lib">
-      <itemPath>../plat_lib/app_usbd_ccid.c</itemPath>
-      <itemPath>../plat_lib/app_usbd_ccid.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
@@ -4338,15 +4336,6 @@
       <item path="../demo_lib/demo_cdc_service.c" ex="false" tool="0" flavor2="2">
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
-      </item>
-      <item path="../plat_lib/app_usbd_ccid.c" ex="false" tool="0" flavor2="2">
-        <cTool>
-          <incDir>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/examples/dfu/secure_bootloader/pca10056e_uart/config</pElem>
-            <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
-          </incDir>
-        </cTool>
       </item>
       <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="2">
         <cTool>
