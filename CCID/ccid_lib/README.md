@@ -34,12 +34,11 @@ CCIDドライバーのカスタマイズおよび導入手順につきまして�
 
 |#|関数名|説明|
 |:---:|:---|:---|
-|2-1|app_usbd_ccid_internal.h|内部利用するヘッダー[注1]|
-|2-2|app_usbd_ccid.c/.h|nRF52840用CCID I/F[注1]|
-|2-3|usbd_service.c/.h|USB経由で通信する各種I/F(CCID、HID、CDC)への<br>振分処理を実行します。|
-|2-4|usbd_service_ccid.c/.h|CCID I/F経由でデータ送受信処理を実行します。|
+|2-1|usbd_service.c/.h|USB経由で通信する各種I/F(CCID、HID、CDC)への<br>振分処理を実行します。|
+|2-2|usbd_service_ccid.c/.h|CCID I/F経由でデータ送受信処理を実行します。|
+|2-3|usbd_service_bos.c/.h|BOSディスクリプター応答に関する処理を実行します。[注1]|
 
-[注1]これらのモジュールは、後日`usbd_service_ccid.c/.h`に吸収して一本化する予定です。
+[注1]一応実装はしましたが、BOSディスクリプター応答は当面サポートしない見込みです。2020/06/25現在の実装では、BOSディスクリプター応答を行わなくても、macOS／Windows 10の両環境で、CCID／PIVデバイスとして認識されるようです。
 
 ## 仕様
 本モジュール群で実行できるセキュリティー機能は以下になります。<br>
