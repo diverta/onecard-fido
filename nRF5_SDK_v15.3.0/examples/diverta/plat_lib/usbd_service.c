@@ -29,6 +29,15 @@
 NRF_LOG_MODULE_REGISTER();
 
 //
+// USB製品関連情報
+//  nRF5 SDKの app_usbd_string_desc.c 内で加工され、
+//  ディスクリプター応答されます。
+//
+uint8_t app_usbd_strings_manufacturer[] = USBD_STRINGS_MANUFACTURER;
+uint8_t app_usbd_strings_product[]      = USBD_STRINGS_PRODUCT;
+uint8_t app_usbd_strings_serial[]       = USBD_STRINGS_SERIAL;
+
+//
 // USB共通処理
 //
 // USBイベントハンドラーの参照を待避

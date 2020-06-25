@@ -14,6 +14,15 @@ extern "C" {
 #endif
 
 //
+// USB製品関連情報
+//
+#define USBD_VID                    0xf055
+#define USBD_PID                    0x0001
+#define USBD_STRINGS_MANUFACTURER   "Diverta Inc."
+#define USBD_STRINGS_PRODUCT        "Secure Dongle"
+#define USBD_STRINGS_SERIAL         "000000000000"
+
+//
 // インターフェースのインデックスを管理
 //
 // CTAP HID
