@@ -1707,7 +1707,6 @@
                    root="../plat_lib">
       <itemPath>../plat_lib/app_usbd_ccid.c</itemPath>
       <itemPath>../plat_lib/app_usbd_ccid.h</itemPath>
-      <itemPath>../plat_lib/app_usbd_ccid_internal.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
