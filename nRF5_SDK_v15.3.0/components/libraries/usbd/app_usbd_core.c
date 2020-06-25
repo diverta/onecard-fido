@@ -38,6 +38,10 @@
  *
  */
 #include "sdk_common.h"
+
+// for customize device descriptor
+#include "usbd_service.h"
+
 #if NRF_MODULE_ENABLED(APP_USBD)
 
 #include "app_usbd_core.h"
@@ -88,29 +92,6 @@ NRF_LOG_MODULE_REGISTER();
 
 /** @brief Make USB power value */
 #define APP_USBD_POWER_MAKE(ma) (((ma) + 1) / 2)
-
-/**
- @brief Default device descriptor initializer @ref app_usbd_descriptor_device_t
-* */
-#define APP_USBD_CORE_DEVICE_DESCRIPTOR  {                                                               \
-   .bLength = sizeof(app_usbd_descriptor_device_t),    /* descriptor size */                             \
-   .bDescriptorType = APP_USBD_DESCRIPTOR_DEVICE,      /* descriptor type */                             \
-   .bcdUSB = APP_USBD_BCD_VER_MAKE(2,0),               /* USB BCD version: 2.0 */                        \
-   .bDeviceClass = 0,                                  /* device class: 0 - specified by interface */    \
-   .bDeviceSubClass = 0,                               /* device subclass: 0 - specified by interface */ \
-   .bDeviceProtocol = 0,                               /* device protocol: 0 - specified by interface */ \
-   .bMaxPacketSize0 = NRF_DRV_USBD_EPSIZE,             /* endpoint size: fixed to: NRF_DRV_USBD_EPSIZE*/ \
-   .idVendor = APP_USBD_VID,                           /* Vendor ID*/                                    \
-   .idProduct = APP_USBD_PID,                          /* Product ID*/                                   \
-   .bcdDevice = APP_USBD_BCD_VER_MAKE(                 /* Device version BCD */                          \
-       APP_USBD_DEVICE_VER_MAJOR,                                                                        \
-       APP_USBD_DEVICE_VER_MINOR),                                                                       \
-   .iManufacturer = APP_USBD_STRING_ID_MANUFACTURER,   /* String ID: manufacturer */                     \
-   .iProduct = APP_USBD_STRING_ID_PRODUCT,             /* String ID: product */                          \
-   .iSerialNumber = APP_USBD_STRING_ID_SERIAL,         /* String ID: serial */                           \
-   .bNumConfigurations = 1                             /* Fixed value: only one configuration supported*/\
-}
-
 
 #define APP_USBD_CORE_CONFIGURATION_DESCRIPTOR {                                        \
     .bLength = sizeof(app_usbd_descriptor_configuration_t),                             \
