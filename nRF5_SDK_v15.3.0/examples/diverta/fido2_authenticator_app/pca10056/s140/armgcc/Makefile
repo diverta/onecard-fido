@@ -210,6 +210,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
+  $(PLTLIB_DIR)/usbd_service_bos.c \
   $(PLTLIB_DIR)/usbd_service_ccid.c \
   $(PLTLIB_DIR)/usbd_service_cdc.c \
   $(PLTLIB_DIR)/usbd_service_hid.c \

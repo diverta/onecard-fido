@@ -1736,6 +1736,8 @@
       <itemPath>../plat_lib/nfc_service.h</itemPath>
       <itemPath>../plat_lib/usbd_service.c</itemPath>
       <itemPath>../plat_lib/usbd_service.h</itemPath>
+      <itemPath>../plat_lib/usbd_service_bos.c</itemPath>
+      <itemPath>../plat_lib/usbd_service_bos.h</itemPath>
       <itemPath>../plat_lib/usbd_service_ccid.c</itemPath>
       <itemPath>../plat_lib/usbd_service_ccid.h</itemPath>
       <itemPath>../plat_lib/usbd_service_cdc.c</itemPath>
@@ -4501,6 +4503,10 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/modules/nrfx/mdk</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/usbd_service_bos.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_bos.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/usbd_service_ccid.c" ex="false" tool="0" flavor2="2">
         <cTool>
