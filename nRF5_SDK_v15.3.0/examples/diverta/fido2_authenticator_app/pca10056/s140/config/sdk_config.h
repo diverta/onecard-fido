@@ -3296,7 +3296,7 @@
 // <i> Vendor ID ordered from USB IF: http://www.usb.org/developers/vendor/
 
 #ifndef APP_USBD_VID
-#define APP_USBD_VID 0xf055
+#define APP_USBD_VID 0x1915
 #endif
 
 // <o> APP_USBD_PID - Product ID.  <0x0000-0xFFFF> 
@@ -3306,7 +3306,7 @@
 // <i> Selected Product ID
 
 #ifndef APP_USBD_PID
-#define APP_USBD_PID 0x0001
+#define APP_USBD_PID 0x520C
 #endif
 
 // <o> APP_USBD_DEVICE_VER_MAJOR - Device version, major part.  <0-99> 
@@ -3315,7 +3315,7 @@
 // <i> Device version, will be converted automatically to BCD notation. Use just decimal values.
 
 #ifndef APP_USBD_DEVICE_VER_MAJOR
-#define APP_USBD_DEVICE_VER_MAJOR 0
+#define APP_USBD_DEVICE_VER_MAJOR 1
 #endif
 
 // <o> APP_USBD_DEVICE_VER_MINOR - Device version, minor part.  <0-99> 
@@ -3324,7 +3324,7 @@
 // <i> Device version, will be converted automatically to BCD notation. Use just decimal values.
 
 #ifndef APP_USBD_DEVICE_VER_MINOR
-#define APP_USBD_DEVICE_VER_MINOR 1
+#define APP_USBD_DEVICE_VER_MINOR 0
 #endif
 
 // <q> APP_USBD_CONFIG_SELF_POWERED  - Self-powered device, as opposed to bus-powered.
@@ -3437,7 +3437,7 @@
  
 
 #ifndef APP_USBD_STRINGS_MANUFACTURER_EXTERN
-#define APP_USBD_STRINGS_MANUFACTURER_EXTERN 0
+#define APP_USBD_STRINGS_MANUFACTURER_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRINGS_MANUFACTURER - String descriptor for the manufacturer name.
@@ -3451,7 +3451,7 @@
 // <i> Setting string to NULL disables that string.
 // <i> The order of manufacturer names must be the same like in @ref APP_USBD_STRINGS_LANGIDS.
 #ifndef APP_USBD_STRINGS_MANUFACTURER
-#define APP_USBD_STRINGS_MANUFACTURER APP_USBD_STRING_DESC("Diverta Inc.")
+#define APP_USBD_STRINGS_MANUFACTURER app_usbd_strings_manufacturer
 #endif
 
 // </e>
@@ -3467,7 +3467,7 @@
  
 
 #ifndef APP_USBD_STRINGS_PRODUCT_EXTERN
-#define APP_USBD_STRINGS_PRODUCT_EXTERN 0
+#define APP_USBD_STRINGS_PRODUCT_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRINGS_PRODUCT - String descriptor for the product name.
@@ -3475,7 +3475,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> List of product names that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRINGS_PRODUCT
-#define APP_USBD_STRINGS_PRODUCT APP_USBD_STRING_DESC("FIDO authenticator")
+#define APP_USBD_STRINGS_PRODUCT app_usbd_strings_product
 #endif
 
 // </e>
@@ -3491,7 +3491,7 @@
  
 
 #ifndef APP_USBD_STRING_SERIAL_EXTERN
-#define APP_USBD_STRING_SERIAL_EXTERN 0
+#define APP_USBD_STRING_SERIAL_EXTERN 1
 #endif
 
 // <s> APP_USBD_STRING_SERIAL - String descriptor for the serial number.
@@ -3499,7 +3499,7 @@
 // <i> Note: This value is not editable in Configuration Wizard.
 // <i> Serial number that is defined the same way like in @ref APP_USBD_STRINGS_MANUFACTURER.
 #ifndef APP_USBD_STRING_SERIAL
-#define APP_USBD_STRING_SERIAL APP_USBD_STRING_DESC("000000000000")
+#define APP_USBD_STRING_SERIAL app_usbd_strings_serial
 #endif
 
 // </e>

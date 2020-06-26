@@ -120,7 +120,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/scheduler/app_scheduler.c \
   $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
   $(SDK_ROOT)/components/libraries/timer/app_timer.c \
-  $(SDK_ROOT)/components/libraries/usbd/app_usbd_core.c \
+  $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
   $(SDK_ROOT)/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm.c \
@@ -217,6 +217,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
   $(PLTLIB_DIR)/usbd_service.c \
+  $(PLTLIB_DIR)/usbd_service_bos.c \
   $(PLTLIB_DIR)/usbd_service_ccid.c \
   $(PLTLIB_DIR)/usbd_service_cdc.c \
   $(PLTLIB_DIR)/usbd_service_hid.c \
@@ -234,7 +235,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
-  $(PLTLIB_DIR)/app_usbd_ccid.c \
 
 # source control for former hardware version
 ifeq ("$(HW_REV)","0.2")

@@ -27,3 +27,7 @@ nRF5_SDK_v15.2.0/examples/diverta/one_card_peripheral_proj/nbproject/private/con
 *.epf
 
 nRF5_SDK_v15.2.0/external/micro-ecc/micro-ecc/
+
+# ignore for macOS
+.DS_Store
+
