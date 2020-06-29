@@ -29,6 +29,8 @@ extern "C" {
 #define DEVICE_NAME         "FIDO authenticator board"
 #elif defined(BOARD_PCA10059)
 #define DEVICE_NAME         "FIDO authenticator dongle"
+#elif defined(BOARD_PCA10059_02)
+#define DEVICE_NAME         "Secure Dongle"
 #else
 #define DEVICE_NAME         "FIDO authenticator"
 #endif
@@ -46,6 +48,9 @@ extern "C" {
 #if defined(BOARD_PCA10059)
 #define LED_R   NRF_GPIO_PIN_MAP(1,10)  // rev2 LED1
 #define LED_Y   LED1_G                  // rev2 LED3
+#elif defined(BOARD_PCA10059_02)
+#define LED_R   NRF_GPIO_PIN_MAP(0,27)  // rev2.1.1 LED1
+#define LED_Y   LED1_G                  // rev2.1.1 LED3
 #else
 #define LED_R   LED_1
 #define LED_Y   LED_2
