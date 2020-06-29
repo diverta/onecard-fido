@@ -37,6 +37,9 @@ static bool atcab_init_done = false;
 // シリアルナンバーを保持
 static uint8_t cryptoauth_serial_num[ATCA_SERIAL_NUM_SIZE];
 
+// シリアルナンバーを表示可能なHex文字列形式にするためのバッファ
+static char serial_num_str[20];
+
 // 公開鍵を保持
 static uint8_t public_key_raw_data[ATCA_PUB_KEY_SIZE];
 
@@ -58,6 +61,23 @@ static bool get_cryptoauth_serial_num(void)
     fido_log_print_hexdump_debug(cryptoauth_serial_num, ATCA_SERIAL_NUM_SIZE);
 #endif
     return true;
+}
+
+char *fido_cryptoauth_get_serial_num_str(void)
+{
+    // ATECC608Aの初期化
+    memset(serial_num_str, 0, sizeof(serial_num_str));
+    if (fido_cryptoauth_init() == false) {
+        return serial_num_str;
+    }
+
+    // ATECC608Aのシリアルナンバーを、表示可能なHex文字列形式で戻す
+    //   例：0123d560b2d9470dee（18バイト）
+    for (int i = 0; i < ATCA_SERIAL_NUM_SIZE; i++) {
+        char *serial_num_str_ = serial_num_str;
+        sprintf(serial_num_str, "%s%02X", serial_num_str_, cryptoauth_serial_num[i]);
+    }
+    return serial_num_str;
 }
 
 bool fido_cryptoauth_get_config_bytes(void)
