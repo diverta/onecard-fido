@@ -37,6 +37,7 @@ extern "C" {
 bool     fido_cryptoauth_init(void);
 void     fido_cryptoauth_release(void);
 bool     fido_cryptoauth_get_config_bytes(void);
+char    *fido_cryptoauth_get_serial_num_str(void);
 
 bool     fido_cryptoauth_keypair_generate(uint16_t key_id);
 uint8_t *fido_cryptoauth_keypair_public_key(uint16_t key_id);

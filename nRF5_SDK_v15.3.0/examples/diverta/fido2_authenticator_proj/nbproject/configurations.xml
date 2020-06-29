@@ -39,9 +39,11 @@
     </logicalFolder>
     <logicalFolder name="components" displayName="components" projectFiles="true">
       <logicalFolder name="boards" displayName="boards" projectFiles="true">
+        <itemPath>../../../components/boards/boards.c</itemPath>
         <itemPath>../../../components/boards/boards.h</itemPath>
         <itemPath>../../../components/boards/pca10056.h</itemPath>
         <itemPath>../../../components/boards/pca10059.h</itemPath>
+        <itemPath>../../../components/boards/pca10059_02.h</itemPath>
       </logicalFolder>
       <logicalFolder name="libraries" displayName="libraries" projectFiles="true">
         <logicalFolder name="usbd" displayName="usbd" projectFiles="true">
@@ -4129,6 +4131,11 @@
             tool="0"
             flavor2="2">
       </item>
+      <item path="../../../components/boards/boards.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
       <item path="../../../components/boards/boards.h"
             ex="false"
             tool="3"
@@ -4140,6 +4147,11 @@
             flavor2="0">
       </item>
       <item path="../../../components/boards/pca10059.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../components/boards/pca10059_02.h"
             ex="false"
             tool="3"
             flavor2="0">

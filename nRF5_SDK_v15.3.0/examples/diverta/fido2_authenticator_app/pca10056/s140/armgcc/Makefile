@@ -1,14 +1,29 @@
 PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
+# target board
+#  PCA10056     nRF52840 DK
+#  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2)
+#  PCA10059_02  Secure Dongle with ATECC608A
 TARGET_BOARD     := PCA10059
 
 # application version info
 FW_REV := 0.2.10
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
+HW_REV := 0.2.1
+else
 HW_REV := 0.2
+endif
 CFLAGS += -DHW_REV=\"$(HW_REV)\"
+
+# enable log output on PCA10056
+ifeq ("$(TARGET_BOARD)","PCA10056")
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+else
+    CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
@@ -56,7 +71,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/ble/peer_manager/pm_buffer.c \
   $(SDK_ROOT)/components/ble/peer_manager/security_dispatcher.c \
   $(SDK_ROOT)/components/ble/peer_manager/security_manager.c \
-  $(SDK_ROOT)/components/boards/boards.c \
+  $(SDK_CUSTOM_ROOT)/components/boards/boards.c \
   $(SDK_ROOT)/components/libraries/atomic_fifo/nrf_atfifo.c \
   $(SDK_ROOT)/components/libraries/atomic_flags/nrf_atflags.c \
   $(SDK_ROOT)/components/libraries/atomic/nrf_atomic.c \
@@ -230,17 +245,7 @@ SRC_FILES += \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
 
 # source control for former hardware version
-ifeq ("$(HW_REV)","0.2")
-  FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
-  PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
-  SRC_FILES += \
-  $(FD2LIB_REV2_DIR)/fido_command_common.c \
-  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
-
-else
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
   FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2_1
   PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2_1
   FCALIB_DIR := $(FIDO_DIR)/fido_cryptoauth_lib
@@ -281,6 +286,16 @@ else
   $(CRPLIB_DIR)/hal/atca_hal.c \
   $(CRPLIB_DIR)/host/atca_host.c \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+
+else
+  FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
+  PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
+  SRC_FILES += \
+  $(FD2LIB_REV2_DIR)/fido_command_common.c \
+  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
+  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
 
 endif
 
@@ -445,16 +460,16 @@ INC_FOLDERS += \
   $(TINYCBOR_ROOT)/src \
 
 # source control for former hardware version
-ifeq ("$(HW_REV)","0.2")
+ifeq ("$(TARGET_BOARD)","PCA10059_02")
   INC_FOLDERS += \
   $(FD2LIB_REV2_DIR) \
   $(PLTLIB_REV2_DIR) \
+  $(CRPLIB_DIR) \
 
 else
   INC_FOLDERS += \
   $(FD2LIB_REV2_DIR) \
   $(PLTLIB_REV2_DIR) \
-  $(CRPLIB_DIR) \
 
 endif
 
@@ -538,6 +553,8 @@ LIB_FILES += -lc -lnosys -lm
 # Default target - first one defined
 ifeq ("$(TARGET_BOARD)","PCA10056")
     default: $(TARGETS) deploy_dk
+else ifeq ("$(TARGET_BOARD)","PCA10059_02")
+    default: $(TARGETS) secure_pkg_02
 else
     default: $(TARGETS) deploy secure_pkg
 endif
@@ -561,6 +578,10 @@ deploy:
 secure_pkg:
 	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/app_dfu_package.$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
+
+secure_pkg_02:
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/app_dfu_pkg_02.$(FW_REV).zip
+	@echo Secure Dongle Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
 

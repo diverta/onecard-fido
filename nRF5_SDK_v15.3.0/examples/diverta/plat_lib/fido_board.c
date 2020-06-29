@@ -28,15 +28,9 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_platform.h"
 
-//
-// LEDのピン
-//
-#if defined(BOARD_PCA10059)
-#define LED_R   NRF_GPIO_PIN_MAP(1, 10)
-#define LED_Y   NRF_GPIO_PIN_MAP(0, 26)
-#else
-#define LED_R   LED_1
-#define LED_Y   LED_2
+#if defined(BOARD_PCA10059_02)
+// for fido_cryptoauth_get_serial_num_str
+#include "fido_cryptoauth.h"
 #endif
 
 //
@@ -203,6 +197,12 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data, 
         "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", DEVICE_NAME, FW_REV, HW_REV);
+#if defined(BOARD_PCA10059_02)
+    // ATECC608Aの固有情報を追加
+    char *info_csv_data_ = (char *)info_csv_data;
+    sprintf((char *)info_csv_data, 
+        "%s,ATECC608A=\"%s\"", info_csv_data_, fido_cryptoauth_get_serial_num_str());
+#endif
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;
