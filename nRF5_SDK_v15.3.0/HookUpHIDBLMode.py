@@ -6,7 +6,6 @@ hid_dev = None
 
 for d in hid.enumerate(0, 0):
     keys = d.keys()
-    keys.sort()
     for key in keys:
         if key != 'usage_page':
             continue
@@ -15,7 +14,7 @@ for d in hid.enumerate(0, 0):
 
         # Retrieve path for U2F hid interface
         hid_dev = d
-        print "HID device: path=%s, usage_page=%d, usage=%d" % (hid_dev['path'], hid_dev['usage_page'], hid_dev['usage'])
+        print("HID device: path=%s, usage_page=%d, usage=%d" % (hid_dev['path'], hid_dev['usage_page'], hid_dev['usage']))
         break
 
 if hid_dev is None:
@@ -36,7 +35,7 @@ VENDOR_ID  = 61525
 PRODUCT_ID = 1
 
 try:
-    h = hid.device(VENDOR_ID, PRODUCT_ID, path=hid_dev['path'])
+    h = hid.Device(VENDOR_ID, PRODUCT_ID, path=hid_dev['path'])
 
     # send 64 bytes
     data = [0] * 64
@@ -56,19 +55,19 @@ try:
     data[13] = 0x30
     data[14] = 0x41
 
-    h.write(data)
-    print "---- sent data ----"
+    h.write(bytes(data))
+    print("---- sent data ----")
     data_ = bytearray(data)
-    print binascii.hexlify(data_[:32])
-    print binascii.hexlify(data_[32:])
+    print(binascii.hexlify(data_[:32]))
+    print(binascii.hexlify(data_[32:]))
 
     # receive 64 bytes
     rcv = h.read(64)
-    print "---- received data ----"
+    print("---- received data ----")
     data_ = bytearray(rcv)
-    print binascii.hexlify(data_[:32])
-    print binascii.hexlify(data_[32:])
-    print "---- INIT done ----"
+    print(binascii.hexlify(data_[:32]))
+    print(binascii.hexlify(data_[32:]))
+    print("---- INIT done ----")
 
 
     # send 64 bytes
@@ -79,23 +78,23 @@ try:
     data[3]  = data_[18]
     data[4]  = 0xc5
 
-    h.write(data)
-    print "---- sent data ----"
+    h.write(bytes(data))
+    print("---- sent data ----")
     data_ = bytearray(data)
-    print binascii.hexlify(data_[:32])
-    print binascii.hexlify(data_[32:])
+    print(binascii.hexlify(data_[:32]))
+    print(binascii.hexlify(data_[32:]))
 
     # receive 64 bytes
     rcv = h.read(64)
-    print "---- received data ----"
+    print("---- received data ----")
     data_ = bytearray(rcv)
-    print binascii.hexlify(data_[:32])
-    print binascii.hexlify(data_[32:])
-    print "---- command done ----"
+    print(binascii.hexlify(data_[:32]))
+    print(binascii.hexlify(data_[32:]))
+    print("---- command done ----")
 
     h.close()
 
-except IOError, ex:
-    print ex
-    print "You probably don't have the hard coded test hid. Update the hid.device line"
-    print "in this script with one from the enumeration list output above and try again."
+except IOError as ex:
+    print(ex)
+    print("You probably don't have the hard coded test hid. Update the hid.device line")
+    print("in this script with one from the enumeration list output above and try again.")
