@@ -26,42 +26,47 @@ MDBT50Q DongleをPCのUSBポートに装着します。<br>
 
 ### 書込み用ツールの準備
 
-書込み用ツール「nRFコマンドラインツール」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「NetBeansインストール手順」](../nRF5_SDK_v15.3.0/NETBEANSINST.md)の該当部分をご参照ください。
+書込み用ツール「nRF Util」を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書[「nRF Utilインストール手順」](../nRF5_SDK_v15.3.0/NRFUTILINST.md)をご参照願います。
+
+### Python3ライブラリーの準備
+
+後述のPython3スクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行させるために必要な依存ライブラリー「hidapi」を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書[「hidapiインストール手順」](../nRF5_SDK_v15.3.0/PYHIDAPIINST.md)をご参照願います。
 
 ## アプリケーションの書込み
 
 ### ブートローダーモードに遷移
 
-Pythonスクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
+Python3スクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
 以下のコマンドを実行します。
 
 ```
 GITHUB_DIR=${HOME}/GitHub/onecard-fido
-python ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
+python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
 ```
 
 下記は実行例になります。
 
 ```
-MacBookPro-makmorit-jp:~ makmorit$ GITHUB_DIR=${HOME}/GitHub/onecard-fido
-MacBookPro-makmorit-jp:~ makmorit$ python ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
-HID device: path=USB_f055_0001_0x7f95e25070f0, usage_page=61904, usage=1
+makmorit@iMac-makmorit-jp ~ % GITHUB_DIR=${HOME}/GitHub/onecard-fido
+makmorit@iMac-makmorit-jp ~ % python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
+HID device: path=b'IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/XHC1@14/XHC1@14000000/HS03@14100000/Secure Dongle@14100000/IOUSBHostInterface@0/AppleUserUSBHostHIDDevice', usage_page=61904, usage=1
 ---- sent data ----
-ffffffff860008d4e5f607182930410000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
+b'ffffffff860008d4e5f607182930410000000000000000000000000000000000'
+b'0000000000000000000000000000000000000000000000000000000000000000'
 ---- received data ----
-ffffffff860011d4e5f607182930410100330102050002070000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
+b'ffffffff860011d4e5f607182930410100330102050002070000000000000000'
+b'0000000000000000000000000000000000000000000000000000000000000000'
 ---- INIT done ----
 ---- sent data ----
-01003301c5000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
+b'01003301c5000000000000000000000000000000000000000000000000000000'
+b'0000000000000000000000000000000000000000000000000000000000000000'
 ---- received data ----
-01003301c5000100000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
+b'01003301c5000100000000000000000000000000000000000000000000000000'
+b'0000000000000000000000000000000000000000000000000000000000000000'
 ---- command done ----
-MacBookPro-makmorit-jp:~ makmorit$
+makmorit@iMac-makmorit-jp ~ %
 ```
 
 コマンド実行が完了すると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
