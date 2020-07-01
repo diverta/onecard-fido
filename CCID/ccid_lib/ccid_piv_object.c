@@ -13,6 +13,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// テスト用
+#include "ccid_piv_object_test.h"
+
 // デフォルトの管理用キー (24 bytes)
 static char *card_admin_key_default = "010203040506070801020304050607080102030405060708";
 
@@ -43,23 +46,38 @@ static size_t convert_hexstring_to_bytes(char *data, uint8_t *buffer)
 
 bool ccid_piv_object_sn_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(SN_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("Serial number is requested (%d bytes)", *size);
     return false;
+#endif
 }
 
 bool ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(CHUID_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("Card Holder Unique Identifier is requested (%d bytes)", *size);
     return false;
+#endif
 }
 
 bool ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(CCC_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("Card Capability Container is requested");
     return false;
+#endif
 }
 
 bool ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size)
@@ -71,23 +89,38 @@ bool ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size)
 
 bool ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(TAG05_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("X.509 Certificate for PIV Authentication is requested (%d bytes)", *size);
     return false;
+#endif
 }
 
 bool ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(TAG0A_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("X.509 Certificate for Digital Signature is requested (%d bytes)", *size);
     return false;
+#endif
 }
 
 bool ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size)
 {
+#if CCID_PIV_OBJECT_TEST
+    *size = convert_hexstring_to_bytes(TAG0B_TEMP, buffer);
+    return true;
+#else
     // 後日正式に実装予定です。
     fido_log_debug("X.509 Certificate for Key Management is requested (%d bytes)", *size);
     return false;
+#endif
 }
 
 bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size)
