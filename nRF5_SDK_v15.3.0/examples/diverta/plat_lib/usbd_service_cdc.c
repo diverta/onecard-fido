@@ -242,7 +242,11 @@ void usbd_cdc_init(void)
 bool usbd_cdc_port_is_open(void)
 {
     // 仮想COMポート接続中の場合 true
-    return m_cdc_port_open;
+    // return m_cdc_port_open;
+    //
+    // 現在閉塞中なので false を戻す。
+    //
+    return false;
 }
 
 void usbd_service_cdc_do_process(void)
