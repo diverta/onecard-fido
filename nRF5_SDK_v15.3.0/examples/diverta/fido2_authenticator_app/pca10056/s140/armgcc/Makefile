@@ -227,7 +227,6 @@ SRC_FILES += \
   $(PLTLIB_DIR)/usbd_service.c \
   $(PLTLIB_DIR)/usbd_service_bos.c \
   $(PLTLIB_DIR)/usbd_service_ccid.c \
-  $(PLTLIB_DIR)/usbd_service_cdc.c \
   $(PLTLIB_DIR)/usbd_service_hid.c \
   $(U2FLIB_DIR)/u2f_authenticate.c \
   $(U2FLIB_DIR)/u2f_keyhandle.c \
@@ -241,7 +240,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_pairing.c \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
-  $(DMOLIB_DIR)/demo_cdc_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
 
 # source control for former hardware version
