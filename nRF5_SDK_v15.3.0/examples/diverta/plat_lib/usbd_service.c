@@ -46,11 +46,8 @@ void usbd_service_start(void)
 {
     // USBデバイスクラスを初期化
     usbd_hid_init();
-    if (false) {
-        // 現在閉塞中
-        usbd_ccid_init();
-    }
-    
+    usbd_ccid_init();
+
     // USBデバイスを開始
     ret_code_t ret = app_usbd_power_events_enable();
     if (ret != NRF_SUCCESS) {
@@ -166,4 +163,7 @@ void usbd_service_do_process(void)
 
     // HIDサービスを稼働させる
     usbd_service_hid_do_process(true);
+
+    // CCIDサービスを稼働させる
+    usbd_service_ccid_do_process();
 }
