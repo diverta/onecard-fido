@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := _build
 #  PCA10056     nRF52840 DK
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2)
 #  PCA10059_02  Secure Dongle with ATECC608A
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059
 
 # application version info
 FW_REV := 0.2.10
