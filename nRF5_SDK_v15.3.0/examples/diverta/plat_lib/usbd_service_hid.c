@@ -211,14 +211,14 @@ void usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size)
 void usbd_service_hid_do_process(bool process)
 {
     if (process) {
-        // 仮想COMポートから切断されている場合は
-        // HIDサービスを稼働させる
-        if (m_hid_report_received) {
-            // HIDサービスから受信データがあった場合、
-            // FIDO USB HIDサービスを実行
-            m_hid_report_received = false;
-            fido_hid_receive_on_request_received();
-        }
+    // 仮想COMポートから切断されている場合は
+    // HIDサービスを稼働させる
+    if (m_hid_report_received) {
+        // HIDサービスから受信データがあった場合、
+        // FIDO USB HIDサービスを実行
+        m_hid_report_received = false;
+        fido_hid_receive_on_request_received();
+    }
         
     } else {
         // 受信されたHIDリクエストを無効化

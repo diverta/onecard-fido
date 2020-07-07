@@ -116,16 +116,6 @@ typedef enum app_usbd_ccid_user_event_e {
                                       data_ein,         \
                                       data_eout)        \
 
-static inline app_usbd_class_inst_t const *app_usbd_ccid_class_inst_get(app_usbd_ccid_t const *p_ccid)
-{
-    return &p_ccid->base;
-}
-
-static inline app_usbd_ccid_t const *app_usbd_ccid_class_get(app_usbd_class_inst_t const *p_inst)
-{
-    return (app_usbd_ccid_t const *)p_inst;
-}
-
 //
 // 関数群
 //

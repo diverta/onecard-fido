@@ -36,19 +36,22 @@ static bool m_ccid_received  = false;
 //   nRF5 SDKの命名規約に沿った名称付けをしています。
 //
 // データ送受信用の一時変数
-static nrf_drv_usbd_transfer_t _transfer;
-static uint8_t _rx_buf[64];
-static size_t  _rx_buf_size;
-static uint8_t _tx_buf[64];
-static size_t  _tx_buf_size;
+static uint8_t m_rx_buf[64];
+static size_t  m_rx_buf_size;
+static uint8_t m_tx_buf[64];
+static size_t  m_tx_buf_size;
 
-static inline app_usbd_ccid_t const *ccid_get(app_usbd_class_inst_t const * p_inst)
+static inline app_usbd_class_inst_t const *app_usbd_ccid_class_inst_get(app_usbd_ccid_t const *p_ccid)
 {
-    ASSERT(p_inst != NULL);
+    return &p_ccid->base;
+}
+
+static inline app_usbd_ccid_t const *app_usbd_ccid_class_get(app_usbd_class_inst_t const *p_inst)
+{
     return (app_usbd_ccid_t const *)p_inst;
 }
 
-static inline app_usbd_ccid_ctx_t *ccid_ctx_get(app_usbd_ccid_t const * p_ccid)
+static inline app_usbd_ccid_ctx_t *app_usbd_ccid_ctx_get(app_usbd_ccid_t const * p_ccid)
 {
     ASSERT(p_ccid != NULL);
     ASSERT(p_ccid->specific.p_data != NULL);
@@ -58,7 +61,7 @@ static inline app_usbd_ccid_ctx_t *ccid_ctx_get(app_usbd_ccid_t const * p_ccid)
 static inline void user_event_handler(app_usbd_class_inst_t const *p_inst,
                                       app_usbd_ccid_user_event_t event)
 {
-    app_usbd_ccid_t const *p_ccid = ccid_get(p_inst);
+    app_usbd_ccid_t const *p_ccid = app_usbd_ccid_class_get(p_inst);
     if (p_ccid->specific.inst.user_ev_handler != NULL) {
         p_ccid->specific.inst.user_ev_handler(p_inst, event);
     }
@@ -66,56 +69,46 @@ static inline void user_event_handler(app_usbd_class_inst_t const *p_inst,
 
 static void ccid_reset_port(app_usbd_class_inst_t const *p_inst)
 {
-    app_usbd_ccid_t const *p_ccid = ccid_get(p_inst);
-    app_usbd_ccid_ctx_t   *p_ccid_ctx = ccid_ctx_get(p_ccid);
+    app_usbd_ccid_t const *p_ccid = app_usbd_ccid_class_get(p_inst);
+    app_usbd_ccid_ctx_t   *p_ccid_ctx = app_usbd_ccid_ctx_get(p_ccid);
 
     // Set transfers configuration to default state.
     p_ccid_ctx->dummy = 0;
 }
 
-static void prepare_ep_output_buffer(void) 
+static void prepare_ep_output_buffer(void *p_buf, size_t *size) 
 {
     nrf_drv_usbd_ep_t ep_addr = CCID_DATA_EPOUT;
-    _transfer.p_data.rx = _rx_buf;
-    _transfer.size = nrf_drv_usbd_epout_size_get(ep_addr);
+    size_t epout_size = nrf_drv_usbd_epout_size_get(ep_addr);
+    NRF_DRV_USBD_TRANSFER_OUT(transfer, p_buf, epout_size);
 
-    ret_code_t ret = nrf_drv_usbd_ep_transfer(ep_addr, &_transfer);
+    ret_code_t ret = app_usbd_ep_transfer(ep_addr, &transfer);
     if (ret != NRF_SUCCESS) {
         NRF_LOG_ERROR("prepare_ep_output_buffer: nrf_drv_usbd_ep_transfer returns 0x%02x", ret);
     }
-    _rx_buf_size = _transfer.size;
+    APP_ERROR_CHECK(ret);
+    *size = transfer.size;
 
 #if NRF_LOG_HEXDUMP_DEBUG_RX
-    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", _rx_buf_size, ret);
-    NRF_LOG_HEXDUMP_DEBUG(_rx_buf, _rx_buf_size);
+    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", *size, ret);
+    NRF_LOG_HEXDUMP_DEBUG(p_buf, *size);
 #endif
 }
 
-uint8_t *app_usbd_ccid_ep_output_buffer(void)
-{
-    return _rx_buf;
-}
-
-size_t app_usbd_ccid_ep_output_buffer_size(void)
-{
-    return _rx_buf_size;
-}
-
-void app_usbd_ccid_ep_input_from_buffer(void *p_buf, size_t size)
+static void perform_ep_input_from_buffer(void *p_buf, size_t size)
 {
     nrf_drv_usbd_ep_t ep_addr = CCID_DATA_EPIN;
-    _transfer.p_data.tx = p_buf;
-    _transfer.size = size;
-    _transfer.flags = 0;
+    NRF_DRV_USBD_TRANSFER_IN(transfer, p_buf, size);
 
-    ret_code_t ret = nrf_drv_usbd_ep_transfer(ep_addr, &_transfer);
+    ret_code_t ret = nrf_drv_usbd_ep_transfer(ep_addr, &transfer);
     if (ret != NRF_SUCCESS) {
         NRF_LOG_ERROR("app_usbd_ccid_ep_input_from_buffer: nrf_drv_usbd_ep_transfer returns 0x%02x", ret);
     }
+    APP_ERROR_CHECK(ret);
 
 #if NRF_LOG_HEXDUMP_DEBUG_TX
-    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", _transfer.size, ret);
-    NRF_LOG_HEXDUMP_DEBUG(_transfer.p_data.tx, _transfer.size);
+    NRF_LOG_DEBUG("nrf_drv_usbd_ep_transfer(%d bytes) returns %d", size, ret);
+    NRF_LOG_HEXDUMP_DEBUG(p_buf, size);
 #endif
 }
 
@@ -213,7 +206,7 @@ static bool ccid_feed_descriptors(app_usbd_class_descriptor_ctx_t *p_ctx,
 {
     static uint8_t ifaces = 0;
     ifaces = app_usbd_class_iface_count_get(p_inst);
-    app_usbd_ccid_t const *p_ccid = ccid_get(p_inst);
+    app_usbd_ccid_t const *p_ccid = app_usbd_ccid_class_get(p_inst);
 
     APP_USBD_CLASS_DESCRIPTOR_BEGIN(p_ctx, p_buff, max_size);
 
@@ -376,8 +369,8 @@ void usbd_ccid_init(void)
 void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size)
 {
     // レスポンスAPDUを送信バッファに設定
-    memcpy(_tx_buf, p_data, size);
-    _tx_buf_size = size;
+    memcpy(m_tx_buf, p_data, size);
+    m_tx_buf_size = size;
 
     // レスポンスAPDU生成完了
     m_ccid_status = 5;
@@ -390,14 +383,10 @@ void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size)
 
 void usbd_service_ccid_do_process(void)
 {
-    if (m_ccid_status > 0) {
-        NRF_LOG_DEBUG("%d", m_ccid_status);
-    }
-
     switch (m_ccid_status) {
         case 1:
             // 受信バッファをフェッチ
-            prepare_ep_output_buffer();
+            prepare_ep_output_buffer(m_rx_buf, &m_rx_buf_size);
             m_ccid_status = 2;
             break;
         case 2:
@@ -409,7 +398,7 @@ void usbd_service_ccid_do_process(void)
             break;
         case 3:
             // 受信バッファからリクエストAPDUを取出し
-            if (ccid_data_frame_received(_rx_buf, _rx_buf_size)) {
+            if (ccid_data_frame_received(m_rx_buf, m_rx_buf_size)) {
                 // リクエストAPDU取出し完了
                 m_ccid_status = 4;
             } else {
@@ -423,7 +412,7 @@ void usbd_service_ccid_do_process(void)
             break;
         case 5:
             // レスポンスAPDU送信
-            app_usbd_ccid_ep_input_from_buffer(_tx_buf, _tx_buf_size);
+            perform_ep_input_from_buffer(m_tx_buf, m_tx_buf_size);
             m_ccid_status = 6;
             break;
         default:
