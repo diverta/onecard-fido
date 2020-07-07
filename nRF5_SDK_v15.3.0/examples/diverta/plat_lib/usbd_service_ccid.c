@@ -27,7 +27,6 @@ NRF_LOG_MODULE_REGISTER();
 //
 // データ処理ステータス
 //
-static uint8_t m_ccid_status = 0;
 static bool m_ccid_received  = false;
 
 //
@@ -38,8 +37,6 @@ static bool m_ccid_received  = false;
 // データ送受信用の一時変数
 static uint8_t m_rx_buf[64];
 static size_t  m_rx_buf_size;
-static uint8_t m_tx_buf[64];
-static size_t  m_tx_buf_size;
 
 static inline app_usbd_class_inst_t const *app_usbd_ccid_class_inst_get(app_usbd_ccid_t const *p_ccid)
 {
@@ -322,28 +319,13 @@ static void ccid_user_ev_handler(app_usbd_class_inst_t const *p_inst, enum app_u
 {
     switch (event) {
         case APP_USBD_CCID_USER_EVT_RX:
-            if (m_ccid_status == 0) {
-                m_ccid_status = 1;
-            } else {
-                NRF_LOG_ERROR("APP_USBD_CCID_USER_EVT_RX is irregular event");
-                m_ccid_status = 0;
-            }
+            // 受信バッファをフェッチ
+            prepare_ep_output_buffer(m_rx_buf, &m_rx_buf_size);
             break;
         case APP_USBD_CCID_USER_EVT_RX_DONE:
-            if (m_ccid_status == 2) {
-                m_ccid_received = true;
-            } else {
-                NRF_LOG_ERROR("APP_USBD_CCID_USER_EVT_RX_DONE is irregular event");
-                m_ccid_status = 0;
-            }
+            m_ccid_received = true;
             break;
         case APP_USBD_CCID_USER_EVT_TX_DONE:
-            if (m_ccid_status == 6) {
-                m_ccid_status = 0;
-            } else {
-                NRF_LOG_ERROR("APP_USBD_CCID_USER_EVT_TX_DONE is irregular event");
-                m_ccid_status = 0;
-            }
             break;
         default:
             break;
@@ -368,12 +350,8 @@ void usbd_ccid_init(void)
 
 void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size)
 {
-    // レスポンスAPDUを送信バッファに設定
-    memcpy(m_tx_buf, p_data, size);
-    m_tx_buf_size = size;
-
-    // レスポンスAPDU生成完了
-    m_ccid_status = 5;
+    // レスポンスAPDU送信
+    perform_ep_input_from_buffer(p_data, size);
     
 #if NRF_LOG_HEXDUMP_DEBUG_BUFFER
     NRF_LOG_DEBUG("usbd_ccid_send_data_frame(%d bytes)", size);
@@ -383,39 +361,12 @@ void usbd_ccid_send_data_frame(uint8_t *p_data, size_t size)
 
 void usbd_service_ccid_do_process(void)
 {
-    switch (m_ccid_status) {
-        case 1:
-            // 受信バッファをフェッチ
-            prepare_ep_output_buffer(m_rx_buf, &m_rx_buf_size);
-            m_ccid_status = 2;
-            break;
-        case 2:
-            // 受信バッファのフェッチ完了
-            if (m_ccid_received) {
-                m_ccid_received = false;
-                m_ccid_status = 3;
-            }
-            break;
-        case 3:
-            // 受信バッファからリクエストAPDUを取出し
-            if (ccid_data_frame_received(m_rx_buf, m_rx_buf_size)) {
-                // リクエストAPDU取出し完了
-                m_ccid_status = 4;
-            } else {
-                // 継続フレーム待ち
-                m_ccid_status = 0;
-            }
-            break;
-        case 4:
-            // レスポンスAPDU生成
+    // 受信バッファのフェッチ完了
+    if (m_ccid_received) {
+        m_ccid_received = false;
+        // レスポンスAPDUを生成し、業務処理を実行
+        if (ccid_data_frame_received(m_rx_buf, m_rx_buf_size)) {
             ccid_request_apdu_received();
-            break;
-        case 5:
-            // レスポンスAPDU送信
-            perform_ep_input_from_buffer(m_tx_buf, m_tx_buf_size);
-            m_ccid_status = 6;
-            break;
-        default:
-            break;
+        }
     }
 }
