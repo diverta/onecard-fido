@@ -58,18 +58,12 @@ PIV Card、OpenPGP Cardなどといったスマートカードのエミュレー
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
 
 #### ソフトウェアの開発状況
-nRF52840アプリケーションへの追加実装と、macOS環境上での実機動作確認は、概ね完了しています。<br>
+nRF52840アプリケーションへの追加実装と、macOS環境／Windows10環境上での実機動作確認は、概ね完了しています。<br>
 作業中のアプリケーションは以下の場所に格納しています。<br>
 コード格納場所（プラットフォーム非依存）--->[ccid_lib](CCID/ccid_lib)<br>
 コード格納場所（プラットフォーム依存）--->[app_usbd_ccid](nRF5_SDK_v15.3.0/examples/diverta/plat_lib/app_usbd_ccid.c)
 
-Windows環境上での実機動作確認はできていません。<br>
-（Windows環境固有の対応が追加で必要となります）
-
 #### 今後必要な対応
-- CCID I/FのWindows環境固有対応
-  - macOS環境で出来たこと（CCID I/F経由によるPIVコマンド投入等）が、Windows 10環境でも出来ることを確認します。
-  - 具体的には、Yubico PIV Tool (command line) の各機能を、Windows 10環境で実行し、macOS環境で実行した時の結果と比較します。
 - macOS環境専用ドライバー（インストーラー含む）の開発
 - 業務アプリケーション（PIV／OpenPGP）の開発
 - CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
