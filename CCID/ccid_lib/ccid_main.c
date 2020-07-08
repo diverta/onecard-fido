@@ -148,6 +148,8 @@ static uint8_t pc_to_reader_icc_power_off(void)
 
 static uint8_t pc_to_reader_get_slot_status(void) 
 {
+    // fido_log_debug("Slot get status");
+
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
     return SLOT_NO_ERROR;
@@ -235,7 +237,7 @@ static void reader_to_pc_parameters(uint8_t error)
     usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE + apdu_size);
 }
 
-static void apdu_received(void)
+void ccid_request_apdu_received(void)
 {
     uint8_t error;
 
@@ -262,12 +264,13 @@ static void apdu_received(void)
             reader_to_pc_parameters(error);
             break;
         default:
+            fido_log_error("Slot error command");
             reader_to_pc_slot_status(SLOTERROR_CMD_NOT_SUPPORTED);
             break;
     }
 }
 
-void ccid_data_frame_received(uint8_t *data, size_t len)
+bool ccid_data_frame_received(uint8_t *data, size_t len)
 {
     // APDU格納領域
     uint8_t *apdu_data = bulkout_data + CCID_CMD_HEADER_SIZE;
@@ -276,7 +279,7 @@ void ccid_data_frame_received(uint8_t *data, size_t len)
     if (bulkout_state == 0) {
         if (len < CCID_CMD_HEADER_SIZE) {
             // 受信フレームにヘッダー（10バイト）が含まれていない場合は終了
-            return;
+            return false;
         }
 
         // フレームデータをバッファに退避
@@ -298,7 +301,7 @@ void ccid_data_frame_received(uint8_t *data, size_t len)
 
         if (apdu_size_received == apdu_size_expected) {
             // APDUの処理を実行
-            apdu_received();
+            return true;
 
         } else if (apdu_size_received < apdu_size_expected) {
             if (apdu_size_expected > APDU_DATA_SIZE) {
@@ -323,10 +326,12 @@ void ccid_data_frame_received(uint8_t *data, size_t len)
             memcpy(apdu_data + apdu_size_received, data, len);
             bulkout_state = 0;
             // APDUの処理を実行
-            apdu_received();
+            return true;
 
         } else {
             bulkout_state = 0;
         }
     }
+
+    return false;
 }

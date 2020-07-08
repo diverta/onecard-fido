@@ -16,7 +16,6 @@
 
 #include "usbd_service.h"
 #include "usbd_service_ccid.h"
-#include "usbd_service_cdc.h"
 #include "usbd_service_hid.h"
 
 // for BOOTLOADER_DFU_START
@@ -47,12 +46,8 @@ void usbd_service_start(void)
 {
     // USBデバイスクラスを初期化
     usbd_hid_init();
-    if (false) {
-        // 現在閉塞中
-        usbd_ccid_init();
-        usbd_cdc_init();
-    }
-    
+    usbd_ccid_init();
+
     // USBデバイスを開始
     ret_code_t ret = app_usbd_power_events_enable();
     if (ret != NRF_SUCCESS) {
@@ -166,16 +161,9 @@ void usbd_service_do_process(void)
     // USBデバイス処理を実行する
     while (app_usbd_event_queue_process());
 
-    if (usbd_cdc_port_is_open()) {
-        // CDCサービスから受信データがあった場合、
-        // CDC関連処理を実行
-        usbd_service_cdc_do_process();
-        // 受信されたHIDリクエストは処理しない
-        usbd_service_hid_do_process(false);
+    // HIDサービスを稼働させる
+    usbd_service_hid_do_process(true);
 
-    } else {
-        // 仮想COMポートから切断されている場合は
-        // HIDサービスを稼働させる
-        usbd_service_hid_do_process(true);
-    }
+    // CCIDサービスを稼働させる
+    usbd_service_ccid_do_process();
 }

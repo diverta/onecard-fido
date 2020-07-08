@@ -70,7 +70,8 @@ extern "C" {
 // 関数群
 //
 void      ccid_initialize_value(void);
-void      ccid_data_frame_received(uint8_t *data, size_t len);
+bool      ccid_data_frame_received(uint8_t *data, size_t len);
+void      ccid_request_apdu_received(void);
 uint8_t  *ccid_command_apdu_data(void);
 size_t    ccid_command_apdu_size(void);
 uint8_t  *ccid_response_apdu_data(void);

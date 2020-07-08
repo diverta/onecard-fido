@@ -58,14 +58,6 @@ extern "C" {
 #define CCID_DATA_EPIN          NRF_DRV_USBD_EPIN2
 #define CCID_DATA_EPOUT         NRF_DRV_USBD_EPOUT2
 
-// CDC（現在機能閉塞中）
-#define CDC_ACM_COMM_INTERFACE  2
-#define CDC_ACM_COMM_EPIN       NRF_DRV_USBD_EPIN3
-
-#define CDC_ACM_DATA_INTERFACE  3
-#define CDC_ACM_DATA_EPIN       NRF_DRV_USBD_EPIN4
-#define CDC_ACM_DATA_EPOUT      NRF_DRV_USBD_EPOUT4
-
 //
 // 関数群
 //
