@@ -148,7 +148,7 @@ static uint8_t pc_to_reader_icc_power_off(void)
 
 static uint8_t pc_to_reader_get_slot_status(void) 
 {
-    fido_log_debug("Slot get status");
+    // fido_log_debug("Slot get status");
 
     // bStatus
     set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
