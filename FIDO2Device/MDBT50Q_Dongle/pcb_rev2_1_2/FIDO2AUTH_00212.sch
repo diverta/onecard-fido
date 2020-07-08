@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -556,7 +556,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <smd name="C" x="0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
 <smd name="A" x="-0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
 <text x="-0.873125" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-0.79375" y="-1.905" size="0.7112" layer="27">&gt;VALUE</text>
+<text x="-0.79375" y="-2.005" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="0.675" y1="0.275" x2="0.875" y2="0.425" layer="51" rot="R270"/>
 <rectangle x1="0.55" y1="0.225" x2="0.6" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="0.5125" y1="0.2375" x2="0.5625" y2="0.6125" layer="51" rot="R270"/>
@@ -567,25 +567,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.7375" y1="-0.1125" x2="-0.1875" y2="0.1125" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="0.175" x2="-0.55" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="-0.275" x2="-0.55" y2="-0.175" layer="51" rot="R270"/>
-<rectangle x1="0.238125" y1="-0.91875" x2="0.488125" y2="-0.66875" layer="21" rot="R270"/>
-</package>
-<package name="APHF1608LSEEQBDZGKC">
-<description>&lt;b&gt;1.6 x 0.8 mm Full-Color Surface Mount LED&lt;/b&gt;&lt;p&gt;</description>
-<smd name="2" x="-0.65" y="-0.35" dx="0.5" dy="0.4" layer="1" stop="no" cream="no"/>
-<smd name="3" x="0.65" y="-0.35" dx="0.5" dy="0.4" layer="1" stop="no" cream="no"/>
-<smd name="4" x="0.65" y="0.35" dx="0.5" dy="0.4" layer="1" stop="no" cream="no"/>
-<smd name="1" x="-0.65" y="0.35" dx="0.5" dy="0.4" layer="1" stop="no" cream="no"/>
-<text x="-0.76825" y="1.0605" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-1.641375" y="-1.248625" size="0.7112" layer="27" align="top-left">&gt;VALUE</text>
-<rectangle x1="-0.95" y1="0.1" x2="-0.35" y2="0.6" layer="29"/>
-<rectangle x1="-0.875" y1="0.175" x2="-0.425" y2="0.525" layer="31"/>
-<rectangle x1="-0.875" y1="-0.525" x2="-0.425" y2="-0.175" layer="31"/>
-<rectangle x1="0.425" y1="-0.525" x2="0.875" y2="-0.175" layer="31"/>
-<rectangle x1="0.425" y1="0.175" x2="0.875" y2="0.525" layer="31"/>
-<rectangle x1="0.35" y1="0.1" x2="0.95" y2="0.6" layer="29"/>
-<rectangle x1="0.35" y1="-0.6" x2="0.95" y2="-0.1" layer="29"/>
-<rectangle x1="-0.95" y1="-0.6" x2="-0.35" y2="-0.1" layer="29"/>
-<rectangle x1="-1.349375" y1="0.748125" x2="-1.099375" y2="0.998125" layer="21"/>
+<rectangle x1="0.9" y1="-1.2" x2="1.3" y2="-0.8" layer="51"/>
 </package>
 <package name="SOT23">
 <description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
@@ -750,74 +732,6 @@ Wave soldering</description>
 <vertex x="-2.921" y="-2.413"/>
 <vertex x="-2.413" y="-2.921"/>
 </polygon>
-</symbol>
-<symbol name="LED-RGB-A">
-<wire x1="6.35" y1="-0.762" x2="5.08" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-2.794" x2="3.81" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="6.35" y1="-2.794" x2="5.08" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="5.08" y1="-2.794" x2="3.81" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="6.35" y1="-0.762" x2="3.81" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="3.048" y1="-1.016" x2="2.159" y2="-1.905" width="0.1524" layer="94"/>
-<wire x1="3.81" y1="-1.778" x2="2.921" y2="-2.667" width="0.1524" layer="94"/>
-<wire x1="1.27" y1="-0.762" x2="0" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="0" y1="-2.794" x2="-1.27" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="1.27" y1="-2.794" x2="0" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="0" y1="-2.794" x2="-1.27" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="1.27" y1="-0.762" x2="-1.27" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="-2.032" y1="-1.016" x2="-2.921" y2="-1.905" width="0.1524" layer="94"/>
-<wire x1="-1.27" y1="-1.778" x2="-2.159" y2="-2.667" width="0.1524" layer="94"/>
-<wire x1="-3.81" y1="-0.762" x2="-5.08" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-2.794" x2="-6.35" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="-2.794" x2="-5.08" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-2.794" x2="-6.35" y2="-2.794" width="0.254" layer="94"/>
-<wire x1="-3.81" y1="-0.762" x2="-6.35" y2="-0.762" width="0.254" layer="94"/>
-<wire x1="-7.112" y1="-1.016" x2="-8.001" y2="-1.905" width="0.1524" layer="94"/>
-<wire x1="-6.35" y1="-1.778" x2="-7.239" y2="-2.667" width="0.1524" layer="94"/>
-<wire x1="-5.08" y1="0" x2="0" y2="0" width="0.1524" layer="94"/>
-<wire x1="0" y1="0" x2="0" y2="-2.54" width="0.1524" layer="94"/>
-<wire x1="0" y1="0" x2="5.08" y2="0" width="0.1524" layer="94"/>
-<wire x1="5.08" y1="0" x2="5.08" y2="-2.54" width="0.1524" layer="94"/>
-<circle x="-5.08" y="0" radius="0.1796" width="0.254" layer="94"/>
-<circle x="0" y="0" radius="0.1796" width="0.254" layer="94"/>
-<text x="7.62" y="-1.778" size="1.778" layer="95">&gt;NAME</text>
-<text x="7.62" y="-4.699" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="CBLUE" x="5.08" y="-5.08" visible="pad" length="short" direction="pas" rot="R90"/>
-<pin name="CGREEN" x="0" y="-5.08" visible="pad" length="short" direction="pas" rot="R90"/>
-<pin name="CRED" x="-5.08" y="-5.08" visible="pad" length="short" direction="pas" rot="R90"/>
-<pin name="A" x="-5.08" y="2.54" visible="pad" length="middle" direction="pas" rot="R270"/>
-<polygon width="0.1524" layer="94">
-<vertex x="2.032" y="-1.524"/>
-<vertex x="1.778" y="-2.286"/>
-<vertex x="2.54" y="-2.032"/>
-</polygon>
-<polygon width="0.1524" layer="94">
-<vertex x="2.794" y="-2.286"/>
-<vertex x="2.54" y="-3.048"/>
-<vertex x="3.302" y="-2.794"/>
-</polygon>
-<polygon width="0.1524" layer="94">
-<vertex x="-3.048" y="-1.524"/>
-<vertex x="-3.302" y="-2.286"/>
-<vertex x="-2.54" y="-2.032"/>
-</polygon>
-<polygon width="0.1524" layer="94">
-<vertex x="-2.286" y="-2.286"/>
-<vertex x="-2.54" y="-3.048"/>
-<vertex x="-1.778" y="-2.794"/>
-</polygon>
-<polygon width="0.1524" layer="94">
-<vertex x="-8.128" y="-1.524"/>
-<vertex x="-8.382" y="-2.286"/>
-<vertex x="-7.62" y="-2.032"/>
-</polygon>
-<polygon width="0.1524" layer="94">
-<vertex x="-7.366" y="-2.286"/>
-<vertex x="-7.62" y="-3.048"/>
-<vertex x="-6.858" y="-2.794"/>
-</polygon>
-<text x="-6.35" y="-3.81" size="1.27" layer="94" rot="R180">R</text>
-<text x="-1.27" y="-3.81" size="1.27" layer="94" rot="R180">G</text>
-<text x="3.81" y="-3.81" size="1.27" layer="94" rot="R180">B</text>
 </symbol>
 <symbol name="XC6206">
 <description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;</description>
@@ -1145,70 +1059,6 @@ ESR（等価直列抵抗）	70 kOhms&lt;br&gt;
 </device>
 </devices>
 </deviceset>
-<deviceset name="APHD1608" prefix="LED">
-<description>&lt;b&gt;発光ダイオード&lt;/b&gt;</description>
-<gates>
-<gate name="G$1" symbol="LED" x="0" y="-2.54"/>
-</gates>
-<devices>
-<device name="LQBC/D_" package="CHIPLED_0805">
-<connects>
-<connect gate="G$1" pin="A" pad="A"/>
-<connect gate="G$1" pin="C" pad="C"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="LSURCK_" package="CHIPLED_0805">
-<connects>
-<connect gate="G$1" pin="A" pad="A"/>
-<connect gate="G$1" pin="C" pad="C"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="LQBC/D" package="CHIPLED_0603">
-<connects>
-<connect gate="G$1" pin="A" pad="A"/>
-<connect gate="G$1" pin="C" pad="C"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="LSURCK" package="CHIPLED_0603">
-<connects>
-<connect gate="G$1" pin="A" pad="A"/>
-<connect gate="G$1" pin="C" pad="C"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="APHF1608" prefix="LED">
-<description>&lt;b&gt;Chip LED RGB&lt;/b&gt;&lt;p&gt;
-Source: http://document.sharpsma.com/files/GM1WA55311A_SS.pdf</description>
-<gates>
-<gate name="G$1" symbol="LED-RGB-A" x="0" y="0"/>
-</gates>
-<devices>
-<device name="LSEEQBDZGKC" package="APHF1608LSEEQBDZGKC">
-<connects>
-<connect gate="G$1" pin="A" pad="1"/>
-<connect gate="G$1" pin="CBLUE" pad="3"/>
-<connect gate="G$1" pin="CGREEN" pad="4"/>
-<connect gate="G$1" pin="CRED" pad="2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="XC6206" prefix="U">
 <description>&lt;b&gt;LDO電圧レギュレータ&lt;/b&gt;&lt;p&gt;
 出力電圧: 3.3 V &lt;br&gt;
@@ -1291,6 +1141,50 @@ Ifsm - 順方向サージ電流: 10 A &lt;br&gt;
 </technologies>
 </device>
 <device name="LSYCK" package="CHIPLED_0603">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="APHD1608" prefix="LED">
+<description>&lt;b&gt;発光ダイオード&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="LED" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="LQBC/D_" package="CHIPLED_0805">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LSURCK_" package="CHIPLED_0805">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LQBC/D" package="CHIPLED_0603">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="LSURCK" package="CHIPLED_0603">
 <connects>
 <connect gate="G$1" pin="A" pad="A"/>
 <connect gate="G$1" pin="C" pad="C"/>
@@ -2110,9 +2004,6 @@ Working distance&lt;br&gt;
 <part name="GND13" library="Supply" deviceset="0V" device=""/>
 <part name="SW2" library="Parts" deviceset="SKTADAE010" device=""/>
 <part name="GND12" library="Supply" deviceset="0V" device=""/>
-<part name="LD1" library="Parts" deviceset="APHD1608" device="LSURCK"/>
-<part name="LD2" library="Parts" deviceset="APHF1608" device="LSEEQBDZGKC"/>
-<part name="R2" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
 <part name="R3" library="Parts" deviceset="RESISTOR" device="_0402" value="1.2k"/>
 <part name="R4" library="Parts" deviceset="RESISTOR" device="_0402" value="2.2k"/>
 <part name="R5" library="Parts" deviceset="RESISTOR" device="_0402" value="390"/>
@@ -2128,7 +2019,7 @@ Working distance&lt;br&gt;
 <part name="D3" library="Parts" deviceset="PMEG2005" device="AEA,115"/>
 <part name="BAT1" library="Connectors" deviceset="BAT-HLD-012-SMT" device=""/>
 <part name="GND18" library="Supply" deviceset="0V" device=""/>
-<part name="LD3" library="Parts" deviceset="APTD1608" device="LSYCK"/>
+<part name="LD1" library="Parts" deviceset="APTD1608" device="LSYCK"/>
 <part name="R6" library="Parts" deviceset="RESISTOR" device="_0402" value="1.5k"/>
 <part name="FRAME4" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="CN2" library="Connectors" deviceset="IF_4PIN" device=""/>
@@ -2139,15 +2030,18 @@ Working distance&lt;br&gt;
 <part name="GND20" library="Supply" deviceset="0V" device=""/>
 <part name="R7" library="Parts" deviceset="RESISTOR" device="_0402" value="3.6k"/>
 <part name="R8" library="Parts" deviceset="RESISTOR" device="_0402" value="3.6k"/>
+<part name="LD3" library="Parts" deviceset="APTD1608" device="LCGCK"/>
+<part name="LD2" library="Parts" deviceset="APHD1608" device="LSURCK"/>
+<part name="LD4" library="Parts" deviceset="APHD1608" device="LQBC/D"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="152.4" y="152.4" size="2.54" layer="91">32.768kHzクリスタル</text>
 <text x="203.2" y="152.4" size="2.54" layer="91">バイパスコンデンサー</text>
-<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.2</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-    （rev2.1.1）</text>
+    （rev2.1.2）</text>
 <text x="20.32" y="162.56" size="3.81" layer="91">モジュール部</text>
 <text x="167.64" y="91.44" size="2.54" layer="91">リセット回路</text>
 <text x="167.64" y="50.8" size="2.54" layer="91">MAIN SW</text>
@@ -2386,7 +2280,7 @@ Working distance&lt;br&gt;
 <label x="170.18" y="83.82" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="LED2_R" class="0">
+<net name="LED2" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.08"/>
 <wire x1="73.66" y1="45.72" x2="73.66" y2="12.7" width="0.1524" layer="91"/>
@@ -2394,7 +2288,7 @@ Working distance&lt;br&gt;
 <label x="104.14" y="12.7" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="LED2_G" class="0">
+<net name="LED3" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P1.09"/>
 <wire x1="78.74" y1="45.72" x2="78.74" y2="17.78" width="0.1524" layer="91"/>
@@ -2402,7 +2296,7 @@ Working distance&lt;br&gt;
 <label x="104.14" y="17.78" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="LED2_B" class="0">
+<net name="LED4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P0.12"/>
 <wire x1="86.36" y1="45.72" x2="86.36" y2="22.86" width="0.1524" layer="91"/>
@@ -2444,14 +2338,6 @@ Working distance&lt;br&gt;
 </net>
 <net name="LED1" class="0">
 <segment>
-<label x="45.72" y="38.1" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="U1" gate="G$1" pin="P0.27"/>
-<wire x1="53.34" y1="45.72" x2="53.34" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="53.34" y1="38.1" x2="45.72" y2="38.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="LED3" class="0">
-<segment>
 <pinref part="U1" gate="G$1" pin="P0.26"/>
 <wire x1="60.96" y1="45.72" x2="60.96" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="60.96" y1="22.86" x2="45.72" y2="22.86" width="0.1524" layer="91"/>
@@ -2478,15 +2364,16 @@ Working distance&lt;br&gt;
 <plain>
 <text x="30.48" y="162.56" size="3.81" layer="91">USBプラグ部</text>
 <text x="30.48" y="91.44" size="3.81" layer="91">LED部</text>
-<text x="152.4" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
-<text x="152.4" y="81.28" size="2.54" layer="91">nRF52840アプリケーションを
+<text x="175.26" y="91.44" size="3.81" layer="91">プログラミングI/F部</text>
+<text x="175.26" y="81.28" size="2.54" layer="91">nRF52840アプリケーションを
 書込する際に使用します。</text>
-<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.2</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-    （rev2.1.1）</text>
-<text x="124.46" y="66.04" size="2.54" layer="91">LED（黄色）</text>
-<text x="40.64" y="66.04" size="2.54" layer="91">LED（赤色）</text>
-<text x="76.2" y="66.04" size="2.54" layer="91">LED（３色）</text>
+    （rev2.1.2）</text>
+<text x="38.1" y="66.04" size="2.54" layer="91">LED（黄色）</text>
+<text x="73.66" y="66.04" size="2.54" layer="91">LED（赤色）</text>
+<text x="109.22" y="66.04" size="2.54" layer="91">LED（緑色）</text>
+<text x="144.78" y="66.04" size="2.54" layer="91">LED（青色）</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -2502,22 +2389,28 @@ Working distance&lt;br&gt;
 <instance part="FB3" gate="G$1" x="76.2" y="111.76"/>
 <instance part="D1" gate="G$1" x="114.3" y="124.46"/>
 <instance part="CN1" gate="G$1" x="30.48" y="124.46"/>
-<instance part="LD1" gate="G$1" x="33.02" y="60.96" smashed="yes">
-<attribute name="NAME" x="36.576" y="58.928" size="1.778" layer="95"/>
-<attribute name="VALUE" x="36.195" y="56.388" size="1.778" layer="96"/>
+<instance part="R3" gate="G$1" x="66.04" y="40.64" rot="R90"/>
+<instance part="R4" gate="G$1" x="101.6" y="40.64" rot="R90"/>
+<instance part="R5" gate="G$1" x="137.16" y="40.64" rot="R90"/>
+<instance part="GND14" gate="1" x="213.36" y="53.34"/>
+<instance part="LD1" gate="G$1" x="30.48" y="60.96" smashed="yes">
+<attribute name="NAME" x="34.036" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="33.655" y="56.388" size="1.778" layer="96"/>
 </instance>
-<instance part="LD2" gate="G$1" x="73.66" y="60.96"/>
-<instance part="R2" gate="G$1" x="33.02" y="40.64" rot="R90"/>
-<instance part="R3" gate="G$1" x="63.5" y="40.64" rot="R90"/>
-<instance part="R4" gate="G$1" x="73.66" y="40.64" rot="R90"/>
-<instance part="R5" gate="G$1" x="83.82" y="40.64" rot="R90"/>
-<instance part="GND14" gate="1" x="190.5" y="53.34"/>
-<instance part="LD3" gate="G$1" x="119.38" y="60.96" smashed="yes">
-<attribute name="NAME" x="122.936" y="58.928" size="1.778" layer="95"/>
-<attribute name="VALUE" x="122.555" y="56.388" size="1.778" layer="96"/>
+<instance part="R6" gate="G$1" x="30.48" y="40.64" rot="R90"/>
+<instance part="CN2" gate="G$1" x="218.44" y="71.12"/>
+<instance part="LD3" gate="G$1" x="101.6" y="60.96" smashed="yes">
+<attribute name="NAME" x="105.156" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="104.775" y="56.388" size="1.778" layer="96"/>
 </instance>
-<instance part="R6" gate="G$1" x="119.38" y="40.64" rot="R90"/>
-<instance part="CN2" gate="G$1" x="195.58" y="71.12"/>
+<instance part="LD2" gate="G$1" x="66.04" y="60.96" smashed="yes">
+<attribute name="NAME" x="69.596" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="69.215" y="56.388" size="1.778" layer="96"/>
+</instance>
+<instance part="LD4" gate="G$1" x="137.16" y="60.96" smashed="yes">
+<attribute name="NAME" x="140.716" y="58.928" size="1.778" layer="95"/>
+<attribute name="VALUE" x="140.335" y="56.388" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -2593,9 +2486,9 @@ Working distance&lt;br&gt;
 </segment>
 <segment>
 <pinref part="GND14" gate="1" pin="0V"/>
-<wire x1="190.5" y1="55.88" x2="190.5" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="55.88" x2="213.36" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="CN2" gate="G$1" pin="1"/>
-<wire x1="190.5" y1="63.5" x2="195.58" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="63.5" x2="218.44" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -2647,115 +2540,102 @@ Working distance&lt;br&gt;
 </net>
 <net name="VDD_NRF" class="0">
 <segment>
-<pinref part="LD1" gate="G$1" pin="A"/>
-<wire x1="33.02" y1="63.5" x2="33.02" y2="68.58" width="0.1524" layer="91"/>
-<label x="33.02" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
-</segment>
-<segment>
+<label x="66.04" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 <pinref part="LD2" gate="G$1" pin="A"/>
-<wire x1="68.58" y1="63.5" x2="68.58" y2="68.58" width="0.1524" layer="91"/>
-<label x="68.58" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="66.04" y1="63.5" x2="66.04" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<wire x1="182.88" y1="66.04" x2="182.88" y2="60.96" width="0.1524" layer="91"/>
-<label x="182.88" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+<wire x1="205.74" y1="66.04" x2="205.74" y2="60.96" width="0.1524" layer="91"/>
+<label x="205.74" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
 <pinref part="CN2" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="66.04" x2="182.88" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="66.04" x2="205.74" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
+<pinref part="LD1" gate="G$1" pin="A"/>
+<wire x1="30.48" y1="63.5" x2="30.48" y2="68.58" width="0.1524" layer="91"/>
+<label x="30.48" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+</segment>
+<segment>
+<label x="101.6" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
 <pinref part="LD3" gate="G$1" pin="A"/>
-<wire x1="119.38" y1="63.5" x2="119.38" y2="68.58" width="0.1524" layer="91"/>
-<label x="119.38" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+<wire x1="101.6" y1="63.5" x2="101.6" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<label x="137.16" y="68.58" size="1.778" layer="95" rot="R90" xref="yes"/>
+<pinref part="LD4" gate="G$1" pin="A"/>
+<wire x1="137.16" y1="63.5" x2="137.16" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="LED2_R" class="0">
+<net name="LED2" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="63.5" y1="40.64" x2="63.5" y2="35.56" width="0.1524" layer="91"/>
-<label x="63.5" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
-<net name="LED2_G" class="0">
-<segment>
-<pinref part="R4" gate="G$1" pin="1"/>
-<wire x1="73.66" y1="40.64" x2="73.66" y2="35.56" width="0.1524" layer="91"/>
-<label x="73.66" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
-<net name="LED2_B" class="0">
-<segment>
-<pinref part="R5" gate="G$1" pin="1"/>
-<wire x1="83.82" y1="40.64" x2="83.82" y2="35.56" width="0.1524" layer="91"/>
-<label x="83.82" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
-<net name="N$11" class="0">
-<segment>
-<pinref part="LD1" gate="G$1" pin="C"/>
-<pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="33.02" y1="55.88" x2="33.02" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="SWDIO" class="0">
-<segment>
-<wire x1="175.26" y1="68.58" x2="175.26" y2="60.96" width="0.1524" layer="91"/>
-<label x="175.26" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
-<pinref part="CN2" gate="G$1" pin="3"/>
-<wire x1="195.58" y1="68.58" x2="175.26" y2="68.58" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="SWDCLK" class="0">
-<segment>
-<wire x1="167.64" y1="71.12" x2="167.64" y2="60.96" width="0.1524" layer="91"/>
-<label x="167.64" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
-<pinref part="CN2" gate="G$1" pin="4"/>
-<wire x1="195.58" y1="71.12" x2="167.64" y2="71.12" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$1" class="0">
-<segment>
-<pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="63.5" y1="50.8" x2="63.5" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="63.5" y1="53.34" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="LD2" gate="G$1" pin="CRED"/>
-<wire x1="68.58" y1="53.34" x2="68.58" y2="55.88" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="LD2" gate="G$1" pin="CGREEN"/>
-<pinref part="R4" gate="G$1" pin="2"/>
-<wire x1="73.66" y1="55.88" x2="73.66" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<pinref part="LD2" gate="G$1" pin="CBLUE"/>
-<wire x1="78.74" y1="55.88" x2="78.74" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="R5" gate="G$1" pin="2"/>
-<wire x1="78.74" y1="53.34" x2="83.82" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="83.82" y1="53.34" x2="83.82" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$8" class="0">
-<segment>
-<pinref part="LD3" gate="G$1" pin="C"/>
-<pinref part="R6" gate="G$1" pin="2"/>
-<wire x1="119.38" y1="55.88" x2="119.38" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="40.64" x2="66.04" y2="35.56" width="0.1524" layer="91"/>
+<label x="66.04" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
 <net name="LED3" class="0">
 <segment>
-<pinref part="R6" gate="G$1" pin="1"/>
-<wire x1="119.38" y1="40.64" x2="119.38" y2="35.56" width="0.1524" layer="91"/>
-<label x="119.38" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="R4" gate="G$1" pin="1"/>
+<wire x1="101.6" y1="40.64" x2="101.6" y2="35.56" width="0.1524" layer="91"/>
+<label x="101.6" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="LED4" class="0">
+<segment>
+<pinref part="R5" gate="G$1" pin="1"/>
+<wire x1="137.16" y1="40.64" x2="137.16" y2="35.56" width="0.1524" layer="91"/>
+<label x="137.16" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="SWDIO" class="0">
+<segment>
+<wire x1="198.12" y1="68.58" x2="198.12" y2="60.96" width="0.1524" layer="91"/>
+<label x="198.12" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="CN2" gate="G$1" pin="3"/>
+<wire x1="218.44" y1="68.58" x2="198.12" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="SWDCLK" class="0">
+<segment>
+<wire x1="190.5" y1="71.12" x2="190.5" y2="60.96" width="0.1524" layer="91"/>
+<label x="190.5" y="60.96" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="CN2" gate="G$1" pin="4"/>
+<wire x1="218.44" y1="71.12" x2="190.5" y2="71.12" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="LD1" gate="G$1" pin="C"/>
+<pinref part="R6" gate="G$1" pin="2"/>
+<wire x1="30.48" y1="55.88" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="LED1" class="0">
 <segment>
-<pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="33.02" y1="40.64" x2="33.02" y2="35.56" width="0.1524" layer="91"/>
-<label x="33.02" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+<pinref part="R6" gate="G$1" pin="1"/>
+<wire x1="30.48" y1="40.64" x2="30.48" y2="35.56" width="0.1524" layer="91"/>
+<label x="30.48" y="35.56" size="1.778" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="R5" gate="G$1" pin="2"/>
+<pinref part="LD4" gate="G$1" pin="C"/>
+<wire x1="137.16" y1="50.8" x2="137.16" y2="55.88" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="R4" gate="G$1" pin="2"/>
+<pinref part="LD3" gate="G$1" pin="C"/>
+<wire x1="101.6" y1="50.8" x2="101.6" y2="55.88" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="R3" gate="G$1" pin="2"/>
+<pinref part="LD2" gate="G$1" pin="C"/>
+<wire x1="66.04" y1="50.8" x2="66.04" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -2767,9 +2647,9 @@ Working distance&lt;br&gt;
 乾電池ホルダーにボタン乾電池を装着した場合は、3.0Vを供給します。</text>
 <text x="78.74" y="60.96" size="2.54" layer="91">ボタン乾電池ケースは
 基板の背面に実装</text>
-<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.2</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-    （rev2.1.1）</text>
+    （rev2.1.2）</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0"/>
@@ -2872,9 +2752,9 @@ Working distance&lt;br&gt;
 </sheet>
 <sheet>
 <plain>
-<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.1</text>
+<text x="217.424" y="20.32" size="1.778" layer="91">MDBT50Q-P1M Dongle rev2.1.2</text>
 <text x="166.37" y="8.89" size="3.81" layer="91">MDBT50Q Dongle
-    （rev2.1.1）</text>
+    （rev2.1.2）</text>
 <text x="45.72" y="142.24" size="3.81" layer="91">セキュリティーIC部</text>
 </plain>
 <instances>
