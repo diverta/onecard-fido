@@ -41,7 +41,7 @@
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
-<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
@@ -284,7 +284,7 @@ ALPS SKTADAE010</description>
 <text x="-1.349375" y="-1.285875" size="0.7112" layer="27" ratio="11" align="top-left">&gt;VALUE</text>
 <circle x="0" y="0" radius="0.5" width="0.127" layer="21"/>
 </package>
-<package name="CHIPLED_0603">
+<package name="APTD1608">
 <description>&lt;b&gt;CHIPLED&lt;/b&gt;&lt;p&gt;
 Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <wire x1="0.8" y1="0.3" x2="0.8" y2="-0.3" width="0.1016" layer="51" curve="170.055574"/>
@@ -292,10 +292,10 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <wire x1="0.375" y1="0.4" x2="-0.35" y2="0.4" width="0.1016" layer="51"/>
 <wire x1="0.35" y1="-0.4" x2="-0.35" y2="-0.4" width="0.1016" layer="51"/>
 <circle x="0.625" y="0.35" radius="0.075" width="0.0508" layer="51"/>
-<smd name="C" x="0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
-<smd name="A" x="-0.75" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
-<text x="-0.873125" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
-<text x="-0.79375" y="-2.005" size="0.7112" layer="27">&gt;VALUE</text>
+<smd name="C" x="0.8" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
+<smd name="A" x="-0.8" y="0" dx="0.8" dy="0.8" layer="1" rot="R270"/>
+<text x="-1.473125" y="0.79375" size="0.7112" layer="25">&gt;NAME</text>
+<text x="-1.49375" y="-1.605" size="0.7112" layer="27">&gt;VALUE</text>
 <rectangle x1="0.675" y1="0.275" x2="0.875" y2="0.425" layer="51" rot="R270"/>
 <rectangle x1="0.55" y1="0.225" x2="0.6" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="0.5125" y1="0.2375" x2="0.5625" y2="0.6125" layer="51" rot="R270"/>
@@ -306,7 +306,10 @@ Source: http://www.osram.convergy.de/ ... LG_LY Q971.pdf</description>
 <rectangle x1="-0.7375" y1="-0.1125" x2="-0.1875" y2="0.1125" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="0.175" x2="-0.55" y2="0.275" layer="51" rot="R270"/>
 <rectangle x1="-0.65" y1="-0.275" x2="-0.55" y2="-0.175" layer="51" rot="R270"/>
-<rectangle x1="0.9" y1="-1.2" x2="1.3" y2="-0.8" layer="51"/>
+<wire x1="-1.4" y1="0.6" x2="1.4" y2="0.6" width="0.127" layer="21"/>
+<wire x1="1.4" y1="0.6" x2="1.4" y2="-0.6" width="0.127" layer="21"/>
+<wire x1="1.4" y1="-0.6" x2="-1.4" y2="-0.6" width="0.127" layer="21"/>
+<wire x1="-1.4" y1="-0.6" x2="-1.4" y2="0.6" width="0.127" layer="21"/>
 </package>
 <package name="SOT23">
 <description>&lt;b&gt;SOT-23&lt;/b&gt;</description>
@@ -759,7 +762,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="3.046" y="26.86" size="1.27" layer="27" rot="R270" align="top-left"/>
 </element>
 <element name="X1" library="Parts" package="NX3215" value="NX3215SA-32.768K" x="6.810375" y="28.336875" smashed="yes">
-<attribute name="NAME" x="4.746625" y="28.813125" size="0.508" layer="25" rot="R180"/>
+<attribute name="NAME" x="4.587875" y="29.606875" size="0.508" layer="25"/>
 <attribute name="VALUE" x="4.985375" y="26.286875" size="0.8128" layer="27"/>
 </element>
 <element name="C1" library="Parts" package="C0603K" value="12pF" x="7.20725" y="32.0675" smashed="yes">
@@ -863,9 +866,9 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="5.92375" y="15.536875" size="0.7112" layer="27" rot="R180" align="top-left"/>
 </element>
 <element name="BAT1" library="Connectors" package="BAT-HLD-012-SMT" value="BAT-HLD-012-SMT" x="9.5885" y="27.94" rot="MR180"/>
-<element name="LD1" library="Parts" package="CHIPLED_0603" value="APTD1608LSYCK" x="2.38125" y="28.09875" smashed="yes" rot="R180">
+<element name="LD1" library="Parts" package="APTD1608" value="APTD1608LSECK/J4-PF" x="2.54" y="28.09875" smashed="yes" rot="R180">
 <attribute name="NAME" x="0.9525" y="27.46375" size="0.508" layer="25" rot="R90"/>
-<attribute name="VALUE" x="3.175" y="30.00375" size="0.7112" layer="27" rot="R180"/>
+<attribute name="VALUE" x="3.33375" y="30.00375" size="0.7112" layer="27" rot="R180"/>
 </element>
 <element name="R6" library="Parts" package="R0402" value="1.5k" x="1.651" y="26.114375" smashed="yes" rot="R90">
 <attribute name="NAME" x="0.936625" y="25.638125" size="0.508" layer="25" rot="R90"/>
@@ -895,17 +898,17 @@ design rules under a new name.</description>
 <attribute name="NAME" x="13.23975" y="28.654375" size="0.508" layer="25"/>
 <attribute name="VALUE" x="12.525375" y="30.32125" size="0.7112" layer="27" rot="R180"/>
 </element>
-<element name="LD3" library="Parts" package="CHIPLED_0603" value="APTD1608LCGCK" x="2.38125" y="30.95625" smashed="yes" rot="R180">
+<element name="LD3" library="Parts" package="APTD1608" value="APTD1608LZGCK" x="2.54" y="30.95625" smashed="yes" rot="R180">
 <attribute name="NAME" x="0.9525" y="30.32125" size="0.508" layer="25" rot="R90"/>
-<attribute name="VALUE" x="3.175" y="32.96125" size="0.7112" layer="27" rot="R180"/>
+<attribute name="VALUE" x="3.33375" y="32.96125" size="0.7112" layer="27" rot="R180"/>
 </element>
-<element name="LD2" library="Parts" package="CHIPLED_0603" value="APHD1608LSURCK" x="2.38125" y="29.5275" smashed="yes" rot="R180">
+<element name="LD2" library="Parts" package="APTD1608" value="APHD1608LSURCK" x="2.54" y="29.5275" smashed="yes" rot="R180">
 <attribute name="NAME" x="0.9525" y="28.8925" size="0.508" layer="25" rot="R90"/>
-<attribute name="VALUE" x="3.175" y="31.5325" size="0.7112" layer="27" rot="R180"/>
+<attribute name="VALUE" x="3.33375" y="31.5325" size="0.7112" layer="27" rot="R180"/>
 </element>
-<element name="LD4" library="Parts" package="CHIPLED_0603" value="APHD1608LQBC/D" x="2.38125" y="32.385" smashed="yes" rot="R180">
+<element name="LD4" library="Parts" package="APTD1608" value="APTD1608LVBC/D" x="2.54" y="32.385" smashed="yes" rot="R180">
 <attribute name="NAME" x="0.9525" y="31.75" size="0.508" layer="25" rot="R90"/>
-<attribute name="VALUE" x="3.175" y="34.39" size="0.7112" layer="27" rot="R180"/>
+<attribute name="VALUE" x="3.33375" y="34.39" size="0.7112" layer="27" rot="R180"/>
 </element>
 </elements>
 <signals>
@@ -1226,22 +1229,22 @@ design rules under a new name.</description>
 <contactref element="LD3" pad="A"/>
 <contactref element="LD2" pad="A"/>
 <contactref element="LD4" pad="A"/>
-<wire x1="3.33375" y1="27.89625" x2="3.13125" y2="28.09875" width="0.2032" layer="1"/>
+<wire x1="3.33375" y1="27.89625" x2="3.34" y2="28.09875" width="0.2032" layer="1"/>
 <wire x1="3.01625" y1="21.986875" x2="2.38125" y2="22.621875" width="0.2032" layer="1"/>
 <wire x1="2.38125" y1="22.621875" x2="2.38125" y2="23.256875" width="0.2032" layer="1"/>
 <wire x1="3.33375" y1="24.209375" x2="2.38125" y2="23.256875" width="0.2032" layer="1"/>
-<wire x1="3.13125" y1="28.09875" x2="3.13125" y2="29.5275" width="0.2032" layer="1"/>
-<wire x1="3.13125" y1="29.5275" x2="3.13125" y2="30.95625" width="0.2032" layer="1"/>
-<wire x1="3.13125" y1="30.95625" x2="3.13125" y2="32.385" width="0.2032" layer="1"/>
+<wire x1="3.34" y1="29.5275" x2="3.34" y2="30.95625" width="0.2032" layer="1"/>
+<wire x1="3.34" y1="30.95625" x2="3.34" y2="32.385" width="0.2032" layer="1"/>
 <wire x1="3.33375" y1="24.209375" x2="3.33375" y2="25.003125" width="0.2032" layer="1"/>
 <wire x1="3.33375" y1="25.003125" x2="2.8575" y2="25.479375" width="0.2032" layer="1"/>
-<wire x1="2.8575" y1="25.479375" x2="2.8575" y2="27.825" width="0.2032" layer="1"/>
-<wire x1="2.8575" y1="27.825" x2="3.13125" y2="28.09875" width="0.2032" layer="1"/>
 <wire x1="8.5575" y1="15.39875" x2="7.366" y2="15.39875" width="0.2032" layer="1"/>
 <wire x1="7.366" y1="15.39875" x2="7.0485" y2="15.71625" width="0.2032" layer="1"/>
 <wire x1="15.621" y1="10.795" x2="15.621" y2="12.47775" width="0.254" layer="16"/>
 <wire x1="15.621" y1="12.47775" x2="12.3825" y2="15.71625" width="0.254" layer="16"/>
 <wire x1="12.3825" y1="18.811875" x2="12.3825" y2="15.71625" width="0.254" layer="16"/>
+<wire x1="2.8575" y1="25.479375" x2="2.8575" y2="27.61625" width="0.2032" layer="1"/>
+<wire x1="2.8575" y1="27.61625" x2="3.34" y2="28.09875" width="0.2032" layer="1"/>
+<wire x1="3.34" y1="29.5275" x2="3.34" y2="28.09875" width="0.2032" layer="1"/>
 </signal>
 <signal name="VBUS">
 <contactref element="FB1" pad="1"/>
@@ -1401,8 +1404,8 @@ design rules under a new name.</description>
 <signal name="N$8">
 <contactref element="LD1" pad="C"/>
 <contactref element="R6" pad="2"/>
-<wire x1="1.651" y1="26.764375" x2="1.651" y2="28.079" width="0.2032" layer="1"/>
-<wire x1="1.651" y1="28.079" x2="1.63125" y2="28.09875" width="0.2032" layer="1"/>
+<wire x1="1.651" y1="26.764375" x2="1.651" y2="28.00975" width="0.2032" layer="1"/>
+<wire x1="1.651" y1="28.00975" x2="1.74" y2="28.09875" width="0.2032" layer="1"/>
 </signal>
 <signal name="TWI_SDA">
 <contactref element="U1" pad="22"/>
@@ -1475,14 +1478,14 @@ design rules under a new name.</description>
 <wire x1="1.239125" y1="15.954375" x2="1.239125" y2="16.62025" width="0.2032" layer="1"/>
 <wire x1="1.239125" y1="16.62025" x2="0.47625" y2="17.383125" width="0.2032" layer="1"/>
 <wire x1="0.47625" y1="17.383125" x2="0.47625" y2="31.115" width="0.2032" layer="1"/>
-<wire x1="1.63125" y1="32.385" x2="1.63125" y2="32.27" width="0.2032" layer="1"/>
+<wire x1="1.74" y1="32.385" x2="1.63125" y2="32.27" width="0.2032" layer="1"/>
 <wire x1="1.63125" y1="32.27" x2="0.47625" y2="31.115" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$6">
 <contactref element="R4" pad="2"/>
 <contactref element="LD3" pad="C"/>
 <wire x1="0.873125" y1="19.129375" x2="0.873125" y2="30.32125" width="0.2032" layer="1"/>
-<wire x1="1.63125" y1="30.95625" x2="1.508125" y2="30.95625" width="0.2032" layer="1"/>
+<wire x1="1.74" y1="30.95625" x2="1.508125" y2="30.95625" width="0.2032" layer="1"/>
 <wire x1="1.508125" y1="30.95625" x2="0.873125" y2="30.32125" width="0.2032" layer="1"/>
 <wire x1="1.239125" y1="18.0975" x2="1.239125" y2="18.763375" width="0.2032" layer="1"/>
 <wire x1="1.239125" y1="18.763375" x2="0.873125" y2="19.129375" width="0.2032" layer="1"/>
@@ -1494,8 +1497,9 @@ design rules under a new name.</description>
 <wire x1="1.651" y1="23.08225" x2="2.936875" y2="24.368125" width="0.2032" layer="1"/>
 <wire x1="2.936875" y1="24.368125" x2="2.936875" y2="24.765" width="0.2032" layer="1"/>
 <wire x1="2.936875" y1="24.765" x2="2.460625" y2="25.24125" width="0.2032" layer="1"/>
-<wire x1="2.460625" y1="25.24125" x2="2.460625" y2="28.698125" width="0.2032" layer="1"/>
-<wire x1="2.460625" y1="28.698125" x2="1.63125" y2="29.5275" width="0.2032" layer="1"/>
+<wire x1="2.460625" y1="25.24125" x2="2.460625" y2="29.289375" width="0.2032" layer="1"/>
+<wire x1="1.74" y1="29.5275" x2="2.2225" y2="29.5275" width="0.2032" layer="1"/>
+<wire x1="2.2225" y1="29.5275" x2="2.460625" y2="29.289375" width="0.2032" layer="1"/>
 </signal>
 </signals>
 </board>
