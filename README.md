@@ -24,6 +24,15 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
+#### 2019/07/13
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.29a）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-macOS-20200713/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+修正点は以下になります。（[#340](https://github.com/diverta/onecard-fido/issues/340) ご参照）
+- macOS版管理ツールのファイル参照ダイアログが表示されない不具合を解消
+
 #### 2019/06/24
 
 FIDO認証器管理ツールを修正しました。<br>

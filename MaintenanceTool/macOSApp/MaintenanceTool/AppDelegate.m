@@ -331,10 +331,6 @@
         [self enableButtons:true];
     }
 
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
-                 modalResponse:(NSInteger)modalResponse {
-    }
-
 #pragma mark - Call back from ToolCommand
 
     - (void)notifyToolCommandMessage:(NSString *)message {
