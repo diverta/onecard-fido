@@ -6,7 +6,6 @@
 
 #### 要件確定済み
 
-- [[障害] macOS版管理ツールのファイル参照ダイアログが表示されない](https://github.com/diverta/onecard-fido/issues/340)
 - [[改善] BLE自動認証有効時のヘルスチェック動作を改善](https://github.com/diverta/onecard-fido/issues/302)
 
 #### 要件未確定
