@@ -22,7 +22,7 @@ extern "C" {
 #endif
 //   ハードウェアのバージョン
 #ifndef HW_REV
-#define HW_REV              "0.0"
+#define HW_REV              ""
 #endif
 //   ボード名称
 #if   defined(BOARD_PCA10056)

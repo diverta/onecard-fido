@@ -30,6 +30,12 @@
 // ユーザー所在確認待ち状態を示すフラグ
 static bool waiting_for_tup = false;
 
+// スキャン動作中フラグ
+//   自動認証機能が有効な場合に行われる
+//   BLEペリフェラルのスキャン中は
+//   true が設定される
+static bool ble_peripheral_auth_scan_started = false;
+
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
 
@@ -54,6 +60,12 @@ void fido_command_abort_flag_set(bool flag)
 //
 void fido_command_mainsw_event_handler(void)
 {
+    // 自動認証機能のBLEペリフェラルスキャン中は
+    // ボタン押下時の処理を無効化
+    if (ble_peripheral_auth_scan_started) {
+        return;
+    }
+
     // ボタンが短押しされた時の処理を実行
     if (fido_u2f_command_on_mainsw_event() == true) {
         return;
@@ -108,6 +120,8 @@ void fido_user_presence_verify_start(uint32_t timeout_msec, void *context)
     // ボタンを押す代わりに
     // 指定のサービスUUIDをもつBLEペリフェラルをスキャン
     if (demo_ble_peripheral_auth_start_scan(context)) {
+        // スキャン動作中フラグを設定
+        ble_peripheral_auth_scan_started = true;
         return;
     }
 
@@ -152,6 +166,9 @@ void fido_user_presence_verify_end(void)
 
 void fido_user_presence_verify_on_ble_scan_end(bool success)
 {
+    // スキャン動作中フラグをクリア
+    ble_peripheral_auth_scan_started = false;
+
     // 自動認証機能が有効時、指定のサービスUUIDをもつ
     // BLEペリフェラルデバイスのスキャン完了時の処理
     if (success) {
