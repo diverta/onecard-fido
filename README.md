@@ -15,6 +15,9 @@ Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器の�
 FIDO2認証器に、鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
 [Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
+- <b>[オープンソースコードライセンスについて](LICENSES.md)</b><br>
+上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
+
 ## ハードウェア
 
 - <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
