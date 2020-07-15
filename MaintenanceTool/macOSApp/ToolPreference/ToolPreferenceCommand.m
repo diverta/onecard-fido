@@ -103,13 +103,29 @@
         [[self delegate] toolPreferenceWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData]];
     }
 
+    - (void)toolPreferenceInquiryWillProcess {
+        // リクエストデータを編集し、内部変数に設定
+        [self setCommandType:COMMAND_AUTH_PARAM_GET];
+        [self generateRequestCommandAuthParamGet:[self commandType]];
+
+        // AppDelegate経由でコマンドを実行
+        [[self delegate] toolPreferenceWillProcess:COMMAND_TOOL_PREF_PARAM_INQUIRY withData:[self processData]];
+    }
+
     - (void)toolPreferenceDidProcess:(Command)command
                                  CMD:(uint8_t)cmd response:(NSData *)resp
                               result:(bool)result message:(NSString *)message {
-        // 取得データを画面項目に設定し、画面に制御を戻す
+        // 取得データをクラス変数に設定
         bool success = [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
-        [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
-                                                             success:(success & result) message:message];
+        if (command == COMMAND_TOOL_PREF_PARAM) {
+            // 画面に制御を戻す
+            [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
+                                                                 success:(success & result) message:message];
+        } else {
+            // AppDelegateに再び制御を戻す
+            [[self delegate] toolPreferenceInquiryDidProcess:command
+                    CMD:cmd response:resp result:(success & result) message:message];
+        }
     }
 
 #pragma mark - Interface for ToolPreferenceWindow

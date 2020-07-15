@@ -33,6 +33,7 @@ typedef enum : NSInteger {
 
     // AppDelegate経由でコマンドを実行
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType;
+    - (void)toolPreferenceInquiryWillProcess;
 
     // AppDelegate経由で実行したコマンドの応答
     - (void)toolPreferenceDidProcess:(Command)command
