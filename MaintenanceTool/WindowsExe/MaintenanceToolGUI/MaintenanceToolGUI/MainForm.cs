@@ -259,6 +259,34 @@ namespace MaintenanceToolGUI
             }
         }
 
+        private void DoCommandToolPreferenceInquiry()
+        {
+            // ボタンを押下不可とする
+            enableButtons(false);
+
+            // コマンドタイムアウト監視開始
+            commandTimer.Start();
+
+            // ツール設定情報照会
+            commandTitle = "";
+            toolPreference.DoToolPreferenceParamInquiry();
+        }
+
+        public void DoResponseToolPreferenceParamInquiry(string[] fields)
+        {
+            // コマンドタイムアウト監視終了
+            commandTimer.Stop();
+
+            // 例外抑止
+            if (fields.Length != 3) {
+                OnAppMainProcessExited(true);
+                return;
+            }
+
+            // 配列の先頭から、自動認証機能の有効／無効区分を取得
+            bool bleScanAuthEnabled = (fields[0] == "1");
+        }
+
         public void OnAppMainProcessExited(bool ret)
         {
             // コマンドタイムアウト監視終了
