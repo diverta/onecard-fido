@@ -8,6 +8,7 @@
 
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolContext.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "PinCodeParamWindow.h"
 #import "FIDODefines.h"
@@ -430,11 +431,14 @@
             return;
         }
         if (testUserPresenceNeeded) {
-            // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
-            [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+            if ([[ToolContext instance] bleScanAuthEnabled] == false) {
+                // ツール設定でBLE自動認証機能が有効化されていない場合
+                // リクエスト転送の前に、基板上のMAIN SWを押してもらうように促すメッセージを画面表示
+                [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_START];
+                [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1];
+                [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2];
+                [self displayMessage:MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3];
+            }
         }
         // authenticatorGetAssertionコマンドを実行
         if ([self transportType] == TRANSPORT_BLE) {

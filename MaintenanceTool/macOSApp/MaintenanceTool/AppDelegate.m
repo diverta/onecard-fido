@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import "ToolContext.h"
 #import "ToolHIDCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
@@ -40,11 +41,16 @@
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
 
+    // 実行するヘルスチェックの種別を保持
+    @property (nonatomic) Command   healthCheckCommand;
 @end
 
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+        // 共有情報にアプリケーションの参照を設定
+        [[ToolContext instance] setAppDelegateRef:self];
+
         // アプリケーション開始ログを出力
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommon getAppVersionString]];
 
@@ -192,21 +198,13 @@
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
-        // PINコード入力画面を開く
-        if (![self checkUSBHIDConnection]) {
-            return;
-        }
-        [self enableButtons:false];
-        [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self window]];
+        // HID CTAP2ヘルスチェック実行
+        [self performHealthCheckCommand:COMMAND_TEST_MAKE_CREDENTIAL];
     }
 
     - (IBAction)menuItemTestHID2DidSelect:(id)sender {
         // HID U2Fヘルスチェック実行
-        if (![self checkUSBHIDConnection]) {
-            return;
-        }
-        [self enableButtons:false];
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_REGISTER];
+        [self performHealthCheckCommand:COMMAND_TEST_REGISTER];
     }
 
     - (IBAction)menuItemTestHID3DidSelect:(id)sender {
@@ -278,6 +276,52 @@
     - (IBAction)menuItemDFUNewDidSelect:(id)sender {
         [self enableButtons:false];
         [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
+    }
+
+#pragma mark - Perform health check
+
+    - (void)performHealthCheckCommand:(Command)command {
+        // USBポートに接続されていない場合は終了
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
+        // 事前にツール設定照会を実行
+        [self enableButtons:false];
+        [self setHealthCheckCommand:command];
+        [[self toolPreferenceCommand] toolPreferenceInquiryWillProcess];
+    }
+
+    - (void)toolPreferenceInquiryDidProcess:(Command)command
+                                 CMD:(uint8_t)cmd response:(NSData *)resp
+                              result:(bool)result message:(NSString *)message {
+        // 処理失敗時は終了
+        if (result == false) {
+            [self commandDidProcess:COMMAND_NONE result:result message:message];
+            return;
+        }
+        // ツール設定情報を共有情報に保持させる
+        [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
+        if ([[ToolContext instance] bleScanAuthEnabled]) {
+            // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
+            if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
+                             informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH] == false) {
+                // メッセージダイアログでNOをクリックした場合は終了
+                [self commandDidProcess:COMMAND_NONE result:true message:nil];
+                return;
+            }
+        }
+        switch ([self healthCheckCommand]) {
+            case COMMAND_TEST_MAKE_CREDENTIAL:
+                // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
+                [[self toolHIDCommand] pinCodeParamWindowWillOpen:self parentWindow:[self window]];
+                break;
+            case COMMAND_TEST_REGISTER:
+                // HID U2Fヘルスチェック処理を実行
+                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TEST_REGISTER];
+                break;
+            default:
+                break;
+        }
     }
 
 #pragma mark - Interface for ToolPreferenceWindow
@@ -354,13 +398,17 @@
     - (void)hidCommandDidProcess:(Command)command
                              CMD:(uint8_t)cmd response:(NSData *)resp
                           result:(bool)result message:(NSString *)message {
-        if (command == COMMAND_TOOL_PREF_PARAM) {
-            // ツール設定画面に応答メッセージを引き渡す
-            [self toolPreferenceDidProcess:command
-                CMD:cmd response:resp result:result message:message];
-            return;
+        switch (command) {
+            case COMMAND_TOOL_PREF_PARAM:
+            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
+                // ツール設定コマンドに応答メッセージを引き渡す
+                [self toolPreferenceDidProcess:command
+                        CMD:cmd response:resp result:result message:message];
+                break;
+            default:
+                [self commandDidProcess:command result:result message:message];
+                break;
         }
-        [self commandDidProcess:command result:result message:message];
     }
 
     - (void)hidCommandStartedProcess:(Command)command {

@@ -125,6 +125,7 @@
                 [[self toolU2FHealthCheckCommand] doU2FRequest:[self command]];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
+            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
                 [self doRequestToolPreferenceParameter:[self getNewCIDFrom:message]];
                 break;
             case COMMAND_HID_BOOTLOADER_MODE:
@@ -420,6 +421,7 @@
                 [self doU2FHealthCheck];
                 break;
             case COMMAND_TOOL_PREF_PARAM:
+            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
                 [self doToolPreferenceParameter];
                 break;
             default:

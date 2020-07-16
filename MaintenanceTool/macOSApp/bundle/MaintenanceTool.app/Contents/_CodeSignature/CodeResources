@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		laqQJt1sYUrl1iI5IEVUaE1juMA=
+		zG+5Xyw1W0UA47KlY8ix8qjcLK4=
 		</data>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<data>
@@ -32,9 +32,9 @@
 		<data>
 		9iECURhzXA+NiufmvH487yidUIQ=
 		</data>
-		<key>Resources/app_dfu_package.0.2.8.zip</key>
+		<key>Resources/app_dfu_package.0.2.10.zip</key>
 		<data>
-		Un5ORIfjhAUNRGrjdelYuTtCszY=
+		RZa7xAYG+9T+/vNWSHqSQ1tKtvg=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -68,7 +68,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			D6odNSdhqxB6/zhmzgt5TOLg+7WZQsADnpLYTu3/Nr0=
+			2ofYaTb+LDiROuvitqmai8lsY9HSMXRE2QW5ftRAoY0=
 			</data>
 		</dict>
 		<key>Resources/DFUProcessingWindow.nib</key>
@@ -106,11 +106,11 @@
 			3NeFbbvFVukpplmr7hZ08UA/rK06ybvnq3djQR5sfyI=
 			</data>
 		</dict>
-		<key>Resources/app_dfu_package.0.2.8.zip</key>
+		<key>Resources/app_dfu_package.0.2.10.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			TEZhsLB92gl/jUR0YueNcwdfJJEruWHhDz0Cs0bE2xg=
+			3Kr6C7lVDgKAlMq9H2Pd5NWhNrtaJfgrJ4NsYi2sQaU=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
