@@ -285,6 +285,22 @@ namespace MaintenanceToolGUI
 
             // 配列の先頭から、自動認証機能の有効／無効区分を取得
             bool bleScanAuthEnabled = (fields[0] == "1");
+            if (bleScanAuthEnabled) {
+                // プロンプトで表示されるメッセージ
+                string message = string.Format("{0}\n\n{1}",
+                    AppCommon.MSG_PROMPT_START_HCHK_BLE_AUTH,
+                    AppCommon.MSG_COMMENT_START_HCHK_BLE_AUTH);
+
+                // プロンプトを表示し、Yesの場合だけ処理を続行する
+                if (FormUtil.DisplayPromptPopup(message) == false) {
+                    OnAppMainProcessExited(true);
+                    return;
+                }
+            }
+
+            // 仮の実装です。
+            MessageBox.Show(AppCommon.MSG_CMDTST_MENU_NOT_SUPPORTED, MaintenanceToolTitle);
+            OnAppMainProcessExited(true);
         }
 
         public void OnAppMainProcessExited(bool ret)
@@ -464,8 +480,8 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // CTAP2ヘルスチェック実行
-            DoCommandCtap2Healthcheck(sender, e);
+            // 自動認証設定内容を照会
+            DoCommandToolPreferenceInquiry();
         }
 
         private void DoHIDU2fTestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -474,8 +490,8 @@ namespace MaintenanceToolGUI
             if (CheckUSBDeviceDisconnected()) {
                 return;
             }
-            // U2Fヘルスチェック実行
-            doCommand(sender);
+            // 自動認証設定内容を照会
+            DoCommandToolPreferenceInquiry();
         }
 
         private void DoHIDPingTestToolStripMenuItem_Click(object sender, EventArgs e)

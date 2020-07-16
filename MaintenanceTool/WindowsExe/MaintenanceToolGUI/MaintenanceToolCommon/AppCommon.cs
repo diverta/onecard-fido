@@ -58,6 +58,8 @@ namespace MaintenanceToolCommon
         public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT2 = "  FIDO認証器上のユーザー所在確認LEDが点滅したら、";
         public const string MSG_HCHK_U2F_AUTHENTICATE_COMMENT3 = "  MAIN SWを１回押してください.";
         public const string MSG_HCHK_U2F_AUTHENTICATE_SUCCESS = "U2F Authenticateが成功しました。";
+        public const string MSG_PROMPT_START_HCHK_BLE_AUTH = "自動認証で使用するBLEデバイスを近づけてください。";
+        public const string MSG_COMMENT_START_HCHK_BLE_AUTH = "BLE自動認証機能が有効化されている場合は、BLEデバイスによりユーザー所在確認を行います。\nスキャン対象サービスUUIDを持つBLEデバイスを始動させ、FIDO認証器に近づけてください。\n\n「はい」をクリックすると、ヘルスチェックを実行します。";
 
         // コマンドテスト関連メッセージ
         public const string MSG_CMDTST_INVALID_NONCE = "CTAPHID_INITコマンドが失敗しました。";
