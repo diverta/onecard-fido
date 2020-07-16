@@ -1,4 +1,5 @@
 #import "AppDelegate.h"
+#import "ToolContext.h"
 #import "ToolHIDCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
@@ -47,6 +48,9 @@
 @implementation AppDelegate
 
     - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+        // 共有情報にアプリケーションの参照を設定
+        [[ToolContext instance] setAppDelegateRef:self];
+
         // アプリケーション開始ログを出力
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_APP_LAUNCHED, [ToolCommon getAppVersionString]];
 
@@ -295,8 +299,9 @@
             [self commandDidProcess:COMMAND_NONE result:result message:message];
             return;
         }
-        // ツール設定照会が完了したら、後続のヘルスチェック処理を実行
-        if ([[self toolPreferenceCommand] bleScanAuthEnabled]) {
+        // ツール設定情報を共有情報に保持させる
+        [[ToolContext instance] setBleScanAuthEnabled:[[self toolPreferenceCommand] bleScanAuthEnabled]];
+        if ([[ToolContext instance] bleScanAuthEnabled]) {
             // ツール設定でBLE自動認証機能が有効化されている場合は確認メッセージを表示
             if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_HCHK_BLE_AUTH
                              informativeText:MSG_COMMENT_START_HCHK_BLE_AUTH] == false) {

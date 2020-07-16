@@ -25,6 +25,7 @@
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
+		7A629F4524C00245007ABA89 /* ToolContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A629F4424C00245007ABA89 /* ToolContext.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A84EFA22254440500DF449D /* SetPinParamWindow.xib */; };
 		7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A84EFA522544F7000DF449D /* SetPinParamWindow.m */; };
@@ -91,6 +92,8 @@
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A54339B2328C3D000F2FCA5 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
 		7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolU2FHealthCheckCommand.m; sourceTree = "<group>"; };
+		7A629F4424C00245007ABA89 /* ToolContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolContext.m; sourceTree = "<group>"; };
+		7A629F4624C00262007ABA89 /* ToolContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolContext.h; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
 		7A84EFA22254440500DF449D /* SetPinParamWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetPinParamWindow.xib; sourceTree = "<group>"; };
 		7A84EFA422544F7000DF449D /* SetPinParamWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetPinParamWindow.h; sourceTree = "<group>"; };
@@ -288,6 +291,8 @@
 				7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */,
 				7A8E0E2523791A0A00B47026 /* ToolLogFile.h */,
 				7A8E0E2623791A2D00B47026 /* ToolLogFile.m */,
+				7A629F4624C00262007ABA89 /* ToolContext.h */,
+				7A629F4424C00245007ABA89 /* ToolContext.m */,
 			);
 			path = MaintenanceToolCommon;
 			sourceTree = "<group>";
@@ -408,6 +413,7 @@
 				7A84EFA622544F7000DF449D /* SetPinParamWindow.m in Sources */,
 				7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */,
 				7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */,
+				7A629F4524C00245007ABA89 /* ToolContext.m in Sources */,
 				7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */,
 				7A9F1060226DB4EE007AEB41 /* fido_blob.c in Sources */,
 				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
