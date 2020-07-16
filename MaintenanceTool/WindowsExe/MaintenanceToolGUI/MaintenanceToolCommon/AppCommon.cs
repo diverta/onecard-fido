@@ -310,6 +310,7 @@ namespace MaintenanceToolCommon
             EraseSkeyCert,
             InstallSkeyCert,
             ToolPreferenceCommand,
+            ToolPreferenceParamInquiry,
             ChangeToBootloaderMode,
             //
             // U2F

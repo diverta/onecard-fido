@@ -240,6 +240,7 @@ namespace MaintenanceToolGUI
                 DoRequestEraseSkeyCert();
                 break;
             case AppCommon.RequestType.ToolPreferenceCommand:
+            case AppCommon.RequestType.ToolPreferenceParamInquiry:
                 toolPreference.DoResponseHidInit(message, length);
                 break;
             case AppCommon.RequestType.TestCtapHidPing:
