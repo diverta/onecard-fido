@@ -312,7 +312,7 @@ namespace MaintenanceToolGUI
                     AppCommon.MSG_COMMENT_START_HCHK_BLE_AUTH);
 
                 // プロンプトを表示し、Yesの場合だけ処理を続行する
-                if (FormUtil.DisplayPromptPopup(message) == false) {
+                if (FormUtil.DisplayPromptPopup(this, message) == false) {
                     OnAppMainProcessExited(true);
                     return;
                 }
@@ -375,7 +375,7 @@ namespace MaintenanceToolGUI
 
             // 鍵・証明書削除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(message))
+            if (FormUtil.DisplayPromptPopup(this, message))
             {
                 doCommand(sender);
             }
@@ -419,7 +419,7 @@ namespace MaintenanceToolGUI
 
             // 鍵・証明書インストール
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(message)) {
+            if (FormUtil.DisplayPromptPopup(this, message)) {
                 doCommand(sender);
             }
         }
