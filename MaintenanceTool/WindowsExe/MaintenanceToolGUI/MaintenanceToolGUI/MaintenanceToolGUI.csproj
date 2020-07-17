@@ -274,7 +274,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\app_dfu_package.0.2.8.zip" />
+    <EmbeddedResource Include="Resources\app_dfu_package.0.2.10.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
