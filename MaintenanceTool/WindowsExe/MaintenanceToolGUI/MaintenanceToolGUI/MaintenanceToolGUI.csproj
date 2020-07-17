@@ -103,6 +103,7 @@
     <Compile Include="DFUStartForm.Designer.cs">
       <DependentUpon>DFUStartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolContext.cs" />
     <Compile Include="ToolDFU.cs" />
     <Compile Include="ToolDFUImage.cs" />
     <Compile Include="ToolDFUProcess.cs" />

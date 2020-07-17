@@ -163,9 +163,12 @@ namespace MaintenanceToolGUI
             // CSVデータをASCII文字列に変換
             string csv = System.Text.Encoding.ASCII.GetString(csvData);
 
-            // 自動認証設定照会の場合、メイン画面に制御を戻す
+            // 自動認証設定照会の場合、
             if (toolPreferenceParameter.CommandType == CommandType.COMMAND_AUTH_PARAM_INQUIRY) {
-                mainForm.DoResponseToolPreferenceParamInquiry(csv.Split(','));
+                // 共有情報にデータをセット
+                ToolContext.GetInstance().SetBleScanAuthParamValues(csv.Split(','));
+                // メイン画面に制御を戻す
+                mainForm.DoResponseToolPreferenceParamInquiry();
                 return;
             }
 
