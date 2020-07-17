@@ -22,6 +22,9 @@ namespace MaintenanceToolGUI
         // タイムアウト監視用タイマー
         private CommandTimer commandTimer = null;
 
+        // パラメーター入力画面
+        private PinCodeParamForm PinCodeParamFormRef;
+
         public MainForm()
         {
             InitializeComponent();
@@ -47,6 +50,9 @@ namespace MaintenanceToolGUI
             // タイトル、バージョンを引き渡し
             toolPreference = new ToolPreference(this, hid);
             toolPreference.SetTitleAndVersionText();
+
+            // パラメーター入力画面を生成
+            PinCodeParamFormRef = new PinCodeParamForm();
 
             // DFU処理クラスを生成
             toolDFU = new ToolDFU(this, hid);
@@ -225,11 +231,14 @@ namespace MaintenanceToolGUI
         private void DoCommandCtap2Healthcheck(bool bleHchk)
         {
             // パラメーター入力画面を表示
-            PinCodeParamForm f = new PinCodeParamForm();
-            if (f.ShowDialog() == DialogResult.Cancel) {
+            if (PinCodeParamFormRef.OpenForm(this) == false) {
                 // パラメーター入力画面でCancelの場合は終了
+                OnAppMainProcessExited(true);
                 return;
             }
+
+            // 入力されたPINコードを取得
+            string pin = PinCodeParamFormRef.PinCurr;
 
             // コマンドタイムアウト監視開始
             commandTimer.Start();
@@ -238,11 +247,11 @@ namespace MaintenanceToolGUI
             if (bleHchk) {
                 commandTitle = ToolGUICommon.PROCESS_NAME_BLE_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
-                ble.DoCtap2Healthcheck(f.PinCurr);
+                ble.DoCtap2Healthcheck(pin);
             } else {
                 commandTitle = ToolGUICommon.PROCESS_NAME_HID_CTAP2_HEALTHCHECK;
                 DisplayStartMessage(commandTitle);
-                hid.DoCtap2Healthcheck(f.PinCurr);
+                hid.DoCtap2Healthcheck(pin);
             }
         }
 
