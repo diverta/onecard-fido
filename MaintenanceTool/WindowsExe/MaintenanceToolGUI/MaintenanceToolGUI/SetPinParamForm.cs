@@ -117,9 +117,9 @@ namespace MaintenanceToolGUI
                 ToolGUICommon.MSG_CLEAR_PIN_CODE,
                 ToolGUICommon.MSG_PROMPT_CLEAR_PIN_CODE);
 
-            // 鍵・証明書削除
+            // PINコード解除
             // プロンプトを表示し、Yesの場合だけ処理を行う
-            if (FormUtil.DisplayPromptPopup(message)) {
+            if (FormUtil.DisplayPromptPopup(this, message)) {
                 // 画面入力値をパラメーターに保持
                 PinNew = "";
                 PinOld = "";

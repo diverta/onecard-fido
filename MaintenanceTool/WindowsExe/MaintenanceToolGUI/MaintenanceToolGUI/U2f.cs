@@ -251,13 +251,16 @@ namespace MaintenanceToolGUI
             int length = GenerateU2FAuthenticateBytes(U2FRequestData, getAuthOption(requestType));
 
             if (requestType == AppCommon.RequestType.TestAuthenticate) {
-                // BLE U2Fリクエスト転送の前に、
+                // ツール設定でBLE自動認証機能が有効化されていない場合
+                // リクエスト転送の前に、
                 // FIDO認証器のMAIN SWを押してもらうように促す
                 // メッセージを画面表示
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_START);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT1);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT2);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT3);
+                if (ToolContext.GetInstance().BleScanAuthEnabled == false) {
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_START);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT1);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT2);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_U2F_AUTHENTICATE_COMMENT3);
+                }
             }
 
             // U2F Authenticateコマンドを実行

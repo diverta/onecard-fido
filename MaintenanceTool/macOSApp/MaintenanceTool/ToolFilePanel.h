@@ -20,19 +20,11 @@
                    fileTypes:(NSArray<NSString *> *)fileTypes;
     - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow;
 
-#pragma mark for NSSavePanel
-    - (void)prepareSavePanel:(NSString *)prompt message:(NSString *)message
-                    fileName:(NSString *)fileName
-                   fileTypes:(NSArray<NSString *> *)fileTypes;
-    - (void)panelWillCreatePath:(id)sender parentWindow:(NSWindow *)parentWindow;
-
 @end
 
 @protocol ToolFilePanelDelegate <NSObject>
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
-                 modalResponse:(NSInteger)modalResponse;
-    - (void)panelDidCreatePath:(id)sender filePath:(NSString*)filePath
                  modalResponse:(NSInteger)modalResponse;
 
 @end

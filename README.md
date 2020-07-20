@@ -15,6 +15,9 @@ Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器の�
 FIDO2認証器に、鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
 [Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
+- <b>[オープンソースコードライセンスについて](LICENSES.md)</b><br>
+上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
+
 ## ハードウェア
 
 - <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
@@ -24,17 +27,16 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2019/06/24
+#### 2019/07/20
 
 FIDO認証器管理ツールを修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.29）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-macOS-20200623/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.30）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-20200715/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.29）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200622/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.30）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-20200716/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-修正点は以下になります。（[#334](https://github.com/diverta/onecard-fido/issues/334) ご参照）
-- ファームウェア更新中に表示されるポップアップが閉じられない不具合を解消
-- インストーラーで更新インストールができない不具合を解消（Windows版のみ）
+修正点は以下になります。（[#302](https://github.com/diverta/onecard-fido/issues/302) ご参照）
+- [BLE自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-20200715/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)有効時のヘルスチェック動作を改善
 
 #### ご注意
 

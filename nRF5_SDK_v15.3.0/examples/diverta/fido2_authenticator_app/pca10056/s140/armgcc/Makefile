@@ -11,12 +11,7 @@ TARGET_BOARD     := PCA10059
 FW_REV := 0.2.10
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
-ifeq ("$(TARGET_BOARD)","PCA10059_02")
-HW_REV := 0.2.1
-else
-HW_REV := 0.2
-endif
-CFLAGS += -DHW_REV=\"$(HW_REV)\"
+CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
 
 # enable log output on PCA10056
 ifeq ("$(TARGET_BOARD)","PCA10056")

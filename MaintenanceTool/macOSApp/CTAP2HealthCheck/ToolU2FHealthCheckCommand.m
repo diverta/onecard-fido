@@ -8,6 +8,7 @@
 
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolContext.h"
 #import "ToolU2FHealthCheckCommand.h"
 #import "FIDODefines.h"
 #import "debug_log.h"
@@ -229,12 +230,15 @@
     }
 
     - (void)doResponseCommandAuthenticateNoUP:(NSData *)message {
-        // 後続のU2F Authenticateを開始する前に、
-        // 基板上のMAIN SWを押してもらうように促すメッセージを表示
-        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
-        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
-        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
-        [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
+        if ([[ToolContext instance] bleScanAuthEnabled] == false) {
+            // ツール設定でBLE自動認証機能が有効化されていない場合
+            // 後続のU2F Authenticateを開始する前に、
+            // 基板上のMAIN SWを押してもらうように促すメッセージを表示
+            [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_START];
+            [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT1];
+            [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT2];
+            [self displayMessage:MSG_HCHK_U2F_AUTHENTICATE_COMMENT3];
+        }
         // U2Fヘルスチェックの後続テストを実行
         if ([self transportType] == TRANSPORT_BLE) {
             [self setCommand:COMMAND_TEST_AUTH_USER_PRESENCE];
