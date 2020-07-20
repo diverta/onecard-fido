@@ -114,7 +114,7 @@ namespace MaintenanceToolGUI
                     ToolGUICommon.MSG_PROMPT_WRITE_UUID_SCAN_PARAM_1 :
                     ToolGUICommon.MSG_PROMPT_WRITE_UUID_SCAN_PARAM_0
                 );
-            if (FormUtil.DisplayPromptPopup(message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, message) == false) {
                 return;
             }
 
@@ -137,7 +137,7 @@ namespace MaintenanceToolGUI
             string message = string.Format("{0}\n\n{1}",
                 ToolGUICommon.MSG_CLEAR_UUID_SCAN_PARAM,
                 ToolGUICommon.MSG_PROMPT_CLEAR_UUID_SCAN_PARAM);
-            if (FormUtil.DisplayPromptPopup(message) == false) {
+            if (FormUtil.DisplayPromptPopup(this, message) == false) {
                 return;
             }
 

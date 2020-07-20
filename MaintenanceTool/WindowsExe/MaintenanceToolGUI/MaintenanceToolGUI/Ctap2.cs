@@ -304,14 +304,17 @@ namespace MaintenanceToolGUI
                 return;
             }
 
-            // リクエスト転送の前に、
-            // 基板上のMAIN SWを押してもらうように促す
-            // メッセージを画面表示
             if (requestType == AppCommon.RequestType.TestGetAssertion && testUserPresenceNeeded) {
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_START);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2);
-                mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3);
+                // ツール設定でBLE自動認証機能が有効化されていない場合
+                // リクエスト転送の前に、
+                // FIDO認証器のMAIN SWを押してもらうように促す
+                // メッセージを画面表示
+                if (ToolContext.GetInstance().BleScanAuthEnabled == false) {
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_START);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT1);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT2);
+                    mainForm.OnPrintMessageText(AppCommon.MSG_HCHK_CTAP2_LOGIN_TEST_COMMENT3);
+                }
             }
 
             // MakeCredential／GetAssertionコマンドを実行

@@ -1,5 +1,4 @@
 ﻿using MaintenanceToolCommon;
-using System;
 using System.Linq;
 
 namespace MaintenanceToolGUI
@@ -30,7 +29,8 @@ namespace MaintenanceToolGUI
             None = 0,
             COMMAND_AUTH_PARAM_GET,
             COMMAND_AUTH_PARAM_SET,
-            COMMAND_AUTH_PARAM_RESET
+            COMMAND_AUTH_PARAM_RESET,
+            COMMAND_AUTH_PARAM_INQUIRY
         };
 
         // リクエストパラメーターを保持
@@ -81,6 +81,16 @@ namespace MaintenanceToolGUI
             hidMain.DoRequestCtapHidInitByToolPreference(this);
         }
 
+        public void DoToolPreferenceParamInquiry()
+        {
+            // パラメーターに処理区分のみ設定
+            toolPreferenceParameter = new ToolPreferenceParameter();
+            toolPreferenceParameter.CommandType = CommandType.COMMAND_AUTH_PARAM_INQUIRY;
+
+            // HID INITコマンドを実行
+            hidMain.DoRequestCtapHidInitByToolPreference(this);
+        }
+
         // 
         // INITコマンドの後続処理判定
         //
@@ -91,6 +101,9 @@ namespace MaintenanceToolGUI
             case CommandType.COMMAND_AUTH_PARAM_SET:
             case CommandType.COMMAND_AUTH_PARAM_RESET:
                 DoRequestToolPreference();
+                break;
+            case CommandType.COMMAND_AUTH_PARAM_INQUIRY:
+                DoRequestToolPreferenceParamInquiry();
                 break;
             default:
                 return false;
@@ -123,6 +136,16 @@ namespace MaintenanceToolGUI
             hidMain.SendHIDMessage(Const.HID_CMD_TOOL_PREF_PARAM, requestData, requestData.Length);
         }
 
+        public void DoRequestToolPreferenceParamInquiry()
+        {
+            // リクエストデータを生成
+            byte cmd = (byte)CommandType.COMMAND_AUTH_PARAM_GET;
+            byte[] requestData = new byte[] { cmd };
+
+            // HID経由でリクエストデータを送信
+            hidMain.SendHIDMessage(Const.HID_CMD_TOOL_PREF_PARAM, requestData, requestData.Length);
+        }
+
         //
         // 自動認証設定コマンドのレスポンス処理
         //
@@ -139,6 +162,15 @@ namespace MaintenanceToolGUI
 
             // CSVデータをASCII文字列に変換
             string csv = System.Text.Encoding.ASCII.GetString(csvData);
+
+            // 自動認証設定照会の場合、
+            if (toolPreferenceParameter.CommandType == CommandType.COMMAND_AUTH_PARAM_INQUIRY) {
+                // 共有情報にデータをセット
+                ToolContext.GetInstance().SetBleScanAuthParamValues(csv.Split(','));
+                // メイン画面に制御を戻す
+                mainForm.DoResponseToolPreferenceParamInquiry();
+                return;
+            }
 
             // CSVデータを分解して画面項目に設定
             toolPreferenceForm.SetFields(csv.Split(','));
