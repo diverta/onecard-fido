@@ -304,3 +304,76 @@ MacBookPro-makmorit-jp:~ makmorit$
 ```
 
 以上で動作確認は完了です。
+
+## インストーラーの作成
+
+他のmacOSを搭載したPCに、上記手順で作成したCCIDドライバーをインストールするためのインストーラー（再頒布用パッケージ）を作成します。
+
+#### インストーラー作成用媒体の配置
+
+`${HOME}/GitHub/onecard-fido/CCID/macOSDriver`に、インストーラーを作成するためのファイルを配置します。
+
+まずは、このフォルダーの直下に`CCIDDriver.plist`というファイルを以下の内容で生成します。
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>BundleHasStrictIdentifier</key>
+		<true/>
+		<key>BundleIsRelocatable</key>
+		<false/>
+		<key>BundleIsVersionChecked</key>
+		<false/>
+		<key>BundleOverwriteAction</key>
+		<string>upgrade</string>
+		<key>RootRelativeBundlePath</key>
+		<string>ifd-ccid.bundle</string>
+	</dict>
+</array>
+</plist>
+```
+
+次に、`bundle`というサブディレクトリーに、前述の手順で生成したドライバー`ifd-ccid.bundle`を、権限を変えずにコピーします。<br>
+以下は実行例になります。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ cp -prv /usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/bundle
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/Info.plist
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib -> /Users/makmorit/GitHub/onecard-fido/CCID/macOSDriver/bundle/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
+MacBookPro-makmorit-jp:~ makmorit$
+```
+
+#### インストーラーの作成
+
+インストーラー作成のために必要なファイルが揃ったら、以下のコマンドを実行します。
+
+```
+cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
+rm -rfv CCIDDriver.pkg
+pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+```
+
+下記は実行例になります。<br>
+`CCIDDriver.pkg`というファイル（CCIDドライバーのインストーラー）が作成されます。<br>
+この`CCIDDriver.pkg`を、適宜ほかのmacOS環境に配布し、CCIDドライバーをインストールすることになります。
+
+```
+MacBookPro-makmorit-jp:~ makmorit$ cd ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/
+MacBookPro-makmorit-jp:macOSDriver makmorit$ rm -rfv CCIDDriver.pkg
+MacBookPro-makmorit-jp:macOSDriver makmorit$ pkgbuild --root bundle --component-plist CCIDDriver.plist --identifier jp.co.diverta.CCIDDriver --install-location /usr/local/libexec/SmartCardServices/drivers CCIDDriver.pkg
+pkgbuild: Reading components from CCIDDriver.plist
+pkgbuild: Adding component at ifd-ccid.bundle
+pkgbuild: Wrote package to CCIDDriver.pkg
+MacBookPro-makmorit-jp:macOSDriver makmorit$ ls -al *.pkg
+-rw-r--r--  1 makmorit  staff  102064  7 20 15:04 CCIDDriver.pkg
+MacBookPro-makmorit-jp:macOSDriver makmorit$
+```
+
+
+以上で、CCIDドライバーのインストーラー作成は完了です。
