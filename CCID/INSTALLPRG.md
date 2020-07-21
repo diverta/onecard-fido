@@ -46,3 +46,29 @@ CCIDドライバー「[CCIDDriver.pkg](../CCID/macOSDriver/CCIDDriver.pkg)」を
 （2020/07/21現在、PIVアプリケーションがMDBT50Q Dongleに搭載されていないため、macOSとMDBT50Q Dongleのペアリングは不可能となっております）
 
 これで、CCIDドライバーのインストールは完了です。
+
+## アンインストールの実行
+
+CCIDドライバーをアンインストールするためには、ターミナルを開いて、下記のコマンドを実行します。<br>
+実行時はパスワードの入力が求められますので、管理者パスワードを入力してください。
+
+```
+sudo rm -rfv "/usr/local/libexec/SmartCardServices"
+```
+
+下記は実行例になります。
+
+```
+bash-3.2$ sudo rm -rfv "/usr/local/libexec/SmartCardServices"
+Password:
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS/libccid.dylib
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/MacOS
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents/Info.plist
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle/Contents
+/usr/local/libexec/SmartCardServices/drivers/ifd-ccid.bundle
+/usr/local/libexec/SmartCardServices/drivers
+/usr/local/libexec/SmartCardServices
+bash-3.2$
+```
+
+これで、CCIDドライバーのアンインストールは完了です。
