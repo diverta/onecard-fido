@@ -60,22 +60,22 @@ MacBookPro-makmorit-jp:lib makmorit$
 
 #### ソースコードを取得
 
-下記サイトから[ソースコード（`ccid-1.4.31.tar.bz2`）](https://ccid.apdu.fr/files/ccid-1.4.31.tar.bz2)をダウンロードします。
+下記サイトから[ソースコード（`ccid-1.4.32.tar.bz2`）](https://ccid.apdu.fr/files/ccid-1.4.32.tar.bz2)をダウンロードします。
 - <b>[CCID free software driver](https://ccid.apdu.fr)</b>
 
 サイト[`https://ccid.apdu.fr`](https://ccid.apdu.fr)を表示し、青い「Download」ボタンをクリックします。
 
 <img src="reference/assets02/0001.jpg" width="640">
 
-Latest Versionの「`ccid-1.4.31.tar.bz2`」ボタンをクリックします。
+遷移先ページにある「`ccid-1.4.32.tar.bz2`」のリンクをクリックします。
 
 <img src="reference/assets02/0002.jpg" width="640">
 
-ダウンロードした「`ccid-1.4.31.tar.bz2`」を解凍します。
+ダウンロードした「`ccid-1.4.32.tar.bz2`」を解凍します。
 
 <img src="reference/assets02/0003.jpg" width="640">
 
-解凍したフォルダー`ccid-1.4.31`を、`${HOME}/opt/`配下に移動します。
+解凍したフォルダー`ccid-1.4.32`を、`${HOME}/opt/`配下に移動します。
 
 <img src="reference/assets02/0004.jpg" width="640">
 
@@ -149,7 +149,7 @@ MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$ echo $?
 MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$
 ```
 
-#### サポートデバイスリストの修正
+#### サポートデバイスリストの修正（手作業）
 
 新たにmacOSでサポートさせたいデバイスの製品ID（VID／PID）を、サポートデバイスリストに追記します。
 
@@ -179,6 +179,27 @@ MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$ cat readers/supported_readers.txt |
 MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$
 ```
 
+#### サポートデバイスリストの修正（パッチ適用）
+先述のサポートデバイスリスト`supported_readers.txt`を修正するためのパッチを用意しております。<br>
+以下のコマンドを実行すると、エディター等を使用しなくても、サポートデバイスリストを修正することができます。
+
+```
+cd ${HOME}/opt/ccid-1.4.32
+patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/supported_readers.txt.patch
+```
+
+下記は実行例になります。
+
+```
+MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$ pwd
+/Users/makmorit/opt/ccid-1.4.32
+MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$ patch readers/supported_readers.txt < ${HOME}/GitHub/onecard-fido/CCID/macOSDriver/supported_readers.txt.patch
+patching file readers/supported_readers.txt
+MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$ cat readers/supported_readers.txt | grep Diverta
+# Diverta Inc.
+0xF055:0x0001:Diverta Inc. Secure Dongle
+MacBookPro-makmorit-jp:ccid-1.4.32 makmorit$
+```
 
 #### ビルドの実行
 
