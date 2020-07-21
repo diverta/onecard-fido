@@ -48,7 +48,7 @@ nRF52840アプリケーションへの追加実装と、ATECC608A単体の実機
 MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで、基板をさらに極小化する試みになります。<br>
 （[#280](https://github.com/diverta/onecard-fido/issues/280) ご参照）
 
-## CCIDインターフェース追加対応
+## [CCIDインターフェース追加対応](CCID/README.md)
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションに必要な基盤技術を確立します。<br>
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
 

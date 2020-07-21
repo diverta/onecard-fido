@@ -1,0 +1,12 @@
+--- supported_readers.txt.original	2020-04-14 17:28:31.000000000 +0900
++++ supported_readers.txt	2020-05-26 15:18:18.000000000 +0900
+@@ -792,6 +792,9 @@
+ 0x1050:0x0406:Yubico YubiKey FIDO+CCID
+ 0x1050:0x0407:Yubico YubiKey OTP+FIDO+CCID
+ 
++# Diverta Inc.
++0xF055:0x0001:Diverta Inc. Secure Dongle
++
+ ##########################
+ # section: unsupported
+ ##########################
