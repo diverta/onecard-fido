@@ -10,13 +10,13 @@
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
-static const uint8_t pin_policy[] = {0x40, 0x10};
 
 //
 // 管理コマンドが実行可能かどうかを保持
@@ -134,16 +134,16 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         // 1) tag 0x4f contains the AID of the PIV Card Application and
         // 2) tag 0x5f2f lists the PIN Usage Policy.
         rdata[0] = 0x7e;
-        rdata[1] = 5 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+        rdata[1] = 5 + sizeof(rid) + sizeof(pix) + ccid_piv_pin_policy_size();
         rdata[2] = 0x4f;
         rdata[3] = sizeof(rid) + sizeof(pix);
         memcpy(rdata + 4, rid, sizeof(rid));
         memcpy(rdata + 4 + sizeof(rid), pix, sizeof(pix));
         rdata[4 + sizeof(rid) + sizeof(pix)] = 0x5f;
         rdata[5 + sizeof(rid) + sizeof(pix)] = 0x2f;
-        rdata[6 + sizeof(rid) + sizeof(pix)] = sizeof(pin_policy);
-        memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), pin_policy, sizeof(pin_policy));
-        rapdu->len = 7 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+        rdata[6 + sizeof(rid) + sizeof(pix)] = ccid_piv_pin_policy_size();
+        memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), ccid_piv_pin_policy(), ccid_piv_pin_policy_size());
+        rapdu->len = 7 + sizeof(rid) + sizeof(pix) + ccid_piv_pin_policy_size();
 
         fido_log_debug("Discovery Object is requested (%d bytes)", rapdu->len);
 
@@ -236,8 +236,33 @@ static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
+static uint16_t piv_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_auth(capdu, rapdu);
+}
+
+static void piv_init(void)
+{
+    // 初期化処理を一度だけ実行
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+
+    // PIN／リトライカウンターの初期化
+    if (ccid_piv_pin_init() == false) {
+        return;
+    }
+
+    // 初期化処理完了
+    initialized = true;
+}
+
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
+    // 初期化処理を一度だけ実行
+    piv_init();
+
     // レスポンス長をゼロクリア
     rapdu->len = 0;
 
@@ -266,6 +291,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_PUT_DATA:
             rapdu->sw = piv_ins_put_data(capdu, rapdu);
+            break;
+        case PIV_INS_VERIFY:
+            rapdu->sw = piv_ins_verify(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

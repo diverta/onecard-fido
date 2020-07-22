@@ -30,12 +30,16 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_apdu.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_apdu.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_main.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_pin.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_pin.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_general_auth.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_general_auth.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.h</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.h</itemPath>
     </logicalFolder>
     <logicalFolder name="components" displayName="components" projectFiles="true">
       <logicalFolder name="boards" displayName="boards" projectFiles="true">
@@ -3927,6 +3931,16 @@
             tool="0"
             flavor2="2">
       </item>
+      <item path="../../../../CCID/ccid_lib/ccid_pin.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../CCID/ccid_lib/ccid_piv.c"
             ex="false"
             tool="0"
@@ -3946,6 +3960,16 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c"
             ex="false"
