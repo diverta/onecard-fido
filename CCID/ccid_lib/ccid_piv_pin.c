@@ -15,6 +15,16 @@ static bool    pin_is_validated;
 // PINポリシー
 static uint8_t pin_policy[] = {0x40, 0x10};
 
+bool ccid_piv_pin_is_validated(void)
+{
+    return pin_is_validated;
+}
+
+void ccid_piv_pin_set_validated(bool b)
+{
+    pin_is_validated = b;
+}
+
 uint8_t *ccid_piv_pin_policy(void)
 {
     return pin_policy;

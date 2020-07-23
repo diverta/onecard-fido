@@ -6,6 +6,7 @@
  */
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
+#include "ccid_piv_internal_auth.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -24,23 +25,10 @@ static response_apdu_t *rapdu;
 // 業務処理に関する定義
 //
 // 暗号化アルゴリズム
-#define ALG_DEFAULT     0x00
 #define ALG_TDEA_3KEY   0x03
-#define ALG_RSA_2048    0x07
-#define ALG_ECC_256     0x11
 
 // 3-key TDES関連
 #define TDEA_BLOCK_SIZE 8
-
-// RSA関連
-#define RSA_N_BIT   2048u
-#define E_LENGTH    4
-#define N_LENGTH    (RSA_N_BIT / 8)
-#define PQ_LENGTH   (RSA_N_BIT / 16)
-
-// ECC関連
-#define ECC_KEY_SIZE        32
-#define ECC_PUB_KEY_SIZE    64
 
 // tags for general auth
 #define TAG_WITNESS         0x80
@@ -95,7 +83,7 @@ static uint8_t tlv_length_size(uint16_t length)
   }
 }
 
-static void authenticate_reset(void) 
+void ccid_piv_general_auth_reset_context(void)
 {
     // auth context data offset
     //  0: auth state
@@ -106,20 +94,6 @@ static void authenticate_reset(void)
     auth_ctx[1] = 0;
     auth_ctx[2] = 0;
     memset(auth_ctx + 3, 0, LENGTH_CHALLENGE);
-}
-
-static int get_input_size(uint8_t alg) {
-    switch (alg) {
-        case ALG_DEFAULT:
-        case ALG_TDEA_3KEY:
-            return TDEA_BLOCK_SIZE;
-        case ALG_RSA_2048:
-            return N_LENGTH;
-        case ALG_ECC_256:
-            return ECC_KEY_SIZE;
-        default:
-            return 0;
-    }
 }
 
 static bool is_key_exist(uint8_t id)
@@ -164,7 +138,7 @@ static uint16_t mutual_authenticate_request(void)
     fido_log_debug("mutual authenticate request");
 
     // 変数の初期化
-    authenticate_reset();
+    ccid_piv_general_auth_reset_context();
     ccid_piv_admin_mode_set(false);
 
     // パラメーターのチェック
@@ -209,7 +183,7 @@ static uint16_t mutual_authenticate_request(void)
         memset(crypto_key, 0, sizeof(crypto_key));
 
     } else {
-        authenticate_reset();
+        ccid_piv_general_auth_reset_context();
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
@@ -233,11 +207,11 @@ static uint16_t mutual_authenticate_response(void)
         || auth_ctx[2] != crypto_alg 
         || input_data_length != len_for_tag[IDX_WITNESS] 
         || memcmp(challenge, capdu->data + pos_for_tag[IDX_WITNESS], input_data_length) != 0) {
-        authenticate_reset();
+        ccid_piv_general_auth_reset_context();
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
     if (input_data_length != len_for_tag[IDX_CHALLENGE]) {
-        authenticate_reset();
+        ccid_piv_general_auth_reset_context();
         return SW_WRONG_LENGTH;
     }
 
@@ -262,12 +236,12 @@ static uint16_t mutual_authenticate_response(void)
         memset(crypto_key, 0, sizeof(crypto_key));
 
     } else {
-        authenticate_reset();
+        ccid_piv_general_auth_reset_context();
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
     // 変数の初期化
-    authenticate_reset();
+    ccid_piv_general_auth_reset_context();
     ccid_piv_admin_mode_set(true);
 
     // 正常終了
@@ -322,7 +296,7 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     // 管理用キーに対応する暗号アルゴリズムを取得し、
     // 入力データサイズを判定
     crypto_alg = ccid_piv_object_card_admin_key_alg_get();
-    input_data_length = get_input_size(crypto_alg);
+    input_data_length = TDEA_BLOCK_SIZE;
 
     // データ格納領域の参照
     uint8_t *data = capdu->data;
@@ -336,7 +310,7 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     uint16_t func_ret = SW_NO_ERROR;
     if (pos_for_tag[IDX_WITNESS] == 0 && pos_for_tag[IDX_CHALLENGE] > 0 
         && len_for_tag[IDX_CHALLENGE] > 0 && pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0) {
-        fido_log_debug("internal authenticate");
+        func_ret = ccid_piv_internal_auth(capdu, rapdu, pos_for_tag[IDX_RESPONSE], len_for_tag[IDX_RESPONSE]);
 
     } else if (pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] == 0) {
         fido_log_debug("external authenticate request");
@@ -358,7 +332,7 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     } else {
         // INVALID CASE
         fido_log_error("general authenticate: invalid case");
-        authenticate_reset();
+        ccid_piv_general_auth_reset_context();
         func_ret = SW_WRONG_DATA;
     }
     

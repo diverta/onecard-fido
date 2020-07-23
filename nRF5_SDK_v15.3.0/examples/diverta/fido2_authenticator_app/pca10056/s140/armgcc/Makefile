@@ -204,6 +204,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_pin.c \
   $(CIDLIB_DIR)/ccid_piv.c \
   $(CIDLIB_DIR)/ccid_piv_general_auth.c \
+  $(CIDLIB_DIR)/ccid_piv_internal_auth.c \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(CIDLIB_DIR)/ccid_piv_pin.c \
   $(PLTLIB_DIR)/fido_board.c \

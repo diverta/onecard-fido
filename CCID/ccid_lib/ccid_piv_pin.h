@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+bool     ccid_piv_pin_is_validated(void);
+void     ccid_piv_pin_set_validated(bool b);
 uint8_t *ccid_piv_pin_policy(void);
 size_t   ccid_piv_pin_policy_size(void);
 bool     ccid_piv_pin_init(void);
