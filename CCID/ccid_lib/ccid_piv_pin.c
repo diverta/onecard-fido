@@ -10,7 +10,6 @@
 #include "ccid_piv_pin.h"
 
 // PIN関連情報を内部保持
-static uint8_t pin_code[PIN_DEFAULT_SIZE];
 static bool    pin_is_validated;
 
 // PINポリシー
@@ -29,8 +28,6 @@ size_t ccid_piv_pin_policy_size(void)
 bool ccid_piv_pin_init(void)
 {
     // 内部保持データの初期化
-    memset(pin_code, 0xff, sizeof(pin_code));
-    //pin.min_length = pin.max_length = PIN_DEFAULT_SIZE;
     pin_is_validated = false;
 
     // PIN／リトライカウンターの初期化

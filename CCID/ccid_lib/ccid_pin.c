@@ -39,8 +39,9 @@ static int write_attr(const char *path, uint8_t attr, const void *buf, size_t le
     }
     return 0;
 }
-static int read_file(const char *path, void *buf, size_t off, size_t len) 
+static int read_file(void *buf, size_t len) 
 {
+    memset(m_pin_buffer, 0xff, sizeof(m_pin_buffer));
     memcpy(buf, m_pin_buffer, len);
     return len;
 }
@@ -50,41 +51,66 @@ static int write_file(const char *path, const void *buf, size_t off, size_t len,
     memcpy(m_pin_buffer, buf, len);
     return 0;
 }
-static int get_file_size(const char *path) 
+
+static bool restore_pin_code(uint8_t *pin_buf, size_t pin_buf_size)
 {
-    int c;
-    for (c = 0; m_pin_buffer[c] != 0 && c < sizeof(m_pin_buffer); c++);
-    return c;
-}
-static int pin_get_size(void) 
-{
-    return get_file_size(NULL); 
+    // 登録されているPINを取得
+    if (read_file(pin_buf, pin_buf_size) < 0) {
+        return false;
+    }
+    return true;
 }
 
-static bool mem_is_equal(const uint8_t *a, const uint8_t *b, size_t len)
+static bool pin_code_is_equal(const void *buf, uint8_t len, bool *is_equal)
 {
-    size_t eq = 0;
-    size_t neq = 0;
-    for (size_t i = 0; i != len; ++i) {
-        if (a[i] == b[i]) {
-            eq++;
-        } else {
-            neq++;
+    // パラメーターチェック
+    if (is_equal == NULL) {
+        return false;
+    }
+
+    // 登録されているPINを取得
+    if (restore_pin_code(pin_buf, sizeof(pin_buf)) == false) {
+        return false;
+    }
+
+    // 入力されたPINをチェック
+    *is_equal = (memcmp(buf, pin_buf, len) == 0);
+    memset(pin_buf, 0, sizeof(pin_buf));
+    return true;
+}
+
+static bool pin_code_is_blank(bool *is_blank)
+{
+    // パラメーターチェック
+    if (is_blank == NULL) {
+        return false;
+    }
+
+    // 登録されているPINを取得
+    if (restore_pin_code(pin_buf, sizeof(pin_buf)) == false) {
+        return false;
+    }
+
+    // 登録されているPINをチェック
+    *is_blank = true;
+    for (uint8_t c = 0; c < sizeof(pin_buf); c++) {
+        if (pin_buf[c] != 0xff) {
+            *is_blank = false;
+            break;
         }
     }
-    if (eq + neq != len) {
-        return false;
-    }
-    if (eq == len) {
-        return true;
-    } else {
-        return false;
-    }
+
+    // PINがブランクであれば true を戻す
+    memset(pin_buf, 0, sizeof(pin_buf));
+    return true;
 }
 
 bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_failed) 
 {
     // パラメーターチェック
+    if (retries == NULL) {
+        return false;
+    }
     if (len != PIN_DEFAULT_SIZE) {
         return false;
     }
@@ -95,9 +121,7 @@ bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_
     if (err < 0) {
         return false;
     }
-    if (retries != NULL) {
-        *retries = ctr;
-    }
+    *retries = ctr;
 
     // リトライカウンターが０であれば認証失敗
     if (ctr == 0) {
@@ -105,22 +129,15 @@ bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_
         return true;
     }
 
-    // 登録されているPINを取得
-    int real_len = read_file(NULL, pin_buf, 0, sizeof(pin_buf));
-    if (real_len < 0) {
+    // 入力されたPINと、登録されているPINを比較
+    bool is_equal;
+    if (pin_code_is_equal(buf, len, &is_equal) == false) {
         return false;
     }
-
-    // 入力されたPINをチェック
-    bool pin_equals = mem_is_equal(buf, pin_buf, len);
-    memset(pin_buf, 0, sizeof(pin_buf));
-
-    if (real_len != len || pin_equals == false) {
+    if (is_equal == false) {
         // NGの場合はリトライカウンターを１減らす
         --ctr;
-        if (retries != NULL) {
-            *retries = ctr;
-        }
+        *retries = ctr;
         // 内部で保持しているリトライカウンターを更新
         err = write_attr(NULL, RETRY_ATTR, &ctr, sizeof(ctr));
         if (err < 0) {
@@ -145,11 +162,22 @@ bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_
 
 bool ccid_pin_get_retries(uint8_t *retries) 
 {
-    if (pin_get_size() == 0) {
+    // パラメーターチェック
+    if (retries == NULL) {
+        return false;
+    }
+
+    // PINコードがブランクであればゼロクリア
+    bool is_blank;
+    if (pin_code_is_blank(&is_blank) == false) {
+        return false;
+    }
+    if (is_blank) {
         *retries = 0;
         return true;
     }
 
+    // リトライカウンターの現在値を参照
     int err = read_attr(NULL, RETRY_ATTR, retries, sizeof(uint8_t));
     if (err < 0) {
         return false;
