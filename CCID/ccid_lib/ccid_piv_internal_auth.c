@@ -10,6 +10,9 @@
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 
+// for ECDSA
+#include "u2f_signature.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -53,9 +56,17 @@ uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *ou
     fido_crypto_ecdsa_sign(privkey_be, digest, digest_size, output_data, output_size);
     memset(privkey_be, 0, sizeof(privkey_be));
 
-    // 署名をANSI形式に変換
-    //*output_size = ecdsa_sig2ansi(key_size, output_data, output_data);
-    
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1(output_data) == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // データとサイズを取得
+    *output_size = u2f_signature_data_size();
+    memcpy(output_data, u2f_signature_data_buffer(), *output_size);
+
     // 正常終了
     return SW_NO_ERROR;
 }
@@ -67,7 +78,7 @@ uint16_t ccid_piv_internal_auth(command_apdu_t *c_apdu, response_apdu_t *r_apdu,
     rapdu = r_apdu;
 
     fido_log_debug("internal authenticate");
-    
+
     // 変数の初期化
     ccid_piv_general_auth_reset_context();
     uint8_t key_alg = capdu->p1;
@@ -91,7 +102,7 @@ uint16_t ccid_piv_internal_auth(command_apdu_t *c_apdu, response_apdu_t *r_apdu,
     size_t input_size = challenge_size;
     size_t output_size = 0;
 
-    // 該当のスロットから、EC秘密鍵を読込み、応答を生成    
+    // 該当のスロットから、EC秘密鍵を読込み、応答を生成
     uint16_t ret = generate_ecdsa_sign(input_data, input_size, output_data, &output_size);
     if (ret != SW_NO_ERROR) {
         return ret;
