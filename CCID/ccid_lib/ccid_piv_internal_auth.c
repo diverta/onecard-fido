@@ -29,12 +29,26 @@ static command_apdu_t  *capdu;
 static response_apdu_t *rapdu;
 
 // 一時作業領域
-static uint8_t privkey_be[RAW_PRIVATE_KEY_SIZE];
+static uint8_t work_buf[1024];
 static uint8_t digest[SHA_256_HASH_SIZE];
+
+static uint8_t *pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_length)
+{
+    for (size_t i = 3; i < cert_data_length; i++) {
+        if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
+            cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
+            // 03 42 00 04 というシーケンスが発見されたら、
+            // その先頭アドレスを戻す
+            return (cert_data + i + 1);
+        }
+    }
+    fido_log_error("pubkey_in_certificate failed: Public key not found");
+    return NULL;
+}
 
 uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
 {
-    // キー長を取得
+    // パラメーターのチェック
     uint8_t digest_size = SHA_256_HASH_SIZE;
     if (input_size > digest_size) {
         return SW_WRONG_DATA;
@@ -42,21 +56,39 @@ uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *ou
 
     // 該当のスロットから、EC鍵を読込
     size_t s;
-    if (ccid_piv_object_key_pauth_get(privkey_be, &s) == false) {
+    if (ccid_piv_object_key_pauth_get(work_buf, &s) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
-    // 入力チャレンジがキー長より短い場合は、先頭から 0 を埋める
+    // 入力チャレンジがハッシュ長より短い場合は、先頭から 0 を埋める
     uint8_t offset = digest_size - input_size;
     memset(digest, 0, sizeof(digest));
     memcpy(digest + offset, input_data, input_size);
 
     // ECDSA署名を生成
+    uint8_t *privkey_be = work_buf;
     *output_size = ECDSA_SIGNATURE_SIZE;
     fido_crypto_ecdsa_sign(privkey_be, digest, digest_size, output_data, output_size);
-    memset(privkey_be, 0, sizeof(privkey_be));
+    memset(work_buf, 0, sizeof(work_buf));
 
-    // ASN.1形式署名を格納する領域を準備
+    // 該当のスロットから、証明書を読込
+    if (ccid_piv_object_cert_pauth_get(work_buf, &s) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 証明書から公開鍵を抽出
+    uint8_t *pubkey_be = pubkey_in_certificate(work_buf, s);
+    if (pubkey_be == NULL) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // ECDSA署名を検証
+    s = *output_size;
+    if (fido_crypto_ecdsa_sign_verify(pubkey_be, digest, digest_size, output_data, s) == false) {
+        // 署名検証失敗の場合終了
+        return SW_UNABLE_TO_PROCESS;
+    }
+
     if (u2f_signature_convert_to_asn1(output_data) == false) {
         // 生成された署名をASN.1形式署名に変換する
         // 変換失敗の場合終了
