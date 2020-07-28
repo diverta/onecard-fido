@@ -22,9 +22,13 @@ NRF_LOG_MODULE_REGISTER();
 
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
+static nrf_crypto_ecdsa_verify_context_t verify_context = {0};
 
 // 署名生成のための秘密鍵情報を保持
 static nrf_crypto_ecc_private_key_t private_key_for_sign;
+
+// 署名検証のための公開鍵情報を保持
+static nrf_crypto_ecc_public_key_t  public_key_for_sign;
 
 // for generate random vector
 #include "nrf_crypto_rng.h"
@@ -119,6 +123,40 @@ void fido_crypto_ecdsa_sign(uint8_t *private_key_be,
         NRF_LOG_ERROR("nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
     }
     APP_ERROR_CHECK(err_code);
+}
+
+bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be, 
+    uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t signature_size)
+{
+    // Initialize crypto library.
+    ret_code_t err_code = nrf_crypto_init();
+    APP_ERROR_CHECK(err_code);
+
+    // 検証に使用する公開鍵（64バイト）を取得
+    //   SDK 15以降はビッグエンディアンで引き渡す必要あり
+    err_code = nrf_crypto_ecc_public_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info,
+        &public_key_for_sign, 
+        public_key_be, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_DEBUG("nrf_crypto_ecc_public_key_from_raw() returns 0x%02x ", err_code);
+    }
+    APP_ERROR_CHECK(err_code);
+
+    // 署名検証実行
+    err_code = nrf_crypto_ecdsa_verify(
+        &verify_context, 
+        &public_key_for_sign, 
+        hash_digest,
+        digest_size,
+        signature, 
+        signature_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecdsa_verify() returns 0x%02x ", err_code);
+        return false;
+    }
+    return true;
 }
 
 void fido_crypto_calculate_hmac_sha256(
