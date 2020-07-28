@@ -308,9 +308,10 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
 
     // アプリケーション認証処理を実行
     uint16_t func_ret = SW_NO_ERROR;
-    if (pos_for_tag[IDX_WITNESS] == 0 && pos_for_tag[IDX_CHALLENGE] > 0 
-        && len_for_tag[IDX_CHALLENGE] > 0 && pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0) {
-        func_ret = ccid_piv_internal_auth(capdu, rapdu, pos_for_tag[IDX_RESPONSE], len_for_tag[IDX_RESPONSE]);
+    if (pos_for_tag[IDX_WITNESS] == 0 && 
+        pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] > 0 && 
+        pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0) {
+        func_ret = ccid_piv_internal_auth(capdu, rapdu, pos_for_tag[IDX_CHALLENGE], len_for_tag[IDX_CHALLENGE]);
 
     } else if (pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] == 0) {
         fido_log_debug("external authenticate request");
