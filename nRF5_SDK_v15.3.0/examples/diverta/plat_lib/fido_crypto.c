@@ -15,6 +15,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "nrf_crypto_init.h"
 #include "nrf_crypto_hash.h"
 #include "nrf_crypto_ecdsa.h"
+#include "nrf_crypto_ecdh.h"
 #include "app_error.h"
 
 // for calculate hmac
@@ -23,6 +24,7 @@ NRF_LOG_MODULE_REGISTER();
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 static nrf_crypto_ecdsa_verify_context_t verify_context = {0};
+static nrf_crypto_ecdh_context_t nrf_crypto_ecdh_context;
 
 // 署名生成のための秘密鍵情報を保持
 static nrf_crypto_ecc_private_key_t private_key_for_sign;
@@ -38,6 +40,10 @@ static uint8_t m_random_vector[64];
 static nrf_crypto_hmac_context_t hmac_context;
 static uint8_t                   hmac_data[NRF_CRYPTO_HASH_SIZE_SHA256];
 static size_t                    hmac_data_size;
+
+// SDK内部形式変換用の一時領域（公開鍵／秘密鍵）
+static nrf_crypto_ecc_public_key_t client_public_key;
+static nrf_crypto_ecc_private_key_t self_private_key;
 
 void fido_crypto_init(void)
 {
@@ -201,4 +207,41 @@ void fido_crypto_calculate_hmac_sha256(
     for (uint8_t i = 0; i < sizeof(hmac_data); i++) {
         dest_data[i] = hmac_data[i];
     }
+}
+
+bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_public_key_raw_data, uint8_t *sskey_raw_data, size_t *sskey_raw_data_size)
+{
+    // 公開鍵をSDK内部形式に変換
+    ret_code_t err_code = nrf_crypto_ecc_public_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info, 
+        &client_public_key, client_public_key_raw_data, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecc_public_key_from_raw returns 0x%04x(%s)", 
+            err_code, nrf_crypto_error_string_get(err_code));
+        return false;
+    }
+
+    // 秘密鍵をSDK内部形式に変換
+    err_code = nrf_crypto_ecc_private_key_from_raw(
+        &g_nrf_crypto_ecc_secp256r1_curve_info, 
+        &self_private_key, private_key_raw_data, 
+        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecc_private_key_from_raw returns 0x%04x(%s)", 
+            err_code, nrf_crypto_error_string_get(err_code));
+        return false;
+    }
+
+    // 共通鍵を生成
+    *sskey_raw_data_size = NRF_CRYPTO_ECDH_SECP256R1_SHARED_SECRET_SIZE;
+    err_code = nrf_crypto_ecdh_compute(&nrf_crypto_ecdh_context,
+        &self_private_key, &client_public_key, sskey_raw_data, sskey_raw_data_size);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_ecdh_compute returns 0x%04x(%s)", 
+            err_code, nrf_crypto_error_string_get(err_code));
+        return false;
+    }
+
+    return true;
 }
