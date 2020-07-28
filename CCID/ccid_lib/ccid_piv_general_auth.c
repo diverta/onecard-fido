@@ -8,6 +8,7 @@
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_internal_auth.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -248,16 +249,6 @@ static uint16_t mutual_authenticate_response(void)
     return SW_NO_ERROR;
 }
 
-static uint16_t ecdh_with_piv_kmk(void)
-{
-    // ECDH with the PIV KMK
-    // Documented in SP800-73-4 Part 2 Appendix A.5
-    fido_log_debug("ECDH with the PIV KMK");
-
-    // 正常終了
-    return SW_NO_ERROR;
-}
-
 static bool parse_pos_and_length_for_tags(uint8_t *data)
 {
     memset(pos_for_tag, 0, sizeof(pos_for_tag));
@@ -328,7 +319,7 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
 
     } else if (pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0 
         && pos_for_tag[IDX_EXP] > 0 && len_for_tag[IDX_EXP] > 0) {
-        func_ret = ecdh_with_piv_kmk();
+        func_ret = ccid_piv_authenticate_ecdh_with_kmk(capdu, rapdu, pos_for_tag[IDX_EXP], len_for_tag[IDX_EXP]);
 
     } else {
         // INVALID CASE

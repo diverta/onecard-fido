@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 uint16_t ccid_piv_internal_auth(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t challenge_pos, uint8_t challenge_size);
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t pubkey_pos, uint8_t pubkey_size);
 
 #ifdef __cplusplus
 }

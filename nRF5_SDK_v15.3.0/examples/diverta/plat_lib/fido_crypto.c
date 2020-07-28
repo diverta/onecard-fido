@@ -211,8 +211,17 @@ void fido_crypto_calculate_hmac_sha256(
 
 bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_public_key_raw_data, uint8_t *sskey_raw_data, size_t *sskey_raw_data_size)
 {
+    // Initialize crypto library.
+    ret_code_t err_code = nrf_crypto_init();
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_init returns 0x%04x(%s)", 
+            err_code, nrf_crypto_error_string_get(err_code));
+        return false;
+    }
+    NRF_LOG_DEBUG("Compute shared secret using ECDH start");
+
     // 公開鍵をSDK内部形式に変換
-    ret_code_t err_code = nrf_crypto_ecc_public_key_from_raw(
+    err_code = nrf_crypto_ecc_public_key_from_raw(
         &g_nrf_crypto_ecc_secp256r1_curve_info, 
         &client_public_key, client_public_key_raw_data, 
         NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
@@ -243,5 +252,6 @@ bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_p
         return false;
     }
 
+    NRF_LOG_DEBUG("Compute shared secret using ECDH end");
     return true;
 }

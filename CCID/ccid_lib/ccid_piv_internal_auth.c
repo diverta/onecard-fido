@@ -150,3 +150,55 @@ uint16_t ccid_piv_internal_auth(command_apdu_t *c_apdu, response_apdu_t *r_apdu,
     // 正常終了
     return SW_NO_ERROR;
 }
+
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t pubkey_pos, uint8_t pubkey_size)
+{
+    // リクエスト／レスポンス格納領域の参照を保持
+    capdu = c_apdu;
+    rapdu = r_apdu;
+
+    // ECDH with the PIV KMK
+    // Documented in SP800-73-4 Part 2 Appendix A.5
+    fido_log_debug("ECDH with the PIV KMK");
+
+    // 変数の初期化
+    ccid_piv_general_auth_reset_context();
+
+    // パラメーターのチェック
+    if (capdu->p2 != 0x9d || ccid_piv_pin_is_validated() == false) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+    if (pubkey_size != RAW_PUBLIC_KEY_SIZE + 1) {
+        return SW_WRONG_DATA;
+    }
+    if (capdu->p2 == 0x9d) {
+        ccid_piv_pin_set_validated(false);
+    }
+
+    // 該当のスロットから、EC鍵を読込
+    size_t size;
+    if (ccid_piv_object_key_keyman_get(work_buf, &size) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 受信した公開鍵
+    uint8_t *cdata = capdu->data;
+    uint8_t *rdata = rapdu->data;
+    uint8_t *pubkey = cdata + pubkey_pos + 1;
+    uint8_t *ecdh = rdata + 4;
+
+    // 秘密鍵と公開鍵から共通鍵を生成
+    if (fido_crypto_calculate_ecdh(work_buf, pubkey, ecdh, &size) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // レスポンスデータを生成
+    rdata[0] = 0x7c;
+    rdata[1] = size + 2;
+    rdata[2] = 0x82;
+    rdata[3] = size;
+    rapdu->len = size + 4;
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
