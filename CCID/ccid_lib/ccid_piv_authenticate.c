@@ -17,12 +17,6 @@
 #include "fido_platform.h"
 
 //
-// 業務処理に関する定義
-//
-// 暗号化アルゴリズム
-#define ALG_ECC_256     0x11
-
-//
 // リクエスト／レスポンス格納領域の参照を保持
 //
 static command_apdu_t  *capdu;

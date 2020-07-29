@@ -21,41 +21,32 @@
 //
 static command_apdu_t  *capdu;
 static response_apdu_t *rapdu;
-
-//
-// 業務処理に関する定義
-//
-// 暗号化アルゴリズム
-#define ALG_TDEA_3KEY   0x03
-
-// 3-key TDES関連
-#define TDEA_BLOCK_SIZE 8
-
-// tags for general auth
-#define TAG_WITNESS         0x80
-#define TAG_CHALLENGE       0x81
-#define TAG_RESPONSE        0x82
-#define TAG_EXP             0x85
-#define IDX_WITNESS         (TAG_WITNESS - 0x80)
-#define IDX_CHALLENGE       (TAG_CHALLENGE - 0x80)
-#define IDX_RESPONSE        (TAG_RESPONSE - 0x80)
-#define IDX_EXP             (TAG_EXP - 0x80)
-
-#define LENGTH_CHALLENGE    16
-#define LENGTH_AUTH_STATE   (5 + LENGTH_CHALLENGE)
-
-// states for auth
-#define AUTH_STATE_NONE     0
-#define AUTH_STATE_EXTERNAL 1
-#define AUTH_STATE_MUTUAL   2
-
 //
 // 認証処理に使用する共有情報
 //
 static uint8_t  auth_ctx[LENGTH_AUTH_STATE];
 static uint8_t  crypto_key[24];
-static uint16_t pos_for_tag[6];
-static int16_t  len_for_tag[6];
+
+//
+// BER-TLV関連
+//  PIVのリクエスト／レスポンスに
+//  格納されるデータオブジェクトは、
+//  BER-TLV形式で表現されます
+//
+typedef struct {
+    // Witness
+    uint16_t wit_pos;
+    int16_t  wit_len;
+    // Challenge
+    uint16_t chl_pos;
+    int16_t  chl_len;
+    // Response
+    uint16_t rsp_pos;
+    int16_t  rsp_len;
+    // Exponentiation
+    uint16_t exp_pos;
+    int16_t  exp_len;
+} BER_TLV_INFO;
 
 static uint16_t tlv_get_length(const uint8_t *data) 
 {
@@ -80,6 +71,46 @@ static uint8_t tlv_length_size(uint16_t length)
   } else {
       return 3;
   }
+}
+
+static bool parse_ber_tlv_info(uint8_t *data, BER_TLV_INFO *info)
+{
+    memset(info, 0, sizeof(BER_TLV_INFO));
+
+    uint16_t dat_len = tlv_get_length(data + 1);
+    uint16_t dat_pos = 1 + tlv_length_size(dat_len);
+
+    while (dat_pos < capdu->lc) {
+        uint8_t tag = data[dat_pos++];
+        int16_t len = tlv_get_length(data + dat_pos);
+        dat_pos += tlv_length_size(len);
+        uint16_t pos = dat_pos;
+        dat_pos += len;
+        fido_log_debug("Tag 0x%02X, pos: %d, len: %d", tag, pos, len);
+
+        switch (tag) {
+            case TAG_WITNESS:
+                info->wit_len = len;
+                info->wit_pos = pos;
+                break;
+            case TAG_CHALLENGE:
+                info->chl_len = len;
+                info->chl_pos = pos;
+                break;
+            case TAG_RESPONSE:
+                info->rsp_len = len;
+                info->rsp_pos = pos;
+                break;
+            case TAG_EXPONENT:
+                info->exp_len = len;
+                info->exp_pos = pos;
+                break;
+            default:
+                return false;
+        }
+    }
+
+    return true;
 }
 
 void ccid_piv_general_auth_reset_context(void)
@@ -196,7 +227,7 @@ static uint16_t mutual_authenticate_request(void)
     return SW_NO_ERROR;
 }
 
-static uint16_t mutual_authenticate_response(void)
+static uint16_t mutual_authenticate_response(BER_TLV_INFO *data_obj_info)
 {
     fido_log_debug("mutual authenticate response");
 
@@ -216,12 +247,12 @@ static uint16_t mutual_authenticate_response(void)
     if (auth_ctx[0] != AUTH_STATE_MUTUAL 
         || auth_ctx[1] != capdu->p2 
         || auth_ctx[2] != crypto_alg 
-        || input_data_length != len_for_tag[IDX_WITNESS] 
-        || memcmp(challenge, capdu->data + pos_for_tag[IDX_WITNESS], input_data_length) != 0) {
+        || input_data_length != data_obj_info->wit_len 
+        || memcmp(challenge, capdu->data + data_obj_info->wit_pos, input_data_length) != 0) {
         ccid_piv_general_auth_reset_context();
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (input_data_length != len_for_tag[IDX_CHALLENGE]) {
+    if (input_data_length != data_obj_info->chl_len) {
         ccid_piv_general_auth_reset_context();
         return SW_WRONG_LENGTH;
     }
@@ -240,7 +271,7 @@ static uint16_t mutual_authenticate_response(void)
             return SW_FILE_NOT_FOUND;
         }
         // 管理用キーを使用し、challenge を復号化
-        if (tdes_enc(capdu->data + pos_for_tag[IDX_CHALLENGE], rdata + 4, crypto_key) == false) {
+        if (tdes_enc(capdu->data + data_obj_info->chl_pos, rdata + 4, crypto_key) == false) {
             memset(crypto_key, 0, sizeof(crypto_key));
             return SW_UNABLE_TO_PROCESS;
         }
@@ -257,27 +288,6 @@ static uint16_t mutual_authenticate_response(void)
 
     // 正常終了
     return SW_NO_ERROR;
-}
-
-static bool parse_pos_and_length_for_tags(uint8_t *data)
-{
-    memset(pos_for_tag, 0, sizeof(pos_for_tag));
-    memset(len_for_tag, 0, sizeof(len_for_tag));
-    uint16_t dat_len = tlv_get_length(data + 1);
-    uint16_t dat_pos = 1 + tlv_length_size(dat_len);
-    while (dat_pos < capdu->lc) {
-        uint8_t tag = data[dat_pos++];
-        if (tag != 0x80 && tag != 0x81 && tag != 0x82 && tag != 0x85) {
-            return false;
-        }
-        len_for_tag[tag - 0x80] = tlv_get_length(data + dat_pos);
-        dat_pos += tlv_length_size(len_for_tag[tag - 0x80]);
-        pos_for_tag[tag - 0x80] = dat_pos;
-        dat_pos += len_for_tag[tag - 0x80];
-        fido_log_debug("Tag 0x%02X, pos[%d]: %d, len[%d]: %d", 
-            tag, tag - 0x80, pos_for_tag[tag - 0x80], tag - 0x80, len_for_tag[tag - 0x80]);
-    }
-    return true;
 }
 
 uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r_apdu)
@@ -298,33 +308,34 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     uint8_t *data = capdu->data;
 
     // データ要素ごとの長さ／格納位置を解析
-    if (parse_pos_and_length_for_tags(data) == false) {
+    BER_TLV_INFO data_obj_info;
+    if (parse_ber_tlv_info(data, &data_obj_info) == false) {
         return SW_WRONG_DATA;
     }
 
     // アプリケーション認証処理を実行
     uint16_t func_ret = SW_NO_ERROR;
-    if (pos_for_tag[IDX_WITNESS] == 0 && 
-        pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] > 0 && 
-        pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0) {
-        func_ret = ccid_piv_authenticate_internal(capdu, rapdu, pos_for_tag[IDX_CHALLENGE], len_for_tag[IDX_CHALLENGE]);
+    if (data_obj_info.wit_pos == 0 &&
+        data_obj_info.chl_pos > 0 && data_obj_info.chl_len > 0 &&
+        data_obj_info.rsp_pos > 0 && data_obj_info.rsp_len == 0) {
+        func_ret = ccid_piv_authenticate_internal(capdu, rapdu, data_obj_info.chl_pos, data_obj_info.chl_len);
 
-    } else if (pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] == 0) {
+    } else if (data_obj_info.chl_pos > 0 && data_obj_info.chl_len == 0) {
         fido_log_debug("external authenticate request");
 
-    } else if (pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] > 0) {
+    } else if (data_obj_info.rsp_pos > 0 && data_obj_info.rsp_len > 0) {
         fido_log_debug("external authenticate response");
 
-    } else if (pos_for_tag[IDX_WITNESS] > 0 && len_for_tag[IDX_WITNESS] == 0) {
+    } else if (data_obj_info.wit_pos > 0 && data_obj_info.wit_len == 0) {
         func_ret = mutual_authenticate_request();
 
-    } else if (pos_for_tag[IDX_WITNESS] > 0 && len_for_tag[IDX_WITNESS] > 0 
-        && pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] > 0) {
-        func_ret = mutual_authenticate_response();
+    } else if (data_obj_info.wit_pos > 0 && data_obj_info.wit_len > 0 &&
+               data_obj_info.chl_pos > 0 && data_obj_info.chl_len > 0) {
+        func_ret = mutual_authenticate_response(&data_obj_info);
 
-    } else if (pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0 
-        && pos_for_tag[IDX_EXP] > 0 && len_for_tag[IDX_EXP] > 0) {
-        func_ret = ccid_piv_authenticate_ecdh_with_kmk(capdu, rapdu, pos_for_tag[IDX_EXP], len_for_tag[IDX_EXP]);
+    } else if (data_obj_info.rsp_pos > 0 && data_obj_info.rsp_len == 0 &&
+               data_obj_info.exp_pos > 0 && data_obj_info.exp_len > 0) {
+        func_ret = ccid_piv_authenticate_ecdh_with_kmk(capdu, rapdu, data_obj_info.exp_pos, data_obj_info.exp_len);
 
     } else {
         // INVALID CASE
