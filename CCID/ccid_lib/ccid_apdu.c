@@ -37,9 +37,6 @@ enum APPLET {
 };
 static enum APPLET current_applet;
 
-// Appletをあらわすバイト配列
-static uint8_t applet_id_piv[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
-
 void ccid_apdu_stop_applet(void) 
 {
     switch (current_applet) {
@@ -271,8 +268,8 @@ static bool command_is_applet_selection(command_apdu_t *capdu)
 
 static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
-    if (capdu->lc >= sizeof(applet_id_piv) 
-        && memcmp(capdu->data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
+    if (capdu->lc >= ccid_piv_rid_size() 
+        && memcmp(capdu->data, ccid_piv_rid(), ccid_piv_rid_size()) == 0) {
         // PIV
         if (current_applet != APPLET_PIV) {
             ccid_apdu_stop_applet();

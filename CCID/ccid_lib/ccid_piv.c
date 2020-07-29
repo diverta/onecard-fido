@@ -15,8 +15,26 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+//
+// 各種ID
+//  NIST RID
+//  NIST PIX (1st version of the PIV Card Application)
+//
 static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
+static const uint8_t rid_size = sizeof(rid);
+static const uint8_t pix_size = sizeof(pix);
+static const uint8_t aid_size = rid_size + pix_size;
+
+uint8_t *ccid_piv_rid(void)
+{
+    return (uint8_t *)rid;
+}
+
+size_t ccid_piv_rid_size(void)
+{
+    return sizeof(rid);
+}
 
 //
 // 管理コマンドが実行可能かどうかを保持
@@ -43,16 +61,16 @@ static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu)
     // レスポンスデータを編集
     uint8_t *rdata = rapdu->data;
     rdata[0] = 0x61;
-    rdata[1] = 6 + sizeof(pix) + sizeof(rid);
+    rdata[1] = 6 + pix_size + rid_size;
     rdata[2] = 0x4f;
-    rdata[3] = sizeof(pix);
-    memcpy(rdata + 4, pix, sizeof(pix));
-    rdata[4 + sizeof(pix)] = 0x79;
-    rdata[5 + sizeof(pix)] = 2 + sizeof(rid);
-    rdata[6 + sizeof(pix)] = 0x4F;
-    rdata[7 + sizeof(pix)] = sizeof(rid);
-    memcpy(rdata + 8 + sizeof(pix), rid, sizeof(rid));
-    rapdu->len = 8 + sizeof(pix) + sizeof(rid);
+    rdata[3] = pix_size;
+    memcpy(rdata + 4, pix, pix_size);
+    rdata[4 + pix_size] = 0x79;
+    rdata[5 + pix_size] = 2 + rid_size;
+    rdata[6 + pix_size] = 0x4F;
+    rdata[7 + pix_size] = rid_size;
+    memcpy(rdata + 8 + pix_size, rid, rid_size);
+    rapdu->len = 8 + pix_size + rid_size;
 
     // 正常終了
     return SW_NO_ERROR;
@@ -134,16 +152,16 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         // 1) tag 0x4f contains the AID of the PIV Card Application and
         // 2) tag 0x5f2f lists the PIN Usage Policy.
         rdata[0] = 0x7e;
-        rdata[1] = 5 + sizeof(rid) + sizeof(pix) + ccid_piv_pin_policy_size();
+        rdata[1] = 5 + aid_size + ccid_piv_pin_policy_size();
         rdata[2] = 0x4f;
-        rdata[3] = sizeof(rid) + sizeof(pix);
-        memcpy(rdata + 4, rid, sizeof(rid));
-        memcpy(rdata + 4 + sizeof(rid), pix, sizeof(pix));
-        rdata[4 + sizeof(rid) + sizeof(pix)] = 0x5f;
-        rdata[5 + sizeof(rid) + sizeof(pix)] = 0x2f;
-        rdata[6 + sizeof(rid) + sizeof(pix)] = ccid_piv_pin_policy_size();
-        memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), ccid_piv_pin_policy(), ccid_piv_pin_policy_size());
-        rapdu->len = 7 + sizeof(rid) + sizeof(pix) + ccid_piv_pin_policy_size();
+        rdata[3] = aid_size;
+        memcpy(rdata + 4, rid, rid_size);
+        memcpy(rdata + 4 + rid_size, pix, pix_size);
+        rdata[4 + aid_size] = 0x5f;
+        rdata[5 + aid_size] = 0x2f;
+        rdata[6 + aid_size] = ccid_piv_pin_policy_size();
+        memcpy(rdata + 7 + aid_size, ccid_piv_pin_policy(), ccid_piv_pin_policy_size());
+        rapdu->len = 7 + aid_size + ccid_piv_pin_policy_size();
 
         fido_log_debug("Discovery Object is requested (%d bytes)", rapdu->len);
 
