@@ -34,10 +34,10 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_pin.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv.h</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_authenticate.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_authenticate.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_general_auth.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_general_auth.h</itemPath>
-      <itemPath>../../../../CCID/ccid_lib/ccid_piv_internal_auth.c</itemPath>
-      <itemPath>../../../../CCID/ccid_lib/ccid_piv_internal_auth.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.c</itemPath>
@@ -3948,6 +3948,16 @@
             tool="0"
             flavor2="2">
       </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_authenticate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../CCID/ccid_lib/ccid_piv_general_auth.c"
             ex="false"
             tool="0"
@@ -3957,16 +3967,6 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/external/mbedtls/include</pElem>
           </incDir>
         </cTool>
-      </item>
-      <item path="../../../../CCID/ccid_lib/ccid_piv_internal_auth.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
-      <item path="../../../../CCID/ccid_lib/ccid_piv_internal_auth.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../../../CCID/ccid_lib/ccid_piv_object.c"
             ex="false"

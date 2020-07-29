@@ -1,12 +1,12 @@
 /* 
- * File:   ccid_piv_internal_auth.c
+ * File:   ccid_piv_authenticate.c
  * Author: makmorit
  *
  * Created on 2020/07/23, 16:32
  */
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
-#include "ccid_piv_internal_auth.h"
+#include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 
@@ -46,7 +46,7 @@ static uint8_t *pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_lengt
     return NULL;
 }
 
-uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
+static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
 {
     // パラメーターのチェック
     uint8_t digest_size = SHA_256_HASH_SIZE;
@@ -103,7 +103,7 @@ uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *ou
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_internal_auth(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t challenge_pos, uint8_t challenge_size)
+uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t challenge_pos, uint8_t challenge_size)
 {
     // リクエスト／レスポンス格納領域の参照を保持
     capdu = c_apdu;

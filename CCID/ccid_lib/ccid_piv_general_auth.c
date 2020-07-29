@@ -6,7 +6,7 @@
  */
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
-#include "ccid_piv_internal_auth.h"
+#include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
 
@@ -54,8 +54,6 @@ static response_apdu_t *rapdu;
 //
 static uint8_t  auth_ctx[LENGTH_AUTH_STATE];
 static uint8_t  crypto_key[24];
-static uint8_t  crypto_alg;
-static uint16_t input_data_length;
 static uint16_t pos_for_tag[6];
 static int16_t  len_for_tag[6];
 
@@ -147,6 +145,12 @@ static uint16_t mutual_authenticate_request(void)
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
+    // 管理用キーに対応する暗号アルゴリズムを取得
+    uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
+
+    // 入力データサイズ
+    uint8_t input_data_length = TDEA_BLOCK_SIZE;
+
     // mutual_authenticate_response実行で
     // 使用する情報を退避
     // auth context data offset
@@ -195,6 +199,12 @@ static uint16_t mutual_authenticate_request(void)
 static uint16_t mutual_authenticate_response(void)
 {
     fido_log_debug("mutual authenticate response");
+
+    // 管理用キーに対応する暗号アルゴリズムを取得
+    uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
+
+    // 入力データサイズ
+    uint8_t input_data_length = TDEA_BLOCK_SIZE;
 
     // パラメーターのチェック
     // auth context data offset
@@ -284,11 +294,6 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
         return SW_WRONG_P1P2;
     }
 
-    // 管理用キーに対応する暗号アルゴリズムを取得し、
-    // 入力データサイズを判定
-    crypto_alg = ccid_piv_object_card_admin_key_alg_get();
-    input_data_length = TDEA_BLOCK_SIZE;
-
     // データ格納領域の参照
     uint8_t *data = capdu->data;
 
@@ -302,7 +307,7 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     if (pos_for_tag[IDX_WITNESS] == 0 && 
         pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] > 0 && 
         pos_for_tag[IDX_RESPONSE] > 0 && len_for_tag[IDX_RESPONSE] == 0) {
-        func_ret = ccid_piv_internal_auth(capdu, rapdu, pos_for_tag[IDX_CHALLENGE], len_for_tag[IDX_CHALLENGE]);
+        func_ret = ccid_piv_authenticate_internal(capdu, rapdu, pos_for_tag[IDX_CHALLENGE], len_for_tag[IDX_CHALLENGE]);
 
     } else if (pos_for_tag[IDX_CHALLENGE] > 0 && len_for_tag[IDX_CHALLENGE] == 0) {
         fido_log_debug("external authenticate request");
