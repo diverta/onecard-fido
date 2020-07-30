@@ -114,10 +114,10 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     if (key_alg != ALG_ECC_256) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (key_id != 0x9E && ccid_piv_pin_is_validated() == false) {
+    if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (key_id == 0x9D) {
+    if (key_id == TAG_KEY_KEYMN) {
         ccid_piv_pin_set_validated(false);
     }
 
@@ -137,7 +137,7 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     // レスポンスデータを生成
     rdata[0] = 0x7c;
     rdata[1] = output_size + 2;
-    rdata[2] = 0x82;
+    rdata[2] = TAG_RESPONSE;
     rdata[3] = output_size;
     rapdu->len = output_size + 4;
 
@@ -159,13 +159,13 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     ccid_piv_general_auth_reset_context();
 
     // パラメーターのチェック
-    if (capdu->p2 != 0x9d || ccid_piv_pin_is_validated() == false) {
+    if (capdu->p2 != TAG_KEY_KEYMN || ccid_piv_pin_is_validated() == false) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
     if (pubkey_size != RAW_PUBLIC_KEY_SIZE + 1) {
         return SW_WRONG_DATA;
     }
-    if (capdu->p2 == 0x9d) {
+    if (capdu->p2 == TAG_KEY_KEYMN) {
         ccid_piv_pin_set_validated(false);
     }
 
@@ -189,7 +189,7 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     // レスポンスデータを生成
     rdata[0] = 0x7c;
     rdata[1] = size + 2;
-    rdata[2] = 0x82;
+    rdata[2] = TAG_RESPONSE;
     rdata[3] = size;
     rapdu->len = size + 4;
 

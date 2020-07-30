@@ -196,3 +196,54 @@ uint8_t ccid_piv_object_card_admin_key_alg_get(void)
     // 0x03: 3-key triple DEA
     return 0x03;
 }
+
+bool ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size)
+{
+    // パラメーターチェック
+    if (*size < 1) {
+        return false;
+    }
+    
+    // PIVデータオブジェクトごとに処理を分岐
+    bool success = false;
+    switch (data_obj_tag) {
+        case 0x01:
+            // X.509 Certificate for Card Authentication
+            success = ccid_piv_object_cert_cauth_get(buffer, size);
+            break;
+        case 0x02:
+            // Card Holder Unique Identifier
+            success = ccid_piv_object_chuid_get(buffer, size);
+            break;
+        case 0x05:
+            // X.509 Certificate for PIV Authentication
+            success = ccid_piv_object_cert_pauth_get(buffer, size);
+            break;
+        case 0x07:
+            // Card Capability Container
+            success = ccid_piv_object_ccc_get(buffer, size);
+            break;
+        case 0x0A:
+            // X.509 Certificate for Digital Signature
+            success = ccid_piv_object_cert_digsig_get(buffer, size);
+            break;
+        case 0x0B:
+            // X.509 Certificate for Key Management
+            success = ccid_piv_object_cert_keyman_get(buffer, size);
+            break;
+        case 0x0C:
+            // Key History Object
+            success = ccid_piv_object_key_history_get(buffer, size);
+            break;
+        default:
+            break;
+    }
+    
+    if (success == false) {
+        // 処理失敗時は長さをゼロクリア
+        *size = 0;
+    }
+    
+    // 正常終了
+    return success;
+}

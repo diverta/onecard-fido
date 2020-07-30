@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 void     ccid_piv_general_auth_reset_context(void);
-uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t ccid_piv_general_authenticate(command_apdu_t *capdu, response_apdu_t *rapdu);
     
 #ifdef __cplusplus
 }

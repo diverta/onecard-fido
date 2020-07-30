@@ -25,7 +25,9 @@ static response_apdu_t *rapdu;
 // 認証処理に使用する共有情報
 //
 static uint8_t  auth_ctx[LENGTH_AUTH_STATE];
-static uint8_t  crypto_key[24];
+
+// 一時作業領域
+static uint8_t  work_buf[32];
 
 //
 // BER-TLV関連
@@ -126,28 +128,18 @@ void ccid_piv_general_auth_reset_context(void)
     memset(auth_ctx + 3, 0, LENGTH_CHALLENGE);
 }
 
-static bool is_key_exist(uint8_t id)
+static bool is_key_id_exist(uint8_t id)
 {
     switch (id) {
-        case 0x9A:
-            // PIV_AUTH_KEY_PATH
-            return true;
-        case 0x9B:
-            // CARD_ADMIN_KEY_PATH
-            return true;
-        case 0x9C:
-            // SIG_KEY_PATH
-            return true;
-        case 0x9D:
-            // KEY_MANAGEMENT_KEY_PATH
-            return true;
-        case 0x9E:
-            // CARD_AUTH_KEY_PATH
+        case TAG_KEY_PAUTH:
+        case TAG_KEY_CAADM:
+        case TAG_KEY_DGSIG:
+        case TAG_KEY_KEYMN:
+        case TAG_KEY_CAUTH:
             return true;
         default:
             return false;
     }
-    return true;
 }
 
 static bool tdes_enc(const uint8_t *in, uint8_t *out, const uint8_t *key) 
@@ -172,7 +164,7 @@ static uint16_t mutual_authenticate_request(void)
     ccid_piv_admin_mode_set(false);
 
     // パラメーターのチェック
-    if (capdu->p2 != 0x9b) {
+    if (capdu->p2 != TAG_KEY_CAADM) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
@@ -180,7 +172,7 @@ static uint16_t mutual_authenticate_request(void)
     uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
 
     // 入力データサイズ
-    uint8_t input_data_length = TDEA_BLOCK_SIZE;
+    uint8_t challenge_size = TDEA_BLOCK_SIZE;
 
     // mutual_authenticate_response実行で
     // 使用する情報を退避
@@ -192,31 +184,32 @@ static uint16_t mutual_authenticate_request(void)
     auth_ctx[0] = AUTH_STATE_MUTUAL;
     auth_ctx[1] = capdu->p2;
     auth_ctx[2] = crypto_alg;
-    if (3 + input_data_length > sizeof(auth_ctx)) {
+    if (challenge_size > sizeof(auth_ctx) - 3) {
         return SW_WRONG_DATA;
     }
     uint8_t *challenge = auth_ctx + 3;
-    fido_crypto_generate_random_vector(challenge, input_data_length);
+    fido_crypto_generate_random_vector(challenge, challenge_size);
 
     uint8_t *rdata = rapdu->data;
     rdata[0] = 0x7c;
-    rdata[1] = input_data_length + 2;
+    rdata[1] = challenge_size + 2;
     rdata[2] = TAG_WITNESS;
-    rdata[3] = input_data_length;
-    rapdu->len = input_data_length + 4;
+    rdata[3] = challenge_size;
+    rapdu->len = challenge_size + 4;
 
     if (crypto_alg == ALG_TDEA_3KEY) {
         // 管理用キーを取得
-        size_t size = sizeof(crypto_key);
-        if (ccid_piv_object_card_admin_key_get(crypto_key, &size) == false) {
+        size_t size = sizeof(work_buf);
+        if (ccid_piv_object_card_admin_key_get(work_buf, &size) == false) {
             return SW_FILE_NOT_FOUND;
         }
         // 管理用キーを使用し、challenge を暗号化
-        if (tdes_enc(challenge, rdata + 4, crypto_key) == false) {
-            memset(crypto_key, 0, sizeof(crypto_key));
+        uint8_t *output_data = rdata + 4;
+        if (tdes_enc(challenge, output_data, work_buf) == false) {
+            memset(work_buf, 0, sizeof(work_buf));
             return SW_UNABLE_TO_PROCESS;
         }
-        memset(crypto_key, 0, sizeof(crypto_key));
+        memset(work_buf, 0, sizeof(work_buf));
 
     } else {
         ccid_piv_general_auth_reset_context();
@@ -235,7 +228,7 @@ static uint16_t mutual_authenticate_response(BER_TLV_INFO *data_obj_info)
     uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
 
     // 入力データサイズ
-    uint8_t input_data_length = TDEA_BLOCK_SIZE;
+    uint8_t challenge_size = TDEA_BLOCK_SIZE;
 
     // パラメーターのチェック
     // auth context data offset
@@ -244,38 +237,41 @@ static uint16_t mutual_authenticate_response(BER_TLV_INFO *data_obj_info)
     //  2: auth algorism
     //  3: auth challenge (16 bytes)
     uint8_t *challenge = auth_ctx + 3;
+    uint8_t *witness = capdu->data + data_obj_info->wit_pos;
     if (auth_ctx[0] != AUTH_STATE_MUTUAL 
         || auth_ctx[1] != capdu->p2 
         || auth_ctx[2] != crypto_alg 
-        || input_data_length != data_obj_info->wit_len 
-        || memcmp(challenge, capdu->data + data_obj_info->wit_pos, input_data_length) != 0) {
+        || challenge_size != data_obj_info->wit_len 
+        || memcmp(challenge, witness, challenge_size) != 0) {
         ccid_piv_general_auth_reset_context();
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (input_data_length != data_obj_info->chl_len) {
+    if (challenge_size != data_obj_info->chl_len) {
         ccid_piv_general_auth_reset_context();
         return SW_WRONG_LENGTH;
     }
 
     uint8_t *rdata = rapdu->data;
     rdata[0] = 0x7c;
-    rdata[1] = input_data_length + 2;
+    rdata[1] = challenge_size + 2;
     rdata[2] = TAG_RESPONSE;
-    rdata[3] = input_data_length;
-    rapdu->len = input_data_length + 4;
+    rdata[3] = challenge_size;
+    rapdu->len = challenge_size + 4;
 
     if (crypto_alg == ALG_TDEA_3KEY) {
         // 管理用キーを取得
-        size_t size = sizeof(crypto_key);
-        if (ccid_piv_object_card_admin_key_get(crypto_key, &size) == false) {
+        size_t size = sizeof(work_buf);
+        if (ccid_piv_object_card_admin_key_get(work_buf, &size) == false) {
             return SW_FILE_NOT_FOUND;
         }
-        // 管理用キーを使用し、challenge を復号化
-        if (tdes_enc(capdu->data + data_obj_info->chl_pos, rdata + 4, crypto_key) == false) {
-            memset(crypto_key, 0, sizeof(crypto_key));
+        // 管理用キーを使用し、challenge を暗号化
+        uint8_t *input_data = capdu->data + data_obj_info->chl_pos;
+        uint8_t *output_data = rdata + 4;
+        if (tdes_enc(input_data, output_data, work_buf) == false) {
+            memset(work_buf, 0, sizeof(work_buf));
             return SW_UNABLE_TO_PROCESS;
         }
-        memset(crypto_key, 0, sizeof(crypto_key));
+        memset(work_buf, 0, sizeof(work_buf));
 
     } else {
         ccid_piv_general_auth_reset_context();
@@ -290,7 +286,7 @@ static uint16_t mutual_authenticate_response(BER_TLV_INFO *data_obj_info)
     return SW_NO_ERROR;
 }
 
-uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r_apdu)
+uint16_t ccid_piv_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r_apdu)
 {
     // リクエスト／レスポンス格納領域の参照を保持
     capdu = c_apdu;
@@ -300,16 +296,13 @@ uint16_t piv_ins_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r
     if (capdu->data[0] != 0x7C) {
         return SW_WRONG_DATA;
     }
-    if (is_key_exist(capdu->p2) == false) {
+    if (is_key_id_exist(capdu->p2) == false) {
         return SW_WRONG_P1P2;
     }
 
-    // データ格納領域の参照
-    uint8_t *data = capdu->data;
-
-    // データ要素ごとの長さ／格納位置を解析
+    // 各データオブジェクトの長さ／格納位置を解析
     BER_TLV_INFO data_obj_info;
-    if (parse_ber_tlv_info(data, &data_obj_info) == false) {
+    if (parse_ber_tlv_info(capdu->data, &data_obj_info) == false) {
         return SW_WRONG_DATA;
     }
 

@@ -76,57 +76,6 @@ static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
-bool ccid_piv_object_get(uint8_t file_tag, uint8_t *buffer, size_t *size)
-{
-    // パラメーターチェック
-    if (*size < 1) {
-        return false;
-    }
-    
-    // PIVデータのタグごとに処理を分岐
-    bool success = false;
-    switch (file_tag) {
-        case 0x01:
-            // X.509 Certificate for Card Authentication
-            success = ccid_piv_object_cert_cauth_get(buffer, size);
-            break;
-        case 0x02:
-            // Card Holder Unique Identifier
-            success = ccid_piv_object_chuid_get(buffer, size);
-            break;
-        case 0x05:
-            // X.509 Certificate for PIV Authentication
-            success = ccid_piv_object_cert_pauth_get(buffer, size);
-            break;
-        case 0x07:
-            // Card Capability Container
-            success = ccid_piv_object_ccc_get(buffer, size);
-            break;
-        case 0x0A:
-            // X.509 Certificate for Digital Signature
-            success = ccid_piv_object_cert_digsig_get(buffer, size);
-            break;
-        case 0x0B:
-            // X.509 Certificate for Key Management
-            success = ccid_piv_object_cert_keyman_get(buffer, size);
-            break;
-        case 0x0C:
-            // Key History Object
-            success = ccid_piv_object_key_history_get(buffer, size);
-            break;
-        default:
-            break;
-    }
-    
-    if (success == false) {
-        // 処理失敗時は長さをゼロクリア
-        *size = 0;
-    }
-    
-    // 正常終了
-    return success;
-}
-
 static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // 送受信APDUデータの格納領域
@@ -237,6 +186,11 @@ static uint16_t piv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu
 
     // 正常終了
     return SW_NO_ERROR;
+}
+
+static uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_general_authenticate(capdu, rapdu);
 }
 
 static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
