@@ -59,7 +59,6 @@ nRF52840アプリケーションへの追加実装と、macOS環境／Windows10�
 コード格納場所（プラットフォーム依存）--->[usbd_service_ccid](nRF5_SDK_v15.3.0/examples/diverta/plat_lib/usbd_service_ccid.c)
 
 #### 今後必要な対応
-- macOS環境専用ドライバー（インストーラー含む）の開発
 - 業務アプリケーション（PIV／OpenPGP）の開発
 - CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
 
