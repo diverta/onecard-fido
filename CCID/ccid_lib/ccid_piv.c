@@ -193,6 +193,38 @@ static uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apd
     return ccid_piv_general_authenticate(capdu, rapdu);
 }
 
+static uint16_t piv_ins_set_management_key(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0xff || capdu->p2 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != CAADM_KEY_SIZE + 3) {
+        return SW_WRONG_LENGTH;
+    }
+    uint8_t *cdata = capdu->data;
+    if (cdata[0] != 0x03 || cdata[1] != TAG_KEY_CAADM || cdata[2] != CAADM_KEY_SIZE) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // 管理コマンドが実行可能でない場合は終了
+    if (ccid_piv_admin_mode_get() == false) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+
+    // パスワードを登録
+    uint8_t *key = cdata + 3;
+    // if (write_file(CARD_ADMIN_KEY_PATH, key, 0, CAADM_KEY_SIZE, 1) < 0) 
+    //     return SW_UNABLE_TO_PROCESS;
+
+    // for debug
+    fido_log_debug("Management key (%d bytes)", CAADM_KEY_SIZE);
+    fido_log_print_hexdump_debug(key, CAADM_KEY_SIZE);
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
 static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // 管理コマンドが実行可能でない場合は終了
@@ -260,6 +292,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_GENERAL_AUTHENTICATE:
             rapdu->sw = piv_ins_general_authenticate(capdu, rapdu);
+            break;
+        case PIV_INS_SET_MANAGEMENT_KEY:
+            rapdu->sw = piv_ins_set_management_key(capdu, rapdu);
             break;
         case PIV_INS_PUT_DATA:
             rapdu->sw = piv_ins_put_data(capdu, rapdu);

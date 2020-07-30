@@ -25,6 +25,11 @@ extern "C" {
 #define TAG_KEY_CAUTH   0x9e
 
 //
+// データオブジェクト関連定義
+//
+#define CAADM_KEY_SIZE  24
+
+//
 // 関数群
 //
 bool    ccid_piv_object_sn_get(uint8_t *buffer, size_t *size);
