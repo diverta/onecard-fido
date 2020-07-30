@@ -8,6 +8,7 @@
 #define CCID_PIV_AUTHENTICATE_H
 
 #include "ccid_apdu.h"
+#include "ccid_piv_general_auth.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,8 +41,11 @@ extern "C" {
 //
 // 関数群
 //
-uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t challenge_pos, uint8_t challenge_size);
-uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, uint8_t pubkey_pos, uint8_t pubkey_size);
+void     ccid_piv_authenticate_reset_context(void);
+uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
+uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info);
 
 #ifdef __cplusplus
 }
