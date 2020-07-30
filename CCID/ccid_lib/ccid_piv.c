@@ -10,13 +10,31 @@
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+//
+// 各種ID
+//  NIST RID
+//  NIST PIX (1st version of the PIV Card Application)
+//
 static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
-static const uint8_t pin_policy[] = {0x40, 0x10};
+static const uint8_t rid_size = sizeof(rid);
+static const uint8_t pix_size = sizeof(pix);
+static const uint8_t aid_size = rid_size + pix_size;
+
+uint8_t *ccid_piv_rid(void)
+{
+    return (uint8_t *)rid;
+}
+
+size_t ccid_piv_rid_size(void)
+{
+    return sizeof(rid);
+}
 
 //
 // 管理コマンドが実行可能かどうかを保持
@@ -43,70 +61,19 @@ static uint16_t piv_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu)
     // レスポンスデータを編集
     uint8_t *rdata = rapdu->data;
     rdata[0] = 0x61;
-    rdata[1] = 6 + sizeof(pix) + sizeof(rid);
+    rdata[1] = 6 + pix_size + rid_size;
     rdata[2] = 0x4f;
-    rdata[3] = sizeof(pix);
-    memcpy(rdata + 4, pix, sizeof(pix));
-    rdata[4 + sizeof(pix)] = 0x79;
-    rdata[5 + sizeof(pix)] = 2 + sizeof(rid);
-    rdata[6 + sizeof(pix)] = 0x4F;
-    rdata[7 + sizeof(pix)] = sizeof(rid);
-    memcpy(rdata + 8 + sizeof(pix), rid, sizeof(rid));
-    rapdu->len = 8 + sizeof(pix) + sizeof(rid);
+    rdata[3] = pix_size;
+    memcpy(rdata + 4, pix, pix_size);
+    rdata[4 + pix_size] = 0x79;
+    rdata[5 + pix_size] = 2 + rid_size;
+    rdata[6 + pix_size] = 0x4F;
+    rdata[7 + pix_size] = rid_size;
+    memcpy(rdata + 8 + pix_size, rid, rid_size);
+    rapdu->len = 8 + pix_size + rid_size;
 
     // 正常終了
     return SW_NO_ERROR;
-}
-
-bool ccid_piv_object_get(uint8_t file_tag, uint8_t *buffer, size_t *size)
-{
-    // パラメーターチェック
-    if (*size < 1) {
-        return false;
-    }
-    
-    // PIVデータのタグごとに処理を分岐
-    bool success = false;
-    switch (file_tag) {
-        case 0x01:
-            // X.509 Certificate for Card Authentication
-            success = ccid_piv_object_cert_cauth_get(buffer, size);
-            break;
-        case 0x02:
-            // Card Holder Unique Identifier
-            success = ccid_piv_object_chuid_get(buffer, size);
-            break;
-        case 0x05:
-            // X.509 Certificate for PIV Authentication
-            success = ccid_piv_object_cert_pauth_get(buffer, size);
-            break;
-        case 0x07:
-            // Card Capability Container
-            success = ccid_piv_object_ccc_get(buffer, size);
-            break;
-        case 0x0A:
-            // X.509 Certificate for Digital Signature
-            success = ccid_piv_object_cert_digsig_get(buffer, size);
-            break;
-        case 0x0B:
-            // X.509 Certificate for Key Management
-            success = ccid_piv_object_cert_keyman_get(buffer, size);
-            break;
-        case 0x0C:
-            // Key History Object
-            success = ccid_piv_object_key_history_get(buffer, size);
-            break;
-        default:
-            break;
-    }
-    
-    if (success == false) {
-        // 処理失敗時は長さをゼロクリア
-        *size = 0;
-    }
-    
-    // 正常終了
-    return success;
 }
 
 static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
@@ -134,16 +101,16 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         // 1) tag 0x4f contains the AID of the PIV Card Application and
         // 2) tag 0x5f2f lists the PIN Usage Policy.
         rdata[0] = 0x7e;
-        rdata[1] = 5 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+        rdata[1] = 5 + aid_size + ccid_piv_pin_policy_size();
         rdata[2] = 0x4f;
-        rdata[3] = sizeof(rid) + sizeof(pix);
-        memcpy(rdata + 4, rid, sizeof(rid));
-        memcpy(rdata + 4 + sizeof(rid), pix, sizeof(pix));
-        rdata[4 + sizeof(rid) + sizeof(pix)] = 0x5f;
-        rdata[5 + sizeof(rid) + sizeof(pix)] = 0x2f;
-        rdata[6 + sizeof(rid) + sizeof(pix)] = sizeof(pin_policy);
-        memcpy(rdata + 7 + sizeof(rid) + sizeof(pix), pin_policy, sizeof(pin_policy));
-        rapdu->len = 7 + sizeof(rid) + sizeof(pix) + sizeof(pin_policy);
+        rdata[3] = aid_size;
+        memcpy(rdata + 4, rid, rid_size);
+        memcpy(rdata + 4 + rid_size, pix, pix_size);
+        rdata[4 + aid_size] = 0x5f;
+        rdata[5 + aid_size] = 0x2f;
+        rdata[6 + aid_size] = ccid_piv_pin_policy_size();
+        memcpy(rdata + 7 + aid_size, ccid_piv_pin_policy(), ccid_piv_pin_policy_size());
+        rapdu->len = 7 + aid_size + ccid_piv_pin_policy_size();
 
         fido_log_debug("Discovery Object is requested (%d bytes)", rapdu->len);
 
@@ -221,6 +188,11 @@ static uint16_t piv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu
     return SW_NO_ERROR;
 }
 
+static uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_general_authenticate(capdu, rapdu);
+}
+
 static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // 管理コマンドが実行可能でない場合は終了
@@ -236,8 +208,33 @@ static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu)
     return SW_NO_ERROR;
 }
 
+static uint16_t piv_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_auth(capdu, rapdu);
+}
+
+static void piv_init(void)
+{
+    // 初期化処理を一度だけ実行
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+
+    // PIN／リトライカウンターの初期化
+    if (ccid_piv_pin_init() == false) {
+        return;
+    }
+
+    // 初期化処理完了
+    initialized = true;
+}
+
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
+    // 初期化処理を一度だけ実行
+    piv_init();
+
     // レスポンス長をゼロクリア
     rapdu->len = 0;
 
@@ -266,6 +263,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_PUT_DATA:
             rapdu->sw = piv_ins_put_data(capdu, rapdu);
+            break;
+        case PIV_INS_VERIFY:
+            rapdu->sw = piv_ins_verify(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

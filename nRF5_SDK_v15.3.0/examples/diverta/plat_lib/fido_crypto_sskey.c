@@ -35,12 +35,6 @@ static uint8_t public_key_raw_data[NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE]
 // 鍵交換用キーペアが生成済みかどうかを保持
 static bool keypair_generated = false;
 
-// SDK内部形式変換用の一時領域
-//   CTAP2クライアントから受領した公開鍵
-static nrf_crypto_ecc_public_key_t client_public_key;
-//   鍵交換用キーペアの秘密鍵
-static nrf_crypto_ecc_private_key_t self_private_key;
-
 // 共通鍵格納領域
 //   この領域に格納される共通鍵(Shared secret key)は、
 //   ビッグエンディアン配列となる
@@ -50,17 +44,6 @@ static size_t  sskey_raw_data_size;
 // 共通鍵ハッシュ格納領域
 static nrf_crypto_hash_sha256_digest_t sskey_hash;
 static size_t                          sskey_hash_size;
-
-static nrf_crypto_ecdh_context_t nrf_crypto_ecdh_context;
-
-static void app_error_check(char *function, ret_code_t err_code)
-{
-    if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("%s returns 0x%04x(%s)", 
-            function, err_code, nrf_crypto_error_string_get(err_code));
-        APP_ERROR_CHECK(err_code);
-    }
-}
 
 void fido_crypto_sskey_init(bool force)
 {
@@ -94,25 +77,11 @@ uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
         return CTAP1_ERR_OTHER;
     }
 
-    // CTAP2クライアントから受け取った公開鍵を、SDK内部形式に変換
-    ret_code_t err_code = nrf_crypto_ecc_public_key_from_raw(
-        &g_nrf_crypto_ecc_secp256r1_curve_info, 
-        &client_public_key, client_public_key_raw_data, 
-        NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
-    app_error_check("nrf_crypto_ecc_public_key_from_raw", err_code);
-
-    // 自分で生成した公開鍵を、SDK内部形式に変換
-    err_code = nrf_crypto_ecc_private_key_from_raw(
-        &g_nrf_crypto_ecc_secp256r1_curve_info, 
-        &self_private_key, private_key_raw_data, 
-        NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
-    app_error_check("nrf_crypto_ecc_private_key_from_raw", err_code);
-
+    // CTAP2クライアントから受け取った公開鍵と、自分で生成した秘密鍵を使用し、
     // 共通鍵を生成
-    sskey_raw_data_size = NRF_CRYPTO_ECDH_SECP256R1_SHARED_SECRET_SIZE;
-    err_code = nrf_crypto_ecdh_compute(&nrf_crypto_ecdh_context,
-        &self_private_key, &client_public_key, sskey_raw_data, &sskey_raw_data_size);
-    app_error_check("nrf_crypto_ecdh_compute", err_code);
+    if (fido_crypto_calculate_ecdh(private_key_raw_data, client_public_key_raw_data, sskey_raw_data, &sskey_raw_data_size) == false) {
+        return CTAP1_ERR_OTHER;
+    }
 
 #if LOG_HEXDUMP_DEBUG_SSKEY
     NRF_LOG_DEBUG("fido_crypto_sskey_generate:");
