@@ -26,8 +26,8 @@ CCIDドライバーのカスタマイズおよび導入手順につきまして�
 |1-1|ccid_apdu.c/.h|リクエストAPDU解析、レスポンスAPDU生成を行います。|
 |1-2|ccid_main.c/.h|エントリーモジュール|
 |1-3|ccid_pin.c/.h|PINに関する各種処理を実行します。|
-|1-4|ccid_piv_general_auth.c/.h|PIVに必要な各種認証処理を実行します。|
-|1-5|ccid_piv_internal_auth.c/.h|チャレンジ認証、共通鍵認証処理を実行します。|
+|1-4|ccid_piv_authenticate.c/.h|PIVの各種認証処理を実行します。|
+|1-5|ccid_piv_general_auth.c/.h|PIV認証処理のエントリーモジュール|
 |1-6|ccid_piv_object.c/.h|PIVで使用する各種オブジェクトを管理します。|
 |1-7|ccid_piv_pin.c/.h|PIN認証処理を実行します。|
 |1-8|ccid_piv.c/.h|PIVに関する業務処理を実行します。|
