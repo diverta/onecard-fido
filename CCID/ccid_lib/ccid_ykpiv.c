@@ -4,12 +4,10 @@
  *
  * Created on 2020/08/03, 12:16
  */
-#include <stdlib.h>
 #include <string.h>
 
 #include "ccid.h"
 #include "ccid_piv.h"
-#include "ccid_piv_object.h"
 #include "ccid_ykpiv.h"
 
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
@@ -22,17 +20,9 @@ uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapd
         return SW_WRONG_LENGTH;
     }
 
-    // バージョン文字列 "xx.xx.xx" を分割
-    uint8_t v[] = {0x00, 0x00, 0x00};
-#ifdef FW_REV
-    char *version_str = FW_REV;
-    char *tp = strtok(version_str, ".");
-    for (int i = 0; tp != NULL; i++) {
-        v[i] = atoi(tp);
-        tp = strtok(NULL, ".");
-    }    
-#endif
-    
+    // バージョン "5.0.0" を生成
+    uint8_t v[] = {0x05, 0x00, 0x00};
+
     // レスポンスデータを編集
     uint8_t *rdata = rapdu->data;
     rdata[0] = v[0];
@@ -54,13 +44,13 @@ uint16_t ccid_ykpiv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu
         return SW_WRONG_LENGTH;
     }
 
-    // ファイルの内容を送信APDUデータに格納
+    // シリアル "0x00000000" を生成
+    uint8_t s[] = {0x00, 0x00, 0x00, 0x00};
+
+    // レスポンスデータを編集
     uint8_t *rdata = rapdu->data;
-    size_t size = ccid_response_apdu_size_max();
-    if (ccid_piv_object_sn_get(rdata, &size) == false) {
-        return SW_FILE_NOT_FOUND;
-    }
-    rapdu->len = (uint16_t)size;
+    memcpy(rdata, s, sizeof(s));
+    rapdu->len = sizeof(s);
 
     // 正常終了
     return SW_NO_ERROR;
