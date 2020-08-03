@@ -37,9 +37,6 @@ enum APPLET {
 };
 static enum APPLET current_applet;
 
-// Appletをあらわすバイト配列
-static uint8_t applet_id_piv[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
-
 void ccid_apdu_stop_applet(void) 
 {
     switch (current_applet) {
@@ -252,7 +249,7 @@ static void generate_response_apdu(command_apdu_t *capdu, response_apdu_t *rapdu
     apdu_data[size_to_send + 1] = LO(sw);
 
     // 送信APDUレスポンスのログ
-    if (capdu->ins == 0xc0) {
+    if (capdu->ins == PIV_INS_GET_RESPONSE_APDU) {
         fido_log_debug("APDU send: SW(%04x) data(%d, total %d)", 
             sw, size_to_send, rapdu->len);
     } else {
@@ -271,8 +268,7 @@ static bool command_is_applet_selection(command_apdu_t *capdu)
 
 static bool select_applet(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
-    if (capdu->lc >= sizeof(applet_id_piv) 
-        && memcmp(capdu->data, applet_id_piv, sizeof(applet_id_piv)) == 0) {
+    if (ccid_piv_rid_is_piv_applet(capdu)) {
         // PIV
         if (current_applet != APPLET_PIV) {
             ccid_apdu_stop_applet();
@@ -391,7 +387,7 @@ static void get_response_or_process_applet(command_apdu_t *capdu, response_apdu_
         capdu->cla, capdu->ins, capdu->p1, capdu->p2, capdu->lc, capdu->le);
     print_hexdump_debug(capdu->data, capdu->data_size);
 #endif
-    if ((capdu->cla == 0x80 || capdu->cla == 0x00) && capdu->ins == 0xc0) {
+    if ((capdu->cla == 0x80 || capdu->cla == 0x00) && capdu->ins == PIV_INS_GET_RESPONSE_APDU) {
         // GET RESPONSEの場合、
         // レスポンスAPDUを生成するだけなので、
         // ここでは何も行わない
