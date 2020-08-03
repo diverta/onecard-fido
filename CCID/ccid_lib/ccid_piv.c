@@ -4,13 +4,12 @@
  *
  * Created on 2020/06/01, 9:55
  */
-#include <stdlib.h>
-
 #include "ccid.h"
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
+#include "ccid_ykpiv.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -26,14 +25,10 @@ static const uint8_t rid_size = sizeof(rid);
 static const uint8_t pix_size = sizeof(pix);
 static const uint8_t aid_size = rid_size + pix_size;
 
-uint8_t *ccid_piv_rid(void)
+bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu)
 {
-    return (uint8_t *)rid;
-}
-
-size_t ccid_piv_rid_size(void)
-{
-    return sizeof(rid);
+    return (capdu->lc >= rid_size &&
+            memcmp(capdu->data, rid, rid_size) == 0);
 }
 
 //
@@ -129,60 +124,6 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
     } else {
         return SW_FILE_NOT_FOUND;
     }
-
-    // 正常終了
-    return SW_NO_ERROR;
-}
-
-static uint16_t piv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
-{
-    // パラメーターのチェック
-    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
-        return SW_WRONG_P1P2;
-    }
-    if (capdu->lc != 0) {
-        return SW_WRONG_LENGTH;
-    }
-
-    // バージョン文字列 "xx.xx.xx" を分割
-    uint8_t v[] = {0x00, 0x00, 0x00};
-#ifdef FW_REV
-    char *version_str = FW_REV;
-    char *tp = strtok(version_str, ".");
-    for (int i = 0; tp != NULL; i++) {
-        v[i] = atoi(tp);
-        tp = strtok(NULL, ".");
-    }    
-#endif
-    
-    // レスポンスデータを編集
-    uint8_t *rdata = rapdu->data;
-    rdata[0] = v[0];
-    rdata[1] = v[1];
-    rdata[2] = v[2];
-    rapdu->len = 3;
-
-    // 正常終了
-    return SW_NO_ERROR;
-}
-
-static uint16_t piv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu) 
-{
-    // パラメーターのチェック
-    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
-        return SW_WRONG_P1P2;
-    }
-    if (capdu->lc != 0) {
-        return SW_WRONG_LENGTH;
-    }
-
-    // ファイルの内容を送信APDUデータに格納
-    uint8_t *rdata = rapdu->data;
-    size_t size = ccid_response_apdu_size_max();
-    if (ccid_piv_object_sn_get(rdata, &size) == false) {
-        return SW_FILE_NOT_FOUND;
-    }
-    rapdu->len = (uint16_t)size;
 
     // 正常終了
     return SW_NO_ERROR;
@@ -284,12 +225,6 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case PIV_INS_GET_DATA:
             rapdu->sw = piv_ins_get_data(capdu, rapdu);
             break;
-        case PIV_INS_GET_VERSION:
-            rapdu->sw = piv_ins_get_version(capdu, rapdu);
-            break;
-        case PIV_INS_GET_SERIAL:
-            rapdu->sw = piv_ins_get_serial(capdu, rapdu);
-            break;
         case PIV_INS_GENERAL_AUTHENTICATE:
             rapdu->sw = piv_ins_general_authenticate(capdu, rapdu);
             break;
@@ -301,6 +236,15 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_VERIFY:
             rapdu->sw = piv_ins_verify(capdu, rapdu);
+            break;
+        //
+        // Yubico PIV Tool固有のコマンド
+        //
+        case YKPIV_INS_GET_VERSION:
+            rapdu->sw = ccid_ykpiv_ins_get_version(capdu, rapdu);
+            break;
+        case YKPIV_INS_GET_SERIAL:
+            rapdu->sw = ccid_ykpiv_ins_get_serial(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

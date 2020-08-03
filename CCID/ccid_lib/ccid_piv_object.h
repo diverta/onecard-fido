@@ -32,7 +32,6 @@ extern "C" {
 //
 // 関数群
 //
-bool    ccid_piv_object_sn_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size);

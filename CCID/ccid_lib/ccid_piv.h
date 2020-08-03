@@ -21,18 +21,12 @@ extern "C" {
 #define PIV_INS_GENERAL_AUTHENTICATE    0x87
 #define PIV_INS_PUT_DATA                0xDB
 #define PIV_INS_GENERATE_ASYMMETRIC_KEY_PAIR 0x47
-
-#define PIV_INS_SET_MANAGEMENT_KEY      0xFF
-#define PIV_INS_RESET                   0xFB
-#define PIV_INS_IMPORT_ASYMMETRIC_KEY   0xFE
-#define PIV_INS_GET_VERSION             0xFD
-#define PIV_INS_GET_SERIAL              0xF8
+#define PIV_INS_GET_RESPONSE_APDU       0xC0
 
 //
 // 関数群
 //
-uint8_t *ccid_piv_rid(void);
-size_t   ccid_piv_rid_size(void);
+bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu);
 
 void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu);
 void ccid_piv_stop_applet(void);
