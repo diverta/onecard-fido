@@ -8,7 +8,43 @@
 
 #include "ccid.h"
 #include "ccid_piv.h"
+#include "ccid_piv_object.h"
 #include "ccid_ykpiv.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0xff || capdu->p2 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != CAADM_KEY_SIZE + 3) {
+        return SW_WRONG_LENGTH;
+    }
+    uint8_t *cdata = capdu->data;
+    if (cdata[0] != 0x03 || cdata[1] != TAG_KEY_CAADM || cdata[2] != CAADM_KEY_SIZE) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // 管理コマンドが実行可能でない場合は終了
+    if (ccid_piv_admin_mode_get() == false) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+
+    // パスワードを登録
+    uint8_t *key = cdata + 3;
+    // if (write_file(CARD_ADMIN_KEY_PATH, key, 0, CAADM_KEY_SIZE, 1) < 0) 
+    //     return SW_UNABLE_TO_PROCESS;
+
+    // for debug
+    fido_log_debug("Management key (%d bytes)", CAADM_KEY_SIZE);
+    fido_log_print_hexdump_debug(key, CAADM_KEY_SIZE);
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
 
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
