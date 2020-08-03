@@ -7,9 +7,16 @@
 #ifndef CCID_FLASH_PIV_OBJECT_H
 #define CCID_FLASH_PIV_OBJECT_H
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, uint8_t *key_alg);
+bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, uint8_t key_alg);
 
 #ifdef __cplusplus
 }

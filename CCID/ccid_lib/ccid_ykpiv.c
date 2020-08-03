@@ -8,6 +8,7 @@
 
 #include "ccid.h"
 #include "ccid_piv.h"
+#include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 #include "ccid_ykpiv.h"
 
@@ -35,8 +36,9 @@ uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu
 
     // パスワードを登録
     uint8_t *key = cdata + 3;
-    // if (write_file(CARD_ADMIN_KEY_PATH, key, 0, CAADM_KEY_SIZE, 1) < 0) 
-    //     return SW_UNABLE_TO_PROCESS;
+    if (ccid_flash_piv_object_card_admin_key_write(key, CAADM_KEY_SIZE, ALG_TDEA_3KEY) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
 
     // for debug
     fido_log_debug("Management key (%d bytes)", CAADM_KEY_SIZE);
