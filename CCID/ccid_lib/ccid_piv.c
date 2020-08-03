@@ -26,14 +26,10 @@ static const uint8_t rid_size = sizeof(rid);
 static const uint8_t pix_size = sizeof(pix);
 static const uint8_t aid_size = rid_size + pix_size;
 
-uint8_t *ccid_piv_rid(void)
+bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu)
 {
-    return (uint8_t *)rid;
-}
-
-size_t ccid_piv_rid_size(void)
-{
-    return sizeof(rid);
+    return (capdu->lc >= rid_size &&
+            memcmp(capdu->data, rid, rid_size) == 0);
 }
 
 //
@@ -252,10 +248,10 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case PIV_INS_GET_DATA:
             rapdu->sw = piv_ins_get_data(capdu, rapdu);
             break;
-        case PIV_INS_GET_VERSION:
+        case YKPIV_INS_GET_VERSION:
             rapdu->sw = piv_ins_get_version(capdu, rapdu);
             break;
-        case PIV_INS_GET_SERIAL:
+        case YKPIV_INS_GET_SERIAL:
             rapdu->sw = piv_ins_get_serial(capdu, rapdu);
             break;
         case PIV_INS_GENERAL_AUTHENTICATE:
