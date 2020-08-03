@@ -24,12 +24,6 @@ extern "C" {
 #define PIV_INS_GET_RESPONSE_APDU       0xC0
 
 //
-// Yubico vendor specific instructions
-//
-#define YKPIV_INS_GET_VERSION           0xfd
-#define YKPIV_INS_GET_SERIAL            0xf8
-
-//
 // 関数群
 //
 bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu);
