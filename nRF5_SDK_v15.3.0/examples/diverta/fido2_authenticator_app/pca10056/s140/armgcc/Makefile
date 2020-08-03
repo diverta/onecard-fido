@@ -207,6 +207,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_piv_authenticate.c \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(CIDLIB_DIR)/ccid_piv_pin.c \
+  $(CIDLIB_DIR)/ccid_ykpiv.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
   $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \

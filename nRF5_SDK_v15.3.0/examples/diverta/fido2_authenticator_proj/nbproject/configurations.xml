@@ -42,6 +42,8 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.h</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_ykpiv.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_ykpiv.h</itemPath>
     </logicalFolder>
     <logicalFolder name="components" displayName="components" projectFiles="true">
       <logicalFolder name="boards" displayName="boards" projectFiles="true">
@@ -3979,6 +3981,16 @@
             flavor2="0">
       </item>
       <item path="../../../../CCID/ccid_lib/ccid_piv_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv.h"
             ex="false"
             tool="3"
             flavor2="0">

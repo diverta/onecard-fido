@@ -21,7 +21,6 @@
 //
 #define CCID_PIV_OBJECT_TEST false
 #if CCID_PIV_OBJECT_TEST
-static char *SN_TEMP    = "7BEEBABE";
 static char *CHUID_TEMP = "533B3019D4E739DA739CED39CE739D836858210842108421C84210C3EB34104C8D536A86AA98A5CE20D53557776E58350832303330303130313E00FE00";
 static char *CCC_TEMP   = "5333f015a000000116ff02d4bfab488d66fa69ae507ee5f8daf10121f20121f300f40100f50110f600f700fa00fb00fc00fd00fe00";
 static char *TAG9A_TEMP = "84EF66C1D3B9A5061331A27879D0B1D9E33817FF5BBC1C26969627E6FE3C43FE";
@@ -58,18 +57,6 @@ static size_t convert_hexstring_to_bytes(char *data, uint8_t *buffer)
         }
     }
     return index;
-}
-
-bool ccid_piv_object_sn_get(uint8_t *buffer, size_t *size)
-{
-#if CCID_PIV_OBJECT_TEST
-    *size = convert_hexstring_to_bytes(SN_TEMP, buffer);
-    return true;
-#else
-    // 後日正式に実装予定です。
-    fido_log_debug("Serial number is requested (%d bytes)", *size);
-    return false;
-#endif
 }
 
 bool ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size)
