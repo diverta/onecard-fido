@@ -171,8 +171,14 @@ bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size)
 
 bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size)
 {
-    // デフォルトを戻す
-    *size = convert_hexstring_to_bytes(card_admin_key_default, buffer);
+    // パスワードをFlash ROMから読出し
+    uint8_t alg;
+    if (ccid_flash_piv_object_card_admin_key_read(buffer, size, &alg) == false) {
+        // Flash ROMに登録されていない場合は
+        // デフォルトを戻す
+        *size = convert_hexstring_to_bytes(card_admin_key_default, buffer);
+    }
+
     fido_log_debug("Card administration key is requested (%d bytes)", *size);
     return true;
 }

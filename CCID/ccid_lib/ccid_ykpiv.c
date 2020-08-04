@@ -40,10 +40,6 @@ uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu
         return SW_UNABLE_TO_PROCESS;
     }
 
-    // for debug
-    fido_log_debug("Management key (%d bytes)", CAADM_KEY_SIZE);
-    fido_log_print_hexdump_debug(key, CAADM_KEY_SIZE);
-
     // 正常終了
     return SW_NO_ERROR;
 }

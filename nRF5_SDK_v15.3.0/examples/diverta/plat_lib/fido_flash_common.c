@@ -38,9 +38,9 @@ void fido_flash_fds_force_gc(void)
 
 bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer)
 {
-	fds_flash_record_t flash_record;
-	uint32_t *data;
-    uint16_t  data_length;
+    fds_flash_record_t flash_record;
+    uint32_t  *data;
+    uint16_t   data_length;
     ret_code_t err_code;
 
     err_code = fds_record_open(record_desc, &flash_record);
@@ -57,6 +57,76 @@ bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_
     if (err_code != FDS_SUCCESS) {
         NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
+    }
+
+    return true;
+}
+
+static bool fido_flash_fds_record_find(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, fds_record_desc_t *record_desc)
+{
+    // 作業領域の初期化
+    memset(record_desc, 0, sizeof(fds_record_desc_t));
+    memset(record_buf_R, 0, record_words * 4);
+
+    // Flash ROMから既存データを検索し、
+    // 見つかった場合は true を戻す
+    fds_find_token_t ftok = {0};
+    ret_code_t ret = fds_record_find(file_id, record_key, record_desc, &ftok);
+    if (ret != FDS_SUCCESS) {
+        return false;
+    }
+
+    // Flash ROMに登録されているデータを読み出す
+    return fido_flash_fds_record_get(record_desc, record_buf_R);
+}
+
+bool fido_flash_fds_record_read(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R)
+{
+    // Flash ROMから既存データを走査
+    fds_record_desc_t record_desc;
+    if (fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc) == false) {
+        return false;
+    }
+
+    return true;
+}
+
+bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, uint32_t *record_buf_W)
+{
+    // Flash ROMから既存データを走査
+    fds_record_desc_t record_desc;
+    bool found = fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc);
+    
+    // Flash ROMに書込むレコードを生成
+    fds_record_t record;
+    record.file_id           = file_id;
+    record.key               = record_key;
+    record.data.p_data       = record_buf_W;
+    record.data.length_words = record_words;
+
+    ret_code_t ret;
+    if (found == true) {
+        // 既存のデータが存在する場合は上書き
+        ret = fds_record_update(&record_desc, &record);
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
+            return false;
+        }
+
+    } else {
+        // 既存のデータが存在しない場合は新規追加
+        ret = fds_record_write(&record_desc, &record);
+        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+            NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
+            return false;
+        }
+    }
+
+    if (ret == FDS_ERR_NO_SPACE_IN_FLASH) {
+        // 書込みができない場合、ガベージコレクションを実行
+        // (fds_gcが実行される。NGであればシステムエラー扱い)
+        NRF_LOG_ERROR("no space in flash, calling FDS GC ");
+        fido_flash_fds_force_gc();
     }
 
     return true;
