@@ -16,9 +16,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for mbed tls
-#include "mbedtls/des.h"
-
 //
 // リクエスト／レスポンス格納領域の参照を保持
 //
@@ -222,19 +219,6 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     return SW_NO_ERROR;
 }
 
-static bool tdes_enc(const uint8_t *in, uint8_t *out, const uint8_t *key) 
-{
-    mbedtls_des_context ctx;
-    mbedtls_des_init(&ctx);
-    mbedtls_des_setkey_enc(&ctx, key);
-    if (mbedtls_des_crypt_ecb(&ctx, in, out) < 0) {
-        return false;
-    }
-
-    mbedtls_des_free(&ctx);
-    return true;
-}
-
 uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
@@ -291,7 +275,7 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
         }
         // 管理用キーを使用し、challenge を暗号化
         uint8_t *output_data = rdata + 4;
-        if (tdes_enc(challenge, output_data, work_buf) == false) {
+        if (fido_crypto_tdes_enc(challenge, output_data, work_buf) == false) {
             memset(work_buf, 0, sizeof(work_buf));
             return SW_UNABLE_TO_PROCESS;
         }
@@ -358,7 +342,7 @@ uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_
         // 管理用キーを使用し、challenge を暗号化
         uint8_t *input_data = capdu->data + data_obj_info->chl_pos;
         uint8_t *output_data = rdata + 4;
-        if (tdes_enc(input_data, output_data, work_buf) == false) {
+        if (fido_crypto_tdes_enc(input_data, output_data, work_buf) == false) {
             memset(work_buf, 0, sizeof(work_buf));
             return SW_UNABLE_TO_PROCESS;
         }
