@@ -62,7 +62,10 @@ typedef struct response_apdu {
 // 関数群
 //
 void ccid_apdu_process(void);
+void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu);
 void ccid_apdu_stop_applet(void);
+bool ccid_apdu_response_is_pending(void);
+void ccid_apdu_response_set_pending(bool b);
 
 #ifdef __cplusplus
 }
