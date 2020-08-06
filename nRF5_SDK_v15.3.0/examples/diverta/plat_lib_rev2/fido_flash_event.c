@@ -26,6 +26,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_pairing.h"
 #include "fido_flash.h"
 #include "fido_flash_common.h"
+#include "ccid_flash_piv_object.h"
 
 //
 // GCがアプリケーション（業務処理）から
@@ -55,6 +56,9 @@ static void fido_flash_event_result_failure(void)
 
     // 管理用コマンドの処理を実行
     fido_maintenance_command_flash_failed();
+
+    // CCID関連処理を実行
+    ccid_flash_piv_object_failed();
 }
 
 static void fido_flash_event_gc_done(void)
@@ -70,6 +74,9 @@ static void fido_flash_event_gc_done(void)
     
     // 管理用コマンドの処理を実行
     fido_maintenance_command_flash_gc_done();
+
+    // CCID関連処理を実行
+    ccid_flash_piv_object_gc_done();
 }
 
 static void fido_flash_event_updated(fds_evt_t const *p_evt)
@@ -98,7 +105,10 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
         // CTAP2コマンドの処理を実行
         fido_ctap2_command_token_counter_record_updated();
     }
- }
+
+    // CCID関連処理を実行
+    ccid_flash_piv_object_record_updated();
+}
 
 static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
 {

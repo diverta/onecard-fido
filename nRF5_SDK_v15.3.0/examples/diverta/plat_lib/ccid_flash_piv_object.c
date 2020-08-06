@@ -9,6 +9,8 @@
 #include "fido_flash.h"
 #include "fido_flash_common.h"
 
+#include "ccid_ykpiv.h"
+
 // for logging informations
 #define NRF_LOG_MODULE_NAME ccid_flash_piv_object
 #include "nrf_log.h"
@@ -25,6 +27,8 @@ NRF_LOG_MODULE_REGISTER();
 static uint32_t          m_record_buf_R[MAX_BUF_SIZE];
 static uint32_t          m_record_buf_W[MAX_BUF_SIZE];
 
+// Flash ROM書込み時に実行した関数の参照を保持
+static void *m_flash_func = NULL;
 
 bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, uint8_t *key_alg)
 {
@@ -76,5 +80,44 @@ bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, u
 #endif
 
     // データをFlash ROMに書込
+    m_flash_func = (void *)ccid_flash_piv_object_card_admin_key_write;
     return fido_flash_fds_record_write(PIV_DATA_OBJ_9D_FILE_ID, PIV_DATA_OBJ_9D_RECORD_KEY, PIV_DATA_OBJ_9D_RECORD_SIZE, m_record_buf_R, m_record_buf_W);
+}
+
+void ccid_flash_piv_object_failed(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+    // Flash ROM処理でエラーが発生時はエラーレスポンス送信
+    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+        ccid_ykpiv_ins_set_mgmkey_resume(false);
+    }
+    m_flash_func = NULL;
+}
+
+void ccid_flash_piv_object_gc_done(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+    // for nRF52840:
+    // FDSリソース不足解消のためGCが実行された場合は、
+    // GC実行直前の処理を再実行
+    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+        ccid_ykpiv_ins_set_mgmkey_retry();
+    }
+    m_flash_func = NULL;
+}
+
+void ccid_flash_piv_object_record_updated(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+    // 正常系の後続処理を実行
+    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+        ccid_ykpiv_ins_set_mgmkey_resume(true);
+    }
+    m_flash_func = NULL;
 }
