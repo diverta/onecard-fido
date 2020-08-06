@@ -62,41 +62,48 @@ bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_
     return true;
 }
 
-static bool fido_flash_fds_record_find(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, fds_record_desc_t *record_desc)
+static bool fido_flash_fds_record_find(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, fds_record_desc_t *record_desc, bool *is_exist)
 {
     // 作業領域の初期化
     memset(record_desc, 0, sizeof(fds_record_desc_t));
     memset(record_buf_R, 0, record_words * 4);
 
     // Flash ROMから既存データを検索し、
-    // 見つかった場合は true を戻す
     fds_find_token_t ftok = {0};
     ret_code_t ret = fds_record_find(file_id, record_key, record_desc, &ftok);
-    if (ret != FDS_SUCCESS) {
+    if (ret == FDS_SUCCESS) {
+        // 見つかった場合は is_exist に true を設定し、
+        // Flash ROMに登録されているデータを読み出す
+        *is_exist = true;
+        return fido_flash_fds_record_get(record_desc, record_buf_R);
+
+    } else if (ret == FDS_ERR_NOT_FOUND) {
+        // 見つからなかった場合は is_exist に false を設定
+        *is_exist = false;
+        return true;
+
+    } else {
+        // 処理失敗時
         return false;
     }
-
-    // Flash ROMに登録されているデータを読み出す
-    return fido_flash_fds_record_get(record_desc, record_buf_R);
 }
 
-bool fido_flash_fds_record_read(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R)
+bool fido_flash_fds_record_read(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, bool *is_exist)
 {
     // Flash ROMから既存データを走査
     fds_record_desc_t record_desc;
-    if (fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc) == false) {
-        return false;
-    }
-
-    return true;
+    return fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc, is_exist);
 }
 
 bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, uint32_t *record_buf_W)
 {
     // Flash ROMから既存データを走査
     fds_record_desc_t record_desc;
-    bool found = fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc);
-    
+    bool found;
+    if (fido_flash_fds_record_find(file_id, record_key, record_words, record_buf_R, &record_desc, &found) == false) {
+        return false;
+    }
+
     // Flash ROMに書込むレコードを生成
     fds_record_t record;
     record.file_id           = file_id;

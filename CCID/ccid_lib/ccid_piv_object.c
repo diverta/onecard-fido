@@ -173,13 +173,20 @@ bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size)
 {
     // パスワードをFlash ROMから読出し
     uint8_t alg;
-    if (ccid_flash_piv_object_card_admin_key_read(buffer, size, &alg) == false) {
+    bool is_exist;
+    if (ccid_flash_piv_object_card_admin_key_read(buffer, size, &alg, &is_exist) == false) {
+        // 読出しが失敗した場合はエラー
+        return false;
+    }
+
+    if (is_exist) {
+        fido_log_debug("Card administration key is requested (%d bytes)", *size);
+    } else {
         // Flash ROMに登録されていない場合は
         // デフォルトを戻す
         *size = convert_hexstring_to_bytes(card_admin_key_default, buffer);
+        fido_log_debug("Card administration key (default) is applied");
     }
-
-    fido_log_debug("Card administration key is requested (%d bytes)", *size);
     return true;
 }
 
