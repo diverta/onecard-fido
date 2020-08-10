@@ -30,6 +30,7 @@
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2_1</sourceRootElem>
                 <sourceRootElem>../../../../CCID/ccid_lib</sourceRootElem>
                 <sourceRootElem>../../../components</sourceRootElem>
+                <sourceRootElem>../../../../SECUREIC/fido_cryptoauth_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
