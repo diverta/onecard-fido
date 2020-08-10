@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "ccid_piv.h"
+#include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -169,12 +170,11 @@ bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size)
     return false;
 }
 
-bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size)
+bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *alg)
 {
     // パスワードをFlash ROMから読出し
-    uint8_t alg;
     bool is_exist;
-    if (ccid_flash_piv_object_card_admin_key_read(buffer, size, &alg, &is_exist) == false) {
+    if (ccid_flash_piv_object_card_admin_key_read(buffer, size, alg, &is_exist) == false) {
         // 読出しが失敗した場合はエラー
         return false;
     }
@@ -185,16 +185,10 @@ bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size)
         // Flash ROMに登録されていない場合は
         // デフォルトを戻す
         *size = convert_hexstring_to_bytes(card_admin_key_default, buffer);
+        *alg = ALG_TDEA_3KEY;
         fido_log_debug("Card administration key (default) is applied");
     }
     return true;
-}
-
-uint8_t ccid_piv_object_card_admin_key_alg_get(void)
-{
-    // デフォルトを戻す
-    // 0x03: 3-key triple DEA
-    return 0x03;
 }
 
 bool ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size)
