@@ -211,6 +211,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case YKPIV_INS_GET_SERIAL:
             rapdu->sw = ccid_ykpiv_ins_get_serial(capdu, rapdu);
             break;
+        case YKPIV_INS_SET_MGMKEY:
+            rapdu->sw = ccid_ykpiv_ins_set_mgmkey(capdu, rapdu);
+            break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
             break;

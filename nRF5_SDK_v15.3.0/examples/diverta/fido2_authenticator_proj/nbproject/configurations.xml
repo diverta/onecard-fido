@@ -1714,6 +1714,8 @@
                    projectFiles="true"
                    root="../plat_lib">
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
+      <itemPath>../plat_lib/ccid_flash_piv_object.c</itemPath>
+      <itemPath>../plat_lib/ccid_flash_piv_object.h</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
       <itemPath>../plat_lib/fido_board.h</itemPath>
       <itemPath>../plat_lib/fido_crypto.c</itemPath>
@@ -4399,6 +4401,16 @@
             <pElem>../../../../../../opt/nRF5_SDK_15.3.0/components/softdevice/s112/headers</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../plat_lib/ccid_flash_piv_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_flash_piv_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../plat_lib/fido_board.c" ex="false" tool="0" flavor2="2">
         <cTool>

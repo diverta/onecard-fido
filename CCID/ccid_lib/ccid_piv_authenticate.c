@@ -16,9 +16,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for mbed tls
-#include "mbedtls/des.h"
-
 //
 // リクエスト／レスポンス格納領域の参照を保持
 //
@@ -45,6 +42,7 @@ void ccid_piv_authenticate_reset_context(void)
     auth_ctx[1] = 0;
     auth_ctx[2] = 0;
     memset(auth_ctx + 3, 0, LENGTH_CHALLENGE);
+    memset(work_buf, 0, sizeof(work_buf));
 }
 
 static uint8_t *pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_length)
@@ -222,19 +220,6 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
     return SW_NO_ERROR;
 }
 
-static bool tdes_enc(const uint8_t *in, uint8_t *out, const uint8_t *key) 
-{
-    mbedtls_des_context ctx;
-    mbedtls_des_init(&ctx);
-    mbedtls_des_setkey_enc(&ctx, key);
-    if (mbedtls_des_crypt_ecb(&ctx, in, out) < 0) {
-        return false;
-    }
-
-    mbedtls_des_free(&ctx);
-    return true;
-}
-
 uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
 {
     // リクエスト／レスポンス格納領域の参照を保持
@@ -253,8 +238,12 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
-    // 管理用キーに対応する暗号アルゴリズムを取得
-    uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
+    // 管理用キーを取得
+    size_t size = sizeof(work_buf);
+    uint8_t crypto_alg;
+    if (ccid_piv_object_card_admin_key_get(work_buf, &size, &crypto_alg) == false) {
+        return SW_FILE_NOT_FOUND;
+    }
 
     // 入力データサイズ
     uint8_t challenge_size = TDEA_BLOCK_SIZE;
@@ -270,6 +259,7 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
     auth_ctx[1] = capdu->p2;
     auth_ctx[2] = crypto_alg;
     if (challenge_size > sizeof(auth_ctx) - 3) {
+        ccid_piv_authenticate_reset_context();
         return SW_WRONG_DATA;
     }
     uint8_t *challenge = auth_ctx + 3;
@@ -284,15 +274,10 @@ uint16_t ccid_piv_authenticate_mutual_request(command_apdu_t *c_apdu, response_a
     rapdu->len = challenge_size + 4;
 
     if (crypto_alg == ALG_TDEA_3KEY) {
-        // 管理用キーを取得
-        size_t size = sizeof(work_buf);
-        if (ccid_piv_object_card_admin_key_get(work_buf, &size) == false) {
-            return SW_FILE_NOT_FOUND;
-        }
         // 管理用キーを使用し、challenge を暗号化
         uint8_t *output_data = rdata + 4;
-        if (tdes_enc(challenge, output_data, work_buf) == false) {
-            memset(work_buf, 0, sizeof(work_buf));
+        if (fido_crypto_tdes_enc(challenge, output_data, work_buf) == false) {
+            ccid_piv_authenticate_reset_context();
             return SW_UNABLE_TO_PROCESS;
         }
         memset(work_buf, 0, sizeof(work_buf));
@@ -314,8 +299,12 @@ uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_
 
     fido_log_debug("mutual authenticate response");
 
-    // 管理用キーに対応する暗号アルゴリズムを取得
-    uint8_t crypto_alg = ccid_piv_object_card_admin_key_alg_get();
+    // 管理用キーを取得
+    size_t size = sizeof(work_buf);
+    uint8_t crypto_alg;
+    if (ccid_piv_object_card_admin_key_get(work_buf, &size, &crypto_alg) == false) {
+        return SW_FILE_NOT_FOUND;
+    }
 
     // 入力データサイズ
     uint8_t challenge_size = TDEA_BLOCK_SIZE;
@@ -350,19 +339,13 @@ uint16_t ccid_piv_authenticate_mutual_response(command_apdu_t *c_apdu, response_
     rapdu->len = challenge_size + 4;
 
     if (crypto_alg == ALG_TDEA_3KEY) {
-        // 管理用キーを取得
-        size_t size = sizeof(work_buf);
-        if (ccid_piv_object_card_admin_key_get(work_buf, &size) == false) {
-            return SW_FILE_NOT_FOUND;
-        }
         // 管理用キーを使用し、challenge を暗号化
         uint8_t *input_data = capdu->data + data_obj_info->chl_pos;
         uint8_t *output_data = rdata + 4;
-        if (tdes_enc(input_data, output_data, work_buf) == false) {
-            memset(work_buf, 0, sizeof(work_buf));
+        if (fido_crypto_tdes_enc(input_data, output_data, work_buf) == false) {
+            ccid_piv_authenticate_reset_context();
             return SW_UNABLE_TO_PROCESS;
         }
-        memset(work_buf, 0, sizeof(work_buf));
 
     } else {
         ccid_piv_authenticate_reset_context();

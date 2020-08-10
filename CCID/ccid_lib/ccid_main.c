@@ -155,16 +155,6 @@ static uint8_t pc_to_reader_get_slot_status(void)
     return SLOT_NO_ERROR;
 }
 
-static uint8_t pc_to_reader_xfr_block(void)
-{
-    // 受信APDUに対する処理を実行する
-    ccid_apdu_process();
-
-    // bStatus
-    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
-    return SLOT_NO_ERROR;
-}
-
 static uint8_t pc_to_reader_get_parameters(void) 
 {
     fido_log_debug("Slot get param");
@@ -256,8 +246,8 @@ void ccid_request_apdu_received(void)
             reader_to_pc_slot_status(error);
             break;
         case PC_TO_RDR_XFRBLOCK:
-            error = pc_to_reader_xfr_block();
-            reader_to_pc_data_block(error);
+            // 受信APDUに対する処理を実行する
+            ccid_apdu_process();
             break;
         case PC_TO_RDR_GETPARAMETERS:
             error = pc_to_reader_get_parameters();
@@ -268,6 +258,13 @@ void ccid_request_apdu_received(void)
             reader_to_pc_slot_status(SLOTERROR_CMD_NOT_SUPPORTED);
             break;
     }
+}
+
+void ccid_resume_reader_to_pc_data_block(void)
+{
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_NO_ERROR, BM_ICC_PRESENT_ACTIVE);
+    reader_to_pc_data_block(SLOT_NO_ERROR);
 }
 
 bool ccid_data_frame_received(uint8_t *data, size_t len)

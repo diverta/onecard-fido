@@ -21,6 +21,9 @@ NRF_LOG_MODULE_REGISTER();
 // for calculate hmac
 #include "nrf_crypto_hmac.h"
 
+// for mbed tls
+#include "mbedtls/des.h"
+
 static nrf_crypto_hash_context_t hash_context = {0};
 static nrf_crypto_ecdsa_sign_context_t sign_context = {0};
 static nrf_crypto_ecdsa_verify_context_t verify_context = {0};
@@ -253,5 +256,21 @@ bool fido_crypto_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *client_p
     }
 
     NRF_LOG_DEBUG("Compute shared secret using ECDH end");
+    return true;
+}
+
+bool fido_crypto_tdes_enc(const uint8_t *in, uint8_t *out, const uint8_t *key)
+{
+    mbedtls_des3_context ctx;
+    mbedtls_des3_init(&ctx);
+    mbedtls_des3_set3key_enc(&ctx, key);
+
+    int ret = mbedtls_des3_crypt_ecb(&ctx, in, out);
+    if (ret < 0) {
+        NRF_LOG_ERROR("mbedtls_des3_crypt_ecb returns %d", ret);
+        return false;
+    }
+
+    mbedtls_des3_free(&ctx);
     return true;
 }

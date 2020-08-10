@@ -25,6 +25,11 @@ extern "C" {
 #define TAG_KEY_CAUTH   0x9e
 
 //
+// データオブジェクト関連定義
+//
+#define CAADM_KEY_SIZE  24
+
+//
 // 関数群
 //
 bool    ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);
@@ -37,8 +42,7 @@ bool    ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_key_keyman_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size);
-bool    ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size);
-uint8_t ccid_piv_object_card_admin_key_alg_get(void);
+bool    ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *alg);
 bool    ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size);
 
 #ifdef __cplusplus
