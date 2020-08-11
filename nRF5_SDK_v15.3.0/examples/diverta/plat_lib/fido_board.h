@@ -39,8 +39,13 @@ extern "C" {
 #define MODEL_NUM           "0001"
 
 // SCL/SDA signal pin
+#if   defined(BOARD_PCA10056)
+#define TWI_SCL_PIN     NRF_GPIO_PIN_MAP(0,27)
+#define TWI_SDA_PIN     NRF_GPIO_PIN_MAP(0,26)
+#else
 #define TWI_SCL_PIN     NRF_GPIO_PIN_MAP(0,2)   // rev2 AIN0
 #define TWI_SDA_PIN     NRF_GPIO_PIN_MAP(0,6)   // rev2 UART_TX
+#endif
 
 //
 // LEDのピン
