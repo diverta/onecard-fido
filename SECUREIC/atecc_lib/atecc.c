@@ -77,7 +77,7 @@ bool atecc_initialize(void)
     fido_log_info("atecc_initialize start");
 
     // デバイスの初期化
-    ATECC_STATUS status = atecc_init();
+    ATECC_STATUS status = atecc_device_init();
     if (status != ATECC_SUCCESS) {
         fido_log_error("atecc_initialize failed: atecc_init() returns 0x%02x", status);
         return false;
@@ -103,7 +103,7 @@ void atecc_finalize(void)
 {
     if (atecc_init_done) {
         // デバイスを解放
-        atecc_release();
+        atecc_device_release();
         atecc_init_done = false;
         fido_log_info("atecc_finalize done");
     }
