@@ -18,6 +18,7 @@
 #include "atecc_command.h"
 #include "atecc_iface.h"
 #include "atecc_read.h"
+#include "atecc_util.h"
 #include "atecc_write.h"
 
 static uint8_t ecc608_configdata[ATECC_CONFIG_SIZE] = {
@@ -72,12 +73,12 @@ static uint8_t ecc608_configdata[ATECC_CONFIG_SIZE] = {
 
 static bool get_zone_is_locked(bool *is_config_locked, bool *is_data_locked)
 {
-    if (atecc_is_locked(LOCK_ZONE_CONFIG, is_config_locked) == false) {
-        fido_log_error("atecc_setup_config: atecc_is_locked(LOCK_ZONE_CONFIG) failed");
+    if (atecc_lock_status_get(LOCK_ZONE_CONFIG, is_config_locked) == false) {
+        fido_log_error("atecc_setup_config: atecc_lock_status_get(LOCK_ZONE_CONFIG) failed");
         return false;
     }
-    if (atecc_is_locked(LOCK_ZONE_DATA, is_data_locked) == false) {
-        fido_log_error("atecc_setup_config: atecc_is_locked(LOCK_ZONE_DATA) failed");
+    if (atecc_lock_status_get(LOCK_ZONE_DATA, is_data_locked) == false) {
+        fido_log_error("atecc_setup_config: atecc_lock_status_get(LOCK_ZONE_DATA) failed");
         return false;
     }
     return true;

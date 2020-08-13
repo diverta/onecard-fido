@@ -5,6 +5,7 @@
  * Created on 2020/08/12, 12:36
  */
 #include <stdlib.h>
+#include <string.h>
 
 #include "atecc_command.h"
 #include "atecc_util.h"
@@ -69,4 +70,71 @@ ATECC_STATUS atecc_get_zone_size(uint8_t zone, uint16_t slot, size_t* size)
     }
 
     return status;
+}
+
+//
+// ロック関連
+//
+static ATECC_STATUS atecc_lock(uint8_t mode, uint16_t summary_crc)
+{
+    // build command for lock zone and send
+    ATECC_PACKET packet;
+    memset(&packet, 0, sizeof(packet));
+    packet.param1 = mode;
+    packet.param2 = summary_crc;
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    ATECC_STATUS status = atecc_command_lock(command, &packet);
+    if (status != ATECC_SUCCESS) {
+        return status;
+    }
+
+    status = atecc_command_execute(&packet, atecc_device_ref());
+    if (status != ATECC_SUCCESS) {
+        return status;
+    }
+
+    return ATECC_SUCCESS;
+}
+
+ATECC_STATUS atecc_lock_config_zone(void)
+{
+    return atecc_lock(LOCK_ZONE_NO_CRC | LOCK_ZONE_CONFIG, 0);
+}
+
+ATECC_STATUS atecc_lock_data_zone(void)
+{
+    return atecc_lock(LOCK_ZONE_NO_CRC | LOCK_ZONE_DATA, 0);
+}
+
+bool atecc_lock_status_get(uint8_t zone, bool *is_locked)
+{
+    // build an read command
+    ATECC_PACKET packet;
+    packet.param1 = 0x00;
+    packet.param2 = 0x15;
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    ATECC_STATUS status = atecc_command_read(command, &packet);
+    if (status != ATECC_SUCCESS) {
+        return false;
+    }
+
+    status = atecc_command_execute(&packet, atecc_device_ref());
+    if (status != ATECC_SUCCESS) {
+        return false;
+    }
+
+    switch (zone) {
+        case LOCK_ZONE_DATA:
+            *is_locked = (packet.data[ATECC_RSP_DATA_IDX + 2] == 0);
+            break;
+        case LOCK_ZONE_CONFIG:
+            *is_locked = (packet.data[ATECC_RSP_DATA_IDX + 3] == 0);
+            break;
+        default:
+            return false;
+    }
+
+    return true;
 }
