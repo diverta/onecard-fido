@@ -59,22 +59,22 @@ struct atecc_iface {
 //
 // 関数群
 //
-ATECC_STATUS atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE ca_iface);
-ATECC_STATUS atecc_iface_release(ATECC_IFACE ca_iface);
+ATECC_STATUS atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE iface);
+ATECC_STATUS atecc_iface_release(ATECC_IFACE iface);
 
-ATECC_STATUS atecc_iface_init_func(ATECC_IFACE ca_iface);
-ATECC_STATUS atecc_iface_postinit_func(ATECC_IFACE ca_iface);
-ATECC_STATUS atecc_iface_send_func(ATECC_IFACE ca_iface, uint8_t *txdata, int txlength);
-ATECC_STATUS atecc_iface_receive_func(ATECC_IFACE ca_iface, uint8_t *rxdata, uint16_t *rxlength);
-ATECC_STATUS atecc_iface_wake_func(ATECC_IFACE ca_iface);
-ATECC_STATUS atecc_iface_idle_func(ATECC_IFACE ca_iface);
-ATECC_STATUS atecc_iface_sleep_func(ATECC_IFACE ca_iface);
+ATECC_STATUS atecc_iface_init_func(ATECC_IFACE iface);
+ATECC_STATUS atecc_iface_postinit_func(ATECC_IFACE iface);
+ATECC_STATUS atecc_iface_send_func(ATECC_IFACE iface, uint8_t *txdata, int txlength);
+ATECC_STATUS atecc_iface_receive_func(ATECC_IFACE iface, uint8_t *rxdata, uint16_t *rxlength);
+ATECC_STATUS atecc_iface_wake_func(ATECC_IFACE iface);
+ATECC_STATUS atecc_iface_idle_func(ATECC_IFACE iface);
+ATECC_STATUS atecc_iface_sleep_func(ATECC_IFACE iface);
 
 //
 // ハードウェア依存の関数
 // 実装は atecc608a_i2c_hal.c にあります。
 //
-ATECC_STATUS hal_iface_init(ATECC_IFACE ca_iface);
+ATECC_STATUS hal_iface_init(ATECC_IFACE iface);
 ATECC_STATUS hal_iface_release(void *hal_data);
 void         atecc_delay_us(uint32_t delay);
 void         atecc_delay_10us(uint32_t delay);

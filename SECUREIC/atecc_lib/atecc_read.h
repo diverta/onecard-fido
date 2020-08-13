@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 ATECC_STATUS atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, uint8_t *data, size_t length);
-ATECC_STATUS atecc_read_config_zone(uint8_t* config_data);
-ATECC_STATUS atecc_read_serial_number(uint8_t* serial_number);
+ATECC_STATUS atecc_read_config_zone(uint8_t *config_data);
+ATECC_STATUS atecc_read_serial_number(uint8_t *serial_number);
 
 #ifdef __cplusplus
 }

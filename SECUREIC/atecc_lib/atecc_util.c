@@ -10,7 +10,7 @@
 #include "atecc_command.h"
 #include "atecc_util.h"
 
-ATECC_STATUS atecc_get_address(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint16_t* addr)
+ATECC_STATUS atecc_get_address(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint16_t *addr)
 {
     uint8_t mem_zone = zone & 0x03;
 
@@ -38,7 +38,7 @@ ATECC_STATUS atecc_get_address(uint8_t zone, uint16_t slot, uint8_t block, uint8
     return ATECC_SUCCESS;
 }
 
-ATECC_STATUS atecc_get_zone_size(uint8_t zone, uint16_t slot, size_t* size)
+ATECC_STATUS atecc_get_zone_size(uint8_t zone, uint16_t slot, size_t *size)
 {
     ATECC_STATUS status = ATECC_SUCCESS;
 
@@ -127,10 +127,10 @@ bool atecc_lock_status_get(uint8_t zone, bool *is_locked)
 
     switch (zone) {
         case LOCK_ZONE_DATA:
-            *is_locked = (packet.data[ATECC_RSP_DATA_IDX + 2] == 0);
+            *is_locked = (packet.data[ATECC_IDX_RSP_DATA + 2] == 0);
             break;
         case LOCK_ZONE_CONFIG:
-            *is_locked = (packet.data[ATECC_RSP_DATA_IDX + 3] == 0);
+            *is_locked = (packet.data[ATECC_IDX_RSP_DATA + 3] == 0);
             break;
         default:
             return false;
