@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-ATECC_STATUS atecc_get_addr(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint16_t* addr);
+ATECC_STATUS atecc_get_address(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint16_t* addr);
 ATECC_STATUS atecc_get_zone_size(uint8_t zone, uint16_t slot, size_t* size);
 
 #ifdef __cplusplus
