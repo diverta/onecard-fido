@@ -14,6 +14,8 @@
 static ATECC_IFACE_CFG m_iface_config;
 
 ATECC_IFACE_CFG cfg_ateccx08a_i2c_default = {
+    .devtype           = ATECC608A,
+    .iface_type        = ATECC_I2C_IFACE,
     .i2c.slave_address = 0xC0,
     .i2c.bus           = 2,
     .i2c.baud          = 400000,
