@@ -31,37 +31,52 @@ accompany Microchip software.
 |#|関数名|説明|
 |:---:|:---|:---|
 |1-1|atecc_aes.c/.h|ATECC608A組込みAES関連|
-|1-2|atecc_config.c/.h|各種Config関連|
-|1-3|atecc_device.c/.h|デバイス制御関連|
-|1-4|atecc_key.c/.h|キーペア関連|
+|1-2|atecc_command.c/.h|各種コマンド実行|
+|1-3|atecc_device.c/.h|デバイス制御|
+|1-4|atecc_iface.c/.h|nRF52840〜ATECC608A間のI/F|
 |1-5|atecc_read.c/.h|各種データ照会関連|
-|1-6|atecc_util.c/.h|各種ユーティリティー関連|
-|1-7|atecc_write.c/.h|各種データ更新関連|
+|1-6|atecc_setup.c/.h|各種データ照会関連|
+|1-7|atecc_util.c/.h|各種ユーティリティー関連|
+|1-8|atecc_write.c/.h|各種データ更新関連|
+|1-9|atecc.c/.h|エントリーモジュール|
 
-#### 関数一覧
+#### 関数一覧（業務処理関連）
 
 移植作業中に追加／削除される可能性があります。
 
 |#|関数名|説明|
 |:---:|:---|:---|
-|2-1|atecc_init|デバイス初期化|
-|2-2|atecc_release|デバイス解放|
-|2-3|atecc_is_locked|デバイスロック状態取得|
-|2-4|atecc_lock_config_zone|Config領域ロック|
-|2-5|atecc_lock_data_zone|データ領域ロック|
-|2-6|atecc_write_config_zone|Config領域更新|
-|2-7|atecc_write_zone|データ領域更新|
-|2-8|atecc_read_config_zone|Config領域照会|
-|2-9|atecc_read_zone|データ領域照会|
-|2-10|atecc_read_serial_number|シリアル番号照会|
-|2-11|atecc_random|ランダム値生成|
-|2-12|atecc_nonce_load|NONCE値照会|
-|2-13|atecc_priv_write|秘密鍵更新|
-|2-14|atecc_genkey|キーペア生成|
-|2-15|atecc_get_pubkey|公開鍵照会|
-|2-16|atecc_aes_cbc_init|AES初期化|
-|2-17|atecc_aes_cbc_encrypt_block|AES暗号化|
-|2-18|atecc_aes_cbc_decrypt_block|AES復号化|
+|2-1|atecc_initialize|デバイス初期化|
+|2-2|atecc_finalize|デバイス解放|
+|2-3|atecc_get_serial_num_str|シリアル番号文字列取得|
+|2-4|atecc_write_zone|データ領域更新|
+|2-5|atecc_read_bytes_zone|メモリー領域照会|
+|2-6|atecc_read_zone|データ領域照会|
+|2-7|atecc_read_serial_number|シリアル番号照会|
+|2-8|atecc_random|ランダム値生成|
+|2-9|atecc_nonce_load|NONCE値照会|
+|2-10|atecc_priv_write|秘密鍵更新|
+|2-11|atecc_genkey|キーペア生成|
+|2-12|atecc_get_pubkey|公開鍵照会|
+|2-13|atecc_aes_cbc_init|AES初期化|
+|2-14|atecc_aes_cbc_encrypt_block|AES暗号化|
+|2-15|atecc_aes_cbc_decrypt_block|AES復号化|
+
+#### 関数一覧（デバイス制御関連）
+
+業務処理から直接呼び出されることはないと思われますが、為念で掲載させていただきます。
+
+|#|関数名|説明|
+|:---:|:---|:---|
+|3-1|atecc_get_config_bytes|デバイス設定データ取得|
+|3-2|atecc_setup_config|デバイス初回設定処理|
+|3-3|atecc_lock_status_get|デバイスロック状態取得|
+|3-4|atecc_lock_data_zone|データ領域ロック|
+|3-5|atecc_lock_config_zone|Config領域ロック|
+|3-6|atecc_write_config_zone|Config領域更新|
+|3-7|atecc_read_config_zone|Config領域照会|
+|3-8|atecc_get_address|メモリーアドレス照会|
+|3-9|atecc_get_zone_size|メモリー領域(Zone)サイズ照会|
 
 ## 仕様
 
