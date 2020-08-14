@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="atecc_lib" displayName="atecc_lib" projectFiles="true">
+      <itemPath>../../../../SECUREIC/atecc_lib/README.md</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_command.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_command.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_device.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_device.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_read.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_read.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_setup.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_util.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_util.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_write.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_write.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="ble_lib"
                    displayName="ble_lib"
                    projectFiles="true"
@@ -1600,8 +1618,6 @@
     <Elem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</Elem>
     <Elem>../../../../FIDO2Device/demo_lib</Elem>
     <Elem>../demo_lib</Elem>
-    <Elem>../../../../../cryptoauthlib/lib</Elem>
-    <Elem>../../../../FIDO2Device/fido_cryptoauth_lib</Elem>
     <Elem>../plat_rev2_lib</Elem>
     <Elem>../plat_lib_rev2</Elem>
     <Elem>../../../../FIDO2Device/fido2_lib_rev2</Elem>
@@ -1609,7 +1625,7 @@
     <Elem>../../../../FIDO2Device/fido2_lib_rev2_1</Elem>
     <Elem>../../../../CCID/ccid_lib</Elem>
     <Elem>../../../components</Elem>
-    <Elem>../../../../SECUREIC/fido_cryptoauth_lib</Elem>
+    <Elem>../../../../SECUREIC/atecc_lib</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -3195,6 +3211,86 @@
             ex="false"
             tool="0"
             flavor2="2">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/README.md"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_device.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_device.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_iface.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_iface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_read.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_read.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_setup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_util.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_util.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_write.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_write.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../components/boards/boards.c"
             ex="false"

@@ -2,8 +2,9 @@ PROJECT_NAME     := fido2_authenticator_app_pca10056_s140
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 # target board
-#  PCA10056     nRF52840 DK
-#  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2)
+#  PCA10056     nRF52840 DK(with/without ATECC608A)
+#  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
+#  PCA10059_2   MDBT50Q Dongle(rev2.1.2, with ATECC608A)
 TARGET_BOARD     := PCA10059
 
 # application version info
@@ -250,6 +251,20 @@ SRC_FILES += \
   $(PLTLIB_REV2_DIR)/fido_flash_password.c \
   $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
 
+# Source files to targets (Boards with ATECC608A)
+SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
+ATELIB_DIR := $(SCIC_DIR)/atecc_lib
+SRC_FILES += \
+  $(ATELIB_DIR)/atecc.c \
+  $(ATELIB_DIR)/atecc_command.c \
+  $(ATELIB_DIR)/atecc_device.c \
+  $(ATELIB_DIR)/atecc_iface.c \
+  $(ATELIB_DIR)/atecc_read.c \
+  $(ATELIB_DIR)/atecc_setup.c \
+  $(ATELIB_DIR)/atecc_util.c \
+  $(ATELIB_DIR)/atecc_write.c \
+  $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+
 # Include folders common to all targets
 INC_FOLDERS += \
   ../config \
@@ -413,6 +428,10 @@ INC_FOLDERS += \
 INC_FOLDERS += \
   $(FD2LIB_REV2_DIR) \
   $(PLTLIB_REV2_DIR) \
+
+# Include folders to targets (Boards with ATECC608A)
+INC_FOLDERS += \
+  $(ATELIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \

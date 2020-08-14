@@ -21,8 +21,6 @@
                 <sourceRootElem>../../../../../../opt/nRF5_SDK_15.3.0/components/ble</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/demo_lib</sourceRootElem>
                 <sourceRootElem>../demo_lib</sourceRootElem>
-                <sourceRootElem>../../../../../cryptoauthlib/lib</sourceRootElem>
-                <sourceRootElem>../../../../FIDO2Device/fido_cryptoauth_lib</sourceRootElem>
                 <sourceRootElem>../plat_rev2_lib</sourceRootElem>
                 <sourceRootElem>../plat_lib_rev2</sourceRootElem>
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2</sourceRootElem>
@@ -30,7 +28,7 @@
                 <sourceRootElem>../../../../FIDO2Device/fido2_lib_rev2_1</sourceRootElem>
                 <sourceRootElem>../../../../CCID/ccid_lib</sourceRootElem>
                 <sourceRootElem>../../../components</sourceRootElem>
-                <sourceRootElem>../../../../SECUREIC/fido_cryptoauth_lib</sourceRootElem>
+                <sourceRootElem>../../../../SECUREIC/atecc_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

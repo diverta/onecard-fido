@@ -36,11 +36,11 @@ void const *fido_twi_instance_ref(void)
     return (void const *)&m_twi;
 }
 
-void fido_twi_init (void)
+bool fido_twi_init (void)
 {
     // 初期化処理の重複実行抑止
     if (twi_init_done) {
-        return;
+        return true;
     } else {
         twi_init_done = true;
     }
@@ -54,8 +54,13 @@ void fido_twi_init (void)
     };
 
     ret_code_t err_code = nrf_drv_twi_init(&m_twi, &twi_config, NULL, NULL);
-    APP_ERROR_CHECK(err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("ATECC608A hal_i2c_init: nrf_drv_twi_init returns %d ", err_code);
+        return false;
+    }
+
     nrf_drv_twi_enable(&m_twi);
+    return true;
 }
 
 bool fido_twi_write(uint8_t address, uint8_t *p_data, uint8_t length)
