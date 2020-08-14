@@ -12,24 +12,29 @@
 #include "atecc_read.h"
 #include "atecc_util.h"
 
-static ATECC_STATUS atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len)
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+static bool atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len)
 {
     ATECC_PACKET  packet;
     ATECC_COMMAND command = atecc_device_ref()->mCommands;
-    ATECC_STATUS  status = ATECC_GEN_FAIL;
+    bool status = false;
     uint16_t      addr;
 
     // Check the input parameters
     if (data == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_zone failed: BAD_PARAM");
+        return false;
     }
     if (len != ATECC_WORD_SIZE && len != ATECC_BLOCK_SIZE) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_zone failed: BAD_PARAM");
+        return false;
     }
 
     // The get address function checks the remaining variables
     status = atecc_get_address(zone, slot, block, offset, &addr);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
@@ -42,31 +47,35 @@ static ATECC_STATUS atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, 
     packet.param1 = zone;
     packet.param2 = addr;
     status = atecc_command_read(command, &packet);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
     // execute a read command
     status = atecc_command_execute(&packet, atecc_device_ref());
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
     memcpy(data, &packet.data[1], len);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_read_config_zone(uint8_t *config_data)
+bool atecc_read_config_zone(uint8_t *config_data)
 {
     if (config_data == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_config_zone failed: BAD_PARAM");
+        return false;
     }
 
-    ATECC_STATUS status = atecc_read_bytes_zone(ATECC_ZONE_CONFIG, 0, 0x00, config_data, ATECC_CONFIG_SIZE);
-    return status;
+    bool status = atecc_read_bytes_zone(ATECC_ZONE_CONFIG, 0, 0x00, config_data, ATECC_CONFIG_SIZE);
+    if (status == false) {
+        return false;
+    }
+    return true;
 }
 
-ATECC_STATUS atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, uint8_t *data, size_t length)
+bool atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, uint8_t *data, size_t length)
 {
     size_t  zone_size = 0;
     uint8_t read_buf[32];
@@ -79,26 +88,29 @@ ATECC_STATUS atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, u
     size_t  read_offset = 0;
 
     if (zone != ATECC_ZONE_CONFIG && zone != ATECC_ZONE_OTP && zone != ATECC_ZONE_DATA) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_bytes_zone failed: BAD_PARAM");
+        return false;
     }
     if (zone == ATECC_ZONE_DATA && slot > 15) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_bytes_zone failed: BAD_PARAM");
+        return false;
     }
     if (length == 0) {
         // Always succeed reading 0 bytes
-        return ATECC_SUCCESS;
+        return true;
     }
     if (data == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_bytes_zone failed: BAD_PARAM");
+        return false;
     }
 
-    ATECC_STATUS status = atecc_get_zone_size(zone, slot, &zone_size);
-    if (status != ATECC_SUCCESS) {
+    bool status = atecc_get_zone_size(zone, slot, &zone_size);
+    if (status == false) {
         return status;
     }
     if (offset + length > zone_size) {
-        // Can't read past the end of a zone
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_bytes_zone failed: Can't read past the end of a zone");
+        return false;
     }
     cur_block = offset / ATECC_BLOCK_SIZE;
 
@@ -112,7 +124,7 @@ ATECC_STATUS atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, u
         }
         // Read next chunk of data
         status = atecc_read_zone(zone, slot, (uint8_t)cur_block, (uint8_t)cur_offset, read_buf, read_size);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             return status;
         }
         // Calculate where in the read buffer we need data from
@@ -141,22 +153,23 @@ ATECC_STATUS atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, u
         }
     }
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_read_serial_number(uint8_t *serial_number)
+bool atecc_read_serial_number(uint8_t *serial_number)
 {
     if (serial_number == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_read_bytes_zone failed: BAD_PARAM");
+        return false;
     }
 
     uint8_t read_buf[ATECC_BLOCK_SIZE];
-    ATECC_STATUS status = atecc_read_zone(ATECC_ZONE_CONFIG, 0, 0, 0, read_buf, ATECC_BLOCK_SIZE);
-    if (status != ATECC_SUCCESS) {
+    bool status = atecc_read_zone(ATECC_ZONE_CONFIG, 0, 0, 0, read_buf, ATECC_BLOCK_SIZE);
+    if (status == false) {
         return status;
     }
 
     memcpy(&serial_number[0], &read_buf[0], 4);
     memcpy(&serial_number[4], &read_buf[8], 5);
-    return ATECC_SUCCESS;
+    return true;
 }

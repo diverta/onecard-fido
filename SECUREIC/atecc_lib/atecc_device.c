@@ -33,62 +33,65 @@ ATECC_DEVICE atecc_device_ref(void)
     return _atecc_device;
 }
 
-static ATECC_STATUS init_atecc_command(ATECC_DEVICE_TYPE device_type, ATECC_COMMAND command)
+static bool init_atecc_command(ATECC_DEVICE_TYPE device_type, ATECC_COMMAND command)
 {
     if (command == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("init_atecc_command failed: BAD_PARAM");
+        return false;
     }
 
     command->dt = device_type;
     command->clock_divider = 0;
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-static ATECC_STATUS init_atecc_device(ATECC_IFACE_CFG *cfg, ATECC_DEVICE device)
+static bool init_atecc_device(ATECC_IFACE_CFG *cfg, ATECC_DEVICE device)
 {
-    ATECC_STATUS status;
+    bool status;
 
     if (cfg == NULL || device == NULL || device->mCommands == NULL || device->mIface == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("init_atecc_device failed: BAD_PARAM");
+        return false;
     }
 
     status = init_atecc_command(cfg->devtype, device->mCommands);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
     status = atecc_iface_init(cfg, device->mIface);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-static ATECC_STATUS release_atecc_device(ATECC_DEVICE device) 
+static bool release_atecc_device(ATECC_DEVICE device) 
 {
     if (device == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("release_atecc_device failed: BAD_PARAM");
+        return false;
     }
 
     return atecc_iface_release(device->mIface);
 }
 
-ATECC_STATUS atecc_device_release(void)
+bool atecc_device_release(void)
 {
-    ATECC_STATUS status = release_atecc_device(_atecc_device);
-    if (status != ATECC_SUCCESS) {
+    bool status = release_atecc_device(_atecc_device);
+    if (status == false) {
         return status;
     }
     _atecc_device = NULL;
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_device_init(void)
+bool atecc_device_init(void)
 {
-    ATECC_STATUS status = ATECC_GEN_FAIL;
+    bool status = false;
 
     // デバイス設定は、ライブラリーのデフォルトを採用
     ATECC_IFACE_CFG *cfg = &m_iface_config;
@@ -104,16 +107,16 @@ ATECC_STATUS atecc_device_init(void)
 
     // I2C初期設定、TWI有効化
     status = init_atecc_device(cfg, &m_atecc_device);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
     _atecc_device = &m_atecc_device;
 
     // ATECC608Aの分周設定
-    if ((status = atecc_read_bytes_zone(ATECC_ZONE_CONFIG, 0, ATECC_CHIPMODE_OFFSET, &_atecc_device->mCommands->clock_divider, 1)) != ATECC_SUCCESS) {
+    if ((status = atecc_read_bytes_zone(ATECC_ZONE_CONFIG, 0, ATECC_CHIPMODE_OFFSET, &_atecc_device->mCommands->clock_divider, 1)) == false) {
         return status;
     }
     _atecc_device->mCommands->clock_divider &= ATECC_CHIPMODE_CLOCK_DIV_MASK;
 
-    return ATECC_SUCCESS;
+    return true;
 }

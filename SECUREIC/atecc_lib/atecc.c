@@ -36,9 +36,8 @@ static char serial_num_str[20];
 
 static bool get_atecc_serial_num(void)
 {
-    ATECC_STATUS status = atecc_read_serial_number(atecc_serial_num);
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("get_atecc_serial_num failed: atecc_read_serial_number() returns 0x%02x", status);
+    if (atecc_read_serial_number(atecc_serial_num) == false) {
+        fido_log_error("get_atecc_serial_num failed");
         return false;
     }
 #if LOG_HEXDUMP_DEBUG_CONFIG
@@ -77,9 +76,7 @@ bool atecc_initialize(void)
     fido_log_info("atecc_initialize start");
 
     // デバイスの初期化
-    ATECC_STATUS status = atecc_device_init();
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("atecc_initialize failed: atecc_init() returns 0x%02x", status);
+    if (atecc_device_init() == false) {
         return false;
     }
 
@@ -111,9 +108,7 @@ void atecc_finalize(void)
 
 bool atecc_get_config_bytes(void)
 {
-    ATECC_STATUS status = atecc_read_config_zone(ateccx08a_config_bytes);
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("atecc_get_config_bytes failed: atecc_read_config_zone() returns 0x%02x", status);
+    if (atecc_read_config_zone(ateccx08a_config_bytes) == false) {
         return false;
     }
 #if LOG_HEXDUMP_DEBUG_CONFIG

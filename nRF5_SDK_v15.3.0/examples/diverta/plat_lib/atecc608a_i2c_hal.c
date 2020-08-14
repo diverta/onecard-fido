@@ -34,10 +34,11 @@ typedef struct {
 
 static i2c_hal_data_t m_hal_data;
 
-ATECC_STATUS hal_i2c_init(ATECC_IFACE iface) 
+bool hal_i2c_init(ATECC_IFACE iface) 
 {
     if (fido_twi_init() == false) {
-        return ATECC_COMM_FAIL;
+        NRF_LOG_ERROR("hal_i2c_init failed: Communication with device failed. Same as in hardware dependent modules.");
+        return false;
     }
 
     ATECC_IFACE_CFG *cfg = iface->mIfaceCFG;
@@ -50,12 +51,12 @@ ATECC_STATUS hal_i2c_init(ATECC_IFACE iface)
     m_hal_data.p_instance = (nrf_drv_twi_t const *)fido_twi_instance_ref();
     iface->hal_data = &m_hal_data;
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_i2c_post_init(ATECC_IFACE iface) {
+bool hal_i2c_post_init(ATECC_IFACE iface) {
     (void)iface;
-    return ATECC_SUCCESS;
+    return true;
 }
 
 static uint8_t get_twi_address(ATECC_IFACE iface)
@@ -66,20 +67,20 @@ static uint8_t get_twi_address(ATECC_IFACE iface)
     return address;
 }
 
-ATECC_STATUS hal_i2c_send(ATECC_IFACE iface, uint8_t *data, int length) 
+bool hal_i2c_send(ATECC_IFACE iface, uint8_t *data, int length) 
 {
     // 先頭バイトを差替えて送信
     data[0] = 0x3;
     length++;
     if (fido_twi_write(get_twi_address(iface), data, length) == false) {
-        NRF_LOG_ERROR("hal_i2c_send failed");
-        return ATECC_TX_FAIL;
+        NRF_LOG_ERROR("hal_i2c_send failed: ATECC_TX_FAIL");
+        return false;
     }
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_i2c_receive(ATECC_IFACE iface, uint8_t *rx_data, uint16_t *rx_length) 
+bool hal_i2c_receive(ATECC_IFACE iface, uint8_t *rx_data, uint16_t *rx_length) 
 {
     // read procedure is:
     // 1. read 1 byte, this will be the length of the package
@@ -93,21 +94,21 @@ ATECC_STATUS hal_i2c_receive(ATECC_IFACE iface, uint8_t *rx_data, uint16_t *rx_l
     }
     if (r == false) {
         NRF_LOG_ERROR("hal_i2c_receive failed: length read timeout");
-        return ATECC_RX_TIMEOUT;
+        return false;
     }
 
     // NACKの場合（応答データが受信できなかった場合）
     if (length_package[0] == 0) {
         NRF_LOG_WARNING("hal_i2c_receive: NACK has occurred");
         *rx_length = 0;
-        return ATECC_SUCCESS;
+        return true;
     }
     
     // データの１バイト目に、受信できるバイト数が格納されています
     uint8_t bytes_to_read = length_package[0] - 1;
     if (bytes_to_read > *rx_length) {
         NRF_LOG_ERROR("hal_i2c_receive buffer too small, requested %u, but have %u", bytes_to_read, *rx_length);
-        return ATECC_SMALL_BUFFER;
+        return false;
     }
 
     // データ長を格納
@@ -122,15 +123,17 @@ ATECC_STATUS hal_i2c_receive(ATECC_IFACE iface, uint8_t *rx_data, uint16_t *rx_l
     }
     if (r == false) {
         NRF_LOG_ERROR("hal_i2c_receive failed: package read timeout");
-        return ATECC_RX_TIMEOUT;
+        return false;
     }
     *rx_length = length_package[0];
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_i2c_wake(ATECC_IFACE iface) 
+bool hal_i2c_wake(ATECC_IFACE iface, bool *wake_failed) 
 {
+    *wake_failed = false;
+
     // steps to wake the chip up...
     // 1. switch to 100KHz
     // 2. Send NULL buffer to address 0x0 (NACK)
@@ -149,7 +152,7 @@ ATECC_STATUS hal_i2c_wake(ATECC_IFACE iface)
     }
     if (r == false) {
         NRF_LOG_ERROR("hal_i2c_wake failed: read timeout");
-        return ATECC_RX_TIMEOUT;
+        return false;
     }
 
     // 5. Set frequency back to requested one
@@ -157,45 +160,47 @@ ATECC_STATUS hal_i2c_wake(ATECC_IFACE iface)
     const uint8_t selftest_fail_resp[4] = {0x04, 0x07, 0xC4, 0x40};
 
     if (memcmp(rx_buffer, expected_response, sizeof(expected_response)) == 0) {
-        return ATECC_SUCCESS;
+        return true;
 
     } else if (memcmp(rx_buffer, selftest_fail_resp, sizeof(selftest_fail_resp)) == 0) {
         NRF_LOG_ERROR("hal_i2c_wake failed: selftest error");
-        return ATECC_STATUS_SELFTEST_ERROR;
+        return false;
 
     } else {
         NRF_LOG_ERROR("hal_i2c_wake failed: unknown error");
-        return ATECC_WAKE_FAILED;
+        *wake_failed = true;
+        return false;
     }
 }
 
-ATECC_STATUS hal_i2c_idle(ATECC_IFACE iface) 
+bool hal_i2c_idle(ATECC_IFACE iface) 
 {
     // idle word address value
     uint8_t buffer[1] = {0x2};
     fido_twi_write(get_twi_address(iface), buffer, sizeof(buffer));
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_i2c_sleep(ATECC_IFACE iface) 
+bool hal_i2c_sleep(ATECC_IFACE iface) 
 {
     // sleep word address value
     uint8_t buffer[1] = {0x1};
     fido_twi_write(get_twi_address(iface), buffer, sizeof(buffer));
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_i2c_release(void *hal_data) {
+bool hal_i2c_release(void *hal_data) {
     UNUSED_PARAMETER(hal_data);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_iface_init(ATECC_IFACE iface)
+bool hal_iface_init(ATECC_IFACE iface)
 {
     if (iface == NULL) {
-        return ATECC_COMM_FAIL;
+        NRF_LOG_ERROR("hal_iface_init failed: null pointer");
+        return false;
     }
 
     iface->init_func     = &hal_i2c_init;
@@ -207,10 +212,10 @@ ATECC_STATUS hal_iface_init(ATECC_IFACE iface)
     iface->idle_func     = &hal_i2c_idle;
     iface->hal_data      = NULL;
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS hal_iface_release(void *hal_data)
+bool hal_iface_release(void *hal_data)
 {
     return hal_i2c_release(hal_data);
 }

@@ -7,13 +7,7 @@
 #ifndef ATECC_COMMAND_H
 #define ATECC_COMMAND_H
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
 #include "atecc_device.h"
-#include "atecc_common.h"
-#include "atecc_iface.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -189,11 +183,11 @@ typedef struct {
 //
 // 関数群
 //
-ATECC_STATUS atecc_command_lock(ATECC_COMMAND command, ATECC_PACKET *packet);
-ATECC_STATUS atecc_command_read(ATECC_COMMAND command, ATECC_PACKET *packet);
-ATECC_STATUS atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bool has_mac);
-ATECC_STATUS atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet);
-ATECC_STATUS atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device);
+bool atecc_command_lock(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_read(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bool has_mac);
+bool atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device);
 
 #ifdef __cplusplus
 }

@@ -86,9 +86,9 @@ static bool get_zone_is_locked(bool *is_config_locked, bool *is_data_locked)
 
 static bool lock_config_zone(void)
 {
-    ATECC_STATUS status = atecc_lock_config_zone();
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("lock_config_zone failed: atecc_lock_config_zone returns 0x%02x", status);
+    bool status = atecc_lock_config_zone();
+    if (status == false) {
+        fido_log_error("lock_config_zone failed: atecc_lock_config_zone returns false");
         return false;
     }
 
@@ -98,9 +98,9 @@ static bool lock_config_zone(void)
 
 static bool lock_data_zone(void)
 {
-    ATECC_STATUS status = atecc_lock_data_zone();
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("lock_data_zone failed: atecc_lock_data_zone returns 0x%02x", status);
+    bool status = atecc_lock_data_zone();
+    if (status == false) {
+        fido_log_error("lock_data_zone failed: atecc_lock_data_zone returns false");
         return false;
     }
 
@@ -111,9 +111,9 @@ static bool lock_data_zone(void)
 static bool write_config_zone(void)
 {
     // Configバイトを書き込み
-    ATECC_STATUS status = atecc_write_config_zone(ecc608_configdata);
-    if (status != ATECC_SUCCESS) {
-        fido_log_error("write_config_zone failed: atecc_write_config_zone returns 0x%02x", status);
+    bool status = atecc_write_config_zone(ecc608_configdata);
+    if (status == false) {
+        fido_log_error("write_config_zone failed: atecc_write_config_zone returns false");
         return false;
     }
 

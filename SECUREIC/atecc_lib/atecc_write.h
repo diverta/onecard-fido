@@ -7,15 +7,18 @@
 #ifndef ATECC_WRITE_H
 #define ATECC_WRITE_H
 
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-
-#include "atecc_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ATECC_STATUS atecc_write_config_zone(const uint8_t *config_data);
+//
+// 関数群
+//
+bool atecc_write_config_zone(const uint8_t *config_data);
 
 #ifdef __cplusplus
 }

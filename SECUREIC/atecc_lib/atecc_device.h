@@ -7,7 +7,6 @@
 #ifndef ATECC_DEVICE_H
 #define ATECC_DEVICE_H
 
-#include "atecc_common.h"
 #include "atecc_iface.h"
 
 #ifdef __cplusplus
@@ -50,9 +49,12 @@ struct atecc_device {
     ATECC_IFACE   mIface;
 };
 
+//
+// 関数群
+//
 ATECC_DEVICE atecc_device_ref(void);
-ATECC_STATUS atecc_device_init(void);
-ATECC_STATUS atecc_device_release(void);
+bool         atecc_device_init(void);
+bool         atecc_device_release(void);
 
 #ifdef __cplusplus
 }

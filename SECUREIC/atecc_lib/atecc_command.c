@@ -7,8 +7,10 @@
 #include <string.h>
 
 #include "atecc_command.h"
-#include "atecc_common.h"
 #include "atecc_device.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 #define ATECC_UNSUPPORTED_CMD ((uint16_t)0xFFFF)
 
@@ -46,7 +48,7 @@ static void atecc_command_calc_crc(ATECC_PACKET *packet)
     atecc_command_crc(length, &(packet->txsize), crc);
 }
 
-static ATECC_STATUS atecc_command_check_crc(const uint8_t *response)
+static bool atecc_command_check_crc(const uint8_t *response)
 {
     uint8_t crc[ATECC_CRC_SIZE];
     uint8_t count = response[ATECC_IDX_COUNT];
@@ -54,28 +56,28 @@ static ATECC_STATUS atecc_command_check_crc(const uint8_t *response)
     count -= ATECC_CRC_SIZE;
     atecc_command_crc(count, response, crc);
 
-    return (crc[0] == response[count] && crc[1] == response[count + 1]) ? ATECC_SUCCESS : ATECC_RX_CRC_ERROR;
+    return (crc[0] == response[count] && crc[1] == response[count + 1]);
 }
 
-ATECC_STATUS atecc_command_lock(ATECC_COMMAND command, ATECC_PACKET *packet)
+bool atecc_command_lock(ATECC_COMMAND command, ATECC_PACKET *packet)
 {
     // Set the opcode & parameters
     packet->opcode = ATECC_OP_LOCK;
     packet->txsize = LOCK_COUNT;
     atecc_command_calc_crc(packet);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_command_read(ATECC_COMMAND command, ATECC_PACKET *packet)
+bool atecc_command_read(ATECC_COMMAND command, ATECC_PACKET *packet)
 {
     // Set the opcode & parameters
     packet->opcode = ATECC_OP_READ;
     packet->txsize = READ_COUNT;
     atecc_command_calc_crc(packet);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bool has_mac)
+bool atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bool has_mac)
 {
     // Set the opcode & parameters
     packet->opcode = ATECC_OP_WRITE;
@@ -90,63 +92,59 @@ ATECC_STATUS atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bo
         packet->txsize += WRITE_MAC_SIZE;
     }
     atecc_command_calc_crc(packet);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet)
+bool atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet)
 {
     // Set the opcode & parameters
     packet->opcode = ATECC_OP_UPDATE_EXTRA;
     packet->txsize = UPDATE_COUNT;
     atecc_command_calc_crc(packet);
-    return ATECC_SUCCESS;
+    return true;
 }
 
-static ATECC_STATUS atecc_command_is_error(uint8_t *data)
+static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long
     if (data[0] == 0x04) {
         switch (data[1]) {
         case 0x00:
             // No Error
-            return ATECC_SUCCESS;
+            return true;
+            break;
         case 0x01:
-            // checkmac or verify failed
-            return ATCA_CHECKMAC_VERIFY_FAILED;
+            fido_log_error("atecc_command_is_error: checkmac or verify failed");
             break;
         case 0x03:
-            // command received byte length, opcode or parameter was illegal
-            return ATCA_PARSE_ERROR;
+            fido_log_error("atecc_command_is_error: command received byte length, opcode or parameter was illegal");
             break;
         case 0x05:
-            // computation error during ECC processing causing invalid results
-            return ATCA_STATUS_ECC;
+            fido_log_error("atecc_command_is_error: computation error during ECC processing causing invalid results");
             break;
         case 0x07:
-            // chip is in self test failure mode
-            return ATECC_STATUS_SELFTEST_ERROR;
+            fido_log_error("atecc_command_is_error: chip is in self test failure mode");
             break;
         case 0x08:
-            //random number generator health test error
-            return ATCA_HEALTH_TEST_ERROR;
+            fido_log_error("atecc_command_is_error: random number generator health test error");
+            break;
         case 0x0f: 
-            // chip can't execute the command
-            return ATCA_EXECUTION_ERROR;
+            fido_log_error("atecc_command_is_error: chip can't execute the command");
             break;
         case 0x11: 
-            // chip was successfully woken up
-            return ATCA_WAKE_SUCCESS;
+            fido_log_error("atecc_command_is_error: chip was successfully woken up");
             break;
         case 0xff: 
-            // bad crc found (command not properly received by device) or other comm error
-            return ATCA_STATUS_CRC;
+            fido_log_error("atecc_command_is_error: bad crc found (command not properly received by device) or other comm error");
             break;
         default:
-            return ATECC_GEN_FAIL;
+            fido_log_error("atecc_command_is_error: unknown error");
             break;
         }
+        return false;
+
     } else {
-        return ATECC_SUCCESS;
+        return true;
     }
 }
 
@@ -200,9 +198,9 @@ static const device_execution_time_t device_execution_time_608_m0[] = {
     {ATECC_OP_WRITE,        45}
 };
 
-static ATECC_STATUS get_exec_time(uint8_t opcode, ATECC_COMMAND command)
+static bool get_exec_time(uint8_t opcode, ATECC_COMMAND command)
 {
-    ATECC_STATUS status = ATECC_SUCCESS;
+    bool status = true;
     const device_execution_time_t *execution_times;
     uint8_t no_of_commands;
 
@@ -224,35 +222,37 @@ static ATECC_STATUS get_exec_time(uint8_t opcode, ATECC_COMMAND command)
     }
 
     if (command->execution_time_msec == ATECC_UNSUPPORTED_CMD) {
-        status = ATECC_BAD_OPCODE;
+        fido_log_error("get_exec_time failed: BAD_OPCODE");
+        status = false;
     }
 
     return status;
 }
 
-ATECC_STATUS atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device)
+bool atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device)
 {
-    ATECC_STATUS status;
+    bool status;
     uint32_t execution_or_wait_time;
     uint32_t max_delay_count;
     uint16_t rxsize;
 
     do {
         status = get_exec_time(packet->opcode, device->mCommands);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             return status;
         }
         execution_or_wait_time = device->mCommands->execution_time_msec;
         max_delay_count = 0;
 
-        status = atecc_iface_wake_func(device->mIface);
-        if (status != ATECC_SUCCESS) {
+        bool wake_failed;
+        status = atecc_iface_wake_func(device->mIface, &wake_failed);
+        if (status == false) {
             break;
         }
 
         // send the command
         status = atecc_iface_send_func(device->mIface, (uint8_t*)packet, packet->txsize);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             break;
         }
 
@@ -264,29 +264,31 @@ ATECC_STATUS atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device)
             // receive the response
             rxsize = sizeof(packet->data);
             status = atecc_iface_receive_func(device->mIface, packet->data, &rxsize);
-            if (status == ATECC_SUCCESS) {
+            if (status == true) {
                 break;
             }
         } while (max_delay_count-- > 0);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             break;
         }
 
         // Check response size
         if (rxsize < 4) {
             if (rxsize > 0) {
-                status = ATCA_RX_FAIL;
+                fido_log_error("atecc_command_execute failed: RX_FAIL");
+                status = false;
             } else {
-                status = ATCA_RX_NO_RESPONSE;
+                fido_log_error("atecc_command_execute failed: RX_NO_RESPONSE");
+                status = false;
             }
             break;
         }
         status = atecc_command_check_crc(packet->data);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             break;
         }
         status = atecc_command_is_error(packet->data);
-        if (status != ATECC_SUCCESS) {
+        if (status == false) {
             break;
         }
 

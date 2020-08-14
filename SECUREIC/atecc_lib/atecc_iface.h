@@ -11,8 +11,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "atecc_common.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,13 +43,13 @@ struct atecc_iface {
     ATECC_IFACE_TYPE mType;
     ATECC_IFACE_CFG *mIfaceCFG;
 
-    ATECC_STATUS (*init_func)(ATECC_IFACE hal);
-    ATECC_STATUS (*postinit_func)(ATECC_IFACE hal);
-    ATECC_STATUS (*send_func)(ATECC_IFACE hal, uint8_t *txdata, int txlength);
-    ATECC_STATUS (*receive_func)(ATECC_IFACE hal, uint8_t *rxdata, uint16_t *rxlength);
-    ATECC_STATUS (*wake_func)(ATECC_IFACE hal);
-    ATECC_STATUS (*idle_func)(ATECC_IFACE hal);
-    ATECC_STATUS (*sleep_func)(ATECC_IFACE hal);
+    bool (*init_func)(ATECC_IFACE hal);
+    bool (*postinit_func)(ATECC_IFACE hal);
+    bool (*send_func)(ATECC_IFACE hal, uint8_t *txdata, int txlength);
+    bool (*receive_func)(ATECC_IFACE hal, uint8_t *rxdata, uint16_t *rxlength);
+    bool (*wake_func)(ATECC_IFACE hal, bool *wake_failed);
+    bool (*idle_func)(ATECC_IFACE hal);
+    bool (*sleep_func)(ATECC_IFACE hal);
 
     void *hal_data;
 };
@@ -59,26 +57,26 @@ struct atecc_iface {
 //
 // 関数群
 //
-ATECC_STATUS atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE iface);
-ATECC_STATUS atecc_iface_release(ATECC_IFACE iface);
+bool atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE iface);
+bool atecc_iface_release(ATECC_IFACE iface);
 
-ATECC_STATUS atecc_iface_init_func(ATECC_IFACE iface);
-ATECC_STATUS atecc_iface_postinit_func(ATECC_IFACE iface);
-ATECC_STATUS atecc_iface_send_func(ATECC_IFACE iface, uint8_t *txdata, int txlength);
-ATECC_STATUS atecc_iface_receive_func(ATECC_IFACE iface, uint8_t *rxdata, uint16_t *rxlength);
-ATECC_STATUS atecc_iface_wake_func(ATECC_IFACE iface);
-ATECC_STATUS atecc_iface_idle_func(ATECC_IFACE iface);
-ATECC_STATUS atecc_iface_sleep_func(ATECC_IFACE iface);
+bool atecc_iface_init_func(ATECC_IFACE iface);
+bool atecc_iface_postinit_func(ATECC_IFACE iface);
+bool atecc_iface_send_func(ATECC_IFACE iface, uint8_t *txdata, int txlength);
+bool atecc_iface_receive_func(ATECC_IFACE iface, uint8_t *rxdata, uint16_t *rxlength);
+bool atecc_iface_wake_func(ATECC_IFACE iface, bool *wake_failed);
+bool atecc_iface_idle_func(ATECC_IFACE iface);
+bool atecc_iface_sleep_func(ATECC_IFACE iface);
 
 //
 // ハードウェア依存の関数
 // 実装は atecc608a_i2c_hal.c にあります。
 //
-ATECC_STATUS hal_iface_init(ATECC_IFACE iface);
-ATECC_STATUS hal_iface_release(void *hal_data);
-void         atecc_delay_us(uint32_t delay);
-void         atecc_delay_10us(uint32_t delay);
-void         atecc_delay_ms(uint32_t delay);
+bool hal_iface_init(ATECC_IFACE iface);
+bool hal_iface_release(void *hal_data);
+void atecc_delay_us(uint32_t delay);
+void atecc_delay_10us(uint32_t delay);
+void atecc_delay_ms(uint32_t delay);
 
 #ifdef __cplusplus
 }

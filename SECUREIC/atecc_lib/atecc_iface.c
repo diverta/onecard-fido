@@ -8,96 +8,99 @@
 
 #include "atecc_iface.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
 // How long to wait after an initial wake failure for the POSt to complete.
 // If Power-on self test (POST) is enabled, 
 // the self test will run on waking from sleep or during power-on,
 // which delays the wake reply.
 #define POST_DELAY_MSEC 25
 
-ATECC_STATUS atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE iface)
+bool atecc_iface_init(ATECC_IFACE_CFG *cfg, ATECC_IFACE iface)
 {
-    ATECC_STATUS status;
+    bool status;
 
     if (cfg == NULL || iface == NULL) {
-        return ATECC_BAD_PARAM;
+        fido_log_error("atecc_iface_init failed: BAD_PARAM");
+        return false;
     }
 
     iface->mType = cfg->iface_type;
     iface->mIfaceCFG = cfg;
 
     status = atecc_iface_init_func(iface);
-    if (status != ATECC_SUCCESS) {
+    if (status == false) {
         return status;
     }
 
-    return ATECC_SUCCESS;
+    return true;
 }
 
-ATECC_STATUS atecc_iface_init_func(ATECC_IFACE iface)
+bool atecc_iface_init_func(ATECC_IFACE iface)
 {
-    ATECC_STATUS status = ATECC_COMM_FAIL;
+    bool status = false;
 
     // get method mapping to HAL methods for this interface
     hal_iface_init(iface);
 
-    status = iface->init_func(iface);
-    if (status == ATECC_SUCCESS) {
+    if (iface->init_func(iface)) {
         status = iface->postinit_func(iface);
     }
 
     return status;
 }
 
-ATECC_STATUS atecc_iface_send_func(ATECC_IFACE iface, uint8_t *txdata, int txlength)
+bool atecc_iface_send_func(ATECC_IFACE iface, uint8_t *txdata, int txlength)
 {
     return iface->send_func(iface, txdata, txlength);
 }
 
-ATECC_STATUS atecc_iface_receive_func(ATECC_IFACE iface, uint8_t *rxdata, uint16_t *rxlength)
+bool atecc_iface_receive_func(ATECC_IFACE iface, uint8_t *rxdata, uint16_t *rxlength)
 {
     return iface->receive_func(iface, rxdata, rxlength);
 }
 
-ATECC_STATUS atecc_iface_wake_func(ATECC_IFACE iface)
+bool atecc_iface_wake_func(ATECC_IFACE iface, bool *wake_failed)
 {
-    ATECC_STATUS status = iface->wake_func(iface);
+    bool status = iface->wake_func(iface, wake_failed);
 
-    if (status == ATECC_WAKE_FAILED) {
-        // The device might be performing a POST. Wait for it to complete
-        // and try again.
+    if (*wake_failed) {
+        // The device might be performing a POST. 
+        // Wait for it to complete and try again.
         atecc_delay_ms(POST_DELAY_MSEC);
-        status = iface->wake_func(iface);
+        status = iface->wake_func(iface, wake_failed);
     }
 
     return status;
 }
 
-ATECC_STATUS atecc_iface_idle_func(ATECC_IFACE iface)
+bool atecc_iface_idle_func(ATECC_IFACE iface)
 {
-    ATECC_STATUS status;
+    bool status;
 
     status = iface->idle_func(iface);
     atecc_delay_ms(1);
     return status;
 }
 
-ATECC_STATUS atecc_iface_sleep_func(ATECC_IFACE iface)
+bool atecc_iface_sleep_func(ATECC_IFACE iface)
 {
-    ATECC_STATUS status;
+    bool status;
 
     status = iface->sleep_func(iface);
     atecc_delay_ms(1);
     return status;
 }
 
-ATECC_STATUS atecc_iface_release(ATECC_IFACE iface)
+bool atecc_iface_release(ATECC_IFACE iface)
 {
-    ATECC_STATUS ret = ATECC_BAD_PARAM;
-
-    if (iface) {
-        ret = hal_iface_release(iface->hal_data);
-        iface->hal_data = NULL;
+    if (iface == NULL) {
+        fido_log_error("atecc_iface_release failed: BAD_PARAM");
+        return false;
     }
 
+    bool ret = hal_iface_release(iface->hal_data);
+    iface->hal_data = NULL;
     return ret;
 }
