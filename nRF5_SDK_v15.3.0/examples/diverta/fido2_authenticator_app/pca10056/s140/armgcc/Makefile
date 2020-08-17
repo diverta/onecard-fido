@@ -178,6 +178,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_command.c \
+  $(FD2LIB_DIR)/fido_command_common.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -185,6 +186,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_maintenance_cryption.c \
+  $(FD2LIB_DIR)/fido_maintenance_skcert.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
@@ -218,7 +220,10 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
+  $(PLTLIB_DIR)/fido_flash_event.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
+  $(PLTLIB_DIR)/fido_flash_password.c \
+  $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
@@ -241,16 +246,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_send_retry.c \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
-
-# Source files to targets (PCA10056, PCA10059)
-FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
-PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
-SRC_FILES += \
-  $(FD2LIB_REV2_DIR)/fido_command_common.c \
-  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
 
 # Source files to targets (Boards with ATECC608A)
 SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
@@ -424,11 +419,6 @@ INC_FOLDERS += \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
-
-# Include folders to targets (PCA10056, PCA10059)
-INC_FOLDERS += \
-  $(FD2LIB_REV2_DIR) \
-  $(PLTLIB_REV2_DIR) \
 
 # Include folders to targets (Boards with ATECC608A)
 INC_FOLDERS += \
