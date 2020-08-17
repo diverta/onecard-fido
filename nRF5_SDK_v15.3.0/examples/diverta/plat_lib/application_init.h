@@ -27,6 +27,8 @@ typedef enum {
 //
 APP_INI_STAT application_init_status_get(void);
 void         application_init_status_set(APP_INI_STAT s);
+void         application_init_start(void);
+void         application_init_resume(void);
 
 #ifdef __cplusplus
 }
