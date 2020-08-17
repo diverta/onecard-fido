@@ -1525,6 +1525,8 @@
                    displayName="plat_lib"
                    projectFiles="true"
                    root="../plat_lib">
+      <itemPath>../plat_lib/application_init.c</itemPath>
+      <itemPath>../plat_lib/application_init.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
       <itemPath>../plat_lib/ccid_flash_piv_object.c</itemPath>
       <itemPath>../plat_lib/ccid_flash_piv_object.h</itemPath>
@@ -3507,6 +3509,10 @@
         </cTool>
       </item>
       <item path="../fido2_authenticator_app/main.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="../plat_lib/application_init.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/application_init.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="2">
         <cTool>
