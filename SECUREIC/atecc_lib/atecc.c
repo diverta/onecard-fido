@@ -67,6 +67,13 @@ char *atecc_get_serial_num_str(void)
     return serial_num_str;
 }
 
+bool atecc_is_available(void)
+{
+    // ATECC608Aに接続し、
+    // 初期化処理が実行済みの場合は true を戻す
+    return atecc_init_done;
+}
+
 bool atecc_initialize(void)
 {
     if (atecc_init_done) {
