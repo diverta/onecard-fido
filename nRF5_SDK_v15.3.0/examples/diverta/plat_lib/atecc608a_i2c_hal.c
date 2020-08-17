@@ -137,7 +137,9 @@ bool hal_i2c_wake(ATECC_IFACE iface, bool *wake_failed)
     // steps to wake the chip up...
     // 1. switch to 100KHz
     // 2. Send NULL buffer to address 0x0 (NACK)
-    fido_twi_verify_nack(get_twi_address(iface));
+    if (fido_twi_verify_nack(get_twi_address(iface)) == false) {
+        return false;
+    }
 
     // 3. Wait for wake_delay
     i2c_hal_data_t *hal_data = (i2c_hal_data_t*)(iface->hal_data);

@@ -20,7 +20,7 @@
 #include "atecc_read.h"
 
 // for debug hex dump data
-#define LOG_HEXDUMP_DEBUG_CONFIG true
+#define LOG_HEXDUMP_DEBUG_CONFIG false
 
 // 設定情報を保持
 static uint8_t ateccx08a_config_bytes[ATECC_CONFIG_SIZE];
