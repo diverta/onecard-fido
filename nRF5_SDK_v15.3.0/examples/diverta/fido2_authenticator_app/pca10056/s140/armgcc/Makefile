@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY := _build
 # target board
 #  PCA10056     nRF52840 DK(with/without ATECC608A)
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
-#  PCA10059_2   MDBT50Q Dongle(rev2.1.2, with ATECC608A)
+#  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
 TARGET_BOARD     := PCA10059
 
 # application version info
