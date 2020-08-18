@@ -132,11 +132,11 @@ static void start_ble_peripheral(void)
         // アドバタイジングを開始させ、
         // BLEペリフェラル・モードに遷移
         ble_service_peripheral_start();
-        return;
-    }
 
-    // LED制御をアイドル中（秒間２回点滅）に変更
-    fido_status_indicator_idle();
+    } else {
+        // LED制御をアイドル中（秒間２回点滅）に変更
+        fido_status_indicator_idle();
+    }
 
     // アプリケーション初期化完了フラグを設定
     // (初期化処理が実行可能)
