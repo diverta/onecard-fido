@@ -21,7 +21,6 @@
 #include "application_init.h"
 
 // FIDO Authenticator固有の処理
-#include "fido_ble_event.h"
 #include "usbd_service.h"
 #include "nfc_service.h"
 #include "ble_service_common.h"
@@ -162,7 +161,7 @@ static void idle_state_handle(void)
     err_code = nrf_ble_lesc_request_handler();
     APP_ERROR_CHECK(err_code);
 
-#ifdef BOARD_PCA10056
+#if NRF_LOG_BACKEND_UART_ENABLED
     // nRF52840 DKで開発時のみ、ログが出力されるようにする
     if (NRF_LOG_PROCESS()) {
         return;
@@ -214,19 +213,13 @@ int main(void)
 
     // Enter main loop.
     for (;;) {
-        switch (application_init_status_get()) {
-            case APP_INI_STAT_EN_INIT:
-                // アプリケーション稼働に必要な初期化処理を再開
-                application_init_resume();
-                break;
-            case APP_INI_STAT_EN_PROC:
-                // 業務処理を実行
-                usbd_service_do_process();
-                fido_ble_do_process();
-                break;
-            default:
-                break;
-        }
+        // USBデバイス処理を実行
+        while (app_usbd_event_queue_process());
+
+        // 業務処理を実行
+        application_main();
+
+        // その他デバイス固有の処理を実行
         idle_state_handle();
     }
 }

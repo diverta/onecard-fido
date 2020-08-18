@@ -14,21 +14,10 @@ extern "C" {
 #endif
 
 //
-// アプリケーション初期化フラグ
-//
-typedef enum {
-    APP_INI_STAT_NONE,
-    APP_INI_STAT_EN_INIT,
-    APP_INI_STAT_EN_PROC,
-} APP_INI_STAT;
-
-//
 // 関数群
 //
-APP_INI_STAT application_init_status_get(void);
-void         application_init_status_set(APP_INI_STAT s);
 void         application_init_start(void);
-void         application_init_resume(void);
+void         application_main(void);
 
 #ifdef __cplusplus
 }

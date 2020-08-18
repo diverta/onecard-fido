@@ -158,9 +158,6 @@ void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event))
 
 void usbd_service_do_process(void)
 {
-    // USBデバイス処理を実行する
-    while (app_usbd_event_queue_process());
-
     // HIDサービスを稼働させる
     usbd_service_hid_do_process(true);
 

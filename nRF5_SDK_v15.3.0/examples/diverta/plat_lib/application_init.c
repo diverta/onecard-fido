@@ -26,27 +26,23 @@ NRF_LOG_MODULE_REGISTER();
 // FIDO Authenticator固有の処理
 #include "fido_hid_channel.h"
 #include "ctap2_client_pin.h"
+#include "fido_ble_event.h"
+#include "usbd_service.h"
 
 //業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 //
 // アプリケーション初期化フラグ
-//  0: 初期化処理起動待ち
-//  1: 初期化処理が実行可能
-//  2: 各業務処理が実行可能
 //
+typedef enum {
+    APP_INI_STAT_NONE,
+    APP_INI_STAT_EN_BLEADV,
+    APP_INI_STAT_EN_INIT,
+    APP_INI_STAT_EN_PROC,
+} APP_INI_STAT;
+
 static APP_INI_STAT application_init_status = APP_INI_STAT_NONE;
-
-APP_INI_STAT application_init_status_get(void)
-{
-    return application_init_status;
-}
-
-void application_init_status_set(APP_INI_STAT s)
-{
-    application_init_status = s;
-}
 
 //
 // BLEペリフェラル始動判定用タイマー
@@ -60,8 +56,8 @@ static bool app_timer_started = false;
 static void timeout_handler(void *p_context)
 {
     // アプリケーション初期化完了フラグを設定
-    // (初期化処理が実行可能)
-    application_init_status_set(APP_INI_STAT_EN_INIT);
+    // (BLEペリフェラルモード遷移判定処理が実行可能)
+    application_init_status = APP_INI_STAT_EN_BLEADV;
 }
 
 static void timer_terminate(void)
@@ -141,9 +137,13 @@ static void start_ble_peripheral(void)
 
     // LED制御をアイドル中（秒間２回点滅）に変更
     fido_status_indicator_idle();
+
+    // アプリケーション初期化完了フラグを設定
+    // (初期化処理が実行可能)
+    application_init_status = APP_INI_STAT_EN_INIT;
 }
 
-void application_init_resume(void)
+static void application_init_resume(void)
 {
     // アプリケーションで使用するボタンの設定
     fido_button_init();
@@ -154,19 +154,40 @@ void application_init_resume(void)
     // PINトークンとキーペアを再生成
     ctap2_client_pin_init();
 
+#if defined(BOARD_PCA10059)
+    NRF_LOG_INFO("Secure IC is not installed. Flash ROM will be used instead.");
+#else
     // ATECC608A初期化と接続検知
     if (atecc_initialize()) {
         NRF_LOG_INFO("Secure IC was detected: SN(%s)", atecc_get_serial_num_str());
     } else {
         NRF_LOG_INFO("Secure IC was not detected. Flash ROM will be used instead.");
     }
-
-    // BLEペリフェラル・モード遷移可能であれば、
-    // BLEペリフェラルを開始
-    start_ble_peripheral();
+#endif
 
     // アプリケーション初期化完了フラグを設定
     // (各業務処理が実行可能)
-    application_init_status_set(APP_INI_STAT_EN_PROC);
+    application_init_status = APP_INI_STAT_EN_PROC;
     NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
+}
+
+void application_main(void)
+{
+    switch (application_init_status) {
+        case APP_INI_STAT_EN_BLEADV:
+            // BLEペリフェラルモード遷移判定処理
+            start_ble_peripheral();
+            break;
+        case APP_INI_STAT_EN_INIT:
+            // アプリケーション稼働に必要な初期化処理を再開
+            application_init_resume();    
+            break;
+        case APP_INI_STAT_EN_PROC:
+            // 業務処理を実行
+            usbd_service_do_process();
+            fido_ble_do_process();
+            break;
+        default:
+            break;
+    }
 }
