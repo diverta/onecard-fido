@@ -51,7 +51,7 @@ char *atecc_get_serial_num_str(void)
 {
     // ATECC608Aの初期化
     memset(serial_num_str, 0, sizeof(serial_num_str));
-    if (atecc_initialize() == false) {
+    if (atecc_is_available() == false) {
         return serial_num_str;
     }
 
@@ -62,8 +62,6 @@ char *atecc_get_serial_num_str(void)
         sprintf(serial_num_str, "%s%02X", serial_num_str_, atecc_serial_num[i]);
     }
 
-    // デバイスを解放
-    atecc_finalize();
     return serial_num_str;
 }
 
