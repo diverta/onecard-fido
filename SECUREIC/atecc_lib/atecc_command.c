@@ -247,7 +247,7 @@ bool atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device)
         bool wake_failed;
         status = atecc_iface_wake_func(device->mIface, &wake_failed);
         if (status == false) {
-            break;
+            return status;
         }
 
         // send the command

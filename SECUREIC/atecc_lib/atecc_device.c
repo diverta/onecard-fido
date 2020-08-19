@@ -112,6 +112,19 @@ bool atecc_device_init(void)
     }
     _atecc_device = &m_atecc_device;
 
+    // 明示的に wake --> idle を実行し、
+    // ATECC608A内部のウォッチドッグタイマーをリセット
+    bool wake_failed;
+    if (atecc_iface_wake_func(_atecc_device->mIface, &wake_failed) == false) {
+        // 実行失敗時は処理終了
+        return false;
+    }
+    if (wake_failed) {
+        // wake失敗時は処理終了
+        return false;
+    }
+    atecc_iface_idle_func(_atecc_device->mIface);
+
     // ATECC608Aの分周設定
     if ((status = atecc_read_bytes_zone(ATECC_ZONE_CONFIG, 0, ATECC_CHIPMODE_OFFSET, &_atecc_device->mCommands->clock_divider, 1)) == false) {
         return status;

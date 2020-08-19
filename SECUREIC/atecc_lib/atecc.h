@@ -36,6 +36,7 @@ extern "C" {
 //
 // 関数群
 //
+bool     atecc_is_available(void);
 bool     atecc_initialize(void);
 void     atecc_finalize(void);
 char    *atecc_get_serial_num_str(void);

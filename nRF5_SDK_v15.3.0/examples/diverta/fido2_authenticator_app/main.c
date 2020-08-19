@@ -17,11 +17,11 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+// for application initialize
+#include "application_init.h"
+
 // FIDO Authenticator固有の処理
-#include "fido_ble_event.h"
-#include "fido_hid_channel.h"
 #include "usbd_service.h"
-#include "ctap2_client_pin.h"
 #include "nfc_service.h"
 #include "ble_service_common.h"
 
@@ -161,7 +161,7 @@ static void idle_state_handle(void)
     err_code = nrf_ble_lesc_request_handler();
     APP_ERROR_CHECK(err_code);
 
-#ifdef BOARD_PCA10056
+#if NRF_LOG_BACKEND_UART_ENABLED
     // nRF52840 DKで開発時のみ、ログが出力されるようにする
     if (NRF_LOG_PROCESS()) {
         return;
@@ -186,18 +186,6 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
-static void application_init(void)
-{
-    // アプリケーションで使用するボタンの設定
-    fido_button_init();
-
-    // アプリケーションで使用するCIDを初期化
-    fido_hid_channel_initialize_cid();
-
-    // PINトークンとキーペアを再生成
-    ctap2_client_pin_init();
-}
-
 /**@brief Function for application main entry.
  */
 int main(void)
@@ -220,19 +208,18 @@ int main(void)
     // NFC関連の初期化（機能閉塞中です）
     nfc_service_init(true);
 
-    // USBポートに接続されていない場合は、
-    // BLEペリフェラルモードに移行
-    ble_service_common_enable_peripheral();
-    NRF_LOG_INFO("Diverta FIDO Authenticator application started.");
-
-    // アプリケーション固有の初期化処理
-    application_init();
+    // アプリケーション稼働に必要な初期化処理を開始
+    application_init_start();
 
     // Enter main loop.
     for (;;) {
+        // USBデバイス処理を実行
+        while (app_usbd_event_queue_process());
+
         // 業務処理を実行
-        usbd_service_do_process();
-        fido_ble_do_process();
+        application_main();
+
+        // その他デバイス固有の処理を実行
         idle_state_handle();
     }
 }
