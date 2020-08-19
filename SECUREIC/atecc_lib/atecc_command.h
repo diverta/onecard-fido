@@ -136,6 +136,7 @@ extern "C" {
 #define WRITE_ZONE_OTP              ((uint8_t)1)            // Write zone id OTP
 #define WRITE_ZONE_DATA             ((uint8_t)2)            // Write zone id data
 #define WRITE_RSP_SIZE              ATECC_RSP_SIZE_MIN      // Write command response packet size
+
 //
 // UpdateExtra Command 関連定義
 //
@@ -147,6 +148,95 @@ extern "C" {
 #define UPDATE_MODE_USER_EXTRA_ADD  UPDATE_MODE_SELECTOR    // UpdateExtra mode update UserExtraAdd (config byte 85)
 #define UPDATE_MODE_DEC_COUNTER     ((uint8_t)0x02)         // UpdateExtra mode: decrement counter
 #define UPDATE_RSP_SIZE             ATECC_RSP_SIZE_MIN      // UpdateExtra command response packet size
+
+//
+// PrivWrite Command 関連定義
+//
+#define PRIVWRITE_ZONE_IDX          ATECC_IDX_PARAM1        // PrivWrite command index for zone
+#define PRIVWRITE_KEYID_IDX         ATECC_IDX_PARAM2        // PrivWrite command index for KeyID
+#define PRIVWRITE_VALUE_IDX         ( 5)                    // PrivWrite command index for value
+#define PRIVWRITE_MAC_IDX           (41)                    // PrivWrite command index for MAC
+#define PRIVWRITE_COUNT             (75)                    // PrivWrite command packet size
+#define PRIVWRITE_ZONE_MASK         ((uint8_t)0x40)         // PrivWrite zone bits 0 to 5 and 7 are 0.
+#define PRIVWRITE_MODE_ENCRYPT      ((uint8_t)0x40)         // PrivWrite mode: encrypted
+#define PRIVWRITE_RSP_SIZE          ATECC_RSP_SIZE_MIN      // PrivWrite command response packet size
+
+//
+// Random Command 関連定義
+//
+#define RANDOM_MODE_IDX             ATECC_IDX_PARAM1        // Random command index for mode
+#define RANDOM_PARAM2_IDX           ATECC_IDX_PARAM2        // Random command index for 2. parameter
+#define RANDOM_COUNT                ATECC_CMD_SIZE_MIN      // Random command packet size
+#define RANDOM_SEED_UPDATE          ((uint8_t)0x00)         // Random mode for automatic seed update
+#define RANDOM_NO_SEED_UPDATE       ((uint8_t)0x01)         // Random mode for no seed update
+#define RANDOM_NUM_SIZE             ((uint8_t)32)           // Number of bytes in the data packet of a random command
+#define RANDOM_RSP_SIZE             ATECC_RSP_SIZE_32       // Random command response packet size
+
+//
+// Nonce Command 関連定義
+//
+#define NONCE_MODE_IDX                  ATECC_IDX_PARAM1    // Nonce command index for mode
+#define NONCE_PARAM2_IDX                ATECC_IDX_PARAM2    // Nonce command index for 2. parameter
+#define NONCE_INPUT_IDX                 ATECC_IDX_DATA      // Nonce command index for input data
+#define NONCE_COUNT_SHORT               (ATECC_CMD_SIZE_MIN + 20) // Nonce command packet size for 20 bytes of NumIn
+#define NONCE_COUNT_LONG                (ATECC_CMD_SIZE_MIN + 32) // Nonce command packet size for 32 bytes of NumIn
+#define NONCE_COUNT_LONG_64             (ATECC_CMD_SIZE_MIN + 64) // Nonce command packet size for 64 bytes of NumIn
+#define NONCE_MODE_MASK                 ((uint8_t)0x03)     // Nonce mode bits 2 to 7 are 0.
+#define NONCE_MODE_SEED_UPDATE          ((uint8_t)0x00)     // Nonce mode: update seed
+#define NONCE_MODE_NO_SEED_UPDATE       ((uint8_t)0x01)     // Nonce mode: do not update seed
+#define NONCE_MODE_INVALID              ((uint8_t)0x02)     // Nonce mode 2 is invalid.
+#define NONCE_MODE_PASSTHROUGH          ((uint8_t)0x03)     // Nonce mode: pass-through
+#define NONCE_MODE_INPUT_LEN_MASK       ((uint8_t)0x20)     // Nonce mode: input size mask
+#define NONCE_MODE_INPUT_LEN_32         ((uint8_t)0x00)     // Nonce mode: input size is 32 bytes
+#define NONCE_MODE_INPUT_LEN_64         ((uint8_t)0x20)     // Nonce mode: input size is 64 bytes
+#define NONCE_MODE_TARGET_MASK          ((uint8_t)0xC0)     // Nonce mode: target mask
+#define NONCE_MODE_TARGET_TEMPKEY       ((uint8_t)0x00)     // Nonce mode: target is TempKey
+#define NONCE_MODE_TARGET_MSGDIGBUF     ((uint8_t)0x40)     // Nonce mode: target is Message Digest Buffer
+#define NONCE_MODE_TARGET_ALTKEYBUF     ((uint8_t)0x80)     // Nonce mode: target is Alternate Key Buffer
+#define NONCE_ZERO_CALC_MASK            ((uint16_t)0x8000)  // Nonce zero (param2): calculation mode mask
+#define NONCE_ZERO_CALC_RANDOM          ((uint16_t)0x0000)  // Nonce zero (param2): calculation mode random, use RNG in calculation and return RNG output
+#define NONCE_ZERO_CALC_TEMPKEY         ((uint16_t)0x8000)  // Nonce zero (param2): calculation mode TempKey, use TempKey in calculation and return new TempKey value
+#define NONCE_NUMIN_SIZE                (20)                // Nonce NumIn size for random modes
+#define NONCE_NUMIN_SIZE_PASSTHROUGH    (32)                // Nonce NumIn size for 32-byte pass-through mode
+#define NONCE_RSP_SIZE_SHORT            ATECC_RSP_SIZE_MIN  // Nonce command response packet size with no output
+#define NONCE_RSP_SIZE_LONG             ATECC_RSP_SIZE_32   // Nonce command response packet size with output
+
+//
+// GenDig Command 関連定義
+//
+#define GENDIG_ZONE_IDX                 ATECC_IDX_PARAM1    // GenDig command index for zone
+#define GENDIG_KEYID_IDX                ATECC_IDX_PARAM2    // GenDig command index for key id
+#define GENDIG_DATA_IDX                 ATECC_IDX_DATA      // GenDig command index for optional data
+#define GENDIG_COUNT                    ATECC_CMD_SIZE_MIN  // GenDig command packet size without "other data"
+#define GENDIG_ZONE_CONFIG              ((uint8_t)0)        // GenDig zone id config. Use KeyID to specify any of the four 256-bit blocks of the Configuration zone.
+#define GENDIG_ZONE_OTP                 ((uint8_t)1)        // GenDig zone id OTP. Use KeyID to specify either the first or second 256-bit block of the OTP zone.
+#define GENDIG_ZONE_DATA                ((uint8_t)2)        // GenDig zone id data. Use KeyID to specify a slot in the Data zone or a transport key in the hardware array.
+#define GENDIG_ZONE_SHARED_NONCE        ((uint8_t)3)        // GenDig zone id shared nonce. KeyID specifies the location of the input value in the message generation.
+#define GENDIG_ZONE_COUNTER             ((uint8_t)4)        // GenDig zone id counter. KeyID specifies the monotonic counter ID to be included in the message generation.
+#define GENDIG_ZONE_KEY_CONFIG          ((uint8_t)5)        // GenDig zone id key config. KeyID specifies the slot for which the configuration information is to be included in the message generation.
+#define GENDIG_RSP_SIZE                 ATECC_RSP_SIZE_MIN  // GenDig command response packet size
+
+//
+// MAC Command 関連定義
+//
+#define MAC_MODE_IDX                    ATECC_IDX_PARAM1    // MAC command index for mode
+#define MAC_KEYID_IDX                   ATECC_IDX_PARAM2    // MAC command index for key id
+#define MAC_CHALLENGE_IDX               ATECC_IDX_DATA      // MAC command index for optional challenge
+#define MAC_COUNT_SHORT                 ATECC_CMD_SIZE_MIN  // MAC command packet size without challenge
+#define MAC_COUNT_LONG                  (39)                // MAC command packet size with challenge
+#define MAC_MODE_CHALLENGE              ((uint8_t)0x00)     // MAC mode       0: first SHA block from data slot
+#define MAC_MODE_BLOCK2_TEMPKEY         ((uint8_t)0x01)     // MAC mode bit   0: second SHA block from TempKey
+#define MAC_MODE_BLOCK1_TEMPKEY         ((uint8_t)0x02)     // MAC mode bit   1: first SHA block from TempKey
+#define MAC_MODE_SOURCE_FLAG_MATCH      ((uint8_t)0x04)     // MAC mode bit   2: match TempKey.SourceFlag
+#define MAC_MODE_PTNONCE_TEMPKEY        ((uint8_t)0x06)     // MAC mode bit   0: second SHA block from TempKey
+#define MAC_MODE_PASSTHROUGH            ((uint8_t)0x07)     // MAC mode bit 0-2: pass-through mode
+#define MAC_MODE_INCLUDE_OTP_88         ((uint8_t)0x10)     // MAC mode bit   4: include first 88 OTP bits
+#define MAC_MODE_INCLUDE_OTP_64         ((uint8_t)0x20)     // MAC mode bit   5: include first 64 OTP bits
+#define MAC_MODE_INCLUDE_SN             ((uint8_t)0x40)     // MAC mode bit   6: include serial number
+#define MAC_CHALLENGE_SIZE              (32)                // MAC size of challenge
+#define MAC_SIZE                        (32)                // MAC size of response
+#define MAC_MODE_MASK                   ((uint8_t)0x77)     // MAC mode bits 3 and 7 are 0.
+#define MAC_RSP_SIZE                    ATECC_RSP_SIZE_32   // MAC command response packet size
 
 typedef struct {
     uint8_t  opcode;
@@ -188,6 +278,10 @@ bool atecc_command_read(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_write(ATECC_COMMAND command, ATECC_PACKET *packet, bool has_mac);
 bool atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device);
+bool atecc_command_priv_write(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_random(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_nonce(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_no_mac_key);
 
 #ifdef __cplusplus
 }

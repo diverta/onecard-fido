@@ -255,6 +255,7 @@ SRC_FILES += \
   $(ATELIB_DIR)/atecc_command.c \
   $(ATELIB_DIR)/atecc_device.c \
   $(ATELIB_DIR)/atecc_iface.c \
+  $(ATELIB_DIR)/atecc_priv.c \
   $(ATELIB_DIR)/atecc_read.c \
   $(ATELIB_DIR)/atecc_setup.c \
   $(ATELIB_DIR)/atecc_util.c \

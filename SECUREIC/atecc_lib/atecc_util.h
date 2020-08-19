@@ -23,6 +23,7 @@ bool atecc_get_zone_size(uint8_t zone, uint16_t slot, size_t *size);
 bool atecc_lock_config_zone(void);
 bool atecc_lock_data_zone(void);
 bool atecc_lock_status_get(uint8_t zone, bool *is_locked);
+bool atecc_random(uint8_t *rand_out);
 
 #ifdef __cplusplus
 }

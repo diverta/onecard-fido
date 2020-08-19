@@ -17,6 +17,7 @@
 //
 #include "atecc_command.h"
 #include "atecc_iface.h"
+#include "atecc_priv.h"
 #include "atecc_read.h"
 #include "atecc_util.h"
 #include "atecc_write.h"
@@ -156,6 +157,7 @@ bool atecc_install_privkey(uint8_t *privkey_raw_data)
         return false;
     }
 
+    fido_log_debug("atecc_install_privkey success");
     return true;
 }
 
