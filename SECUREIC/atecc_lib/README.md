@@ -46,21 +46,22 @@ accompany Microchip software.
 
 |#|関数名|説明|
 |:---:|:---|:---|
-|2-1|atecc_initialize|デバイス初期化|
-|2-2|atecc_finalize|デバイス解放|
-|2-3|atecc_get_serial_num_str|シリアル番号文字列取得|
-|2-4|atecc_write_zone|データ領域更新|
-|2-5|atecc_read_bytes_zone|メモリー領域照会|
-|2-6|atecc_read_zone|データ領域照会|
-|2-7|atecc_read_serial_number|シリアル番号照会|
-|2-8|atecc_random|ランダム値生成|
-|2-9|atecc_nonce_load|NONCE値照会|
-|2-10|atecc_priv_write|秘密鍵更新|
-|2-11|atecc_genkey|キーペア生成|
-|2-12|atecc_get_pubkey|公開鍵照会|
-|2-13|atecc_aes_cbc_init|AES初期化|
-|2-14|atecc_aes_cbc_encrypt_block|AES暗号化|
-|2-15|atecc_aes_cbc_decrypt_block|AES復号化|
+|2-1|atecc_is_available|デバイス使用可否照会|
+|2-2|atecc_initialize|デバイス初期化|
+|2-3|atecc_finalize|デバイス解放|
+|2-4|atecc_get_serial_num_str|シリアル番号文字列取得|
+|2-5|atecc_write_zone|データ領域更新|
+|2-6|atecc_read_bytes_zone|メモリー領域照会|
+|2-7|atecc_read_zone|データ領域照会|
+|2-8|atecc_read_serial_number|シリアル番号照会|
+|2-9|atecc_random|ランダム値生成|
+|2-10|atecc_nonce_load|NONCE値照会|
+|2-11|atecc_priv_write|秘密鍵更新|
+|2-12|atecc_genkey|キーペア生成|
+|2-13|atecc_get_pubkey|公開鍵照会|
+|2-14|atecc_aes_cbc_init|AES初期化|
+|2-15|atecc_aes_cbc_encrypt_block|AES暗号化|
+|2-16|atecc_aes_cbc_decrypt_block|AES復号化|
 
 #### 関数一覧（デバイス制御関連）
 
