@@ -18,21 +18,21 @@
 #include "atecc_command.h"
 #include "atecc_iface.h"
 #include "atecc_read.h"
+#include "atecc_util.h"
+#include "atecc_write.h"
 
 // for debug hex dump data
 #define LOG_HEXDUMP_DEBUG_CONFIG false
 
-// 設定情報を保持
-static uint8_t ateccx08a_config_bytes[ATECC_CONFIG_SIZE];
+// データ編集用エリア（領域節約のため共通化）
+static uint8_t work_buf_1[256];
+static uint8_t work_buf_2[32];
 
 // 初期化処理実行済みフラグ
 static bool atecc_init_done = false;
 
 // シリアルナンバーを保持
 static uint8_t atecc_serial_num[ATECC_SERIAL_NUM_SIZE];
-
-// シリアルナンバーを表示可能なHex文字列形式にするためのバッファ
-static char serial_num_str[20];
 
 static bool get_atecc_serial_num(void)
 {
@@ -50,6 +50,7 @@ static bool get_atecc_serial_num(void)
 char *atecc_get_serial_num_str(void)
 {
     // ATECC608Aの初期化
+    char *serial_num_str = (char *)work_buf_1;
     memset(serial_num_str, 0, sizeof(serial_num_str));
     if (atecc_is_available() == false) {
         return serial_num_str;
@@ -113,13 +114,48 @@ void atecc_finalize(void)
 
 bool atecc_get_config_bytes(void)
 {
-    if (atecc_read_config_zone(ateccx08a_config_bytes) == false) {
+    if (atecc_read_config_zone(work_buf_1) == false) {
         return false;
     }
 #if LOG_HEXDUMP_DEBUG_CONFIG
     fido_log_debug("Config zone data (128 bytes):");
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes,      64);
-    fido_log_print_hexdump_debug(ateccx08a_config_bytes + 64, 64);
+    fido_log_print_hexdump_debug(work_buf_1,      64);
+    fido_log_print_hexdump_debug(work_buf_1 + 64, 64);
 #endif
     return true;
 }
+
+//
+// 外部秘密鍵の導入処理
+//
+bool atecc_install_privkey(uint8_t *privkey_raw_data)
+{
+    // 32バイトの一時キーを生成
+    if (atecc_random(work_buf_2) == false) {
+        fido_log_error("atecc_install_privkey failed: atcab_random returns false");
+        return false;
+    }
+
+    // 一時キーを１５番スロットに書込み
+    if (atecc_write_zone(ATECC_ZONE_DATA, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, 0, 0, work_buf_2, ATECC_BLOCK_SIZE) == false) {
+        fido_log_error("atecc_install_privkey failed: atcab_write_zone(%d) returns false", KEY_ID_FOR_INSTALL_PRV_TMP_KEY);
+        return false;
+    }
+
+    // 秘密鍵を一時バッファにセット（先頭の４バイトは 0 埋めとする）
+    memset(work_buf_1, 0x00, sizeof(work_buf_1));
+    memcpy(work_buf_1 + 4, privkey_raw_data, ATECC_PRIV_KEY_SIZE);
+
+    // 秘密鍵を１４番スロットに書込み
+    //   １５番スロットには、１４番スロットに書込まれた
+    //   秘密鍵を暗号化するキーが上書き保存されます。
+    //   １４・１５番スロットの内容は、
+    //   いかなる手段によっても参照することができません。
+    if (atecc_priv_write(KEY_ID_FOR_INSTALL_PRIVATE_KEY, work_buf_1, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, work_buf_2) == false) {
+        fido_log_error("atecc_install_privkey failed: atecc_priv_write(%d) returns false", KEY_ID_FOR_INSTALL_PRIVATE_KEY);
+        return false;
+    }
+
+    return true;
+}
+

@@ -42,6 +42,7 @@ void     atecc_finalize(void);
 char    *atecc_get_serial_num_str(void);
 bool     atecc_get_config_bytes(void);
 bool     atecc_setup_config(void);
+bool     atecc_install_privkey(uint8_t *privkey_raw_data);
 
 #ifdef __cplusplus
 }

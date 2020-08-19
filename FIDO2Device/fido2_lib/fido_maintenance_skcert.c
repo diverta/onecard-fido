@@ -15,6 +15,7 @@
 #include "fido_command_common.h"
 #include "fido_maintenance.h"
 #include "fido_maintenance_cryption.h"
+#include "atecc.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -93,6 +94,16 @@ static void command_install_skey_cert(void)
         return;
     }
 
+    // ATECC608Aが利用可能であれば、
+    // 秘密鍵をFlash ROMに登録せず、
+    // ATECC608Aの該当スロットに登録するようにする
+    if (atecc_is_available()) {
+        if (atecc_install_privkey(fido_maintenance_cryption_data()) == false) {
+            send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
+            return;
+        }
+    }
+    
     // Flash ROMに登録する鍵・証明書データを準備
     if (fido_flash_skey_cert_data_prepare(
         fido_maintenance_cryption_data(), fido_maintenance_cryption_size()) == false) {
