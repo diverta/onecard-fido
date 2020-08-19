@@ -18,6 +18,7 @@ extern "C" {
 //
 // 関数群
 //
+bool atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len);
 bool atecc_read_bytes_zone(uint8_t zone, uint16_t slot, size_t offset, uint8_t *data, size_t length);
 bool atecc_read_config_zone(uint8_t *config_data);
 bool atecc_read_serial_number(uint8_t *serial_number);
