@@ -26,9 +26,6 @@
 //
 static uint8_t response_buffer[1024];
 
-// ランダムベクター生成領域
-static uint8_t m_random_vector[32];
-
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
     // レスポンスデータを送信パケットに設定し送信

@@ -27,6 +27,22 @@ static void print_hexdump_debug(uint8_t *buff, size_t size)
 #endif
 
 //
+// Flash ROM書込み完了待ち等の事由により、
+// レスポンス実行を抑止させるためのフラグ
+//
+static bool response_is_pending;
+
+bool ccid_apdu_response_is_pending(void)
+{
+    return response_is_pending;
+}
+
+void ccid_apdu_response_set_pending(bool b)
+{
+    response_is_pending = b;
+}
+
+//
 // Applet
 //
 enum APPLET {
@@ -419,6 +435,9 @@ void ccid_apdu_process(void)
     print_hexdump_debug(ccid_command_apdu_data(), ccid_command_apdu_size());
 #endif
 
+    // レスポンス実行抑止フラグを初期化
+    ccid_apdu_response_set_pending(false);
+
     // 受信したAPDUを解析
     if (parse_command_apdu(capdu) == false) {
         // APDUが不正の場合はエラー扱い
@@ -430,6 +449,17 @@ void ccid_apdu_process(void)
         get_response_or_process_applet(capdu, rapdu);
     }
 
+    // レスポンスAPDUの送信を指示
+    ccid_apdu_resume_process(capdu, rapdu);
+}
+
+void ccid_apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    if (ccid_apdu_response_is_pending()) {
+        // レスポンス実行抑止フラグ設定時は終了
+        return;
+    }
+
 #if LOG_DEBUG_APDU_DATA_BUFF
     // 送信APDUレスポンスのログ
     fido_log_debug("APDU to send: SW(0x%04x) data(%d bytes)", rapdu->sw, rapdu->len);
@@ -438,4 +468,7 @@ void ccid_apdu_process(void)
 
     // レスポンスAPDUを生成
     generate_response_apdu(capdu, rapdu);
+    
+    // レスポンスAPDUの送信を指示
+    ccid_resume_reader_to_pc_data_block();
 }

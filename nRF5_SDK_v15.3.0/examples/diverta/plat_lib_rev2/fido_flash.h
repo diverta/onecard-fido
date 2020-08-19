@@ -67,6 +67,20 @@ extern "C" {
 #define SKEY_CERT_WORD_NUM (SKEY_WORD_NUM+CERT_WORD_NUM)
 
 //
+// 以下はPIVアプリケーションで使用
+//
+// 管理用パスワード
+//   レコードサイズ = 9 ワード
+//     パスワード: 8ワード（32バイト)
+//     属性データ: 1ワード（4バイト）
+//       0    : パスワード長（1バイト）
+//       1    : パスワードのアルゴリズム（1バイト）
+//       2 - 3: 予備（2バイト）
+#define PIV_DATA_OBJ_9D_FILE_ID         (0xBFDE)
+#define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCE)
+#define PIV_DATA_OBJ_9D_RECORD_SIZE     9
+
+//
 // fido_flash_event.c
 //
 void fido_flash_event_set_gc_forced(void);
