@@ -13,6 +13,9 @@
 // for ECDSA
 #include "u2f_signature.h"
 
+// for fido_extract_pubkey_in_certificate
+#include "fido_common.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -43,20 +46,6 @@ void ccid_piv_authenticate_reset_context(void)
     auth_ctx[2] = 0;
     memset(auth_ctx + 3, 0, LENGTH_CHALLENGE);
     memset(work_buf, 0, sizeof(work_buf));
-}
-
-static uint8_t *pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_length)
-{
-    for (size_t i = 3; i < cert_data_length; i++) {
-        if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
-            cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
-            // 03 42 00 04 というシーケンスが発見されたら、
-            // その先頭アドレスを戻す
-            return (cert_data + i + 1);
-        }
-    }
-    fido_log_error("pubkey_in_certificate failed: Public key not found");
-    return NULL;
 }
 
 static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
@@ -90,8 +79,9 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
     }
 
     // 証明書から公開鍵を抽出
-    uint8_t *pubkey_be = pubkey_in_certificate(work_buf, s);
+    uint8_t *pubkey_be = fido_extract_pubkey_in_certificate(work_buf, s);
     if (pubkey_be == NULL) {
+        fido_log_error("fido_extract_pubkey_in_certificate failed: Public key not found");
         return SW_UNABLE_TO_PROCESS;
     }
 
