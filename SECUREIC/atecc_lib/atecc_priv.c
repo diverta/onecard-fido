@@ -6,6 +6,7 @@
  */
 #include "atecc_command.h"
 #include "atecc_device.h"
+#include "atecc_nonce.h"
 #include "atecc_read.h"
 #include "atecc_util.h"
 #include "atecc_write.h"
@@ -13,195 +14,12 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// RandOut{32} || NumIn{20} || OpCode{1} || Mode{1} || LSB of Param2{1}
-#define ATECC_MSG_SIZE_NONCE            (55)
 //! KeyId{32} || OpCode{1} || Param1{1} || Param2{2} || SN8{1} || SN0_1{2} || 0{25} || TempKey{32}
 #define ATECC_MSG_SIZE_GEN_DIG          (96)
 //! KeyId{32} || OpCode{1} || Param1{1} || Param2{2}|| SN8{1} || SN0_1{2} || 0{21} || PlainText{36}
-#define ATCA_MSG_SIZE_PRIVWRITE_MAC     (96)
-#define ATCA_PRIVWRITE_MAC_ZEROS_SIZE   (21)
-#define ATCA_PRIVWRITE_PLAIN_TEXT_SIZE  (36)
-
-
-typedef struct atca_nonce_in_out {
-    uint8_t               mode;
-    uint16_t              zero;
-    const uint8_t        *num_in;
-    const uint8_t        *rand_out;
-    struct atca_temp_key *temp_key;
-} atca_nonce_in_out_t;
-
-typedef struct atca_gen_dig_in_out {
-    uint8_t               zone;             // [in] Zone/Param1 for the GenDig command
-    uint16_t              key_id;           // [in] KeyId/Param2 for the GenDig command
-    uint16_t              slot_conf;        // [in] Slot config for the GenDig command
-    uint16_t              key_conf;         // [in] Key config for the GenDig command
-    uint8_t               slot_locked;      // [in] slot locked for the GenDig command
-    uint32_t              counter;          // [in] counter for the GenDig command
-    bool                  is_key_nomac;     // [in] Set to true if the slot pointed to be key_id has the SotConfig.NoMac bit set
-    const uint8_t        *sn;               // [in] Device serial number SN[0:8]. Only SN[0:1] and SN[8] are required though.
-    const uint8_t        *stored_value;     // [in] 32-byte slot value, config block, OTP block as specified by the Zone/KeyId parameters
-    const uint8_t        *other_data;       // [in] 32-byte value for shared nonce zone, 4-byte value if is_key_nomac is true, ignored and/or NULL otherwise
-    struct atca_temp_key *temp_key;         // [inout] Current state of TempKey
-} atca_gen_dig_in_out_t;
-
-typedef struct atca_write_mac_in_out {
-    uint8_t               zone;             // Zone/Param1 for the Write or PrivWrite command
-    uint16_t              key_id;           // KeyID/Param2 for the Write or PrivWrite command
-    const uint8_t        *sn;               // Device serial number SN[0:8]. Only SN[0:1] and SN[8] are required though.
-    const uint8_t        *input_data;       // Data to be encrypted. 32 bytes for Write command, 36 bytes for PrivWrite command.
-    uint8_t              *encrypted_data;   // Encrypted version of input_data will be returned here. 32 bytes for Write command, 36 bytes for PrivWrite command.
-    uint8_t              *auth_mac;         // Write MAC will be returned here. 32 bytes.
-    struct atca_temp_key *temp_key;         // Current state of TempKey.
-} atca_write_mac_in_out_t;
-
-typedef struct atca_temp_key {
-    uint8_t  value[ATECC_KEY_SIZE * 2];     // Value of TempKey (64 bytes for ATECC608A only)
-    unsigned key_id       : 4;              // If TempKey was derived from a slot or transport key (GenDig or GenKey), that key ID is saved here.
-    unsigned source_flag  : 1;              // Indicates id TempKey started from a random nonce (0) or not (1).
-    unsigned gen_dig_data : 1;              // TempKey was derived from the GenDig command.
-    unsigned gen_key_data : 1;              // TempKey was derived from the GenKey command (ATECC devices only).
-    unsigned no_mac_flag  : 1;              // TempKey was derived from a key that has the NoMac bit set preventing the use of the MAC command. Known as CheckFlag in ATSHA devices).
-    unsigned valid        : 1;              // TempKey is valid.
-    uint8_t  is_64;                         // TempKey has 64 bytes of valid data
-} atca_temp_key_t;
-
-
-static bool atecc_do_nonce(struct atca_nonce_in_out *param)
-{
-    uint8_t temporary[ATECC_MSG_SIZE_NONCE];
-    uint8_t *p_temp;
-    uint8_t calc_mode = param->mode & NONCE_MODE_MASK;
-
-    // Check parameters
-    if (param->temp_key == NULL || param->num_in == NULL) {
-        fido_log_error("atcah_nonce failed: BAD_PARAM");
-        return false;
-    }
-
-    // Calculate or pass-through the nonce to TempKey->Value
-    if ((calc_mode == NONCE_MODE_SEED_UPDATE) || (calc_mode == NONCE_MODE_NO_SEED_UPDATE)) {
-        // RandOut is only required for these modes
-        if (param->rand_out == NULL) {
-            fido_log_error("atcah_nonce failed: BAD_PARAM");
-            return false;
-        }
-
-        if ((param->zero & NONCE_ZERO_CALC_MASK) == NONCE_ZERO_CALC_TEMPKEY) {
-            // Nonce calculation mode. Actual value of TempKey has been returned in RandOut
-            memcpy(param->temp_key->value, param->rand_out, 32);
-            // TempKey flags aren't changed
-
-        } else {
-            // Calculate nonce using SHA-256 (refer to data sheet)
-            p_temp = temporary;
-
-            memcpy(p_temp, param->rand_out, RANDOM_NUM_SIZE);
-            p_temp += RANDOM_NUM_SIZE;
-
-            memcpy(p_temp, param->num_in, NONCE_NUMIN_SIZE);
-            p_temp += NONCE_NUMIN_SIZE;
-
-            *p_temp++ = ATECC_OP_NONCE;
-            *p_temp++ = param->mode;
-            *p_temp++ = 0x00;
-
-            // Calculate SHA256 to get the nonce
-            // atcac_sw_sha2_256(temporary, ATECC_MSG_SIZE_NONCE, param->temp_key->value);
-            size_t hash_digest_size = 32;
-            fido_crypto_generate_sha256_hash(temporary, ATECC_MSG_SIZE_NONCE, param->temp_key->value, &hash_digest_size);
-
-            // Update TempKey flags
-            param->temp_key->source_flag = 0; // Random
-            param->temp_key->key_id = 0;
-            param->temp_key->gen_dig_data = 0;
-            param->temp_key->no_mac_flag = 0;
-            param->temp_key->valid = 1;
-        }
-
-        // Update TempKey to only 32 bytes
-        param->temp_key->is_64 = 0;
-
-    } else if ((param->mode & NONCE_MODE_MASK) == NONCE_MODE_PASSTHROUGH) {
-        if ((param->mode & NONCE_MODE_TARGET_MASK) == NONCE_MODE_TARGET_TEMPKEY) {
-            // Pass-through mode for TempKey (other targets have no effect on TempKey)
-            if ((param->mode & NONCE_MODE_INPUT_LEN_MASK) == NONCE_MODE_INPUT_LEN_64) {
-                memcpy(param->temp_key->value, param->num_in, 64);
-                param->temp_key->is_64 = 1;
-            } else {
-                memcpy(param->temp_key->value, param->num_in, 32);
-                param->temp_key->is_64 = 0;
-            }
-
-            // Update TempKey flags
-            param->temp_key->source_flag = 1; // Not Random
-            param->temp_key->key_id = 0;
-            param->temp_key->gen_dig_data = 0;
-            param->temp_key->no_mac_flag = 0;
-            param->temp_key->valid = 1;
-
-        } else {
-            // In the case of ECC608A, 
-            // passthrough message may be stored in message digest buffer/ Alternate Key buffer
-            // Update TempKey flags
-            param->temp_key->source_flag = 1; //Not Random
-            param->temp_key->key_id = 0;
-            param->temp_key->gen_dig_data = 0;
-            param->temp_key->no_mac_flag = 0;
-            param->temp_key->valid = 0;
-
-        }
-
-    } else {
-        fido_log_error("atcah_nonce failed: BAD_PARAM");
-        return false;
-    }
-
-    return true;
-}
-
-static bool atecc_nonce_base(uint8_t mode, uint16_t zero, const uint8_t *num_in, uint8_t* rand_out)
-{
-    ATECC_COMMAND command = atecc_device_ref()->mCommands;
-    uint8_t nonce_mode = mode & NONCE_MODE_MASK;
-
-    // build a nonce command
-    ATECC_PACKET packet;
-    packet.param1 = mode;
-    packet.param2 = zero;
-
-    // Copy the right amount of NumIn data
-    if ((nonce_mode == NONCE_MODE_SEED_UPDATE || nonce_mode == NONCE_MODE_NO_SEED_UPDATE)) {
-        memcpy(packet.data, num_in, NONCE_NUMIN_SIZE);
-    } else if (nonce_mode == NONCE_MODE_PASSTHROUGH) {
-        if ((mode & NONCE_MODE_INPUT_LEN_MASK) == NONCE_MODE_INPUT_LEN_64) {
-            memcpy(packet.data, num_in, 64);
-        } else {
-            memcpy(packet.data, num_in, 32);
-        }
-    } else {
-        fido_log_error("atecc_nonce_base failed: BAD_PARAM");
-        return false;
-    }
-
-    if (atecc_command_nonce(command, &packet) == false) {
-        return false;
-    }
-    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
-        return false;
-    }
-
-    if ((rand_out != NULL) && (packet.data[ATECC_IDX_COUNT] >= 35)) {
-        memcpy(&rand_out[0], &packet.data[ATECC_IDX_RSP_DATA], 32);
-    }
-
-    return true;
-}
-
-static bool atecc_nonce_rand(const uint8_t *num_in, uint8_t* rand_out) 
-{
-    return atecc_nonce_base(NONCE_MODE_SEED_UPDATE, 0, num_in, rand_out);
-}
+#define ATECC_MSG_SIZE_PRIVWRITE_MAC    (96)
+#define ATECC_PRIVWRITE_MAC_ZEROS_SIZE  (21)
+#define ATECC_PRIVWRITE_PLAIN_TEXT_SIZE (36)
 
 static bool atecc_gen_dig(uint8_t zone, uint16_t key_id, const uint8_t *other_data, uint8_t other_data_size)
 {
@@ -234,26 +52,26 @@ static bool atecc_gen_dig(uint8_t zone, uint16_t key_id, const uint8_t *other_da
     return true;
 }
 
-static bool atecc_do_gen_dig(struct atca_gen_dig_in_out *param)
+static bool atecc_do_gen_dig(atecc_gen_dig_in_out_t *param)
 {
     uint8_t temporary[ATECC_MSG_SIZE_GEN_DIG];
     uint8_t *p_temp;
 
     // Check parameters
     if (param->sn == NULL || param->temp_key == NULL) {
-        fido_log_error("atcah_gen_dig failed: BAD_PARAM");
+        fido_log_error("atecc_do_gen_dig failed: BAD_PARAM");
         return false;
     }
     if ((param->zone <= GENDIG_ZONE_DATA) && (param->stored_value == NULL)) {
-        fido_log_error("atcah_gen_dig failed: Stored value cannot be null for Config, OTP and Data");
+        fido_log_error("atecc_do_gen_dig failed: Stored value cannot be null for Config, OTP and Data");
         return false;
     }
     if ((param->zone == GENDIG_ZONE_SHARED_NONCE || (param->zone == GENDIG_ZONE_DATA && param->is_key_nomac)) && param->other_data == NULL) {
-        fido_log_error("atcah_gen_dig failed: Other data is required in these cases");
+        fido_log_error("atecc_do_gen_dig failed: Other data is required in these cases");
         return false;
     }
     if (param->zone > 5) {
-        fido_log_error("atcah_gen_dig failed: Unknown zone");
+        fido_log_error("atecc_do_gen_dig failed: Unknown zone");
         return false;
     }
     // Start calculation
@@ -375,9 +193,9 @@ static bool atecc_do_gen_dig(struct atca_gen_dig_in_out *param)
     return true;
 }
 
-static bool atecc_privwrite_auth_mac(struct atca_write_mac_in_out *param)
+static bool atecc_privwrite_auth_mac(atecc_write_mac_in_out_t *param)
 {
-    uint8_t mac_input[ATCA_MSG_SIZE_PRIVWRITE_MAC];
+    uint8_t mac_input[ATECC_MSG_SIZE_PRIVWRITE_MAC];
     uint8_t i = 0;
     uint8_t *p_temp = NULL;
     uint8_t session_key2[32];
@@ -444,11 +262,11 @@ static bool atecc_privwrite_auth_mac(struct atca_write_mac_in_out *param)
         *p_temp++ = param->sn[1];
 
         // (7) 21 zeros
-        memset(p_temp, 0, ATCA_PRIVWRITE_MAC_ZEROS_SIZE);
-        p_temp += ATCA_PRIVWRITE_MAC_ZEROS_SIZE;
+        memset(p_temp, 0, ATECC_PRIVWRITE_MAC_ZEROS_SIZE);
+        p_temp += ATECC_PRIVWRITE_MAC_ZEROS_SIZE;
 
         // (8) 36 bytes PlainText (Private Key)
-        memcpy(p_temp, param->input_data, ATCA_PRIVWRITE_PLAIN_TEXT_SIZE);
+        memcpy(p_temp, param->input_data, ATECC_PRIVWRITE_PLAIN_TEXT_SIZE);
 
         // Calculate SHA256 to get the new TempKey
         // atcac_sw_sha2_256(mac_input, sizeof(mac_input), param->auth_mac);
@@ -463,11 +281,12 @@ bool atecc_priv_write(uint16_t key_id, const uint8_t priv_key[36], uint16_t writ
     ATECC_PACKET packet;
     ATECC_COMMAND command = atecc_device_ref()->mCommands;
     bool status = false;
-    atca_nonce_in_out_t nonce_params;
-    atca_gen_dig_in_out_t gen_dig_param;
-    atca_write_mac_in_out_t host_mac_param;
-    atca_temp_key_t temp_key;
-    uint8_t serial_num[32]; // Buffer is larger than the 9 bytes required to make reads easier
+    atecc_nonce_in_out_t     nonce_params;
+    atecc_gen_dig_in_out_t   gen_dig_param;
+    atecc_write_mac_in_out_t host_mac_param;
+    atecc_temp_key_t         temp_key;
+    // Buffer is larger than the 9 bytes required to make reads easier
+    uint8_t serial_num[32]; 
     uint8_t num_in[NONCE_NUMIN_SIZE] = { 0 };
     uint8_t rand_out[RANDOM_NUM_SIZE] = { 0 };
     uint8_t cipher_text[36] = { 0 };
@@ -509,7 +328,7 @@ bool atecc_priv_write(uint16_t key_id, const uint8_t priv_key[36], uint16_t writ
         nonce_params.num_in = num_in;
         nonce_params.rand_out = rand_out;
         nonce_params.temp_key = &temp_key;
-        if (atecc_do_nonce(&nonce_params) == false) {
+        if (atecc_calculate_nonce(&nonce_params) == false) {
             return false;
         }
 

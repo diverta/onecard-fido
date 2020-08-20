@@ -11,6 +11,8 @@
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_device.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_nonce.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_nonce.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_priv.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_priv.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_read.c</itemPath>
@@ -3336,6 +3338,16 @@
             flavor2="0">
       </item>
       <item path="../../../../SECUREIC/atecc_lib/atecc_iface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.h"
             ex="false"
             tool="3"
             flavor2="0">
