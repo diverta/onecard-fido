@@ -20,13 +20,8 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-//
-// レスポンスデータ格納領域
-//
-static uint8_t response_buffer[4];
-
-// ランダムベクター生成領域
-static uint8_t m_random_vector[32];
+// データ編集用エリア（領域節約のため共通化）
+static uint8_t work_buf[64];
 
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
@@ -34,8 +29,8 @@ static void send_command_response(uint8_t ctap2_status, size_t length)
     uint32_t cid = fido_hid_receive_header()->CID;
     uint32_t cmd = fido_hid_receive_header()->CMD;
     // １バイトめにステータスコードをセット
-    response_buffer[0] = ctap2_status;
-    fido_hid_send_command_response(cid, cmd, response_buffer, length);
+    work_buf[0] = ctap2_status;
+    fido_hid_send_command_response(cid, cmd, work_buf, length);
 }
 
 static void send_command_error_response(uint8_t ctap2_status) 
@@ -58,10 +53,10 @@ static void command_erase_skey_cert(void)
 static bool generate_random_password(void)
 {
     // 32バイトのランダムベクターを生成
-    fido_command_generate_random_vector(m_random_vector, sizeof(m_random_vector));
+    fido_command_generate_random_vector(work_buf, 32);
 
     // Flash ROMに書き出して保存
-    if (fido_flash_password_set(m_random_vector) == false) {
+    if (fido_flash_password_set(work_buf) == false) {
         return false;
     }
 
