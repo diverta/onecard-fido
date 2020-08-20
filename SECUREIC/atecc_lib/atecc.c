@@ -161,3 +161,15 @@ bool atecc_install_privkey(uint8_t *privkey_raw_data)
     return true;
 }
 
+bool atecc_generate_pubkey_from_privkey(uint8_t *public_key_buff)
+{
+    uint16_t key_id = KEY_ID_FOR_INSTALL_PRIVATE_KEY;
+    memset(public_key_buff, 0x00, ATECC_PUB_KEY_SIZE);
+
+    if (atecc_gen_key(GENKEY_MODE_PUBLIC, key_id, NULL, public_key_buff) == false) {
+        fido_log_error("atecc_generate_pubkey_from_privkey failed: atecc_gen_key(%d) returns false", key_id);
+        return false;
+    }
+
+    return true;
+}

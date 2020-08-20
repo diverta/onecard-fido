@@ -43,6 +43,7 @@ char    *atecc_get_serial_num_str(void);
 bool     atecc_get_config_bytes(void);
 bool     atecc_setup_config(void);
 bool     atecc_install_privkey(uint8_t *privkey_raw_data);
+bool     atecc_generate_pubkey_from_privkey(uint8_t *public_key_buff);
 
 #ifdef __cplusplus
 }

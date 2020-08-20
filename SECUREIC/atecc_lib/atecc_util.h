@@ -24,6 +24,7 @@ bool atecc_lock_config_zone(void);
 bool atecc_lock_data_zone(void);
 bool atecc_lock_status_get(uint8_t zone, bool *is_locked);
 bool atecc_random(uint8_t *rand_out);
+bool atecc_gen_key(uint8_t mode, uint16_t key_id, const uint8_t *other_data, uint8_t *public_key);
 
 #ifdef __cplusplus
 }

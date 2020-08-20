@@ -165,6 +165,19 @@ bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_
     return true;
 }
 
+bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_GENKEY;
+    if (packet->param1 & GENKEY_MODE_PUBKEY_DIGEST) {
+        packet->txsize = GENKEY_COUNT_DATA;
+    } else {
+        packet->txsize = GENKEY_COUNT;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
 static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long

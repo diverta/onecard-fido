@@ -173,3 +173,31 @@ bool atecc_random(uint8_t *rand_out)
     }
     return true;
 }
+
+//
+// 公開鍵生成
+//
+bool atecc_gen_key(uint8_t mode, uint16_t key_id, const uint8_t *other_data, uint8_t *public_key)
+{
+    // Build GenKey command
+    ATECC_PACKET packet;
+    packet.param1 = mode;
+    packet.param2 = key_id;
+    if (other_data) {
+        memcpy(packet.data, other_data, GENKEY_OTHER_DATA_SIZE);
+    }
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    if (atecc_command_gen_key(command, &packet) == false) {
+        return false;
+    }
+    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
+        return false;
+    }
+
+    if (public_key && packet.data[ATECC_IDX_COUNT] > 4) {
+        memcpy(public_key, &packet.data[ATECC_IDX_RSP_DATA], packet.data[ATECC_IDX_COUNT] - 3);
+    }
+
+    return true;
+}

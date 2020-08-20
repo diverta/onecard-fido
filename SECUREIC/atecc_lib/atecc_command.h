@@ -238,6 +238,24 @@ extern "C" {
 #define MAC_MODE_MASK                   ((uint8_t)0x77)     // MAC mode bits 3 and 7 are 0.
 #define MAC_RSP_SIZE                    ATECC_RSP_SIZE_32   // MAC command response packet size
 
+//
+// GenKey Command 関連定義
+//
+#define GENKEY_MODE_IDX                 ATECC_IDX_PARAM1    // GenKey command index for mode
+#define GENKEY_KEYID_IDX                ATECC_IDX_PARAM2    // GenKey command index for key id
+#define GENKEY_DATA_IDX                 (5)                 // GenKey command index for other data
+#define GENKEY_COUNT                    ATECC_CMD_SIZE_MIN  // GenKey command packet size without "other data"
+#define GENKEY_COUNT_DATA               (10)                // GenKey command packet size with "other data"
+#define GENKEY_OTHER_DATA_SIZE          (3)                 // GenKey size of "other data"
+#define GENKEY_MODE_MASK                ((uint8_t)0x1C)     // GenKey mode bits 0 to 1 and 5 to 7 are 0
+#define GENKEY_MODE_PRIVATE             ((uint8_t)0x04)     // GenKey mode: private key generation
+#define GENKEY_MODE_PUBLIC              ((uint8_t)0x00)     // GenKey mode: public key calculation
+#define GENKEY_MODE_DIGEST              ((uint8_t)0x08)     // GenKey mode: PubKey digest will be created after the public key is calculated
+#define GENKEY_MODE_PUBKEY_DIGEST       ((uint8_t)0x10)     // GenKey mode: Calculate PubKey digest on the public key in KeyId
+#define GENKEY_PRIVATE_TO_TEMPKEY       ((uint16_t)0xFFFF)  // GenKey Create private key and store to tempkey (608 only)
+#define GENKEY_RSP_SIZE_SHORT           ATECC_RSP_SIZE_MIN  // GenKey response packet size in Digest mode
+#define GENKEY_RSP_SIZE_LONG            ATECC_RSP_SIZE_64   // GenKey response packet size when returning a public key
+
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -282,6 +300,7 @@ bool atecc_command_priv_write(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_random(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_nonce(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_no_mac_key);
+bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
