@@ -20,6 +20,9 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// for debug apdu data
+#define LOG_DEBUG_PUBKEY_BUFF   false
+
 // データ編集用エリア（領域節約のため共通化）
 static uint8_t work_buf[64];
 
@@ -64,6 +67,49 @@ static bool generate_random_password(void)
     return true;
 }
 
+static bool install_privkey_to_atecc(void)
+{
+    // 秘密鍵をATECC608Aの１４番スロットに登録
+    if (atecc_install_privkey(fido_maintenance_cryption_data()) == false) {
+        return false;
+    }
+
+    // 証明書から公開鍵を抽出
+    // （証明書は公開鍵の後ろに連結されている）
+    uint8_t *cert_data = fido_maintenance_cryption_data() + RAW_PRIVATE_KEY_SIZE;
+    size_t   cert_size = fido_maintenance_cryption_size() - RAW_PRIVATE_KEY_SIZE;
+    uint8_t *pubkey = fido_extract_pubkey_in_certificate(cert_data, cert_size);
+    if (pubkey == NULL) {
+        fido_log_error("install_privkey_to_atecc failed: No public key in certificate");
+        return false;
+    } 
+
+    // １４番スロットの秘密鍵から、公開鍵を生成
+    if (atecc_generate_pubkey_from_privkey(work_buf) == false) {
+        return false;
+    }
+
+#if LOG_DEBUG_PUBKEY_BUFF
+    // 生成された公開鍵をダンプ
+    fido_log_debug("Public key from certificate:");
+    fido_log_print_hexdump_debug(pubkey, RAW_PUBLIC_KEY_SIZE);
+    fido_log_debug("Public key from ATECC608A:");
+    fido_log_print_hexdump_debug(work_buf, RAW_PUBLIC_KEY_SIZE);
+#endif
+
+    // 内容を検証
+    if (memcmp(pubkey, work_buf, RAW_PUBLIC_KEY_SIZE) != 0) {
+        fido_log_error("install_privkey_to_atecc failed: Invalid public key in certificate");
+        return false;
+    }
+
+    // クライアントから送付されたデータから、
+    // 秘密鍵に該当する部分を削除
+    // （先頭の32バイトをFlash ROM上での初期状態とする）
+    memset(fido_maintenance_cryption_data(), 0xff, RAW_PRIVATE_KEY_SIZE);
+    return true;
+}
+
 static void command_install_skey_cert(void)
 {
     uint8_t *data = fido_hid_receive_apdu()->data;
@@ -93,7 +139,7 @@ static void command_install_skey_cert(void)
     // 秘密鍵をFlash ROMに登録せず、
     // ATECC608Aの該当スロットに登録するようにする
     if (atecc_is_available()) {
-        if (atecc_install_privkey(fido_maintenance_cryption_data()) == false) {
+        if (install_privkey_to_atecc() == false) {
             send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 7);
             return;
         }
