@@ -192,7 +192,9 @@ static bool do_sign_with_privkey(uint8_t *private_key_be)
     // ハッシュデータと秘密鍵により、署名データ作成
     uint8_t *hash_digest = u2f_signature_hash_for_sign();
     size_t signature_size = ECDSA_SIGNATURE_SIZE;
-    fido_crypto_ecdsa_sign(private_key_be, hash_digest, SHA_256_HASH_SIZE, signature, &signature_size);
+    if (fido_crypto_ecdsa_sign(private_key_be, hash_digest, SHA_256_HASH_SIZE, signature, &signature_size) == false) {
+        return false;
+    }
 
     // ASN.1形式署名を格納する領域を準備
     if (u2f_signature_convert_to_asn1(signature) == false) {
