@@ -44,6 +44,7 @@ bool     atecc_get_config_bytes(void);
 bool     atecc_setup_config(void);
 bool     atecc_install_privkey(uint8_t *privkey_raw_data);
 bool     atecc_generate_pubkey_from_privkey(uint8_t *public_key_buff);
+bool     atecc_generate_sign_with_privkey(uint16_t key_id, uint8_t const *hash_digest, uint8_t *signature);
 
 #ifdef __cplusplus
 }

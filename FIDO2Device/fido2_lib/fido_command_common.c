@@ -19,6 +19,9 @@
 // for token counter
 #include "fido_flash_token_counter.h"
 
+// for ATECC608A
+#include "atecc.h"
+
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
@@ -184,6 +187,28 @@ void fido_command_sskey_calculate_hmac_sha256(
 // 署名関連
 //
 static uint8_t signature[ECDSA_SIGNATURE_SIZE];
+
+static bool do_sign_with_atecc_privkey(void)
+{
+    // 署名ベースからハッシュデータを生成
+    u2f_signature_generate_hash_for_sign();
+
+    // ハッシュデータと秘密鍵により、署名データ作成
+    uint8_t *hash_digest = u2f_signature_hash_for_sign();
+    if (atecc_generate_sign_with_privkey(KEY_ID_FOR_INSTALL_PRIVATE_KEY, hash_digest, signature) == false) {
+        return false;
+    }
+
+    // ASN.1形式署名を格納する領域を準備
+    if (u2f_signature_convert_to_asn1(signature) == false) {
+        // 生成された署名をASN.1形式署名に変換する
+        // 変換失敗の場合終了
+        return false;
+    }
+
+    return true;
+}
+
 static bool do_sign_with_privkey(uint8_t *private_key_be)
 {
     // 署名ベースからハッシュデータを生成
@@ -208,6 +233,12 @@ static bool do_sign_with_privkey(uint8_t *private_key_be)
 
 bool fido_command_do_sign_with_privkey(void)
 {
+    // ATECC608Aが利用可能であれば、
+    // ATECC608Aに登録されている秘密鍵で署名データ作成
+    if (atecc_is_available()) {
+        return do_sign_with_atecc_privkey();
+    }
+
     // 認証器固有の秘密鍵を取得
     uint8_t *private_key_be = fido_flash_skey_data();
 
