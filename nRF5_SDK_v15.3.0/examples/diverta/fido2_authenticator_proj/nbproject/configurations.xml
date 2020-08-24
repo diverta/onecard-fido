@@ -5,6 +5,8 @@
       <itemPath>../../../../SECUREIC/atecc_lib/README.md</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_aes.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_aes.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_command.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_command.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_device.c</itemPath>
@@ -3310,6 +3312,16 @@
             flavor2="0">
       </item>
       <item path="../../../../SECUREIC/atecc_lib/atecc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_aes.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_aes.h"
             ex="false"
             tool="3"
             flavor2="0">

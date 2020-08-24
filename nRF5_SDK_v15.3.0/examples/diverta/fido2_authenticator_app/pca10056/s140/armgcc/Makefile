@@ -252,6 +252,7 @@ SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
 ATELIB_DIR := $(SCIC_DIR)/atecc_lib
 SRC_FILES += \
   $(ATELIB_DIR)/atecc.c \
+  $(ATELIB_DIR)/atecc_aes.c \
   $(ATELIB_DIR)/atecc_command.c \
   $(ATELIB_DIR)/atecc_device.c \
   $(ATELIB_DIR)/atecc_iface.c \
