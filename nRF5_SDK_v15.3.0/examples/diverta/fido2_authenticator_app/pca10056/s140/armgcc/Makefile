@@ -255,8 +255,11 @@ SRC_FILES += \
   $(ATELIB_DIR)/atecc_command.c \
   $(ATELIB_DIR)/atecc_device.c \
   $(ATELIB_DIR)/atecc_iface.c \
+  $(ATELIB_DIR)/atecc_nonce.c \
+  $(ATELIB_DIR)/atecc_priv.c \
   $(ATELIB_DIR)/atecc_read.c \
   $(ATELIB_DIR)/atecc_setup.c \
+  $(ATELIB_DIR)/atecc_sign.c \
   $(ATELIB_DIR)/atecc_util.c \
   $(ATELIB_DIR)/atecc_write.c \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \

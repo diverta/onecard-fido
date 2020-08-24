@@ -101,12 +101,15 @@ void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_s
     }
 }
 
-void fido_crypto_ecdsa_sign(uint8_t *private_key_be, 
+bool fido_crypto_ecdsa_sign(uint8_t *private_key_be, 
     uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
 {
     // Initialize crypto library.
     ret_code_t err_code = nrf_crypto_init();
-    APP_ERROR_CHECK(err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_DEBUG("nrf_crypto_init() returns 0x%02x ", err_code);
+        return false;
+    }
 
     // 署名に使用する秘密鍵（32バイト）を取得
     //   SDK 15以降はビッグエンディアンで引き渡す必要あり
@@ -117,8 +120,8 @@ void fido_crypto_ecdsa_sign(uint8_t *private_key_be,
         NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_DEBUG("nrf_crypto_ecc_private_key_from_raw() returns 0x%02x ", err_code);
+        return false;
     }
-    APP_ERROR_CHECK(err_code);
     
     // 署名実行
     err_code = nrf_crypto_ecdsa_sign(
@@ -130,8 +133,10 @@ void fido_crypto_ecdsa_sign(uint8_t *private_key_be,
         signature_size);
     if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("nrf_crypto_ecdsa_sign() returns 0x%02x ", err_code);
+        return false;
     }
-    APP_ERROR_CHECK(err_code);
+
+    return true;
 }
 
 bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be, 

@@ -11,9 +11,15 @@
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_device.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_iface.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_nonce.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_nonce.h</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_priv.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_priv.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_read.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_read.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_setup.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_sign.c</itemPath>
+      <itemPath>../../../../SECUREIC/atecc_lib/atecc_sign.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_util.c</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_util.h</itemPath>
       <itemPath>../../../../SECUREIC/atecc_lib/atecc_write.c</itemPath>
@@ -3338,6 +3344,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_priv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_priv.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../../SECUREIC/atecc_lib/atecc_read.c"
             ex="false"
             tool="0"
@@ -3351,6 +3377,16 @@
       <item path="../../../../SECUREIC/atecc_lib/atecc_setup.c"
             ex="false"
             tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_sign.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_sign.h"
+            ex="false"
+            tool="3"
             flavor2="0">
       </item>
       <item path="../../../../SECUREIC/atecc_lib/atecc_util.c"

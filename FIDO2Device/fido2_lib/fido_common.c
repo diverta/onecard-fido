@@ -48,3 +48,16 @@ size_t fido_calculate_aes_block_size(size_t buffer_size)
     // 計算されたブロックサイズを戻す
     return block_size;
 }
+
+uint8_t *fido_extract_pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_length)
+{
+    for (size_t i = 3; i < cert_data_length; i++) {
+        if (cert_data[i-3] == 0x03 && cert_data[i-2] == 0x42 &&
+            cert_data[i-1] == 0x00 && cert_data[i]   == 0x04) {
+            // 03 42 00 04 というシーケンスが発見されたら、
+            // その先頭アドレスを戻す
+            return (cert_data + i + 1);
+        }
+    }
+    return NULL;
+}

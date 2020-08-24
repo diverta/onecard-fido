@@ -146,3 +146,58 @@ bool atecc_lock_status_get(uint8_t zone, bool *is_locked)
 
     return true;
 }
+
+//
+// ランダマイズ関連
+//
+bool atecc_random(uint8_t *rand_out)
+{
+    // build an random command
+    ATECC_PACKET packet;
+    packet.param1 = RANDOM_SEED_UPDATE;
+    packet.param2 = 0x0000;
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    if (atecc_command_random(command, &packet) == false) {
+        return false;
+    }
+    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
+        return false;
+    }
+    if (packet.data[ATECC_IDX_COUNT] != RANDOM_RSP_SIZE) {
+        fido_log_error("atecc_random failed: RX_FAIL");
+        return false;
+    }
+    if (rand_out != NULL) {
+        memcpy(rand_out, &packet.data[ATECC_IDX_RSP_DATA], RANDOM_NUM_SIZE);
+    }
+    return true;
+}
+
+//
+// 公開鍵生成
+//
+bool atecc_gen_key(uint8_t mode, uint16_t key_id, const uint8_t *other_data, uint8_t *public_key)
+{
+    // Build GenKey command
+    ATECC_PACKET packet;
+    packet.param1 = mode;
+    packet.param2 = key_id;
+    if (other_data) {
+        memcpy(packet.data, other_data, GENKEY_OTHER_DATA_SIZE);
+    }
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    if (atecc_command_gen_key(command, &packet) == false) {
+        return false;
+    }
+    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
+        return false;
+    }
+
+    if (public_key && packet.data[ATECC_IDX_COUNT] > 4) {
+        memcpy(public_key, &packet.data[ATECC_IDX_RSP_DATA], packet.data[ATECC_IDX_COUNT] - 3);
+    }
+
+    return true;
+}

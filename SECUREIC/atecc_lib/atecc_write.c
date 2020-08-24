@@ -53,7 +53,7 @@ static bool atecc_write(uint8_t zone, uint16_t address, const uint8_t *value, co
     return true;
 }
 
-static bool atecc_write_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, const uint8_t *data, uint8_t len)
+bool atecc_write_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, const uint8_t *data, uint8_t len)
 {
     // Check the input parameters
     if (data == NULL) {
