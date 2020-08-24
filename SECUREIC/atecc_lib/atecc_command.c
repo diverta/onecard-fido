@@ -178,6 +178,44 @@ bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet)
     return true;
 }
 
+bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_SIGN;
+    packet->txsize = SIGN_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_VERIFY;
+
+    // variable packet size based on mode
+    switch (packet->param1 & VERIFY_MODE_MASK) {
+        case VERIFY_MODE_STORED:
+            packet->txsize = VERIFY_256_STORED_COUNT;
+            break;
+        case VERIFY_MODE_VALIDATE_EXTERNAL:
+            packet->txsize = VERIFY_256_EXTERNAL_COUNT;
+            break;
+        case VERIFY_MODE_EXTERNAL:
+            packet->txsize = VERIFY_256_EXTERNAL_COUNT;
+            break;
+        case VERIFY_MODE_VALIDATE:
+        case VERIFY_MODE_INVALIDATE:
+            packet->txsize = VERIFY_256_VALIDATE_COUNT;
+            break;
+        default:
+            fido_log_error("atecc_command_verify: BAD_PARAM");
+            return false;
+    }
+
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
 static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long

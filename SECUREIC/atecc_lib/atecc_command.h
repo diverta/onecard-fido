@@ -256,6 +256,55 @@ extern "C" {
 #define GENKEY_RSP_SIZE_SHORT           ATECC_RSP_SIZE_MIN  // GenKey response packet size in Digest mode
 #define GENKEY_RSP_SIZE_LONG            ATECC_RSP_SIZE_64   // GenKey response packet size when returning a public key
 
+//
+// Sign Command 関連定義
+//
+#define SIGN_MODE_IDX                   ATECC_IDX_PARAM1    // Sign command index for mode
+#define SIGN_KEYID_IDX                  ATECC_IDX_PARAM2    // Sign command index for key id
+#define SIGN_COUNT                      ATECC_CMD_SIZE_MIN  // Sign command packet size
+#define SIGN_MODE_MASK                  ((uint8_t)0xE1)     // Sign mode bits 1 to 4 are 0
+#define SIGN_MODE_INTERNAL              ((uint8_t)0x00)     // Sign mode	 0: internal
+#define SIGN_MODE_INVALIDATE            ((uint8_t)0x01)     // Sign mode bit 1: Signature will be used for Verify(Invalidate)
+#define SIGN_MODE_INCLUDE_SN            ((uint8_t)0x40)     // Sign mode bit 6: include serial number
+#define SIGN_MODE_EXTERNAL              ((uint8_t)0x80)     // Sign mode bit 7: external
+#define SIGN_MODE_SOURCE_MASK           ((uint8_t)0x20)     // Sign mode message source mask
+#define SIGN_MODE_SOURCE_TEMPKEY        ((uint8_t)0x00)     // Sign mode message source is TempKey
+#define SIGN_MODE_SOURCE_MSGDIGBUF      ((uint8_t)0x20)     // Sign mode message source is the Message Digest Buffer
+#define SIGN_RSP_SIZE                   ATECC_RSP_SIZE_MAX  // Sign command response packet size
+
+//
+// Verify Command 関連定義
+//
+#define VERIFY_MODE_IDX                 ATECC_IDX_PARAM1    // Verify command index for mode
+#define VERIFY_KEYID_IDX                ATECC_IDX_PARAM2    // Verify command index for key id
+#define VERIFY_DATA_IDX                 (  5)               // Verify command index for data
+#define VERIFY_256_STORED_COUNT         ( 71)               // Verify command packet size for 256-bit key in stored mode
+#define VERIFY_283_STORED_COUNT         ( 79)               // Verify command packet size for 283-bit key in stored mode
+#define VERIFY_256_VALIDATE_COUNT       ( 90)               // Verify command packet size for 256-bit key in validate mode
+#define VERIFY_283_VALIDATE_COUNT       ( 98)               // Verify command packet size for 283-bit key in validate mode
+#define VERIFY_256_EXTERNAL_COUNT       (135)               // Verify command packet size for 256-bit key in external mode
+#define VERIFY_283_EXTERNAL_COUNT       (151)               // Verify command packet size for 283-bit key in external mode
+#define VERIFY_256_KEY_SIZE             ( 64)               // Verify key size for 256-bit key
+#define VERIFY_283_KEY_SIZE             ( 72)               // Verify key size for 283-bit key
+#define VERIFY_256_SIGNATURE_SIZE       ( 64)               // Verify signature size for 256-bit key
+#define VERIFY_283_SIGNATURE_SIZE       ( 72)               // Verify signature size for 283-bit key
+#define VERIFY_OTHER_DATA_SIZE          ( 19)               // Verify size of "other data"
+#define VERIFY_MODE_MASK                ((uint8_t)0x03)     // Verify mode bits 2 to 7 are 0
+#define VERIFY_MODE_STORED              ((uint8_t)0x00)     // Verify mode: stored
+#define VERIFY_MODE_VALIDATE_EXTERNAL   ((uint8_t)0x01)     // Verify mode: validate external
+#define VERIFY_MODE_EXTERNAL            ((uint8_t)0x02)     // Verify mode: external
+#define VERIFY_MODE_VALIDATE            ((uint8_t)0x03)     // Verify mode: validate
+#define VERIFY_MODE_INVALIDATE          ((uint8_t)0x07)     // Verify mode: invalidate
+#define VERIFY_MODE_SOURCE_MASK         ((uint8_t)0x20)     // Verify mode message source mask
+#define VERIFY_MODE_SOURCE_TEMPKEY      ((uint8_t)0x00)     // Verify mode message source is TempKey
+#define VERIFY_MODE_SOURCE_MSGDIGBUF    ((uint8_t)0x20)     // Verify mode message source is the Message Digest Buffer
+#define VERIFY_MODE_MAC_FLAG            ((uint8_t)0x80)     // Verify mode: MAC
+#define VERIFY_KEY_B283                 ((uint16_t)0x0000)  // Verify key type: B283
+#define VERIFY_KEY_K283                 ((uint16_t)0x0001)  // Verify key type: K283
+#define VERIFY_KEY_P256                 ((uint16_t)0x0004)  // Verify key type: P256
+#define VERIFY_RSP_SIZE                 ATECC_RSP_SIZE_MIN  // Verify command response packet size
+#define VERIFY_RSP_SIZE_MAC             ATECC_RSP_SIZE_32   // Verify command response packet size with validating MAC
+
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -301,6 +350,8 @@ bool atecc_command_random(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_nonce(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_no_mac_key);
 bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
