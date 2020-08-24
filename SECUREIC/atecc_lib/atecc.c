@@ -19,11 +19,13 @@
 #include "atecc_iface.h"
 #include "atecc_priv.h"
 #include "atecc_read.h"
+#include "atecc_sign.h"
 #include "atecc_util.h"
 #include "atecc_write.h"
 
 // for debug hex dump data
 #define LOG_HEXDUMP_DEBUG_CONFIG false
+#define ATECC_VERIFY_EXTERN      false
 
 // データ編集用エリア（領域節約のため共通化）
 static uint8_t work_buf_1[256];
@@ -170,6 +172,32 @@ bool atecc_generate_pubkey_from_privkey(uint8_t *public_key_buff)
         fido_log_error("atecc_generate_pubkey_from_privkey failed: atecc_gen_key(%d) returns false", key_id);
         return false;
     }
+
+    return true;
+}
+
+bool atecc_generate_sign_with_privkey(uint16_t key_id, uint8_t const *hash_digest, uint8_t *signature)
+{
+    // 署名実行
+    if (atecc_sign(key_id, hash_digest, signature) == false) {
+        fido_log_error("atecc_generate_sign_with_privkey failed: atecc_sign(%d) returns false", key_id);
+        return false;
+    }
+    fido_log_debug("atecc_generate_sign_with_privkey: ecdsa sign success");
+
+#if ATECC_VERIFY_EXTERN
+    // 署名を公開鍵で検証
+    if (atecc_generate_pubkey_from_privkey(work_buf_1) == false) {
+        fido_log_error("atecc_generate_sign_with_privkey failed: atecc_generate_pubkey_from_privkey(%d) returns false", key_id);
+        return false;
+    }
+    if (atecc_verify_extern(hash_digest, signature, work_buf_1) == false) {
+        fido_log_error("atecc_generate_sign_with_privkey failed: atecc_verify_extern(%d) returns false", key_id);
+        return false;
+    } else {
+        fido_log_debug("atecc_generate_sign_with_privkey: verify ecdsa sign success");
+    }
+#endif
 
     return true;
 }
