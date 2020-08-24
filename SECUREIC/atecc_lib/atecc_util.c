@@ -201,3 +201,44 @@ bool atecc_gen_key(uint8_t mode, uint16_t key_id, const uint8_t *other_data, uin
 
     return true;
 }
+
+//
+// 設定情報照会
+//
+static bool atecc_info_base(uint8_t mode, uint16_t param2, uint8_t *out_data)
+{
+    // build an info command
+    ATECC_PACKET packet;
+    packet.param1 = mode;
+    packet.param2 = param2;
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    if (atecc_command_info(command, &packet) == false) {
+        return false;
+    }
+    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
+        return false;
+    }
+
+    if (out_data != NULL && packet.data[ATECC_IDX_COUNT] >= 7) {
+        memcpy(out_data, &packet.data[ATECC_IDX_RSP_DATA], 4);
+    }
+
+    return true;
+}
+
+bool atecc_info_get_latch(bool *state)
+{
+    if (state == NULL) {
+        fido_log_error("atecc_info_get_latch failed: BAD_PARAM");
+        return false;
+    }
+
+    uint8_t out_data[4];
+    if (atecc_info_base(INFO_MODE_VOL_KEY_PERMIT, 0, out_data) == false) {
+        return false;
+    }
+
+    *state = (out_data[0] == 1);
+    return true;
+}

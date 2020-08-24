@@ -305,6 +305,27 @@ extern "C" {
 #define VERIFY_RSP_SIZE                 ATECC_RSP_SIZE_MIN  // Verify command response packet size
 #define VERIFY_RSP_SIZE_MAC             ATECC_RSP_SIZE_32   // Verify command response packet size with validating MAC
 
+//
+// Info Command 関連定義
+//
+#define INFO_PARAM1_IDX                 ATECC_IDX_PARAM1    // Info command index for 1. parameter
+#define INFO_PARAM2_IDX                 ATECC_IDX_PARAM2    // Info command index for 2. parameter
+#define INFO_COUNT                      ATECC_CMD_SIZE_MIN  // Info command packet size
+#define INFO_MODE_REVISION              ((uint8_t)0x00)     // Info mode Revision
+#define INFO_MODE_KEY_VALID             ((uint8_t)0x01)     // Info mode KeyValid
+#define INFO_MODE_STATE                 ((uint8_t)0x02)     // Info mode State
+#define INFO_MODE_GPIO                  ((uint8_t)0x03)     // Info mode GPIO
+#define INFO_MODE_VOL_KEY_PERMIT        ((uint8_t)0x04)     // Info mode GPIO
+#define INFO_MODE_MAX                   ((uint8_t)0x03)     // Info mode maximum value
+#define INFO_NO_STATE                   ((uint8_t)0x00)     // Info mode is not the state mode.
+#define INFO_OUTPUT_STATE_MASK          ((uint8_t)0x01)     // Info output state mask
+#define INFO_DRIVER_STATE_MASK          ((uint8_t)0x02)     // Info driver state mask
+#define INFO_PARAM2_SET_LATCH_STATE     ((uint16_t)0x0002)  // Info param2 to set the persistent latch state.
+#define INFO_PARAM2_LATCH_SET           ((uint16_t)0x0001)  // Info param2 to set the persistent latch
+#define INFO_PARAM2_LATCH_CLEAR         ((uint16_t)0x0000)  // Info param2 to clear the persistent latch
+#define INFO_SIZE                       ((uint8_t)0x04)     // Info return size
+#define INFO_RSP_SIZE                   ATECC_RSP_SIZE_VAL  // Info command response packet size
+
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -352,6 +373,7 @@ bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_
 bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
