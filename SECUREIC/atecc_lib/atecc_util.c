@@ -227,6 +227,13 @@ static bool atecc_info_base(uint8_t mode, uint16_t param2, uint8_t *out_data)
     return true;
 }
 
+bool atecc_info_set_latch(bool state)
+{
+    uint16_t param2 = INFO_PARAM2_SET_LATCH_STATE;
+    param2 |= (state ? INFO_PARAM2_LATCH_SET : INFO_PARAM2_LATCH_CLEAR);
+    return atecc_info_base(INFO_MODE_VOL_KEY_PERMIT, param2, NULL);
+}
+
 bool atecc_info_get_latch(bool *state)
 {
     if (state == NULL) {

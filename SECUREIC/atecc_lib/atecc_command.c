@@ -225,6 +225,15 @@ bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet)
     return true;
 }
 
+bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_CHECKMAC;
+    packet->txsize = CHECKMAC_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
 static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long

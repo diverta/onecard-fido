@@ -239,6 +239,29 @@ extern "C" {
 #define MAC_RSP_SIZE                    ATECC_RSP_SIZE_32   // MAC command response packet size
 
 //
+// CheckMac Command 関連定義
+//
+#define CHECKMAC_MODE_IDX               ATECC_IDX_PARAM1    // CheckMAC command index for mode
+#define CHECKMAC_KEYID_IDX              ATECC_IDX_PARAM2    // CheckMAC command index for key identifier
+#define CHECKMAC_CLIENT_CHALLENGE_IDX   ATECC_IDX_DATA      // CheckMAC command index for client challenge
+#define CHECKMAC_CLIENT_RESPONSE_IDX    (37)                // CheckMAC command index for client response
+#define CHECKMAC_DATA_IDX               (69)                // CheckMAC command index for other data
+#define CHECKMAC_COUNT                  (84)                // CheckMAC command packet size
+#define CHECKMAC_MODE_CHALLENGE         ((uint8_t)0x00)     // CheckMAC mode	   0: first SHA block from key id
+#define CHECKMAC_MODE_BLOCK2_TEMPKEY    ((uint8_t)0x01)     // CheckMAC mode bit   0: second SHA block from TempKey
+#define CHECKMAC_MODE_BLOCK1_TEMPKEY    ((uint8_t)0x02)     // CheckMAC mode bit   1: first SHA block from TempKey
+#define CHECKMAC_MODE_SOURCE_FLAG_MATCH ((uint8_t)0x04)     // CheckMAC mode bit   2: match TempKey.SourceFlag
+#define CHECKMAC_MODE_INCLUDE_OTP_64    ((uint8_t)0x20)     // CheckMAC mode bit   5: include first 64 OTP bits
+#define CHECKMAC_MODE_MASK              ((uint8_t)0x27)     // CheckMAC mode bits 3, 4, 6, and 7 are 0.
+#define CHECKMAC_CLIENT_CHALLENGE_SIZE  (32)                // CheckMAC size of client challenge
+#define CHECKMAC_CLIENT_RESPONSE_SIZE   (32)                // CheckMAC size of client response
+#define CHECKMAC_OTHER_DATA_SIZE        (13)                // CheckMAC size of "other data"
+#define CHECKMAC_CLIENT_COMMAND_SIZE    (4)                 // CheckMAC size of client command header size inside "other data"
+#define CHECKMAC_CMD_MATCH              (0)                 // CheckMAC return value when there is a match
+#define CHECKMAC_CMD_MISMATCH           (1)                 // CheckMAC return value when there is a mismatch
+#define CHECKMAC_RSP_SIZE               ATECC_RSP_SIZE_MIN  // CheckMAC response packet size
+
+//
 // GenKey Command 関連定義
 //
 #define GENKEY_MODE_IDX                 ATECC_IDX_PARAM1    // GenKey command index for mode
@@ -326,6 +349,7 @@ extern "C" {
 #define INFO_SIZE                       ((uint8_t)0x04)     // Info return size
 #define INFO_RSP_SIZE                   ATECC_RSP_SIZE_VAL  // Info command response packet size
 
+    
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -374,6 +398,7 @@ bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
