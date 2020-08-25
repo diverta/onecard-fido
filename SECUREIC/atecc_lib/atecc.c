@@ -15,6 +15,7 @@
 //
 // ATECCx08A関連
 //
+#include "atecc_aes.h"
 #include "atecc_command.h"
 #include "atecc_iface.h"
 #include "atecc_priv.h"
@@ -76,6 +77,39 @@ bool atecc_is_available(void)
     return atecc_init_done;
 }
 
+static bool setup_temp_key(uint16_t tmp_key_id, uint8_t *work_buf)
+{
+    // 32バイトの一時キーを生成
+    if (atecc_random(work_buf) == false) {
+        fido_log_error("setup_temp_key failed: atecc_random returns false");
+        return false;
+    }
+
+    // 一時キーを１５番スロットに書込み
+    if (atecc_write_zone(ATECC_ZONE_DATA, tmp_key_id, 0, 0, work_buf, ATECC_BLOCK_SIZE) == false) {
+        fido_log_error("setup_temp_key failed: atecc_write_zone(%d) returns false", tmp_key_id);
+        return false;
+    }
+
+    return true;
+}
+
+static bool atecc_aes_init(void)
+{
+    // 32バイトの一時キーを生成し、１５番スロットに書込み
+    uint16_t tmp_key_id = KEY_ID_FOR_INSTALL_PRV_TMP_KEY;
+    if (setup_temp_key(tmp_key_id, work_buf_2) == false) {
+        return false;
+    }
+
+    // AESコマンドを使えるようにするため、Persistent Latch を設定
+    if (atecc_aes_set_persistent_latch(tmp_key_id, work_buf_2) == false) {
+        return false;
+    }
+
+    return true;
+}
+
 bool atecc_initialize(void)
 {
     if (atecc_init_done) {
@@ -99,6 +133,11 @@ bool atecc_initialize(void)
         return false;
     }
 
+    // AES関連初期化処理
+    if (atecc_aes_init() == false) {
+        return false;
+    }
+    
     // 初期化処理は実行済み
     atecc_init_done = true;
     fido_log_info("atecc_initialize success");
@@ -133,15 +172,10 @@ bool atecc_get_config_bytes(void)
 //
 bool atecc_install_privkey(uint8_t *privkey_raw_data)
 {
-    // 32バイトの一時キーを生成
-    if (atecc_random(work_buf_2) == false) {
-        fido_log_error("atecc_install_privkey failed: atcab_random returns false");
-        return false;
-    }
-
-    // 一時キーを１５番スロットに書込み
-    if (atecc_write_zone(ATECC_ZONE_DATA, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, 0, 0, work_buf_2, ATECC_BLOCK_SIZE) == false) {
-        fido_log_error("atecc_install_privkey failed: atcab_write_zone(%d) returns false", KEY_ID_FOR_INSTALL_PRV_TMP_KEY);
+    // 32バイトの一時キーを生成し、１５番スロットに書込み
+    uint16_t tmp_key_id = KEY_ID_FOR_INSTALL_PRV_TMP_KEY;
+    if (setup_temp_key(tmp_key_id, work_buf_2) == false) {
+        fido_log_error("atecc_install_privkey failed: setup_temp_key(%d) returns false", tmp_key_id);
         return false;
     }
 
@@ -154,7 +188,7 @@ bool atecc_install_privkey(uint8_t *privkey_raw_data)
     //   秘密鍵を暗号化するキーが上書き保存されます。
     //   １４・１５番スロットの内容は、
     //   いかなる手段によっても参照することができません。
-    if (atecc_priv_write(KEY_ID_FOR_INSTALL_PRIVATE_KEY, work_buf_1, KEY_ID_FOR_INSTALL_PRV_TMP_KEY, work_buf_2) == false) {
+    if (atecc_priv_write(KEY_ID_FOR_INSTALL_PRIVATE_KEY, work_buf_1, tmp_key_id, work_buf_2) == false) {
         fido_log_error("atecc_install_privkey failed: atecc_priv_write(%d) returns false", KEY_ID_FOR_INSTALL_PRIVATE_KEY);
         return false;
     }
