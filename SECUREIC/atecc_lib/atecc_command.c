@@ -234,6 +234,20 @@ bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet)
     return true;
 }
 
+bool atecc_command_aes(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_AES;
+    packet->txsize = ATECC_CMD_SIZE_MIN;
+    if ((packet->param1 & AES_MODE_OP_MASK) == AES_MODE_GFM) {
+        packet->txsize += ATECC_AES_GFM_SIZE;
+    } else {
+        packet->txsize += AES_DATA_SIZE;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
 static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long

@@ -349,7 +349,23 @@ extern "C" {
 #define INFO_SIZE                       ((uint8_t)0x04)     // Info return size
 #define INFO_RSP_SIZE                   ATECC_RSP_SIZE_VAL  // Info command response packet size
 
-    
+//
+// AES Command 関連定義
+//
+#define AES_MODE_IDX                    ATECC_IDX_PARAM1    // AES command index for mode
+#define AES_KEYID_IDX                   ATECC_IDX_PARAM2    // AES command index for key id
+#define AES_INPUT_IDX                   ATECC_IDX_DATA      // AES command index for input data
+#define AES_COUNT                       (23)                // AES command packet size
+#define AES_MODE_MASK                   ((uint8_t)0xC7)     // AES mode bits 3 to 5 are 0
+#define AES_MODE_KEY_BLOCK_MASK         ((uint8_t)0xC0)     // AES mode mask for key block field
+#define AES_MODE_OP_MASK                ((uint8_t)0x07)     // AES mode operation mask
+#define AES_MODE_ENCRYPT                ((uint8_t)0x00)     // AES mode: Encrypt
+#define AES_MODE_DECRYPT                ((uint8_t)0x01)     // AES mode: Decrypt
+#define AES_MODE_GFM                    ((uint8_t)0x03)     // AES mode: GFM calculation
+#define AES_MODE_KEY_BLOCK_POS          (6)                 // Bit shift for key block in mode
+#define AES_DATA_SIZE                   (16)                // size of AES encrypt/decrypt data
+#define AES_RSP_SIZE                    ATECC_RSP_SIZE_16   // AES command response packet size
+
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -399,6 +415,7 @@ bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_aes(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
