@@ -58,6 +58,19 @@ static bool generate_random_password(void)
     // 32バイトのランダムベクターを生成
     fido_command_generate_random_vector(work_buf, 32);
 
+    // ATECC608Aが利用可能であれば、
+    // AESパスワードをFlash ROMに登録せず、
+    // ATECC608Aの該当スロットに登録するようにする
+    if (atecc_is_available()) {
+        if (atecc_install_aes_password(work_buf, 32) == false) {
+            fido_log_error("Update AES password (ATECC608A) failed ");
+            return false;
+        }
+        // Flash ROMに書き出す領域を初期化
+        memset(work_buf, 0xff, 32);
+        fido_log_debug("Update AES password (ATECC608A) success ");
+    }
+
     // Flash ROMに書き出して保存
     if (fido_flash_password_set(work_buf) == false) {
         return false;

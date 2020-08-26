@@ -235,3 +235,26 @@ bool atecc_generate_sign_with_privkey(uint16_t key_id, uint8_t const *hash_diges
 
     return true;
 }
+
+//
+// AESパスワードの導入処理
+//
+bool atecc_install_aes_password(uint8_t *aes_key_data, size_t aes_key_size)
+{
+    // パラメーターチェック
+    if (aes_key_size % 32 != 0) {
+        fido_log_error("atecc_install_aes_password failed: invalid AES password size (%d bytes)", aes_key_size);
+        return false;
+    }
+
+    // AESパスワードを１３番スロットに書込み
+    //   １３番スロットの内容は、
+    //   いかなる手段によっても参照することができません。
+    uint16_t aes_key_id = KEY_ID_FOR_INSTALL_AES_PASSWORD;
+    if (atecc_write_bytes_zone(ATECC_ZONE_DATA, aes_key_id, 0, aes_key_data, aes_key_size) == false) {
+        fido_log_error("atecc_install_aes_password failed: atecc_write_bytes_zone(%d) returns false", aes_key_id);
+        return false;
+    }
+
+    return true;
+}
