@@ -219,6 +219,88 @@ bool atecc_aes_set_persistent_latch(uint16_t write_key_id, uint8_t *write_key)
     return true;
 }
 
+//
+// 暗号化／復号化
+//
+static bool atecc_aes(uint8_t mode, uint16_t key_id, uint8_t *aes_in, uint8_t *aes_out)
+{
+    if (aes_in == NULL) {
+        fido_log_error("atecc_aes failed: BAD_PARAM");
+        return false;
+    }
+
+    // build a AES command
+    ATECC_PACKET packet;
+    packet.param1 = mode;
+    packet.param2 = key_id;
+    if (AES_MODE_GFM == (mode & AES_MODE_GFM)) {
+        memcpy(packet.data, aes_in, ATECC_AES_GFM_SIZE);
+    } else {
+        memcpy(packet.data, aes_in, AES_DATA_SIZE);
+    }
+
+    ATECC_COMMAND command = atecc_device_ref()->mCommands;
+    if (atecc_command_aes(command, &packet) == false) {
+        return false;
+    }
+    if (atecc_command_execute(&packet, atecc_device_ref()) == false) {
+        return false;
+    }
+
+    if (aes_out && packet.data[ATECC_IDX_COUNT] >= (3 + AES_DATA_SIZE)) {
+        // The AES command return a 16 byte data.
+        memcpy(aes_out, &packet.data[ATECC_IDX_RSP_DATA], AES_DATA_SIZE);
+    }
+
+    return true;
+}
+
+bool atecc_aes_encrypt(uint8_t *plaintext, size_t plaintext_size, uint8_t *encrypted)
+{
+    // 変数の初期化
+    uint16_t aes_key_id = KEY_ID_FOR_INSTALL_AES_PASSWORD;
+    size_t   data_block_num = plaintext_size / AES_DATA_SIZE;
+
+    // Encryption with the AES keys
+    for (size_t data_block = 0; data_block < data_block_num; data_block++) {
+        // 暗号ブロックを更新
+        uint8_t aes_key_block = data_block % 2;
+
+        // データブロックごとに暗号化
+        uint8_t mode = AES_MODE_ENCRYPT | (AES_MODE_KEY_BLOCK_MASK & (aes_key_block << AES_MODE_KEY_BLOCK_POS));
+        size_t offset = data_block * AES_DATA_SIZE;
+        if (atecc_aes(mode, aes_key_id, plaintext + offset, encrypted + offset) == false) {
+            fido_log_error("atecc_aes_encrypt failed: atecc_aes(%d) returns false", aes_key_id);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool atecc_aes_decrypt(uint8_t *encrypted, size_t encrypted_size, uint8_t *decrypted)
+{
+    // 変数の初期化
+    uint16_t aes_key_id = KEY_ID_FOR_INSTALL_AES_PASSWORD;
+    size_t   data_block_num = encrypted_size / AES_DATA_SIZE;
+
+    // Decryption with the AES keys
+    for (size_t data_block = 0; data_block < data_block_num; data_block++) {
+        // 暗号ブロックを更新
+        uint8_t aes_key_block = data_block % 2;
+
+        // データブロックごとに復号化
+        uint8_t mode = AES_MODE_DECRYPT | (AES_MODE_KEY_BLOCK_MASK & (aes_key_block << AES_MODE_KEY_BLOCK_POS));
+        size_t offset = data_block * AES_DATA_SIZE;
+        if (atecc_aes(mode, aes_key_id, encrypted + offset, decrypted + offset) == false) {
+            fido_log_error("atecc_aes_decrypt failed: atecc_aes(%d) returns false", aes_key_id);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void atecc_aes_test(void)
 {
     fido_log_info("atecc_aes_test done");
