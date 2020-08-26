@@ -82,7 +82,7 @@ bool atecc_write_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset
     return status;
 }
 
-static bool atecc_write_bytes_zone(uint8_t zone, uint16_t slot, size_t offset_bytes, const uint8_t *data, size_t length)
+bool atecc_write_bytes_zone(uint8_t zone, uint16_t slot, size_t offset_bytes, const uint8_t *data, size_t length)
 {
     if (zone != ATECC_ZONE_CONFIG && zone != ATECC_ZONE_OTP && zone != ATECC_ZONE_DATA) {
         fido_log_error("atecc_write_bytes_zone failed: BAD_PARAM");

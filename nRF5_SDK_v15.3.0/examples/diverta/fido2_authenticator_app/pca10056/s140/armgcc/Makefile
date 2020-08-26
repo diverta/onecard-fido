@@ -20,6 +20,9 @@ else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
 
+# disable ATECC608A (or ATECC608A is not installed)
+# CFLAGS += -DNO_SECURE_IC
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
@@ -252,6 +255,7 @@ SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
 ATELIB_DIR := $(SCIC_DIR)/atecc_lib
 SRC_FILES += \
   $(ATELIB_DIR)/atecc.c \
+  $(ATELIB_DIR)/atecc_aes.c \
   $(ATELIB_DIR)/atecc_command.c \
   $(ATELIB_DIR)/atecc_device.c \
   $(ATELIB_DIR)/atecc_iface.c \

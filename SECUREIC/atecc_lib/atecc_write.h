@@ -19,6 +19,7 @@ extern "C" {
 // 関数群
 //
 bool atecc_write_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, const uint8_t *data, uint8_t len);
+bool atecc_write_bytes_zone(uint8_t zone, uint16_t slot, size_t offset_bytes, const uint8_t *data, size_t length);
 bool atecc_write_config_zone(const uint8_t *config_data);
 
 #ifdef __cplusplus

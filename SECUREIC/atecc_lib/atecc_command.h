@@ -239,6 +239,29 @@ extern "C" {
 #define MAC_RSP_SIZE                    ATECC_RSP_SIZE_32   // MAC command response packet size
 
 //
+// CheckMac Command 関連定義
+//
+#define CHECKMAC_MODE_IDX               ATECC_IDX_PARAM1    // CheckMAC command index for mode
+#define CHECKMAC_KEYID_IDX              ATECC_IDX_PARAM2    // CheckMAC command index for key identifier
+#define CHECKMAC_CLIENT_CHALLENGE_IDX   ATECC_IDX_DATA      // CheckMAC command index for client challenge
+#define CHECKMAC_CLIENT_RESPONSE_IDX    (37)                // CheckMAC command index for client response
+#define CHECKMAC_DATA_IDX               (69)                // CheckMAC command index for other data
+#define CHECKMAC_COUNT                  (84)                // CheckMAC command packet size
+#define CHECKMAC_MODE_CHALLENGE         ((uint8_t)0x00)     // CheckMAC mode	   0: first SHA block from key id
+#define CHECKMAC_MODE_BLOCK2_TEMPKEY    ((uint8_t)0x01)     // CheckMAC mode bit   0: second SHA block from TempKey
+#define CHECKMAC_MODE_BLOCK1_TEMPKEY    ((uint8_t)0x02)     // CheckMAC mode bit   1: first SHA block from TempKey
+#define CHECKMAC_MODE_SOURCE_FLAG_MATCH ((uint8_t)0x04)     // CheckMAC mode bit   2: match TempKey.SourceFlag
+#define CHECKMAC_MODE_INCLUDE_OTP_64    ((uint8_t)0x20)     // CheckMAC mode bit   5: include first 64 OTP bits
+#define CHECKMAC_MODE_MASK              ((uint8_t)0x27)     // CheckMAC mode bits 3, 4, 6, and 7 are 0.
+#define CHECKMAC_CLIENT_CHALLENGE_SIZE  (32)                // CheckMAC size of client challenge
+#define CHECKMAC_CLIENT_RESPONSE_SIZE   (32)                // CheckMAC size of client response
+#define CHECKMAC_OTHER_DATA_SIZE        (13)                // CheckMAC size of "other data"
+#define CHECKMAC_CLIENT_COMMAND_SIZE    (4)                 // CheckMAC size of client command header size inside "other data"
+#define CHECKMAC_CMD_MATCH              (0)                 // CheckMAC return value when there is a match
+#define CHECKMAC_CMD_MISMATCH           (1)                 // CheckMAC return value when there is a mismatch
+#define CHECKMAC_RSP_SIZE               ATECC_RSP_SIZE_MIN  // CheckMAC response packet size
+
+//
 // GenKey Command 関連定義
 //
 #define GENKEY_MODE_IDX                 ATECC_IDX_PARAM1    // GenKey command index for mode
@@ -305,6 +328,44 @@ extern "C" {
 #define VERIFY_RSP_SIZE                 ATECC_RSP_SIZE_MIN  // Verify command response packet size
 #define VERIFY_RSP_SIZE_MAC             ATECC_RSP_SIZE_32   // Verify command response packet size with validating MAC
 
+//
+// Info Command 関連定義
+//
+#define INFO_PARAM1_IDX                 ATECC_IDX_PARAM1    // Info command index for 1. parameter
+#define INFO_PARAM2_IDX                 ATECC_IDX_PARAM2    // Info command index for 2. parameter
+#define INFO_COUNT                      ATECC_CMD_SIZE_MIN  // Info command packet size
+#define INFO_MODE_REVISION              ((uint8_t)0x00)     // Info mode Revision
+#define INFO_MODE_KEY_VALID             ((uint8_t)0x01)     // Info mode KeyValid
+#define INFO_MODE_STATE                 ((uint8_t)0x02)     // Info mode State
+#define INFO_MODE_GPIO                  ((uint8_t)0x03)     // Info mode GPIO
+#define INFO_MODE_VOL_KEY_PERMIT        ((uint8_t)0x04)     // Info mode GPIO
+#define INFO_MODE_MAX                   ((uint8_t)0x03)     // Info mode maximum value
+#define INFO_NO_STATE                   ((uint8_t)0x00)     // Info mode is not the state mode.
+#define INFO_OUTPUT_STATE_MASK          ((uint8_t)0x01)     // Info output state mask
+#define INFO_DRIVER_STATE_MASK          ((uint8_t)0x02)     // Info driver state mask
+#define INFO_PARAM2_SET_LATCH_STATE     ((uint16_t)0x0002)  // Info param2 to set the persistent latch state.
+#define INFO_PARAM2_LATCH_SET           ((uint16_t)0x0001)  // Info param2 to set the persistent latch
+#define INFO_PARAM2_LATCH_CLEAR         ((uint16_t)0x0000)  // Info param2 to clear the persistent latch
+#define INFO_SIZE                       ((uint8_t)0x04)     // Info return size
+#define INFO_RSP_SIZE                   ATECC_RSP_SIZE_VAL  // Info command response packet size
+
+//
+// AES Command 関連定義
+//
+#define AES_MODE_IDX                    ATECC_IDX_PARAM1    // AES command index for mode
+#define AES_KEYID_IDX                   ATECC_IDX_PARAM2    // AES command index for key id
+#define AES_INPUT_IDX                   ATECC_IDX_DATA      // AES command index for input data
+#define AES_COUNT                       (23)                // AES command packet size
+#define AES_MODE_MASK                   ((uint8_t)0xC7)     // AES mode bits 3 to 5 are 0
+#define AES_MODE_KEY_BLOCK_MASK         ((uint8_t)0xC0)     // AES mode mask for key block field
+#define AES_MODE_OP_MASK                ((uint8_t)0x07)     // AES mode operation mask
+#define AES_MODE_ENCRYPT                ((uint8_t)0x00)     // AES mode: Encrypt
+#define AES_MODE_DECRYPT                ((uint8_t)0x01)     // AES mode: Decrypt
+#define AES_MODE_GFM                    ((uint8_t)0x03)     // AES mode: GFM calculation
+#define AES_MODE_KEY_BLOCK_POS          (6)                 // Bit shift for key block in mode
+#define AES_DATA_SIZE                   (16)                // size of AES encrypt/decrypt data
+#define AES_RSP_SIZE                    ATECC_RSP_SIZE_16   // AES command response packet size
+
 typedef struct {
     uint8_t  opcode;
     uint16_t execution_time_msec;
@@ -352,6 +413,9 @@ bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_
 bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet);
 bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet);
+bool atecc_command_aes(ATECC_COMMAND command, ATECC_PACKET *packet);
 
 #ifdef __cplusplus
 }
