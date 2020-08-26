@@ -20,6 +20,9 @@ else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
 
+# disable ATECC608A (or ATECC608A is not installed)
+CFLAGS += -DNO_SECURE_IC
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device

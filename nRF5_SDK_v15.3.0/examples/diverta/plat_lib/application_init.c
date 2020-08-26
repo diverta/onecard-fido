@@ -154,7 +154,7 @@ static void application_init_resume(void)
     // PINトークンとキーペアを再生成
     ctap2_client_pin_init();
 
-#if defined(BOARD_PCA10059)
+#if defined(NO_SECURE_IC)
     NRF_LOG_INFO("Secure IC is not installed. Flash ROM will be used instead.");
 #else
     // ATECC608A初期化と接続検知
