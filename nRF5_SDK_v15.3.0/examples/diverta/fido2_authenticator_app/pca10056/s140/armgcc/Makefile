@@ -21,7 +21,7 @@ else
 endif
 
 # disable ATECC608A (or ATECC608A is not installed)
-CFLAGS += -DNO_SECURE_IC
+# CFLAGS += -DNO_SECURE_IC
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
