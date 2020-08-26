@@ -300,8 +300,3 @@ bool atecc_aes_decrypt(uint8_t *encrypted, size_t encrypted_size, uint8_t *decry
 
     return true;
 }
-
-void atecc_aes_test(void)
-{
-    fido_log_info("atecc_aes_test done");
-}

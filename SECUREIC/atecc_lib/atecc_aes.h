@@ -21,7 +21,6 @@ extern "C" {
 bool atecc_aes_set_persistent_latch(uint16_t write_key_id, uint8_t *write_key);
 bool atecc_aes_encrypt(uint8_t *plaintext, size_t plaintext_size, uint8_t *encrypted);
 bool atecc_aes_decrypt(uint8_t *encrypted, size_t encrypted_size, uint8_t *decrypted);
-void atecc_aes_test(void);
 
 #ifdef __cplusplus
 }

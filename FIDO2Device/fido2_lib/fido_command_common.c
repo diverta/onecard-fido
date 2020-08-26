@@ -21,6 +21,7 @@
 
 // for ATECC608A
 #include "atecc.h"
+#include "atecc_aes.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -67,11 +68,31 @@ bool fido_command_check_aes_password_exist(void)
 
 size_t fido_command_aes_cbc_decrypt(uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted)
 {
+    // ATECC608Aが利用可能であれば、
+    // ATECC608Aに登録されているAESパスワードを使用して復号化
+    if (atecc_is_available()) {
+        if (atecc_aes_decrypt(p_encrypted, encrypted_size, decrypted) == false) {
+            return 0;
+        } else {
+            return encrypted_size;
+        }
+    }
+
     return fido_crypto_aes_cbc_256_decrypt(fido_flash_password_get(), p_encrypted, encrypted_size, decrypted);
 }
 
 size_t fido_command_aes_cbc_encrypt(uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted)
 {
+    // ATECC608Aが利用可能であれば、
+    // ATECC608Aに登録されているAESパスワードを使用して暗号化
+    if (atecc_is_available()) {
+        if (atecc_aes_encrypt(p_plaintext, plaintext_size, encrypted) == false) {
+            return 0;
+        } else {
+            return plaintext_size;
+        }
+    }
+
     return fido_crypto_aes_cbc_256_encrypt(fido_flash_password_get(), p_plaintext, plaintext_size, encrypted);
 }
 
