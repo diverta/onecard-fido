@@ -28,10 +28,8 @@ NRF_LOG_MODULE_REGISTER();
 
 #include "fido_platform.h"
 
-#if defined(BOARD_PCA10059_02)
-// for fido_cryptoauth_get_serial_num_str
-#include "fido_cryptoauth.h"
-#endif
+// for atecc_get_serial_num_str
+#include "atecc.h"
 
 //
 // ボタンのピン番号
@@ -197,12 +195,12 @@ bool fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_si
     // 各項目をCSV化し、引数のバッファに格納
     sprintf((char *)info_csv_data, 
         "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", DEVICE_NAME, FW_REV, HW_REV);
-#if defined(BOARD_PCA10059_02)
-    // ATECC608Aの固有情報を追加
+
+    // ATECC608Aの固有情報を追加（非実装の場合はブランク）
     char *info_csv_data_ = (char *)info_csv_data;
     sprintf((char *)info_csv_data, 
-        "%s,ATECC608A=\"%s\"", info_csv_data_, fido_cryptoauth_get_serial_num_str());
-#endif
+        "%s,ATECC608A=\"%s\"", info_csv_data_, atecc_get_serial_num_str());
+
     *info_csv_size = strlen((char *)info_csv_data);
     NRF_LOG_DEBUG("Application version info csv created (%d bytes)", *info_csv_size);
     return true;

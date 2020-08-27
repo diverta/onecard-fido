@@ -107,10 +107,11 @@ typedef struct {
 } HID_INIT_RES_T;
 
 // 関数群
-void   fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
-void   fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
-void   fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
-size_t fido_calculate_aes_block_size(size_t buffer_size);
+void     fido_set_status_word(uint8_t *dest_buffer, uint16_t status_word);
+void     fido_set_uint32_bytes(uint8_t *p_dest_buffer, uint32_t bytes);
+void     fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes);
+size_t   fido_calculate_aes_block_size(size_t buffer_size);
+uint8_t *fido_extract_pubkey_in_certificate(uint8_t *cert_data, size_t cert_data_length);
 
 #ifdef __cplusplus
 }

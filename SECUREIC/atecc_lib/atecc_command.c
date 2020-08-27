@@ -104,6 +104,150 @@ bool atecc_command_update_extra(ATECC_COMMAND command, ATECC_PACKET *packet)
     return true;
 }
 
+bool atecc_command_priv_write(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_PRIVWRITE;
+    packet->txsize = PRIVWRITE_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_random(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_RANDOM;
+    packet->txsize = RANDOM_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_nonce(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    // variable packet size
+    uint8_t calc_mode = packet->param1 & NONCE_MODE_MASK;
+    packet->opcode = ATECC_OP_NONCE;
+    if ((calc_mode == NONCE_MODE_SEED_UPDATE || calc_mode == NONCE_MODE_NO_SEED_UPDATE)) {
+        // Calculated nonce mode, 20 byte NumInm
+        packet->txsize = NONCE_COUNT_SHORT;
+    } else if (calc_mode == NONCE_MODE_PASSTHROUGH) {
+        // PAss-through nonce mode
+        if ((packet->param1 & NONCE_MODE_INPUT_LEN_MASK) == NONCE_MODE_INPUT_LEN_64) {
+            // 64 byte NumIn
+            packet->txsize = NONCE_COUNT_LONG_64;
+        } else {
+            // 32 byte NumIn
+            packet->txsize = NONCE_COUNT_LONG;
+        }
+    } else {
+        fido_log_error("atecc_command_nonce: BAD_PARAM");
+        return false;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_gen_dig(ATECC_COMMAND command, ATECC_PACKET *packet, bool is_no_mac_key)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_GENDIG;
+    if (packet->param1 == GENDIG_ZONE_SHARED_NONCE) {
+        // shared nonce mode
+        packet->txsize = GENDIG_COUNT + 32;
+    } else if (is_no_mac_key) {
+        // noMac keys use 4 bytes of OtherData in calculation
+        packet->txsize = GENDIG_COUNT + 4;
+    } else {
+        packet->txsize = GENDIG_COUNT;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_gen_key(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_GENKEY;
+    if (packet->param1 & GENKEY_MODE_PUBKEY_DIGEST) {
+        packet->txsize = GENKEY_COUNT_DATA;
+    } else {
+        packet->txsize = GENKEY_COUNT;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_sign(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_SIGN;
+    packet->txsize = SIGN_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_verify(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_VERIFY;
+
+    // variable packet size based on mode
+    switch (packet->param1 & VERIFY_MODE_MASK) {
+        case VERIFY_MODE_STORED:
+            packet->txsize = VERIFY_256_STORED_COUNT;
+            break;
+        case VERIFY_MODE_VALIDATE_EXTERNAL:
+            packet->txsize = VERIFY_256_EXTERNAL_COUNT;
+            break;
+        case VERIFY_MODE_EXTERNAL:
+            packet->txsize = VERIFY_256_EXTERNAL_COUNT;
+            break;
+        case VERIFY_MODE_VALIDATE:
+        case VERIFY_MODE_INVALIDATE:
+            packet->txsize = VERIFY_256_VALIDATE_COUNT;
+            break;
+        default:
+            fido_log_error("atecc_command_verify: BAD_PARAM");
+            return false;
+    }
+
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_info(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_INFO;
+    packet->txsize = INFO_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_check_mac(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_CHECKMAC;
+    packet->txsize = CHECKMAC_COUNT;
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
+bool atecc_command_aes(ATECC_COMMAND command, ATECC_PACKET *packet)
+{
+    // Set the opcode & parameters
+    packet->opcode = ATECC_OP_AES;
+    packet->txsize = ATECC_CMD_SIZE_MIN;
+    if ((packet->param1 & AES_MODE_OP_MASK) == AES_MODE_GFM) {
+        packet->txsize += ATECC_AES_GFM_SIZE;
+    } else {
+        packet->txsize += AES_DATA_SIZE;
+    }
+    atecc_command_calc_crc(packet);
+    return true;
+}
+
 static bool atecc_command_is_error(uint8_t *data)
 {
     // error packets are always 4 bytes long
@@ -247,7 +391,7 @@ bool atecc_command_execute(ATECC_PACKET* packet, ATECC_DEVICE device)
         bool wake_failed;
         status = atecc_iface_wake_func(device->mIface, &wake_failed);
         if (status == false) {
-            break;
+            return status;
         }
 
         // send the command

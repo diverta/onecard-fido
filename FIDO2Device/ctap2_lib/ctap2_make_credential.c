@@ -367,7 +367,7 @@ static uint8_t generate_sign(void)
 
     // 認証器固有の秘密鍵を使用して署名生成
     if (fido_command_do_sign_with_privkey() == false) {
-        return false;
+        return CTAP1_ERR_OTHER;
     }
 
 #if LOG_DEBUG_SIGN_BUFF

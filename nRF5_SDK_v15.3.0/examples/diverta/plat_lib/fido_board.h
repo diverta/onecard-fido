@@ -51,14 +51,14 @@ extern "C" {
 // LEDのピン
 //
 #if defined(BOARD_PCA10059)
-#define LED_R   NRF_GPIO_PIN_MAP(1,10)  // rev2 LED1
-#define LED_Y   LED1_G                  // rev2 LED3
+#define LED_R   NRF_GPIO_PIN_MAP(1,10)  // rev2 LED1 (red)
+#define LED_Y   LED1_G                  // rev2 LED3 (yellow)
 #elif defined(BOARD_PCA10059_02)
-#define LED_R   NRF_GPIO_PIN_MAP(0,27)  // rev2.1.1 LED1
-#define LED_Y   LED1_G                  // rev2.1.1 LED3
+#define LED_R   LED_2                   // rev2.1.2 LED2 (red)
+#define LED_Y   LED1_G                  // rev2.1.2 LED1 (yellow)
 #else
-#define LED_R   LED_1
-#define LED_Y   LED_2
+#define LED_R   LED_2
+#define LED_Y   LED_1
 #endif
 
 // LED種別

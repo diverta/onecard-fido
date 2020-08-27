@@ -4,7 +4,7 @@ OUTPUT_DIRECTORY := _build
 # target board
 #  PCA10056     nRF52840 DK(with/without ATECC608A)
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
-#  PCA10059_2   MDBT50Q Dongle(rev2.1.2, with ATECC608A)
+#  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
 TARGET_BOARD     := PCA10059
 
 # application version info
@@ -19,6 +19,9 @@ ifeq ("$(TARGET_BOARD)","PCA10056")
 else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
+
+# disable ATECC608A (or ATECC608A is not installed)
+# CFLAGS += -DNO_SECURE_IC
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
@@ -178,6 +181,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
   $(FD2LIB_DIR)/fido_command.c \
+  $(FD2LIB_DIR)/fido_command_common.c \
   $(FD2LIB_DIR)/fido_common.c \
   $(FD2LIB_DIR)/fido_ctap2_command.c \
   $(FD2LIB_DIR)/fido_hid_channel.c \
@@ -185,6 +189,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_hid_send.c \
   $(FD2LIB_DIR)/fido_maintenance.c \
   $(FD2LIB_DIR)/fido_maintenance_cryption.c \
+  $(FD2LIB_DIR)/fido_maintenance_skcert.c \
   $(FD2LIB_DIR)/fido_nfc_receive.c \
   $(FD2LIB_DIR)/fido_nfc_send.c \
   $(FD2LIB_DIR)/fido_receive_apdu.c \
@@ -208,6 +213,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(CIDLIB_DIR)/ccid_piv_pin.c \
   $(CIDLIB_DIR)/ccid_ykpiv.c \
+  $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -217,7 +223,10 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
   $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
   $(PLTLIB_DIR)/fido_flash_common.c \
+  $(PLTLIB_DIR)/fido_flash_event.c \
   $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
+  $(PLTLIB_DIR)/fido_flash_password.c \
+  $(PLTLIB_DIR)/fido_flash_skey_cert.c \
   $(PLTLIB_DIR)/fido_flash_token_counter.c \
   $(PLTLIB_DIR)/fido_status_indicator.c \
   $(PLTLIB_DIR)/fido_timer.c \
@@ -241,26 +250,20 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(DMOLIB_DIR)/demo_ble_peripheral_auth.c \
 
-# Source files to targets (PCA10056, PCA10059)
-FD2LIB_REV2_DIR := $(FIDO_DIR)/fido2_lib_rev2
-PLTLIB_REV2_DIR := $(PROJ_DIR)/../plat_lib_rev2
-SRC_FILES += \
-  $(FD2LIB_REV2_DIR)/fido_command_common.c \
-  $(FD2LIB_REV2_DIR)/fido_maintenance_skcert.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_event.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_password.c \
-  $(PLTLIB_REV2_DIR)/fido_flash_skey_cert.c \
-
 # Source files to targets (Boards with ATECC608A)
 SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
 ATELIB_DIR := $(SCIC_DIR)/atecc_lib
 SRC_FILES += \
   $(ATELIB_DIR)/atecc.c \
+  $(ATELIB_DIR)/atecc_aes.c \
   $(ATELIB_DIR)/atecc_command.c \
   $(ATELIB_DIR)/atecc_device.c \
   $(ATELIB_DIR)/atecc_iface.c \
+  $(ATELIB_DIR)/atecc_nonce.c \
+  $(ATELIB_DIR)/atecc_priv.c \
   $(ATELIB_DIR)/atecc_read.c \
   $(ATELIB_DIR)/atecc_setup.c \
+  $(ATELIB_DIR)/atecc_sign.c \
   $(ATELIB_DIR)/atecc_util.c \
   $(ATELIB_DIR)/atecc_write.c \
   $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
@@ -423,11 +426,6 @@ INC_FOLDERS += \
   $(BLELIB_DIR) \
   $(DMOLIB_DIR) \
   $(TINYCBOR_ROOT)/src \
-
-# Include folders to targets (PCA10056, PCA10059)
-INC_FOLDERS += \
-  $(FD2LIB_REV2_DIR) \
-  $(PLTLIB_REV2_DIR) \
 
 # Include folders to targets (Boards with ATECC608A)
 INC_FOLDERS += \

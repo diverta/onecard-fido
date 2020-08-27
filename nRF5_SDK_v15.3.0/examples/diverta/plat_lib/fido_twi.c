@@ -23,6 +23,7 @@ NRF_LOG_MODULE_REGISTER();
 
 // for debug data
 #define LOG_DEBUG_HEX_DATA false
+#define LOG_DEBUG_ERROR_RX false
 
 // 初期化処理の重複実行抑止フラグ
 static bool twi_init_done = false;
@@ -55,7 +56,7 @@ bool fido_twi_init (void)
 
     ret_code_t err_code = nrf_drv_twi_init(&m_twi, &twi_config, NULL, NULL);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("ATECC608A hal_i2c_init: nrf_drv_twi_init returns %d ", err_code);
+        NRF_LOG_ERROR("ATECC608A hal_i2c_init: nrf_drv_twi_init returns %04X ", err_code);
         return false;
     }
 
@@ -67,7 +68,7 @@ bool fido_twi_write(uint8_t address, uint8_t *p_data, uint8_t length)
 {
     ret_code_t err_code = nrf_drv_twi_tx(&m_twi, address, p_data, length, false);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("ATECC608A hal_i2c_send: nrf_drv_twi_tx returns %d ", err_code);
+        NRF_LOG_ERROR("ATECC608A hal_i2c_send: nrf_drv_twi_tx returns %04X ", err_code);
         return false;
     }
     return true;
@@ -77,7 +78,9 @@ bool fido_twi_read(uint8_t address, uint8_t *p_data, uint8_t length)
 {
     ret_code_t err_code = nrf_drv_twi_rx(&m_twi, address, p_data, length);
     if (err_code != NRF_SUCCESS) {
-        NRF_LOG_ERROR("ATECC608A hal_i2c_receive: nrf_drv_twi_rx returns %d ", err_code);
+#if LOG_DEBUG_ERROR_RX
+        NRF_LOG_ERROR("ATECC608A hal_i2c_receive: nrf_drv_twi_rx returns %04X ", err_code);
+#endif
         return false;
     }
 #if LOG_DEBUG_HEX_DATA
@@ -101,7 +104,7 @@ bool fido_twi_verify_nack(uint8_t address)
         return true;
 
     } else {
-        NRF_LOG_ERROR("verify_nack: nrf_drv_twi_tx returns %d ", err_code);
+        NRF_LOG_ERROR("verify_nack: nrf_drv_twi_tx returns %04X ", err_code);
         return false;
     }
 }

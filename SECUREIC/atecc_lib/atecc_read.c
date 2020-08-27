@@ -15,7 +15,7 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-static bool atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len)
+bool atecc_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len)
 {
     ATECC_PACKET  packet;
     ATECC_COMMAND command = atecc_device_ref()->mCommands;
