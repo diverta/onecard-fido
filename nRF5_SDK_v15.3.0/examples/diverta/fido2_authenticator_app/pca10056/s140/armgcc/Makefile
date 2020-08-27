@@ -23,6 +23,10 @@ endif
 # disable ATECC608A (or ATECC608A is not installed)
 # CFLAGS += -DNO_SECURE_IC
 
+# enable nRF52840 RTC2 instance (RTCC is available)
+CFLAGS += -DNRFX_RTC_ENABLED=1
+CFLAGS += -DNRFX_RTC2_ENABLED=1
+
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_15.3.0
 PROJ_DIR := ../../..
 FIDO_DIR := $(PROJ_DIR)/../../../../FIDO2Device
@@ -156,6 +160,7 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_nfct.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rng.c \
+  $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_rtc.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_systick.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_timer.c \
   $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
