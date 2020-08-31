@@ -4,7 +4,7 @@
 
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作した、USBドングル基板です。
 
-<img src="assets02/0001.jpg" width="500">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="500">
 
 #### 特色
 - FIDO2機能（WebAuthn）をサポート
@@ -14,7 +14,7 @@
 - 署名検証機能付きUSBブートローダーを採用し、不正ファームウェアの書込みを抑止
 - CCIDインターフェースを装備し、スマートカードエミュレーションが可能（ただし2020/08/31現在、業務処理プログラムは開発中）
 
-### [MDBT50Q Dongleの概要](HWSUMMARY_212.md)
+### [MDBT50Q Dongleの概要](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)
 
 基板、動作についての概要を説明しています。
 
@@ -50,12 +50,12 @@ FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す
 
 ## ご参考情報
 
-### [アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)
+### [アプリケーション書込み手順](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/APPINSTALL.md)
 
-MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を経由し、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
+MDBT50Q Dongleにプレインストールされている[USBブートローダー（署名機能付き）](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を経由し、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
 （ファームウェア単体開発時の運用になります）
 
-### [簡易USBブートローダー](../../nRF5_SDK_v15.3.0/examples/dfu/README.md)
+### [USBブートローダー（署名機能付き）](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)
 
 PCのUSBポート経由で、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../nRF5_SDK_v15.3.0/README.md)を書き込むことができるようにするためのファームウェアです。<br>
 MDBT50Q Dongleにはすでに導入済みとなっております。
