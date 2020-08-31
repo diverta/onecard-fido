@@ -5,10 +5,10 @@ OUTPUT_DIRECTORY := _build
 #  PCA10056     nRF52840 DK(with/without ATECC608A)
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10059_02
 
 # application version info
-FW_REV := 0.2.10
+FW_REV := 0.2.11
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -529,7 +529,7 @@ deploy:
 	@echo Application hex file for MDBT50Q Dongle is now available.
 
 secure_pkg:
-	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/app_dfu_package.$(FW_REV).zip
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/appkg.$(TARGET_BOARD).$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
