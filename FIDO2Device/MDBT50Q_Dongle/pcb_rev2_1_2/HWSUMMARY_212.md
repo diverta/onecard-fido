@@ -6,11 +6,11 @@
 
 #### 表面
 
-<img src="assets02/0008.jpg" width="600">
+<img src="assets/0008.jpg" width="600">
 
 #### 裏面
 
-<img src="assets02/0009.jpg" width="600">
+<img src="assets/0009.jpg" width="600">
 
 ## 動作の概要
 
@@ -24,21 +24,21 @@ PCのUSBポートへの装着状態で、動作モードが自動的に切り替
 PCのUSBポートに装着すると、USB HIDデバイスとして動作します。[注1][注2]<br>
 アイドル時は緑色LEDが点滅します。
 
-<img src="assets02/0003.jpg" width="400">
+<img src="assets/0003.jpg" width="400">
 
 #### BLEペリフェラルモード（非ペアリングモード）
 
 基板背面の電池ホルダーにボタン乾電池（CR1225）をセットすると、BLEペリフェラルデバイスとして動作します。[注2]<br>
 アイドル時は青色LEDが点滅します。
 
-<img src="assets02/0004.jpg" width="400">
+<img src="assets/0004.jpg" width="400">
 
 #### BLEペリフェラルモード（ペアリングモード）
 
 前述の非ペアリングモードの状態で、ボタンを３秒以上長押しすると、ペアリングモードに遷移します。[注3]<br>
 下図のように、ペアリングモードであることを示す、橙色LEDが点灯します。[注4]
 
-<img src="assets02/0005.jpg" width="400">
+<img src="assets/0005.jpg" width="400">
 
 [注1] ボタン乾電池がセットされていない場合は、PCのUSBから電源を取得し、USB HIDデバイスとして動作します。<br>
 [注2] ボタン乾電池がセットされている状態でも、PCのUSBポートに装着している間は、常にUSB HIDデバイスとして動作します。<br>
@@ -50,13 +50,13 @@ PCのUSBポートに装着すると、USB HIDデバイスとして動作しま�
 管理ツールから「ファームウェア更新」を実行すると、ブートローダーモードに遷移し、ファームウェアが転送可能な状態となります。<br>
 下図のように、橙色LEDと緑色LEDが同時に点灯します。[注4]
 
-<img src="assets02/0006.jpg" width="400">
+<img src="assets/0006.jpg" width="400">
 
 ### LED点灯制御
 
 基板上に４点のLEDが配置されています。
 
-<img src="assets02/0007.jpg" width="450">
+<img src="assets/0007.jpg" width="450">
 
 各LEDの点灯制御は以下の通りです。
 
