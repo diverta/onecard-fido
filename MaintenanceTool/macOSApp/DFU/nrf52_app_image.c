@@ -46,6 +46,7 @@ size_t nrf52_app_image_bin_size(void)
 // ファームウェア更新イメージ（app_dfu_package.<バージョン文字列>.zip）のフルパスを保持
 static char nrf52_app_zip_filename[1024];
 static char nrf52_app_zip_version[16];
+static char nrf52_app_zip_boardname[16];
 
 char *nrf52_app_image_zip_filename(void)
 {
@@ -55,6 +56,11 @@ char *nrf52_app_image_zip_filename(void)
 char *nrf52_app_image_zip_version(void)
 {
     return nrf52_app_zip_version;
+}
+
+char *nrf52_app_image_zip_boardname(void)
+{
+    return nrf52_app_zip_boardname;
 }
 
 static bool read_app_image_file(const char *file_name, size_t max_size, uint8_t *data, size_t *size)
@@ -138,19 +144,23 @@ static void extract_fw_version(char *file_name)
     // ファイル名をバッファにコピー
     char buf[32];
     strcpy(buf, file_name);
-    // ファイル名（app_dfu_package.0.2.4.zip）からバージョン情報を抽出して保持
+    // ファイル名（appkg.PCA10059.0.2.4.zip）からバージョン情報を抽出して保持
     int ver = 0, rev = 0, sub = 0;
     char *p = strtok(buf, ".");
     if (p) {
         p = strtok(NULL, ".");
         if (p) {
-            ver = atoi(p);
+            strncpy(nrf52_app_zip_boardname, p, strlen(p));
             p = strtok(NULL, ".");
             if (p) {
-                rev = atoi(p);
+                ver = atoi(p);
                 p = strtok(NULL, ".");
                 if (p) {
-                    sub = atoi(p);
+                    rev = atoi(p);
+                    p = strtok(NULL, ".");
+                    if (p) {
+                        sub = atoi(p);
+                    }
                 }
             }
         }
@@ -158,7 +168,7 @@ static void extract_fw_version(char *file_name)
     sprintf(nrf52_app_zip_version, "%d.%d.%d", ver, rev, sub);
 }
 
-bool nrf52_app_image_zip_filename_get(const char *zip_file_dir_path)
+bool nrf52_app_image_zip_filename_get(const char *zip_file_dir_path, const char *zip_file_name_prefix)
 {
     DIR *dir = opendir(zip_file_dir_path);
     if (dir == NULL) {
@@ -168,8 +178,8 @@ bool nrf52_app_image_zip_filename_get(const char *zip_file_dir_path)
     memset(nrf52_app_zip_filename, 0, sizeof(nrf52_app_zip_filename));
     struct dirent *dp = readdir(dir);
     while (dp != NULL) {
-        // ファイル名に NRF52_APP_ZIP_FILE_NAME が含まれている場合
-        if (strncmp(dp->d_name, NRF52_APP_ZIP_FILE_NAME, strlen(NRF52_APP_ZIP_FILE_NAME)) == 0) {
+        // ファイル名に zip_file_name_prefix が含まれている場合
+        if (strncmp(dp->d_name, zip_file_name_prefix, strlen(zip_file_name_prefix)) == 0) {
             // フルパスを編集して保持
             sprintf(nrf52_app_zip_filename, "%s/%s", zip_file_dir_path, dp->d_name);
             // ファイル名からバージョン番号を抽出して保持
