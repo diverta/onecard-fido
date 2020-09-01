@@ -244,7 +244,7 @@
             if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
                 // DFUコマンドにファームウェアバージョンを戻す
                 ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-                [toolDFUCommand notifyFirmwareVersion:strFWRev];
+                [toolDFUCommand notifyFirmwareVersion:strFWRev boardname:strHWRev];
             }
             return;
         }
