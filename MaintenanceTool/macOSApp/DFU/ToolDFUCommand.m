@@ -134,6 +134,10 @@
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
         // 認証器の現在バージョンをクリア
         [self setCurrentVersion:@""];
+        // ブートローダーモード遷移判定フラグがセットされていない場合は終了
+        if ([self needCheckBootloaderMode] == false) {
+            return;
+        }
         // USB HID経由でバージョン照会コマンドを実行
         if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
             return;
