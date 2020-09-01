@@ -1,6 +1,6 @@
 # [開発運用] アプリケーション書込み手順
 
-MDBT50Q Dongleにプレインストールされている[USBブートローダー（署名機能付き）](../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
+MDBT50Q Dongleにプレインストールされている[USBブートローダー（署名機能付き）](../../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を使用して、MDBT50Q Dongleに[FIDO2認証器アプリケーション](../../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載いたします。
 
 ## 書込み準備
 
@@ -8,17 +8,17 @@ MDBT50Q Dongleにプレインストールされている[USBブートローダ�
 
 まず最初に、MDBT50Q Dongleの背面にあるボタン電池ケースに、<b>電池が入っていないこと</b>を必ず確認します。
 
-<img src="assets02/0000.png" width="400">
+<img src="../../../nRF5_SDK_v15.3.0/assets02/0000.png" width="400">
 
 MDBT50Q DongleをPCのUSBポートに装着します。<br>
 アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
 
-<img src="assets02/0010.jpg" width="400">
+<img src="../../../nRF5_SDK_v15.3.0/assets02/0010.jpg" width="400">
 
 ### ファームウェアの準備
 
 ビルド済みのファームウェア更新イメージファイルが、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../nRF5_SDK_v15.3.0/firmwares)
+- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../../nRF5_SDK_v15.3.0/firmwares)
 - ファームウェア更新イメージファイル: `app_dfu_package.nn.nn.nn.zip`
 
 `app_dfu_package.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
@@ -27,18 +27,18 @@ MDBT50Q DongleをPCのUSBポートに装着します。<br>
 ### 書込み用ツールの準備
 
 書込み用ツール「nRF Util」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「nRF Utilインストール手順」](../nRF5_SDK_v15.3.0/NRFUTILINST.md)をご参照願います。
+詳細につきましては、手順書[「nRF Utilインストール手順」](../../../nRF5_SDK_v15.3.0/NRFUTILINST.md)をご参照願います。
 
 ### Python3ライブラリーの準備
 
-後述のPython3スクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行させるために必要な依存ライブラリー「hidapi」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「hidapiインストール手順」](../nRF5_SDK_v15.3.0/PYHIDAPIINST.md)をご参照願います。
+後述のPython3スクリプト「[`HookUpHIDBLMode.py`](../../../nRF5_SDK_v15.3.0/HookUpHIDBLMode.py)」を実行させるために必要な依存ライブラリー「hidapi」を、あらかじめPCに導入しておきます。<br>
+詳細につきましては、手順書[「hidapiインストール手順」](../../../nRF5_SDK_v15.3.0/PYHIDAPIINST.md)をご参照願います。
 
 ## アプリケーションの書込み
 
 ### ブートローダーモードに遷移
 
-Python3スクリプト「[`HookUpHIDBLMode.py`](HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
+Python3スクリプト「[`HookUpHIDBLMode.py`](../../../nRF5_SDK_v15.3.0/HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
 以下のコマンドを実行します。
 
 ```
@@ -72,7 +72,7 @@ makmorit@iMac-makmorit-jp ~ %
 コマンド実行が完了すると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
 MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
 
-<img src="../MaintenanceTool/macOSApp/assets02/0011.jpg" width="300">
+<img src="../../../MaintenanceTool/macOSApp/assets02/0011.jpg" width="300">
 
 
 ### 書込み実行
@@ -110,6 +110,6 @@ MacBookPro-makmorit-jp:firmwares makmorit$
 書込処理が終了すると、MDBT50Q Dongleが自動的にリセットされ、アプリケーションがスタートします。<br>
 アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
 
-<img src="assets02/0010.jpg" width="400">
+<img src="../../../nRF5_SDK_v15.3.0/assets02/0010.jpg" width="400">
 
 以上で、MDBT50Q Dongleへのアプリケーション書込みは完了になります。
