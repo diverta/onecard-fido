@@ -18,11 +18,11 @@ MDBT50Q DongleをPCのUSBポートに装着します。<br>
 ### ファームウェアの準備
 
 ビルド済みのファームウェア更新イメージファイルが、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: [/nRF5_SDK_v15.3.0/firmwares/](../../../nRF5_SDK_v15.3.0/firmwares)
-- ファームウェア更新イメージファイル: `app_dfu_package.nn.nn.nn.zip`
+- ディレクトリー: [`/nRF5_SDK_v15.3.0/firmwares/`](../../../nRF5_SDK_v15.3.0/firmwares)
+- ファームウェア更新イメージファイル: `appkg.PCA10059.nn.nn.nn.zip`
 
-`app_dfu_package.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
-例えば、バージョン`0.2.8`のファームウェア更新イメージファイル名は、`app_dfu_package.0.2.8.zip`となります。
+`appkg.PCA10059.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
+例えば、バージョン`0.2.11`のファームウェア更新イメージファイル名は、`appkg.PCA10059.0.2.11.zip`となります。
 
 ### 書込み用ツールの準備
 
@@ -49,9 +49,9 @@ python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
 下記は実行例になります。
 
 ```
-makmorit@iMac-makmorit-jp ~ % GITHUB_DIR=${HOME}/GitHub/onecard-fido
-makmorit@iMac-makmorit-jp ~ % python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
-HID device: path=b'IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/XHC1@14/XHC1@14000000/HS03@14100000/Secure Dongle@14100000/IOUSBHostInterface@0/AppleUserUSBHostHIDDevice', usage_page=61904, usage=1
+bash-3.2$ GITHUB_DIR=${HOME}/GitHub/onecard-fido
+bash-3.2$ python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
+HID device: path=b'IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/XHC1@14/XHC1@14000000/HS03@14100000/FIDO authenticator@14100000/IOUSBHostInterface@0/AppleUserUSBHostHIDDevice', usage_page=61904, usage=1
 ---- sent data ----
 b'ffffffff860008d4e5f607182930410000000000000000000000000000000000'
 b'0000000000000000000000000000000000000000000000000000000000000000'
@@ -66,7 +66,7 @@ b'0000000000000000000000000000000000000000000000000000000000000000'
 b'01003301c5000100000000000000000000000000000000000000000000000000'
 b'0000000000000000000000000000000000000000000000000000000000000000'
 ---- command done ----
-makmorit@iMac-makmorit-jp ~ %
+bash-3.2$
 ```
 
 コマンド実行が完了すると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
@@ -83,7 +83,7 @@ nRFコマンドラインツールで`nrfutil dfu usb-serial`コマンドを実�
 ```
 FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
 cd ${FIRMWARES_DIR}
-PACKAGE=`ls *.zip`
+PACKAGE=`ls appkg.PCA10059.*.zip`
 PORTNAME=`ls /dev/tty.usbmodem*`
 echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
 nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
@@ -92,17 +92,16 @@ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 下記は実行例になります。
 
 ```
-MacBookPro-makmorit-jp:~ makmorit$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
-MacBookPro-makmorit-jp:~ makmorit$ cd ${FIRMWARES_DIR}
-MacBookPro-makmorit-jp:firmwares makmorit$ PACKAGE=`ls *.zip`
-MacBookPro-makmorit-jp:firmwares makmorit$ PORTNAME=`ls /dev/tty.usbmodem*`
-MacBookPro-makmorit-jp:firmwares makmorit$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg app_dfu_package.0.2.8.zip -p /dev/tty.usbmodem1421]
-MacBookPro-makmorit-jp:firmwares makmorit$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
+bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF5_SDK_v15.3.0/firmwares"
+bash-3.2$ cd ${FIRMWARES_DIR}
+bash-3.2$ PACKAGE=`ls appkg.PCA10059.*.zip`
+bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
+bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059.0.2.11.zip -p /dev/tty.usbmodemFC79AA445BA31]
+bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.
-MacBookPro-makmorit-jp:firmwares makmorit$
-
+bash-3.2$ 
 ```
 
 ### 書込み完了

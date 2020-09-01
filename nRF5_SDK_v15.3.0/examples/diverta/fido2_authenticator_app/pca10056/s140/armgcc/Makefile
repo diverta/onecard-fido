@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := _build
 #  PCA10056     nRF52840 DK(with/without ATECC608A)
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059_02
+TARGET_BOARD     := PCA10059
 
 # application version info
 FW_REV := 0.2.11
@@ -503,13 +503,13 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
 LIB_FILES += -lc -lnosys -lm
 
 
-.PHONY: default help deploy_dk deploy secure_pkg
+.PHONY: default help deploy_dk secure_pkg
 
 # Default target - first one defined
 ifeq ("$(TARGET_BOARD)","PCA10056")
     default: $(TARGETS) deploy_dk
 else
-    default: $(TARGETS) deploy secure_pkg
+    default: $(TARGETS) secure_pkg
 endif
 
 # Print all targets that can be built
@@ -523,10 +523,6 @@ help:
 deploy_dk:
 	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_DK_xxaa.hex
 	@echo Application hex file for NRF52840 DK is now available.
-
-deploy:
-	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/nrf52840_xxaa.hex
-	@echo Application hex file for MDBT50Q Dongle is now available.
 
 secure_pkg:
 	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(PROJ_DIR)/../../dfu/private.pem $(DEPLOY_ROOT)/appkg.$(TARGET_BOARD).$(FW_REV).zip
