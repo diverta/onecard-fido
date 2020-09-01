@@ -2,7 +2,18 @@
 
 ## プログラム更新履歴
 
-#### 2019/07/13
+#### 2020/07/20
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.30）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-20200715/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.30）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-20200716/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。（[#302](https://github.com/diverta/onecard-fido/issues/302) ご参照）
+- [BLE自動認証機能](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-macOS-20200715/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)有効時のヘルスチェック動作を改善
+
+#### 2020/07/13
 
 FIDO認証器管理ツールを修正しました。<br>
 
@@ -11,7 +22,7 @@ FIDO認証器管理ツールを修正しました。<br>
 修正点は以下になります。（[#340](https://github.com/diverta/onecard-fido/issues/340) ご参照）
 - macOS版管理ツールのファイル参照ダイアログが表示されない不具合を解消
 
-#### 2019/06/24
+#### 2020/06/24
 
 FIDO認証器管理ツールを修正しました。<br>
 
@@ -23,7 +34,7 @@ FIDO認証器管理ツールを修正しました。<br>
 - ファームウェア更新中に表示されるポップアップが閉じられない不具合を解消
 - インストーラーで更新インストールができない不具合を解消（Windows版のみ）
 
-#### 2019/06/18
+#### 2020/06/18
 
 FIDO認証器管理ツールを修正しました。<br>
 
