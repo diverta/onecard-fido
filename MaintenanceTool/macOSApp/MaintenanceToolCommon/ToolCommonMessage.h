@@ -190,6 +190,7 @@
 #define MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER    @"FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。"
 #define MSG_DFU_TARGET_NOT_CONNECTED            @"FIDO認証器がブートローダーモードに遷移していません。"
 #define MSG_DFU_TARGET_CONNECTION_FAILED        @"ファームウェア新規導入先のFIDO認証器に接続できませんでした。"
+#define MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST     @"ファームウェア更新イメージファイルが存在しません。"
 #define MSG_DFU_UPDATE_VERSION_UNKNOWN          @"FIDO認証器ファームウェアの更新バージョンが不明です。"
 #define MSG_DFU_CURRENT_VERSION_UNKNOWN         @"FIDO認証器ファームウェアの現在バージョンが不明です。"
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED        @"FIDO認証器ファームウェアのバージョンが%@に更新されました。"
