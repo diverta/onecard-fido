@@ -141,6 +141,9 @@ static size_t parse_file(uint8_t *data)
 
 static void extract_fw_version(char *file_name)
 {
+    // 編集領域を初期化
+    memset(nrf52_app_zip_version, 0, sizeof(nrf52_app_zip_version));
+    memset(nrf52_app_zip_boardname, 0, sizeof(nrf52_app_zip_boardname));
     // ファイル名をバッファにコピー
     char buf[32];
     strcpy(buf, file_name);
