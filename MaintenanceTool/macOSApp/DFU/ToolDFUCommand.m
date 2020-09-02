@@ -442,15 +442,22 @@
         dispatch_async([self subQueue], ^{
             // サブスレッドでDFU処理を実行
             if ([self performDFUProcess] == false) {
-                // 処理失敗時は処理タイムアウト検知を不要とする
-                [self setNeedTimeoutMonitor:false];
-                // 処理進捗画面に対し、処理失敗の旨を通知する
-                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
+                // 処理失敗時は、処理進捗画面に対し通知
+                [self notifyErrorToProcessingWindow];
             }
         });
         dispatch_async([self mainQueue], ^{
             // メイン画面に開始メッセージを出力
             [[self delegate] toolDFUCommandDidStart];
+        });
+    }
+
+    - (void)notifyErrorToProcessingWindow {
+        dispatch_async([self mainQueue], ^{
+            // 処理失敗時は処理タイムアウト検知を不要とする
+            [self setNeedTimeoutMonitor:false];
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
     }
 
