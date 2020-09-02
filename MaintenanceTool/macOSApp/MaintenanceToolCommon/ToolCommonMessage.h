@@ -151,6 +151,8 @@
 #define MSG_VERSION_INFO_DEVICE_NAME        @"  デバイス名: %@"
 #define MSG_VERSION_INFO_FW_REV             @"  ファームウェアのバージョン: %@"
 #define MSG_VERSION_INFO_HW_REV             @"  ハードウェアのバージョン: %@"
+#define MSG_VERSION_INFO_SECURE_IC_AVAIL    @"  セキュアIC: 搭載"
+#define MSG_VERSION_INFO_SECURE_IC_UNAVAIL  @"  セキュアIC: 非搭載"
 
 #pragma mark - BLEペアリング関連のメッセージ文言
 #define MSG_BLE_PARING_ERR_BT_OFF           @"Bluetoothがオフになっています。Bluetoothをオンにしてください。"
