@@ -204,6 +204,6 @@
 #define MSG_DFU_PROCESS_TRANSFER_IMAGE          @"更新ファームウェアを転送中です。"
 #define MSG_DFU_PROCESS_WAITING_UPDATE          @"転送された更新ファームウェアの反映を待機中です。"
 #define MSG_PROMPT_START_DFU_PROCESS            @"ファームウェア新規導入処理を開始しますか？"
-#define MSG_COMMENT_START_DFU_PROCESS           @"署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の黄色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち、Yesボタンをクリックすると、\nファームウェア新規導入処理が開始されます。"
+#define MSG_COMMENT_START_DFU_PROCESS           @"署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち、Yesボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。"
 
 #endif /* ToolCommonMessage_h */

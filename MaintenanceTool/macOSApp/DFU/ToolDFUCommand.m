@@ -307,6 +307,13 @@
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
+        [self setCurrentBoardname:@"PCA10059_02"];
+        // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+        if ([self readDFUImageFile] == false) {
+            [self notifyCancel];
+            return;
+        }
         // 処理前のチェック
         if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
