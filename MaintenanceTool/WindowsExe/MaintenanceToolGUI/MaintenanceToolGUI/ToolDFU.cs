@@ -212,6 +212,11 @@ namespace MaintenanceToolGUI
         //
         public void OnUSBDeviceArrival()
         {
+            // バージョン更新判定フラグがセットされていない場合は終了
+            if (NeedCompareUpdateVersion == false) {
+                return;
+            }
+
             // 認証器に導入中のバージョンをクリア
             CurrentVersion = "";
 
