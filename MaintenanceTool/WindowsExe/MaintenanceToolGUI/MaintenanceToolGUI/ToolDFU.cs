@@ -91,7 +91,17 @@ namespace MaintenanceToolGUI
 
         public void ResumeCommandDFU()
         {
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (ReadDFUImageFile() == false) {
+                NotifyCancel();
+                return;
+            }
+
             // バージョンチェックが不正の場合は処理を終了
+            if (VersionCheckForDFU() == false) {
+                NotifyCancel();
+                return;
+            }
             if (DfuImageIsAvailable() == false) {
                 NotifyCancel();
                 return;
@@ -141,8 +151,23 @@ namespace MaintenanceToolGUI
             mainForm.OnDFUCanceled();
         }
 
+        private bool ReadDFUImageFile()
+        {
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (toolDFUImage.ReadDFUImageFile() == false) {
+                FormUtil.ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
+                return false;
+            }
+            return true;
+        }
+
         private bool DfuImageIsAvailable()
         {
+            // ファームウェア更新イメージファイルから、更新バージョンを取得
+            UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
+
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
                 FormUtil.ShowWarningMessage(
@@ -160,9 +185,9 @@ namespace MaintenanceToolGUI
                 FormUtil.ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         //

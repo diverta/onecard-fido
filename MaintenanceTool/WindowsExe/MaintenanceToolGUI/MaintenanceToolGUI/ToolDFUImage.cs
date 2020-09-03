@@ -37,16 +37,18 @@ namespace MaintenanceToolGUI
         {
         }
 
-        public void ReadDFUImageFile()
+        public bool ReadDFUImageFile()
         {
             // ファームウェア更新イメージファイル名を取得
             GetDFUImageFileResourceName();
 
             // ファームウェア更新イメージ(.zip)を配列に読込
-            ReadDFUImage();
+            if (ReadDFUImage() == false) {
+                return false;
+            }
 
             // 書庫を解析し、内包されているイメージを抽出
-            ExtractDFUImage();
+            return ExtractDFUImage();
         }
 
         public string GetUpdateVersionFromDFUImage()
@@ -82,7 +84,7 @@ namespace MaintenanceToolGUI
             }
         }
 
-        private void ReadDFUImage()
+        private bool ReadDFUImage()
         {
             // ファイルサイズをゼロクリア
             NRF52AppDatSize = 0;
@@ -93,7 +95,7 @@ namespace MaintenanceToolGUI
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream stream = assembly.GetManifestResourceStream(DFUImageResourceName);
             if (stream == null) {
-                return;
+                return false;
             }
 
             try {
@@ -102,17 +104,19 @@ namespace MaintenanceToolGUI
 
                 // リソースファイルを閉じる
                 stream.Close();
+                return true;
 
             } catch (Exception e) {
                 AppCommon.OutputLogError(string.Format("ToolDFUImage.ReadDFUImage: {0}", e.Message));
+                return false;
             }
         }
 
-        private void ExtractDFUImage()
+        private bool ExtractDFUImage()
         {
             // 例外抑止
             if (NRF52AppZipSize == 0) {
-                return;
+                return false;
             }
 
             // .zip書庫ファイルを解析し、内包されている.bin/.datイメージを抽出
@@ -126,6 +130,7 @@ namespace MaintenanceToolGUI
                     i++;
                 }
             }
+            return true;
         }
 
         private int ParseImage(byte[] data, int index)
