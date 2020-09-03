@@ -15,6 +15,11 @@ namespace MaintenanceToolGUI
             MessageBox.Show(messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
+        public static void ShowWarningMessage(IWin32Window owner, string captionText, string messageText)
+        {
+            MessageBox.Show(owner, messageText, captionText, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
         public static bool DisplayPromptPopup(IWin32Window owner, string message)
         {
             DialogResult dialogResult = MessageBox.Show(owner,

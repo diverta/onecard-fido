@@ -111,7 +111,7 @@ namespace MaintenanceToolGUI
             Command = ToolDFUCommand.CommandDFU;
 
             // 処理開始画面を表示
-            if (dfuStartForm.OpenForm()) {
+            if (dfuStartForm.OpenForm(mainForm)) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
                 // DFU主処理開始
                 DoProcessDFU();
@@ -134,7 +134,7 @@ namespace MaintenanceToolGUI
             Command = ToolDFUCommand.CommandDFUNew;
 
             // 処理開始画面を表示
-            if (dfuNewStartForm.OpenForm()) {
+            if (dfuNewStartForm.OpenForm(mainForm)) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
                 // DFU主処理開始
                 DoProcessDFU();
@@ -155,7 +155,7 @@ namespace MaintenanceToolGUI
         {
             // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
             if (toolDFUImage.ReadDFUImageFile(CurrentBoardname) == false) {
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
                 return false;
@@ -170,7 +170,7 @@ namespace MaintenanceToolGUI
 
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
                 return false;
@@ -182,7 +182,7 @@ namespace MaintenanceToolGUI
         {
             // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
             if (CurrentVersion.Equals("")) {
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
                 return false;
@@ -194,7 +194,7 @@ namespace MaintenanceToolGUI
             if (currentVersionDec > updateVersionDec) {
                 string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW, 
                     CurrentVersion, UpdateVersion);
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
@@ -366,7 +366,7 @@ namespace MaintenanceToolGUI
             });
 
             // 処理進捗画面を表示
-            bool ret = dfuProcessingForm.OpenForm();
+            bool ret = dfuProcessingForm.OpenForm(mainForm);
 
             // 処理結果（成功 or 失敗）をメイン画面に戻す
             mainForm.OnAppMainProcessExited(ret);
@@ -401,6 +401,14 @@ namespace MaintenanceToolGUI
                 // DFU転送失敗時は処理進捗画面に制御を戻す
                 dfuProcessingForm.NotifyTerminateDFUProcess(success);
             }
+        }
+
+        //
+        // メッセージボックス
+        //
+        void ShowWarningMessage(string captionText, string messageText)
+        {
+            FormUtil.ShowWarningMessage(mainForm, captionText, messageText);
         }
     }
 }
