@@ -459,7 +459,7 @@ namespace MaintenanceToolGUI
                 // DFU処理のためのバージョン照会
                 // (HID接続完了時の処理) である場合、
                 // DFU処理クラスにバージョンを通知
-                ToolDFURef.NotifyFirmwareVersionResponse(strFWRev);
+                ToolDFURef.NotifyFirmwareVersionResponse(strFWRev, strHWRev);
                 return;
             }
 
