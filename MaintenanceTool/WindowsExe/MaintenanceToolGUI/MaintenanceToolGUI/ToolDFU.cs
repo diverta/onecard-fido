@@ -154,7 +154,7 @@ namespace MaintenanceToolGUI
         private bool ReadDFUImageFile()
         {
             // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
-            if (toolDFUImage.ReadDFUImageFile() == false) {
+            if (toolDFUImage.ReadDFUImageFile(CurrentBoardname) == false) {
                 FormUtil.ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
