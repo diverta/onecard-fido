@@ -66,9 +66,6 @@ namespace MaintenanceToolGUI
             // 更新イメージクラスを初期化
             toolDFUImage = new ToolDFUImage();
 
-            // ファームウェア更新イメージファイルから、更新バージョンを取得
-            UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
-
             // DFU転送処理クラスを初期化
             toolDFUProcess = new ToolDFUProcess(dfuDevice, toolDFUImage);
 

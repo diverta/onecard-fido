@@ -35,6 +35,10 @@ namespace MaintenanceToolGUI
 
         public ToolDFUImage()
         {
+        }
+
+        public void ReadDFUImageFile()
+        {
             // ファームウェア更新イメージファイル名を取得
             GetDFUImageFileResourceName();
 
