@@ -124,6 +124,15 @@ namespace MaintenanceToolGUI
 
         public void DoCommandDFUNew()
         {
+            // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
+            CurrentBoardname = "PCA10059_02";
+
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (ReadDFUImageFile() == false) {
+                NotifyCancel();
+                return;
+            }
+
             // バージョンチェックが不正の場合は処理を終了
             if (DfuImageIsAvailable() == false) {
                 NotifyCancel();
