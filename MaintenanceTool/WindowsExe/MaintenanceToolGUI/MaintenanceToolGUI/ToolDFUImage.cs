@@ -25,41 +25,41 @@ namespace MaintenanceToolGUI
         private string DFUImageResourceName;
 
         // リソース名称検索用キーワード
-        private const string ResourceNamePrefix = "MaintenanceToolGUI.Resources.app_dfu_package.";
+        private const string ResourceNamePrefix = "MaintenanceToolGUI.Resources.appkg.";
         private const string ResourceNameSuffix = ".zip";
 
         // DFU対象ファイル名
         private const string NRF52_APP_DAT_FILE_NAME = "nrf52840_xxaa.dat";
         private const string NRF52_APP_BIN_FILE_NAME = "nrf52840_xxaa.bin";
-        private const string NRF52_APP_ZIP_FILE_NAME = "app_dfu_package";
 
         public ToolDFUImage()
         {
+        }
+
+        public bool ReadDFUImageFile(string boardname)
+        {
             // ファームウェア更新イメージファイル名を取得
-            GetDFUImageFileResourceName();
+            if (GetDFUImageFileResourceName(boardname) == false) {
+                return false;
+            }
 
             // ファームウェア更新イメージ(.zip)を配列に読込
-            ReadDFUImage();
+            if (ReadDFUImage() == false) {
+                return false;
+            }
 
             // 書庫を解析し、内包されているイメージを抽出
-            ExtractDFUImage();
+            return ExtractDFUImage();
         }
 
         public string GetUpdateVersionFromDFUImage()
         {
             // ファームウェア更新イメージ名称から、更新バージョンを取得
             string UpdateVersion = ExtractUpdateVersion(DFUImageResourceName);
-
-            // ログ出力
-            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: Firmware version {0}", UpdateVersion));
-            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: {0}({1} bytes), {2}({3} bytes)",
-                NRF52_APP_DAT_FILE_NAME, NRF52AppDatSize,
-                NRF52_APP_BIN_FILE_NAME, NRF52AppBinSize
-                ));
             return UpdateVersion;
         }
 
-        private void GetDFUImageFileResourceName()
+        private bool GetDFUImageFileResourceName(string boardname)
         {
             // リソース名称を初期化
             DFUImageResourceName = "";
@@ -69,16 +69,20 @@ namespace MaintenanceToolGUI
             string[] resnames = myAssembly.GetManifestResourceNames();
             foreach (string resName in resnames) {
                 // リソース名が
-                // "MaintenanceToolGUI.Resources.app_dfu_package."
+                // "MaintenanceToolGUI.Resources.appkg.<boardname>."
                 // という名称で始まっている場合は、
                 // ファームウェア更新イメージファイルと判定
-                if (resName.StartsWith(ResourceNamePrefix)) {
+                string prefix = string.Format("{0}{1}.", ResourceNamePrefix, boardname);
+                if (resName.StartsWith(prefix)) {
                     DFUImageResourceName = resName;
+                    return true;
                 }
             }
+
+            return false;
         }
 
-        private void ReadDFUImage()
+        private bool ReadDFUImage()
         {
             // ファイルサイズをゼロクリア
             NRF52AppDatSize = 0;
@@ -89,7 +93,7 @@ namespace MaintenanceToolGUI
             Assembly assembly = Assembly.GetExecutingAssembly();
             Stream stream = assembly.GetManifestResourceStream(DFUImageResourceName);
             if (stream == null) {
-                return;
+                return false;
             }
 
             try {
@@ -98,17 +102,19 @@ namespace MaintenanceToolGUI
 
                 // リソースファイルを閉じる
                 stream.Close();
+                return true;
 
             } catch (Exception e) {
                 AppCommon.OutputLogError(string.Format("ToolDFUImage.ReadDFUImage: {0}", e.Message));
+                return false;
             }
         }
 
-        private void ExtractDFUImage()
+        private bool ExtractDFUImage()
         {
             // 例外抑止
             if (NRF52AppZipSize == 0) {
-                return;
+                return false;
             }
 
             // .zip書庫ファイルを解析し、内包されている.bin/.datイメージを抽出
@@ -122,6 +128,7 @@ namespace MaintenanceToolGUI
                     i++;
                 }
             }
+            return true;
         }
 
         private int ParseImage(byte[] data, int index)
@@ -176,7 +183,25 @@ namespace MaintenanceToolGUI
             }
 
             // リソース名称文字列から、バージョン文字列だけを抽出
-            UpdateVersion = resName.Replace(ResourceNamePrefix, "").Replace(ResourceNameSuffix, "");
+            string replaced = resName.Replace(ResourceNamePrefix, "").Replace(ResourceNameSuffix, "");
+            string[] elem = replaced.Split('.');
+            if (elem.Length != 4) {
+                return UpdateVersion;
+            }
+
+            // 抽出後の文字列を、基板名とバージョン文字列に分ける
+            // 例：PCA10059_02.0.2.11 --> PCA10059_02, 0.2.11
+            string boardname = elem[0];
+            UpdateVersion = string.Format("{0}.{1}.{2}", elem[1], elem[2], elem[3]);
+
+            // ログ出力
+            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: Firmware version {0}, board name {1}", 
+                UpdateVersion, boardname));
+            AppCommon.OutputLogDebug(string.Format("ToolDFUImage: {0}({1} bytes), {2}({3} bytes)",
+                NRF52_APP_DAT_FILE_NAME, NRF52AppDatSize,
+                NRF52_APP_BIN_FILE_NAME, NRF52AppBinSize
+                ));
+
             return UpdateVersion;
         }
     }

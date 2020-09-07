@@ -23,6 +23,7 @@ namespace MaintenanceToolGUI
 
         // 認証器からHID経由で取得したバージョン
         public string CurrentVersion { get; set; }
+        public string CurrentBoardname { get; set; }
 
         // 転送処理クラス
         private ToolDFUProcess toolDFUProcess;
@@ -66,9 +67,6 @@ namespace MaintenanceToolGUI
             // 更新イメージクラスを初期化
             toolDFUImage = new ToolDFUImage();
 
-            // ファームウェア更新イメージファイルから、更新バージョンを取得
-            UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
-
             // DFU転送処理クラスを初期化
             toolDFUProcess = new ToolDFUProcess(dfuDevice, toolDFUImage);
 
@@ -87,8 +85,24 @@ namespace MaintenanceToolGUI
         //
         public void DoCommandDFU()
         {
+            // 認証器に導入中のバージョンを照会
+            hidMain.DoGetVersionInfoForDFU();
+        }
+
+        public void ResumeCommandDFU()
+        {
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (ReadDFUImageFile() == false) {
+                NotifyCancel();
+                return;
+            }
+
             // バージョンチェックが不正の場合は処理を終了
             if (DfuImageIsAvailable() == false) {
+                NotifyCancel();
+                return;
+            }
+            if (VersionCheckForDFU() == false) {
                 NotifyCancel();
                 return;
             }
@@ -97,7 +111,7 @@ namespace MaintenanceToolGUI
             Command = ToolDFUCommand.CommandDFU;
 
             // 処理開始画面を表示
-            if (dfuStartForm.OpenForm()) {
+            if (dfuStartForm.OpenForm(mainForm)) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
                 // DFU主処理開始
                 DoProcessDFU();
@@ -110,6 +124,15 @@ namespace MaintenanceToolGUI
 
         public void DoCommandDFUNew()
         {
+            // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
+            CurrentBoardname = "PCA10059_02";
+
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (ReadDFUImageFile() == false) {
+                NotifyCancel();
+                return;
+            }
+
             // バージョンチェックが不正の場合は処理を終了
             if (DfuImageIsAvailable() == false) {
                 NotifyCancel();
@@ -120,7 +143,7 @@ namespace MaintenanceToolGUI
             Command = ToolDFUCommand.CommandDFUNew;
 
             // 処理開始画面を表示
-            if (dfuNewStartForm.OpenForm()) {
+            if (dfuNewStartForm.OpenForm(mainForm)) {
                 // 処理開始画面でOKクリック-->DFU接続成功の場合、
                 // DFU主処理開始
                 DoProcessDFU();
@@ -137,11 +160,26 @@ namespace MaintenanceToolGUI
             mainForm.OnDFUCanceled();
         }
 
+        private bool ReadDFUImageFile()
+        {
+            // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+            if (toolDFUImage.ReadDFUImageFile(CurrentBoardname) == false) {
+                ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST);
+                return false;
+            }
+            return true;
+        }
+
         private bool DfuImageIsAvailable()
         {
+            // ファームウェア更新イメージファイルから、更新バージョンを取得
+            UpdateVersion = toolDFUImage.GetUpdateVersionFromDFUImage();
+
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
             if (UpdateVersion.Equals("")) {
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_UPDATE_VERSION_UNKNOWN);
                 return false;
@@ -153,12 +191,34 @@ namespace MaintenanceToolGUI
         {
             // HID経由で認証器の現在バージョンが取得できていない場合は利用不可
             if (CurrentVersion.Equals("")) {
-                FormUtil.ShowWarningMessage(
+                ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE,
                     ToolGUICommon.MSG_DFU_CURRENT_VERSION_UNKNOWN);
-                return true;
+                return false;
             }
-            return false;
+
+            // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
+            int currentVersionDec = CalculateDecimalVersion(CurrentVersion);
+            int updateVersionDec = CalculateDecimalVersion(UpdateVersion);
+            if (currentVersionDec > updateVersionDec) {
+                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_ALREADY_NEW, 
+                    CurrentVersion, UpdateVersion);
+                ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                return false;
+            }
+
+            return true;
+        }
+
+        private int CalculateDecimalVersion(string versionStr)
+        {
+            // バージョン文字列 "1.2.11" -> "010211" 形式に変換
+            int decimalVersion = 0;
+            foreach (string element in versionStr.Split('.')) {
+                decimalVersion = decimalVersion * 100 + int.Parse(element);
+            }
+            return decimalVersion;
         }
 
         //
@@ -212,17 +272,24 @@ namespace MaintenanceToolGUI
         //
         public void OnUSBDeviceArrival()
         {
-            // 認証器に導入中のバージョンをクリア
+            // バージョン更新判定フラグがセットされていない場合は終了
+            if (NeedCompareUpdateVersion == false) {
+                return;
+            }
+
+            // 認証器に導入中のバージョン、基板名をクリア
             CurrentVersion = "";
+            CurrentBoardname = "";
 
             // 認証器に導入中のバージョンを照会
             hidMain.DoGetVersionInfoForDFU();
         }
 
-        public void NotifyFirmwareVersionResponse(string strFWRev)
+        public void NotifyFirmwareVersionResponse(string strFWRev, string strHWRev)
         {
-            // 認証器に導入中のバージョンを保持
+            // 認証器に導入中のバージョン、基板名を保持
             CurrentVersion = strFWRev;
+            CurrentBoardname = strHWRev;
 
             // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
             if (NeedCompareUpdateVersion) {
@@ -232,6 +299,10 @@ namespace MaintenanceToolGUI
                 // バージョン情報を比較して終了判定
                 // --> 判定結果を処理進捗画面に戻す
                 dfuProcessingForm.NotifyTerminateDFUProcess(CompareUpdateVersion());
+
+            } else {
+                // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+                ResumeCommandDFU();
             }
         }
 
@@ -304,7 +375,7 @@ namespace MaintenanceToolGUI
             });
 
             // 処理進捗画面を表示
-            bool ret = dfuProcessingForm.OpenForm();
+            bool ret = dfuProcessingForm.OpenForm(mainForm);
 
             // 処理結果（成功 or 失敗）をメイン画面に戻す
             mainForm.OnAppMainProcessExited(ret);
@@ -339,6 +410,14 @@ namespace MaintenanceToolGUI
                 // DFU転送失敗時は処理進捗画面に制御を戻す
                 dfuProcessingForm.NotifyTerminateDFUProcess(success);
             }
+        }
+
+        //
+        // メッセージボックス
+        //
+        void ShowWarningMessage(string captionText, string messageText)
+        {
+            FormUtil.ShowWarningMessage(mainForm, captionText, messageText);
         }
     }
 }

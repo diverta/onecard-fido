@@ -6,7 +6,7 @@
 
 ### ご注意
 
-[「署名機能付きUSBブートローダー移行手順書」](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)に記載の、ブートローダー導入手順により、[署名機能付きUSBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)だけが導入されている状態のMDBT50Q Dongleをご使用ください。
+アプリケーション・ファームウェアが導入されていない状態の、最新版MDBT50Q Dongle（rev2.1.2）をご使用ください。
 
 既にアプリケーション・ファームウェアが導入されているMDBT50Q Dongleに対しては、本機能は使用できません。
 
@@ -14,14 +14,14 @@
 
 まず最初に、MDBT50Q Dongleの背面にあるボタン電池ケースに、電池が入っていないことを必ず確認します。
 
-<img src="../../nRF5_SDK_v15.3.0/firmwares/assets02/0000.png" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0011.jpg" width="400">
 
 次に、署名機能付きUSBブートローダーだけが導入されている状態のMDBT50Q Dongleを、PCのUSBポートに装着します。<br>
 MDBT50Q Dongleは、自動的にブートローダーモードに遷移します。
 
-MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
+MDBT50Q Dongleの橙色・黄色のLEDが同時点灯していることを確認します。
 
-<img src="../../MaintenanceTool/macOSApp/assets02/0011.jpg" width="300">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0006.jpg" width="400">
 
 管理ツールを起動し、ファイルメニューから「ファームウェアを新規導入」を選択します。
 
@@ -46,7 +46,7 @@ MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認
 
 MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 
-<img src="../../MaintenanceTool/macOSApp/assets02/0010.jpg" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="400">
 
 以上で、ファームウェア新規導入処理は完了となります。
 
