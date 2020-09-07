@@ -228,6 +228,7 @@
         NSString *strDeviceName = @"";
         NSString *strFWRev = @"";
         NSString *strHWRev = @"";
+        NSString *strSecic = @"";
         for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
             NSArray *items = [element componentsSeparatedByString:@"="];
             NSString *key = [items objectAtIndex:0];
@@ -238,13 +239,15 @@
                 strFWRev = [self extractCSVItemFrom:val];
             } else if ([key isEqualToString:@"HW_REV"]) {
                 strHWRev = [self extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"ATECC608A"]) {
+                strSecic = [self extractCSVItemFrom:val];
             }
         }
         if ([self command] == COMMAND_HID_GET_VERSION_FOR_DFU) {
             if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
                 // DFUコマンドにファームウェアバージョンを戻す
                 ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-                [toolDFUCommand notifyFirmwareVersion:strFWRev];
+                [toolDFUCommand notifyFirmwareVersion:strFWRev boardname:strHWRev];
             }
             return;
         }
@@ -253,6 +256,12 @@
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_FW_REV, strFWRev]];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_HW_REV, strHWRev]];
+        // セキュアICの搭載有無を表示
+        if ([strSecic length] > 0) {
+            [self displayMessage:MSG_VERSION_INFO_SECURE_IC_AVAIL];
+        } else {
+            [self displayMessage:MSG_VERSION_INFO_SECURE_IC_UNAVAIL];
+        }
         [self commandDidProcess:[self command] result:true message:nil];
     }
 

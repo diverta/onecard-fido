@@ -50,8 +50,9 @@
     @property (nonatomic) bool needCompareUpdateVersion;
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
-    // 認証器からHID経由で取得したバージョン
+    // 認証器からHID経由で取得したバージョン、基板名
     @property (nonatomic) NSString *currentVersion;
+    @property (nonatomic) NSString *currentBoardname;
     // タイムアウト監視フラグ
     @property (nonatomic) bool needTimeoutMonitor;
 
@@ -85,22 +86,7 @@
         [self setNeedCheckBootloaderMode:false];
         // バージョン更新判定フラグをリセット
         [self setNeedCompareUpdateVersion:false];
-        // ファームウェア更新イメージファイルから、更新バージョンを取得
-        [self getUpdateVersionFromDFUImage];
         return self;
-    }
-
-    - (void)getUpdateVersionFromDFUImage {
-        // 別スレッドで実行
-        dispatch_async([self subQueue], ^{
-            // ファームウェア更新イメージファイルから、バイナリーイメージを読込
-            if ([self readDFUImages]) {
-                // パッケージに同梱されている更新イメージのバージョンを取得
-                NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
-                // 更新バージョンを保持
-                [self setUpdateVersionFromImage:update];
-            }
-        });
     }
 
 #pragma mark - Process timeout monitor
@@ -134,6 +120,10 @@
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef {
         // 認証器の現在バージョンをクリア
         [self setCurrentVersion:@""];
+        // バージョン更新判定フラグがセットされていない場合は終了
+        if ([self needCompareUpdateVersion] == false) {
+            return;
+        }
         // USB HID経由でバージョン照会コマンドを実行
         if ([toolHIDCommandRef isMemberOfClass:[ToolHIDCommand class]] == false) {
             return;
@@ -158,15 +148,19 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev {
-        // 認証器の現在バージョンを保持
+    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev {
+        // 認証器の現在バージョン、基板名を保持
         [self setCurrentVersion:strFWRev];
+        [self setCurrentBoardname:strHWRev];
         // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
         if ([self needCompareUpdateVersion]) {
             // バージョン情報を比較して終了判定
             bool result = [self compareUpdateVersion:strFWRev];
             // 処理進捗画面に対し、処理結果を通知する
             [[self dfuProcessingWindow] commandDidTerminateDFUProcess:result];
+        } else {
+            // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+            [self resumeDfuProcessStart];
         }
     }
 
@@ -213,19 +207,16 @@
 
 #pragma mark - Interface for Main Process
 
-    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolHIDCommandRef:(id)toolHIDCommandRef {
         // 処理前のチェック
         if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
             return;
         }
-        if ([self versionCheckForDFU] == false) {
-            // バージョンチェックが不正の場合はキャンセル
-            [self notifyCancel];
-            return;
-        }
-        // 処理開始画面（ダイアログ）をモーダルで表示
-        [self dfuStartWindowWillOpen];
+        // 事前にバージョン情報取得を実行し、認証器の現在バージョンと基板名を取得 --> notifyFirmwareVersionが呼び出される
+        [self setToolHIDCommand:(ToolHIDCommand *)toolHIDCommandRef];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_GET_VERSION_FOR_DFU
+                                           withData:nil forCommand:self];
     }
 
     - (bool)setupBeforeProcess:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -236,21 +227,73 @@
             // すでにツール設定画面が開いている場合は終了
             return false;
         }
+        return true;
+    }
+
+    - (void)resumeDfuProcessStart {
+        // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+        if ([self readDFUImageFile] == false) {
+            [self notifyCancel];
+            return;
+        }
+        // 処理前のチェック
+        if ([self versionCheckForDFU] == false) {
+            // バージョンチェックが不正の場合はキャンセル
+            [self notifyCancel];
+            return;
+        }
         if ([self dfuImageIsAvailable] == false) {
             // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
+            [self notifyCancel];
+            return;
+        }
+        // 処理開始画面（ダイアログ）をモーダルで表示
+        [self dfuStartWindowWillOpen];
+    }
+
+    - (bool)readDFUImageFile {
+        // 更新イメージファイル（例：appkg.PCA10059_02.0.2.11.zip）の検索用文字列を生成
+        NSString *zipFileNamePrefix = [NSString stringWithFormat:@"appkg.%@.", [self currentBoardname]];
+        // 基板名に対応する更新イメージファイルから、バイナリーイメージを読込
+        if ([self readDFUImages:zipFileNamePrefix] == false) {
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
+                      informativeText:MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST];
             return false;
         }
         return true;
     }
 
     - (bool)dfuImageIsAvailable {
-        // 更新イメージファイル名からバージョンが取得できていない場合は利用不可
-        if ([[self updateVersionFromImage] length] == 0) {
+        // パッケージに同梱されている更新イメージファイル名からバージョンを取得
+        NSString *update = [[NSString alloc] initWithUTF8String:nrf52_app_image_zip_version()];
+        // バージョンが取得できなかった場合は利用不可
+        if ([update length] == 0) {
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
                       informativeText:MSG_DFU_UPDATE_VERSION_UNKNOWN];
             return false;
         }
+        // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
+        int currentVersionDec = [self calculateDecimalVersion:[self currentVersion]];
+        int updateVersionDec = [self calculateDecimalVersion:update];
+        if (currentVersionDec > updateVersionDec) {
+            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
+                                     [self currentVersion], update];
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE
+                      informativeText:informative];
+            return false;
+        }
+        // 更新バージョンを保持
+        [self setUpdateVersionFromImage:update];
         return true;
+    }
+
+    - (int)calculateDecimalVersion:(NSString *)versionStr {
+        // バージョン文字列 "1.2.11" -> "010211" 形式に変換
+        int decimalVersion = 0;
+        for (NSString *element in [versionStr componentsSeparatedByString:@"."]) {
+            decimalVersion = decimalVersion * 100 + [element intValue];
+        }
+        return decimalVersion;
     }
 
     - (bool)versionCheckForDFU {
@@ -264,6 +307,13 @@
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
+        [self setCurrentBoardname:@"PCA10059_02"];
+        // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
+        if ([self readDFUImageFile] == false) {
+            [self notifyCancel];
+            return;
+        }
         // 処理前のチェック
         if ([self setupBeforeProcess:sender parentWindow:parentWindow] == false) {
             [self notifyCancel];
@@ -418,15 +468,22 @@
         dispatch_async([self subQueue], ^{
             // サブスレッドでDFU処理を実行
             if ([self performDFUProcess] == false) {
-                // 処理失敗時は処理タイムアウト検知を不要とする
-                [self setNeedTimeoutMonitor:false];
-                // 処理進捗画面に対し、処理失敗の旨を通知する
-                [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
+                // 処理失敗時は、処理進捗画面に対し通知
+                [self notifyErrorToProcessingWindow];
             }
         });
         dispatch_async([self mainQueue], ^{
             // メイン画面に開始メッセージを出力
             [[self delegate] toolDFUCommandDidStart];
+        });
+    }
+
+    - (void)notifyErrorToProcessingWindow {
+        dispatch_async([self mainQueue], ^{
+            // 処理失敗時は処理タイムアウト検知を不要とする
+            [self setNeedTimeoutMonitor:false];
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self dfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
     }
 
@@ -474,18 +531,18 @@
         });
     }
 
-    - (bool)readDFUImages {
+    - (bool)readDFUImages:(NSString *)zipFileNamePrefix {
         // リソースバンドル・ディレクトリーの絶対パスを取得
         NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
         // .zipファイル名を取得
-        if (nrf52_app_image_zip_filename_get([resourcePath UTF8String]) == false) {
+        if (nrf52_app_image_zip_filename_get([resourcePath UTF8String], [zipFileNamePrefix UTF8String]) == false) {
             [self notifyErrorMessage:MSG_DFU_IMAGE_FILENAME_CANNOT_GET];
             return false;
         }
         // ログ出力
         [[ToolLogFile defaultLogger]
-         debugWithFormat:@"ToolDFUCommand: Firmware version %s",
-         nrf52_app_image_zip_version()];
+         debugWithFormat:@"ToolDFUCommand: Firmware version %s, board name %s",
+         nrf52_app_image_zip_version(), nrf52_app_image_zip_boardname()];
         // .zipファイルからイメージを読込
         const char *zip_path = nrf52_app_image_zip_filename();
         if (nrf52_app_image_zip_read(zip_path) == false) {

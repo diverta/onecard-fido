@@ -269,7 +269,7 @@
     - (IBAction)menuItemDFUTestDidSelect:(id)sender {
         if ([self checkUSBHIDConnection]) {
             [self enableButtons:false];
-            [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window]];
+            [[self toolDFUCommand] dfuProcessWillStart:self parentWindow:[self window] toolHIDCommandRef:[self toolHIDCommand]];
         }
     }
 
