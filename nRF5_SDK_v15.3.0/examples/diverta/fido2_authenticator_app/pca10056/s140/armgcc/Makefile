@@ -237,6 +237,7 @@ SRC_FILES += \
   $(PLTLIB_DIR)/fido_timer.c \
   $(PLTLIB_DIR)/fido_twi.c \
   $(PLTLIB_DIR)/nfc_service.c \
+  $(PLTLIB_DIR)/rtc2.c \
   $(PLTLIB_DIR)/usbd_service.c \
   $(PLTLIB_DIR)/usbd_service_bos.c \
   $(PLTLIB_DIR)/usbd_service_ccid.c \
