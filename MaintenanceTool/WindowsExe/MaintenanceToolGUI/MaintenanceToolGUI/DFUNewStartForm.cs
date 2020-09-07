@@ -19,11 +19,11 @@ namespace MaintenanceToolGUI
                 ToolGUICommon.MSG_PROMPT_START_DFU_PROCESS);
         }
 
-        public bool OpenForm()
+        public bool OpenForm(IWin32Window owner)
         {
             // 処理開始画面を開く
             DialogResult = DialogResult.Cancel;
-            return (ShowDialog() == DialogResult.OK);
+            return (ShowDialog(owner) == DialogResult.OK);
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

@@ -10,19 +10,19 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		zG+5Xyw1W0UA47KlY8ix8qjcLK4=
+		gckW1HCxqHSEIdysj0waghkaEPg=
 		</data>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<data>
-		Wfk0U9pZELK7mzc19/4Lk0kDphY=
+		5s0MR9vHNmxcGxV1smnv2Fhsm6I=
 		</data>
 		<key>Resources/DFUStartWindow.nib</key>
 		<data>
-		XeuGEFs22/JjyukR+iOU4bAlgQI=
+		MAFIjxKpigHDlIO4B1kXYX1rWh4=
 		</data>
 		<key>Resources/PinCodeParamWindow.nib</key>
 		<data>
-		auQvdNZDJX9LVnkE308ZI1/skKM=
+		cTvaSdJkJmuwPPdVD7l7relkSVw=
 		</data>
 		<key>Resources/SetPinParamWindow.nib</key>
 		<data>
@@ -30,11 +30,15 @@
 		</data>
 		<key>Resources/ToolPreferenceWindow.nib</key>
 		<data>
-		9iECURhzXA+NiufmvH487yidUIQ=
+		CTLJRF+N1E6LUGdD6+Mdtk8B2Ow=
 		</data>
-		<key>Resources/app_dfu_package.0.2.10.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
 		<data>
-		RZa7xAYG+9T+/vNWSHqSQ1tKtvg=
+		dsErB5GXazP7fOHqkjXRL4Xh51g=
+		</data>
+		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<data>
+		b57eZenPwpE7WW+8rSLuq6S3QII=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -49,7 +53,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			E9GrbBFDLFvHzfUlUJ8iuQhGDZA=
+			SLZRDbC/UdW0BkU7fASzzENaWCw=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -68,28 +72,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2ofYaTb+LDiROuvitqmai8lsY9HSMXRE2QW5ftRAoY0=
+			u+THC5c4OIuDPPstqbmKWdZquE2rwKT4Ar42svIAtgQ=
 			</data>
 		</dict>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qd7QLOVEX78clf3j/IV2zCVJYBitdCDskusNo3Qau54=
+			+37jbLkhCIXAERH3T08AWK9bjgj61qhrAISrSWtwEk0=
 			</data>
 		</dict>
 		<key>Resources/DFUStartWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			N/3N8UTJwC+DwUtnVKpeXy2ZpzfikStb3hlL6NcA5BA=
+			esVJy3s+AZyKeImVHXeVoYIRUQ+cAccDyO6M+bu2ht8=
 			</data>
 		</dict>
 		<key>Resources/PinCodeParamWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ThOn3nzGlHgYCHtM/rMzo4MaQC4za2KvIso/HiBRG7s=
+			BtwvhOvhb6vOfP0WjK4SU7vreplbSEQwOY1XwDRduVw=
 			</data>
 		</dict>
 		<key>Resources/SetPinParamWindow.nib</key>
@@ -103,14 +107,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			3NeFbbvFVukpplmr7hZ08UA/rK06ybvnq3djQR5sfyI=
+			QHZsgUVOIpX8lEGVh0WyWugFdomgz7+I09QWd0VPllM=
 			</data>
 		</dict>
-		<key>Resources/app_dfu_package.0.2.10.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			3Kr6C7lVDgKAlMq9H2Pd5NWhNrtaJfgrJ4NsYi2sQaU=
+			BaXU/TwIG5TfsvzaQ+2po0n2O2SMhHi4cuhMKOiIACQ=
+			</data>
+		</dict>
+		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			itBSdkEV85jbpvt+3dwIASXnJCok/T/e5fYODACKalY=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
@@ -126,7 +137,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hDZnuptD2ZZ6eNFo47yELL+6OiWE1B6WvtXc4zS+Nj0=
+			p5+q/t5w9ZeBbwwaSqQWZ9FknMNWb5munPnleSxVGzo=
 			</data>
 			<key>optional</key>
 			<true/>

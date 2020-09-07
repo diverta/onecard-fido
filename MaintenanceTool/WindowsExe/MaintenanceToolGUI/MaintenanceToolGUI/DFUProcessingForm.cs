@@ -26,14 +26,14 @@ namespace MaintenanceToolGUI
             }
         }
 
-        public bool OpenForm()
+        public bool OpenForm(IWin32Window owner)
         {
             // プログレスバーをリセット
             LevelIndicator.Value = 0;
 
             // 処理進捗画面を開く
             DialogResult = DialogResult.Cancel;
-            return (ShowDialog() == DialogResult.OK);
+            return (ShowDialog(owner) == DialogResult.OK);
         }
 
         private void TerminateWindow()

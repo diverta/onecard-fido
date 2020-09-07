@@ -14,7 +14,7 @@ namespace MaintenanceToolGUI
             ToolDFURef = td;
         }
 
-        public bool OpenForm()
+        public bool OpenForm(IWin32Window owner)
         {
             // DFU処理クラスを参照し、バージョン文字列をラベルに設定
             LabelUpdateVersion.Text = ToolDFURef.UpdateVersion;
@@ -22,7 +22,7 @@ namespace MaintenanceToolGUI
 
             // 処理開始画面を開く
             DialogResult = DialogResult.Cancel;
-            return (ShowDialog() == DialogResult.OK);
+            return (ShowDialog(owner) == DialogResult.OK);
         }
 
         private void TerminateWindow()

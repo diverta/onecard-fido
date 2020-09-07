@@ -445,6 +445,7 @@ namespace MaintenanceToolGUI
             string strDeviceName = "";
             string strFWRev = "";
             string strHWRev = "";
+            string strSecic = "";
             foreach (string v in vars) {
                 if (v.StartsWith("DEVICE_NAME=")) {
                     strDeviceName = v.Split('=')[1].Replace("\"", "");
@@ -452,6 +453,8 @@ namespace MaintenanceToolGUI
                     strFWRev = v.Split('=')[1].Replace("\"", "");
                 } else if (v.StartsWith("HW_REV=")) {
                     strHWRev = v.Split('=')[1].Replace("\"", "");
+                } else if (v.StartsWith("ATECC608A=")) {
+                    strSecic = v.Split('=')[1].Replace("\"", "");
                 }
             }
 
@@ -459,7 +462,7 @@ namespace MaintenanceToolGUI
                 // DFU処理のためのバージョン照会
                 // (HID接続完了時の処理) である場合、
                 // DFU処理クラスにバージョンを通知
-                ToolDFURef.NotifyFirmwareVersionResponse(strFWRev);
+                ToolDFURef.NotifyFirmwareVersionResponse(strFWRev, strHWRev);
                 return;
             }
 
@@ -468,6 +471,12 @@ namespace MaintenanceToolGUI
             mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_DEVICE_NAME, strDeviceName));
             mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_FW_REV, strFWRev));
             mainForm.OnPrintMessageText(string.Format(AppCommon.MSG_VERSION_INFO_HW_REV, strHWRev));
+            // セキュアICの搭載有無を表示
+            if (strSecic.Length > 0) {
+                mainForm.OnPrintMessageText(AppCommon.MSG_VERSION_INFO_SECURE_IC_AVAIL);
+            } else {
+                mainForm.OnPrintMessageText(AppCommon.MSG_VERSION_INFO_SECURE_IC_UNAVAIL);
+            }
             mainForm.OnAppMainProcessExited(true);
         }
 

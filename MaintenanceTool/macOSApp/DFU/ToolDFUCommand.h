@@ -13,11 +13,11 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (bool)checkUSBHIDConnection;
-    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolHIDCommandRef:(id)toolHIDCommandRef;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
     - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev;
+    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev;
     - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd;
 
     - (void)commandWillChangeToBootloaderMode;

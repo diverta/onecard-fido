@@ -34,7 +34,7 @@
             // LevelIndicator
             // 
             this.LevelIndicator.Location = new System.Drawing.Point(12, 26);
-            this.LevelIndicator.Maximum = 22;
+            this.LevelIndicator.Maximum = 23;
             this.LevelIndicator.Name = "LevelIndicator";
             this.LevelIndicator.Size = new System.Drawing.Size(285, 25);
             this.LevelIndicator.Step = 1;
