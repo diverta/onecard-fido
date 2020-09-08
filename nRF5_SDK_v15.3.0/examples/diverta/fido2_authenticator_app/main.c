@@ -34,9 +34,6 @@
 // for FDS event handle
 #include "fido_flash.h"
 
-// for RTCC
-#include "rtc2.h"
-
 #define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
 #define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
@@ -199,7 +196,6 @@ int main(void)
     timers_init();
     power_management_init();
     flash_storage_init();
-    rtc2_init();
 
     // BLE関連の初期化
     ble_stack_init();
