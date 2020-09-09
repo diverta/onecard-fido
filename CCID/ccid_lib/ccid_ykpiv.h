@@ -17,6 +17,7 @@ extern "C" {
 // Yubico vendor specific instructions
 //
 #define YKPIV_INS_SET_MGMKEY            0xff
+#define YKPIV_INS_IMPORT_ASYMMETRIC_KEY 0xfe
 #define YKPIV_INS_GET_VERSION           0xfd
 #define YKPIV_INS_GET_SERIAL            0xf8
 
