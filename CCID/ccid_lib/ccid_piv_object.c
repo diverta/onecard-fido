@@ -241,3 +241,17 @@ bool ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size)
     // 正常終了
     return success;
 }
+
+bool ccid_piv_object_is_key_tag_exist(uint8_t key_tag)
+{
+    switch (key_tag) {
+        case TAG_KEY_PAUTH:
+        case TAG_KEY_CAADM:
+        case TAG_KEY_DGSIG:
+        case TAG_KEY_KEYMN:
+        case TAG_KEY_CAUTH:
+            return true;
+        default:
+            return false;
+    }
+}
