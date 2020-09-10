@@ -34,7 +34,7 @@ bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, u
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データをバッファに読込む
-    if (fido_flash_fds_record_read(PIV_DATA_OBJ_9D_FILE_ID, PIV_DATA_OBJ_9D_RECORD_KEY, PIV_DATA_OBJ_9D_RECORD_SIZE, m_record_buf_R, is_exist) == false) {
+    if (fido_flash_fds_record_read(PIV_DATA_OBJ_9B_FILE_ID, PIV_DATA_OBJ_9B_RECORD_KEY, PIV_DATA_OBJ_9B_RECORD_SIZE, m_record_buf_R, is_exist) == false) {
         return false;
     }
     // 既存データがなければここで終了
@@ -85,7 +85,7 @@ bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, u
 
     // データをFlash ROMに書込
     m_flash_func = (void *)ccid_flash_piv_object_card_admin_key_write;
-    return fido_flash_fds_record_write(PIV_DATA_OBJ_9D_FILE_ID, PIV_DATA_OBJ_9D_RECORD_KEY, PIV_DATA_OBJ_9D_RECORD_SIZE, m_record_buf_R, m_record_buf_W);
+    return fido_flash_fds_record_write(PIV_DATA_OBJ_9B_FILE_ID, PIV_DATA_OBJ_9B_RECORD_KEY, PIV_DATA_OBJ_9B_RECORD_SIZE, m_record_buf_R, m_record_buf_W);
 }
 
 void ccid_flash_piv_object_failed(void)
