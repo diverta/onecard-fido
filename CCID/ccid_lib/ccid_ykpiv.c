@@ -116,6 +116,40 @@ uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu
     return sw;
 }
 
+void ccid_ykpiv_ins_import_key_retry(void)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    // リトライが必要な場合は
+    // 鍵インポート処理を再実行
+    uint16_t sw = ccid_ykpiv_ins_import_key(m_capdu, m_rapdu);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        fido_log_warning("Private key registration retry");
+    } else {
+        // 異常時はエラーレスポンス処理を指示
+        fido_log_error("Private key registration retry fail");
+        apdu_resume_process(m_capdu, m_rapdu, sw);        
+    }
+}
+
+void ccid_ykpiv_ins_import_key_resume(bool success)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    if (success) {
+        // Flash ROM書込みが完了した場合は正常レスポンス処理を指示
+        fido_log_info("Private key registration success");
+        apdu_resume_process(m_capdu, m_rapdu, SW_NO_ERROR);
+    } else {
+        // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
+        fido_log_error("Private key registration fail");
+        apdu_resume_process(m_capdu, m_rapdu, SW_UNABLE_TO_PROCESS);
+    }
+}
+
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // パラメーターのチェック

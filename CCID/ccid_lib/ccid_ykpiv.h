@@ -28,6 +28,8 @@ uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu
 void     ccid_ykpiv_ins_set_mgmkey_retry(void);
 void     ccid_ykpiv_ins_set_mgmkey_resume(bool success);
 uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu);
+void     ccid_ykpiv_ins_import_key_retry(void);
+void     ccid_ykpiv_ins_import_key_resume(bool success);
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu);
 uint16_t ccid_ykpiv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu);
 

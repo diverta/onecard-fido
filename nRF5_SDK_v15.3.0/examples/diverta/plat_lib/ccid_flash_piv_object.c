@@ -97,6 +97,9 @@ void ccid_flash_piv_object_failed(void)
     if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_resume(false);
     }
+    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+        ccid_ykpiv_ins_import_key_resume(false);
+    }
     m_flash_func = NULL;
 }
 
@@ -111,6 +114,9 @@ void ccid_flash_piv_object_gc_done(void)
     if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_retry();
     }
+    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+        ccid_ykpiv_ins_import_key_retry();
+    }
     m_flash_func = NULL;
 }
 
@@ -122,6 +128,9 @@ void ccid_flash_piv_object_record_updated(void)
     // 正常系の後続処理を実行
     if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_resume(true);
+    }
+    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+        ccid_ykpiv_ins_import_key_resume(true);
     }
     m_flash_func = NULL;
 }
