@@ -323,7 +323,9 @@ static void ccid_user_ev_handler(app_usbd_class_inst_t const *p_inst, enum app_u
             prepare_ep_output_buffer(m_rx_buf, &m_rx_buf_size);
             break;
         case APP_USBD_CCID_USER_EVT_RX_DONE:
-            m_ccid_received = true;
+            if (ccid_data_frame_received(m_rx_buf, m_rx_buf_size)) {
+                m_ccid_received = true;
+            }
             break;
         case APP_USBD_CCID_USER_EVT_TX_DONE:
             break;
@@ -365,8 +367,6 @@ void usbd_service_ccid_do_process(void)
     if (m_ccid_received) {
         m_ccid_received = false;
         // レスポンスAPDUを生成し、業務処理を実行
-        if (ccid_data_frame_received(m_rx_buf, m_rx_buf_size)) {
-            ccid_request_apdu_received();
-        }
+        ccid_request_apdu_received();
     }
 }
