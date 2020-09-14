@@ -27,6 +27,21 @@ NRF_LOG_MODULE_REGISTER();
 static uint32_t          m_record_buf_R[MAX_BUF_SIZE];
 static uint32_t          m_record_buf_W[MAX_BUF_SIZE];
 
+uint8_t *ccid_flash_piv_object_read_buffer(void)
+{
+    return (uint8_t *)m_record_buf_R;
+}
+
+uint8_t *ccid_flash_piv_object_write_buffer(void)
+{
+    return (uint8_t *)m_record_buf_W;
+}
+
+size_t ccid_flash_piv_object_rw_buffer_size(void)
+{
+    return MAX_BUF_SIZE;
+}
+
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
 

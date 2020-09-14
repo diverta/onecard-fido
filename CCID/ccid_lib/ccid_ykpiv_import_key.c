@@ -174,16 +174,22 @@ static uint16_t import_ecc_private_key(command_apdu_t *capdu)
         return SW_WRONG_DATA;
     }
 
-#if LOG_DEBUG_PKEY_BUFF
-    uint8_t alg = capdu->p1;
-    uint8_t tag = capdu->p2;
+    // 処理のパラメーターを取得
+    uint8_t key_alg = capdu->p1;
+    uint8_t key_tag = capdu->p2;
     uint8_t *key = cdata + 2;
-    fido_log_debug("ccid_ykpiv_ins_import_key: tag=%02x, alg=%02x (%d bytes)", tag, alg, priv_key_size);
-    fido_log_print_hexdump_debug(key, priv_key_size);
-#endif
 
-    // 後ほど正式に実装予定
-    return SW_WRONG_P1P2;
+    // 鍵データを、Flash ROM書出用バッファにコピー（５バイト目を先頭とする）
+    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 4;
+    memcpy(key_data_buff, key, priv_key_size);
+
+    // 秘密鍵を登録
+    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
 }
 
 uint16_t ccid_ykpiv_import_key(command_apdu_t *capdu, response_apdu_t *rapdu)
