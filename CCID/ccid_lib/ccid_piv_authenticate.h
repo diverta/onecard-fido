@@ -19,6 +19,7 @@ extern "C" {
 //
 // 暗号化アルゴリズム
 #define ALG_TDEA_3KEY       0x03
+#define ALG_RSA_2048        0x07
 #define ALG_ECC_256         0x11
 
 // 3-key TDES関連

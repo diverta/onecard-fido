@@ -10,17 +10,24 @@
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
-#include "ccid_ykpiv.h"
+#include "ccid_ykpiv_import_key.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// for debug data
-#define LOG_DEBUG_PKEY_BUFF         false
-
 // APDU格納領域の参照を待避
 static command_apdu_t  *m_capdu;
 static response_apdu_t *m_rapdu;
+
+static void apdu_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    ccid_apdu_response_set_pending(true);
+
+    // APDU格納領域の参照を待避
+    m_capdu = capdu;
+    m_rapdu = rapdu;
+}
 
 static void apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t sw)
 {
@@ -56,11 +63,7 @@ uint16_t ccid_ykpiv_ins_set_mgmkey(command_apdu_t *capdu, response_apdu_t *rapdu
     }
 
     // Flash ROM書込みが完了するまで、レスポンスを抑止
-    ccid_apdu_response_set_pending(true);
-
-    // APDU格納領域の参照を待避
-    m_capdu = capdu;
-    m_rapdu = rapdu;
+    apdu_resume_prepare(capdu, rapdu);
 
     // 正常終了
     return SW_NO_ERROR;
@@ -102,47 +105,15 @@ void ccid_ykpiv_ins_set_mgmkey_resume(bool success)
 
 uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
-    // 管理コマンドが実行可能でない場合は終了
-    if (ccid_piv_admin_mode_get() == false) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    // 鍵インポート処理を実行
+    uint16_t sw = ccid_ykpiv_import_key(capdu, rapdu);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        apdu_resume_prepare(capdu, rapdu);
     }
 
-    // パラメーターのチェック
-    uint8_t alg = capdu->p1;
-    uint8_t key_tag = capdu->p2;
-    if (ccid_piv_object_is_key_tag_exist(key_tag) == false) {
-        return SW_WRONG_P1P2;
-    }
-
-    // リクエストデータの格納領域
-    uint8_t *cdata = capdu->data;
-
-    // 秘密鍵を抽出
-    if (alg == ALG_ECC_256) {
-        size_t priv_key_size = 32;
-        if (capdu->lc < 2 + priv_key_size) {
-            return SW_WRONG_LENGTH;
-        }
-        if (cdata[0] != 0x06 || cdata[1] != priv_key_size) {
-            return SW_WRONG_DATA;
-        }
-
-#if LOG_DEBUG_PKEY_BUFF
-        uint8_t *key = cdata + 2;
-        fido_log_debug("ccid_ykpiv_ins_import_key: tag=%02x, alg=%02x (%d bytes)", key_tag, alg, priv_key_size);
-        fido_log_print_hexdump_debug(key, priv_key_size);
-#endif
-
-    } else {
-        return SW_WRONG_P1P2;
-    }
-
-    // APDU格納領域の参照を待避
-    m_capdu = capdu;
-    m_rapdu = rapdu;
-
-    // 正常終了
-    return SW_NO_ERROR;
+    // ステータスワードを戻す
+    return sw;
 }
 
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu) 

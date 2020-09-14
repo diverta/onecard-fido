@@ -213,6 +213,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(CIDLIB_DIR)/ccid_piv_pin.c \
   $(CIDLIB_DIR)/ccid_ykpiv.c \
+  $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
