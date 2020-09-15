@@ -17,45 +17,47 @@
 // for debug data
 #define LOG_DEBUG_PKEY_BUFF     false
 
-#define RSA2048_PQ_LENGTH 128
-
-static uint16_t tlv_get_element_size(const uint8_t *data, const size_t size, size_t *elem_len_size, uint16_t *elem_size) 
+static uint16_t tlv_get_element_size(uint8_t elem_no, uint8_t *data, size_t size, size_t *elem_header_size, uint16_t *elem_data_size, uint16_t elem_data_size_max) 
 {
     if (size < 1) {
         return SW_WRONG_LENGTH;
+    }
+    if (data[0] != elem_no) {
+        return SW_WRONG_DATA;
+    }
+    
+    if (data[1] < 0x80) {
+        *elem_data_size = data[1];
+        *elem_header_size = 2;
 
-    } else if (data[0] < 0x80) {
-        *elem_size = data[0];
-        *elem_len_size = 1;
-
-    } else if (data[0] == 0x81) {
+    } else if (data[1] == 0x81) {
         if (size < 2) {
             return SW_WRONG_LENGTH;
 
         } else {
-            *elem_size = data[1];
-            *elem_len_size = 2;
+            *elem_data_size = data[2];
+            *elem_header_size = 3;
         }
 
-    } else if (data[0] == 0x82) {
+    } else if (data[1] == 0x82) {
         if (size < 3) {
             return SW_WRONG_LENGTH;
 
         } else {
-            *elem_size = (uint16_t)(data[1] << 8u) | data[2];
-            *elem_len_size = 3;
+            *elem_data_size = (uint16_t)(data[2] << 8u) | data[3];
+            *elem_header_size = 4;
         }
 
     } else {
         return SW_WRONG_LENGTH;
     }
 
-    if (*elem_size + *elem_len_size > size) {
+    if (*elem_data_size + *elem_header_size > size) {
         // length does not overflow, but data does overflow
         return SW_WRONG_LENGTH;
     }
 
-    if (*elem_size > RSA2048_PQ_LENGTH) {
+    if (*elem_data_size > elem_data_size_max) {
         return SW_WRONG_DATA;
     }
 
@@ -64,101 +66,106 @@ static uint16_t tlv_get_element_size(const uint8_t *data, const size_t size, siz
 
 static uint16_t import_rsa_private_key(command_apdu_t *capdu)
 {
-        if (capdu->lc == 0) {
-            return SW_WRONG_LENGTH;
-        }
-        size_t   elem_len_size;
-        uint16_t elem_size;
-        uint16_t ret;
+    if (capdu->lc == 0) {
+        return SW_WRONG_LENGTH;
+    }
+    size_t   elem_header_size;
+    uint16_t elem_data_size;
+    uint16_t ret;
 
-        // リクエストデータの格納領域
-        uint8_t *cdata = capdu->data;
-        uint8_t *p = cdata;
-        //
-        // Pの抽出
-        //
-        if (*p++ != 0x01) {
-            return SW_WRONG_DATA;
-        }
-        ret = tlv_get_element_size(p, capdu->lc - 1, &elem_len_size, &elem_size);
-        if (ret != SW_NO_ERROR) {
-            return ret;
-        }
-        p += elem_len_size;
-#if LOG_DEBUG_PKEY_BUFF
-        uint8_t alg = capdu->p1;
-        uint8_t tag = capdu->p2;
-        fido_log_debug("ccid_ykpiv_ins_import_key: tag=%02x, alg=%02x", tag, alg);
-        fido_log_debug("P (%d bytes) offset=%d:", elem_size, elem_len_size);
-        fido_log_print_hexdump_debug(p, 64);
-#endif
-        p += elem_size;
-        //
-        // Qの抽出
-        //
-        if (*p++ != 0x02) {
-            return SW_WRONG_DATA;
-        }
-        ret = tlv_get_element_size(p, capdu->lc - (p - cdata), &elem_len_size, &elem_size);
-        if (ret != SW_NO_ERROR) {
-            return ret;
-        }
-        p += elem_len_size;
-#if LOG_DEBUG_PKEY_BUFF
-        fido_log_debug("Q (%d bytes) offset=%d:", elem_size, elem_len_size);
-        fido_log_print_hexdump_debug(p, 64);
-#endif
-        p += elem_size;
-        //
-        // DPの抽出
-        //
-        if (*p++ != 0x03) {
-            return SW_WRONG_DATA;
-        }
-        ret = tlv_get_element_size(p, capdu->lc - (p - cdata), &elem_len_size, &elem_size);
-        if (ret != SW_NO_ERROR) {
-            return ret;
-        }
-        p += elem_len_size;
-#if LOG_DEBUG_PKEY_BUFF
-        fido_log_debug("DP (%d bytes) offset=%d:", elem_size, elem_len_size);
-        fido_log_print_hexdump_debug(p, 64);
-#endif
-        p += elem_size;
-        //
-        // DQの抽出
-        //
-        if (*p++ != 0x04) {
-            return SW_WRONG_DATA;
-        }
-        ret = tlv_get_element_size(p, capdu->lc - (p - cdata), &elem_len_size, &elem_size);
-        if (ret != SW_NO_ERROR) {
-            return ret;
-        }
-        p += elem_len_size;
-#if LOG_DEBUG_PKEY_BUFF
-        fido_log_debug("DQ (%d bytes) offset=%d:", elem_size, elem_len_size);
-        fido_log_print_hexdump_debug(p, 64);
-#endif
-        p += elem_size;
-        //
-        // QINVの抽出
-        //
-        if (*p++ != 0x05) {
-            return SW_WRONG_DATA;
-        }
-        ret = tlv_get_element_size(p, capdu->lc - (p - cdata), &elem_len_size, &elem_size);
-        if (ret != SW_NO_ERROR) {
-            return ret;
-        }
-        p += elem_len_size;
-#if LOG_DEBUG_PKEY_BUFF
-        fido_log_debug("QINV (%d bytes) offset=%d:", elem_size, elem_len_size);
-        fido_log_print_hexdump_debug(p, 64);
-#endif
+    // リクエストデータの格納領域
+    uint8_t *cdata = capdu->data;
+    uint8_t *p = cdata;
 
-    // 後ほど正式に実装予定
-    return SW_WRONG_P1P2;
+    //
+    // Pの抽出
+    //
+    size_t remaining = capdu->lc;
+    ret = tlv_get_element_size(0x01, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+    // 鍵データの先頭アドレスを保持
+    p += elem_header_size;
+    uint8_t *P = p;
+    // 次の項目に移動
+    p += elem_data_size;
+
+    //
+    // Qの抽出
+    //
+    remaining = capdu->lc - (p - cdata);
+    ret = tlv_get_element_size(0x02, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+    // 鍵データの先頭アドレスを保持
+    p += elem_header_size;
+    uint8_t *Q = p;
+    // 次の項目に移動
+    p += elem_data_size;
+
+    //
+    // DPの抽出
+    //
+    remaining = capdu->lc - (p - cdata);
+    ret = tlv_get_element_size(0x03, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+    // 鍵データの先頭アドレスを保持
+    p += elem_header_size;
+    uint8_t *DP = p;
+    // 次の項目に移動
+    p += elem_data_size;
+
+    //
+    // DQの抽出
+    //
+    remaining = capdu->lc - (p - cdata);
+    ret = tlv_get_element_size(0x04, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+    // 鍵データの先頭アドレスを保持
+    p += elem_header_size;
+    uint8_t *DQ = p;
+    // 次の項目に移動
+    p += elem_data_size;
+
+    //
+    // QINVの抽出
+    //
+    remaining = capdu->lc - (p - cdata);
+    ret = tlv_get_element_size(0x05, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+    // 鍵データの先頭アドレスを保持
+    p += elem_header_size;
+    uint8_t *QINV = p;
+
+    // 鍵データを、Flash ROM書出用バッファにコピー（５バイト目を先頭とする）
+    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 4;
+    memcpy(key_data_buff, P, RSA2048_PQ_LENGTH);
+    key_data_buff += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff, Q, RSA2048_PQ_LENGTH);
+    key_data_buff += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff, DP, RSA2048_PQ_LENGTH);
+    key_data_buff += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff, DQ, RSA2048_PQ_LENGTH);
+    key_data_buff += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff, QINV, RSA2048_PQ_LENGTH);
+
+    // 秘密鍵を登録
+    uint8_t key_alg = capdu->p1;
+    uint8_t key_tag = capdu->p2;
+    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
 }
 
 static uint16_t import_ecc_private_key(command_apdu_t *capdu)

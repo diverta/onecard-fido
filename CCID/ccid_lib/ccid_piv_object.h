@@ -28,6 +28,7 @@ extern "C" {
 // データオブジェクト関連定義
 //
 #define CAADM_KEY_SIZE  24
+#define RSA2048_PQ_LENGTH 128
 
 //
 // 関数群
