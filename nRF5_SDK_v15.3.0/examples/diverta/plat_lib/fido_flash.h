@@ -92,17 +92,19 @@ extern "C" {
 #define PIV_DATA_OBJ_9C_RECORD_KEY      (0xBFCC)
 #define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCB)
 //
-// PIV用証明書
-//   レコードサイズ = 256ワード（1,024バイト）
+// PIV用オブジェクト（証明書含む）
+//   レコードサイズ = 可変長
 //     属性データ: 1ワード（4バイト）
 //       0    : 種別（1バイト）
 //       1    : アルゴリズム（1バイト）
-//       2 - 3: 証明書データの長さ（2バイト）
-//     証明書データ: 255ワード（1,020バイト)
+//       2 - 3: オブジェクトデータの長さ（2バイト）
+//     オブジェクトデータ: 可変長
 #define PIV_DATA_OBJ_CERT_FILE_ID       (FIDO_SKEY_CERT_FILE_ID)
-#define PIV_DATA_OBJ_05_RECORD_KEY      (0xBFCA)
-#define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC9)
-#define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC8)
+#define PIV_DATA_OBJ_02_RECORD_KEY      (0xBFCA)
+#define PIV_DATA_OBJ_05_RECORD_KEY      (0xBFC9)
+#define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
+#define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
+#define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
 
 //
 // fido_flash_event.c
