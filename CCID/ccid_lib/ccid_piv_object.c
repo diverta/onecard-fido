@@ -257,3 +257,17 @@ bool ccid_piv_object_is_key_tag_exist(uint8_t key_tag)
             return false;
     }
 }
+
+bool ccid_piv_object_is_obj_tag_exist(uint8_t obj_tag)
+{
+    switch (obj_tag) {
+        case TAG_OBJ_CHUID:
+        case TAG_CERT_PAUTH:
+        case TAG_OBJ_CCC:
+        case TAG_CERT_DGSIG:
+        case TAG_CERT_KEYMN:
+            return true;
+        default:
+            return false;
+    }
+}

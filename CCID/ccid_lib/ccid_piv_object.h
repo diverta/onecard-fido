@@ -49,6 +49,7 @@ bool    ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *alg);
 bool    ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_is_key_tag_exist(uint8_t key_tag);
+bool    ccid_piv_object_is_obj_tag_exist(uint8_t obj_tag);
 
 #ifdef __cplusplus
 }
