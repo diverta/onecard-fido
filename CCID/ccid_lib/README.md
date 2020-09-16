@@ -31,7 +31,9 @@ CCIDドライバーのカスタマイズおよび導入手順につきまして�
 |1-6|ccid_piv_object.c/.h|PIVで使用する各種オブジェクトを管理します。|
 |1-7|ccid_piv_pin.c/.h|PIN認証処理を実行します。|
 |1-8|ccid_piv.c/.h|PIVに関する業務処理を実行します。|
-|1-9|ccid.h|CCID関連で共通利用するヘッダー|
+|1-9|ccid_ykpiv_import_key.c/.h|Yubico PIV Toolの鍵インポート処理を実行します。|
+|1-10|ccid_ykpiv.c/.h|Yubico PIV Toolに関する業務処理を実行します。|
+|1-11|ccid.h|CCID関連で共通利用するヘッダー|
 
 #### モジュール一覧（プラットフォーム依存）
 
