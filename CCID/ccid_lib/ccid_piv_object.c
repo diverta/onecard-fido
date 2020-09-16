@@ -81,13 +81,6 @@ bool ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size)
 #endif
 }
 
-bool ccid_piv_object_cert_cauth_get(uint8_t *buffer, size_t *size)
-{
-    // 後日正式に実装予定です。
-    fido_log_debug("X.509 Certificate for Card Authentication is requested");
-    return false;
-}
-
 static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *size)
 {
     // 秘密鍵データをFlash ROMから読出し
@@ -187,13 +180,6 @@ bool ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size)
 #endif
 }
 
-bool ccid_piv_object_key_history_get(uint8_t *buffer, size_t *size)
-{
-    // 後日正式に実装予定です。
-    fido_log_debug("Key History Object is requested");
-    return false;
-}
-
 bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *alg)
 {
     // パスワードをFlash ROMから読出し
@@ -225,33 +211,25 @@ bool ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size)
     // PIVデータオブジェクトごとに処理を分岐
     bool success = false;
     switch (data_obj_tag) {
-        case 0x01:
-            // X.509 Certificate for Card Authentication
-            success = ccid_piv_object_cert_cauth_get(buffer, size);
-            break;
-        case 0x02:
+        case TAG_OBJ_CHUID:
             // Card Holder Unique Identifier
             success = ccid_piv_object_chuid_get(buffer, size);
             break;
-        case 0x05:
+        case TAG_CERT_PAUTH:
             // X.509 Certificate for PIV Authentication
             success = ccid_piv_object_cert_pauth_get(buffer, size);
             break;
-        case 0x07:
+        case TAG_OBJ_CCC:
             // Card Capability Container
             success = ccid_piv_object_ccc_get(buffer, size);
             break;
-        case 0x0A:
+        case TAG_CERT_DGSIG:
             // X.509 Certificate for Digital Signature
             success = ccid_piv_object_cert_digsig_get(buffer, size);
             break;
-        case 0x0B:
+        case TAG_CERT_KEYMN:
             // X.509 Certificate for Key Management
             success = ccid_piv_object_cert_keyman_get(buffer, size);
-            break;
-        case 0x0C:
-            // Key History Object
-            success = ccid_piv_object_key_history_get(buffer, size);
             break;
         default:
             break;
