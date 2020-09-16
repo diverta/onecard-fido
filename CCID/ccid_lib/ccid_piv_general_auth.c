@@ -89,20 +89,6 @@ static bool parse_ber_tlv_info(uint8_t *data, BER_TLV_INFO *info)
     return true;
 }
 
-static bool is_key_id_exist(uint8_t id)
-{
-    switch (id) {
-        case TAG_KEY_PAUTH:
-        case TAG_KEY_CAADM:
-        case TAG_KEY_DGSIG:
-        case TAG_KEY_KEYMN:
-        case TAG_KEY_CAUTH:
-            return true;
-        default:
-            return false;
-    }
-}
-
 uint16_t ccid_piv_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *r_apdu)
 {
     // リクエスト／レスポンス格納領域の参照を保持
@@ -113,7 +99,7 @@ uint16_t ccid_piv_general_authenticate(command_apdu_t *c_apdu, response_apdu_t *
     if (capdu->data[0] != 0x7C) {
         return SW_WRONG_DATA;
     }
-    if (is_key_id_exist(capdu->p2) == false) {
+    if (ccid_piv_object_is_key_tag_exist(capdu->p2) == false) {
         return SW_WRONG_P1P2;
     }
 

@@ -58,7 +58,7 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
 
     // 該当のスロットから、EC鍵を読込
     size_t s;
-    if (ccid_piv_object_key_pauth_get(work_buf, &s) == false) {
+    if (ccid_piv_object_key_pauth_get(ALG_ECC_256, work_buf, &s) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -184,7 +184,7 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
 
     // 該当のスロットから、EC鍵を読込
     size_t size;
-    if (ccid_piv_object_key_keyman_get(work_buf, &size) == false) {
+    if (ccid_piv_object_key_keyman_get(ALG_ECC_256, work_buf, &size) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
