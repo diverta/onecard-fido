@@ -32,8 +32,13 @@ extern "C" {
 //
 // データオブジェクト関連定義
 //
-#define CAADM_KEY_SIZE  24
+#define CAADM_KEY_SIZE    24
+#define ECC_PRV_KEY_SIZE  32
+#define RSA2048_KEY_SIZE  640
 #define RSA2048_PQ_LENGTH 128
+#define MAX_CERT_SIZE     1024
+#define MAX_CCC_SIZE      288
+#define MAX_CHUID_SIZE    288
 
 //
 // 関数群

@@ -99,10 +99,10 @@ static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *
 
     // Flash ROM読込バッファから秘密鍵を抽出
     if (alg == ALG_RSA_2048) {
-        *size = 640;
+        *size = RSA2048_KEY_SIZE;
         memcpy(buffer, ccid_flash_piv_object_read_buffer() + 4, *size);
     } else if (alg == ALG_ECC_256) {
-        *size = 32;
+        *size = ECC_PRV_KEY_SIZE;
         memcpy(buffer, ccid_flash_piv_object_read_buffer() + 4, *size);
     } else {
         *size = 0;

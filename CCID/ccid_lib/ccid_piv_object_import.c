@@ -16,19 +16,19 @@ static size_t get_enough_space(uint8_t obj_tag)
     switch (obj_tag) {
         case TAG_OBJ_CHUID:
             // Card Holder Unique Identifier
-            return 2916;
+            return MAX_CHUID_SIZE;
         case TAG_CERT_PAUTH:
             // X.509 Certificate for PIV Authentication
-            return 1905;
+            return MAX_CERT_SIZE;
         case TAG_OBJ_CCC:
             // Card Capability Container
-            return 287;
+            return MAX_CCC_SIZE;
         case TAG_CERT_DGSIG:
             // X.509 Certificate for Digital Signature
-            return 1905;
+            return MAX_CERT_SIZE;
         case TAG_CERT_KEYMN:
             // X.509 Certificate for Key Management
-            return 1905;
+            return MAX_CERT_SIZE;
         default:
             return 0;
     }
