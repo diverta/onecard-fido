@@ -69,6 +69,27 @@ extern "C" {
 //
 // 以下はPIVアプリケーションで使用
 //
+// PIVオブジェクト属性
+//   レコードサイズ = 2ワード
+//     属性データ: 1ワード（4バイト）
+//       0    : 種別（1バイト）
+//       1    : アルゴリズム（1バイト）
+//       2 - 3: 予備（2バイト）
+//     オブジェクトの長さ: 1ワード（4バイト）
+#define PIV_DATA_OBJ_ATTR_FILE_ID       (0xBFDE)
+#define PIV_DATA_OBJ_ATTR_RECORD_KEY    (0xBFCE)
+#define PIV_DATA_OBJ_ATTR_RECORD_SIZE   2
+//
+// PIVオブジェクトデータ
+//   レコードサイズ = 可変長（最大256ワード＝1,024バイト）
+#define PIV_DATA_OBJ_DATA_FILE_ID       (0xBFDD)
+#define PIV_DATA_OBJ_DATA_RECORD_KEY    (0xBFCD)
+#define PIV_DATA_OBJ_DATA_RECORD_SIZE   256
+    
+#if true
+//
+// 後日削除予定
+//
 // 管理用パスワード
 //   レコードサイズ = 9 ワード
 //     パスワード: 8ワード（32バイト)
@@ -105,6 +126,10 @@ extern "C" {
 #define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
 #define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
 #define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
+//
+// 後日削除予定
+//
+#endif
 
 //
 // fido_flash_event.c

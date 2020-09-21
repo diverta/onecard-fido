@@ -25,7 +25,7 @@ NRF_LOG_MODULE_REGISTER();
 //   バッファ長（MAX_BUF_SIZE）は、
 //   このモジュールで管理する
 //   最大のレコードサイズに合わせます。
-#define MAX_BUF_SIZE     ((MAX_CERT_SIZE/4)+1)
+#define MAX_BUF_SIZE     PIV_DATA_OBJ_DATA_RECORD_SIZE
 static uint32_t          m_record_buf_R[MAX_BUF_SIZE];
 static uint32_t          m_record_buf_W[MAX_BUF_SIZE];
 
