@@ -260,3 +260,79 @@ bool ccid_piv_object_is_obj_tag_exist(uint8_t obj_tag)
             return false;
     }
 }
+
+#if CCID_PIV_OBJECT_TEST
+//
+// 以下はテスト用
+//
+static uint8_t work_buf[640];
+
+void ccid_piv_object_test_read_ecc_pkey(void)
+{
+    size_t s;
+    if (ccid_piv_object_key_pauth_get(ALG_ECC_256, work_buf, &s)) {
+        fido_log_debug("ccid_piv_object_key_pauth_get (%d bytes)", s);
+        fido_log_print_hexdump_debug(work_buf, s);
+    }
+    if (ccid_piv_object_key_digsig_get(ALG_ECC_256, work_buf, &s)) {
+        fido_log_debug("ccid_piv_object_key_digsig_get (%d bytes)", s);
+        fido_log_print_hexdump_debug(work_buf, s);
+    }
+    if (ccid_piv_object_key_keyman_get(ALG_ECC_256, work_buf, &s)) {
+        fido_log_debug("ccid_piv_object_key_keyman_get (%d bytes)", s);
+        fido_log_print_hexdump_debug(work_buf, s);
+    }
+}
+
+void ccid_piv_object_test_read_rsa_pkey(void)
+{
+    // for research
+    size_t s;
+    static uint8_t cnt=0;
+    switch (cnt) {
+        case 0:
+            fido_log_debug("Private key read test start.");
+            ccid_piv_object_key_pauth_get(ALG_RSA_2048, work_buf, &s);
+            cnt++;
+            break;
+        case 1:
+            ccid_piv_object_key_digsig_get(ALG_RSA_2048, work_buf, &s);
+            cnt++;
+            break;
+        case 2:
+            ccid_piv_object_key_keyman_get(ALG_RSA_2048, work_buf, &s);
+            cnt++;
+            break;
+        default:
+            fido_log_debug("Private key read test end.");
+            cnt=0;
+            return;
+    }
+
+    uint8_t *p = work_buf;
+    fido_log_debug("P (first 16 bytes):", s);
+    fido_log_print_hexdump_debug(p, 16);
+    fido_log_debug("P (last 16 bytes):", s);
+    fido_log_print_hexdump_debug(p+128-16, 16);
+    p += 128;
+    fido_log_debug("Q (first 16 bytes):", s);
+    fido_log_print_hexdump_debug(p, 16);
+    fido_log_debug("Q (last 16 bytes):", s);
+    fido_log_print_hexdump_debug(p+128-16, 16);
+    p += 128;
+    fido_log_debug("DP (first 16 bytes):", s);
+    fido_log_print_hexdump_debug(p, 16);
+    fido_log_debug("DP (last 16 bytes):", s);
+    fido_log_print_hexdump_debug(p+128-16, 16);
+    p += 128;
+    fido_log_debug("DQ (first 16 bytes):", s);
+    fido_log_print_hexdump_debug(p, 16);
+    fido_log_debug("DQ (last 16 bytes):", s);
+    fido_log_print_hexdump_debug(p+128-16, 16);
+    p += 128;
+    fido_log_debug("QINV (first 16 bytes):", s);
+    fido_log_print_hexdump_debug(p, 16);
+    fido_log_debug("QINV (last 16 bytes):", s);
+    fido_log_print_hexdump_debug(p+128-16, 16);
+}
+#endif // #ifdef CCID_PIV_OBJECT_TEST
