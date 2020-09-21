@@ -11,6 +11,28 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// APDU格納領域の参照を待避
+static command_apdu_t  *m_capdu;
+static response_apdu_t *m_rapdu;
+
+static void apdu_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    ccid_apdu_response_set_pending(true);
+
+    // APDU格納領域の参照を待避
+    m_capdu = capdu;
+    m_rapdu = rapdu;
+}
+
+static void apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t sw)
+{
+    // レスポンス処理再開を指示
+    rapdu->sw = sw;
+    ccid_apdu_response_set_pending(false);
+    ccid_apdu_resume_process(capdu, rapdu);
+}
+
 static size_t get_enough_space(uint8_t obj_tag) 
 {
     switch (obj_tag) {
@@ -67,10 +89,47 @@ uint16_t ccid_piv_object_import(command_apdu_t *capdu, response_apdu_t *rapdu)
         return SW_NOT_ENOUGH_SPACE;
     }
 
-    //
-    // TODO: ここに処理を記述
-    //
+    // PIVオブジェクトデータを登録
+    uint8_t *object_data = data + 5;
+    if (ccid_flash_piv_object_data_write(obj_tag, object_data, object_size) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
 
-    // 正常終了
+    // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+    apdu_resume_prepare(capdu, rapdu);
     return SW_NO_ERROR;
+}
+
+void ccid_piv_object_import_retry(void)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    // リトライが必要な場合は
+    // 鍵インポート処理を再実行
+    uint16_t sw = ccid_piv_object_import(m_capdu, m_rapdu);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        fido_log_warning("PIV object data registration retry");
+    } else {
+        // 異常時はエラーレスポンス処理を指示
+        fido_log_error("PIV object data registration retry fail");
+        apdu_resume_process(m_capdu, m_rapdu, sw);        
+    }
+}
+
+void ccid_piv_object_import_resume(bool success)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    if (success) {
+        // Flash ROM書込みが完了した場合は正常レスポンス処理を指示
+        fido_log_info("PIV object data registration success");
+        apdu_resume_process(m_capdu, m_rapdu, SW_NO_ERROR);
+    } else {
+        // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
+        fido_log_error("PIV object data registration fail");
+        apdu_resume_process(m_capdu, m_rapdu, SW_UNABLE_TO_PROCESS);
+    }
 }

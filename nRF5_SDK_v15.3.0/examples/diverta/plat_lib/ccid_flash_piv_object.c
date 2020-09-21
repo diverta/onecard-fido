@@ -12,6 +12,7 @@
 #include "ccid_ykpiv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_object_import.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ccid_flash_piv_object
@@ -234,6 +235,12 @@ bool ccid_flash_piv_object_private_key_read(uint8_t key_tag, uint8_t key_alg, ui
     if (read_piv_object_data_from_fds(key_tag, is_exist) == false) {
         return false;
     }
+
+    // 既存データがなければここで終了
+    if (*is_exist == false) {
+        return true;
+    }
+
     // データを引数の領域にコピー
     uint8_t key_alg_;
     copy_object_data_from_buffer(&key_alg_, key, key_size);
@@ -255,6 +262,37 @@ bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg, u
     return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size);
 }
 
+//
+// PIVデータオブジェクト関連
+//
+bool ccid_flash_piv_object_data_read(uint8_t obj_tag, uint8_t *obj_data, size_t *obj_size, bool *is_exist)
+{
+    // Flash ROMから既存データを読込み、
+    // 既存データがあれば、データをバッファに読込む
+    if (read_piv_object_data_from_fds(obj_tag, is_exist) == false) {
+        return false;
+    }
+
+    // 既存データがなければここで終了
+    if (*is_exist == false) {
+        return true;
+    }
+
+    // データを引数の領域にコピー
+    uint8_t obj_alg;
+    copy_object_data_from_buffer(&obj_alg, obj_data, obj_size);
+    return true;
+}
+
+bool ccid_flash_piv_object_data_write(uint8_t obj_tag, uint8_t *obj_data, size_t obj_size)
+{
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
+    uint8_t obj_alg = 0xff;
+    m_flash_func = (void *)ccid_flash_piv_object_data_write;
+    return write_piv_object_data_to_fds(obj_tag, obj_alg, obj_data, obj_size);
+}
+
 void ccid_flash_piv_object_failed(void)
 {
     if (m_flash_func == NULL) {
@@ -266,6 +304,9 @@ void ccid_flash_piv_object_failed(void)
     }
     if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_resume(false);
+    }
+    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+        ccid_piv_object_import_resume(false);
     }
     m_flash_func = NULL;
 }
@@ -284,6 +325,9 @@ void ccid_flash_piv_object_gc_done(void)
     if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_retry();
     }
+    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+        ccid_piv_object_import_retry();
+    }
     m_flash_func = NULL;
 }
 
@@ -298,6 +342,9 @@ void ccid_flash_piv_object_record_updated(void)
     }
     if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_resume(true);
+    }
+    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+        ccid_piv_object_import_resume(true);
     }
     m_flash_func = NULL;
 }
