@@ -118,43 +118,6 @@ static bool get_record_key_by_tag(uint8_t tag, uint8_t alg, uint16_t *file_id, u
     return true;
 }
 
-static bool read_piv_object_data(uint8_t obj_tag, uint8_t obj_alg, bool *is_exist)
-{
-    // Flash ROMから既存データを読込み、
-    // 既存データがあれば、データをバッファに読込む
-    uint16_t file_id;
-    uint16_t record_key;
-    size_t record_words;
-    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words)) {
-        return fido_flash_fds_record_read(file_id, record_key, record_words, m_record_buf_R, is_exist);
-    } else {
-        return false;
-    }
-}
-
-static bool write_piv_object_data(uint8_t obj_tag, uint8_t obj_alg, size_t object_size)
-{
-    // 属性データをバッファに設定
-    //   0    : 種別（1バイト）
-    //   1    : アルゴリズム（1バイト）
-    //   2 - 3: データの長さ（2バイト）
-    uint8_t *rec_bytes = ccid_flash_piv_object_write_buffer();
-    rec_bytes[0] = obj_tag;
-    rec_bytes[1] = obj_alg;
-    uint16_t size_16t = (uint16_t)object_size;
-    memcpy(rec_bytes + 2, &size_16t, sizeof(uint16_t));
-
-    // データをFlash ROMに書込
-    uint16_t file_id;
-    uint16_t record_key;
-    size_t record_words;
-    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words)) {
-        return fido_flash_fds_record_write(file_id, record_key, record_words, m_record_buf_R, m_record_buf_W);
-    } else {
-        return false;
-    }
-}
-
 //
 // PIVオブジェクトのRead／Write
 //
@@ -304,26 +267,27 @@ bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, u
 //
 // PIV秘密鍵関連
 //
-bool ccid_flash_piv_object_private_key_read(uint8_t key_tag, uint8_t key_alg, bool *is_exist)
+bool ccid_flash_piv_object_private_key_read(uint8_t key_tag, uint8_t key_alg, uint8_t *key, size_t *key_size, bool *is_exist)
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データをバッファに読込む
-    return read_piv_object_data(key_tag, key_alg, is_exist);
+    if (read_piv_object_data_from_fds(key_tag, key_alg, is_exist) == false) {
+        return false;
+    }
+    // データを引数の領域にコピー
+    uint8_t key_alg_;
+    copy_object_data_from_buffer(&key_alg_, key, key_size);
+    return true;
 }
 
-bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg)
+bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg, uint8_t *key, size_t key_size)
 {
-    // 鍵データ長を設定
-    size_t key_size = ECC_PRV_KEY_SIZE;
-    if (key_alg == ALG_RSA_2048) {
-        key_size = RSA2048_KEY_SIZE;
-    }
+    bool is_exist;
 
-    // 呼び出し元の関数名を保持
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
     m_flash_func = (void *)ccid_flash_piv_object_private_key_write;
-
-    // データをFlash ROMに書込
-    return write_piv_object_data(key_tag, key_alg, key_size);
+    return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size, &is_exist);
 }
 
 void ccid_flash_piv_object_failed(void)

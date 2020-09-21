@@ -85,7 +85,7 @@ static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *
 {
     // 秘密鍵データをFlash ROMから読出し
     bool is_exist;
-    if (ccid_flash_piv_object_private_key_read(tag, alg, &is_exist) == false) {
+    if (ccid_flash_piv_object_private_key_read(tag, alg, buffer, size, &is_exist) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("Private Key for PIV application read fail: tag=0x02x", tag);
         return false;
@@ -95,17 +95,6 @@ static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *
         // Flash ROMに登録されていない場合はエラー
         fido_log_error("Private Key for PIV application is not registered: tag=0x02x", tag);
         return false;
-    }
-
-    // Flash ROM読込バッファから秘密鍵を抽出
-    if (alg == ALG_RSA_2048) {
-        *size = RSA2048_KEY_SIZE;
-        memcpy(buffer, ccid_flash_piv_object_read_buffer() + 4, *size);
-    } else if (alg == ALG_ECC_256) {
-        *size = ECC_PRV_KEY_SIZE;
-        memcpy(buffer, ccid_flash_piv_object_read_buffer() + 4, *size);
-    } else {
-        *size = 0;
     }
 
     return true;
