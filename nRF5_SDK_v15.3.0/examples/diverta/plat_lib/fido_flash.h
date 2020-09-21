@@ -77,16 +77,27 @@ extern "C" {
 //       2 - 3: 予備（2バイト）
 //     オブジェクトの長さ: 1ワード（4バイト）
 #define PIV_DATA_OBJ_ATTR_FILE_ID       (0xBFDE)
-#define PIV_DATA_OBJ_ATTR_RECORD_KEY    (0xBFCE)
 #define PIV_DATA_OBJ_ATTR_RECORD_SIZE   2
 //
 // PIVオブジェクトデータ
 //   レコードサイズ = 可変長（最大256ワード＝1,024バイト）
 #define PIV_DATA_OBJ_DATA_FILE_ID       (0xBFDD)
-#define PIV_DATA_OBJ_DATA_RECORD_KEY    (0xBFCD)
 #define PIV_DATA_OBJ_DATA_RECORD_SIZE   256
-    
-#if true
+//
+// PIVオブジェクト属性レコード／データ格納レコードで
+// 共通利用するレコードID
+//
+#define PIV_DATA_OBJ_9A_RECORD_KEY      (0xBFCE)
+#define PIV_DATA_OBJ_9B_RECORD_KEY      (0xBFCD)
+#define PIV_DATA_OBJ_9C_RECORD_KEY      (0xBFCC)
+#define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCB)
+#define PIV_DATA_OBJ_02_RECORD_KEY      (0xBFCA)
+#define PIV_DATA_OBJ_05_RECORD_KEY      (0xBFC9)
+#define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
+#define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
+#define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
+
+#if TEMPORARY
 //
 // 後日削除予定
 //
@@ -98,7 +109,6 @@ extern "C" {
 //       1    : パスワードのアルゴリズム（1バイト）
 //       2 - 3: 予備（2バイト）
 #define PIV_DATA_OBJ_9B_FILE_ID         (0xBFDE)
-#define PIV_DATA_OBJ_9B_RECORD_KEY      (0xBFCE)
 #define PIV_DATA_OBJ_9B_RECORD_SIZE     9
 //
 // PIV用秘密鍵
@@ -109,9 +119,6 @@ extern "C" {
 //       2 - 3: 鍵データの長さ（2バイト）
 //     鍵データ: RSA=160ワード（640バイト)、ECC=8ワード（32バイト）
 #define PIV_DATA_OBJ_PRVKEY_FILE_ID     (FIDO_SKEY_CERT_FILE_ID)
-#define PIV_DATA_OBJ_9A_RECORD_KEY      (0xBFCD)
-#define PIV_DATA_OBJ_9C_RECORD_KEY      (0xBFCC)
-#define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCB)
 //
 // PIV用オブジェクト（証明書含む）
 //   レコードサイズ = 可変長
@@ -121,11 +128,6 @@ extern "C" {
 //       2 - 3: オブジェクトデータの長さ（2バイト）
 //     オブジェクトデータ: 可変長
 #define PIV_DATA_OBJ_CERT_FILE_ID       (FIDO_SKEY_CERT_FILE_ID)
-#define PIV_DATA_OBJ_02_RECORD_KEY      (0xBFCA)
-#define PIV_DATA_OBJ_05_RECORD_KEY      (0xBFC9)
-#define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
-#define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
-#define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
 //
 // 後日削除予定
 //
