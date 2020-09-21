@@ -96,7 +96,7 @@ static size_t calculate_record_words(size_t record_bytes)
     return record_words;
 }
 
-static bool read_piv_object_data_from_fds(uint8_t obj_tag, uint8_t obj_alg, bool *is_exist)
+static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
 {
     // レコードキーを取得
     uint16_t record_key;
@@ -143,7 +143,7 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, uint8_t obj_alg, bool
     return fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, is_exist);
 }
 
-static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8_t *obj_data, size_t obj_data_size, bool *is_exist)
+static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8_t *obj_data, size_t obj_data_size)
 {
     // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピー
     //   オブジェクト属性 = 2ワード
@@ -202,7 +202,7 @@ bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, u
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データをバッファに読込む
     uint8_t key_tag = TAG_CERT_KEYMN;
-    if (read_piv_object_data_from_fds(key_tag, *key_alg, is_exist) == false) {
+    if (read_piv_object_data_from_fds(key_tag, is_exist) == false) {
         return false;
     }
     // 既存データがなければここで終了
@@ -216,13 +216,12 @@ bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, u
 
 bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, uint8_t key_alg)
 {
-    bool is_exist;
     uint8_t key_tag = TAG_CERT_KEYMN;
 
     // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
     // Flash ROMに書込
     m_flash_func = (void *)ccid_flash_piv_object_card_admin_key_write;
-    return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size, &is_exist);
+    return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size);
 }
 
 //
@@ -232,23 +231,28 @@ bool ccid_flash_piv_object_private_key_read(uint8_t key_tag, uint8_t key_alg, ui
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データをバッファに読込む
-    if (read_piv_object_data_from_fds(key_tag, key_alg, is_exist) == false) {
+    if (read_piv_object_data_from_fds(key_tag, is_exist) == false) {
         return false;
     }
     // データを引数の領域にコピー
     uint8_t key_alg_;
     copy_object_data_from_buffer(&key_alg_, key, key_size);
+
+    // アルゴリズムが登録されているものと異なる場合は、
+    // 既存データ無しと扱う
+    if (key_alg != key_alg_) {
+        *is_exist = false;
+    }
+
     return true;
 }
 
 bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg, uint8_t *key, size_t key_size)
 {
-    bool is_exist;
-
     // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
     // Flash ROMに書込
     m_flash_func = (void *)ccid_flash_piv_object_private_key_write;
-    return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size, &is_exist);
+    return write_piv_object_data_to_fds(key_tag, key_alg, key, key_size);
 }
 
 void ccid_flash_piv_object_failed(void)
