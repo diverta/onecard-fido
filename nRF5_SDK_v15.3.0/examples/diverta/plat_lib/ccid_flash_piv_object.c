@@ -50,71 +50,36 @@ static void *m_flash_func = NULL;
 //
 // Flash ROM read/write
 //
-static size_t get_private_key_length_words(uint8_t key_alg)
-{
-    size_t length_words;
-    switch (key_alg) {
-        case ALG_RSA_2048:
-            length_words = RSA2048_KEY_SIZE / 4;
-            break;
-        case ALG_ECC_256:
-            length_words = ECC_PRV_KEY_SIZE / 4;
-            break;
-        default:
-            length_words = 0;
-            break;
-    }
-    return length_words;
-}
-
-static bool get_record_key_by_tag(uint8_t tag, uint8_t alg, uint16_t *file_id, uint16_t *record_key, size_t *record_words)
+static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
 {
     switch (tag) {
         case TAG_OBJ_CHUID:
-            *file_id = PIV_DATA_OBJ_CERT_FILE_ID;
             *record_key = PIV_DATA_OBJ_02_RECORD_KEY;
-            *record_words = MAX_CHUID_SIZE / 4;
             break;
         case TAG_CERT_PAUTH:
-            *file_id = PIV_DATA_OBJ_CERT_FILE_ID;
             *record_key = PIV_DATA_OBJ_05_RECORD_KEY;
-            *record_words = MAX_CERT_SIZE / 4;
             break;
         case TAG_OBJ_CCC:
-            *file_id = PIV_DATA_OBJ_CERT_FILE_ID;
             *record_key = PIV_DATA_OBJ_07_RECORD_KEY;
-            *record_words = MAX_CCC_SIZE / 4;
             break;
         case TAG_CERT_DGSIG:
-            *file_id = PIV_DATA_OBJ_CERT_FILE_ID;
             *record_key = PIV_DATA_OBJ_0A_RECORD_KEY;
-            *record_words = MAX_CERT_SIZE / 4;
             break;
         case TAG_CERT_KEYMN:
-            *file_id = PIV_DATA_OBJ_CERT_FILE_ID;
             *record_key = PIV_DATA_OBJ_0B_RECORD_KEY;
-            *record_words = MAX_CERT_SIZE / 4;
             break;
         case TAG_KEY_PAUTH:
-            *file_id = PIV_DATA_OBJ_PRVKEY_FILE_ID;
             *record_key = PIV_DATA_OBJ_9A_RECORD_KEY;
-            *record_words = get_private_key_length_words(alg);
             break;
         case TAG_KEY_DGSIG:
-            *file_id = PIV_DATA_OBJ_PRVKEY_FILE_ID;
             *record_key = PIV_DATA_OBJ_9C_RECORD_KEY;
-            *record_words = get_private_key_length_words(alg);
             break;
         case TAG_KEY_KEYMN:
-            *file_id = PIV_DATA_OBJ_PRVKEY_FILE_ID;
             *record_key = PIV_DATA_OBJ_9D_RECORD_KEY;
-            *record_words = get_private_key_length_words(alg);
             break;
         default:
             return false;
     }
-    // レコード長は、属性データの１ワード分を加算
-    *record_words += 1;
     return true;
 }
 
@@ -134,10 +99,8 @@ static size_t calculate_record_words(size_t record_bytes)
 static bool read_piv_object_data_from_fds(uint8_t obj_tag, uint8_t obj_alg, bool *is_exist)
 {
     // レコードキーを取得
-    uint16_t file_id;
     uint16_t record_key;
-    size_t record_words;
-    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words) == false) {
+    if (get_record_key_by_tag(obj_tag, &record_key) == false) {
         return false;
     }
 
@@ -170,7 +133,7 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, uint8_t obj_alg, bool
 #endif
 
     // オブジェクトデータの長さから、必要ワード数を計算
-    record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
+    size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
 
     // Flash ROMからオブジェクトデータを読込
     //   データが存在する場合は、
@@ -206,13 +169,11 @@ static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8
 #endif
 
     // レコードキーを取得
-    uint16_t file_id;
     uint16_t record_key;
-    size_t record_words;
-    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words)) {
+    if (get_record_key_by_tag(obj_tag, &record_key)) {
         // オブジェクトデータの長さから、必要ワード数を計算し、
         // データをFlash ROMに書込
-        record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
+        size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
         return fido_flash_fds_record_write(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, m_record_buf_W);
 
     } else {
