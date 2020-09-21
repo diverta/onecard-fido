@@ -25,7 +25,7 @@ NRF_LOG_MODULE_REGISTER();
 //   バッファ長（MAX_BUF_SIZE）は、
 //   このモジュールで管理する
 //   最大のレコードサイズに合わせます。
-#define MAX_BUF_SIZE     PIV_DATA_OBJ_DATA_RECORD_SIZE
+#define MAX_BUF_SIZE     PIV_DATA_OBJ_DATA_WORDS_MAX
 static uint32_t          m_record_buf_R[MAX_BUF_SIZE];
 static uint32_t          m_record_buf_W[MAX_BUF_SIZE];
 
@@ -150,6 +150,108 @@ static bool write_piv_object_data(uint8_t obj_tag, uint8_t obj_alg, size_t objec
     size_t record_words;
     if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words)) {
         return fido_flash_fds_record_write(file_id, record_key, record_words, m_record_buf_R, m_record_buf_W);
+    } else {
+        return false;
+    }
+}
+
+//
+// PIVオブジェクトのRead／Write
+//
+static size_t calculate_record_words(size_t record_bytes)
+{
+    // オブジェクトの長さから、必要ワード数を計算
+    size_t record_words = record_bytes / 4;
+    if (record_bytes % 4 > 0) {
+        record_words++;
+    }
+    return record_words;
+}
+
+static bool read_piv_object_data_from_fds(uint8_t obj_tag, uint8_t obj_alg, bool *is_exist)
+{
+    // レコードキーを取得
+    uint16_t file_id;
+    uint16_t record_key;
+    size_t record_words;
+    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words) == false) {
+        return false;
+    }
+
+    // Flash ROMから属性データを読込
+    if (fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, PIV_DATA_OBJ_ATTR_WORDS, m_record_buf_R, is_exist) == false) {
+        return false;
+    }
+    // 既存データがなければここで終了
+    if (*is_exist == false) {
+        return true;
+    }
+
+    // 属性データを取出し、一時変数に保持
+    //   オブジェクト属性 = 2ワード
+    //     属性データ: 1ワード（4バイト）
+    //       0    : 種別（1バイト）
+    //       1    : アルゴリズム（1バイト）
+    //       2 - 3: 予備（2バイト）
+    //     オブジェクトデータの長さ: 1ワード（4バイト）
+    uint8_t *rec_bytes = ccid_flash_piv_object_read_buffer();
+    uint32_t size32_t;
+    memcpy(&size32_t, rec_bytes + 4, sizeof(uint32_t));
+
+#if LOG_HEXDUMP_DEBUG
+    size_t total_size = size32_t + 8;
+    NRF_LOG_DEBUG("ccid_flash_piv_object_read_buffer (%d bytes)", total_size);
+    NRF_LOG_HEXDUMP_DEBUG(rec_bytes, 32);
+    NRF_LOG_DEBUG("last 16 bytes:");
+    NRF_LOG_HEXDUMP_DEBUG(rec_bytes + total_size - 16, 16);
+#endif
+
+    // オブジェクトデータの長さから、必要ワード数を計算
+    record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
+
+    // Flash ROMからオブジェクトデータを読込
+    //   データが存在する場合は、
+    //   m_record_buf_Rの３ワード目を先頭とし、
+    //   オブジェクトデータが格納されます
+    //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+    return fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, is_exist);
+}
+
+static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8_t *obj_data, size_t obj_data_size, bool *is_exist)
+{
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピー
+    //   オブジェクト属性 = 2ワード
+    //     属性データ: 1ワード（4バイト）
+    //       0    : 種別（1バイト）
+    //       1    : アルゴリズム（1バイト）
+    //       2 - 3: 予備（2バイト）
+    //     オブジェクトデータの長さ: 1ワード（4バイト）
+    //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+    uint8_t *rec_bytes = ccid_flash_piv_object_write_buffer();
+    rec_bytes[0] = obj_tag;
+    rec_bytes[1] = obj_alg;
+    uint32_t size32_t = (uint32_t)obj_data_size;
+    memcpy(rec_bytes + 4, &size32_t, sizeof(uint32_t));
+    memcpy(rec_bytes + 8, obj_data, obj_data_size);
+
+#if LOG_HEXDUMP_DEBUG
+    size_t total_size = obj_data_size + 8;
+    NRF_LOG_DEBUG("ccid_flash_piv_object_write_buffer (%d bytes)", total_size);
+    NRF_LOG_HEXDUMP_DEBUG(rec_bytes, 32);
+    NRF_LOG_DEBUG("last 16 bytes:");
+    NRF_LOG_HEXDUMP_DEBUG(rec_bytes + total_size - 16, 16);
+#endif
+
+    // レコードキーを取得
+    uint16_t file_id;
+    uint16_t record_key;
+    size_t record_words;
+    if (get_record_key_by_tag(obj_tag, obj_alg, &file_id, &record_key, &record_words)) {
+        // オブジェクトデータの長さから、必要ワード数を計算し、
+        // データをFlash ROMに書込
+        record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
+        return fido_flash_fds_record_write(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, m_record_buf_W);
+
     } else {
         return false;
     }

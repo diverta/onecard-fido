@@ -69,22 +69,19 @@ extern "C" {
 //
 // 以下はPIVアプリケーションで使用
 //
-// PIVオブジェクト属性
-//   レコードサイズ = 2ワード
+// PIVオブジェクト
+//   オブジェクト属性 = 2ワード
 //     属性データ: 1ワード（4バイト）
 //       0    : 種別（1バイト）
 //       1    : アルゴリズム（1バイト）
 //       2 - 3: 予備（2バイト）
-//     オブジェクトの長さ: 1ワード（4バイト）
-#define PIV_DATA_OBJ_ATTR_FILE_ID       (0xBFDE)
-#define PIV_DATA_OBJ_ATTR_RECORD_SIZE   2
+//     オブジェクトデータの長さ: 1ワード（4バイト）
+//   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+#define PIV_DATA_OBJ_FILE_ID            (0xBFDE)
+#define PIV_DATA_OBJ_ATTR_WORDS         2
+#define PIV_DATA_OBJ_DATA_WORDS_MAX     256
 //
-// PIVオブジェクトデータ
-//   レコードサイズ = 可変長（最大256ワード＝1,024バイト）
-#define PIV_DATA_OBJ_DATA_FILE_ID       (0xBFDD)
-#define PIV_DATA_OBJ_DATA_RECORD_SIZE   256
-//
-// PIVオブジェクト属性レコード／データ格納レコードで
+// PIVオブジェクト格納ファイルで
 // 共通利用するレコードID
 //
 #define PIV_DATA_OBJ_9A_RECORD_KEY      (0xBFCE)
