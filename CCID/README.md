@@ -19,6 +19,8 @@ nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../FIDO2Device/M
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールする手順を掲載しています。<br>
 WIndows 10環境では、CCIDドライバーのインストールは不要になります。
 
+- <b>[Yubico PIV Tool (command line) macOS版 導入手順](../CCID/PIVTOOLMACINST.md)</b><br>
+PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、macOS環境に導入する手順を掲載します。
 
-- <b>[Yubico PIV Tool (command line) 導入手順](../CCID/PIVTOOLWININST.md)</b><br>
+- <b>[Yubico PIV Tool (command line) Windows版 導入手順](../CCID/PIVTOOLWININST.md)</b><br>
 PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、Windows 10環境に導入する手順を掲載します。
