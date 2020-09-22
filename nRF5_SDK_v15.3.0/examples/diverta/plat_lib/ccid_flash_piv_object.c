@@ -72,6 +72,9 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
         case TAG_KEY_PAUTH:
             *record_key = PIV_DATA_OBJ_9A_RECORD_KEY;
             break;
+        case TAG_KEY_CAADM:
+            *record_key = PIV_DATA_OBJ_9B_RECORD_KEY;
+            break;
         case TAG_KEY_DGSIG:
             *record_key = PIV_DATA_OBJ_9C_RECORD_KEY;
             break;
@@ -202,7 +205,7 @@ bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, u
 {
     // Flash ROMから既存データを読込み、
     // 既存データがあれば、データをバッファに読込む
-    uint8_t key_tag = TAG_CERT_KEYMN;
+    uint8_t key_tag = TAG_KEY_CAADM;
     if (read_piv_object_data_from_fds(key_tag, is_exist) == false) {
         return false;
     }
@@ -217,7 +220,7 @@ bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, u
 
 bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, uint8_t key_alg)
 {
-    uint8_t key_tag = TAG_CERT_KEYMN;
+    uint8_t key_tag = TAG_KEY_CAADM;
 
     // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
     // Flash ROMに書込

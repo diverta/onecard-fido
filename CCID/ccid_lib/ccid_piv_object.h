@@ -27,7 +27,6 @@ extern "C" {
 #define TAG_KEY_CAADM   0x9b
 #define TAG_KEY_DGSIG   0x9c
 #define TAG_KEY_KEYMN   0x9d
-#define TAG_KEY_CAUTH   0x9e
 
 //
 // データオブジェクト関連定義

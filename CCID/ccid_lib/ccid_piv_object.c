@@ -177,6 +177,7 @@ bool ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *
     bool is_exist;
     if (ccid_flash_piv_object_card_admin_key_read(buffer, size, alg, &is_exist) == false) {
         // 読出しが失敗した場合はエラー
+        fido_log_error("Card administration key read fail");
         return false;
     }
 
@@ -242,7 +243,6 @@ bool ccid_piv_object_is_key_tag_exist(uint8_t key_tag)
         case TAG_KEY_CAADM:
         case TAG_KEY_DGSIG:
         case TAG_KEY_KEYMN:
-        case TAG_KEY_CAUTH:
             return true;
         default:
             return false;

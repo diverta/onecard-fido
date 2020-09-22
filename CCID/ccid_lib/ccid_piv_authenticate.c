@@ -125,9 +125,14 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     if (key_alg != ALG_ECC_256) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
-    }
+
+    // TODO:
+    //   Card authenticateをサポートする場合、
+    //   このコードを有効化します
+    // if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
+    //     return SW_SECURITY_STATUS_NOT_SATISFIED;
+    // }
+
     if (key_id == TAG_KEY_KEYMN) {
         ccid_piv_pin_set_validated(false);
     }
