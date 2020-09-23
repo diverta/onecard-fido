@@ -27,18 +27,17 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/09/07
+#### 2020/09/22
 
 FIDO認証器管理ツールを修正しました。<br>
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.31）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-macOS-20200901/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.32）](https://github.com/diverta/onecard-fido/tree/bug-FIDO2MT-macOS-20200923/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.31）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200903/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.32）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200923/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-修正点は以下になります。（[#361](https://github.com/diverta/onecard-fido/issues/361) ご参照）
-- 「ファームウェア更新」機能実行時、認証器に導入されているファームウェアのバージョンが、管理ツールに同梱されているバージョンより新しい場合、更新処理が行われないよう修正
-- 管理ツール同梱のファームウェア更新イメージファイルを入替え（Version 0.2.11 にアップグレード）
-- ファームウェア更新時、MDBT50Q Dongleの基板名（`rev2=PCA10059` or `rev2.1.2=PCA10059_02`）に応じ、更新対象のイメージファイルが自動的に選択されるよう修正
+修正点は以下になります。（[#366](https://github.com/diverta/onecard-fido/issues/366) ご参照）
+- 管理ツールの「Flash ROM情報取得」機能を実行時、Flash ROM空き容量として表示される％（百分率）が、実態の空き容量と異なる不具合を解消
+- 画面上のテキストが隠れて表示されてしまう不具合を解消（macOS版管理ツールのみ）
 
 #### 2020/09/01
 

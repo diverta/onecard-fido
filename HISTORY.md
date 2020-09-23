@@ -2,6 +2,19 @@
 
 ## プログラム更新履歴
 
+#### 2020/09/07
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.31）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-macOS-20200901/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.31）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200903/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。（[#361](https://github.com/diverta/onecard-fido/issues/361) ご参照）
+- 「ファームウェア更新」機能実行時、認証器に導入されているファームウェアのバージョンが、管理ツールに同梱されているバージョンより新しい場合、更新処理が行われないよう修正
+- 管理ツール同梱のファームウェア更新イメージファイルを入替え（Version 0.2.11 にアップグレード）
+- ファームウェア更新時、MDBT50Q Dongleの基板名（`rev2=PCA10059` or `rev2.1.2=PCA10059_02`）に応じ、更新対象のイメージファイルが自動的に選択されるよう修正
+
 #### 2020/07/20
 
 FIDO認証器管理ツールを修正しました。<br>
