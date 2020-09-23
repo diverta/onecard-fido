@@ -24,3 +24,6 @@ PIVで使用する証明書等を導入するために利用できる「Yubico P
 
 - <b>[Yubico PIV Tool (command line) Windows版 導入手順](../CCID/PIVTOOLWININST.md)</b><br>
 PIVで使用する証明書等を導入するために利用できる「Yubico PIV Tool (command line) 」を、Windows 10環境に導入する手順を掲載します。
+
+- <b>[Yubico PIV Toolによる初期データ導入手順](../CCID/YKPIVUSAGE.md)</b><br>
+Yubico PIV Tool (command line) を使用して、鍵・証明書などを[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する手順を掲載します。
