@@ -176,15 +176,15 @@
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
         // 情報取得CSVから空き領域に関する情報を抽出
-        NSString *strRemain = @"";
+        NSString *strUsed = @"";
         NSString *strAvail = @"";
         NSString *strCorrupt = @"";
         for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
             NSArray *items = [element componentsSeparatedByString:@"="];
             NSString *key = [items objectAtIndex:0];
             NSString *val = [items objectAtIndex:1];
-            if ([key isEqualToString:@"largest_contig"]) {
-                strRemain = val;
+            if ([key isEqualToString:@"words_used"]) {
+                strUsed = val;
             } else if ([key isEqualToString:@"words_available"]) {
                 strAvail = val;
             } else if ([key isEqualToString:@"corruption"]) {
@@ -193,8 +193,8 @@
         }
         // 空き容量、破損状況を画面に表示
         NSString *rateText;
-        if ([strRemain length] > 0 && [strAvail length] > 0) {
-            float rate = [strRemain floatValue] / [strAvail floatValue] * 100.0;
+        if ([strUsed length] > 0 && [strAvail length] > 0) {
+            float rate = [strUsed floatValue] / [strAvail floatValue] * 100.0;
             rateText = [NSString stringWithFormat:MSG_FSTAT_REMAINING_RATE, rate];
         } else {
             rateText = MSG_FSTAT_NON_REMAINING_RATE;
