@@ -29,13 +29,13 @@ PIV Card、OpenPGP Cardなどといったスマートカードのエミュレー
 - 業務アプリケーション（PIV／OpenPGP）の開発
 - CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
 
-#### 各種手順書／調査結果
+#### 各種手順書
 - [USB CCIDインターフェース](CCID/ccid_lib/README.md)
 - [Yubico PIV Toolによる初期データ導入手順](CCID/YKPIVUSAGE.md)
-- [CCIDインターフェースに関する調査](Research/CCID/README.md)
+- [PIVデバイスを使用したmacOSログイン手順](CCID/MACPIVLOGIN.md)
 
-#### 利用事例
-- [PIVデバイスを使用したmacOSログイン手順](Research/CCID/MACPIVLOGIN.md)
+#### 各種調査結果
+- [CCIDインターフェースに関する調査](Research/CCID/README.md)
 
 ## ワンタイムパスワード対応
 TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレンダー）」の追加実装可能性について調査します。<br>
