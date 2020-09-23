@@ -385,12 +385,12 @@ namespace MaintenanceToolGUI
 
             // 情報取得CSVから空き領域に関する情報を抽出
             string[] vars = responseCSV.Split(',');
-            string strRemain = "";
+            string strUsed = "";
             string strAvail = "";
             string strCorrupt = "";
             foreach (string v in vars) {
-                if (v.StartsWith("largest_contig=")) {
-                    strRemain = v.Split('=')[1];
+                if (v.StartsWith("words_used=")) {
+                    strUsed = v.Split('=')[1];
                 }
                 else if (v.StartsWith("words_available=")) {
                     strAvail = v.Split('=')[1];
@@ -402,8 +402,10 @@ namespace MaintenanceToolGUI
 
             // 空き容量、破損状況を画面に表示
             string rateText = "";
-            if (strRemain.Length > 0 && strAvail.Length > 0) {
-                float rate = float.Parse(strRemain) / float.Parse(strAvail) * 100;
+            if (strUsed.Length > 0 && strAvail.Length > 0) {
+                float avail = float.Parse(strAvail);
+                float remaining = avail - float.Parse(strUsed);
+                float rate = remaining / avail * 100;
                 rateText = string.Format(AppCommon.MSG_FSTAT_REMAINING_RATE, rate);
             } else {
                 rateText = AppCommon.MSG_FSTAT_NON_REMAINING_RATE;
