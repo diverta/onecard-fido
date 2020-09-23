@@ -194,7 +194,9 @@
         // 空き容量、破損状況を画面に表示
         NSString *rateText;
         if ([strUsed length] > 0 && [strAvail length] > 0) {
-            float rate = [strUsed floatValue] / [strAvail floatValue] * 100.0;
+            float avail = [strAvail floatValue];
+            float remaining = avail - [strUsed floatValue];
+            float rate = remaining / avail * 100.0;
             rateText = [NSString stringWithFormat:MSG_FSTAT_REMAINING_RATE, rate];
         } else {
             rateText = MSG_FSTAT_NON_REMAINING_RATE;
