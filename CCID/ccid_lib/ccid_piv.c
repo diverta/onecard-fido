@@ -8,6 +8,7 @@
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_object_import.h"
 #include "ccid_piv_pin.h"
 #include "ccid_ykpiv.h"
 
@@ -136,17 +137,7 @@ static uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apd
 
 static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
-    // 管理コマンドが実行可能でない場合は終了
-    if (ccid_piv_admin_mode_get() == false) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
-    }
-
-    //
-    // TODO: ここに処理を記述
-    //
-
-    // 正常終了
-    return SW_NO_ERROR;
+    return ccid_piv_object_import(capdu, rapdu);
 }
 
 static uint16_t piv_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 

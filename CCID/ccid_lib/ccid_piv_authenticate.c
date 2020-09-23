@@ -70,25 +70,10 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
     // ECDSA署名を生成
     uint8_t *privkey_be = work_buf;
     *output_size = ECDSA_SIGNATURE_SIZE;
-    fido_crypto_ecdsa_sign(privkey_be, digest, digest_size, output_data, output_size);
+    bool b = fido_crypto_ecdsa_sign(privkey_be, digest, digest_size, output_data, output_size);
     memset(work_buf, 0, sizeof(work_buf));
-
-    // 該当のスロットから、証明書を読込
-    if (ccid_piv_object_cert_pauth_get(work_buf, &s) == false) {
-        return SW_UNABLE_TO_PROCESS;
-    }
-
-    // 証明書から公開鍵を抽出
-    uint8_t *pubkey_be = fido_extract_pubkey_in_certificate(work_buf, s);
-    if (pubkey_be == NULL) {
-        fido_log_error("fido_extract_pubkey_in_certificate failed: Public key not found");
-        return SW_UNABLE_TO_PROCESS;
-    }
-
-    // ECDSA署名を検証
-    s = *output_size;
-    if (fido_crypto_ecdsa_sign_verify(pubkey_be, digest, digest_size, output_data, s) == false) {
-        // 署名検証失敗の場合終了
+    if (b == false) {
+        // 署名生成失敗の場合終了
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -125,9 +110,14 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     if (key_alg != ALG_ECC_256) {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
-    if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
-    }
+
+    // TODO:
+    //   Card authenticateをサポートする場合、
+    //   このコードを有効化します
+    // if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
+    //     return SW_SECURITY_STATUS_NOT_SATISFIED;
+    // }
+
     if (key_id == TAG_KEY_KEYMN) {
         ccid_piv_pin_set_validated(false);
     }

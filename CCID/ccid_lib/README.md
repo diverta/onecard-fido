@@ -28,10 +28,13 @@ CCIDドライバーのカスタマイズおよび導入手順につきまして�
 |1-3|ccid_pin.c/.h|PINに関する各種処理を実行します。|
 |1-4|ccid_piv_authenticate.c/.h|PIVの各種認証処理を実行します。|
 |1-5|ccid_piv_general_auth.c/.h|PIV認証処理のエントリーモジュール|
-|1-6|ccid_piv_object.c/.h|PIVで使用する各種オブジェクトを管理します。|
-|1-7|ccid_piv_pin.c/.h|PIN認証処理を実行します。|
-|1-8|ccid_piv.c/.h|PIVに関する業務処理を実行します。|
-|1-9|ccid.h|CCID関連で共通利用するヘッダー|
+|1-6|ccid_piv_object_import.c/.h|PIVで使用する各種オブジェクトのインポート処理を実行します。|
+|1-7|ccid_piv_object.c/.h|PIVで使用する各種オブジェクトを管理します。|
+|1-8|ccid_piv_pin.c/.h|PIN認証処理を実行します。|
+|1-9|ccid_piv.c/.h|PIVに関する業務処理を実行します。|
+|1-10|ccid_ykpiv_import_key.c/.h|Yubico PIV Toolの鍵インポート処理を実行します。|
+|1-11|ccid_ykpiv.c/.h|Yubico PIV Toolに関する業務処理を実行します。|
+|1-12|ccid.h|CCID関連で共通利用するヘッダー|
 
 #### モジュール一覧（プラットフォーム依存）
 
@@ -60,23 +63,25 @@ PIVに関する仕様は下記の通りです。
 
 #### 実行可能命令
 本モジュールで実行できるPIV機能は、下記一覧の通りとなっております。<br>
-（2020/06/10現在、[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)に実装されているもの）
+（2020/09/22現在、[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)に実装されているもの）
 
 |#|INS|名称|説明|
 |:---:|:---|:---|:---|
 |1|`0xA4`|PIV_INS_SELECT|PIV Appletを実行可能化|
 |2|`0xCB`|PIV_INS_GET_DATA|PIVオブジェクトを取得[注5]|
-|3|`0xFD`|PIV_INS_GET_VERSION|バージョン取得[注1]|
-|4|`0xF8`|PIV_INS_GET_SERIAL|Serial number取得|
-|5|`0x87`|PIV_INS_GENERAL_AUTHENTICATE|PIV認証を実行[注2][注5]|
-|6|`0xDB`|PIV_INS_PUT_DATA|PIVオブジェクトを転送[注3]|
-|7|`0x20`|PIV_INS_VERIFY|PIN番号を使用した認証を実行[注4][注5]|
+|3|`0x87`|PIV_INS_GENERAL_AUTHENTICATE|PIV認証を実行[注2][注5]|
+|4|`0xDB`|PIV_INS_PUT_DATA|PIVオブジェクトを転送[注3]|
+|5|`0x20`|PIV_INS_VERIFY|PIN番号を使用した認証を実行[注4][注5]|
+|6|`0xFD`|YKPIV_INS_GET_VERSION|バージョン取得[注1]|
+|7|`0xF8`|YKPIV_INS_GET_SERIAL|Serial number取得[注1]|
+|8|`0xFF`|YKPIV_INS_SET_MGMKEY|管理用パスワード登録[注1]|
+|9|`0xFE`|YKPIV_INS_IMPORT_ASYMMETRIC_KEY|秘密鍵登録[注1]|
 
-[注1]バージョンは[管理ツール](../../MaintenanceTool/README.md)で参照できるものと同一値になります。<br>
+[注1]PIV本来の仕様ではなく、[Yubico PIV Tool](https://developers.yubico.com/yubico-piv-tool/)用の独自コマンドです。<br>
 [注2]デフォルト管理用キーを使用した認証機能のみが実装されています。<br>
-[注3]転送されたオブジェクトを永続化する機能は未実装です。
-[注4]PIN番号は平文転送されます。
-[注5]PIVでは、FIDO同様共通鍵による暗号化オプションをサポートするようですが、2020/07/29現在、本プロジェクトでは未実装です。後日、追加実装を検討いたします。
+[注3]転送されたオブジェクトは、nRF52840のFlash ROMに格納されます。<br>
+[注4]PIN番号は平文転送されます。<br>
+[注5]PIVでは、FIDO同様共通鍵による暗号化オプションをサポートするようですが、2020/09/22現在、本プロジェクトでは未実装です。後日、追加実装を検討いたします。
 
 #### 管理対象PIVオブジェクト
 本モジュールで管理対象とするPIVオブジェクト（PIVで使用する各種機密データ）は、下記一覧の通りとなっております。<br>
@@ -84,17 +89,19 @@ PIVに関する仕様は下記の通りです。
 
 |#|TAG|名称|説明|
 |:---:|:---|:---|:---|
-|1|(無し)|Serial number|製品を識別する任意の4バイト値|
+|1|`0x9B`|Card administration key|管理用パスワード[注3]|
 |2|`0x02`|Card Holder Unique Identifier|デバイスを識別する任意のID|
-|3|`0x9A`|PIV Authentication Key|PIV認証用の秘密鍵|
-|4|`0x9C`|Digital Signature Key|署名用の秘密鍵|
-|5|`0x9D`|Key Management Key|キー管理用の秘密鍵|
-|6|`0x05`|X.509 Certificate for PIV Authentication|PIV認証用の証明書|
-|7|`0x0A`|X.509 Certificate for Digital Signature|署名用の証明書|
-|8|`0x0B`|X.509 Certificate for Key Management|キー管理用の証明書|
+|3|`0x07`|Card Capability Container|デバイスを識別する任意のID|
+|4|`0x9A`|PIV Authentication Key|PIV認証用の秘密鍵|
+|5|`0x9C`|Digital Signature Key|デジタル署名用の秘密鍵|
+|6|`0x9D`|Key Management Key|キー管理用の秘密鍵|
+|7|`0x05`|X.509 Certificate for PIV Authentication|PIV認証用の証明書|
+|8|`0x0A`|X.509 Certificate for Digital Signature|デジタル署名用の証明書|
+|9|`0x0B`|X.509 Certificate for Key Management|キー管理用の証明書|
 
 [注1]将来的に、[管理ツール](../../MaintenanceTool/README.md)によるメンテナンスが出来るようにすることを検討しています。<br>
-[注2]インストールされたオブジェクトは、nRF52840のFlash ROMに格納される予定です。
+[注2]インストールされたオブジェクトは、nRF52840のFlash ROMに格納されます。<br>
+[注3]TDEA（Triple Data Encryption Algorithm）暗号のみサポートしています。
 
 ### CCIDの仕様
 CCIDインターフェースに関する仕様は下記の通りです。

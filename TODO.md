@@ -14,61 +14,28 @@
   - PIN初期設定、鍵・証明書インストール／削除といった機能は、ベンダーが行うものなので、エンドユーザーには公開しないようにする<br>
   - 開発者に必要な機能を追加（USBのVID／PID変更、特定バージョンのファームウェアを任意選択／更新する機能、etc...）
 
-## MDBT50Q DongleのセキュアIC組込み対応
-基板上にATECC608Aを追加実装し、秘密鍵を読出し不可にするための対応を行います。<br>
-（[#245](https://github.com/diverta/onecard-fido/issues/245) ご参照）
-
-#### ソフトウェアの開発状況
-nRF52840アプリケーションへの追加実装と、ATECC608A単体の実機動作確認は、ほぼ完了しています。<br>
-作業中のアプリケーションは以下の場所に格納しています。<br>
-コード格納場所（プラットフォーム非依存）--->[fido_cryptoauth_lib](FIDO2Device/fido_cryptoauth_lib)<br>
-コード格納場所（プラットフォーム依存）--->[plat_lib_rev2_1](nRF5_SDK_v15.3.0/examples/diverta/plat_lib_rev2_1)
-
-後日、後述「スロット構成変更」を実施しようと考えています。
-
-#### 評価基板の製作状況
-完成イメージは下図の通りです。<br>
-すでに完成しており、実機動作確認済みです。<br>
-（[#320](https://github.com/diverta/onecard-fido/pull/320) ご参照）
-
-<img src="assets/0080.jpg" width="400">
-
-ただし使用している３色LEDが製造中止-->調達不可となったため、設計変更が必要となってしまいました。
-
-#### 今後必要な対応
-- ３色LEDを単色LEDに変更し、基板を再作成（極小化対応も一部取り込み予定）
-- ATECC608Aスロット構成の変更（FIDO以外の業務アプリケーションでも使用できるようにするための拡張対応）
-
-#### 各種調査結果
-- [ATECC608A関数群について](Research/CRYPTOAUTH/CRYPTOAUTHFUNC.md)
-- [ATECC608A関数テストモジュールについて](Research/CRYPTOAUTH/CRYPTOAUTHTEST.md)
-- [ATECC608Aの設定カスタマイズについて](Research/CRYPTOAUTH/CRYPTOAUTHCONF.md)
-
-## MDBT50Q Dongleの極小化対応
-MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで、基板をさらに極小化する試みになります。<br>
-（[#280](https://github.com/diverta/onecard-fido/issues/280) ご参照）
-
 ## [CCIDインターフェース追加対応](CCID/README.md)
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションに必要な基盤技術を確立します。<br>
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
 
-#### ソフトウェアの開発状況
-nRF52840アプリケーションへの追加実装と、macOS環境／Windows10環境上での実機動作確認は、概ね完了しています。<br>
-作業中のアプリケーションは以下の場所に格納しています。<br>
-コード格納場所（プラットフォーム非依存）--->[ccid_lib](CCID/ccid_lib)<br>
-コード格納場所（プラットフォーム依存）--->[usbd_service_ccid](nRF5_SDK_v15.3.0/examples/diverta/plat_lib/usbd_service_ccid.c)
+#### 完了済み作業
+- CCIDインターフェース本体の、nRF52840アプリケーションへの追加実装
+- CCIDインターフェース本体の、macOS環境／Windows10環境上での実機動作確認
+- 「Yubico PIV Tool」による初期データ導入機能
 
 #### 今後必要な対応
+- PIN設定変更機能（現状、デフォルトから変更不可となっています）
+- RSA-2048秘密鍵／証明書による認証機能
 - 業務アプリケーション（PIV／OpenPGP）の開発
 - CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
 
-#### 各種調査結果
+#### 各種手順書
 - [USB CCIDインターフェース](CCID/ccid_lib/README.md)
-- [Yubico PIV Toolによる初期データ導入手順](Research/CCID/SETUPYKPIV.md)
-- [CCIDインターフェースに関する調査](Research/CCID/README.md)
+- [Yubico PIV Toolによる初期データ導入手順](CCID/YKPIVUSAGE.md)
+- [PIVデバイスを使用したmacOSログイン手順](CCID/MACPIVLOGIN.md)
 
-#### 利用事例
-- [PIVデバイスを使用したmacOSログイン手順](Research/CCID/MACPIVLOGIN.md)
+#### 各種調査結果
+- [CCIDインターフェースに関する調査](Research/CCID/README.md)
 
 ## ワンタイムパスワード対応
 TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレンダー）」の追加実装可能性について調査します。<br>
@@ -79,8 +46,15 @@ TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレ
 - 業務アプリケーション（OATH-TOTP）の開発
 - RTCC評価用の基板製作（I2Cコマンド検証用／バックアップ機能検証用／etc...）
 
+## [セキュアIC組込み対応](SECUREIC/README.md)
+完了しております。
+
 ## その他
 優先度は低くなります
+
+#### MDBT50Q Dongleの極小化対応
+MDBT50Q Dongleについて、基板実装要件が全て出揃ったところで、基板をさらに極小化する試みになります。<br>
+（[#280](https://github.com/diverta/onecard-fido/issues/280) ご参照）
 
 #### CTAP 2.1対応
 

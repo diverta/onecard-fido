@@ -145,22 +145,24 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     p += elem_header_size;
     uint8_t *QINV = p;
 
-    // 鍵データを、Flash ROM書出用バッファにコピー（５バイト目を先頭とする）
-    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 4;
-    memcpy(key_data_buff, P, RSA2048_PQ_LENGTH);
-    key_data_buff += RSA2048_PQ_LENGTH;
-    memcpy(key_data_buff, Q, RSA2048_PQ_LENGTH);
-    key_data_buff += RSA2048_PQ_LENGTH;
-    memcpy(key_data_buff, DP, RSA2048_PQ_LENGTH);
-    key_data_buff += RSA2048_PQ_LENGTH;
-    memcpy(key_data_buff, DQ, RSA2048_PQ_LENGTH);
-    key_data_buff += RSA2048_PQ_LENGTH;
-    memcpy(key_data_buff, QINV, RSA2048_PQ_LENGTH);
+    // 鍵データを、Flash ROM書出用バッファにコピー（９バイト目を先頭とする）
+    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 8;
+    size_t key_size = 0;
+    memcpy(key_data_buff + key_size, P, RSA2048_PQ_LENGTH);
+    key_size += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff + key_size, Q, RSA2048_PQ_LENGTH);
+    key_size += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff + key_size, DP, RSA2048_PQ_LENGTH);
+    key_size += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff + key_size, DQ, RSA2048_PQ_LENGTH);
+    key_size += RSA2048_PQ_LENGTH;
+    memcpy(key_data_buff + key_size, QINV, RSA2048_PQ_LENGTH);
+    key_size += RSA2048_PQ_LENGTH;
 
     // 秘密鍵を登録
     uint8_t key_alg = capdu->p1;
     uint8_t key_tag = capdu->p2;
-    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg) == false) {
+    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg, key_data_buff, key_size) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -170,7 +172,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
 
 static uint16_t import_ecc_private_key(command_apdu_t *capdu)
 {
-    size_t priv_key_size = 32;
+    size_t priv_key_size = ECC_PRV_KEY_SIZE;
     if (capdu->lc < 2 + priv_key_size) {
         return SW_WRONG_LENGTH;
     }
@@ -186,12 +188,8 @@ static uint16_t import_ecc_private_key(command_apdu_t *capdu)
     uint8_t key_tag = capdu->p2;
     uint8_t *key = cdata + 2;
 
-    // 鍵データを、Flash ROM書出用バッファにコピー（５バイト目を先頭とする）
-    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 4;
-    memcpy(key_data_buff, key, priv_key_size);
-
     // 秘密鍵を登録
-    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg) == false) {
+    if (ccid_flash_piv_object_private_key_write(key_tag, key_alg, key, priv_key_size) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
