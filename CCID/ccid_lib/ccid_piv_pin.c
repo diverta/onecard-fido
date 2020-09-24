@@ -53,7 +53,27 @@ bool ccid_piv_pin_init(void)
 //
 uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+    PIV_PIN_TYPE pin_type;
+    if (capdu->p2 == 0x80) {
+        pin_type = PIV_PIN;
+    } else if (capdu->p2 == 0x81) {
+        pin_type = PIV_PUK;
+    } else {
+        return SW_REFERENCE_DATA_NOT_FOUND;
+    }
+    if (capdu->lc != 16) {
+        return SW_WRONG_LENGTH;
+    }
+
     // 後日正式に実装予定
+    // TODO:
+    // (1) PIN or PUKで認証
+    // (2) 認証OKであればPIN or PUKを更新
+    (void)pin_type;
     return SW_REFERENCE_DATA_NOT_FOUND;
 }
 
