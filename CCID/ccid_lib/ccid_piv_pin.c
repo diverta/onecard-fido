@@ -49,6 +49,15 @@ bool ccid_piv_pin_init(void)
 }
 
 //
+// PIN設定処理
+//
+uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // 後日正式に実装予定
+    return SW_REFERENCE_DATA_NOT_FOUND;
+}
+
+//
 // PIN認証処理
 //
 uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 

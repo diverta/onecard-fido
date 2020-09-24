@@ -24,7 +24,6 @@ static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
 static const uint8_t rid_size = sizeof(rid);
 static const uint8_t pix_size = sizeof(pix);
-static const uint8_t aid_size = rid_size + pix_size;
 
 bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu)
 {
@@ -96,6 +95,7 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         // For the Discovery Object, the 0x7e template nests two data elements:
         // 1) tag 0x4f contains the AID of the PIV Card Application and
         // 2) tag 0x5f2f lists the PIN Usage Policy.
+        uint8_t aid_size = rid_size + pix_size;
         rdata[0] = 0x7e;
         rdata[1] = 5 + aid_size + ccid_piv_pin_policy_size();
         rdata[2] = 0x4f;
@@ -145,6 +145,11 @@ static uint16_t piv_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu)
     return ccid_piv_pin_auth(capdu, rapdu);
 }
 
+static uint16_t piv_ins_change_reference_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_set(capdu, rapdu);
+}
+
 static void piv_init(void)
 {
     // 初期化処理を一度だけ実行
@@ -192,6 +197,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_VERIFY:
             rapdu->sw = piv_ins_verify(capdu, rapdu);
+            break;
+        case PIV_INS_CHANGE_REFERENCE_DATA:
+            rapdu->sw = piv_ins_change_reference_data(capdu, rapdu);
             break;
         //
         // Yubico PIV Tool固有のコマンド
