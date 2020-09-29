@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 // プラットフォーム固有のインターフェース
 #include "usbd_service.h"
@@ -74,6 +75,10 @@ static void restore_auth_param(void)
     if (p_uuid_string[0] != 0) {
         memcpy(service_uuid_string, p_uuid_string, UUID_STRING_LEN);
         service_uuid_string[UUID_STRING_LEN] = 0;
+        for (int i = 0; i < UUID_STRING_LEN; i++) {
+            int c = toupper(service_uuid_string[i]);
+            service_uuid_string[i] = (uint8_t)c;
+        }
     }
 
     uint8_t scan_sec = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_sec();
