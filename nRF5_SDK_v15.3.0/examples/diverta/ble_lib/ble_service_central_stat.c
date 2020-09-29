@@ -90,7 +90,6 @@ static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t co
         uint8_t *p_field_data = p_data + index + 2;
         uint8_t field_data_size = field_length - 1;
         
-        info->ad_type = field_type;
         switch (field_type) {
             case 2:
             case 3:
@@ -100,6 +99,7 @@ static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t co
             case 7:
                 // UUIDバイト配列
                 // ビッグエンディアン形式で格納させる
+                info->uuid_type = field_type;
                 info->uuid_bytes_size = field_data_size;
                 for (uint8_t c = 0; c < field_data_size; c++) {
                     info->uuid_bytes[field_data_size - 1 - c] = p_field_data[c];
@@ -175,7 +175,7 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
     for (uint8_t i = 0; i < adv_stat_info_size; i++) {
         // UUIDを文字列変換
         ADV_STAT_INFO_T *info = &adv_stat_info[i];
-        uuid_bytes_to_ascii(info->uuid_bytes, info->ad_type, uuid_buf);
+        uuid_bytes_to_ascii(info->uuid_bytes, info->uuid_type, uuid_buf);
 
         if (strcmp(uuid_buf, uuid_strict_string) != 0) {
             // UUIDがマッチしていない場合は次の統計情報に移る
