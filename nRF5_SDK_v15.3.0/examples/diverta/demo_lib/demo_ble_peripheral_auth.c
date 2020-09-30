@@ -146,7 +146,7 @@ static void scan_parameter_buffer_set(ADV_STAT_INFO_T *info)
     memcpy(scan_param_bytes, info->uuid_bytes, info->uuid_bytes_size);
     offset += info->uuid_bytes_size;
     //   Bluetoothアドレス
-    memcpy(scan_param_bytes + offset, info->peer_addr, PEER_ADDR_SIZE);
+    memcpy(scan_param_bytes + offset, info->peer_addr.addr, PEER_ADDR_SIZE);
     offset += PEER_ADDR_SIZE;
     //   パラメーター長
     scan_param_bytes_size = offset;
@@ -175,7 +175,7 @@ static void resume_function_after_scan(void)
         // 見つかった時の処理
         // 複数スキャンされた場合は、最もRSSI値が大きいBLEデバイスが戻ります。
         fido_log_debug("BLE peripheral device (for FIDO register) found (NAME=%s, ADDR=%s)", 
-            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
+            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr.addr));
         scan_parameter_buffer_set(info);
         fido_user_presence_verify_on_ble_scan_end(true);
     }
@@ -240,7 +240,7 @@ static void resume_function_after_second_scan(void)
     } else {
         // 見つかった時の処理
         fido_log_debug("BLE peripheral device (for FIDO authenticate) found (NAME=%s, ADDR=%s)", 
-            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr));
+            info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr.addr));
         fido_user_presence_verify_on_ble_scan_end(true);
     }
 }

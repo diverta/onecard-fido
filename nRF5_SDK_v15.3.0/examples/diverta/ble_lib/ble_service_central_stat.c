@@ -41,12 +41,12 @@ void ble_service_central_stat_info_init(void)
 static void debug_print_adv_stat_info(ADV_STAT_INFO_T *info)
 {
     NRF_LOG_DEBUG("Bluetooth address:%02x%02x%02x%02x%02x%02x",
-        info->peer_addr[0],
-        info->peer_addr[1],
-        info->peer_addr[2],
-        info->peer_addr[3],
-        info->peer_addr[4],
-        info->peer_addr[5]
+        info->peer_addr.addr[0],
+        info->peer_addr.addr[1],
+        info->peer_addr.addr[2],
+        info->peer_addr.addr[3],
+        info->peer_addr.addr[4],
+        info->peer_addr.addr[5]
         );
     NRF_LOG_DEBUG("Device name:%s (TX power=%d, RSSI=%d), UUID(%d bytes):", 
         info->dev_name, info->tx_power, info->rssi, info->uuid_bytes_size);
@@ -63,7 +63,7 @@ void ble_service_central_stat_debug_print(void)
 static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t const *p_adv_report)
 {
     // Bluetoothアドレス、RSSI、Tx Power Levelを設定
-    memcpy(info->peer_addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN);
+    info->peer_addr = p_adv_report->peer_addr;
     info->rssi = p_adv_report->rssi;
     info->tx_power = p_adv_report->tx_power;
 
@@ -123,12 +123,12 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
 {
     for (uint8_t idx = 0; idx < ADV_STAT_INFO_SIZE_MAX; idx++) {
         // 同一のアドレスが出現したら、その位置に上書き
-        if (memcmp(adv_stat_info[idx].peer_addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN) == 0) {
+        if (memcmp(adv_stat_info[idx].peer_addr.addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN) == 0) {
             set_adv_stat_info(&adv_stat_info[idx], p_adv_report);
             return;
         }
         // ブランクが出現したら、その位置に新規追加し、データ数を設定
-        if (memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) == 0) {
+        if (memcmp(adv_stat_info[idx].peer_addr.addr, zero_addr, BLE_GAP_ADDR_LEN) == 0) {
             set_adv_stat_info(&adv_stat_info[idx], p_adv_report);
             adv_stat_info_size = idx + 1;
             return;
@@ -209,7 +209,7 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *scan_param_b
             // UUIDがマッチしていない場合は次の統計情報に移る
             continue;
         }
-        if (memcmp(info->peer_addr, peer_addr, 6) != 0) {
+        if (memcmp(info->peer_addr.addr, peer_addr, 6) != 0) {
             // アドレスがマッチしていない場合は次の統計情報に移る
             continue;
         }
@@ -246,7 +246,7 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
         sprintf(peer_addr_rssi_buf, 
             "\"%s\",%s,%d",
             adv_stat_info[idx].dev_name,
-            ble_service_central_stat_btaddr_string(adv_stat_info[idx].peer_addr),
+            ble_service_central_stat_btaddr_string(adv_stat_info[idx].peer_addr.addr),
             adv_stat_info[idx].rssi
             );
         // CSVデータを編集
@@ -254,7 +254,7 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
         size = sprintf(adv_stat_info_string, 
             "%s%s%s", 
             adv_stat_info_string_, 
-            memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
+            memcmp(adv_stat_info[idx].peer_addr.addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
             (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "" : ","
             );
     }
