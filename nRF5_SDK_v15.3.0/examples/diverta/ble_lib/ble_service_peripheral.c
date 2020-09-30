@@ -21,6 +21,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// for ble_service_peripheral_mode
+#include "ble_service_common.h"
+
 // FIDO Authenticator固有の処理
 #include "fido_ble_service.h"
 #include "fido_ble_event.h"
@@ -48,19 +51,11 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
     {BLE_UUID_U2F_SERVICE,                  BLE_UUID_TYPE_BLE}
 };
 
-// BLEペリフェラルモードかどうかを保持
-static bool ble_peripheral_mode = false;
-
-bool ble_service_peripheral_mode(void)
-{
-    return ble_peripheral_mode;
-}
-
 void ble_service_peripheral_advertising_start(void)
 {
     // アドバタイジングをスタートさせた場合は
     // BLEペリフェラルモードに移行
-    ble_peripheral_mode = true;
+    ble_service_peripheral_mode_set(true);
 
     ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
@@ -237,7 +232,7 @@ void ble_service_peripheral_start(void)
 //
 void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
 {
-    if (ble_peripheral_mode == false) {
+    if (ble_service_peripheral_mode() == false) {
         return;
     }
     m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -247,7 +242,7 @@ void ble_service_peripheral_gap_connected(ble_evt_t const *p_ble_evt)
 
 void ble_service_peripheral_gap_disconnected(ble_evt_t const *p_ble_evt)
 {
-    if (ble_peripheral_mode == false) {
+    if (ble_service_peripheral_mode() == false) {
         return;
     }
     m_conn_handle = BLE_CONN_HANDLE_INVALID;

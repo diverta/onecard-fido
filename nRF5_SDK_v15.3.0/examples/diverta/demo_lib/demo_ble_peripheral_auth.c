@@ -13,7 +13,7 @@
 #include "usbd_service.h"
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
-#include "ble_service_peripheral.h"
+#include "ble_service_common.h"
 
 // 業務処理インターフェース
 #include "fido_command.h"

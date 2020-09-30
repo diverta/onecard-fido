@@ -25,6 +25,19 @@ NRF_LOG_MODULE_REGISTER();
 // for Device name
 #include "fido_board.h"
 
+// BLEペリフェラルモードかどうかを保持
+static bool ble_peripheral_mode = false;
+
+bool ble_service_peripheral_mode(void)
+{
+    return ble_peripheral_mode;
+}
+
+void ble_service_peripheral_mode_set(bool b)
+{
+    ble_peripheral_mode = b;
+}
+
 void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     ret_code_t err_code;
