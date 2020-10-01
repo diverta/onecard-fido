@@ -45,12 +45,14 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
             ble_service_peripheral_gap_connected(p_ble_evt);
+            ble_service_central_gap_connected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             ble_service_peripheral_gap_disconnected(p_ble_evt);
+            ble_service_central_gap_disconnected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:

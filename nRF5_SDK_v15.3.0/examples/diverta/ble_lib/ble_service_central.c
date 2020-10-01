@@ -25,6 +25,7 @@ NRF_BLE_SCAN_DEF(m_scan);
 
 #include "ble_service_central.h"
 #include "ble_service_central_stat.h"
+#include "ble_service_common.h"
 
 // for fido_status_indicator
 #include "fido_platform.h"
@@ -186,10 +187,91 @@ void ble_service_central_scan_stop(void)
 }
 
 //
+// 指定のBluetoothアドレスをもつ
+// デバイスに対し、接続／切断要求を行う
+//
+// 接続完了後に実行される関数の参照を保持
+static void (*resume_func_after_conn)(void);
+// 接続中のハンドルを保持
+static uint16_t conn_handle;
+
+static void init_for_request_connection(void)
+{
+    // 初期化
+    resume_func_after_conn = NULL;
+    conn_handle = BLE_CONN_HANDLE_INVALID;
+}
+
+bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(void))
+{
+    // 初期化
+    init_for_request_connection();
+
+    // For readability.
+    ble_gap_scan_params_t const *p_scan_params = &m_scan.scan_params;
+    ble_gap_conn_params_t const *p_conn_params = &m_scan.conn_params;
+    uint8_t                      con_cfg_tag   = m_scan.conn_cfg_tag;
+
+    // Establish connection.
+    ret_code_t err_code = sd_ble_gap_connect(p_addr, p_scan_params, p_conn_params, con_cfg_tag);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("sd_ble_gap_connect returns %d ", err_code);
+        return false;
+    }
+
+    // 接続後に実行される関数の参照を退避
+    resume_func_after_conn = _resume_function;
+    return true;
+}
+
+bool ble_service_central_request_disconnection(void)
+{
+    // BLE接続がない場合は終了
+    if (conn_handle == BLE_CONN_HANDLE_INVALID) {
+        return true;
+    }
+    
+    // BLE切断を切断
+    ret_code_t err_code = sd_ble_gap_disconnect(conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+    init_for_request_connection();
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("sd_ble_gap_disconnect returns %d ", err_code);
+        return false;
+    }
+
+    return true;
+}
+
+//
 // BLE GAPイベント関連処理
 //
 void ble_service_central_gap_adv_report(ble_evt_t const *p_ble_evt)
 {
     // 統計情報を更新
     ble_service_central_stat_adv_report(&p_ble_evt->evt.gap_evt.params.adv_report);
+}
+
+void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt)
+{
+    if (ble_service_peripheral_mode()) {
+        return;
+    }
+    
+    // 接続中はハンドルを保持
+    conn_handle = p_ble_evt->evt.gattc_evt.conn_handle;
+    
+    // 接続後の処理を継続する
+    if (resume_func_after_conn != NULL) {
+        // 接続完了後に実行される関数を実行
+        (*resume_func_after_conn)();
+    }
+}
+
+void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt)
+{
+    if (ble_service_peripheral_mode()) {
+        return;
+    }
+
+    (void)p_ble_evt;
 }
