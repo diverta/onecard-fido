@@ -88,7 +88,7 @@ uint8_t fido_ble_pairing_advertising_flag(void)
     return advdata_flags;
 }
 
-bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
+static bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
 {
     if (run_as_pairing_mode == false) {
         if (p_ble_evt->header.evt_id == BLE_GAP_EVT_SEC_PARAMS_REQUEST) {
@@ -107,14 +107,12 @@ bool fido_ble_pairing_reject_request(ble_evt_t const *p_ble_evt)
     return false;
 }
 
-static void ble_evt_handler(ble_evt_t const *p_ble_evt, void * p_context)
+void fido_ble_pairing_on_evt_sec_params_request(ble_evt_t const *p_ble_evt)
 {
     // ペアリングモードでない場合は、
     // ペアリング要求に応じないようにする
     fido_ble_pairing_reject_request(p_ble_evt);
 }
-
-NRF_SDH_BLE_OBSERVER(m_ble_evt_observer, BLE_CONN_STATE_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
 
 bool fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt)
 {

@@ -16,7 +16,7 @@ extern "C" {
 void    fido_ble_pairing_delete_bonds(void);
 bool    fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt);
 uint8_t fido_ble_pairing_advertising_flag(void);
-bool    fido_ble_pairing_reject_request(ble_evt_t *p_ble_evt);
+void    fido_ble_pairing_on_evt_sec_params_request(ble_evt_t const *p_ble_evt);
 bool    fido_ble_pairing_allow_repairing(pm_evt_t const *p_evt);
 void    fido_ble_pairing_change_mode(void);
 void    fido_ble_pairing_get_mode(void);
