@@ -22,6 +22,8 @@ bool ble_service_central_request_disconnection(void);
 void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt);
 void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt);
 void ble_service_central_gap_adv_report(ble_evt_t const *p_ble_evt);
+void ble_service_central_gap_evt_auth_status(ble_evt_t const *p_ble_evt);
+bool ble_service_central_pm_evt(void const *p_pm_evt);
 
 #ifdef __cplusplus
 }

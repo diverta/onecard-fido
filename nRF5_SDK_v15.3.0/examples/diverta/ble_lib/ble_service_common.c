@@ -100,6 +100,7 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
                           p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
+            ble_service_central_gap_evt_auth_status(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_ADV_REPORT:
@@ -143,11 +144,18 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
 
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
-    // FIDO Authenticator固有の処理
-    if (fido_ble_pm_evt_handler(p_evt)) {
-        return;
+    if (ble_service_peripheral_mode()) {
+        // FIDO Authenticator固有の処理
+        if (fido_ble_pm_evt_handler(p_evt)) {
+            return;
+        }
+    } else {
+        // BLEセントラル固有の処理
+        if (ble_service_central_pm_evt(p_evt)) {
+            return;
+        }
     }
-    
+
     pm_handler_on_pm_evt(p_evt);
     pm_handler_flash_clean(p_evt);
 
