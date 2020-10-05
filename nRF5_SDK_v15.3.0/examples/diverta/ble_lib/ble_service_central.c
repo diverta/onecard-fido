@@ -14,6 +14,8 @@
 #include "nrf_sdh_soc.h"
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_scan.h"
+#include "peer_manager.h"
+#include "peer_data_storage.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_service_central
@@ -191,18 +193,24 @@ void ble_service_central_scan_stop(void)
 // デバイスに対し、接続／切断要求を行う
 //
 // 接続完了後に実行される関数の参照を保持
-static void (*resume_func_after_conn)(void);
+static void (*resume_func_after_conn)(bool);
 // 接続中のハンドルを保持
 static uint16_t conn_handle;
+// ペアリング済みかどうかを保持
+static bool already_paired;
+// 接続先のBluetoothアドレスを保持
+static ble_gap_addr_t bluetooth_addr;
 
 static void init_for_request_connection(void)
 {
     // 初期化
     resume_func_after_conn = NULL;
     conn_handle = BLE_CONN_HANDLE_INVALID;
+    already_paired = false;
+    memset(&bluetooth_addr, 0, sizeof(ble_gap_addr_t));
 }
 
-bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(void))
+bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool))
 {
     // 初期化
     init_for_request_connection();
@@ -242,6 +250,11 @@ bool ble_service_central_request_disconnection(void)
     return true;
 }
 
+uint8_t *ble_service_central_connected_address(void)
+{
+    return bluetooth_addr.addr;
+}
+
 //
 // BLE GAPイベント関連処理
 //
@@ -256,14 +269,14 @@ void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt)
     if (ble_service_peripheral_mode()) {
         return;
     }
-    
+
     // 接続中はハンドルを保持
     conn_handle = p_ble_evt->evt.gattc_evt.conn_handle;
     
     // 接続後の処理を継続する
     if (resume_func_after_conn != NULL) {
         // 接続完了後に実行される関数を実行
-        (*resume_func_after_conn)();
+        (*resume_func_after_conn)(already_paired);
     }
 }
 
@@ -274,4 +287,48 @@ void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt)
     }
 
     (void)p_ble_evt;
+}
+
+void ble_service_central_gap_evt_auth_status(ble_evt_t const *p_ble_evt)
+{
+    if (ble_service_peripheral_mode()) {
+        return;
+    }
+
+    (void)p_ble_evt;
+}
+
+//
+// Peer managerイベント関連処理
+//
+static void get_bluetooth_addr_connected(uint16_t peer_id)
+{
+    pm_peer_data_t         peer_data;
+    pm_peer_data_bonding_t bond_data;
+
+    peer_data.p_bonding_data = &bond_data;
+    uint16_t buf_size = sizeof(bond_data);
+    ret_code_t err_code = pds_peer_data_read(peer_id, PM_PEER_DATA_ID_BONDING, &peer_data, &buf_size);
+    if (err_code == NRF_SUCCESS) {
+        bluetooth_addr = bond_data.peer_ble_id.id_addr_info;
+    } else {
+        NRF_LOG_DEBUG("pds_peer_data_read returns 0x%04x", err_code);
+    }
+}
+
+bool ble_service_central_pm_evt(void const *p_pm_evt)
+{
+    pm_evt_t const *p_evt = (pm_evt_t const *)p_pm_evt;
+    switch (p_evt->evt_id) {
+        case PM_EVT_BONDED_PEER_CONNECTED:
+            // ペアリング済みである場合はフラグを設定
+            NRF_LOG_DEBUG("Connected using bonding data");
+            get_bluetooth_addr_connected(p_evt->peer_id);
+            already_paired = true;
+            break;
+
+        default:
+            break;
+    }
+    return false;
 }
