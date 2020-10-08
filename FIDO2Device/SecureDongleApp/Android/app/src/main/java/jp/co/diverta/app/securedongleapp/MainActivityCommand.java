@@ -1,9 +1,16 @@
 package jp.co.diverta.app.securedongleapp;
 
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.os.Message;
+
+import jp.co.diverta.app.securedongleapp.ble.BLECentral;
+
 public class MainActivityCommand
 {
     // オブジェクトの参照を保持
     private MainActivity guiRef;
+    private BLECentral bleCentral;
 
     // ログ表示用
     private String TAG = getClass().getName();
@@ -11,10 +18,12 @@ public class MainActivityCommand
     public MainActivityCommand(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
+        bleCentral = new BLECentral(this);
     }
 
     public void startBLEConnection() {
-        // TODO: スキャンを開始
+        // スキャンを開始
+        bleCentral.startScan();
     }
 
     public void startBLEAdvertise() {
@@ -41,5 +50,13 @@ public class MainActivityCommand
         MainActivityGUIHandler handler = guiRef.guiHandler;
         handler.setStatusText(s);
         handler.sendEmptyMessage(MainActivityGUIHandler.APPEND_TEXT);
+    }
+
+    public BluetoothManager getBluetoothManager() {
+        return (BluetoothManager)guiRef.getSystemService(Context.BLUETOOTH_SERVICE);
+    }
+
+    public Context getApplicationContext() {
+        return guiRef.getApplicationContext();
     }
 }
