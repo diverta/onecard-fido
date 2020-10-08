@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SecureDongleApp</string>
+    <string name="pairing_and_connect">ペアリング実行</string>
+    <string name="start_ble_advertisement">BLE認証実行</string>
+    <string name="stop_ble_advertisement">BLE認証終了</string>
+    <string name="tips_text_initial">BLE認証実行ボタンをタップして、認証機能を実行してください。\n\nドングルとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
+    <string name="status_text_initial">BLEアドバタイズが開始されていません。</string>
 </resources>
