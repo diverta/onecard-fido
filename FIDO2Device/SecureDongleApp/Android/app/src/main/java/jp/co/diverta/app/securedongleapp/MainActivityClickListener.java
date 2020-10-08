@@ -15,7 +15,7 @@ public class MainActivityClickListener implements View.OnClickListener
     public MainActivityClickListener(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
-        commandRef = new MainActivityCommand();
+        commandRef = new MainActivityCommand(ma);
     }
 
     @Override
@@ -33,13 +33,8 @@ public class MainActivityClickListener implements View.OnClickListener
     }
 
     private void buttonPairingClicked() {
-        // TODO@: 仮の実装です。
-        flag = !flag;
-        if (flag) {
-            guiRef.displayStatusText("True");
-        } else {
-            guiRef.displayStatusText("False");
-        }
+        // BLE接続を開始
+        commandRef.startBLEConnection();
     }
 
     private void buttonAdvertiseClicked() {
@@ -65,7 +60,11 @@ public class MainActivityClickListener implements View.OnClickListener
         }
     }
 
-    public String getResourceString(int resId) {
+    //
+    // MainActivityにアクセスするための関数群
+    //
+
+    private String getResourceString(int resId) {
         return guiRef.getString(resId);
     }
 }

@@ -3,6 +3,7 @@ package jp.co.diverta.app.securedongleapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,14 +16,15 @@ public class MainActivity extends AppCompatActivity
     public Button buttonAdvertise;
 
     // ログ表示用
-    private String TAG;
+    private String TAG = getClass().getName();
+
+    // BLEスレッドから画面操作するためのハンドラー
+    public MainActivityGUIHandler guiHandler = new MainActivityGUIHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        TAG = getString(R.string.app_name);
-        Log.d(TAG, "MainActivity created");
+        Log.d(TAG, "Created");
 
         // 画面の設定
         setContentView(R.layout.activity_main);
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "MainActivity destroyed");
+        Log.d(TAG, "Destroyed");
         super.onDestroy();
     }
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     //
 
     public void changeButtonAdvertiseCaption(boolean start) {
+        // BLE認証ボタンのキャプションを変更
         if (start) {
             buttonAdvertise.setText(getString(R.string.start_ble_advertisement));
         } else {
@@ -55,10 +58,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void displayStatusText(String text) {
+        // ステータス表示欄に文字列を表示
         textViewStatus.setText(text);
     }
 
     public void appendStatusText(String text) {
+        // ステータス表示欄に文字列を追加表示
         String s = String.format("%s\n%s", textViewStatus.getText(), text);
         displayStatusText(s);
     }
