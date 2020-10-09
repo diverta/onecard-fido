@@ -2,7 +2,6 @@ package jp.co.diverta.app.securedongleapp;
 
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.Message;
 
 import jp.co.diverta.app.securedongleapp.ble.BLECentral;
 
