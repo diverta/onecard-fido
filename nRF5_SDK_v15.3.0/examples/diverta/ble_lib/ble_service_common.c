@@ -25,6 +25,19 @@ NRF_LOG_MODULE_REGISTER();
 // for Device name
 #include "fido_board.h"
 
+// BLEペリフェラルモードかどうかを保持
+static bool ble_peripheral_mode = false;
+
+bool ble_service_peripheral_mode(void)
+{
+    return ble_peripheral_mode;
+}
+
+void ble_service_peripheral_mode_set(bool b)
+{
+    ble_peripheral_mode = b;
+}
+
 void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     ret_code_t err_code;
@@ -32,12 +45,14 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("BLE: Connected.");
             ble_service_peripheral_gap_connected(p_ble_evt);
+            ble_service_central_gap_connected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE: Disconnected, reason %d.",
                           p_ble_evt->evt.gap_evt.params.disconnected.reason);
             ble_service_peripheral_gap_disconnected(p_ble_evt);
+            ble_service_central_gap_disconnected(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
@@ -85,6 +100,7 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
                           p_ble_evt->evt.gap_evt.params.auth_status.sm1_levels.lv4,
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_own),
                           *((uint8_t *)&p_ble_evt->evt.gap_evt.params.auth_status.kdist_peer));
+            ble_service_central_gap_evt_auth_status(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_ADV_REPORT:
@@ -128,11 +144,18 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
 
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
-    // FIDO Authenticator固有の処理
-    if (fido_ble_pm_evt_handler(p_evt)) {
-        return;
+    if (ble_service_peripheral_mode()) {
+        // FIDO Authenticator固有の処理
+        if (fido_ble_pm_evt_handler(p_evt)) {
+            return;
+        }
+    } else {
+        // BLEセントラル固有の処理
+        if (ble_service_central_pm_evt(p_evt)) {
+            return;
+        }
     }
-    
+
     pm_handler_on_pm_evt(p_evt);
     pm_handler_flash_clean(p_evt);
 
@@ -199,7 +222,7 @@ static void gap_params_init(void)
                                           strlen(DEVICE_NAME));
     APP_ERROR_CHECK(err_code);
 
-    err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_HEART_RATE_SENSOR_HEART_RATE_BELT);
+    err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_UNKNOWN);
     APP_ERROR_CHECK(err_code);
 
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));

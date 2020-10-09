@@ -20,10 +20,10 @@ extern "C" {
 #define ADV_STAT_INFO_DATA_MAX_SIZE 32
 #define ADV_STAT_INFO_UUID_MAX_SIZE 16
 typedef struct {
-    uint8_t peer_addr[BLE_GAP_ADDR_LEN];
+    ble_gap_addr_t peer_addr;
     int8_t  rssi;
     int8_t  tx_power;
-    uint8_t ad_type;
+    uint8_t uuid_type;
     uint8_t dev_name[ADV_STAT_INFO_DATA_MAX_SIZE];
     size_t  dev_name_size;
     uint8_t uuid_bytes[ADV_STAT_INFO_UUID_MAX_SIZE];
