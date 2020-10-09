@@ -48,5 +48,9 @@ public class BLECentral
         // デバイスのスキャンを停止
         mBleScanner.stopScan(mScanCallback);
         Log.d(TAG, "Device scan stopped");
+
+        // TODO: 仮の実装です。
+        // コマンドクラスに制御を戻す
+        commandRef.onBLEConnectionTerminated(true);
     }
 }

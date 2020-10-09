@@ -8,6 +8,8 @@ public class MainActivityGUIHandler extends Handler
     // メッセージID
     public static final int DISPLAY_TEXT = 1;
     public static final int APPEND_TEXT = 2;
+    public static final int BUTTONS_ENABLE = 3;
+    public static final int BUTTONS_DISABLE = 4;
 
     private MainActivity guiRef;
     private String statusText;
@@ -26,6 +28,12 @@ public class MainActivityGUIHandler extends Handler
                 // ステータス表示欄に文字列を追加表示
                 guiRef.appendStatusText(statusText);
                 break;
+            case BUTTONS_ENABLE:
+                setButtonsEnabled(true);
+                break;
+            case BUTTONS_DISABLE:
+                setButtonsEnabled(false);
+                break;
             default:
                 break;
         }
@@ -38,5 +46,11 @@ public class MainActivityGUIHandler extends Handler
     public void setStatusText(String s) {
         // ステータス欄に表示する文字列を設定
         statusText = s;
+    }
+
+    public void setButtonsEnabled(boolean b) {
+        // ボタンを押下可能／不可能に変更
+        guiRef.buttonPairing.setEnabled(b);
+        guiRef.buttonAdvertise.setEnabled(b);
     }
 }

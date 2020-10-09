@@ -9,6 +9,7 @@ public class MainActivityCommand
 {
     // オブジェクトの参照を保持
     private MainActivity guiRef;
+    private MainActivityGUIHandler handlerRef;
     private BLECentral bleCentral;
 
     // ログ表示用
@@ -17,12 +18,22 @@ public class MainActivityCommand
     public MainActivityCommand(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
+        handlerRef = guiRef.guiHandler;
         bleCentral = new BLECentral(this);
     }
 
     public void startBLEConnection() {
+        // ボタンを押下不可に変更
+        setButtonsEnabled(false);
+        displayStatusText("スキャンを開始します。");
         // スキャンを開始
         bleCentral.startScan();
+    }
+
+    public void onBLEConnectionTerminated(boolean success) {
+        // ボタンを押下可に変更
+        setButtonsEnabled(true);
+        appendStatusText("スキャンを終了しました。");
     }
 
     public void startBLEAdvertise() {
@@ -39,16 +50,22 @@ public class MainActivityCommand
 
     public void displayStatusText(String s) {
         // ステータス表示欄に文字列を表示
-        MainActivityGUIHandler handler = guiRef.guiHandler;
-        handler.setStatusText(s);
-        handler.sendEmptyMessage(MainActivityGUIHandler.DISPLAY_TEXT);
+        handlerRef.setStatusText(s);
+        handlerRef.sendEmptyMessage(MainActivityGUIHandler.DISPLAY_TEXT);
     }
 
     public void appendStatusText(String s) {
         // ステータス表示欄に文字列を追加表示
-        MainActivityGUIHandler handler = guiRef.guiHandler;
-        handler.setStatusText(s);
-        handler.sendEmptyMessage(MainActivityGUIHandler.APPEND_TEXT);
+        handlerRef.setStatusText(s);
+        handlerRef.sendEmptyMessage(MainActivityGUIHandler.APPEND_TEXT);
+    }
+
+    public void setButtonsEnabled(boolean enable) {
+        if (enable) {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTONS_ENABLE);
+        } else {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTONS_DISABLE);
+        }
     }
 
     public BluetoothManager getBluetoothManager() {
