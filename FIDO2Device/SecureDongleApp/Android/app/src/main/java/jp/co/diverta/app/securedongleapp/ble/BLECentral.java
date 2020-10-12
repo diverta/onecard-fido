@@ -1,6 +1,9 @@
 package jp.co.diverta.app.securedongleapp.ble;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -21,15 +24,23 @@ public class BLECentral
     private BluetoothManager mBleManager;
     private BluetoothAdapter mBleAdapter;
     private BluetoothLeScanner mBleScanner;
+    private BluetoothDevice mBleDevice;
+    private BluetoothGatt mBleGatt;
     private ScanCallback mScanCallback;
+    private BluetoothGattCallback mGattCallback;
 
     // タイムアウト監視用
     private Handler mHandler = new Handler();
     private BLECentralScanTimeoutThread mScanTimeoutThread = new BLECentralScanTimeoutThread();
+    private BLEConnectionTimeoutThread mConnectionTimeoutThread = new BLEConnectionTimeoutThread();
 
     public BLECentral(MainActivityCommand mac) {
         commandRef = mac;
     }
+
+    //
+    // デバイススキャン関連処理
+    //
 
     public void startScan() {
         // Bluetoothの使用準備
@@ -38,10 +49,13 @@ public class BLECentral
         if (mBleAdapter != null && mBleAdapter.isEnabled()) {
             // BLEが使用可能であればスキャンを開始
             startScanDevice();
+        } else {
+            // Bluetoothがオフの場合はエラー
+            commandRef.cannotStartBLEConnection();
         }
     }
 
-    public void startScanDevice() {
+    private void startScanDevice() {
         // デバイスのスキャンを開始
         Log.d(TAG, "Device scan started");
         mBleScanner = mBleAdapter.getBluetoothLeScanner();
@@ -52,17 +66,20 @@ public class BLECentral
         mHandler.postDelayed(mScanTimeoutThread, 5000);
     }
 
-    public void stopScanDevice() {
+    public void onDeviceScanned(BluetoothDevice device) {
+        // デバイスのスキャンが成功した場合、スキャンを停止
+        stopScanDevice();
+        // スキャンされたデバイスに接続
+        connectDevice(device);
+    }
+
+    private void stopScanDevice() {
         // スキャンタイムアウト時のコールバックを削除
         mHandler.removeCallbacks(mScanTimeoutThread);
 
         // デバイスのスキャンを停止
         mBleScanner.stopScan(mScanCallback);
         Log.d(TAG, "Device scan stopped");
-
-        // TODO: 仮の実装です。
-        // コマンドクラスに制御を戻す
-        commandRef.onBLEConnectionTerminated(true);
     }
 
     private class BLECentralScanTimeoutThread implements Runnable
@@ -72,6 +89,60 @@ public class BLECentral
             // タイムアウトが発生した場合、スキャンを停止
             Log.d(TAG, "Device scan timed out");
             stopScanDevice();
+            // コマンドクラスに制御を戻す
+            commandRef.onBLEConnectionTerminated(false);
+        }
+    }
+
+    //
+    // デバイス接続関連処理
+    //
+
+    private void connectDevice(BluetoothDevice device) {
+        // スキャンされたデバイスに接続
+        mGattCallback = new BLECentralGattCallback(this);
+        device.connectGatt(commandRef.getApplicationContext(), false, mGattCallback);
+        // 接続タイムアウトを監視開始（60秒間）
+        mHandler.postDelayed(mConnectionTimeoutThread, 60000);
+    }
+
+    public void onDeviceStateConnected(BluetoothGatt gatt) {
+        Log.d(TAG, "Device connected");
+
+        // 接続オブジェクトを保持
+        mBleGatt = gatt;
+    }
+
+    public void onDeviceStateDisconnected() {
+        Log.d(TAG, "Device disconnected");
+
+        // 接続オブジェクトを閉じる
+        closeBleGatt();
+        // コマンドクラスに制御を戻す
+        commandRef.onBLEConnectionTerminated(true);
+    }
+
+    private void closeBleGatt() {
+        // 接続タイムアウト時のコールバックを削除
+        mHandler.removeCallbacks(mConnectionTimeoutThread);
+
+        // 接続オブジェクトを閉じる
+        if (mBleGatt != null) {
+            mBleGatt.close();
+            mBleGatt = null;
+            Log.d(TAG, "BLE gatt object closed");
+        }
+    }
+
+    private class BLEConnectionTimeoutThread implements Runnable
+    {
+        @Override
+        public void run() {
+            // タイムアウトが発生した場合、接続を停止
+            Log.d(TAG, "Device connection timed out");
+            closeBleGatt();
+            // コマンドクラスに制御を戻す
+            commandRef.onBLEConnectionTerminated(false);
         }
     }
 }

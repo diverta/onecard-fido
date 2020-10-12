@@ -37,7 +37,7 @@ public class BLECentralScanCallback extends ScanCallback
                         uuids.toString(),
                         result.getDevice().getAddress());
                 Log.d(TAG, msg);
-                centralRef.stopScanDevice();
+                centralRef.onDeviceScanned(result.getDevice());
                 return;
             }
         }
