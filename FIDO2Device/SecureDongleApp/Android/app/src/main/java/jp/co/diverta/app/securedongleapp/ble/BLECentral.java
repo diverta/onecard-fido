@@ -17,6 +17,11 @@ public class BLECentral
     // ログ表示用
     private String TAG = getClass().getName();
 
+    // UUID関連
+    public static final String U2F_SERVICE_UUID            = "0000FFFD-0000-1000-8000-00805F9B34FB";
+    public static final String U2F_CONTROL_POINT_CHAR_UUID = "F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB";
+    public static final String U2F_STATUS_CHAR_UUID        = "F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB";
+
     // コマンドクラスの参照を保持
     private MainActivityCommand commandRef;
 

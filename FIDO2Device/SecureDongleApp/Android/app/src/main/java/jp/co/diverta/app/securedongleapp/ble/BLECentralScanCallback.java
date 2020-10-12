@@ -30,7 +30,7 @@ public class BLECentralScanCallback extends ScanCallback
         }
 
         // FIDOサービスと同じUUIDであれば、スキャンを停止
-        ParcelUuid uuidFIDO = ParcelUuid.fromString("0000fffd-0000-1000-8000-00805f9b34fb");
+        ParcelUuid uuidFIDO = ParcelUuid.fromString(BLECentral.U2F_SERVICE_UUID);
         for (ParcelUuid uuid : uuids) {
             if (uuid.equals(uuidFIDO)) {
                 String msg = String.format("FIDO authenticator found: Bluetooth address=%s",
