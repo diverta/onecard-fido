@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.os.Handler;
 import android.util.Log;
 
 import jp.co.diverta.app.securedongleapp.MainActivityCommand;
@@ -21,6 +22,10 @@ public class BLECentral
     private BluetoothAdapter mBleAdapter;
     private BluetoothLeScanner mBleScanner;
     private ScanCallback mScanCallback;
+
+    // タイムアウト監視用
+    private Handler mHandler = new Handler();
+    private BLECentralScanTimeoutThread mScanTimeoutThread = new BLECentralScanTimeoutThread();
 
     public BLECentral(MainActivityCommand mac) {
         commandRef = mac;
@@ -42,9 +47,15 @@ public class BLECentral
         mBleScanner = mBleAdapter.getBluetoothLeScanner();
         mScanCallback = new BLECentralScanCallback(this);
         mBleScanner.startScan(mScanCallback);
+
+        // スキャンタイムアウトを監視開始（５秒間）
+        mHandler.postDelayed(mScanTimeoutThread, 5000);
     }
 
     public void stopScanDevice() {
+        // スキャンタイムアウト時のコールバックを削除
+        mHandler.removeCallbacks(mScanTimeoutThread);
+
         // デバイスのスキャンを停止
         mBleScanner.stopScan(mScanCallback);
         Log.d(TAG, "Device scan stopped");
@@ -52,5 +63,15 @@ public class BLECentral
         // TODO: 仮の実装です。
         // コマンドクラスに制御を戻す
         commandRef.onBLEConnectionTerminated(true);
+    }
+
+    private class BLECentralScanTimeoutThread implements Runnable
+    {
+        @Override
+        public void run() {
+            // タイムアウトが発生した場合、スキャンを停止
+            Log.d(TAG, "Device scan timed out");
+            stopScanDevice();
+        }
     }
 }
