@@ -114,8 +114,8 @@ public class BLECentral
     public void onDeviceStateConnected(BluetoothGatt gatt) {
         Log.d(TAG, "Device connected");
 
-        // 接続オブジェクトを保持
-        mBleGatt = gatt;
+        // デバイス上のサービスを検索
+        gatt.discoverServices();
     }
 
     public void onDeviceStateDisconnected() {
@@ -149,5 +149,20 @@ public class BLECentral
             // コマンドクラスに制御を戻す
             commandRef.onBLEConnectionTerminated(false);
         }
+    }
+
+    public void onServicesDiscovered(boolean discovered, BluetoothGatt gatt) {
+        // サービスが見つからなかった場合は異常終了
+        if (discovered == false) {
+            // コマンドクラスに制御を戻す
+            Log.d(TAG, "BLE service not discovered");
+            closeBleGatt();
+            commandRef.onBLEConnectionTerminated(false);
+            return;
+        }
+        Log.d(TAG, "BLE service discovered");
+
+        // 接続オブジェクトを保持
+        mBleGatt = gatt;
     }
 }
