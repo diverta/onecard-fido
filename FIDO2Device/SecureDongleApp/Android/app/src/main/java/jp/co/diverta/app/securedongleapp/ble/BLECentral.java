@@ -17,11 +17,6 @@ public class BLECentral
     // ログ表示用
     private String TAG = getClass().getName();
 
-    // UUID関連
-    public static final String U2F_SERVICE_UUID            = "0000FFFD-0000-1000-8000-00805F9B34FB";
-    public static final String U2F_CONTROL_POINT_CHAR_UUID = "F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB";
-    public static final String U2F_STATUS_CHAR_UUID        = "F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB";
-
     // コマンドクラスの参照を保持
     private MainActivityCommand commandRef;
 
@@ -151,7 +146,7 @@ public class BLECentral
         }
     }
 
-    public void onServicesDiscovered(boolean discovered, BluetoothGatt gatt) {
+    public void onServicesDiscovered(boolean discovered, BLECentralU2FService u2fService) {
         // サービスが見つからなかった場合は異常終了
         if (discovered == false) {
             // コマンドクラスに制御を戻す
@@ -163,6 +158,6 @@ public class BLECentral
         Log.d(TAG, "BLE service discovered");
 
         // 接続オブジェクトを保持
-        mBleGatt = gatt;
+        mBleGatt = u2fService.getBleGattRef();
     }
 }
