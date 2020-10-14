@@ -80,12 +80,24 @@ public class BLECentralU2FService
         if (mBleGatt.setCharacteristicNotification(mU2fStatusChar, true) == false) {
             return false;
         }
+        Log.d(TAG, "Response characteristic notification enabled");
+
         BluetoothGattDescriptor descriptor = mU2fStatusChar.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         if (mBleGatt.writeDescriptor(descriptor) == false) {
             return false;
         }
         Log.d(TAG, "Response notification ready");
+        return true;
+    }
+
+    public boolean performRequest(byte[] b) {
+        // キャラクタリスティックに値を設定し、Writeリクエストを送信
+        mU2fControlPointChar.setValue(b);
+        mU2fControlPointChar.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+        if (mBleGatt.writeCharacteristic(mU2fControlPointChar) == false) {
+            Log.d(TAG, "writeCharacteristic returns false");
+        }
         return true;
     }
 }
