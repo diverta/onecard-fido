@@ -69,8 +69,8 @@ public class BLECentral
     public void onDeviceScanned(BluetoothDevice device) {
         // デバイスのスキャンが成功した場合、スキャンを停止
         stopScanDevice();
-        // スキャンされたデバイスに接続
-        connectDevice(device);
+        // スキャンに成功したデバイスに対し、ペアリングを実行
+        performPairing(device);
     }
 
     private void stopScanDevice() {
@@ -91,6 +91,27 @@ public class BLECentral
             stopScanDevice();
             // コマンドクラスに制御を戻す
             commandRef.onBLEConnectionTerminated(false);
+        }
+    }
+
+    //
+    // ペアリング関連処理
+    //
+    private void performPairing(BluetoothDevice device) {
+        // ペアリング状況を取得
+        int state = device.getBondState();
+        if (state == BluetoothDevice.BOND_NONE) {
+            // ペアリングが未済の場合は、ペアリングを実行
+            if (device.createBond() == false) {
+                // 失敗した場合はコマンドクラスに制御を戻す
+                commandRef.onBLEConnectionTerminated(false);
+            }
+            Log.d(TAG, "Device not bonded. Pairing will start...");
+
+        } else {
+            // 既にペアリング済みの場合は、コマンドクラスに制御を戻す
+            Log.d(TAG, "Device already bonded");
+            commandRef.onBLEConnectionTerminated(true);
         }
     }
 
