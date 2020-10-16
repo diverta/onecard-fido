@@ -2,8 +2,6 @@ package jp.co.diverta.app.securedongleapp.ble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -24,15 +22,11 @@ public class BLECentral
     private BluetoothManager mBleManager;
     private BluetoothAdapter mBleAdapter;
     private BluetoothLeScanner mBleScanner;
-    private BluetoothDevice mBleDevice;
-    private BluetoothGatt mBleGatt;
     private ScanCallback mScanCallback;
-    private BluetoothGattCallback mGattCallback;
 
     // タイムアウト監視用
     private Handler mHandler = new Handler();
     private BLECentralScanTimeoutThread mScanTimeoutThread = new BLECentralScanTimeoutThread();
-    private BLEConnectionTimeoutThread mConnectionTimeoutThread = new BLEConnectionTimeoutThread();
 
     public BLECentral(MainActivityCommand mac) {
         commandRef = mac;
@@ -113,72 +107,5 @@ public class BLECentral
             Log.d(TAG, "Device already bonded");
             commandRef.onBLEConnectionTerminated(true);
         }
-    }
-
-    //
-    // デバイス接続関連処理
-    //
-
-    private void connectDevice(BluetoothDevice device) {
-        // スキャンされたデバイスに接続
-        mGattCallback = new BLECentralGattCallback(this);
-        device.connectGatt(commandRef.getApplicationContext(), false, mGattCallback);
-        // 接続タイムアウトを監視開始（60秒間）
-        mHandler.postDelayed(mConnectionTimeoutThread, 60000);
-    }
-
-    public void onDeviceStateConnected(BluetoothGatt gatt) {
-        Log.d(TAG, "Device connected");
-
-        // デバイス上のサービスを検索
-        gatt.discoverServices();
-    }
-
-    public void onDeviceStateDisconnected() {
-        Log.d(TAG, "Device disconnected");
-
-        // 接続オブジェクトを閉じる
-        closeBleGatt();
-        // コマンドクラスに制御を戻す
-        commandRef.onBLEConnectionTerminated(true);
-    }
-
-    private void closeBleGatt() {
-        // 接続タイムアウト時のコールバックを削除
-        mHandler.removeCallbacks(mConnectionTimeoutThread);
-
-        // 接続オブジェクトを閉じる
-        if (mBleGatt != null) {
-            mBleGatt.close();
-            mBleGatt = null;
-            Log.d(TAG, "BLE gatt object closed");
-        }
-    }
-
-    private class BLEConnectionTimeoutThread implements Runnable
-    {
-        @Override
-        public void run() {
-            // タイムアウトが発生した場合、接続を停止
-            Log.d(TAG, "Device connection timed out");
-            closeBleGatt();
-            // コマンドクラスに制御を戻す
-            commandRef.onBLEConnectionTerminated(false);
-        }
-    }
-
-    public void onServicesDiscovered(boolean discovered, BLECentralU2FService u2fService) {
-        // サービスが見つからなかった場合は異常終了
-        if (discovered == false) {
-            // コマンドクラスに制御を戻す
-            Log.d(TAG, "BLE service not discovered");
-            closeBleGatt();
-            commandRef.onBLEConnectionTerminated(false);
-            return;
-        }
-        Log.d(TAG, "BLE service discovered");
-
-        // 接続オブジェクトを保持
-        mBleGatt = u2fService.getBleGattRef();
     }
 }
