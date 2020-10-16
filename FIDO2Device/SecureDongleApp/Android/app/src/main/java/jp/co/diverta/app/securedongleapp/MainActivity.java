@@ -1,5 +1,7 @@
 package jp.co.diverta.app.securedongleapp;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -46,6 +48,11 @@ public class MainActivity extends AppCompatActivity
     //
     // オブジェクトを操作するための関数群
     //
+
+    public void registerBroadcastReceiver(MainActivityBroadcastReceiver receiver) {
+        // ペアリング関連ステータスを受信できるようにする
+        registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
+    }
 
     public void changeButtonAdvertiseCaption(boolean start) {
         // BLE認証ボタンのキャプションを変更

@@ -20,6 +20,10 @@ public class MainActivityCommand
         guiRef = ma;
         handlerRef = guiRef.guiHandler;
         bleCentral = new BLECentral(this);
+
+        // ペアリング関連ステータスを受信できるようにする
+        MainActivityBroadcastReceiver receiver = new MainActivityBroadcastReceiver(this);
+        ma.registerBroadcastReceiver(receiver);
     }
 
     public void startBLEConnection() {
