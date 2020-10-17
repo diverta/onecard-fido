@@ -9,6 +9,9 @@ import java.util.List;
 
 public class BLECentralScanCallback extends ScanCallback
 {
+    // UUID関連
+    public static final String U2F_SERVICE_UUID = "0000FFFD-0000-1000-8000-00805F9B34FB";
+
     // ログ表示用
     private String TAG = getClass().getName();
 
@@ -30,14 +33,14 @@ public class BLECentralScanCallback extends ScanCallback
         }
 
         // FIDOサービスと同じUUIDであれば、スキャンを停止
-        ParcelUuid uuidFIDO = ParcelUuid.fromString("0000fffd-0000-1000-8000-00805f9b34fb");
+        ParcelUuid uuidFIDO = ParcelUuid.fromString(U2F_SERVICE_UUID);
         for (ParcelUuid uuid : uuids) {
             if (uuid.equals(uuidFIDO)) {
                 String msg = String.format("FIDO authenticator found: Bluetooth address=%s",
                         uuids.toString(),
                         result.getDevice().getAddress());
                 Log.d(TAG, msg);
-                centralRef.stopScanDevice();
+                centralRef.onDeviceScanned(result.getDevice());
                 return;
             }
         }

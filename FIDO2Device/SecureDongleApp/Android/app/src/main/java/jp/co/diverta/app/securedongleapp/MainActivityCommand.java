@@ -20,20 +20,35 @@ public class MainActivityCommand
         guiRef = ma;
         handlerRef = guiRef.guiHandler;
         bleCentral = new BLECentral(this);
+
+        // ペアリング関連ステータスを受信できるようにする
+        MainActivityBroadcastReceiver receiver = new MainActivityBroadcastReceiver(this);
+        ma.registerBroadcastReceiver(receiver);
     }
 
     public void startBLEConnection() {
         // ボタンを押下不可に変更
         setButtonsEnabled(false);
-        displayStatusText("スキャンを開始します。");
+        displayStatusText("ペアリングを開始します。");
         // スキャンを開始
         bleCentral.startScan();
+    }
+
+    public void cannotStartBLEConnection() {
+        // ボタンを押下可に変更
+        setButtonsEnabled(true);
+        // BLEが無効の場合
+        displayStatusText("Bluetoothがオフになっています。Bluetoothをオンにしてください。");
     }
 
     public void onBLEConnectionTerminated(boolean success) {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
-        appendStatusText("スキャンを終了しました。");
+        if (success) {
+            appendStatusText("ペアリングが成功しました。");
+        } else {
+            appendStatusText("ペアリングが失敗しました。");
+        }
     }
 
     public void startBLEAdvertise() {
