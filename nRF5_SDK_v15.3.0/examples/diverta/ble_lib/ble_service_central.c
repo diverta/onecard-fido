@@ -33,7 +33,8 @@ NRF_BLE_SCAN_DEF(m_scan);
 #include "fido_platform.h"
 
 // スキャン終了後に実行される関数の参照を保持
-static void (*resume_function)(void);
+static void (*resume_function)(bool);
+static bool resume_function_param;
 
 //
 // スキャン用タイマー
@@ -141,7 +142,7 @@ void ble_service_central_init(void)
     NRF_LOG_DEBUG("BLE central initialized");
 }
 
-void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(void))
+void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(bool), bool _resume_function_param)
 {
     // 統計情報を初期化
     ble_service_central_stat_info_init();
@@ -165,6 +166,7 @@ void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_functi
 
     // スキャン終了後に実行される関数の参照を退避
     resume_function = _resume_function;
+    resume_function_param = _resume_function_param;
     
     // スキャン中の旨を通知
     NRF_LOG_DEBUG("Scan started");
@@ -184,7 +186,7 @@ void ble_service_central_scan_stop(void)
 
     if (resume_function != NULL) {
         // スキャン終了後に実行される関数を実行
-        (*resume_function)();
+        (*resume_function)(resume_function_param);
     }
 }
 

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 void ble_service_central_init(void);
-void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(void));
+void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(bool), bool _resume_function_param);
 void ble_service_central_scan_stop(void);
 bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool));
 bool ble_service_central_request_disconnection(void);
