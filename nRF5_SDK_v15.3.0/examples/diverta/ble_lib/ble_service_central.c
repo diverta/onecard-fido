@@ -210,6 +210,13 @@ static void init_for_request_connection(void)
     memset(&bluetooth_addr, 0, sizeof(ble_gap_addr_t));
 }
 
+static void resume_after_request_connection(void) {
+    if (resume_func_after_conn != NULL) {
+        // 接続完了後に実行される関数を実行
+        (*resume_func_after_conn)(already_paired);
+    }
+}
+
 bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool))
 {
     // 初期化
@@ -274,10 +281,7 @@ void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt)
     conn_handle = p_ble_evt->evt.gattc_evt.conn_handle;
     
     // 接続後の処理を継続する
-    if (resume_func_after_conn != NULL) {
-        // 接続完了後に実行される関数を実行
-        (*resume_func_after_conn)(already_paired);
-    }
+    resume_after_request_connection();
 }
 
 void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt)
