@@ -196,6 +196,7 @@ void ble_service_central_scan_stop(void)
 //
 // 接続完了後に実行される関数の参照を保持
 static void (*resume_func_after_conn)(bool);
+static bool resume_func_after_conn_param;
 // 接続中のハンドルを保持
 static uint16_t conn_handle;
 // ペアリング済みかどうかを保持
@@ -207,6 +208,7 @@ static void init_for_request_connection(void)
 {
     // 初期化
     resume_func_after_conn = NULL;
+    resume_func_after_conn_param = false;
     conn_handle = BLE_CONN_HANDLE_INVALID;
     already_paired = false;
     memset(&bluetooth_addr, 0, sizeof(ble_gap_addr_t));
@@ -215,11 +217,16 @@ static void init_for_request_connection(void)
 static void resume_after_request_connection(void) {
     if (resume_func_after_conn != NULL) {
         // 接続完了後に実行される関数を実行
-        (*resume_func_after_conn)(already_paired);
+        (*resume_func_after_conn)(resume_func_after_conn_param);
     }
 }
 
-bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool))
+bool ble_service_central_already_paired(void)
+{
+    return already_paired;
+}
+
+bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool), bool _resume_func_after_conn_param)
 {
     // 初期化
     init_for_request_connection();
@@ -238,6 +245,7 @@ bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resu
 
     // 接続後に実行される関数の参照を退避
     resume_func_after_conn = _resume_function;
+    resume_func_after_conn_param = _resume_func_after_conn_param;
     return true;
 }
 
