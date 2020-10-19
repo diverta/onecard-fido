@@ -54,6 +54,7 @@ static uint8_t scan_param_bytes[32];
 static size_t  scan_param_bytes_size;
 
 // 関数プロトタイプ
+static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address);
 static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
 
 static void init_auth_param(void)
@@ -197,13 +198,36 @@ static void resume_function_after_scan(bool is_register)
         fido_log_debug("BLE peripheral device (for FIDO %s) scanned (NAME=%s, ADDR=%s)", 
             is_register ? "register" : "authenticate",
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr.addr));
-        if (is_register) {
-            // Registerの場合は、BLEスキャンパラメーターを登録するため
-            // 統計情報をバッファに保持
-            scan_parameter_buffer_set(info->uuid_bytes, info->uuid_bytes_size, info->peer_addr.addr);
-        }
-        fido_user_presence_verify_on_ble_scan_end(true);
+
+        // 後続の処理を実行
+        bool found = register_or_match_scan_param(is_register, info->uuid_bytes, info->uuid_bytes_size, info->peer_addr.addr);
+        fido_user_presence_verify_on_ble_scan_end(found);
     }
+}
+
+static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address)
+{
+    bool found = true;
+    if (is_register) {
+        // Registerの場合は、BLEスキャンパラメーターを登録するため
+        // 統計情報とBluetoothアドレスをバッファに保持
+        scan_parameter_buffer_set(uuid_bytes, uuid_bytes_size, connected_address);
+
+    } else {
+        // Authenticateの場合は、BLEスキャンパラメーターに登録された
+        // Bluetoothアドレスとマッチングを行う
+        if (ble_service_central_stat_match_scan_param(scan_param_bytes, uuid_bytes, uuid_bytes_size, connected_address) == false) {
+            // 失敗した場合は以降の処理を中止
+            found = false;
+        }
+    }
+
+    // マッチング結果を戻す
+    fido_log_debug("BLE peripheral device (for FIDO %s) %s (Bluetooth address=%s)", 
+        is_register ? "register" : "authenticate",
+        found ? "found" : "not found",
+        ble_service_central_stat_btaddr_string(connected_address));
+    return found;
 }
 
 bool demo_ble_peripheral_auth_scan_enable(void)
