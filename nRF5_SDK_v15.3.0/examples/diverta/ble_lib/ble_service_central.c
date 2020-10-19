@@ -279,9 +279,6 @@ void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt)
 
     // 接続中はハンドルを保持
     conn_handle = p_ble_evt->evt.gattc_evt.conn_handle;
-    
-    // 接続後の処理を継続する
-    resume_after_request_connection();
 }
 
 void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt)
@@ -330,7 +327,10 @@ bool ble_service_central_pm_evt(void const *p_pm_evt)
             get_bluetooth_addr_connected(p_evt->peer_id);
             already_paired = true;
             break;
-
+        case PM_EVT_CONN_SEC_SUCCEEDED:    
+            // 接続後の処理を継続する
+            resume_after_request_connection();
+            break;
         default:
             break;
     }
