@@ -337,6 +337,11 @@ bool ble_service_central_pm_evt(void const *p_pm_evt)
             get_bluetooth_addr_connected(p_evt->peer_id);
             already_paired = true;
             break;
+        case PM_EVT_CONN_SEC_FAILED:
+            // ペアリング情報消失などの理由により
+            // セキュア接続が失敗したため、
+            // ペアリング済みフラグを取り消し
+            already_paired = false;
         case PM_EVT_CONN_SEC_SUCCEEDED:    
             // 接続後の処理を継続する
             resume_after_request_connection();
