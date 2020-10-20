@@ -53,7 +53,12 @@ static uint8_t service_uuid_need_pairing = NEED_PAIRING_DEFAULT;
 static uint8_t scan_param_bytes[32];
 static size_t  scan_param_bytes_size;
 
+// スキャンにマッチしたデバイスの統計情報を保持
+static ADV_STAT_INFO_T *adv_stat_info_scan_matched = NULL;
+
 // 関数プロトタイプ
+static void perform_secure_connection(bool is_register, ADV_STAT_INFO_T *info);
+static void resume_after_secure_connection(bool);
 static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address);
 static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
 
@@ -214,10 +219,52 @@ static void resume_function_after_scan(bool is_register)
             is_register ? "register" : "authenticate",
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr.addr));
 
+        // ペアリングが必要な場合は、セキュア接続を要求
+        if (service_uuid_need_pairing != 0) {
+            perform_secure_connection(is_register, info);
+            return;
+        }
+
         // 後続の処理を実行
         bool found = register_or_match_scan_param(is_register, info->uuid_bytes, info->uuid_bytes_size, info->peer_addr.addr);
         fido_user_presence_verify_on_ble_scan_end(found);
     }
+}
+
+static void perform_secure_connection(bool is_register, ADV_STAT_INFO_T *info)
+{
+    // スキャンできたBLEデバイスに接続し、正式なBluetoothアドレスを取得
+    if (ble_service_central_request_connection(&info->peer_addr, resume_after_secure_connection, is_register) == false) {
+        fido_user_presence_verify_on_ble_scan_end(false);
+        adv_stat_info_scan_matched = NULL;
+
+    } else {
+        // 統計情報を退避
+        adv_stat_info_scan_matched = info;
+    }
+}
+
+static void resume_after_secure_connection(bool is_register)
+{
+    if (ble_service_central_already_paired()) {
+        // ペアリング情報により接続できたら、
+        // 正式なBluetoothアドレスを抽出
+        uint8_t *uuid_bytes = adv_stat_info_scan_matched->uuid_bytes;
+        size_t   uuid_bytes_size = adv_stat_info_scan_matched->uuid_bytes_size;
+        uint8_t *connected_address = ble_service_central_connected_address();
+
+        // 後続の処理を実行
+        bool found = register_or_match_scan_param(is_register, uuid_bytes, uuid_bytes_size, connected_address);
+        fido_user_presence_verify_on_ble_scan_end(found);
+
+    } else {
+        // 制御を戻す
+        fido_log_debug("BLE peripheral device (for FIDO %s) not paired.", is_register ? "register" : "authenticate");
+        fido_user_presence_verify_on_ble_scan_end(false);
+    }
+
+    // BLE切断
+    ble_service_central_request_disconnection();
 }
 
 static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address)
