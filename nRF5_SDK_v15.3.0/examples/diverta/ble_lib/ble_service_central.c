@@ -33,7 +33,8 @@ NRF_BLE_SCAN_DEF(m_scan);
 #include "fido_platform.h"
 
 // スキャン終了後に実行される関数の参照を保持
-static void (*resume_function)(void);
+static void (*resume_function)(bool);
+static bool resume_function_param;
 
 //
 // スキャン用タイマー
@@ -141,7 +142,7 @@ void ble_service_central_init(void)
     NRF_LOG_DEBUG("BLE central initialized");
 }
 
-void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(void))
+void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_function)(bool), bool _resume_function_param)
 {
     // 統計情報を初期化
     ble_service_central_stat_info_init();
@@ -165,6 +166,7 @@ void ble_service_central_scan_start(uint32_t timeout_msec, void (*_resume_functi
 
     // スキャン終了後に実行される関数の参照を退避
     resume_function = _resume_function;
+    resume_function_param = _resume_function_param;
     
     // スキャン中の旨を通知
     NRF_LOG_DEBUG("Scan started");
@@ -184,7 +186,7 @@ void ble_service_central_scan_stop(void)
 
     if (resume_function != NULL) {
         // スキャン終了後に実行される関数を実行
-        (*resume_function)();
+        (*resume_function)(resume_function_param);
     }
 }
 
@@ -194,6 +196,7 @@ void ble_service_central_scan_stop(void)
 //
 // 接続完了後に実行される関数の参照を保持
 static void (*resume_func_after_conn)(bool);
+static bool resume_func_after_conn_param;
 // 接続中のハンドルを保持
 static uint16_t conn_handle;
 // ペアリング済みかどうかを保持
@@ -205,12 +208,25 @@ static void init_for_request_connection(void)
 {
     // 初期化
     resume_func_after_conn = NULL;
+    resume_func_after_conn_param = false;
     conn_handle = BLE_CONN_HANDLE_INVALID;
     already_paired = false;
     memset(&bluetooth_addr, 0, sizeof(ble_gap_addr_t));
 }
 
-bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool))
+static void resume_after_request_connection(void) {
+    if (resume_func_after_conn != NULL) {
+        // 接続完了後に実行される関数を実行
+        (*resume_func_after_conn)(resume_func_after_conn_param);
+    }
+}
+
+bool ble_service_central_already_paired(void)
+{
+    return already_paired;
+}
+
+bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resume_function)(bool), bool _resume_func_after_conn_param)
 {
     // 初期化
     init_for_request_connection();
@@ -229,6 +245,7 @@ bool ble_service_central_request_connection(ble_gap_addr_t *p_addr, void (*_resu
 
     // 接続後に実行される関数の参照を退避
     resume_func_after_conn = _resume_function;
+    resume_func_after_conn_param = _resume_func_after_conn_param;
     return true;
 }
 
@@ -272,12 +289,6 @@ void ble_service_central_gap_connected(ble_evt_t const *p_ble_evt)
 
     // 接続中はハンドルを保持
     conn_handle = p_ble_evt->evt.gattc_evt.conn_handle;
-    
-    // 接続後の処理を継続する
-    if (resume_func_after_conn != NULL) {
-        // 接続完了後に実行される関数を実行
-        (*resume_func_after_conn)(already_paired);
-    }
 }
 
 void ble_service_central_gap_disconnected(ble_evt_t const *p_ble_evt)
@@ -326,7 +337,15 @@ bool ble_service_central_pm_evt(void const *p_pm_evt)
             get_bluetooth_addr_connected(p_evt->peer_id);
             already_paired = true;
             break;
-
+        case PM_EVT_CONN_SEC_FAILED:
+            // ペアリング情報消失などの理由により
+            // セキュア接続が失敗したため、
+            // ペアリング済みフラグを取り消し
+            already_paired = false;
+        case PM_EVT_CONN_SEC_SUCCEEDED:    
+            // 接続後の処理を継続する
+            resume_after_request_connection();
+            break;
         default:
             break;
     }

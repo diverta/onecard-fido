@@ -193,32 +193,23 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
     return matched_info;
 }
 
-ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes)
+bool ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *peer_addr)
 {
     // BLEスキャン用パラメーター
     //   0 - 15: サービスUUID（16バイト）
     //  16 - 21: Bluetoothアドレス（6バイト）
-    uint8_t *uuid_bytes = scan_param_bytes;
-    uint8_t *peer_addr = scan_param_bytes + 16;
+    uint8_t *param_uuid_bytes = scan_param_bytes;
+    uint8_t *param_peer_addr = scan_param_bytes + 16;
 
-    // スキャン結果の統計情報についてチェック
-    ADV_STAT_INFO_T *matched_info = NULL;
-    for (uint8_t i = 0; i < adv_stat_info_size; i++) {
-        ADV_STAT_INFO_T *info = &adv_stat_info[i];
-        if (memcmp(info->uuid_bytes, uuid_bytes, info->uuid_bytes_size) != 0) {
-            // UUIDがマッチしていない場合は次の統計情報に移る
-            continue;
-        }
-        if (memcmp(info->peer_addr.addr, peer_addr, 6) != 0) {
-            // アドレスがマッチしていない場合は次の統計情報に移る
-            continue;
-        }
-        // マッチしたデバイスの統計情報を退避
-        matched_info = info;
-        break;
+    if (memcmp(uuid_bytes, param_uuid_bytes, uuid_bytes_size) != 0) {
+        // UUIDがマッチしていない場合はfalse
+        return false;
     }
-    
-    return matched_info;
+    if (memcmp(peer_addr, param_peer_addr, 6) != 0) {
+        // アドレスがマッチしていない場合はfalse
+        return false;
+    }
+    return true;
 }
 
 //
