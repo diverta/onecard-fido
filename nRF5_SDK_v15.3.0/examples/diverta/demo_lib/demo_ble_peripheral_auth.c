@@ -57,6 +57,27 @@ static size_t  scan_param_bytes_size;
 static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address);
 static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
 
+static void parse_scan_param_flags(uint32_t *param_service_uuid_scan_enable)
+{
+    // uint32_t 形式で１ワード内に同梱されている
+    // 自動認証有効化フラグ、ペアリング要否フラグを、
+    // 登録ワードの先頭バイトから順に抽出
+    uint8_t *p_param = (uint8_t *)param_service_uuid_scan_enable;
+    service_uuid_scan_enable = p_param[0];
+    service_uuid_need_pairing = p_param[1];
+}
+
+static void generate_scan_param_flags(uint32_t *param_service_uuid_scan_enable)
+{
+    // 自動認証有効化フラグ、ペアリング要否フラグを、
+    // 先頭から順に uint32_t 形式で１ワード内に同梱
+    uint8_t param_array[] = {
+        service_uuid_scan_enable, 
+        service_uuid_need_pairing, 
+        0x00, 0x00};
+    memcpy(param_service_uuid_scan_enable, param_array, sizeof(param_array));
+}
+
 static void init_auth_param(void)
 {
     // 初期値を設定
@@ -73,11 +94,7 @@ static void save_auth_param(void)
 
     // 自動認証有効化フラグ、ペアリング要否フラグ＝登録ワードの先頭バイトから順に設定
     uint32_t scan_enable;
-    uint8_t param_array[] = {
-        service_uuid_scan_enable, 
-        service_uuid_need_pairing, 
-        0x00, 0x00};
-    memcpy(&scan_enable, param_array, sizeof(param_array));
+    generate_scan_param_flags(&scan_enable);
 
     if (fido_flash_blp_auth_param_write(p_uuid_string, scan_sec, scan_enable) == false) {
         fido_log_error("Failed to save BLE peripheral auth parameter to flash ROM");
@@ -107,9 +124,7 @@ static void restore_auth_param(void)
 
     // 自動認証有効化フラグ、ペアリング要否フラグ＝登録ワードの先頭バイトから順に抽出
     uint32_t param_service_uuid_scan_enable = fido_flash_blp_auth_param_service_uuid_scan_enable();
-    uint8_t *p_param = (uint8_t *)&param_service_uuid_scan_enable;
-    service_uuid_scan_enable = p_param[0];
-    service_uuid_need_pairing = p_param[1];
+    parse_scan_param_flags(&param_service_uuid_scan_enable);
 }
 
 static void clear_scan_parameter(void)
@@ -299,13 +314,15 @@ void parse_auth_param_request(uint8_t *request, size_t request_size)
 
     // CSV各項目を分解
     // CSVは、リクエストの２バイト目以降
-    // (1) 自動認証有効化フラグ
+    // (1) 自動認証有効化フラグ、ペアリング要否フラグ
     char *s = (char *)(request + 1);
     char *p = strtok(s, ",");
     if (p == NULL) {
         return;
     }
-    service_uuid_scan_enable = (uint8_t)atoi(p);
+    // 登録ワードの先頭バイトから順に抽出
+    uint32_t param_service_uuid_scan_enable = (uint32_t)atoi(p);
+    parse_scan_param_flags(&param_service_uuid_scan_enable);
 
     // (2) スキャン対象サービスUUID
     // (3) スキャン秒数
@@ -357,6 +374,11 @@ void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_siz
 
 bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size)
 {
+    // 自動認証有効化フラグ、ペアリング要否フラグ
+    // ＝登録ワードの先頭バイトから順に１ワード内に設定
+    uint32_t param_service_uuid_scan_enable;
+    generate_scan_param_flags(&param_service_uuid_scan_enable);
+
     // 領域を初期化
     memset(response, 0x00, *response_size);
     //
@@ -364,8 +386,8 @@ bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response
     //   <自動認証有効化フラグ>,<スキャン対象サービスUUID>,<スキャン秒数>
     //  （解除時は、UUIDに、長さ０の文字列を設定）
     //
-    sprintf((char *)response, "%d,%s,%d", 
-        service_uuid_scan_enable, service_uuid_string, service_uuid_scan_sec);
+    sprintf((char *)response, "%ld,%s,%d", 
+        param_service_uuid_scan_enable, service_uuid_string, service_uuid_scan_sec);
     *response_size = strlen((char *)response);
     return true;
 }
