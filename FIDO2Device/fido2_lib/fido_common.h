@@ -61,6 +61,7 @@ extern "C" {
 #define MNT_COMMAND_GET_APP_VERSION     0xc3
 #define MNT_COMMAND_PREFERENCE_PARAM    0xc4
 #define MNT_COMMAND_BOOTLOADER_MODE     0xc5
+#define MNT_COMMAND_ERASE_BONDING_DATA  0xc6
 
 // リクエストデータに含まれるAPDU項目を保持
 typedef struct {

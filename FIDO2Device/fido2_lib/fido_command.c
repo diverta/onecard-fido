@@ -264,6 +264,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_GET_APP_VERSION:
         case MNT_COMMAND_PREFERENCE_PARAM:
         case MNT_COMMAND_BOOTLOADER_MODE:
+        case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_maintenance_command();
             break;
         default:
@@ -368,6 +369,7 @@ void on_hid_response_send_completed(void)
         case MNT_COMMAND_GET_APP_VERSION:
         case MNT_COMMAND_PREFERENCE_PARAM:
         case MNT_COMMAND_BOOTLOADER_MODE:
+        case MNT_COMMAND_ERASE_BONDING_DATA:
             fido_maintenance_command_report_sent();
             break;
         default:
