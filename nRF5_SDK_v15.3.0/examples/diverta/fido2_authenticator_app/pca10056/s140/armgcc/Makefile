@@ -5,10 +5,10 @@ OUTPUT_DIRECTORY := _build
 #  PCA10056     nRF52840 DK(with/without ATECC608A)
 #  PCA10059     nRF52840 Dongle, MDBT50Q Dongle(rev2, without ATECC608A)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10059
+TARGET_BOARD     := PCA10059_02
 
 # application version info
-FW_REV := 0.2.11
+FW_REV := 0.2.12
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
