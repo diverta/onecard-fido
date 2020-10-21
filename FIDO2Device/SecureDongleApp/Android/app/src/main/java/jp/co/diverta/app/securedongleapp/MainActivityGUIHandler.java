@@ -10,6 +10,8 @@ public class MainActivityGUIHandler extends Handler
     public static final int APPEND_TEXT = 2;
     public static final int BUTTONS_ENABLE = 3;
     public static final int BUTTONS_DISABLE = 4;
+    public static final int BUTTON_ADV_ENABLE = 5;
+    public static final int BUTTON_ADV_DISABLE = 6;
 
     private MainActivity guiRef;
     private String statusText;
@@ -34,6 +36,12 @@ public class MainActivityGUIHandler extends Handler
             case BUTTONS_DISABLE:
                 setButtonsEnabled(false);
                 break;
+            case BUTTON_ADV_ENABLE:
+                setAdvertiseButtonEnabled(true);
+                break;
+            case BUTTON_ADV_DISABLE:
+                setAdvertiseButtonEnabled(false);
+                break;
             default:
                 break;
         }
@@ -51,6 +59,11 @@ public class MainActivityGUIHandler extends Handler
     public void setButtonsEnabled(boolean b) {
         // ボタンを押下可能／不可能に変更
         guiRef.buttonPairing.setEnabled(b);
+        guiRef.buttonAdvertise.setEnabled(b);
+    }
+
+    public void setAdvertiseButtonEnabled(boolean b) {
+        // ボタンを押下可能／不可能に変更
         guiRef.buttonAdvertise.setEnabled(b);
     }
 }

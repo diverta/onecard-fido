@@ -65,6 +65,8 @@ public class MainActivityCommand
     }
 
     public void stopBLEAdvertise() {
+        // ボタンを押下可に変更
+        setButtonsEnabled(true);
         // ステータステキストを表示
         appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_stop));
         // BLEアドバタイズを終了
@@ -72,11 +74,13 @@ public class MainActivityCommand
     }
 
     public void onBLEAdvertiseCallback(boolean success) {
-        // ボタンを押下可に変更
-        setButtonsEnabled(true);
         if (success) {
+            // BLE近接認証終了ボタンのみ押下可に変更
+            setButtonAdvertiseEnabled(true);
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
         } else {
+            // 全てのボタンを押下可に変更
+            setButtonsEnabled(true);
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_start_fail));
         }
     }
@@ -102,6 +106,14 @@ public class MainActivityCommand
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTONS_ENABLE);
         } else {
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTONS_DISABLE);
+        }
+    }
+
+    public void setButtonAdvertiseEnabled(boolean enable) {
+        if (enable) {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_ADV_ENABLE);
+        } else {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_ADV_DISABLE);
         }
     }
 
