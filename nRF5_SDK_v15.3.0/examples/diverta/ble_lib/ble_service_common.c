@@ -9,6 +9,7 @@
 #include "nrf_ble_gatt.h"
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
+#include "fds.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ble_service_common
@@ -131,6 +132,36 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
 }
 
 //
+// ペアリング情報の全削除処理
+//
+static void (*erase_bonding_data_response_func)(bool) = NULL;
+
+bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
+{
+    // ペアリング情報削除後に実行される関数の参照を退避
+    erase_bonding_data_response_func = _response_func;
+
+    // 全てのペアリング情報を削除
+    ret_code_t err_code = pm_peers_delete();
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
+        return false;
+    }
+    return true;
+}
+
+static void perform_erase_bonding_data_response_func(bool success)
+{
+    if (erase_bonding_data_response_func == NULL) {
+        return;
+    }
+
+    // ペアリング情報削除後に実行される処理
+    (*erase_bonding_data_response_func)(success);
+    erase_bonding_data_response_func = NULL;
+}
+
+//
 // 初期化関連処理（Peer Manager）
 // 
 #define SEC_PARAM_BOND                      1                                       /**< Perform bonding. */
@@ -144,6 +175,18 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
 
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
+    // ペアリング情報削除時のイベントを最優先で処理
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
+        NRF_LOG_DEBUG("pm_peers_delete has completed successfully");
+        perform_erase_bonding_data_response_func(true);
+        return;
+    }
+    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
+        NRF_LOG_ERROR("pm_peers_delete has failed");
+        perform_erase_bonding_data_response_func(false);
+        return;
+    }
+
     if (ble_service_peripheral_mode()) {
         // FIDO Authenticator固有の処理
         if (fido_ble_pm_evt_handler(p_evt)) {
@@ -158,16 +201,6 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
 
     pm_handler_on_pm_evt(p_evt);
     pm_handler_flash_clean(p_evt);
-
-    switch (p_evt->evt_id)
-    {
-        case PM_EVT_PEERS_DELETE_SUCCEEDED:
-            ble_service_peripheral_advertising_start();
-            break;
-
-        default:
-            break;
-    }
 }
 
 static void peer_manager_init(void)

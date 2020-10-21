@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "peer_manager.h"
-#include "fds.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_ble_gatt.h"
 #include "ble_srv_common.h"
@@ -33,45 +32,6 @@ static bool pairing_completed;
 
 // ペアリングモード変更中の旨を保持
 static bool change_pairing_mode = false;
-
-void fido_ble_pairing_delete_bonds(void)
-{
-    ret_code_t err_code;
-    NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds start ");
-
-    // ボンディング情報を削除
-    err_code = pm_peers_delete();
-    if (err_code != FDS_SUCCESS) {
-        // 失敗した場合はエラーレスポンスを戻す
-        NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
-        uint8_t cmd = fido_ble_receive_header()->CMD;
-        fido_ble_send_status_word(cmd, 0x9101);
-        return;
-    }
-}
-
-bool fido_ble_pairing_delete_bonds_response(pm_evt_t const *p_evt)
-{
-    uint8_t cmd = fido_ble_receive_header()->CMD;
-
-    // pm_peers_deleteが完了したときの処理。
-    //   PM_EVT_PEERS_DELETE_SUCCEEDED、または
-    //   PM_EVT_PEERS_DELETE_FAILEDの
-    //   いずれかのイベントが発生する
-    // 成功or失敗の旨のレスポンスを生成し、U2Fクライアントに戻す
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_SUCCEEDED) {
-        fido_ble_send_status_word(cmd, U2F_SW_NO_ERROR);
-        NRF_LOG_DEBUG("ble_u2f_pairing_delete_bonds end ");
-        return true;
-    }
-    if (p_evt->evt_id == PM_EVT_PEERS_DELETE_FAILED) {
-        fido_ble_send_status_word(cmd, 0x9102);
-        NRF_LOG_ERROR("ble_u2f_pairing_delete_bonds abend: Peer manager event=%d ", p_evt->evt_id);
-        return true;
-    }
-    
-    return false;
-}
 
 uint8_t fido_ble_pairing_advertising_flag(void)
 {
