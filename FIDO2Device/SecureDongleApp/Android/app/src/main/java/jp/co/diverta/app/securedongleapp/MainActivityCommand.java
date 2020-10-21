@@ -33,7 +33,7 @@ public class MainActivityCommand
     public void startBLEConnection() {
         // ボタンを押下不可に変更
         setButtonsEnabled(false);
-        displayStatusText("ペアリングを開始します。");
+        displayStatusText(getResourceString(R.string.msg_pairing_will_start));
         // スキャンを開始
         bleCentral.startScan();
     }
@@ -42,16 +42,16 @@ public class MainActivityCommand
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // BLEが無効の場合
-        displayStatusText("Bluetoothがオフになっています。Bluetoothをオンにしてください。");
+        displayStatusText(getResourceString(R.string.msg_bluetooth_is_turned_off));
     }
 
     public void onBLEConnectionTerminated(boolean success) {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         if (success) {
-            appendStatusText("ペアリングが成功しました。");
+            appendStatusText(getResourceString(R.string.msg_pairing_success));
         } else {
-            appendStatusText("ペアリングが失敗しました。");
+            appendStatusText(getResourceString(R.string.msg_pairing_failure));
         }
     }
 
@@ -59,14 +59,14 @@ public class MainActivityCommand
         // ボタンを押下不可に変更
         setButtonsEnabled(false);
         // ステータステキストを表示
-        displayStatusText("BLE認証を開始します。");
+        displayStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_start));
         // BLEアドバタイズを開始
         blePeripheral.startBLEAdvertise();
     }
 
     public void stopBLEAdvertise() {
         // ステータステキストを表示
-        appendStatusText("BLE認証を終了します。");
+        displayStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_stop));
         // BLEアドバタイズを終了
         blePeripheral.stopBLEAdvertise();
     }
@@ -75,9 +75,9 @@ public class MainActivityCommand
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         if (success) {
-            appendStatusText("アドバタイジングが開始されました。");
+            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
         } else {
-            appendStatusText("アドバタイジングを開始できませんでした。");
+            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_stopped));
         }
     }
 
@@ -121,7 +121,8 @@ public class MainActivityCommand
         return guiRef.getString(resId);
     }
 
-    public void popupTinyMessage(String msg) {
+    public void popupTinyMessage(int resId) {
+        String msg = getResourceString(resId);
         Context context = guiRef.getApplicationContext();
         Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
         toast.show();

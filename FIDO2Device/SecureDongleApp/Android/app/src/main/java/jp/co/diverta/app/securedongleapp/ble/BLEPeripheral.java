@@ -11,6 +11,7 @@ import android.os.ParcelUuid;
 import android.util.Log;
 
 import jp.co.diverta.app.securedongleapp.MainActivityCommand;
+import jp.co.diverta.app.securedongleapp.R;
 
 public class BLEPeripheral
 {
@@ -65,7 +66,7 @@ public class BLEPeripheral
         mBleAdapter = mBleManager.getAdapter();
         if (mBleAdapter == null) {
             Log.e(TAG, "BluetoothManager.getAdapter() returns null");
-            commandRef.popupTinyMessage("BLEペリフェラルモードが使用できません。");
+            commandRef.popupTinyMessage(R.string.msg_ble_peripheral_mode_unavailable);
             return false;
         }
         Log.d(TAG, "Ready to prepare BLE peripheral");
@@ -73,7 +74,7 @@ public class BLEPeripheral
         mBtAdvertiser = mBleAdapter.getBluetoothLeAdvertiser();
         if (mBtAdvertiser == null) {
             Log.e(TAG, "BluetoothAdapter.getBluetoothLeAdvertiser() returns null");
-            commandRef.popupTinyMessage("BLEアドバタイジングが使用できません。");
+            commandRef.popupTinyMessage(R.string.msg_ble_advertise_unavailable);
             return false;
         }
 
@@ -114,7 +115,7 @@ public class BLEPeripheral
         public void onStartFailure(int errorCode) {
             super.onStartFailure(errorCode);
             Log.d(TAG, "Advertisement start fail");
-            commandRef.popupTinyMessage("BLEアドバタイジングを開始できません。");
+            commandRef.popupTinyMessage(R.string.msg_ble_advertise_start_fail);
             // コマンドクラスに制御を戻す
             commandRef.onBLEAdvertiseCallback(false);
         }
