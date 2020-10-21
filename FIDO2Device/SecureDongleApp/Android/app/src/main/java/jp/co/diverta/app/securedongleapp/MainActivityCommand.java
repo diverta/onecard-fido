@@ -66,7 +66,7 @@ public class MainActivityCommand
 
     public void stopBLEAdvertise() {
         // ステータステキストを表示
-        displayStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_stop));
+        appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_stop));
         // BLEアドバタイズを終了
         blePeripheral.stopBLEAdvertise();
     }
@@ -77,7 +77,7 @@ public class MainActivityCommand
         if (success) {
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
         } else {
-            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_stopped));
+            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_start_fail));
         }
     }
 
