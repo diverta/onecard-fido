@@ -5,6 +5,4 @@
     <string name="stop_ble_advertisement">BLE認証終了</string>
     <string name="tips_text_initial">BLE認証実行ボタンをタップして、認証機能を実行してください。\n\nドングルとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
     <string name="status_text_initial">BLEアドバタイズが開始されていません。</string>
-    <string name="status_text_ble_adv_start">BLEアドバタイズを開始しています。</string>
-    <string name="status_text_ble_adv_stop">BLEアドバタイズを停止しています。</string>
 </resources>
