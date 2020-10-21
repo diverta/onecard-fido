@@ -78,10 +78,13 @@ public class MainActivityCommand
             // BLE近接認証終了ボタンのみ押下可に変更
             setButtonAdvertiseEnabled(true);
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
+            // ボタンのキャンプションを変更
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_ADV_CHANGE_CAPTION);
         } else {
             // 全てのボタンを押下可に変更
             setButtonsEnabled(true);
-            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_start_fail));
+            // メッセージ欄を初期状態に戻す
+            displayStatusText(getResourceString(R.string.status_text_initial));
         }
     }
 

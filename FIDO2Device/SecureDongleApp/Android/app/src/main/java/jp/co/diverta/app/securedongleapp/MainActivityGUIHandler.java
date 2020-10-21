@@ -12,6 +12,7 @@ public class MainActivityGUIHandler extends Handler
     public static final int BUTTONS_DISABLE = 4;
     public static final int BUTTON_ADV_ENABLE = 5;
     public static final int BUTTON_ADV_DISABLE = 6;
+    public static final int BUTTON_ADV_CHANGE_CAPTION = 7;
 
     private MainActivity guiRef;
     private String statusText;
@@ -41,6 +42,9 @@ public class MainActivityGUIHandler extends Handler
                 break;
             case BUTTON_ADV_DISABLE:
                 setAdvertiseButtonEnabled(false);
+                break;
+            case BUTTON_ADV_CHANGE_CAPTION:
+                guiRef.changeButtonAdvertiseCaption(false);
                 break;
             default:
                 break;
