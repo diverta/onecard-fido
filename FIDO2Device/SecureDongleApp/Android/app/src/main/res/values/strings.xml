@@ -11,6 +11,9 @@
     <string name="msg_pairing_will_start">ペアリングを開始します。</string>
     <string name="msg_pairing_success">ペアリングが成功しました。</string>
     <string name="msg_pairing_failure">ペアリングが失敗しました。</string>
+    <string name="msg_pairing_scan_timeout">ドングルをスキャンできませんでした。ドングルがペアリングモードに遷移していない可能性があります。</string>
+    <string name="msg_pairing_start_fail">ペアリング処理を開始することができませんでした。</string>
+    <string name="msg_pairing_already_bonded">すでにドングルとのペアリングが行われているようです。</string>
     <string name="msg_bleadv_for_auth_will_start">BLE近接認証を開始します。</string>
     <string name="msg_bleadv_for_auth_will_stop">BLE近接認証を終了します。</string>
     <string name="msg_bleadv_for_auth_started">認証のためのBLEアドバタイジングが開始されました。</string>

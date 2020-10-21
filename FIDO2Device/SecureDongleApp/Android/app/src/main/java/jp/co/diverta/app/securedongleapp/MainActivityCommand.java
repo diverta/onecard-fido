@@ -124,7 +124,7 @@ public class MainActivityCommand
     public void popupTinyMessage(int resId) {
         String msg = getResourceString(resId);
         Context context = guiRef.getApplicationContext();
-        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
         toast.show();
     }
 
