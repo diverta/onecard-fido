@@ -2,6 +2,7 @@ package jp.co.diverta.app.securedongleapp;
 
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.os.Message;
 import android.widget.Toast;
 
 import jp.co.diverta.app.securedongleapp.ble.BLECentral;
@@ -83,8 +84,7 @@ public class MainActivityCommand
         } else {
             // 全てのボタンを押下可に変更
             setButtonsEnabled(true);
-            // メッセージ欄を初期状態に戻す
-            displayStatusText(getResourceString(R.string.status_text_initial));
+            appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_start_fail));
         }
     }
 
@@ -94,14 +94,14 @@ public class MainActivityCommand
 
     public void displayStatusText(String s) {
         // ステータス表示欄に文字列を表示
-        handlerRef.setStatusText(s);
-        handlerRef.sendEmptyMessage(MainActivityGUIHandler.DISPLAY_TEXT);
+        Message msg = Message.obtain(handlerRef, MainActivityGUIHandler.DISPLAY_TEXT, s);
+        handlerRef.sendMessage(msg);
     }
 
     public void appendStatusText(String s) {
         // ステータス表示欄に文字列を追加表示
-        handlerRef.setStatusText(s);
-        handlerRef.sendEmptyMessage(MainActivityGUIHandler.APPEND_TEXT);
+        Message msg = Message.obtain(handlerRef, MainActivityGUIHandler.APPEND_TEXT, s);
+        handlerRef.sendMessage(msg);
     }
 
     public void setButtonsEnabled(boolean enable) {
