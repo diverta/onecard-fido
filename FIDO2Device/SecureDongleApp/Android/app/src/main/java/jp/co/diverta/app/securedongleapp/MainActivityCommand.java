@@ -68,6 +68,8 @@ public class MainActivityCommand
     public void stopBLEAdvertise() {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
+        // ボタンのキャプションを変更
+        setButtonAdvertiseChangeCaption(true);
         // ステータステキストを表示
         appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_stop));
         // BLEアドバタイズを終了
@@ -80,7 +82,7 @@ public class MainActivityCommand
             setButtonAdvertiseEnabled(true);
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
             // ボタンのキャンプションを変更
-            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_ADV_CHANGE_CAPTION);
+            setButtonAdvertiseChangeCaption(false);
         } else {
             // 全てのボタンを押下可に変更
             setButtonsEnabled(true);
@@ -118,6 +120,11 @@ public class MainActivityCommand
         } else {
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_ADV_DISABLE);
         }
+    }
+
+    public void setButtonAdvertiseChangeCaption(boolean start) {
+        Message msg = Message.obtain(handlerRef, MainActivityGUIHandler.BUTTON_ADV_CHANGE_CAPTION, start);
+        handlerRef.sendMessage(msg);
     }
 
     public BluetoothManager getBluetoothManager() {

@@ -44,7 +44,7 @@ public class MainActivityGUIHandler extends Handler
                 setAdvertiseButtonEnabled(false);
                 break;
             case BUTTON_ADV_CHANGE_CAPTION:
-                guiRef.changeButtonAdvertiseCaption(false);
+                guiRef.changeButtonAdvertiseCaption((boolean)msg.obj);
                 break;
             default:
                 break;

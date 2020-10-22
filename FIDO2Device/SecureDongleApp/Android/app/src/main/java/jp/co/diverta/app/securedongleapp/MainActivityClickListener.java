@@ -42,8 +42,6 @@ public class MainActivityClickListener implements View.OnClickListener
 
         } else {
             // BLE近接認証終了ボタンの場合
-            // ボタンキャプションを変更
-            guiRef.changeButtonAdvertiseCaption(true);
             // アドバタイズ停止
             commandRef.stopBLEAdvertise();
         }
