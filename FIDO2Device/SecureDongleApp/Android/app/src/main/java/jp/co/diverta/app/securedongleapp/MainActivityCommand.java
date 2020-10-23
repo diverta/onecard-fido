@@ -2,7 +2,9 @@ package jp.co.diverta.app.securedongleapp;
 
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import jp.co.diverta.app.securedongleapp.ble.BLECentral;
@@ -15,6 +17,9 @@ public class MainActivityCommand
     private MainActivityGUIHandler handlerRef;
     private BLECentral bleCentral;
     private BLEPeripheral blePeripheral;
+
+    // BLEアドバタイジングが開始されたかどうかを保持
+    private boolean mBLEAdvertiseStarted = false;
 
     // ログ表示用
     private String TAG = getClass().getName();
@@ -57,6 +62,8 @@ public class MainActivityCommand
     }
 
     public void startBLEAdvertise() {
+        // アドバタイジング開始済みフラグをクリア
+        mBLEAdvertiseStarted = false;
         // ボタンを押下不可に変更
         setButtonsEnabled(false);
         // ステータステキストを表示
@@ -66,6 +73,8 @@ public class MainActivityCommand
     }
 
     public void stopBLEAdvertise() {
+        // アドバタイジング開始済みフラグをクリア
+        mBLEAdvertiseStarted = false;
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // ボタンのキャプションを変更
@@ -83,10 +92,40 @@ public class MainActivityCommand
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_started));
             // ボタンのキャンプションを変更
             setButtonAdvertiseChangeCaption(false);
+            // アドバタイジング開始済みフラグを設定
+            mBLEAdvertiseStarted = true;
         } else {
             // 全てのボタンを押下可に変更
             setButtonsEnabled(true);
             appendStatusText(getResourceString(R.string.msg_bleadv_for_auth_start_fail));
+        }
+    }
+
+    //
+    // アドバタイジング自動停止関連
+    //
+
+    private Handler mHandler = new Handler();
+    private BLEAdvertiseStopperThread mStopperThread = new BLEAdvertiseStopperThread();
+
+    public void onBLEGattServerCallback() {
+        // 接続が確立されたら５秒後に切断させるようにする
+        mHandler.postDelayed(mStopperThread, 5000);
+    }
+
+    private class BLEAdvertiseStopperThread implements Runnable
+    {
+        @Override
+        public void run() {
+            // タイムアウトが発生した場合
+            Log.d(TAG, "Elapsed 5 seconds after connection");
+            // すでにBLEアドバタイジングが停止済みの場合は終了
+            if (mBLEAdvertiseStarted == false) {
+                Log.d(TAG, "BLE Advertise already stopped");
+                return;
+            }
+            // BLEアドバタイジングを停止
+            stopBLEAdvertise();
         }
     }
 

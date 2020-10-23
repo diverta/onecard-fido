@@ -1,7 +1,11 @@
 package jp.co.diverta.app.securedongleapp.ble;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattServer;
+import android.bluetooth.BluetoothGattServerCallback;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
@@ -29,6 +33,8 @@ public class BLEPeripheral
     private BluetoothAdapter mBleAdapter;
     private BluetoothLeAdvertiser mBtAdvertiser;
     private BLEAdvertiseCallback advertiseStartCallback = new BLEAdvertiseCallback();
+    private BluetoothGattServer mBtGattServer;
+    private BLEGattServerCallback mGattServerCallback = new BLEGattServerCallback();;
 
     public BLEPeripheral(MainActivityCommand mac) {
         commandRef = mac;
@@ -53,6 +59,7 @@ public class BLEPeripheral
     public void stopBLEAdvertise() {
         // アドバタイジングを停止
         mBtAdvertiser.stopAdvertising(advertiseStartCallback);
+        mBtGattServer.close();
         Log.d(TAG, "Advertising will stop");
     }
 
@@ -77,6 +84,9 @@ public class BLEPeripheral
             commandRef.popupTinyMessage(R.string.msg_ble_advertise_unavailable);
             return false;
         }
+
+        // ドングルからの接続／切断検知用ハンドラーを設定
+        mBtGattServer = mBleManager.openGattServer(context, mGattServerCallback);
 
         // 0.2秒 wait
         commandRef.waitMilliSeconds(200);
@@ -118,6 +128,22 @@ public class BLEPeripheral
             commandRef.popupTinyMessage(R.string.msg_ble_advertise_start_fail);
             // コマンドクラスに制御を戻す
             commandRef.onBLEAdvertiseCallback(false);
+        }
+    }
+
+    private class BLEGattServerCallback extends BluetoothGattServerCallback
+    {
+        @Override
+        public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
+            super.onConnectionStateChange(device, status, newState);
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                // 接続が確立されたら５秒後に切断させるようにする
+                Log.d(TAG, "Connection state changed to connected(" + device.toString() + "): status=" + status);
+                commandRef.onBLEGattServerCallback();
+
+            } else {
+                Log.d(TAG, "Connection state changed to disconnected(" + device.toString() + "): status=" + status);
+            }
         }
     }
 }
