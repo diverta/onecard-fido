@@ -85,6 +85,8 @@ public class MainActivityCommand
     public void stopBLEAdvertise() {
         // アドバタイジング開始済みフラグをクリア
         mBLEAdvertiseStarted = false;
+        // 操作タイムアウトの監視を停止
+        cancelBLEAdvertiseOperationTimeout();
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // ボタンのキャプションを変更
@@ -154,7 +156,10 @@ public class MainActivityCommand
 
     public void cancelBLEAdvertiseOperationTimeout() {
         // タイムアウト監視を停止
-        mOperationTimeoutHandler.removeCallbacks(mOperationTimeoutThread);
+        if (mOperationTimeoutThread != null) {
+            mOperationTimeoutHandler.removeCallbacks(mOperationTimeoutThread);
+            mOperationTimeoutThread = null;
+        }
     }
 
     private class BLEAdvertiseOperationTimeoutThread implements Runnable

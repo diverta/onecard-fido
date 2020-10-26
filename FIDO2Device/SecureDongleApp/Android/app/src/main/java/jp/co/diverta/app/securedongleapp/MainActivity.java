@@ -1,7 +1,9 @@
 package jp.co.diverta.app.securedongleapp;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -37,6 +39,14 @@ public class MainActivity extends AppCompatActivity
         MainActivityClickListener onClickListener = new MainActivityClickListener(this);
         buttonPairing.setOnClickListener(onClickListener);
         buttonAdvertise.setOnClickListener(onClickListener);
+
+        // 位置情報の許可を求める（API 23以降で必須）
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
     }
 
     @Override

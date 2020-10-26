@@ -100,10 +100,8 @@ public class BLEPeripheral
         dataBuilder.addServiceUuid(ParcelUuid.fromString(BLE_ADVERTISE_UUID));
 
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
-        settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED);
-        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM);
-        settingsBuilder.setTimeout(60);
-        settingsBuilder.setConnectable(true);
+        settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
+        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
 
         AdvertiseData.Builder respBuilder = new AdvertiseData.Builder();
         respBuilder.setIncludeDeviceName(true);
