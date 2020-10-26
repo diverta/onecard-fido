@@ -21,6 +21,14 @@ public class MainActivityCommand
     // BLEアドバタイジングが開始されたかどうかを保持
     private boolean mBLEAdvertiseStarted = false;
 
+    // アドバタイジング自動停止関連で使用するオブジェクト
+    private Handler mBLEAdvertiseStopperHandler = new Handler();
+    private BLEAdvertiseStopperThread mBLEAdvertiseStopperThread = null;
+
+    // 操作タイムアウト監視で使用するオブジェクト
+    private Handler mOperationTimeoutHandler = new Handler();
+    private BLEAdvertiseOperationTimeoutThread mOperationTimeoutThread = null;
+
     // ログ表示用
     private String TAG = getClass().getName();
 
@@ -68,6 +76,8 @@ public class MainActivityCommand
         setButtonsEnabled(false);
         // ステータステキストを表示
         displayStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_start));
+        // 操作タイムアウト（１分）の監視を開始
+        startBLEAdvertiseOperationTimeout();
         // BLEアドバタイズを開始
         blePeripheral.startBLEAdvertise();
     }
@@ -105,26 +115,59 @@ public class MainActivityCommand
     // アドバタイジング自動停止関連
     //
 
-    private Handler mHandler = new Handler();
-    private BLEAdvertiseStopperThread mStopperThread = new BLEAdvertiseStopperThread();
-
     public void onBLEGattServerCallback() {
+        // 操作タイムアウトの監視を停止
+        cancelBLEAdvertiseOperationTimeout();
+        // アドバタイジング自動停止のための監視タイマーを開始
+        startBLEAdvertiseStopperThread();
+    }
+
+    public void startBLEAdvertiseStopperThread() {
         // 接続が確立されたら５秒後に切断させるようにする
-        mHandler.postDelayed(mStopperThread, 5000);
+        mBLEAdvertiseStopperThread = new BLEAdvertiseStopperThread();
+        mBLEAdvertiseStopperHandler.postDelayed(mBLEAdvertiseStopperThread, 5000);
     }
 
     private class BLEAdvertiseStopperThread implements Runnable
     {
         @Override
         public void run() {
-            // タイムアウトが発生した場合
-            Log.d(TAG, "Elapsed 5 seconds after connection");
             // すでにBLEアドバタイジングが停止済みの場合は終了
             if (mBLEAdvertiseStarted == false) {
-                Log.d(TAG, "BLE Advertise already stopped");
                 return;
             }
-            // BLEアドバタイジングを停止
+            // タイムアウトが発生した場合は、BLEアドバタイジングを停止
+            Log.d(TAG, "Elapsed 5 seconds after connection");
+            stopBLEAdvertise();
+        }
+    }
+
+    //
+    // 操作タイムアウト（１分）監視関連
+    //
+
+    public void startBLEAdvertiseOperationTimeout() {
+        // アドバタイジング開始指示から１分後にタイムアウトさせるようにする
+        mOperationTimeoutThread = new BLEAdvertiseOperationTimeoutThread();
+        mOperationTimeoutHandler.postDelayed(mOperationTimeoutThread, 60000);
+    }
+
+    public void cancelBLEAdvertiseOperationTimeout() {
+        // タイムアウト監視を停止
+        mOperationTimeoutHandler.removeCallbacks(mOperationTimeoutThread);
+    }
+
+    private class BLEAdvertiseOperationTimeoutThread implements Runnable
+    {
+        @Override
+        public void run() {
+            // すでにBLEアドバタイジングが停止済みの場合は終了
+            if (mBLEAdvertiseStarted == false) {
+                return;
+            }
+            // タイムアウトが発生した場合は、BLEアドバタイジングを停止
+            appendStatusText(getResourceString(R.string.msg_operation_timeout));
+            Log.d(TAG, "Elapsed 60 seconds after BLE advertise operation");
             stopBLEAdvertise();
         }
     }

@@ -18,5 +18,6 @@
     <string name="msg_bleadv_for_auth_will_stop">BLE近接認証を終了します。</string>
     <string name="msg_bleadv_for_auth_started">認証のためのBLEアドバタイジングが開始されました。</string>
     <string name="msg_bleadv_for_auth_start_fail">認証のためのBLEアドバタイジングを開始できませんでした。</string>
+    <string name="msg_operation_timeout">操作がタイムアウトしました。</string>
     <string name="msg_bluetooth_is_turned_off">Bluetoothがオフになっています。Bluetoothをオンにしてください。</string>
 </resources>
