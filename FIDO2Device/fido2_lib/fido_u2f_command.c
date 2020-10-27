@@ -404,8 +404,7 @@ static void u2f_command_authenticate(void)
         return;
     }
 
-    if (control_byte == 0x03) {
-        // 0x03 ("enforce-user-presence-and-sign")
+    if (u2f_command_register_is_tup_needed()) {
         // ユーザー所在確認が必要な場合は、ここで終了し
         // その旨のフラグを設定
         is_tup_needed = true;
