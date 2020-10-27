@@ -85,7 +85,7 @@ public class BLECentral
             Log.d(TAG, "Device scan timed out");
             stopScanDevice();
             // コマンドクラスに制御を戻す
-            commandRef.popupTinyMessage(R.string.msg_pairing_scan_timeout);
+            commandRef.appendResourceStringMessage(R.string.msg_pairing_scan_timeout);
             commandRef.onBLEConnectionTerminated(false);
         }
     }
@@ -100,7 +100,7 @@ public class BLECentral
             // ペアリングが未済の場合は、ペアリングを実行
             if (device.createBond() == false) {
                 // 失敗した場合はコマンドクラスに制御を戻す
-                commandRef.popupTinyMessage(R.string.msg_pairing_start_fail);
+                commandRef.appendResourceStringMessage(R.string.msg_pairing_start_fail);
                 commandRef.onBLEConnectionTerminated(false);
                 return;
             }
@@ -109,7 +109,7 @@ public class BLECentral
         } else {
             // 既にペアリング済みの場合は、コマンドクラスに制御を戻す
             Log.d(TAG, "Device already bonded");
-            commandRef.popupTinyMessage(R.string.msg_pairing_already_bonded);
+            commandRef.appendResourceStringMessage(R.string.msg_pairing_already_bonded);
             commandRef.onBLEConnectionTerminated(true);
         }
     }

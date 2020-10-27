@@ -237,6 +237,11 @@ public class MainActivityCommand
         toast.show();
     }
 
+    public void appendResourceStringMessage(int resId) {
+        String msg = getResourceString(resId);
+        appendStatusText(msg);
+    }
+
     public void waitMilliSeconds(long ms) {
         try {
             Thread.sleep(ms);
