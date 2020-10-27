@@ -36,7 +36,7 @@ public class BLECentralScanCallback extends ScanCallback
         ParcelUuid uuidFIDO = ParcelUuid.fromString(U2F_SERVICE_UUID);
         for (ParcelUuid uuid : uuids) {
             if (uuid.equals(uuidFIDO)) {
-                String msg = String.format("FIDO authenticator found: Bluetooth address=%s",
+                String msg = String.format("FIDO authenticator found: Service UUIDs=%s, Bluetooth address=%s",
                         uuids.toString(),
                         result.getDevice().getAddress());
                 Log.d(TAG, msg);

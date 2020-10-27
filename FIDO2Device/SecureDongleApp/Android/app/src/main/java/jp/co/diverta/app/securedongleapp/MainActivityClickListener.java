@@ -8,9 +8,6 @@ public class MainActivityClickListener implements View.OnClickListener
     private MainActivity guiRef;
     private MainActivityCommand commandRef;
 
-    // ボタンキャプション切り替え用のフラグ
-    private boolean advertising = false;
-
     public MainActivityClickListener(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
@@ -37,17 +34,14 @@ public class MainActivityClickListener implements View.OnClickListener
     }
 
     private void buttonAdvertiseClicked() {
-        if (advertising == false) {
-            // ボタンキャプションを変更
-            guiRef.changeButtonAdvertiseCaption(false);
-            advertising = true;
+        String buttonStartCaption = guiRef.getString(R.string.start_ble_advertisement);
+        if (guiRef.buttonAdvertise.getText().equals(buttonStartCaption)) {
+            // BLE近接認証実行ボタンの場合
             // アドバタイズ開始
             commandRef.startBLEAdvertise();
 
         } else {
-            // ボタンキャプションを変更
-            guiRef.changeButtonAdvertiseCaption(true);
-            advertising = false;
+            // BLE近接認証終了ボタンの場合
             // アドバタイズ停止
             commandRef.stopBLEAdvertise();
         }

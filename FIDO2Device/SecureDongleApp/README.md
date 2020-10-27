@@ -15,7 +15,7 @@ Android版と、iOS版を用意します。
 <img src="Android/assets01/0001.jpg" width="200">
 
 #### 動作環境
-Android Version 5.0〜
+Android Version 8.0〜
 
 ## [iOS版](iOS)
 

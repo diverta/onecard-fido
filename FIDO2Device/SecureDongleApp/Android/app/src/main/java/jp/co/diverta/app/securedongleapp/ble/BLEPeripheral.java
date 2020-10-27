@@ -1,7 +1,11 @@
 package jp.co.diverta.app.securedongleapp.ble;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattServer;
+import android.bluetooth.BluetoothGattServerCallback;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
@@ -11,6 +15,7 @@ import android.os.ParcelUuid;
 import android.util.Log;
 
 import jp.co.diverta.app.securedongleapp.MainActivityCommand;
+import jp.co.diverta.app.securedongleapp.R;
 
 public class BLEPeripheral
 {
@@ -28,6 +33,8 @@ public class BLEPeripheral
     private BluetoothAdapter mBleAdapter;
     private BluetoothLeAdvertiser mBtAdvertiser;
     private BLEAdvertiseCallback advertiseStartCallback = new BLEAdvertiseCallback();
+    private BluetoothGattServer mBtGattServer;
+    private BLEGattServerCallback mGattServerCallback = new BLEGattServerCallback();;
 
     public BLEPeripheral(MainActivityCommand mac) {
         commandRef = mac;
@@ -52,6 +59,7 @@ public class BLEPeripheral
     public void stopBLEAdvertise() {
         // アドバタイジングを停止
         mBtAdvertiser.stopAdvertising(advertiseStartCallback);
+        mBtGattServer.close();
         Log.d(TAG, "Advertising will stop");
     }
 
@@ -65,7 +73,7 @@ public class BLEPeripheral
         mBleAdapter = mBleManager.getAdapter();
         if (mBleAdapter == null) {
             Log.e(TAG, "BluetoothManager.getAdapter() returns null");
-            commandRef.popupTinyMessage("BLEペリフェラルモードが使用できません。");
+            commandRef.appendResourceStringMessage(R.string.msg_ble_peripheral_mode_unavailable);
             return false;
         }
         Log.d(TAG, "Ready to prepare BLE peripheral");
@@ -73,9 +81,12 @@ public class BLEPeripheral
         mBtAdvertiser = mBleAdapter.getBluetoothLeAdvertiser();
         if (mBtAdvertiser == null) {
             Log.e(TAG, "BluetoothAdapter.getBluetoothLeAdvertiser() returns null");
-            commandRef.popupTinyMessage("BLEアドバタイジングが使用できません。");
+            commandRef.appendResourceStringMessage(R.string.msg_ble_advertise_unavailable);
             return false;
         }
+
+        // ドングルからの接続／切断検知用ハンドラーを設定
+        mBtGattServer = mBleManager.openGattServer(context, mGattServerCallback);
 
         // 0.2秒 wait
         commandRef.waitMilliSeconds(200);
@@ -89,10 +100,8 @@ public class BLEPeripheral
         dataBuilder.addServiceUuid(ParcelUuid.fromString(BLE_ADVERTISE_UUID));
 
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
-        settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED);
-        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM);
-        settingsBuilder.setTimeout(60);
-        settingsBuilder.setConnectable(true);
+        settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
+        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
 
         AdvertiseData.Builder respBuilder = new AdvertiseData.Builder();
         respBuilder.setIncludeDeviceName(true);
@@ -114,9 +123,25 @@ public class BLEPeripheral
         public void onStartFailure(int errorCode) {
             super.onStartFailure(errorCode);
             Log.d(TAG, "Advertisement start fail");
-            commandRef.popupTinyMessage("BLEアドバタイジングを開始できません。");
+            commandRef.appendResourceStringMessage(R.string.msg_ble_advertise_start_fail);
             // コマンドクラスに制御を戻す
             commandRef.onBLEAdvertiseCallback(false);
+        }
+    }
+
+    private class BLEGattServerCallback extends BluetoothGattServerCallback
+    {
+        @Override
+        public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
+            super.onConnectionStateChange(device, status, newState);
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                // 接続が確立されたら５秒後に切断させるようにする
+                Log.d(TAG, "Connection state changed to connected(" + device.toString() + "): status=" + status);
+                commandRef.onBLEGattServerCallback();
+
+            } else {
+                Log.d(TAG, "Connection state changed to disconnected(" + device.toString() + "): status=" + status);
+            }
         }
     }
 }
