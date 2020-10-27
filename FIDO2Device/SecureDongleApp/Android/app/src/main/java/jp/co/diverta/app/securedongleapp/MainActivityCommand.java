@@ -87,6 +87,7 @@ public class MainActivityCommand
         mBLEAdvertiseStarted = false;
         // 操作タイムアウトの監視を停止
         cancelBLEAdvertiseOperationTimeout();
+        cancelBLEAdvertiseStopperThread();
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // ボタンのキャプションを変更
@@ -120,8 +121,18 @@ public class MainActivityCommand
     public void onBLEGattServerCallback() {
         // 操作タイムアウトの監視を停止
         cancelBLEAdvertiseOperationTimeout();
+        // 先に開始されているタイマーがあれば停止
+        cancelBLEAdvertiseStopperThread();
         // アドバタイジング自動停止のための監視タイマーを開始
         startBLEAdvertiseStopperThread();
+    }
+
+    public void cancelBLEAdvertiseStopperThread() {
+        // タイムアウト監視を停止
+        if (mBLEAdvertiseStopperThread != null) {
+            mBLEAdvertiseStopperHandler.removeCallbacks(mBLEAdvertiseStopperThread);
+            mBLEAdvertiseStopperThread = null;
+        }
     }
 
     public void startBLEAdvertiseStopperThread() {
