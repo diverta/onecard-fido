@@ -76,8 +76,6 @@ public class MainActivityCommand
         setButtonsEnabled(false);
         // ステータステキストを表示
         displayStatusText(getResourceString(R.string.msg_bleadv_for_auth_will_start));
-        // 操作タイムアウトの監視を停止
-        cancelBLEAdvertiseOperationTimeout();
         // 操作タイムアウト（１分）の監視を開始
         startBLEAdvertiseOperationTimeout();
         // BLEアドバタイズを開始
