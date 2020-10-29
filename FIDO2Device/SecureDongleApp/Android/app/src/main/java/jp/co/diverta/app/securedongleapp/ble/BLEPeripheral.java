@@ -135,11 +135,12 @@ public class BLEPeripheral
         public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
             super.onConnectionStateChange(device, status, newState);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                // 接続が確立されたら５秒後に切断させるようにする
+                // 接続が確立されたときの処理
                 Log.d(TAG, "Connection state changed to connected(" + device.toString() + "): status=" + status);
                 commandRef.onBLEGattServerCallback();
 
             } else {
+                // 接続が破棄されたときの処理
                 Log.d(TAG, "Connection state changed to disconnected(" + device.toString() + "): status=" + status);
             }
         }
