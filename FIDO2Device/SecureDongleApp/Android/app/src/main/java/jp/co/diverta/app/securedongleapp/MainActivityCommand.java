@@ -136,9 +136,9 @@ public class MainActivityCommand
     }
 
     public void startBLEAdvertiseStopperThread() {
-        // 接続が確立されたら５秒後に切断させるようにする
+        // 接続が確立されたら７秒後に切断させるようにする
         mBLEAdvertiseStopperThread = new BLEAdvertiseStopperThread();
-        mBLEAdvertiseStopperHandler.postDelayed(mBLEAdvertiseStopperThread, 5000);
+        mBLEAdvertiseStopperHandler.postDelayed(mBLEAdvertiseStopperThread, 7000);
     }
 
     private class BLEAdvertiseStopperThread implements Runnable
@@ -150,7 +150,7 @@ public class MainActivityCommand
                 return;
             }
             // タイムアウトが発生した場合は、BLEアドバタイジングを停止
-            Log.d(TAG, "Elapsed 5 seconds after connection");
+            Log.d(TAG, "Elapsed 7 seconds after connection");
             stopBLEAdvertise();
         }
     }
