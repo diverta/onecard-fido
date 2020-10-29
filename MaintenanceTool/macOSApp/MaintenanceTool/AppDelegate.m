@@ -27,6 +27,8 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
+    @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
@@ -101,6 +103,8 @@
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
         [self.menuItemDFUNew setEnabled:enabled];
+        [self.menuItemEraseBond setEnabled:enabled];
+        [self.menuItemBLMode setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -276,6 +280,22 @@
     - (IBAction)menuItemDFUNewDidSelect:(id)sender {
         [self enableButtons:false];
         [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemEraseBondDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // TODO: ペアリング情報削除機能を追加
+        [self enableButtons:false];
+    }
+
+    - (IBAction)menuItemBLModeDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // TODO: ブートローダーモード遷移機能を追加
+        [self enableButtons:false];
     }
 
 #pragma mark - Perform health check
