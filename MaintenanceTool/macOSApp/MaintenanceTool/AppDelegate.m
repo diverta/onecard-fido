@@ -304,8 +304,11 @@
                          informativeText:MSG_PROMPT_BOOT_LOADER_MODE] == false) {
             return;
         }
-        // TODO: ブートローダーモード遷移機能を追加
+        // ブートローダーモード遷移
         [self enableButtons:false];
+        [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                           withData:nil forCommand:self];
     }
 
 #pragma mark - Perform health check
@@ -487,6 +490,9 @@
                 break;
             case COMMAND_HID_GET_VERSION_INFO:
                 [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
