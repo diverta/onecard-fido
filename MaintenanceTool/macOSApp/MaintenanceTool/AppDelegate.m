@@ -286,12 +286,22 @@
         if (![self checkUSBHIDConnection]) {
             return;
         }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
+                         informativeText:MSG_PROMPT_ERASE_BONDS] == false) {
+            return;
+        }
         // TODO: ペアリング情報削除機能を追加
         [self enableButtons:false];
     }
 
     - (IBAction)menuItemBLModeDidSelect:(id)sender {
         if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
+                         informativeText:MSG_PROMPT_BOOT_LOADER_MODE] == false) {
             return;
         }
         // TODO: ブートローダーモード遷移機能を追加
