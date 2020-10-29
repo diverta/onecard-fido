@@ -24,6 +24,8 @@
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
+		7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */; };
+		7A61AA61254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */; };
 		7A629F4524C00245007ABA89 /* ToolContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A629F4424C00245007ABA89 /* ToolContext.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
 		7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A84EFA22254440500DF449D /* SetPinParamWindow.xib */; };
@@ -45,8 +47,6 @@
 		7A9F1063226DB82B007AEB41 /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F1061226DB82B007AEB41 /* debug_log.c */; };
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
 		7AA7464123C2C0B6001938A7 /* nrf52_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA7463F23C2C0B6001938A7 /* nrf52_app_image.c */; };
-		7AA9A2D024FDF705008BD014 /* appkg.PCA10059_02.0.2.11.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA9A2CE24FDF705008BD014 /* appkg.PCA10059_02.0.2.11.zip */; };
-		7AA9A2D124FDF705008BD014 /* appkg.PCA10059.0.2.11.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AA9A2CF24FDF705008BD014 /* appkg.PCA10059.0.2.11.zip */; };
 		7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AB119F223617DB600EEFF6C /* ToolPreferenceWindow.xib */; };
 		7AB119F5236182E900EEFF6C /* ToolPreferenceCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB119F4236182E900EEFF6C /* ToolPreferenceCommand.m */; };
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
@@ -92,6 +92,8 @@
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A54339B2328C3D000F2FCA5 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
 		7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolU2FHealthCheckCommand.m; sourceTree = "<group>"; };
+		7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059.0.2.12.zip; sourceTree = "<group>"; };
+		7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.2.12.zip; sourceTree = "<group>"; };
 		7A629F4424C00245007ABA89 /* ToolContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolContext.m; sourceTree = "<group>"; };
 		7A629F4624C00262007ABA89 /* ToolContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolContext.h; sourceTree = "<group>"; };
 		7A8402F22268570D000F5E50 /* libtinycbor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtinycbor.a; sourceTree = "<group>"; };
@@ -131,8 +133,6 @@
 		7A9FC7E922431F0A009F569B /* ToolInstallCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolInstallCommand.h; sourceTree = "<group>"; };
 		7AA7463F23C2C0B6001938A7 /* nrf52_app_image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = nrf52_app_image.c; sourceTree = "<group>"; };
 		7AA7464023C2C0B6001938A7 /* nrf52_app_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nrf52_app_image.h; sourceTree = "<group>"; };
-		7AA9A2CE24FDF705008BD014 /* appkg.PCA10059_02.0.2.11.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.2.11.zip; sourceTree = "<group>"; };
-		7AA9A2CF24FDF705008BD014 /* appkg.PCA10059.0.2.11.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059.0.2.11.zip; sourceTree = "<group>"; };
 		7AB119F223617DB600EEFF6C /* ToolPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolPreferenceWindow.xib; sourceTree = "<group>"; };
 		7AB119F4236182E900EEFF6C /* ToolPreferenceCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPreferenceCommand.m; sourceTree = "<group>"; };
 		7AB119F62361830900EEFF6C /* ToolPreferenceCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPreferenceCommand.h; sourceTree = "<group>"; };
@@ -302,8 +302,8 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7AA9A2CE24FDF705008BD014 /* appkg.PCA10059_02.0.2.11.zip */,
-				7AA9A2CF24FDF705008BD014 /* appkg.PCA10059.0.2.11.zip */,
+				7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */,
+				7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -396,9 +396,9 @@
 			files = (
 				7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */,
 				7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */,
-				7AA9A2D024FDF705008BD014 /* appkg.PCA10059_02.0.2.11.zip in Resources */,
+				7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */,
+				7A61AA61254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip in Resources */,
 				7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */,
-				7AA9A2D124FDF705008BD014 /* appkg.PCA10059.0.2.11.zip in Resources */,
 				7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */,
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */,
