@@ -291,8 +291,9 @@
                          informativeText:MSG_PROMPT_ERASE_BONDS] == false) {
             return;
         }
-        // TODO: ペアリング情報削除機能を追加
+        // ペアリング情報削除
         [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
     }
 
     - (IBAction)menuItemBLModeDidSelect:(id)sender {
@@ -476,6 +477,9 @@
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
                 break;
             // HID関連
+            case COMMAND_ERASE_BONDS:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
                 break;
