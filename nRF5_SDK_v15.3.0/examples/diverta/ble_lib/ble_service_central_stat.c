@@ -252,3 +252,10 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
 
     return size;
 }
+
+char *ble_service_central_stat_uuid_string(uint8_t *uuid_bytes)
+{
+    // 16バイトのUUIDを、文字列形式に変換
+    uuid_bytes_to_ascii(uuid_bytes, 0x07, uuid_buf);
+    return uuid_buf;
+}
