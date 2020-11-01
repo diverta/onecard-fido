@@ -12,6 +12,7 @@
                 <outlet property="buttonAuthParamReset" destination="fKy-hY-Jjn" id="Lau-4B-VOv"/>
                 <outlet property="buttonAuthParamSet" destination="CSJ-7V-QFp" id="qr2-zf-dX4"/>
                 <outlet property="buttonCheck" destination="nvc-7G-Non" id="mJM-bw-5ad"/>
+                <outlet property="buttonCheckPairing" destination="cic-D8-TOp" id="nTs-Va-bnw"/>
                 <outlet property="buttonClose" destination="B5l-qJ-2om" id="dCQ-0g-oBR"/>
                 <outlet property="fieldCopyrightText" destination="hIu-ir-PYR" id="VWi-mK-1rE"/>
                 <outlet property="fieldServiceUUIDScanSec" destination="bab-0v-lpe" id="1ws-PZ-C7h"/>
@@ -25,14 +26,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="540" height="238"/>
+            <rect key="contentRect" x="196" y="240" width="540" height="307"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="540" height="238"/>
+                <rect key="frame" x="0.0" y="0.0" width="540" height="307"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BzS-GG-SbY" userLabel="Title">
-                        <rect key="frame" x="34" y="212" width="472" height="17"/>
+                        <rect key="frame" x="34" y="281" width="472" height="17"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="17" id="KjD-vW-iBt"/>
                         </constraints>
@@ -43,16 +44,16 @@
                         </textFieldCell>
                     </textField>
                     <tabView translatesAutoresizingMaskIntoConstraints="NO" id="89d-sz-6W2">
-                        <rect key="frame" x="13" y="51" width="514" height="159"/>
+                        <rect key="frame" x="13" y="51" width="514" height="228"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="自動認証設定" identifier="" id="TNa-tP-eVW">
                                 <view key="view" id="P8L-Hv-IdZ">
-                                    <rect key="frame" x="10" y="33" width="494" height="113"/>
+                                    <rect key="frame" x="10" y="33" width="494" height="182"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XcB-Gt-YBA">
-                                            <rect key="frame" x="186" y="48" width="291" height="21"/>
+                                            <rect key="frame" x="186" y="51" width="291" height="21"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="uhx-Yq-VhS">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -60,9 +61,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bab-0v-lpe">
-                                            <rect key="frame" x="186" y="17" width="51" height="21"/>
+                                            <rect key="frame" x="186" y="20" width="40" height="21"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="51" id="sXb-d2-fJB"/>
+                                                <constraint firstAttribute="width" constant="40" id="sXb-d2-fJB"/>
                                             </constraints>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="228-9C-PwG">
                                                 <font key="font" metaFont="system"/>
@@ -71,7 +72,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fKy-hY-Jjn" userLabel="Button Reset">
-                                            <rect key="frame" x="401" y="9" width="82" height="32"/>
+                                            <rect key="frame" x="401" y="13" width="82" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="b3l-M2-5Mx"/>
                                             </constraints>
@@ -84,7 +85,7 @@
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Zq-r8-d7y">
-                                            <rect key="frame" x="14" y="20" width="77" height="16"/>
+                                            <rect key="frame" x="15" y="23" width="77" height="16"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン秒数" id="xWu-Gf-HHT">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -92,7 +93,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jce-8W-wDg">
-                                            <rect key="frame" x="13" y="51" width="156" height="16"/>
+                                            <rect key="frame" x="15" y="54" width="156" height="16"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="スキャン対象サービスUUID" id="Tse-Tm-YvW">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -100,15 +101,23 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nvc-7G-Non">
-                                            <rect key="frame" x="184" y="82" width="61" height="18"/>
+                                            <rect key="frame" x="184" y="152" width="61" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="04j-XI-niX">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                         </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cic-D8-TOp">
+                                            <rect key="frame" x="184" y="109" width="61" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="aqF-hc-wlu">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CSJ-7V-QFp" userLabel="Button Write">
-                                            <rect key="frame" x="326" y="10" width="82" height="32"/>
+                                            <rect key="frame" x="319" y="13" width="82" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="YRe-Dp-0qg"/>
                                             </constraints>
@@ -120,8 +129,28 @@
                                                 <action selector="buttonAuthParamSetDidPress:" target="-2" id="8wK-yf-u1b"/>
                                             </connections>
                                         </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BWW-9r-GM9">
+                                            <rect key="frame" x="15" y="153" width="154" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="自動認証機能を有効化" id="T0h-zA-cL7" userLabel="自動認証機能を有効化">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zZe-aL-NRk">
+                                            <rect key="frame" x="210" y="80" width="269" height="62"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="Onq-Md-0eY" userLabel="自動認証機能を有効化">
+                                                <font key="font" metaFont="system"/>
+                                                <string key="title">スマートフォンをBLEデバイスとして使用したい場合は、ここをチェックします。
+（専用アプリをインストールしてください）</string>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BAx-Wl-9Dm" userLabel="Button Read">
-                                            <rect key="frame" x="251" y="9" width="82" height="32"/>
+                                            <rect key="frame" x="237" y="13" width="82" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="70" id="fPT-aD-DBk"/>
                                             </constraints>
@@ -133,10 +162,10 @@
                                                 <action selector="buttonAuthParamGetDidPress:" target="-2" id="37D-wP-EYa"/>
                                             </connections>
                                         </button>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BWW-9r-GM9">
-                                            <rect key="frame" x="13" y="83" width="154" height="16"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R79-bM-WEs">
+                                            <rect key="frame" x="16" y="110" width="154" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="自動認証機能を有効化" id="T0h-zA-cL7" userLabel="自動認証機能を有効化">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="ペアリングを必要とする" id="cSk-u5-Di7" userLabel="自動認証機能を有効化">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -144,31 +173,31 @@
                                         </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="CSJ-7V-QFp" secondAttribute="bottom" constant="17" id="63t-q6-LL3"/>
+                                        <constraint firstAttribute="bottom" secondItem="CSJ-7V-QFp" secondAttribute="bottom" constant="20" id="63t-q6-LL3"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="P8L-Hv-IdZ" secondAttribute="leading" constant="186" id="8ys-ut-PmF"/>
-                                        <constraint firstItem="XcB-Gt-YBA" firstAttribute="leading" secondItem="jce-8W-wDg" secondAttribute="trailing" constant="19" id="9p4-Os-Tyl"/>
+                                        <constraint firstItem="XcB-Gt-YBA" firstAttribute="leading" secondItem="jce-8W-wDg" secondAttribute="trailing" constant="17" id="9p4-Os-Tyl"/>
                                         <constraint firstItem="fKy-hY-Jjn" firstAttribute="baseline" secondItem="BAx-Wl-9Dm" secondAttribute="baseline" id="En6-Oa-K7p"/>
                                         <constraint firstAttribute="trailing" secondItem="XcB-Gt-YBA" secondAttribute="trailing" constant="17" id="FN8-uJ-Qpn"/>
-                                        <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="8Zq-r8-d7y" secondAttribute="trailing" constant="97" id="Osi-c6-amE"/>
+                                        <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="8Zq-r8-d7y" secondAttribute="trailing" constant="96" id="Osi-c6-amE"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="leading" secondItem="XcB-Gt-YBA" secondAttribute="leading" id="Oyi-to-hSQ"/>
                                         <constraint firstItem="XcB-Gt-YBA" firstAttribute="baseline" secondItem="jce-8W-wDg" secondAttribute="baseline" id="PVO-d0-dB9"/>
                                         <constraint firstItem="CSJ-7V-QFp" firstAttribute="top" secondItem="bab-0v-lpe" secondAttribute="bottom" constant="-21" id="QYk-k9-kIz"/>
                                         <constraint firstItem="fKy-hY-Jjn" firstAttribute="trailing" secondItem="XcB-Gt-YBA" secondAttribute="trailing" id="Ueh-g9-SXG"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="top" secondItem="XcB-Gt-YBA" secondAttribute="bottom" constant="10" id="ZKo-A6-j53"/>
-                                        <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" constant="1" id="lho-ul-DCr"/>
-                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="120" id="nrV-Bv-rTd"/>
-                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="5" id="oAi-hL-ilh"/>
+                                        <constraint firstItem="BAx-Wl-9Dm" firstAttribute="baseline" secondItem="CSJ-7V-QFp" secondAttribute="baseline" id="lho-ul-DCr"/>
+                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="centerX" secondItem="P8L-Hv-IdZ" secondAttribute="centerX" constant="113" id="nrV-Bv-rTd"/>
+                                        <constraint firstItem="CSJ-7V-QFp" firstAttribute="leading" secondItem="BAx-Wl-9Dm" secondAttribute="trailing" constant="12" id="oAi-hL-ilh"/>
                                         <constraint firstItem="bab-0v-lpe" firstAttribute="baseline" secondItem="8Zq-r8-d7y" secondAttribute="baseline" id="q8L-Cm-5el"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
                             <tabViewItem label="バージョン" identifier="" id="D77-m2-w5b">
                                 <view key="view" id="SUw-ai-6v5">
-                                    <rect key="frame" x="10" y="33" width="494" height="113"/>
+                                    <rect key="frame" x="10" y="33" width="494" height="182"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="byf-8p-gt6">
-                                            <rect key="frame" x="134" y="79" width="226" height="13"/>
+                                            <rect key="frame" x="134" y="145" width="226" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="222" id="asE-lI-qQ7"/>
                                             </constraints>
@@ -179,7 +208,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hIu-ir-PYR">
-                                            <rect key="frame" x="123" y="47" width="249" height="13"/>
+                                            <rect key="frame" x="123" y="110" width="249" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="245" id="1ZP-ad-6d3"/>
                                             </constraints>
@@ -229,7 +258,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="rKa-vf-chM"/>
             </connections>
-            <point key="canvasLocation" x="157" y="146"/>
+            <point key="canvasLocation" x="157" y="180.5"/>
         </window>
     </objects>
 </document>
