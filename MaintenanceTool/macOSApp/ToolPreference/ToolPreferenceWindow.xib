@@ -139,12 +139,10 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zZe-aL-NRk">
-                                            <rect key="frame" x="210" y="80" width="269" height="62"/>
+                                            <rect key="frame" x="210" y="87" width="269" height="57"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="Onq-Md-0eY" userLabel="自動認証機能を有効化">
-                                                <font key="font" metaFont="system"/>
-                                                <string key="title">スマートフォンをBLEデバイスとして使用したい場合は、ここをチェックします。
-（専用アプリをインストールしてください）</string>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="スマートフォンをBLEデバイスとして使用したい場合は、専用アプリをインストールした後、専用アプリによりペアリングを行ってください。" id="Onq-Md-0eY" userLabel="自動認証機能を有効化">
+                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -163,10 +161,10 @@
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R79-bM-WEs">
-                                            <rect key="frame" x="16" y="110" width="154" height="16"/>
+                                            <rect key="frame" x="14" y="96" width="155" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="ペアリングを必要とする" id="cSk-u5-Di7" userLabel="自動認証機能を有効化">
-                                                <font key="font" metaFont="system"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="スマートフォンをBLEデバイスとして使用" id="cSk-u5-Di7" userLabel="自動認証機能を有効化">
+                                                <font key="font" size="13" name=".HiraKakuInterface-W3"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
