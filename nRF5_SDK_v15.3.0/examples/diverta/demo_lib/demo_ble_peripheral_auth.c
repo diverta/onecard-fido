@@ -106,6 +106,17 @@ static void save_auth_param(void)
     }
 }
 
+static void convert_uuid_string_to_upper(char *p_uuid_string, char *p_upper_uuid_string)
+{
+    // 文字列形式のUUIDを、すべて大文字に変換
+    memcpy(p_upper_uuid_string, p_uuid_string, UUID_STRING_LEN);
+    p_upper_uuid_string[UUID_STRING_LEN] = 0;
+    for (int i = 0; i < UUID_STRING_LEN; i++) {
+        int c = toupper(p_upper_uuid_string[i]);
+        p_upper_uuid_string[i] = (uint8_t)c;
+    }
+}
+
 static void restore_auth_param(void)
 {
     if (fido_flash_blp_auth_param_read() == false) {
@@ -114,12 +125,7 @@ static void restore_auth_param(void)
 
     char *p_uuid_string = (char *)fido_flash_blp_auth_param_service_uuid_string();
     if (p_uuid_string[0] != 0) {
-        memcpy(service_uuid_string, p_uuid_string, UUID_STRING_LEN);
-        service_uuid_string[UUID_STRING_LEN] = 0;
-        for (int i = 0; i < UUID_STRING_LEN; i++) {
-            int c = toupper(service_uuid_string[i]);
-            service_uuid_string[i] = (uint8_t)c;
-        }
+        convert_uuid_string_to_upper(p_uuid_string, service_uuid_string);
     }
 
     uint8_t scan_sec = (uint8_t)fido_flash_blp_auth_param_service_uuid_scan_sec();
@@ -204,6 +210,18 @@ static void resume_function_after_scan(bool is_register)
     // 統計情報をデバッグ出力
     ble_service_central_stat_debug_print();
 #endif
+
+    // Authenticateの場合は、スキャン対象サービスUUIDとして
+    // キーハンドル／クレデンシャルIDから抽出したサービスUUIDを使用
+    //   scan_param_bytes の先頭16バイトを、文字列形式に変換し、
+    //   service_uuid_string に格納する必要がある
+    if (is_register == false) {
+        fido_log_print_hexdump_debug(scan_param_bytes, 16);
+        char *p_uuid_string = ble_service_central_stat_uuid_string(scan_param_bytes);
+        convert_uuid_string_to_upper(p_uuid_string, service_uuid_string);
+    }
+    fido_log_debug("BLE peripheral device (for FIDO %s) service UUID for scan=%s", 
+        is_register ? "register" : "authenticate", service_uuid_string);
 
     // スキャン対象サービスUUIDが、スキャン統計情報に含まれているかどうかチェック
     ADV_STAT_INFO_T *info = ble_service_central_stat_match_uuid(service_uuid_string);
