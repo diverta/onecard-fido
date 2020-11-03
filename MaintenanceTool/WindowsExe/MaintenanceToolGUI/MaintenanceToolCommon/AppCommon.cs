@@ -40,6 +40,10 @@ namespace MaintenanceToolCommon
         public const string MSG_OCCUR_KEYHANDLE_ERROR = "キーハンドルが存在しません。再度ユーザー登録を実行してください。";
         public const string MSG_OCCUR_SKEYNOEXIST_ERROR = "鍵・証明書がインストールされていません。鍵・証明書インストール処理を実行してください。";
         public const string MSG_OCCUR_PAIRINGMODE_ERROR = "ペアリングモードでは、ペアリング実行以外の機能は使用できません。\r\nペアリングモードを解除してから、機能を再度実行してください。";
+        public const string MSG_ERASE_BONDS = "FIDO認証器からペアリング情報をすべて削除します。";
+        public const string MSG_PROMPT_ERASE_BONDS = "削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？";
+        public const string MSG_BOOT_LOADER_MODE = "FIDO認証器をブートローダーモードに遷移させます。";
+        public const string MSG_PROMPT_BOOT_LOADER_MODE = "ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？";
 
         // 鍵・証明書インストール関連
         public const string MSG_CANNOT_RECV_DEVICE_PUBLIC_KEY = "公開鍵を認証器から受け取ることができませんでした。";
@@ -316,6 +320,8 @@ namespace MaintenanceToolCommon
             ToolPreferenceCommand,
             ToolPreferenceParamInquiry,
             ChangeToBootloaderMode,
+            EraseBonds,
+            GotoBootLoaderMode,
             //
             // U2F
             //

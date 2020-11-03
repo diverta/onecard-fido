@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Linq;
 using MaintenanceToolCommon;
 
 namespace MaintenanceToolGUI
@@ -161,6 +162,9 @@ namespace MaintenanceToolGUI
         public byte[] receivedCID = new byte[4];
         public byte receivedCMD;
 
+        // リクエスト送信時のCIDを保持
+        private byte[] SendHIDMessageCID = new byte[4];
+
         // フレームデータを保持
         private byte[] frameData = new byte[Const.HID_FRAME_LEN];
 
@@ -198,6 +202,10 @@ namespace MaintenanceToolGUI
             for (int c = 0; c < receivedCID.Length; c++) {
                 // CIDをコピー
                 receivedCID[c] = frameData[c];
+            }
+            // レスポンス受信時のCIDが、リクエスト送信時のCIDと異なる場合は無視
+            if (Enumerable.SequenceEqual(receivedCID, SendHIDMessageCID) == false) {
+                return;
             }
             int hid_init_data_len = 57;
             int hid_cont_data_len = 59;
@@ -297,6 +305,8 @@ namespace MaintenanceToolGUI
                 AppCommon.OutputLogError("SendHIDMessage: invalid message buffer");
                 return;
             }
+            // リクエスト送信時のCIDを保持
+            cid.CopyTo(SendHIDMessageCID, 0);
             // 
             // 送信データをフレーム分割
             // 

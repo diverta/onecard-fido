@@ -7,6 +7,7 @@ namespace MaintenanceToolGUI
     {
         // 自動認証設定関連のパラメーター
         public bool BleScanAuthEnabled { get; set; }
+        public bool BlePairingIsNeeded { get; set; }
         public string ServiceUUIDString { get; set; }
         public string ServiceUUIDScanSec { get; set; }
 
@@ -119,9 +120,14 @@ namespace MaintenanceToolGUI
             // コマンド（1 から始まる値です）
             byte cmd = (byte)toolPreferenceParameter.CommandType;
 
+            // 自動認証フラグを編集
+            int pairNeed = toolPreferenceParameter.BlePairingIsNeeded ? 256 : 0;
+            int scanEnabled = toolPreferenceParameter.BleScanAuthEnabled ? 1 : 0;
+            int flags = pairNeed + scanEnabled;
+
             // パラメーターからCSVを生成
             string csv = string.Format("{0},{1},{2}",
-                toolPreferenceParameter.BleScanAuthEnabled ? 1 : 0,
+                flags,
                 toolPreferenceParameter.ServiceUUIDString,
                 toolPreferenceParameter.ServiceUUIDScanSec);
 
@@ -163,20 +169,49 @@ namespace MaintenanceToolGUI
             // CSVデータをASCII文字列に変換
             string csv = System.Text.Encoding.ASCII.GetString(csvData);
 
+            // CSVデータを分解し、自動認証パラメーターを抽出
+            ToolPreferenceParameter param = ExtractToolPreferenceParameter(csv.Split(','));
+
             // 自動認証設定照会の場合、
             if (toolPreferenceParameter.CommandType == CommandType.COMMAND_AUTH_PARAM_INQUIRY) {
                 // 共有情報にデータをセット
-                ToolContext.GetInstance().SetBleScanAuthParamValues(csv.Split(','));
+                ToolContext.GetInstance().SetBleScanAuthParamValues(param);
                 // メイン画面に制御を戻す
                 mainForm.DoResponseToolPreferenceParamInquiry();
                 return;
             }
 
             // CSVデータを分解して画面項目に設定
-            toolPreferenceForm.SetFields(csv.Split(','));
+            toolPreferenceForm.SetFields(param);
 
             // 処理結果を画面表示し、ボタンを押下可能とする
             OnHidMainProcessExited(true, "");
+        }
+
+        private ToolPreferenceParameter ExtractToolPreferenceParameter(string[] fields)
+        {
+            ToolPreferenceParameter param = new ToolPreferenceParameter();
+            if (fields.Length != 3) {
+                return param;
+            }
+
+            // 配列の先頭から画面項目に設定
+            //   自動認証フラグ
+            int flags = 0;
+            try {
+                flags = int.Parse(fields[0]);
+            } catch {
+            }
+            int _iBleScanAuthEnabled = flags % 256;
+            int _iBlePairingIsNeeded = flags / 256;
+            param.BleScanAuthEnabled = (_iBleScanAuthEnabled == 1);
+            param.BlePairingIsNeeded = (_iBlePairingIsNeeded == 1);
+            //   スキャン対象UUID
+            param.ServiceUUIDString = fields[1];
+            //   スキャン秒数
+            param.ServiceUUIDScanSec = fields[2];
+
+            return param;
         }
 
         public void OnHidMainProcessExited(bool ret, string errMessage)

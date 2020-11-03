@@ -32,16 +32,10 @@
             BleScanAuthEnabled = false;
         }
 
-        public void SetBleScanAuthParamValues(string[] values)
+        public void SetBleScanAuthParamValues(ToolPreferenceParameter param)
         {
-            if (values.Length != 3) {
-                // データが完備していない場合は該当項目をクリア
-                InitBleScanAuthParamValues();
-                return;
-            }
-
-            // 配列の先頭から、自動認証機能の有効／無効区分を取得
-            BleScanAuthEnabled = (values[0] == "1");
+            // 自動認証機能の有効／無効区分を設定
+            BleScanAuthEnabled = param.BleScanAuthEnabled;
         }
     }
 }
