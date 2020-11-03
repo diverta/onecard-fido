@@ -1,13 +1,14 @@
-# BLE近接認証アプリ（仮称）
+# SecureDongleApp（BLE近接認証アプリ）
 
 ## 概要
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の基板上のボタンを押す代わりに、スマートフォンのボタンを押すことにより、FIDO認証を実行できるようにするアプリです。
 
-Android版と、iOS版を用意します。
+Android版を用意しました。
+（iOS版は、後日対応予定です）
 
 ## 機能
 * ペアリング実行
-* BLE認証実行
+* BLE近接認証実行
 
 ## [Android版](Android)
 
