@@ -92,15 +92,15 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(224, 36);
             this.label3.TabIndex = 13;
-            this.label3.Text = "スマートフォンをBLEデバイスとして使用したい場合は、ここをチェックします。\r\n （専用アプリをインストールしてください）";
+            this.label3.Text = "スマートフォンをBLEデバイスとして使用したい場合は、専用アプリをインストールした後、専用アプリによりペアリングを行ってください。";
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(26, 60);
+            this.label1.Location = new System.Drawing.Point(26, 54);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 12);
+            this.label1.Size = new System.Drawing.Size(150, 24);
             this.label1.TabIndex = 12;
-            this.label1.Text = "ペアリングを必要とする";
+            this.label1.Text = "スマートフォンをBLEデバイスとして使用";
             // 
             // checkNeedPairing
             // 
