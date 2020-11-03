@@ -172,6 +172,17 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoGetVersionInfo();
             } 
+            else if (sender.Equals(DoEraseBondsToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
+                DisplayStartMessage(commandTitle);
+                hid.DoEraseBonds();
+
+            } 
+            else if (sender.Equals(DoBootLoaderModeToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_BOOT_LOADER_MODE;
+                DisplayStartMessage(commandTitle);
+                hid.DoBootLoaderMode();
+            } 
             else if (sender.Equals(DoBLEPingTestToolStripMenuItem)) {
                 // BLE経由でPINGコマンドを実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
