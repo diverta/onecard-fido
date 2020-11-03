@@ -37,6 +37,10 @@
 #define MSG_OCCUR_UNKNOWN_ERROR     @"不明なエラーが発生しました。"
 #define MSG_FORMAT_START_MESSAGE    @"%1$@を開始します。"
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
+#define MSG_ERASE_BONDS             @"FIDO認証器からペアリング情報をすべて削除します。"
+#define MSG_PROMPT_ERASE_BONDS      @"削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？"
+#define MSG_BOOT_LOADER_MODE        @"FIDO認証器をブートローダーモードに遷移させます。"
+#define MSG_PROMPT_BOOT_LOADER_MODE @"ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？"
 
 #pragma mark - コマンド種別に対応する処理名称
 #define PROCESS_NAME_ERASE_SKEY_CERT                @"鍵・証明書・キーハンドル削除処理"
@@ -54,6 +58,8 @@
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
 #define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
+#define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
+#define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"

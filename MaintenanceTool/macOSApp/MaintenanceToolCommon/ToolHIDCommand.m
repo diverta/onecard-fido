@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppDelegate.h"
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
@@ -133,6 +134,9 @@
                 break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
+                break;
+            case COMMAND_ERASE_BONDS:
+                [self doRequestEraseBonds:[self getNewCIDFrom:message]];
                 break;
             default:
                 // 画面に制御を戻す
@@ -283,7 +287,23 @@
             // DFUコマンドに制御を戻す
             ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
             [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
+        } else if ([[self toolCommandRef] isMemberOfClass:[AppDelegate class]]) {
+            // AppDelegateに制御を戻す
+            [self commandDidProcess:[self command] result:true message:nil];
         }
+    }
+
+    - (void)doEraseBonds {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doRequestEraseBonds:(NSData *)cid {
+        // メッセージを編集し、コマンド 0xC6 を実行
+        NSData *message = [[NSData alloc] init];
+        [self doRequest:message CID:cid CMD:HID_CMD_ERASE_BONDS];
     }
 
     - (void)doEraseSkeyCert {
@@ -410,6 +430,9 @@
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self doHidBootloaderMode];
                 break;
+            case COMMAND_ERASE_BONDS:
+                [self doEraseBonds];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -497,6 +520,7 @@
             case HID_CMD_BOOTLOADER_MODE:
                 [self doResponseHidBootloaderMode:message CMD:cmd];
                 break;
+            case HID_CMD_ERASE_BONDS:
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];

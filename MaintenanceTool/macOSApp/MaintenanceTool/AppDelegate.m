@@ -27,6 +27,8 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
+    @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
@@ -101,6 +103,8 @@
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
         [self.menuItemDFUNew setEnabled:enabled];
+        [self.menuItemEraseBond setEnabled:enabled];
+        [self.menuItemBLMode setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -278,6 +282,36 @@
         [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
     }
 
+    - (IBAction)menuItemEraseBondDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
+                         informativeText:MSG_PROMPT_ERASE_BONDS] == false) {
+            return;
+        }
+        // ペアリング情報削除
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
+    }
+
+    - (IBAction)menuItemBLModeDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
+                         informativeText:MSG_PROMPT_BOOT_LOADER_MODE] == false) {
+            return;
+        }
+        // ブートローダーモード遷移
+        [self enableButtons:false];
+        [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                           withData:nil forCommand:self];
+    }
+
 #pragma mark - Perform health check
 
     - (void)performHealthCheckCommand:(Command)command {
@@ -443,6 +477,9 @@
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
                 break;
             // HID関連
+            case COMMAND_ERASE_BONDS:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
                 break;
@@ -457,6 +494,9 @@
                 break;
             case COMMAND_HID_GET_VERSION_INFO:
                 [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];
