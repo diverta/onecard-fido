@@ -17,3 +17,6 @@ Android Version 8.0〜
 
 - <b>[インストール手順](INSTALLPRG.md)</b><br>
 BLE近接認証アプリをAndroid環境にインストールする手順を掲載しています。
+
+- <b>[BLE近接認証手順](BLEAUTH.md)</b><br>
+BLE近接認証アプリを使用し、WebAuthnのユーザー登録／ログインを実行する手順を掲載しています。
