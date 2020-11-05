@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">SecureDongleApp</string>
     <string name="pairing_and_connect">ペアリング実行</string>
-    <string name="start_ble_advertisement">BLE近接認証実行</string>
+    <string name="start_ble_advertisement">BLE近接認証開始</string>
     <string name="stop_ble_advertisement">BLE近接認証終了</string>
-    <string name="tips_text_initial">BLE近接認証実行ボタンをタップして、認証機能を実行してください。\n\nドングルとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
+    <string name="tips_text_initial">BLE近接認証開始ボタンをタップしてから、ユーザー登録またはログイン（WebAuthn）を実行してください。\n\nドングルとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
     <string name="status_text_initial">BLEアドバタイジングが開始されていません。</string>
     <string name="msg_ble_peripheral_mode_unavailable">BLEペリフェラルモードが使用できません。</string>
     <string name="msg_ble_advertise_unavailable">BLEアドバタイジングが使用できません。</string>

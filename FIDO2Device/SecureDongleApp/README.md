@@ -1,18 +1,19 @@
-# BLE近接認証アプリ（仮称）
+# BLE近接認証アプリ
 
 ## 概要
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の基板上のボタンを押す代わりに、スマートフォンのボタンを押すことにより、FIDO認証を実行できるようにするアプリです。
+<b>[BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)</b>において、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の基板上のボタンを押す代わりに、スマートフォンのボタンを押すことにより、FIDO認証を実行できるようにするアプリです。
 
-Android版と、iOS版を用意します。
+Android版を用意しました。
+（iOS版は、後日対応予定です）
 
 ## 機能
 * ペアリング実行
-* BLE認証実行
+* BLE近接認証実行
 
 ## [Android版](Android)
 
 #### 画面イメージ
-<img src="Android/assets01/0001.jpg" width="200">
+<img src="Android/assets02/0004.jpg" width="200">
 
 #### 動作環境
 Android Version 8.0〜

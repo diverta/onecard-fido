@@ -2,6 +2,32 @@
 
 ## プログラム更新履歴
 
+#### 2020/09/22
+
+FIDO認証器管理ツールを修正しました。<br>
+
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.32）](https://github.com/diverta/onecard-fido/tree/bug-FIDO2MT-macOS-20200923/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.32）](https://github.com/diverta/onecard-fido/blob/bug-FIDO2MT-Windows-20200923/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+
+修正点は以下になります。（[#366](https://github.com/diverta/onecard-fido/issues/366) ご参照）
+- 管理ツールの「Flash ROM情報取得」機能を実行時、Flash ROM空き容量として表示される％（百分率）が、実態の空き容量と異なる不具合を解消
+- 画面上のテキストが隠れて表示されてしまう不具合を解消（macOS版管理ツールのみ）
+
+#### 2020/09/01
+
+MDBT50Q Dongle、およびファームウェアを修正しました。<br>
+
+- <b>[MDBT50Q Dongle（Rev2.1.2）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/FIDO2Device/MDBT50Q_Dongle/README.md)</b>
+
+- <b>[nRF52840ファームウェア（Version 0.2.11）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/nRF5_SDK_v15.3.0/firmwares)</b>
+
+MDBT50Q Dongleの主な修正点は以下になります。
+- nRF52840アプリケーションに、セキュアIC（[ATECC608A](https://www.mouser.jp/new/microchip/microchip-atecc608a-crypto-devices/)）を組込み、秘密鍵／AESパスワードを読出し不可とする（[#347](https://github.com/diverta/onecard-fido/issues/347) ご参照）
+- CCIDインターフェースを装備し、スマートカードエミュレーションを可能とする（[#339](https://github.com/diverta/onecard-fido/issues/339) ご参照。現時点で、業務アプリケーションは未実装）
+- [署名検証機能付きUSBブートローダー](https://github.com/diverta/onecard-fido/blob/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/nRF5_SDK_v15.3.0/firmwares/secure_bootloader/README.md)を採用し、不正ファームウェアの書込みを抑止
+- 外形サイズを 5cm x 2cm に縮小
+
 #### 2020/09/07
 
 FIDO認証器管理ツールを修正しました。<br>

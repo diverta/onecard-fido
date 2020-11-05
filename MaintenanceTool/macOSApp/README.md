@@ -39,7 +39,7 @@ FIDO認証器に、PINコード（暗証番号）を設定する手順を掲載�
 FIDO認証器のヘルスチェックを実行する手順を掲載しています。
 
 - <b>[自動認証パラメーター設定手順](BLEAUTHPARAM.md)</b><br>
-[BLEデバイスを使用した自動認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
+[BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
 
 - <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
