@@ -103,11 +103,18 @@ uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu)
         return ret;
     }
 
-    // 後日正式に実装予定
-    // TODO:
-    // 認証OKであればPIN or PUKを更新
-    (void)pin_type;
-    return SW_REFERENCE_DATA_NOT_FOUND;
+    // 認証済みフラグをリセット
+    pin_is_validated = false;
+
+    // PIN or PUKを更新
+    uint8_t *update_pin = capdu->data + PIN_DEFAULT_SIZE;
+    if (ccid_pin_update(pin_type, update_pin, PIN_DEFAULT_SIZE) == false) {
+        // PINが更新できない場合は処理失敗
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
 }
 
 //

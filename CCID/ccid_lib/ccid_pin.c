@@ -186,6 +186,45 @@ bool ccid_pin_get_retries(uint8_t *retries)
 }
 
 //
+// PIN更新処理
+//
+static bool update_pin(const void *buf, uint8_t len)
+{
+    uint8_t default_cnt;
+    uint8_t current_cnt;
+
+    // PINを更新
+    if (save_pin_code((uint8_t *)buf, len) == false) {
+        return false;
+    }
+    // リトライカウンターのデフォルトを参照
+    if (restore_pin_retries(&default_cnt, &current_cnt) == false) {
+        return false;
+    }
+    // PINのリトライカウンターをデフォルトに設定
+    if (save_pin_retries_current(default_cnt) == false) {
+        return false;
+    }
+    // 処理成功
+    return true;
+}
+
+bool ccid_pin_update(PIV_PIN_TYPE type, const void *buf, uint8_t len) 
+{
+    bool ret = false;
+    switch (type) {
+        case PIV_PIN:
+            // PINを更新
+            ret = update_pin(buf, len);
+            break;
+        default:
+            // Not supported
+            break;
+    }
+    return ret;
+}
+
+//
 // 仮の実装です。
 //
 bool ccid_pin_create(const void *buf, uint8_t len, uint8_t max_retries) 
