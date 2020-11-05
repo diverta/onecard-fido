@@ -49,6 +49,34 @@ bool ccid_piv_pin_init(void)
 }
 
 //
+// 共通処理
+//
+static uint16_t verify_pin_code(command_apdu_t *capdu) 
+{
+    // 入力されたPINで認証実行
+    uint8_t *cdata = capdu->data;
+    uint8_t  count;
+    bool     pin_auth_failed;
+    pin_is_validated = false;
+    if (ccid_pin_verify(cdata, PIN_DEFAULT_SIZE, &count, &pin_auth_failed) == false) {
+        // 登録されたPINが照会できない場合は処理失敗
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (count == 0) {
+        // リトライカウンターが0であれば認証をブロック
+        return SW_AUTHENTICATION_BLOCKED;
+    }
+    if (pin_auth_failed) {
+        // 認証NGの場合は、現在のリトライカウンターを戻す
+        return SW_PIN_RETRIES + count;
+    }
+
+    // 正常終了
+    pin_is_validated = true;
+    return SW_NO_ERROR;
+}
+
+//
 // PIN設定処理
 //
 uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu) 
@@ -69,10 +97,15 @@ uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu)
         return SW_WRONG_LENGTH;
     }
 
+    // 入力されたPIN or PUKで認証
+    uint16_t ret = verify_pin_code(capdu);
+    if (ret != SW_NO_ERROR) {
+        return ret;
+    }
+
     // 後日正式に実装予定
     // TODO:
-    // (1) PIN or PUKで認証
-    // (2) 認証OKであればPIN or PUKを更新
+    // 認証OKであればPIN or PUKを更新
     (void)pin_type;
     return SW_REFERENCE_DATA_NOT_FOUND;
 }
@@ -116,24 +149,5 @@ uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // 入力されたPINで認証実行
-    uint8_t *cdata = capdu->data;
-    uint8_t  count;
-    bool     pin_auth_failed;
-    pin_is_validated = false;
-    if (ccid_pin_verify(cdata, PIN_DEFAULT_SIZE, &count, &pin_auth_failed) == false) {
-        // 登録されたPINが照会できない場合は処理失敗
-        return SW_UNABLE_TO_PROCESS;
-    }
-    if (count == 0) {
-        // リトライカウンターが0であれば認証をブロック
-        return SW_AUTHENTICATION_BLOCKED;
-    }
-    if (pin_auth_failed) {
-        // 認証NGの場合は、現在のリトライカウンターを戻す
-        return SW_PIN_RETRIES + count;
-    }
-
-    // 正常終了
-    pin_is_validated = true;
-    return SW_NO_ERROR;
+    return verify_pin_code(capdu);
 }
