@@ -13,7 +13,6 @@
 extern "C" {
 #endif
 
-bool ble_service_peripheral_mode(void);
 void ble_service_peripheral_init(void);
 void ble_service_peripheral_advertising_start(void);
 void ble_service_peripheral_start(void);

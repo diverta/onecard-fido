@@ -172,6 +172,17 @@ namespace MaintenanceToolGUI
                 DisplayStartMessage(commandTitle);
                 hid.DoGetVersionInfo();
             } 
+            else if (sender.Equals(DoEraseBondsToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_ERASE_BONDS;
+                DisplayStartMessage(commandTitle);
+                hid.DoEraseBonds();
+
+            } 
+            else if (sender.Equals(DoBootLoaderModeToolStripMenuItem)) {
+                commandTitle = ToolGUICommon.PROCESS_NAME_BOOT_LOADER_MODE;
+                DisplayStartMessage(commandTitle);
+                hid.DoBootLoaderMode();
+            } 
             else if (sender.Equals(DoBLEPingTestToolStripMenuItem)) {
                 // BLE経由でPINGコマンドを実行する
                 commandTitle = ToolGUICommon.PROCESS_NAME_TEST_BLE_PING;
@@ -571,6 +582,40 @@ namespace MaintenanceToolGUI
         private void DoBLEPingCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // BLE PINGテストを実行
+            doCommand(sender);
+        }
+
+        private void DoEraseBondsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_ERASE_BONDS,
+                AppCommon.MSG_PROMPT_ERASE_BONDS);
+            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+                return;
+            }
+            // ペアリング情報削除コマンドを実行
+            doCommand(sender);
+        }
+
+        private void DoBootLoaderModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // USB HID接続がない場合はエラーメッセージを表示
+            if (CheckUSBDeviceDisconnected()) {
+                return;
+            }
+            // 確認メッセージを表示し、Yesの場合だけ処理を続行する
+            string message = string.Format("{0}\n\n{1}",
+                AppCommon.MSG_BOOT_LOADER_MODE,
+                AppCommon.MSG_PROMPT_BOOT_LOADER_MODE);
+            if (FormUtil.DisplayPromptPopup(this, message) == false) {
+                return;
+            }
+            // ブートローダーモード遷移コマンドを実行
             doCommand(sender);
         }
 

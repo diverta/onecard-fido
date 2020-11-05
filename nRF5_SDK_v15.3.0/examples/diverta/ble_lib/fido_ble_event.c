@@ -130,6 +130,11 @@ bool fido_ble_evt_handler(ble_evt_t *p_ble_evt, void *p_context)
             ble_u2f_on_disconnect(p_u2f, p_ble_evt);
             break;
 
+        case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
+            // ペアリング要求があった場合の処理
+            fido_ble_pairing_on_evt_sec_params_request(p_ble_evt);
+            break;
+            
         case BLE_GAP_EVT_AUTH_STATUS:
             // ペアリングが成功したかどうかを判定
             fido_ble_pairing_on_evt_auth_status(p_ble_evt);
@@ -159,11 +164,6 @@ bool fido_ble_pm_evt_handler(pm_evt_t *p_evt)
     // ペアリング済みである端末からの
     // 再ペアリング要求を受入れるようにする
     fido_ble_pairing_allow_repairing(p_evt);
-    
-    // ペアリング情報の削除が完了したときの処理を行う
-    if (fido_ble_pairing_delete_bonds_response(p_evt)) {
-        return true;
-    }
     
     // ペアリングが無効になってしまった場合
     // ペアリングモードLED点滅を開始させる

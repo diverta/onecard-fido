@@ -44,9 +44,9 @@ MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して
 
 BLEセントラルサービスを使用したオプション機能です。
 
-### [BLEデバイスによる自動認証](BLEDAUTH.md)
+### [BLE近接認証](BLEDAUTH.md)
 
-FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
+FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、スマートフォンなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
 
 ## ご参考情報
 

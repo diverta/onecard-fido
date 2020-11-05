@@ -29,47 +29,32 @@ MDBT50Q DongleをPCのUSBポートに装着します。<br>
 書込み用ツール「nRF Util」を、あらかじめPCに導入しておきます。<br>
 詳細につきましては、手順書[「nRF Utilインストール手順」](../../../nRF5_SDK_v15.3.0/NRFUTILINST.md)をご参照願います。
 
-### Python3ライブラリーの準備
+### 管理ツールの準備
 
-後述のPython3スクリプト「[`HookUpHIDBLMode.py`](../../../nRF5_SDK_v15.3.0/HookUpHIDBLMode.py)」を実行させるために必要な依存ライブラリー「hidapi」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「hidapiインストール手順」](../../../nRF5_SDK_v15.3.0/PYHIDAPIINST.md)をご参照願います。
+[FIDO認証器管理ツール](../../../MaintenanceTool/README.md)をPCにインストールします。<br>
+以下の手順書をご参照願います。
+
+* <b>[インストール手順（macOS版）](../../../MaintenanceTool/macOSApp/INSTALLPRG.md) </b>
+* <b>[インストール手順（Windows版）](../../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>
 
 ## アプリケーションの書込み
 
 ### ブートローダーモードに遷移
 
-Python3スクリプト「[`HookUpHIDBLMode.py`](../../../nRF5_SDK_v15.3.0/HookUpHIDBLMode.py)」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
-以下のコマンドを実行します。
+管理ツールのメニュー「ブートローダーモード遷移」を実行し、MDBT50Q Dongleをブートローダーモードに遷移させます。<br>
+（下図はmacOS版による実行イメージになります）
 
-```
-GITHUB_DIR=${HOME}/GitHub/onecard-fido
-python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
-```
+<img src="../assets02/0001.jpg" width="400">
 
-下記は実行例になります。
+処理続行を確認するポップアップが表示されるので「Yes」ボタンをクリックします。
 
-```
-bash-3.2$ GITHUB_DIR=${HOME}/GitHub/onecard-fido
-bash-3.2$ python3 ${GITHUB_DIR}/nRF5_SDK_v15.3.0/HookUpHIDBLMode.py
-HID device: path=b'IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/XHC1@14/XHC1@14000000/HS03@14100000/Secure Dongle@14100000/IOUSBHostInterface@0/AppleUserUSBHostHIDDevice', usage_page=61904, usage=1
----- sent data ----
-b'ffffffff860008d4e5f607182930410000000000000000000000000000000000'
-b'0000000000000000000000000000000000000000000000000000000000000000'
----- received data ----
-b'ffffffff860011d4e5f607182930410100330102050002070000000000000000'
-b'0000000000000000000000000000000000000000000000000000000000000000'
----- INIT done ----
----- sent data ----
-b'01003301c5000000000000000000000000000000000000000000000000000000'
-b'0000000000000000000000000000000000000000000000000000000000000000'
----- received data ----
-b'01003301c5000100000000000000000000000000000000000000000000000000'
-b'0000000000000000000000000000000000000000000000000000000000000000'
----- command done ----
-bash-3.2$
-```
+<img src="../assets02/0002.jpg" width="400">
 
-コマンド実行が完了すると、MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
+実行が完了し、ポップアップが表示されます。
+
+<img src="../assets02/0003.jpg" width="400">
+
+MDBT50Q Dongleが自動的に、ブートローダーモードに遷移します。<br>
 MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認します。
 
 <img src="assets/0006.jpg" width="400">

@@ -41,12 +41,12 @@ void ble_service_central_stat_info_init(void)
 static void debug_print_adv_stat_info(ADV_STAT_INFO_T *info)
 {
     NRF_LOG_DEBUG("Bluetooth address:%02x%02x%02x%02x%02x%02x",
-        info->peer_addr[0],
-        info->peer_addr[1],
-        info->peer_addr[2],
-        info->peer_addr[3],
-        info->peer_addr[4],
-        info->peer_addr[5]
+        info->peer_addr.addr[0],
+        info->peer_addr.addr[1],
+        info->peer_addr.addr[2],
+        info->peer_addr.addr[3],
+        info->peer_addr.addr[4],
+        info->peer_addr.addr[5]
         );
     NRF_LOG_DEBUG("Device name:%s (TX power=%d, RSSI=%d), UUID(%d bytes):", 
         info->dev_name, info->tx_power, info->rssi, info->uuid_bytes_size);
@@ -63,7 +63,7 @@ void ble_service_central_stat_debug_print(void)
 static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t const *p_adv_report)
 {
     // Bluetoothアドレス、RSSI、Tx Power Levelを設定
-    memcpy(info->peer_addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN);
+    info->peer_addr = p_adv_report->peer_addr;
     info->rssi = p_adv_report->rssi;
     info->tx_power = p_adv_report->tx_power;
 
@@ -90,7 +90,6 @@ static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t co
         uint8_t *p_field_data = p_data + index + 2;
         uint8_t field_data_size = field_length - 1;
         
-        info->ad_type = field_type;
         switch (field_type) {
             case 2:
             case 3:
@@ -100,6 +99,7 @@ static void set_adv_stat_info(ADV_STAT_INFO_T *info, ble_gap_evt_adv_report_t co
             case 7:
                 // UUIDバイト配列
                 // ビッグエンディアン形式で格納させる
+                info->uuid_type = field_type;
                 info->uuid_bytes_size = field_data_size;
                 for (uint8_t c = 0; c < field_data_size; c++) {
                     info->uuid_bytes[field_data_size - 1 - c] = p_field_data[c];
@@ -123,12 +123,12 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
 {
     for (uint8_t idx = 0; idx < ADV_STAT_INFO_SIZE_MAX; idx++) {
         // 同一のアドレスが出現したら、その位置に上書き
-        if (memcmp(adv_stat_info[idx].peer_addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN) == 0) {
+        if (memcmp(adv_stat_info[idx].peer_addr.addr, p_adv_report->peer_addr.addr, BLE_GAP_ADDR_LEN) == 0) {
             set_adv_stat_info(&adv_stat_info[idx], p_adv_report);
             return;
         }
         // ブランクが出現したら、その位置に新規追加し、データ数を設定
-        if (memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) == 0) {
+        if (memcmp(adv_stat_info[idx].peer_addr.addr, zero_addr, BLE_GAP_ADDR_LEN) == 0) {
             set_adv_stat_info(&adv_stat_info[idx], p_adv_report);
             adv_stat_info_size = idx + 1;
             return;
@@ -175,7 +175,7 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
     for (uint8_t i = 0; i < adv_stat_info_size; i++) {
         // UUIDを文字列変換
         ADV_STAT_INFO_T *info = &adv_stat_info[i];
-        uuid_bytes_to_ascii(info->uuid_bytes, info->ad_type, uuid_buf);
+        uuid_bytes_to_ascii(info->uuid_bytes, info->uuid_type, uuid_buf);
 
         if (strcmp(uuid_buf, uuid_strict_string) != 0) {
             // UUIDがマッチしていない場合は次の統計情報に移る
@@ -193,32 +193,23 @@ ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string)
     return matched_info;
 }
 
-ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes)
+bool ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *peer_addr)
 {
     // BLEスキャン用パラメーター
     //   0 - 15: サービスUUID（16バイト）
     //  16 - 21: Bluetoothアドレス（6バイト）
-    uint8_t *uuid_bytes = scan_param_bytes;
-    uint8_t *peer_addr = scan_param_bytes + 16;
+    uint8_t *param_uuid_bytes = scan_param_bytes;
+    uint8_t *param_peer_addr = scan_param_bytes + 16;
 
-    // スキャン結果の統計情報についてチェック
-    ADV_STAT_INFO_T *matched_info = NULL;
-    for (uint8_t i = 0; i < adv_stat_info_size; i++) {
-        ADV_STAT_INFO_T *info = &adv_stat_info[i];
-        if (memcmp(info->uuid_bytes, uuid_bytes, info->uuid_bytes_size) != 0) {
-            // UUIDがマッチしていない場合は次の統計情報に移る
-            continue;
-        }
-        if (memcmp(info->peer_addr, peer_addr, 6) != 0) {
-            // アドレスがマッチしていない場合は次の統計情報に移る
-            continue;
-        }
-        // マッチしたデバイスの統計情報を退避
-        matched_info = info;
-        break;
+    if (memcmp(uuid_bytes, param_uuid_bytes, uuid_bytes_size) != 0) {
+        // UUIDがマッチしていない場合はfalse
+        return false;
     }
-    
-    return matched_info;
+    if (memcmp(peer_addr, param_peer_addr, 6) != 0) {
+        // アドレスがマッチしていない場合はfalse
+        return false;
+    }
+    return true;
 }
 
 //
@@ -246,7 +237,7 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
         sprintf(peer_addr_rssi_buf, 
             "\"%s\",%s,%d",
             adv_stat_info[idx].dev_name,
-            ble_service_central_stat_btaddr_string(adv_stat_info[idx].peer_addr),
+            ble_service_central_stat_btaddr_string(adv_stat_info[idx].peer_addr.addr),
             adv_stat_info[idx].rssi
             );
         // CSVデータを編集
@@ -254,10 +245,17 @@ size_t ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info
         size = sprintf(adv_stat_info_string, 
             "%s%s%s", 
             adv_stat_info_string_, 
-            memcmp(adv_stat_info[idx].peer_addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
+            memcmp(adv_stat_info[idx].peer_addr.addr, zero_addr, BLE_GAP_ADDR_LEN) ? peer_addr_rssi_buf : ",,",
             (idx == ADV_STAT_INFO_SIZE_MAX - 1) ? "" : ","
             );
     }
 
     return size;
+}
+
+char *ble_service_central_stat_uuid_string(uint8_t *uuid_bytes)
+{
+    // 16バイトのUUIDを、文字列形式に変換
+    uuid_bytes_to_ascii(uuid_bytes, 0x07, uuid_buf);
+    return uuid_buf;
 }

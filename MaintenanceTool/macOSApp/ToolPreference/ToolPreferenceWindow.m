@@ -21,6 +21,7 @@
     @property (assign) IBOutlet NSButton        *buttonAuthParamReset;
     @property (assign) IBOutlet NSButton        *buttonClose;
     @property (assign) IBOutlet NSButton        *buttonCheck;
+    @property (assign) IBOutlet NSButton        *buttonCheckPairing;
 
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -116,6 +117,8 @@
         // 画面項目をブランクに設定・使用不可とする
         [[self buttonCheck] setState:NSControlStateValueOff];
         [[self buttonCheck] setEnabled:false];
+        [[self buttonCheckPairing] setState:NSControlStateValueOff];
+        [[self buttonCheckPairing] setEnabled:false];
         [[self fieldServiceUUIDString] setStringValue:@""];
         [[self fieldServiceUUIDScanSec] setStringValue:@""];
         [[self fieldServiceUUIDString] setEnabled:false];
@@ -143,6 +146,13 @@
             [[self toolPreferenceCommand] bleScanAuthEnabled] ?
                 NSControlStateValueOn : NSControlStateValueOff;
         [[self buttonCheck] setState:state];
+        
+        // ペアリング要否ボタンを設定
+        [[self buttonCheckPairing] setEnabled:true];
+        NSControlStateValue statePairing =
+            [[self toolPreferenceCommand] blePairingIsNeeded] ?
+                NSControlStateValueOn : NSControlStateValueOff;
+        [[self buttonCheckPairing] setState:statePairing];
 
         // 設定書込・解除ボタンを押下可とする
         [[self buttonAuthParamSet] setEnabled:true];
@@ -174,6 +184,8 @@
         // スキャン対象サービスUUID、スキャン秒数を設定し、自動認証用パラメーター設定コマンドを実行
         [[self toolPreferenceCommand] setBleScanAuthEnabled:
             ([[self buttonCheck] state] == NSControlStateValueOn)];
+        [[self toolPreferenceCommand] setBlePairingIsNeeded:
+            ([[self buttonCheckPairing] state] == NSControlStateValueOn)];
         [[self toolPreferenceCommand] setServiceUUIDString:[[self fieldServiceUUIDString] stringValue]];
         [[self toolPreferenceCommand] setServiceUUIDScanSec:[[self fieldServiceUUIDScanSec] stringValue]];
         [[self toolPreferenceCommand] toolPreferenceWillProcess:COMMAND_AUTH_PARAM_SET];

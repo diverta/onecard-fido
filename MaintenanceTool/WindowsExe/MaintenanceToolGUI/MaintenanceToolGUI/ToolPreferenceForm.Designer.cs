@@ -30,6 +30,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolPreferenceForm));
             this.tabPreference = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkNeedPairing = new System.Windows.Forms.CheckBox();
             this.textScanSec = new System.Windows.Forms.TextBox();
             this.textScanUUID = new System.Windows.Forms.TextBox();
             this.checkScanEnable = new System.Windows.Forms.CheckBox();
@@ -58,11 +61,14 @@
             this.tabPreference.Location = new System.Drawing.Point(12, 12);
             this.tabPreference.Name = "tabPreference";
             this.tabPreference.SelectedIndex = 0;
-            this.tabPreference.Size = new System.Drawing.Size(460, 197);
+            this.tabPreference.Size = new System.Drawing.Size(460, 236);
             this.tabPreference.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.checkNeedPairing);
             this.tabPage1.Controls.Add(this.textScanSec);
             this.tabPage1.Controls.Add(this.textScanUUID);
             this.tabPage1.Controls.Add(this.checkScanEnable);
@@ -75,21 +81,46 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(452, 171);
+            this.tabPage1.Size = new System.Drawing.Size(452, 210);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "自動認証設定";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(203, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(224, 36);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "スマートフォンをBLEデバイスとして使用したい場合は、専用アプリをインストールした後、専用アプリによりペアリングを行ってください。";
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(26, 54);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(150, 24);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "スマートフォンをBLEデバイスとして使用";
+            // 
+            // checkNeedPairing
+            // 
+            this.checkNeedPairing.AutoSize = true;
+            this.checkNeedPairing.Location = new System.Drawing.Point(182, 60);
+            this.checkNeedPairing.Name = "checkNeedPairing";
+            this.checkNeedPairing.Size = new System.Drawing.Size(15, 14);
+            this.checkNeedPairing.TabIndex = 11;
+            this.checkNeedPairing.UseVisualStyleBackColor = true;
+            // 
             // textScanSec
             // 
-            this.textScanSec.Location = new System.Drawing.Point(182, 82);
+            this.textScanSec.Location = new System.Drawing.Point(182, 126);
             this.textScanSec.Name = "textScanSec";
             this.textScanSec.Size = new System.Drawing.Size(40, 19);
             this.textScanSec.TabIndex = 4;
             // 
             // textScanUUID
             // 
-            this.textScanUUID.Location = new System.Drawing.Point(182, 52);
+            this.textScanUUID.Location = new System.Drawing.Point(182, 96);
             this.textScanUUID.Name = "textScanUUID";
             this.textScanUUID.Size = new System.Drawing.Size(245, 19);
             this.textScanUUID.TabIndex = 3;
@@ -105,7 +136,7 @@
             // 
             // buttonReset
             // 
-            this.buttonReset.Location = new System.Drawing.Point(286, 120);
+            this.buttonReset.Location = new System.Drawing.Point(286, 164);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(80, 23);
             this.buttonReset.TabIndex = 7;
@@ -115,7 +146,7 @@
             // 
             // buttonWrite
             // 
-            this.buttonWrite.Location = new System.Drawing.Point(186, 120);
+            this.buttonWrite.Location = new System.Drawing.Point(186, 164);
             this.buttonWrite.Name = "buttonWrite";
             this.buttonWrite.Size = new System.Drawing.Size(80, 23);
             this.buttonWrite.TabIndex = 6;
@@ -125,7 +156,7 @@
             // 
             // buttonRead
             // 
-            this.buttonRead.Location = new System.Drawing.Point(86, 120);
+            this.buttonRead.Location = new System.Drawing.Point(86, 164);
             this.buttonRead.Name = "buttonRead";
             this.buttonRead.Size = new System.Drawing.Size(80, 23);
             this.buttonRead.TabIndex = 5;
@@ -135,7 +166,7 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(26, 85);
+            this.label5.Location = new System.Drawing.Point(26, 129);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(150, 12);
             this.label5.TabIndex = 10;
@@ -143,7 +174,7 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(26, 55);
+            this.label2.Location = new System.Drawing.Point(26, 99);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(150, 12);
             this.label2.TabIndex = 9;
@@ -166,15 +197,15 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(452, 171);
+            this.tabPage2.Size = new System.Drawing.Size(452, 210);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "バージョン";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // labelCopywrite
+            // labelCopyright
             // 
             this.labelCopyright.Location = new System.Drawing.Point(113, 122);
-            this.labelCopyright.Name = "labelCopywrite";
+            this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(226, 12);
             this.labelCopyright.TabIndex = 7;
             this.labelCopyright.Text = "labelCopywrite";
@@ -207,7 +238,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(202, 226);
+            this.buttonCancel.Location = new System.Drawing.Point(202, 263);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(80, 23);
             this.buttonCancel.TabIndex = 1;
@@ -219,13 +250,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 261);
+            this.ClientSize = new System.Drawing.Size(484, 304);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.tabPreference);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ToolPreferenceForm";
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ツール設定";
             this.tabPreference.ResumeLayout(false);
@@ -256,5 +289,8 @@
         private System.Windows.Forms.Button buttonRead;
         private System.Windows.Forms.TextBox textScanSec;
         private System.Windows.Forms.TextBox textScanUUID;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkNeedPairing;
     }
 }

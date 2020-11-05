@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">SecureDongleApp</string>
+    <string name="pairing_and_connect">ペアリング実行</string>
+    <string name="start_ble_advertisement">BLE近接認証開始</string>
+    <string name="stop_ble_advertisement">BLE近接認証終了</string>
+    <string name="tips_text_initial">BLE近接認証開始ボタンをタップしてから、ユーザー登録またはログイン（WebAuthn）を実行してください。\n\nドングルとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
+    <string name="status_text_initial">BLEアドバタイジングが開始されていません。</string>
+    <string name="msg_ble_peripheral_mode_unavailable">BLEペリフェラルモードが使用できません。</string>
+    <string name="msg_ble_advertise_unavailable">BLEアドバタイジングが使用できません。</string>
+    <string name="msg_ble_advertise_start_fail">BLEアドバタイジングを開始できません。</string>
+    <string name="msg_pairing_will_start">ペアリングを開始します。</string>
+    <string name="msg_pairing_success">ペアリングが成功しました。</string>
+    <string name="msg_pairing_failure">ペアリングが失敗しました。</string>
+    <string name="msg_pairing_scan_timeout">ドングルをスキャンできませんでした。ドングルがペアリングモードに遷移していない可能性があります。</string>
+    <string name="msg_pairing_start_fail">ペアリング処理を開始することができませんでした。</string>
+    <string name="msg_pairing_already_bonded">すでにドングルとのペアリングが行われているようです。</string>
+    <string name="msg_bleadv_for_auth_will_start">BLE近接認証を開始します。</string>
+    <string name="msg_bleadv_for_auth_will_stop">BLE近接認証を終了します。</string>
+    <string name="msg_bleadv_for_auth_started">認証のためのBLEアドバタイジングが開始されました。</string>
+    <string name="msg_bleadv_for_auth_start_fail">認証のためのBLEアドバタイジングを開始できませんでした。</string>
+    <string name="msg_operation_timeout">操作がタイムアウトしました。</string>
+    <string name="msg_bluetooth_is_turned_off">Bluetoothがオフになっています。Bluetoothをオンにしてください。</string>
+</resources>
