@@ -27,7 +27,7 @@ namespace MaintenanceToolGUI
             toolPreference = tp;
         }
 
-        public void SetTitleAndVersionText(String toolName, String toolVersion, String toolCopyright)
+        public void SetTitleAndVersionText(string toolName, string toolVersion, string toolCopyright)
         {
             // ツールタイトル表示
             labelToolName.Text = toolName;
@@ -62,11 +62,13 @@ namespace MaintenanceToolGUI
             textScanUUID.Text = "";
             textScanSec.Text = "";
             checkScanEnable.Checked = false;
+            checkNeedPairing.Checked = false;
 
             // 画面項目を使用不可とする
             textScanUUID.Enabled = false;
             textScanSec.Enabled = false;
             checkScanEnable.Enabled = false;
+            checkNeedPairing.Enabled = false;
 
             // 設定書込・解除ボタンを押下不可とする
             buttonWrite.Enabled = false;
@@ -79,6 +81,7 @@ namespace MaintenanceToolGUI
             textScanUUID.Enabled = true;
             textScanSec.Enabled = true;
             checkScanEnable.Enabled = true;
+            checkNeedPairing.Enabled = true;
 
             // 設定書込・解除ボタンを押下可とする
             buttonWrite.Enabled = true;
@@ -128,6 +131,7 @@ namespace MaintenanceToolGUI
             parameter.ServiceUUIDString = textScanUUID.Text;
             parameter.ServiceUUIDScanSec = textScanSec.Text;
             parameter.BleScanAuthEnabled = checkScanEnable.Checked;
+            parameter.BlePairingIsNeeded = checkNeedPairing.Checked;
             toolPreference.DoCommandToolPreference(parameter);
         }
 
@@ -206,19 +210,17 @@ namespace MaintenanceToolGUI
         //
         // 自動認証設定コマンド実行結果を画面項目に設定
         //
-        public void SetFields(string[] fields)
+        public void SetFields(ToolPreferenceParameter param)
         {
-            // 例外抑止
-            if (fields.Length != 3) {
-                return;
-            }
-            // 配列の先頭から画面項目に設定
-            //   自動認証機能を有効化
-            checkScanEnable.Checked = (fields[0] == "1");
-            //   スキャン対象UUID
-            textScanUUID.Text = fields[1];
-            //   スキャン秒数
-            textScanSec.Text = fields[2];
+            // 自動認証フラグ
+            checkScanEnable.Checked = param.BleScanAuthEnabled;
+            checkNeedPairing.Checked = param.BlePairingIsNeeded;
+
+            // スキャン対象UUID
+            textScanUUID.Text = param.ServiceUUIDString;
+
+            // スキャン秒数
+            textScanSec.Text = param.ServiceUUIDScanSec;
         }
 
         //
