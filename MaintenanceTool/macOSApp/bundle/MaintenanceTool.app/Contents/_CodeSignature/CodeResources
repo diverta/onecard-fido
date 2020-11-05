@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		8ZQzjMpnGtHa5RIe7YMo1t1t1k0=
+		eGKA0Z81DwV6IhsX8NusmlRJbv0=
 		</data>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<data>
@@ -30,15 +30,15 @@
 		</data>
 		<key>Resources/ToolPreferenceWindow.nib</key>
 		<data>
-		e7T5eI+T/OS9gcobMUw9PX/XziA=
+		jnbnPO9bJ0IbIV7XK8caLFDhjPE=
 		</data>
-		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.12.zip</key>
 		<data>
-		dsErB5GXazP7fOHqkjXRL4Xh51g=
+		2gUw3AIlV+j0h39uw0hQ2GUh1uc=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.2.12.zip</key>
 		<data>
-		b57eZenPwpE7WW+8rSLuq6S3QII=
+		2769n/msOqwlbO8czMyff6yDbm8=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -53,7 +53,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			SLZRDbC/UdW0BkU7fASzzENaWCw=
+			g0B5ZRCtTgo1nZWuyjP+tgqQXo0=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -72,7 +72,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			iD5xojlwVUSPrZ6P1/KcfwDnxL7OvLDzOXohRMeXdrI=
+			1ghWl+MMobfGBRxTiYT3LcJpQw7eCX3zl92mnvWtxpU=
 			</data>
 		</dict>
 		<key>Resources/DFUProcessingWindow.nib</key>
@@ -107,21 +107,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			gmOPRMwWuay2aclXd7ciHAACZ9bnSKOvUqsLV+L8VTA=
+			bbcJ5Oy3A7czEyzg5Q0MbZ1yE0ALXkhUUmsw3OBWEco=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.12.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			BaXU/TwIG5TfsvzaQ+2po0n2O2SMhHi4cuhMKOiIACQ=
+			R33yu3S699+r1tXHs+NEG6b5eqvUgYPCblwXXzDlzio=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.2.12.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			itBSdkEV85jbpvt+3dwIASXnJCok/T/e5fYODACKalY=
+			aWhhSbBIp5rH1EunbD1Bdnk//XSmYmmYwm7SSYawnRk=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
@@ -137,7 +137,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			p5+q/t5w9ZeBbwwaSqQWZ9FknMNWb5munPnleSxVGzo=
+			5IbLKS9+UbrInyMDiwHBMz+o4zPDmqNSgC74gbrqLf0=
 			</data>
 			<key>optional</key>
 			<true/>

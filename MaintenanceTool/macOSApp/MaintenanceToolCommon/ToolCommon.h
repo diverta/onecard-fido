@@ -37,7 +37,8 @@ typedef enum : NSInteger {
     COMMAND_AUTH_RESET,
     COMMAND_TOOL_PREF_PARAM,
     COMMAND_TOOL_PREF_PARAM_INQUIRY,
-    COMMAND_USB_DFU
+    COMMAND_USB_DFU,
+    COMMAND_ERASE_BONDS
 } Command;
 
 // トランスポート種別
