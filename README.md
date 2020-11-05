@@ -27,7 +27,7 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/11/04
+#### 2020/11/05
 
 FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 （ファームウェア[Version 0.2.12](https://github.com/diverta/onecard-fido/tree/improve-SDApp-Android-20201103/nRF5_SDK_v15.3.0/firmwares)は、管理ツールに同梱しています。<br>
