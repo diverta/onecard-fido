@@ -38,10 +38,10 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 - <b>[Windows版 FIDO認証器管理ツール（Version 0.1.33）](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
 修正点は以下になります。
-- [BLEデバイス近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を、スマートフォンで利用できるようにする（[#371](https://github.com/diverta/onecard-fido/issues/371) ご参照）
+- [BLE近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を、スマートフォンで利用できるようにする（[#371](https://github.com/diverta/onecard-fido/issues/371) ご参照）
 - 開発時運用メニュー（ペアリング情報削除機能／ブートローダーモード遷移機能）を追加（[#381](https://github.com/diverta/onecard-fido/pull/381)、[#383](https://github.com/diverta/onecard-fido/pull/383) ご参照）
 
-また、[BLEデバイス近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)で使用することができる[Androidアプリ](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/SecureDongleApp/Android/README.md)も合わせてリリースしています。<br>
+また、[BLE近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)で使用することができる[Androidアプリ](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/SecureDongleApp/Android/README.md)も合わせてリリースしています。<br>
 （手順につきましては、[こちらの手順書](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/SecureDongleApp/Android/BLEAUTH.md)をご参照）
 
 
@@ -49,7 +49,7 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 
 ## FIDO2について
 
-最新バージョンのプログラムにより使用可能となった新機能「BLEデバイス近接認証機能（パスワードレス・ボタンレス）」のイメージです。
+最新バージョンのプログラムにより使用可能となった新機能「BLE近接認証機能（パスワードレス・ボタンレス）」のイメージです。
 
 <img src="FIDO2Device/MDBT50Q_Dongle/assets01/0000.jpg" width="720">
 <img src="FIDO2Device/MDBT50Q_Dongle/assets01/0001.jpg" width="720">
@@ -57,7 +57,7 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 
 FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わりに、スマートフォンなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させる機能です。
 
-詳細につきましてはドキュメント<b>「[BLEデバイス近接認証機能](FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)」</b>をご参照願います。
+詳細につきましてはドキュメント<b>「[BLE近接認証機能](FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)」</b>をご参照願います。
 
 #### CTAP2とは
 
