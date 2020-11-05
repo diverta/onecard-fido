@@ -13,7 +13,7 @@ Android版を用意しました。
 ## [Android版](Android)
 
 #### 画面イメージ
-<img src="Android/assets01/0001.jpg" width="200">
+<img src="Android/assets02/0004.jpg" width="200">
 
 #### 動作環境
 Android Version 8.0〜

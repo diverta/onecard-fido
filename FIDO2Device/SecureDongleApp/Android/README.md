@@ -8,7 +8,7 @@
 * BLE近接認証実行
 
 #### 画面イメージ
-<img src="assets01/0001.jpg" width="200">
+<img src="assets02/0004.jpg" width="200">
 
 #### 動作環境
 Android Version 8.0〜

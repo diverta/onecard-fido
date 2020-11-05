@@ -57,7 +57,7 @@ BLE近接認証アプリをAndroid環境にインストールする手順を掲�
 
 <img src="assets01/0010.jpg" width="200">
 
-下図のようにBLE近接アプリが起動します。
+下図のようにBLE近接認証アプリが起動します。
 
 <img src="assets01/0011.jpg" width="200">
 

@@ -2,11 +2,11 @@
 
 ## 概要
 
-BLE近接認証アプリを使用し、WebAuthnのユーザー登録／ログインを実行する手順を掲載しています。
+[BLE近接認証アプリ](README.md)を使用し、WebAuthnのユーザー登録／ログインを実行する手順を掲載しています。
 
 #### 機能概要
 
-FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わりに、BLE近接認証アプリを導入したスマートフォンを近づけることにより、[認証処理を自動的に続行させる機能](../../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)です。
+FIDO認証（WebAuthn）実行時、[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)上のボタンを押す代わりに、BLE近接認証アプリを導入したスマートフォンを近づけることにより、[認証処理を自動的に続行させる機能](../../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)です。
 
 ## 事前準備
 
@@ -40,7 +40,7 @@ Androidスマートフォンに、BLE近接認証アプリをインストール�
 #### 近接認証開始
 
 Androidに導入した「[BLE近接認証アプリ](README.md)」を起動します。<br>
-起動したら、画面上の「BLE近接認証実行」をタップします。
+起動したら、画面上の「BLE近接認証開始」をタップします。
 
 <img src="assets02/0001.jpg" width="200">
 
@@ -56,7 +56,7 @@ BLEアドバタイジングが開始され、MDBT50Q Dongleが、Androidを対�
 
 <img src="assets02/0003.jpg" width="200">
 
-必要に応じて、再度「BLE近接認証実行」をタップし、BLEアドバタイジングを開始させるようにします。
+必要に応じて、再度「BLE近接認証開始」をタップし、BLEアドバタイジングを開始させるようにします。
 
 #### FIDO認証の実行
 
@@ -78,7 +78,7 @@ macOS環境において、Chromeブラウザーを使用し「[WebAuthn.io](http
 
 #### ユーザー登録
 
-「[BLE近接認証アプリ](README.md)」の「BLE近接認証実行」を開始します。
+「[BLE近接認証アプリ](README.md)」の「BLE近接認証開始」を実行します。
 
 <img src="assets02/0002.jpg" width="200">
 
@@ -99,7 +99,7 @@ macOS環境において、Chromeブラウザーを使用し「[WebAuthn.io](http
 
 #### ログイン
 
-「[BLE近接認証アプリ](README.md)」の「BLE近接認証実行」を開始します。
+「[BLE近接認証アプリ](README.md)」の「BLE近接認証開始」を実行します。
 
 <img src="assets02/0002.jpg" width="200">
 
