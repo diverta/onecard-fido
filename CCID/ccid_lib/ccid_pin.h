@@ -31,7 +31,6 @@ typedef enum {
 
 bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_failed);
 bool ccid_pin_get_retries(uint8_t *retries);
-bool ccid_pin_create(const void *buf, uint8_t len, uint8_t max_retries);
 bool ccid_pin_update(PIV_PIN_TYPE type, const void *buf, uint8_t len);
 
 #ifdef __cplusplus

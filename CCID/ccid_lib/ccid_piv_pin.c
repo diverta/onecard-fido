@@ -39,12 +39,6 @@ bool ccid_piv_pin_init(void)
 {
     // 内部保持データの初期化
     pin_is_validated = false;
-
-    // PIN／リトライカウンターの初期化
-    if (ccid_pin_create(PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE, PIN_DEFAULT_RETRY_CNT) == false) {
-        return false;
-    }
-
     return true;
 }
 

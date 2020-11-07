@@ -19,11 +19,6 @@ static uint8_t  m_pin_buffer[PIN_DEFAULT_SIZE];
 //
 // 関数群
 //
-static bool save_pin_retries_default(uint8_t retries)
-{
-    m_default_retries = retries;
-    return true;
-}
 static bool save_pin_retries_current(uint8_t retries)
 {
     m_current_retries = retries;
@@ -222,27 +217,4 @@ bool ccid_pin_update(PIV_PIN_TYPE type, const void *buf, uint8_t len)
             break;
     }
     return ret;
-}
-
-//
-// 仮の実装です。
-//
-bool ccid_pin_create(const void *buf, uint8_t len, uint8_t max_retries) 
-{
-    // PINを設定
-    if (save_pin_code((uint8_t *)buf, len) == false) {
-        return false;
-    }
-
-    // 内部保持用のリトライカウンターを設定
-    if (save_pin_retries_current(max_retries) == false) {
-        return false;
-    }
-
-    // デフォルトのリトライカウンターを設定
-    if (save_pin_retries_default(max_retries) == false) {
-        return false;
-    }
-
-    return true;
 }
