@@ -295,9 +295,6 @@ bool ccid_piv_object_pin_get(uint8_t obj_tag, uint8_t *pin_code, uint8_t *retrie
         memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE);
         memset(pin_buffer + 10, 0, 6);
         fido_log_debug("PIV PIN is not registered, use default: tag=0x%02x", obj_tag);
-
-    } else {
-        fido_log_debug("PIV PIN is registered: tag=0x%02x", obj_tag);
     }
 
     // PINとリトライカウンターを戻す
