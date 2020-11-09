@@ -6,52 +6,34 @@
  */
 #include <string.h>
 
+#include "ccid_apdu.h"
 #include "ccid_pin.h"
+#include "ccid_piv_object.h"
 
-//
-// 仮の実装です。
-//
-// リトライカウンター／PINコードの永続化領域
-//
-static uint16_t m_default_retries;
-static uint16_t m_current_retries;
-static uint8_t  m_pin_buffer[PIN_DEFAULT_SIZE];
 //
 // 関数群
 //
-static bool save_pin_retries_current(uint8_t retries)
-{
-    m_current_retries = retries;
-    return true;
-}
-static bool restore_pin_retries(uint8_t *def, uint8_t *curr)
+static bool restore_pin_retries(uint8_t *curr)
 {
     // パラメーターチェック
-    if (def == NULL || curr == NULL) {
+    if (curr == NULL) {
         return false;
     }
     // 登録されているリトライカウンターを取得
-    *def = m_default_retries;
-    *curr = m_current_retries;
+    if (ccid_piv_object_pin_get(TAG_PIV_PIN, NULL, curr) == false) {
+        return false;
+    }
     return true;
 }
-static bool save_pin_code(uint8_t *pin_buf, size_t pin_buf_size)
+
+static bool restore_pin_code(uint8_t *pin_buf)
 {
     // 登録されているPINを取得
-    memset(m_pin_buffer, 0xff, sizeof(m_pin_buffer));
-    memcpy(m_pin_buffer, pin_buf, pin_buf_size);
+    if (ccid_piv_object_pin_get(TAG_PIV_PIN, pin_buf, NULL) == false) {
+        return false;
+    }
     return true;
 }
-static bool restore_pin_code(uint8_t *pin_buf, size_t pin_buf_size)
-{
-    // 登録されているPINを取得
-    memset(pin_buf, 0xff, pin_buf_size);
-    memcpy(pin_buf, m_pin_buffer, pin_buf_size);
-    return true;
-}
-//
-// 仮の実装です（ここまで）
-//
 
 // 一時読込み用領域
 static uint8_t pin_buf[PIN_DEFAULT_SIZE];
@@ -67,7 +49,7 @@ static bool pin_code_is_equal(const void *buf, uint8_t len, bool *is_equal)
     }
 
     // 登録されているPINを取得
-    if (restore_pin_code(pin_buf, sizeof(pin_buf)) == false) {
+    if (restore_pin_code(pin_buf) == false) {
         return false;
     }
 
@@ -85,7 +67,7 @@ static bool pin_code_is_blank(bool *is_blank)
     }
 
     // 登録されているPINを取得
-    if (restore_pin_code(pin_buf, sizeof(pin_buf)) == false) {
+    if (restore_pin_code(pin_buf) == false) {
         return false;
     }
 
@@ -114,9 +96,8 @@ bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_
     }
 
     // リトライカウンターのデフォルト／現在値を参照
-    uint8_t default_cnt;
     uint8_t current_cnt;
-    if (restore_pin_retries(&default_cnt, &current_cnt) == false) {
+    if (restore_pin_retries(&current_cnt) == false) {
         return false;
     }
     *retries = current_cnt;
@@ -135,19 +116,12 @@ bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_
     if (is_equal == false) {
         // NGの場合はリトライカウンターを１減らす
         *retries = --current_cnt;
-        // 現在のリトライカウンターを更新
-        if (save_pin_retries_current(current_cnt) == false) {
-            return false;
-        }
         *auth_failed = true;
-        return true;
+    } else {
+        // OKの場合はリトライカウンターをデフォルトに設定
+        *retries = PIN_DEFAULT_RETRY_CNT;
+        *auth_failed = false;
     }
-
-    // 認証が成功したら、リトライカウンターをデフォルト値に再設定
-    if (save_pin_retries_current(default_cnt) == false) {
-        return false;
-    }
-    *auth_failed = false;
     return true;
 }
 
@@ -169,9 +143,8 @@ bool ccid_pin_get_retries(uint8_t *retries)
     }
 
     // リトライカウンターのデフォルト／現在値を参照
-    uint8_t default_cnt;
     uint8_t current_cnt;
-    if (restore_pin_retries(&default_cnt, &current_cnt) == false) {
+    if (restore_pin_retries(&current_cnt) == false) {
         return false;
     }
 
@@ -185,21 +158,10 @@ bool ccid_pin_get_retries(uint8_t *retries)
 //
 static bool update_pin(const void *buf, uint8_t len)
 {
-    uint8_t default_cnt;
-    uint8_t current_cnt;
+    // TODO:
+    // PINコードを更新
+    // PINのリトライカウンターは、デフォルトに設定
 
-    // PINを更新
-    if (save_pin_code((uint8_t *)buf, len) == false) {
-        return false;
-    }
-    // リトライカウンターのデフォルトを参照
-    if (restore_pin_retries(&default_cnt, &current_cnt) == false) {
-        return false;
-    }
-    // PINのリトライカウンターをデフォルトに設定
-    if (save_pin_retries_current(default_cnt) == false) {
-        return false;
-    }
     // 処理成功
     return true;
 }

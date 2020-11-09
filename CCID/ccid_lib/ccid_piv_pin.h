@@ -24,6 +24,8 @@ size_t   ccid_piv_pin_policy_size(void);
 bool     ccid_piv_pin_init(void);
 uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu);
 uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu);
+void     ccid_piv_pin_retry(void);
+void     ccid_piv_pin_resume(bool success);
 
 #ifdef __cplusplus
 }
