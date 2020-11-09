@@ -93,6 +93,8 @@ extern "C" {
 #define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
 #define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
 #define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
+#define PIV_DATA_OBJ_80_RECORD_KEY      (0xBFC5)
+#define PIV_DATA_OBJ_81_RECORD_KEY      (0xBFC4)
 
 //
 // fido_flash_event.c

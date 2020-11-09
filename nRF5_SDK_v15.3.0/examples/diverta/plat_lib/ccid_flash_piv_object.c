@@ -81,6 +81,12 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
         case TAG_KEY_KEYMN:
             *record_key = PIV_DATA_OBJ_9D_RECORD_KEY;
             break;
+        case TAG_PIV_PIN:
+            *record_key = PIV_DATA_OBJ_80_RECORD_KEY;
+            break;
+        case TAG_KEY_PUK:
+            *record_key = PIV_DATA_OBJ_81_RECORD_KEY;
+            break;
         default:
             return false;
     }
@@ -266,6 +272,18 @@ bool ccid_flash_piv_object_private_key_write(uint8_t key_tag, uint8_t key_alg, u
 }
 
 //
+// PIV PIN／リトライカウンター関連
+//
+bool ccid_flash_piv_object_pin_write(uint8_t obj_tag, uint8_t *obj_data, size_t obj_size)
+{
+    // 引数のデータを、Flash ROM書込み用データの一時格納領域にコピーし、
+    // Flash ROMに書込
+    uint8_t obj_alg = 0xff;
+    m_flash_func = (void *)ccid_flash_piv_object_pin_write;
+    return write_piv_object_data_to_fds(obj_tag, obj_alg, obj_data, obj_size);
+}
+
+//
 // PIVデータオブジェクト関連
 //
 bool ccid_flash_piv_object_data_read(uint8_t obj_tag, uint8_t *obj_data, size_t *obj_size, bool *is_exist)
@@ -311,6 +329,9 @@ void ccid_flash_piv_object_failed(void)
     if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_resume(false);
     }
+    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+        ccid_piv_object_pin_set_resume(false);
+    }
     m_flash_func = NULL;
 }
 
@@ -331,6 +352,9 @@ void ccid_flash_piv_object_gc_done(void)
     if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_retry();
     }
+    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+        ccid_piv_object_pin_set_retry();
+    }
     m_flash_func = NULL;
 }
 
@@ -348,6 +372,9 @@ void ccid_flash_piv_object_record_updated(void)
     }
     if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_resume(true);
+    }
+    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+        ccid_piv_object_pin_set_resume(true);
     }
     m_flash_func = NULL;
 }
