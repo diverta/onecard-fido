@@ -9,6 +9,7 @@
 #include "ccid_pin.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
+#include "ccid_piv_pin_update.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -79,19 +80,6 @@ static void apdu_resume_process(command_apdu_t *capdu, response_apdu_t *rapdu, u
     ccid_apdu_resume_process(capdu, rapdu);
 }
 
-static bool save_pin_retries_current(uint8_t retries)
-{
-    // 登録されているPIN／リトライカウンターを取得
-    // （登録されていない場合はデフォルトが戻ります）
-    uint8_t pin_buf[PIN_DEFAULT_SIZE];
-    if (ccid_piv_object_pin_get(TAG_PIV_PIN, pin_buf, NULL) == false) {
-        return false;
-    }
-
-    // PIN／リトライカウンターをセットで登録
-    return ccid_piv_object_pin_set(TAG_PIV_PIN, pin_buf, retries);
-}
-
 static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // 入力されたPINで認証実行
@@ -110,15 +98,12 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu)
     //  Flash ROMを更新後、
     //  ccid_piv_pin_retry／ccid_piv_pin_resumeの
     //  いずれかがコールバックされます。
-    if (save_pin_retries_current(m_current_retries)) {
+    uint16_t sw = ccid_piv_pin_update_retries(capdu->p2, m_current_retries);
+    if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         apdu_resume_prepare(capdu, rapdu);
-        return SW_NO_ERROR;
-
-    } else {
-        // 異常時はエラーレスポンス処理を指示
-        return SW_UNABLE_TO_PROCESS;
     }
+    return sw;
 }
 
 //
@@ -130,12 +115,7 @@ uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->p1 != 0x00) {
         return SW_WRONG_P1P2;
     }
-    PIV_PIN_TYPE pin_type;
-    if (capdu->p2 == 0x80) {
-        pin_type = PIV_PIN;
-    } else if (capdu->p2 == 0x81) {
-        pin_type = PIV_PUK;
-    } else {
+    if (capdu->p2 != 0x80 && capdu->p2 != 0x81) {
         return SW_REFERENCE_DATA_NOT_FOUND;
     }
     if (capdu->lc != 16) {
@@ -153,13 +133,7 @@ uint16_t ccid_piv_pin_set(command_apdu_t *capdu, response_apdu_t *rapdu)
 
     // PIN or PUKを更新
     uint8_t *update_pin = capdu->data + PIN_DEFAULT_SIZE;
-    if (ccid_pin_update(pin_type, update_pin, PIN_DEFAULT_SIZE) == false) {
-        // PINが更新できない場合は処理失敗
-        return SW_UNABLE_TO_PROCESS;
-    }
-
-    // 正常終了
-    return SW_NO_ERROR;
+    return ccid_piv_pin_update(capdu->p2, update_pin);
 }
 
 //
@@ -232,8 +206,8 @@ void ccid_piv_pin_retry(void)
     // 呼び出し先に応じて、処理を再実行
     uint16_t sw = SW_NO_ERROR;
     if (m_flash_func == (void *)ccid_piv_pin_auth) {
-        // 入力されたPINで認証実行
-        sw = verify_pin_code(m_capdu, m_rapdu);
+        // 現在のリトライカウンターを更新
+        sw = ccid_piv_pin_update_retries(m_capdu->p2, m_current_retries);
     }
 
     if (sw == SW_NO_ERROR) {

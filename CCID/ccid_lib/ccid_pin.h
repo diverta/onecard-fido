@@ -19,19 +19,8 @@ extern "C" {
 #define PIN_DEFAULT_SIZE        8
 #define PIN_DEFAULT_RETRY_CNT   3
 
-//
-// PIVで使用するPINの区分
-// (1) PIN: 通常のPIV認証に使用する番号
-// (2) PUK: PINブロックを解除するための認証に使用する番号
-//
-typedef enum {
-    PIV_PIN,
-    PIV_PUK,
-} PIV_PIN_TYPE;
-
 bool ccid_pin_verify(const void *buf, uint8_t len, uint8_t *retries, bool *auth_failed);
 bool ccid_pin_get_retries(uint8_t *retries);
-bool ccid_pin_update(PIV_PIN_TYPE type, const void *buf, uint8_t len);
 
 #ifdef __cplusplus
 }

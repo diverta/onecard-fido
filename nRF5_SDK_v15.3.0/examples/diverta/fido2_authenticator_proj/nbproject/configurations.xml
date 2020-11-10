@@ -70,6 +70,8 @@
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_object_import.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin.h</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin_update.c</itemPath>
+      <itemPath>../../../../CCID/ccid_lib/ccid_piv_pin_update.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_ykpiv.c</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_ykpiv.h</itemPath>
       <itemPath>../../../../CCID/ccid_lib/ccid_ykpiv_import_key.c</itemPath>
@@ -3058,6 +3060,16 @@
             flavor2="0">
       </item>
       <item path="../../../../CCID/ccid_lib/ccid_piv_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_update.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_update.h"
             ex="false"
             tool="3"
             flavor2="0">

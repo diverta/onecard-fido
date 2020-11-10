@@ -152,31 +152,3 @@ bool ccid_pin_get_retries(uint8_t *retries)
     *retries = current_cnt;
     return true;
 }
-
-//
-// PIN更新処理
-//
-static bool update_pin(const void *buf, uint8_t len)
-{
-    // TODO:
-    // PINコードを更新
-    // PINのリトライカウンターは、デフォルトに設定
-
-    // 処理成功
-    return true;
-}
-
-bool ccid_pin_update(PIV_PIN_TYPE type, const void *buf, uint8_t len) 
-{
-    bool ret = false;
-    switch (type) {
-        case PIV_PIN:
-            // PINを更新
-            ret = update_pin(buf, len);
-            break;
-        default:
-            // Not supported
-            break;
-    }
-    return ret;
-}

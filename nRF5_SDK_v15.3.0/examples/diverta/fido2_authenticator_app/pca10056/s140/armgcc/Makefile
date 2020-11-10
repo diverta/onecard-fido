@@ -213,6 +213,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_piv_object.c \
   $(CIDLIB_DIR)/ccid_piv_object_import.c \
   $(CIDLIB_DIR)/ccid_piv_pin.c \
+  $(CIDLIB_DIR)/ccid_piv_pin_update.c \
   $(CIDLIB_DIR)/ccid_ykpiv.c \
   $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
   $(PLTLIB_DIR)/application_init.c \
