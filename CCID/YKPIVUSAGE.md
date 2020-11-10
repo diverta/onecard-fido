@@ -41,11 +41,33 @@ Disconnect card #0.
 bash-3.2$
 ```
 
-#### PINの設定
+#### PINの変更（オプション）
 
-<b>2020/09/23現在、この機能は未実装です。</b>
+現状、PIV機能で使用するデフォルトのPIN番号は、`123456` となっております。<br>
+こちらを適宜、別のPIN番号に変更できます。
 
-現状、PIV機能で使用するデフォルトのPIN番号は、`123456` となっております。
+コマンド`change-pin`を実行し、PIV機能で使用するPIN番号を変更します。<br>
+以下のコマンドを実行します。
+
+```
+./yubico-piv-tool -v --reader="Diverta Inc. Secure Dongle" -a change-pin -P 123456
+```
+
+以下は実行例になります。<br>
+
+```
+bash-3.2$ ./yubico-piv-tool -v --reader="Diverta Inc. Secure Dongle" -a change-pin -P 123456
+Connect reader 'Diverta Inc. Secure Dongle' matching 'Diverta Inc. Secure Dongle'.
+Action 'change-pin' does not need authentication.
+Now processing for action 'change-pin'.
+Enter new pin: [注1]
+Verifying - Enter new pin: [注1]
+Successfully changed the pin code.
+Disconnect card #0.
+bash-3.2$
+```
+
+[注1]`Enter new pin: `や`Verifying - Enter new pin: `のプロンプトに続いて、新しいPIN番号を入力します。入力文字列はエコーバックされません。
 
 #### デバイスIDを設定
 
@@ -99,7 +121,7 @@ bash-3.2$
 半角24文字で指定してください。<br>
 例えば、`010203040506070801020304050607080102030405060708`というHEX文字列が、パスワードとして設定できます。
 
-以下のコマンドを実行します。
+以下のコマンドを実行します。[注2]
 
 ```
 ./yubico-piv-tool -v --reader="Diverta Inc. Secure Dongle" --pin=123456 -a set-mgm-key
@@ -113,14 +135,15 @@ Connect reader 'Diverta Inc. Secure Dongle' matching 'Diverta Inc. Secure Dongle
 Authenticating since action 'set-mgm-key' needs that.
 Successful application authentication.
 Now processing for action 'set-mgm-key'.
-Enter new management key: [注1]
-Verifying - Enter new management key: [注1]
+Enter new management key: [注3]
+Verifying - Enter new management key: [注3]
 Successfully set new management key.
 Disconnect card #0.
 bash-3.2$
 ```
 [注1]デフォルトの管理用パスワードは`010203040506070801020304050607080102030405060708`となっております。<br>
-[注2]`Enter new management key: `や`Verifying - Enter new management key: `のプロンプトに続いて、前述のパスワード（HEX文字列）を入力します。入力文字列はエコーバックされません。
+[注2]`--pin=123456`は、デフォルトPIN番号を指定した例です。前述手順でPIN番号をデフォルトから変更した場合は、そのPIN番号を代わりに指定してください。<br>
+[注3]`Enter new management key: `や`Verifying - Enter new management key: `のプロンプトに続いて、前述のパスワード（HEX文字列）を入力します。入力文字列はエコーバックされません。
 
 ## 秘密鍵・証明書の導入
 
@@ -168,7 +191,7 @@ bash-3.2$
 #### 秘密鍵の導入
 
 生成した秘密鍵を、MDBT50Q Dongle内部のPIVデバイススロット[注1]に導入します。<br>
-以下のコマンドを実行します。
+以下のコマンドを実行します。[注2]
 
 ```
 YPT_COMMAND=./yubico-piv-tool
@@ -211,12 +234,13 @@ Disconnect card #0.
 bash-3.2$
 ```
 
-[注1]9a（PIV Authentication）、9c（Digital Signature）、9d（Key Management）の３点があります。
+[注1]9a（PIV Authentication）、9c（Digital Signature）、9d（Key Management）の３点があります。<br>
+[注2]`--pin=123456`は、デフォルトPIN番号を指定した例です。前述手順でPIN番号をデフォルトから変更した場合は、そのPIN番号を代わりに指定してください。
 
 #### 自己署名証明書の作成
 
 Yubico PIV Tool (command line) を使用し、自己署名証明書を作成します。<br>
-以下のコマンドを実行します。
+以下のコマンドを実行します。[注1]
 
 ```
 ${YPT_COMMAND} -v -r "${READER_NAME}" --pin=123456 -a selfsign-certificate -s 9a -S "/CN=pivauth.divert.co.jp/" -i ecc_pub_9a.pem -o ecc_crt_9a.pem
@@ -266,10 +290,12 @@ drwxr-xr-x@  8 makmorit  staff     256  9 16 16:08 test_ecc_key_cert
 bash-3.2$
 ```
 
+[注1]`--pin=123456`は、デフォルトPIN番号を指定した例です。前述手順でPIN番号をデフォルトから変更した場合は、そのPIN番号を代わりに指定してください。
+
 #### 証明書の導入
 
 生成した自己署名証明書を、MDBT50Q Dongle内部のPIVデバイススロット[注1]に導入します。<br>
-以下のコマンドを実行します。
+以下のコマンドを実行します。[注2]
 
 ```
 ${YPT_COMMAND} -v -r "${READER_NAME}" --pin=123456 -a import-certificate -s 9a -i ecc_crt_9a.pem
@@ -306,7 +332,8 @@ Disconnect card #0.
 bash-3.2$
 ```
 
-[注1]9a（PIV Authentication）、9c（Digital Signature）、9d（Key Management）の３点があります。
+[注1]9a（PIV Authentication）、9c（Digital Signature）、9d（Key Management）の３点があります。<br>
+[注2]`--pin=123456`は、デフォルトPIN番号を指定した例です。前述手順でPIN番号をデフォルトから変更した場合は、そのPIN番号を代わりに指定してください。
 
 ## 導入結果の確認
 
