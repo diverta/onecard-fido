@@ -1,11 +1,11 @@
 /* 
- * File:   ccid_pin.h
+ * File:   ccid_piv_pin_auth.h
  * Author: makmorit
  *
- * Created on 2020/07/22, 10:47
+ * Created on 2020/11/10, 14:48
  */
-#ifndef CCID_PIN_H
-#define CCID_PIN_H
+#ifndef CCID_PIV_PIN_AUTH_H
+#define CCID_PIV_PIN_AUTH_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -29,4 +29,4 @@ bool     ccid_piv_pin_auth_get_retries(uint8_t *retries);
 }
 #endif
 
-#endif /* CCID_PIN_H */
+#endif /* CCID_PIV_PIN_AUTH_H */

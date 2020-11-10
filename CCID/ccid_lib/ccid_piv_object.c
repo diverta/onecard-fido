@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ccid_pin.h"
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
+#include "ccid_piv_pin_auth.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"

@@ -6,9 +6,9 @@
  */
 #include <string.h>
 
-#include "ccid_pin.h"
 #include "ccid_piv_object.h"
 #include "ccid_piv_pin.h"
+#include "ccid_piv_pin_auth.h"
 #include "ccid_piv_pin_update.h"
 
 // 業務処理／HW依存処理間のインターフェース

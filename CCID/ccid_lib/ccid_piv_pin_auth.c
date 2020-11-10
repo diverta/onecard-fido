@@ -1,13 +1,13 @@
 /* 
- * File:   ccid_pin.c
+ * File:   ccid_piv_pin_auth.c
  * Author: makmorit
  *
- * Created on 2020/07/22, 10:47
+ * Created on 2020/11/10, 14:48
  */
 #include <string.h>
 
 #include "ccid_apdu.h"
-#include "ccid_pin.h"
+#include "ccid_piv_pin_auth.h"
 #include "ccid_piv_object.h"
 
 //

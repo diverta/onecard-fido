@@ -7,8 +7,8 @@
 #include <string.h>
 
 #include "ccid_apdu.h"
-#include "ccid_pin.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin_auth.h"
 
 // 一時読込領域
 static uint8_t work_buf[PIN_DEFAULT_SIZE];
