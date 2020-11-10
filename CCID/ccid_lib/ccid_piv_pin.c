@@ -89,10 +89,6 @@ static uint16_t verify_pin_code(command_apdu_t *capdu, response_apdu_t *rapdu)
         // 登録されたPINが照会できない場合は処理失敗
         return SW_UNABLE_TO_PROCESS;
     }
-    if (m_current_retries == 0) {
-        // リトライカウンターが0であれば認証をブロック
-        return SW_AUTHENTICATION_BLOCKED;
-    }
 
     // 現在のリトライカウンターを更新
     //  Flash ROMを更新後、
