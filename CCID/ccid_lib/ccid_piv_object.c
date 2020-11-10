@@ -18,6 +18,7 @@
 
 // テスト用
 #define CCID_PIV_OBJECT_TEST false
+#define LOG_DEBUG_PIN_BUFFER false
 
 // デフォルトの管理用キー (24 bytes)
 static char *card_admin_key_default = "010203040506070801020304050607080102030405060708";
@@ -297,6 +298,11 @@ bool ccid_piv_object_pin_get(uint8_t obj_tag, uint8_t *pin_code, uint8_t *retrie
         fido_log_debug("PIV PIN is not registered, use default: tag=0x%02x", obj_tag);
     }
 
+#if LOG_DEBUG_PIN_BUFFER
+    fido_log_debug("PIN object data read buffer: ");
+    fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
+#endif
+
     // PINとリトライカウンターを戻す
     if (retries != NULL) {
         *retries = pin_buffer[0];
@@ -321,6 +327,11 @@ bool ccid_piv_object_pin_set(uint8_t obj_tag, uint8_t *pin_code, uint8_t retries
     pin_buffer[1] = PIN_DEFAULT_SIZE;
     memcpy(pin_buffer + 2, pin_code, PIN_DEFAULT_SIZE);
     memset(pin_buffer + 10, 0, 6);
+
+#if LOG_DEBUG_PIN_BUFFER
+    fido_log_debug("PIN object data write buffer: ");
+    fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
+#endif
 
     // Flash ROMに登録
     //  Flash ROM更新後、

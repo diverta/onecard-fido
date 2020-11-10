@@ -319,20 +319,24 @@ void ccid_flash_piv_object_failed(void)
     if (m_flash_func == NULL) {
         return;
     }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
     // Flash ROM処理でエラーが発生時はエラーレスポンス送信
-    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_resume(false);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_resume(false);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_resume(false);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_resume(false);
     }
-    m_flash_func = NULL;
 }
 
 void ccid_flash_piv_object_gc_done(void)
@@ -340,22 +344,26 @@ void ccid_flash_piv_object_gc_done(void)
     if (m_flash_func == NULL) {
         return;
     }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
     // for nRF52840:
     // FDSリソース不足解消のためGCが実行された場合は、
     // GC実行直前の処理を再実行
-    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_retry();
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_retry();
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_retry();
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_retry();
     }
-    m_flash_func = NULL;
 }
 
 void ccid_flash_piv_object_record_updated(void)
@@ -363,18 +371,22 @@ void ccid_flash_piv_object_record_updated(void)
     if (m_flash_func == NULL) {
         return;
     }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
     // 正常系の後続処理を実行
-    if (m_flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_card_admin_key_write) {
         ccid_ykpiv_ins_set_mgmkey_resume(true);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_private_key_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_private_key_write) {
         ccid_ykpiv_ins_import_key_resume(true);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_data_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_data_write) {
         ccid_piv_object_import_resume(true);
     }
-    if (m_flash_func == (void *)ccid_flash_piv_object_pin_write) {
+    if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_resume(true);
     }
-    m_flash_func = NULL;
 }
