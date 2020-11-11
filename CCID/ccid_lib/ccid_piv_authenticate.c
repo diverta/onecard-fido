@@ -91,42 +91,10 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
     return SW_NO_ERROR;
 }
 
-uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_size)
 {
-    // リクエスト／レスポンス格納領域の参照を保持
-    capdu = c_apdu;
-    rapdu = r_apdu;
-
-    fido_log_debug("internal authenticate");
-
-    // 変数の初期化
-    ccid_piv_authenticate_reset_context();
-    uint8_t challenge_pos = data_obj_info->chl_pos;
-    uint8_t challenge_size = data_obj_info->chl_len;
-    uint8_t key_alg = capdu->p1;
-    uint8_t key_id  = capdu->p2;
-
-    // パラメーターのチェック
-    if (key_alg != ALG_ECC_256) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
-    }
-
-    // TODO:
-    //   Card authenticateをサポートする場合、
-    //   このコードを有効化します
-    // if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
-    //     return SW_SECURITY_STATUS_NOT_SATISFIED;
-    // }
-
-    if (key_id == TAG_KEY_KEYMN) {
-        ccid_piv_pin_set_validated(false);
-    }
-
-    uint8_t *cdata = capdu->data;
     uint8_t *rdata = rapdu->data;
-    uint8_t *input_data = cdata + challenge_pos;
     uint8_t *output_data = rdata + 4;
-    size_t input_size = challenge_size;
     size_t output_size = 0;
 
     // 該当のスロットから、EC秘密鍵を読込み、応答を生成
@@ -144,6 +112,45 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
 
     // 正常終了
     return SW_NO_ERROR;
+}
+
+uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
+{
+    // リクエスト／レスポンス格納領域の参照を保持
+    capdu = c_apdu;
+    rapdu = r_apdu;
+
+    fido_log_debug("internal authenticate");
+
+    // 変数の初期化
+    ccid_piv_authenticate_reset_context();
+    uint8_t challenge_pos = data_obj_info->chl_pos;
+    size_t  challenge_size = data_obj_info->chl_len;
+    uint8_t key_alg = capdu->p1;
+    uint8_t key_id  = capdu->p2;
+
+    // TODO:
+    //   Card authenticateをサポートする場合、
+    //   このコードを有効化します
+    // if (key_id != TAG_KEY_CAUTH && ccid_piv_pin_is_validated() == false) {
+    //     return SW_SECURITY_STATUS_NOT_SATISFIED;
+    // }
+
+    if (key_id == TAG_KEY_KEYMN) {
+        ccid_piv_pin_set_validated(false);
+    }
+
+    // 入力データの参照とサイズを取得
+    uint8_t *cdata = capdu->data;
+    uint8_t *input_data = cdata + challenge_pos;
+    size_t input_size = challenge_size;
+
+    // アルゴリズムに対応する処理を実行
+    if (key_alg == ALG_ECC_256) {
+        return authenticate_internal_ECC_256(input_data, input_size);
+    } else {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
 }
 
 uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_apdu_t *r_apdu, BER_TLV_INFO *data_obj_info)
