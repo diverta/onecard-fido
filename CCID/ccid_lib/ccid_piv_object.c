@@ -10,12 +10,15 @@
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin.h"
+#include "ccid_piv_pin_auth.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 // テスト用
 #define CCID_PIV_OBJECT_TEST false
+#define LOG_DEBUG_PIN_BUFFER false
 
 // デフォルトの管理用キー (24 bytes)
 static char *card_admin_key_default = "010203040506070801020304050607080102030405060708";
@@ -261,6 +264,101 @@ bool ccid_piv_object_is_obj_tag_exist(uint8_t obj_tag)
         default:
             return false;
     }
+}
+
+//
+// PIN管理用
+//
+bool ccid_piv_object_pin_get(uint8_t obj_tag, uint8_t *pin_code, uint8_t *retries)
+{
+    // PIN用のオブジェクトデータを一時格納
+    uint8_t pin_buffer[16];
+    size_t  obj_size = sizeof(pin_buffer);
+    bool    is_exist;
+
+    // オブジェクトデータをFlash ROMから読出し
+    // バイトイメージ（16バイト）
+    //   0      : PINリトライカウンター
+    //   1      : PIN長
+    //   2 - 9  : PIN
+    //  10 - 15 : 予備
+    //
+    if (ccid_flash_piv_object_data_read(obj_tag, pin_buffer, &obj_size, &is_exist) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("PIV PIN read fail: tag=0x%02x", obj_tag);
+        return false;
+    }
+
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルトを設定
+        pin_buffer[0] = PIN_DEFAULT_RETRY_CNT;
+        pin_buffer[1] = PIN_DEFAULT_SIZE;
+        if (obj_tag == TAG_KEY_PUK) {
+            memcpy(pin_buffer + 2, PUK_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+        } else {
+            memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+        }
+        memset(pin_buffer + 10, 0, 6);
+        fido_log_debug("PIV PIN is not registered, use default: tag=0x%02x", obj_tag);
+    }
+
+#if LOG_DEBUG_PIN_BUFFER
+    fido_log_debug("PIN object data read buffer (tag=0x%02x): ", obj_tag);
+    fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
+#endif
+
+    // PINとリトライカウンターを戻す
+    if (retries != NULL) {
+        *retries = pin_buffer[0];
+    }
+    if (pin_code != NULL) {
+        memcpy(pin_code, pin_buffer + 2, pin_buffer[1]);
+    }
+    return true;
+}
+
+bool ccid_piv_object_pin_set(uint8_t obj_tag, uint8_t *pin_code, uint8_t retries)
+{
+    // Flash ROMに登録するオブジェクトデータを生成
+    // バイトイメージ（16バイト）
+    //   0      : PINリトライカウンター
+    //   1      : PIN長
+    //   2 - 9  : PIN
+    //  10 - 15 : 予備
+    //
+    uint8_t pin_buffer[16];
+    pin_buffer[0] = retries;
+    pin_buffer[1] = PIN_DEFAULT_SIZE;
+    memcpy(pin_buffer + 2, pin_code, PIN_DEFAULT_SIZE);
+    memset(pin_buffer + 10, 0, 6);
+
+#if LOG_DEBUG_PIN_BUFFER
+    fido_log_debug("PIN object data write buffer (tag=0x%02x): ", obj_tag);
+    fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
+#endif
+
+    // Flash ROMに登録
+    //  Flash ROM更新後、
+    //  ccid_piv_object_pin_set_retry または
+    //  ccid_piv_object_pin_set_resume のいずれかが
+    //  コールバックされます。
+    if (ccid_flash_piv_object_pin_write(obj_tag, pin_buffer, sizeof(pin_buffer)) == false) {
+        fido_log_error("PIV PIN write fail: tag=0x%02x", obj_tag);
+        return false;
+    }
+
+    // 処理成功
+    return true;
+}
+
+void ccid_piv_object_pin_set_retry(void)
+{
+    ccid_piv_pin_retry();
+}
+
+void ccid_piv_object_pin_set_resume(bool success)
+{
+    ccid_piv_pin_resume(success);
 }
 
 #if CCID_PIV_OBJECT_TEST

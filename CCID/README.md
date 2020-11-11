@@ -27,5 +27,8 @@ PIVで使用する証明書等を導入するために利用できる「Yubico P
 - <b>[Yubico PIV Toolによる初期データ導入手順](../CCID/YKPIVUSAGE.md)</b><br>
 Yubico PIV Tool (command line) を使用して、鍵・証明書などを[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する手順を掲載します。
 
+- <b>[Yubico PIV Toolによる各種手順](../CCID/YKPIVUSAGE_1.md)</b><br>
+Yubico PIV Tool (command line) を使用した（前項以外の）各種手順を掲載します。
+
 - <b>[PIV機能によるmacOSログイン手順](../CCID/MACPIVLOGIN.md)</b><br>
 [MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)のPIV機能を使用して、macOSにPINでログインする手順を掲載します。
