@@ -150,6 +150,11 @@ static uint16_t piv_ins_change_reference_data(command_apdu_t *capdu, response_ap
     return ccid_piv_pin_set(capdu, rapdu);
 }
 
+static uint16_t piv_ins_reset_retry_counter(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_reset(capdu, rapdu);
+}
+
 static void piv_init(void)
 {
     // 初期化処理を一度だけ実行
@@ -200,6 +205,9 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case PIV_INS_CHANGE_REFERENCE_DATA:
             rapdu->sw = piv_ins_change_reference_data(capdu, rapdu);
+            break;
+        case PIV_INS_RESET_RETRY_COUNTER:
+            rapdu->sw = piv_ins_reset_retry_counter(capdu, rapdu);
             break;
         //
         // Yubico PIV Tool固有のコマンド
