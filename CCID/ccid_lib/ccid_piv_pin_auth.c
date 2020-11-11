@@ -14,40 +14,71 @@
 // PIN認証処理関連
 //
 static bool    m_pin_auth_failed;
-static uint8_t m_current_retries;
+static uint8_t m_pin_current_retries;
 
-bool ccid_piv_pin_auth_failed(void)
+static bool    m_puk_auth_failed;
+static uint8_t m_puk_current_retries;
+
+bool ccid_piv_pin_auth_failed(uint8_t pin_type)
 {
     // 認証NGの場合は true
-    return m_pin_auth_failed;
+    if (pin_type == TAG_KEY_PUK) {
+        return m_puk_auth_failed;
+    } else {
+        return m_pin_auth_failed;
+    }
 }
 
-uint8_t ccid_piv_pin_auth_current_retries(void)
+uint8_t ccid_piv_pin_auth_current_retries(uint8_t pin_type)
 {
     // 現在のリトライカウンターを戻す
-    return m_current_retries;
+    if (pin_type == TAG_KEY_PUK) {
+        return m_puk_current_retries;
+    } else {
+        return m_pin_current_retries;
+    }
+}
+
+static void auth_failed_set(uint8_t pin_type, bool b)
+{
+    // 認証OK／NGの別を設定
+    if (pin_type == TAG_KEY_PUK) {
+        m_puk_auth_failed = b;
+    } else {
+        m_pin_auth_failed = b;
+    }
+}
+
+static void current_retries_set(uint8_t pin_type, uint8_t retries)
+{
+    // 現在のリトライカウンターを設定
+    if (pin_type == TAG_KEY_PUK) {
+        m_puk_current_retries = retries;
+    } else {
+        m_pin_current_retries = retries;
+    }
 }
 
 //
 // 関数群
 //
-static bool restore_pin_retries(uint8_t *curr)
+static bool restore_pin_retries(uint8_t pin_type, uint8_t *curr)
 {
     // パラメーターチェック
     if (curr == NULL) {
         return false;
     }
     // 登録されているリトライカウンターを取得
-    if (ccid_piv_object_pin_get(TAG_PIV_PIN, NULL, curr) == false) {
+    if (ccid_piv_object_pin_get(pin_type, NULL, curr) == false) {
         return false;
     }
     return true;
 }
 
-static bool restore_pin_code(uint8_t *pin_buf)
+static bool restore_pin_code(uint8_t pin_type, uint8_t *pin_buf)
 {
     // 登録されているPINを取得
-    if (ccid_piv_object_pin_get(TAG_PIV_PIN, pin_buf, NULL) == false) {
+    if (ccid_piv_object_pin_get(pin_type, pin_buf, NULL) == false) {
         return false;
     }
     return true;
@@ -59,7 +90,7 @@ static uint8_t pin_buf[PIN_DEFAULT_SIZE];
 //
 // 業務処理群
 //
-static bool pin_code_is_equal(const void *buf, uint8_t len, bool *is_equal)
+static bool pin_code_is_equal(uint8_t pin_type, const void *buf, uint8_t len, bool *is_equal)
 {
     // パラメーターチェック
     if (is_equal == NULL) {
@@ -67,7 +98,7 @@ static bool pin_code_is_equal(const void *buf, uint8_t len, bool *is_equal)
     }
 
     // 登録されているPINを取得
-    if (restore_pin_code(pin_buf) == false) {
+    if (restore_pin_code(pin_type, pin_buf) == false) {
         return false;
     }
 
@@ -77,7 +108,7 @@ static bool pin_code_is_equal(const void *buf, uint8_t len, bool *is_equal)
     return true;
 }
 
-static bool pin_code_is_blank(bool *is_blank)
+static bool pin_code_is_blank(uint8_t pin_type, bool *is_blank)
 {
     // パラメーターチェック
     if (is_blank == NULL) {
@@ -85,7 +116,7 @@ static bool pin_code_is_blank(bool *is_blank)
     }
 
     // 登録されているPINを取得
-    if (restore_pin_code(pin_buf) == false) {
+    if (restore_pin_code(pin_type, pin_buf) == false) {
         return false;
     }
 
@@ -103,8 +134,12 @@ static bool pin_code_is_blank(bool *is_blank)
     return true;
 }
 
-uint16_t ccid_piv_pin_auth_verify(uint8_t *buf, uint8_t len) 
+uint16_t ccid_piv_pin_auth_verify(uint8_t pin_type, uint8_t *buf, uint8_t len) 
 {
+    // 内部変数を初期化
+    auth_failed_set(pin_type, true);
+    current_retries_set(pin_type, 0);
+
     // パラメーターチェック
     if (buf == NULL) {
         return SW_UNABLE_TO_PROCESS;
@@ -115,35 +150,32 @@ uint16_t ccid_piv_pin_auth_verify(uint8_t *buf, uint8_t len)
 
     // リトライカウンターのデフォルト／現在値を参照
     uint8_t current_cnt;
-    if (restore_pin_retries(&current_cnt) == false) {
+    if (restore_pin_retries(pin_type, &current_cnt) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
-    m_current_retries = current_cnt;
 
     // リトライカウンターが０であれば認証をブロック
-    if (m_current_retries == 0) {
-        m_pin_auth_failed = true;
+    if (current_cnt == 0) {
         return SW_AUTHENTICATION_BLOCKED;
     }
 
     // 入力されたPINと、登録されているPINを比較
     bool is_equal;
-    if (pin_code_is_equal(buf, len, &is_equal) == false) {
+    if (pin_code_is_equal(pin_type, buf, len, &is_equal) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
     if (is_equal == false) {
         // NGの場合はリトライカウンターを１減らす
-        m_current_retries = --current_cnt;
-        m_pin_auth_failed = true;
+        current_retries_set(pin_type, --current_cnt);
     } else {
         // OKの場合はリトライカウンターをデフォルトに設定
-        m_current_retries = PIN_DEFAULT_RETRY_CNT;
-        m_pin_auth_failed = false;
+        current_retries_set(pin_type, PIN_DEFAULT_RETRY_CNT);
+        auth_failed_set(pin_type, false);
     }
     return SW_NO_ERROR;
 }
 
-bool ccid_piv_pin_auth_get_retries(uint8_t *retries) 
+bool ccid_piv_pin_auth_get_retries(uint8_t pin_type, uint8_t *retries) 
 {
     // パラメーターチェック
     if (retries == NULL) {
@@ -152,7 +184,7 @@ bool ccid_piv_pin_auth_get_retries(uint8_t *retries)
 
     // PINコードがブランクであればゼロクリア
     bool is_blank;
-    if (pin_code_is_blank(&is_blank) == false) {
+    if (pin_code_is_blank(pin_type, &is_blank) == false) {
         return false;
     }
     if (is_blank) {
@@ -162,7 +194,7 @@ bool ccid_piv_pin_auth_get_retries(uint8_t *retries)
 
     // リトライカウンターのデフォルト／現在値を参照
     uint8_t current_cnt;
-    if (restore_pin_retries(&current_cnt) == false) {
+    if (restore_pin_retries(pin_type, &current_cnt) == false) {
         return false;
     }
 

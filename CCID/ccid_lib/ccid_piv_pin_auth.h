@@ -20,11 +20,11 @@ extern "C" {
 #define PIN_DEFAULT_SIZE        8
 #define PIN_DEFAULT_RETRY_CNT   3
 
-bool     ccid_piv_pin_auth_failed(void);
-uint8_t  ccid_piv_pin_auth_current_retries(void);
+bool     ccid_piv_pin_auth_failed(uint8_t pin_type);
+uint8_t  ccid_piv_pin_auth_current_retries(uint8_t pin_type);
 
-uint16_t ccid_piv_pin_auth_verify(uint8_t *buf, uint8_t len);
-bool     ccid_piv_pin_auth_get_retries(uint8_t *retries);
+uint16_t ccid_piv_pin_auth_verify(uint8_t pin_type, uint8_t *buf, uint8_t len);
+bool     ccid_piv_pin_auth_get_retries(uint8_t pin_type, uint8_t *retries);
 
 #ifdef __cplusplus
 }
