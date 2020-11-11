@@ -15,6 +15,7 @@
 extern "C" {
 #endif
 
+#define PUK_DEFAULT_CODE        "12345678"
 #define PIN_DEFAULT_CODE        "123456\xFF\xFF"
 #define PIN_DEFAULT_SIZE        8
 #define PIN_DEFAULT_RETRY_CNT   3

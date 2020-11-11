@@ -293,13 +293,17 @@ bool ccid_piv_object_pin_get(uint8_t obj_tag, uint8_t *pin_code, uint8_t *retrie
         // Flash ROMに登録されていない場合はデフォルトを設定
         pin_buffer[0] = PIN_DEFAULT_RETRY_CNT;
         pin_buffer[1] = PIN_DEFAULT_SIZE;
-        memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+        if (obj_tag == TAG_KEY_PUK) {
+            memcpy(pin_buffer + 2, PUK_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+        } else {
+            memcpy(pin_buffer + 2, PIN_DEFAULT_CODE, PIN_DEFAULT_SIZE);
+        }
         memset(pin_buffer + 10, 0, 6);
         fido_log_debug("PIV PIN is not registered, use default: tag=0x%02x", obj_tag);
     }
 
 #if LOG_DEBUG_PIN_BUFFER
-    fido_log_debug("PIN object data read buffer: ");
+    fido_log_debug("PIN object data read buffer (tag=0x%02x): ", obj_tag);
     fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
 #endif
 
@@ -329,7 +333,7 @@ bool ccid_piv_object_pin_set(uint8_t obj_tag, uint8_t *pin_code, uint8_t retries
     memset(pin_buffer + 10, 0, 6);
 
 #if LOG_DEBUG_PIN_BUFFER
-    fido_log_debug("PIN object data write buffer: ");
+    fido_log_debug("PIN object data write buffer (tag=0x%02x): ", obj_tag);
     fido_log_print_hexdump_debug(pin_buffer, sizeof(pin_buffer));
 #endif
 
