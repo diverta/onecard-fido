@@ -111,6 +111,7 @@ static uint16_t authenticate_internal_ECC_256(uint8_t tag, uint8_t *input_data, 
     rapdu->len = output_size + 4;
 
     // 正常終了
+    fido_log_debug("internal authenticate (ECCP256) done");
     return SW_NO_ERROR;
 }
 
@@ -150,6 +151,7 @@ static uint16_t authenticate_internal_RSA2048(uint8_t tag, uint8_t *input_data, 
     rapdu->len = RSA2048_N_LENGTH + 8;
 
     // 正常終了
+    fido_log_debug("internal authenticate (RSA2048) done");
     return SW_NO_ERROR;
 }
 
