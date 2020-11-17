@@ -89,7 +89,7 @@ bool ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size)
     return true;
 }
 
-static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *size)
+bool ccid_piv_object_read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *size)
 {
     // 秘密鍵データをFlash ROMから読出し
     bool is_exist;
@@ -105,17 +105,7 @@ static bool read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *
         return false;
     }
 
-    return true;
-}
-
-bool ccid_piv_object_key_pauth_get(uint8_t alg, uint8_t *buffer, size_t *size)
-{
-    // 秘密鍵をFlash ROMから読出し
-    if (read_private_key(TAG_KEY_PAUTH, alg, buffer, size) == false) {
-        return false;
-    }
-
-    fido_log_debug("Private Key for PIV Authentication is requested (%d bytes)", *size);
+    fido_log_debug("Private Key for PIV application is requested: tag=0x%02x (%d bytes)", tag, *size);
     return true;
 }
 
@@ -130,17 +120,6 @@ bool ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size)
     return true;
 }
 
-bool ccid_piv_object_key_digsig_get(uint8_t alg, uint8_t *buffer, size_t *size)
-{
-    // 秘密鍵をFlash ROMから読出し
-    if (read_private_key(TAG_KEY_DGSIG, alg, buffer, size) == false) {
-        return false;
-    }
-
-    fido_log_debug("Private Key for Digital Signature is requested (%d bytes)", *size);
-    return true;
-}
-
 bool ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size)
 {
     // オブジェクトデータをFlash ROMから読出し
@@ -149,17 +128,6 @@ bool ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size)
     }
 
     fido_log_debug("X.509 Certificate for Digital Signature is requested (%d bytes)", *size);
-    return true;
-}
-
-bool ccid_piv_object_key_keyman_get(uint8_t alg, uint8_t *buffer, size_t *size)
-{
-    // 秘密鍵をFlash ROMから読出し
-    if (read_private_key(TAG_KEY_KEYMN, alg, buffer, size) == false) {
-        return false;
-    }
-
-    fido_log_debug("Private Key for Key Management is requested (%d bytes)", *size);
     return true;
 }
 

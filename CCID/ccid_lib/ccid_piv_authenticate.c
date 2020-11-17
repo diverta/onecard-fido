@@ -48,7 +48,7 @@ void ccid_piv_authenticate_reset_context(void)
     memset(work_buf, 0, sizeof(work_buf));
 }
 
-static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
+static uint16_t generate_ecdsa_sign(uint8_t tag, uint8_t *input_data, size_t input_size, uint8_t *output_data, size_t *output_size)
 {
     // パラメーターのチェック
     uint8_t digest_size = SHA_256_HASH_SIZE;
@@ -58,7 +58,7 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
 
     // 該当のスロットから、EC鍵を読込
     size_t s;
-    if (ccid_piv_object_key_pauth_get(ALG_ECC_256, work_buf, &s) == false) {
+    if (ccid_piv_object_read_private_key(tag, ALG_ECC_256, work_buf, &s) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -91,14 +91,14 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
     return SW_NO_ERROR;
 }
 
-static uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_size)
+static uint16_t authenticate_internal_ECC_256(uint8_t tag, uint8_t *input_data, size_t input_size)
 {
     uint8_t *rdata = rapdu->data;
     uint8_t *output_data = rdata + 4;
     size_t output_size = 0;
 
     // 該当のスロットから、EC秘密鍵を読込み、応答を生成
-    uint16_t ret = generate_ecdsa_sign(input_data, input_size, output_data, &output_size);
+    uint16_t ret = generate_ecdsa_sign(tag, input_data, input_size, output_data, &output_size);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -114,7 +114,7 @@ static uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_
     return SW_NO_ERROR;
 }
 
-static uint16_t authenticate_internal_RSA2048(uint8_t *input_data, size_t input_size)
+static uint16_t authenticate_internal_RSA2048(uint8_t tag, uint8_t *input_data, size_t input_size)
 {
     // パラメーターのチェック
     if (input_size != RSA2048_N_LENGTH) {
@@ -123,7 +123,7 @@ static uint16_t authenticate_internal_RSA2048(uint8_t *input_data, size_t input_
 
     // 該当のスロットから鍵を読込
     size_t s;
-    if (ccid_piv_object_key_pauth_get(ALG_RSA_2048, work_buf, &s) == false) {
+    if (ccid_piv_object_read_private_key(tag, ALG_RSA_2048, work_buf, &s) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
@@ -166,7 +166,7 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     uint8_t challenge_pos = data_obj_info->chl_pos;
     size_t  challenge_size = data_obj_info->chl_len;
     uint8_t key_alg = capdu->p1;
-    uint8_t key_id  = capdu->p2;
+    uint8_t key_tag  = capdu->p2;
 
     // TODO:
     //   Card authenticateをサポートする場合、
@@ -175,7 +175,7 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     //     return SW_SECURITY_STATUS_NOT_SATISFIED;
     // }
 
-    if (key_id == TAG_KEY_KEYMN) {
+    if (key_tag == TAG_KEY_KEYMN) {
         ccid_piv_pin_set_validated(false);
     }
 
@@ -186,9 +186,9 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
 
     // アルゴリズムに対応する処理を実行
     if (key_alg == ALG_ECC_256) {
-        return authenticate_internal_ECC_256(input_data, input_size);
+        return authenticate_internal_ECC_256(key_tag, input_data, input_size);
     } else if (key_alg == ALG_RSA_2048) {
-        return authenticate_internal_RSA2048(input_data, input_size);
+        return authenticate_internal_RSA2048(key_tag, input_data, input_size);
     } else {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
@@ -222,7 +222,7 @@ uint16_t ccid_piv_authenticate_ecdh_with_kmk(command_apdu_t *c_apdu, response_ap
 
     // 該当のスロットから、EC鍵を読込
     size_t size;
-    if (ccid_piv_object_key_keyman_get(ALG_ECC_256, work_buf, &size) == false) {
+    if (ccid_piv_object_read_private_key(capdu->p2, ALG_ECC_256, work_buf, &size) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 
