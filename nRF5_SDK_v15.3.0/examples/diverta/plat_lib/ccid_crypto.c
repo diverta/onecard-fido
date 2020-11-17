@@ -77,6 +77,9 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
 
+    // Time extensionレスポンスを送信
+    ccid_response_time_extension();
+
     //
     // mbedtls_rsa_complete を実行
     //
@@ -85,6 +88,9 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
         NRF_LOG_ERROR("mbedtls_rsa_complete returns 0x%04x", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
+
+    // Time extensionレスポンスを送信
+    ccid_response_time_extension();
 
     //
     // mbedtls_rsa_private を実行

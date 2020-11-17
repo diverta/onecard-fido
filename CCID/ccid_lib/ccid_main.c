@@ -329,3 +329,21 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
 
     return false;
 }
+
+void ccid_response_time_extension(void)
+{
+    // bMessageType
+    bulkin_data[0] = RDR_TO_PC_DATABLOCK;
+    // dwLength
+    set_bulkin_data_dw_length(0);
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_TIME_EXTN, BM_ICC_PRESENT_ACTIVE);
+    // bError
+    // request another 1 BTWs (5.7s)
+    bulkin_data[8] = 1;
+    // bSpecific
+    bulkin_data[9] = 0x00;
+
+    // レスポンス送信
+    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE);
+}
