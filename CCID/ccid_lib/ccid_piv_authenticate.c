@@ -91,7 +91,7 @@ static uint16_t generate_ecdsa_sign(uint8_t *input_data, size_t input_size, uint
     return SW_NO_ERROR;
 }
 
-uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_size)
+static uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_size)
 {
     uint8_t *rdata = rapdu->data;
     uint8_t *output_data = rdata + 4;
@@ -109,6 +109,45 @@ uint16_t authenticate_internal_ECC_256(uint8_t *input_data, size_t input_size)
     rdata[2] = TAG_RESPONSE;
     rdata[3] = output_size;
     rapdu->len = output_size + 4;
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
+static uint16_t authenticate_internal_RSA2048(uint8_t *input_data, size_t input_size)
+{
+    // パラメーターのチェック
+    if (input_size != RSA2048_N_LENGTH) {
+        return SW_WRONG_DATA;
+    }
+
+    // 該当のスロットから鍵を読込
+    size_t s;
+    if (ccid_piv_object_key_pauth_get(ALG_RSA_2048, work_buf, &s) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // レスポンス格納領域の参照を取得
+    uint8_t *rdata = rapdu->data;
+    uint8_t *output_data = rdata + 8;
+
+    // 署名を生成
+    bool ret = ccid_crypto_rsa_private(work_buf, input_data, output_data);
+    memset(work_buf, 0, sizeof(work_buf));
+    if (ret == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // レスポンスデータを生成
+    rdata[0] = 0x7c;
+    rdata[1] = 0x82;
+    rdata[2] = HI(RSA2048_N_LENGTH + 4);
+    rdata[3] = LO(RSA2048_N_LENGTH + 4);
+    rdata[4] = TAG_RESPONSE;
+    rdata[5] = 0x82;
+    rdata[6] = HI(RSA2048_N_LENGTH);
+    rdata[7] = LO(RSA2048_N_LENGTH);
+    rapdu->len = RSA2048_N_LENGTH + 8;
 
     // 正常終了
     return SW_NO_ERROR;
@@ -148,6 +187,8 @@ uint16_t ccid_piv_authenticate_internal(command_apdu_t *c_apdu, response_apdu_t 
     // アルゴリズムに対応する処理を実行
     if (key_alg == ALG_ECC_256) {
         return authenticate_internal_ECC_256(input_data, input_size);
+    } else if (key_alg == ALG_RSA_2048) {
+        return authenticate_internal_RSA2048(input_data, input_size);
     } else {
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
