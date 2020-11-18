@@ -130,6 +130,25 @@
       <itemPath>../demo_lib/demo_ble_peripheral_auth.c</itemPath>
       <itemPath>../demo_lib/demo_ble_peripheral_auth.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="external" displayName="external" projectFiles="true">
+      <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+        <logicalFolder name="include" displayName="include" projectFiles="true">
+          <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+            <itemPath>../../../external/mbedtls/include/mbedtls/bignum.h</itemPath>
+            <itemPath>../../../external/mbedtls/include/mbedtls/error.h</itemPath>
+            <itemPath>../../../external/mbedtls/include/mbedtls/platform_util.h</itemPath>
+            <itemPath>../../../external/mbedtls/include/mbedtls/rsa.h</itemPath>
+            <itemPath>../../../external/mbedtls/include/mbedtls/rsa_internal.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="library" displayName="library" projectFiles="true">
+          <itemPath>../../../external/mbedtls/library/bignum.c</itemPath>
+          <itemPath>../../../external/mbedtls/library/platform_util.c</itemPath>
+          <itemPath>../../../external/mbedtls/library/rsa.c</itemPath>
+          <itemPath>../../../external/mbedtls/library/rsa_internal.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="fido2_authenticator_app"
                    displayName="fido2_authenticator_app"
                    projectFiles="true"
@@ -1531,6 +1550,8 @@
       <itemPath>../plat_lib/application_init.c</itemPath>
       <itemPath>../plat_lib/application_init.h</itemPath>
       <itemPath>../plat_lib/atecc608a_i2c_hal.c</itemPath>
+      <itemPath>../plat_lib/ccid_crypto.c</itemPath>
+      <itemPath>../plat_lib/ccid_crypto.h</itemPath>
       <itemPath>../plat_lib/ccid_flash_piv_object.c</itemPath>
       <itemPath>../plat_lib/ccid_flash_piv_object.h</itemPath>
       <itemPath>../plat_lib/fido_board.c</itemPath>
@@ -1628,6 +1649,7 @@
     <Elem>../../../../CCID/ccid_lib</Elem>
     <Elem>../../../components</Elem>
     <Elem>../../../../SECUREIC/atecc_lib</Elem>
+    <Elem>../../../external</Elem>
   </sourceRootList>
   <projectmakefile>../fido2_authenticator_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -3494,6 +3516,51 @@
             tool="0"
             flavor2="0">
       </item>
+      <item path="../../../external/mbedtls/include/mbedtls/bignum.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/include/mbedtls/error.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/include/mbedtls/platform_util.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/include/mbedtls/rsa.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/include/mbedtls/rsa_internal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/library/bignum.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/library/platform_util.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/library/rsa.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../external/mbedtls/library/rsa_internal.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
       <item path="../ble_lib/ble_service_central.c" ex="false" tool="0" flavor2="2">
         <cTool>
           <incDir>
@@ -3680,6 +3747,10 @@
       <item path="../plat_lib/application_init.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_crypto.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/ccid_flash_piv_object.c"
             ex="false"

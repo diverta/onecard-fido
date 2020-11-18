@@ -36,6 +36,7 @@ extern "C" {
 #define CAADM_KEY_SIZE    24
 #define ECC_PRV_KEY_SIZE  32
 #define RSA2048_KEY_SIZE  640
+#define RSA2048_N_LENGTH  256
 #define RSA2048_PQ_LENGTH 128
 #define MAX_CERT_SIZE     1024
 #define MAX_CCC_SIZE      288
@@ -46,11 +47,9 @@ extern "C" {
 //
 bool    ccid_piv_object_chuid_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_ccc_get(uint8_t *buffer, size_t *size);
-bool    ccid_piv_object_key_pauth_get(uint8_t alg, uint8_t *buffer, size_t *size);
+bool    ccid_piv_object_read_private_key(uint8_t tag, uint8_t alg, uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_cert_pauth_get(uint8_t *buffer, size_t *size);
-bool    ccid_piv_object_key_digsig_get(uint8_t alg, uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_cert_digsig_get(uint8_t *buffer, size_t *size);
-bool    ccid_piv_object_key_keyman_get(uint8_t alg, uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_cert_keyman_get(uint8_t *buffer, size_t *size);
 bool    ccid_piv_object_card_admin_key_get(uint8_t *buffer, size_t *size, uint8_t *alg);
 bool    ccid_piv_object_get(uint8_t data_obj_tag, uint8_t *buffer, size_t *size);

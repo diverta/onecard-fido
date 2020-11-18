@@ -247,6 +247,9 @@ void ccid_piv_pin_reset_second_resume(command_apdu_t *capdu, response_apdu_t *ra
 //
 uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
+    // ステータスを初期化
+    pin_is_validated = false;
+
     // パラメーターのチェック
     if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
         return SW_WRONG_P1P2;
@@ -258,7 +261,6 @@ uint16_t ccid_piv_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
         if (capdu->lc != 0) {
             return SW_WRONG_LENGTH;
         }
-        pin_is_validated = false;
         return SW_NO_ERROR;
     }
 

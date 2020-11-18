@@ -78,6 +78,7 @@ uint8_t  *ccid_response_apdu_data(void);
 void      ccid_response_apdu_size_set(size_t size);
 size_t    ccid_response_apdu_size_max(void);
 void      ccid_resume_reader_to_pc_data_block(void);
+void      ccid_response_time_extension(void);
 
 #ifdef __cplusplus
 }

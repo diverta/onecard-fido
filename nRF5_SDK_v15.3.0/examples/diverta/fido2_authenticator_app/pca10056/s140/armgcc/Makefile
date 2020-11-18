@@ -20,6 +20,9 @@ else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
 
+# for mbedtls_rsa_private
+CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
+
 # disable ATECC608A (or ATECC608A is not installed)
 # CFLAGS += -DNO_SECURE_IC
 
@@ -169,14 +172,15 @@ SRC_FILES += \
   $(SDK_ROOT)/modules/nrfx/soc/nrfx_atomic.c \
   $(SDK_ROOT)/external/mbedtls/library/aes.c \
   $(SDK_ROOT)/external/mbedtls/library/aesni.c \
-  $(SDK_ROOT)/external/mbedtls/library/bignum.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
   $(SDK_ROOT)/external/mbedtls/library/des.c \
-  $(SDK_ROOT)/external/mbedtls/library/ecp.c \
-  $(SDK_ROOT)/external/mbedtls/library/ecp_curves.c \
   $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
+  $(SDK_CUSTOM_ROOT)/external/mbedtls/library/bignum.c \
+  $(SDK_CUSTOM_ROOT)/external/mbedtls/library/platform_util.c \
+  $(SDK_CUSTOM_ROOT)/external/mbedtls/library/rsa_internal.c \
+  $(SDK_CUSTOM_ROOT)/external/mbedtls/library/rsa.c \
   $(PROJ_DIR)/main.c \
   $(FD2LIB_DIR)/fido_ble_receive.c \
   $(FD2LIB_DIR)/fido_ble_send.c \
@@ -217,6 +221,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_ykpiv.c \
   $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
   $(PLTLIB_DIR)/application_init.c \
+  $(PLTLIB_DIR)/ccid_crypto.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -406,6 +411,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/toolchain/cmsis/include \
   $(SDK_ROOT)/external/fnmatch \
   $(SDK_ROOT)/external/fprintf \
+  $(SDK_CUSTOM_ROOT)/external/mbedtls/include \
   $(SDK_ROOT)/external/mbedtls/include \
   $(SDK_ROOT)/external/nrf_cc310/include \
   $(SDK_ROOT)/external/nrf_oberon \
@@ -452,6 +458,7 @@ CFLAGS += -DBOARD_$(TARGET_BOARD)
 CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -DMBEDTLS_CONFIG_FILE=\"nrf_crypto_mbedtls_config.h\"
+CFLAGS += -DMBEDTLS_RSA_C -DMBEDTLS_OID_C
 CFLAGS += -DMBEDTLS_DES_C
 CFLAGS += -DNRF52840_XXAA
 CFLAGS += -DNRF_CRYPTO_MAX_INSTANCE_COUNT=1

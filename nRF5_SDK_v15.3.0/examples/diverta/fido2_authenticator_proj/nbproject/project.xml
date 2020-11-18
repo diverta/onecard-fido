@@ -29,6 +29,7 @@
                 <sourceRootElem>../../../../CCID/ccid_lib</sourceRootElem>
                 <sourceRootElem>../../../components</sourceRootElem>
                 <sourceRootElem>../../../../SECUREIC/atecc_lib</sourceRootElem>
+                <sourceRootElem>../../../external</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
