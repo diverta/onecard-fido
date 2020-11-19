@@ -52,6 +52,8 @@
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
 		7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55375226D572D003FA435 /* CBORDecoder.c */; };
 		7AB5537A226D75BA003FA435 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55378226D75BA003FA435 /* ECDH.c */; };
+		7ACBD8CA25663EFA00722984 /* CryptoTokenKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */; };
+		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
@@ -143,6 +145,8 @@
 		7AB55378226D75BA003FA435 /* ECDH.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ECDH.c; sourceTree = "<group>"; };
 		7AB55379226D75BA003FA435 /* ECDH.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ECDH.h; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
+		7ACBD8CB2566424D00722984 /* Entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ACBD8CA25663EFA00722984 /* CryptoTokenKit.framework in Frameworks */,
 				7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */,
 				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
@@ -170,6 +175,7 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7ACBD8CB2566424D00722984 /* Entitlements.plist */,
 				7AA7464223C2C400001938A7 /* Resources */,
 				7AEE1DDD23BB3184008A00C7 /* DFU */,
 				7AB119F123617D1700EEFF6C /* ToolPreference */,
@@ -185,6 +191,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */,
 				7A0D20BE22408E920022EA8E /* IOKit.framework */,
 				64ED9A9C164752C800F39EAE /* IOBluetooth.framework */,
 				64ED9A791647439300F39EAE /* Cocoa.framework */,
@@ -394,6 +401,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */,
 				7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */,
 				7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */,
@@ -567,6 +575,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 43;
@@ -593,6 +602,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 43;
