@@ -4,8 +4,6 @@
 //
 //  Created by Makoto Morita on 2020/11/20.
 //
-#import <CryptoTokenKit/CryptoTokenKit.h>
-
 #import "debug_log.h"
 #import "ToolCCIDCommand.h"
 #import "ToolCCIDCommon.h"
@@ -53,19 +51,20 @@
         [self setSendLe:le];
     }
 
-    - (bool)SCardSlotManagerWillBeginSession {
+    - (void)SCardSlotManagerWillBeginSession {
         // CCIDデバイスとセッションを開始
         TKSmartCardSlotManager *mngr = [TKSmartCardSlotManager defaultManager];
         if ([[mngr slotNames] count] == 0) {
+            // デバイス名称が取得できない場合は、以降の処理を行わず、コマンドに制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_CCID_INTERFACE_UNAVAILABLE];
-            [self clearSendParameters];
-            return false;
+            [self exitHelperProcess:false response:nil status:0];
+            return;
         }
         NSString *slotName = [mngr slotNames][0];
+        ToolCCIDHelper * __weak weakSelf = self;
         [mngr getSlotWithName:slotName reply:^(TKSmartCardSlot *slot) {
-            [self SCardSlotManagerDidGetSlot:slot withName:slotName];
+            [weakSelf SCardSlotManagerDidGetSlot:slot withName:slotName];
         }];
-        return true;
     }
 
     - (void)SCardSlotManagerDidGetSlot:(TKSmartCardSlot *)slot withName:(NSString *)slotName {
@@ -73,13 +72,14 @@
         [self setSlotName:slotName];
         TKSmartCard *card = [slot makeSmartCard];
         if (card == nil) {
-            // 接続されなかった場合は終了
+            // 接続されなかった場合は、以降の処理を行わず、コマンドに制御を戻す
             [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_DEVICE_UNAVAILABLE, [self slotName]];
-            [self clearSendParameters];
+            [self exitHelperProcess:false response:nil status:0];
             return;
         }
+        ToolCCIDHelper * __weak weakSelf = self;
         [card beginSessionWithReply:^(BOOL success, NSError *error) {
-            [self SCardSlotManagerDidBeginSession:card withReply:success error:error];
+            [weakSelf SCardSlotManagerDidBeginSession:card withReply:success error:error];
         }];
     }
 
@@ -88,10 +88,10 @@
         if ([self commandRef] == nil) {
             return;
         }
-        // 接続されなかった場合は終了
+        // 接続されなかった場合は、以降の処理を行わず、コマンドに制御を戻す
         if (success == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_DEVICE_CONNECT_ERROR, [self slotName], [error description]];
-            [self clearSendParameters];
+            [self exitHelperProcess:false response:nil status:0];
             return;
         }
         // リクエスト送信-->レスポンス受信
@@ -101,9 +101,26 @@
         if (error) {
             [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_REQUEST_SEND_FAILED, [self slotName], [error description]];
         }
-        // セッションを終了し、コマンドに制御を戻す
-        [[self commandRef] ccidHelperDidProcess:(error == nil) response:response status:sw];
+        // コマンドに制御を戻す
+        [self exitHelperProcess:(error == nil) response:response status:sw];
+    }
+
+#pragma mark - Exit function
+
+    - (void)exitHelperProcess:(bool)success response:(NSData *)response status:(uint16_t)sw {
+        // パラメーターを初期化
+        ToolCCIDCommand *commandRef = [self commandRef];
         [self clearSendParameters];
+        // コマンドの参照が無い場合は終了
+        if (commandRef == nil) {
+            return;
+        }
+        // コマンドに制御を戻す
+        if (success) {
+            [commandRef ccidHelperDidProcess:true response:response status:sw];
+        } else {
+            [commandRef ccidHelperDidProcess:false response:nil status:0x00];
+        }
     }
 
 @end
