@@ -6,8 +6,9 @@
 //
 #import "AppDelegate.h"
 #import "ToolCCIDCommand.h"
-#import "ToolCCIDHelper.h"
 #import "ToolCCIDCommon.h"
+#import "ToolCCIDHelper.h"
+#import "ToolLogFile.h"
 
 @interface ToolCCIDCommand ()
 
@@ -47,11 +48,25 @@
         }
     }
 
+    - (void)ccidHelperDidProcess:(bool)success response:(NSData *)resp status:(uint16_t)sw {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            default:
+                [self doResponseSelectApplication:resp status:sw];
+                break;
+        }
+    }
+
 #pragma mark - Command functions
 
     - (void)doSelectApplication {
-        [[self toolCCIDHelper] setSendParameters:PIV_INS_SELECT_APPLICATION p1:0x04 p2:0x00 data:[self getPivAidData] le:0xff];
+        [[self toolCCIDHelper] setSendParameters:self ins:PIV_INS_SELECT_APPLICATION p1:0x04 p2:0x00 data:[self getPivAidData] le:0xff];
         [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+    }
+
+    - (void)doResponseSelectApplication:(NSData *)response status:(uint16_t)sw {
+        // for research
+        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseSelectApplication: RESP[%@] SW[0x%04X]", response, sw];
     }
 
 #pragma mark - Utility functions

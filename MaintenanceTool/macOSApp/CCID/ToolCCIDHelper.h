@@ -9,7 +9,7 @@
 
 @interface ToolCCIDHelper : NSObject
 
-    - (void)setSendParameters:(uint8_t)ins p1:(uint8_t)p1 p2:(uint8_t)p2 data:(NSData *)data le:(uint16_t)le;
+    - (void)setSendParameters:(ToolCCIDCommand *)ref ins:(uint8_t)ins p1:(uint8_t)p1 p2:(uint8_t)p2 data:(NSData *)data le:(uint16_t)le;
     - (bool)SCardSlotManagerWillBeginSession;
 
 @end

@@ -13,6 +13,7 @@
 
     - (id)initWithDelegate:(id)delegate;
     - (void)ccidHelperWillProcess:(Command)command;
+    - (void)ccidHelperDidProcess:(bool)success response:(NSData *)resp status:(uint16_t)sw;
 
 @end
 
