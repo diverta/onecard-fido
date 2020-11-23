@@ -8,12 +8,15 @@
 
 #import "debug_log.h"
 #import "usb_cdc_util.h"
+#import "ToolCommonMessage.h"
 #import "ToolCCIDHelper.h"
 #import "ToolLogFile.h"
 #import "ToolCCIDCommon.h"
 
 @interface ToolCCIDHelper ()
 
+    // 接続されたデバイスの情報を保持
+    @property (nonatomic) NSString *slotName;
     // 送信パラメーターを保持
     @property (nonatomic) uint8_t   sendIns;
     @property (nonatomic) uint8_t   sendP1;
@@ -42,11 +45,10 @@
         // CCIDデバイスとセッションを開始
         TKSmartCardSlotManager *mngr = [TKSmartCardSlotManager defaultManager];
         if ([[mngr slotNames] count] == 0) {
-            NSLog(@"MaintenanceTool found no CCID slot");
+            [[ToolLogFile defaultLogger] error:MSG_CCID_INTERFACE_UNAVAILABLE];
             return false;
         }
         NSString *slotName = [mngr slotNames][0];
-        NSLog(@"MaintenanceTool found CCID slot: %@", slotName);
         [mngr getSlotWithName:slotName reply:^(TKSmartCardSlot *slot) {
             [self SCardSlotManagerDidGetSlot:slot withName:slotName];
         }];
@@ -56,12 +58,13 @@
 #pragma 
 
     - (void)SCardSlotManagerDidGetSlot:(TKSmartCardSlot *)slot withName:(NSString *)slotName {
+        // 接続デバイス名を保持し、接続を試行
+        [self setSlotName:slotName];
         TKSmartCard *card = [slot makeSmartCard];
         if (card == nil) {
-            NSLog(@"MaintenanceTool found no card on CCID slot %@", slotName);
+            [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_DEVICE_UNAVAILABLE, [self slotName]];
             return;
         }
-        NSLog(@"MaintenanceTool connected to card on CCID slot %@", slotName);
         [card beginSessionWithReply:^(BOOL success, NSError *error) {
             [self SCardSlotManagerDidBeginSession:card withReply:success error:error];
         }];
@@ -69,10 +72,10 @@
 
     - (void)SCardSlotManagerDidBeginSession:(TKSmartCard *)card withReply:(bool)success error:(NSError *)error {
         if (success == false) {
-            NSLog(@"Session error: %@", error);
+            [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_DEVICE_CONNECT_ERROR, [self slotName], [error description]];
             return;
         }
-        NSLog(@"MaintenanceTool card session done");
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_CCID_DEVICE_CONNECTED, [self slotName]];
         // コマンドを実行
         uint16_t sw;
         NSNumber *le = [[NSNumber alloc] initWithUnsignedChar:[self sendLe]];
