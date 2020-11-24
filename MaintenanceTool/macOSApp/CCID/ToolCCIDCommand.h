@@ -11,8 +11,7 @@
 
 @interface ToolCCIDCommand : NSObject
 
-    - (void)ccidHelperWillProcess:(Command)command;
-    - (void)ccidHelperWillProcess:(Command)command withPinCode:(NSString *)pinCode;
+    - (void)ccidHelperWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
     - (void)ccidHelperDidProcess:(bool)success response:(NSData *)resp status:(uint16_t)sw;
 
 @end

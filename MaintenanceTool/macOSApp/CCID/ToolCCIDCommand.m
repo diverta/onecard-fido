@@ -18,7 +18,8 @@
     @property (nonatomic) Command            command;
     @property (nonatomic) uint8_t            commandIns;
     // コマンドのパラメーターを保持
-    @property (nonatomic) NSString          *pinCode;
+    @property (nonatomic) NSString          *pinCodeCur;
+    @property (nonatomic) NSString          *pinCodeNew;
 
 @end
 
@@ -38,7 +39,8 @@
         // コマンドおよびパラメーターを初期化
         [self setCommand:COMMAND_NONE];
         [self setCommandIns:0x00];
-        [self setPinCode:nil];
+        [self setPinCodeCur:nil];
+        [self setPinCodeNew:nil];
     }
 
     - (void)ccidHelperWillProcess:(Command)command {
@@ -67,6 +69,10 @@
             case PIV_INS_VERIFY:
                 [self doResponsePivInsVerify:resp status:sw];
                 break;
+            case PIV_INS_CHANGE_REFERENCE:
+            case PIV_INS_RESET_RETRY:
+                [self doResponsePivInsChangePin:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -75,8 +81,9 @@
 
 #pragma mark - Public methods
 
-    - (void)ccidHelperWillProcess:(Command)command withPinCode:(NSString *)pinCode {
-        [self setPinCode:pinCode];
+    - (void)ccidHelperWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
+        [self setPinCodeNew:pinCodeNew];
+        [self setPinCodeCur:pinCodeCur];
         [self ccidHelperWillProcess:command];
     }
 
@@ -96,8 +103,7 @@
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                // TODO: 仮の実装です。
-                [self exitCommandProcess:(sw == SW_SUCCESS)];
+                [self doPivInsChangePIN:[self command]];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -130,6 +136,50 @@
         }
     }
 
+    - (void)doPivInsChangePIN:(Command)command {
+        // INS、P2を設定
+        uint8_t ins, p2;
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                ins = PIV_INS_CHANGE_REFERENCE;
+                p2 = PIV_KEY_PIN;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                ins = PIV_INS_CHANGE_REFERENCE;
+                p2 = PIV_KEY_PUK;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                ins = PIV_INS_RESET_RETRY;
+                p2 = PIV_KEY_PIN;
+                break;
+            default:
+                [self exitCommandProcess:false];
+                return;
+        }
+        // コマンドAPDUを生成
+        NSData *apdu = [self getPivChangePinData:[self pinCodeCur] withPinCodeNew:[self pinCodeNew]];
+        // コマンドを実行
+        [self setCommandIns:ins];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:p2 data:apdu le:0xff];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+    }
+
+    - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
+        // for research
+        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsChangePin: RESP[%@] SW[0x%04X]", response, sw];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self exitCommandProcess:(sw == SW_SUCCESS)];
+                break;
+            default:
+                [self exitCommandProcess:false];
+                break;
+        }
+    }
+
 #pragma mark - Exit function
 
     - (void)exitCommandProcess:(bool)success {
@@ -156,6 +206,24 @@
             memcpy(pin_code, c, s);
         }
         // NSData形式に変換
+        return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
+    }
+
+    - (NSData *)getPivChangePinData:(NSString *)pinCodeCur withPinCodeNew:(NSString *)pinCodeNew {
+        // 認証用PINコード、更新用PINコードの順で配列にセット
+        uint8_t pin_code[16];
+        memset(pin_code, 0xff, sizeof(pin_code));
+        if (pinCodeCur != nil) {
+            uint8_t *c = (uint8_t *)[pinCodeCur UTF8String];
+            size_t s = [pinCodeCur length];
+            memcpy(pin_code, c, s);
+        }
+        if (pinCodeNew != nil) {
+            uint8_t *c = (uint8_t *)[pinCodeNew UTF8String];
+            size_t s = [pinCodeNew length];
+            memcpy(pin_code + 8, c, s);
+        }
+        // NSData形式に変換（16バイト固定長）
         return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
     }
 
