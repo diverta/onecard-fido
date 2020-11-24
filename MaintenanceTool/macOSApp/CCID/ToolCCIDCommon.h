@@ -14,4 +14,7 @@
 
 #define SW_SUCCESS                  0x9000
 
+#define PIV_KEY_PIN                 0x80
+#define PIV_KEY_PUK                 0x81
+
 #endif /* ToolCCIDCommon_h */

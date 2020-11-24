@@ -46,7 +46,9 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doSelectApplication];
                 break;
@@ -91,8 +93,11 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseSelectApplication: RESP[%@] SW[0x%04X]", response, sw];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
-                [self doTestPivInsVerify:[self pinCode]];
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                // TODO: 仮の実装です。
+                [self exitCommandProcess:(sw == SW_SUCCESS)];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -101,6 +106,7 @@
     }
 
     - (void)doTestPivInsVerify:(NSString *)pinCode {
+        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
         // コマンドAPDUを生成
         NSData *apdu = nil;
         if (pinCode != nil) {
@@ -108,18 +114,16 @@
         }
         // コマンドを実行
         [self setCommandIns:PIV_INS_VERIFY];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:0x80 data:apdu le:0xff];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:PIV_KEY_PIN data:apdu le:0xff];
         [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
     }
 
     - (void)doResponsePivInsVerify:(NSData *)response status:(uint16_t)sw {
+        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
         // for research
         [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsVerify: RESP[%@] SW[0x%04X]", response, sw];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
-                [self exitCommandProcess:(sw == SW_SUCCESS)];
-                break;
             default:
                 [self exitCommandProcess:false];
                 break;
