@@ -60,6 +60,9 @@
 #define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
 #define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
 #define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
+#define PROCESS_NAME_CCID_PIV_CHANGE_PIN            @"PIV PINコード変更"
+#define PROCESS_NAME_CCID_PIV_CHANGE_PUK            @"PIV PUKコード変更"
+#define PROCESS_NAME_CCID_PIV_UNBLOCK_PIN           @"PIV PIN解除"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
