@@ -4,7 +4,6 @@
 //
 //  Created by Makoto Morita on 2020/11/20.
 //
-#import "AppDelegate.h"
 #import "ToolCCIDCommand.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -13,8 +12,6 @@
 
 @interface ToolCCIDCommand ()
 
-    // 画面の参照を保持
-    @property (nonatomic, weak) id           delegate;
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
     // コマンドを保持
@@ -28,17 +25,12 @@
 @implementation ToolCCIDCommand
 
     - (id)init {
-        return [self initWithDelegate:nil];
-    }
-
-    - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            [self setDelegate:delegate];
+            // ToolCCIDHelperのインスタンスを生成
+            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] init]];
+            [self clearCommandParameters];
         }
-        // ToolCCIDHelperのインスタンスを生成
-        [self setToolCCIDHelper:[[ToolCCIDHelper alloc] init]];
-        [self clearCommandParameters];
         return self;
     }
 

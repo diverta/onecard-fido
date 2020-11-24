@@ -11,7 +11,6 @@
 
 @interface ToolCCIDCommand : NSObject
 
-    - (id)initWithDelegate:(id)delegate;
     - (void)ccidHelperWillProcess:(Command)command;
     - (void)ccidHelperWillProcess:(Command)command withPinCode:(NSString *)pinCode;
     - (void)ccidHelperDidProcess:(bool)success response:(NSData *)resp status:(uint16_t)sw;
