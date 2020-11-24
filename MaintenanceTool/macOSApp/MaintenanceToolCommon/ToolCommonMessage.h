@@ -212,4 +212,11 @@
 #define MSG_PROMPT_START_DFU_PROCESS            @"ファームウェア新規導入処理を開始しますか？"
 #define MSG_COMMENT_START_DFU_PROCESS           @"署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち、Yesボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。"
 
+#pragma mark - USB CCID関連
+#define MSG_CCID_INTERFACE_UNAVAILABLE          @"FIDO認証器にCCIDインターフェースが存在しません。"
+#define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（CCIDデバイス名: %@）"
+#define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（CCIDデバイス名: %@）%@"
+#define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
+#define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（CCIDデバイス名: %@）%@"
+
 #endif /* ToolCommonMessage_h */
