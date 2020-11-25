@@ -116,11 +116,7 @@
             return;
         }
         // コマンドに制御を戻す
-        if (success) {
-            [commandRef ccidHelperDidProcess:true response:response status:sw];
-        } else {
-            [commandRef ccidHelperDidProcess:false response:nil status:0x00];
-        }
+        [commandRef ccidHelperDidProcess:success response:response status:sw];
     }
 
 @end

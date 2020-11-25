@@ -14,11 +14,16 @@
 
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
+    // 処理機能名称を保持
+    @property (nonatomic) NSString          *processNameOfCommand;
     // コマンドを保持
     @property (nonatomic) Command            command;
     @property (nonatomic) uint8_t            commandIns;
     // コマンドのパラメーターを保持
-    @property (nonatomic) NSString          *pinCode;
+    @property (nonatomic) NSString          *pinCodeCur;
+    @property (nonatomic) NSString          *pinCodeNew;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString          *lastErrorMessage;
 
 @end
 
@@ -36,9 +41,12 @@
 
     - (void)clearCommandParameters {
         // コマンドおよびパラメーターを初期化
+        [self setProcessNameOfCommand:nil];
         [self setCommand:COMMAND_NONE];
         [self setCommandIns:0x00];
-        [self setPinCode:nil];
+        [self setPinCodeCur:nil];
+        [self setPinCodeNew:nil];
+        [self setLastErrorMessage:nil];
     }
 
     - (void)ccidHelperWillProcess:(Command)command {
@@ -46,7 +54,9 @@
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doSelectApplication];
                 break;
@@ -65,6 +75,10 @@
             case PIV_INS_VERIFY:
                 [self doResponsePivInsVerify:resp status:sw];
                 break;
+            case PIV_INS_CHANGE_REFERENCE:
+            case PIV_INS_RESET_RETRY:
+                [self doResponsePivInsChangePin:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -73,8 +87,9 @@
 
 #pragma mark - Public methods
 
-    - (void)ccidHelperWillProcess:(Command)command withPinCode:(NSString *)pinCode {
-        [self setPinCode:pinCode];
+    - (void)ccidHelperWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
+        [self setPinCodeNew:pinCodeNew];
+        [self setPinCodeCur:pinCodeCur];
         [self ccidHelperWillProcess:command];
     }
 
@@ -87,12 +102,18 @@
     }
 
     - (void)doResponsePivInsSelectApplication:(NSData *)response status:(uint16_t)sw {
-        // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseSelectApplication: RESP[%@] SW[0x%04X]", response, sw];
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessage:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
+            [self exitCommandProcess:false];
+            return;
+        }
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
-                [self doTestPivInsVerify:[self pinCode]];
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self doPivInsChangePIN:[self command]];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -101,6 +122,7 @@
     }
 
     - (void)doTestPivInsVerify:(NSString *)pinCode {
+        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
         // コマンドAPDUを生成
         NSData *apdu = nil;
         if (pinCode != nil) {
@@ -108,16 +130,86 @@
         }
         // コマンドを実行
         [self setCommandIns:PIV_INS_VERIFY];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:0x80 data:apdu le:0xff];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:PIV_KEY_PIN data:apdu le:0xff];
         [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
     }
 
     - (void)doResponsePivInsVerify:(NSData *)response status:(uint16_t)sw {
+        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
         // for research
         [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsVerify: RESP[%@] SW[0x%04X]", response, sw];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
-            case COMMAND_TEST_PIV_INS_VERIFY:
+            default:
+                [self exitCommandProcess:false];
+                break;
+        }
+    }
+
+    - (void)doPivInsChangePIN:(Command)command {
+        // INS、P2を設定
+        uint8_t ins, p2;
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                ins = PIV_INS_CHANGE_REFERENCE;
+                p2 = PIV_KEY_PIN;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                ins = PIV_INS_CHANGE_REFERENCE;
+                p2 = PIV_KEY_PUK;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                ins = PIV_INS_RESET_RETRY;
+                p2 = PIV_KEY_PIN;
+                break;
+            default:
+                [self exitCommandProcess:false];
+                return;
+        }
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // コマンドAPDUを生成
+        NSData *apdu = [self getPivChangePinData:[self pinCodeCur] withPinCodeNew:[self pinCodeNew]];
+        // コマンドを実行
+        [self setCommandIns:ins];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:p2 data:apdu le:0xff];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+    }
+
+    - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
+        // ステータスワードをチェックし、エラーの種類を判定
+        uint8_t retries = 3;
+        bool isPinBlocked = false;
+        if ((sw >> 8) == 0x63) {
+            // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+            retries = sw & 0xf;
+            if (retries < 1) {
+                isPinBlocked = true;
+            }
+
+        } else if (sw == SW_ERR_AUTH_BLOCKED) {
+            // 入力PIN／PUKがすでにブロックされている場合
+            isPinBlocked = true;
+
+        } else if (sw != SW_SUCCESS) {
+            // 不明なエラーが発生時
+            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+        }
+        // PINブロック or リトライカウンターの状態に応じメッセージを編集
+        bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
+        if (isPinBlocked) {
+            [self setLastErrorMessage:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
+
+        } else if (retries < 3) {
+            NSString *name = isPinAuth ? @"PIN" : @"PUK";
+            NSString *msg = [[NSString alloc] initWithFormat:MSG_ERROR_PIV_WRONG_PIN, name, name, retries];
+            [self setLastErrorMessage:msg];
+        }
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 [self exitCommandProcess:(sw == SW_SUCCESS)];
                 break;
             default:
@@ -128,11 +220,48 @@
 
 #pragma mark - Exit function
 
+    - (void)startCommandProcess {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
+                break;
+            default:
+                break;
+        }
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self processNameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
+    }
+
     - (void)exitCommandProcess:(bool)success {
-        // TODO: 画面に制御を戻す
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_FORMAT_END_MESSAGE, @"Command", success ? MSG_SUCCESS : MSG_FAILURE];
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
+        if (success == false) {
+            // 処理失敗時はエラーメッセージをログ出力
+            if ([self lastErrorMessage]) {
+                [[ToolLogFile defaultLogger] error:[self lastErrorMessage]];
+            }
+            // コマンド異常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] error:endMsg];
+            }
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
+        }
         // パラメーターを初期化
         [self clearCommandParameters];
+        // TODO: 画面に制御を戻す
     }
 
 #pragma mark - Utility functions
@@ -152,6 +281,24 @@
             memcpy(pin_code, c, s);
         }
         // NSData形式に変換
+        return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
+    }
+
+    - (NSData *)getPivChangePinData:(NSString *)pinCodeCur withPinCodeNew:(NSString *)pinCodeNew {
+        // 認証用PINコード、更新用PINコードの順で配列にセット
+        uint8_t pin_code[16];
+        memset(pin_code, 0xff, sizeof(pin_code));
+        if (pinCodeCur != nil) {
+            uint8_t *c = (uint8_t *)[pinCodeCur UTF8String];
+            size_t s = [pinCodeCur length];
+            memcpy(pin_code, c, s);
+        }
+        if (pinCodeNew != nil) {
+            uint8_t *c = (uint8_t *)[pinCodeNew UTF8String];
+            size_t s = [pinCodeNew length];
+            memcpy(pin_code + 8, c, s);
+        }
+        // NSData形式に変換（16バイト固定長）
         return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
     }
 

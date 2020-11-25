@@ -60,6 +60,9 @@
 #define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
 #define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
 #define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
+#define PROCESS_NAME_CCID_PIV_CHANGE_PIN            @"PIV PINコード変更"
+#define PROCESS_NAME_CCID_PIV_CHANGE_PUK            @"PIV PUKコード変更"
+#define PROCESS_NAME_CCID_PIV_UNBLOCK_PIN           @"PIV PIN解除"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -218,5 +221,10 @@
 #define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（CCIDデバイス名: %@）%@"
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
 #define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（CCIDデバイス名: %@）%@"
+#define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
+#define MSG_ERROR_PIV_WRONG_PIN                 @"%@が不正です。正しい%@を入力してください（残り%d回試行可能です）。"
+#define MSG_ERROR_PIV_PIN_LOCKED                @"PINがすでに無効です。PIN解除を実行し、新しいPINを登録して下さい。"
+#define MSG_ERROR_PIV_PUK_LOCKED                @"PUKがすでに無効です。PIV機能をリセットする必要があります。"
+#define MSG_ERROR_PIV_UNKNOWN                   @"不明なエラーが発生しました。"
 
 #endif /* ToolCommonMessage_h */
