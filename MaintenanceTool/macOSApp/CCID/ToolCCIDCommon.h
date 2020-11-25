@@ -12,6 +12,9 @@
 #define PIV_INS_CHANGE_REFERENCE    0x24
 #define PIV_INS_RESET_RETRY         0x2c
 
+#define YKPIV_INS_RESET             0xfb
+
+#define SW_SEC_STATUS_NOT_SATISFIED 0x6982
 #define SW_ERR_AUTH_BLOCKED         0x6983
 #define SW_SUCCESS                  0x9000
 
