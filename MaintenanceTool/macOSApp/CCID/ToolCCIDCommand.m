@@ -20,6 +20,8 @@
     // コマンドのパラメーターを保持
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString          *lastErrorMessage;
 
 @end
 
@@ -41,6 +43,7 @@
         [self setCommandIns:0x00];
         [self setPinCodeCur:nil];
         [self setPinCodeNew:nil];
+        [self setLastErrorMessage:nil];
     }
 
     - (void)ccidHelperWillProcess:(Command)command {
@@ -167,6 +170,34 @@
     - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
         // for research
         [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsChangePin: RESP[%@] SW[0x%04X]", response, sw];
+        // ステータスワードをチェックし、エラーの種類を判定
+        uint8_t retries = 3;
+        bool isPinBlocked = false;
+        if ((sw >> 8) == 0x63) {
+            // リトライカウンターが戻された場合（入力PIN／PUKが不正時）
+            retries = sw & 0xf;
+            if (retries < 1) {
+                isPinBlocked = true;
+            }
+
+        } else if (sw == SW_ERR_AUTH_BLOCKED) {
+            // 入力PIN／PUKがすでにブロックされている場合
+            isPinBlocked = true;
+
+        } else if (sw != SW_SUCCESS) {
+            // 不明なエラーが発生時
+            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+        }
+        // PINブロック or リトライカウンターの状態に応じメッセージを編集
+        bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
+        if (isPinBlocked) {
+            [self setLastErrorMessage:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
+
+        } else if (retries < 3) {
+            NSString *name = isPinAuth ? @"PIN" : @"PUK";
+            NSString *msg = [[NSString alloc] initWithFormat:MSG_ERROR_PIV_WRONG_PIN, name, name, retries];
+            [self setLastErrorMessage:msg];
+        }
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
@@ -183,6 +214,12 @@
 #pragma mark - Exit function
 
     - (void)exitCommandProcess:(bool)success {
+        if (success == false) {
+            // 処理失敗時はエラーメッセージをログ出力
+            if ([self lastErrorMessage]) {
+                [[ToolLogFile defaultLogger] error:[self lastErrorMessage]];
+            }
+        }
         // TODO: 画面に制御を戻す
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_FORMAT_END_MESSAGE, @"Command", success ? MSG_SUCCESS : MSG_FAILURE];
         // パラメーターを初期化
