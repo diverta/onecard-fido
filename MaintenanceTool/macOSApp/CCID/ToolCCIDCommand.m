@@ -99,8 +99,12 @@
     }
 
     - (void)doResponsePivInsSelectApplication:(NSData *)response status:(uint16_t)sw {
-        // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponseSelectApplication: RESP[%@] SW[0x%04X]", response, sw];
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessage:MSG_ERROR_PIV_APPLET_SELECT_FAILED];
+            [self exitCommandProcess:false];
+            return;
+        }
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
@@ -168,8 +172,6 @@
     }
 
     - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
-        // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsChangePin: RESP[%@] SW[0x%04X]", response, sw];
         // ステータスワードをチェックし、エラーの種類を判定
         uint8_t retries = 3;
         bool isPinBlocked = false;
