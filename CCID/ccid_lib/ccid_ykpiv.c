@@ -179,8 +179,16 @@ static uint16_t erase_piv_object_file(command_apdu_t *capdu, response_apdu_t *ra
         return SW_SECURITY_STATUS_NOT_SATISFIED;
     }
 
-    // 仮の実装です。
-    return SW_COMMAND_NOT_ALLOWED;
+    // 全てのPIVオブジェクトデータをFlash ROM領域から削除
+    if (ccid_flash_piv_object_data_erase() == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // Flash ROM書込みが完了するまで、レスポンスを抑止
+    apdu_resume_prepare(capdu, rapdu);
+
+    // 正常終了
+    return SW_NO_ERROR;
 }
 
 uint16_t ccid_ykpiv_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu)

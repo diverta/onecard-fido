@@ -29,10 +29,12 @@ bool ccid_flash_piv_object_pin_write(uint8_t obj_tag, uint8_t *obj_data, size_t 
 
 bool ccid_flash_piv_object_data_read(uint8_t obj_tag, uint8_t *obj_data, size_t *obj_size, bool *is_exist);
 bool ccid_flash_piv_object_data_write(uint8_t obj_tag, uint8_t *obj_data, size_t obj_size);
+bool ccid_flash_piv_object_data_erase(void);
 
 void ccid_flash_piv_object_failed(void);
 void ccid_flash_piv_object_gc_done(void);
 void ccid_flash_piv_object_record_updated(void);
+void ccid_flash_piv_object_record_deleted(void);
 
 #ifdef __cplusplus
 }
