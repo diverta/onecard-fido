@@ -10,6 +10,7 @@
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_pin_auth.h"
 #include "ccid_ykpiv_import_key.h"
 
 // 業務処理／HW依存処理間のインターフェース
@@ -146,6 +147,85 @@ void ccid_ykpiv_ins_import_key_resume(bool success)
     } else {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
         fido_log_error("Private key registration fail");
+        apdu_resume_process(m_capdu, m_rapdu, SW_UNABLE_TO_PROCESS);
+    }
+}
+
+static uint16_t erase_piv_object_file(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 || capdu->p2 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != 0) {
+        return SW_WRONG_LENGTH;
+    }
+    //
+    // リトライカウンターのチェック
+    //   PIN、PUK両者のリトライカウンターが
+    //   0 かどうかチェックする。
+    //
+    uint8_t retries;
+    if (ccid_piv_pin_auth_get_retries(TAG_PIV_PIN, &retries) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (retries > 0) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+    if (ccid_piv_pin_auth_get_retries(TAG_KEY_PUK, &retries) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (retries > 0) {
+        return SW_SECURITY_STATUS_NOT_SATISFIED;
+    }
+
+    // 仮の実装です。
+    return SW_COMMAND_NOT_ALLOWED;
+}
+
+uint16_t ccid_ykpiv_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // PIVオブジェクトファイル消去処理を実行
+    uint16_t sw = erase_piv_object_file(capdu, rapdu);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        apdu_resume_prepare(capdu, rapdu);
+    }
+
+    // ステータスワードを戻す
+    return sw;
+}
+
+void ccid_ykpiv_ins_reset_retry(void)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    // リトライが必要な場合は
+    // PIVオブジェクトファイル消去処理を再実行
+    uint16_t sw = erase_piv_object_file(m_capdu, m_rapdu);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        fido_log_warning("PIV object file erase retry");
+    } else {
+        // 異常時はエラーレスポンス処理を指示
+        fido_log_error("PIV object file erase retry fail");
+        apdu_resume_process(m_capdu, m_rapdu, sw);        
+    }
+}
+
+void ccid_ykpiv_ins_reset_resume(bool success)
+{
+    ASSERT(m_capdu);
+    ASSERT(m_rapdu);
+
+    if (success) {
+        // Flash ROM書込みが完了した場合は正常レスポンス処理を指示
+        fido_log_info("PIV object file erase success");
+        apdu_resume_process(m_capdu, m_rapdu, SW_NO_ERROR);
+    } else {
+        // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
+        fido_log_error("PIV object file erase fail");
         apdu_resume_process(m_capdu, m_rapdu, SW_UNABLE_TO_PROCESS);
     }
 }
