@@ -14,6 +14,8 @@
 
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
+    // 処理機能名称を保持
+    @property (nonatomic) NSString          *processNameOfCommand;
     // コマンドを保持
     @property (nonatomic) Command            command;
     @property (nonatomic) uint8_t            commandIns;
@@ -39,6 +41,7 @@
 
     - (void)clearCommandParameters {
         // コマンドおよびパラメーターを初期化
+        [self setProcessNameOfCommand:nil];
         [self setCommand:COMMAND_NONE];
         [self setCommandIns:0x00];
         [self setPinCodeCur:nil];
@@ -163,6 +166,8 @@
                 [self exitCommandProcess:false];
                 return;
         }
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
         // コマンドAPDUを生成
         NSData *apdu = [self getPivChangePinData:[self pinCodeCur] withPinCodeNew:[self pinCodeNew]];
         // コマンドを実行
@@ -215,17 +220,48 @@
 
 #pragma mark - Exit function
 
+    - (void)startCommandProcess {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PIN];
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_CHANGE_PUK];
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
+                break;
+            default:
+                break;
+        }
+        // コマンド開始メッセージをログファイルに出力
+        NSString *startMsg = [NSString stringWithFormat:MSG_FORMAT_START_MESSAGE, [self processNameOfCommand]];
+        [[ToolLogFile defaultLogger] info:startMsg];
+    }
+
     - (void)exitCommandProcess:(bool)success {
+        // コマンド終了メッセージを生成
+        NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
+                                success ? MSG_SUCCESS : MSG_FAILURE];
         if (success == false) {
             // 処理失敗時はエラーメッセージをログ出力
             if ([self lastErrorMessage]) {
                 [[ToolLogFile defaultLogger] error:[self lastErrorMessage]];
             }
+            // コマンド異常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] error:endMsg];
+            }
+        } else {
+            // コマンド正常終了メッセージをログ出力
+            if ([self processNameOfCommand]) {
+                [[ToolLogFile defaultLogger] info:endMsg];
+            }
         }
-        // TODO: 画面に制御を戻す
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_FORMAT_END_MESSAGE, @"Command", success ? MSG_SUCCESS : MSG_FAILURE];
         // パラメーターを初期化
         [self clearCommandParameters];
+        // TODO: 画面に制御を戻す
     }
 
 #pragma mark - Utility functions
