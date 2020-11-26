@@ -4,6 +4,7 @@ Yubico PIV Tool (command line) を使用した各種手順を掲載します。<
 本ページでは、以下が説明対象になります。
 - PINのリセット
 - PUKの変更（オプション）
+- PIV機能のリセット
 
 ## 事前準備
 
@@ -46,7 +47,7 @@ bash-3.2$
 
 #### PINのリセット
 
-PIN番号を３回以上間違えて指定すると、PIVのPINポリシーにより、認証がブロックされます。<br>
+PIN番号を３回以上間違えて指定すると、PIVのPINポリシーにより、PIV番号による認証がブロックされます。<br>
 このブロックを解除するためには、PUKという暗証番号を使用して認証し、PIN番号を再設定する必要があります。<br>
 本ページでは、この設定を「PINのリセット」と称します。
 
@@ -102,3 +103,34 @@ bash-3.2$
 
 [注1]`-P 12345678`は、デフォルトPUK番号を指定した例です。本手順でPUK番号をデフォルトから変更した場合は、そのPUK番号を代わりに指定してください。<br>
 [注2]`Enter new puk: `や`Verifying - Enter new puk: `のプロンプトに続いて、新しいPUK番号を入力します。入力文字列はエコーバックされません。
+
+#### PIV機能のリセット
+
+PUK番号を３回以上間違えて指定すると、PIVのPINポリシーにより、PUK番号による認証がブロックされます。<br>
+結果として、前述のPINリセットを実行することができなくなります。
+
+万が一、PINもすでにブロックされている場合、PINリセット（PIN番号の再設定）が実行できないため、PINを使用するPIV機能が全面的に使用不可能となってしまいます。<br>
+PIV機能の利用を再開できるようにするため、PIVでは「PIVアプリケーションリセット」という機能（＝PIV機能のリセット）が用意されています。
+
+<b>【ご注意】<br>
+PIV機能のリセットを実行すると、MDBT50Q Dongle内に導入した秘密鍵・証明書がすべて消去されます。<br>
+「[Yubico PIV Toolによる初期データ導入手順](YKPIVUSAGE.md)」により、再度初期データを導入して下さい。</b>
+
+コマンド`reset`を実行し、PIV機能のリセットを実行します。<br>
+以下のコマンドを実行します。
+
+```
+./yubico-piv-tool -v --reader="Diverta Inc. Secure Dongle" -a reset
+```
+
+以下は実行例になります。<br>
+
+```
+bash-3.2$ ./yubico-piv-tool -v --reader="Diverta Inc. Secure Dongle" -a reset
+Connect reader 'Diverta Inc. Secure Dongle' matching 'Diverta Inc. Secure Dongle'.
+Action 'reset' does not need authentication.
+Now processing for action 'reset'.
+Successfully reset the application.
+Disconnect card #0.
+bash-3.2$
+```
