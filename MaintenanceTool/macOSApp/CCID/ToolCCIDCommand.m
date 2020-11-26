@@ -58,6 +58,7 @@
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
             case COMMAND_CCID_PIV_RESET:
+            case COMMAND_CCID_PIV_IMPORT_KEY:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doSelectApplication];
                 break;
@@ -101,6 +102,10 @@
         [self ccidHelperWillProcess:command];
     }
 
+    - (void)ccidHelperWillImportKey:(Command)command {
+        [self ccidHelperWillProcess:command];
+    }
+
 #pragma mark - Command functions
 
     - (void)doSelectApplication {
@@ -125,6 +130,9 @@
                 break;
             case COMMAND_CCID_PIV_RESET:
                 [self doYkPivInsReset:[self command]];
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self doYkPivImportKey:[self command]];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -156,6 +164,17 @@
                 break;
         }
     }
+
+#pragma mark - Key and certificate management functions
+
+    - (void)doYkPivImportKey:(Command)command {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // 仮の実装です。
+        [self exitCommandProcess:true];
+    }
+
+#pragma mark - PIN management functions
 
     - (void)doPivInsChangePIN:(Command)command {
         // INS、P2を設定
@@ -267,6 +286,9 @@
                 break;
             case COMMAND_CCID_PIV_RESET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
                 break;
             default:
                 break;

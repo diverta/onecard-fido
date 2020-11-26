@@ -64,6 +64,7 @@
 #define PROCESS_NAME_CCID_PIV_CHANGE_PUK            @"PIV PUKコード変更"
 #define PROCESS_NAME_CCID_PIV_UNBLOCK_PIN           @"PIV PIN解除"
 #define PROCESS_NAME_CCID_PIV_RESET                 @"PIV機能リセット"
+#define PROCESS_NAME_CCID_PIV_IMPORT_KEY            @"鍵・証明書インストール（PIV機能）"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
