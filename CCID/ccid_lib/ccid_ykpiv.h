@@ -19,6 +19,7 @@ extern "C" {
 #define YKPIV_INS_SET_MGMKEY            0xff
 #define YKPIV_INS_IMPORT_ASYMMETRIC_KEY 0xfe
 #define YKPIV_INS_GET_VERSION           0xfd
+#define YKPIV_INS_RESET                 0xfb
 #define YKPIV_INS_GET_SERIAL            0xf8
 
 //
@@ -30,6 +31,9 @@ void     ccid_ykpiv_ins_set_mgmkey_resume(bool success);
 uint16_t ccid_ykpiv_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu);
 void     ccid_ykpiv_ins_import_key_retry(void);
 void     ccid_ykpiv_ins_import_key_resume(bool success);
+uint16_t ccid_ykpiv_ins_reset(command_apdu_t *capdu, response_apdu_t *rapdu);
+void     ccid_ykpiv_ins_reset_retry(void);
+void     ccid_ykpiv_ins_reset_resume(bool success);
 uint16_t ccid_ykpiv_ins_get_version(command_apdu_t *capdu, response_apdu_t *rapdu);
 uint16_t ccid_ykpiv_ins_get_serial(command_apdu_t *capdu, response_apdu_t *rapdu);
 

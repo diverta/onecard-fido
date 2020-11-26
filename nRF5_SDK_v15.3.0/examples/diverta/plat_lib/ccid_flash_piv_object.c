@@ -314,6 +314,19 @@ bool ccid_flash_piv_object_data_write(uint8_t obj_tag, uint8_t *obj_data, size_t
     return write_piv_object_data_to_fds(obj_tag, obj_alg, obj_data, obj_size);
 }
 
+bool ccid_flash_piv_object_data_erase(void)
+{
+    // 全てのPIVオブジェクトデータをFlash ROM領域から削除
+    ret_code_t err_code = fds_file_delete(PIV_DATA_OBJ_FILE_ID);
+    if (err_code != FDS_SUCCESS) {
+        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
+        return false;
+    }
+
+    m_flash_func = (void *)ccid_flash_piv_object_data_erase;
+    return true;
+}
+
 void ccid_flash_piv_object_failed(void)
 {
     if (m_flash_func == NULL) {
@@ -336,6 +349,9 @@ void ccid_flash_piv_object_failed(void)
     }
     if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_resume(false);
+    }
+    if (flash_func == (void *)ccid_flash_piv_object_data_erase) {
+        ccid_ykpiv_ins_reset_resume(false);
     }
 }
 
@@ -364,6 +380,9 @@ void ccid_flash_piv_object_gc_done(void)
     if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_retry();
     }
+    if (flash_func == (void *)ccid_flash_piv_object_data_erase) {
+        ccid_ykpiv_ins_reset_retry();
+    }
 }
 
 void ccid_flash_piv_object_record_updated(void)
@@ -388,5 +407,21 @@ void ccid_flash_piv_object_record_updated(void)
     }
     if (flash_func == (void *)ccid_flash_piv_object_pin_write) {
         ccid_piv_object_pin_set_resume(true);
+    }
+}
+
+void ccid_flash_piv_object_record_deleted(void)
+{
+    if (m_flash_func == NULL) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    void *flash_func = m_flash_func;
+    m_flash_func = NULL;
+
+    // 正常系の後続処理を実行
+    if (flash_func == (void *)ccid_flash_piv_object_data_erase) {
+        ccid_ykpiv_ins_reset_resume(true);
     }
 }

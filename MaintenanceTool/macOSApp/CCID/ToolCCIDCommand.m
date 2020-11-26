@@ -57,6 +57,7 @@
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
+            case COMMAND_CCID_PIV_RESET:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doSelectApplication];
                 break;
@@ -79,6 +80,9 @@
             case PIV_INS_RESET_RETRY:
                 [self doResponsePivInsChangePin:resp status:sw];
                 break;
+            case YKPIV_INS_RESET:
+                [self doResponseYkPivInsReset:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -90,6 +94,10 @@
     - (void)ccidHelperWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
         [self setPinCodeNew:pinCodeNew];
         [self setPinCodeCur:pinCodeCur];
+        [self ccidHelperWillProcess:command];
+    }
+
+    - (void)ccidHelperWillReset:(Command)command {
         [self ccidHelperWillProcess:command];
     }
 
@@ -114,6 +122,9 @@
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 [self doPivInsChangePIN:[self command]];
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                [self doYkPivInsReset:[self command]];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -218,6 +229,28 @@
         }
     }
 
+    - (void)doYkPivInsReset:(Command)command {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // コマンドを実行
+        [self setCommandIns:YKPIV_INS_RESET];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:0x00 data:nil le:0xff];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+    }
+
+    - (void)doResponseYkPivInsReset:(NSData *)response status:(uint16_t)sw {
+        // ステータスワードの内容に応じメッセージを編集
+        if (sw == SW_SEC_STATUS_NOT_SATISFIED) {
+            // PIN／PUKがまだブロックされていない場合
+            [self setLastErrorMessage:MSG_ERROR_PIV_RESET_FAIL];
+
+        } else if (sw != SW_SUCCESS) {
+            // 不明なエラーが発生時
+            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+        }
+        [self exitCommandProcess:(sw == SW_SUCCESS)];
+    }
+
 #pragma mark - Exit function
 
     - (void)startCommandProcess {
@@ -231,6 +264,9 @@
                 break;
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_UNBLOCK_PIN];
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_RESET];
                 break;
             default:
                 break;
