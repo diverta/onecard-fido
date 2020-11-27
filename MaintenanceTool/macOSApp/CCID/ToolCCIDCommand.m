@@ -22,6 +22,8 @@
     // コマンドのパラメーターを保持
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
+    // PIV管理機能認証（往路）のチャレンジを保持
+    @property (nonatomic) NSData            *pivAuthChallenge;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString          *lastErrorMessage;
 
@@ -46,6 +48,7 @@
         [self setCommandIns:0x00];
         [self setPinCodeCur:nil];
         [self setPinCodeNew:nil];
+        [self setPivAuthChallenge:nil];
         [self setLastErrorMessage:nil];
     }
 
@@ -73,6 +76,9 @@
         switch ([self commandIns]) {
             case PIV_INS_SELECT_APPLICATION:
                 [self doResponsePivInsSelectApplication:resp status:sw];
+                break;
+            case PIV_INS_AUTHENTICATE:
+                [self doResponsePivInsAuthenticate:resp status:sw];
                 break;
             case PIV_INS_VERIFY:
                 [self doResponsePivInsVerify:resp status:sw];
@@ -140,6 +146,30 @@
         }
     }
 
+    - (void)doRequestPivInsAuthenticate:(NSData *)apdu {
+        // コマンドを実行
+        [self setCommandIns:PIV_INS_AUTHENTICATE];
+        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:PIV_ALG_3DES p2:PIV_KEY_CARDMGM data:apdu le:0xff];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+    }
+
+    - (void)doResponsePivInsAuthenticate:(NSData *)response status:(uint16_t)sw {
+        // for research
+        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsAuthenticate: RESP[%@] SW[0x%04X]", response, sw];
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            if ([self pivAuthChallenge] == nil) {
+                [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED];
+            } else {
+                [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED];
+            }
+            [self exitCommandProcess:false];
+            return;
+        }
+        // PIV管理機能認証レスポンスに対する処理を続行
+        [self doResponsePivAdminAuth:response];
+    }
+
     - (void)doTestPivInsVerify:(NSString *)pinCode {
         // TODO: 将来的に鍵・証明書導入機能で使用予定です。
         // コマンドAPDUを生成
@@ -170,6 +200,36 @@
     - (void)doYkPivImportKey:(Command)command {
         // 処理開始メッセージをログ出力
         [self startCommandProcess];
+        // PIV管理機能認証（往路）を実行
+        [self doRequestPivAdminAuth:nil];
+    }
+
+    - (void)doRequestPivAdminAuth:(NSData *)cardMgmKey {
+        // コマンドAPDUを生成
+        NSData *apdu = [self getPivAdminAuthRequestData];
+        // コマンドを実行
+        [self setPivAuthChallenge:nil];
+        [self doRequestPivInsAuthenticate:apdu];
+    }
+
+    - (void)doRequestPivAdminAuthSecond:(NSData *)insAuthResp {
+        // PIV管理機能認証（往路）のレスポンスから、暗号化されたチャレンジを抽出（５バイト目から８バイト分）
+        [self setPivAuthChallenge:[insAuthResp subdataWithRange:NSMakeRange(4, 8)]];
+        // 8バイトのランダムベクターを生成
+        NSData *random = [self generateRandom:8];
+        // コマンドAPDUを生成
+        NSData *apdu = [self getPivAdminAuthResponseData:[self pivAuthChallenge] withRandom:random];
+        // コマンドを実行
+        [self doRequestPivInsAuthenticate:apdu];
+    }
+
+    - (void)doResponsePivAdminAuth:(NSData *)insAuthResp {
+        if ([self pivAuthChallenge] == nil) {
+            // PIV管理機能認証（復路）を実行
+            [self doRequestPivAdminAuthSecond:insAuthResp];
+            return;
+        }
+        // TODO: PIV管理機能認証の完了チェック
         // 仮の実装です。
         [self exitCommandProcess:true];
     }
@@ -327,6 +387,44 @@
     - (NSData *)getPivAidData {
         static uint8_t piv_aid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
         return [NSData dataWithBytes:piv_aid length:sizeof(piv_aid)];
+    }
+
+    - (NSData *)getPivAdminAuthRequestData {
+        // PIV管理機能認証（往路）のリクエストデータを生成
+        static uint8_t apdu[] = {TAG_DYNAMIC_AUTH_TEMPLATE, 2, TAG_AUTH_WITNESS, 0};
+        return [NSData dataWithBytes:apdu length:sizeof(apdu)];
+    }
+
+    - (NSData *)getPivAdminAuthResponseData:(NSData *)challenge withRandom:(NSData *)random {
+        // 引数のチャレンジ、ランダムをバイト変換
+        uint8_t *c = (uint8_t *)[challenge bytes];
+        size_t c_size = [challenge length];
+        uint8_t *r = (uint8_t *)[random bytes];
+        size_t r_size = [random length];
+        // PIV管理機能認証（復路）のリクエストデータを生成
+        uint8_t apdu[22];
+        uint8_t offset = 0;
+        apdu[offset++] = TAG_DYNAMIC_AUTH_TEMPLATE;
+        apdu[offset++] = 20;
+        // copy challenge
+        apdu[offset++] = TAG_AUTH_WITNESS;
+        apdu[offset++] = c_size;
+        memcpy(apdu + offset, c, c_size);
+        // copy random
+        offset += c_size;
+        apdu[offset++] = TAG_AUTH_CHALLENGE;
+        apdu[offset++] = r_size;
+        memcpy(apdu + offset, r, r_size);
+        return [NSData dataWithBytes:apdu length:sizeof(apdu)];
+    }
+
+    - (NSData *)generateRandom:(size_t)size {
+        uint8_t u[size];
+        for (size_t i = 0; i < size; i++) {
+            uint32_t r = arc4random_uniform(0xff);
+            u[i] = (uint8_t)r;
+        }
+        return [[NSData alloc] initWithBytes:u length:size];
     }
 
     - (NSData *)getPivPinVerifyData:(NSString *)pinCode {

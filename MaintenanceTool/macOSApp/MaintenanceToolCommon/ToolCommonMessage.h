@@ -224,6 +224,8 @@
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
 #define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（CCIDデバイス名: %@）%@"
 #define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
+#define MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED     @"PIV管理機能認証（往路）が失敗しました。"
+#define MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED     @"PIV管理機能認証（復路）が失敗しました。"
 #define MSG_ERROR_PIV_WRONG_PIN                 @"%@が不正です。正しい%@を入力してください（残り%d回試行可能です）。"
 #define MSG_ERROR_PIV_PIN_LOCKED                @"PINがすでに無効です。PIN解除を実行し、新しいPINを登録して下さい。"
 #define MSG_ERROR_PIV_PUK_LOCKED                @"PUKがすでに無効です。PIV機能をリセットする必要があります。"
