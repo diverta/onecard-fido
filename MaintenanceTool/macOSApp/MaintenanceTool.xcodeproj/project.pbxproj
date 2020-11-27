@@ -27,6 +27,7 @@
 		7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */; };
 		7A61AA61254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */; };
 		7A629F4524C00245007ABA89 /* ToolContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A629F4424C00245007ABA89 /* ToolContext.m */; };
+		7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */; };
 		7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */; };
 		7A75A6F32567A1CE003AF1A6 /* ToolCCIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A75A6F22567A1CE003AF1A6 /* ToolCCIDCommand.m */; };
 		7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A8402F22268570D000F5E50 /* libtinycbor.a */; };
@@ -100,6 +101,8 @@
 		7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.2.12.zip; sourceTree = "<group>"; };
 		7A629F4424C00245007ABA89 /* ToolContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolContext.m; sourceTree = "<group>"; };
 		7A629F4624C00262007ABA89 /* ToolContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolContext.h; sourceTree = "<group>"; };
+		7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_des.h; sourceTree = "<group>"; };
+		7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_des.c; sourceTree = "<group>"; };
 		7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDHelper.h; sourceTree = "<group>"; };
 		7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolCCIDHelper.m; sourceTree = "<group>"; };
 		7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolCCIDCommon.h; sourceTree = "<group>"; };
@@ -182,6 +185,7 @@
 		64ED9A6A1647439300F39EAE = {
 			isa = PBXGroup;
 			children = (
+				7A712EBA2570BC9400E45E2D /* tool_crypto */,
 				7A75A6EC25677FDF003AF1A6 /* CCID */,
 				7ACBD8CB2566424D00722984 /* Entitlements.plist */,
 				7AA7464223C2C400001938A7 /* Resources */,
@@ -272,6 +276,15 @@
 				7A98E266226859420007F154 /* FIDODefines.h */,
 			);
 			path = ClientPIN;
+			sourceTree = "<group>";
+		};
+		7A712EBA2570BC9400E45E2D /* tool_crypto */ = {
+			isa = PBXGroup;
+			children = (
+				7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */,
+				7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */,
+			);
+			path = tool_crypto;
 			sourceTree = "<group>";
 		};
 		7A75A6EC25677FDF003AF1A6 /* CCID */ = {
@@ -455,6 +468,7 @@
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */,
 				7A75A6F32567A1CE003AF1A6 /* ToolCCIDCommand.m in Sources */,
+				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7A2BE5EA23BC29B7008EB897 /* ToolCDCHelper.m in Sources */,
 				7A98E265226858C50007F154 /* CBOREncoder.c in Sources */,
 				7A2BE5EE23BC6865008EB897 /* usb_cdc_util.c in Sources */,
