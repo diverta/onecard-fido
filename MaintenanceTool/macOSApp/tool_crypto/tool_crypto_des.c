@@ -71,10 +71,21 @@ unsigned char *tool_crypto_des_default_key(void)
     return (unsigned char *)default_3des_key;
 }
 
-bool tool_crypto_des_import_key(const unsigned char *keyraw, const size_t keyrawlen)
+bool tool_crypto_des_import_key(const unsigned char *key_raw, const size_t key_raw_size)
 {
     if (mgm_key != NULL) {
         des_destroy_key(mgm_key);
     }
-    return des_import_key(DES_TYPE_3DES, keyraw, keyrawlen);
+    return des_import_key(DES_TYPE_3DES, key_raw, key_raw_size);
+}
+
+bool tool_crypto_des_decrypt(const unsigned char *input, const size_t input_size, unsigned char *output, size_t *output_size)
+{
+    if (mgm_key == NULL) {
+        log_debug("%s: DES key is not initialized", __func__);
+        return false;
+    }
+    des_key *key = mgm_key;
+    DES_ecb3_encrypt((const_DES_cblock *)input, (DES_cblock *)output, &(key->ks1), &(key->ks2), &(key->ks3), 0);
+    return true;
 }

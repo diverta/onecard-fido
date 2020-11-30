@@ -17,7 +17,8 @@
 //
 // public functions
 //
-unsigned char  *tool_crypto_des_default_key(void);
-bool            tool_crypto_des_import_key(const unsigned char *keyraw, const size_t keyrawlen);
+unsigned char   *tool_crypto_des_default_key(void);
+bool             tool_crypto_des_import_key(const unsigned char *key_raw, const size_t key_raw_size);
+bool             tool_crypto_des_decrypt(const unsigned char *input, const size_t input_size, unsigned char *output, size_t *output_size);
 
 #endif /* tool_crypto_des_h */
