@@ -4,6 +4,9 @@
 //
 //  Created by Makoto Morita on 2020/11/20.
 //
+#import "debug_log.h"
+#import "tool_crypto_des.h"
+
 #import "ToolCCIDCommand.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -154,8 +157,6 @@
     }
 
     - (void)doResponsePivInsAuthenticate:(NSData *)response status:(uint16_t)sw {
-        // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsAuthenticate: RESP[%@] SW[0x%04X]", response, sw];
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             if ([self pivAuthChallenge] == nil) {
@@ -213,12 +214,19 @@
     }
 
     - (void)doRequestPivAdminAuthSecond:(NSData *)insAuthResp {
-        // PIV管理機能認証（往路）のレスポンスから、暗号化されたチャレンジを抽出（５バイト目から８バイト分）
-        [self setPivAuthChallenge:[insAuthResp subdataWithRange:NSMakeRange(4, 8)]];
-        // 8バイトのランダムベクターを生成
-        NSData *random = [self generateRandom:8];
+        // PIV管理機能認証（往路）のレスポンスから、暗号化された受信チャレンジを抽出（５バイト目から８バイト分）
+        NSData *encrypted = [insAuthResp subdataWithRange:NSMakeRange(4, DES_LEN_DES)];
+        // PIV管理パスワードを使用し、受信チャレンジを復号化
+        NSData *witness = [self decryptPivAdminAuthWitness:encrypted];
+        if (witness == nil) {
+            [self setLastErrorMessageWithFuncError:MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 8バイトのランダムベクターを送信チャレンジに設定
+        [self setPivAuthChallenge:[self generateRandom:8]];
         // コマンドAPDUを生成
-        NSData *apdu = [self getPivAdminAuthResponseData:[self pivAuthChallenge] withRandom:random];
+        NSData *apdu = [self getPivAdminAuthResponseData:witness withChallenge:[self pivAuthChallenge]];
         // コマンドを実行
         [self doRequestPivInsAuthenticate:apdu];
     }
@@ -229,9 +237,31 @@
             [self doRequestPivAdminAuthSecond:insAuthResp];
             return;
         }
-        // TODO: PIV管理機能認証の完了チェック
+        // 送受信チャレンジの内容一致チェック
+        if ([self verifyPivAuthAdminChallenge:insAuthResp] == false) {
+            [self exitCommandProcess:false];
+            return;
+        }
+        // TODO: PIN番号認証を実行
         // 仮の実装です。
         [self exitCommandProcess:true];
+    }
+
+    - (bool)verifyPivAuthAdminChallenge:(NSData *)insAuthResp {
+        // PIV管理機能認証（復路）のレスポンスから、暗号化された受信チャレンジを抽出（５バイト目から８バイト分）
+        NSData *encrypted = [insAuthResp subdataWithRange:NSMakeRange(4, DES_LEN_DES)];
+        // PIV管理パスワードを使用し、受信チャレンジを復号化
+        NSData *challenge = [self decryptPivAdminAuthWitness:encrypted];
+        if (challenge == nil) {
+            [self setLastErrorMessageWithFuncError:MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED];
+            return false;
+        }
+        if ([challenge isEqualToData:[self pivAuthChallenge]] == false) {
+            // 送信チャレンジと受信チャレンジの内容が異なる場合はPIV管理認証失敗
+            [self setLastErrorMessage:MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - PIN management functions
@@ -395,27 +425,45 @@
         return [NSData dataWithBytes:apdu length:sizeof(apdu)];
     }
 
-    - (NSData *)getPivAdminAuthResponseData:(NSData *)challenge withRandom:(NSData *)random {
-        // 引数のチャレンジ、ランダムをバイト変換
+    - (NSData *)getPivAdminAuthResponseData:(NSData *)witness withChallenge:(NSData *)challenge {
+        // 引数のチャレンジをバイト変換
+        uint8_t *w = (uint8_t *)[witness bytes];
+        size_t w_size = [witness length];
         uint8_t *c = (uint8_t *)[challenge bytes];
         size_t c_size = [challenge length];
-        uint8_t *r = (uint8_t *)[random bytes];
-        size_t r_size = [random length];
         // PIV管理機能認証（復路）のリクエストデータを生成
         uint8_t apdu[22];
         uint8_t offset = 0;
         apdu[offset++] = TAG_DYNAMIC_AUTH_TEMPLATE;
         apdu[offset++] = 20;
-        // copy challenge
+        // copy witness
         apdu[offset++] = TAG_AUTH_WITNESS;
+        apdu[offset++] = w_size;
+        memcpy(apdu + offset, w, w_size);
+        // copy challenge
+        offset += w_size;
+        apdu[offset++] = TAG_AUTH_CHALLENGE;
         apdu[offset++] = c_size;
         memcpy(apdu + offset, c, c_size);
-        // copy random
-        offset += c_size;
-        apdu[offset++] = TAG_AUTH_CHALLENGE;
-        apdu[offset++] = r_size;
-        memcpy(apdu + offset, r, r_size);
         return [NSData dataWithBytes:apdu length:sizeof(apdu)];
+    }
+
+    - (NSData *)decryptPivAdminAuthWitness:(NSData *)encryptedWitness {
+        // デフォルトのPIV管理パスワードを取得
+        unsigned char *pw = tool_crypto_des_default_key();
+        if (tool_crypto_des_import_key(pw, DES_LEN_3DES) == false) {
+            return nil;
+        }
+        // PIV管理パスワードを使用し、チャレンジを復号化
+        const unsigned char *encrypted = [encryptedWitness bytes];
+        unsigned char decrypted[DES_LEN_DES];
+        size_t decryptedSize = DES_LEN_DES;
+        if (tool_crypto_des_decrypt(encrypted, DES_LEN_DES, decrypted, &decryptedSize) == false) {
+            return nil;
+        }
+        // 復号化されたチャレンジを戻す
+        NSData *challenge = [[NSData alloc] initWithBytes:decrypted length:decryptedSize];
+        return challenge;
     }
 
     - (NSData *)generateRandom:(size_t)size {
@@ -456,6 +504,12 @@
         }
         // NSData形式に変換（16バイト固定長）
         return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
+    }
+
+    - (void)setLastErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
+        NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
+        NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
+        [self setLastErrorMessage:errorMsg];
     }
 
 @end
