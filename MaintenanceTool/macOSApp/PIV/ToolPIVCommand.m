@@ -136,13 +136,13 @@
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                [self doPivInsChangePIN:[self command]];
+                [self doPivInsChangePIN];
                 break;
             case COMMAND_CCID_PIV_RESET:
-                [self doYkPivInsReset:[self command]];
+                [self doYkPivInsReset];
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
-                [self doYkPivImportKey:[self command]];
+                [self doYkPivImportKey];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -194,16 +194,9 @@
         }
     }
 
-#pragma mark - Key and certificate management functions
+#pragma mark - PIV administrative authentication
 
-    - (void)doYkPivImportKey:(Command)command {
-        // 処理開始メッセージをログ出力
-        [self startCommandProcess];
-        // PIV管理機能認証（往路）を実行
-        [self doRequestPivAdminAuth:nil];
-    }
-
-    - (void)doRequestPivAdminAuth:(NSData *)cardMgmKey {
+    - (void)doRequestPivAdminAuth {
         // コマンドAPDUを生成
         NSData *apdu = [self getPivAdminAuthRequestData];
         // コマンドを実行
@@ -222,7 +215,7 @@
             return;
         }
         // 8バイトのランダムベクターを送信チャレンジに設定
-        [self setPivAuthChallenge:[self generateRandom:8]];
+        [self setPivAuthChallenge:[self generateRandom:DES_LEN_DES]];
         // コマンドAPDUを生成
         NSData *apdu = [self getPivAdminAuthResponseData:witness withChallenge:[self pivAuthChallenge]];
         // コマンドを実行
@@ -261,6 +254,15 @@
         return true;
     }
 
+#pragma mark - Key and certificate management functions
+
+    - (void)doYkPivImportKey {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // PIV管理機能認証（往路）を実行
+        [self doRequestPivAdminAuth];
+    }
+
     - (void)doYkPivImportKeyProcess {
         // TODO: 秘密鍵インポート処理を実行
         // 仮の実装です。
@@ -269,7 +271,7 @@
 
 #pragma mark - PIN management functions
 
-    - (void)doPivInsChangePIN:(Command)command {
+    - (void)doPivInsChangePIN {
         // INS、P2を設定
         uint8_t ins, p2;
         switch ([self command]) {
@@ -340,7 +342,7 @@
         }
     }
 
-    - (void)doYkPivInsReset:(Command)command {
+    - (void)doYkPivInsReset {
         // 処理開始メッセージをログ出力
         [self startCommandProcess];
         // コマンドを実行
