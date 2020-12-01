@@ -18,6 +18,9 @@
 #define RSA2048_PQ_SIZE             128
 #define RSA2048_PKEY_TLV_SIZE       655
 
+#define ECCP256_KEY_SIZE            32
+#define ECCP256_PKEY_TLV_SIZE       34
+
 //
 // public functions
 //
