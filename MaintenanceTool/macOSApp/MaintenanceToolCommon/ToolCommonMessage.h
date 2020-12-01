@@ -234,5 +234,9 @@
 #define MSG_ERROR_PIV_PUK_LOCKED                @"PUKがすでに無効です。PIV機能をリセットする必要があります。"
 #define MSG_ERROR_PIV_RESET_FAIL                @"PINまたはPUKが未だ無効になっていません。"
 #define MSG_ERROR_PIV_UNKNOWN                   @"不明なエラーが発生しました。"
+#define MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED      @"PIV秘密鍵ファイル読込処理が失敗しました（%@）"
+#define MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED      @"PIV証明書ファイル読込処理が失敗しました（%@）"
+#define MSG_PIV_PKEY_PEM_LOADED                 @"PIV秘密鍵ファイルを正常に読込みました。"
+#define MSG_PIV_CERT_PEM_LOADED                 @"PIV証明書ファイルを正常に読込みました。"
 
 #endif /* ToolCommonMessage_h */

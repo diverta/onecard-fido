@@ -23,6 +23,7 @@
 		7A2BE5EE23BC6865008EB897 /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A2BE5EC23BC6865008EB897 /* usb_cdc_util.c */; };
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
+		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
 		7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */; };
 		7A61AA61254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */; };
@@ -95,6 +96,8 @@
 		7A30CAD4225342180071B6EF /* ToolClientPINCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
 		7A41F22A2043B2230055ACBF /* ToolPopupWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPopupWindow.h; sourceTree = "<group>"; };
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
+		7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVImporter.h; sourceTree = "<group>"; };
+		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
 		7A54339B2328C3D000F2FCA5 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
 		7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolU2FHealthCheckCommand.m; sourceTree = "<group>"; };
 		7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059.0.2.12.zip; sourceTree = "<group>"; };
@@ -286,6 +289,8 @@
 				7A6687942575CDB70054F0DE /* ToolPIVCommon.h */,
 				7A6687932575CCF60054F0DE /* ToolPIVCommand.h */,
 				7A6687912575CCC70054F0DE /* ToolPIVCommand.m */,
+				7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */,
+				7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */,
 			);
 			path = PIV;
 			sourceTree = "<group>";
@@ -491,6 +496,7 @@
 				7A261BC123C4128500A9CE86 /* usb_dfu_util.c in Sources */,
 				7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */,
 				7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */,
+				7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */,
 				7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */,
 				7AB5537A226D75BA003FA435 /* ECDH.c in Sources */,
 				7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */,
