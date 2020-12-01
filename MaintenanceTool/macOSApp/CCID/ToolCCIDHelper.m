@@ -5,7 +5,6 @@
 //  Created by Makoto Morita on 2020/11/20.
 //
 #import "debug_log.h"
-#import "ToolCCIDCommand.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
@@ -13,10 +12,12 @@
 
 @interface ToolCCIDHelper ()
 
+    @property (nonatomic, weak) id<ToolCCIDHelperDelegate> delegate;
+
     // 接続されたデバイスの情報を保持
     @property (nonatomic) NSString *slotName;
     // 送信パラメーターを保持
-    @property (nonatomic) ToolCCIDCommand *commandRef;
+    @property (nonatomic) id        commandRef;
     @property (nonatomic) uint8_t   sendIns;
     @property (nonatomic) uint8_t   sendP1;
     @property (nonatomic) uint8_t   sendP2;
@@ -28,8 +29,15 @@
 @implementation ToolCCIDHelper
 
     - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id<ToolCCIDHelperDelegate>)delegate {
         self = [super init];
-        [self clearSendParameters];
+        if (self) {
+            [self setDelegate:delegate];
+            [self clearSendParameters];
+        }
         return self;
     }
 
@@ -42,7 +50,7 @@
         [self setSendLe:0];
     }
 
-    - (void)setSendParameters:(ToolCCIDCommand *)ref ins:(uint8_t)ins p1:(uint8_t)p1 p2:(uint8_t)p2 data:(NSData *)data le:(uint16_t)le {
+    - (void)setSendParameters:(id)ref ins:(uint8_t)ins p1:(uint8_t)p1 p2:(uint8_t)p2 data:(NSData *)data le:(uint16_t)le {
         [self setCommandRef:ref];
         [self setSendIns:ins];
         [self setSendP1:p1];
@@ -51,7 +59,15 @@
         [self setSendLe:le];
     }
 
-    - (void)SCardSlotManagerWillBeginSession {
+    - (void)SCardSlotManagerWillBeginSession:(id)ref ins:(uint8_t)ins p1:(uint8_t)p1 p2:(uint8_t)p2 data:(NSData *)data le:(uint16_t)le {
+        // セッション開始済みの場合は終了
+        if ([self commandRef] != nil) {
+            [[ToolLogFile defaultLogger] error:MSG_CCID_SESSION_ALREADY_EXIST];
+            [self exitHelperProcess:false response:nil status:0];
+            return;
+        }
+        // パラメーターを退避
+        [self setSendParameters:ref ins:ins p1:p1 p2:p2 data:data le:le];
         // CCIDデバイスとセッションを開始
         TKSmartCardSlotManager *mngr = [TKSmartCardSlotManager defaultManager];
         if ([[mngr slotNames] count] == 0) {
@@ -109,14 +125,12 @@
 
     - (void)exitHelperProcess:(bool)success response:(NSData *)response status:(uint16_t)sw {
         // パラメーターを初期化
-        ToolCCIDCommand *commandRef = [self commandRef];
+        id commandRef = [self commandRef];
         [self clearSendParameters];
-        // コマンドの参照が無い場合は終了
-        if (commandRef == nil) {
-            return;
+        // セッションが存在する場合はコマンドに制御を戻す
+        if (commandRef != nil) {
+            [[self delegate] ccidHelperDidProcess:success response:response status:sw];
         }
-        // コマンドに制御を戻す
-        [commandRef ccidHelperDidProcess:success response:response status:sw];
     }
 
 @end

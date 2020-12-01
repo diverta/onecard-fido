@@ -1,19 +1,20 @@
 //
-//  ToolCCIDCommand.m
+//  ToolPIVCommand.m
 //  MaintenanceTool
 //
-//  Created by Makoto Morita on 2020/11/20.
+//  Created by Makoto Morita on 2020/12/01.
 //
 #import "debug_log.h"
 #import "tool_crypto_des.h"
 
-#import "ToolCCIDCommand.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
+#import "ToolPIVCommand.h"
+#import "ToolPIVCommon.h"
 
-@interface ToolCCIDCommand ()
+@interface ToolPIVCommand () <ToolCCIDHelperDelegate>
 
     // CCIDインターフェース処理の参照を保持
     @property (nonatomic) ToolCCIDHelper    *toolCCIDHelper;
@@ -32,13 +33,13 @@
 
 @end
 
-@implementation ToolCCIDCommand
+@implementation ToolPIVCommand
 
     - (id)init {
         self = [super init];
         if (self) {
             // ToolCCIDHelperのインスタンスを生成
-            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] init]];
+            [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
         }
         return self;
@@ -101,17 +102,17 @@
 
 #pragma mark - Public methods
 
-    - (void)ccidHelperWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
+    - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur {
         [self setPinCodeNew:pinCodeNew];
         [self setPinCodeCur:pinCodeCur];
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)ccidHelperWillReset:(Command)command {
+    - (void)commandWillReset:(Command)command {
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)ccidHelperWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur {
+    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur {
         [self setPinCodeCur:pinCodeCur];
         [self ccidHelperWillProcess:command];
     }
@@ -120,8 +121,7 @@
 
     - (void)doRequestPivInsSelectApplication {
         [self setCommandIns:PIV_INS_SELECT_APPLICATION];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x04 p2:0x00 data:[self getPivAidData] le:0xff];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x04 p2:0x00 data:[self getPivAidData] le:0xff];
     }
 
     - (void)doResponsePivInsSelectApplication:(NSData *)response status:(uint16_t)sw {
@@ -153,8 +153,7 @@
     - (void)doRequestPivInsAuthenticate:(NSData *)apdu {
         // コマンドを実行
         [self setCommandIns:PIV_INS_AUTHENTICATE];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:PIV_ALG_3DES p2:PIV_KEY_CARDMGM data:apdu le:0xff];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:PIV_ALG_3DES p2:PIV_KEY_CARDMGM data:apdu le:0xff];
     }
 
     - (void)doResponsePivInsAuthenticate:(NSData *)response status:(uint16_t)sw {
@@ -180,8 +179,7 @@
         }
         // コマンドを実行
         [self setCommandIns:PIV_INS_VERIFY];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:PIV_KEY_PIN data:apdu le:0xff];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x00 p2:PIV_KEY_PIN data:apdu le:0xff];
     }
 
     - (void)doResponsePivInsVerify:(NSData *)response status:(uint16_t)sw {
@@ -297,8 +295,7 @@
         NSData *apdu = [self getPivChangePinData:[self pinCodeCur] withPinCodeNew:[self pinCodeNew]];
         // コマンドを実行
         [self setCommandIns:ins];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:p2 data:apdu le:0xff];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x00 p2:p2 data:apdu le:0xff];
     }
 
     - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
@@ -348,8 +345,7 @@
         [self startCommandProcess];
         // コマンドを実行
         [self setCommandIns:YKPIV_INS_RESET];
-        [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x00 p2:0x00 data:nil le:0xff];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x00 p2:0x00 data:nil le:0xff];
     }
 
     - (void)doResponseYkPivInsReset:(NSData *)response status:(uint16_t)sw {
