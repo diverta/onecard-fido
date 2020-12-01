@@ -12,6 +12,9 @@
     - (bool)readPrivateKeyPemFrom:(NSString *)pemFilePath;
     - (bool)readCertificatePemFrom:(NSString *)pemFilePath;
 
+    - (NSData *)getPrivateKeyTLVData;
+    - (NSData *)getCertificateTLVData;
+
 @end
 
 #endif /* ToolPIVImporter_h */

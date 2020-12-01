@@ -24,6 +24,7 @@
 		7A30CAD3225341FE0071B6EF /* ToolClientPINCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A30CAD2225341FE0071B6EF /* ToolClientPINCommand.m */; };
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
+		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
 		7A61AA60254A839800E3F87B /* appkg.PCA10059.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */; };
 		7A61AA61254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A61AA5F254A839800E3F87B /* appkg.PCA10059_02.0.2.12.zip */; };
@@ -98,6 +99,8 @@
 		7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPopupWindow.m; sourceTree = "<group>"; };
 		7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVImporter.h; sourceTree = "<group>"; };
 		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
+		7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
+		7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_private_key.c; sourceTree = "<group>"; };
 		7A54339B2328C3D000F2FCA5 /* ToolU2FHealthCheckCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolU2FHealthCheckCommand.h; sourceTree = "<group>"; };
 		7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolU2FHealthCheckCommand.m; sourceTree = "<group>"; };
 		7A61AA5E254A839800E3F87B /* appkg.PCA10059.0.2.12.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059.0.2.12.zip; sourceTree = "<group>"; };
@@ -300,6 +303,8 @@
 			children = (
 				7A712EBB2570BCDC00E45E2D /* tool_crypto_des.h */,
 				7A712EBC2570BCDC00E45E2D /* tool_crypto_des.c */,
+				7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */,
+				7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */,
 			);
 			path = tool_crypto;
 			sourceTree = "<group>";
@@ -507,6 +512,7 @@
 				7AEE1DDF23BB33EE008A00C7 /* ToolDFUCommand.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
 				7AB119F5236182E900EEFF6C /* ToolPreferenceCommand.m in Sources */,
+				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
 				7A92740D2105AB960062FA89 /* ToolBLEHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
