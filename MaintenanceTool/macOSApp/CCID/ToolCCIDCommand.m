@@ -66,7 +66,7 @@
             case COMMAND_CCID_PIV_RESET:
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 // 機能実行に先立ち、PIVアプレットをSELECT
-                [self doSelectApplication];
+                [self doRequestPivInsSelectApplication];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -111,13 +111,14 @@
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)ccidHelperWillImportKey:(Command)command {
+    - (void)ccidHelperWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur {
+        [self setPinCodeCur:pinCodeCur];
         [self ccidHelperWillProcess:command];
     }
 
 #pragma mark - Command functions
 
-    - (void)doSelectApplication {
+    - (void)doRequestPivInsSelectApplication {
         [self setCommandIns:PIV_INS_SELECT_APPLICATION];
         [[self toolCCIDHelper] setSendParameters:self ins:[self commandIns] p1:0x04 p2:0x00 data:[self getPivAidData] le:0xff];
         [[self toolCCIDHelper] SCardSlotManagerWillBeginSession];
@@ -171,8 +172,7 @@
         [self doResponsePivAdminAuth:response];
     }
 
-    - (void)doTestPivInsVerify:(NSString *)pinCode {
-        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
+    - (void)doRequestPivInsVerify:(NSString *)pinCode {
         // コマンドAPDUを生成
         NSData *apdu = nil;
         if (pinCode != nil) {
@@ -185,11 +185,11 @@
     }
 
     - (void)doResponsePivInsVerify:(NSData *)response status:(uint16_t)sw {
-        // TODO: 将来的に鍵・証明書導入機能で使用予定です。
-        // for research
-        [[ToolLogFile defaultLogger] debugWithFormat:@"doResponsePivInsVerify: RESP[%@] SW[0x%04X]", response, sw];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self doYkPivImportKeyProcess];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -242,9 +242,8 @@
             [self exitCommandProcess:false];
             return;
         }
-        // TODO: PIN番号認証を実行
-        // 仮の実装です。
-        [self exitCommandProcess:true];
+        // PIN番号認証を実行
+        [self doRequestPivInsVerify:[self pinCodeCur]];
     }
 
     - (bool)verifyPivAuthAdminChallenge:(NSData *)insAuthResp {
@@ -262,6 +261,12 @@
             return false;
         }
         return true;
+    }
+
+    - (void)doYkPivImportKeyProcess {
+        // TODO: 秘密鍵インポート処理を実行
+        // 仮の実装です。
+        [self exitCommandProcess:true];
     }
 
 #pragma mark - PIN management functions
