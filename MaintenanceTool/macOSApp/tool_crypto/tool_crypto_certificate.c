@@ -9,9 +9,15 @@
 
 #include "debug_log.h"
 #include "tool_crypto_certificate.h"
+#include "tool_crypto_private_key.h"
 
 // 証明書のバイナリーイメージを格納
-unsigned char m_cert_data[CERTIFICATE_MAX_SIZE];
+static unsigned char m_cert_data[CERTIFICATE_MAX_SIZE];
+static size_t        m_cert_size;
+
+// 変換されたTLVデータを格納
+static unsigned char m_tlv_bytes[CERTIFICATE_MAX_SIZE];
+static size_t        m_tlv_size;
 
 //
 // references for memory
@@ -74,5 +80,38 @@ bool tool_crypto_certificate_extract_from_pem(const char *pem_path)
         return extract_from_pem_terminate(false);
     }
     // 処理終了
+    m_cert_size = (size_t)cert_loaded;
     return extract_from_pem_terminate(true);
+}
+
+unsigned char *tool_crypto_certificate_TLV_data(void)
+{
+    // 変数初期化
+    memset(m_tlv_bytes, 0, sizeof(m_tlv_bytes));
+    size_t offset = 0;
+
+    // data
+    m_tlv_bytes[offset++] = TAG_CERT;
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, m_cert_size);
+    memcpy(m_tlv_bytes + offset, m_cert_data, m_cert_size);
+    offset += m_cert_size;
+
+    // compression info & LRC trailer
+    m_tlv_bytes[offset++] = TAG_CERT_COMPRESS;
+    m_tlv_bytes[offset++] = 0x01;
+    m_tlv_bytes[offset++] = 0x00;
+    m_tlv_bytes[offset++] = TAG_CERT_LRC;
+    m_tlv_bytes[offset++] = 0x00;
+
+    // TLVのサイズを保持
+    m_tlv_size = offset;
+
+    // 先頭アドレスを戻す
+    return m_tlv_bytes;
+}
+
+size_t tool_crypto_certificate_TLV_size(void)
+{
+    // TLVのサイズを戻す
+    return m_tlv_size;
 }

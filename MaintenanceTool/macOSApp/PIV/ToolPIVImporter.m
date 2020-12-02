@@ -53,8 +53,8 @@
     }
 
     - (NSData *)getCertificateTLVData {
-        return [[NSData alloc] initWithBytes:tool_crypto_private_key_TLV_data()
-                                      length:tool_crypto_private_key_TLV_size()];
+        return [[NSData alloc] initWithBytes:tool_crypto_certificate_TLV_data()
+                                      length:tool_crypto_certificate_TLV_size()];
     }
 
 #pragma mark - Utility functions
