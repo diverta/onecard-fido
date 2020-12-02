@@ -165,7 +165,10 @@ static bool extract_eccp_256(EVP_PKEY *private_key)
     return extract_eccp_256_terminate(true);
 }
 
-static size_t tlv_set_length(unsigned char *buffer, size_t length)
+//
+// utility function
+//
+size_t tool_crypto_tlv_set_length(unsigned char *buffer, size_t length)
 {
     if(length < 0x80) {
         *buffer++ = (unsigned char)length;
@@ -228,31 +231,31 @@ static void generate_TLV_data_rsa_2048(void)
 
     // P
     m_tlv_bytes[offset++] = 0x01;
-    offset += tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
     memcpy(m_tlv_bytes + offset, p, RSA2048_PQ_SIZE);
     offset += RSA2048_PQ_SIZE;
     
     // Q
     m_tlv_bytes[offset++] = 0x02;
-    offset += tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
     memcpy(m_tlv_bytes + offset, q, RSA2048_PQ_SIZE);
     offset += RSA2048_PQ_SIZE;
     
     // DP
     m_tlv_bytes[offset++] = 0x03;
-    offset += tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
     memcpy(m_tlv_bytes + offset, dmp1, RSA2048_PQ_SIZE);
     offset += RSA2048_PQ_SIZE;
     
     // DQ
     m_tlv_bytes[offset++] = 0x04;
-    offset += tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
     memcpy(m_tlv_bytes + offset, dmq1, RSA2048_PQ_SIZE);
     offset += RSA2048_PQ_SIZE;
     
     // QINV
     m_tlv_bytes[offset++] = 0x05;
-    offset += tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
     memcpy(m_tlv_bytes + offset, iqmp, RSA2048_PQ_SIZE);
     offset += RSA2048_PQ_SIZE;
     log_debug("%s: Generated RSA-2048 private key TLV for import (%d bytes)", __func__, offset);
@@ -263,7 +266,7 @@ static void generate_TLV_data_eccp_256(void)
     size_t offset = 0;
 
     m_tlv_bytes[offset++] = 0x06;
-    offset += tlv_set_length(m_tlv_bytes + offset, ECCP256_KEY_SIZE);
+    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, ECCP256_KEY_SIZE);
     memcpy(m_tlv_bytes + offset, m_ec_pk, ECCP256_KEY_SIZE);
     offset += ECCP256_KEY_SIZE;
     log_debug("%s: Generated ECCP-256 private key TLV for import (%d bytes)", __func__, offset);

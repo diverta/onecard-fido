@@ -22,6 +22,11 @@
 #define ECCP256_PKEY_TLV_SIZE       34
 
 //
+// utility function
+//
+size_t           tool_crypto_tlv_set_length(unsigned char *buffer, size_t length);
+
+//
 // public functions
 //
 bool             tool_crypto_private_key_extract_from_pem(const char *pem_path);
