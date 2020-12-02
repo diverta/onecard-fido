@@ -5,6 +5,7 @@
 //  Created by Makoto Morita on 2020/12/01.
 //
 #import "debug_log.h"
+#import "tool_crypto_certificate.h"
 #import "tool_crypto_private_key.h"
 
 #import "ToolCommonMessage.h"
@@ -36,7 +37,12 @@
     }
 
     - (bool)readCertificatePemFrom:(NSString *)pemFilePath {
-        // TODO: PEM形式の証明書ファイルから、バイナリーイメージを抽出
+        // PEM形式の証明書ファイルから、バイナリーイメージを抽出
+        char *path = (char *)[pemFilePath UTF8String];
+        if (tool_crypto_certificate_extract_from_pem(path) == false) {
+            [self logErrorMessageWithFuncError:MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED];
+            return false;
+        }
         [[ToolLogFile defaultLogger] info:MSG_PIV_CERT_PEM_LOADED];
         return true;
     }
