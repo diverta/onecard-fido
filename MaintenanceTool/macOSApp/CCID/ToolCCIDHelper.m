@@ -111,14 +111,39 @@
             return;
         }
         // リクエスト送信-->レスポンス受信
+        size_t sizeAlreadySent = 0;
+        size_t sizeToSend = (size_t)[[self sendData] length];
         uint16_t sw = 0;
-        NSNumber *le = [[NSNumber alloc] initWithUnsignedChar:[self sendLe]];
-        NSData *response = [card sendIns:[self sendIns] p1:[self sendP1] p2:[self sendP2] data:[self sendData] le:le sw:&sw error:&error];
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_REQUEST_SEND_FAILED, [self slotName], [error description]];
-        }
+        NSMutableData *mutableResponse = [[NSMutableData alloc] init];
+        do {
+            // 送信サイズとCLA値を設定
+            size_t thisSendSize = 0xff;
+            if(sizeAlreadySent + thisSendSize < sizeToSend) {
+                // 最終フレームでない場合
+                [card setCla:0x10];
+            } else {
+                // 最終フレームの場合
+                thisSendSize = sizeToSend - sizeAlreadySent;
+                [card setCla:0x00];
+            }
+            // 今回送信分のAPDUデータを抽出し、送信処理を実行
+            NSData *thisSendData = [[self sendData] subdataWithRange:NSMakeRange(sizeAlreadySent, thisSendSize)];
+            NSNumber *le = [[NSNumber alloc] initWithUnsignedChar:[self sendLe]];
+            sw = 0;
+            NSData *response = [card sendIns:[self sendIns] p1:[self sendP1] p2:[self sendP2] data:thisSendData le:le sw:&sw error:&error];
+            if (error) {
+                [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_REQUEST_SEND_FAILED, [self slotName], [error description]];
+                break;
+            }
+            // 受信データがある場合は連結
+            if (response != nil && [response length] > 0) {
+                [mutableResponse appendData:response];
+            }
+            // 送信済みサイズを更新
+            sizeAlreadySent += thisSendSize;
+        } while (sizeAlreadySent < sizeToSend);
         // コマンドに制御を戻す
-        [self exitHelperProcess:(error == nil) response:response status:sw];
+        [self exitHelperProcess:(error == nil) response:mutableResponse status:sw];
     }
 
 #pragma mark - Exit function
