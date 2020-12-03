@@ -9,11 +9,13 @@
 
 @interface ToolPIVImporter : NSObject
 
+    - (id)initForKeySlot:(uint8_t)keySlotId;
+
     - (bool)readPrivateKeyPemFrom:(NSString *)pemFilePath;
     - (bool)readCertificatePemFrom:(NSString *)pemFilePath;
 
-    - (NSData *)getPrivateKeyTLVData;
-    - (NSData *)getCertificateTLVData;
+    - (NSData *)getPrivateKeyAPDUData;
+    - (NSData *)getCertificateAPDUData;
 
 @end
 

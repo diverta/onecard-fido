@@ -10,6 +10,7 @@
 #include "debug_log.h"
 #include "tool_crypto_certificate.h"
 #include "tool_crypto_private_key.h"
+#include "ToolPivCommon.h"
 
 // 証明書のバイナリーイメージを格納
 static unsigned char m_cert_data[CERTIFICATE_MAX_SIZE];
@@ -18,6 +19,10 @@ static size_t        m_cert_size;
 // 変換されたTLVデータを格納
 static unsigned char m_tlv_bytes[CERTIFICATE_MAX_SIZE];
 static size_t        m_tlv_size;
+
+// CCID I/F経由で転送するAPDUデータを格納
+static unsigned char m_apdu_bytes[CERTIFICATE_MAX_SIZE];
+static size_t        m_apdu_size;
 
 //
 // references for memory
@@ -43,6 +48,24 @@ static bool extract_from_pem_terminate(bool success)
         fclose(m_input_file);
     }
     return success;
+}
+
+//
+// utility function
+//
+static size_t tool_crypto_set_object_header(unsigned int object_id, unsigned char *buffer)
+{
+    size_t offset = 0;
+    buffer[offset++] = TAG_DATA_OBJECT;
+
+    // オブジェクト長の情報を設定
+    buffer[offset++] = 3;
+    buffer[offset++] = (object_id >> 16) & 0xff;
+    buffer[offset++] = (object_id >> 8) & 0xff;
+    buffer[offset++] = object_id & 0xff;
+
+    // 設定した情報の長さを戻す
+    return offset;
 }
 
 //
@@ -84,7 +107,7 @@ bool tool_crypto_certificate_extract_from_pem(const char *pem_path)
     return extract_from_pem_terminate(true);
 }
 
-unsigned char *tool_crypto_certificate_TLV_data(void)
+static void tool_crypto_certificate_TLV_data(void)
 {
     // 変数初期化
     memset(m_tlv_bytes, 0, sizeof(m_tlv_bytes));
@@ -105,13 +128,51 @@ unsigned char *tool_crypto_certificate_TLV_data(void)
 
     // TLVのサイズを保持
     m_tlv_size = offset;
-
-    // 先頭アドレスを戻す
-    return m_tlv_bytes;
 }
 
-size_t tool_crypto_certificate_TLV_size(void)
+unsigned char *tool_crypto_certificate_APDU_data(unsigned char key_slot_id)
 {
-    // TLVのサイズを戻す
-    return m_tlv_size;
+    // 変数初期化
+    memset(m_apdu_bytes, 0, sizeof(m_apdu_bytes));
+    m_apdu_size = 0;
+
+    // get object ID
+    unsigned int object_id;
+    switch (key_slot_id) {
+        case PIV_KEY_AUTHENTICATION:
+            object_id = PIV_OBJ_AUTHENTICATION;
+            break;
+        case PIV_KEY_SIGNATURE:
+            object_id = PIV_OBJ_SIGNATURE;
+            break;
+        case PIV_KEY_KEYMGM:
+            object_id = PIV_OBJ_KEY_MANAGEMENT;
+            break;
+        default:
+            return m_apdu_bytes;
+    }
+
+    // 証明書バイナリーのTLVデータを先に生成
+    tool_crypto_certificate_TLV_data();
+    
+    // object info
+    size_t offset = tool_crypto_set_object_header(object_id, m_apdu_bytes);
+
+    // object size & data
+    m_tlv_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
+    offset += tool_crypto_tlv_set_length(m_apdu_bytes + offset, m_tlv_size);
+    memcpy(m_apdu_bytes + offset, m_tlv_bytes, m_tlv_size);
+    offset += m_tlv_size;
+
+    // APDUのサイズを保持
+    m_apdu_size = offset;
+
+    // 先頭アドレスを戻す
+    return m_apdu_bytes;
+}
+
+size_t tool_crypto_certificate_APDU_size(void)
+{
+    // APDUのサイズを戻す
+    return m_apdu_size;
 }

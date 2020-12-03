@@ -82,13 +82,13 @@ static unsigned char get_algorithm(EVP_PKEY *key)
     int size = EVP_PKEY_bits(key);
 
     if (type == EVP_PKEY_RSA && size == RSA2048_N_SIZE) {
-        return PIV_ALG_RSA2048;
+        return PKEY_ALG_RSA2048;
     }
     if (type == EVP_PKEY_EC && size == 256) {
-        return PIV_ALG_ECCP256;
+        return PKEY_ALG_ECCP256;
     }
     log_debug("%s: Unsupported algorithm (type=0x%04x, size=%d)", __func__, type, size);
-    return PIV_ALG_NONE;
+    return PKEY_ALG_NONE;
 }
 
 static bool set_component(unsigned char *in_ptr, const BIGNUM *bn, int element_len)
@@ -210,11 +210,11 @@ bool tool_crypto_private_key_extract_from_pem(const char *pem_path)
     bool ret = false;
     m_alg = get_algorithm(m_private_key);
     switch (m_alg) {
-        case PIV_ALG_RSA2048:
+        case PKEY_ALG_RSA2048:
             // RSA-2048秘密鍵を抽出
             ret = extract_rsa_2048(m_private_key);
             break;
-        case PIV_ALG_ECCP256:
+        case PKEY_ALG_ECCP256:
             // ECCP-256秘密鍵を抽出
             ret = extract_eccp_256(m_private_key);
             break;
@@ -272,14 +272,14 @@ static void generate_TLV_data_eccp_256(void)
     log_debug("%s: Generated ECCP-256 private key TLV for import (%d bytes)", __func__, offset);
 }
 
-unsigned char *tool_crypto_private_key_TLV_data(void)
+unsigned char *tool_crypto_private_key_APDU_data(void)
 {
     memset(m_tlv_bytes, 0, sizeof(m_tlv_bytes));
     switch (m_alg) {
-        case PIV_ALG_RSA2048:
+        case PKEY_ALG_RSA2048:
             generate_TLV_data_rsa_2048();
             break;
-        case PIV_ALG_ECCP256:
+        case PKEY_ALG_ECCP256:
             generate_TLV_data_eccp_256();
             break;
         default:
@@ -289,14 +289,14 @@ unsigned char *tool_crypto_private_key_TLV_data(void)
     return m_tlv_bytes;
 }
 
-size_t tool_crypto_private_key_TLV_size(void)
+size_t tool_crypto_private_key_APDU_size(void)
 {
     size_t size = 0;
     switch (m_alg) {
-        case PIV_ALG_RSA2048:
+        case PKEY_ALG_RSA2048:
             size = RSA2048_PKEY_TLV_SIZE;
             break;
-        case PIV_ALG_ECCP256:
+        case PKEY_ALG_ECCP256:
             size = ECCP256_PKEY_TLV_SIZE;
             break;
         default:

@@ -14,12 +14,18 @@
 
 @interface ToolPIVImporter ()
 
+    // 処理対象となるスロットIDを保持
+    @property (nonatomic) uint8_t           keySlotId;
+
 @end
 
 @implementation ToolPIVImporter
 
-    - (id)init {
+    - (id)initForKeySlot:(uint8_t)keySlotId {
         self = [super init];
+        if (self) {
+            [self setKeySlotId:keySlotId];
+        }
         return self;
     }
 
@@ -47,14 +53,14 @@
         return true;
     }
 
-    - (NSData *)getPrivateKeyTLVData {
-        return [[NSData alloc] initWithBytes:tool_crypto_private_key_TLV_data()
-                                      length:tool_crypto_private_key_TLV_size()];
+    - (NSData *)getPrivateKeyAPDUData; {
+        return [[NSData alloc] initWithBytes:tool_crypto_private_key_APDU_data()
+                                      length:tool_crypto_private_key_APDU_size()];
     }
 
-    - (NSData *)getCertificateTLVData {
-        return [[NSData alloc] initWithBytes:tool_crypto_certificate_TLV_data()
-                                      length:tool_crypto_certificate_TLV_size()];
+    - (NSData *)getCertificateAPDUData {
+        return [[NSData alloc] initWithBytes:tool_crypto_certificate_APDU_data([self keySlotId])
+                                      length:tool_crypto_certificate_APDU_size()];
     }
 
 #pragma mark - Utility functions
