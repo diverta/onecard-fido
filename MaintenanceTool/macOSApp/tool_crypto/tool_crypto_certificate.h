@@ -10,18 +10,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define TAG_CERT                    0x70
-#define TAG_CERT_COMPRESS           0x71
-#define TAG_CERT_LRC                0xfe
-
-#define TAG_DATA_OBJECT             0x5c
-#define TAG_DATA_OBJECT_VALUE       0x53
-
 //
 // public functions
 //
-bool             tool_crypto_certificate_extract_from_pem(const char *pem_path);
-unsigned char   *tool_crypto_certificate_APDU_data(unsigned char key_slot_id);
-size_t           tool_crypto_certificate_APDU_size(void);
+bool             tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned char *cert_data, size_t *cert_size);
 
 #endif /* tool_crypto_certificate_h */
