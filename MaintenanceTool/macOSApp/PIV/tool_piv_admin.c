@@ -1,0 +1,22 @@
+//
+//  tool_piv_admin.c
+//  MaintenanceTool
+//
+//  Created by Makoto Morita on 2020/12/03.
+//
+#include "tool_piv_admin.h"
+
+// デフォルトの3DES鍵
+static const unsigned char default_3des_key[] = {
+    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
+};
+
+//
+// public functions
+//
+unsigned char *tool_piv_admin_des_default_key(void)
+{
+    return (unsigned char *)default_3des_key;
+}

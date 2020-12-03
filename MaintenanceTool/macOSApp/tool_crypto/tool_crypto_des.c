@@ -5,21 +5,15 @@
 //  Created by Makoto Morita on 2020/11/27.
 //
 #include <string.h>
+#include <stdbool.h>
 
 #include "debug_log.h"
-#include "tool_crypto_des.h"
+#include "tool_crypto_common.h"
 
 // for OpenSSL
 #include <openssl/des.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
-
-// デフォルトの3DES鍵
-static const unsigned char default_3des_key[] = {
-    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
-};
 
 // DES鍵を保持
 typedef struct _des_key {
@@ -66,11 +60,6 @@ static bool des_import_key(const int type, const unsigned char *key_raw, const s
 //
 // public functions
 //
-unsigned char *tool_crypto_des_default_key(void)
-{
-    return (unsigned char *)default_3des_key;
-}
-
 bool tool_crypto_des_import_key(const unsigned char *key_raw, const size_t key_raw_size)
 {
     if (mgm_key != NULL) {

@@ -10,17 +10,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define PKEY_ALG_NONE               0x00
-#define PKEY_ALG_RSA2048            0x07
-#define PKEY_ALG_ECCP256            0x11
-
-#define RSA2048_N_SIZE              2048
-#define RSA2048_PQ_SIZE             128
-#define RSA2048_PKEY_TLV_SIZE       655
-
-#define ECCP256_KEY_SIZE            32
-#define ECCP256_PKEY_TLV_SIZE       34
-
 //
 // utility function
 //

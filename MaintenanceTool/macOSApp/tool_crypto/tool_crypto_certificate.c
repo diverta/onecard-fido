@@ -8,6 +8,7 @@
 #include <openssl/pem.h>
 
 #include "debug_log.h"
+#include "tool_crypto_common.h"
 #include "tool_crypto_certificate.h"
 #include "tool_crypto_private_key.h"
 #include "ToolPivCommon.h"

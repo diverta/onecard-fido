@@ -30,8 +30,6 @@
 #define PIV_OBJ_SIGNATURE           0x5fc10a
 #define PIV_OBJ_KEY_MANAGEMENT      0x5fc10b
 
-#define PIV_ALG_3DES                0x03
-
 #define TAG_DYNAMIC_AUTH_TEMPLATE   0x7c
 #define TAG_AUTH_WITNESS            0x80
 #define TAG_AUTH_CHALLENGE          0x81

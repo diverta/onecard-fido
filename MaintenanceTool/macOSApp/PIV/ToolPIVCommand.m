@@ -5,7 +5,9 @@
 //  Created by Makoto Morita on 2020/12/01.
 //
 #import "debug_log.h"
+#import "tool_crypto_common.h"
 #import "tool_crypto_des.h"
+#import "tool_piv_admin.h"
 
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -153,7 +155,7 @@
     - (void)doRequestPivInsAuthenticate:(NSData *)apdu {
         // コマンドを実行
         [self setCommandIns:PIV_INS_AUTHENTICATE];
-        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:PIV_ALG_3DES p2:PIV_KEY_CARDMGM data:apdu le:0xff];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:CRYPTO_ALG_3DES p2:PIV_KEY_CARDMGM data:apdu le:0xff];
     }
 
     - (void)doResponsePivInsAuthenticate:(NSData *)response status:(uint16_t)sw {
@@ -453,7 +455,7 @@
 
     - (NSData *)decryptPivAdminAuthWitness:(NSData *)encryptedWitness {
         // デフォルトのPIV管理パスワードを取得
-        unsigned char *pw = tool_crypto_des_default_key();
+        unsigned char *pw = tool_piv_admin_des_default_key();
         if (tool_crypto_des_import_key(pw, DES_LEN_3DES) == false) {
             return nil;
         }

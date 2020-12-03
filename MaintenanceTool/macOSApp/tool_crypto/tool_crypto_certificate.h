@@ -10,8 +10,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define CERTIFICATE_MAX_SIZE        3072
-
 #define TAG_CERT                    0x70
 #define TAG_CERT_COMPRESS           0x71
 #define TAG_CERT_LRC                0xfe
