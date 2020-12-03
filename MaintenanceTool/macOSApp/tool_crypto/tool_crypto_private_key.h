@@ -11,15 +11,8 @@
 #include <stdio.h>
 
 //
-// utility function
-//
-size_t           tool_crypto_tlv_set_length(unsigned char *buffer, size_t length);
-
-//
 // public functions
 //
-bool             tool_crypto_private_key_extract_from_pem(const char *pem_path);
-unsigned char   *tool_crypto_private_key_APDU_data(void);
-size_t           tool_crypto_private_key_APDU_size(void);
+bool             tool_crypto_private_key_extract_from_pem(const char *pem_path, unsigned char *alg, unsigned char *pkey_data, size_t *pkey_size);
 
 #endif /* tool_crypto_private_key_h */

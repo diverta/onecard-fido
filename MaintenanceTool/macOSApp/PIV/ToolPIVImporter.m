@@ -18,6 +18,7 @@
     // 処理対象となるスロットIDを保持
     @property (nonatomic) uint8_t           keySlotId;
     // インポート処理で必要となるAPDUを保持
+    @property (nonatomic) NSData           *privateKeyAPDU;
     @property (nonatomic) NSData           *certificateAPDU;
 
 @end
@@ -37,10 +38,14 @@
     - (bool)readPrivateKeyPemFrom:(NSString *)pemFilePath {
         // PEM形式の秘密鍵ファイルから、バイナリーイメージを抽出
         char *path = (char *)[pemFilePath UTF8String];
-        if (tool_crypto_private_key_extract_from_pem(path) == false) {
+        if (tool_piv_admin_load_private_key([self keySlotId], path) == false) {
             [self logErrorMessageWithFuncError:MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED];
             return false;
         }
+        // バイナリーイメージから生成されたAPDUを内部で保持
+        NSData *apdu = [[NSData alloc] initWithBytes:tool_piv_admin_generated_APDU_data()
+                                              length:tool_piv_admin_generated_APDU_size()];
+        [self setPrivateKeyAPDU:apdu];
         [[ToolLogFile defaultLogger] info:MSG_PIV_PKEY_PEM_LOADED];
         return true;
     }
@@ -53,16 +58,15 @@
             return false;
         }
         // バイナリーイメージから生成されたAPDUを内部で保持
-        NSData *apdu = [[NSData alloc] initWithBytes:tool_piv_admin_cert_APDU_data()
-                                              length:tool_piv_admin_cert_APDU_size()];
+        NSData *apdu = [[NSData alloc] initWithBytes:tool_piv_admin_generated_APDU_data()
+                                              length:tool_piv_admin_generated_APDU_size()];
         [self setCertificateAPDU:apdu];
         [[ToolLogFile defaultLogger] info:MSG_PIV_CERT_PEM_LOADED];
         return true;
     }
 
     - (NSData *)getPrivateKeyAPDUData; {
-        return [[NSData alloc] initWithBytes:tool_crypto_private_key_APDU_data()
-                                      length:tool_crypto_private_key_APDU_size()];
+        return [self privateKeyAPDU];
     }
 
     - (NSData *)getCertificateAPDUData {

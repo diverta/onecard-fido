@@ -6,8 +6,10 @@
 //
 #include <string.h>
 
+#include "debug_log.h"
 #include "tool_crypto_common.h"
 #include "tool_crypto_certificate.h"
+#include "tool_crypto_private_key.h"
 #include "tool_piv_admin.h"
 #include "ToolPIVCommon.h"
 
@@ -17,6 +19,9 @@ static const unsigned char default_3des_key[] = {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
 };
+
+// 秘密鍵のアルゴリズムを保持
+static unsigned char m_alg;
 
 // 鍵／証明書のバイナリーイメージを格納
 static unsigned char m_binary_data[CERTIFICATE_MAX_SIZE];
@@ -63,6 +68,87 @@ static size_t set_object_header(unsigned int object_id, unsigned char *buffer)
 
     // 設定した情報の長さを戻す
     return offset;
+}
+
+//
+// functions for private key data
+//
+static size_t generate_APDU_data_rsa_2048(unsigned char *apdu_data, unsigned char *binary_data)
+{
+    // 変数初期化
+    size_t offset = 0;
+    size_t offset_b = 0;
+
+    // P
+    apdu_data[offset++] = 0x01;
+    offset += tlv_set_length(apdu_data + offset, RSA2048_PQ_SIZE);
+    memcpy(apdu_data + offset, binary_data + offset_b, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    offset_b += RSA2048_PQ_SIZE;
+
+    // Q
+    apdu_data[offset++] = 0x02;
+    offset += tlv_set_length(apdu_data + offset, RSA2048_PQ_SIZE);
+    memcpy(m_apdu_bytes + offset, binary_data + offset_b, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    offset_b += RSA2048_PQ_SIZE;
+
+    // DP
+    apdu_data[offset++] = 0x03;
+    offset += tlv_set_length(apdu_data + offset, RSA2048_PQ_SIZE);
+    memcpy(apdu_data + offset, binary_data + offset_b, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    offset_b += RSA2048_PQ_SIZE;
+
+    // DQ
+    apdu_data[offset++] = 0x04;
+    offset += tlv_set_length(apdu_data + offset, RSA2048_PQ_SIZE);
+    memcpy(apdu_data + offset, binary_data + offset_b, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    offset_b += RSA2048_PQ_SIZE;
+
+    // QINV
+    apdu_data[offset++] = 0x05;
+    offset += tlv_set_length(apdu_data + offset, RSA2048_PQ_SIZE);
+    memcpy(apdu_data + offset, binary_data + offset_b, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    log_debug("%s: Generated RSA-2048 private key TLV for import (%d bytes)", __func__, offset);
+
+    // APDUのサイズを戻す
+    return offset;
+}
+
+static size_t generate_APDU_data_eccp_256(unsigned char *apdu_data, unsigned char *ec_pk)
+{
+    // 変数初期化
+    size_t offset = 0;
+
+    apdu_data[offset++] = 0x06;
+    offset += tlv_set_length(apdu_data + offset, ECCP256_KEY_SIZE);
+    memcpy(apdu_data + offset, ec_pk, ECCP256_KEY_SIZE);
+    offset += ECCP256_KEY_SIZE;
+    log_debug("%s: Generated ECCP-256 private key TLV for import (%d bytes)", __func__, offset);
+
+    // APDUのサイズを戻す
+    return offset;
+}
+
+static void generate_private_key_APDU(void)
+{
+    // 変数初期化
+    memset(m_apdu_bytes, 0, sizeof(m_apdu_bytes));
+    m_apdu_size = 0;
+
+    switch (m_alg) {
+        case CRYPTO_ALG_RSA2048:
+            m_apdu_size = generate_APDU_data_rsa_2048(m_apdu_bytes, m_binary_data);
+            break;
+        case CRYPTO_ALG_ECCP256:
+            m_apdu_size = generate_APDU_data_eccp_256(m_apdu_bytes, m_binary_data);
+            break;
+        default:
+            break;
+    }
 }
 
 //
@@ -138,6 +224,18 @@ unsigned char *tool_piv_admin_des_default_key(void)
     return (unsigned char *)default_3des_key;
 }
 
+bool tool_piv_admin_load_private_key(unsigned char key_slot_id, const char *pem_path)
+{
+    // PEM形式の秘密鍵ファイルから、バイナリーイメージを抽出
+    m_binary_size = sizeof(m_binary_data);
+    if (tool_crypto_private_key_extract_from_pem(pem_path, &m_alg, m_binary_data, &m_binary_size) == false) {
+        return false;
+    }
+    // バイナリーイメージから、証明書インポート処理用のAPDUを生成
+    generate_private_key_APDU();
+    return true;
+}
+
 bool tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path)
 {
     // PEM形式の証明書ファイルから、バイナリーイメージを抽出
@@ -150,13 +248,13 @@ bool tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_
     return true;
 }
 
-unsigned char *tool_piv_admin_cert_APDU_data(void)
+unsigned char *tool_piv_admin_generated_APDU_data(void)
 {
     // APDU格納領域の参照を戻す
-    return m_binary_data;
+    return m_apdu_bytes;
 }
 
-size_t tool_piv_admin_cert_APDU_size(void)
+size_t tool_piv_admin_generated_APDU_size(void)
 {
     // APDUのサイズを戻す
     return m_apdu_size;

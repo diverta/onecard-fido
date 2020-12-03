@@ -21,13 +21,7 @@ static unsigned char dmq1[RSA2048_PQ_SIZE];
 static unsigned char iqmp[RSA2048_PQ_SIZE];
 
 // ECCP-256秘密鍵要素を格納
-static unsigned char m_ec_pk[32];
-
-// 秘密鍵のアルゴリズムを保持
-static unsigned char m_alg;
-
-// 変換されたTLVデータを格納
-static unsigned char m_tlv_bytes[1024];
+static unsigned char m_ec_pk[ECCP256_KEY_SIZE];
 
 //
 // references for memory
@@ -109,7 +103,7 @@ static bool is_valid_exponent(unsigned char *e)
     return (e[0] == 0x01 && e[1] == 0x00 && e[2] == 0x01);
 }
 
-static bool extract_rsa_2048(EVP_PKEY *private_key)
+static bool extract_rsa_2048(EVP_PKEY *private_key, unsigned char *pkey_data, size_t *pkey_size)
 {
     const BIGNUM *bn_e, *bn_p, *bn_q, *bn_dmp1, *bn_dmq1, *bn_iqmp;
     m_rsa_private_key = EVP_PKEY_get1_RSA(private_key);
@@ -146,10 +140,23 @@ static bool extract_rsa_2048(EVP_PKEY *private_key)
         log_debug("%s: Failed setting QINV component", __func__);
         return extract_rsa_2048_terminate(false);
     }
+    // 引数の領域にコピー
+    size_t offset = 0;
+    memcpy(pkey_data + offset, p, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    memcpy(pkey_data + offset, q, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    memcpy(pkey_data + offset, dmp1, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    memcpy(pkey_data + offset, dmq1, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    memcpy(pkey_data + offset, iqmp, RSA2048_PQ_SIZE);
+    offset += RSA2048_PQ_SIZE;
+    *pkey_size = offset;
     return extract_rsa_2048_terminate(true);
 }
 
-static bool extract_eccp_256(EVP_PKEY *private_key)
+static bool extract_eccp_256(EVP_PKEY *private_key, unsigned char *pkey_data, size_t *pkey_size)
 {
     m_ec_private_key = EVP_PKEY_get1_EC_KEY(private_key);
     if (m_ec_private_key == NULL) {
@@ -163,33 +170,16 @@ static bool extract_eccp_256(EVP_PKEY *private_key)
         log_debug("%s: Failed setting EC private key", __func__);
         return extract_eccp_256_terminate(false);
     }
+    // 引数の領域にコピー
+    memcpy(pkey_data, m_ec_pk, ECCP256_KEY_SIZE);
+    *pkey_size = ECCP256_KEY_SIZE;
     return extract_eccp_256_terminate(true);
-}
-
-//
-// utility function
-//
-size_t tool_crypto_tlv_set_length(unsigned char *buffer, size_t length)
-{
-    if(length < 0x80) {
-        *buffer++ = (unsigned char)length;
-        return 1;
-    } else if(length < 0x100) {
-        *buffer++ = 0x81;
-        *buffer++ = (unsigned char)length;
-        return 2;
-    } else {
-        *buffer++ = 0x82;
-        *buffer++ = (length >> 8) & 0xff;
-        *buffer++ = length & 0xff;
-        return 3;
-    }
 }
 
 //
 // public functions
 //
-bool tool_crypto_private_key_extract_from_pem(const char *pem_path)
+bool tool_crypto_private_key_extract_from_pem(const char *pem_path, unsigned char *alg, unsigned char *pkey_data, size_t *pkey_size)
 {
     // 変数を初期化
     initialize_references();
@@ -209,99 +199,19 @@ bool tool_crypto_private_key_extract_from_pem(const char *pem_path)
     }
     // アルゴリズムに応じて処理分岐
     bool ret = false;
-    m_alg = get_algorithm(m_private_key);
-    switch (m_alg) {
+    *alg = get_algorithm(m_private_key);
+    switch (*alg) {
         case CRYPTO_ALG_RSA2048:
             // RSA-2048秘密鍵を抽出
-            ret = extract_rsa_2048(m_private_key);
+            ret = extract_rsa_2048(m_private_key, pkey_data, pkey_size);
             break;
         case CRYPTO_ALG_ECCP256:
             // ECCP-256秘密鍵を抽出
-            ret = extract_eccp_256(m_private_key);
+            ret = extract_eccp_256(m_private_key, pkey_data, pkey_size);
             break;
         default:
             break;
     }
     // 処理終了
     return extract_from_pem_terminate(ret);
-}
-
-static void generate_TLV_data_rsa_2048(void)
-{
-    size_t offset = 0;
-
-    // P
-    m_tlv_bytes[offset++] = 0x01;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
-    memcpy(m_tlv_bytes + offset, p, RSA2048_PQ_SIZE);
-    offset += RSA2048_PQ_SIZE;
-    
-    // Q
-    m_tlv_bytes[offset++] = 0x02;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
-    memcpy(m_tlv_bytes + offset, q, RSA2048_PQ_SIZE);
-    offset += RSA2048_PQ_SIZE;
-    
-    // DP
-    m_tlv_bytes[offset++] = 0x03;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
-    memcpy(m_tlv_bytes + offset, dmp1, RSA2048_PQ_SIZE);
-    offset += RSA2048_PQ_SIZE;
-    
-    // DQ
-    m_tlv_bytes[offset++] = 0x04;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
-    memcpy(m_tlv_bytes + offset, dmq1, RSA2048_PQ_SIZE);
-    offset += RSA2048_PQ_SIZE;
-    
-    // QINV
-    m_tlv_bytes[offset++] = 0x05;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, RSA2048_PQ_SIZE);
-    memcpy(m_tlv_bytes + offset, iqmp, RSA2048_PQ_SIZE);
-    offset += RSA2048_PQ_SIZE;
-    log_debug("%s: Generated RSA-2048 private key TLV for import (%d bytes)", __func__, offset);
-}
-
-static void generate_TLV_data_eccp_256(void)
-{
-    size_t offset = 0;
-
-    m_tlv_bytes[offset++] = 0x06;
-    offset += tool_crypto_tlv_set_length(m_tlv_bytes + offset, ECCP256_KEY_SIZE);
-    memcpy(m_tlv_bytes + offset, m_ec_pk, ECCP256_KEY_SIZE);
-    offset += ECCP256_KEY_SIZE;
-    log_debug("%s: Generated ECCP-256 private key TLV for import (%d bytes)", __func__, offset);
-}
-
-unsigned char *tool_crypto_private_key_APDU_data(void)
-{
-    memset(m_tlv_bytes, 0, sizeof(m_tlv_bytes));
-    switch (m_alg) {
-        case CRYPTO_ALG_RSA2048:
-            generate_TLV_data_rsa_2048();
-            break;
-        case CRYPTO_ALG_ECCP256:
-            generate_TLV_data_eccp_256();
-            break;
-        default:
-            break;
-    }
-    // 先頭アドレスを戻す
-    return m_tlv_bytes;
-}
-
-size_t tool_crypto_private_key_APDU_size(void)
-{
-    size_t size = 0;
-    switch (m_alg) {
-        case CRYPTO_ALG_RSA2048:
-            size = RSA2048_PKEY_TLV_SIZE;
-            break;
-        case CRYPTO_ALG_ECCP256:
-            size = ECCP256_PKEY_TLV_SIZE;
-            break;
-        default:
-            break;
-    }
-    return size;
 }
