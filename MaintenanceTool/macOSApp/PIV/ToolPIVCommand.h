@@ -8,10 +8,11 @@
 #define ToolPIVCommand_h
 
 #import "ToolCommon.h"
+#import "ToolPIVImporter.h"
 
 @interface ToolPIVCommand : NSObject
 
-    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur;
+    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporter:(ToolPIVImporter *)importer;
     - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
     - (void)commandWillReset:(Command)command;
 

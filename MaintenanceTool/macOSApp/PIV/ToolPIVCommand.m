@@ -15,6 +15,7 @@
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
 #import "ToolPIVCommon.h"
+#import "ToolPIVImporter.h"
 
 @interface ToolPIVCommand () <ToolCCIDHelperDelegate>
 
@@ -28,6 +29,7 @@
     // コマンドのパラメーターを保持
     @property (nonatomic) NSString          *pinCodeCur;
     @property (nonatomic) NSString          *pinCodeNew;
+    @property (nonatomic) ToolPIVImporter   *toolPIVImporter;
     // PIV管理機能認証（往路）のチャレンジを保持
     @property (nonatomic) NSData            *pivAuthChallenge;
     // エラーメッセージテキストを保持
@@ -54,6 +56,7 @@
         [self setCommandIns:0x00];
         [self setPinCodeCur:nil];
         [self setPinCodeNew:nil];
+        [self setToolPIVImporter:nil];
         [self setPivAuthChallenge:nil];
         [self setLastErrorMessage:nil];
     }
@@ -96,6 +99,12 @@
             case YKPIV_INS_RESET:
                 [self doResponseYkPivInsReset:resp status:sw];
                 break;
+            case YKPIV_INS_IMPORT_ASYMM_KEY:
+                [self doResponseYkPivInsImportKey:resp status:sw];
+                break;
+            case PIV_INS_PUT_DATA:
+                [self doResponseYkPivInsImportCert:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -114,8 +123,9 @@
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur {
+    - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporter:(ToolPIVImporter *)importer {
         [self setPinCodeCur:pinCodeCur];
+        [self setToolPIVImporter:importer];
         [self ccidHelperWillProcess:command];
     }
 
@@ -196,6 +206,55 @@
         }
     }
 
+    - (void)doRequestYkPivInsImportKey:(NSData *)apdu algorithm:(uint8_t)alg keySlotId:(uint8_t)slotId {
+        // コマンドを実行
+        [self setCommandIns:YKPIV_INS_IMPORT_ASYMM_KEY];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:alg p2:slotId data:apdu le:0xff];
+    }
+
+    - (void)doResponseYkPivInsImportKey:(NSData *)response status:(uint16_t)sw {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_PKEY_FAILED withImporter:[self toolPIVImporter]];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功のログを出力
+        [self outputLogWithFormat:MSG_PIV_PKEY_PEM_IMPORTED withImporter:[self toolPIVImporter]];
+        // 証明書インポート処理を実行
+        [self doYkPivImportCertProcess];
+    }
+
+    - (void)doRequestYkPivInsImportCert:(NSData *)apdu {
+        // コマンドを実行
+        [self setCommandIns:PIV_INS_PUT_DATA];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x3f p2:0xff data:apdu le:0xff];
+    }
+
+    - (void)doResponseYkPivInsImportCert:(NSData *)response status:(uint16_t)sw {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_CERT_FAILED withImporter:[self toolPIVImporter]];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功のログを出力
+        [self outputLogWithFormat:MSG_PIV_CERT_PEM_IMPORTED withImporter:[self toolPIVImporter]];
+        // 制御を戻す
+        [self exitCommandProcess:true];
+    }
+
+    - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
+        // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
+        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer algorithm]];
+        [self setLastErrorMessage:msg];
+    }
+
+    - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
+        // インストール先のスロットIDとアルゴリズムを付加してログ出力
+        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer algorithm]];
+    }
+
 #pragma mark - PIV administrative authentication
 
     - (void)doRequestPivAdminAuth {
@@ -266,9 +325,17 @@
     }
 
     - (void)doYkPivImportKeyProcess {
-        // TODO: 秘密鍵インポート処理を実行
-        // 仮の実装です。
-        [self exitCommandProcess:true];
+        // 秘密鍵インポート処理を実行
+        NSData *apdu = [[self toolPIVImporter] getPrivateKeyAPDUData];
+        [self doRequestYkPivInsImportKey:apdu
+                               algorithm:[[self toolPIVImporter] algorithm]
+                               keySlotId:[[self toolPIVImporter] keySlotId]];
+    }
+
+    - (void)doYkPivImportCertProcess {
+        // 証明書インポート処理を実行
+        NSData *apdu = [[self toolPIVImporter] getCertificateAPDUData];
+        [self doRequestYkPivInsImportCert:apdu];
     }
 
 #pragma mark - PIN management functions
