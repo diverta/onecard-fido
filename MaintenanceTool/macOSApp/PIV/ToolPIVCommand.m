@@ -71,6 +71,7 @@
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
             case COMMAND_CCID_PIV_RESET:
             case COMMAND_CCID_PIV_IMPORT_KEY:
+            case COMMAND_CCID_PIV_SET_CHUID:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doRequestPivInsSelectApplication];
                 break;
@@ -129,6 +130,10 @@
         [self ccidHelperWillProcess:command];
     }
 
+    - (void)commandWillSetCHUIDAndCCC:(Command)command {
+        [self ccidHelperWillProcess:command];
+    }
+
 #pragma mark - Command functions
 
     - (void)doRequestPivInsSelectApplication {
@@ -155,6 +160,9 @@
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 [self doYkPivImportKey];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self doYkPivSetCHUID];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -294,8 +302,20 @@
             [self exitCommandProcess:false];
             return;
         }
-        // PIN番号認証を実行
-        [self doRequestPivInsVerify:[self pinCodeCur]];
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                // PIN番号認証を実行
+                [self doRequestPivInsVerify:[self pinCodeCur]];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                // CHUID／CCC設定処理を実行
+                [self doYkPivSetCHUIDProcess];
+                break;
+            default:
+                [self exitCommandProcess:false];
+                break;
+        }
     }
 
     - (bool)verifyPivAuthAdminChallenge:(NSData *)insAuthResp {
@@ -336,6 +356,21 @@
         // 証明書インポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getCertificateAPDUData];
         [self doRequestYkPivInsImportCert:apdu];
+    }
+
+#pragma mark - CHUID and CCC management functions
+
+    - (void)doYkPivSetCHUID {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // PIV管理機能認証（往路）を実行
+        [self doRequestPivAdminAuth];
+    }
+
+    - (void)doYkPivSetCHUIDProcess {
+        // TODO: CHUID設定処理を実行
+        // 仮の実装です。
+        [self exitCommandProcess:true];
     }
 
 #pragma mark - PIN management functions
@@ -451,6 +486,9 @@
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_IMPORT_KEY];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
                 break;
             default:
                 break;
