@@ -207,7 +207,7 @@ static void generate_certificate_APDU(unsigned char key_slot_id)
     size_t offset = set_object_header(object_id, m_apdu_bytes);
 
     // object size & data
-    m_tlv_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
+    m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
     offset += tlv_set_length(m_apdu_bytes + offset, m_tlv_size);
     memcpy(m_apdu_bytes + offset, m_tlv_bytes, m_tlv_size);
     offset += m_tlv_size;
@@ -224,13 +224,15 @@ unsigned char *tool_piv_admin_des_default_key(void)
     return (unsigned char *)default_3des_key;
 }
 
-bool tool_piv_admin_load_private_key(unsigned char key_slot_id, const char *pem_path)
+bool tool_piv_admin_load_private_key(unsigned char key_slot_id, const char *pem_path, unsigned char *algorithm)
 {
     // PEM形式の秘密鍵ファイルから、バイナリーイメージを抽出
     m_binary_size = sizeof(m_binary_data);
     if (tool_crypto_private_key_extract_from_pem(pem_path, &m_alg, m_binary_data, &m_binary_size) == false) {
         return false;
     }
+    // 取得したアルゴリズムを引数領域にセット
+    *algorithm = m_alg;
     // バイナリーイメージから、証明書インポート処理用のAPDUを生成
     generate_private_key_APDU();
     return true;
