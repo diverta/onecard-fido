@@ -64,6 +64,7 @@
 #define PROCESS_NAME_CCID_PIV_CHANGE_PUK            @"PIV PUKコード変更"
 #define PROCESS_NAME_CCID_PIV_UNBLOCK_PIN           @"PIV PIN解除"
 #define PROCESS_NAME_CCID_PIV_RESET                 @"PIV機能リセット"
+#define PROCESS_NAME_CCID_PIV_IMPORT_KEY            @"鍵・証明書インストール（PIV機能）"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -217,16 +218,29 @@
 #define MSG_COMMENT_START_DFU_PROCESS           @"署名機能付きブートローダーだけが導入された\nFIDO認証器をUSBポートに装着すると、\n自動的にブートローダーモードに遷移し、\n基板上の橙色・緑色LEDが連続点灯します。\n\nこの状態を確認したのち、Yesボタンをクリックすると、\nファームウェア新規導入処理が開始されます。\n\nFIDO認証器は、最新版（MDBT50Q Dongle rev2.1.2）\nをご利用ください。"
 
 #pragma mark - USB CCID関連
+#define MSG_CCID_SESSION_ALREADY_EXIST          @"CCIDインターフェースで別のセッションが存在します。"
 #define MSG_CCID_INTERFACE_UNAVAILABLE          @"FIDO認証器にCCIDインターフェースが存在しません。"
 #define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（CCIDデバイス名: %@）"
 #define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（CCIDデバイス名: %@）%@"
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
 #define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（CCIDデバイス名: %@）%@"
 #define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
+#define MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED     @"PIV管理機能認証（往路）が失敗しました。"
+#define MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED     @"PIV管理機能認証（復路）が失敗しました。"
+#define MSG_ERROR_PIV_ADMIN_AUTH_FUNC_FAILED    @"PIV管理機能認証の内部処理が失敗しました（%@）"
+#define MSG_ERROR_PIV_ADMIN_AUTH_CHALLENGE_DIFF @"PIV管理機能認証が失敗しました（チャレンジが一致しません）。"
 #define MSG_ERROR_PIV_WRONG_PIN                 @"%@が不正です。正しい%@を入力してください（残り%d回試行可能です）。"
 #define MSG_ERROR_PIV_PIN_LOCKED                @"PINがすでに無効です。PIN解除を実行し、新しいPINを登録して下さい。"
 #define MSG_ERROR_PIV_PUK_LOCKED                @"PUKがすでに無効です。PIV機能をリセットする必要があります。"
 #define MSG_ERROR_PIV_RESET_FAIL                @"PINまたはPUKが未だ無効になっていません。"
 #define MSG_ERROR_PIV_UNKNOWN                   @"不明なエラーが発生しました。"
+#define MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED      @"PIV秘密鍵ファイル読込処理が失敗しました（%@）"
+#define MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED      @"PIV証明書ファイル読込処理が失敗しました（%@）"
+#define MSG_PIV_PKEY_PEM_LOADED                 @"PIV秘密鍵ファイルを正常に読込みました。"
+#define MSG_PIV_CERT_PEM_LOADED                 @"PIV証明書ファイルを正常に読込みました。"
+#define MSG_ERROR_PIV_IMPORT_PKEY_FAILED        @"PIV秘密鍵インポート処理が失敗しました（slot=0x%02x, alg=0x%02x）。"
+#define MSG_ERROR_PIV_IMPORT_CERT_FAILED        @"PIV証明書インポート処理が失敗しました（slot=0x%02x, alg=0x%02x）。"
+#define MSG_PIV_PKEY_PEM_IMPORTED               @"PIV秘密鍵を正常にインポートしました（slot=0x%02x, alg=0x%02x）。"
+#define MSG_PIV_CERT_PEM_IMPORTED               @"PIV証明書を正常にインポートしました（slot=0x%02x, alg=0x%02x）。"
 
 #endif /* ToolCommonMessage_h */
