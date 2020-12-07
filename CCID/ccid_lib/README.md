@@ -112,6 +112,66 @@ PIVに関する仕様は下記の通りです。
 [注3]TDEA（Triple Data Encryption Algorithm）暗号のみサポートしています。<br>
 [注4]共に固定長（8バイト）となっております。PIN／PUK番号が8バイトに満たない場合、残りの領域は`0xff`で埋められます。
 
+#### CHUID（Card Holder Unique Identifier）
+本プロジェクトでCHUIDとして設定する値は、下記の通りダミー値になります。
+
+|#|TAG|名称|内容|意味|
+|:---:|:---|:---|:---|:---|
+|1|`0x30`|FASC-N|別掲[注1]|ダミーFASC-N|
+|2|`0x34`|Global Unique Identifier|HEX文字列[注2]|PIVカードの固有番号|
+|3|`0x35`|Expiration Date|`YYYYMMDD`形式[注3]|PIVカードの有効期限|
+|4|`0x3e`|Issuer Asymmetric Signature|（設定していません）|署名|
+|5|`0xfe`|Error Detection Code|（設定していません）|LRC|
+
+<b>ダミーFASC-Nの内容</b>
+
+|#|名称|内容|意味|
+|:---:|:---|:---|:---|
+|1|Agency Code|`9999`|ダミー値|
+|2|System Code|`9999`|ダミー値|
+|3|Credential Number|`999999`|ダミー値|
+|4|Credential Series|`0`|ダミー値|
+|5|Individual Credential Issue|`1`|ダミー値|
+|6|Person Identifier|`0000000000`|ダミー値|
+|7|Organizational Category|`3`|3=Commercial Enterprise|
+|8|Organizational Identifier|`0000`|ダミー値|
+|9|Person/Organization Association Category|`1`|1=Employee|
+
+[注1]本プロジェクトではダミー値を設定しています（内容は「ダミーFASC-Nの内容」をご参照）。<br>
+[注2]長さ16バイトのIPv6アドレスです。本プロジェクトでは「CHUID設定機能」でランダム値を設定しています。<br>
+[注3]長さ8バイトの半角数字です（`20201201`といった値）。本プロジェクトでは「CHUID設定機能」実行時の1年後の日付を設定しています。
+
+#### CCC（Card Capability Container）
+本プロジェクトでCCCとして設定する値は、下記の通りダミー値になります。
+
+|#|TAG|名称|内容|意味|
+|:---:|:---|:---|:---|:---|
+|1|`0xf0`|Card Identifier|別掲[注1]|ダミーCardID|
+|2|`0xf1`|Capability Version|`0x21`|GSC-IS v2.1|
+|3|`0xf2`|Capability Grammar Version|`0x21`|GSC-IS v2.1|
+|4|`0xf3`|ApplicationsCardURL|（設定していません）||
+|5|`0xf4`|PKCS#15|`0x00`|PKCS#15でない|
+|6|`0xf5`|Registered Data Model|`0x10`|The data model of the<br> PIV Card Application|
+|7|`0xf6`|Access Control Rule Table|（設定していません）||
+|8|`0xf7`|Card APDUs|（設定していません）||
+|9|`0xfa`|Redirection Tag|（設定していません）||
+|10|`0xfb`|Capability Tuples|（設定していません）||
+|11|`0xfc`|Status Tuples|（設定していません）||
+|12|`0xfd`|Next CCC|（設定していません）||
+|13|`0xfe`|Error Detection Code|（設定していません）||
+
+<b>ダミーCardIDの内容</b>
+
+|#|名称|内容|意味|
+|:---:|:---|:---|:---|
+|1|GSC-RID|`a0 00 00 01 16`|GSC-ISのRID|
+|2|manufacturer-Id|`0xff`|ダミー値|
+|3|Card-type|`0x02`|2=JavaCard|
+|4|Card-Id|HEX文字列[注2]|ダミー値|
+
+[注1]本プロジェクトではダミー値を設定しています（内容は「ダミーCardIDの内容」をご参照）。<br>
+[注2]長さ14バイトです。本プロジェクトでは「CHUID設定機能」でランダム値を設定しています。
+
 ### CCIDの仕様
 CCIDインターフェースに関する仕様は下記の通りです。
 
