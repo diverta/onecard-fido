@@ -104,7 +104,7 @@
                 [self doResponseYkPivInsImportKey:resp status:sw];
                 break;
             case PIV_INS_PUT_DATA:
-                [self doResponseYkPivInsImportCert:resp status:sw];
+                [self doResponsePivInsPutData:resp status:sw];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -233,23 +233,25 @@
         [self doYkPivImportCertProcess];
     }
 
-    - (void)doRequestYkPivInsImportCert:(NSData *)apdu {
+    - (void)doRequestPivInsPutData:(NSData *)apdu {
         // コマンドを実行
         [self setCommandIns:PIV_INS_PUT_DATA];
         [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x3f p2:0xff data:apdu le:0xff];
     }
 
-    - (void)doResponseYkPivInsImportCert:(NSData *)response status:(uint16_t)sw {
-        // 不明なエラーが発生時は以降の処理を行わない
-        if (sw != SW_SUCCESS) {
-            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_CERT_FAILED withImporter:[self toolPIVImporter]];
-            [self exitCommandProcess:false];
-            return;
+    - (void)doResponsePivInsPutData:(NSData *)response status:(uint16_t)sw {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self doYkPivImportCertTerminate:response status:sw];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self doYkPivSetCHUIDProcessContinue:response status:sw];
+                break;
+            default:
+                [self exitCommandProcess:false];
+                break;
         }
-        // 処理成功のログを出力
-        [self outputLogWithFormat:MSG_PIV_CERT_PEM_IMPORTED withImporter:[self toolPIVImporter]];
-        // 制御を戻す
-        [self exitCommandProcess:true];
     }
 
     - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
@@ -355,7 +357,20 @@
     - (void)doYkPivImportCertProcess {
         // 証明書インポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getCertificateAPDUData];
-        [self doRequestYkPivInsImportCert:apdu];
+        [self doRequestPivInsPutData:apdu];
+    }
+
+    - (void)doYkPivImportCertTerminate:(NSData *)response status:(uint16_t)sw {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            [self setLastErrorMessageWithFormat:MSG_ERROR_PIV_IMPORT_CERT_FAILED withImporter:[self toolPIVImporter]];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功のログを出力
+        [self outputLogWithFormat:MSG_PIV_CERT_PEM_IMPORTED withImporter:[self toolPIVImporter]];
+        // 制御を戻す
+        [self exitCommandProcess:true];
     }
 
 #pragma mark - CHUID and CCC management functions
@@ -369,6 +384,12 @@
 
     - (void)doYkPivSetCHUIDProcess {
         // TODO: CHUID設定処理を実行
+        // 仮の実装です。
+        [self exitCommandProcess:true];
+    }
+
+    - (void)doYkPivSetCHUIDProcessContinue:(NSData *)response status:(uint16_t)sw {
+        // TODO:エラーハンドリング／制御戻し
         // 仮の実装です。
         [self exitCommandProcess:true];
     }
