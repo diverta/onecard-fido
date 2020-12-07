@@ -25,5 +25,7 @@ bool             tool_piv_admin_load_private_key(unsigned char key_slot_id, cons
 bool             tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path);
 unsigned char   *tool_piv_admin_generated_APDU_data(void);
 size_t           tool_piv_admin_generated_APDU_size(void);
+unsigned char   *tool_piv_admin_generate_CHUID_APDU(size_t *size);
+unsigned char   *tool_piv_admin_generate_CCC_APDU(size_t *size);
 
 #endif /* tool_piv_admin_h */
