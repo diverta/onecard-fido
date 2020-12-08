@@ -72,6 +72,7 @@
             case COMMAND_CCID_PIV_RESET:
             case COMMAND_CCID_PIV_IMPORT_KEY:
             case COMMAND_CCID_PIV_SET_CHUID:
+            case COMMAND_CCID_PIV_STATUS:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doRequestPivInsSelectApplication];
                 break;
@@ -135,6 +136,10 @@
         [self ccidHelperWillProcess:command];
     }
 
+    - (void)commandWillStatus:(Command)command {
+        [self ccidHelperWillProcess:command];
+    }
+
 #pragma mark - Command functions
 
     - (void)doRequestPivInsSelectApplication {
@@ -164,6 +169,9 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self doYkPivSetCHUID];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self doYkPivStatusProcess];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -208,6 +216,9 @@
         switch ([self command]) {
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 [self doYkPivImportKeyProcess];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self doYkPivStatusProcessWithPinRetryResponse:response status:sw];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -425,6 +436,30 @@
         }
     }
 
+#pragma mark - PIV setting reference functions
+
+    - (void)doYkPivStatusProcess {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // PINリトライカウンターを照会
+        [self doRequestPivInsVerify:nil];
+    }
+
+    - (void)doYkPivStatusProcessWithPinRetryResponse:(NSData *)response status:(uint16_t)sw {
+        if ((sw >> 8) == 0x63) {
+            // PINリトライカウンターを取得
+            uint8_t retries = sw & 0x0f;
+            [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
+            // TODO: 仮の実装です。
+            [self exitCommandProcess:true];
+
+        } else {
+            // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED];
+            [self exitCommandProcess:false];
+        }
+    }
+
 #pragma mark - PIN management functions
 
     - (void)doPivInsChangePIN {
@@ -541,6 +576,9 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
             default:
                 break;

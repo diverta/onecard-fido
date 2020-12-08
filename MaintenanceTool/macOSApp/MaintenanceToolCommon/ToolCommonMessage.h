@@ -248,5 +248,7 @@
 #define MSG_ERROR_PIV_IMPORT_CCC_FAILED         @"PIV CCCインポート処理が失敗しました。"
 #define MSG_PIV_CHUID_IMPORTED                  @"PIV CHUIDを正常にインポートしました。"
 #define MSG_PIV_CCC_IMPORTED                    @"PIV CCCを正常にインポートしました。"
+#define MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED  @"PIV PINリトライカウンターを取得できませんでした。"
+#define MSG_PIV_PIN_RETRY_CNT_GET               @"PIV PINリトライカウンターを取得しました（残り試行可能: %u回）。"
 
 #endif /* ToolCommonMessage_h */
