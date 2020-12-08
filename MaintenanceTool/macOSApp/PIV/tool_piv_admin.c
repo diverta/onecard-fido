@@ -4,7 +4,11 @@
 //
 //  Created by Makoto Morita on 2020/12/03.
 //
+#include <stdlib.h>
 #include <string.h>
+
+// for obtaining current time
+#include <time.h>
 
 #include "debug_log.h"
 #include "tool_crypto_common.h"
@@ -12,6 +16,57 @@
 #include "tool_crypto_private_key.h"
 #include "tool_piv_admin.h"
 #include "ToolPIVCommon.h"
+
+//
+// CHUIDテンプレート
+//  0x30: FASC-N
+//  0x34: Card UUID / GUID
+//  0x35: Exp. Date
+//  0x3e: Signature
+//  0xfe: Error Detection Code
+//
+static const unsigned char chuid_template[] = {
+    0x30, 0x19, 0xd4, 0xe7, 0x39, 0xda, 0x73, 0x9c, 0xed, 0x39, 0xce, 0x73, 0x9d, 0x83, 0x68, 0x58, 0x21, 0x08, 0x42, 0x10, 0x84, 0x21, 0xc8, 0x42, 0x10, 0xc3, 0xeb,
+    0x34, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x35, 0x08, 0x32, 0x30, 0x33, 0x30, 0x30, 0x31, 0x30, 0x31,
+    0x3e, 0x00,
+    0xfe, 0x00
+};
+
+//
+// CCCテンプレート
+//  f0: Card Identifier
+//      0xa000000116 == GSC-IS RID
+//      0xff == Manufacturer ID (dummy)
+//      0x02 == Card type (javaCard)
+//      next 14 bytes: card ID
+static const unsigned char ccc_template[] = {
+    0xf0, 0x15,
+    0xa0, 0x00, 0x00, 0x01, 0x16,
+    0xff,
+    0x02,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xf1, 0x01, 0x21,
+    0xf2, 0x01, 0x21,
+    0xf3, 0x00,
+    0xf4, 0x01, 0x00,
+    0xf5, 0x01, 0x10,
+    0xf6, 0x00,
+    0xf7, 0x00,
+    0xfa, 0x00,
+    0xfb, 0x00,
+    0xfc, 0x00,
+    0xfd, 0x00,
+    0xfe, 0x00
+};
+
+// テンプレート内項目の設定位置、長さ
+#define PIV_CARDID_OFFSET   29
+#define PIV_CARDID_SIZE     16
+#define PIV_CARDEXP_OFFSET  47
+#define PIV_CARDEXP_SIZE    8
+#define PIV_CCCID_OFFSET    9
+#define PIV_CCCID_SIZE      14
 
 // デフォルトの3DES鍵
 static const unsigned char default_3des_key[] = {
@@ -217,6 +272,63 @@ static void generate_certificate_APDU(unsigned char key_slot_id)
 }
 
 //
+// functions for ID data
+//
+static void set_random_bytes_to_field(unsigned char *buf, size_t size)
+{
+    // ランダムなバイトデータを設定
+    for (int i = 0; i < size; i++) {
+        uint32_t r = arc4random_uniform(0xff);
+        buf[i] = (unsigned char)r;
+    }
+}
+
+static void set_random_number_to_field(char *buf, size_t size)
+{
+    // ランダムな半角数字を設定
+    char char_set[] = "0123456789";
+    for (int i = 0; i < size; i++) {
+        int j = rand() % sizeof(char_set);
+        buf[i] = char_set[j];
+    }
+}
+
+static void set_next_year_to_field(char *buf, size_t size)
+{
+    // 現在の１年後の日付を設定
+    time_t nowTime = time(NULL);
+    struct tm *t = localtime(&nowTime);
+    t->tm_year++;
+    strftime(buf, size, "%Y%m%d", t);
+}
+
+static void generate_CHUID_bytes(unsigned char *buf, size_t *size)
+{
+    // 生成されるCHUID格納領域の長さ
+    size_t s = sizeof(chuid_template);
+    // テンプレートの内容をコピー
+    memcpy(buf, chuid_template, s);
+    // ランダムなIDを設定
+    set_random_bytes_to_field(buf + PIV_CARDID_OFFSET, PIV_CARDID_SIZE);
+    // 有効期限を１年後に設定
+    set_next_year_to_field((char *)buf + PIV_CARDEXP_OFFSET, PIV_CARDEXP_SIZE);
+    // データ長を設定
+    *size = s;
+}
+
+static void generate_CCC_bytes(unsigned char *buf, size_t *size)
+{
+    // 生成されるCHUID格納領域の長さ
+    size_t s = sizeof(ccc_template);
+    // テンプレートの内容をコピー
+    memcpy(buf, ccc_template, s);
+    // ランダムなIDを設定
+    set_random_number_to_field((char *)buf + PIV_CCCID_OFFSET, PIV_CCCID_SIZE);
+    // データ長を設定
+    *size = s;
+}
+
+//
 // public functions
 //
 unsigned char *tool_piv_admin_des_default_key(void)
@@ -260,4 +372,48 @@ size_t tool_piv_admin_generated_APDU_size(void)
 {
     // APDUのサイズを戻す
     return m_apdu_size;
+}
+
+unsigned char *tool_piv_admin_generate_CHUID_APDU(size_t *size)
+{
+    // 変数初期化
+    memset(m_apdu_bytes, 0, sizeof(m_apdu_bytes));
+
+    // CHUIDのバイナリーデータを先に生成
+    generate_CHUID_bytes(m_binary_data, &m_binary_size);
+    
+    // object info
+    size_t offset = set_object_header(PIV_OBJ_CHUID, m_apdu_bytes);
+
+    // object size & data
+    m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
+    offset += tlv_set_length(m_apdu_bytes + offset, m_binary_size);
+    memcpy(m_apdu_bytes + offset, m_binary_data, m_binary_size);
+    offset += m_binary_size;
+
+    // CHUID格納領域の参照を戻す
+    *size = offset;
+    return m_apdu_bytes;
+}
+
+unsigned char *tool_piv_admin_generate_CCC_APDU(size_t *size)
+{
+    // 変数初期化
+    memset(m_apdu_bytes, 0, sizeof(m_apdu_bytes));
+
+    // CCCのバイナリーデータを先に生成
+    generate_CCC_bytes(m_binary_data, &m_binary_size);
+    
+    // object info
+    size_t offset = set_object_header(PIV_OBJ_CAPABILITY, m_apdu_bytes);
+
+    // object size & data
+    m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
+    offset += tlv_set_length(m_apdu_bytes + offset, m_binary_size);
+    memcpy(m_apdu_bytes + offset, m_binary_data, m_binary_size);
+    offset += m_binary_size;
+
+    // CCC格納領域の参照を戻す
+    *size = offset;
+    return m_apdu_bytes;
 }
