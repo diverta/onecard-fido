@@ -34,6 +34,8 @@
     @property (nonatomic) NSData            *pivAuthChallenge;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString          *lastErrorMessage;
+    // CCCインポート処理が実行中かどうかを保持
+    @property (nonatomic) bool               cccImportProcessing;
 
 @end
 
@@ -395,35 +397,35 @@
     }
 
     - (void)doYkPivSetCHUIDProcess {
+        // フラグをクリア
+        [self setCccImportProcessing:false];
         // CHUIDインポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getChuidAPDUData];
         [self doRequestPivInsPutData:apdu];
     }
 
     - (void)doYkPivSetCHUIDProcessContinue:(NSData *)response status:(uint16_t)sw {
-        // CCCインポート処理が実行中かどうかを保持
-        static bool isCccImportProcessing = false;
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             // 処理失敗ログを出力し、制御を戻す
-            [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:isCccImportProcessing];
+            [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:[self cccImportProcessing]];
             [self exitCommandProcess:false];
             return;
         }
         // 処理成功ログを出力
-        [self outputYkPivSetCHUIDProcessLog:true isCccImportProcessing:isCccImportProcessing];
+        [self outputYkPivSetCHUIDProcessLog:true isCccImportProcessing:[self cccImportProcessing]];
         // CCCインポート処理実行結果の場合
-        if (isCccImportProcessing) {
+        if ([self cccImportProcessing]) {
             // フラグをクリア
-            isCccImportProcessing = false;
+            [self setCccImportProcessing:false];
             // 制御を戻す
             [self exitCommandProcess:true];
         } else {
+            // フラグを設定
+            [self setCccImportProcessing:true];
             // CCCインポート処理を実行
             NSData *apdu = [[self toolPIVImporter] getCccAPDUData];
             [self doRequestPivInsPutData:apdu];
-            // フラグを設定
-            isCccImportProcessing = true;
         }
     }
 
