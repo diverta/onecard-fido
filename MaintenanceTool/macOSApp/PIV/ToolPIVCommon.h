@@ -11,6 +11,7 @@
 #define PIV_INS_VERIFY              0x20
 #define PIV_INS_CHANGE_REFERENCE    0x24
 #define PIV_INS_RESET_RETRY         0x2c
+#define PIV_INS_GET_DATA            0xcb
 #define PIV_INS_PUT_DATA            0xdb
 #define PIV_INS_AUTHENTICATE        0x87
 

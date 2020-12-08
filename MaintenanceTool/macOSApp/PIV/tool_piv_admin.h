@@ -27,5 +27,6 @@ unsigned char   *tool_piv_admin_generated_APDU_data(void);
 size_t           tool_piv_admin_generated_APDU_size(void);
 unsigned char   *tool_piv_admin_generate_CHUID_APDU(size_t *size);
 unsigned char   *tool_piv_admin_generate_CCC_APDU(size_t *size);
+size_t           tool_piv_admin_set_object_header(unsigned int object_id, unsigned char *buffer);
 
 #endif /* tool_piv_admin_h */

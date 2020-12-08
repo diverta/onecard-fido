@@ -109,6 +109,9 @@
             case PIV_INS_PUT_DATA:
                 [self doResponsePivInsPutData:resp status:sw];
                 break;
+            case PIV_INS_GET_DATA:
+                [self doResponsePivInsGetData:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -261,6 +264,24 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self doYkPivSetCHUIDProcessContinue:response status:sw];
+                break;
+            default:
+                [self exitCommandProcess:false];
+                break;
+        }
+    }
+
+    - (void)doRequestPivInsGetData:(NSData *)apdu {
+        // コマンドを実行
+        [self setCommandIns:PIV_INS_GET_DATA];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x3f p2:0xff data:apdu le:0xff];
+    }
+
+    - (void)doResponsePivInsGetData:(NSData *)response status:(uint16_t)sw {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_STATUS:
+                [self doResponseYkPivStatusFetchObjects:response status:sw];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -452,8 +473,8 @@
             // PINリトライカウンターを取得
             uint8_t retries = sw & 0x0f;
             [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
-            // TODO: 仮の実装です。
-            [self exitCommandProcess:true];
+            // PIVオブジェクトを取得
+            [self doYkPivStatusFetchObjects];
 
         } else {
             // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
@@ -461,6 +482,21 @@
             [self exitCommandProcess:false];
         }
     }
+
+    - (void)doYkPivStatusFetchObjects {
+        // TODO: 仮の実装です。
+        // オブジェクト取得処理を実行
+        NSData *apdu = [self getPivInsGetApdu:PIV_OBJ_CHUID];
+        [self doRequestPivInsGetData:apdu];
+    }
+
+    - (void)doResponseYkPivStatusFetchObjects:(NSData *)response status:(uint16_t)sw {
+        // TODO: 仮の実装です。
+        [[ToolLogFile defaultLogger] debugWithFormat:@"CHUID (%d bytes):", [response length]];
+        [[ToolLogFile defaultLogger] hexdump:response];
+        [self exitCommandProcess:true];
+    }
+
 
 #pragma mark - PIN management functions
 
@@ -706,6 +742,13 @@
         }
         // NSData形式に変換（16バイト固定長）
         return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
+    }
+
+    - (NSData *)getPivInsGetApdu:(unsigned int)objectID {
+        unsigned char apdu[5];
+        size_t size = tool_piv_admin_set_object_header(objectID, apdu);
+        // NSData形式に変換
+        return [NSData dataWithBytes:apdu length:size];
     }
 
     - (void)setLastErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
