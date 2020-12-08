@@ -384,15 +384,45 @@
     }
 
     - (void)doYkPivSetCHUIDProcess {
-        // TODO: CHUID設定処理を実行
-        // 仮の実装です。
-        [self exitCommandProcess:true];
+        // CHUIDインポート処理を実行
+        NSData *apdu = [[self toolPIVImporter] getChuidAPDUData];
+        [self doRequestPivInsPutData:apdu];
     }
 
     - (void)doYkPivSetCHUIDProcessContinue:(NSData *)response status:(uint16_t)sw {
-        // TODO:エラーハンドリング／制御戻し
-        // 仮の実装です。
-        [self exitCommandProcess:true];
+        // CCCインポート処理が実行中かどうかを保持
+        static bool isCccImportProcessing = false;
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            // 処理失敗ログを出力し、制御を戻す
+            [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:isCccImportProcessing];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功ログを出力
+        [self outputYkPivSetCHUIDProcessLog:true isCccImportProcessing:isCccImportProcessing];
+        // CCCインポート処理実行結果の場合
+        if (isCccImportProcessing) {
+            // フラグをクリア
+            isCccImportProcessing = false;
+            // 制御を戻す
+            [self exitCommandProcess:true];
+        } else {
+            // CCCインポート処理を実行
+            NSData *apdu = [[self toolPIVImporter] getCccAPDUData];
+            [self doRequestPivInsPutData:apdu];
+            // フラグを設定
+            isCccImportProcessing = true;
+        }
+    }
+
+    - (void)outputYkPivSetCHUIDProcessLog:(bool)success isCccImportProcessing:(bool)ccc {
+        // 処理の成否ログを出力
+        if (success) {
+            [[ToolLogFile defaultLogger] info:(ccc ? MSG_PIV_CCC_IMPORTED : MSG_PIV_CHUID_IMPORTED)];
+        } else {
+            [[ToolLogFile defaultLogger] error:(ccc ? MSG_ERROR_PIV_IMPORT_CCC_FAILED : MSG_ERROR_PIV_IMPORT_CHUID_FAILED)];
+        }
     }
 
 #pragma mark - PIN management functions
