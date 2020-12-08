@@ -249,6 +249,8 @@
 #define MSG_PIV_CHUID_IMPORTED                  @"PIV CHUIDを正常にインポートしました。"
 #define MSG_PIV_CCC_IMPORTED                    @"PIV CCCを正常にインポートしました。"
 #define MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED  @"PIV PINリトライカウンターを取得できませんでした。"
-#define MSG_PIV_PIN_RETRY_CNT_GET               @"PIV PINリトライカウンターを取得しました（残り試行可能: %u回）。"
+#define MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED    @"PIVデータオブジェクトを取得できませんでした（ID=0x%06x）。"
+#define MSG_PIV_PIN_RETRY_CNT_GET               @"PIV PINリトライカウンターを取得しました（残り%d回試行可能です）。"
+#define MSG_PIV_DATA_OBJECT_GET                 @"PIVデータオブジェクトを取得しました（ID=0x%06x）。"
 
 #endif /* ToolCommonMessage_h */

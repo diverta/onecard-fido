@@ -36,6 +36,8 @@
     @property (nonatomic) NSString          *lastErrorMessage;
     // CCCインポート処理が実行中かどうかを保持
     @property (nonatomic) bool               cccImportProcessing;
+    // 現在取得中のPIVオブジェクトIDを保持
+    @property (nonatomic) unsigned int       objectIdToFetch;
 
 @end
 
@@ -474,7 +476,7 @@
             uint8_t retries = sw & 0x0f;
             [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
             // PIVオブジェクトを取得
-            [self doYkPivStatusFetchObjects];
+            [self doYkPivStatusFetchObjects:PIV_OBJ_CHUID];
 
         } else {
             // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
@@ -483,18 +485,33 @@
         }
     }
 
-    - (void)doYkPivStatusFetchObjects {
-        // TODO: 仮の実装です。
+    - (void)doYkPivStatusFetchObjects:(unsigned int)objectId {
+        // 取得対象のオブジェクトIDを退避
+        [self setObjectIdToFetch:objectId];
         // オブジェクト取得処理を実行
-        NSData *apdu = [self getPivInsGetApdu:PIV_OBJ_CHUID];
+        NSData *apdu = [self getPivInsGetApdu:objectId];
         [self doRequestPivInsGetData:apdu];
     }
 
     - (void)doResponseYkPivStatusFetchObjects:(NSData *)response status:(uint16_t)sw {
-        // TODO: 仮の実装です。
-        [[ToolLogFile defaultLogger] debugWithFormat:@"CHUID (%d bytes):", [response length]];
-        [[ToolLogFile defaultLogger] hexdump:response];
-        [self exitCommandProcess:true];
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            // 処理失敗ログを出力し、制御を戻す
+            [[ToolLogFile defaultLogger] errorWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功ログを出力
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
+        // オブジェクトIDに応じて後続処理分岐
+        switch ([self objectIdToFetch]) {
+            case PIV_OBJ_CHUID:
+                [self doYkPivStatusFetchObjects:PIV_OBJ_CAPABILITY];
+                break;
+            default:
+                [self exitCommandProcess:true];
+                break;
+        }
     }
 
 
