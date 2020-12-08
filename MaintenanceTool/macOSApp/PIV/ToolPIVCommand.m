@@ -130,7 +130,8 @@
         [self ccidHelperWillProcess:command];
     }
 
-    - (void)commandWillSetCHUIDAndCCC:(Command)command {
+    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer {
+        [self setToolPIVImporter:importer];
         [self ccidHelperWillProcess:command];
     }
 

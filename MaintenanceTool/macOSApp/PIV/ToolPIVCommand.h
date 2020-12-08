@@ -15,7 +15,7 @@
     - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporter:(ToolPIVImporter *)importer;
     - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
     - (void)commandWillReset:(Command)command;
-    - (void)commandWillSetCHUIDAndCCC:(Command)command;
+    - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer;
 
     - (void)ccidHelperDidProcess:(bool)success response:(NSData *)resp status:(uint16_t)sw;
 
