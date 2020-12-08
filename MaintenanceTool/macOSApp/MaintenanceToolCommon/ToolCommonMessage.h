@@ -66,6 +66,7 @@
 #define PROCESS_NAME_CCID_PIV_RESET                 @"PIV機能リセット"
 #define PROCESS_NAME_CCID_PIV_IMPORT_KEY            @"鍵・証明書インストール（PIV機能）"
 #define PROCESS_NAME_CCID_PIV_SET_CHUID             @"PIV CHUID設定"
+#define PROCESS_NAME_CCID_PIV_STATUS                @"PIV設定情報取得"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
