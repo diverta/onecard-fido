@@ -16,6 +16,7 @@
 		7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
 		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
+		7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0EB1872580768F004ED59C /* tool_pcsc.c */; };
 		7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228A226DBE6F00FC5F07 /* fido_crypto.c */; };
 		7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228D226DC24B00FC5F07 /* AES256CBC.c */; };
 		7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */; };
@@ -84,6 +85,8 @@
 		7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
+		7A0EB1862580768F004ED59C /* tool_pcsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_pcsc.h; sourceTree = "<group>"; };
+		7A0EB1872580768F004ED59C /* tool_pcsc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_pcsc.c; sourceTree = "<group>"; };
 		7A16228A226DBE6F00FC5F07 /* fido_crypto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fido_crypto.c; sourceTree = "<group>"; };
 		7A16228B226DBE6F00FC5F07 /* fido_crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
 		7A16228D226DC24B00FC5F07 /* AES256CBC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 		7A75A6EC25677FDF003AF1A6 /* CCID */ = {
 			isa = PBXGroup;
 			children = (
+				7A0EB1862580768F004ED59C /* tool_pcsc.h */,
+				7A0EB1872580768F004ED59C /* tool_pcsc.c */,
 				7A75A6EF25679044003AF1A6 /* ToolCCIDCommon.h */,
 				7A75A6EB25677E9B003AF1A6 /* ToolCCIDHelper.h */,
 				7A75A6ED25678037003AF1A6 /* ToolCCIDHelper.m */,
@@ -511,6 +516,7 @@
 				7A8AEBEB240358760098FE35 /* DFUStartWindow.m in Sources */,
 				7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */,
 				64ED9A8D1647439300F39EAE /* AppDelegate.m in Sources */,
+				7A0EB1882580768F004ED59C /* tool_pcsc.c in Sources */,
 				7A9F1063226DB82B007AEB41 /* debug_log.c in Sources */,
 				7A261BC123C4128500A9CE86 /* usb_dfu_util.c in Sources */,
 				7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */,
