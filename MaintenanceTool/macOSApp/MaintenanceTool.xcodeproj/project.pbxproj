@@ -15,6 +15,7 @@
 		64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED9A9C164752C800F39EAE /* IOBluetooth.framework */; };
 		7A0D20BC2240899B0022EA8E /* ToolHIDHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */; };
 		7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D20BE22408E920022EA8E /* IOKit.framework */; };
+		7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0EB184258066AA004ED59C /* PCSC.framework */; };
 		7A16228C226DBE6F00FC5F07 /* fido_crypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228A226DBE6F00FC5F07 /* fido_crypto.c */; };
 		7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A16228D226DC24B00FC5F07 /* AES256CBC.c */; };
 		7A1718CD2362883C002507DD /* ToolPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1718CC2362883C002507DD /* ToolPreferenceWindow.m */; };
@@ -57,7 +58,6 @@
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
 		7AB55377226D572D003FA435 /* CBORDecoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55375226D572D003FA435 /* CBORDecoder.c */; };
 		7AB5537A226D75BA003FA435 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55378226D75BA003FA435 /* ECDH.c */; };
-		7ACBD8CA25663EFA00722984 /* CryptoTokenKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */; };
 		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
@@ -83,6 +83,7 @@
 		7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolHIDHelper.m; sourceTree = "<group>"; };
 		7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolHIDHelper.h; sourceTree = "<group>"; };
 		7A0D20BE22408E920022EA8E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		7A0EB184258066AA004ED59C /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		7A16228A226DBE6F00FC5F07 /* fido_crypto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fido_crypto.c; sourceTree = "<group>"; };
 		7A16228B226DBE6F00FC5F07 /* fido_crypto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fido_crypto.h; sourceTree = "<group>"; };
 		7A16228D226DC24B00FC5F07 /* AES256CBC.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = AES256CBC.c; sourceTree = "<group>"; };
@@ -184,8 +185,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7ACBD8CA25663EFA00722984 /* CryptoTokenKit.framework in Frameworks */,
 				7A8402F322685792000F5E50 /* libtinycbor.a in Frameworks */,
+				7A0EB185258066AA004ED59C /* PCSC.framework in Frameworks */,
 				7A0D20BF22408EB90022EA8E /* IOKit.framework in Frameworks */,
 				64ED9A9D164752C800F39EAE /* IOBluetooth.framework in Frameworks */,
 				64ED9A7A1647439300F39EAE /* Cocoa.framework in Frameworks */,
@@ -218,6 +219,7 @@
 		64ED9A781647439300F39EAE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7A0EB184258066AA004ED59C /* PCSC.framework */,
 				7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */,
 				7A0D20BE22408E920022EA8E /* IOKit.framework */,
 				64ED9A9C164752C800F39EAE /* IOBluetooth.framework */,
