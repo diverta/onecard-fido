@@ -110,7 +110,7 @@ static size_t tlv_set_length(unsigned char *buffer, size_t length)
     }
 }
 
-static size_t set_object_header(unsigned int object_id, unsigned char *buffer)
+size_t tool_piv_admin_set_object_header(unsigned int object_id, unsigned char *buffer)
 {
     size_t offset = 0;
     buffer[offset++] = TAG_DATA_OBJECT;
@@ -259,7 +259,7 @@ static void generate_certificate_APDU(unsigned char key_slot_id)
     tool_crypto_certificate_TLV_data();
     
     // object info
-    size_t offset = set_object_header(object_id, m_apdu_bytes);
+    size_t offset = tool_piv_admin_set_object_header(object_id, m_apdu_bytes);
 
     // object size & data
     m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
@@ -383,7 +383,7 @@ unsigned char *tool_piv_admin_generate_CHUID_APDU(size_t *size)
     generate_CHUID_bytes(m_binary_data, &m_binary_size);
     
     // object info
-    size_t offset = set_object_header(PIV_OBJ_CHUID, m_apdu_bytes);
+    size_t offset = tool_piv_admin_set_object_header(PIV_OBJ_CHUID, m_apdu_bytes);
 
     // object size & data
     m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;
@@ -405,7 +405,7 @@ unsigned char *tool_piv_admin_generate_CCC_APDU(size_t *size)
     generate_CCC_bytes(m_binary_data, &m_binary_size);
     
     // object info
-    size_t offset = set_object_header(PIV_OBJ_CAPABILITY, m_apdu_bytes);
+    size_t offset = tool_piv_admin_set_object_header(PIV_OBJ_CAPABILITY, m_apdu_bytes);
 
     // object size & data
     m_apdu_bytes[offset++] = TAG_DATA_OBJECT_VALUE;

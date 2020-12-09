@@ -131,7 +131,8 @@
             NSNumber *le = [[NSNumber alloc] initWithUnsignedChar:[self sendLe]];
             sw = 0;
             NSData *response = [card sendIns:[self sendIns] p1:[self sendP1] p2:[self sendP2] data:thisSendData le:le sw:&sw error:&error];
-            if (error) {
+            if (response == nil && error) {
+                // レスポンスが無く、かつerrorが設定されている場合は、送信エラー発生と判断し、内容をログ出力
                 [[ToolLogFile defaultLogger] errorWithFormat:MSG_CCID_REQUEST_SEND_FAILED, [self slotName], [error description]];
                 break;
             }

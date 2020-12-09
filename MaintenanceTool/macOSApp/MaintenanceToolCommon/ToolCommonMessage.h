@@ -66,6 +66,7 @@
 #define PROCESS_NAME_CCID_PIV_RESET                 @"PIV機能リセット"
 #define PROCESS_NAME_CCID_PIV_IMPORT_KEY            @"鍵・証明書インストール（PIV機能）"
 #define PROCESS_NAME_CCID_PIV_SET_CHUID             @"PIV CHUID設定"
+#define PROCESS_NAME_CCID_PIV_STATUS                @"PIV設定情報取得"
 
 #pragma mark - ToolCommandクラス専用メッセージ
 #define MSG_INVALID_SKEY_LENGTH_IN_PEM      @"鍵ファイルに格納された秘密鍵の長さが不正です。"
@@ -247,5 +248,9 @@
 #define MSG_ERROR_PIV_IMPORT_CCC_FAILED         @"PIV CCCインポート処理が失敗しました。"
 #define MSG_PIV_CHUID_IMPORTED                  @"PIV CHUIDを正常にインポートしました。"
 #define MSG_PIV_CCC_IMPORTED                    @"PIV CCCを正常にインポートしました。"
+#define MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED  @"PIV PINリトライカウンターを取得できませんでした。"
+#define MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED    @"PIVデータオブジェクトを取得できませんでした（ID=0x%06x）。"
+#define MSG_PIV_PIN_RETRY_CNT_GET               @"PIV PINリトライカウンターを取得しました（残り%d回試行可能です）。"
+#define MSG_PIV_DATA_OBJECT_GET                 @"PIVデータオブジェクトを取得しました（ID=0x%06x）。"
 
 #endif /* ToolCommonMessage_h */

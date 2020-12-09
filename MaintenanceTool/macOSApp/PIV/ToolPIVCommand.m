@@ -34,6 +34,10 @@
     @property (nonatomic) NSData            *pivAuthChallenge;
     // エラーメッセージテキストを保持
     @property (nonatomic) NSString          *lastErrorMessage;
+    // CCCインポート処理が実行中かどうかを保持
+    @property (nonatomic) bool               cccImportProcessing;
+    // 現在取得中のPIVオブジェクトIDを保持
+    @property (nonatomic) unsigned int       objectIdToFetch;
 
 @end
 
@@ -72,6 +76,7 @@
             case COMMAND_CCID_PIV_RESET:
             case COMMAND_CCID_PIV_IMPORT_KEY:
             case COMMAND_CCID_PIV_SET_CHUID:
+            case COMMAND_CCID_PIV_STATUS:
                 // 機能実行に先立ち、PIVアプレットをSELECT
                 [self doRequestPivInsSelectApplication];
                 break;
@@ -106,6 +111,9 @@
             case PIV_INS_PUT_DATA:
                 [self doResponsePivInsPutData:resp status:sw];
                 break;
+            case PIV_INS_GET_DATA:
+                [self doResponsePivInsGetData:resp status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -132,6 +140,10 @@
 
     - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer {
         [self setToolPIVImporter:importer];
+        [self ccidHelperWillProcess:command];
+    }
+
+    - (void)commandWillStatus:(Command)command {
         [self ccidHelperWillProcess:command];
     }
 
@@ -164,6 +176,9 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self doYkPivSetCHUID];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self doYkPivStatusProcess];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -209,6 +224,9 @@
             case COMMAND_CCID_PIV_IMPORT_KEY:
                 [self doYkPivImportKeyProcess];
                 break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self doYkPivStatusProcessWithPinRetryResponse:response status:sw];
+                break;
             default:
                 [self exitCommandProcess:false];
                 break;
@@ -248,6 +266,24 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self doYkPivSetCHUIDProcessContinue:response status:sw];
+                break;
+            default:
+                [self exitCommandProcess:false];
+                break;
+        }
+    }
+
+    - (void)doRequestPivInsGetData:(NSData *)apdu {
+        // コマンドを実行
+        [self setCommandIns:PIV_INS_GET_DATA];
+        [[self toolCCIDHelper] SCardSlotManagerWillBeginSession:self ins:[self commandIns] p1:0x3f p2:0xff data:apdu le:0xff];
+    }
+
+    - (void)doResponsePivInsGetData:(NSData *)response status:(uint16_t)sw {
+        // コマンドに応じ、以下の処理に分岐
+        switch ([self command]) {
+            case COMMAND_CCID_PIV_STATUS:
+                [self doResponseYkPivStatusFetchObjects:response status:sw];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -384,35 +420,35 @@
     }
 
     - (void)doYkPivSetCHUIDProcess {
+        // フラグをクリア
+        [self setCccImportProcessing:false];
         // CHUIDインポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getChuidAPDUData];
         [self doRequestPivInsPutData:apdu];
     }
 
     - (void)doYkPivSetCHUIDProcessContinue:(NSData *)response status:(uint16_t)sw {
-        // CCCインポート処理が実行中かどうかを保持
-        static bool isCccImportProcessing = false;
         // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
             // 処理失敗ログを出力し、制御を戻す
-            [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:isCccImportProcessing];
+            [self outputYkPivSetCHUIDProcessLog:false isCccImportProcessing:[self cccImportProcessing]];
             [self exitCommandProcess:false];
             return;
         }
         // 処理成功ログを出力
-        [self outputYkPivSetCHUIDProcessLog:true isCccImportProcessing:isCccImportProcessing];
+        [self outputYkPivSetCHUIDProcessLog:true isCccImportProcessing:[self cccImportProcessing]];
         // CCCインポート処理実行結果の場合
-        if (isCccImportProcessing) {
+        if ([self cccImportProcessing]) {
             // フラグをクリア
-            isCccImportProcessing = false;
+            [self setCccImportProcessing:false];
             // 制御を戻す
             [self exitCommandProcess:true];
         } else {
+            // フラグを設定
+            [self setCccImportProcessing:true];
             // CCCインポート処理を実行
             NSData *apdu = [[self toolPIVImporter] getCccAPDUData];
             [self doRequestPivInsPutData:apdu];
-            // フラグを設定
-            isCccImportProcessing = true;
         }
     }
 
@@ -424,6 +460,60 @@
             [[ToolLogFile defaultLogger] error:(ccc ? MSG_ERROR_PIV_IMPORT_CCC_FAILED : MSG_ERROR_PIV_IMPORT_CHUID_FAILED)];
         }
     }
+
+#pragma mark - PIV setting reference functions
+
+    - (void)doYkPivStatusProcess {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
+        // PINリトライカウンターを照会
+        [self doRequestPivInsVerify:nil];
+    }
+
+    - (void)doYkPivStatusProcessWithPinRetryResponse:(NSData *)response status:(uint16_t)sw {
+        if ((sw >> 8) == 0x63) {
+            // PINリトライカウンターを取得
+            uint8_t retries = sw & 0x0f;
+            [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
+            // PIVオブジェクトを取得
+            [self doYkPivStatusFetchObjects:PIV_OBJ_CHUID];
+
+        } else {
+            // 不明エラーが発生時は処理失敗ログを出力し、制御を戻す
+            [[ToolLogFile defaultLogger] error:MSG_ERROR_PIV_PIN_RETRY_CNT_GET_FAILED];
+            [self exitCommandProcess:false];
+        }
+    }
+
+    - (void)doYkPivStatusFetchObjects:(unsigned int)objectId {
+        // 取得対象のオブジェクトIDを退避
+        [self setObjectIdToFetch:objectId];
+        // オブジェクト取得処理を実行
+        NSData *apdu = [self getPivInsGetApdu:objectId];
+        [self doRequestPivInsGetData:apdu];
+    }
+
+    - (void)doResponseYkPivStatusFetchObjects:(NSData *)response status:(uint16_t)sw {
+        // 不明なエラーが発生時は以降の処理を行わない
+        if (sw != SW_SUCCESS) {
+            // 処理失敗ログを出力し、制御を戻す
+            [[ToolLogFile defaultLogger] errorWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
+            [self exitCommandProcess:false];
+            return;
+        }
+        // 処理成功ログを出力
+        [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
+        // オブジェクトIDに応じて後続処理分岐
+        switch ([self objectIdToFetch]) {
+            case PIV_OBJ_CHUID:
+                [self doYkPivStatusFetchObjects:PIV_OBJ_CAPABILITY];
+                break;
+            default:
+                [self exitCommandProcess:true];
+                break;
+        }
+    }
+
 
 #pragma mark - PIN management functions
 
@@ -541,6 +631,9 @@
                 break;
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
+                break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
             default:
                 break;
@@ -666,6 +759,13 @@
         }
         // NSData形式に変換（16バイト固定長）
         return [NSData dataWithBytes:pin_code length:sizeof(pin_code)];
+    }
+
+    - (NSData *)getPivInsGetApdu:(unsigned int)objectID {
+        unsigned char apdu[5];
+        size_t size = tool_piv_admin_set_object_header(objectID, apdu);
+        // NSData形式に変換
+        return [NSData dataWithBytes:apdu length:size];
     }
 
     - (void)setLastErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
