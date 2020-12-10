@@ -137,7 +137,7 @@ void tool_pcsc_scard_set_command_apdu(uint8_t cla, uint8_t ins, uint8_t p1, uint
 bool tool_pcsc_scard_send_command_apdu(void)
 {
     // データを送信（command_apduには、CLA/INS/P1/P2/Lcの５バイトを含むものとします）
-    uint32_t size = response_apdu_size;
+    uint32_t size = sizeof(response_apdu);
     int32_t rc = SCardTransmit(m_card, SCARD_PCI_T1, command_apdu, command_apdu_size, NULL, response_apdu, &size);
     if (rc != SCARD_S_SUCCESS) {
         log_debug("SCardTransmit failed for '%s', rc=0x%08x", m_slot_name, rc);
