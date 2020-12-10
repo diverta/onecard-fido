@@ -31,6 +31,12 @@ const char *tool_pcsc_scard_slot_name(void)
     return m_slot_name;
 }
 
+bool tool_pcsc_scard_connected(void)
+{
+    // 接続済みかどうかを戻す
+    return (SCardIsValidContext(m_context) == SCARD_S_SUCCESS);
+}
+
 void tool_pcsc_scard_init(void)
 {
     // 共有情報を初期化

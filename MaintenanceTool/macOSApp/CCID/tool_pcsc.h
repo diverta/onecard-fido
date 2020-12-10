@@ -11,6 +11,7 @@
 #include <stdio.h>
 
 const char      *tool_pcsc_scard_slot_name(void);
+bool             tool_pcsc_scard_connected(void);
 void             tool_pcsc_scard_init(void);
 bool             tool_pcsc_scard_connect(void);
 bool             tool_pcsc_scard_begin_transaction(void);
