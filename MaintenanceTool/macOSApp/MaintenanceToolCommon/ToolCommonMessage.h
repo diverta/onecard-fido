@@ -222,10 +222,10 @@
 #pragma mark - USB CCID関連
 #define MSG_CCID_SESSION_ALREADY_EXIST          @"CCIDインターフェースで別のセッションが存在します。"
 #define MSG_CCID_INTERFACE_UNAVAILABLE          @"FIDO認証器にCCIDインターフェースが存在しません。"
-#define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（CCIDデバイス名: %@）"
-#define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（CCIDデバイス名: %@）%@"
+#define MSG_CCID_DEVICE_UNAVAILABLE             @"FIDO認証器が利用できません（%@）"
+#define MSG_CCID_DEVICE_CONNECT_ERROR           @"FIDO認証器との接続に失敗しました（%@）"
 #define MSG_CCID_DEVICE_CONNECTED               @"FIDO認証器に接続しました（CCIDデバイス名: %@）"
-#define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（CCIDデバイス名: %@）%@"
+#define MSG_CCID_REQUEST_SEND_FAILED            @"FIDO認証器へのリクエスト送信が失敗しました（%@）"
 #define MSG_ERROR_PIV_APPLET_SELECT_FAILED      @"PIV機能を使用することができません。"
 #define MSG_ERROR_PIV_ADMIN_AUTH_REQ_FAILED     @"PIV管理機能認証（往路）が失敗しました。"
 #define MSG_ERROR_PIV_ADMIN_AUTH_RES_FAILED     @"PIV管理機能認証（復路）が失敗しました。"
