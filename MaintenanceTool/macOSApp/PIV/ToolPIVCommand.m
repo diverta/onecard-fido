@@ -38,6 +38,8 @@
     @property (nonatomic) bool               cccImportProcessing;
     // 現在取得中のPIVオブジェクトIDを保持
     @property (nonatomic) unsigned int       objectIdToFetch;
+    // statusコマンドの実行結果を保持
+    @property (nonatomic) NSMutableDictionary *objectDictionary;
 
 @end
 
@@ -476,9 +478,12 @@
 
     - (void)doYkPivStatusProcessWithPinRetryResponse:(NSData *)response status:(uint16_t)sw {
         if ((sw >> 8) == 0x63) {
+            // 連想配列を初期化
+            [self setObjectDictionary:[NSMutableDictionary dictionary]];
             // PINリトライカウンターを取得
             uint8_t retries = sw & 0x0f;
             [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
+            [[self objectDictionary] setObject:[NSNumber numberWithUnsignedChar:retries] forKey:@0x00];
             // PIVオブジェクトを取得
             [self doYkPivStatusFetchObjects:PIV_OBJ_CHUID];
 
@@ -510,14 +515,30 @@
         // オブジェクトIDに応じて後続処理分岐
         switch ([self objectIdToFetch]) {
             case PIV_OBJ_CHUID:
+                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_CHUID];
                 [self doYkPivStatusFetchObjects:PIV_OBJ_CAPABILITY];
                 break;
-            default:
+            case PIV_OBJ_CAPABILITY:
+                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_CAPABILITY];
+                [self doYkPivStatusFetchObjects:PIV_OBJ_AUTHENTICATION];
+                break;
+            case PIV_OBJ_AUTHENTICATION:
+                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_AUTHENTICATION];
+                [self doYkPivStatusFetchObjects:PIV_OBJ_SIGNATURE];
+                break;
+            case PIV_OBJ_SIGNATURE:
+                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_SIGNATURE];
+                [self doYkPivStatusFetchObjects:PIV_OBJ_KEY_MANAGEMENT];
+                break;
+            case PIV_OBJ_KEY_MANAGEMENT:
+                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_KEY_MANAGEMENT];
                 [self exitCommandProcess:true];
+                break;
+            default:
+                [self exitCommandProcess:false];
                 break;
         }
     }
-
 
 #pragma mark - PIN management functions
 
