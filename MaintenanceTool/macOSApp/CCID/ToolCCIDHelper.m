@@ -104,6 +104,27 @@
             // 送信済みサイズを更新
             sizeAlreadySent += thisSendSize;
         } while (sizeAlreadySent < sizeToSend);
+        while (sw >> 8 == 0x61) {
+            // GET RESPONSE APDU
+            tool_pcsc_scard_set_command_apdu(0x00, 0xc0, 0x00, 0x00, 0, NULL, 0xff);
+            if (tool_pcsc_scard_send_command_apdu() == false) {
+                // 送信エラーが発生した場合、エラー内容をログ出力
+                [self logErrorMessageWithFuncError:MSG_CCID_REQUEST_SEND_FAILED];
+                [self receivedResponse:nil status:SW_UNABLE_TO_PROCESS];
+                return;
+            }
+            // 受信データがある場合は連結
+            size_t response_apdu_size;
+            uint8_t *response_apdu_data = tool_pcsc_scard_response_apdu_data(&response_apdu_size, &sw);
+            if (sw != SW_SUCCESS && sw >> 8 != 0x61) {
+                // ステータスワードが不正の場合は制御を戻す
+                [self receivedResponse:nil status:sw];
+                return;
+            }
+            if (response_apdu_size > 0) {
+                [mutableResponse appendData:[[NSData alloc] initWithBytes:response_apdu_data length:response_apdu_size]];
+            }
+        }
         // コマンドに制御を戻す
         [self receivedResponse:mutableResponse status:sw];
     }
