@@ -12,6 +12,7 @@
     - (id)initWithSlotName:(NSString *)name;
     - (void)setRetryCount:(uint8_t)retries;
     - (void)setDataObject:(NSData *)object forObjectId:(unsigned int)objectId;
+    - (NSString *)getDescriptionString;
 
 @end
 
