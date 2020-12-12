@@ -64,6 +64,7 @@
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
+		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
 		7AEE1DDF23BB33EE008A00C7 /* ToolDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEE1DDE23BB33EE008A00C7 /* ToolDFUCommand.m */; };
 /* End PBXBuildFile section */
@@ -177,6 +178,8 @@
 		7AD501BA2578883D00494B7C /* tool_piv_admin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_piv_admin.c; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		7ADA84631FE36E6D00879CB4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVSetting.m; sourceTree = "<group>"; };
+		7AE4CBB225844C3C00691DBC /* ToolPIVSetting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolPIVSetting.h; sourceTree = "<group>"; };
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AEE1DDE23BB33EE008A00C7 /* ToolDFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolDFUCommand.m; sourceTree = "<group>"; };
@@ -308,6 +311,8 @@
 				7A6687912575CCC70054F0DE /* ToolPIVCommand.m */,
 				7A41FCA52575E9F100CA06F9 /* ToolPIVImporter.h */,
 				7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */,
+				7AE4CBB225844C3C00691DBC /* ToolPIVSetting.h */,
+				7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */,
 			);
 			path = PIV;
 			sourceTree = "<group>";
@@ -529,6 +534,7 @@
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A8AEBF1240393E00098FE35 /* DFUProcessingWindow.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
+				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A850B8D227011F400F7BCD8 /* PinCodeParamWindow.m in Sources */,
 				7AEE1DDF23BB33EE008A00C7 /* ToolDFUCommand.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,

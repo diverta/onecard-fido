@@ -16,6 +16,7 @@
 #import "ToolPIVCommand.h"
 #import "ToolPIVCommon.h"
 #import "ToolPIVImporter.h"
+#import "ToolPIVSetting.h"
 
 @interface ToolPIVCommand () <ToolCCIDHelperDelegate>
 
@@ -38,8 +39,8 @@
     @property (nonatomic) bool               cccImportProcessing;
     // 現在取得中のPIVオブジェクトIDを保持
     @property (nonatomic) unsigned int       objectIdToFetch;
-    // statusコマンドの実行結果を保持
-    @property (nonatomic) NSMutableDictionary *objectDictionary;
+    // PIV設定情報クラスの参照を保持
+    @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
 
 @end
 
@@ -478,12 +479,12 @@
 
     - (void)doYkPivStatusProcessWithPinRetryResponse:(NSData *)response status:(uint16_t)sw {
         if ((sw >> 8) == 0x63) {
-            // 連想配列を初期化
-            [self setObjectDictionary:[NSMutableDictionary dictionary]];
+            // PIV設定情報クラスを生成
+            [self setToolPIVSetting:[[ToolPIVSetting alloc] initWithSlotName:[[self toolCCIDHelper] getConnectingSlotName]]];
             // PINリトライカウンターを取得
             uint8_t retries = sw & 0x0f;
             [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
-            [[self objectDictionary] setObject:[NSNumber numberWithUnsignedChar:retries] forKey:@0x00];
+            [[self toolPIVSetting] setRetryCount:retries];
             // PIVオブジェクトを取得
             [self doYkPivStatusFetchObjects:PIV_OBJ_CHUID];
 
@@ -512,26 +513,23 @@
         }
         // 処理成功ログを出力
         [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
+        // 取得したデータをPIV設定情報クラスに設定
+        [[self toolPIVSetting] setDataObject:response forObjectId:[self objectIdToFetch]];
         // オブジェクトIDに応じて後続処理分岐
         switch ([self objectIdToFetch]) {
             case PIV_OBJ_CHUID:
-                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_CHUID];
                 [self doYkPivStatusFetchObjects:PIV_OBJ_CAPABILITY];
                 break;
             case PIV_OBJ_CAPABILITY:
-                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_CAPABILITY];
                 [self doYkPivStatusFetchObjects:PIV_OBJ_AUTHENTICATION];
                 break;
             case PIV_OBJ_AUTHENTICATION:
-                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_AUTHENTICATION];
                 [self doYkPivStatusFetchObjects:PIV_OBJ_SIGNATURE];
                 break;
             case PIV_OBJ_SIGNATURE:
-                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_SIGNATURE];
                 [self doYkPivStatusFetchObjects:PIV_OBJ_KEY_MANAGEMENT];
                 break;
             case PIV_OBJ_KEY_MANAGEMENT:
-                [[self objectDictionary] setObject:response forKey:@PIV_OBJ_KEY_MANAGEMENT];
                 [self exitCommandProcess:true];
                 break;
             default:
