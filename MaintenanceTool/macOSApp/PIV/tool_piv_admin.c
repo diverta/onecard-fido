@@ -95,7 +95,7 @@ static size_t        m_apdu_size;
 //
 static size_t tlv_set_length(unsigned char *buffer, size_t length)
 {
-    if(length < 0x80) {
+    if (length < 0x80) {
         *buffer++ = (unsigned char)length;
         return 1;
     } else if(length < 0x100) {
@@ -108,6 +108,23 @@ static size_t tlv_set_length(unsigned char *buffer, size_t length)
         *buffer++ = length & 0xff;
         return 3;
     }
+}
+
+static size_t tlv_get_length(unsigned char *buffer, size_t size, size_t *val_len)
+{
+    // 不正なTLVの場合、戻り値を０に設定します
+    if (buffer[0] < 0x80 && 1 < size) {
+        *val_len = buffer[0];
+        return (1 + *val_len <= size) ? 1 : 0;
+    } else if (buffer[0] == 0x81 && 2 < size) {
+        *val_len = buffer[1];
+        return (2 + *val_len <= size) ? 2 : 0;
+    } else if (buffer[0] == 0x82 && 3 < size) {
+        *val_len = ((buffer[1] << 8) & 0xff00) + (buffer[2] & 0x00ff);
+        return (3 + *val_len <= size) ? 3 : 0;
+    }
+    *val_len = 0;
+    return 0;
 }
 
 size_t tool_piv_admin_set_object_header(unsigned int object_id, unsigned char *buffer)
@@ -416,4 +433,53 @@ unsigned char *tool_piv_admin_generate_CCC_APDU(size_t *size)
     // CCC格納領域の参照を戻す
     *size = offset;
     return m_apdu_bytes;
+}
+
+bool tool_piv_admin_extract_cert_from_TLV(unsigned int object_id, unsigned char *buffer, size_t size)
+{
+    //
+    // 証明書データを格納しているTLVから、証明書データだけを抽出します。
+    //   TLV: 538203957082038cXXXX...XXXX710100fe00 (921 bytes)
+    //   --> TLV data: 7082038cXXXX...XXXX710100fe00
+    //       TLV size: 0x0395 (917 bytes)
+    //   --> cert data: XXXX...XXXX
+    //       cert size: 0x038c (908 bytes)
+    //
+    // 領域を初期化
+    memset(m_binary_data, 0, sizeof(m_binary_data));
+    m_binary_size = 0;
+    // 証明書データを格納しているTLVを抽出
+    unsigned char *tlv_data = buffer + 1;
+    size_t tlv_size = size - 1;
+    size_t obj_len;
+    size_t offset_obj = tlv_get_length(tlv_data, tlv_size, &obj_len);
+    if (offset_obj == 0) {
+        // 不正なTLVの場合は終了
+        return false;
+    }
+    // 証明書データを抽出
+    tlv_data += offset_obj + 1;
+    size_t val_len;
+    size_t offset_val = tlv_get_length(tlv_data, obj_len, &val_len);
+    if (offset_val == 0) {
+        // 不正なTLVの場合は終了
+        return false;
+    }
+    tlv_data += offset_val;
+    // 抽出した証明書データを内部保持
+    memcpy(m_binary_data, tlv_data, val_len);
+    m_binary_size = val_len;
+    return true;
+}
+
+unsigned char *tool_piv_admin_extracted_cert_data(void)
+{
+    // 証明書データ格納領域の参照を戻す
+    return m_binary_data;
+}
+
+size_t tool_piv_admin_extracted_cert_size(void)
+{
+    // 証明書データのサイズを戻す
+    return m_binary_size;
 }
