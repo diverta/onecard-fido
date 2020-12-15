@@ -504,17 +504,17 @@
     }
 
     - (void)doResponseYkPivStatusFetchObjects:(NSData *)response status:(uint16_t)sw {
-        // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            // 処理失敗ログを出力し、制御を戻す
-            [[ToolLogFile defaultLogger] errorWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
-            [self exitCommandProcess:false];
-            return;
+            // 処理失敗ログを出力（エラーではなく警告扱いとする）
+            [[ToolLogFile defaultLogger] warnWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
+            // ブランクデータをPIV設定情報クラスに設定
+            [[self toolPIVSetting] setDataObject:[[NSData alloc] init] forObjectId:[self objectIdToFetch]];
+        } else {
+            // 処理成功ログを出力
+            [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
+            // 取得したデータをPIV設定情報クラスに設定
+            [[self toolPIVSetting] setDataObject:response forObjectId:[self objectIdToFetch]];
         }
-        // 処理成功ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
-        // 取得したデータをPIV設定情報クラスに設定
-        [[self toolPIVSetting] setDataObject:response forObjectId:[self objectIdToFetch]];
         // オブジェクトIDに応じて後続処理分岐
         switch ([self objectIdToFetch]) {
             case PIV_OBJ_CHUID:
