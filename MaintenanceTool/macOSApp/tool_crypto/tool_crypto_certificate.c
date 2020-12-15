@@ -145,7 +145,38 @@ bool tool_crypto_certificate_extract_descriptions(unsigned char *cert_data, size
         log_debug("%s: ASN.1 time is not UTC (%s)", __func__, not_after->data);
         return extract_descriptions_terminate(false);
     }
-    sprintf(m_cert_desc.not_after, "%02d/%02d/%02d %02d:%02d:%02d UTC", YY, mm, dd, HH, MM, SS);
+    sprintf(m_cert_desc.not_after, "%02d/%02d/%02d %02d:%02d:%02d GMT", YY, mm, dd, HH, MM, SS);
+    // 発行先を抽出
+    X509_NAME *subject = X509_get_subject_name(m_certificate);
+    if (subject == NULL) {
+        log_debug("%s: Failed parsing subject name", __func__);
+        return extract_descriptions_terminate(false);
+    }
+    if (X509_NAME_oneline(subject, m_cert_desc.subject, CERT_SUBJ_NAME_MAX_SIZE) == NULL) {
+        log_debug("%s: Failed to get subject name", __func__);
+        return extract_descriptions_terminate(false);
+    }
+    // 発行元を抽出
+    X509_NAME *issuer = X509_get_issuer_name(m_certificate);
+    if (issuer == NULL) {
+        log_debug("%s: Failed parsing issuer name", __func__);
+        return extract_descriptions_terminate(false);
+    }
+    if (X509_NAME_oneline(issuer, m_cert_desc.issuer, CERT_SUBJ_NAME_MAX_SIZE) == NULL) {
+        log_debug("%s: Failed to get issuer name", __func__);
+        return extract_descriptions_terminate(false);
+    }
+    // 証明書ハッシュ（SHA-256）を抽出
+    const EVP_MD *md = EVP_sha256();
+    if (md == NULL) {
+        log_debug("%s: Failed to initialize SHA-256", __func__);
+        return extract_descriptions_terminate(false);
+    }
+    unsigned int md_len = CERT_HASH_MAX_SIZE;
+    if (X509_digest(m_certificate, md, m_cert_desc.hash, &md_len) == 0) {
+        log_debug("%s: Failed to get SHA-256 hash of certificate", __func__);
+        return extract_descriptions_terminate(false);
+    }
     // 処理終了
     return extract_descriptions_terminate(true);
 }

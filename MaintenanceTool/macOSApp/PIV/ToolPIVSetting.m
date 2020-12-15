@@ -17,8 +17,9 @@
 #define TEMPLATE_PIV_CHUID                  @"CHUID:  %@\n"
 #define TEMPLATE_PIV_CCC                    @"CCC:    %@\n"
 #define TEMPLATE_PIV_CERT_HEADER            @"Slot for %@ (%s, not after %s)\n"
-#define TEMPLATE_PIV_CERT_SUBJECT           @"    Subject: %@"
-#define TEMPLATE_PIV_CERT_ISSUER            @"    Issuer:  %@"
+#define TEMPLATE_PIV_CERT_SUBJECT           @"  Subject:  %s\n"
+#define TEMPLATE_PIV_CERT_ISSUER            @"  Issuer:   %s\n"
+#define TEMPLATE_PIV_CERT_HASH              @"  SHA-256:  %@\n"
 #define TEMPLATE_PIV_CERT_NAME_PAUTH        @"PIV authenticate"
 #define TEMPLATE_PIV_CERT_NAME_SIGN         @"signature"
 #define TEMPLATE_PIV_CERT_NAME_KEYMGM       @"key management"
@@ -81,9 +82,12 @@
     - (void)appendCertDescriptionTo:(NSMutableString *)description withObjectId:(NSNumber *)objectId withObjectName:(NSString *)objectName {
         // 指定IDのPIVデータオブジェクトを抽出
         if ([self extractCertDescriptionWithObjectId:objectId]) {
-            // データ種類名、アルゴリズム、有効期限を表示
+            // データ種類名、アルゴリズム、有効期限、発行先／元、SHA-256ハッシュを表示
             CERT_DESC *cert_desc = tool_crypto_certificate_extracted_descriptions();
             [description appendFormat:TEMPLATE_PIV_CERT_HEADER, objectName, cert_desc->alg_name, cert_desc->not_after];
+            [description appendFormat:TEMPLATE_PIV_CERT_SUBJECT, cert_desc->subject];
+            [description appendFormat:TEMPLATE_PIV_CERT_ISSUER, cert_desc->issuer];
+            [description appendFormat:TEMPLATE_PIV_CERT_HASH, [self printableHashStringOfBytes:cert_desc->hash]];
         } else {
             // データ表示不可
             [description appendFormat:TEMPLATE_PIV_CERT_HEADER_UNAVAIL, objectName];
@@ -106,6 +110,12 @@
             return false;
         }
         return true;
+    }
+
+    - (NSString *)printableHashStringOfBytes:(uint8_t *)bytes {
+        // ハッシュを表示可能文字列に変換
+        NSData *data = [[NSData alloc] initWithBytes:bytes length:CERT_HASH_MAX_SIZE];
+        return [self hexStringWithData:data];
     }
 
     - (NSString *)printableCHUIDString {
