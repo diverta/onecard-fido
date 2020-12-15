@@ -586,7 +586,8 @@
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
-            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+            NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
+            [self setLastErrorMessage:msg];
         }
         // PINブロック or リトライカウンターの状態に応じメッセージを編集
         bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
@@ -627,7 +628,8 @@
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
-            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+            NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
+            [self setLastErrorMessage:msg];
         }
         [self exitCommandProcess:(sw == SW_SUCCESS)];
     }
