@@ -29,7 +29,7 @@ unsigned char   *tool_piv_admin_generate_CHUID_APDU(size_t *size);
 unsigned char   *tool_piv_admin_generate_CCC_APDU(size_t *size);
 size_t           tool_piv_admin_set_object_header(unsigned int object_id, unsigned char *buffer);
 
-bool             tool_piv_admin_extract_cert_from_TLV(unsigned int object_id, unsigned char *buffer, size_t size);
+bool             tool_piv_admin_extract_cert_from_TLV(unsigned char *buffer, size_t size);
 unsigned char   *tool_piv_admin_extracted_cert_data(void);
 size_t           tool_piv_admin_extracted_cert_size(void);
 

@@ -9,6 +9,7 @@
 #import "tool_crypto_private_key.h"
 #import "tool_piv_admin.h"
 
+#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPIVImporter.h"
@@ -40,7 +41,7 @@
         char *path = (char *)[pemFilePath UTF8String];
         uint8_t algorithm;
         if (tool_piv_admin_load_private_key([self keySlotId], path, &algorithm) == false) {
-            [self logErrorMessageWithFuncError:MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED];
+            [ToolCommon logErrorMessageWithFuncError:MSG_ERROR_PIV_PKEY_PEM_LOAD_FAILED];
             return false;
         }
         // バイナリーイメージから生成されたAPDUを内部で保持
@@ -56,7 +57,7 @@
         // PEM形式の証明書ファイルから、バイナリーイメージを抽出
         char *path = (char *)[pemFilePath UTF8String];
         if (tool_piv_admin_load_certificate([self keySlotId], path) == false) {
-            [self logErrorMessageWithFuncError:MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED];
+            [ToolCommon logErrorMessageWithFuncError:MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED];
             return false;
         }
         // バイナリーイメージから生成されたAPDUを内部で保持
@@ -94,14 +95,6 @@
 
     - (NSData *)getCccAPDUData {
         return [self cccAPDU];
-    }
-
-#pragma mark - Utility functions
-
-    - (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
-        NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
-        NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
-        [[ToolLogFile defaultLogger] error:errorMsg];
     }
 
 @end

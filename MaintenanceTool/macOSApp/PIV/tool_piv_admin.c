@@ -435,7 +435,7 @@ unsigned char *tool_piv_admin_generate_CCC_APDU(size_t *size)
     return m_apdu_bytes;
 }
 
-bool tool_piv_admin_extract_cert_from_TLV(unsigned int object_id, unsigned char *buffer, size_t size)
+bool tool_piv_admin_extract_cert_from_TLV(unsigned char *buffer, size_t size)
 {
     //
     // 証明書データを格納しているTLVから、証明書データだけを抽出します。
