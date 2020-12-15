@@ -252,5 +252,6 @@
 #define MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED    @"PIVデータオブジェクトを取得できませんでした（ID=0x%06x）。"
 #define MSG_PIV_PIN_RETRY_CNT_GET               @"PIV PINリトライカウンターを取得しました（残り%d回試行可能です）。"
 #define MSG_PIV_DATA_OBJECT_GET                 @"PIVデータオブジェクトを取得しました（ID=0x%06x）。"
+#define MSG_ERROR_PIV_CERT_INFO_GET_FAILED      @"PIV証明書からの属性取得処理が失敗しました（%@）"
 
 #endif /* ToolCommonMessage_h */

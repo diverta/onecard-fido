@@ -455,6 +455,7 @@ bool tool_piv_admin_extract_cert_from_TLV(unsigned char *buffer, size_t size)
     size_t offset_obj = tlv_get_length(tlv_data, tlv_size, &obj_len);
     if (offset_obj == 0) {
         // 不正なTLVの場合は終了
+        log_debug("%s: Invalid TLV (object length)", __func__);
         return false;
     }
     // 証明書データを抽出
@@ -463,6 +464,7 @@ bool tool_piv_admin_extract_cert_from_TLV(unsigned char *buffer, size_t size)
     size_t offset_val = tlv_get_length(tlv_data, obj_len, &val_len);
     if (offset_val == 0) {
         // 不正なTLVの場合は終了
+        log_debug("%s: Invalid TLV (object value length)", __func__);
         return false;
     }
     tlv_data += offset_val;
