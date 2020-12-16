@@ -8,6 +8,7 @@
 #import "ToolPreferenceCommand.h"
 #import "ToolLogFile.h"
 #import "ToolDFUCommand.h"
+#import "ToolPIVCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -256,6 +257,15 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
+    - (IBAction)menuItemTestCCID1DidSelect:(id)sender {
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
+        // PIV設定情報取得
+        [self enableButtons:false];
+        [[[ToolPIVCommand alloc] initWithReference:self] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+    }
+
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [self enableButtons:false];
@@ -388,6 +398,23 @@
     - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
         // DFU処理完了時
         [self commandDidProcess:command result:result message:message];
+    }
+
+#pragma mark - Call back from ToolPIVCommand
+
+    - (void)toolPIVCommandDidStart:(Command)command {
+        // PIV関連処理開始時
+        [self commandStartedProcess:command type:TRANSPORT_NONE];
+    }
+
+    - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // PIV関連処理完了時
+        [self commandDidProcess:command result:result message:message];
+    }
+
+    - (void)toolPIVCommandDidNotifyMessage:(NSString *)message {
+        // PIV関連処理結果の画面出力
+        [self notifyToolCommandMessage:message];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -530,6 +557,10 @@
                 if (type == TRANSPORT_HID) {
                     [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 }
+                break;
+            // CCID関連
+            case COMMAND_CCID_PIV_STATUS:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
             default:
                 break;

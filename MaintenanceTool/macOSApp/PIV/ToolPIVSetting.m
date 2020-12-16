@@ -13,18 +13,18 @@
 #import "ToolPIVSetting.h"
 #import "ToolLogFile.h"
 
-#define TEMPLATE_PIV_SLOT_NAME              @"Device: %@\n"
-#define TEMPLATE_PIV_CHUID                  @"CHUID:  %@\n"
-#define TEMPLATE_PIV_CCC                    @"CCC:    %@\n"
-#define TEMPLATE_PIV_CERT_HEADER            @"Slot for %@ (%s, not after %s)\n"
-#define TEMPLATE_PIV_CERT_SUBJECT           @"  Subject:  %s\n"
-#define TEMPLATE_PIV_CERT_ISSUER            @"  Issuer:   %s\n"
-#define TEMPLATE_PIV_CERT_HASH              @"  SHA-256:  %@\n"
+#define TEMPLATE_PIV_SLOT_NAME              @"  Device: %@\n"
+#define TEMPLATE_PIV_CHUID                  @"  CHUID:  %@\n"
+#define TEMPLATE_PIV_CCC                    @"  CCC:    %@\n"
+#define TEMPLATE_PIV_CERT_HEADER            @"  Slot for %@ (%s, not after %s)\n"
+#define TEMPLATE_PIV_CERT_SUBJECT           @"    Subject:  %s\n"
+#define TEMPLATE_PIV_CERT_ISSUER            @"    Issuer:   %s\n"
+#define TEMPLATE_PIV_CERT_HASH              @"    SHA-256:  %@\n"
 #define TEMPLATE_PIV_CERT_NAME_PAUTH        @"PIV authenticate"
 #define TEMPLATE_PIV_CERT_NAME_SIGN         @"signature"
 #define TEMPLATE_PIV_CERT_NAME_KEYMGM       @"key management"
-#define TEMPLATE_PIV_CERT_HEADER_UNAVAIL    @"Slot for %@ (Not available)\n"
-#define TEMPLATE_PIV_PIN_RETRIES            @"PIN tries left: %d"
+#define TEMPLATE_PIV_CERT_HEADER_UNAVAIL    @"  Slot for %@ (Not available)\n"
+#define TEMPLATE_PIV_PIN_RETRIES            @"  PIN tries left: %d"
 
 @interface ToolPIVSetting ()
 

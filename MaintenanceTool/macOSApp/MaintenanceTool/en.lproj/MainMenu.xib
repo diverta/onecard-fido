@@ -423,6 +423,19 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="CCID" id="F7h-cH-AOx">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" id="dz7-kc-kVt">
+                                    <items>
+                                        <menuItem title="PIV設定情報取得" id="4uH-r0-bGw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestCCID1DidSelect:" target="494" id="hdC-Ks-5fe"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

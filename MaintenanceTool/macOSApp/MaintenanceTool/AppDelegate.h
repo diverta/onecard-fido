@@ -17,6 +17,9 @@
                                      result:(bool)result message:(NSString *)message;
     - (void)toolDFUCommandDidStart;
     - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message;
+    - (void)toolPIVCommandDidStart:(Command)command;
+    - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message;
+    - (void)toolPIVCommandDidNotifyMessage:(NSString *)message;
 
 @end
 
