@@ -12,12 +12,13 @@
 
 @interface ToolPIVCommand : NSObject
 
-    - (id)initWithReference:(id)reference;
+    - (id)initWithDelegate:(id)delegate;
     - (void)commandWillImportKey:(Command)command withAuthPinCode:(NSString *)pinCodeCur withImporter:(ToolPIVImporter *)importer;
     - (void)commandWillChangePin:(Command)command withNewPinCode:(NSString *)pinCodeNew withAuthPinCode:(NSString *)pinCodeCur;
     - (void)commandWillReset:(Command)command;
     - (void)commandWillSetCHUIDAndCCC:(Command)command withImporter:(ToolPIVImporter *)importer;
     - (void)commandWillStatus:(Command)command;
+    - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse;
 
 @end
 

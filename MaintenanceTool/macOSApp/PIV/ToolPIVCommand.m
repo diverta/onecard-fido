@@ -13,6 +13,7 @@
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
+#import "ToolInfoWindow.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
 #import "ToolPIVCommon.h"
@@ -43,21 +44,21 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) id           parentRef;
+    @property (nonatomic, weak) AppDelegate *appDelegate;
 
 @end
 
 @implementation ToolPIVCommand
 
     - (id)init {
-        return [self initWithReference:nil];
+        return [self initWithDelegate:nil];
     }
 
-    - (id)initWithReference:(id)reference {
+    - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
             // 画面の参照を保持
-            [self setParentRef:reference];
+            [self setAppDelegate:delegate];
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
@@ -160,8 +161,6 @@
     }
 
     - (void)commandWillStatus:(Command)command {
-        // 画面側に処理開始を通知
-        [self appDelegateWillStartCommand:command];
         // コマンドを実行
         [self ccidHelperWillProcess:command];
     }
@@ -483,6 +482,8 @@
 #pragma mark - PIV setting reference functions
 
     - (void)doYkPivStatusProcess {
+        // 処理開始メッセージをログ出力
+        [self startCommandProcess];
         // PINリトライカウンターを照会
         [self doRequestPivInsVerify:nil];
     }
@@ -540,13 +541,26 @@
                 [self doYkPivStatusFetchObjects:PIV_OBJ_KEY_MANAGEMENT];
                 break;
             case PIV_OBJ_KEY_MANAGEMENT:
-                [self appDelegateWillDisplayMessage:[[self toolPIVSetting] getDescriptionString]];
                 [self exitCommandProcess:true];
+                [self toolInfoWindowWillOpen];
                 break;
             default:
                 [self exitCommandProcess:false];
                 break;
         }
+    }
+
+    - (void)toolInfoWindowWillOpen {
+        // PIV設定情報を、情報表示画面に表示
+        ToolInfoWindow *windowRef = [[self appDelegate] toolInfoWindowRef];
+        [windowRef windowWillOpenWithCommandRef:self
+                                    titleString:PROCESS_NAME_CCID_PIV_STATUS
+                                     infoString:[[self toolPIVSetting] getDescriptionString]];
+    }
+
+    - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // メイン画面側に処理完了を通知（ログ出力／ポップアップ表示無し）
+        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - PIN management functions
@@ -668,6 +682,9 @@
             case COMMAND_CCID_PIV_SET_CHUID:
                 [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_SET_CHUID];
                 break;
+            case COMMAND_CCID_PIV_STATUS:
+                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
+                break;
             default:
                 break;
         }
@@ -679,12 +696,6 @@
     - (void)exitCommandProcess:(bool)success {
         // CCIDデバイスから切断
         [[self toolCCIDHelper] ccidHelperWillDisconnect];
-        // 画面側に処理完了を通知
-        if ([self command] == COMMAND_CCID_PIV_STATUS) {
-            [self appDelegateWillTerminateCommand:[self command] result:success];
-            [self clearCommandParameters];
-            return;
-        }
         // コマンド終了メッセージを生成
         NSString *endMsg = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, [self processNameOfCommand],
                                 success ? MSG_SUCCESS : MSG_FAILURE];
@@ -705,21 +716,6 @@
         }
         // パラメーターを初期化
         [self clearCommandParameters];
-    }
-
-    - (void)appDelegateWillStartCommand:(Command)command {
-        AppDelegate *appDelegate = (AppDelegate *)[self parentRef];
-        [appDelegate toolPIVCommandDidStart:command];
-    }
-
-    - (void)appDelegateWillTerminateCommand:(Command)command result:(bool)success {
-        AppDelegate *appDelegate = (AppDelegate *)[self parentRef];
-        [appDelegate toolPIVCommandDidTerminate:command result:success message:nil];
-    }
-
-    - (void)appDelegateWillDisplayMessage:(NSString *)message {
-        AppDelegate *appDelegate = (AppDelegate *)[self parentRef];
-        [appDelegate toolPIVCommandDidNotifyMessage:message];
     }
 
 #pragma mark - Utility functions
