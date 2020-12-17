@@ -9,6 +9,7 @@
 
 #pragma mark - Call from other class
 
+    - (id)toolInfoWindowRef;
     - (bool)checkUSBHIDConnection;
     - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data;
     - (void)toolPreferenceWindowDidClose;
@@ -17,9 +18,7 @@
                                      result:(bool)result message:(NSString *)message;
     - (void)toolDFUCommandDidStart;
     - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message;
-    - (void)toolPIVCommandDidStart:(Command)command;
     - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message;
-    - (void)toolPIVCommandDidNotifyMessage:(NSString *)message;
 
 @end
 

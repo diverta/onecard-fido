@@ -3,6 +3,7 @@
 #import "ToolHIDCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
+#import "ToolInfoWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
@@ -28,6 +29,7 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestCCID;
     @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
@@ -40,7 +42,8 @@
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolDFUCommand    *toolDFUCommand;
-
+    @property (nonatomic) ToolPIVCommand    *toolPIVCommand;
+    @property (nonatomic) ToolInfoWindow    *toolInfoWindow;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
 
@@ -67,7 +70,11 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
-        
+        // 情報表示画面の初期設定
+        [self setToolInfoWindow:[[ToolInfoWindow alloc] initWithWindowNibName:@"ToolInfoWindow"]];
+        [[self toolInfoWindow] setParentWindow:[self window]];
+        // PIV機能の初期設定
+        [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         // DFU機能の初期設定
         [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
     }
@@ -85,6 +92,11 @@
         }
     }
 
+    - (id)toolInfoWindowRef {
+        // 情報表示画面の参照を戻す
+        return [self toolInfoWindow];
+    }
+
 #pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
@@ -100,6 +112,7 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
+        [self.menuItemTestCCID setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
@@ -263,7 +276,7 @@
         }
         // PIV設定情報取得
         [self enableButtons:false];
-        [[[ToolPIVCommand alloc] initWithReference:self] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
     }
 
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
@@ -402,19 +415,9 @@
 
 #pragma mark - Call back from ToolPIVCommand
 
-    - (void)toolPIVCommandDidStart:(Command)command {
-        // PIV関連処理開始時
-        [self commandStartedProcess:command type:TRANSPORT_NONE];
-    }
-
     - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
         // PIV関連処理完了時
         [self commandDidProcess:command result:result message:message];
-    }
-
-    - (void)toolPIVCommandDidNotifyMessage:(NSString *)message {
-        // PIV関連処理結果の画面出力
-        [self notifyToolCommandMessage:message];
     }
 
 #pragma mark - Call back from ToolFilePanel
@@ -557,10 +560,6 @@
                 if (type == TRANSPORT_HID) {
                     [self setProcessNameOfCommand:PROCESS_NAME_HID_U2F_HEALTHCHECK];
                 }
-                break;
-            // CCID関連
-            case COMMAND_CCID_PIV_STATUS:
-                [self setProcessNameOfCommand:PROCESS_NAME_CCID_PIV_STATUS];
                 break;
             default:
                 break;
