@@ -16,6 +16,9 @@
 
     @property (nonatomic, weak) id<ToolCCIDHelperDelegate> delegate;
 
+    // 接続デバイス名を保持
+    @property (nonatomic) NSString *slotName;
+
 @end
 
 @implementation ToolCCIDHelper
@@ -38,6 +41,8 @@
             [[ToolLogFile defaultLogger] error:MSG_CCID_SESSION_ALREADY_EXIST];
             return false;
         }
+        // 接続デバイス名をクリア
+        [self setSlotName:nil];
         // CCIDデバイスと接続
         tool_pcsc_scard_init();
         if (tool_pcsc_scard_connect() == false) {
@@ -52,7 +57,14 @@
             [self logErrorMessageWithFuncError:MSG_CCID_DEVICE_UNAVAILABLE];
             return false;
         }
+        // 接続デバイス名を退避
+        [self setSlotName:slotName];
         return true;
+    }
+
+    - (NSString *)getConnectingSlotName {
+        // 接続デバイス名を戻す
+        return [self slotName];
     }
 
     - (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate {

@@ -25,4 +25,9 @@
 
 #define CERTIFICATE_MAX_SIZE        3072
 
+//
+// public functions
+//
+unsigned char    tool_crypto_get_algorithm_from_evp_pkey(void *_key);
+
 #endif /* tool_crypto_common_h */

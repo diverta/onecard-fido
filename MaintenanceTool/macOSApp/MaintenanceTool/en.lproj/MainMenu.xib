@@ -423,6 +423,19 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="CCID" id="F7h-cH-AOx">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" id="dz7-kc-kVt">
+                                    <items>
+                                        <menuItem title="PIV設定情報取得" id="4uH-r0-bGw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemTestCCID1DidSelect:" target="494" id="hdC-Ks-5fe"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -703,6 +716,7 @@
                 <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
+                <outlet property="menuItemTestCCID" destination="F7h-cH-AOx" id="Wei-F6-28U"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
                 <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>

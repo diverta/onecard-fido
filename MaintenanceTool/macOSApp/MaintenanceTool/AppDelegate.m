@@ -3,11 +3,13 @@
 #import "ToolHIDCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
+#import "ToolInfoWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolLogFile.h"
 #import "ToolDFUCommand.h"
+#import "ToolPIVCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -27,6 +29,7 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemTestCCID;
     @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
@@ -39,7 +42,8 @@
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolDFUCommand    *toolDFUCommand;
-
+    @property (nonatomic) ToolPIVCommand    *toolPIVCommand;
+    @property (nonatomic) ToolInfoWindow    *toolInfoWindow;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
 
@@ -66,7 +70,11 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
-        
+        // 情報表示画面の初期設定
+        [self setToolInfoWindow:[[ToolInfoWindow alloc] initWithWindowNibName:@"ToolInfoWindow"]];
+        [[self toolInfoWindow] setParentWindow:[self window]];
+        // PIV機能の初期設定
+        [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         // DFU機能の初期設定
         [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
     }
@@ -84,6 +92,11 @@
         }
     }
 
+    - (id)toolInfoWindowRef {
+        // 情報表示画面の参照を戻す
+        return [self toolInfoWindow];
+    }
+
 #pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
@@ -99,6 +112,7 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
+        [self.menuItemTestCCID setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
@@ -256,6 +270,15 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
+    - (IBAction)menuItemTestCCID1DidSelect:(id)sender {
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
+        // PIV設定情報取得
+        [self enableButtons:false];
+        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+    }
+
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [self enableButtons:false];
@@ -387,6 +410,13 @@
 
     - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
         // DFU処理完了時
+        [self commandDidProcess:command result:result message:message];
+    }
+
+#pragma mark - Call back from ToolPIVCommand
+
+    - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // PIV関連処理完了時
         [self commandDidProcess:command result:result message:message];
     }
 

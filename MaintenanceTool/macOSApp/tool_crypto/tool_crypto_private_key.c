@@ -71,21 +71,6 @@ static bool extract_from_pem_terminate(bool success)
 //
 // private functions
 //
-static unsigned char get_algorithm(EVP_PKEY *key)
-{
-    int type = EVP_PKEY_base_id(key);
-    int size = EVP_PKEY_bits(key);
-
-    if (type == EVP_PKEY_RSA && size == RSA2048_N_SIZE) {
-        return CRYPTO_ALG_RSA2048;
-    }
-    if (type == EVP_PKEY_EC && size == 256) {
-        return CRYPTO_ALG_ECCP256;
-    }
-    log_debug("%s: Unsupported algorithm (type=0x%04x, size=%d)", __func__, type, size);
-    return CRYPTO_ALG_NONE;
-}
-
 static bool set_component(unsigned char *in_ptr, const BIGNUM *bn, int element_len)
 {
     int real_len = BN_num_bytes(bn);
@@ -199,7 +184,7 @@ bool tool_crypto_private_key_extract_from_pem(const char *pem_path, unsigned cha
     }
     // アルゴリズムに応じて処理分岐
     bool ret = false;
-    *alg = get_algorithm(m_private_key);
+    *alg = tool_crypto_get_algorithm_from_evp_pkey(m_private_key);
     switch (*alg) {
         case CRYPTO_ALG_RSA2048:
             // RSA-2048秘密鍵を抽出

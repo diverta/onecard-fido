@@ -77,6 +77,8 @@ typedef enum : NSInteger {
                            pattern:(NSString *)pattern
                    informativeText:(NSString *)informativeText;
 
+    + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
+
 @end
 
 

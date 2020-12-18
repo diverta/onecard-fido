@@ -9,13 +9,16 @@
 #import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
 
+#import "AppDelegate.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
+#import "ToolInfoWindow.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
 #import "ToolPIVCommon.h"
 #import "ToolPIVImporter.h"
+#import "ToolPIVSetting.h"
 
 @interface ToolPIVCommand () <ToolCCIDHelperDelegate>
 
@@ -38,14 +41,24 @@
     @property (nonatomic) bool               cccImportProcessing;
     // 現在取得中のPIVオブジェクトIDを保持
     @property (nonatomic) unsigned int       objectIdToFetch;
+    // PIV設定情報クラスの参照を保持
+    @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
+    // 画面の参照を保持
+    @property (nonatomic, weak) AppDelegate *appDelegate;
 
 @end
 
 @implementation ToolPIVCommand
 
     - (id)init {
+        return [self initWithDelegate:nil];
+    }
+
+    - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
+            // 画面の参照を保持
+            [self setAppDelegate:delegate];
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
@@ -148,6 +161,7 @@
     }
 
     - (void)commandWillStatus:(Command)command {
+        // コマンドを実行
         [self ccidHelperWillProcess:command];
     }
 
@@ -476,9 +490,12 @@
 
     - (void)doYkPivStatusProcessWithPinRetryResponse:(NSData *)response status:(uint16_t)sw {
         if ((sw >> 8) == 0x63) {
+            // PIV設定情報クラスを生成
+            [self setToolPIVSetting:[[ToolPIVSetting alloc] initWithSlotName:[[self toolCCIDHelper] getConnectingSlotName]]];
             // PINリトライカウンターを取得
             uint8_t retries = sw & 0x0f;
             [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_PIN_RETRY_CNT_GET, retries];
+            [[self toolPIVSetting] setRetryCount:retries];
             // PIVオブジェクトを取得
             [self doYkPivStatusFetchObjects:PIV_OBJ_CHUID];
 
@@ -498,26 +515,53 @@
     }
 
     - (void)doResponseYkPivStatusFetchObjects:(NSData *)response status:(uint16_t)sw {
-        // 不明なエラーが発生時は以降の処理を行わない
         if (sw != SW_SUCCESS) {
-            // 処理失敗ログを出力し、制御を戻す
-            [[ToolLogFile defaultLogger] errorWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
-            [self exitCommandProcess:false];
-            return;
+            // 処理失敗ログを出力（エラーではなく警告扱いとする）
+            [[ToolLogFile defaultLogger] warnWithFormat:MSG_ERROR_PIV_DATA_OBJECT_GET_FAILED, [self objectIdToFetch]];
+            // ブランクデータをPIV設定情報クラスに設定
+            [[self toolPIVSetting] setDataObject:[[NSData alloc] init] forObjectId:[self objectIdToFetch]];
+        } else {
+            // 処理成功ログを出力
+            [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
+            // 取得したデータをPIV設定情報クラスに設定
+            [[self toolPIVSetting] setDataObject:response forObjectId:[self objectIdToFetch]];
         }
-        // 処理成功ログを出力
-        [[ToolLogFile defaultLogger] infoWithFormat:MSG_PIV_DATA_OBJECT_GET, [self objectIdToFetch]];
         // オブジェクトIDに応じて後続処理分岐
         switch ([self objectIdToFetch]) {
             case PIV_OBJ_CHUID:
                 [self doYkPivStatusFetchObjects:PIV_OBJ_CAPABILITY];
                 break;
-            default:
+            case PIV_OBJ_CAPABILITY:
+                [self doYkPivStatusFetchObjects:PIV_OBJ_AUTHENTICATION];
+                break;
+            case PIV_OBJ_AUTHENTICATION:
+                [self doYkPivStatusFetchObjects:PIV_OBJ_SIGNATURE];
+                break;
+            case PIV_OBJ_SIGNATURE:
+                [self doYkPivStatusFetchObjects:PIV_OBJ_KEY_MANAGEMENT];
+                break;
+            case PIV_OBJ_KEY_MANAGEMENT:
                 [self exitCommandProcess:true];
+                [self toolInfoWindowWillOpen];
+                break;
+            default:
+                [self exitCommandProcess:false];
                 break;
         }
     }
 
+    - (void)toolInfoWindowWillOpen {
+        // PIV設定情報を、情報表示画面に表示
+        ToolInfoWindow *windowRef = [[self appDelegate] toolInfoWindowRef];
+        [windowRef windowWillOpenWithCommandRef:self
+                                    titleString:PROCESS_NAME_CCID_PIV_STATUS
+                                     infoString:[[self toolPIVSetting] getDescriptionString]];
+    }
+
+    - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // メイン画面側に処理完了を通知（ログ出力／ポップアップ表示無し）
+        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+    }
 
 #pragma mark - PIN management functions
 
@@ -567,7 +611,8 @@
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
-            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+            NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
+            [self setLastErrorMessage:msg];
         }
         // PINブロック or リトライカウンターの状態に応じメッセージを編集
         bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
@@ -608,7 +653,8 @@
 
         } else if (sw != SW_SUCCESS) {
             // 不明なエラーが発生時
-            [self setLastErrorMessage:MSG_ERROR_PIV_UNKNOWN];
+            NSString *msg = [NSString stringWithFormat:MSG_ERROR_PIV_UNKNOWN, sw];
+            [self setLastErrorMessage:msg];
         }
         [self exitCommandProcess:(sw == SW_SUCCESS)];
     }
@@ -670,7 +716,6 @@
         }
         // パラメーターを初期化
         [self clearCommandParameters];
-        // TODO: 画面に制御を戻す
     }
 
 #pragma mark - Utility functions
