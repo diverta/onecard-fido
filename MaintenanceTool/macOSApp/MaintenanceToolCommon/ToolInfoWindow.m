@@ -7,7 +7,13 @@
 #import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
 
+// このウィンドウクラスのインスタンスを保持
+static ToolInfoWindow *sharedInstance;
+
 @interface ToolInfoWindow ()
+
+    // 親ウィンドウの参照を保持
+    @property (nonatomic, weak) NSWindow        *parentWindow;
 
     @property (assign) IBOutlet NSTextField     *labelTitle;
     @property (assign) IBOutlet NSTextView      *textView;
@@ -20,6 +26,37 @@
 @end
 
 @implementation ToolInfoWindow
+
+#pragma mark - Methods for singleton
+
+    + (ToolInfoWindow *)defaultWindow {
+        // このクラスのインスタンス化を１度だけ行う
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [[self alloc] initWithWindowNibName:@"ToolInfoWindow"];
+        });
+        // インスタンスの参照を戻す
+        return sharedInstance;
+    }
+
+    + (id)allocWithZone:(NSZone *)zone {
+        // このクラスのインスタンス化を１度だけ行う
+        __block id ret = nil;
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            sharedInstance = [super allocWithZone:zone];
+            ret = sharedInstance;
+        });
+        
+        // インスタンスの参照を戻す（２回目以降の呼び出しではnilが戻る）
+        return ret;
+    }
+
+    - (id)copyWithZone:(NSZone *)zone{
+        return self;
+    }
+
+#pragma mark - Methods of this instance
 
     - (void)windowDidLoad {
         // テキストエリアの初期化
@@ -60,8 +97,13 @@
         [self terminateWindow:NSModalResponseOK];
     }
 
-    - (bool)windowWillOpenWithCommandRef:(id)ref titleString:(NSString *)title infoString:(NSString *)info {
+#pragma mark - For ToolInfoWindow open/close
+
+    - (bool)windowWillOpenWithCommandRef:(id)ref withParentWindow:(NSWindow *)parent
+                             titleString:(NSString *)title infoString:(NSString *)info
+                     {
         // すでにダイアログが開いている場合は終了
+        [self setParentWindow:parent];
         if ([[[self parentWindow] sheets] count] > 0) {
             return false;
         }
@@ -86,11 +128,6 @@
     - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [self close];
-        if ([sender isMemberOfClass:[ToolPIVCommand class]]) {
-            // PIV機能コマンドに制御を戻す
-            ToolPIVCommand *command = (ToolPIVCommand *)sender;
-            [command toolInfoWindowDidClose:self modalResponse:modalResponse];
-        }
     }
 
 @end

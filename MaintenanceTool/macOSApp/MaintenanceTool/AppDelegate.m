@@ -71,8 +71,7 @@
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
         // 情報表示画面の初期設定
-        [self setToolInfoWindow:[[ToolInfoWindow alloc] initWithWindowNibName:@"ToolInfoWindow"]];
-        [[self toolInfoWindow] setParentWindow:[self window]];
+        [self setToolInfoWindow:[ToolInfoWindow defaultWindow]];
         // PIV機能の初期設定
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         // DFU機能の初期設定

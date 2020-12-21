@@ -10,6 +10,7 @@
 #import "tool_piv_admin.h"
 
 #import "AppDelegate.h"
+#import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
@@ -44,7 +45,8 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate *appDelegate;
+    @property (nonatomic, weak) AppDelegate     *appDelegate;
+    @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
 
 @end
 
@@ -62,6 +64,8 @@
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
+            // PIV設定画面のインスタンスを生成
+            [self setPivPreferenceWindow:[[PIVPreferenceWindow alloc] initWithWindowNibName:@"PIVPreferenceWindow"]];
         }
         return self;
     }
@@ -135,6 +139,20 @@
                 [self exitCommandProcess:false];
                 break;
         }
+    }
+
+#pragma mark - For PIVPreferenceWindow open/close
+
+    - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
+        // PIV機能設定画面を表示（親画面＝メイン画面）
+        if ([[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
+            [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+        }
+    }
+
+    - (void)commandDidClosePreferenceWindow {
+        // メイン画面に制御を戻す
+        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods
@@ -542,7 +560,6 @@
                 break;
             case PIV_OBJ_KEY_MANAGEMENT:
                 [self exitCommandProcess:true];
-                [self toolInfoWindowWillOpen];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -550,17 +567,8 @@
         }
     }
 
-    - (void)toolInfoWindowWillOpen {
-        // PIV設定情報を、情報表示画面に表示
-        ToolInfoWindow *windowRef = [[self appDelegate] toolInfoWindowRef];
-        [windowRef windowWillOpenWithCommandRef:self
-                                    titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                     infoString:[[self toolPIVSetting] getDescriptionString]];
-    }
-
-    - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
-        // メイン画面側に処理完了を通知（ログ出力／ポップアップ表示無し）
-        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+    - (NSString *)getPIVSettingDescriptionString {
+        return [[self toolPIVSetting] getDescriptionString];
     }
 
 #pragma mark - PIN management functions
@@ -715,7 +723,10 @@
             }
         }
         // パラメーターを初期化
+        Command command = [self command];
         [self clearCommandParameters];
+        // 画面に制御を戻す
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command];
     }
 
 #pragma mark - Utility functions

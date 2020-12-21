@@ -5,15 +5,18 @@
 //  Created by Makoto Morita on 2020/12/21.
 //
 #import "PIVPreferenceWindow.h"
+#import "ToolInfoWindow.h"
 #import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
-#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 
 @interface PIVPreferenceWindow ()
 
+    // 親画面を保持
     @property (nonatomic, weak) NSWindow            *parentWindow;
+    // PIV機能処理クラスの参照を保持
+    @property (nonatomic, weak) ToolPIVCommand      *toolPIVCommand;
 
 @end
 
@@ -33,6 +36,11 @@
         }
     }
 
+    - (IBAction)buttonPivStatusDidPress:(id)sender {
+        // PIV設定情報取得
+        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+    }
+
     - (IBAction)buttonCloseDidPress:(id)sender {
         [self terminateWindow:NSModalResponseOK];
     }
@@ -46,6 +54,8 @@
         if ([[[self parentWindow] sheets] count] > 0) {
             return false;
         }
+        // ToolPIVCommandの参照を保持
+        [self setToolPIVCommand:ref];
         // 画面項目を初期化
         [self initFieldValue];
         // ダイアログをモーダルで表示
@@ -66,6 +76,28 @@
             ToolPIVCommand *command = (ToolPIVCommand *)sender;
             [command commandDidClosePreferenceWindow];
         }
+    }
+
+#pragma mark - For ToolPIVCommand functions
+
+    - (void)toolPIVCommandDidProcess:(Command)command {
+        switch (command) {
+            case COMMAND_CCID_PIV_STATUS:
+                // PIV設定情報を、情報表示画面に表示
+                [self openToolInfoWindowWithDescription];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)openToolInfoWindowWithDescription {
+        // PIV設定情報を、情報表示画面に表示
+        ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
+        ToolPIVCommand *command = [self toolPIVCommand];
+        [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
+                                     titleString:PROCESS_NAME_CCID_PIV_STATUS
+                                      infoString:[command getPIVSettingDescriptionString]];
     }
 
 @end
