@@ -449,18 +449,11 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Option" id="296">
                         <items>
-                            <menuItem title="PIV" id="297">
+                            <menuItem title="PIV機能設定" id="297">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" id="dz7-kc-kVt">
-                                    <items>
-                                        <menuItem title="設定情報取得" id="4uH-r0-bGw">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemOptionPiv1DidSelect:" target="494" id="qzO-f3-ZTc"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                                <connections>
+                                    <action selector="menuItemOptionPivSettingsDidSelect:" target="494" id="UWh-c5-CBZ"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>

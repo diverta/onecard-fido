@@ -270,13 +270,13 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
-    - (IBAction)menuItemOptionPiv1DidSelect:(id)sender {
+    - (IBAction)menuItemOptionPivSettingsDidSelect:(id)sender {
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // PIV設定情報取得
+        // PIV機能設定画面を表示
         [self enableButtons:false];
-        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
