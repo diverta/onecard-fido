@@ -29,7 +29,7 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestCCID;
+    @property (assign) IBOutlet NSMenuItem  *menuItemOption;
     @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
@@ -112,7 +112,7 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
-        [self.menuItemTestCCID setEnabled:enabled];
+        [self.menuItemOption setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
@@ -270,7 +270,7 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
-    - (IBAction)menuItemTestCCID1DidSelect:(id)sender {
+    - (IBAction)menuItemOptionPiv1DidSelect:(id)sender {
         if ([self checkUSBHIDConnection] == false) {
             return;
         }

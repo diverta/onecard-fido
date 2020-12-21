@@ -423,19 +423,6 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="CCID" id="F7h-cH-AOx">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" id="dz7-kc-kVt">
-                                    <items>
-                                        <menuItem title="PIV設定情報取得" id="4uH-r0-bGw">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemTestCCID1DidSelect:" target="494" id="hdC-Ks-5fe"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -458,19 +445,22 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="View" hidden="YES" id="295">
-                    <menu key="submenu" title="View" id="296">
+                <menuItem title="Option" id="295">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Option" id="296">
                         <items>
-                            <menuItem title="Show Toolbar" keyEquivalent="t" id="297">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="toggleToolbarShown:" target="-1" id="366"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Customize Toolbar…" id="298">
-                                <connections>
-                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="365"/>
-                                </connections>
+                            <menuItem title="PIV" id="297">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" id="dz7-kc-kVt">
+                                    <items>
+                                        <menuItem title="設定情報取得" id="4uH-r0-bGw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemOptionPiv1DidSelect:" target="494" id="qzO-f3-ZTc"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -714,9 +704,9 @@
                 <outlet property="menuItemDFU" destination="sxt-Mu-jyP" id="LgB-99-JI9"/>
                 <outlet property="menuItemDFUNew" destination="83P-ZN-a21" id="0iQ-xm-DGo"/>
                 <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
+                <outlet property="menuItemOption" destination="295" id="x73-fM-PHP"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
-                <outlet property="menuItemTestCCID" destination="F7h-cH-AOx" id="Wei-F6-28U"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
                 <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>
