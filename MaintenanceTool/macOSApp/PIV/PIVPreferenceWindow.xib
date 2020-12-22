@@ -8,6 +8,18 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PIVPreferenceWindow">
             <connections>
+                <outlet property="buttonPath1" destination="pCe-YJ-TVY" id="hnm-ct-BZx"/>
+                <outlet property="buttonPath2" destination="bAH-Qj-qo6" id="wAr-ff-M8L"/>
+                <outlet property="buttonPath3" destination="kCl-hE-wLf" id="zJk-NK-jS7"/>
+                <outlet property="buttonPath4" destination="gQU-eU-uU3" id="cjW-2l-yEv"/>
+                <outlet property="buttonPath5" destination="1CW-qH-GpA" id="M1w-Im-Emr"/>
+                <outlet property="buttonPath6" destination="Erp-LM-re8" id="iqA-nA-QbE"/>
+                <outlet property="fieldPath1" destination="fE7-j2-l4a" id="2pH-e4-KGN"/>
+                <outlet property="fieldPath2" destination="fzE-5G-Xcd" id="fP8-a6-EF1"/>
+                <outlet property="fieldPath3" destination="qWQ-P3-T2P" id="uuz-uq-K0B"/>
+                <outlet property="fieldPath4" destination="NLm-tT-7Lo" id="pC7-cm-Hb7"/>
+                <outlet property="fieldPath5" destination="LBw-ey-XBS" id="WWp-s8-Xpd"/>
+                <outlet property="fieldPath6" destination="anq-aU-Alp" id="KnG-bl-gFn"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J6e-tU-Pvs"/>
             </connections>
         </customObject>
@@ -66,7 +78,7 @@
                                                 <rect key="frame" x="3" y="3" width="471" height="65"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fE7-j2-l4a">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fE7-j2-l4a">
                                                         <rect key="frame" x="125" y="38" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Mh8-aF-caf">
@@ -82,6 +94,9 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath1DidPress:" target="-2" id="5hZ-26-bhz"/>
+                                                        </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bAH-Qj-qo6">
                                                         <rect key="frame" x="404" y="2" width="65" height="32"/>
@@ -90,8 +105,11 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath2DidPress:" target="-2" id="eov-6d-TfU"/>
+                                                        </connections>
                                                     </button>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzE-5G-Xcd">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzE-5G-Xcd">
                                                         <rect key="frame" x="125" y="9" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="m7J-db-BjK">
@@ -129,7 +147,7 @@
                                                 <rect key="frame" x="3" y="3" width="471" height="65"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qWQ-P3-T2P">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qWQ-P3-T2P">
                                                         <rect key="frame" x="125" y="38" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="nDC-Qa-V2z">
@@ -145,6 +163,9 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath3DidPress:" target="-2" id="hmJ-Tm-hAR"/>
+                                                        </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gQU-eU-uU3">
                                                         <rect key="frame" x="404" y="2" width="65" height="32"/>
@@ -153,8 +174,11 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath4DidPress:" target="-2" id="e9C-T9-ebY"/>
+                                                        </connections>
                                                     </button>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NLm-tT-7Lo">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NLm-tT-7Lo">
                                                         <rect key="frame" x="125" y="9" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="dPm-fJ-LRP">
@@ -192,7 +216,7 @@
                                                 <rect key="frame" x="3" y="3" width="471" height="65"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBw-ey-XBS">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBw-ey-XBS">
                                                         <rect key="frame" x="125" y="38" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="j4J-43-EYw">
@@ -208,6 +232,9 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath5DidPress:" target="-2" id="X64-H6-p6y"/>
+                                                        </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Erp-LM-re8">
                                                         <rect key="frame" x="404" y="2" width="65" height="32"/>
@@ -216,8 +243,11 @@
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
+                                                        <connections>
+                                                            <action selector="buttonPath6DidPress:" target="-2" id="yWJ-zd-ZrV"/>
+                                                        </connections>
                                                     </button>
-                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="anq-aU-Alp">
+                                                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="anq-aU-Alp">
                                                         <rect key="frame" x="125" y="9" width="277" height="21"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="72G-9E-de2">
