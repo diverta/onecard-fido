@@ -54,6 +54,21 @@
         }
     }
 
+    - (IBAction)buttonInstallPkey9aDidPress:(id)sender {
+        // PIV認証用の鍵・証明書インストール
+        [self installPkeyCert:sender toKeySlot:0x9a withPkeyField:[self fieldPath1] withCertField:[self fieldPath2]];
+    }
+
+    - (IBAction)buttonInstallPkey9cDidPress:(id)sender {
+        // 電子署名用の鍵・証明書インストール
+        [self installPkeyCert:sender toKeySlot:0x9c withPkeyField:[self fieldPath3] withCertField:[self fieldPath4]];
+    }
+
+    - (IBAction)buttonInstallPkey9dDidPress:(id)sender {
+        // 管理機能用の鍵・証明書インストール
+        [self installPkeyCert:sender toKeySlot:0x9d withPkeyField:[self fieldPath5] withCertField:[self fieldPath6]];
+    }
+
     - (IBAction)buttonPivStatusDidPress:(id)sender {
         // PIV設定情報取得
         [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
@@ -160,6 +175,35 @@
             [field setToolTip:filePath];
             [field becomeFirstResponder];
         }
+    }
+
+#pragma mark - For install pkey & cert
+
+    - (void)installPkeyCert:(id)sender toKeySlot:(uint8_t)slotId withPkeyField:(NSTextField *)pkeyField withCertField:(NSTextField *)certField  {
+        // 入力欄のチェック
+        if ([self checkPathEntry:pkeyField messageIfError:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH] == false) {
+            return;
+        }
+        if ([self checkPathEntry:certField messageIfError:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH] == false) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_INSTALL_PIV_PKEY_CERT
+                         informativeText:MSG_PROMPT_INSTL_SKEY_CERT] == false) {
+            return;
+        }
+    }
+
+    - (bool)checkPathEntry:(NSTextField *)field messageIfError:(NSString *)message {
+        // 入力項目が正しく指定されていない場合は終了
+        if ([ToolCommon checkMustEntry:field informativeText:message] == false) {
+            return false;
+        }
+        // 入力されたファイルパスが存在しない場合は終了
+        if ([ToolCommon checkFileExist:field informativeText:message] == false) {
+            return false;
+        }
+        return true;
     }
 
 @end

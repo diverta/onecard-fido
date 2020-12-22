@@ -242,6 +242,7 @@
 #define MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED      @"PIV証明書ファイル読込処理が失敗しました（%@）"
 #define MSG_PIV_PKEY_PEM_LOADED                 @"PIV秘密鍵ファイルを正常に読込みました。"
 #define MSG_PIV_CERT_PEM_LOADED                 @"PIV証明書ファイルを正常に読込みました。"
+#define MSG_INSTALL_PIV_PKEY_CERT               @"PIV秘密鍵・証明書をインストールします。"
 #define MSG_ERROR_PIV_IMPORT_PKEY_FAILED        @"PIV秘密鍵インポート処理が失敗しました（slot=0x%02x, alg=0x%02x）。"
 #define MSG_ERROR_PIV_IMPORT_CERT_FAILED        @"PIV証明書インポート処理が失敗しました（slot=0x%02x, alg=0x%02x）。"
 #define MSG_PIV_PKEY_PEM_IMPORTED               @"PIV秘密鍵を正常にインポートしました（slot=0x%02x, alg=0x%02x）。"
