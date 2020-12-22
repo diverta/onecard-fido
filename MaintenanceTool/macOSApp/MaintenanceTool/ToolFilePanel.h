@@ -14,11 +14,8 @@
     @property (nonatomic, weak) id<ToolFilePanelDelegate> delegate;
 
     - (id)initWithDelegate:(id<ToolFilePanelDelegate>)delegate;
-
-#pragma mark for NSOpenPanel
-    - (void)prepareOpenPanel:(NSString *)prompt message:(NSString *)message
-                   fileTypes:(NSArray<NSString *> *)fileTypes;
-    - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow
+                     withPrompt:(NSString *)prompt withMessage:(NSString *)message withFileTypes:(NSArray<NSString *> *)fileTypes;
 
 @end
 

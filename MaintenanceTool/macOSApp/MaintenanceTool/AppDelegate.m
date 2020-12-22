@@ -200,18 +200,14 @@
 
     - (IBAction)buttonPath1DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_PKEY_PATH
-                                     fileTypes:@[@"pem"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_PKEY_PATH withFileTypes:@[@"pem"]];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_CRT_PATH
-                                     fileTypes:@[@"crt"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_CRT_PATH withFileTypes:@[@"crt"]];
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {

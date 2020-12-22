@@ -8,9 +8,6 @@
 #import "ToolFilePanel.h"
 
 @interface ToolFilePanel ()
-
-    @property (nonatomic) NSOpenPanel *openPanel;
-
 @end
 
 @implementation ToolFilePanel
@@ -29,36 +26,33 @@
 
 #pragma mark for NSOpenPanel
 
-    - (void)prepareOpenPanel:(NSString *)prompt message:(NSString *)message
-                   fileTypes:(NSArray<NSString *> *)fileTypes {
+    - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow
+                     withPrompt:(NSString *)prompt withMessage:(NSString *)message withFileTypes:(NSArray<NSString *> *)fileTypes {
         // ファイル選択パネルの設定
-        [self setOpenPanel:[NSOpenPanel openPanel]];
-        [[self openPanel] setAllowsMultipleSelection:NO];
-        [[self openPanel] setCanChooseDirectories:NO];
-        [[self openPanel] setCanChooseFiles:YES];
-        [[self openPanel] setResolvesAliases:NO];
+        NSOpenPanel *panel = [NSOpenPanel openPanel];
+        [panel setAllowsMultipleSelection:NO];
+        [panel setCanChooseDirectories:NO];
+        [panel setCanChooseFiles:YES];
+        [panel setResolvesAliases:NO];
         // プロンプト、タイトル、ファイルタイプを設定
-        [[self openPanel] setPrompt:prompt];
-        [[self openPanel] setMessage:message];
-        [[self openPanel] setAllowedFileTypes:fileTypes];
-    }
-
-    - (void)panelWillSelectPath:(id)sender parentWindow:(NSWindow *)parentWindow {
+        [panel setPrompt:prompt];
+        [panel setMessage:message];
+        [panel setAllowedFileTypes:fileTypes];
         // ファイル選択パネルをモーダル表示
-        ToolFilePanel * __weak weakSelf  = self;
-        [[self openPanel] beginSheetModalForWindow:parentWindow completionHandler:^(NSInteger result) {
+        ToolFilePanel * __weak weakSelf = self;
+        [panel beginSheetModalForWindow:parentWindow completionHandler:^(NSInteger result) {
             // 呼出元のウィンドウを表示させないようにする
-            [[self openPanel] orderOut:sender];
+            [panel orderOut:sender];
+            // ファイル選択パネルで作成されたファイルパスを引き渡す
+            NSString *filePath = [[panel URL] path];
             // ファイルが選択された時の処理
-            [weakSelf panelDidSelectPath:sender modalResponse:result];
+            [weakSelf panelDidSelectPath:sender modalResponse:result selectedPath:filePath];
         }];
     }
 
-    - (void)panelDidSelectPath:(id)sender modalResponse:(NSInteger)modalResponse {
+    - (void)panelDidSelectPath:(id)sender modalResponse:(NSInteger)modalResponse selectedPath:(NSString *)filePath {
         // ファイル選択パネルで作成されたファイルパスを引き渡す
-        NSString *filePath = [[[self openPanel] URL] path];
-        [[self delegate] panelDidSelectPath:sender filePath:filePath
-                              modalResponse:modalResponse];
+        [[self delegate] panelDidSelectPath:sender filePath:filePath modalResponse:modalResponse];
     }
 
 @end
