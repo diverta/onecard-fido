@@ -726,7 +726,7 @@
         Command command = [self command];
         [self clearCommandParameters];
         // 画面に制御を戻す
-        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command];
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success];
     }
 
 #pragma mark - Utility functions

@@ -15,7 +15,7 @@
     - (bool)windowWillOpenWithCommandRef:(id)ref parentWindow:(NSWindow *)parent;
     - (void)windowDidCloseWithSender:(id)sender modalResponse:(NSInteger)modalResponse;
 
-    - (void)toolPIVCommandDidProcess:(Command)command;
+    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result;
 
 @end
 
