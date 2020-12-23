@@ -145,7 +145,30 @@
 
     - (IBAction)buttonPivStatusDidPress:(id)sender {
         // PIV設定情報取得
-        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+        [self enableButtons:false];
+        [self commandWillStatus];
+    }
+
+    - (IBAction)buttonInitialSettingDidPress:(id)sender {
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_INITIAL_SETTING];
+        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_INITIAL_SETTING] == false) {
+            return;
+        }
+        // CHUID設定機能を実行
+        [self enableButtons:false];
+        [self commandWillSetCHUIDAndCCC];
+    }
+
+    - (IBAction)buttonClearSettingDidPress:(id)sender {
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, MSG_PIV_CLEAR_SETTING];
+        if ([ToolPopupWindow promptYesNo:msg informativeText:MSG_PROMPT_PIV_CLEAR_SETTING] == false) {
+            return;
+        }
+        // PIVリセット機能を実行
+        [self enableButtons:false];
+        [self commandWillReset];
     }
 
     - (IBAction)buttonCloseDidPress:(id)sender {
@@ -188,6 +211,20 @@
     }
 
 #pragma mark - For ToolPIVCommand functions
+
+    - (void)commandWillStatus {
+        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+    }
+
+    - (void)commandWillSetCHUIDAndCCC {
+        ToolPIVImporter *importer = [[ToolPIVImporter alloc] init];
+        [importer generateChuidAndCcc];
+        [[self toolPIVCommand] commandWillSetCHUIDAndCCC:COMMAND_CCID_PIV_SET_CHUID withImporter:importer];
+    }
+
+    - (void)commandWillReset {
+        [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
+    }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result {
         [self enableButtons:true];
