@@ -62,9 +62,78 @@
     - (void)windowDidLoad {
         [super windowDidLoad];
         [self setToolFilePanel:[[ToolFilePanel alloc] initWithDelegate:self]];
+        // 画面項目を初期化
+        [self initFieldValue];
     }
 
     - (void)initFieldValue {
+        // 最初のタブを選択させる
+        [[self tabView] selectTabViewItemAtIndex:0];
+        // タブを初期化
+        [self initTabPkeyCertManagement];
+        [self initTabPinManagement];
+    }
+
+    - (void)initTabPkeyCertManagement {
+        // ラジオボタンの初期化
+        [self initButtonPkeySlotIdsWithDefault:[self buttonPkeySlotId1]];
+        // テキストボックスの初期化
+        [[self fieldPath1] setStringValue:@""];
+        [[self fieldPath2] setStringValue:@""];
+        [[self fieldPin1] setStringValue:@""];
+        [[self fieldPin2] setStringValue:@""];
+        // テキストボックスのカーソルを配置
+        [[self fieldPath1] becomeFirstResponder];
+    }
+
+    - (void)initTabPinManagement {
+        // ラジオボタンの初期化
+        [self initButtonPinCommandsWithDefault:[self buttonPinCommand1]];
+        // テキストボックスの初期化
+        [[self fieldCurPin] setStringValue:@""];
+        [[self fieldNewPin] setStringValue:@""];
+        [[self fieldNewPinConf] setStringValue:@""];
+    }
+
+    - (void)enableButtons:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonClose] setEnabled:enabled];
+        [[self buttonPivStatus] setEnabled:enabled];
+        [[self buttonInitialSetting] setEnabled:enabled];
+        [[self buttonClearSetting] setEnabled:enabled];
+        // 現在選択中のタブ内も同様に制御を行う
+        NSTabViewItem *item = [[self tabView] selectedTabViewItem];
+        if (item == [self tabPkeyCertManagement]) {
+            [self enableButtonsInTabPkeyCertManagement:enabled];
+        }
+        if (item == [self tabPinManagement]) {
+            [self enableButtonsInTabPinManagement:enabled];
+        }
+    }
+
+    - (void)enableButtonsInTabPkeyCertManagement:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonPkeySlotId1] setEnabled:enabled];
+        [[self buttonPkeySlotId2] setEnabled:enabled];
+        [[self buttonPkeySlotId3] setEnabled:enabled];
+        [[self fieldPath1] setEnabled:enabled];
+        [[self fieldPath2] setEnabled:enabled];
+        [[self buttonPath1] setEnabled:enabled];
+        [[self buttonPath2] setEnabled:enabled];
+        [[self fieldPin1] setEnabled:enabled];
+        [[self fieldPin2] setEnabled:enabled];
+        [[self buttonInstallPkeyCert] setEnabled:enabled];
+    }
+
+    - (void)enableButtonsInTabPinManagement:(bool)enabled {
+        // ボタンや入力欄の使用可能／不可制御
+        [[self buttonPinCommand1] setEnabled:enabled];
+        [[self buttonPinCommand2] setEnabled:enabled];
+        [[self buttonPinCommand3] setEnabled:enabled];
+        [[self fieldCurPin] setEnabled:enabled];
+        [[self fieldNewPin] setEnabled:enabled];
+        [[self fieldNewPinConf] setEnabled:enabled];
+        [[self buttonPerformPinCommand] setEnabled:enabled];
     }
 
     - (void)terminateWindow:(NSModalResponse)response {
@@ -94,8 +163,10 @@
         }
         // ToolPIVCommandの参照を保持
         [self setToolPIVCommand:ref];
-        // 画面項目を初期化
-        [self initFieldValue];
+        // すでにダイアログがロード済みの場合は、画面項目を再度初期化
+        if ([self isWindowLoaded]) {
+            [self initFieldValue];
+        }
         // ダイアログをモーダルで表示
         NSWindow *dialog = [self window];
         PIVPreferenceWindow * __weak weakSelf = self;
@@ -119,6 +190,7 @@
 #pragma mark - For ToolPIVCommand functions
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result {
+        [self enableButtons:true];
         switch (command) {
             case COMMAND_CCID_PIV_STATUS:
                 // PIV設定情報を、情報表示画面に表示
@@ -157,6 +229,56 @@
             [ToolPopupWindow informational:str informativeText:nil];
         } else {
             [ToolPopupWindow critical:str informativeText:nil];
+        }
+    }
+
+#pragma mark - 鍵・証明書管理タブ関連
+
+    - (void)initButtonPkeySlotIdsWithDefault:(NSButton *)defaultButton {
+        // 「インストールする鍵・証明書」のラジオボタン「PIV認証用」を選択状態にする
+        [defaultButton setState:NSControlStateValueOn];
+        [self getSelectedPkeySlotIdValue:defaultButton];
+    }
+
+    - (void)getSelectedPkeySlotIdValue:(NSButton *)button {
+        if (button == [self buttonPkeySlotId1]) {
+            [self setSelectedPkeySlotId:0x9a];
+        } else if (button == [self buttonPkeySlotId2]) {
+            [self setSelectedPkeySlotId:0x9c];
+        } else if (button == [self buttonPkeySlotId3]) {
+            [self setSelectedPkeySlotId:0x9d];
+        } else {
+            [self setSelectedPkeySlotId:0x00];
+        }
+    }
+
+#pragma mark - PIN番号管理タブ関連
+
+    - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
+        // 「実行する機能」のラジオボタン「PIN番号を変更」を選択状態にする
+        [defaultButton setState:NSControlStateValueOn];
+        [self getSelectedPinCommandValue:defaultButton];
+    }
+
+    - (void)getSelectedPinCommandValue:(NSButton *)button {
+        // ラジオボタンの選択状態に応じ、入力欄のキャプションも変更する
+        if (button == [self buttonPinCommand1]) {
+            [self setSelectedPinCommand:COMMAND_CCID_PIV_CHANGE_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_CURRENT_PIN];
+            [[self labelNewPin] setStringValue:MSG_LABEL_NEW_PIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_NEW_PIN_FOR_CONFIRM];
+        } else if (button == [self buttonPinCommand2]) {
+            [self setSelectedPinCommand:COMMAND_CCID_PIV_CHANGE_PUK];
+            [[self labelCurPin] setStringValue:MSG_LABEL_CURRENT_PUK];
+            [[self labelNewPin] setStringValue:MSG_LABEL_NEW_PUK];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_NEW_PUK_FOR_CONFIRM];
+        } else if (button == [self buttonPinCommand3]) {
+            [self setSelectedPinCommand:COMMAND_CCID_PIV_UNBLOCK_PIN];
+            [[self labelCurPin] setStringValue:MSG_LABEL_CURRENT_PUK];
+            [[self labelNewPin] setStringValue:MSG_LABEL_NEW_PIN];
+            [[self labelNewPinConf] setStringValue:MSG_LABEL_NEW_PIN_FOR_CONFIRM];
+        } else {
+            [self setSelectedPinCommand:COMMAND_NONE];
         }
     }
 
