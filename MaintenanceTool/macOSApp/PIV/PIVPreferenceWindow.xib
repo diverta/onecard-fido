@@ -8,11 +8,17 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PIVPreferenceWindow">
             <connections>
+                <outlet property="buttonClearSetting" destination="bXg-F8-xgl" id="uDc-5x-mdL"/>
+                <outlet property="buttonClose" destination="raO-ar-z97" id="mtm-C2-e27"/>
+                <outlet property="buttonInitialSetting" destination="uye-kV-qWV" id="lvZ-ze-eM0"/>
+                <outlet property="buttonInstallPkeyCert" destination="aYG-wl-NhX" id="mJ1-Ew-5hU"/>
                 <outlet property="buttonPath1" destination="pCe-YJ-TVY" id="hnm-ct-BZx"/>
                 <outlet property="buttonPath2" destination="bAH-Qj-qo6" id="wAr-ff-M8L"/>
+                <outlet property="buttonPerformPinCommand" destination="QM5-Wx-HQF" id="aUl-ct-ftE"/>
                 <outlet property="buttonPinCommand1" destination="sHN-p0-rvu" id="JoQ-kb-nbo"/>
                 <outlet property="buttonPinCommand2" destination="khp-d9-xQD" id="nun-RG-K8z"/>
                 <outlet property="buttonPinCommand3" destination="aea-jx-y5X" id="SeP-Yq-hG3"/>
+                <outlet property="buttonPivStatus" destination="PWJ-aC-YsL" id="M9s-1x-WMX"/>
                 <outlet property="buttonPkeySlotId1" destination="sfJ-jz-ytV" id="aOC-Qs-JCO"/>
                 <outlet property="buttonPkeySlotId2" destination="UFQ-bS-B0n" id="Qqd-m2-Zbh"/>
                 <outlet property="buttonPkeySlotId3" destination="Fbv-TL-3il" id="3tq-Ts-dVD"/>
@@ -26,6 +32,8 @@
                 <outlet property="labelCurPin" destination="6un-mf-b2T" id="juB-i4-SzM"/>
                 <outlet property="labelNewPin" destination="KQz-Ea-7T1" id="lhg-Oe-MGq"/>
                 <outlet property="labelNewPinConf" destination="rWk-au-GHF" id="DIr-Bg-4QN"/>
+                <outlet property="tabPinManagement" destination="gGN-0l-Qmq" id="ekU-Iy-mgz"/>
+                <outlet property="tabPkeyCertManagement" destination="qgx-2D-ch2" id="8oD-YG-pbl"/>
                 <outlet property="tabView" destination="T2H-Gb-kML" id="K5k-ny-4ZF"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="J6e-tU-Pvs"/>
                 <outlet property="windowView" destination="EiT-Mj-1SZ" id="D44-5X-Tie"/>

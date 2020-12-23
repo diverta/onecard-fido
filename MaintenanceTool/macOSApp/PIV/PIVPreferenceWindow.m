@@ -15,25 +15,45 @@
 @interface PIVPreferenceWindow () <ToolFilePanelDelegate>
 
     // ファイル選択用のテキストボックス、ボタン
+    @property (assign) IBOutlet NSView              *windowView;
+    @property (assign) IBOutlet NSTabView           *tabView;
+    @property (assign) IBOutlet NSButton            *buttonClose;
+    @property (assign) IBOutlet NSButton            *buttonPivStatus;
+    @property (assign) IBOutlet NSButton            *buttonInitialSetting;
+    @property (assign) IBOutlet NSButton            *buttonClearSetting;
+
+    @property (assign) IBOutlet NSTabViewItem       *tabPkeyCertManagement;
+    @property (assign) IBOutlet NSButton            *buttonPkeySlotId1;
+    @property (assign) IBOutlet NSButton            *buttonPkeySlotId2;
+    @property (assign) IBOutlet NSButton            *buttonPkeySlotId3;
     @property (assign) IBOutlet NSTextField         *fieldPath1;
     @property (assign) IBOutlet NSTextField         *fieldPath2;
-    @property (assign) IBOutlet NSTextField         *fieldPath3;
-    @property (assign) IBOutlet NSTextField         *fieldPath4;
-    @property (assign) IBOutlet NSTextField         *fieldPath5;
-    @property (assign) IBOutlet NSTextField         *fieldPath6;
     @property (assign) IBOutlet NSButton            *buttonPath1;
     @property (assign) IBOutlet NSButton            *buttonPath2;
-    @property (assign) IBOutlet NSButton            *buttonPath3;
-    @property (assign) IBOutlet NSButton            *buttonPath4;
-    @property (assign) IBOutlet NSButton            *buttonPath5;
-    @property (assign) IBOutlet NSButton            *buttonPath6;
+    @property (assign) IBOutlet NSTextField         *fieldPin1;
+    @property (assign) IBOutlet NSTextField         *fieldPin2;
+    @property (assign) IBOutlet NSButton            *buttonInstallPkeyCert;
+
+    @property (assign) IBOutlet NSTabViewItem       *tabPinManagement;
+    @property (assign) IBOutlet NSButton            *buttonPinCommand1;
+    @property (assign) IBOutlet NSButton            *buttonPinCommand2;
+    @property (assign) IBOutlet NSButton            *buttonPinCommand3;
+    @property (assign) IBOutlet NSTextField         *labelCurPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPin;
+    @property (assign) IBOutlet NSTextField         *labelNewPinConf;
+    @property (assign) IBOutlet NSTextField         *fieldCurPin;
+    @property (assign) IBOutlet NSTextField         *fieldNewPin;
+    @property (assign) IBOutlet NSTextField         *fieldNewPinConf;
+    @property (assign) IBOutlet NSButton            *buttonPerformPinCommand;
 
     // 親画面を保持
     @property (nonatomic, weak) NSWindow            *parentWindow;
     // PIV機能処理クラスの参照を保持
     @property (nonatomic, weak) ToolPIVCommand      *toolPIVCommand;
     @property (nonatomic) ToolFilePanel             *toolFilePanel;
-
+    // ラジオボタンで選択中の情報を保持
+    @property (nonatomic) uint8_t                    selectedPkeySlotId;
+    @property (nonatomic) Command                    selectedPinCommand;
 
 @end
 
@@ -52,21 +72,6 @@
         if ([self parentWindow]) {
             [[self parentWindow] endSheet:[self window] returnCode:response];
         }
-    }
-
-    - (IBAction)buttonInstallPkey9aDidPress:(id)sender {
-        // PIV認証用の鍵・証明書インストール
-        [self installPkeyCert:sender toKeySlot:0x9a withPkeyField:[self fieldPath1] withCertField:[self fieldPath2]];
-    }
-
-    - (IBAction)buttonInstallPkey9cDidPress:(id)sender {
-        // 電子署名用の鍵・証明書インストール
-        [self installPkeyCert:sender toKeySlot:0x9c withPkeyField:[self fieldPath3] withCertField:[self fieldPath4]];
-    }
-
-    - (IBAction)buttonInstallPkey9dDidPress:(id)sender {
-        // 管理機能用の鍵・証明書インストール
-        [self installPkeyCert:sender toKeySlot:0x9d withPkeyField:[self fieldPath5] withCertField:[self fieldPath6]];
     }
 
     - (IBAction)buttonPivStatusDidPress:(id)sender {
@@ -113,11 +118,22 @@
 
 #pragma mark - For ToolPIVCommand functions
 
-    - (void)toolPIVCommandDidProcess:(Command)command {
+    - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result {
         switch (command) {
             case COMMAND_CCID_PIV_STATUS:
                 // PIV設定情報を、情報表示画面に表示
                 [self openToolInfoWindowWithDescription];
+                break;
+            case COMMAND_CCID_PIV_SET_CHUID:
+                [self displayResultMessage:result withName:MSG_PIV_INITIAL_SETTING];
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                [self displayResultMessage:result withName:MSG_PIV_CLEAR_SETTING];
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
                 break;
             default:
                 break;
@@ -133,24 +149,23 @@
                                       infoString:[command getPIVSettingDescriptionString]];
     }
 
+    - (void)displayResultMessage:(bool)result withName:(NSString *)name {
+        // メッセージをポップアップ表示
+        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
+                         result ? MSG_SUCCESS:MSG_FAILURE];
+        if (result) {
+            [ToolPopupWindow informational:str informativeText:nil];
+        } else {
+            [ToolPopupWindow critical:str informativeText:nil];
+        }
+    }
+
 #pragma mark - For file path selection
 
     - (IBAction)buttonPath1DidPress:(id)sender {
         [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH];
     }
     - (IBAction)buttonPath2DidPress:(id)sender {
-        [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH];
-    }
-    - (IBAction)buttonPath3DidPress:(id)sender {
-        [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH];
-    }
-    - (IBAction)buttonPath4DidPress:(id)sender {
-        [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH];
-    }
-    - (IBAction)buttonPath5DidPress:(id)sender {
-        [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_PKEY_PEM_PATH];
-    }
-    - (IBAction)buttonPath6DidPress:(id)sender {
         [self panelWillSelectPath:sender withPrompt:MSG_PROMPT_SELECT_PIV_CERT_PEM_PATH];
     }
     - (void)panelWillSelectPath:(id)sender withPrompt:(NSString *)prompt {
@@ -164,10 +179,6 @@
         }
         [self setFieldPath:sender filePath:filePath WithField:[self fieldPath1] withButton:[self buttonPath1]];
         [self setFieldPath:sender filePath:filePath WithField:[self fieldPath2] withButton:[self buttonPath2]];
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath3] withButton:[self buttonPath3]];
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath4] withButton:[self buttonPath4]];
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath5] withButton:[self buttonPath5]];
-        [self setFieldPath:sender filePath:filePath WithField:[self fieldPath6] withButton:[self buttonPath6]];
     }
     - (void)setFieldPath:(id)sender filePath:(NSString *)filePath WithField:(NSTextField *)field withButton:(NSButton *)button {
         if (sender == button) {
