@@ -11,6 +11,8 @@
 #import "ToolPIVImporter.h"
 
 @interface ToolPIVCommand : NSObject
+    // エラーメッセージテキストを保持
+    @property (nonatomic) NSString *lastErrorMessage;
 
     - (id)initWithDelegate:(id)delegate;
     - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent;
