@@ -274,6 +274,8 @@
 #define MSG_PIV_INSTALL_PKEY_CERT               @"鍵・証明書ファイルのインストール"
 #define MSG_PIV_LOAD_PKEY_FAILED                @"鍵ファイルの読込が失敗しました。"
 #define MSG_PIV_LOAD_CERT_FAILED                @"証明書ファイルの読込が失敗しました。"
+#define MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED  @"鍵・証明書の組み合わせが不正です。"
+#define MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM      @"鍵アルゴリズム（0x%02x）と証明書アルゴリズム（0x%02x）が異なっています。\n正しい組み合わせの鍵・証明書をご使用ください。"
 #define MSG_PIV_CHANGE_PIN_NUMBER               @"PIN番号の変更"
 #define MSG_PIV_CHANGE_PUK_NUMBER               @"PUK番号の変更"
 #define MSG_PIV_RESET_PIN_NUMBER                @"PIN番号のリセット"

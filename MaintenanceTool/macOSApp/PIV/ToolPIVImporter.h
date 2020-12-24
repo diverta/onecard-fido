@@ -22,7 +22,8 @@
 
     // 処理対象となるスロットID、アルゴリズムを保持
     @property (nonatomic) uint8_t           keySlotId;
-    @property (nonatomic) uint8_t           algorithm;
+    @property (nonatomic) uint8_t           keyAlgorithm;
+    @property (nonatomic) uint8_t           certAlgorithm;
 
 @end
 

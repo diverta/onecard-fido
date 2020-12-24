@@ -254,6 +254,13 @@
             [ToolPopupWindow critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil];
             return false;
         }
+        // 鍵・証明書のアルゴリズムが異なる場合は、エラーメッセージを表示し処理中止
+        if ([importer keyAlgorithm] != [importer certAlgorithm]) {
+            NSString *info = [[NSString alloc] initWithFormat:MSG_FORMAT_PIV_PKEY_CERT_ALGORITHM,
+                              [importer keyAlgorithm], [importer certAlgorithm]];
+            [ToolPopupWindow critical:MSG_PIV_PKEY_CERT_ALGORITHM_CMP_FAILED informativeText:info];
+            return false;
+        }
         [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporter:importer];
         return true;
     }

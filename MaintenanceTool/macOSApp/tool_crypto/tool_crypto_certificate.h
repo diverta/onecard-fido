@@ -25,7 +25,7 @@ typedef struct _cert_desc {
 //
 // public functions
 //
-bool             tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned char *cert_data, size_t *cert_size);
+bool             tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned char *algorithm, unsigned char *cert_data, size_t *cert_size);
 bool             tool_crypto_certificate_extract_descriptions(unsigned char *cert_data, size_t cert_size);
 CERT_DESC       *tool_crypto_certificate_extracted_descriptions(void);
 

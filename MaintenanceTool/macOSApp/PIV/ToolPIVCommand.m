@@ -328,13 +328,13 @@
 
     - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
-        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer algorithm]];
+        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
         [self setLastErrorMessage:msg];
     }
 
     - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してログ出力
-        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer algorithm]];
+        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
     }
 
 #pragma mark - PIV administrative authentication
@@ -428,7 +428,7 @@
         // 秘密鍵インポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getPrivateKeyAPDUData];
         [self doRequestYkPivInsImportKey:apdu
-                               algorithm:[[self toolPIVImporter] algorithm]
+                               algorithm:[[self toolPIVImporter] keyAlgorithm]
                                keySlotId:[[self toolPIVImporter] keySlotId]];
     }
 

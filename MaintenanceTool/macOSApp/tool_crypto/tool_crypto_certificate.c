@@ -37,6 +37,9 @@ static bool extract_from_pem_terminate(bool success)
     if (m_certificate != NULL) {
         X509_free(m_certificate);
     }
+    if (m_public_key != NULL) {
+        EVP_PKEY_free(m_public_key);
+    }
     if (m_input_file != NULL) {
         fclose(m_input_file);
     }
@@ -57,7 +60,7 @@ static bool extract_descriptions_terminate(bool success)
 //
 // public functions
 //
-bool tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned char *cert_data, size_t *cert_size)
+bool tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned char *algorithm, unsigned char *cert_data, size_t *cert_size)
 {
     // 変数を初期化
     initialize_references();
@@ -69,12 +72,20 @@ bool tool_crypto_certificate_extract_from_pem(const char *pem_path, unsigned cha
         log_debug("%s: Pem file open fail (%s)", __func__, pem_path);
         return extract_from_pem_terminate(false);
     }
-    // PEMファイルから秘密鍵を読込
+    // PEMファイルから証明書を読込
     m_certificate = PEM_read_X509(m_input_file, NULL, NULL, password);
     if (m_certificate == NULL) {
         log_debug("%s: Failed loading certificate for import (%s)", __func__, pem_path);
         return extract_from_pem_terminate(false);
     }
+    // 公開鍵を抽出
+    m_public_key = X509_get_pubkey(m_certificate);
+    if (m_public_key == NULL) {
+        log_debug("%s: Failed parsing public key for import (%s)", __func__, pem_path);
+        return extract_descriptions_terminate(false);
+    }
+    // 公開鍵からアルゴリズムを抽出
+    *algorithm = tool_crypto_get_algorithm_from_evp_pkey(m_public_key);
     // 証明書バイナリーイメージ長をチェック
     int cert_len = i2d_X509(m_certificate, NULL);
     if (cert_len > *cert_size || cert_len < 0) {

@@ -75,9 +75,6 @@ static const unsigned char default_3des_key[] = {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
 };
 
-// 秘密鍵のアルゴリズムを保持
-static unsigned char m_alg;
-
 // 鍵／証明書のバイナリーイメージを格納
 static unsigned char m_binary_data[CERTIFICATE_MAX_SIZE];
 static size_t        m_binary_size;
@@ -205,13 +202,13 @@ static size_t generate_APDU_data_eccp_256(unsigned char *apdu_data, unsigned cha
     return offset;
 }
 
-static void generate_private_key_APDU(void)
+static void generate_private_key_APDU(uint8_t alg)
 {
     // 変数初期化
     memset(m_apdu_bytes, 0, sizeof(m_apdu_bytes));
     m_apdu_size = 0;
 
-    switch (m_alg) {
+    switch (alg) {
         case CRYPTO_ALG_RSA2048:
             m_apdu_size = generate_APDU_data_rsa_2048(m_apdu_bytes, m_binary_data);
             break;
@@ -357,21 +354,19 @@ bool tool_piv_admin_load_private_key(unsigned char key_slot_id, const char *pem_
 {
     // PEM形式の秘密鍵ファイルから、バイナリーイメージを抽出
     m_binary_size = sizeof(m_binary_data);
-    if (tool_crypto_private_key_extract_from_pem(pem_path, &m_alg, m_binary_data, &m_binary_size) == false) {
+    if (tool_crypto_private_key_extract_from_pem(pem_path, algorithm, m_binary_data, &m_binary_size) == false) {
         return false;
     }
-    // 取得したアルゴリズムを引数領域にセット
-    *algorithm = m_alg;
     // バイナリーイメージから、証明書インポート処理用のAPDUを生成
-    generate_private_key_APDU();
+    generate_private_key_APDU(*algorithm);
     return true;
 }
 
-bool tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path)
+bool tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path, unsigned char *algorithm)
 {
     // PEM形式の証明書ファイルから、バイナリーイメージを抽出
     m_binary_size = sizeof(m_binary_data);
-    if (tool_crypto_certificate_extract_from_pem(pem_path, m_binary_data, &m_binary_size) == false) {
+    if (tool_crypto_certificate_extract_from_pem(pem_path, algorithm, m_binary_data, &m_binary_size) == false) {
         return false;
     }
     // バイナリーイメージから、証明書インポート処理用のAPDUを生成
