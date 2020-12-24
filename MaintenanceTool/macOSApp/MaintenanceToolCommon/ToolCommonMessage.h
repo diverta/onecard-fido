@@ -267,6 +267,7 @@
 #define MSG_LABEL_NEW_PUK                       @"新しいPUK番号"
 #define MSG_LABEL_NEW_PUK_FOR_CONFIRM           @"新しいPUK番号（確認用）"
 #define MSG_FORMAT_WILL_PROCESS                 @"%@を実行します。"
+#define MSG_FORMAT_PROCESS_INFORMATIVE          @"%@\n\n処理を開始しますか？"
 #define MSG_PIV_INITIAL_SETTING                 @"初回設定の処理"
 #define MSG_PROMPT_PIV_INITIAL_SETTING          @"新規にCHUID、CCCが設定されます。\n\n処理を開始しますか？"
 #define MSG_PIV_CLEAR_SETTING                   @"設定情報の消去"
@@ -279,6 +280,9 @@
 #define MSG_PIV_CHANGE_PIN_NUMBER               @"PIN番号の変更"
 #define MSG_PIV_CHANGE_PUK_NUMBER               @"PUK番号の変更"
 #define MSG_PIV_RESET_PIN_NUMBER                @"PIN番号のリセット"
+#define MSG_DESC_PIV_CHANGE_PIN_NUMBER          @"現在のPIN番号を、入力した新しいPIN番号に変更します。"
+#define MSG_DESC_PIV_CHANGE_PUK_NUMBER          @"現在のPUK番号を、入力した新しいPUK番号に変更します。"
+#define MSG_DESC_PIV_RESET_PIN_NUMBER           @"現在のPIN番号をリセットし、入力した新しいPIN番号に変更します。"
 #define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
 
 #endif /* ToolCommonMessage_h */

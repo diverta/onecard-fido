@@ -315,29 +315,7 @@
 
     - (void)displayResultMessage:(bool)result withCommand:(Command)command {
         // 処理名称を設定
-        NSString *name = nil;
-        switch (command) {
-            case COMMAND_CCID_PIV_SET_CHUID:
-                name = MSG_PIV_INITIAL_SETTING;
-                break;
-            case COMMAND_CCID_PIV_RESET:
-                name = MSG_PIV_CLEAR_SETTING;
-                break;
-            case COMMAND_CCID_PIV_IMPORT_KEY:
-                name = MSG_PIV_INSTALL_PKEY_CERT;
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PIN:
-                name = MSG_PIV_CHANGE_PIN_NUMBER;
-                break;
-            case COMMAND_CCID_PIV_CHANGE_PUK:
-                name = MSG_PIV_CHANGE_PUK_NUMBER;
-                break;
-            case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                name = MSG_PIV_RESET_PIN_NUMBER;
-                break;
-            default:
-                break;
-        }
+        NSString *name = [self functionNameOfCommand:command];
         // メッセージをポップアップ表示
         if (name) {
             NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
@@ -425,9 +403,16 @@
     }
 
     - (IBAction)buttonPerformPinCommandDidPress:(id)sender {
-        // TODO: ラジオボタンから実行コマンド種別を取得
-        // TODO: 入力欄の内容をチェック
-        // TODO: PIN番号管理コマンドを実行
+        // ラジオボタンから実行コマンド種別を取得
+        Command command = [self selectedPinCommand];
+        // 入力欄の内容をチェック
+        if ([self checkForPerformPinCommand:sender withCommand:command] == false) {
+            return;
+        }
+        // PIN番号管理コマンドを実行（ラジオボタンから実行コマンドを取得）
+        NSString *curPin = [[self fieldCurPin] stringValue];
+        NSString *newPin = [[self fieldNewPinConf] stringValue];
+        [self commandWillChangePin:command withNewPin:newPin withAuthPin:curPin];
     }
 
     - (void)initButtonPinCommandsWithDefault:(NSButton *)defaultButton {
@@ -517,6 +502,66 @@
     - (bool)checkPinConfirmFor:(NSTextField *)dest withSource:(NSTextField *)source withName:(NSString *)name {
         NSString *msg = [[NSString alloc] initWithFormat:MSG_PROMPT_INPUT_PIV_PIN_PUK_CONFIRM, name];
         return [ToolCommon compareEntry:dest srcField:source informativeText:msg];
+    }
+
+    - (bool)checkForPerformPinCommand:(id)sender withCommand:(Command)command {
+        // 処理名称、詳細を設定
+        NSString *name = [self functionNameOfCommand:command];
+        NSString *desc = [self descriptionOfCommand:command];
+        // 事前に確認ダイアログを表示
+        NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
+        NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
+        if ([ToolPopupWindow promptYesNo:msg informativeText:informative] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (NSString *)functionNameOfCommand:(Command)command {
+        // 処理名称を設定
+        NSString *name = nil;
+        switch (command) {
+            case COMMAND_CCID_PIV_SET_CHUID:
+                name = MSG_PIV_INITIAL_SETTING;
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                name = MSG_PIV_CLEAR_SETTING;
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                name = MSG_PIV_INSTALL_PKEY_CERT;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                name = MSG_PIV_CHANGE_PIN_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                name = MSG_PIV_CHANGE_PUK_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                name = MSG_PIV_RESET_PIN_NUMBER;
+                break;
+            default:
+                break;
+        }
+        return name;
+    }
+
+    - (NSString *)descriptionOfCommand:(Command)command {
+        // 処理詳細を設定
+        NSString *name = nil;
+        switch (command) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                name = MSG_DESC_PIV_CHANGE_PIN_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                name = MSG_DESC_PIV_CHANGE_PUK_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                name = MSG_DESC_PIV_RESET_PIN_NUMBER;
+                break;
+            default:
+                break;
+        }
+        return name;
     }
 
 @end
