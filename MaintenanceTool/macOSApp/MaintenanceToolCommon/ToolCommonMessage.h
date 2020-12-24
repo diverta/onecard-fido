@@ -274,5 +274,9 @@
 #define MSG_PIV_INSTALL_PKEY_CERT               @"鍵・証明書ファイルのインストール"
 #define MSG_PIV_LOAD_PKEY_FAILED                @"鍵ファイルの読込が失敗しました。"
 #define MSG_PIV_LOAD_CERT_FAILED                @"証明書ファイルの読込が失敗しました。"
+#define MSG_PIV_CHANGE_PIN_NUMBER               @"PIN番号の変更"
+#define MSG_PIV_CHANGE_PUK_NUMBER               @"PUK番号の変更"
+#define MSG_PIV_RESET_PIN_NUMBER                @"PIN番号のリセット"
+#define MSG_PIV_STATUS_GET_FAILED               @"PIV設定情報を取得できませんでした。"
 
 #endif /* ToolCommonMessage_h */

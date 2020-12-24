@@ -263,22 +263,14 @@
     }
 
     - (void)toolPIVCommandDidProcess:(Command)command withResult:(bool)result {
-        [self enableButtons:true];
         switch (command) {
             case COMMAND_CCID_PIV_STATUS:
                 // PIV設定情報を、情報表示画面に表示
-                [self openToolInfoWindowWithDescription];
-                break;
-            case COMMAND_CCID_PIV_SET_CHUID:
-                [self displayResultMessage:result withName:MSG_PIV_INITIAL_SETTING];
-                break;
-            case COMMAND_CCID_PIV_RESET:
-                [self displayResultMessage:result withName:MSG_PIV_CLEAR_SETTING];
+                [self openToolInfoWindowWithDescriptionWithResult:result];
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
-                [self displayResultMessage:result withName:MSG_PIV_INSTALL_PKEY_CERT];
+                // 全ての入力欄をクリア
                 if (result) {
-                    // 全ての入力欄をクリア
                     [self initTabPkeyCertPathFields];
                     [self initTabPkeyCertPinFields];
                 }
@@ -286,29 +278,68 @@
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                // 全ての入力欄をクリア
+                if (result) {
+                    [self initTabPinManagementPinFields];
+                }
                 break;
             default:
                 break;
         }
+        // 処理終了メッセージをポップアップ表示後、画面項目を使用可とする
+        [self displayResultMessage:result withCommand:command];
+        [self enableButtons:true];
     }
 
-    - (void)openToolInfoWindowWithDescription {
-        // PIV設定情報を、情報表示画面に表示
-        ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
-        ToolPIVCommand *command = [self toolPIVCommand];
-        [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
-                                     titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                      infoString:[command getPIVSettingDescriptionString]];
-    }
-
-    - (void)displayResultMessage:(bool)result withName:(NSString *)name {
-        // メッセージをポップアップ表示
-        NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
-                         result ? MSG_SUCCESS:MSG_FAILURE];
+    - (void)openToolInfoWindowWithDescriptionWithResult:(bool)result {
         if (result) {
-            [ToolPopupWindow informational:str informativeText:nil];
+            // PIV設定情報を、情報表示画面に表示
+            ToolInfoWindow *infoWindow = [ToolInfoWindow defaultWindow];
+            ToolPIVCommand *command = [self toolPIVCommand];
+            [infoWindow windowWillOpenWithCommandRef:command withParentWindow:[self window]
+                                         titleString:PROCESS_NAME_CCID_PIV_STATUS
+                                          infoString:[command getPIVSettingDescriptionString]];
         } else {
-            [ToolPopupWindow critical:str informativeText:[[self toolPIVCommand] lastErrorMessage]];
+            // 異常終了メッセージをポップアップ表示
+            [ToolPopupWindow critical:MSG_PIV_STATUS_GET_FAILED
+                      informativeText:[[self toolPIVCommand] lastErrorMessage]];
+        }
+    }
+
+    - (void)displayResultMessage:(bool)result withCommand:(Command)command {
+        // 処理名称を設定
+        NSString *name = nil;
+        switch (command) {
+            case COMMAND_CCID_PIV_SET_CHUID:
+                name = MSG_PIV_INITIAL_SETTING;
+                break;
+            case COMMAND_CCID_PIV_RESET:
+                name = MSG_PIV_CLEAR_SETTING;
+                break;
+            case COMMAND_CCID_PIV_IMPORT_KEY:
+                name = MSG_PIV_INSTALL_PKEY_CERT;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                name = MSG_PIV_CHANGE_PIN_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                name = MSG_PIV_CHANGE_PUK_NUMBER;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                name = MSG_PIV_RESET_PIN_NUMBER;
+                break;
+            default:
+                break;
+        }
+        // メッセージをポップアップ表示
+        if (name) {
+            NSString *str = [NSString stringWithFormat:MSG_FORMAT_END_MESSAGE, name,
+                             result ? MSG_SUCCESS:MSG_FAILURE];
+            if (result) {
+                [ToolPopupWindow informational:str informativeText:nil];
+            } else {
+                [ToolPopupWindow critical:str informativeText:[[self toolPIVCommand] lastErrorMessage]];
+            }
         }
     }
 
