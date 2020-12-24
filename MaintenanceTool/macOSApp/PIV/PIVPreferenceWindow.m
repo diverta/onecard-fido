@@ -67,32 +67,50 @@
     }
 
     - (void)initFieldValue {
-        // 最初のタブを選択させる
-        [[self tabView] selectTabViewItemAtIndex:0];
-        // タブを初期化
-        [self initTabPkeyCertManagement];
+        // PIN番号管理タブ内の入力項目を初期化
+        [[self tabView] selectTabViewItem:[self tabPinManagement]];
         [self initTabPinManagement];
+        // 鍵・証明書管理タブ内の入力項目を初期化（このタブが選択状態になります）
+        [[self tabView] selectTabViewItem:[self tabPkeyCertManagement]];
+        [self initTabPkeyCertManagement];
     }
 
     - (void)initTabPkeyCertManagement {
         // ラジオボタンの初期化
         [self initButtonPkeySlotIdsWithDefault:[self buttonPkeySlotId1]];
         // テキストボックスの初期化
+        [self initTabPkeyCertPathFields];
+        [self initTabPkeyCertPinFields];
+    }
+
+    - (void)initTabPkeyCertPathFields {
+        // ファイルパスのテキストボックスを初期化
         [[self fieldPath1] setStringValue:@""];
         [[self fieldPath2] setStringValue:@""];
+        // テキストボックスのカーソルを先頭の項目に配置
+        [[self fieldPath1] becomeFirstResponder];
+    }
+
+    - (void)initTabPkeyCertPinFields {
+        // PIN番号のテキストボックスを初期化
         [[self fieldPin1] setStringValue:@""];
         [[self fieldPin2] setStringValue:@""];
-        // テキストボックスのカーソルを配置
-        [[self fieldPath1] becomeFirstResponder];
     }
 
     - (void)initTabPinManagement {
         // ラジオボタンの初期化
         [self initButtonPinCommandsWithDefault:[self buttonPinCommand1]];
         // テキストボックスの初期化
+        [self initTabPinManagementPinFields];
+    }
+
+    - (void)initTabPinManagementPinFields {
+        // PIN番号のテキストボックスを初期化
         [[self fieldCurPin] setStringValue:@""];
         [[self fieldNewPin] setStringValue:@""];
         [[self fieldNewPinConf] setStringValue:@""];
+        // テキストボックスのカーソルを先頭の項目に配置
+        [[self fieldCurPin] becomeFirstResponder];
     }
 
     - (void)enableButtons:(bool)enabled {
@@ -226,15 +244,18 @@
         [[self toolPIVCommand] commandWillReset:COMMAND_CCID_PIV_RESET];
     }
 
-    - (void)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
+    - (bool)commandWillImportPkeyCert:(uint8_t)keySlotId pkeyPemPath:(NSString *)pkey certPemPath:(NSString *)cert withAuthPin:(NSString *)authPin {
         ToolPIVImporter *importer = [[ToolPIVImporter alloc] initForKeySlot:keySlotId];
         if ([importer readPrivateKeyPemFrom:pkey] == false) {
-            return;
+            [ToolPopupWindow critical:MSG_PIV_LOAD_PKEY_FAILED informativeText:nil];
+            return false;
         }
         if ([importer readCertificatePemFrom:cert] == false) {
-            return;
+            [ToolPopupWindow critical:MSG_PIV_LOAD_CERT_FAILED informativeText:nil];
+            return false;
         }
         [[self toolPIVCommand] commandWillImportKey:COMMAND_CCID_PIV_IMPORT_KEY withAuthPinCode:authPin withImporter:importer];
+        return true;
     }
 
     - (void)commandWillChangePin:(Command)command withNewPin:(NSString *)newPin withAuthPin:(NSString *)authPin {
@@ -255,6 +276,13 @@
                 [self displayResultMessage:result withName:MSG_PIV_CLEAR_SETTING];
                 break;
             case COMMAND_CCID_PIV_IMPORT_KEY:
+                [self displayResultMessage:result withName:MSG_PIV_INSTALL_PKEY_CERT];
+                if (result) {
+                    // 全ての入力欄をクリア
+                    [self initTabPkeyCertPathFields];
+                    [self initTabPkeyCertPinFields];
+                }
+                break;
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
@@ -280,7 +308,7 @@
         if (result) {
             [ToolPopupWindow informational:str informativeText:nil];
         } else {
-            [ToolPopupWindow critical:str informativeText:nil];
+            [ToolPopupWindow critical:str informativeText:[[self toolPIVCommand] lastErrorMessage]];
         }
     }
 
