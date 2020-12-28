@@ -10,6 +10,7 @@
 #import "tool_piv_admin.h"
 
 #import "AppDelegate.h"
+#import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
 #import "ToolCommonMessage.h"
@@ -35,8 +36,6 @@
     @property (nonatomic) ToolPIVImporter   *toolPIVImporter;
     // PIV管理機能認証（往路）のチャレンジを保持
     @property (nonatomic) NSData            *pivAuthChallenge;
-    // エラーメッセージテキストを保持
-    @property (nonatomic) NSString          *lastErrorMessage;
     // CCCインポート処理が実行中かどうかを保持
     @property (nonatomic) bool               cccImportProcessing;
     // 現在取得中のPIVオブジェクトIDを保持
@@ -44,7 +43,8 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate *appDelegate;
+    @property (nonatomic, weak) AppDelegate     *appDelegate;
+    @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
 
 @end
 
@@ -62,6 +62,8 @@
             // ToolCCIDHelperのインスタンスを生成
             [self setToolCCIDHelper:[[ToolCCIDHelper alloc] initWithDelegate:self]];
             [self clearCommandParameters];
+            // PIV設定画面のインスタンスを生成
+            [self setPivPreferenceWindow:[[PIVPreferenceWindow alloc] initWithWindowNibName:@"PIVPreferenceWindow"]];
         }
         return self;
     }
@@ -75,12 +77,13 @@
         [self setPinCodeNew:nil];
         [self setToolPIVImporter:nil];
         [self setPivAuthChallenge:nil];
-        [self setLastErrorMessage:nil];
     }
 
     - (void)ccidHelperWillProcess:(Command)command {
         // コマンドを待避
         [self setCommand:command];
+        // コマンド実行時のエラーテキストをクリア
+        [self setLastErrorMessage:nil];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
@@ -135,6 +138,20 @@
                 [self exitCommandProcess:false];
                 break;
         }
+    }
+
+#pragma mark - For PIVPreferenceWindow open/close
+
+    - (void)commandWillOpenPreferenceWindowWithParent:(NSWindow *)parent {
+        // PIV機能設定画面を表示（親画面＝メイン画面）
+        if ([[self pivPreferenceWindow] windowWillOpenWithCommandRef:self parentWindow:parent] == false) {
+            [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+        }
+    }
+
+    - (void)commandDidClosePreferenceWindow {
+        // メイン画面に制御を戻す
+        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
     }
 
 #pragma mark - Public methods
@@ -240,7 +257,7 @@
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_IMPORT_KEY:
-                [self doYkPivImportKeyProcess];
+                [self doYkPivImportKeyProcessWithResponse:response status:sw];
                 break;
             case COMMAND_CCID_PIV_STATUS:
                 [self doYkPivStatusProcessWithPinRetryResponse:response status:sw];
@@ -311,13 +328,13 @@
 
     - (void)setLastErrorMessageWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してエラーログを生成
-        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer algorithm]];
+        NSString *msg = [[NSString alloc] initWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
         [self setLastErrorMessage:msg];
     }
 
     - (void)outputLogWithFormat:(NSString *)format withImporter:(ToolPIVImporter *)importer {
         // インストール先のスロットIDとアルゴリズムを付加してログ出力
-        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer algorithm]];
+        [[ToolLogFile defaultLogger] infoWithFormat:format, [importer keySlotId], [importer keyAlgorithm]];
     }
 
 #pragma mark - PIV administrative authentication
@@ -401,11 +418,17 @@
         [self doRequestPivAdminAuth];
     }
 
-    - (void)doYkPivImportKeyProcess {
+    - (void)doYkPivImportKeyProcessWithResponse:(NSData *)response status:(uint16_t)sw {
+        // ステータスワードをチェックし、PIN認証の成否を判定
+        if ([self checkPivInsReplyUsingPinOrPukWithStatus:sw isPinAuth:true] == false) {
+            // PIN認証が失敗した場合は処理終了
+            [self exitCommandProcess:false];
+            return;
+        }
         // 秘密鍵インポート処理を実行
         NSData *apdu = [[self toolPIVImporter] getPrivateKeyAPDUData];
         [self doRequestYkPivInsImportKey:apdu
-                               algorithm:[[self toolPIVImporter] algorithm]
+                               algorithm:[[self toolPIVImporter] keyAlgorithm]
                                keySlotId:[[self toolPIVImporter] keySlotId]];
     }
 
@@ -542,7 +565,6 @@
                 break;
             case PIV_OBJ_KEY_MANAGEMENT:
                 [self exitCommandProcess:true];
-                [self toolInfoWindowWillOpen];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -550,17 +572,8 @@
         }
     }
 
-    - (void)toolInfoWindowWillOpen {
-        // PIV設定情報を、情報表示画面に表示
-        ToolInfoWindow *windowRef = [[self appDelegate] toolInfoWindowRef];
-        [windowRef windowWillOpenWithCommandRef:self
-                                    titleString:PROCESS_NAME_CCID_PIV_STATUS
-                                     infoString:[[self toolPIVSetting] getDescriptionString]];
-    }
-
-    - (void)toolInfoWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
-        // メイン画面側に処理完了を通知（ログ出力／ポップアップ表示無し）
-        [[self appDelegate] toolPIVCommandDidTerminate:COMMAND_NONE result:true message:nil];
+    - (NSString *)getPIVSettingDescriptionString {
+        return [[self toolPIVSetting] getDescriptionString];
     }
 
 #pragma mark - PIN management functions
@@ -594,7 +607,7 @@
         [[self toolCCIDHelper] ccidHelperWillSendIns:[self commandIns] p1:0x00 p2:p2 data:apdu le:0xff];
     }
 
-    - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
+    - (bool)checkPivInsReplyUsingPinOrPukWithStatus:(uint16_t)sw isPinAuth:(bool)isPinAuth {
         // ステータスワードをチェックし、エラーの種類を判定
         uint8_t retries = 3;
         bool isPinBlocked = false;
@@ -615,7 +628,6 @@
             [self setLastErrorMessage:msg];
         }
         // PINブロック or リトライカウンターの状態に応じメッセージを編集
-        bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
         if (isPinBlocked) {
             [self setLastErrorMessage:isPinAuth ? MSG_ERROR_PIV_PIN_LOCKED : MSG_ERROR_PIV_PUK_LOCKED];
 
@@ -624,12 +636,19 @@
             NSString *msg = [[NSString alloc] initWithFormat:MSG_ERROR_PIV_WRONG_PIN, name, name, retries];
             [self setLastErrorMessage:msg];
         }
+        return (sw == SW_SUCCESS);
+    }
+
+    - (void)doResponsePivInsChangePin:(NSData *)response status:(uint16_t)sw {
+        // ステータスワードをチェックし、PIN認証の成否を判定
+        bool isPinAuth = ([self command] == COMMAND_CCID_PIV_CHANGE_PIN);
+        bool ret = [self checkPivInsReplyUsingPinOrPukWithStatus:sw isPinAuth:isPinAuth];
         // コマンドに応じ、以下の処理に分岐
         switch ([self command]) {
             case COMMAND_CCID_PIV_CHANGE_PIN:
             case COMMAND_CCID_PIV_CHANGE_PUK:
             case COMMAND_CCID_PIV_UNBLOCK_PIN:
-                [self exitCommandProcess:(sw == SW_SUCCESS)];
+                [self exitCommandProcess:ret];
                 break;
             default:
                 [self exitCommandProcess:false];
@@ -715,7 +734,10 @@
             }
         }
         // パラメーターを初期化
+        Command command = [self command];
         [self clearCommandParameters];
+        // 画面に制御を戻す
+        [[self pivPreferenceWindow] toolPIVCommandDidProcess:command withResult:success];
     }
 
 #pragma mark - Utility functions

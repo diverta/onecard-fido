@@ -13,6 +13,8 @@
 // PINコードの最小／最大桁数
 #define PIN_CODE_SIZE_MIN 4
 #define PIN_CODE_SIZE_MAX 16
+#define PIV_PIN_CODE_SIZE_MIN 6
+#define PIV_PIN_CODE_SIZE_MAX 8
 
 // コマンド種別
 typedef enum : NSInteger {

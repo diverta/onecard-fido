@@ -14,6 +14,7 @@ PC環境から、[FIDO認証器](../../nRF5_SDK_v15.3.0)の動作に必要な鍵
 * Flash ROM情報取得機能
 * バージョン情報取得機能
 * 自動認証パラメーター設定機能
+* PIV機能設定
 * ファームウェア更新機能
 * ログファイル格納ディレクトリー参照機能
 * 開発時運用機能
@@ -40,6 +41,9 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 
 - <b>[自動認証パラメーター設定手順](BLEAUTHPARAM.md)</b><br>
 [BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
+
+- <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
+[PIV機能](../../CCID/MACPIVLOGIN.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。

@@ -48,7 +48,7 @@
         NSData *apdu = [[NSData alloc] initWithBytes:tool_piv_admin_generated_APDU_data()
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setPrivateKeyAPDU:apdu];
-        [self setAlgorithm:algorithm];
+        [self setKeyAlgorithm:algorithm];
         [[ToolLogFile defaultLogger] info:MSG_PIV_PKEY_PEM_LOADED];
         return true;
     }
@@ -56,7 +56,8 @@
     - (bool)readCertificatePemFrom:(NSString *)pemFilePath {
         // PEM形式の証明書ファイルから、バイナリーイメージを抽出
         char *path = (char *)[pemFilePath UTF8String];
-        if (tool_piv_admin_load_certificate([self keySlotId], path) == false) {
+        uint8_t algorithm;
+        if (tool_piv_admin_load_certificate([self keySlotId], path, &algorithm) == false) {
             [ToolCommon logErrorMessageWithFuncError:MSG_ERROR_PIV_CERT_PEM_LOAD_FAILED];
             return false;
         }
@@ -64,6 +65,7 @@
         NSData *apdu = [[NSData alloc] initWithBytes:tool_piv_admin_generated_APDU_data()
                                               length:tool_piv_admin_generated_APDU_size()];
         [self setCertificateAPDU:apdu];
+        [self setCertAlgorithm:algorithm];
         [[ToolLogFile defaultLogger] info:MSG_PIV_CERT_PEM_LOADED];
         return true;
     }

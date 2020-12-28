@@ -29,7 +29,7 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemTestCCID;
+    @property (assign) IBOutlet NSMenuItem  *menuItemOption;
     @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
@@ -71,8 +71,7 @@
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
         // 情報表示画面の初期設定
-        [self setToolInfoWindow:[[ToolInfoWindow alloc] initWithWindowNibName:@"ToolInfoWindow"]];
-        [[self toolInfoWindow] setParentWindow:[self window]];
+        [self setToolInfoWindow:[ToolInfoWindow defaultWindow]];
         // PIV機能の初期設定
         [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         // DFU機能の初期設定
@@ -112,7 +111,7 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
-        [self.menuItemTestCCID setEnabled:enabled];
+        [self.menuItemOption setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
@@ -201,18 +200,14 @@
 
     - (IBAction)buttonPath1DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_PKEY_PATH
-                                     fileTypes:@[@"pem"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_PKEY_PATH withFileTypes:@[@"pem"]];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_CRT_PATH
-                                     fileTypes:@[@"crt"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_CRT_PATH withFileTypes:@[@"crt"]];
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
@@ -270,13 +265,13 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
-    - (IBAction)menuItemTestCCID1DidSelect:(id)sender {
+    - (IBAction)menuItemOptionPivSettingsDidSelect:(id)sender {
         if ([self checkUSBHIDConnection] == false) {
             return;
         }
-        // PIV設定情報取得
+        // PIV機能設定画面を表示
         [self enableButtons:false];
-        [[self toolPIVCommand] commandWillStatus:COMMAND_CCID_PIV_STATUS];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
     }
 
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
@@ -428,11 +423,11 @@
         if (modalResponse == NSFileHandlingPanelOKButton) {
             if ([self buttonPath1] == sender) {
                 [[self fieldPath1] setStringValue:filePath];
-                [[self fieldPath1] becomeFirstResponder];
+                [[self fieldPath1] setToolTip:filePath];
             }
             if ([self buttonPath2] == sender) {
                 [[self fieldPath2] setStringValue:filePath];
-                [[self fieldPath2] becomeFirstResponder];
+                [[self fieldPath2] setToolTip:filePath];
             }
         }
         // メニューを活性化

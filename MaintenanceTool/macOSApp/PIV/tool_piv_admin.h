@@ -22,7 +22,7 @@
 unsigned char   *tool_piv_admin_des_default_key(void);
 
 bool             tool_piv_admin_load_private_key(unsigned char key_slot_id, const char *pem_path, unsigned char *algorithm);
-bool             tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path);
+bool             tool_piv_admin_load_certificate(unsigned char key_slot_id, const char *pem_path, unsigned char *algorithm);
 unsigned char   *tool_piv_admin_generated_APDU_data(void);
 size_t           tool_piv_admin_generated_APDU_size(void);
 unsigned char   *tool_piv_admin_generate_CHUID_APDU(size_t *size);

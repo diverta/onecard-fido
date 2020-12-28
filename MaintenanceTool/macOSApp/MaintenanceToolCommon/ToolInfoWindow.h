@@ -11,9 +11,8 @@
 
 @interface ToolInfoWindow : NSWindowController
 
-    @property (nonatomic, weak) NSWindow *parentWindow;
-
-    - (bool)windowWillOpenWithCommandRef:(id)ref titleString:(NSString *)title infoString:(NSString *)info;
+    + (ToolInfoWindow *)defaultWindow;
+    - (bool)windowWillOpenWithCommandRef:(id)ref withParentWindow:(NSWindow *)parent titleString:(NSString *)title infoString:(NSString *)info;
 
 @end
 
