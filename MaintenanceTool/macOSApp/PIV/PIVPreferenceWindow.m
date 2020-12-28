@@ -505,6 +505,10 @@
     }
 
     - (bool)checkForPerformPinCommand:(id)sender withCommand:(Command)command {
+        // 入力欄のチェック
+        if ([self checkPinNumbersForPinCommand:command] == false) {
+            return false;
+        }
         // 処理名称、詳細を設定
         NSString *name = [self functionNameOfCommand:command];
         NSString *desc = [self descriptionOfCommand:command];
@@ -512,6 +516,47 @@
         NSString *msg = [[NSString alloc] initWithFormat:MSG_FORMAT_WILL_PROCESS, name];
         NSString *informative = [[NSString alloc] initWithFormat:MSG_FORMAT_PROCESS_INFORMATIVE, desc];
         if ([ToolPopupWindow promptYesNo:msg informativeText:informative] == false) {
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkPinNumbersForPinCommand:(Command)command {
+        // ポップアップ表示される文言を設定
+        NSString *msgCurPin = nil;
+        NSString *msgNewPin = nil;
+        NSString *msgNewPinConf = nil;
+        switch (command) {
+            case COMMAND_CCID_PIV_CHANGE_PIN:
+                msgCurPin = MSG_LABEL_CURRENT_PIN;
+                msgNewPin = MSG_LABEL_NEW_PIN;
+                msgNewPinConf = MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            case COMMAND_CCID_PIV_CHANGE_PUK:
+                msgCurPin = MSG_LABEL_CURRENT_PUK;
+                msgNewPin = MSG_LABEL_NEW_PUK;
+                msgNewPinConf = MSG_LABEL_NEW_PUK_FOR_CONFIRM;
+                break;
+            case COMMAND_CCID_PIV_UNBLOCK_PIN:
+                msgCurPin = MSG_LABEL_CURRENT_PUK;
+                msgNewPin = MSG_LABEL_NEW_PIN;
+                msgNewPinConf = MSG_LABEL_NEW_PIN_FOR_CONFIRM;
+                break;
+            default:
+                break;
+        }
+        // 入力欄のチェック
+        if ([self checkPinNumber:[self fieldCurPin] withName:msgCurPin] == false) {
+            return false;
+        }
+        if ([self checkPinNumber:[self fieldNewPin] withName:msgNewPin] == false) {
+            return false;
+        }
+        if ([self checkPinNumber:[self fieldNewPinConf] withName:msgNewPinConf] == false) {
+            return false;
+        }
+        // 確認用PINコードのチェック
+        if ([self checkPinConfirmFor:[self fieldNewPinConf] withSource:[self fieldNewPin] withName:msgNewPinConf] == false) {
             return false;
         }
         return true;
