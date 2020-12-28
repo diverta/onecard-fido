@@ -423,11 +423,11 @@
         if (modalResponse == NSFileHandlingPanelOKButton) {
             if ([self buttonPath1] == sender) {
                 [[self fieldPath1] setStringValue:filePath];
-                [[self fieldPath1] becomeFirstResponder];
+                [[self fieldPath1] setToolTip:filePath];
             }
             if ([self buttonPath2] == sender) {
                 [[self fieldPath2] setStringValue:filePath];
-                [[self fieldPath2] becomeFirstResponder];
+                [[self fieldPath2] setToolTip:filePath];
             }
         }
         // メニューを活性化
