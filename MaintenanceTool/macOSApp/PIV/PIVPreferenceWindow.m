@@ -87,14 +87,16 @@
         // ファイルパスのテキストボックスを初期化
         [[self fieldPath1] setStringValue:@""];
         [[self fieldPath2] setStringValue:@""];
-        // テキストボックスのカーソルを先頭の項目に配置
-        [[self fieldPath1] becomeFirstResponder];
+        [[self fieldPath1] setToolTip:@""];
+        [[self fieldPath2] setToolTip:@""];
     }
 
     - (void)initTabPkeyCertPinFields {
         // PIN番号のテキストボックスを初期化
         [[self fieldPin1] setStringValue:@""];
         [[self fieldPin2] setStringValue:@""];
+        // テキストボックスのカーソルを先頭の項目に配置
+        [[self fieldPin1] becomeFirstResponder];
     }
 
     - (void)initTabPinManagement {
@@ -392,7 +394,6 @@
         if (sender == button) {
             [field setStringValue:filePath];
             [field setToolTip:filePath];
-            [field becomeFirstResponder];
         }
     }
 
