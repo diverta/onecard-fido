@@ -374,7 +374,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6un-mf-b2T">
-                                                        <rect key="frame" x="18" y="83" width="91" height="16"/>
+                                                        <rect key="frame" x="18" y="83" width="150" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="現在のPUK番号" id="zy7-6n-aUk">
                                                             <font key="font" metaFont="system"/>
@@ -383,7 +383,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KQz-Ea-7T1">
-                                                        <rect key="frame" x="18" y="52" width="91" height="16"/>
+                                                        <rect key="frame" x="18" y="52" width="150" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号" id="iGU-ak-mNK">
                                                             <font key="font" metaFont="system"/>
@@ -392,7 +392,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWk-au-GHF">
-                                                        <rect key="frame" x="18" y="21" width="139" height="16"/>
+                                                        <rect key="frame" x="18" y="21" width="150" height="16"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="新しいPUK番号（確認）" id="P9l-EJ-dV6">
                                                             <font key="font" metaFont="system"/>
