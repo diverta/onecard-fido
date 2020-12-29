@@ -43,7 +43,7 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 [BLE近接認証機能](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)の各種パラメーターを設定する手順を掲載しています。
 
 - <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
-[PIV機能](../../CCID/MACPIVLOGIN.md)に必要な各種設定の手順を掲載しています。
+[PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
 - <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
