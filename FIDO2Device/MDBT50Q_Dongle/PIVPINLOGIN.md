@@ -27,27 +27,32 @@ macOS環境に導入した管理ツールにより、MDBT50Q DongleにPIV機能�
 
 #### スマートカードペアリングの実行
 
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を、PC（MacBook、iMac等）のUSBポートに装着します。<br>
-初回装着の場合、以下のようなダイアログが表示されます。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を、PC（MacBook、iMac等）のUSBポートに装着します。
 
+初回装着の場合、以下のようなダイアログが表示されます。<br>
+右下部の「ペアリング」をクリックします。
+
+<img src="assets03/0001.jpg" width="400">
+
+下図のようなダイアログが表示されます。<br>
 「PIV認証用証明書」を選択し「ペアリング」ボタンをクリックします。
 
-<img src="../../Research/CCID/reference/assets01/0016.png" width="400">
+<img src="assets03/0002.jpg" width="330">
+
+下図のようなダイアログがポップアップ表示されます。<br>
+macOSユーザーのパスワードを入力するか、Touch IDを使用します。
+
+<img src="assets03/0003.jpg" width="400">
 
 下図のようなダイアログが表示されます。<br>
-macOSユーザーのパスワードを入力します。
+PIN番号`123456`を入力し「OK」をクリックします。[注1]
 
-<img src="../../Research/CCID/reference/assets01/0017.png" width="400">
-
-下図のようなダイアログが表示されます。<br>
-デフォルトPIN番号である`123456`を入力します。
-
-<img src="../../Research/CCID/reference/assets01/0018.png" width="400">
+<img src="assets03/0004.jpg" width="400">
 
 下図のようなダイアログが表示されます。<br>
-キーチェーンのパスワード（通常はユーザーパスワードと同じ）を入力します。
+キーチェーンのパスワード（通常はユーザーパスワードと同じ）を入力し「OK」をクリックします。
 
-<img src="../../Research/CCID/reference/assets01/0019.png" width="400">
+<img src="assets03/0005.jpg" width="400">
 
 ダイアログが閉じられ、スマートカードペアリングが完了します。
 
@@ -55,21 +60,23 @@ macOSユーザーのパスワードを入力します。
 
 いったんmacOSからログオフし、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を、PCのUSBポートから外します。
 
-<img src="../../Research/CCID/reference/assets01/0020.png" width="400">
+<img src="assets03/0006.jpg" width="400">
 
 macOSのログイン画面が表示されます。<br>
 この後、ふたたび[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を、PC（MacBook、iMac等）のUSBポートに装着します。
 
 下図のように、ユーザーパスワードではなく、PIN番号を入力するためのボックスが表示されます。
 
-<img src="../../Research/CCID/reference/assets01/0021.jpeg" width="400">
+<img src="assets03/0007.jpg" width="400">
 
-PIN番号を入力して、ログインを実行します。
+PIN番号`123456`を入力して、ログインを実行します。[注1]
 
-<img src="../../Research/CCID/reference/assets01/0022.jpeg" width="400">
+<img src="assets03/0008.jpg" width="400">
 
 通常のパスワードによるログインと同様、macOSにログインできます。
 
-<img src="../../Research/CCID/reference/assets01/0023.jpeg" width="400">
+<img src="assets03/0009.jpg" width="400">
 
 以上で、PIN番号によるmacOSログインは完了になります。
+
+[注1] PIN番号`123456`はPIV機能の初期値になります。管理ツールの[PIN番号管理機能](../../MaintenanceTool/macOSApp/PIVSETTING.md)により、PIN番号を初期値から変更した場合は、変更後のPIN番号を指定してください。
