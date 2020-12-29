@@ -7,16 +7,16 @@
 
 下記手順書により、MDBT50Q DongleでPIV機能が使えるように準備を行います。
 
-#### [CCIDドライバーインストール手順](../../CCID/INSTALLPRG.md)
+### [CCIDドライバーインストール手順](../../CCID/INSTALLPRG.md)
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のCCIDインターフェース専用ドライバー（以下単に「CCIDドライバー」）を、macOS環境にインストールします。
 
-#### [管理ツールのインストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)
+### [管理ツールのインストール手順](../../MaintenanceTool/macOSApp/INSTALLPRG.md)
 最新バージョンの[管理ツール](../../MaintenanceTool/macOSApp/MaintenanceTool.pkg)をmacOS環境に導入します。
 
-#### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
+### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)）をMDBT50Q Dongleに導入します。
 
-#### [PIV機能の設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
+### [PIV機能の設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
 macOS環境に導入した管理ツールにより、MDBT50Q DongleにPIV機能を設定します。<br>
 リンク先ドキュメントの以下各章をご参照願います。<br>
 ・ソフトウェアのバージョン確認<br>
