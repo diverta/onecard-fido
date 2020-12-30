@@ -27,23 +27,22 @@ PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン�
 
 ## What's new
 
-#### 2020/11/05
+#### 2020/12/30
 
 FIDO認証器管理ツール、ファームウェアを修正しました。<br>
-（ファームウェア[Version 0.2.12](https://github.com/diverta/onecard-fido/tree/improve-SDApp-Android-20201103/nRF5_SDK_v15.3.0/firmwares)は、管理ツールに同梱しています。<br>
-　管理ツールの「[ファームウェア更新](https://github.com/diverta/onecard-fido/tree/improve-SDApp-Android-20201103/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)」機能を使用し、ファームウェアをアップデート願います）
+（ファームウェア[Version 0.2.13](https://github.com/diverta/onecard-fido/tree/doc-20201228/nRF5_SDK_v15.3.0/firmwares)は、管理ツールに同梱しています。<br>
+　管理ツールの「[ファームウェア更新](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)」機能を使用し、ファームウェアをアップデート願います）
 
-- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.33）](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
+- <b>[macOS版 FIDO認証器管理ツール（Version 0.1.34）](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/macOSApp/MaintenanceTool.pkg)</b>
 
-- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.33）](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
+- <b>[Windows版 FIDO認証器管理ツール（Version 0.1.34）](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
 修正点は以下になります。
-- [BLE近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)を、スマートフォンで利用できるようにする（[#371](https://github.com/diverta/onecard-fido/issues/371) ご参照）
-- 開発時運用メニュー（ペアリング情報削除機能／ブートローダーモード遷移機能）を追加（[#381](https://github.com/diverta/onecard-fido/pull/381)、[#383](https://github.com/diverta/onecard-fido/pull/383) ご参照）
+- <b>PIVカードエミュレーション機能を正式にリリース</b>しました（ドキュメント「[CCIDインターフェース追加対応](https://github.com/diverta/onecard-fido/blob/doc-20201228/CCID/README.md)」ご参照）。
 
-また、[BLE近接認証機能](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)で使用することができる[Androidアプリ](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/SecureDongleApp/Android/README.md)も合わせてリリースしています。<br>
-（手順につきましては、[こちらの手順書](https://github.com/diverta/onecard-fido/blob/improve-SDApp-Android-20201103/FIDO2Device/SecureDongleApp/Android/BLEAUTH.md)をご参照）
-
+- macOS版管理ツールに[PIV機能設定](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/macOSApp/PIVSETTING.md)メニューを追加（[#339](https://github.com/diverta/onecard-fido/issues/339) ご参照）
+- PIV機能設定メニュー追加に伴い、ファームウェアを改修
+- Windows版管理ツールには、PIV機能設定メニューはありません（今回の修正は同梱ファームウェア差替えのみになります）。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

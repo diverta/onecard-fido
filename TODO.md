@@ -4,6 +4,13 @@
 
 ## 各種アプリケーション改善対応
 
+#### 要件確定済み
+
+- <b>[調査] nRF Connect SDKへの移植に関する調査</b>
+（[#394](https://github.com/diverta/onecard-fido/issues/394) ご参照）
+  - 現状のnRF52840をベースとした基板のアプリケーションを、nRF Connect SDKに移植
+  - 移植後、問題が無いようであれば、次世代SoCである「nRF5340」への移植を実施
+
 #### 要件未確定
 
 - [改善] nRF52840アプリケーションのソースコードを圧縮する<br>
@@ -22,17 +29,16 @@ PIV Card、OpenPGP Cardなどといったスマートカードのエミュレー
 - CCIDインターフェース本体の、nRF52840アプリケーションへの追加実装
 - CCIDインターフェース本体の、macOS環境／Windows10環境上での実機動作確認
 - 「Yubico PIV Tool」による初期データ導入機能
+- 業務アプリケーション（PIV）の開発<br>
+（PIVカードエミュレーション。RSA-2048秘密鍵／証明書による認証機能を含む）
+- 管理ツールによる初期データ導入機能<br>
+（PIN設定変更機能を含む）
 
 #### 今後必要な対応
-- PIN設定変更機能（現状、デフォルトから変更不可となっています）
-- RSA-2048秘密鍵／証明書による認証機能
-- 業務アプリケーション（PIV／OpenPGP）の開発
-- CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
+- 業務アプリケーション（OpenPGP）の開発
 
 #### 各種手順書
-- [USB CCIDインターフェース](CCID/ccid_lib/README.md)
-- [Yubico PIV Toolによる初期データ導入手順](CCID/YKPIVUSAGE.md)
-- [PIVデバイスを使用したmacOSログイン手順](CCID/MACPIVLOGIN.md)
+- [PIN番号を使用したmacOSログイン確認手順](FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)
 
 #### 各種調査結果
 - [CCIDインターフェースに関する調査](Research/CCID/README.md)
