@@ -38,7 +38,7 @@ PIV機能は、[CCIDインターフェース](../../CCID/README.md)という仕�
 
 PIV機能の設定は「PIV機能設定画面」上で行います。
 
-まずは管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)を装着します。<br>
+まずは管理ツールを起動し、USBポートに[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を装着します。<br>
 その後、メニュー「Option --> PIV機能設定」を実行します。
 
 <img src="assets05/0001.jpg" width="400">
@@ -81,7 +81,7 @@ PIV設定情報取得画面に、下図の「CHUID」「CCC」が設定されて
 
 ### 鍵・証明書ファイルのインストール
 
-PIV機能では、FIDO機能と同様、鍵・証明書ファイルを認証器に導入する必要があります。
+PIV機能では、FIDO機能と同様、鍵・証明書ファイルを[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に導入する必要があります。
 
 導入が必要な鍵・証明書は、以下の３セットになります。<br>
 いずれも「PEM形式」の鍵・証明書ファイル（テキストファイル）をご用意ください。

@@ -12,7 +12,7 @@ PIV Card、OpenPGP Cardなどといったスマートカードのエミュレー
 <img src="../FIDO2Device/MDBT50Q_Dongle/assets01/0004.jpg" width="720">
 
 nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCに装着すると、macOSにPIN番号を使ってログインできるようになります。<br>
-詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
+詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
 
 ## 手順書
 
