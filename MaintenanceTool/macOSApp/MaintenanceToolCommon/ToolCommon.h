@@ -13,6 +13,8 @@
 // PINコードの最小／最大桁数
 #define PIN_CODE_SIZE_MIN 4
 #define PIN_CODE_SIZE_MAX 16
+#define PIV_PIN_CODE_SIZE_MIN 6
+#define PIV_PIN_CODE_SIZE_MAX 8
 
 // コマンド種別
 typedef enum : NSInteger {
@@ -37,7 +39,15 @@ typedef enum : NSInteger {
     COMMAND_AUTH_RESET,
     COMMAND_TOOL_PREF_PARAM,
     COMMAND_TOOL_PREF_PARAM_INQUIRY,
-    COMMAND_USB_DFU
+    COMMAND_USB_DFU,
+    COMMAND_ERASE_BONDS,
+    COMMAND_CCID_PIV_CHANGE_PIN,
+    COMMAND_CCID_PIV_CHANGE_PUK,
+    COMMAND_CCID_PIV_UNBLOCK_PIN,
+    COMMAND_CCID_PIV_RESET,
+    COMMAND_CCID_PIV_IMPORT_KEY,
+    COMMAND_CCID_PIV_SET_CHUID,
+    COMMAND_CCID_PIV_STATUS
 } Command;
 
 // トランスポート種別
@@ -68,6 +78,8 @@ typedef enum : NSInteger {
     + (bool) checkValueWithPattern:(NSTextField *)textField
                            pattern:(NSString *)pattern
                    informativeText:(NSString *)informativeText;
+
+    + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
 
 @end
 

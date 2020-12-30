@@ -202,8 +202,11 @@ int main(void)
     gatt_init();
     ble_service_common_init();
 
-    // USBデバイスを開始
-    usbd_service_start();
+    if (fido_ble_pairing_mode_get() == false) {
+        // ペアリングモードでない場合は
+        // USBデバイスを開始
+        usbd_service_start();
+    }
 
     // NFC関連の初期化（機能閉塞中です）
     nfc_service_init(true);

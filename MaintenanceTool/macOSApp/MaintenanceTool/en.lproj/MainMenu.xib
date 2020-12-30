@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -426,18 +426,33 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="View" hidden="YES" id="295">
-                    <menu key="submenu" title="View" id="296">
+                <menuItem title="Develop" id="3QH-K5-a4t">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Develop" autoenablesItems="NO" id="3MR-cq-TMg">
                         <items>
-                            <menuItem title="Show Toolbar" keyEquivalent="t" id="297">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <menuItem title="ペアリング情報削除" id="LIf-cp-Zj9">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="toggleToolbarShown:" target="-1" id="366"/>
+                                    <action selector="menuItemEraseBondDidSelect:" target="494" id="8tI-f8-yS1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Customize Toolbar…" id="298">
+                            <menuItem title="ブートローダーモード遷移" id="ZIq-GE-Ddb">
+                                <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="365"/>
+                                    <action selector="menuItemBLModeDidSelect:" target="494" id="YIb-Z9-8Tz"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Option" id="295">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Option" id="296">
+                        <items>
+                            <menuItem title="PIV機能設定" id="297">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="menuItemOptionPivSettingsDidSelect:" target="494" id="UWh-c5-CBZ"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -485,39 +500,39 @@
         <window title="FIDO認証器管理ツール" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="564" height="356"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1129"/>
             <view key="contentView" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="564" height="356"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdI-T9-vnq">
                         <rect key="frame" x="14" y="290" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="lHS-3K-zvA"/>
+                        </constraints>
                         <buttonCell key="cell" type="push" title="鍵・証明書・キーハンドル消去" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="button2DidPress:" target="494" id="17E-xy-wWB"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U">
-                        <rect key="frame" x="438" y="319" width="112" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-hD-g4U">
+                        <rect key="frame" x="430" y="320" width="120" height="32"/>
                         <buttonCell key="cell" type="push" title="終了" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GV1-ni-AJH">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="buttonQuitDidPress:" target="494" id="1js-lz-oHm"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="536">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="536">
                         <rect key="frame" x="14" y="319" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="ペアリング実行" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="537">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="button1DidPress:" target="494" id="vnW-jf-j2y"/>
@@ -526,20 +541,20 @@
                     <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="540">
                         <rect key="frame" x="-1" y="20" width="566" height="150"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" ambiguous="YES" id="izZ-0Q-JSq">
+                        <clipView key="contentView" drawsBackground="NO" id="izZ-0Q-JSq">
                             <rect key="frame" x="1" y="1" width="549" height="148"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="541">
+                                <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="541">
                                     <rect key="frame" x="0.0" y="0.0" width="549" height="148"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <size key="minSize" width="549" height="148"/>
                                     <size key="maxSize" width="566" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="542">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
@@ -550,87 +565,120 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
-                        <rect key="frame" x="18" y="271" width="141" height="13"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M1A-69-z9C">
+                        <rect key="frame" x="18" y="271" width="125" height="14"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="鍵ファイルのパス" id="3zX-NM-1d4">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L9Q-dT-I7g">
-                        <rect key="frame" x="18" y="243" width="141" height="13"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="証明書ファイルのパス" id="rdn-8H-nvR">
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IXA-ys-cwj">
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IXA-ys-cwj">
                         <rect key="frame" x="153" y="267" width="330" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="xlq-YR-14K">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="xlq-YR-14K">
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-Gc-dtE">
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-Gc-dtE">
                         <rect key="frame" x="153" y="239" width="330" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="iad-TY-nd8">
+                        <constraints>
+                            <constraint firstAttribute="width" constant="330" id="XC7-2J-VFY"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="iad-TY-nd8">
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kCs-qC-oYa">
-                        <rect key="frame" x="485" y="260" width="65" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kCs-qC-oYa">
+                        <rect key="frame" x="485" y="261" width="65" height="31"/>
                         <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9z5-dM-Usy">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="buttonPath1DidPress:" target="494" id="D5E-na-4EW"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IeA-Jn-tVn">
-                        <rect key="frame" x="485" y="232" width="65" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IeA-Jn-tVn">
+                        <rect key="frame" x="485" y="232" width="65" height="33"/>
                         <buttonCell key="cell" type="push" title="参照" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9WC-Ex-0Jp">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="buttonPath2DidPress:" target="494" id="Cba-yX-w4G"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qlP-Sb-BZf">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qlP-Sb-BZf">
                         <rect key="frame" x="14" y="203" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="鍵・証明書ファイルのインストール" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="s8B-lQ-fxh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="button3DidPress:" target="494" id="hBn-ux-B4h"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FlF-Id-KYb">
                         <rect key="frame" x="14" y="174" width="233" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="PINコード設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X1R-F5-3ds">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".HiraKakuInterface-W3"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="button4DidPress:" target="494" id="Xob-qI-0Wc"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L9Q-dT-I7g">
+                        <rect key="frame" x="18" y="243" width="125" height="14"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="証明書ファイルのパス" id="rdn-8H-nvR">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="M1A-69-z9C" firstAttribute="trailing" secondItem="L9Q-dT-I7g" secondAttribute="trailing" id="0kM-8g-YYs"/>
+                    <constraint firstItem="IXA-ys-cwj" firstAttribute="top" secondItem="IdI-T9-vnq" secondAttribute="bottom" constant="8" symbolic="YES" id="1O1-yv-91v"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IeA-Jn-tVn" secondAttribute="trailing" constant="20" symbolic="YES" id="3MR-sU-bEo"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="top" secondItem="IXA-ys-cwj" secondAttribute="bottom" constant="6" id="5Ej-Yz-gfU"/>
+                    <constraint firstItem="IXA-ys-cwj" firstAttribute="top" secondItem="hcA-hD-g4U" secondAttribute="bottom" constant="38" id="7LI-Va-IFG"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="372" secondAttribute="top" constant="38" id="AyW-La-zZ3"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="IdI-T9-vnq" secondAttribute="leading" id="DMc-BH-DjW"/>
+                    <constraint firstItem="kCs-qC-oYa" firstAttribute="top" secondItem="372" secondAttribute="top" constant="68" id="E91-uh-xPg"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="centerY" secondItem="L9Q-dT-I7g" secondAttribute="centerY" id="Fcs-Vo-rnC"/>
+                    <constraint firstItem="hcA-hD-g4U" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="kCs-qC-oYa" secondAttribute="trailing" id="GC8-1t-Tzf"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="536" secondAttribute="leading" id="Ie9-gh-rFm"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="FlF-Id-KYb" secondAttribute="leading" id="Jlp-ht-TwU"/>
+                    <constraint firstItem="M1A-69-z9C" firstAttribute="baseline" secondItem="IXA-ys-cwj" secondAttribute="firstBaseline" id="Kut-KK-7gc"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="centerY" secondItem="IeA-Jn-tVn" secondAttribute="centerY" id="NcH-M7-atm"/>
+                    <constraint firstItem="kCs-qC-oYa" firstAttribute="centerY" secondItem="IXA-ys-cwj" secondAttribute="centerY" id="OnE-cw-d64"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="top" secondItem="372" secondAttribute="top" constant="125" id="Qwn-DQ-DU6"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="baseline" secondItem="IeA-Jn-tVn" secondAttribute="baseline" id="Sk7-O4-nfX"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="top" secondItem="M1A-69-z9C" secondAttribute="bottom" constant="10" id="TpA-bZ-0eK"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="FlF-Id-KYb" secondAttribute="trailing" id="VZS-LX-sNq"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="536" secondAttribute="trailing" id="ace-aL-pxG"/>
+                    <constraint firstItem="kCs-qC-oYa" firstAttribute="leading" secondItem="IeA-Jn-tVn" secondAttribute="leading" id="am0-gf-QLP"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="top" secondItem="fmr-Gc-dtE" secondAttribute="bottom" constant="8" symbolic="YES" id="bQz-a2-ZfJ"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="trailing" secondItem="IdI-T9-vnq" secondAttribute="trailing" id="fs9-2C-mbi"/>
+                    <constraint firstItem="M1A-69-z9C" firstAttribute="centerY" secondItem="IXA-ys-cwj" secondAttribute="centerY" id="hNe-jw-psG"/>
+                    <constraint firstItem="hcA-hD-g4U" firstAttribute="leading" secondItem="536" secondAttribute="trailing" constant="195" id="iIp-hW-Khh"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="trailing" secondItem="IXA-ys-cwj" secondAttribute="trailing" id="pic-PP-gSu"/>
+                    <constraint firstItem="kCs-qC-oYa" firstAttribute="firstBaseline" secondItem="IXA-ys-cwj" secondAttribute="baseline" id="sj2-mU-0qD"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="L9Q-dT-I7g" secondAttribute="leading" id="t0h-X9-0Ro"/>
+                    <constraint firstItem="FlF-Id-KYb" firstAttribute="top" secondItem="qlP-Sb-BZf" secondAttribute="bottom" constant="8" id="u2L-UL-aFI"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="firstBaseline" secondItem="L9Q-dT-I7g" secondAttribute="baseline" id="uIi-95-eKu"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" symbolic="YES" id="udg-WC-nVd"/>
+                    <constraint firstItem="IeA-Jn-tVn" firstAttribute="leading" secondItem="fmr-Gc-dtE" secondAttribute="trailing" constant="8" symbolic="YES" id="uo7-ao-oKd"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="leading" secondItem="IXA-ys-cwj" secondAttribute="leading" id="wXN-6B-54W"/>
+                    <constraint firstItem="IdI-T9-vnq" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="8" id="x0K-TD-qVl"/>
+                    <constraint firstItem="qlP-Sb-BZf" firstAttribute="leading" secondItem="M1A-69-z9C" secondAttribute="leading" id="xln-CG-Idr"/>
+                    <constraint firstItem="fmr-Gc-dtE" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="153" id="zUw-un-uyv"/>
+                </constraints>
             </view>
             <point key="canvasLocation" x="132" y="107"/>
         </window>
@@ -645,8 +693,11 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
+                <outlet property="menuItemBLMode" destination="ZIq-GE-Ddb" id="tt5-hT-XG7"/>
                 <outlet property="menuItemDFU" destination="sxt-Mu-jyP" id="LgB-99-JI9"/>
                 <outlet property="menuItemDFUNew" destination="83P-ZN-a21" id="0iQ-xm-DGo"/>
+                <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
+                <outlet property="menuItemOption" destination="295" id="x73-fM-PHP"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>

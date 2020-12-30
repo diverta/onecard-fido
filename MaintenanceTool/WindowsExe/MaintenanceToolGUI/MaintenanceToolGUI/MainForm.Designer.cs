@@ -46,6 +46,7 @@
             this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewLogFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DFUToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DFUNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.テストTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uSBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DoHIDCtap2TestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,9 @@
             this.その他OToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolPreferenceStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.DFUNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.開発DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoEraseBondsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoBootLoaderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -180,6 +183,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ファイルFToolStripMenuItem,
             this.テストTToolStripMenuItem,
+            this.開発DToolStripMenuItem,
             this.その他OToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -211,6 +215,13 @@
             this.DFUToolStripMenuItem.Text = "ファームウェアを更新";
             this.DFUToolStripMenuItem.Click += new System.EventHandler(this.DFUToolStripMenuItem_Click);
             // 
+            // DFUNewToolStripMenuItem
+            // 
+            this.DFUNewToolStripMenuItem.Name = "DFUNewToolStripMenuItem";
+            this.DFUNewToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.DFUNewToolStripMenuItem.Text = "ファームウェアを新規導入";
+            this.DFUNewToolStripMenuItem.Click += new System.EventHandler(this.DFUNewToolStripMenuItem_Click);
+            // 
             // テストTToolStripMenuItem
             // 
             this.テストTToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -229,7 +240,7 @@
             this.DoHIDGetFlashInfoToolStripMenuItem,
             this.DoHIDGetVersionInfoToolStripMenuItem});
             this.uSBToolStripMenuItem.Name = "uSBToolStripMenuItem";
-            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.uSBToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uSBToolStripMenuItem.Text = "USB";
             // 
             // DoHIDCtap2TestToolStripMenuItem
@@ -274,7 +285,7 @@
             this.DoBLEU2fTestToolStripMenuItem,
             this.DoBLEPingTestToolStripMenuItem});
             this.bLEToolStripMenuItem.Name = "bLEToolStripMenuItem";
-            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.bLEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bLEToolStripMenuItem.Text = "BLE";
             // 
             // DoBLECtap2TestToolStripMenuItem
@@ -309,16 +320,32 @@
             // ToolPreferenceStripMenuItem
             // 
             this.ToolPreferenceStripMenuItem.Name = "ToolPreferenceStripMenuItem";
-            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.ToolPreferenceStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ToolPreferenceStripMenuItem.Text = "ツール設定(&P)...";
             this.ToolPreferenceStripMenuItem.Click += new System.EventHandler(this.ToolPreferenceStripMenuItem_Click);
             // 
-            // DFUNewToolStripMenuItem
+            // 開発DToolStripMenuItem
             // 
-            this.DFUNewToolStripMenuItem.Name = "DFUNewToolStripMenuItem";
-            this.DFUNewToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.DFUNewToolStripMenuItem.Text = "ファームウェアを新規導入";
-            this.DFUNewToolStripMenuItem.Click += new System.EventHandler(this.DFUNewToolStripMenuItem_Click);
+            this.開発DToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DoEraseBondsToolStripMenuItem,
+            this.DoBootLoaderModeToolStripMenuItem});
+            this.開発DToolStripMenuItem.Name = "開発DToolStripMenuItem";
+            this.開発DToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.開発DToolStripMenuItem.Text = "開発(&D)";
+            // 
+            // DoEraseBondsToolStripMenuItem
+            // 
+            this.DoEraseBondsToolStripMenuItem.Name = "DoEraseBondsToolStripMenuItem";
+            this.DoEraseBondsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.DoEraseBondsToolStripMenuItem.Text = "ペアリング情報削除";
+            this.DoEraseBondsToolStripMenuItem.Click += new System.EventHandler(this.DoEraseBondsToolStripMenuItem_Click);
+            // 
+            // DoBootLoaderModeToolStripMenuItem
+            // 
+            this.DoBootLoaderModeToolStripMenuItem.Name = "DoBootLoaderModeToolStripMenuItem";
+            this.DoBootLoaderModeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.DoBootLoaderModeToolStripMenuItem.Text = "ブートローダーモード遷移";
+            this.DoBootLoaderModeToolStripMenuItem.Click += new System.EventHandler(this.DoBootLoaderModeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -386,6 +413,9 @@
         private System.Windows.Forms.ToolStripMenuItem ViewLogFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DFUToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DFUNewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 開発DToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoEraseBondsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoBootLoaderModeToolStripMenuItem;
     }
 }
 

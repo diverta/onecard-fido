@@ -6,6 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
+#import "AppDelegate.h"
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
@@ -134,6 +135,9 @@
             case COMMAND_ERASE_SKEY_CERT:
                 [self doRequestEraseSkeyCert:[self getNewCIDFrom:message]];
                 break;
+            case COMMAND_ERASE_BONDS:
+                [self doRequestEraseBonds:[self getNewCIDFrom:message]];
+                break;
             default:
                 // 画面に制御を戻す
                 [self commandDidProcess:[self command] result:false message:nil];
@@ -176,15 +180,15 @@
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
         // 情報取得CSVから空き領域に関する情報を抽出
-        NSString *strRemain = @"";
+        NSString *strUsed = @"";
         NSString *strAvail = @"";
         NSString *strCorrupt = @"";
         for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
             NSArray *items = [element componentsSeparatedByString:@"="];
             NSString *key = [items objectAtIndex:0];
             NSString *val = [items objectAtIndex:1];
-            if ([key isEqualToString:@"largest_contig"]) {
-                strRemain = val;
+            if ([key isEqualToString:@"words_used"]) {
+                strUsed = val;
             } else if ([key isEqualToString:@"words_available"]) {
                 strAvail = val;
             } else if ([key isEqualToString:@"corruption"]) {
@@ -193,8 +197,10 @@
         }
         // 空き容量、破損状況を画面に表示
         NSString *rateText;
-        if ([strRemain length] > 0 && [strAvail length] > 0) {
-            float rate = [strRemain floatValue] / [strAvail floatValue] * 100.0;
+        if ([strUsed length] > 0 && [strAvail length] > 0) {
+            float avail = [strAvail floatValue];
+            float remaining = avail - [strUsed floatValue];
+            float rate = remaining / avail * 100.0;
             rateText = [NSString stringWithFormat:MSG_FSTAT_REMAINING_RATE, rate];
         } else {
             rateText = MSG_FSTAT_NON_REMAINING_RATE;
@@ -281,7 +287,23 @@
             // DFUコマンドに制御を戻す
             ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
             [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
+        } else if ([[self toolCommandRef] isMemberOfClass:[AppDelegate class]]) {
+            // AppDelegateに制御を戻す
+            [self commandDidProcess:[self command] result:true message:nil];
         }
+    }
+
+    - (void)doEraseBonds {
+        // コマンド開始メッセージを画面表示
+        [self displayStartMessage];
+        // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
+        [self doRequestCtapHidInit];
+    }
+
+    - (void)doRequestEraseBonds:(NSData *)cid {
+        // メッセージを編集し、コマンド 0xC6 を実行
+        NSData *message = [[NSData alloc] init];
+        [self doRequest:message CID:cid CMD:HID_CMD_ERASE_BONDS];
     }
 
     - (void)doEraseSkeyCert {
@@ -408,6 +430,9 @@
             case COMMAND_HID_BOOTLOADER_MODE:
                 [self doHidBootloaderMode];
                 break;
+            case COMMAND_ERASE_BONDS:
+                [self doEraseBonds];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self doEraseSkeyCert];
                 break;
@@ -495,6 +520,7 @@
             case HID_CMD_BOOTLOADER_MODE:
                 [self doResponseHidBootloaderMode:message CMD:cmd];
                 break;
+            case HID_CMD_ERASE_BONDS:
             case HID_CMD_ERASE_SKEY_CERT:
             case HID_CMD_INSTALL_SKEY_CERT:
                 [self doResponseMaintenanceCommand:message];

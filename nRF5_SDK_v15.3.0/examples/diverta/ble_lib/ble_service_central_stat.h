@@ -20,10 +20,10 @@ extern "C" {
 #define ADV_STAT_INFO_DATA_MAX_SIZE 32
 #define ADV_STAT_INFO_UUID_MAX_SIZE 16
 typedef struct {
-    uint8_t peer_addr[BLE_GAP_ADDR_LEN];
+    ble_gap_addr_t peer_addr;
     int8_t  rssi;
     int8_t  tx_power;
-    uint8_t ad_type;
+    uint8_t uuid_type;
     uint8_t dev_name[ADV_STAT_INFO_DATA_MAX_SIZE];
     size_t  dev_name_size;
     uint8_t uuid_bytes[ADV_STAT_INFO_UUID_MAX_SIZE];
@@ -35,9 +35,10 @@ void ble_service_central_stat_adv_report(ble_gap_evt_adv_report_t const *p_adv_r
 void ble_service_central_stat_debug_print(void);
 
 ADV_STAT_INFO_T *ble_service_central_stat_match_uuid(char *uuid_strict_string);
-ADV_STAT_INFO_T *ble_service_central_stat_match_scan_param(uint8_t *p_scan_param);
+bool             ble_service_central_stat_match_scan_param(uint8_t *scan_param_bytes, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *peer_addr);
 char            *ble_service_central_stat_btaddr_string(uint8_t *addr_bytes);
 size_t           ble_service_central_stat_csv_get(uint32_t serial_num, char *adv_stat_info_string);
+char            *ble_service_central_stat_uuid_string(uint8_t *uuid_bytes);
 
 #ifdef __cplusplus
 }

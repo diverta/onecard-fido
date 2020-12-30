@@ -90,6 +90,8 @@
         public const string PROCESS_NAME_CLIENT_PIN_CHANGE = "PINコード変更";
         public const string PROCESS_NAME_AUTH_RESET = "PINコード解除";
         public const string PROCESS_NAME_USB_DFU = "FIDO認証器のファームウェア更新";
+        public const string PROCESS_NAME_ERASE_BONDS = "ペアリング情報削除";
+        public const string PROCESS_NAME_BOOT_LOADER_MODE = "ブートローダーモード遷移";
 
         // ファイル選択／保存ダイアログ用フィルター
         public const string FILTER_SELECT_PEM_PATH = "秘密鍵ファイル (*.pem)|*.pem";

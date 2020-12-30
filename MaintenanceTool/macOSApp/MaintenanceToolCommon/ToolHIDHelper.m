@@ -22,6 +22,9 @@
     @property (nonatomic) IOHIDManagerRef   toolHIDManager;
     @property (nonatomic) IOHIDDeviceRef    toolHIDDevice;
     @property (nonatomic) NSMutableData    *hidResponse;
+
+    // リクエスト送信時のCIDを保持
+    @property (nonatomic) NSData           *requestCID;
 @end
 
 @implementation ToolHIDHelper
@@ -97,12 +100,16 @@
         // タイムアウト監視を停止
         [self cancelTimeoutMonitorForSelector:@selector(responseTimeoutMonitorDidTimeout)
                                    withObject:nil];
+        // リクエスト送信時のCIDをクリア
+        [self setRequestCID:nil];
     }
 
     - (void)responseTimeoutMonitorDidTimeout {
         // タイムアウト時は呼出元に制御を戻す
         [[ToolLogFile defaultLogger] error:MSG_HID_CMD_RESPONSE_TIMEOUT];
         [[self delegate] hidHelperDidResponseTimeout];
+        // リクエスト送信時のCIDをクリア
+        [self setRequestCID:nil];
     }
 
 #pragma mark - Functions for receive messages from HID device
@@ -117,7 +124,10 @@
 
         // CIDは先頭から４バイトを取得
         NSData *cid = [reportData subdataWithRange:NSMakeRange(0, 4)];
-        
+        // レスポンス受信時のCIDが、リクエスト送信時のCIDと異なる場合は無視
+        if ([cid isEqualToData:[self requestCID]] == false) {
+            return;
+        }
         // コマンド／シーケンスは先頭から５バイト目を参照
         uint8_t cmd = message[4];
         if (cmd & 0x80) {
@@ -168,7 +178,9 @@
                           CID:(NSData *)cid CMD:(uint8_t)command {
         // レスポンスタイムアウトを監視
         [self startResponseTimeoutMonitor];
-
+        // リクエスト送信時のCIDを保持
+        [self setRequestCID:cid];
+        // 送信フレームを生成し、各フレームをHIDデバイスに送信
         NSArray<NSData *> *requestFrames =
         [self generateHIDRequestFramesFrom:message CID:cid CMD:command];
         [self HIDManagerWillSendRequestFrames:requestFrames];

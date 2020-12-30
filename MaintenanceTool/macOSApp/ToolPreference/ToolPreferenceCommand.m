@@ -43,9 +43,11 @@
         // 1バイト目＝コマンドバイト
         char cmd[] = {(char)commandType};
         NSMutableData *requestData = [[NSMutableData alloc] initWithBytes:cmd length:1];
-        // ２バイト目以降＝設定するデータ（UUID、スキャン秒数）
+        // ２バイト目以降＝設定するデータ（有効化、ペアリング要否、UUID、スキャン秒数）
+        uint16_t pairNeed = (uint16_t)[self blePairingIsNeeded] * 256;
+        uint16_t flags = (uint16_t)[self bleScanAuthEnabled] + pairNeed;
         NSString *csv = [NSString stringWithFormat:@"%d,%@,%@",
-                         [self bleScanAuthEnabled], [self serviceUUIDString], [self serviceUUIDScanSec]
+                         flags, [self serviceUUIDString], [self serviceUUIDScanSec]
                          ];
         NSData *data = [csv dataUsingEncoding:NSUTF8StringEncoding];
         // リクエストデータを編集し、内部変数に設定
@@ -78,7 +80,11 @@
         // カンマを境にしてCSVを分解
         NSArray<NSString *> *items = [csvString componentsSeparatedByString:@","];
         // 画面項目に設定
-        [self setBleScanAuthEnabled:[[items objectAtIndex:0] isEqualToString:@"1"]];
+        int flags = [[items objectAtIndex:0] intValue];
+        int _BleScanAuthEnabled = flags % 256;
+        int _BlePairingIsNeeded = flags / 256;
+        [self setBleScanAuthEnabled:(_BleScanAuthEnabled == 1)];
+        [self setBlePairingIsNeeded:(_BlePairingIsNeeded == 1)];
         [self setServiceUUIDString:[items objectAtIndex:1]];
         [self setServiceUUIDScanSec:[items objectAtIndex:2]];
         return true;

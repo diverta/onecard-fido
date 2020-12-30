@@ -3,11 +3,13 @@
 #import "ToolHIDCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolFilePanel.h"
+#import "ToolInfoWindow.h"
 #import "ToolPopupWindow.h"
 #import "ToolCommonMessage.h"
 #import "ToolPreferenceCommand.h"
 #import "ToolLogFile.h"
 #import "ToolDFUCommand.h"
+#import "ToolPIVCommand.h"
 
 @interface AppDelegate ()
     <ToolHIDCommandDelegate, ToolBLECommandDelegate, ToolFilePanelDelegate>
@@ -27,6 +29,9 @@
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
+    @property (assign) IBOutlet NSMenuItem  *menuItemOption;
+    @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
+    @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
@@ -37,7 +42,8 @@
     @property (nonatomic) ToolFilePanel     *toolFilePanel;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolDFUCommand    *toolDFUCommand;
-
+    @property (nonatomic) ToolPIVCommand    *toolPIVCommand;
+    @property (nonatomic) ToolInfoWindow    *toolInfoWindow;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
 
@@ -64,7 +70,10 @@
 
         // 設定画面の初期設定
         [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
-        
+        // 情報表示画面の初期設定
+        [self setToolInfoWindow:[ToolInfoWindow defaultWindow]];
+        // PIV機能の初期設定
+        [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
         // DFU機能の初期設定
         [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
     }
@@ -82,6 +91,11 @@
         }
     }
 
+    - (id)toolInfoWindowRef {
+        // 情報表示画面の参照を戻す
+        return [self toolInfoWindow];
+    }
+
 #pragma mark - Functions for button handling
 
     - (void)enableButtons:(bool)enabled {
@@ -97,10 +111,13 @@
         [self.buttonQuit setEnabled:enabled];
         [self.menuItemTestUSB setEnabled:enabled];
         [self.menuItemTestBLE setEnabled:enabled];
+        [self.menuItemOption setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
         [self.menuItemDFU setEnabled:enabled];
         [self.menuItemDFUNew setEnabled:enabled];
+        [self.menuItemEraseBond setEnabled:enabled];
+        [self.menuItemBLMode setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -183,18 +200,14 @@
 
     - (IBAction)buttonPath1DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_PKEY_PATH
-                                     fileTypes:@[@"pem"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_PKEY_PATH withFileTypes:@[@"pem"]];
     }
 
     - (IBAction)buttonPath2DidPress:(id)sender {
         [self enableButtons:false];
-        [[self toolFilePanel] prepareOpenPanel:MSG_BUTTON_SELECT
-                                       message:MSG_PROMPT_SELECT_CRT_PATH
-                                     fileTypes:@[@"crt"]];
-        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]];
+        [[self toolFilePanel] panelWillSelectPath:sender parentWindow:[self window]
+                                       withPrompt:MSG_BUTTON_SELECT withMessage:MSG_PROMPT_SELECT_CRT_PATH withFileTypes:@[@"crt"]];
     }
 
     - (IBAction)menuItemTestHID1DidSelect:(id)sender {
@@ -252,6 +265,15 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_TEST_BLE_PING];
     }
 
+    - (IBAction)menuItemOptionPivSettingsDidSelect:(id)sender {
+        if ([self checkUSBHIDConnection] == false) {
+            return;
+        }
+        // PIV機能設定画面を表示
+        [self enableButtons:false];
+        [[self toolPIVCommand] commandWillOpenPreferenceWindowWithParent:[self window]];
+    }
+
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [self enableButtons:false];
@@ -276,6 +298,36 @@
     - (IBAction)menuItemDFUNewDidSelect:(id)sender {
         [self enableButtons:false];
         [[self toolDFUCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
+    }
+
+    - (IBAction)menuItemEraseBondDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_ERASE_BONDS
+                         informativeText:MSG_PROMPT_ERASE_BONDS] == false) {
+            return;
+        }
+        // ペアリング情報削除
+        [self enableButtons:false];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_BONDS];
+    }
+
+    - (IBAction)menuItemBLModeDidSelect:(id)sender {
+        if (![self checkUSBHIDConnection]) {
+            return;
+        }
+        // 事前に確認ダイアログを表示
+        if ([ToolPopupWindow promptYesNo:MSG_BOOT_LOADER_MODE
+                         informativeText:MSG_PROMPT_BOOT_LOADER_MODE] == false) {
+            return;
+        }
+        // ブートローダーモード遷移
+        [self enableButtons:false];
+        [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
+                                           withData:nil forCommand:self];
     }
 
 #pragma mark - Perform health check
@@ -356,6 +408,13 @@
         [self commandDidProcess:command result:result message:message];
     }
 
+#pragma mark - Call back from ToolPIVCommand
+
+    - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // PIV関連処理完了時
+        [self commandDidProcess:command result:result message:message];
+    }
+
 #pragma mark - Call back from ToolFilePanel
 
     - (void)panelDidSelectPath:(id)sender filePath:(NSString*)filePath
@@ -364,11 +423,11 @@
         if (modalResponse == NSFileHandlingPanelOKButton) {
             if ([self buttonPath1] == sender) {
                 [[self fieldPath1] setStringValue:filePath];
-                [[self fieldPath1] becomeFirstResponder];
+                [[self fieldPath1] setToolTip:filePath];
             }
             if ([self buttonPath2] == sender) {
                 [[self fieldPath2] setStringValue:filePath];
-                [[self fieldPath2] becomeFirstResponder];
+                [[self fieldPath2] setToolTip:filePath];
             }
         }
         // メニューを活性化
@@ -443,6 +502,9 @@
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
                 break;
             // HID関連
+            case COMMAND_ERASE_BONDS:
+                [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
+                break;
             case COMMAND_ERASE_SKEY_CERT:
                 [self setProcessNameOfCommand:PROCESS_NAME_ERASE_SKEY_CERT];
                 break;
@@ -457,6 +519,9 @@
                 break;
             case COMMAND_HID_GET_VERSION_INFO:
                 [self setProcessNameOfCommand:PROCESS_NAME_GET_VERSION_INFO];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self setProcessNameOfCommand:PROCESS_NAME_BOOT_LOADER_MODE];
                 break;
             case COMMAND_CLIENT_PIN_SET:
                 [self setProcessNameOfCommand:PROCESS_NAME_CLIENT_PIN_SET];

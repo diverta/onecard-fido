@@ -18,6 +18,7 @@ namespace MaintenanceToolGUI
         public const int HID_CMD_GET_VERSION_INFO = 0xc3;
         public const int HID_CMD_TOOL_PREF_PARAM = 0xc4;
         public const int HID_CMD_BOOTLOADER_MODE = 0xc5;
+        public const int HID_CMD_ERASE_BONDS = 0xc6;
         public const int HID_CMD_CTAPHID_CBOR = 0x90;
         public const int HID_CMD_UNKNOWN_ERROR = 0xbf;
     }
@@ -113,8 +114,10 @@ namespace MaintenanceToolGUI
             case Const.HID_CMD_CTAPHID_INIT:
                 DoResponseTestCtapHidInit(message, length);
                 break;
+            case Const.HID_CMD_ERASE_BONDS:
             case Const.HID_CMD_ERASE_SKEY_CERT:
             case Const.HID_CMD_INSTALL_SKEY_CERT:
+                // ステータスバイトをチェックし、画面に制御を戻す
                 DoResponseMaintSkeyCert(message, length);
                 break;
             case Const.HID_CMD_GET_FLASH_STAT:
@@ -133,7 +136,12 @@ namespace MaintenanceToolGUI
                 toolPreference.DoResponseToolPreference(message, length);
                 break;
             case Const.HID_CMD_BOOTLOADER_MODE:
-                ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
+                if (requestType == AppCommon.RequestType.GotoBootLoaderMode) {
+                    // ステータスバイトをチェックし、画面に制御を戻す
+                    DoResponseMaintSkeyCert(message, length);
+                } else {
+                    ToolDFURef.NotifyBootloaderModeResponse(hidProcess.receivedCMD, message);
+                }
                 break;
             case Const.HID_CMD_UNKNOWN_ERROR:
                 if (requestedCMD == Const.HID_CMD_TOOL_PREF_PARAM) {
@@ -236,6 +244,12 @@ namespace MaintenanceToolGUI
         public void DoResponseCtapHidInit(byte[] message, int length)
         {
             switch (requestType) {
+            case AppCommon.RequestType.EraseBonds:
+                DoRequestEraseBonds();
+                break;
+            case AppCommon.RequestType.GotoBootLoaderMode:
+                DoRequestBootLoaderMode();
+                break;
             case AppCommon.RequestType.EraseSkeyCert:
                 DoRequestEraseSkeyCert();
                 break;
@@ -284,6 +298,30 @@ namespace MaintenanceToolGUI
                 receivedCID[j] = message[8 + j];
             }
             return receivedCID;
+        }
+
+        public void DoEraseBonds()
+        {
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.EraseBonds);
+        }
+
+        public void DoRequestEraseBonds()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_ERASE_BONDS, RequestData, 0);
+        }
+
+        public void DoBootLoaderMode()
+        {
+            // INITコマンドを実行し、nonce を送信する
+            DoRequestCtapHidInit(AppCommon.RequestType.GotoBootLoaderMode);
+        }
+
+        public void DoRequestBootLoaderMode()
+        {
+            // コマンドバイトだけを送信する
+            hidProcess.SendHIDMessage(ReceivedCID, Const.HID_CMD_BOOTLOADER_MODE, RequestData, 0);
         }
 
         public void DoEraseSkeyCert()
@@ -385,12 +423,12 @@ namespace MaintenanceToolGUI
 
             // 情報取得CSVから空き領域に関する情報を抽出
             string[] vars = responseCSV.Split(',');
-            string strRemain = "";
+            string strUsed = "";
             string strAvail = "";
             string strCorrupt = "";
             foreach (string v in vars) {
-                if (v.StartsWith("largest_contig=")) {
-                    strRemain = v.Split('=')[1];
+                if (v.StartsWith("words_used=")) {
+                    strUsed = v.Split('=')[1];
                 }
                 else if (v.StartsWith("words_available=")) {
                     strAvail = v.Split('=')[1];
@@ -402,8 +440,10 @@ namespace MaintenanceToolGUI
 
             // 空き容量、破損状況を画面に表示
             string rateText = "";
-            if (strRemain.Length > 0 && strAvail.Length > 0) {
-                float rate = float.Parse(strRemain) / float.Parse(strAvail) * 100;
+            if (strUsed.Length > 0 && strAvail.Length > 0) {
+                float avail = float.Parse(strAvail);
+                float remaining = avail - float.Parse(strUsed);
+                float rate = remaining / avail * 100;
                 rateText = string.Format(AppCommon.MSG_FSTAT_REMAINING_RATE, rate);
             } else {
                 rateText = AppCommon.MSG_FSTAT_NON_REMAINING_RATE;

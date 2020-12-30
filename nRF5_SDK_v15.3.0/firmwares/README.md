@@ -10,9 +10,7 @@
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
 |1|[`s140_nrf52_6.1.1_softdevice.hex`](s140_nrf52_6.1.1_softdevice.hex)|ソフトデバイス|
-|2|[`nrf52840_DK_xxaa.hex`](nrf52840_DK_xxaa.hex)|アプリケーション（nRF52840 DK用）|
-|3|`appkg.PCA10059.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1/README.md)専用ファームウェア更新イメージ|
-|4|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージ|
+|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージ|
 
 #### ファームウェア更新イメージ
 

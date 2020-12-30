@@ -5,9 +5,10 @@
 //  Created by Makoto Morita on 2018/03/05.
 //
 #import <Foundation/Foundation.h>
-
+#import "debug_log.h"
 #import "ToolCommon.h"
 #import "ToolCommonMessage.h"
+#import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
 @interface ToolCommon ()
@@ -139,6 +140,14 @@
             return false;
         }
         return true;
+    }
+
+#pragma mark - Utilities for log output
+
+    + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate {
+        NSString *functionMsg = [[NSString alloc] initWithUTF8String:log_debug_message()];
+        NSString *errorMsg = [[NSString alloc] initWithFormat:errorMsgTemplate, functionMsg];
+        [[ToolLogFile defaultLogger] error:errorMsg];
     }
 
 @end

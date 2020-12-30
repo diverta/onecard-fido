@@ -122,6 +122,9 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
         // 管理用コマンドの処理を実行
         fido_maintenance_command_token_counter_file_deleted();
     }
+
+    // CCID関連処理を実行
+    ccid_flash_piv_object_record_deleted();
 }
 
 static void fido_command_on_fs_evt(fds_evt_t const *p_evt)

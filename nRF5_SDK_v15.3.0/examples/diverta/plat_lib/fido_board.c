@@ -23,7 +23,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_timer.h"
 
 // for fido_ble_pairing_change_mode
-#include "ble_service_peripheral.h"
+#include "ble_service_common.h"
 #include "fido_ble_pairing.h"
 
 #include "fido_platform.h"
@@ -60,57 +60,51 @@ static bool m_push_initial = true;
 
 static void on_button_evt(uint8_t pin_no, uint8_t button_action)
 {
-	switch (button_action) {
-	case APP_BUTTON_ACTION_PUSH:
-        if (m_push_initial) {
-            m_push_initial = false;
-        }
-        if (pin_no == PIN_MAIN_SW_IN) {
-            fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, NULL);
-        }
-		break;
-		
-	case APP_BUTTON_ACTION_RELEASE:
-        if (m_push_initial) {
-            // ボタン長押し中にリセット後、
-            // 単独でこのイベントが発生した場合は無視
-            m_push_initial = false;
-            break;
-        }
-        if (m_long_pushed) {
-            m_long_pushed = false;
-            // ボタンが長押しされた時の処理を実行
-            if (ble_service_peripheral_mode()) {
-                // BLEペリフェラルが稼働時は、
-                // ペアリングモード変更を実行
-                fido_ble_pairing_change_mode();
+    switch (button_action) {
+        case APP_BUTTON_ACTION_PUSH:
+            if (m_push_initial) {
+                m_push_initial = false;
+            }
+            if (pin_no == PIN_MAIN_SW_IN) {
+                fido_button_long_push_timer_start(LONG_PUSH_TIMEOUT, NULL);
             }
             break;
-        }
 
-        if (pin_no == PIN_MAIN_SW_IN) {
-            fido_button_long_push_timer_stop();
-            
-            // FIDO固有の処理を実行
-            fido_command_mainsw_event_handler();
-        }
-		break;
-		
-	default:
-		break;
-	}
+        case APP_BUTTON_ACTION_RELEASE:
+            if (m_push_initial) {
+                // ボタン長押し中にリセット後、
+                // 単独でこのイベントが発生した場合は無視
+                m_push_initial = false;
+                break;
+            }
+            if (m_long_pushed) {
+                m_long_pushed = false;
+                // ボタンが長押しされた時は、
+                // ペアリングモード変更を実行
+                fido_ble_pairing_change_mode();
+                break;
+            }
+            if (pin_no == PIN_MAIN_SW_IN) {
+                fido_button_long_push_timer_stop();
+
+                // FIDO固有の処理を実行
+                fido_command_mainsw_event_handler();
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 void fido_command_long_push_timer_handler(void *p_context)
 {
     (void)p_context;
-	m_long_pushed = true;
+    m_long_pushed = true;
     
-    if (ble_service_peripheral_mode()) {
-        // ペアリングモードに遷移させるための長押しの場合、
-        // このタイミングで、黄色LEDを連続点灯させる
-        fido_status_indicator_pairing_mode();
-    }
+    // ペアリングモードに遷移させるための長押しの場合、
+    // このタイミングで、黄色LEDを連続点灯させる
+    fido_status_indicator_pairing_mode();
 }
 
 //

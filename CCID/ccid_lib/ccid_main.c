@@ -17,8 +17,8 @@ static uint8_t bulkout_data[288];
 static uint8_t bulkin_data[288];
 
 // データ受信用一時変数
-static size_t apdu_size_received;
-static size_t apdu_size_expected;
+static size_t bulkout_size_received;
+static size_t bulkout_size_expected;
 
 // 読込中の状態をあらわすフラグ
 //   0:先頭フレーム受信待ち
@@ -28,8 +28,8 @@ static uint8_t bulkout_state;
 void ccid_initialize_value(void)
 {
     // モジュール変数を初期化
-    apdu_size_received = 0;
-    apdu_size_expected = 0;
+    bulkout_size_received = 0;
+    bulkout_size_expected = 0;
     bulkout_state = 0;
 }
 
@@ -231,6 +231,13 @@ void ccid_request_apdu_received(void)
 {
     uint8_t error;
 
+    // 送信データ領域に初期値を設定
+    // bSlot Offset = 5
+    // bSeq  Offset = 6
+    memset(bulkin_data, 0, sizeof(bulkin_data));
+    bulkin_data[5] = bulkout_data[5];
+    bulkin_data[6] = bulkout_data[6];
+
     // bMessageType で処理分岐
     switch (bulkout_data[0]) {
         case PC_TO_RDR_ICCPOWERON:
@@ -269,9 +276,6 @@ void ccid_resume_reader_to_pc_data_block(void)
 
 bool ccid_data_frame_received(uint8_t *data, size_t len)
 {
-    // APDU格納領域
-    uint8_t *apdu_data = bulkout_data + CCID_CMD_HEADER_SIZE;
-
     // 先頭フレーム待ちの場合
     if (bulkout_state == 0) {
         if (len < CCID_CMD_HEADER_SIZE) {
@@ -280,34 +284,25 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
         }
 
         // フレームデータをバッファに退避
-        apdu_size_received = len - CCID_CMD_HEADER_SIZE;
-        memcpy(bulkout_data, data, CCID_CMD_HEADER_SIZE);
-        memcpy(apdu_data, data + CCID_CMD_HEADER_SIZE, apdu_size_received);
+        bulkout_size_received = len;
+        memcpy(bulkout_data, data, len);
 
-        // dwLength Offset = 1 (4 bytes)
-        memcpy(&apdu_size_expected, bulkout_data + 1, 4);
+        // dwLength Offset = 1 (4 bytes) 
+        memcpy(&bulkout_size_expected, bulkout_data + 1, 4);
 
-        // 送信データ領域を初期化
-        memset(bulkin_data, 0, sizeof(bulkin_data));
-        
-        // 送信データ領域に初期値を設定
-        // bSlot Offset = 5
-        // bSeq  Offset = 6
-        bulkin_data[5] = bulkout_data[5];
-        bulkin_data[6] = bulkout_data[6];
+        // ブロックサイズを取得して保持
+        // Block size = Command header size + APDU size
+        bulkout_size_expected += CCID_CMD_HEADER_SIZE;
 
-        if (apdu_size_received == apdu_size_expected) {
+        if (bulkout_size_received == bulkout_size_expected) {
+            // ブロックサイズ＝フレームサイズの場合は、ブロック受信を完了し、
             // APDUの処理を実行
             return true;
 
-        } else if (apdu_size_received < apdu_size_expected) {
-            if (apdu_size_expected > APDU_DATA_SIZE) {
-                // 受信データは無効
-                bulkout_state = 0;
-            } else {
-                // 継続フレームを受信
-                bulkout_state = 1;
-            }
+        } else if (bulkout_size_received < bulkout_size_expected) {
+            // フレーム受信を継続
+            bulkout_state = 1;
+
         } else {
             // 無効とする
             bulkout_state = 0;
@@ -315,12 +310,14 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
 
     // 継続フレーム待ちの場合
     } else if (bulkout_state == 1) {
-        if (apdu_size_received + len < apdu_size_expected) {
-            memcpy(apdu_data + apdu_size_received, data, len);
-            apdu_size_received += len;
+        if (bulkout_size_received + len < bulkout_size_expected) {
+            // 受信済みサイズがブロックサイズに満たない場合は、フレーム受信を継続
+            memcpy(bulkout_data + bulkout_size_received, data, len);
+            bulkout_size_received += len;
 
-        } else if (apdu_size_received + len == apdu_size_expected) {
-            memcpy(apdu_data + apdu_size_received, data, len);
+        } else if (bulkout_size_received + len == bulkout_size_expected) {
+            // ブロックサイズ通りに受信できた場合は、ブロック受信を完了
+            memcpy(bulkout_data + bulkout_size_received, data, len);
             bulkout_state = 0;
             // APDUの処理を実行
             return true;
@@ -331,4 +328,22 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
     }
 
     return false;
+}
+
+void ccid_response_time_extension(void)
+{
+    // bMessageType
+    bulkin_data[0] = RDR_TO_PC_DATABLOCK;
+    // dwLength
+    set_bulkin_data_dw_length(0);
+    // bStatus
+    set_bulkin_data_status(BM_COMMAND_STATUS_TIME_EXTN, BM_ICC_PRESENT_ACTIVE);
+    // bError
+    // request another 1 BTWs (5.7s)
+    bulkin_data[8] = 1;
+    // bSpecific
+    bulkin_data[9] = 0x00;
+
+    // レスポンス送信
+    usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE);
 }

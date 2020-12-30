@@ -4,6 +4,13 @@
 
 ## 各種アプリケーション改善対応
 
+#### 要件確定済み
+
+- <b>[調査] nRF Connect SDKへの移植に関する調査</b>
+（[#394](https://github.com/diverta/onecard-fido/issues/394) ご参照）
+  - 現状のnRF52840をベースとした基板のアプリケーションを、nRF Connect SDKに移植
+  - 移植後、問題が無いようであれば、次世代SoCである「nRF5340」への移植を実施
+
 #### 要件未確定
 
 - [改善] nRF52840アプリケーションのソースコードを圧縮する<br>
@@ -18,23 +25,23 @@
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションに必要な基盤技術を確立します。<br>
 （[#323](https://github.com/diverta/onecard-fido/issues/323) ご参照）
 
-#### ソフトウェアの開発状況
-nRF52840アプリケーションへの追加実装と、macOS環境／Windows10環境上での実機動作確認は、概ね完了しています。<br>
-作業中のアプリケーションは以下の場所に格納しています。<br>
-コード格納場所（プラットフォーム非依存）--->[ccid_lib](CCID/ccid_lib)<br>
-コード格納場所（プラットフォーム依存）--->[usbd_service_ccid](nRF5_SDK_v15.3.0/examples/diverta/plat_lib/usbd_service_ccid.c)
+#### 完了済み作業
+- CCIDインターフェース本体の、nRF52840アプリケーションへの追加実装
+- CCIDインターフェース本体の、macOS環境／Windows10環境上での実機動作確認
+- 「Yubico PIV Tool」による初期データ導入機能
+- 業務アプリケーション（PIV）の開発<br>
+（PIVカードエミュレーション。RSA-2048秘密鍵／証明書による認証機能を含む）
+- 管理ツールによる初期データ導入機能<br>
+（PIN設定変更機能を含む）
 
 #### 今後必要な対応
-- 業務アプリケーション（PIV／OpenPGP）の開発
-- CCID I/F専用管理ツールの開発（当面は「Yubico PIV Tool」で代用を想定）
+- 業務アプリケーション（OpenPGP）の開発
+
+#### 各種手順書
+- [PIN番号を使用したmacOSログイン確認手順](FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)
 
 #### 各種調査結果
-- [USB CCIDインターフェース](CCID/ccid_lib/README.md)
-- [Yubico PIV Toolによる初期データ導入手順](Research/CCID/SETUPYKPIV.md)
 - [CCIDインターフェースに関する調査](Research/CCID/README.md)
-
-#### 利用事例
-- [PIVデバイスを使用したmacOSログイン手順](Research/CCID/MACPIVLOGIN.md)
 
 ## ワンタイムパスワード対応
 TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレンダー）」の追加実装可能性について調査します。<br>
@@ -44,6 +51,9 @@ TOTPの実装に必須となる「RTCC（リアルタイムクロック・カレ
 - HID Keyboard I/Fの追加実装（前述・スマートカードエミュレート機能でも必要になる可能性あり）
 - 業務アプリケーション（OATH-TOTP）の開発
 - RTCC評価用の基板製作（I2Cコマンド検証用／バックアップ機能検証用／etc...）
+
+## [セキュアIC組込み対応](SECUREIC/README.md)
+完了しております。
 
 ## その他
 優先度は低くなります

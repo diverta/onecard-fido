@@ -21,6 +21,9 @@
 // 自動認証パラメーター設定関連
 #include "demo_ble_peripheral_auth.h"
 
+// 関数プロトタイプ
+static void command_erase_bonding_data_response(bool success);
+
 //
 // レスポンスデータ格納領域
 //
@@ -157,6 +160,28 @@ static void jump_to_bootloader_mode(void)
     usbd_service_stop_for_bootloader();
 }
 
+static void command_erase_bonding_data(void)
+{
+    fido_log_info("Erase bonding data start");
+    //
+    // nRF52840のFlash ROM上に作成された
+    // 全てのペアリング情報を削除
+    //
+    if (ble_service_common_erase_bond_data(command_erase_bonding_data_response) == false) {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 12);
+    }
+}
+
+static void command_erase_bonding_data_response(bool success)
+{
+    // レスポンスを送信
+    if (success) {
+        send_command_response(CTAP1_ERR_SUCCESS, 1);
+    } else {
+        send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 13);
+    }
+}
+
 void fido_maintenance_command(void)
 {
     // リクエストデータ受信後に実行すべき処理を判定
@@ -173,6 +198,9 @@ void fido_maintenance_command(void)
             break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             command_bootloader_mode();
+            break;
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            command_erase_bonding_data();
             break;
         default:
             break;
@@ -201,6 +229,9 @@ void fido_maintenance_command_report_sent(void)
             break;
         case MNT_COMMAND_BOOTLOADER_MODE:
             jump_to_bootloader_mode();
+            break;
+        case MNT_COMMAND_ERASE_BONDING_DATA:
+            fido_log_info("Erase bonding data end");
             break;
         default:
             break;

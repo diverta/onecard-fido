@@ -40,13 +40,17 @@ MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAu
 
 MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
 
+### [PIN番号を使用したmacOSログイン確認手順](PIVPINLOGIN.md)
+
+MDBT50Q Dongleに設定したPIV機能を使用し、PIN番号によるmacOSログインを行うための確認手順を掲載しています。
+
 ## オプション機能
 
 BLEセントラルサービスを使用したオプション機能です。
 
-### [BLEデバイスによる自動認証](BLEDAUTH.md)
+### [BLE近接認証](BLEDAUTH.md)
 
-FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、One CardなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
+FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、スマートフォンなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
 
 ## ご参考情報
 

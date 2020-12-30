@@ -19,6 +19,8 @@ extern "C" {
 #include "fido_platform_common.h"
 
 // ハードウェアの差異に依存する定義を集約
+#include "ble_service_common.h"
+#include "ccid_crypto.h"
 #include "fido_crypto.h"
 #include "fido_crypto_keypair.h"
 #include "fido_crypto_sskey.h"

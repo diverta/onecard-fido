@@ -69,16 +69,32 @@ extern "C" {
 //
 // 以下はPIVアプリケーションで使用
 //
-// 管理用パスワード
-//   レコードサイズ = 9 ワード
-//     パスワード: 8ワード（32バイト)
+// PIVオブジェクト
+//   オブジェクト属性 = 2ワード
 //     属性データ: 1ワード（4バイト）
-//       0    : パスワード長（1バイト）
-//       1    : パスワードのアルゴリズム（1バイト）
+//       0    : 種別（1バイト）
+//       1    : アルゴリズム（1バイト）
 //       2 - 3: 予備（2バイト）
-#define PIV_DATA_OBJ_9D_FILE_ID         (0xBFDE)
-#define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCE)
-#define PIV_DATA_OBJ_9D_RECORD_SIZE     9
+//     オブジェクトデータの長さ: 1ワード（4バイト）
+//   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+#define PIV_DATA_OBJ_FILE_ID            (0xBFDE)
+#define PIV_DATA_OBJ_ATTR_WORDS         2
+#define PIV_DATA_OBJ_DATA_WORDS_MAX     256
+//
+// PIVオブジェクト格納ファイルで
+// 共通利用するレコードID
+//
+#define PIV_DATA_OBJ_9A_RECORD_KEY      (0xBFCE)
+#define PIV_DATA_OBJ_9B_RECORD_KEY      (0xBFCD)
+#define PIV_DATA_OBJ_9C_RECORD_KEY      (0xBFCC)
+#define PIV_DATA_OBJ_9D_RECORD_KEY      (0xBFCB)
+#define PIV_DATA_OBJ_02_RECORD_KEY      (0xBFCA)
+#define PIV_DATA_OBJ_05_RECORD_KEY      (0xBFC9)
+#define PIV_DATA_OBJ_07_RECORD_KEY      (0xBFC8)
+#define PIV_DATA_OBJ_0A_RECORD_KEY      (0xBFC7)
+#define PIV_DATA_OBJ_0B_RECORD_KEY      (0xBFC6)
+#define PIV_DATA_OBJ_80_RECORD_KEY      (0xBFC5)
+#define PIV_DATA_OBJ_81_RECORD_KEY      (0xBFC4)
 
 //
 // fido_flash_event.c

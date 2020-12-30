@@ -8,6 +8,7 @@
 #include "ccid_piv.h"
 #include "ccid_piv_general_auth.h"
 #include "ccid_piv_object.h"
+#include "ccid_piv_object_import.h"
 #include "ccid_piv_pin.h"
 #include "ccid_ykpiv.h"
 
@@ -23,7 +24,6 @@ static const uint8_t rid[] = {0xa0, 0x00, 0x00, 0x03, 0x08};
 static const uint8_t pix[] = {0x00, 0x00, 0x10, 0x00, 0x01, 0x00};
 static const uint8_t rid_size = sizeof(rid);
 static const uint8_t pix_size = sizeof(pix);
-static const uint8_t aid_size = rid_size + pix_size;
 
 bool ccid_piv_rid_is_piv_applet(command_apdu_t *capdu)
 {
@@ -95,6 +95,7 @@ static uint16_t piv_ins_get_data(command_apdu_t *capdu, response_apdu_t *rapdu)
         // For the Discovery Object, the 0x7e template nests two data elements:
         // 1) tag 0x4f contains the AID of the PIV Card Application and
         // 2) tag 0x5f2f lists the PIN Usage Policy.
+        uint8_t aid_size = rid_size + pix_size;
         rdata[0] = 0x7e;
         rdata[1] = 5 + aid_size + ccid_piv_pin_policy_size();
         rdata[2] = 0x4f;
@@ -136,22 +137,22 @@ static uint16_t piv_ins_general_authenticate(command_apdu_t *capdu, response_apd
 
 static uint16_t piv_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
-    // 管理コマンドが実行可能でない場合は終了
-    if (ccid_piv_admin_mode_get() == false) {
-        return SW_SECURITY_STATUS_NOT_SATISFIED;
-    }
-
-    //
-    // TODO: ここに処理を記述
-    //
-
-    // 正常終了
-    return SW_NO_ERROR;
+    return ccid_piv_object_import(capdu, rapdu);
 }
 
 static uint16_t piv_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     return ccid_piv_pin_auth(capdu, rapdu);
+}
+
+static uint16_t piv_ins_change_reference_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_set(capdu, rapdu);
+}
+
+static uint16_t piv_ins_reset_retry_counter(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_piv_pin_reset(capdu, rapdu);
 }
 
 static void piv_init(void)
@@ -202,6 +203,12 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case PIV_INS_VERIFY:
             rapdu->sw = piv_ins_verify(capdu, rapdu);
             break;
+        case PIV_INS_CHANGE_REFERENCE_DATA:
+            rapdu->sw = piv_ins_change_reference_data(capdu, rapdu);
+            break;
+        case PIV_INS_RESET_RETRY_COUNTER:
+            rapdu->sw = piv_ins_reset_retry_counter(capdu, rapdu);
+            break;
         //
         // Yubico PIV Tool固有のコマンド
         //
@@ -213,6 +220,12 @@ void ccid_piv_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case YKPIV_INS_SET_MGMKEY:
             rapdu->sw = ccid_ykpiv_ins_set_mgmkey(capdu, rapdu);
+            break;
+        case YKPIV_INS_IMPORT_ASYMMETRIC_KEY:
+            rapdu->sw = ccid_ykpiv_ins_import_key(capdu, rapdu);
+            break;
+        case YKPIV_INS_RESET:
+            rapdu->sw = ccid_ykpiv_ins_reset(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

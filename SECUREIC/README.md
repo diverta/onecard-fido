@@ -22,11 +22,8 @@ Microchip社のセキュアIC「[ATECC608A](https://www.mouser.jp/ProductDetail/
 
 ## 対応プラン
 
-- まずFIDO機能で使用する秘密鍵／暗号化関連処理を、ATECC608Aを使用した処理で置き換えます。<br>
+- FIDO機能で使用する秘密鍵／暗号化関連処理を、ATECC608Aを使用した処理で置き換えます。<br>
 FIDO機能では、[管理ツール](../MaintenanceTool/README.md)を使用し、ATECC608A外部から秘密鍵をインポートする運用としております。
-
-- 次に、PIVやOpenPGP等の[スマートカード・エミュレーション機能](../CCID/README.md)においても、ATECC608Aを使用して鍵管理を行うものとします。<br>
-近日本格開発予定のPIV機能では、[Yubico PIV Toolによる初期データ導入](../Research/CCID/SETUPYKPIV.md)を想定しているため、ATECC608A外部から秘密鍵をインポートするのではなく、内部で秘密鍵を生成し、外部に公開鍵をエクスポートする実装にしたいと考えております。
 
 ## 開発情報
 

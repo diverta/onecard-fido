@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		gckW1HCxqHSEIdysj0waghkaEPg=
+		z2gXugjHgZSC3V0skAA7pRZE0T4=
 		</data>
 		<key>Resources/DFUProcessingWindow.nib</key>
 		<data>
@@ -20,25 +20,37 @@
 		<data>
 		MAFIjxKpigHDlIO4B1kXYX1rWh4=
 		</data>
+		<key>Resources/Entitlements.plist</key>
+		<data>
+		yFypNR3sHIGjuUsxo3PSqtX1S5Y=
+		</data>
+		<key>Resources/PIVPreferenceWindow.nib</key>
+		<data>
+		D54qFkT4AMWHtrGHIH+XSktlJTU=
+		</data>
 		<key>Resources/PinCodeParamWindow.nib</key>
 		<data>
-		cTvaSdJkJmuwPPdVD7l7relkSVw=
+		auQvdNZDJX9LVnkE308ZI1/skKM=
 		</data>
 		<key>Resources/SetPinParamWindow.nib</key>
 		<data>
 		zHYCfmUplxJLofoINisEc1Y9g+k=
 		</data>
+		<key>Resources/ToolInfoWindow.nib</key>
+		<data>
+		N64x8R+YqlNadipRaLi8xZ5MTgQ=
+		</data>
 		<key>Resources/ToolPreferenceWindow.nib</key>
 		<data>
-		CTLJRF+N1E6LUGdD6+Mdtk8B2Ow=
+		jnbnPO9bJ0IbIV7XK8caLFDhjPE=
 		</data>
-		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.13.zip</key>
 		<data>
-		dsErB5GXazP7fOHqkjXRL4Xh51g=
+		/9x73KHAiaZq+FQH7onx7OxP5C0=
 		</data>
-		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.2.13.zip</key>
 		<data>
-		b57eZenPwpE7WW+8rSLuq6S3QII=
+		nRKDKpLl+UoAwM+A8rKZ2ZT63jk=
 		</data>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -53,7 +65,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			SLZRDbC/UdW0BkU7fASzzENaWCw=
+			3JQzdtwEpFq4YuHavO5s7LawfCM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -72,7 +84,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			u+THC5c4OIuDPPstqbmKWdZquE2rwKT4Ar42svIAtgQ=
+			sd6S9C0Nq/pN4TYhGFExsl33v33N/7TarStmf82rthU=
 			</data>
 		</dict>
 		<key>Resources/DFUProcessingWindow.nib</key>
@@ -89,11 +101,25 @@
 			esVJy3s+AZyKeImVHXeVoYIRUQ+cAccDyO6M+bu2ht8=
 			</data>
 		</dict>
+		<key>Resources/Entitlements.plist</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			FZcEg0mSwCWu8v6Naf0pDGzx9OkpZafJvaOqhPjVJvI=
+			</data>
+		</dict>
+		<key>Resources/PIVPreferenceWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			erTYH/GNxfbo0GhiWOj1VZ+x9YeE1tyxE6TrirZicGc=
+			</data>
+		</dict>
 		<key>Resources/PinCodeParamWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			BtwvhOvhb6vOfP0WjK4SU7vreplbSEQwOY1XwDRduVw=
+			ThOn3nzGlHgYCHtM/rMzo4MaQC4za2KvIso/HiBRG7s=
 			</data>
 		</dict>
 		<key>Resources/SetPinParamWindow.nib</key>
@@ -103,25 +129,32 @@
 			wdw4QBYuhSdSR9aaI9Pb4gYPQ18a8uQi+3T7bj8Usb4=
 			</data>
 		</dict>
+		<key>Resources/ToolInfoWindow.nib</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			kL3X2cpX4L6KmGtgXnVhKmVwY85J8veqILU3j6GStqI=
+			</data>
+		</dict>
 		<key>Resources/ToolPreferenceWindow.nib</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			QHZsgUVOIpX8lEGVh0WyWugFdomgz7+I09QWd0VPllM=
+			bbcJ5Oy3A7czEyzg5Q0MbZ1yE0ALXkhUUmsw3OBWEco=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059.0.2.13.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			BaXU/TwIG5TfsvzaQ+2po0n2O2SMhHi4cuhMKOiIACQ=
+			3yd9cG4P+YviHK2KzCfU9M/JbRBjh4SQ2EzUXMgnr5Y=
 			</data>
 		</dict>
-		<key>Resources/appkg.PCA10059_02.0.2.11.zip</key>
+		<key>Resources/appkg.PCA10059_02.0.2.13.zip</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			itBSdkEV85jbpvt+3dwIASXnJCok/T/e5fYODACKalY=
+			TDuYtubVAKKnbuDjo7v4PcgPYPz4MmR7oP+LtWudq20=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/InfoPlist.strings</key>
@@ -137,7 +170,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			p5+q/t5w9ZeBbwwaSqQWZ9FknMNWb5munPnleSxVGzo=
+			6vqDe8zcXwJlhV6IRoOhkdOcjfyExZ6urBQHpIqTrzo=
 			</data>
 			<key>optional</key>
 			<true/>
