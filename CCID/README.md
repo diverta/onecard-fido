@@ -8,11 +8,11 @@
 
 PIV Card、OpenPGP Cardなどといったスマートカードのエミュレーションを、nRF52840アプリケーション上で実行させるために必要となります。
 
-#### 現状
+<img src="../FIDO2Device/MDBT50Q_Dongle/assets01/0003.jpg" width="720">
+<img src="../FIDO2Device/MDBT50Q_Dongle/assets01/0004.jpg" width="720">
 
-2020/12/29現在、PIV Cardエミュレーションを実装済みです。<br>
-この結果、nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)を使用し、PIN番号でmacOSにログインできるようになるところまで実現できています。<br>
-（詳細につきましては、下記手順書をご参照）
+nRF52840アプリケーションを搭載した[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をPCに装着すると、macOSにPIN番号を使ってログインできるようになります。<br>
+詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
 
 ## 手順書
 

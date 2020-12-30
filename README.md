@@ -72,3 +72,14 @@ Windows環境による具体的なテスト方法は、別途手順書[「Edge�
 
 #### [以前の仕様](FORMER.md)
 FIDOの旧世代２要素認証（U2F）に関する開発物件になります。
+
+
+## PIVカードエミュレーションについて
+
+最新バージョンのプログラムにより使用可能となった新機能「PIVカードエミュレーション」のイメージです。
+
+<img src="FIDO2Device/MDBT50Q_Dongle/assets01/0003.jpg" width="720">
+<img src="FIDO2Device/MDBT50Q_Dongle/assets01/0004.jpg" width="720">
+
+macOSにPIN番号を使ってログインできるようになります。<br>
+詳細につきましてはドキュメント<b>「[PIN番号を使用したmacOSログイン確認手順](FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)」</b>をご参照願います。
