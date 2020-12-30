@@ -38,11 +38,12 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 - <b>[Windows版 FIDO認証器管理ツール（Version 0.1.34）](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
 修正点は以下になります。
-- <b>PIVカードエミュレーション機能を正式にリリース</b>しました（ドキュメント「[CCIDインターフェース追加対応](https://github.com/diverta/onecard-fido/blob/doc-20201228/CCID/README.md)」ご参照）。
-
+- <b>PIVカードエミュレーション機能を正式にリリース</b>しました。
+<br>（ドキュメント「[CCIDインターフェース追加対応](https://github.com/diverta/onecard-fido/blob/doc-20201228/CCID/README.md)」ご参照）
 - macOS版管理ツールに[PIV機能設定](https://github.com/diverta/onecard-fido/blob/doc-20201228/MaintenanceTool/macOSApp/PIVSETTING.md)メニューを追加（[#339](https://github.com/diverta/onecard-fido/issues/339) ご参照）
 - PIV機能設定メニュー追加に伴い、ファームウェアを改修
-- Windows版管理ツールには、PIV機能設定メニューはありません（今回の修正は同梱ファームウェア差替えのみになります）。
+- Windows版管理ツールには、PIV機能設定メニューはありません。<br>
+（今回の修正は同梱ファームウェア差替えのみになります）
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 

@@ -16,12 +16,12 @@
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)）をMDBT50Q Dongleに導入します。
 
-### [PIV機能の設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
-macOS環境に導入した管理ツールにより、MDBT50Q DongleにPIV機能を設定します。<br>
+### [PIV機能の基本設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
+macOS環境に導入した管理ツールにより、MDBT50Q Dongleに対し、PIV機能の基本設定を行います。<br>
 リンク先ドキュメントの以下各章をご参照願います。<br>
 ・ソフトウェアのバージョン確認<br>
 ・PIV機能設定画面の表示<br>
-・初期設定の実行（ID設定の実行／鍵・証明書ファイルのインストール）
+・基本設定の実行（ID設定の実行／鍵・証明書ファイルのインストール）
 
 ## 作業手順
 
@@ -79,4 +79,4 @@ PIN番号`123456`を入力して、ログインを実行します。[注1]
 
 以上で、PIN番号によるmacOSログインは完了になります。
 
-[注1] PIN番号`123456`はPIV機能の初期値になります。管理ツールの[PIN番号管理機能](../../MaintenanceTool/macOSApp/PIVSETTING.md)により、PIN番号を初期値から変更した場合は、変更後のPIN番号を指定してください。
+[注1] PIN番号`123456`はPIV機能の初期値になります。管理ツールの[PIN番号管理機能](../../MaintenanceTool/macOSApp/PIVSETTING_OPT.md)により、PIN番号を初期値から変更した場合は、変更後のPIN番号を指定してください。
