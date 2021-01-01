@@ -1586,6 +1586,9 @@
       <itemPath>../plat_lib/nfc_service.h</itemPath>
       <itemPath>../plat_lib/rtc2.c</itemPath>
       <itemPath>../plat_lib/rtc2.h</itemPath>
+      <itemPath>../plat_lib/rv3028c7_i2c.c</itemPath>
+      <itemPath>../plat_lib/rv3028c7_i2c.h</itemPath>
+      <itemPath>../plat_lib/rv3028c7_i2c_def.h</itemPath>
       <itemPath>../plat_lib/usbd_service.c</itemPath>
       <itemPath>../plat_lib/usbd_service.h</itemPath>
       <itemPath>../plat_lib/usbd_service_bos.c</itemPath>
@@ -3852,6 +3855,12 @@
       <item path="../plat_lib/rtc2.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="../plat_lib/rtc2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/rv3028c7_i2c.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/rv3028c7_i2c.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/rv3028c7_i2c_def.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../plat_lib/usbd_service.c" ex="false" tool="0" flavor2="0">
       </item>
