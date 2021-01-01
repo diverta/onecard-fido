@@ -15,6 +15,8 @@ extern "C" {
 // 関数群
 //
 bool rv3028c7_i2c_init(void);
+bool rv3028c7_i2c_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours);
+bool rv3028c7_i2c_get_timestamp_string(char *timestamp_str);
 void rv3028c7_i2c_test(void);
 
 #ifdef __cplusplus

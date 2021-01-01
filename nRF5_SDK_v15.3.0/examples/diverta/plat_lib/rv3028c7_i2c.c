@@ -16,12 +16,19 @@ NRF_LOG_MODULE_REGISTER();
 #include "rv3028c7_i2c_def.h"
 #include "rv3028c7_i2c.h"
 
+// for struct tm
+#include <time.h>
+
+// テスト用
+#define RV3028C7_I2C_TEST false
+
 // 初期化処理の重複実行抑止フラグ
 static bool init_done = false;
 
 // データ送受信用の一時領域
 static uint8_t read_buff[32];
 static uint8_t write_buff[32];
+static uint8_t m_datetime[DATETIME_COMPONENTS_SIZE];
 
 static bool read_register(uint8_t reg_addr, uint8_t *reg_val)
 {
@@ -38,6 +45,22 @@ static bool read_register(uint8_t reg_addr, uint8_t *reg_val)
     return true;
 }
 
+static bool read_bytes_from_registers(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+{
+    write_buff[0] = reg_addr;
+    if (fido_twi_write(RV3028C7_ADDRESS, write_buff, 1) == false) {
+        NRF_LOG_ERROR("read_bytes_from_registers: fido_twi_write fail (reg_addr=0x%02x) ", reg_addr);
+        return false;
+    }
+    if (fido_twi_read(RV3028C7_ADDRESS, read_buff, size) == false) {
+        NRF_LOG_ERROR("read_bytes_from_registers: fido_twi_read fail (reg_addr=0x%02x, data_size=%u) ", 
+                reg_addr, size);
+        return false;
+    }
+    memcpy(data, read_buff, size);
+    return true;
+}
+
 static bool write_register(uint8_t reg_addr, uint8_t reg_val)
 {
     write_buff[0] = reg_addr;
@@ -45,6 +68,18 @@ static bool write_register(uint8_t reg_addr, uint8_t reg_val)
     if (fido_twi_write(RV3028C7_ADDRESS, write_buff, 2) == false) {
         NRF_LOG_ERROR("write_register: fido_twi_write fail (reg_addr=0x%02x, reg_val=0x%02x) ", 
             write_buff[0], write_buff[1]);
+        return false;
+    }
+    return true;
+}
+
+static bool write_bytes_to_registers(uint8_t reg_addr, uint8_t *data, uint8_t size) 
+{
+    write_buff[0] = reg_addr;
+    memcpy(write_buff + 1, data, size);
+    if (fido_twi_write(RV3028C7_ADDRESS, write_buff, size + 1) == false) {
+        NRF_LOG_ERROR("write_bytes_to_registers: fido_twi_write fail (reg_addr=0x%02x, data_size=%u) ", 
+            reg_addr, size);
         return false;
     }
     return true;
@@ -239,9 +274,90 @@ static bool enable_trickle_charge(uint8_t tcr)
     return true;
 }
 
-static uint8_t rv3028c7_convert_to_decimal(uint8_t bcd)
+static uint8_t convert_to_decimal(uint8_t bcd)
 {
     return (bcd / 16 * 10) + (bcd % 16);
+}
+
+static uint8_t convert_to_bcd(uint8_t decimal) 
+{
+    return (decimal / 10 * 16) + (decimal % 10);
+}
+
+static bool set_datetime_components(uint8_t *datetime_components, uint16_t year, uint8_t month, uint8_t day_of_month, uint8_t day_of_week, uint8_t hour, uint8_t minute, uint8_t second) 
+{
+    // Year 2000 AD is the earliest allowed year in this implementation
+    // Century overflow is not considered yet 
+    // (i.e., only supports year 2000 to 2099)
+    if (year < 2000) {
+        return false;
+    }
+    datetime_components[DATETIME_YEAR] = convert_to_bcd(year - 2000);
+
+    if (month < 1 || month > 12) {
+        return false;
+    }
+    datetime_components[DATETIME_MONTH] = convert_to_bcd(month);
+
+    if (day_of_month < 1 || day_of_month > 31) {
+        return false;
+    }
+    datetime_components[DATETIME_DAY_OF_MONTH] = convert_to_bcd(day_of_month);
+
+    if (day_of_week > 6) {
+        return false;
+    }
+    datetime_components[DATETIME_DAY_OF_WEEK] = convert_to_bcd(day_of_week);
+
+    // Uses 24-hour notation by default
+    if (hour > 23) {
+        return false;
+    }
+    datetime_components[DATETIME_HOUR] = convert_to_bcd(hour);
+
+    if (minute > 59) {
+        return false;
+    }
+    datetime_components[DATETIME_MINUTE] = convert_to_bcd(minute);
+
+    if (second > 59) {
+        return false;
+    }
+    datetime_components[DATETIME_SECOND] = convert_to_bcd(second);
+
+    return true;
+}
+
+static bool synchronize(uint8_t *datetime_components) 
+{
+    return write_bytes_to_registers(RV3028C7_REG_CLOCK_SECONDS, datetime_components, DATETIME_COMPONENTS_SIZE);
+}
+
+static bool set_unix_timestamp(uint32_t seconds_since_epoch, bool sync_calendar, uint8_t timezone_diff_hours) 
+{
+    uint8_t ts[4] = {
+        (uint8_t)seconds_since_epoch,
+        (uint8_t)(seconds_since_epoch >> 8),
+        (uint8_t)(seconds_since_epoch >> 16),
+        (uint8_t)(seconds_since_epoch >> 24)
+    };
+    if (write_bytes_to_registers(RV3028C7_REG_UNIX_TIME_0, ts, 4) == false) {
+        return false;
+    }
+
+    if (sync_calendar) {
+        // カレンダーを引数のUNIX時間と同期させる
+        // ただし、タイムゾーン差分を考慮
+        time_t t = seconds_since_epoch + timezone_diff_hours * 3600;
+        struct tm *dt = gmtime(&t);
+        if (set_datetime_components(m_datetime, dt->tm_year + 1900, dt->tm_mon + 1, dt->tm_mday, 0, dt->tm_hour, dt->tm_min, dt->tm_sec) == false) {
+            return false;
+        }
+        if (synchronize(m_datetime) == false) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool rv3028c7_i2c_init(void)
@@ -292,6 +408,43 @@ bool rv3028c7_i2c_init(void)
     return true;
 }
 
+bool rv3028c7_i2c_set_timestamp(uint32_t seconds_since_epoch, uint8_t timezone_diff_hours)
+{
+    // UNIX時間を使って時刻合わせ
+    //  UNIX時間カウンターには、引数をそのまま設定し、
+    //  カレンダーには、タイムゾーンに対応した時刻を設定
+    //  例) 1609443121
+    //    2020年12月31日 19:32:01 UTC
+    //    2021年 1月 1日 04:32:01 JST <-- カレンダーから取得できるのはこちら
+    if (set_unix_timestamp(seconds_since_epoch, true, timezone_diff_hours) == false) {
+        return false;
+    }
+    return true;
+}
+
+bool rv3028c7_i2c_get_timestamp_string(char *timestamp_str)
+{
+    // レジスター（Clock register）から現在時刻を取得
+    if (read_bytes_from_registers(RV3028C7_REG_CLOCK_SECONDS, m_datetime, DATETIME_COMPONENTS_SIZE) == false) {
+        return false;
+    }
+    // 所定の形式でフォーマット
+    sprintf(timestamp_str, "20%02d/%02d/%02d %02d:%02d:%02d",
+            convert_to_decimal(m_datetime[6]), 
+            convert_to_decimal(m_datetime[5]), 
+            convert_to_decimal(m_datetime[4]), 
+            convert_to_decimal(m_datetime[2]), 
+            convert_to_decimal(m_datetime[1]), 
+            convert_to_decimal(m_datetime[0]));
+    return true;
+}
+
+#if RV3028C7_I2C_TEST
+//
+// 以下はテスト用
+//
+static char work_buf[64];
+
 void rv3028c7_i2c_test(void)
 {
     NRF_LOG_DEBUG("RV-3028-C7 test start");
@@ -301,24 +454,27 @@ void rv3028c7_i2c_test(void)
         return;
     }
 
-    // レジスター（Clock register）から現在時刻を取得
-    write_buff[0] = RV3028C7_REG_CLOCK_SECONDS;
-    if (fido_twi_write(RV3028C7_ADDRESS, write_buff, 1) == false) {
+    // 現在時刻を取得
+    memset(work_buf, 0, sizeof(work_buf));
+    char *p = work_buf;
+    if (rv3028c7_i2c_get_timestamp_string(p) == false) {
         return;
     }
-    if (fido_twi_read(RV3028C7_ADDRESS, read_buff, 7) == false) {
-        return;
-    }
-    NRF_LOG_DEBUG("Clock registers:");
-    NRF_LOG_HEXDUMP_DEBUG(read_buff, 7);
-    NRF_LOG_DEBUG("Current date time: 20%02d/%02d/%02d %02d:%02d:%02d",
-            rv3028c7_convert_to_decimal(read_buff[6]), 
-            rv3028c7_convert_to_decimal(read_buff[5]), 
-            rv3028c7_convert_to_decimal(read_buff[4]), 
-            rv3028c7_convert_to_decimal(read_buff[2]), 
-            rv3028c7_convert_to_decimal(read_buff[1]), 
-            rv3028c7_convert_to_decimal(read_buff[0])
-            );
+    NRF_LOG_DEBUG("Current date time: %s JST", p);
 
+    // UNIX時間を使って時刻合わせ
+    uint32_t seconds_since_epoch = 1609443121;
+    if (rv3028c7_i2c_set_timestamp(seconds_since_epoch, 9) == false) {
+        return;
+    }
+    NRF_LOG_DEBUG("Set timestamp success (to 2021/01/01 04:32:01)");
+
+    // 時刻合わせ後の現在時刻を取得
+    p = work_buf + 32;
+    if (rv3028c7_i2c_get_timestamp_string(p) == false) {
+        return;
+    }
+    NRF_LOG_DEBUG("Current date time: %s JST", p);
     NRF_LOG_DEBUG("RV-3028-C7 test completed");
 }
+#endif // #ifdef RV3028C7_I2C_TEST
