@@ -10,6 +10,7 @@
 （[#394](https://github.com/diverta/onecard-fido/issues/394) ご参照）
   - 現状のnRF52840をベースとした基板のアプリケーションを、nRF Connect SDKに移植
   - 移植後、問題が無いようであれば、次世代SoCである「nRF5340」への移植を実施
+  - 詳細はドキュメント「<b>[nRF Connect SDKに関する調査](Research/nRFCnctSDK_v1.4.99/README.md)</b>」ご参照
 
 #### 要件未確定
 
