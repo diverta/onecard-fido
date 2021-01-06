@@ -25,6 +25,7 @@ nRF Connect SDKインストール時に必要なGUIツールを準備します�
 - ninja
 - west
 - pyelftools
+- intelhex
 - Getting Started Assistant（必須ではないです）
 
 #### ninjaのインストール
@@ -155,6 +156,29 @@ Collecting pyelftools
      |████████████████████████████████| 151 kB 993 kB/s
 Installing collected packages: pyelftools
 Successfully installed pyelftools-0.27
+WARNING: You are using pip version 20.3.1; however, version 20.3.3 is available.
+You should consider upgrading via the '/usr/local/opt/python@3.9/bin/python3.9 -m pip install --upgrade pip' command.
+bash-3.2$
+```
+
+#### intelhexのインストール
+
+nRF5340用のファームウェアイメージ生成時に使用するコマンド「intelhex」をインストールします。<br>
+ターミナルから以下のコマンドを実行します。
+
+```
+/usr/local/bin/python3.9 -m pip install intelhex
+```
+
+以下はmacOS Catalinaでの実行例になります。
+
+```
+bash-3.2$ /usr/local/bin/python3.9 -m pip install intelhex
+Collecting intelhex
+  Downloading intelhex-2.3.0-py2.py3-none-any.whl (50 kB)
+     |████████████████████████████████| 50 kB 592 kB/s
+Installing collected packages: intelhex
+Successfully installed intelhex-2.3.0
 WARNING: You are using pip version 20.3.1; however, version 20.3.3 is available.
 You should consider upgrading via the '/usr/local/opt/python@3.9/bin/python3.9 -m pip install --upgrade pip' command.
 bash-3.2$
