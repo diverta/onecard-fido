@@ -12,7 +12,7 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 具体的には、Windows PCに「Windows 10 October 2018 Update」を導入します。<br>
 導入したら、Windows 10のバージョン情報を参照し、バージョンが「1809」になっていることを確認してください。
 
-<img src="../../Research/FIDO_2_0/assets01/0001.png" width="700">
+<img src="assets04/0001.png" width="700">
 
 ## FIDO2認証器の準備
 
@@ -50,16 +50,16 @@ Edgeブラウザーを起動し、URL「[https://webauthntest.azurewebsites.net/
 
 MDBT50Q Dongleは、PCのUSBポートに装着しておきます。
 
-<img src="../../Research/FIDO_2_0/assets01/0002.png" width="640">
+<img src="assets04/0002.png" width="640">
 
 表示されたWebページ中央部にある「Sign In」枠内の「username」欄に、適宜ユーザー名を入力後『SIGN IN」ボタンをクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0003.png" width="270">
+<img src="assets04/0003.png" width="270">
 
 「WebAuthn Test App」のホーム画面に遷移します。<br>
 画面右上部の赤い「＋」のアイコン（３つのうち左端のアイコン）をクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0004.png" width="640">
+<img src="assets04/0004.png" width="640">
 
 下図のような「Create Credential Options」画面がポップアップ表示されます。<br>
 以下のように項目を変更設定します。
@@ -70,16 +70,16 @@ MDBT50Q Dongleは、PCのUSBポートに装着しておきます。
 
 項目を変更設定したら、画面右下部の「CREATE」ボタンをクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0005.png" width="350">
+<img src="assets04/0005.png" width="350">
 
 程なく、PINを新規入力する画面が表示されます。<br>
 テキストボックスに、適宜PIN（暗証番号）を入力し、OKをクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0006.png" width="300">
+<img src="assets04/0006.png" width="300">
 
 下図のような、ユーザー所在確認を求める画面が表示されます。
 
-<img src="../../Research/FIDO_2_0/assets01/0007.png" width="300">
+<img src="assets04/0007.png" width="300">
 
 MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
@@ -87,7 +87,7 @@ MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタ
 
 MDBT50Q Dongleからレスポンスが戻り、しばらくすると、下図のようにユーザー登録処理が成功したことを通知するメッセージ「Successfully created credential」が画面下端に表示されます。
 
-<img src="../../Research/FIDO_2_0/assets01/0009.png" width="640">
+<img src="assets04/0009.png" width="640">
 
 これで、ユーザー登録のテストは完了です。
 
@@ -96,7 +96,7 @@ MDBT50Q Dongleからレスポンスが戻り、しばらくすると、下図の
 前述の「WebAuthn Test App」ホーム画面を表示し、MDBT50Q DongleをPCのUSBポートに装着しておきます。<br>
 画面右上部の赤い鍵のアイコン（３つのうち真ん中のアイコン）をクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0010.png" width="640">
+<img src="assets04/0010.png" width="640">
 
 下図のような「Get Credential Options」画面がポップアップ表示されます。<br>
 以下のように項目を変更設定します。
@@ -105,23 +105,23 @@ MDBT50Q Dongleからレスポンスが戻り、しばらくすると、下図の
 
 項目を変更設定したら、画面右下部の「GET」ボタンをクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0011.png" width="350">
+<img src="assets04/0011.png" width="350">
 
 程なく、PINを入力する画面が表示されます。<br>
 テキストボックスに、先ほど作成したPIN（暗証番号）を入力し、OKをクリックします。
 
-<img src="../../Research/FIDO_2_0/assets01/0012.png" width="300">
+<img src="assets04/0012.png" width="300">
 
 下図のような、ユーザー所在確認を求める画面が表示されます。
 
-<img src="../../Research/FIDO_2_0/assets01/0013.png" width="300">
+<img src="assets04/0013.png" width="300">
 
 MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
-<img src="assets/0014.jpg" width="350">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 MDBT50Q Dongleからレスポンスが戻り、しばらくすると、下図のようにログイン処理が成功したことを通知するメッセージ「Successful assertion」が画面下端に表示されます。
 
-<img src="../../Research/FIDO_2_0/assets01/0014.png" width="640">
+<img src="assets04/0014.png" width="640">
 
 これで、ログインのテストは完了です。
