@@ -1,0 +1,1085 @@
+
+Microsoft(R) Program Maintenance Utility Version 14.00.24210.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	"C:\Program Files\Microsoft Visual Studio 14.0\VC\BIN\nmake.exe" depend && "C:\Program Files\Microsoft Visual Studio 14.0\VC\BIN\nmake.exe" _all
+
+Microsoft(R) Program Maintenance Utility Version 14.00.24210.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Microsoft(R) Program Maintenance Utility Version 14.00.24210.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	"C:\Perl\bin\perl.exe" "util\mkdef.pl" "crypto" 32 > libcrypto-1_1.def
+	"C:\Perl\bin\perl.exe" -i.tmp -pe "s|^LIBRARY\s+crypto32|LIBRARY libcrypto-1_1|;" libcrypto-1_1.def
+	DEL libcrypto-1_1.def.tmp
+	"C:\Perl\bin\perl.exe" "util\mkrc.pl" libcrypto-1_1.dll > libcrypto-1_1.rc
+	rc /folibcrypto-1_1.res libcrypto-1_1.rc
+Microsoft (R) Windows (R) Resource Compiler Version 10.0.10011.16384
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	IF EXIST libcrypto-1_1.dll.manifest DEL /F /Q libcrypto-1_1.dll.manifest
+	link /nologo /debug /dll  /implib:libcrypto.lib /out:libcrypto-1_1.dll /def:libcrypto-1_1.def @C:\Users\user\AppData\Local\Temp\nm2555.tmp || (DEL /Q libcrypto.* libcrypto-1_1.* && EXIT 1)
+   ライブラリ libcrypto.lib とオブジェクト libcrypto.exp を作成中
+	IF EXIST libcrypto-1_1.dll.manifest  mt -nologo -manifest libcrypto-1_1.dll.manifest -outputresource:libcrypto-1_1.dll
+	IF EXIST apps\libcrypto-1_1.dll DEL /Q /F apps\libcrypto-1_1.dll
+	IF EXIST test\libcrypto-1_1.dll DEL /Q /F test\libcrypto-1_1.dll
+	COPY libcrypto-1_1.dll apps
+        1 個のファイルをコピーしました。
+	COPY libcrypto-1_1.dll test
+        1 個のファイルをコピーしました。
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\bio_ssl.obj "ssl\bio_ssl.c"
+bio_ssl.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\d1_lib.obj "ssl\d1_lib.c"
+d1_lib.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\d1_msg.obj "ssl\d1_msg.c"
+d1_msg.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\d1_srtp.obj "ssl\d1_srtp.c"
+d1_srtp.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\methods.obj "ssl\methods.c"
+methods.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\pqueue.obj "ssl\pqueue.c"
+pqueue.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\record\dtls1_bitmap.obj "ssl\record\dtls1_bitmap.c"
+dtls1_bitmap.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\record\rec_layer_d1.obj "ssl\record\rec_layer_d1.c"
+rec_layer_d1.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\record\rec_layer_s3.obj "ssl\record\rec_layer_s3.c"
+rec_layer_s3.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\record\ssl3_buffer.obj "ssl\record\ssl3_buffer.c"
+ssl3_buffer.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\record\ssl3_record.obj "ssl\record\ssl3_record.c"
+ssl3_record.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\s3_cbc.obj "ssl\s3_cbc.c"
+s3_cbc.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\s3_enc.obj "ssl\s3_enc.c"
+s3_enc.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\s3_lib.obj "ssl\s3_lib.c"
+s3_lib.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\s3_msg.obj "ssl\s3_msg.c"
+s3_msg.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_asn1.obj "ssl\ssl_asn1.c"
+ssl_asn1.c
+ssl\ssl_asn1.c(298): warning C4244: '=': 'int64_t' から 'long' への変換です。データが失われる可能性があります。
+ssl\ssl_asn1.c(303): warning C4244: '=': 'int64_t' から 'long' への変換です。データが失われる可能性があります。
+ssl\ssl_asn1.c(328): warning C4244: '=': 'int64_t' から 'unsigned long' への変換です。データが失われる可能性があります。
+ssl\ssl_asn1.c(353): warning C4244: '=': 'uint64_t' から 'uint32_t' への変換です。データが失われる可能性があります。
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_cert.obj "ssl\ssl_cert.c"
+ssl_cert.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_ciph.obj "ssl\ssl_ciph.c"
+ssl_ciph.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_conf.obj "ssl\ssl_conf.c"
+ssl_conf.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_err.obj "ssl\ssl_err.c"
+ssl_err.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_init.obj "ssl\ssl_init.c"
+ssl_init.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_lib.obj "ssl\ssl_lib.c"
+ssl_lib.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_mcnf.obj "ssl\ssl_mcnf.c"
+ssl_mcnf.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_rsa.obj "ssl\ssl_rsa.c"
+ssl_rsa.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_sess.obj "ssl\ssl_sess.c"
+ssl_sess.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_stat.obj "ssl\ssl_stat.c"
+ssl_stat.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_txt.obj "ssl\ssl_txt.c"
+ssl_txt.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\ssl_utst.obj "ssl\ssl_utst.c"
+ssl_utst.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\statem\statem.obj "ssl\statem\statem.c"
+statem.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\statem\statem_clnt.obj "ssl\statem\statem_clnt.c"
+statem_clnt.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\statem\statem_dtls.obj "ssl\statem\statem_dtls.c"
+statem_dtls.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\statem\statem_lib.obj "ssl\statem\statem_lib.c"
+statem_lib.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\statem\statem_srvr.obj "ssl\statem\statem_srvr.c"
+statem_srvr.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\t1_enc.obj "ssl\t1_enc.c"
+t1_enc.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\t1_ext.obj "ssl\t1_ext.c"
+t1_ext.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\t1_lib.obj "ssl\t1_lib.c"
+t1_lib.c
+ssl\t1_lib.c(1745): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\t1_reneg.obj "ssl\t1_reneg.c"
+t1_reneg.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\t1_trce.obj "ssl\t1_trce.c"
+t1_trce.c
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdossl_static -c /Fossl\tls_srp.obj "ssl\tls_srp.c"
+tls_srp.c
+	"C:\Perl\bin\perl.exe" "util\mkdef.pl" "ssl" 32 > libssl-1_1.def
+	"C:\Perl\bin\perl.exe" -i.tmp -pe "s|^LIBRARY\s+ssl32|LIBRARY libssl-1_1|;" libssl-1_1.def
+	DEL libssl-1_1.def.tmp
+	"C:\Perl\bin\perl.exe" "util\mkrc.pl" libssl-1_1.dll > libssl-1_1.rc
+	rc /folibssl-1_1.res libssl-1_1.rc
+Microsoft (R) Windows (R) Resource Compiler Version 10.0.10011.16384
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	IF EXIST libssl-1_1.dll.manifest DEL /F /Q libssl-1_1.dll.manifest
+	link /nologo /debug /dll  /implib:libssl.lib /out:libssl-1_1.dll /def:libssl-1_1.def @C:\Users\user\AppData\Local\Temp\nm5CE1.tmp || (DEL /Q libssl.* libssl-1_1.* && EXIT 1)
+   ライブラリ libssl.lib とオブジェクト libssl.exp を作成中
+	IF EXIST libssl-1_1.dll.manifest  mt -nologo -manifest libssl-1_1.dll.manifest -outputresource:libssl-1_1.dll
+	IF EXIST apps\libssl-1_1.dll DEL /Q /F apps\libssl-1_1.dll
+	IF EXIST test\libssl-1_1.dll DEL /Q /F test\libssl-1_1.dll
+	COPY libssl-1_1.dll apps
+        1 個のファイルをコピーしました。
+	COPY libssl-1_1.dll test
+        1 個のファイルをコピーしました。
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fddso -c /Foengines\e_capi.obj "engines\e_capi.c"
+e_capi.c
+	IF EXIST engines\capi.dll.manifest DEL /F /Q engines\capi.dll.manifest
+	link /nologo /debug /dll /out:engines\capi.dll /def:C:\Users\user\AppData\Local\Temp\nm603D.tmp @C:\Users\user\AppData\Local\Temp\nm603E.tmp
+   ライブラリ engines\capi.lib とオブジェクト engines\capi.exp を作成中
+	IF EXIST engines\capi.dll.manifest  mt -nologo -manifest engines\capi.dll.manifest -outputresource:engines\capi.dll
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fddso -c /Foengines\e_dasync.obj "engines\e_dasync.c"
+e_dasync.c
+	IF EXIST engines\dasync.dll.manifest DEL /F /Q engines\dasync.dll.manifest
+	link /nologo /debug /dll /out:engines\dasync.dll /def:C:\Users\user\AppData\Local\Temp\nm6233.tmp @C:\Users\user\AppData\Local\Temp\nm6234.tmp
+   ライブラリ engines\dasync.lib とオブジェクト engines\dasync.exp を作成中
+	IF EXIST engines\dasync.dll.manifest  mt -nologo -manifest engines\dasync.dll.manifest -outputresource:engines\dasync.dll
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fddso -c /Foengines\e_ossltest.obj "engines\e_ossltest.c"
+e_ossltest.c
+	IF EXIST engines\ossltest.dll.manifest DEL /F /Q engines\ossltest.dll.manifest
+	link /nologo /debug /dll /out:engines\ossltest.dll /def:C:\Users\user\AppData\Local\Temp\nm639D.tmp @C:\Users\user\AppData\Local\Temp\nm639E.tmp
+   ライブラリ engines\ossltest.lib とオブジェクト engines\ossltest.exp を作成中
+	IF EXIST engines\ossltest.dll.manifest  mt -nologo -manifest engines\ossltest.dll.manifest -outputresource:engines\ossltest.dll
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fddso -c /Foengines\e_padlock.obj "engines\e_padlock.c"
+e_padlock.c
+	IF EXIST engines\padlock.dll.manifest DEL /F /Q engines\padlock.dll.manifest
+	link /nologo /debug /dll /out:engines\padlock.dll /def:C:\Users\user\AppData\Local\Temp\nm64E7.tmp @C:\Users\user\AppData\Local\Temp\nm64E8.tmp
+   ライブラリ engines\padlock.lib とオブジェクト engines\padlock.exp を作成中
+	IF EXIST engines\padlock.dll.manifest  mt -nologo -manifest engines\padlock.dll.manifest -outputresource:engines\padlock.dll
+	"C:\Perl\bin\perl.exe" "apps\progs.pl" "apps\openssl" > apps\progs.h
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\app_rand.obj "apps\app_rand.c"
+app_rand.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\apps.obj "apps\apps.c"
+apps.c
+apps\apps.c(1895): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+apps\apps.c(2325): warning C4996: 'fileno': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _fileno. See online help for details.
+C:\Program Files\Windows Kits\10\include\10.0.14393.0\ucrt\stdio.h(2450): note: 'fileno' の宣言を確認してください
+apps\apps.c(2331): warning C4996: 'fileno': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _fileno. See online help for details.
+C:\Program Files\Windows Kits\10\include\10.0.14393.0\ucrt\stdio.h(2450): note: 'fileno' の宣言を確認してください
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\asn1pars.obj "apps\asn1pars.c"
+asn1pars.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ca.obj "apps\ca.c"
+ca.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ciphers.obj "apps\ciphers.c"
+ciphers.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\cms.obj "apps\cms.c"
+cms.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\crl.obj "apps\crl.c"
+crl.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\crl2p7.obj "apps\crl2p7.c"
+crl2p7.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\dgst.obj "apps\dgst.c"
+dgst.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\dhparam.obj "apps\dhparam.c"
+dhparam.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\dsa.obj "apps\dsa.c"
+dsa.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\dsaparam.obj "apps\dsaparam.c"
+dsaparam.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ec.obj "apps\ec.c"
+ec.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ecparam.obj "apps\ecparam.c"
+ecparam.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\enc.obj "apps\enc.c"
+enc.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\engine.obj "apps\engine.c"
+engine.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\errstr.obj "apps\errstr.c"
+errstr.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\gendsa.obj "apps\gendsa.c"
+gendsa.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\genpkey.obj "apps\genpkey.c"
+genpkey.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\genrsa.obj "apps\genrsa.c"
+genrsa.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\nseq.obj "apps\nseq.c"
+nseq.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ocsp.obj "apps\ocsp.c"
+ocsp.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\openssl.obj "apps\openssl.c"
+openssl.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\opt.obj "apps\opt.c"
+opt.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\passwd.obj "apps\passwd.c"
+passwd.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkcs12.obj "apps\pkcs12.c"
+pkcs12.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkcs7.obj "apps\pkcs7.c"
+pkcs7.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkcs8.obj "apps\pkcs8.c"
+pkcs8.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkey.obj "apps\pkey.c"
+pkey.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkeyparam.obj "apps\pkeyparam.c"
+pkeyparam.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\pkeyutl.obj "apps\pkeyutl.c"
+pkeyutl.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\prime.obj "apps\prime.c"
+prime.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\rand.obj "apps\rand.c"
+rand.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\rehash.obj "apps\rehash.c"
+rehash.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\req.obj "apps\req.c"
+req.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\rsa.obj "apps\rsa.c"
+rsa.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\rsautl.obj "apps\rsautl.c"
+rsautl.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\s_cb.obj "apps\s_cb.c"
+s_cb.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\s_client.obj "apps\s_client.c"
+s_client.c
+apps\s_client.c(376): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\s_server.obj "apps\s_server.c"
+s_server.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\s_socket.obj "apps\s_socket.c"
+s_socket.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\s_time.obj "apps\s_time.c"
+s_time.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\sess_id.obj "apps\sess_id.c"
+sess_id.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\smime.obj "apps\smime.c"
+smime.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\speed.obj "apps\speed.c"
+speed.c
+apps\speed.c(3105): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+apps\speed.c(3106): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\spkac.obj "apps\spkac.c"
+spkac.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\srp.obj "apps\srp.c"
+srp.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\ts.obj "apps\ts.c"
+ts.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\verify.obj "apps\verify.c"
+verify.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\version.obj "apps\version.c"
+version.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\win32_init.obj "apps\win32_init.c"
+win32_init.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foapps\x509.obj "apps\x509.c"
+x509.c
+	cl  /I "." /I "include" /I "apps" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Foms\applink.obj "ms\applink.c"
+applink.c
+	IF EXIST apps\openssl.exe.manifest DEL /F /Q apps\openssl.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:apps\openssl.exe @C:\Users\user\AppData\Local\Temp\nm9F04.tmp
+   ライブラリ apps\openssl.lib とオブジェクト apps\openssl.exp を作成中
+	IF EXIST apps\openssl.exe.manifest  mt -nologo -manifest apps\openssl.exe.manifest -outputresource:apps\openssl.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\asn1.obj "fuzz\asn1.c"
+asn1.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\test-corpus.obj "fuzz\test-corpus.c"
+test-corpus.c
+	IF EXIST fuzz\asn1-test.exe.manifest DEL /F /Q fuzz\asn1-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\asn1-test.exe @C:\Users\user\AppData\Local\Temp\nmA202.tmp
+	IF EXIST fuzz\asn1-test.exe.manifest  mt -nologo -manifest fuzz\asn1-test.exe.manifest -outputresource:fuzz\asn1-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\asn1parse.obj "fuzz\asn1parse.c"
+asn1parse.c
+	IF EXIST fuzz\asn1parse-test.exe.manifest DEL /F /Q fuzz\asn1parse-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\asn1parse-test.exe @C:\Users\user\AppData\Local\Temp\nmA34B.tmp
+	IF EXIST fuzz\asn1parse-test.exe.manifest  mt -nologo -manifest fuzz\asn1parse-test.exe.manifest -outputresource:fuzz\asn1parse-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\bignum.obj "fuzz\bignum.c"
+bignum.c
+	IF EXIST fuzz\bignum-test.exe.manifest DEL /F /Q fuzz\bignum-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\bignum-test.exe @C:\Users\user\AppData\Local\Temp\nmA466.tmp
+	IF EXIST fuzz\bignum-test.exe.manifest  mt -nologo -manifest fuzz\bignum-test.exe.manifest -outputresource:fuzz\bignum-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\bndiv.obj "fuzz\bndiv.c"
+bndiv.c
+	IF EXIST fuzz\bndiv-test.exe.manifest DEL /F /Q fuzz\bndiv-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\bndiv-test.exe @C:\Users\user\AppData\Local\Temp\nmA580.tmp
+	IF EXIST fuzz\bndiv-test.exe.manifest  mt -nologo -manifest fuzz\bndiv-test.exe.manifest -outputresource:fuzz\bndiv-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\cms.obj "fuzz\cms.c"
+cms.c
+	IF EXIST fuzz\cms-test.exe.manifest DEL /F /Q fuzz\cms-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\cms-test.exe @C:\Users\user\AppData\Local\Temp\nmA6B9.tmp
+	IF EXIST fuzz\cms-test.exe.manifest  mt -nologo -manifest fuzz\cms-test.exe.manifest -outputresource:fuzz\cms-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\conf.obj "fuzz\conf.c"
+conf.c
+	IF EXIST fuzz\conf-test.exe.manifest DEL /F /Q fuzz\conf-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\conf-test.exe @C:\Users\user\AppData\Local\Temp\nmA7D4.tmp
+	IF EXIST fuzz\conf-test.exe.manifest  mt -nologo -manifest fuzz\conf-test.exe.manifest -outputresource:fuzz\conf-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\crl.obj "fuzz\crl.c"
+crl.c
+	IF EXIST fuzz\crl-test.exe.manifest DEL /F /Q fuzz\crl-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\crl-test.exe @C:\Users\user\AppData\Local\Temp\nmA8FE.tmp
+	IF EXIST fuzz\crl-test.exe.manifest  mt -nologo -manifest fuzz\crl-test.exe.manifest -outputresource:fuzz\crl-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\ct.obj "fuzz\ct.c"
+ct.c
+	IF EXIST fuzz\ct-test.exe.manifest DEL /F /Q fuzz\ct-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\ct-test.exe @C:\Users\user\AppData\Local\Temp\nmAA27.tmp
+	IF EXIST fuzz\ct-test.exe.manifest  mt -nologo -manifest fuzz\ct-test.exe.manifest -outputresource:fuzz\ct-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\server.obj "fuzz\server.c"
+server.c
+	IF EXIST fuzz\server-test.exe.manifest DEL /F /Q fuzz\server-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\server-test.exe @C:\Users\user\AppData\Local\Temp\nmAB42.tmp
+	IF EXIST fuzz\server-test.exe.manifest  mt -nologo -manifest fuzz\server-test.exe.manifest -outputresource:fuzz\server-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fofuzz\x509.obj "fuzz\x509.c"
+x509.c
+	IF EXIST fuzz\x509-test.exe.manifest DEL /F /Q fuzz\x509-test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:fuzz\x509-test.exe @C:\Users\user\AppData\Local\Temp\nmAC9A.tmp
+	IF EXIST fuzz\x509-test.exe.manifest  mt -nologo -manifest fuzz\x509-test.exe.manifest -outputresource:fuzz\x509-test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\aborttest.obj "test\aborttest.c"
+aborttest.c
+	IF EXIST test\aborttest.exe.manifest DEL /F /Q test\aborttest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\aborttest.exe @C:\Users\user\AppData\Local\Temp\nmADA5.tmp
+	IF EXIST test\aborttest.exe.manifest  mt -nologo -manifest test\aborttest.exe.manifest -outputresource:test\aborttest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\afalgtest.obj "test\afalgtest.c"
+afalgtest.c
+	IF EXIST test\afalgtest.exe.manifest DEL /F /Q test\afalgtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\afalgtest.exe @C:\Users\user\AppData\Local\Temp\nmAEBF.tmp
+	IF EXIST test\afalgtest.exe.manifest  mt -nologo -manifest test\afalgtest.exe.manifest -outputresource:test\afalgtest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\asynciotest.obj "test\asynciotest.c"
+asynciotest.c
+	cl  /I "include" /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ssltestlib.obj "test\ssltestlib.c"
+ssltestlib.c
+	IF EXIST test\asynciotest.exe.manifest DEL /F /Q test\asynciotest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\asynciotest.exe @C:\Users\user\AppData\Local\Temp\nmB112.tmp
+	IF EXIST test\asynciotest.exe.manifest  mt -nologo -manifest test\asynciotest.exe.manifest -outputresource:test\asynciotest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\asynctest.obj "test\asynctest.c"
+asynctest.c
+	IF EXIST test\asynctest.exe.manifest DEL /F /Q test\asynctest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\asynctest.exe @C:\Users\user\AppData\Local\Temp\nmB28A.tmp
+	IF EXIST test\asynctest.exe.manifest  mt -nologo -manifest test\asynctest.exe.manifest -outputresource:test\asynctest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\bad_dtls_test.obj "test\bad_dtls_test.c"
+bad_dtls_test.c
+test\bad_dtls_test.c: warning C4819: ファイルは、現在のコード ページ (932) で表示できない文字を含んでいます。データの損失を防ぐために、ファイルを Unicode 形式で保存してください。
+test\bad_dtls_test.c(311): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+test\bad_dtls_test.c(336): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	IF EXIST test\bad_dtls_test.exe.manifest DEL /F /Q test\bad_dtls_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\bad_dtls_test.exe @C:\Users\user\AppData\Local\Temp\nmB421.tmp
+	IF EXIST test\bad_dtls_test.exe.manifest  mt -nologo -manifest test\bad_dtls_test.exe.manifest -outputresource:test\bad_dtls_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\bftest.obj "test\bftest.c"
+bftest.c
+	IF EXIST test\bftest.exe.manifest DEL /F /Q test\bftest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\bftest.exe @C:\Users\user\AppData\Local\Temp\nmB5A9.tmp
+	IF EXIST test\bftest.exe.manifest  mt -nologo -manifest test\bftest.exe.manifest -outputresource:test\bftest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\bio_enc_test.obj "test\bio_enc_test.c"
+bio_enc_test.c
+	IF EXIST test\bio_enc_test.exe.manifest DEL /F /Q test\bio_enc_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\bio_enc_test.exe @C:\Users\user\AppData\Local\Temp\nmB6F2.tmp
+	IF EXIST test\bio_enc_test.exe.manifest  mt -nologo -manifest test\bio_enc_test.exe.manifest -outputresource:test\bio_enc_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\bioprinttest.obj "test\bioprinttest.c"
+bioprinttest.c
+	IF EXIST test\bioprinttest.exe.manifest DEL /F /Q test\bioprinttest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\bioprinttest.exe @C:\Users\user\AppData\Local\Temp\nmB80C.tmp
+	IF EXIST test\bioprinttest.exe.manifest  mt -nologo -manifest test\bioprinttest.exe.manifest -outputresource:test\bioprinttest.exe
+	cl  /I "." /I "crypto\include" /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\bntest.obj "test\bntest.c"
+bntest.c
+	IF EXIST test\bntest.exe.manifest DEL /F /Q test\bntest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\bntest.exe @C:\Users\user\AppData\Local\Temp\nmB9D2.tmp
+	IF EXIST test\bntest.exe.manifest  mt -nologo -manifest test\bntest.exe.manifest -outputresource:test\bntest.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "aes" > test\buildtest_aes.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_aes.obj "test\buildtest_aes.c"
+buildtest_aes.c
+	IF EXIST test\buildtest_aes.exe.manifest DEL /F /Q test\buildtest_aes.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_aes.exe @C:\Users\user\AppData\Local\Temp\nmBB0C.tmp
+	IF EXIST test\buildtest_aes.exe.manifest  mt -nologo -manifest test\buildtest_aes.exe.manifest -outputresource:test\buildtest_aes.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "asn1" > test\buildtest_asn1.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_asn1.obj "test\buildtest_asn1.c"
+buildtest_asn1.c
+	IF EXIST test\buildtest_asn1.exe.manifest DEL /F /Q test\buildtest_asn1.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_asn1.exe @C:\Users\user\AppData\Local\Temp\nmBC26.tmp
+	IF EXIST test\buildtest_asn1.exe.manifest  mt -nologo -manifest test\buildtest_asn1.exe.manifest -outputresource:test\buildtest_asn1.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "asn1t" > test\buildtest_asn1t.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_asn1t.obj "test\buildtest_asn1t.c"
+buildtest_asn1t.c
+	IF EXIST test\buildtest_asn1t.exe.manifest DEL /F /Q test\buildtest_asn1t.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_asn1t.exe @C:\Users\user\AppData\Local\Temp\nmBD50.tmp
+	IF EXIST test\buildtest_asn1t.exe.manifest  mt -nologo -manifest test\buildtest_asn1t.exe.manifest -outputresource:test\buildtest_asn1t.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "async" > test\buildtest_async.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_async.obj "test\buildtest_async.c"
+buildtest_async.c
+	IF EXIST test\buildtest_async.exe.manifest DEL /F /Q test\buildtest_async.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_async.exe @C:\Users\user\AppData\Local\Temp\nmBE7A.tmp
+	IF EXIST test\buildtest_async.exe.manifest  mt -nologo -manifest test\buildtest_async.exe.manifest -outputresource:test\buildtest_async.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "bio" > test\buildtest_bio.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_bio.obj "test\buildtest_bio.c"
+buildtest_bio.c
+	IF EXIST test\buildtest_bio.exe.manifest DEL /F /Q test\buildtest_bio.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_bio.exe @C:\Users\user\AppData\Local\Temp\nmBFA4.tmp
+	IF EXIST test\buildtest_bio.exe.manifest  mt -nologo -manifest test\buildtest_bio.exe.manifest -outputresource:test\buildtest_bio.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "blowfish" > test\buildtest_blowfish.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_blowfish.obj "test\buildtest_blowfish.c"
+buildtest_blowfish.c
+	IF EXIST test\buildtest_blowfish.exe.manifest DEL /F /Q test\buildtest_blowfish.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_blowfish.exe @C:\Users\user\AppData\Local\Temp\nmC0DD.tmp
+	IF EXIST test\buildtest_blowfish.exe.manifest  mt -nologo -manifest test\buildtest_blowfish.exe.manifest -outputresource:test\buildtest_blowfish.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "bn" > test\buildtest_bn.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_bn.obj "test\buildtest_bn.c"
+buildtest_bn.c
+	IF EXIST test\buildtest_bn.exe.manifest DEL /F /Q test\buildtest_bn.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_bn.exe @C:\Users\user\AppData\Local\Temp\nmC207.tmp
+	IF EXIST test\buildtest_bn.exe.manifest  mt -nologo -manifest test\buildtest_bn.exe.manifest -outputresource:test\buildtest_bn.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "buffer" > test\buildtest_buffer.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_buffer.obj "test\buildtest_buffer.c"
+buildtest_buffer.c
+	IF EXIST test\buildtest_buffer.exe.manifest DEL /F /Q test\buildtest_buffer.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_buffer.exe @C:\Users\user\AppData\Local\Temp\nmC331.tmp
+	IF EXIST test\buildtest_buffer.exe.manifest  mt -nologo -manifest test\buildtest_buffer.exe.manifest -outputresource:test\buildtest_buffer.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "camellia" > test\buildtest_camellia.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_camellia.obj "test\buildtest_camellia.c"
+buildtest_camellia.c
+	IF EXIST test\buildtest_camellia.exe.manifest DEL /F /Q test\buildtest_camellia.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_camellia.exe @C:\Users\user\AppData\Local\Temp\nmC43C.tmp
+	IF EXIST test\buildtest_camellia.exe.manifest  mt -nologo -manifest test\buildtest_camellia.exe.manifest -outputresource:test\buildtest_camellia.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "cast" > test\buildtest_cast.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_cast.obj "test\buildtest_cast.c"
+buildtest_cast.c
+	IF EXIST test\buildtest_cast.exe.manifest DEL /F /Q test\buildtest_cast.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_cast.exe @C:\Users\user\AppData\Local\Temp\nmC566.tmp
+	IF EXIST test\buildtest_cast.exe.manifest  mt -nologo -manifest test\buildtest_cast.exe.manifest -outputresource:test\buildtest_cast.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "cmac" > test\buildtest_cmac.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_cmac.obj "test\buildtest_cmac.c"
+buildtest_cmac.c
+	IF EXIST test\buildtest_cmac.exe.manifest DEL /F /Q test\buildtest_cmac.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_cmac.exe @C:\Users\user\AppData\Local\Temp\nmC6AF.tmp
+	IF EXIST test\buildtest_cmac.exe.manifest  mt -nologo -manifest test\buildtest_cmac.exe.manifest -outputresource:test\buildtest_cmac.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "cms" > test\buildtest_cms.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_cms.obj "test\buildtest_cms.c"
+buildtest_cms.c
+	IF EXIST test\buildtest_cms.exe.manifest DEL /F /Q test\buildtest_cms.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_cms.exe @C:\Users\user\AppData\Local\Temp\nmC807.tmp
+	IF EXIST test\buildtest_cms.exe.manifest  mt -nologo -manifest test\buildtest_cms.exe.manifest -outputresource:test\buildtest_cms.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "comp" > test\buildtest_comp.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_comp.obj "test\buildtest_comp.c"
+buildtest_comp.c
+	IF EXIST test\buildtest_comp.exe.manifest DEL /F /Q test\buildtest_comp.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_comp.exe @C:\Users\user\AppData\Local\Temp\nmC931.tmp
+	IF EXIST test\buildtest_comp.exe.manifest  mt -nologo -manifest test\buildtest_comp.exe.manifest -outputresource:test\buildtest_comp.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "conf" > test\buildtest_conf.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_conf.obj "test\buildtest_conf.c"
+buildtest_conf.c
+	IF EXIST test\buildtest_conf.exe.manifest DEL /F /Q test\buildtest_conf.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_conf.exe @C:\Users\user\AppData\Local\Temp\nmCA5B.tmp
+	IF EXIST test\buildtest_conf.exe.manifest  mt -nologo -manifest test\buildtest_conf.exe.manifest -outputresource:test\buildtest_conf.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "conf_api" > test\buildtest_conf_api.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_conf_api.obj "test\buildtest_conf_api.c"
+buildtest_conf_api.c
+	IF EXIST test\buildtest_conf_api.exe.manifest DEL /F /Q test\buildtest_conf_api.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_conf_api.exe @C:\Users\user\AppData\Local\Temp\nmCB85.tmp
+	IF EXIST test\buildtest_conf_api.exe.manifest  mt -nologo -manifest test\buildtest_conf_api.exe.manifest -outputresource:test\buildtest_conf_api.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "crypto" > test\buildtest_crypto.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_crypto.obj "test\buildtest_crypto.c"
+buildtest_crypto.c
+	IF EXIST test\buildtest_crypto.exe.manifest DEL /F /Q test\buildtest_crypto.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_crypto.exe @C:\Users\user\AppData\Local\Temp\nmCCAF.tmp
+	IF EXIST test\buildtest_crypto.exe.manifest  mt -nologo -manifest test\buildtest_crypto.exe.manifest -outputresource:test\buildtest_crypto.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ct" > test\buildtest_ct.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ct.obj "test\buildtest_ct.c"
+buildtest_ct.c
+	IF EXIST test\buildtest_ct.exe.manifest DEL /F /Q test\buildtest_ct.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ct.exe @C:\Users\user\AppData\Local\Temp\nmCDE8.tmp
+	IF EXIST test\buildtest_ct.exe.manifest  mt -nologo -manifest test\buildtest_ct.exe.manifest -outputresource:test\buildtest_ct.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "des" > test\buildtest_des.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_des.obj "test\buildtest_des.c"
+buildtest_des.c
+	IF EXIST test\buildtest_des.exe.manifest DEL /F /Q test\buildtest_des.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_des.exe @C:\Users\user\AppData\Local\Temp\nmCF03.tmp
+	IF EXIST test\buildtest_des.exe.manifest  mt -nologo -manifest test\buildtest_des.exe.manifest -outputresource:test\buildtest_des.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "dh" > test\buildtest_dh.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_dh.obj "test\buildtest_dh.c"
+buildtest_dh.c
+	IF EXIST test\buildtest_dh.exe.manifest DEL /F /Q test\buildtest_dh.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_dh.exe @C:\Users\user\AppData\Local\Temp\nmD03C.tmp
+	IF EXIST test\buildtest_dh.exe.manifest  mt -nologo -manifest test\buildtest_dh.exe.manifest -outputresource:test\buildtest_dh.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "dsa" > test\buildtest_dsa.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_dsa.obj "test\buildtest_dsa.c"
+buildtest_dsa.c
+	IF EXIST test\buildtest_dsa.exe.manifest DEL /F /Q test\buildtest_dsa.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_dsa.exe @C:\Users\user\AppData\Local\Temp\nmD166.tmp
+	IF EXIST test\buildtest_dsa.exe.manifest  mt -nologo -manifest test\buildtest_dsa.exe.manifest -outputresource:test\buildtest_dsa.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "dtls1" > test\buildtest_dtls1.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_dtls1.obj "test\buildtest_dtls1.c"
+buildtest_dtls1.c
+	IF EXIST test\buildtest_dtls1.exe.manifest DEL /F /Q test\buildtest_dtls1.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_dtls1.exe @C:\Users\user\AppData\Local\Temp\nmD2A0.tmp
+	IF EXIST test\buildtest_dtls1.exe.manifest  mt -nologo -manifest test\buildtest_dtls1.exe.manifest -outputresource:test\buildtest_dtls1.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "e_os2" > test\buildtest_e_os2.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_e_os2.obj "test\buildtest_e_os2.c"
+buildtest_e_os2.c
+	IF EXIST test\buildtest_e_os2.exe.manifest DEL /F /Q test\buildtest_e_os2.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_e_os2.exe @C:\Users\user\AppData\Local\Temp\nmD3BA.tmp
+	IF EXIST test\buildtest_e_os2.exe.manifest  mt -nologo -manifest test\buildtest_e_os2.exe.manifest -outputresource:test\buildtest_e_os2.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ebcdic" > test\buildtest_ebcdic.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ebcdic.obj "test\buildtest_ebcdic.c"
+buildtest_ebcdic.c
+	IF EXIST test\buildtest_ebcdic.exe.manifest DEL /F /Q test\buildtest_ebcdic.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ebcdic.exe @C:\Users\user\AppData\Local\Temp\nmD4F3.tmp
+	IF EXIST test\buildtest_ebcdic.exe.manifest  mt -nologo -manifest test\buildtest_ebcdic.exe.manifest -outputresource:test\buildtest_ebcdic.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ec" > test\buildtest_ec.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ec.obj "test\buildtest_ec.c"
+buildtest_ec.c
+	IF EXIST test\buildtest_ec.exe.manifest DEL /F /Q test\buildtest_ec.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ec.exe @C:\Users\user\AppData\Local\Temp\nmD61D.tmp
+	IF EXIST test\buildtest_ec.exe.manifest  mt -nologo -manifest test\buildtest_ec.exe.manifest -outputresource:test\buildtest_ec.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ecdh" > test\buildtest_ecdh.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ecdh.obj "test\buildtest_ecdh.c"
+buildtest_ecdh.c
+	IF EXIST test\buildtest_ecdh.exe.manifest DEL /F /Q test\buildtest_ecdh.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ecdh.exe @C:\Users\user\AppData\Local\Temp\nmD747.tmp
+	IF EXIST test\buildtest_ecdh.exe.manifest  mt -nologo -manifest test\buildtest_ecdh.exe.manifest -outputresource:test\buildtest_ecdh.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ecdsa" > test\buildtest_ecdsa.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ecdsa.obj "test\buildtest_ecdsa.c"
+buildtest_ecdsa.c
+	IF EXIST test\buildtest_ecdsa.exe.manifest DEL /F /Q test\buildtest_ecdsa.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ecdsa.exe @C:\Users\user\AppData\Local\Temp\nmD861.tmp
+	IF EXIST test\buildtest_ecdsa.exe.manifest  mt -nologo -manifest test\buildtest_ecdsa.exe.manifest -outputresource:test\buildtest_ecdsa.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "engine" > test\buildtest_engine.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_engine.obj "test\buildtest_engine.c"
+buildtest_engine.c
+	IF EXIST test\buildtest_engine.exe.manifest DEL /F /Q test\buildtest_engine.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_engine.exe @C:\Users\user\AppData\Local\Temp\nmD96C.tmp
+	IF EXIST test\buildtest_engine.exe.manifest  mt -nologo -manifest test\buildtest_engine.exe.manifest -outputresource:test\buildtest_engine.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "err" > test\buildtest_err.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_err.obj "test\buildtest_err.c"
+buildtest_err.c
+	IF EXIST test\buildtest_err.exe.manifest DEL /F /Q test\buildtest_err.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_err.exe @C:\Users\user\AppData\Local\Temp\nmDAB5.tmp
+	IF EXIST test\buildtest_err.exe.manifest  mt -nologo -manifest test\buildtest_err.exe.manifest -outputresource:test\buildtest_err.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "evp" > test\buildtest_evp.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_evp.obj "test\buildtest_evp.c"
+buildtest_evp.c
+	IF EXIST test\buildtest_evp.exe.manifest DEL /F /Q test\buildtest_evp.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_evp.exe @C:\Users\user\AppData\Local\Temp\nmDBFE.tmp
+	IF EXIST test\buildtest_evp.exe.manifest  mt -nologo -manifest test\buildtest_evp.exe.manifest -outputresource:test\buildtest_evp.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "hmac" > test\buildtest_hmac.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_hmac.obj "test\buildtest_hmac.c"
+buildtest_hmac.c
+	IF EXIST test\buildtest_hmac.exe.manifest DEL /F /Q test\buildtest_hmac.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_hmac.exe @C:\Users\user\AppData\Local\Temp\nmDCF9.tmp
+	IF EXIST test\buildtest_hmac.exe.manifest  mt -nologo -manifest test\buildtest_hmac.exe.manifest -outputresource:test\buildtest_hmac.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "idea" > test\buildtest_idea.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_idea.obj "test\buildtest_idea.c"
+buildtest_idea.c
+	IF EXIST test\buildtest_idea.exe.manifest DEL /F /Q test\buildtest_idea.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_idea.exe @C:\Users\user\AppData\Local\Temp\nmDE13.tmp
+	IF EXIST test\buildtest_idea.exe.manifest  mt -nologo -manifest test\buildtest_idea.exe.manifest -outputresource:test\buildtest_idea.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "kdf" > test\buildtest_kdf.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_kdf.obj "test\buildtest_kdf.c"
+buildtest_kdf.c
+	IF EXIST test\buildtest_kdf.exe.manifest DEL /F /Q test\buildtest_kdf.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_kdf.exe @C:\Users\user\AppData\Local\Temp\nmDF1E.tmp
+	IF EXIST test\buildtest_kdf.exe.manifest  mt -nologo -manifest test\buildtest_kdf.exe.manifest -outputresource:test\buildtest_kdf.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "lhash" > test\buildtest_lhash.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_lhash.obj "test\buildtest_lhash.c"
+buildtest_lhash.c
+	IF EXIST test\buildtest_lhash.exe.manifest DEL /F /Q test\buildtest_lhash.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_lhash.exe @C:\Users\user\AppData\Local\Temp\nmE048.tmp
+	IF EXIST test\buildtest_lhash.exe.manifest  mt -nologo -manifest test\buildtest_lhash.exe.manifest -outputresource:test\buildtest_lhash.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "md4" > test\buildtest_md4.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_md4.obj "test\buildtest_md4.c"
+buildtest_md4.c
+	IF EXIST test\buildtest_md4.exe.manifest DEL /F /Q test\buildtest_md4.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_md4.exe @C:\Users\user\AppData\Local\Temp\nmE172.tmp
+	IF EXIST test\buildtest_md4.exe.manifest  mt -nologo -manifest test\buildtest_md4.exe.manifest -outputresource:test\buildtest_md4.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "md5" > test\buildtest_md5.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_md5.obj "test\buildtest_md5.c"
+buildtest_md5.c
+	IF EXIST test\buildtest_md5.exe.manifest DEL /F /Q test\buildtest_md5.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_md5.exe @C:\Users\user\AppData\Local\Temp\nmE27C.tmp
+	IF EXIST test\buildtest_md5.exe.manifest  mt -nologo -manifest test\buildtest_md5.exe.manifest -outputresource:test\buildtest_md5.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "mdc2" > test\buildtest_mdc2.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_mdc2.obj "test\buildtest_mdc2.c"
+buildtest_mdc2.c
+	IF EXIST test\buildtest_mdc2.exe.manifest DEL /F /Q test\buildtest_mdc2.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_mdc2.exe @C:\Users\user\AppData\Local\Temp\nmE397.tmp
+	IF EXIST test\buildtest_mdc2.exe.manifest  mt -nologo -manifest test\buildtest_mdc2.exe.manifest -outputresource:test\buildtest_mdc2.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "modes" > test\buildtest_modes.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_modes.obj "test\buildtest_modes.c"
+buildtest_modes.c
+	IF EXIST test\buildtest_modes.exe.manifest DEL /F /Q test\buildtest_modes.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_modes.exe @C:\Users\user\AppData\Local\Temp\nmE4E0.tmp
+	IF EXIST test\buildtest_modes.exe.manifest  mt -nologo -manifest test\buildtest_modes.exe.manifest -outputresource:test\buildtest_modes.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "obj_mac" > test\buildtest_obj_mac.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_obj_mac.obj "test\buildtest_obj_mac.c"
+buildtest_obj_mac.c
+	IF EXIST test\buildtest_obj_mac.exe.manifest DEL /F /Q test\buildtest_obj_mac.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_obj_mac.exe @C:\Users\user\AppData\Local\Temp\nmE5FA.tmp
+	IF EXIST test\buildtest_obj_mac.exe.manifest  mt -nologo -manifest test\buildtest_obj_mac.exe.manifest -outputresource:test\buildtest_obj_mac.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "objects" > test\buildtest_objects.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_objects.obj "test\buildtest_objects.c"
+buildtest_objects.c
+	IF EXIST test\buildtest_objects.exe.manifest DEL /F /Q test\buildtest_objects.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_objects.exe @C:\Users\user\AppData\Local\Temp\nmE753.tmp
+	IF EXIST test\buildtest_objects.exe.manifest  mt -nologo -manifest test\buildtest_objects.exe.manifest -outputresource:test\buildtest_objects.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ocsp" > test\buildtest_ocsp.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ocsp.obj "test\buildtest_ocsp.c"
+buildtest_ocsp.c
+	IF EXIST test\buildtest_ocsp.exe.manifest DEL /F /Q test\buildtest_ocsp.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ocsp.exe @C:\Users\user\AppData\Local\Temp\nmE8AC.tmp
+	IF EXIST test\buildtest_ocsp.exe.manifest  mt -nologo -manifest test\buildtest_ocsp.exe.manifest -outputresource:test\buildtest_ocsp.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "opensslv" > test\buildtest_opensslv.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_opensslv.obj "test\buildtest_opensslv.c"
+buildtest_opensslv.c
+	IF EXIST test\buildtest_opensslv.exe.manifest DEL /F /Q test\buildtest_opensslv.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_opensslv.exe @C:\Users\user\AppData\Local\Temp\nmE9C6.tmp
+	IF EXIST test\buildtest_opensslv.exe.manifest  mt -nologo -manifest test\buildtest_opensslv.exe.manifest -outputresource:test\buildtest_opensslv.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ossl_typ" > test\buildtest_ossl_typ.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ossl_typ.obj "test\buildtest_ossl_typ.c"
+buildtest_ossl_typ.c
+	IF EXIST test\buildtest_ossl_typ.exe.manifest DEL /F /Q test\buildtest_ossl_typ.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ossl_typ.exe @C:\Users\user\AppData\Local\Temp\nmEAF0.tmp
+	IF EXIST test\buildtest_ossl_typ.exe.manifest  mt -nologo -manifest test\buildtest_ossl_typ.exe.manifest -outputresource:test\buildtest_ossl_typ.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "pem" > test\buildtest_pem.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_pem.obj "test\buildtest_pem.c"
+buildtest_pem.c
+	IF EXIST test\buildtest_pem.exe.manifest DEL /F /Q test\buildtest_pem.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_pem.exe @C:\Users\user\AppData\Local\Temp\nmEC39.tmp
+	IF EXIST test\buildtest_pem.exe.manifest  mt -nologo -manifest test\buildtest_pem.exe.manifest -outputresource:test\buildtest_pem.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "pem2" > test\buildtest_pem2.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_pem2.obj "test\buildtest_pem2.c"
+buildtest_pem2.c
+	IF EXIST test\buildtest_pem2.exe.manifest DEL /F /Q test\buildtest_pem2.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_pem2.exe @C:\Users\user\AppData\Local\Temp\nmED53.tmp
+	IF EXIST test\buildtest_pem2.exe.manifest  mt -nologo -manifest test\buildtest_pem2.exe.manifest -outputresource:test\buildtest_pem2.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "pkcs12" > test\buildtest_pkcs12.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_pkcs12.obj "test\buildtest_pkcs12.c"
+buildtest_pkcs12.c
+	IF EXIST test\buildtest_pkcs12.exe.manifest DEL /F /Q test\buildtest_pkcs12.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_pkcs12.exe @C:\Users\user\AppData\Local\Temp\nmEE9C.tmp
+	IF EXIST test\buildtest_pkcs12.exe.manifest  mt -nologo -manifest test\buildtest_pkcs12.exe.manifest -outputresource:test\buildtest_pkcs12.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "pkcs7" > test\buildtest_pkcs7.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_pkcs7.obj "test\buildtest_pkcs7.c"
+buildtest_pkcs7.c
+	IF EXIST test\buildtest_pkcs7.exe.manifest DEL /F /Q test\buildtest_pkcs7.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_pkcs7.exe @C:\Users\user\AppData\Local\Temp\nmEFC6.tmp
+	IF EXIST test\buildtest_pkcs7.exe.manifest  mt -nologo -manifest test\buildtest_pkcs7.exe.manifest -outputresource:test\buildtest_pkcs7.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "rand" > test\buildtest_rand.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_rand.obj "test\buildtest_rand.c"
+buildtest_rand.c
+	IF EXIST test\buildtest_rand.exe.manifest DEL /F /Q test\buildtest_rand.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_rand.exe @C:\Users\user\AppData\Local\Temp\nmF0F0.tmp
+	IF EXIST test\buildtest_rand.exe.manifest  mt -nologo -manifest test\buildtest_rand.exe.manifest -outputresource:test\buildtest_rand.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "rc2" > test\buildtest_rc2.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_rc2.obj "test\buildtest_rc2.c"
+buildtest_rc2.c
+	IF EXIST test\buildtest_rc2.exe.manifest DEL /F /Q test\buildtest_rc2.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_rc2.exe @C:\Users\user\AppData\Local\Temp\nmF20A.tmp
+	IF EXIST test\buildtest_rc2.exe.manifest  mt -nologo -manifest test\buildtest_rc2.exe.manifest -outputresource:test\buildtest_rc2.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "rc4" > test\buildtest_rc4.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_rc4.obj "test\buildtest_rc4.c"
+buildtest_rc4.c
+	IF EXIST test\buildtest_rc4.exe.manifest DEL /F /Q test\buildtest_rc4.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_rc4.exe @C:\Users\user\AppData\Local\Temp\nmF324.tmp
+	IF EXIST test\buildtest_rc4.exe.manifest  mt -nologo -manifest test\buildtest_rc4.exe.manifest -outputresource:test\buildtest_rc4.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ripemd" > test\buildtest_ripemd.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ripemd.obj "test\buildtest_ripemd.c"
+buildtest_ripemd.c
+	IF EXIST test\buildtest_ripemd.exe.manifest DEL /F /Q test\buildtest_ripemd.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ripemd.exe @C:\Users\user\AppData\Local\Temp\nmF44E.tmp
+	IF EXIST test\buildtest_ripemd.exe.manifest  mt -nologo -manifest test\buildtest_ripemd.exe.manifest -outputresource:test\buildtest_ripemd.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "rsa" > test\buildtest_rsa.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_rsa.obj "test\buildtest_rsa.c"
+buildtest_rsa.c
+	IF EXIST test\buildtest_rsa.exe.manifest DEL /F /Q test\buildtest_rsa.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_rsa.exe @C:\Users\user\AppData\Local\Temp\nmF588.tmp
+	IF EXIST test\buildtest_rsa.exe.manifest  mt -nologo -manifest test\buildtest_rsa.exe.manifest -outputresource:test\buildtest_rsa.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "safestack" > test\buildtest_safestack.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_safestack.obj "test\buildtest_safestack.c"
+buildtest_safestack.c
+	IF EXIST test\buildtest_safestack.exe.manifest DEL /F /Q test\buildtest_safestack.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_safestack.exe @C:\Users\user\AppData\Local\Temp\nmF6A2.tmp
+	IF EXIST test\buildtest_safestack.exe.manifest  mt -nologo -manifest test\buildtest_safestack.exe.manifest -outputresource:test\buildtest_safestack.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "seed" > test\buildtest_seed.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_seed.obj "test\buildtest_seed.c"
+buildtest_seed.c
+	IF EXIST test\buildtest_seed.exe.manifest DEL /F /Q test\buildtest_seed.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_seed.exe @C:\Users\user\AppData\Local\Temp\nmF7BC.tmp
+	IF EXIST test\buildtest_seed.exe.manifest  mt -nologo -manifest test\buildtest_seed.exe.manifest -outputresource:test\buildtest_seed.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "sha" > test\buildtest_sha.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_sha.obj "test\buildtest_sha.c"
+buildtest_sha.c
+	IF EXIST test\buildtest_sha.exe.manifest DEL /F /Q test\buildtest_sha.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_sha.exe @C:\Users\user\AppData\Local\Temp\nmF8C7.tmp
+	IF EXIST test\buildtest_sha.exe.manifest  mt -nologo -manifest test\buildtest_sha.exe.manifest -outputresource:test\buildtest_sha.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "srp" > test\buildtest_srp.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_srp.obj "test\buildtest_srp.c"
+buildtest_srp.c
+	IF EXIST test\buildtest_srp.exe.manifest DEL /F /Q test\buildtest_srp.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_srp.exe @C:\Users\user\AppData\Local\Temp\nmF9F1.tmp
+	IF EXIST test\buildtest_srp.exe.manifest  mt -nologo -manifest test\buildtest_srp.exe.manifest -outputresource:test\buildtest_srp.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "srtp" > test\buildtest_srtp.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_srtp.obj "test\buildtest_srtp.c"
+buildtest_srtp.c
+	IF EXIST test\buildtest_srtp.exe.manifest DEL /F /Q test\buildtest_srtp.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_srtp.exe @C:\Users\user\AppData\Local\Temp\nmFB3A.tmp
+	IF EXIST test\buildtest_srtp.exe.manifest  mt -nologo -manifest test\buildtest_srtp.exe.manifest -outputresource:test\buildtest_srtp.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ssl" > test\buildtest_ssl.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ssl.obj "test\buildtest_ssl.c"
+buildtest_ssl.c
+	IF EXIST test\buildtest_ssl.exe.manifest DEL /F /Q test\buildtest_ssl.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ssl.exe @C:\Users\user\AppData\Local\Temp\nmFC73.tmp
+	IF EXIST test\buildtest_ssl.exe.manifest  mt -nologo -manifest test\buildtest_ssl.exe.manifest -outputresource:test\buildtest_ssl.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ssl2" > test\buildtest_ssl2.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ssl2.obj "test\buildtest_ssl2.c"
+buildtest_ssl2.c
+	IF EXIST test\buildtest_ssl2.exe.manifest DEL /F /Q test\buildtest_ssl2.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ssl2.exe @C:\Users\user\AppData\Local\Temp\nmFD7E.tmp
+	IF EXIST test\buildtest_ssl2.exe.manifest  mt -nologo -manifest test\buildtest_ssl2.exe.manifest -outputresource:test\buildtest_ssl2.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "stack" > test\buildtest_stack.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_stack.obj "test\buildtest_stack.c"
+buildtest_stack.c
+	IF EXIST test\buildtest_stack.exe.manifest DEL /F /Q test\buildtest_stack.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_stack.exe @C:\Users\user\AppData\Local\Temp\nmFE98.tmp
+	IF EXIST test\buildtest_stack.exe.manifest  mt -nologo -manifest test\buildtest_stack.exe.manifest -outputresource:test\buildtest_stack.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "symhacks" > test\buildtest_symhacks.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_symhacks.obj "test\buildtest_symhacks.c"
+buildtest_symhacks.c
+	IF EXIST test\buildtest_symhacks.exe.manifest DEL /F /Q test\buildtest_symhacks.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_symhacks.exe @C:\Users\user\AppData\Local\Temp\nmFFB3.tmp
+	IF EXIST test\buildtest_symhacks.exe.manifest  mt -nologo -manifest test\buildtest_symhacks.exe.manifest -outputresource:test\buildtest_symhacks.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "tls1" > test\buildtest_tls1.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_tls1.obj "test\buildtest_tls1.c"
+buildtest_tls1.c
+	IF EXIST test\buildtest_tls1.exe.manifest DEL /F /Q test\buildtest_tls1.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_tls1.exe @C:\Users\user\AppData\Local\Temp\nmEC.tmp
+	IF EXIST test\buildtest_tls1.exe.manifest  mt -nologo -manifest test\buildtest_tls1.exe.manifest -outputresource:test\buildtest_tls1.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ts" > test\buildtest_ts.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ts.obj "test\buildtest_ts.c"
+buildtest_ts.c
+	IF EXIST test\buildtest_ts.exe.manifest DEL /F /Q test\buildtest_ts.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ts.exe @C:\Users\user\AppData\Local\Temp\nm235.tmp
+	IF EXIST test\buildtest_ts.exe.manifest  mt -nologo -manifest test\buildtest_ts.exe.manifest -outputresource:test\buildtest_ts.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "txt_db" > test\buildtest_txt_db.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_txt_db.obj "test\buildtest_txt_db.c"
+buildtest_txt_db.c
+	IF EXIST test\buildtest_txt_db.exe.manifest DEL /F /Q test\buildtest_txt_db.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_txt_db.exe @C:\Users\user\AppData\Local\Temp\nm34F.tmp
+	IF EXIST test\buildtest_txt_db.exe.manifest  mt -nologo -manifest test\buildtest_txt_db.exe.manifest -outputresource:test\buildtest_txt_db.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "ui" > test\buildtest_ui.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_ui.obj "test\buildtest_ui.c"
+buildtest_ui.c
+	IF EXIST test\buildtest_ui.exe.manifest DEL /F /Q test\buildtest_ui.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_ui.exe @C:\Users\user\AppData\Local\Temp\nm46A.tmp
+	IF EXIST test\buildtest_ui.exe.manifest  mt -nologo -manifest test\buildtest_ui.exe.manifest -outputresource:test\buildtest_ui.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "whrlpool" > test\buildtest_whrlpool.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_whrlpool.obj "test\buildtest_whrlpool.c"
+buildtest_whrlpool.c
+	IF EXIST test\buildtest_whrlpool.exe.manifest DEL /F /Q test\buildtest_whrlpool.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_whrlpool.exe @C:\Users\user\AppData\Local\Temp\nm584.tmp
+	IF EXIST test\buildtest_whrlpool.exe.manifest  mt -nologo -manifest test\buildtest_whrlpool.exe.manifest -outputresource:test\buildtest_whrlpool.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "x509" > test\buildtest_x509.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_x509.obj "test\buildtest_x509.c"
+buildtest_x509.c
+	IF EXIST test\buildtest_x509.exe.manifest DEL /F /Q test\buildtest_x509.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_x509.exe @C:\Users\user\AppData\Local\Temp\nm6CD.tmp
+	IF EXIST test\buildtest_x509.exe.manifest  mt -nologo -manifest test\buildtest_x509.exe.manifest -outputresource:test\buildtest_x509.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "x509_vfy" > test\buildtest_x509_vfy.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_x509_vfy.obj "test\buildtest_x509_vfy.c"
+buildtest_x509_vfy.c
+	IF EXIST test\buildtest_x509_vfy.exe.manifest DEL /F /Q test\buildtest_x509_vfy.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_x509_vfy.exe @C:\Users\user\AppData\Local\Temp\nm7F7.tmp
+	IF EXIST test\buildtest_x509_vfy.exe.manifest  mt -nologo -manifest test\buildtest_x509_vfy.exe.manifest -outputresource:test\buildtest_x509_vfy.exe
+	"C:\Perl\bin\perl.exe" "test\generate_buildtest.pl" "x509v3" > test\buildtest_x509v3.c
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\buildtest_x509v3.obj "test\buildtest_x509v3.c"
+buildtest_x509v3.c
+	IF EXIST test\buildtest_x509v3.exe.manifest DEL /F /Q test\buildtest_x509v3.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\buildtest_x509v3.exe @C:\Users\user\AppData\Local\Temp\nm930.tmp
+	IF EXIST test\buildtest_x509v3.exe.manifest  mt -nologo -manifest test\buildtest_x509v3.exe.manifest -outputresource:test\buildtest_x509v3.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\casttest.obj "test\casttest.c"
+casttest.c
+	IF EXIST test\casttest.exe.manifest DEL /F /Q test\casttest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\casttest.exe @C:\Users\user\AppData\Local\Temp\nmA99.tmp
+	IF EXIST test\casttest.exe.manifest  mt -nologo -manifest test\casttest.exe.manifest -outputresource:test\casttest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\cipherlist_test.obj "test\cipherlist_test.c"
+cipherlist_test.c
+	cl  /I "." /I "include" /I "." -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\testutil.obj "test\testutil.c"
+testutil.c
+	IF EXIST test\cipherlist_test.exe.manifest DEL /F /Q test\cipherlist_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\cipherlist_test.exe @C:\Users\user\AppData\Local\Temp\nmCFB.tmp
+	IF EXIST test\cipherlist_test.exe.manifest  mt -nologo -manifest test\cipherlist_test.exe.manifest -outputresource:test\cipherlist_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\clienthellotest.obj "test\clienthellotest.c"
+clienthellotest.c
+	IF EXIST test\clienthellotest.exe.manifest DEL /F /Q test\clienthellotest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\clienthellotest.exe @C:\Users\user\AppData\Local\Temp\nmE44.tmp
+	IF EXIST test\clienthellotest.exe.manifest  mt -nologo -manifest test\clienthellotest.exe.manifest -outputresource:test\clienthellotest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\constant_time_test.obj "test\constant_time_test.c"
+constant_time_test.c
+	IF EXIST test\constant_time_test.exe.manifest DEL /F /Q test\constant_time_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\constant_time_test.exe @C:\Users\user\AppData\Local\Temp\nmFDC.tmp
+	IF EXIST test\constant_time_test.exe.manifest  mt -nologo -manifest test\constant_time_test.exe.manifest -outputresource:test\constant_time_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\crltest.obj "test\crltest.c"
+crltest.c
+	IF EXIST test\crltest.exe.manifest DEL /F /Q test\crltest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\crltest.exe @C:\Users\user\AppData\Local\Temp\nm1173.tmp
+	IF EXIST test\crltest.exe.manifest  mt -nologo -manifest test\crltest.exe.manifest -outputresource:test\crltest.exe
+	cl  /I "crypto\include" /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ct_test.obj "test\ct_test.c"
+ct_test.c
+	IF EXIST test\ct_test.exe.manifest DEL /F /Q test\ct_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ct_test.exe @C:\Users\user\AppData\Local\Temp\nm12BC.tmp
+	IF EXIST test\ct_test.exe.manifest  mt -nologo -manifest test\ct_test.exe.manifest -outputresource:test\ct_test.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\d2i_test.obj "test\d2i_test.c"
+d2i_test.c
+	IF EXIST test\d2i_test.exe.manifest DEL /F /Q test\d2i_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\d2i_test.exe @C:\Users\user\AppData\Local\Temp\nm1463.tmp
+	IF EXIST test\d2i_test.exe.manifest  mt -nologo -manifest test\d2i_test.exe.manifest -outputresource:test\d2i_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\danetest.obj "test\danetest.c"
+danetest.c
+	IF EXIST test\danetest.exe.manifest DEL /F /Q test\danetest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\danetest.exe @C:\Users\user\AppData\Local\Temp\nm160A.tmp
+	IF EXIST test\danetest.exe.manifest  mt -nologo -manifest test\danetest.exe.manifest -outputresource:test\danetest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\destest.obj "test\destest.c"
+destest.c
+	IF EXIST test\destest.exe.manifest DEL /F /Q test\destest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\destest.exe @C:\Users\user\AppData\Local\Temp\nm1753.tmp
+	IF EXIST test\destest.exe.manifest  mt -nologo -manifest test\destest.exe.manifest -outputresource:test\destest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\dhtest.obj "test\dhtest.c"
+dhtest.c
+	IF EXIST test\dhtest.exe.manifest DEL /F /Q test\dhtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\dhtest.exe @C:\Users\user\AppData\Local\Temp\nm18CB.tmp
+	IF EXIST test\dhtest.exe.manifest  mt -nologo -manifest test\dhtest.exe.manifest -outputresource:test\dhtest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\dsatest.obj "test\dsatest.c"
+dsatest.c
+	IF EXIST test\dsatest.exe.manifest DEL /F /Q test\dsatest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\dsatest.exe @C:\Users\user\AppData\Local\Temp\nm1A52.tmp
+	IF EXIST test\dsatest.exe.manifest  mt -nologo -manifest test\dsatest.exe.manifest -outputresource:test\dsatest.exe
+	cl  /I "include" /I "test" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\dtlstest.obj "test\dtlstest.c"
+dtlstest.c
+	IF EXIST test\dtlstest.exe.manifest DEL /F /Q test\dtlstest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\dtlstest.exe @C:\Users\user\AppData\Local\Temp\nm1B8C.tmp
+	IF EXIST test\dtlstest.exe.manifest  mt -nologo -manifest test\dtlstest.exe.manifest -outputresource:test\dtlstest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\dtlsv1listentest.obj "test\dtlsv1listentest.c"
+dtlsv1listentest.c
+	IF EXIST test\dtlsv1listentest.exe.manifest DEL /F /Q test\dtlsv1listentest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\dtlsv1listentest.exe @C:\Users\user\AppData\Local\Temp\nm1D42.tmp
+	IF EXIST test\dtlsv1listentest.exe.manifest  mt -nologo -manifest test\dtlsv1listentest.exe.manifest -outputresource:test\dtlsv1listentest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ecdsatest.obj "test\ecdsatest.c"
+ecdsatest.c
+	IF EXIST test\ecdsatest.exe.manifest DEL /F /Q test\ecdsatest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ecdsatest.exe @C:\Users\user\AppData\Local\Temp\nm1E8C.tmp
+	IF EXIST test\ecdsatest.exe.manifest  mt -nologo -manifest test\ecdsatest.exe.manifest -outputresource:test\ecdsatest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ectest.obj "test\ectest.c"
+ectest.c
+	IF EXIST test\ectest.exe.manifest DEL /F /Q test\ectest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ectest.exe @C:\Users\user\AppData\Local\Temp\nm20EE.tmp
+	IF EXIST test\ectest.exe.manifest  mt -nologo -manifest test\ectest.exe.manifest -outputresource:test\ectest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\enginetest.obj "test\enginetest.c"
+enginetest.c
+	IF EXIST test\enginetest.exe.manifest DEL /F /Q test\enginetest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\enginetest.exe @C:\Users\user\AppData\Local\Temp\nm2237.tmp
+	IF EXIST test\enginetest.exe.manifest  mt -nologo -manifest test\enginetest.exe.manifest -outputresource:test\enginetest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\evp_extra_test.obj "test\evp_extra_test.c"
+evp_extra_test.c
+	IF EXIST test\evp_extra_test.exe.manifest DEL /F /Q test\evp_extra_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\evp_extra_test.exe @C:\Users\user\AppData\Local\Temp\nm2380.tmp
+	IF EXIST test\evp_extra_test.exe.manifest  mt -nologo -manifest test\evp_extra_test.exe.manifest -outputresource:test\evp_extra_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\evp_test.obj "test\evp_test.c"
+evp_test.c
+	IF EXIST test\evp_test.exe.manifest DEL /F /Q test\evp_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\evp_test.exe @C:\Users\user\AppData\Local\Temp\nm2508.tmp
+	IF EXIST test\evp_test.exe.manifest  mt -nologo -manifest test\evp_test.exe.manifest -outputresource:test\evp_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\exdatatest.obj "test\exdatatest.c"
+exdatatest.c
+	IF EXIST test\exdatatest.exe.manifest DEL /F /Q test\exdatatest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\exdatatest.exe @C:\Users\user\AppData\Local\Temp\nm2651.tmp
+	IF EXIST test\exdatatest.exe.manifest  mt -nologo -manifest test\exdatatest.exe.manifest -outputresource:test\exdatatest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\exptest.obj "test\exptest.c"
+exptest.c
+	IF EXIST test\exptest.exe.manifest DEL /F /Q test\exptest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\exptest.exe @C:\Users\user\AppData\Local\Temp\nm27F8.tmp
+	IF EXIST test\exptest.exe.manifest  mt -nologo -manifest test\exptest.exe.manifest -outputresource:test\exptest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\gmdifftest.obj "test\gmdifftest.c"
+gmdifftest.c
+	IF EXIST test\gmdifftest.exe.manifest DEL /F /Q test\gmdifftest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\gmdifftest.exe @C:\Users\user\AppData\Local\Temp\nm2912.tmp
+	IF EXIST test\gmdifftest.exe.manifest  mt -nologo -manifest test\gmdifftest.exe.manifest -outputresource:test\gmdifftest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\heartbeat_test.obj "test\heartbeat_test.c"
+heartbeat_test.c
+	IF EXIST test\heartbeat_test.exe.manifest DEL /F /Q test\heartbeat_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\heartbeat_test.exe @C:\Users\user\AppData\Local\Temp\nm2AB9.tmp
+	IF EXIST test\heartbeat_test.exe.manifest  mt -nologo -manifest test\heartbeat_test.exe.manifest -outputresource:test\heartbeat_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\hmactest.obj "test\hmactest.c"
+hmactest.c
+	IF EXIST test\hmactest.exe.manifest DEL /F /Q test\hmactest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\hmactest.exe @C:\Users\user\AppData\Local\Temp\nm2C31.tmp
+	IF EXIST test\hmactest.exe.manifest  mt -nologo -manifest test\hmactest.exe.manifest -outputresource:test\hmactest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ideatest.obj "test\ideatest.c"
+ideatest.c
+	IF EXIST test\ideatest.exe.manifest DEL /F /Q test\ideatest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ideatest.exe @C:\Users\user\AppData\Local\Temp\nm2DA9.tmp
+	IF EXIST test\ideatest.exe.manifest  mt -nologo -manifest test\ideatest.exe.manifest -outputresource:test\ideatest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\igetest.obj "test\igetest.c"
+igetest.c
+	IF EXIST test\igetest.exe.manifest DEL /F /Q test\igetest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\igetest.exe @C:\Users\user\AppData\Local\Temp\nm2F40.tmp
+	IF EXIST test\igetest.exe.manifest  mt -nologo -manifest test\igetest.exe.manifest -outputresource:test\igetest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\md2test.obj "test\md2test.c"
+md2test.c
+	IF EXIST test\md2test.exe.manifest DEL /F /Q test\md2test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\md2test.exe @C:\Users\user\AppData\Local\Temp\nm30A9.tmp
+	IF EXIST test\md2test.exe.manifest  mt -nologo -manifest test\md2test.exe.manifest -outputresource:test\md2test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\md4test.obj "test\md4test.c"
+md4test.c
+	IF EXIST test\md4test.exe.manifest DEL /F /Q test\md4test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\md4test.exe @C:\Users\user\AppData\Local\Temp\nm3230.tmp
+	IF EXIST test\md4test.exe.manifest  mt -nologo -manifest test\md4test.exe.manifest -outputresource:test\md4test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\md5test.obj "test\md5test.c"
+md5test.c
+	IF EXIST test\md5test.exe.manifest DEL /F /Q test\md5test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\md5test.exe @C:\Users\user\AppData\Local\Temp\nm3399.tmp
+	IF EXIST test\md5test.exe.manifest  mt -nologo -manifest test\md5test.exe.manifest -outputresource:test\md5test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\mdc2test.obj "test\mdc2test.c"
+mdc2test.c
+	IF EXIST test\mdc2test.exe.manifest DEL /F /Q test\mdc2test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\mdc2test.exe @C:\Users\user\AppData\Local\Temp\nm3520.tmp
+	IF EXIST test\mdc2test.exe.manifest  mt -nologo -manifest test\mdc2test.exe.manifest -outputresource:test\mdc2test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\memleaktest.obj "test\memleaktest.c"
+memleaktest.c
+	IF EXIST test\memleaktest.exe.manifest DEL /F /Q test\memleaktest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\memleaktest.exe @C:\Users\user\AppData\Local\Temp\nm363A.tmp
+	IF EXIST test\memleaktest.exe.manifest  mt -nologo -manifest test\memleaktest.exe.manifest -outputresource:test\memleaktest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\p5_crpt2_test.obj "test\p5_crpt2_test.c"
+p5_crpt2_test.c
+	IF EXIST test\p5_crpt2_test.exe.manifest DEL /F /Q test\p5_crpt2_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\p5_crpt2_test.exe @C:\Users\user\AppData\Local\Temp\nm37C2.tmp
+	IF EXIST test\p5_crpt2_test.exe.manifest  mt -nologo -manifest test\p5_crpt2_test.exe.manifest -outputresource:test\p5_crpt2_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\packettest.obj "test\packettest.c"
+packettest.c
+test\packettest.c(377): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+test\packettest.c(456): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	IF EXIST test\packettest.exe.manifest DEL /F /Q test\packettest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\packettest.exe @C:\Users\user\AppData\Local\Temp\nm391B.tmp
+	IF EXIST test\packettest.exe.manifest  mt -nologo -manifest test\packettest.exe.manifest -outputresource:test\packettest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\pbelutest.obj "test\pbelutest.c"
+pbelutest.c
+	IF EXIST test\pbelutest.exe.manifest DEL /F /Q test\pbelutest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\pbelutest.exe @C:\Users\user\AppData\Local\Temp\nm3A54.tmp
+	IF EXIST test\pbelutest.exe.manifest  mt -nologo -manifest test\pbelutest.exe.manifest -outputresource:test\pbelutest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\randtest.obj "test\randtest.c"
+randtest.c
+	IF EXIST test\randtest.exe.manifest DEL /F /Q test\randtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\randtest.exe @C:\Users\user\AppData\Local\Temp\nm3BEC.tmp
+	IF EXIST test\randtest.exe.manifest  mt -nologo -manifest test\randtest.exe.manifest -outputresource:test\randtest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\rc2test.obj "test\rc2test.c"
+rc2test.c
+	IF EXIST test\rc2test.exe.manifest DEL /F /Q test\rc2test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\rc2test.exe @C:\Users\user\AppData\Local\Temp\nm3D64.tmp
+	IF EXIST test\rc2test.exe.manifest  mt -nologo -manifest test\rc2test.exe.manifest -outputresource:test\rc2test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\rc4test.obj "test\rc4test.c"
+rc4test.c
+	IF EXIST test\rc4test.exe.manifest DEL /F /Q test\rc4test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\rc4test.exe @C:\Users\user\AppData\Local\Temp\nm3ECC.tmp
+	IF EXIST test\rc4test.exe.manifest  mt -nologo -manifest test\rc4test.exe.manifest -outputresource:test\rc4test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\rc5test.obj "test\rc5test.c"
+rc5test.c
+	IF EXIST test\rc5test.exe.manifest DEL /F /Q test\rc5test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\rc5test.exe @C:\Users\user\AppData\Local\Temp\nm4025.tmp
+	IF EXIST test\rc5test.exe.manifest  mt -nologo -manifest test\rc5test.exe.manifest -outputresource:test\rc5test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\rmdtest.obj "test\rmdtest.c"
+rmdtest.c
+	IF EXIST test\rmdtest.exe.manifest DEL /F /Q test\rmdtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\rmdtest.exe @C:\Users\user\AppData\Local\Temp\nm419D.tmp
+	IF EXIST test\rmdtest.exe.manifest  mt -nologo -manifest test\rmdtest.exe.manifest -outputresource:test\rmdtest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\rsa_test.obj "test\rsa_test.c"
+rsa_test.c
+	IF EXIST test\rsa_test.exe.manifest DEL /F /Q test\rsa_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\rsa_test.exe @C:\Users\user\AppData\Local\Temp\nm4334.tmp
+	IF EXIST test\rsa_test.exe.manifest  mt -nologo -manifest test\rsa_test.exe.manifest -outputresource:test\rsa_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sanitytest.obj "test\sanitytest.c"
+sanitytest.c
+	IF EXIST test\sanitytest.exe.manifest DEL /F /Q test\sanitytest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sanitytest.exe @C:\Users\user\AppData\Local\Temp\nm444E.tmp
+	IF EXIST test\sanitytest.exe.manifest  mt -nologo -manifest test\sanitytest.exe.manifest -outputresource:test\sanitytest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\secmemtest.obj "test\secmemtest.c"
+secmemtest.c
+	IF EXIST test\secmemtest.exe.manifest DEL /F /Q test\secmemtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\secmemtest.exe @C:\Users\user\AppData\Local\Temp\nm4559.tmp
+	IF EXIST test\secmemtest.exe.manifest  mt -nologo -manifest test\secmemtest.exe.manifest -outputresource:test\secmemtest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sha1test.obj "test\sha1test.c"
+sha1test.c
+	IF EXIST test\sha1test.exe.manifest DEL /F /Q test\sha1test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sha1test.exe @C:\Users\user\AppData\Local\Temp\nm46F0.tmp
+	IF EXIST test\sha1test.exe.manifest  mt -nologo -manifest test\sha1test.exe.manifest -outputresource:test\sha1test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sha256t.obj "test\sha256t.c"
+sha256t.c
+	IF EXIST test\sha256t.exe.manifest DEL /F /Q test\sha256t.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sha256t.exe @C:\Users\user\AppData\Local\Temp\nm4839.tmp
+	IF EXIST test\sha256t.exe.manifest  mt -nologo -manifest test\sha256t.exe.manifest -outputresource:test\sha256t.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sha512t.obj "test\sha512t.c"
+sha512t.c
+	IF EXIST test\sha512t.exe.manifest DEL /F /Q test\sha512t.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sha512t.exe @C:\Users\user\AppData\Local\Temp\nm4982.tmp
+	IF EXIST test\sha512t.exe.manifest  mt -nologo -manifest test\sha512t.exe.manifest -outputresource:test\sha512t.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\shlibloadtest.obj "test\shlibloadtest.c"
+shlibloadtest.c
+	IF EXIST test\shlibloadtest.exe.manifest DEL /F /Q test\shlibloadtest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\shlibloadtest.exe @C:\Users\user\AppData\Local\Temp\nm4AEB.tmp
+	IF EXIST test\shlibloadtest.exe.manifest  mt -nologo -manifest test\shlibloadtest.exe.manifest -outputresource:test\shlibloadtest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\srptest.obj "test\srptest.c"
+srptest.c
+	IF EXIST test\srptest.exe.manifest DEL /F /Q test\srptest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\srptest.exe @C:\Users\user\AppData\Local\Temp\nm4C34.tmp
+	IF EXIST test\srptest.exe.manifest  mt -nologo -manifest test\srptest.exe.manifest -outputresource:test\srptest.exe
+	cl  /I "." /I "include" /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\handshake_helper.obj "test\handshake_helper.c"
+handshake_helper.c
+test\handshake_helper.c(231): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+test\handshake_helper.c(237): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+c:\users\user\openssl-1.1.0g\test\handshake_helper.c(739) : warning C4715: 'next_phase': 値を返さないコントロール パスがあります。
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ssl_test.obj "test\ssl_test.c"
+ssl_test.c
+	cl  /I "." /I "include" /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ssl_test_ctx.obj "test\ssl_test_ctx.c"
+ssl_test_ctx.c
+	IF EXIST test\ssl_test.exe.manifest DEL /F /Q test\ssl_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ssl_test.exe @C:\Users\user\AppData\Local\Temp\nm4FA0.tmp
+	IF EXIST test\ssl_test.exe.manifest  mt -nologo -manifest test\ssl_test.exe.manifest -outputresource:test\ssl_test.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ssl_test_ctx_test.obj "test\ssl_test_ctx_test.c"
+ssl_test_ctx_test.c
+	IF EXIST test\ssl_test_ctx_test.exe.manifest DEL /F /Q test\ssl_test_ctx_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ssl_test_ctx_test.exe @C:\Users\user\AppData\Local\Temp\nm5147.tmp
+	IF EXIST test\ssl_test_ctx_test.exe.manifest  mt -nologo -manifest test\ssl_test_ctx_test.exe.manifest -outputresource:test\ssl_test_ctx_test.exe
+	cl  /I "include" /I "." -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sslapitest.obj "test\sslapitest.c"
+sslapitest.c
+	IF EXIST test\sslapitest.exe.manifest DEL /F /Q test\sslapitest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sslapitest.exe @C:\Users\user\AppData\Local\Temp\nm52FD.tmp
+	IF EXIST test\sslapitest.exe.manifest  mt -nologo -manifest test\sslapitest.exe.manifest -outputresource:test\sslapitest.exe
+	cl  /I "include" /I "test" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\sslcorrupttest.obj "test\sslcorrupttest.c"
+sslcorrupttest.c
+	IF EXIST test\sslcorrupttest.exe.manifest DEL /F /Q test\sslcorrupttest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\sslcorrupttest.exe @C:\Users\user\AppData\Local\Temp\nm5475.tmp
+	IF EXIST test\sslcorrupttest.exe.manifest  mt -nologo -manifest test\sslcorrupttest.exe.manifest -outputresource:test\sslcorrupttest.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\ssltest_old.obj "test\ssltest_old.c"
+ssltest_old.c
+test\ssltest_old.c(355): warning C4267: '=': 'size_t' から 'unsigned char' に変換しました。データが失われているかもしれません。
+	IF EXIST test\ssltest_old.exe.manifest DEL /F /Q test\ssltest_old.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\ssltest_old.exe @C:\Users\user\AppData\Local\Temp\nm5716.tmp
+	IF EXIST test\ssltest_old.exe.manifest  mt -nologo -manifest test\ssltest_old.exe.manifest -outputresource:test\ssltest_old.exe
+	cl  /I "." /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\threadstest.obj "test\threadstest.c"
+threadstest.c
+	IF EXIST test\threadstest.exe.manifest DEL /F /Q test\threadstest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\threadstest.exe @C:\Users\user\AppData\Local\Temp\nm58AD.tmp
+	IF EXIST test\threadstest.exe.manifest  mt -nologo -manifest test\threadstest.exe.manifest -outputresource:test\threadstest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\v3ext.obj "test\v3ext.c"
+v3ext.c
+	IF EXIST test\v3ext.exe.manifest DEL /F /Q test\v3ext.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\v3ext.exe @C:\Users\user\AppData\Local\Temp\nm59F6.tmp
+	IF EXIST test\v3ext.exe.manifest  mt -nologo -manifest test\v3ext.exe.manifest -outputresource:test\v3ext.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\v3nametest.obj "test\v3nametest.c"
+v3nametest.c
+	IF EXIST test\v3nametest.exe.manifest DEL /F /Q test\v3nametest.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\v3nametest.exe @C:\Users\user\AppData\Local\Temp\nm5BAD.tmp
+	IF EXIST test\v3nametest.exe.manifest  mt -nologo -manifest test\v3nametest.exe.manifest -outputresource:test\v3nametest.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\verify_extra_test.obj "test\verify_extra_test.c"
+verify_extra_test.c
+	IF EXIST test\verify_extra_test.exe.manifest DEL /F /Q test\verify_extra_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\verify_extra_test.exe @C:\Users\user\AppData\Local\Temp\nm5CE6.tmp
+	IF EXIST test\verify_extra_test.exe.manifest  mt -nologo -manifest test\verify_extra_test.exe.manifest -outputresource:test\verify_extra_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\wp_test.obj "test\wp_test.c"
+wp_test.c
+	IF EXIST test\wp_test.exe.manifest DEL /F /Q test\wp_test.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\wp_test.exe @C:\Users\user\AppData\Local\Temp\nm5E01.tmp
+	IF EXIST test\wp_test.exe.manifest  mt -nologo -manifest test\wp_test.exe.manifest -outputresource:test\wp_test.exe
+	cl  /I "include" -DOPENSSL_USE_APPLINK -DDSO_WIN32 -DNDEBUG -DOPENSSL_THREADS -DOPENSSL_NO_STATIC_ENGINE -DOPENSSL_PIC "-DENGINESDIR=\"C:\\Users\\user\\openssl\\lib\\engines-1_1\"" "-DOPENSSLDIR=\"C:\\Program Files\\Common Files\\SSL\"" -W3 -wd4090 -Gs0 -GF -Gy -nologo -DOPENSSL_SYS_WIN32 -DWIN32_LEAN_AND_MEAN -DL_ENDIAN -D_CRT_SECURE_NO_DEPRECATE -DUNICODE -D_UNICODE /MD /O2 /Zi /Fdapp -c /Fotest\x509aux.obj "test\x509aux.c"
+x509aux.c
+	IF EXIST test\x509aux.exe.manifest DEL /F /Q test\x509aux.exe.manifest
+	link /nologo /debug /subsystem:console /opt:ref /out:test\x509aux.exe @C:\Users\user\AppData\Local\Temp\nm5FA8.tmp
+	IF EXIST test\x509aux.exe.manifest  mt -nologo -manifest test\x509aux.exe.manifest -outputresource:test\x509aux.exe
+	"C:\Perl\bin\perl.exe" "-I." -Mconfigdata "util\dofile.pl"  "-omakefile" "apps\CA.pl.in" > "apps\CA.pl"
+	"C:\Perl\bin\perl.exe" "-I." -Mconfigdata "util\dofile.pl"  "-omakefile" "apps\tsget.in" > "apps\tsget.pl"
+	"C:\Perl\bin\perl.exe" "-I." -Mconfigdata "util\dofile.pl"  "-omakefile" "tools\c_rehash.in" > "tools\c_rehash.pl"
