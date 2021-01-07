@@ -6,11 +6,11 @@
 
 #### 表面
 
-<img src="../MDBT50Q_Dongle/assets/0015.png" width="680">
+<img src="assets/0015.png" width="680">
 
 #### 裏面
 
-<img src="../MDBT50Q_Dongle/assets/0016.png" width="680">
+<img src="assets/0016.png" width="680">
 
 ## 動作の概要
 
@@ -24,14 +24,14 @@
 PCのUSBポートに装着すると、USB HIDデバイスとして動作します。[注1][注2]<br>
 アイドル時は３色LEDが緑色で点滅します。
 
-<img src="../MDBT50Q_Dongle/assets/0017.jpg" width="400">
+<img src="assets/0017.jpg" width="400">
 
 #### BLEペリフェラルモード
 
 基板背面の電池ホルダーにボタン乾電池（CR1225）をセットすると、BLEペリフェラルデバイスとして動作します。[注2]<br>
 アイドル時は３色LEDが青色で点滅します。
 
-<img src="../MDBT50Q_Dongle/assets/0018.jpg" width="400">
+<img src="assets/0018.jpg" width="400">
 
 [注1] ボタン乾電池がセットされていない場合は、PCのUSBから電源を取得し、USB HIDデバイスとして動作します。<br>
 [注2] ボタン乾電池がセットされている状態でも、PCのUSBポートに装着している間は、常にUSB HIDデバイスとして動作します。<br>

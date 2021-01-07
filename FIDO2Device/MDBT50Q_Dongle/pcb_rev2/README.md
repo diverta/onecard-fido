@@ -4,7 +4,7 @@
 
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作した、USBドングル基板です。
 
-<img src="../assets/0021.jpg" width="500">
+<img src="assets/0021.jpg" width="500">
 
 ### [MDBT50Q Dongleの概要](HWSUMMARY.md)
 

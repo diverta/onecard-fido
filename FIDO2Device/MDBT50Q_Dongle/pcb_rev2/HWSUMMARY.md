@@ -6,11 +6,11 @@
 
 #### 表面
 
-<img src="../assets/0022.jpg" width="680">
+<img src="assets/0022.jpg" width="680">
 
 #### 裏面
 
-<img src="../assets/0023.jpg" width="530">
+<img src="assets/0023.jpg" width="530">
 
 ## 動作の概要
 
@@ -24,21 +24,21 @@
 PCのUSBポートに装着すると、USB HIDデバイスとして動作します。[注1][注2]<br>
 アイドル時は３色LEDが緑色で点滅します。
 
-<img src="../assets/0024.jpg" width="400">
+<img src="assets/0024.jpg" width="400">
 
 #### BLEペリフェラルモード（非ペアリングモード）
 
 基板背面の電池ホルダーにボタン乾電池（CR1225）をセットすると、BLEペリフェラルデバイスとして動作します。[注2]<br>
 アイドル時は３色LEDが青色で点滅します。
 
-<img src="../assets/0018.jpg" width="400">
+<img src="assets/0018.jpg" width="400">
 
 #### BLEペリフェラルモード（ペアリングモード）
 
 前述の非ペアリングモードの状態で、ボタンを３秒以上長押しすると、ペアリングモードに遷移します。[注3]<br>
 下図のように、ペアリングモードであることを示す、黄色LEDが点灯します。[注4]
 
-<img src="../assets/0020.jpg" width="400">
+<img src="assets/0020.jpg" width="400">
 
 [注1] ボタン乾電池がセットされていない場合は、PCのUSBから電源を取得し、USB HIDデバイスとして動作します。<br>
 [注2] ボタン乾電池がセットされている状態でも、PCのUSBポートに装着している間は、常にUSB HIDデバイスとして動作します。<br>
