@@ -1,42 +1,15 @@
 # 調査情報
 
-## 各種調査・検証
+各種調査、検証の手順および結果を掲載しています。
 
-* <b>[WebAuthn関連調査](WEBAUTHN_INDEX.md)</b><br>
-FIDO 2.0のWeb認証技術である、WebAuthnについて、各種調査を行っています。
+### [仮設認証局](../Research/provisionalCA/README.md)
 
-* <b>[USB HIDデバイス関連調査](USBHID/README.md)</b><br>
-Chromeブラウザーを使用して、GoogleアカウントのU2F Registerを実行するために最小限必要となる、USB HIDデバイスの開発について調査を行います。<br>
-2018/7/9現在、USB HIDデバイスとU2F管理ツール、One Cardを利用して、GoogleアカウントのU2F Registerが実行できたことが確認できております。
+FIDO2仕様適合テスト実行時に必要な、開発用証明書を発行している仮説認証局について掲載しています。
 
-* <b>[U2Fローカルテストサーバー](../U2FDemoServer/README.md)</b><br>
-ChromeでBLE U2F対応調査／開発を行う際に使用する、PC環境ローカルテスト用のU2Fサーバーを構築しました。<br>
-U2Fローカルテストサーバーについて、概要説明や、利用手順を掲載しております。
+### [CTAP 2.1関連調査](../Research/CTAP_2_1/README.md)
 
-* <b>[Chrome OSでのU2F認証テスト](CHROMEOSTEST.md)</b><br>
-テスト用のChromeエクステンションを使用し、[U2F認証テストサイト](https://crxjs-dot-u2fdemo.appspot.com/)でU2F認証ができることを確認しました。<br>
-その時の手順および結果を掲載しております。
+CTAP 2.1について、機能や実装などの調査を行います。
 
-* <b>[Chrome(macOS版)でのBLE U2F対応調査](CHROMEBLEEXT.md)</b><br>
-macOS版Chromeブラウザーで、BLE U2F対応ができるかどうかの調査です。
+### [nRF Connect SDKに関する調査](../Research/nRFCnctSDK_v1.4.99/README.md)
 
-* <b>[Chrome(Windows版)でのBLE U2F対応調査](CHROMEBLEEXTWIN.md)</b><br>
-Windows版Chromeブラウザーで、BLE U2F対応ができるかどうかの調査です。
-
-* <b>[\[調査中止\] Web Bluetooth APIによるBLE U2F対応調査](CHROMEWBAPI.md)</b><br>
-macOSでサポートされている「Web Bluetooth API」を使用して、BLE U2Fクライアントが実現できるかどうか調査しました<br>
-結果としては、実現不可能という判断となりました。<br>
-その時の検討内容および動作確認結果などを掲載しております。
-
-## 補足説明
-
-* <b>[（旧バージョン）U2Fローカルテストサーバー](u2f-test-server/README.md)</b><br>
-かつて使用していた、U2Fローカルテストサーバーについて掲載しています。<br>
-Javaベースのライブラリーサーバーを中核としています。
-
-## TODO
-
-* <b>Android環境でのサポート状況確認</b><br>
-Android向けGoogle Playで既にサポートずみ（とのこと）である、BLE U2Fサービスが利用できるかどうかを、実機で確認する予定です。<br><br>
-[ご参考] Googleサポート状況に関する議論：<br>
-https://groups.google.com/a/fidoalliance.org/forum/#!topic/fido-dev/-hT1UF0FKTo
+新世代のnRF5開発処理系「[nRF Connect SDK](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/index.html)」に関する調査を行います。

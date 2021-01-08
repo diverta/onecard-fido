@@ -1,29 +1,31 @@
-# One Card FIDO対応
+# セキュリティデバイス実装対応
 
-One CardにFIDO U2F／WebAuthn認証機能を実装するプロジェクトです。
-
-## [開発TODO](TODO.md)
-現在進行中、もしくは将来予定している開発案件についての概要を掲載しています。
+Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェクトです。
 
 ## プログラム
 
-- <b>[FIDO2アプリケーション](nRF5_SDK_v15.3.0)</b><br>
-Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器のファームウェアです。<br>
-[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)と、nRF52840 DK（開発ボード）に対応しています。
+- <b>[nRF52840アプリケーション](nRF5_SDK_v15.3.0)</b><br>
+FIDO2認証機能、PIVカードエミュレーション機能を実装したファームウェアです。<br>
+Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
 
 - <b>[FIDO認証器管理ツール](MaintenanceTool)</b><br>
-FIDO2認証器に、鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
+[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に、FIDO2認証機能用の鍵・証明書・PINを導入するために使用する、デスクトップ・ツールです。<br>
 [Windows版](MaintenanceTool/WindowsExe)、[macOS版](MaintenanceTool/macOSApp)の両方を用意しております。
 
-- <b>[オープンソースコードライセンスについて](LICENSES.md)</b><br>
+- <b>[オープンソースコードライセンスについて](OSSL.md)</b><br>
 上記プログラム内で使用されているオープンソースコード（ライブラリー）についての概要を掲載しています。
 
 ## ハードウェア
 
 - <b>[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)</b><br>
-Nordic社のSoC「nRF52840」を使用した、FIDO U2F／WebAuthn認証器です。<br>
+Nordic社のSoC「nRF52840」を使用したFIDO2認証器です。<br>
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
-PCのUSBポート装着時はUSB HIDデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
+PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
+
+- <b>MDBT50Q Dongle Mini（！！！現在開発中！！！）</b><br>
+上記「[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)」を小型化し、USBドングルユースに特化したデバイスです。<br>
+近年PCで採用が増大している小型USBコネクター<b>「USB Type-C プラグ」</b>を装備します。<br>
+PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスとして稼働します。
 
 ## What's new
 
@@ -47,7 +49,7 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 
 #### [過去の更新履歴はこちら](HISTORY.md)
 
-## FIDO2について
+## FIDO2認証機能について
 
 最新バージョンのプログラムにより使用可能となった新機能「BLE近接認証機能（パスワードレス・ボタンレス）」のイメージです。
 
@@ -63,16 +65,10 @@ FIDO認証（WebAuthn）実行時、MDBT50Q Dongle上のボタンを押す代わ
 
 FIDOの新世代パスワードレス認証（<b>WebAuthn</b>）に対応するために用意された、FIDO 2.0の技術仕様です。
 
-[FIDO2アプリケーション](nRF5_SDK_v15.3.0)では、既にUSB HIDトランスポート、BLEトランスポートに対応しています。<br>
-NFCトランスポートは、後日対応予定です。
+[nRF52840アプリケーション](nRF5_SDK_v15.3.0)では、既にUSB HIDトランスポート、BLEトランスポートに対応しています。
 
-また、Windows環境（Edgeブラウザー）でのWebAuthnは、PINコード（暗証番号）入力が必須となるのですが、こちらの方もすでに対応済みとなっております。
-
+また、Windows環境（Edgeブラウザー）でのWebAuthnは、PINコード（暗証番号）入力が必須となるのですが、こちらの方もすでに対応済みとなっております。<br>
 Windows環境による具体的なテスト方法は、別途手順書[「Edgeブラウザーを使用したWebAuthnテスト手順」](FIDO2Device/MDBT50Q_Dongle/WEBAUTHNTEST.md)をご参照ください。
-
-#### [以前の仕様](FORMER.md)
-FIDOの旧世代２要素認証（U2F）に関する開発物件になります。
-
 
 ## PIVカードエミュレーションについて
 

@@ -23,8 +23,6 @@ Googleアカウントが必要になります。<br>
 Chromeブラウザーを使用し、Googleアカウントにセキュリティ キー（MDBT50Q Dongle）を登録します。<br>
 あらかじめ、PCのUSBポートに[MDBT50Q Dongle](README.md)を装着しておきます。
 
-<img src="assets/0019.jpg" width="400">
-
 Chromeブラウザーを開き、環境設定メニューを実行します。
 
 <img src="assets01/0021.jpg" width="640">
@@ -59,7 +57,7 @@ Googleアカウント管理画面の左側のメニュー「セキュリティ�
 
 ここでMDBT50Q Dongle上の緑色LEDが点滅を始めます（おおむね秒間２回）。
 
-<img src="assets/0017.jpg" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 MDBT50Q Dongle上のボタンを１回プッシュすると、下図のような白いポップアップが表示されます。<br>
 「許可」をクリックします。
@@ -102,8 +100,6 @@ Chromeの設定画面（下図）を表示し、画面中央上部の「オフ�
 セキュリティ キー（MDBT50Q Dongle）を使用し、Chromeブラウザーに、Googleアカウントでログインします。<br>
 あらかじめ、PCのUSBポートに[MDBT50Q Dongle](README.md)を装着しておきます。
 
-<img src="assets/0019.jpg" width="400">
-
 Chromeブラウザーを開き、画面右上部のユーザーアイコンをクリックし、下図のようなポップアップを表示させます。<br>
 ポップアップ上の青いボタン「同期を有効にする」をクリックします。
 
@@ -115,7 +111,7 @@ Chromeブラウザーを開き、画面右上部のユーザーアイコンを�
 
 ここでMDBT50Q Dongle上の緑色LEDが点滅を始めます（おおむね秒間２回）。
 
-<img src="assets/0017.jpg" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 MDBT50Q Dongle上のボタンを１回プッシュすると、下図のように「完了しました」というメッセージが表示されます。
 
