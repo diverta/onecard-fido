@@ -1,6 +1,6 @@
 # Edgeブラウザーを使用したWebAuthnテスト手順
 
-MDBT50Q Dongleと、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPINコードにより行う手順を掲載しています。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)と、最新バージョンのEdgeブラウザーを使用し、WebAuthnユーザー登録／ログインをPINコードにより行う手順を掲載しています。
 
 ## ソフトウェアの導入
 
@@ -16,22 +16,19 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 ## FIDO2認証器の準備
 
-#### アプリケーションを導入
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)をFIDO2認証器として使用するための準備を行います。
 
-[FIDO2認証器アプリケーション](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.3.0)を、MDBT50Q Dongleに書込みます。<br>
-書込み手順につきましては、<b>[アプリケーション書込み手順](../../nRF5_SDK_v15.3.0/APPINSTALL.md)</b>をご参照ください。
+#### 最新の管理ツールを導入
 
-ファームウェアは、GitHubリポジトリーの以下の場所に格納されています。
-- ディレクトリー: onecard-fido/nRF5_SDK_v15.3.0/firmwares/
-- アプリケーション: [nrf52840_xxaa.hex](../../nRF5_SDK_v15.3.0/firmwares/nrf52840_xxaa.hex)
-- ソフトデバイス: [s140_nrf52_6.1.1_softdevice.hex](../../nRF5_SDK_v15.3.0/firmwares/s140_nrf52_6.1.1_softdevice.hex)
-
-#### 管理ツールを導入
-
-[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows 10）に導入します。<br>
+最新バージョンの[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（Windows 10）に導入します。<br>
 以下の手順書をご参照願います。
 
 * <b>[インストール手順（Windows版）](../../MaintenanceTool/WindowsExe/INSTALLPRG.md) </b>
+
+#### 最新のファームウェアを導入
+
+最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)）を、MDBT50Q Dongleに書込みます。<br>
+書込み手順につきましては、<b>[ファームウェア更新手順](../../MaintenanceTool/WindowsExe/UPDATEFIRMWARE.md)</b>をご参照ください。
 
 #### 鍵・証明書を導入
 
@@ -42,13 +39,14 @@ PC環境に導入した管理ツールを使用し、MDBT50Q Dongleに、鍵・�
 
 ## WebAuthn機能テストの実行
 
-MDBT50Q DongleとEdgeブラウザーを使用し、WebAuthn機能（ユーザー登録／ログイン）のテストを実施します。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)とEdgeブラウザーを使用し、WebAuthn機能（ユーザー登録／ログイン）のテストを実施します。
 
 ### ユーザー登録
 
-Edgeブラウザーを起動し、URL「[https://webauthntest.azurewebsites.net/login.html](https://webauthntest.azurewebsites.net/login.html)」を実行すると、WebAuthn機能のデモページが表示されます。
+まず最初に、MDBT50Q Dongleを、PCのUSBポートに装着しておきます。
 
-MDBT50Q Dongleは、PCのUSBポートに装着しておきます。
+続いてEdgeブラウザーを起動し、URL「[https://webauthntest.azurewebsites.net/login.html](https://webauthntest.azurewebsites.net/login.html)」を実行すると、WebAuthn機能のデモページが表示されます。
+
 
 <img src="assets04/0002.png" width="640">
 
@@ -83,7 +81,7 @@ MDBT50Q Dongleは、PCのUSBポートに装着しておきます。
 
 MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
-<img src="assets/0014.jpg" width="350">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 MDBT50Q Dongleからレスポンスが戻り、しばらくすると、下図のようにユーザー登録処理が成功したことを通知するメッセージ「Successfully created credential」が画面下端に表示されます。
 
