@@ -1,6 +1,9 @@
-# nRF52840版 FIDO2アプリケーション
+# nRF52840アプリケーション
 
 ## 概要
+
+### FIDO2認証機能
+
 FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケーションです。
 
 - PCにおけるユーザー登録／ログイン実行時[注1]：[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)をUSBポートに挿すと、nRF52840のUSB HIDサービスを経由して処理が行われます。
@@ -13,9 +16,15 @@ FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケ�
 
 FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
+
+### PIVカードエミュレーション機能
+
+PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
+詳細につきましては、別ドキュメント（[CCIDインターフェース追加対応](../CCID/README.md)）をご参照願います。
+
 ## ハードウェア
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)＋PCのUSBポートの組み合わせによるWebAuthn操作を想定しています。[注1]
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)＋PCのUSBポートの組み合わせによるWebAuthn操作等を想定しています。[注1]
 
 ただし、nRF52840 DK（開発用ボード）でも動作させることが可能です。[注2]<br>
 この場合は、J-Link（プログラミングで使用するUSBポート）経由のUARTにより、デバッグログを表示させることができます。
@@ -25,7 +34,7 @@ FIDO U2F／CTAP2に関する情報 : https://fidoalliance.org/download/
 
 ## ファームウェア
 
-「nRF52840版 FIDO2アプリケーション」で使用するファームウェアは、フォルダー[`firmwares`](firmwares/README.md) に格納しています。
+「nRF52840アプリケーション」のファームウェアは、フォルダー[`firmwares`](firmwares/README.md) に格納しています。
 
 ## 開発環境構築手順
 
