@@ -18,7 +18,7 @@ NetBeansとARM GCC、nRF5 SDKを使用し、nRF52840の開発環境を構築す�
 https://netbeans.org/downloads/8.2/<br>
 下図のような画面に遷移します。
 
-<img src="assets02/0006.png" width="600">
+<img src="assets02/0006.jpg" width="600">
 
 「NetBeans IDE ダウンロードバンドル」の「C/C++」をダウンロードします。<br>
 「netbeans-8.2-cpp-macosx.dmg」というファイルがダウンロードされます。
@@ -29,12 +29,12 @@ https://netbeans.org/downloads/8.2/<br>
 https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF5-Command-Line-Tools/Download<br>
 下図のような画面に遷移します。
 
-<img src="assets02/0004.png" width="600">
+<img src="assets02/0004.jpg" width="600">
 
 サイト中段のラジオボタン「9.8.1 macOS」をチェックします。<br>
 その後、右上にある「Download file」をクリックし、ダウンロードを開始させます。
 
-<img src="assets02/0005.png" width="600">
+<img src="assets02/0005.jpg" width="600">
 
 「nRF-Command-Line-Tools_9_8_1_OSX.tar」という名前のファイルがダウンロードされます。
 
@@ -44,11 +44,11 @@ https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF5-Command-Lin
 https://www.segger.com/downloads/jlink<br>
 下図のような画面に遷移します。
 
-<img src="assets02/0008.png" width="600">
+<img src="assets02/0008.jpg" width="600">
 
 「J-Link Software and Documentation Pack」をクリックすると下図の画面のようになります。
 
-<img src="assets02/0009.png" width="600">
+<img src="assets02/0009.jpg" width="600">
 
 一覧の上から２番目「J-Link Software and Documentation pack for macOS」の、DOWNLOADボタンをクリックし、ツールをダウンロードします。<br>
 「JLink_MacOSX_V646d.pkg」というファイルがダウンロードされます。
@@ -59,11 +59,11 @@ https://www.segger.com/downloads/jlink<br>
 
 ダウンロードした「netbeans-8.2-cpp-macosx.dmg」をダブルクリックすると、インストーラーが起動しますので、画面の指示に従い操作を進めます。
 
-<img src="assets02/0010.png" width="400">
+<img src="assets02/0010.jpg" width="400">
 
 アプリケーションフォルダーに「NetBeans」というサブフォルダーが出来ていればインストールは完了です。
 
-<img src="assets02/0011.png" width="400">
+<img src="assets02/0011.jpg" width="400">
 
 ### SEGGER J-Linkのインストール
 
