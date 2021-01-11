@@ -37,6 +37,7 @@ PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br
 
 - <b>[ARM GCCインストール手順](ARMGCCINST.md)</b>
 - <b>[nRF5 SDKインストール手順](NR5SDKINST.md)</b>
+- <b>[NetBeansインストール手順](NETBEANSINST.md)</b>
 
 ## 動作確認手順
 
