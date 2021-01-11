@@ -46,7 +46,7 @@
 ### 書込み用ツールの準備
 
 書込み用ツール「nRF Connect for Desktop」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)をご参照ください。
+詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../../nRF52840_app/NRFCONNECTINST.md)をご参照ください。
 
 ## 簡易USBブートローダーの書込み
 

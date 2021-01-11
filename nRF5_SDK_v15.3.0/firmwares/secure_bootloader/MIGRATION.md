@@ -70,7 +70,7 @@
 詳細につきましては、手順書「[NetBeansインストール手順](../../../nRF5_SDK_v15.3.0/NETBEANSINST.md)」内のトピック<b>「nRFコマンドラインツール」</b>をご参照ください。
 
 - <b>nRF Connect for Desktop</b><br>
-詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)をご参照ください。
+詳細につきましては、手順書[「nRF Connect for Desktop導入手順」](../../../nRF52840_app/NRFCONNECTINST.md)をご参照ください。
 
 ### 管理ツールの準備
 
