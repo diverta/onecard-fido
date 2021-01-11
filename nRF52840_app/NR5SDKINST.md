@@ -68,7 +68,8 @@ bash-3.2$
 
 ## nRF5 SDKの設定変更
 
-以下の作業では、ARM GCCツールチェインが、あらかじめ`${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update`というフォルダーに導入されている前提とします。
+以下の作業では、ARM GCCツールチェインが、あらかじめ`${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update`というフォルダーに導入されている前提とします。<br>
+（ARM GCCツールチェインのインストールにつきましては、[別途手順書](ARMGCCINST.md)ご参照）
 
 #### ツールチェインのバージョン確認
 
