@@ -4,7 +4,7 @@ NetBeansとARM GCC、nRF5 SDKを使用し、USBブートローダー（署名機
 
 ## ブートローダーについて
 
-PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、[nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/firmwares/README.md)を書き込むためのファームウェアです。<br>
+PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/README.md)を書き込むためのファームウェアです。<br>
 [Nordic社提供のサンプルアプリケーション](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.0.2/sdk_app_serial_dfu_bootloader.html)に小修正を施し、制作しています。
 
 ## 事前準備
@@ -66,8 +66,8 @@ MDBT50Q Dongle用の独自定義は下記ファイルになります。
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|`pca10059_01.h`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ヘッダーファイル|
-|2|`pca10059_02.h`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ヘッダーファイル|
+|1|`pca10059_01.h`|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ヘッダーファイル|
+|2|`pca10059_02.h`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ヘッダーファイル|
 
 今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/components/boards`](../../../nRF52840_app/components/boards)配下に配置いたしました。
 
