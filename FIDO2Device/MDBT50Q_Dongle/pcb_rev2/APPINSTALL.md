@@ -27,7 +27,7 @@ MDBT50Q DongleをPCのUSBポートに装着します。<br>
 ### 書込み用ツールの準備
 
 書込み用ツール「nRF Util」を、あらかじめPCに導入しておきます。<br>
-詳細につきましては、手順書[「nRF Utilインストール手順」](../../../nRF5_SDK_v15.3.0/NRFUTILINST.md)をご参照願います。
+詳細につきましては、手順書[「nRF Utilインストール手順」](../../../nRF52840_app/NRFUTILINST.md)をご参照願います。
 
 ### Python3ライブラリーの準備
 
@@ -101,7 +101,7 @@ command [nrfutil dfu usb-serial -pkg appkg.PCA10059.0.2.11.zip -p /dev/tty.usbmo
 bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.
-bash-3.2$ 
+bash-3.2$
 ```
 
 ### 書込み完了

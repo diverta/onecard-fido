@@ -1,0 +1,34 @@
+# MDBT50Q Dongle用ファームウェア
+
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)で使用するファームウェアです。
+
+## nRF52840アプリケーション
+
+このフォルダー（`firmwares`）に格納しています。
+
+| # |ファイル名 |説明 |
+|:-:|:-|:-|
+|1|`appkg.PCA10059.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
+|2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+
+#### ファームウェア更新イメージ
+
+[管理ツール](../../MaintenanceTool)に同梱され、管理ツールの[ファームウェア更新機能](../../MaintenanceTool/macOSApp/DFUFUNC.md)でダウンロードされることを前提としております。<br>
+基板名「`PCA10059`」または「`PCA10059_02`」を指定し、[NetBeansプロジェクト](../../nRF52840_app/examples/diverta)でビルドすると、このファイルが自動生成されるようになっております。
+
+なお、`appkg.<基板名>.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
+例えば、MDBT50Q Dongle rev2.1.2（基板名`PCA10059_02`）、バージョン`0.2.13`のファームウェア更新イメージファイル名は、`appkg.PCA10059_02.0.2.13.zip`となります。
+
+## USBブートローダー（署名機能付き）
+
+サブフォルダー（`firmwares/secure_bootloader`）に格納しています。
+
+| # |ファイル名 |説明 |
+|:-:|:-|:-|
+|1|`nrf52840_xxaa.hex`|[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)（rev2以降のバージョン）に対し、<br>[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/README.md)を書込める<br>ようにするためのファームウェアです。|
+
+#### [USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/secure_bootloader/README.md)
+NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
+
+#### [USBブートローダー書込み手順書](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)
+MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプリケーション・ファームウェアをセット導入する手順を記載しています。

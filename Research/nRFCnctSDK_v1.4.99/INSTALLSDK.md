@@ -13,7 +13,7 @@
 - ARM GCCツールチェイン
 - SEGGER J-Link
 
-#### [nRF Connect for Desktop導入手順](../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)
+#### [nRF Connect for Desktop導入手順](../../nRF52840_app/NRFCONNECTINST.md)
 nRF Connect SDKインストール時に必要なGUIツールを準備します。
 
 #### [CMakeインストール手順](../../Research/nRFCnctSDK_v1.4.99/INSTALLCMAKE.md)
