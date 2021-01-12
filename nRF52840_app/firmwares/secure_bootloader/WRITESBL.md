@@ -56,8 +56,8 @@
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|[`nrf52840_xxaa_PCA10059_01.hex`](nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_01.hex)|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ブートローダー|
-|2|[`nrf52840_xxaa_PCA10059_02.hex`](nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_02.hex)|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ブートローダー|
+|1|[`nrf52840_xxaa_PCA10059_01.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_01.hex)|[MDBT50Q Dongle（rev2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ブートローダー|
+|2|[`nrf52840_xxaa_PCA10059_02.hex`](../../../nRF52840_app/firmwares/secure_bootloader/nrf52840_xxaa_PCA10059_02.hex)|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ブートローダー|
 
 ### 書込み用ツールの準備
 
