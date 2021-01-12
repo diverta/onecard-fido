@@ -29,7 +29,8 @@ PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br
 
 ## ファームウェア
 
-「nRF52840アプリケーション」のファームウェアは、フォルダー[`firmwares`](firmwares/README.md) に格納しています。
+「nRF52840アプリケーション」のファームウェアは、フォルダー[`firmwares`](firmwares/README.md) に格納しています。<br>
+（詳細は別ドキュメント<b>「[MDBT50Q Dongle用ファームウェア](../nRF52840_app/firmwares/README.md)」</b>をご参照）
 
 ## 開発環境構築手順
 
