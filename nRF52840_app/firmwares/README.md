@@ -29,8 +29,8 @@
 |1|`nrf52840_xxaa_PCA10059_01.hex`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ブートローダー|
 |2|`nrf52840_xxaa_PCA10059_02.hex`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ブートローダー|
 
-#### [USBブートローダー（署名機能付き）作成手順書](../../nRF52840_app/examples/dfu/BUILDSBL.md)
+#### [USBブートローダー（署名機能付き）作成手順書](../../nRF52840_app/firmwares/secure_bootloader/BUILDSBL.md)
 NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
-#### [USBブートローダー書込み手順書](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)
+#### [USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)
 MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプリケーション・ファームウェアをセット導入する手順を記載しています。
