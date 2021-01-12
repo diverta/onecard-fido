@@ -1,8 +1,8 @@
-# USBブートローダー（署名機能付き）作成手順
+# USBブートローダー（署名機能付き）作成手順書
 
 NetBeansとARM GCC、nRF5 SDKを使用し、USBブートローダー（署名機能付き）を作成する手順を記載しています。
 
-## USBブートローダー（署名機能付き）の概要
+## ブートローダーについて
 
 PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、[nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/firmwares/README.md)を書き込むためのファームウェアです。<br>
 [Nordic社提供のサンプルアプリケーション](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.0.2/sdk_app_serial_dfu_bootloader.html)に小修正を施し、制作しています。
@@ -12,18 +12,18 @@ PCから[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し
 ### NetBeans環境の作成
 
 あらかじめ、NetBeans環境をPCに作成しておきます。<br>
-具体的な手順は、[NetBeansインストール手順](../../../../nRF5_SDK_v15.3.0/NETBEANSINST.md)をご参照ください。
+具体的な手順は、[NetBeansインストール手順](../../../nRF52840_app/NETBEANSINST.md)をご参照ください。
 
 ## ソースファイルの準備
 
 #### オリジナルソースの取得
 
-nRF5 SDKのサンプルアプリケーション・フォルダー（/nRF5_SDK_17.0.2/examples/dfu）から、必要なソースコードを取得します。
+nRF5 SDKのサンプルアプリケーション・フォルダー（`/nRF5_SDK_17.0.2/examples/dfu`）から、必要なソースコードを取得します。
 
 - `secure_bootloader`サブフォルダー
 - `dfu_public_key.c`
 
-今回の作成にあたっては、[`<リポジトリールート>/nRF5_SDK_v15.3.0/examples/dfu`](../../../../nRF5_SDK_v15.3.0/examples/dfu)配下に配置いたしました。
+今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/examples/dfu`](../../../nRF52840_app/examples/dfu)配下に配置いたしました。
 
 `secure_bootloader`サブフォルダーには、不要なファイルが含まれていますので、適宜削除します。<br>
 具体的には下記イメージになるかと存じます。
@@ -57,27 +57,49 @@ bash-3.2$
 
 [注1] ご参考：[GitHub - pc-nrfutil](https://github.com/NordicSemiconductor/pc-nrfutil/blob/master/README.md)
 
+#### SDKソースコードの修正
+
+[MDBT50Q Dongle](../../../FIDO2Device/MDBT50Q_Dongle/README.md)は、Nordic社のドングル「nRF52840 Dongle」から回路を修正しているため、`PCA_10059`のソースがそのまま利用できません。<br>
+そのため、nRF5 SDKのフォルダー（`/nRF5_SDK_17.0.2/components/boards`）から、必要なソースコードを取得し、一部修正を加えております。
+
+MDBT50Q Dongle用の独自定義は下記ファイルになります。
+
+| # |ファイル名 |説明 |
+|:-:|:-|:-|
+|1|`pca10059_01.h`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ヘッダーファイル|
+|2|`pca10059_02.h`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ヘッダーファイル|
+
+今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/components/boards`](../../../nRF52840_app/components/boards)配下に配置いたしました。
+
 #### メイクファイルの修正
 
-メイクファイル「[Makefile](../../../../nRF5_SDK_v15.3.0/examples/dfu/secure_bootloader/pca10056_usb/armgcc/Makefile)」の下記部分を修正します。
+メイクファイル「[Makefile](../../../nRF52840_app/examples/dfu/secure_bootloader/pca10056_usb/armgcc/Makefile)」の下記部分を修正します。
 
 #### パス修正
 
-<b>修正前</b>
+【修正前】
 ```
 SDK_ROOT := ../../../../..
+PROJ_DIR := ../..
 ```
 
-<b>修正後</b>
+【修正後】<br>
+修正コード／`.hex`ファイルコピー先ルートディレクトリーの定義を加えています。
 ```
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
+PROJ_DIR := ../..
+SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
 ```
 
 #### define追加
 
-<b>追加した行</b>
+【追加した行】
 ```
-TARGET_BOARD     := PCA10059
+# target board
+#  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
+#  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
+TARGET_BOARD     := PCA10059_02
 
 # Pin for DFU mode
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_BUTTON=0
@@ -85,23 +107,49 @@ CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_GPREGRET=1
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_PINRESET=0
 ```
 
-[注] `-DNRF_BL_DFU_ENTER_METHOD_xxxx`の定義は、ブートローダーの開始設定を修正している部分です。すなわち、ブートローダーモードに遷移させるためには、nRF52840アプリケーション側で、レジスター`GPREGRET`に所定の値を設定することが必要となります（リセットボタンやユーザーボタンによるブートローダーモード遷移は不可能です）。
+[注1] `-DNRF_BL_DFU_ENTER_METHOD_xxxx`の定義は、ブートローダーの開始設定を修正している部分です。すなわち、ブートローダーモードに遷移させるためには、nRF52840アプリケーション側で、レジスター`GPREGRET`に所定の値を設定することが必要となります（リセットボタンやユーザーボタンによるブートローダーモード遷移は不可能です）。<br>
+[注2] `TARGET_BOARD`の定義は、ブートローダー導入先の基板名を指定します。`PCA10059_02`を指定すると、MDBT50Q Dongle(rev2.1.2)向けのブートローダーが生成されます。
 
-#### ターゲット変更（２箇所あります）
+#### ターゲット変更（４箇所あります）
 
-<b>修正前</b>
+【修正前】
 ```
+$(SDK_ROOT)/components/boards/boards.c \
+：
+$(SDK_ROOT)/components/boards \
+：
 CFLAGS += -DBOARD_PCA10056
+：
+ASMFLAGS += -DBOARD_PCA10056
+：
+default: nrf52840_xxaa
 ```
 
-<b>修正後</b>
+【修正後】
 ```
+$(SDK_CUSTOM_ROOT)/components/boards/boards.c \
+：
+$(SDK_CUSTOM_ROOT)/components/boards \
+：
 CFLAGS += -DBOARD_$(TARGET_BOARD)
+：
+ASMFLAGS += -DBOARD_$(TARGET_BOARD)
+：
+default: nrf52840_xxaa deploy_dk
+```
+
+#### `.hex`ファイルコピー処理追加
+
+【追加した行】
+```
+deploy_dk:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/secure_bootloader/nrf52840_xxaa_$(TARGET_BOARD).hex
+	@echo Secure bootloader hex file for $(TARGET_BOARD) is now available.
 ```
 
 ## ソースファイルからビルド
 
-上記で取得したソースファイルから、NetBeansプロジェクトを新規作成し、USBブートローダー（`nrf52840_xxaa.hex`ファイル）を生成します。
+上記で取得したソースファイルから、NetBeansプロジェクトを新規作成し、USBブートローダー（`nrf52840_xxaa_<基板名>.hex`ファイル）を生成します。
 
 #### プロジェクトの新規作成〜ビルド実行
 
@@ -158,13 +206,13 @@ NetBeansを起動し、ファイル--->新規プロジェクトを実行しま�
 
 #### ビルド結果の確認
 
-ビルドが完了したら、USBブートローダー`nrf52840_xxaa.hex`が正しく生成されているかどうか確認します。<br>
-下記は、ターミナルで`nrf52840_xxaa.hex`(102KB)が生成されたことを確認したところです。
+ビルドが完了したら、USBブートローダー`nrf52840_xxaa_<基板名>.hex`が正しく生成されているかどうか確認します。<br>
+下記は、ターミナルで`nrf52840_xxaa_PCA10059_02.hex`(102KB)が生成されたことを確認したところです。
 
 ```
-bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/examples/dfu/secure_bootloader/pca10056_usb/armgcc/_build
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_bootloader/
 bash-3.2$ ls -al *.hex
--rw-r--r--  1 makmorit  staff  101130  1 12 11:26 nrf52840_xxaa.hex
+-rw-r--r--  1 makmorit  staff  100815  1 12 14:45 nrf52840_xxaa_PCA10059_02.hex
 bash-3.2$
 ```
 

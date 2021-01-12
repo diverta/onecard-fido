@@ -1,7 +1,10 @@
 PROJECT_NAME     := secure_bootloader_usb_mbr_pca10056
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
-TARGET_BOARD     := PCA10059
+# target board
+#  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
+#  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
+TARGET_BOARD     := PCA10059_02
 
 # Pin for DFU mode
 CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_BUTTON=0
@@ -10,6 +13,8 @@ CFLAGS += -DNRF_BL_DFU_ENTER_METHOD_PINRESET=0
 
 SDK_ROOT := $(HOME)/opt/nRF5_SDK_17.0.2
 PROJ_DIR := ../..
+SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := secure_bootloader_gcc_nrf52.ld
@@ -20,7 +25,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/bootloader/serial_dfu/nrf_dfu_serial_usb.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_frontend.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_str_formatter.c \
-  $(SDK_ROOT)/components/boards/boards.c \
+  $(SDK_CUSTOM_ROOT)/components/boards/boards.c \
   $(SDK_ROOT)/modules/nrfx/mdk/system_nrf52840.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310_bl/cc310_bl_backend_ecc.c \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310_bl/cc310_bl_backend_ecdsa.c \
@@ -130,7 +135,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/external/nrf_oberon \
   $(SDK_ROOT)/components/libraries/strerror \
   $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls \
-  $(SDK_ROOT)/components/boards \
+  $(SDK_CUSTOM_ROOT)/components/boards \
   $(SDK_ROOT)/components/libraries/crypto/backend/cc310 \
   $(SDK_ROOT)/components/libraries/bootloader \
   $(SDK_ROOT)/components/softdevice/mbr/headers \
@@ -217,7 +222,7 @@ LIB_FILES += -lc -lnosys -lm
 .PHONY: default help
 
 # Default target - first one defined
-default: nrf52840_xxaa
+default: nrf52840_xxaa deploy_dk
 
 # Print all targets that can be built
 help:
@@ -226,6 +231,10 @@ help:
 	@echo		flash_mbr
 	@echo		sdk_config - starting external tool for editing sdk_config.h
 	@echo		flash      - flashing binary
+
+deploy_dk:
+	/bin/cp -pv $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DEPLOY_ROOT)/secure_bootloader/nrf52840_xxaa_$(TARGET_BOARD).hex
+	@echo Secure bootloader hex file for $(TARGET_BOARD) is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
 
