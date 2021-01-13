@@ -34,3 +34,16 @@ NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する
 
 #### [USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)
 MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプリケーション・ファームウェアをセット導入する手順を記載しています。
+
+## サンプルアプリケーション
+
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の動作確認用に使用するサンプルのBLEアプリケーションです。<br>
+サブフォルダー（`firmwares/sample_blehrs`）に格納しています。
+
+| # |ファイル名 |説明 |
+|:-:|:-|:-|
+|1|`appkg.PCA10059_01.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
+|2|`appkg.PCA10059_02.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+
+#### [サンプルアプリケーション作成手順書](../../nRF52840_app/firmwares/sample_blehrs/BUILDHRS.md)
+NetBeansとARM GCC、nRF5 SDKを使用し、動作確認用のサンプルアプリケーション「Heart Rate Application」を作成する手順を記載しています。
