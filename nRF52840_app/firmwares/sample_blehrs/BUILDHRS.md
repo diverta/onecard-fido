@@ -18,7 +18,7 @@ NetBeansとARM GCC、nRF5 SDKを使用し、動作確認用のサンプルアプ
 #### オリジナルソースの取得
 
 nRF5 SDKのサンプルアプリケーション・フォルダー（`${HOME}/opt/nRF5_SDK_17.0.2/examples/ble_peripheral/ble_app_hrs`）から、必要なソースコードを取得します。<br>
-今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/examples/dfu`](../../../nRF52840_app/examples/dfu)配下に配置いたしました。
+今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/examples/ble_peripheral/ble_app_hrs`](../../../nRF52840_app/examples/ble_peripheral/ble_app_hrs)配下に配置いたしました。
 
 `ble_app_hrs`サブフォルダーには、不要なファイルが含まれていますので、適宜削除します。<br>
 具体的には下記イメージになるかと存じます。
@@ -53,7 +53,7 @@ MDBT50Q Dongle用の独自定義は下記ファイルになります。
 
 #### メイクファイルの修正
 
-メイクファイル「[Makefile](../../../nRF52840_app/examples/dfu/secure_bootloader/pca10056_usb/armgcc/Makefile)」の下記部分を修正します。
+メイクファイル「[Makefile](../../../nRF52840_app/examples/ble_peripheral/ble_app_hrs/pca10059/s140/armgcc/Makefile)」の下記部分を修正します。
 
 #### パス修正
 
