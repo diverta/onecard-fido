@@ -120,30 +120,41 @@ nRF Connectを起動します。<br>
 
 画面左上部の「Select device」プルダウンをクリックして、PCA10056（前述のnRF52840 DK）を選択します。
 
-<img src="../assets02/0012.jpg" width="450">
+<img src="../assets03/0005.jpg" width="450">
 
 しばらくすると、左側の「nRF52840」欄に、nRF52840 DKに接続されているMDBT50Q Dongle側のメモリーイメージが表示されます。<br>
 下図例ではメモリーイメージが表示されていませんが、これは事前実行したFlash ROM全消去により、全領域が初期状態となったためです。
 
-<img src="../assets02/0013.jpg" width="450">
+<img src="../assets03/0006.jpg" width="450">
 
 これで書き込み準備は完了です。
 
 ### 書込み実行
 
-画面右下部にある「Write」のリンクをクリックし、書込みをスタートさせます。<br>
+画面右下部にある「Write」のリンクをクリックし、書込みをスタートさせます。
+
+<img src="../assets03/0007.jpg" width="450">
+
 下図のように「nRF52840」欄に淡い縞模様が表示され、書込処理が進みます。
 
-<img src="../assets02/0014.jpg" width="450">
+<img src="../assets03/0008.jpg" width="450">
 
 しばらくすると、下図のように画面下部のメッセージ欄が赤く変化します。<br>
+
+<img src="../assets03/0009.jpg" width="450">
+
 画面左上部にあるプルダウンから「Close device」を選択し、nRF52840 DKとの接続をすみやかに切断してください。
 
-<img src="../assets02/0015.jpg" width="450">
+<img src="../assets03/0010.jpg" width="450">
 
 切断が完了したら、画面の「Quit」を実行して、nRF Connectを終了させます。
 
-<img src="../assets02/0016.jpg" width="450">
+<img src="../assets03/0011.jpg" width="450">
+
+MDBT50Q Dongleにブートローダーが書き込まれ、自動的にブートローダーが起動します。<br>
+下図のように、基板上の緑色・橙色LEDが点灯している状態が、ブートローダー起動中の状態になります。
+
+<img src="../assets03/0012.jpg" width="600">
 
 その後、MDBT50Q DongleをPCのUSBポートから外し、nRF52840 DKとの配線を外してください。
 
