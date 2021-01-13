@@ -37,7 +37,7 @@ MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプ
 
 ## サンプルアプリケーション
 
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の動作確認用に使用するサンプルのBLEアプリケーションです。<br>
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の初期動作確認用に使用するサンプルのBLEアプリケーションです。<br>
 サブフォルダー（`firmwares/sample_blehrs`）に格納しています。
 
 | # |ファイル名 |説明 |
@@ -47,3 +47,6 @@ MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプ
 
 #### [サンプルアプリケーション作成手順書](../../nRF52840_app/firmwares/sample_blehrs/BUILDHRS.md)
 NetBeansとARM GCC、nRF5 SDKを使用し、動作確認用のサンプルアプリケーション「Heart Rate Application」を作成する手順を記載しています。
+
+#### [サンプルアプリケーション動作確認手順書](../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)
+MDBT50Q Dongleに「Heart Rate Application」を新規導入し、Androidアプリを使用して動作確認する手順を記載しています。

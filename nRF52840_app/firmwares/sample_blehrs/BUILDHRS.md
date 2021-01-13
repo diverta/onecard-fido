@@ -13,6 +13,19 @@ NetBeansとARM GCC、nRF5 SDKを使用し、動作確認用のサンプルアプ
 あらかじめ、NetBeans環境をPCに作成しておきます。<br>
 具体的な手順は、[NetBeansインストール手順](../../../nRF52840_app/NETBEANSINST.md)をご参照ください。
 
+#### nRF Utilのインストール
+
+ビルドを実行する際に必要となる、nRF UtilをPCにインストールしておきます。<br>
+具体的な手順は、[nRF Utilインストール手順](../../../nRF52840_app/NRFUTILINST.md)をご参照ください。
+
+本手順書を作成した時点でのnRF Utilは、`version 6.1`となっておりました。
+
+```
+bash-3.2$ nrfutil version
+nrfutil version 6.1.0
+bash-3.2$
+```
+
 ## ソースファイルの準備
 
 #### オリジナルソースの取得
