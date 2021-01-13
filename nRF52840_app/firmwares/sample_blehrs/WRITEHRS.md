@@ -35,7 +35,7 @@ Playストア経由で入手できるかと存じます。
 #### ハードウェアの準備
 
 まず最初に、MDBT50Q Dongleを初期化し、USBブートローダーのみが動作する状態とします。<br>
-具体的な手順は、[nRF Utilインストール手順](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)をご参照ください。
+具体的な手順は、[USBブートローダー書込み手順書](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)をご参照ください。
 
 前述の手順が完了しますと、USBブートローダーのみが動作中のため、下図のように、基板上の緑色・橙色LEDが点灯している状態となります。
 
