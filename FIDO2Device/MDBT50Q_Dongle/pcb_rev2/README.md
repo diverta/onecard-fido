@@ -14,7 +14,7 @@
 
 nRF52840 Dongleをベースとし、電池電源の増設と、LEDの増設、若干の配線変更を行っております。
 
-### [nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/README.md)
+### [nRF52840アプリケーション](../../../nRF52840_app/README.md)
 
 MDBT50Q Dongleで使用するファームウェアです。
 
@@ -39,15 +39,3 @@ BLEセントラルサービスを使用したオプション機能です。
 ### [BLE近接認証](../BLEDAUTH.md)
 
 FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、スマートフォンなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
-
-## ご参考情報
-
-### [アプリケーション書込み手順](APPINSTALL.md)
-
-MDBT50Q Dongleにプレインストールされている[簡易USBブートローダー](../../../nRF5_SDK_v15.3.0/examples/dfu/README.md)を経由し、MDBT50Q Dongleに[nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/README.md)を書き込む手順を掲載しています。<br>
-（ファームウェア単体開発時の運用になります）
-
-### [簡易USBブートローダー](../../../nRF5_SDK_v15.3.0/examples/dfu/README.md)
-
-PCのUSBポート経由で、MDBT50Q Dongleに[nRF52840アプリケーション](../../../nRF5_SDK_v15.3.0/README.md)を書き込むことができるようにするためのファームウェアです。<br>
-MDBT50Q Dongleにはすでに導入済みとなっております。

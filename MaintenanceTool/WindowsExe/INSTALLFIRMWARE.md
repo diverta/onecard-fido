@@ -49,8 +49,3 @@ MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="400">
 
 以上で、ファームウェア新規導入処理は完了となります。
-
-## 開発情報（ご参考）
-
-- <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
-プログラム実装に関する情報を掲載しています。

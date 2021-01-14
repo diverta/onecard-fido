@@ -47,8 +47,3 @@ MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認
 <img src="../../MaintenanceTool/macOSApp/assets02/0010.jpg" width="400">
 
 以上で、ファームウェア更新処理は完了となります。
-
-## 開発情報（ご参考）
-
-- <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
-プログラム実装に関する情報を掲載しています。

@@ -2,19 +2,30 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)に鍵・証明書を導入する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、FIDO2認証器に鍵・証明書を導入する手順を掲載します。
 
-## 管理ツールのインストール
+## 認証器の準備
 
-[インストール手順](INSTALLPRG.md)を参照し、管理ツールをmacOSにインストールします。
+#### 使用機材
+
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+
+#### 管理ツールを導入
+
+[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS）に導入します。<br>
+以下の手順書をご参照願います。
+
+* <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
 
 ## 鍵・証明書の削除
 
-管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)を装着します。
+管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
 <img src="assets/0006.png" width="400">
 
-次に「鍵・証明書・キーハンドル消去」ボタンをクリックします。
+管理ツール画面下部のメッセージ欄に「USB HIDデバイスに接続されました。」と表示されることを確認したら、次に「鍵・証明書・キーハンドル消去」ボタンをクリックします。
 
 <img src="assets/0007.png" width="400">
 
