@@ -8,13 +8,13 @@
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|`appkg.PCA10059.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
+|1|`appkg.PCA10059_01.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
 |2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
 
 #### ファームウェア更新イメージ
 
-[管理ツール](../../MaintenanceTool)に同梱され、管理ツールの[ファームウェア更新機能](../../MaintenanceTool/macOSApp/DFUFUNC.md)でダウンロードされることを前提としております。<br>
-基板名「`PCA10059`」または「`PCA10059_02`」を指定し、[NetBeansプロジェクト](../../nRF52840_app/examples/diverta)でビルドすると、このファイルが自動生成されるようになっております。
+[管理ツール](../../MaintenanceTool)に同梱され、管理ツールの[「ファームウェア更新機能」](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)でダウンロードされることを前提としております。<br>
+基板名「`PCA10059_01`」または「`PCA10059_02`」を指定し、NetBeansでビルドすると、このファイルが自動生成されるようになっております。
 
 なお、`appkg.<基板名>.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
 例えば、MDBT50Q Dongle rev2.1.2（基板名`PCA10059_02`）、バージョン`0.2.13`のファームウェア更新イメージファイル名は、`appkg.PCA10059_02.0.2.13.zip`となります。
