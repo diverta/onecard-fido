@@ -27,7 +27,7 @@ WebAuthnをサポートしているEdgeブラウザーは、単体で導入で�
 
 #### 最新のファームウェアを導入
 
-最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)）を、MDBT50Q Dongleに書込みます。<br>
+最新バージョンのファームウェアを、MDBT50Q Dongleに書込みます。<br>
 書込み手順につきましては、<b>[ファームウェア更新手順](../../MaintenanceTool/WindowsExe/UPDATEFIRMWARE.md)</b>をご参照ください。
 
 #### 鍵・証明書を導入

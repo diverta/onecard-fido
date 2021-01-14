@@ -7,7 +7,7 @@ J-Linkに同梱のデバッグ出力参照ツール「SEGGER J-Link RTT Viewer�
 RTTViewerは、デバッグツール「<b>SEGGER J-Link</b>」に含まれるGUIアプリケーションです。<br>
 ですのでまずは「SEGGER J-Link」をPCに導入願います。
 
-詳細につきましては、別途手順書「[NetBeansインストール手順](../../nRF5_SDK_v15.3.0/NETBEANSINST.md)」の該当章「<b>SEGGER J-Link</b>」をご参照願います。
+詳細につきましては、別途手順書「[NetBeansインストール手順](../../nRF52840_app/NETBEANSINST.md)」の該当章「<b>SEGGER J-Link</b>」をご参照願います。
 
 ## RTTViewerの設定
 
