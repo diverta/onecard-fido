@@ -2,13 +2,13 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の[ファームウェア](../../nRF5_SDK_v15.3.0)を更新する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)のファームウェアを更新する手順を掲載します。
 
 ## 操作方法
 
 まず最初に、MDBT50Q Dongleの背面にあるボタン電池ケースに、電池が入っていないことを必ず確認します。
 
-<img src="../../nRF5_SDK_v15.3.0/firmwares/assets02/0000.png" width="400">
+<img src="../../MaintenanceTool/macOSApp/assets02/0000.jpg" width="400">
 
 次に、MDBT50Q DongleをPCのUSBポートに装着します。<br>
 この時に、MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
@@ -47,8 +47,3 @@ MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認
 <img src="../../MaintenanceTool/macOSApp/assets02/0010.jpg" width="400">
 
 以上で、ファームウェア更新処理は完了となります。
-
-## 開発情報（ご参考）
-
-- <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
-プログラム実装に関する情報を掲載しています。

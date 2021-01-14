@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、[アプリケーション・ファームウェア](../../nRF5_SDK_v15.3.0)を新規導入する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、アプリケーション・ファームウェアを新規導入する手順を掲載します。
 
 ### ご注意
 
@@ -49,8 +49,3 @@ MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="400">
 
 以上で、ファームウェア新規導入処理は完了となります。
-
-## 開発情報（ご参考）
-
-- <b>[ファームウェア更新機能](DFUFUNC.md)</b><br>
-プログラム実装に関する情報を掲載しています。

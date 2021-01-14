@@ -21,14 +21,32 @@
 
 ## USBブートローダー（署名機能付き）
 
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)（rev2以降のバージョン）に対し、[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/README.md)を書込めるようにするためのファームウェアです。<br>
 サブフォルダー（`firmwares/secure_bootloader`）に格納しています。
 
 | # |ファイル名 |説明 |
 |:-:|:-|:-|
-|1|`nrf52840_xxaa.hex`|[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)（rev2以降のバージョン）に対し、<br>[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/README.md)を書込める<br>ようにするためのファームウェアです。|
+|1|`nrf52840_xxaa_PCA10059_01.hex`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ブートローダー|
+|2|`nrf52840_xxaa_PCA10059_02.hex`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ブートローダー|
 
-#### [USBブートローダー作成手順](../../nRF5_SDK_v15.3.0/examples/dfu/secure_bootloader/README.md)
+#### [USBブートローダー（署名機能付き）作成手順書](../../nRF52840_app/firmwares/secure_bootloader/BUILDSBL.md)
 NetBeansとARM GCC、nRF5 SDKを使用し、ブートローダーを作成する手順を記載しています。
 
-#### [USBブートローダー書込み手順書](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)
+#### [USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)
 MDBT50Q Dongleに、ブートローダー本体／ソフトデバイス／アプリケーション・ファームウェアをセット導入する手順を記載しています。
+
+## サンプルアプリケーション
+
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)の初期動作確認用に使用するサンプルのBLEアプリケーションです。<br>
+サブフォルダー（`firmwares/sample_blehrs`）に格納しています。
+
+| # |ファイル名 |説明 |
+|:-:|:-|:-|
+|1|`appkg.PCA10059_01.zip`|[MDBT50Q Dongle（rev2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2/README.md)専用ファームウェア更新イメージファイル|
+|2|`appkg.PCA10059_02.zip`|[MDBT50Q Dongle（rev2.1.2）](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
+
+#### [サンプルアプリケーション作成手順書](../../nRF52840_app/firmwares/sample_blehrs/BUILDHRS.md)
+NetBeansとARM GCC、nRF5 SDKを使用し、動作確認用のサンプルアプリケーション「Heart Rate Application」を作成する手順を記載しています。
+
+#### [サンプルアプリケーション動作確認手順書](../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)
+MDBT50Q Dongleに「Heart Rate Application」を新規導入し、Androidアプリを使用して動作確認する手順を記載しています。

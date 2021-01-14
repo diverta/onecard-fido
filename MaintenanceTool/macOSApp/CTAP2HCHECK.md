@@ -2,7 +2,7 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[FIDO2認証器](../../nRF5_SDK_v15.3.0)のヘルスチェックを実行する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、FIDO2認証器のヘルスチェックを実行する手順を掲載します。
 
 #### 処理内容
 
@@ -14,9 +14,9 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### 使用機材
 
-本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、[FIDO2認証器](../../nRF5_SDK_v15.3.0)として使用します。
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0000.jpg" width="300">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
 
 #### 管理ツールを導入
 
@@ -27,7 +27,7 @@ CTAP2ヘルスチェックは、USB HID経由またはBLE経由で実行され�
 
 #### ファームウェアを更新
 
-[FIDO2認証器](../../nRF5_SDK_v15.3.0)の最新ファームウェアを、MDBT50Q Dongleに書込み、ファームウェアを更新します。<br>
+最新ファームウェアを、MDBT50Q Dongleに書込み、ファームウェアを更新します。<br>
 （最新ファームウェアは、FIDO認証器管理ツールに同梱されています）
 
 ファームウェアの更新手順につきましては、<b>[ファームウェア更新手順書](UPDATEFIRMWARE.md)</b>をご参照ください。
@@ -43,7 +43,8 @@ PC環境に導入した管理ツールを使用し、鍵・証明書のインス
 
 ## CTAP2ヘルスチェックの実行
 
-MDBT50Q DongleをPCのUSBポートに装着後、管理ツールを起動します。
+MDBT50Q DongleをPCのUSBポートに装着後、管理ツールを起動します。<br>
+「USB HIDデバイスに接続されました。」というメッセージが表示されていることを確認します。
 
 <img src="assets/0019.png" width="400">
 
@@ -61,7 +62,7 @@ PIN入力画面がポップアップ表示されますので、認証器に設�
 
 MDBT50Q Dongle上の緑色LEDが点滅し始めますので、基板上のボタンを１回プッシュします。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0014.jpg" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="300">
 
 ヘルスチェック処理が成功すると「CTAP2ヘルスチェックが成功しました。」というメッセージが表示されます。
 
