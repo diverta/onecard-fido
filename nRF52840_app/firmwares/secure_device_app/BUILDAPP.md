@@ -88,7 +88,7 @@ MDBT50Q Dongle用の独自定義、独自実装は下記ファイルになりま
 # target board
 #  PCA10059_01  MDBT50Q Dongle(rev2, without ATECC608A)
 #  PCA10059_02  MDBT50Q Dongle(rev2.1.2, with ATECC608A)
-TARGET_BOARD     := PCA10056
+TARGET_BOARD     := PCA10059_01
 
 # application version info
 FW_REV := 0.2.13
@@ -110,7 +110,7 @@ CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 # CFLAGS += -DNO_SECURE_IC
 ```
 
-[注1] `TARGET_BOARD`の定義は、ブートローダー導入先の基板名を指定します。`PCA10059_02`を指定すると、MDBT50Q Dongle(rev2.1.2)向けのブートローダーが生成されます。
+[注1] `TARGET_BOARD`の定義は、ブートローダー導入先の基板名を指定します。`PCA10059_01`を指定すると、MDBT50Q Dongle(rev2)向けのファームウェア更新イメージが生成されます。
 
 #### パス修正
 
@@ -225,3 +225,82 @@ secure_pkg:
 	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0x0100 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(HOME)/secure_bootloader_prvkey.pem $(DEPLOY_ROOT)/appkg.$(TARGET_BOARD).$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
 ```
+
+## ソースファイルからビルド
+
+上記で取得したソースファイルから、NetBeansプロジェクトを新規作成し、動作確認用のファームウェア更新イメージ（`appkg.<基板名>.<バージョン文字列>.zip`ファイル）を生成します。<br>
+下記例では、ファームウェア更新イメージファイル名は`appkg.PCA10059_01.0.2.13.zip`となります。
+
+#### プロジェクトの新規作成〜ビルド実行
+
+NetBeansを起動し、ファイル--->新規プロジェクトを実行します。
+
+<img src="assets01/0003.jpg" width="300">
+
+新規プロジェクト画面が表示されますので、一覧から「既存のソースを使用するC/C++プロジェクト」を選択し「次 >」をクリックします。
+
+<img src="assets01/0004.jpg" width="350">
+
+下図のような画面に遷移しますので、以下のように設定します。
+
+- 既存のソースを含むフォルダを指定 - サンプルアプリが格納されているフォルダー「`examples/diverta/secure_device_app`」を指定します。<br>
+下図の例では「`/Users/makmorit/GitHub/onecard-fido/nRF52840_app/examples/diverta/secure_device_app`」という文字列が設定されています。
+
+- ツール・コレクションを選択 - 「GNU_ARM (GNU Mac)」をチェックします。
+- 構成モードを選択 - 「カスタム(C)」をチェックします。
+
+設定が完了したら「次 >」をクリックします。
+
+<img src="assets01/0005.jpg" width="350">
+
+下図のような画面に遷移しますので、以下のように設定します。
+
+- 「事前ビルド・ステップが必要」にチェック
+
+- フォルダで実行(U) - サンプルアプリのサブフォルダー「`pca10056/s140/armgcc`」を指定します。<br>
+下図の例では「`/Users/makmorit/GitHub/onecard-fido/nRF52840_app/nRF52840_app/examples/diverta/secure_device_app/pca10056/s140/armgcc`」という文字列が設定されています。
+
+- 「カスタム・コマンド」にチェック
+
+- コマンド(O) - 「make」と入力します。
+
+設定が完了したら「次 >」をクリックします。
+
+<img src="assets01/0006.jpg" width="350">
+
+「4. ビルド・アクション」に遷移しますが、以降は「7. プロジェクトの名前と場所」に遷移するまではデフォルト設定のまま「次 >」をクリックします。
+
+<img src="assets01/0007.jpg" width="350">
+
+「7. プロジェクトの名前と場所」に遷移したら、プロジェクト名(P)を「`secure_device_app`」から「`secure_device_app_proj`」に変更しておきます。<br>
+（ソースフォルダー名「`secure_device_app`」を上書きしたくないための措置です）
+
+設定が完了したら「終了(F)」をクリックします。
+
+<img src="assets01/0008.jpg" width="350">
+
+自動的にビルドがスタートしますので、しばらくそのまま待ちます。<br>
+しばらくするとビルドが完了し「ビルド SUCCESSFUL」と表示されれば、ビルドは成功です。
+
+<img src="assets01/0009.jpg" width="600">
+
+#### ビルド結果の確認
+
+ビルドが完了したら、ファームウェア更新イメージファイル`appkg.PCA10059_01.0.2.13.zip`が正しく生成されているかどうか確認します。<br>
+下記は、ターミナルで`appkg.PCA10059_01.0.2.13.zip`(109KB)が生成されたことを確認したところです。
+
+```
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/
+bash-3.2$ ls -al *.zip
+-rw-r--r--  1 makmorit  staff  108905  1 18 09:38 appkg.PCA10059_01.0.2.13.zip
+bash-3.2$
+```
+
+以上で、ソースファイルからのビルドは完了です。
+
+#### 動作確認
+
+この時点では、ファームウェアはまだ、Nordic社提供のサンプル「[Heart Rate Application](../../../nRF52840_app/firmwares/sample_blehrs/BUILDHRS.md)」と同等の機能になっています。<br>
+したがって、別途手順書「[サンプルアプリケーション動作確認手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」どおりに動作確認を進めます。
+
+動作確認の結果がOKであれば、前SDKバージョンのnRF52840アプリケーションから、ソースコードの移行作業を進めていくことになります。
