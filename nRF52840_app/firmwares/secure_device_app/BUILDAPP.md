@@ -183,8 +183,11 @@ endif
 #### Oberonの削除
 
 【削除した行】<br>
-ビルド対象コードから、Oberon関連のソースコードを削除しました。
+ビルド対象コードから、SEGGER RTT、Oberon関連のソースコードを削除しました。
 ```
+$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
+$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c \
+$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_chacha_poly_aead.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecc.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecdh.c \
@@ -192,6 +195,10 @@ $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_ecdsa.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_eddsa.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hash.c \
 $(SDK_ROOT)/components/libraries/crypto/backend/oberon/oberon_backend_hmac.c \
+：
+$(SDK_ROOT)/external/nrf_oberon \
+：
+$(SDK_ROOT)/external/segger_rtt \
 ```
 
 #### リンク先ファイルの修正
