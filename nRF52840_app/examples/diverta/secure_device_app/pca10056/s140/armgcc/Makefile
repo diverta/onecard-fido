@@ -12,9 +12,13 @@ CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
 
+# Customized configs
+CFLAGS += -DUSE_APP_CONFIG
+
 # enable log output on PCA10056
 ifeq ("$(TARGET_BOARD)","PCA10056")
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=1
+    CFLAGS += -DNRF_LOG_DEFAULT_LEVEL=4
 else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
