@@ -298,9 +298,58 @@ bash-3.2$
 
 以上で、ソースファイルからのビルドは完了です。
 
-#### 動作確認
+## 初期動作確認
 
 この時点では、ファームウェアはまだ、Nordic社提供のサンプル「[Heart Rate Application](../../../nRF52840_app/firmwares/sample_blehrs/BUILDHRS.md)」と同等の機能になっています。<br>
-したがって、別途手順書「[サンプルアプリケーション動作確認手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」どおりに動作確認を進めます。
+したがって「[サンプルアプリケーション動作確認手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」に準じた動作確認を進めます。
+
+#### MDBT50Q Dongleを初期化
+
+まずは、別途ドキュメント「[USBブートローダー書込み手順書](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」に従い、MDBT50Q Dongleを初期化します。<br>
+MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯している状態である事を確認します。
+
+<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
+
+#### ファームウェア更新イメージの書込み
+
+`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、ファームウェア更新イメージファイルを転送します。<br>
+具体的には、以下のコマンドを投入します。
+
+```
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+cd ${FIRMWARES_DIR}
+PACKAGE=`ls appkg.PCA10059_*.zip`
+PORTNAME=`ls /dev/tty.usbmodem*`
+echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
+```
+
+下記は実行例になります。
+
+```
+bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+bash-3.2$ cd ${FIRMWARES_DIR}
+bash-3.2$ PACKAGE=`ls appkg.PCA10059_*.zip`
+bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
+bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_01.0.2.13.zip -p /dev/tty.usbmodemD496DB4407941]
+bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
+  [####################################]  100%          
+Device programmed.
+bash-3.2$
+```
+
+#### 書込み完了
+
+書込処理が終了すると、MDBT50Q Dongleが自動的にリセットされ、サンプルアプリケーションがスタートします。<br>
+アイドル時であることを表示する橙色のLEDが点滅していることを確認します。
+
+<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
+
+#### 動作確認
+
+別ドキュメント「[サンプルアプリケーション動作確認手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」の章「サンプルアプリケーションの動作確認」を参考に、動作確認を進めます。<br>
+
+<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0007.jpg" width="150">
 
 動作確認の結果がOKであれば、前SDKバージョンのnRF52840アプリケーションから、ソースコードの移行作業を進めていくことになります。
