@@ -112,6 +112,10 @@ void fido_command_long_push_timer_handler(void *p_context)
 //
 void fido_button_timers_init(void)
 {
+    // Initialize timer module.
+    ret_code_t err_code = app_timer_init();
+    APP_ERROR_CHECK(err_code);
+
     // ボタン長押し検知用タイマー
     fido_button_long_push_timer_init();
 }

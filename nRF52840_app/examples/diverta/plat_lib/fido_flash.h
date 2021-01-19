@@ -101,6 +101,7 @@ extern "C" {
 //
 void fido_flash_event_set_gc_forced(void);
 void fido_flash_fds_event_register(void);
+void fido_flash_storage_init(void);
 
 #ifdef __cplusplus
 }

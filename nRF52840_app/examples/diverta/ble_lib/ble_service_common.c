@@ -7,6 +7,10 @@
 #include "nordic_common.h"
 #include "nrf.h"
 #include "nrf_ble_gatt.h"
+#include "nrf_sdh.h"
+#include "nrf_sdh_ble.h"
+#include "nrf_sdh_soc.h"
+#include "ble.h"
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
 #include "fds.h"
@@ -39,7 +43,14 @@ void ble_service_peripheral_mode_set(bool b)
     ble_peripheral_mode = b;
 }
 
-void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
+//
+// 初期化関連処理（BLE関連）
+// 
+#define APP_BLE_CONN_CFG_TAG                1           /**< A tag identifying the SoftDevice BLE configuration. */
+#define APP_BLE_OBSERVER_PRIO               3           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
+NRF_BLE_GATT_DEF(m_gatt);                               /**< GATT module instance. */
+
+static void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
 {
     ret_code_t err_code;
     switch (p_ble_evt->header.evt_id) {
@@ -120,7 +131,31 @@ void ble_service_common_evt_handler(ble_evt_t const *p_ble_evt, void *p_context)
     }
 }
 
-void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
+static void ble_stack_init(void)
+{
+    ret_code_t err_code;
+
+    err_code = nrf_sdh_enable_request();
+    APP_ERROR_CHECK(err_code);
+
+    // Configure the BLE stack using the default settings.
+    // Fetch the start address of the application RAM.
+    uint32_t ram_start = 0;
+    err_code = nrf_sdh_ble_app_ram_start_get(&ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // Enable BLE stack.
+    err_code = nrf_sdh_ble_enable(&ram_start);
+    APP_ERROR_CHECK(err_code);
+
+    // Register a handler for BLE events.
+    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_service_common_evt_handler, NULL);
+}
+
+static void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_evt_t const *p_evt)
 {
     UNUSED_PARAMETER(p_gatt);
 
@@ -131,6 +166,16 @@ void ble_service_common_gatt_evt_handler(nrf_ble_gatt_t *p_gatt, nrf_ble_gatt_ev
     }
 }
 
+static void gatt_init(void)
+{
+    ret_code_t err_code;
+
+    err_code = nrf_ble_gatt_init(&m_gatt, ble_service_common_gatt_evt_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrf_ble_gatt_att_mtu_central_set(&m_gatt, NRF_SDH_BLE_GATT_MAX_MTU_SIZE);
+    APP_ERROR_CHECK(err_code);
+}
 //
 // ペアリング情報の全削除処理
 //
@@ -271,6 +316,8 @@ static void gap_params_init(void)
 
 void ble_service_common_init(void)
 {
+    ble_stack_init();
+    gatt_init();
     peer_manager_init();
     gap_params_init();
 

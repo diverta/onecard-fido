@@ -21,6 +21,21 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_flash_common.h"
 
 //
+// 初期化関数
+//
+void fido_flash_storage_init(void)
+{
+    // FDSを初期化
+    ret_code_t err_code = fds_init();
+    APP_ERROR_CHECK(err_code);
+
+    // FDSイベント発生後に実行される
+    // FIDO Authenticator固有の処理を
+    // fds_registerで登録
+    fido_flash_fds_event_register();
+}
+
+//
 // 共通関数
 //
 void fido_flash_fds_force_gc(void)
