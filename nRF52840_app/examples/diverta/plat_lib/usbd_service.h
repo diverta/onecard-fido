@@ -61,9 +61,10 @@ extern "C" {
 //
 // 関数群
 //
-void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event));
+void usbd_service_init(void);
 void usbd_service_start(void);
 void usbd_service_do_process(void);
+void usbd_service_pwr_detect_func(void (*event_handler_)(void));
 
 #ifdef __cplusplus
 }

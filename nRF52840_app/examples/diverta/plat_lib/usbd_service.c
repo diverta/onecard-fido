@@ -40,7 +40,7 @@ uint8_t app_usbd_strings_serial[]       = USBD_STRINGS_SERIAL;
 // USB共通処理
 //
 // USBイベントハンドラーの参照を待避
-static void (*event_handler)(app_usbd_event_type_t event);
+static void (*event_handler)(void);
 
 void usbd_service_start(void)
 {
@@ -96,10 +96,20 @@ static void usbd_service_stopped(void)
     }
 }
 
+static void usbd_user_ev_handler_custom(app_usbd_event_type_t event)
+{
+    if (event == APP_USBD_EVT_POWER_DETECTED) {
+        // BLEペリフェラル稼働中にUSB接続された場合は、
+        // ソフトデバイスを再起動し、
+        // BLEペリフェラルを無効化
+        (*event_handler)();
+    }
+}
+
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
     // アプリケーション固有の処理を実行
-    (*event_handler)(event);
+    usbd_user_ev_handler_custom(event);
 
     switch (event) {
         case APP_USBD_EVT_DRV_SOF:
@@ -136,7 +146,7 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
-void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event))
+void usbd_service_init(void)
 {
     ret_code_t ret = nrf_drv_clock_init();
     APP_ERROR_CHECK(ret);
@@ -149,9 +159,6 @@ void usbd_service_init(void (*event_handler_)(app_usbd_event_type_t event))
     };
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
-
-    // USBイベントハンドラーの参照を待避
-    event_handler = event_handler_;
     
     NRF_LOG_DEBUG("usbd_init() done");
 }
@@ -163,4 +170,10 @@ void usbd_service_do_process(void)
 
     // CCIDサービスを稼働させる
     usbd_service_ccid_do_process();
+}
+
+void usbd_service_pwr_detect_func(void (*event_handler_)(void))
+{
+    // USBイベントハンドラーの参照を待避
+    event_handler = event_handler_;
 }
