@@ -34,10 +34,10 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
-    if (ret == FDS_SUCCESS) {
+    if (ret == NRF_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
@@ -45,7 +45,7 @@ static bool write_random_vector(uint32_t *p_fds_record_buffer)
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &m_fds_record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }
@@ -73,7 +73,7 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
     ret_code_t err_code;
 
     err_code = fds_record_open(record_desc, &flash_record);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
@@ -83,7 +83,7 @@ static bool read_random_vector_record(fds_record_desc_t *record_desc, uint32_t *
     memcpy(data_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
@@ -96,7 +96,7 @@ static bool read_random_vector(uint32_t *p_fds_record_buffer)
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret_code_t ret = fds_record_find(FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, &record_desc, &ftok);
-    if (ret == FDS_SUCCESS) {
+    if (ret == NRF_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
         if (read_random_vector_record(&record_desc, p_fds_record_buffer) == false) {
             // データ格納失敗時

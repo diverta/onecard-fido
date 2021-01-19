@@ -26,7 +26,7 @@ bool fido_flash_token_counter_delete(void)
 {
     // トークンカウンターをFlash ROM領域から削除
     ret_code_t err_code = fds_file_delete(FIDO_TOKEN_COUNTER_FILE_ID);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
         return false;
     }
@@ -43,14 +43,14 @@ static bool token_counter_record_find(uint8_t *p_unique_key, fds_record_desc_t *
     fds_find_token_t  ftok = {0};
     do {
         ret = fds_record_find(FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, record_desc, &ftok);
-        if (ret == FDS_SUCCESS) {
+        if (ret == NRF_SUCCESS) {
             // 同じキーのレコードかどうか判定 (先頭32バイトを比較)
             fido_flash_fds_record_get(record_desc, m_token_counter_record_buffer);
             if (strncmp((char *)p_unique_key, (char *)m_token_counter_record_buffer, 32) == 0) {
                 found = true;
             }
         }
-    } while (ret == FDS_SUCCESS && found == false);
+    } while (ret == NRF_SUCCESS && found == false);
 
     return found;
 }
@@ -110,7 +110,7 @@ bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counte
     if (found == true) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
@@ -118,7 +118,7 @@ bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counte
     } else {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }

@@ -28,7 +28,7 @@ void fido_flash_fds_force_gc(void)
     // FDSガベージコレクションを強制実行
     // NGの場合はシステムエラー扱い（処理続行不可）
     ret_code_t err_code = fds_gc();
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         APP_ERROR_CHECK(err_code);
     }
 
@@ -44,7 +44,7 @@ bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_
     ret_code_t err_code;
 
     err_code = fds_record_open(record_desc, &flash_record);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_record_open returns 0x%02x ", err_code);
         return false;
     }
@@ -54,7 +54,7 @@ bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_
     memcpy(record_buffer, data, data_length * sizeof(uint32_t));
 
     err_code = fds_record_close(record_desc);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_record_close returns 0x%02x ", err_code);
         return false;	
     }
@@ -71,7 +71,7 @@ static bool fido_flash_fds_record_find(uint16_t file_id, uint16_t record_key, si
     // Flash ROMから既存データを検索し、
     fds_find_token_t ftok = {0};
     ret_code_t ret = fds_record_find(file_id, record_key, record_desc, &ftok);
-    if (ret == FDS_SUCCESS) {
+    if (ret == NRF_SUCCESS) {
         // 見つかった場合は is_exist に true を設定し、
         // Flash ROMに登録されているデータを読み出す
         *is_exist = true;
@@ -115,7 +115,7 @@ bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t r
     if (found == true) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
@@ -123,7 +123,7 @@ bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t r
     } else {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }
@@ -150,7 +150,7 @@ bool fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
     // nRF5 SDK経由でFlash ROM統計情報を取得
     fds_stat_t stat = {0};
     ret_code_t ret = fds_stat(&stat);
-    if (ret != FDS_SUCCESS) {
+    if (ret != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_stat returns 0x%02x ", ret);
         return false;
     }

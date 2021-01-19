@@ -318,7 +318,7 @@ bool ccid_flash_piv_object_data_erase(void)
 {
     // 全てのPIVオブジェクトデータをFlash ROM領域から削除
     ret_code_t err_code = fds_file_delete(PIV_DATA_OBJ_FILE_ID);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
         return false;
     }

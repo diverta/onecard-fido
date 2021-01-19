@@ -38,7 +38,8 @@ NRF_LOG_MODULE_REGISTER();
  * one byte for report ID. This means that output report size is limited
  * to 64 bytes.
  */
-#define REPORT_OUT_MAXSIZE  63
+#define REPORT_OUT_MAXSIZE      63
+#define REPORT_FEATURE_MAXSIZE  63
 
 /**
  * @brief List of HID generic class endpoints.
@@ -94,6 +95,7 @@ APP_USBD_HID_GENERIC_GLOBAL_DEF(m_app_hid_generic,
                                 reps,
                                 REPORT_IN_QUEUE_SIZE,
                                 REPORT_OUT_MAXSIZE,
+                                REPORT_FEATURE_MAXSIZE,
                                 APP_USBD_HID_SUBCLASS_NONE,
                                 APP_USBD_HID_PROTO_GENERIC);
 

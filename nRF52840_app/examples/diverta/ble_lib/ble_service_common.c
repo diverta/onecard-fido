@@ -143,7 +143,7 @@ bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
 
     // 全てのペアリング情報を削除
     ret_code_t err_code = pm_peers_delete();
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("pm_peers_delete returns 0x%02x ", err_code);
         return false;
     }

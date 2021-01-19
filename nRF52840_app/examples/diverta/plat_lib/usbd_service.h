@@ -31,14 +31,14 @@ extern "C" {
 #define APP_USBD_CORE_DEVICE_DESCRIPTOR  {                                                               \
    .bLength = sizeof(app_usbd_descriptor_device_t),    /* descriptor size */                             \
    .bDescriptorType = APP_USBD_DESCRIPTOR_DEVICE,      /* descriptor type */                             \
-   .bcdUSB = APP_USBD_BCD_VER_MAKE(2,0),               /* USB BCD version: 2.0 */                        \
+   .bcdUSB = APP_USBD_BCD_VER_MAKE(2,0,0),             /* USB BCD version: 2.0 */                        \
    .bDeviceClass = 0,                                  /* device class: 0 - specified by interface */    \
    .bDeviceSubClass = 0,                               /* device subclass: 0 - specified by interface */ \
    .bDeviceProtocol = 0,                               /* device protocol: 0 - specified by interface */ \
    .bMaxPacketSize0 = NRF_DRV_USBD_EPSIZE,             /* endpoint size: fixed to: NRF_DRV_USBD_EPSIZE*/ \
    .idVendor =  USBD_VID,                              /* Vendor ID*/                                    \
    .idProduct = USBD_PID,                              /* Product ID*/                                   \
-   .bcdDevice = APP_USBD_BCD_VER_MAKE(0,1),            /* Device version BCD */                          \
+   .bcdDevice = APP_USBD_BCD_VER_MAKE(0,1,0),          /* Device version BCD */                          \
    .iManufacturer = APP_USBD_STRING_ID_MANUFACTURER,   /* String ID: manufacturer */                     \
    .iProduct = APP_USBD_STRING_ID_PRODUCT,             /* String ID: product */                          \
    .iSerialNumber = APP_USBD_STRING_ID_SERIAL,         /* String ID: serial */                           \

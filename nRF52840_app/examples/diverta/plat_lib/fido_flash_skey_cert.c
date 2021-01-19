@@ -55,7 +55,7 @@ bool fido_flash_skey_cert_delete(void)
 {
     // 秘密鍵／証明書をFlash ROM領域から削除
     ret_code_t err_code = fds_file_delete(FIDO_SKEY_CERT_FILE_ID);
-    if (err_code != FDS_SUCCESS) {
+    if (err_code != NRF_SUCCESS) {
         NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", err_code);
         return false;
     }
@@ -72,7 +72,7 @@ bool fido_flash_skey_cert_read(void)
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret_code_t ret = fds_record_find(FIDO_SKEY_CERT_FILE_ID, FIDO_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
-    if (ret == FDS_SUCCESS) {
+    if (ret == NRF_SUCCESS) {
         // レコードが存在するときは領域にデータを格納
         if (fido_flash_fds_record_get(&record_desc, skey_cert_data) == false) {
             return false;
@@ -139,10 +139,10 @@ bool fido_flash_skey_cert_write(void)
     fds_record_desc_t record_desc;
     fds_find_token_t  ftok = {0};
     ret = fds_record_find(FIDO_SKEY_CERT_FILE_ID, FIDO_SKEY_CERT_RECORD_KEY, &record_desc, &ftok);
-    if (ret == FDS_SUCCESS) {
+    if (ret == NRF_SUCCESS) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &m_fds_record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
@@ -150,7 +150,7 @@ bool fido_flash_skey_cert_write(void)
     } else if (ret == FDS_ERR_NOT_FOUND) {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &m_fds_record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }

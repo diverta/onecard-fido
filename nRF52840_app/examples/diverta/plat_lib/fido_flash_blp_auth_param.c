@@ -32,7 +32,7 @@ static bool blp_auth_param_record_find(fds_record_desc_t *record_desc)
     // 見つかった場合は true を戻す
     fds_find_token_t  ftok = {0};
     ret_code_t ret = fds_record_find(FIDO_BLP_AUTH_PARAM_FILE_ID, FIDO_BLP_AUTH_PARAM_RECORD_KEY, record_desc, &ftok);
-    if (ret != FDS_SUCCESS) {
+    if (ret != NRF_SUCCESS) {
         return false;
     }
 
@@ -99,7 +99,7 @@ bool fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec, 
     if (found == true) {
         // 既存のデータが存在する場合は上書き
         ret = fds_record_update(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_update returns 0x%02x ", ret);
             return false;
         }
@@ -107,7 +107,7 @@ bool fido_flash_blp_auth_param_write(uint8_t *p_uuid_string, uint32_t scan_sec, 
     } else {
         // 既存のデータが存在しない場合は新規追加
         ret = fds_record_write(&record_desc, &record);
-        if (ret != FDS_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
+        if (ret != NRF_SUCCESS && ret != FDS_ERR_NO_SPACE_IN_FLASH) {
             NRF_LOG_ERROR("fds_record_write returns 0x%02x ", ret);
             return false;
         }

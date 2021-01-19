@@ -318,7 +318,7 @@ static void get_bluetooth_addr_connected(uint16_t peer_id)
     pm_peer_data_bonding_t bond_data;
 
     peer_data.p_bonding_data = &bond_data;
-    uint16_t buf_size = sizeof(bond_data);
+    uint32_t buf_size = sizeof(bond_data);
     ret_code_t err_code = pds_peer_data_read(peer_id, PM_PEER_DATA_ID_BONDING, &peer_data, &buf_size);
     if (err_code == NRF_SUCCESS) {
         bluetooth_addr = bond_data.peer_ble_id.id_addr_info;

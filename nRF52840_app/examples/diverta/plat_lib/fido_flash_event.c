@@ -130,7 +130,7 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
 static void fido_command_on_fs_evt(fds_evt_t const *p_evt)
 {
     // FDS処理が失敗時
-    if (p_evt->result != FDS_SUCCESS) {
+    if (p_evt->result != NRF_SUCCESS) {
         fido_flash_event_result_failure();
         return;
     }
