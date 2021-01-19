@@ -46,6 +46,7 @@
  * @ref srvlib_conn_params module.
  */
 
+#ifdef ORIGINAL_MAIN
 #include <stdint.h>
 #include <string.h>
 #include "nordic_common.h"
@@ -157,6 +158,19 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
     {BLE_UUID_BATTERY_SERVICE,              BLE_UUID_TYPE_BLE},
     {BLE_UUID_DEVICE_INFORMATION_SERVICE,   BLE_UUID_TYPE_BLE}
 };
+#else
+
+#include "nordic_common.h"
+#include "nrf_ble_lesc.h"
+#include "nrf_pwr_mgmt.h"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
+#include "app_error.h"
+
+#define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+
+#endif 
 
 
 /**@brief Callback function for asserts in the SoftDevice.
@@ -176,6 +190,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
 }
 
 
+#ifdef ORIGINAL_MAIN
 /**@brief Clear bond information from persistent storage.
  */
 static void delete_bonds(void)
@@ -905,6 +920,7 @@ static void buttons_leds_init(bool * p_erase_bonds)
 
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 }
+#endif
 
 
 /**@brief Function for initializing the nrf log module.
@@ -945,11 +961,19 @@ static void idle_state_handle(void)
     }
 }
 
+// HW依存処理関連
+#include "fido_platform.h"
+#include "application_init.h"
+#include "ble_service_common.h"
+#include "fido_board.h"
+#include "fido_flash.h"
+#include "usbd_service.h"
 
 /**@brief Function for application main entry.
  */
 int main(void)
 {
+#ifdef ORIGINAL_MAIN
     bool erase_bonds;
 
     // Initialize.
@@ -970,10 +994,31 @@ int main(void)
     NRF_LOG_INFO("Heart Rate Sensor example started.");
     application_timers_start();
     advertising_start(erase_bonds);
+#else
+    // 基本機能の初期化
+    log_init();
+    usbd_service_init();
+    usbd_service_pwr_detect_func(ble_service_common_disable_peripheral);
+    fido_button_timers_init();
+    power_management_init();
+    // FDS関連の初期化
+    fido_flash_storage_init();
+    // BLE関連の初期化
+    ble_service_common_init();
+    if (fido_ble_pairing_mode_get() == false) {
+        // ペアリングモードでない場合は
+        // USBデバイスを開始
+        usbd_service_start();
+    }
+    // アプリケーション稼働に必要な初期化処理を開始
+    application_init_start();
+#endif
 
     // Enter main loop.
     for (;;)
     {
+        // 業務処理を実行
+        application_main();
         idle_state_handle();
     }
 }
