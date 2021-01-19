@@ -77,7 +77,12 @@ MDBT50Q Dongle用の独自定義、独自実装は下記ファイルになりま
 
 今回の作成にあたっては、[`<リポジトリールート>/nRF52840_app/components`](../../../nRF52840_app/components)配下に配置いたしました。
 
-#### メイクファイルの修正
+#### 設定ファイルの追加
+
+本件ではサンプルアプリケーションの設定ファイル「`sdk_config.h`」を修正せず、代わりにファイル「`app_config.h`」にカスタマイズされた設定を記述することとしております。
+ファイルは「`sdk_config.h`」と同じフォルダー「`nRF52840_app/examples/diverta/secure_device_app/pca10056/s140/config/`」配下に格納します。
+
+## メイクファイルの修正
 
 メイクファイル「[Makefile](../../../nRF52840_app/examples/diverta/secure_device_app/pca10056/s140/armgcc/Makefile)」について、オリジナルから修正を加えます。
 
@@ -102,6 +107,9 @@ ifeq ("$(TARGET_BOARD)","PCA10056")
 else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
+
+# for RSA & DES
+CFLAGS += -DMBEDTLS_RSA_C -DMBEDTLS_OID_C -DMBEDTLS_DES_C
 
 # for mbedtls_rsa_private
 CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64

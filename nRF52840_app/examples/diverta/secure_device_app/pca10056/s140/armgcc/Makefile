@@ -23,6 +23,9 @@ else
     CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
 endif
 
+# for RSA & DES
+CFLAGS += -DMBEDTLS_RSA_C -DMBEDTLS_OID_C -DMBEDTLS_DES_C
+
 # for mbedtls_rsa_private
 CFLAGS += -DMEMORY_MANAGER_XLARGE_BLOCK_COUNT=64
 
@@ -39,7 +42,6 @@ CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
-DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
 DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
 
