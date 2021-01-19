@@ -19,7 +19,7 @@
 #include "fido_platform.h"
 
 // 自動認証パラメーター設定関連
-#include "demo_ble_peripheral_auth.h"
+#include "ble_peripheral_auth.h"
 
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
@@ -125,8 +125,8 @@ static void command_preference_parameter_maintenance(void)
         case 1:
         case 2:
         case 3:
-            demo_ble_peripheral_auth_param_request(data, length);
-            ret = demo_ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
+            ble_peripheral_auth_param_request(data, length);
+            ret = ble_peripheral_auth_param_response(cmd_type, buffer, &buffer_size);
             break;
         default:
             fido_log_error("Unknown preference parameter maintenance command type");
