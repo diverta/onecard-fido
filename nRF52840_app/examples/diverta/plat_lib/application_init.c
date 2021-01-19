@@ -173,6 +173,9 @@ static void application_init_resume(void)
 
 void application_main(void)
 {
+    // USBデバイス処理を実行
+    while (app_usbd_event_queue_process());
+
     switch (application_init_status) {
         case APP_INI_STAT_EN_BLEADV:
             // BLEペリフェラルモード遷移判定処理

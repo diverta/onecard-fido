@@ -1,5 +1,5 @@
-/* 
- * File:   demo_ble_peripheral_auth.c
+/*
+ * File:   ble_peripheral_auth.c
  * Author: makmorit
  *
  * Created on 2019/10/22, 11:48
@@ -21,8 +21,8 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// デモ機能インターフェース
-#include "demo_ble_peripheral_auth.h"
+// 近接認証機能
+#include "ble_peripheral_auth.h"
 
 // for debug log and hexdump
 #define LOG_HEXDUMP_DEBUG_ADVDATA   false
@@ -60,7 +60,7 @@ static ADV_STAT_INFO_T *adv_stat_info_scan_matched = NULL;
 static void perform_secure_connection(bool is_register, ADV_STAT_INFO_T *info);
 static void resume_after_secure_connection(bool);
 static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, size_t uuid_bytes_size, uint8_t *connected_address);
-static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
+static bool ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param);
 
 static void parse_scan_param_flags(uint32_t *param_service_uuid_scan_enable)
 {
@@ -77,8 +77,8 @@ static void generate_scan_param_flags(uint32_t *param_service_uuid_scan_enable)
     // 自動認証有効化フラグ、ペアリング要否フラグを、
     // 先頭から順に uint32_t 形式で１ワード内に同梱
     uint8_t param_array[] = {
-        service_uuid_scan_enable, 
-        service_uuid_need_pairing, 
+        service_uuid_scan_enable,
+        service_uuid_need_pairing,
         0x00, 0x00};
     memcpy(param_service_uuid_scan_enable, param_array, sizeof(param_array));
 }
@@ -145,19 +145,19 @@ static void clear_scan_parameter(void)
     memset(scan_param_bytes, 0, sizeof(scan_param_bytes));
 }
 
-void demo_ble_peripheral_auth_param_init(void)
+void ble_peripheral_auth_param_init(void)
 {
     // 初期値を設定
     init_auth_param();
 
     // Flash ROMに設定されている場合は読み出す
     restore_auth_param();
-    
+
     // BLEスキャンパラメーターを事前にクリア
     clear_scan_parameter();
 }
 
-size_t demo_ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
+size_t ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
 {
     // BLE自動認証機能用のスキャンパラメーターを、
     // 引数で指定された領域に格納
@@ -220,7 +220,7 @@ static void resume_function_after_scan(bool is_register)
         char *p_uuid_string = ble_service_central_stat_uuid_string(scan_param_bytes);
         convert_uuid_string_to_upper(p_uuid_string, service_uuid_string);
     }
-    fido_log_debug("BLE peripheral device (for FIDO %s) service UUID for scan=%s", 
+    fido_log_debug("BLE peripheral device (for FIDO %s) service UUID for scan=%s",
         is_register ? "register" : "authenticate", service_uuid_string);
 
     // スキャン対象サービスUUIDが、スキャン統計情報に含まれているかどうかチェック
@@ -233,7 +233,7 @@ static void resume_function_after_scan(bool is_register)
     } else {
         // 見つかった時の処理
         // 複数スキャンされた場合は、最もRSSI値が大きいBLEデバイスが戻ります。
-        fido_log_debug("BLE peripheral device (for FIDO %s) scanned (NAME=%s, ADDR=%s)", 
+        fido_log_debug("BLE peripheral device (for FIDO %s) scanned (NAME=%s, ADDR=%s)",
             is_register ? "register" : "authenticate",
             info->dev_name, ble_service_central_stat_btaddr_string(info->peer_addr.addr));
 
@@ -303,14 +303,14 @@ static bool register_or_match_scan_param(bool is_register, uint8_t *uuid_bytes, 
     }
 
     // マッチング結果を戻す
-    fido_log_debug("BLE peripheral device (for FIDO %s) %s (Bluetooth address=%s)", 
+    fido_log_debug("BLE peripheral device (for FIDO %s) %s (Bluetooth address=%s)",
         is_register ? "register" : "authenticate",
         found ? "found" : "not found",
         ble_service_central_stat_btaddr_string(connected_address));
     return found;
 }
 
-bool demo_ble_peripheral_auth_scan_enable(void)
+bool ble_peripheral_auth_scan_enable(void)
 {
     if (ble_service_peripheral_mode()) {
         // BLEペリフェラルモードである場合は
@@ -329,18 +329,18 @@ bool demo_ble_peripheral_auth_scan_enable(void)
     return true;
 }
 
-bool demo_ble_peripheral_auth_start_scan(void *context)
+bool ble_peripheral_auth_start_scan(void *context)
 {
     if (context != NULL) {
         // ログイン処理の場合は、
         // BLEスキャンパラメーターを引き渡す
-        return demo_ble_peripheral_auth_start_second_scan((uint8_t *)context);
+        return ble_peripheral_auth_start_second_scan((uint8_t *)context);
     }
-    
+
     // BLEスキャンパラメーターを事前にクリア
     clear_scan_parameter();
 
-    if (demo_ble_peripheral_auth_scan_enable() == false) {
+    if (ble_peripheral_auth_scan_enable() == false) {
         // BLE自動認証が利用できない場合は false を戻し終了
         return false;
     }
@@ -351,14 +351,14 @@ bool demo_ble_peripheral_auth_start_scan(void *context)
     return true;
 }
 
-static bool demo_ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param)
+static bool ble_peripheral_auth_start_second_scan(uint8_t *p_scan_param)
 {
     // BLEスキャンパラメーターが設定されていない場合は終了
     size_t param_size = (size_t)p_scan_param[0];
     if (param_size == 0) {
         return false;
     }
-    
+
     // BLEスキャンパラメーターを保持
     // （バイト長を保持している先頭１バイトは不要）
     memcpy(scan_param_bytes, p_scan_param + 1, param_size);
@@ -375,7 +375,7 @@ void parse_auth_param_request(uint8_t *request, size_t request_size)
 {
     // Flash ROMに設定されている値を読み出す
     // 未設定の場合は初期値が設定されます
-    demo_ble_peripheral_auth_param_init();
+    ble_peripheral_auth_param_init();
 
     // CSV各項目を分解
     // CSVは、リクエストの２バイト目以降
@@ -405,7 +405,7 @@ void parse_auth_param_request(uint8_t *request, size_t request_size)
     }
 }
 
-void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
+void ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
 {
     fido_log_info("BLE peripheral auth param request:");
     fido_log_print_hexdump_debug(request, request_size);
@@ -416,7 +416,7 @@ void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_siz
             // 読込の場合
             // Flash ROMに設定されている値を読み出す
             // 未設定の場合は初期値が設定されます
-            demo_ble_peripheral_auth_param_init();
+            ble_peripheral_auth_param_init();
             break;
         case 2:
             // 書出の場合
@@ -437,7 +437,7 @@ void demo_ble_peripheral_auth_param_request(uint8_t *request, size_t request_siz
     }
 }
 
-bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size)
+bool ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size)
 {
     // 自動認証有効化フラグ、ペアリング要否フラグ
     // ＝登録ワードの先頭バイトから順に１ワード内に設定
@@ -451,7 +451,7 @@ bool demo_ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response
     //   <自動認証有効化フラグ>,<スキャン対象サービスUUID>,<スキャン秒数>
     //  （解除時は、UUIDに、長さ０の文字列を設定）
     //
-    sprintf((char *)response, "%ld,%s,%d", 
+    sprintf((char *)response, "%ld,%s,%d",
         param_service_uuid_scan_enable, service_uuid_string, service_uuid_scan_sec);
     *response_size = strlen((char *)response);
     return true;
