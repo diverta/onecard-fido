@@ -156,7 +156,7 @@ $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
   LINKER_SCRIPT  := secure_device_app_gcc_nrf52.ld
 ```
 
-#### ターゲット変更（４箇所あります）
+#### ターゲット変更（５箇所あります）
 
 【修正前】
 ```
@@ -368,3 +368,270 @@ bash-3.2$
 <img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0007.jpg" width="150">
 
 動作確認の結果がOKであれば、前SDKバージョンのnRF52840アプリケーションから、ソースコードの移行作業を進めていくことになります。
+
+## 業務アプリケーションの移行
+
+nRF52840アプリケーションの業務機能が動作するように、サンプルアプリケーションのメインプログラムを書き換えるとともに、業務アプリケーションのソースコード群を移行します。
+
+#### メインプログラムの修正
+
+ファイル[`main.c`](../../../nRF52840_app/examples/diverta/secure_device_app/main.c)を以下のように修正します。<br>
+この際、オリジナルのソースコードは`#ifdef ORIGINAL_MAIN〜#endif`の構文により無効化（コメントアウト）するようにします。
+
+<b>【追加した行】</b>
+```
+include "nordic_common.h"
+#include "nrf_ble_lesc.h"
+#include "nrf_pwr_mgmt.h"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
+#include "app_error.h"
+：
+// HW依存処理関連
+#include "fido_platform.h"
+#include "application_init.h"
+#include "ble_service_common.h"
+#include "fido_board.h"
+#include "fido_flash.h"
+#include "usbd_service.h"
+：
+// 基本機能の初期化
+log_init();
+usbd_service_init();
+usbd_service_pwr_detect_func(ble_service_common_disable_peripheral);
+fido_button_timers_init();
+power_management_init();
+// FDS関連の初期化
+fido_flash_storage_init();
+// BLE関連の初期化
+ble_service_common_init();
+if (fido_ble_pairing_mode_get() == false) {
+    // ペアリングモードでない場合は
+    // USBデバイスを開始
+    usbd_service_start();
+}
+// アプリケーション稼働に必要な初期化処理を開始
+application_init_start();
+：
+// Enter main loop.
+for (;;)
+{
+    // 業務処理を実行
+    application_main();
+    idle_state_handle();
+}
+```
+
+#### 業務アプリケーションの移行
+
+メイクファイル[`Makefile`](../../../nRF52840_app/examples/diverta/secure_device_app/pca10056/s140/armgcc/Makefile)に、業務アプリケーションのソースコード群を追記します。
+
+<b>【追加した行】</b>
+```
+# Customized sources
+SRC_FILES += \
+ $(SDK_ROOT)/components/ble/nrf_ble_scan/nrf_ble_scan.c \
+ $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_aes.c \
+ $(SDK_ROOT)/components/libraries/crypto/backend/mbedtls/mbedtls_backend_init.c \
+ $(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
+ $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
+ $(SDK_ROOT)/components/libraries/usbd/class/hid/app_usbd_hid.c \
+ $(SDK_ROOT)/external/mbedtls/library/aes.c \
+ $(SDK_ROOT)/external/mbedtls/library/aesni.c \
+ $(SDK_ROOT)/external/mbedtls/library/bignum.c \
+ $(SDK_ROOT)/external/mbedtls/library/cipher.c \
+ $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
+ $(SDK_ROOT)/external/mbedtls/library/des.c \
+ $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
+ $(SDK_ROOT)/external/mbedtls/library/platform.c \
+ $(SDK_ROOT)/external/mbedtls/library/platform_util.c \
+ $(SDK_ROOT)/external/mbedtls/library/rsa_internal.c \
+ $(SDK_ROOT)/external/mbedtls/library/rsa.c \
+ $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_power.c \
+ $(SDK_ROOT)/integration/nrfx/legacy/nrf_drv_twi.c \
+ $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_power.c \
+ $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twi.c \
+ $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_twim.c \
+ $(SDK_ROOT)/modules/nrfx/drivers/src/nrfx_usbd.c \
+ $(SDK_CUSTOM_ROOT)/components/libraries/usbd/app_usbd_core.c \
+ $(SDK_CUSTOM_ROOT)/components/libraries/usbd/class/hid/generic/app_usbd_hid_generic.c \
+ $(BLELIB_DIR)/ble_peripheral_auth.c \
+ $(BLELIB_DIR)/ble_service_central.c \
+ $(BLELIB_DIR)/ble_service_central_stat.c \
+ $(BLELIB_DIR)/ble_service_common.c \
+ $(BLELIB_DIR)/ble_service_peripheral.c \
+ $(BLELIB_DIR)/fido_ble_event.c \
+ $(BLELIB_DIR)/fido_ble_pairing.c \
+ $(BLELIB_DIR)/fido_ble_send_retry.c \
+ $(BLELIB_DIR)/fido_ble_service.c \
+ $(CIDLIB_DIR)/ccid_apdu.c \
+ $(CIDLIB_DIR)/ccid_main.c \
+ $(CIDLIB_DIR)/ccid_piv.c \
+ $(CIDLIB_DIR)/ccid_piv_general_auth.c \
+ $(CIDLIB_DIR)/ccid_piv_authenticate.c \
+ $(CIDLIB_DIR)/ccid_piv_object.c \
+ $(CIDLIB_DIR)/ccid_piv_object_import.c \
+ $(CIDLIB_DIR)/ccid_piv_pin.c \
+ $(CIDLIB_DIR)/ccid_piv_pin_auth.c \
+ $(CIDLIB_DIR)/ccid_piv_pin_update.c \
+ $(CIDLIB_DIR)/ccid_ykpiv.c \
+ $(CIDLIB_DIR)/ccid_ykpiv_import_key.c \
+ $(CT2LIB_DIR)/ctap2_cbor_authgetinfo.c \
+ $(CT2LIB_DIR)/ctap2_cbor_encode.c \
+ $(CT2LIB_DIR)/ctap2_cbor_parse.c \
+ $(CT2LIB_DIR)/ctap2_client_pin.c \
+ $(CT2LIB_DIR)/ctap2_client_pin_token.c \
+ $(CT2LIB_DIR)/ctap2_common.c \
+ $(CT2LIB_DIR)/ctap2_extension_hmac_secret.c \
+ $(CT2LIB_DIR)/ctap2_get_assertion.c \
+ $(CT2LIB_DIR)/ctap2_make_credential.c \
+ $(CT2LIB_DIR)/ctap2_pubkey_credential.c \
+ $(FD2LIB_DIR)/fido_ble_receive.c \
+ $(FD2LIB_DIR)/fido_ble_send.c \
+ $(FD2LIB_DIR)/fido_command.c \
+ $(FD2LIB_DIR)/fido_command_common.c \
+ $(FD2LIB_DIR)/fido_common.c \
+ $(FD2LIB_DIR)/fido_ctap2_command.c \
+ $(FD2LIB_DIR)/fido_hid_channel.c \
+ $(FD2LIB_DIR)/fido_hid_receive.c \
+ $(FD2LIB_DIR)/fido_hid_send.c \
+ $(FD2LIB_DIR)/fido_maintenance.c \
+ $(FD2LIB_DIR)/fido_maintenance_cryption.c \
+ $(FD2LIB_DIR)/fido_maintenance_skcert.c \
+ $(FD2LIB_DIR)/fido_receive_apdu.c \
+ $(FD2LIB_DIR)/fido_u2f_command.c \
+ $(PLTLIB_DIR)/application_init.c \
+ $(PLTLIB_DIR)/ccid_crypto.c \
+ $(PLTLIB_DIR)/ccid_flash_piv_object.c \
+ $(PLTLIB_DIR)/fido_board.c \
+ $(PLTLIB_DIR)/fido_crypto.c \
+ $(PLTLIB_DIR)/fido_crypto_aes_cbc_256.c \
+ $(PLTLIB_DIR)/fido_crypto_keypair.c \
+ $(PLTLIB_DIR)/fido_crypto_sskey.c \
+ $(PLTLIB_DIR)/fido_flash_blp_auth_param.c \
+ $(PLTLIB_DIR)/fido_flash_client_pin_store.c \
+ $(PLTLIB_DIR)/fido_flash_common.c \
+ $(PLTLIB_DIR)/fido_flash_event.c \
+ $(PLTLIB_DIR)/fido_flash_pairing_mode.c \
+ $(PLTLIB_DIR)/fido_flash_password.c \
+ $(PLTLIB_DIR)/fido_flash_skey_cert.c \
+ $(PLTLIB_DIR)/fido_flash_token_counter.c \
+ $(PLTLIB_DIR)/fido_status_indicator.c \
+ $(PLTLIB_DIR)/fido_timer.c \
+ $(PLTLIB_DIR)/fido_twi.c \
+ $(PLTLIB_DIR)/usbd_service.c \
+ $(PLTLIB_DIR)/usbd_service_bos.c \
+ $(PLTLIB_DIR)/usbd_service_ccid.c \
+ $(PLTLIB_DIR)/usbd_service_hid.c \
+ $(U2FLIB_DIR)/u2f_authenticate.c \
+ $(U2FLIB_DIR)/u2f_keyhandle.c \
+ $(U2FLIB_DIR)/u2f_register.c \
+ $(U2FLIB_DIR)/u2f_signature.c \
+
+# Source files to targets (Boards with ATECC608A)
+SCIC_DIR := $(PROJ_DIR)/../../../../SECUREIC
+ATELIB_DIR := $(SCIC_DIR)/atecc_lib
+SRC_FILES += \
+ $(ATELIB_DIR)/atecc.c \
+ $(ATELIB_DIR)/atecc_aes.c \
+ $(ATELIB_DIR)/atecc_command.c \
+ $(ATELIB_DIR)/atecc_device.c \
+ $(ATELIB_DIR)/atecc_iface.c \
+ $(ATELIB_DIR)/atecc_nonce.c \
+ $(ATELIB_DIR)/atecc_priv.c \
+ $(ATELIB_DIR)/atecc_read.c \
+ $(ATELIB_DIR)/atecc_setup.c \
+ $(ATELIB_DIR)/atecc_sign.c \
+ $(ATELIB_DIR)/atecc_util.c \
+ $(ATELIB_DIR)/atecc_write.c \
+ $(PLTLIB_DIR)/atecc608a_i2c_hal.c \
+
+INC_FOLDERS += \
+ $(SDK_ROOT)/components/ble/nrf_ble_scan \
+ $(SDK_ROOT)/components/libraries/bootloader \
+ $(TINYCBOR_ROOT)/src \
+ $(ATELIB_DIR) \
+ $(BLELIB_DIR) \
+ $(CIDLIB_DIR) \
+ $(CT2LIB_DIR) \
+ $(FD2LIB_DIR) \
+ $(PLTLIB_DIR) \
+ $(U2FLIB_DIR) \
+```
+
+#### 再ビルドの実行
+
+NetBeansで再度、ビルドを実行し、ファームウェア更新イメージファイル`appkg.PCA10059_01.0.2.13.zip`を再作成します。
+
+<img src="assets01/0011.jpg" width="600">
+
+
+## 再ビルド後の動作確認
+
+USBブートローダー（ファームウェアを書き込むためのプログラム）は、nRF52840アプリケーションからのみ起動が可能、という仕様になっております。<br>
+（不用意にアプリケーションの書込み／消去ができないようにするための措置）<br>
+したがって、ファームウェア更新イメージを再度書込むためには、いったんMDBT50Q Dongleを初期化する必要があります。
+
+#### MDBT50Q Dongleを初期化
+
+まずは、別途ドキュメント「[USBブートローダー書込み手順書](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」に従い、MDBT50Q Dongleを初期化します。<br>
+MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯している状態である事を確認します。
+
+<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
+
+
+#### ファームウェア更新イメージの書込み
+
+`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、再ビルドされたファームウェア更新イメージファイルを転送します。<br>
+具体的には、以下のコマンドを投入します。
+
+```
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+cd ${FIRMWARES_DIR}
+PACKAGE=`ls appkg.PCA10059_*.zip`
+PORTNAME=`ls /dev/tty.usbmodem*`
+echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
+```
+
+下記は実行例になります。
+
+```
+bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+bash-3.2$ cd ${FIRMWARES_DIR}
+bash-3.2$ PACKAGE=`ls appkg.PCA10059_*.zip`
+bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
+bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_01.0.2.13.zip -p /dev/tty.usbmodemD496DB4407941]
+bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
+  [####################################]  100%          
+Device programmed.
+bash-3.2$
+```
+
+#### 書込み完了
+
+書込処理が終了すると、MDBT50Q Dongleが自動的にリセットされ、サンプルアプリケーションがスタートします。<br>
+今度は、アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
+
+<img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="200">
+
+#### ブートローダーモード遷移機能の確認
+
+この状態のMDBT50Q Dongleは、nRF52840アプリケーションが稼働している状況となっております。<br>
+他方、MDBT50Q DongleはすでにUSBブートローダーが書き込まれているため、管理ツールを使用し、後日、nRF52840アプリケーションの更新ができるようになります。
+
+ここでは管理ツールを使用し、ブートローダーモードに遷移できるかどうか確認を行います。<br>
+手順につきましては別ドキュメント「[ブートローダーモード遷移手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」をご参照ください。
+
+ブートローダーモードに遷移すると、MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯します。
+
+<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
+
+確認が終わったら、いったんMDBT50Q Dongleを取り外し、再度PCのUSBポートに装着します。<br>
+今度は、アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
+
+<img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="200">
+
+以上でブートローダーモード遷移機能の確認は完了です。
