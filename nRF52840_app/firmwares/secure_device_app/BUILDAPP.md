@@ -569,69 +569,11 @@ NetBeansで再度、ビルドを実行し、ファームウェア更新イメー
 
 ## 再ビルド後の動作確認
 
-USBブートローダー（ファームウェアを書き込むためのプログラム）は、nRF52840アプリケーションからのみ起動が可能、という仕様になっております。<br>
-（不用意にアプリケーションの書込み／消去ができないようにするための措置）<br>
-したがって、ファームウェア更新イメージを再度書込むためには、いったんMDBT50Q Dongleを初期化する必要があります。
+別ドキュメント「[nRF52840アプリケーション初回導入手順書](../../../nRF52840_app/firmwares/secure_device_app/WRITEAPP.md)」に従い、MDBT50Q Dongleに、再ビルドしたファームウェア更新イメージファイルを導入します。<br>
 
-#### MDBT50Q Dongleを初期化
-
-まずは、別途ドキュメント「[USBブートローダー書込み手順書](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」に従い、MDBT50Q Dongleを初期化します。<br>
-MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯している状態である事を確認します。
-
-<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
-
-
-#### ファームウェア更新イメージの書込み
-
-`nrfutil dfu usb-serial`コマンドを実行し、仮想COMポート経由で、再ビルドされたファームウェア更新イメージファイルを転送します。<br>
-具体的には、以下のコマンドを投入します。
-
-```
-FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
-cd ${FIRMWARES_DIR}
-PACKAGE=`ls appkg.PCA10059_*.zip`
-PORTNAME=`ls /dev/tty.usbmodem*`
-echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
-```
-
-下記は実行例になります。
-
-```
-bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
-bash-3.2$ cd ${FIRMWARES_DIR}
-bash-3.2$ PACKAGE=`ls appkg.PCA10059_*.zip`
-bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
-bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg appkg.PCA10059_01.0.2.13.zip -p /dev/tty.usbmodemD496DB4407941]
-bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
-  [####################################]  100%          
-Device programmed.
-bash-3.2$
-```
-
-#### 書込み完了
-
-書込処理が終了すると、MDBT50Q Dongleが自動的にリセットされ、サンプルアプリケーションがスタートします。<br>
-今度は、アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
+導入作業後は、MDBT50Q DongleでnRF52840アプリケーションが動作するようになります。<br>
+また、管理ツールを使用し、後日、nRF52840アプリケーションの更新もできるようになります。
 
 <img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="200">
 
-#### ブートローダーモード遷移機能の確認
-
-この状態のMDBT50Q Dongleは、nRF52840アプリケーションが稼働している状況となっております。<br>
-他方、MDBT50Q DongleはすでにUSBブートローダーが書き込まれているため、管理ツールを使用し、後日、nRF52840アプリケーションの更新ができるようになります。
-
-ここでは管理ツールを使用し、ブートローダーモードに遷移できるかどうか確認を行います。<br>
-手順につきましては別ドキュメント「[ブートローダーモード遷移手順書](../../../nRF52840_app/firmwares/sample_blehrs/WRITEHRS.md)」をご参照ください。
-
-ブートローダーモードに遷移すると、MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯します。
-
-<img src="../../../nRF52840_app/firmwares/sample_blehrs/assets02/0002.jpg" width="200">
-
-確認が終わったら、いったんMDBT50Q Dongleを取り外し、再度PCのUSBポートに装着します。<br>
-今度は、アイドル時であることを表示する緑色のLEDが点滅していることを確認します。
-
-<img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="200">
-
-以上でブートローダーモード遷移機能の確認は完了です。
+以上で、nRF52840アプリケーションの作成は完了です。

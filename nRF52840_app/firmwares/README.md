@@ -19,6 +19,12 @@
 なお、`appkg.<基板名>.nn.nn.nn.zip`の`nn.nn.nn`は、バージョン番号になります。<br>
 例えば、MDBT50Q Dongle rev2.1.2（基板名`PCA10059_02`）、バージョン`0.2.13`のファームウェア更新イメージファイル名は、`appkg.PCA10059_02.0.2.13.zip`となります。
 
+#### [nRF52840アプリケーション作成手順書](../../nRF52840_app/firmwares/secure_device_app/BUILDAPP.md)
+NetBeansとARM GCC、nRF5 SDKを使用し、[Nordic社提供のサンプルアプリケーション](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.0.2/ble_sdk_app_hrs.html)を土台に、nRF52840アプリケーションを作成する手順を記載しています。
+
+#### [nRF52840アプリケーション初回導入手順書](../../nRF52840_app/firmwares/secure_device_app/WRITEAPP.md)
+MDBT50Q Dongleに、nRF52840アプリケーションを<b>新規に書き込む</b>手順を記載しています。
+
 ## USBブートローダー（署名機能付き）
 
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)（rev2以降のバージョン）に対し、[管理ツール](../../MaintenanceTool)から[nRF52840アプリケーション](../../nRF52840_app/README.md)を書込めるようにするためのファームウェアです。<br>
