@@ -40,7 +40,7 @@ GitHubリポジトリーの「[`/Research/provisionalCA/certForFido2.zip`](../..
 |1|`fido2test.pem`|ヘルスチェック実行用秘密鍵ファイル（PEM形式）|
 |2|`fido2test.crt`|ヘルスチェック実行用証明書ファイル（DER形式）[注1]|
 
-[注1] [仮設認証局](../../../Research/README.md)による署名が行われています（自己署名証明書ではありません）。ただし、[仮設認証局の証明書](../../../Research/provisionalCA/demoCA/cacert.pem)自体は自己署名になります。
+[注1] [仮設認証局](../../../Research/provisionalCA/README.md)による署名が行われています（自己署名証明書ではありません）。ただし、[仮設認証局の証明書](../../../Research/provisionalCA/demoCA/cacert.pem)自体は自己署名になります。
 
 ## 動作確認の実施
 
