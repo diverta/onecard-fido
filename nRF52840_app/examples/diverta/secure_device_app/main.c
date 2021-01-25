@@ -170,6 +170,14 @@ static ble_uuid_t m_adv_uuids[] =                                   /**< Univers
 
 #define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
+// HW依存処理関連
+#include "fido_platform.h"
+#include "application_init.h"
+#include "ble_service_common.h"
+#include "fido_board.h"
+#include "fido_flash.h"
+#include "usbd_service.h"
+
 #endif 
 
 
@@ -961,13 +969,6 @@ static void idle_state_handle(void)
     }
 }
 
-// HW依存処理関連
-#include "fido_platform.h"
-#include "application_init.h"
-#include "ble_service_common.h"
-#include "fido_board.h"
-#include "fido_flash.h"
-#include "usbd_service.h"
 
 /**@brief Function for application main entry.
  */
@@ -994,6 +995,13 @@ int main(void)
     NRF_LOG_INFO("Heart Rate Sensor example started.");
     application_timers_start();
     advertising_start(erase_bonds);
+
+    // Enter main loop.
+    for (;;)
+    {
+        idle_state_handle();
+    }
+
 #else
     // 基本機能の初期化
     log_init();
@@ -1012,15 +1020,13 @@ int main(void)
     }
     // アプリケーション稼働に必要な初期化処理を開始
     application_init_start();
-#endif
-
     // Enter main loop.
-    for (;;)
-    {
+    for (;;) {
         // 業務処理を実行
         application_main();
         idle_state_handle();
     }
+#endif
 }
 
 
