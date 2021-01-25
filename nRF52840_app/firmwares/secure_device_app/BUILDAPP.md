@@ -378,16 +378,18 @@ nRF52840アプリケーションの業務機能が動作するように、サン
 ファイル[`main.c`](../../../nRF52840_app/examples/diverta/secure_device_app/main.c)を以下のように修正します。<br>
 この際、オリジナルのソースコードは`#ifdef ORIGINAL_MAIN〜#endif`の構文により無効化（コメントアウト）するようにします。
 
-<b>【追加した行】</b>
+<b>【追加した行（ヘッダー部）】</b>
 ```
-include "nordic_common.h"
+#include "nordic_common.h"
 #include "nrf_ble_lesc.h"
 #include "nrf_pwr_mgmt.h"
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 #include "app_error.h"
-：
+
+#define DEAD_BEEF                           0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+
 // HW依存処理関連
 #include "fido_platform.h"
 #include "application_init.h"
@@ -395,7 +397,10 @@ include "nordic_common.h"
 #include "fido_board.h"
 #include "fido_flash.h"
 #include "usbd_service.h"
-：
+```
+
+<b>【追加した行（コード部）】</b>
+```
 // 基本機能の初期化
 log_init();
 usbd_service_init();
@@ -413,10 +418,8 @@ if (fido_ble_pairing_mode_get() == false) {
 }
 // アプリケーション稼働に必要な初期化処理を開始
 application_init_start();
-：
 // Enter main loop.
-for (;;)
-{
+for (;;) {
     // 業務処理を実行
     application_main();
     idle_state_handle();

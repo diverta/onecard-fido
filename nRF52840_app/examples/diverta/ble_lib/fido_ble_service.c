@@ -327,15 +327,23 @@ static uint32_t ble_u2f_init_services(ble_u2f_t * p_u2f)
     ble_uuid.type = BLE_UUID_TYPE_BLE;
     ble_uuid.uuid = BLE_UUID_U2F_SERVICE;
 
+    // U2Fサービスを設定
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
                                         &ble_uuid,
                                         &p_u2f->service_handle);
-    VERIFY_SUCCESS(err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("sd_ble_gatts_service_add returns 0x%04x", err_code);
+        return err_code;
+    }
 
-    // U2F vendor defined ベースUUIDを生成
+    // U2F vendor defined ベースUUIDを生成（配下のキャラクタリスティックで使用）
     err_code = sd_ble_uuid_vs_add(&u2f_base_uuid, &p_u2f->uuid_type);
-    VERIFY_SUCCESS(err_code);
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("sd_ble_uuid_vs_add returns 0x%04x", err_code);
+        return err_code;
+    }
 
+    // U2Fサービス配下のキャラクタリスティックを設定
     err_code = u2f_control_point_char_add(p_u2f);
     VERIFY_SUCCESS(err_code);
 
