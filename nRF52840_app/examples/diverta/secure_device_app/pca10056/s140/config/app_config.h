@@ -428,6 +428,53 @@ extern "C" {
 // </e> // NRF_CRYPTO_BACKEND_MBEDTLS_ENABLED
 
 
+// <e> PEER_MANAGER_ENABLED - peer_manager - Peer Manager
+//==========================================================
+#ifndef PEER_MANAGER_ENABLED
+#define PEER_MANAGER_ENABLED 1
+#endif
+// <o> PM_MAX_REGISTRANTS - Number of event handlers that can be registered. 
+#ifndef PM_MAX_REGISTRANTS
+#define PM_MAX_REGISTRANTS 3
+#endif
+
+// <o> PM_FLASH_BUFFERS - Number of internal buffers for flash operations. 
+// <i> Decrease this value to lower RAM usage.
+
+#ifndef PM_FLASH_BUFFERS
+#define PM_FLASH_BUFFERS 4
+#endif
+
+// <q> PM_CENTRAL_ENABLED  - Enable/disable central-specific Peer Manager functionality.
+// <i> Enable/disable central-specific Peer Manager functionality.
+
+#ifndef PM_CENTRAL_ENABLED
+#define PM_CENTRAL_ENABLED 1
+#endif
+
+// <q> PM_SERVICE_CHANGED_ENABLED  - Enable/disable the service changed management for GATT server in Peer Manager.
+// <i> If not using a GATT server, or using a server wihout a service changed characteristic,
+// <i> disable this to save code space.
+
+#ifndef PM_SERVICE_CHANGED_ENABLED
+#define PM_SERVICE_CHANGED_ENABLED 1
+#endif
+
+// <q> PM_PEER_RANKS_ENABLED  - Enable/disable the peer rank management in Peer Manager.
+// <i> Set this to false to save code space if not using the peer rank API.
+
+#ifndef PM_PEER_RANKS_ENABLED
+#define PM_PEER_RANKS_ENABLED 1
+#endif
+
+// <q> PM_LESC_ENABLED  - Enable/disable LESC support in Peer Manager.
+// <i> If set to true, you need to call nrf_ble_lesc_request_handler() in the main loop to respond to LESC-related BLE events. If LESC support is not required, set this to false to save code space.
+
+#ifndef PM_LESC_ENABLED
+#define PM_LESC_ENABLED 1
+#endif
+
+
 // <e> NRF_BLE_SCAN_ENABLED - nrf_ble_scan - Scanning Module
 //==========================================================
 #ifndef NRF_BLE_SCAN_ENABLED
@@ -528,6 +575,78 @@ extern "C" {
 // </e>
 
 // </e> // NRF_BLE_SCAN_ENABLED
+
+
+// <h> nRF_SoftDevice 
+
+//==========================================================
+// <e> NRF_SDH_BLE_ENABLED - nrf_sdh_ble - SoftDevice BLE event handler
+//==========================================================
+#ifndef NRF_SDH_BLE_ENABLED
+#define NRF_SDH_BLE_ENABLED 1
+#endif
+// <h> BLE Stack configuration - Stack configuration parameters
+
+// <i> The SoftDevice handler will configure the stack with these parameters when calling @ref nrf_sdh_ble_default_cfg_set.
+// <i> Other libraries might depend on these values; keep them up-to-date even if you are not explicitely calling @ref nrf_sdh_ble_default_cfg_set.
+//==========================================================
+// <o> NRF_SDH_BLE_GAP_DATA_LENGTH   <27-251> 
+
+
+// <i> Requested BLE GAP data length to be negotiated.
+
+#ifndef NRF_SDH_BLE_GAP_DATA_LENGTH
+#define NRF_SDH_BLE_GAP_DATA_LENGTH 251
+#endif
+
+// <o> NRF_SDH_BLE_PERIPHERAL_LINK_COUNT - Maximum number of peripheral links. 
+#ifndef NRF_SDH_BLE_PERIPHERAL_LINK_COUNT
+#define NRF_SDH_BLE_PERIPHERAL_LINK_COUNT 1
+#endif
+
+// <o> NRF_SDH_BLE_CENTRAL_LINK_COUNT - Maximum number of central links. 
+#ifndef NRF_SDH_BLE_CENTRAL_LINK_COUNT
+#define NRF_SDH_BLE_CENTRAL_LINK_COUNT 1
+#endif
+
+// <o> NRF_SDH_BLE_TOTAL_LINK_COUNT - Total link count. 
+// <i> Maximum number of total concurrent connections using the default configuration.
+
+#ifndef NRF_SDH_BLE_TOTAL_LINK_COUNT
+#define NRF_SDH_BLE_TOTAL_LINK_COUNT 2
+#endif
+
+// <o> NRF_SDH_BLE_GAP_EVENT_LENGTH - GAP event length. 
+// <i> The time set aside for this connection on every connection interval in 1.25 ms units.
+
+#ifndef NRF_SDH_BLE_GAP_EVENT_LENGTH
+#define NRF_SDH_BLE_GAP_EVENT_LENGTH 320
+#endif
+
+// <o> NRF_SDH_BLE_GATT_MAX_MTU_SIZE - Static maximum MTU size. 
+#ifndef NRF_SDH_BLE_GATT_MAX_MTU_SIZE
+#define NRF_SDH_BLE_GATT_MAX_MTU_SIZE 247
+#endif
+
+// <o> NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE - Attribute Table size in bytes. The size must be a multiple of 4. 
+#ifndef NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE
+#define NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE 1408
+#endif
+
+// <o> NRF_SDH_BLE_VS_UUID_COUNT - The number of vendor-specific UUIDs. 
+#ifndef NRF_SDH_BLE_VS_UUID_COUNT
+#define NRF_SDH_BLE_VS_UUID_COUNT 1
+#endif
+
+// <q> NRF_SDH_BLE_SERVICE_CHANGED  - Include the Service Changed characteristic in the Attribute Table.
+ 
+
+#ifndef NRF_SDH_BLE_SERVICE_CHANGED
+#define NRF_SDH_BLE_SERVICE_CHANGED 1
+#endif
+
+// </h> 
+
 
 // <e> TWI_ENABLED - nrf_drv_twi - TWI/TWIM peripheral driver - legacy layer
 //==========================================================
