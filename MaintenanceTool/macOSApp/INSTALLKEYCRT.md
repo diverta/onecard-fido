@@ -19,8 +19,25 @@
 
 * <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
 
+## 鍵・証明書のインストール
+
+秘密鍵ファイル（PEM形式）、証明書ファイル（DER形式）を、それぞれ「参照」ボタンをクリックして選択します。
+
+<img src="assets/0010.png" width="400">
+
+管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
+
+<img src="assets/0011.png" width="400">
+
+FIDO認証器側の処理が成功すると「鍵・証明書インストールが成功しました。」と表示されます。
+
+<img src="assets/0012.png" width="400">
+
+以上で、鍵・証明書の導入は完了です。
+
 ## 鍵・証明書の削除
 
+いったん導入した鍵・証明書をFIDO2認証器から削除するには「鍵・証明書・キーハンドル消去」機能を使用します。<br>
 管理ツールを起動し、USBポートにFIDO2認証器を装着します。
 
 <img src="assets/0006.png" width="400">
@@ -37,27 +54,4 @@ FIDO認証器側の処理が成功すると「鍵・証明書・キーハンド�
 
 <img src="assets/0009.png" width="400">
 
-## 鍵・証明書のインストール
-
-秘密鍵ファイル（fido2test.pem）、証明書ファイル（fido2test.crt）は、GitHubリポジトリーに作り置きしてあります。<br>
-
-<img src="../WindowsExe/assets/0014.png" width="640">
-
-ファイルのGitHubリポジトリー上の場所は以下の通りです。
-- ディレクトリー：[onecard-fido/Research/provisionalCA/](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/)
-- 秘密鍵ファイル：[fido2test.pem](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.pem)
-- 証明書ファイル：[fido2test.crt](https://github.com/diverta/onecard-fido/blob/master/Research/provisionalCA/fido2test.crt)
-
-上記の秘密鍵ファイル（fido2test.pem）、証明書ファイル（fido2test.crt）を、それぞれ「参照」ボタンをクリックして選択します。
-
-<img src="assets/0010.png" width="400">
-
-管理ツール画面の「鍵・証明書ファイルのインストール」ボタンをクリックします。
-
-<img src="assets/0011.png" width="400">
-
-FIDO認証器側の処理が成功すると「鍵・証明書インストールが成功しました。」と表示されます。
-
-<img src="assets/0012.png" width="400">
-
-以上で、鍵・証明書の導入は完了です。
+以上で、鍵・証明書の削除は完了です。

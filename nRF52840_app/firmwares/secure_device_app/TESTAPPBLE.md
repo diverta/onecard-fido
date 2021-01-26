@@ -39,7 +39,7 @@ MDBT50Q DongleがPCのUSBポートに装着されている状態だと、管理�
 ・鍵・証明書ファイルのインストール<br>
 ・PIN番号の設定
 
-具体的な手順は、別ドキュメント「[FIDO2機能動作確認手順書（HID）](../../../MaintenanceTool/macOSApp/INSTALLKEYCRT.md)」の「鍵・証明書のインストール」「PIN番号の設定」の各章をご参照ください。
+具体的な手順は、別ドキュメント「[FIDO2機能動作確認手順書（HID）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPHID.md)」の「鍵・証明書のインストール」「PIN番号の設定」の各章をご参照ください。
 
 ## ペアリングの実施
 
