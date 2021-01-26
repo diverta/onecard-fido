@@ -18,6 +18,10 @@ FIDO2機能の動作確認（HID）は、ヘルスチェック機能の実行に
 FIDO2機能の動作確認（BLE）は、ヘルスチェック機能の実行により行います。<br>
 管理ツールの`Test --> BLE`メニューで実行できます。
 
+### [FIDO2機能の動作確認（BLE近接認証）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPBLE.md)
+
+[BLE近接認証機能](../../../FIDO2Device/SecureDongleApp/Android/BLEAUTH.md)を使用し、FIDO2機能の動作確認を行います。
+
 ### [PIV機能の動作確認（macOS限定）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPCCID.md)
 
 PIV機能の動作確認は、PIV機能設定の実行により行います。<br>
