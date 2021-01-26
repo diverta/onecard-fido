@@ -145,9 +145,8 @@ CT2LIB_DIR := $(FIDO_DIR)/ctap2_lib
 CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
-DMOLIB_DIR := $(PROJ_DIR)/../demo_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
-DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares/secure_device_app
 
 # tinycbor root directory
 TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor
@@ -305,7 +304,7 @@ NetBeansを起動し、ファイル--->新規プロジェクトを実行しま�
 下記は、ターミナルで`appkg.PCA10059_01.0.2.13.zip`(109KB)が生成されたことを確認したところです。
 
 ```
-bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/
 bash-3.2$ ls -al *.zip
 -rw-r--r--  1 makmorit  staff  108905  1 18 09:38 appkg.PCA10059_01.0.2.13.zip
 bash-3.2$
@@ -331,7 +330,7 @@ MDBT50Q Dongleの基板上で、緑色・橙色のLEDが同時点灯している
 具体的には、以下のコマンドを投入します。
 
 ```
-FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 cd ${FIRMWARES_DIR}
 PACKAGE=`ls appkg.PCA10059_*.zip`
 PORTNAME=`ls /dev/tty.usbmodem*`
@@ -342,7 +341,7 @@ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 下記は実行例になります。
 
 ```
-bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 bash-3.2$ cd ${FIRMWARES_DIR}
 bash-3.2$ PACKAGE=`ls appkg.PCA10059_*.zip`
 bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
