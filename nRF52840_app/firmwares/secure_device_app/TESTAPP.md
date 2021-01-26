@@ -10,8 +10,13 @@
 
 ### [FIDO2機能の動作確認（HID）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPHID.md)
 
-FIDO2機能の動作確認は、ヘルスチェック機能の実行により行います。<br>
+FIDO2機能の動作確認（HID）は、ヘルスチェック機能の実行により行います。<br>
 管理ツールの`Test --> USB`メニューで実行できます。
+
+### [FIDO2機能の動作確認（BLE）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPBLE.md)
+
+FIDO2機能の動作確認（BLE）は、ヘルスチェック機能の実行により行います。<br>
+管理ツールの`Test --> BLE`メニューで実行できます。
 
 ### [PIV機能の動作確認（macOS限定）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPCCID.md)
 
