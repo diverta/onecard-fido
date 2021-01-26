@@ -1,10 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../../../../SECUREIC/atecc_lib" name="5">
+      <in>atecc.c</in>
+      <in>atecc.h</in>
+      <in>atecc_aes.c</in>
+      <in>atecc_aes.h</in>
+      <in>atecc_command.c</in>
+      <in>atecc_command.h</in>
+      <in>atecc_device.c</in>
+      <in>atecc_device.h</in>
+      <in>atecc_iface.c</in>
+      <in>atecc_iface.h</in>
+      <in>atecc_nonce.c</in>
+      <in>atecc_nonce.h</in>
+      <in>atecc_priv.c</in>
+      <in>atecc_priv.h</in>
+      <in>atecc_read.c</in>
+      <in>atecc_read.h</in>
+      <in>atecc_setup.c</in>
+      <in>atecc_sign.c</in>
+      <in>atecc_sign.h</in>
+      <in>atecc_util.c</in>
+      <in>atecc_util.h</in>
+      <in>atecc_write.c</in>
+      <in>atecc_write.h</in>
+    </df>
+    <df root="../ble_lib" name="2">
+      <in>ble_peripheral_auth.c</in>
+      <in>ble_peripheral_auth.h</in>
+      <in>ble_service_central.c</in>
+      <in>ble_service_central.h</in>
+      <in>ble_service_central_stat.c</in>
+      <in>ble_service_central_stat.h</in>
+      <in>ble_service_common.c</in>
+      <in>ble_service_common.h</in>
+      <in>ble_service_peripheral.c</in>
+      <in>ble_service_peripheral.h</in>
+      <in>fido_ble_event.c</in>
+      <in>fido_ble_event.h</in>
+      <in>fido_ble_pairing.c</in>
+      <in>fido_ble_pairing.h</in>
+      <in>fido_ble_send_retry.c</in>
+      <in>fido_ble_send_retry.h</in>
+      <in>fido_ble_service.c</in>
+      <in>fido_ble_service.h</in>
+    </df>
+    <df root="../../../../CCID/ccid_lib" name="4">
+      <in>ccid.h</in>
+      <in>ccid_apdu.c</in>
+      <in>ccid_apdu.h</in>
+      <in>ccid_main.c</in>
+      <in>ccid_piv.c</in>
+      <in>ccid_piv.h</in>
+      <in>ccid_piv_authenticate.c</in>
+      <in>ccid_piv_authenticate.h</in>
+      <in>ccid_piv_general_auth.c</in>
+      <in>ccid_piv_general_auth.h</in>
+      <in>ccid_piv_object.c</in>
+      <in>ccid_piv_object.h</in>
+      <in>ccid_piv_object_import.c</in>
+      <in>ccid_piv_object_import.h</in>
+      <in>ccid_piv_pin.c</in>
+      <in>ccid_piv_pin.h</in>
+      <in>ccid_piv_pin_auth.c</in>
+      <in>ccid_piv_pin_auth.h</in>
+      <in>ccid_piv_pin_update.c</in>
+      <in>ccid_piv_pin_update.h</in>
+      <in>ccid_ykpiv.c</in>
+      <in>ccid_ykpiv.h</in>
+      <in>ccid_ykpiv_import_key.c</in>
+      <in>ccid_ykpiv_import_key.h</in>
+    </df>
     <df root="../../../components" name="0">
       <df name="boards">
         <in>boards.c</in>
       </df>
+    </df>
+    <df root="../../../../FIDO2Device/ctap2_lib" name="6">
+      <in>ctap2_cbor_authgetinfo.c</in>
+      <in>ctap2_cbor_authgetinfo.h</in>
+      <in>ctap2_cbor_encode.c</in>
+      <in>ctap2_cbor_encode.h</in>
+      <in>ctap2_cbor_parse.c</in>
+      <in>ctap2_cbor_parse.h</in>
+      <in>ctap2_client_pin.c</in>
+      <in>ctap2_client_pin.h</in>
+      <in>ctap2_client_pin_token.c</in>
+      <in>ctap2_client_pin_token.h</in>
+      <in>ctap2_common.c</in>
+      <in>ctap2_common.h</in>
+      <in>ctap2_extension_hmac_secret.c</in>
+      <in>ctap2_extension_hmac_secret.h</in>
+      <in>ctap2_get_assertion.c</in>
+      <in>ctap2_get_assertion.h</in>
+      <in>ctap2_make_credential.c</in>
+      <in>ctap2_make_credential.h</in>
+      <in>ctap2_pubkey_credential.c</in>
+      <in>ctap2_pubkey_credential.h</in>
+    </df>
+    <df root="../../../../FIDO2Device/fido2_lib" name="7">
+      <in>fido_ble_receive.c</in>
+      <in>fido_ble_receive.h</in>
+      <in>fido_ble_send.c</in>
+      <in>fido_ble_send.h</in>
+      <in>fido_command.c</in>
+      <in>fido_command.h</in>
+      <in>fido_command_common.c</in>
+      <in>fido_command_common.h</in>
+      <in>fido_common.c</in>
+      <in>fido_common.h</in>
+      <in>fido_ctap2_command.c</in>
+      <in>fido_ctap2_command.h</in>
+      <in>fido_hid_channel.c</in>
+      <in>fido_hid_channel.h</in>
+      <in>fido_hid_receive.c</in>
+      <in>fido_hid_receive.h</in>
+      <in>fido_hid_send.c</in>
+      <in>fido_hid_send.h</in>
+      <in>fido_maintenance.c</in>
+      <in>fido_maintenance.h</in>
+      <in>fido_maintenance_cryption.c</in>
+      <in>fido_maintenance_cryption.h</in>
+      <in>fido_maintenance_skcert.c</in>
+      <in>fido_maintenance_skcert.h</in>
+      <in>fido_nfc_common.h</in>
+      <in>fido_nfc_receive.c</in>
+      <in>fido_nfc_receive.h</in>
+      <in>fido_nfc_send.c</in>
+      <in>fido_nfc_send.h</in>
+      <in>fido_platform.h</in>
+      <in>fido_platform_common.h</in>
+      <in>fido_receive_apdu.c</in>
+      <in>fido_receive_apdu.h</in>
+      <in>fido_u2f_command.c</in>
+      <in>fido_u2f_command.h</in>
     </df>
     <logicalFolder name="nRF5_SDK_17.0.2"
                    displayName="nRF5_SDK_17.0.2"
@@ -683,8 +813,64 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
+    <df root="../plat_lib" name="3">
+      <in>application_init.c</in>
+      <in>application_init.h</in>
+      <in>atecc608a_i2c_hal.c</in>
+      <in>ccid_crypto.c</in>
+      <in>ccid_crypto.h</in>
+      <in>ccid_flash_piv_object.c</in>
+      <in>ccid_flash_piv_object.h</in>
+      <in>fido_board.c</in>
+      <in>fido_board.h</in>
+      <in>fido_crypto.c</in>
+      <in>fido_crypto.h</in>
+      <in>fido_crypto_aes_cbc_256.c</in>
+      <in>fido_crypto_keypair.c</in>
+      <in>fido_crypto_keypair.h</in>
+      <in>fido_crypto_sskey.c</in>
+      <in>fido_crypto_sskey.h</in>
+      <in>fido_flash.h</in>
+      <in>fido_flash_blp_auth_param.c</in>
+      <in>fido_flash_client_pin_store.c</in>
+      <in>fido_flash_common.c</in>
+      <in>fido_flash_common.h</in>
+      <in>fido_flash_event.c</in>
+      <in>fido_flash_pairing_mode.c</in>
+      <in>fido_flash_pairing_mode.h</in>
+      <in>fido_flash_password.c</in>
+      <in>fido_flash_skey_cert.c</in>
+      <in>fido_flash_token_counter.c</in>
+      <in>fido_flash_token_counter.h</in>
+      <in>fido_log.h</in>
+      <in>fido_status_indicator.c</in>
+      <in>fido_status_indicator.h</in>
+      <in>fido_timer.c</in>
+      <in>fido_timer.h</in>
+      <in>fido_twi.c</in>
+      <in>fido_twi.h</in>
+      <in>usbd_service.c</in>
+      <in>usbd_service.h</in>
+      <in>usbd_service_bos.c</in>
+      <in>usbd_service_bos.h</in>
+      <in>usbd_service_ccid.c</in>
+      <in>usbd_service_ccid.h</in>
+      <in>usbd_service_hid.c</in>
+      <in>usbd_service_hid.h</in>
+    </df>
     <df root="../secure_device_app" name="1">
       <in>main.c</in>
+    </df>
+    <df root="../../../../FIDO2Device/u2f_lib" name="8">
+      <in>u2f.h</in>
+      <in>u2f_authenticate.c</in>
+      <in>u2f_authenticate.h</in>
+      <in>u2f_keyhandle.c</in>
+      <in>u2f_keyhandle.h</in>
+      <in>u2f_register.c</in>
+      <in>u2f_register.h</in>
+      <in>u2f_signature.c</in>
+      <in>u2f_signature.h</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -698,6 +884,13 @@
   <sourceRootList>
     <Elem>../secure_device_app</Elem>
     <Elem>../../../components</Elem>
+    <Elem>../ble_lib</Elem>
+    <Elem>../plat_lib</Elem>
+    <Elem>../../../../CCID/ccid_lib</Elem>
+    <Elem>../../../../SECUREIC/atecc_lib</Elem>
+    <Elem>../../../../FIDO2Device/ctap2_lib</Elem>
+    <Elem>../../../../FIDO2Device/fido2_lib</Elem>
+    <Elem>../../../../FIDO2Device/u2f_lib</Elem>
   </sourceRootList>
   <projectmakefile>../secure_device_app/pca10056/s140/armgcc/Makefile</projectmakefile>
   <confs>
@@ -2794,12 +2987,731 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../../../CCID/ccid_lib/ccid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_apdu.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_apdu.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_authenticate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_general_auth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_general_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_object_import.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_object_import.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_auth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_auth.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_update.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_piv_pin_update.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv_import_key.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../CCID/ccid_lib/ccid_ykpiv_import_key.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_get_assertion.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_make_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_send.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ble_send.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_command_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_command_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ctap2_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_ctap2_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_channel.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_channel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_send.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_hid_send.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_receive.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_receive.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_send.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_nfc_send.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_platform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_platform_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_receive_apdu.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_receive_apdu.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_u2f_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/fido2_lib/fido_u2f_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_authenticate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_authenticate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_keyhandle.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_keyhandle.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_register.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_register.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../FIDO2Device/u2f_lib/u2f_signature.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_aes.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_aes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_command.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_command.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_device.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_device.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_iface.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_iface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_nonce.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_priv.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_priv.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_read.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_read.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_setup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_sign.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_sign.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_util.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_util.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_write.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../../SECUREIC/atecc_lib/atecc_write.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../components/boards/boards.c"
             ex="false"
             tool="0"
             flavor2="3">
         <cTool flags="0">
         </cTool>
+      </item>
+      <item path="../ble_lib/ble_peripheral_auth.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_peripheral_auth.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_central.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_central.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_central_stat.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_central_stat.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_peripheral.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../ble_lib/ble_service_peripheral.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_event.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_event.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_pairing.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_pairing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_send_retry.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_send_retry.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_service.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../ble_lib/fido_ble_service.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/application_init.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/application_init.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/atecc608a_i2c_hal.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_crypto.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_flash_piv_object.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/ccid_flash_piv_object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_board.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_board.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_aes_cbc_256.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_keypair.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_keypair.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_sskey.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_crypto_sskey.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_blp_auth_param.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_client_pin_store.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_common.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_event.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_pairing_mode.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_pairing_mode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_password.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_skey_cert.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_token_counter.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_flash_token_counter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_log.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_status_indicator.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_status_indicator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_timer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_timer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_twi.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/fido_twi.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_bos.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_bos.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_ccid.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_ccid.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_hid.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../plat_lib/usbd_service_hid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../secure_device_app/main.c" ex="false" tool="0" flavor2="3">
         <cTool flags="0">

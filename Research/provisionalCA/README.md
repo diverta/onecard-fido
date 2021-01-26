@@ -1,7 +1,7 @@
 # 仮設認証局
 
 ## 概要
-[nRF52840版FIDO認証器](https://github.com/diverta/onecard-fido/tree/master/nRF5_SDK_v15.2.0)について、[FIDO2仕様適合テスト](https://github.com/diverta/onecard-fido/issues/119) 実行時、自己署名証明書を使用すると、テスト結果がNGとなってしまいます。
+[nRF52840アプリケーション](../../nRF52840_app)について、[FIDO2仕様適合テスト](https://github.com/diverta/onecard-fido/issues/119) 実行時、自己署名証明書を使用すると、テスト結果がNGとなってしまいます。
 
 対策として、仮設認証局（仮の証明機関）を作成し、仮設認証局が署名した開発用証明書を使用して、FIDO2仕様適合テストを実行するようにしたいと考えます。
 

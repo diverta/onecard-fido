@@ -7,7 +7,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059_01
 
 # application version info
-FW_REV := 0.2.13
+FW_REV := 0.3.0
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -43,7 +43,7 @@ CIDLIB_DIR := $(CCID_DIR)/ccid_lib
 PLTLIB_DIR := $(PROJ_DIR)/../plat_lib
 BLELIB_DIR := $(PROJ_DIR)/../ble_lib
 SDK_CUSTOM_ROOT := $(PROJ_DIR)/../../..
-DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares
+DEPLOY_ROOT := $(SDK_CUSTOM_ROOT)/firmwares/secure_device_app
 
 # tinycbor root directory
 TINYCBOR_ROOT := $(HOME)/GitHub/tinycbor

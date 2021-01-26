@@ -26,13 +26,9 @@ extern "C" {
 #endif
 //   ボード名称
 #if   defined(BOARD_PCA10056)
-#define DEVICE_NAME         "FIDO authenticator board"
-#elif defined(BOARD_PCA10059)
-#define DEVICE_NAME         "FIDO authenticator dongle"
-#elif defined(BOARD_PCA10059_02)
-#define DEVICE_NAME         "Secure Dongle"
+#define DEVICE_NAME         "Secure DK"
 #else
-#define DEVICE_NAME         "FIDO authenticator"
+#define DEVICE_NAME         "Secure Dongle"
 #endif
 //   Device Information Service（BLE）が提供する情報
 #define MANUFACTURER_NAME   "Diverta Inc."

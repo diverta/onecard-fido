@@ -47,12 +47,12 @@ bash-3.2$
 |2|`appkg.PCA10059_02.nn.nn.nn.zip`|[MDBT50Q Dongle（rev2.1.2）](../../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)専用ファームウェア更新イメージファイル|
 
 具体的には、以下のコマンドを投入します。<br>
-下記例ではMDBT50Q Dongle（rev2）のファームウェア更新イメージファイルを使用しています。
+下記例ではMDBT50Q Dongle（rev2.1.2）のファームウェア更新イメージファイルを使用しています。
 
 ```
-FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 cd ${FIRMWARES_DIR}
-PACKAGE=`ls appkg.PCA10059_01*.zip`
+PACKAGE=`ls appkg.PCA10059_02.*.zip`
 PORTNAME=`ls /dev/tty.usbmodem*`
 echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
 nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
@@ -61,12 +61,12 @@ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
 下記は実行例になります。
 
 ```
-bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/"
+bash-3.2$ FIRMWARES_DIR="${HOME}/GitHub/onecard-fido/nRF52840_app/firmwares/secure_device_app/"
 bash-3.2$ cd ${FIRMWARES_DIR}
-bash-3.2$ PACKAGE=`ls appkg.PCA10059_01*.zip`
+bash-3.2$ PACKAGE=`ls appkg.PCA10059_02.*.zip`
 bash-3.2$ PORTNAME=`ls /dev/tty.usbmodem*`
 bash-3.2$ echo command [nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}]
-command [nrfutil dfu usb-serial -pkg appkg.PCA10059_01.0.2.13.zip -p /dev/tty.usbmodemD496DB4407941]
+command [nrfutil dfu usb-serial -pkg appkg.PCA10059_02.0.3.0.zip -p /dev/tty.usbmodemD6209557A6AE1]
 bash-3.2$ nrfutil dfu usb-serial -pkg ${PACKAGE} -p ${PORTNAME}
   [####################################]  100%          
 Device programmed.

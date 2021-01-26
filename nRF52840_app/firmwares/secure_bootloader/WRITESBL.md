@@ -85,11 +85,11 @@ ${TOOLDIR}/nrfjprog -f nrf52 --eraseall
 
 以下は実行例になります。
 ```
-MacBookPro-makmorit-jp:~ makmorit$ TOOLDIR=${HOME}/opt/nRF-Command-Line-Tools_9_8_1_OSX/nrfjprog
-MacBookPro-makmorit-jp:~ makmorit$ ${TOOLDIR}/nrfjprog -f nrf52 --eraseall
+bash-3.2$ TOOLDIR=${HOME}/opt/nRF-Command-Line-Tools_10_9_0_OSX/nrfjprog
+bash-3.2$ ${TOOLDIR}/nrfjprog -f nrf52 --eraseall
 Erasing user available code and UICR flash areas.
 Applying system reset.
-MacBookPro-makmorit-jp:~ makmorit$
+bash-3.2$
 ```
 
 以上で、Flash ROM全消去は完了になりますが、MDBT50Q DongleはPCのUSBポートに装着し、かつ、nRF52840 DKと接続したままにしておきます。
