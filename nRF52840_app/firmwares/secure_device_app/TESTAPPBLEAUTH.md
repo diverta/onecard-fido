@@ -34,17 +34,6 @@ MDBT50Q DongleがPCのUSBポートに装着されている状態だと、管理�
 管理ツールを使用し、あらかじめ鍵・証明書ファイルをインストールします。<br>
 具体的な手順は、別ドキュメント「[鍵・証明書の導入手順](../../../MaintenanceTool/macOSApp/INSTALLKEYCRT.md)」の「鍵・証明書のインストール」の章をご参照ください。
 
-#### 自動認証パラメーターの設定
-
-管理ツールを使用し、自動認証パラメーター（BLE近接認証で使用するBLEデバイスのサービスUUIDや、そのスキャン秒数）を、事前にMDBT50Q Dongleに設定します。<br>
-設定は、管理ツールのツール設定画面上で行います。
-
-<img src="../../../MaintenanceTool/macOSApp/assets03/0004.jpg" width="300">
-
-手順につきましては、下記の環境別手順書をご参照願います。<br>
-- [macOS版管理ツールを使用した自動認証パラメーター設定手順](../../../MaintenanceTool/macOSApp/BLEAUTHPARAM.md)
-- [Windows版管理ツールを使用した自動認証パラメーター設定手順](../../../MaintenanceTool/WindowsExe/BLEAUTHPARAM.md)
-
 #### BLE近接認証アプリのインストール
 
 Androidスマートフォンに、BLE近接認証アプリをインストールし、MDBT50Q Dongleとペアリングしておきます。
@@ -52,6 +41,61 @@ Androidスマートフォンに、BLE近接認証アプリをインストール�
 <img src="../../../FIDO2Device/SecureDongleApp/Android/assets01/0015.jpg" width="150">
 
 手順につきましては「<b>[BLE近接認証アプリインストール手順](../../../FIDO2Device/SecureDongleApp/Android/INSTALLPRG.md)</b>」をご参照願います。
+
+## 自動認証パラメーターの登録
+
+管理ツールを使用し、自動認証パラメーター（BLE近接認証で使用するBLEデバイスのサービスUUIDや、そのスキャン秒数）を、事前にMDBT50Q Dongleに設定します。<br>
+設定は、管理ツールのツール設定画面上で行います。
+
+#### ツール設定画面の表示
+
+管理ツールを起動し、PCのUSBポートにMDBT50Q Dongleを装着します。<br>
+その後、メニューから「Preferences...」をクリックします。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0001.jpg" width="300">
+
+ツール設定画面（ポップアップ画面）が表示されます。
+
+ツール設定画面表示時は、画面項目が入力不可になっている状態ですので、画面上の「設定読込」ボタンをチェックし、画面にパラメーターを入力できるようにします。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0002.jpg" width="300">
+
+認証器に自動認証パラメーターが未設定の状態ですと、下図のように画面項目が入力可能となり、デフォルト値が表示されます。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0003.jpg" width="300">
+
+#### 自動認証パラメーターの登録
+
+画面上に、自動認証パラメーター（BLE近接認証機能で必要となるパラメーター）の各項目を入力／指定します。
+
+|# |項目名 |値 |
+|:-:|:-|:-|
+|1|自動認証機能を有効化 |BLE近接認証機能を有効化するので、チェックをOnにします。|
+|2|スマートフォンをBLEデバイスとして使用 |スマートフォンをBLEデバイスとして使用するので、チェックをOnにします。|
+|3|スキャン対象サービスUUID |「422E0000-E141-11E5-A837-0800200C9A66」[注1]と入力します。|
+|4|スキャン秒数 |１〜９（秒）の値で入力します。|
+
+[注1] [BLE近接認証アプリ](../../../FIDO2Device/SecureDongleApp)のサービスUUIDは「422E0000-E141-11E5-A837-0800200C9A66」となっております。変更はできません。
+
+各項目の入力が終わったら、画面上の「設定書込」ボタンをクリックします。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0004.jpg" width="300">
+
+処理続行を確認するポップアップが表示されるので「Yes」ボタンをクリックします。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0005.jpg" width="300">
+
+処理完了のメッセージボックスが表示され、自動認証パラメーターが認証器に登録されます。<br>
+「OK」ボタンをクリックして、メッセージボックスを閉じます。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0006.jpg" width="300">
+
+ツール設定画面には、登録した自動認証パラメーターの値が表示されます。<br>
+「閉じる」ボタンをクリックし、ツール設定画面を閉じます。
+
+<img src="../../../MaintenanceTool/macOSApp/assets03/0007.jpg" width="300">
+
+これで、自動認証パラメーター登録は完了です。
 
 ## 動作確認の実施
 
