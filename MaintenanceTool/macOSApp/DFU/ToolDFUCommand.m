@@ -282,6 +282,12 @@
                       informativeText:informative];
             return false;
         }
+        // 認証器の現在バージョンが、0.3.0より古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
+        if (currentVersionDec < 300) {
+            NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative];
+            return false;
+        }
         // 更新バージョンを保持
         [self setUpdateVersionFromImage:update];
         return true;
