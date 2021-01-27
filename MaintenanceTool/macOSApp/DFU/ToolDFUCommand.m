@@ -341,8 +341,8 @@
                     [self invokeDFUProcess];
                 } else {
                     // エラーメッセージを表示して終了
-                    [ToolPopupWindow critical:MSG_DFU_TARGET_CONNECTION_FAILED
-                              informativeText:nil];
+                    [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE
+                              informativeText:MSG_DFU_TARGET_CONNECTION_FAILED];
                     [self notifyCancel];
                 }
             });
@@ -378,12 +378,35 @@
     }
 
     - (void)invokeDFUProcess {
+        // ソフトデバイスのバージョンが古い場合は処理を中止する
+        if ([self checkSoftDeviceVersion] == false) {
+            [self notifyCancel];
+            return;
+        }
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self dfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
         [[self dfuProcessingWindow] commandDidStartDFUProcess];
         // サブスレッドでDFU処理を実行開始
         [self startDFUProcess];
+    }
+
+    - (bool)checkSoftDeviceVersion {
+        // バージョン照会コマンドを実行
+        uint32_t softDeviceVersion;
+        if ([self sendFWVersionGetRequestOfFirmwareId:0x01 pVersionNumber:&softDeviceVersion] == false) {
+            // DFU対象デバイスから切断
+            [[self toolCDCHelper] disconnectDevice];
+            return false;
+        }
+        [[ToolLogFile defaultLogger] debugWithFormat:@"ToolDFUCommand: SoftDevice version: %09d", softDeviceVersion];
+        if (softDeviceVersion < 7002000) {
+            // ソフトデバイスのバージョンが v7.2 より前であればエラーメッセージを表示
+            [[self toolCDCHelper] disconnectDevice];
+            [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER];
+            return false;
+        }
+        return true;
     }
 
     - (void)commandWillChangeToBootloaderMode {
@@ -641,6 +664,18 @@
         // IDを比較
         uint8_t *pingResponse = (uint8_t *)[response bytes];
         return (pingResponse[3] == id);
+    }
+
+    - (bool)sendFWVersionGetRequestOfFirmwareId:(uint8_t)fwid pVersionNumber:(uint32_t *)pNumber {
+        // GET FW VERSION 0b 01 C0 -> 60 0B 01 00 90 D7 6A 00 ... C0
+        static uint8_t request[] = {NRF_DFU_OP_FIRMWARE_VERSION, 0x00, NRF_DFU_BYTE_EOM};
+        request[1] = fwid;
+        NSData *data = [NSData dataWithBytes:request length:sizeof(request)];
+        NSData *response = [self sendRequest:data timeoutSec:TIMEOUT_SEC_DFU_OPER_RESPONSE];
+        // レスポンスから、バージョン番号を取得（5〜8バイト目）
+        *pNumber = [self convertLEBytesToUint32:[response bytes] offset:4];
+        // レスポンスを検証
+        return [self assertDFUResponseSuccess:response];
     }
 
     - (bool)sendSetReceiptRequest {
