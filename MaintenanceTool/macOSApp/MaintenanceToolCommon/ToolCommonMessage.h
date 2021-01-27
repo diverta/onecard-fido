@@ -197,6 +197,7 @@
 
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
+#define MSG_DFU_IMAGE_NEW_NOT_AVAILABLE         @"ファームウェア新規導入機能が利用できません。"
 #define MSG_DFU_IMAGE_FILENAME_CANNOT_GET       @"更新ファームウェアファイル名の取得に失敗しました。"
 #define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"
 #define MSG_DFU_IMAGE_TRANSFER_FAILED           @"更新ファームウェアの転送に失敗しました。"
@@ -205,10 +206,12 @@
 #define MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER    @"FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。"
 #define MSG_DFU_TARGET_NOT_CONNECTED            @"FIDO認証器がブートローダーモードに遷移していません。"
 #define MSG_DFU_TARGET_CONNECTION_FAILED        @"ファームウェア新規導入先のFIDO認証器に接続できませんでした。"
+#define MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER   @"FIDO認証器のUSBブートローダーを、最新バージョンに更新してください。"
 #define MSG_DFU_UPDATE_IMAGE_FILE_NOT_EXIST     @"ファームウェア更新イメージファイルが存在しません。"
 #define MSG_DFU_UPDATE_VERSION_UNKNOWN          @"FIDO認証器ファームウェアの更新バージョンが不明です。"
 #define MSG_DFU_CURRENT_VERSION_UNKNOWN         @"FIDO認証器ファームウェアの現在バージョンが不明です。"
 #define MSG_DFU_CURRENT_VERSION_ALREADY_NEW     @"FIDO認証器のファームウェア (現在のバージョン: %@) を、バージョン%@に更新することはできません。"
+#define MSG_DFU_CURRENT_VERSION_OLD_USBBLD      @"FIDO認証器ファームウェアをバージョン%@に更新するためには、USBブートローダーを最新バージョンに更新してください。"
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED        @"FIDO認証器ファームウェアのバージョンが%@に更新されました。"
 #define MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED @"FIDO認証器ファームウェアのバージョンを%@に更新できませんでした。"
 #define MSG_DFU_PROCESS_TIMEOUT                 @"FIDO認証器ファームウェアの更新処理がタイムアウトしました。"
