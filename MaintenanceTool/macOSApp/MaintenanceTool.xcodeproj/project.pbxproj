@@ -50,6 +50,8 @@
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
 		7A92740D2105AB960062FA89 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLEHelper.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
+		7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */; };
+		7A9829C425C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */; };
 		7A98E265226858C50007F154 /* CBOREncoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A98E263226858C50007F154 /* CBOREncoder.c */; };
 		7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A9B5F4E23FE581800F2EDE5 /* DFUStartWindow.xib */; };
 		7A9F1060226DB4EE007AEB41 /* fido_blob.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F105E226DB4EE007AEB41 /* fido_blob.c */; };
@@ -64,8 +66,6 @@
 		7AB5537A226D75BA003FA435 /* ECDH.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB55378226D75BA003FA435 /* ECDH.c */; };
 		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
-		7AD0E8C4259AB378006AAECF /* appkg.PCA10059_02.0.2.13.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AD0E8C2259AB378006AAECF /* appkg.PCA10059_02.0.2.13.zip */; };
-		7AD0E8C5259AB378006AAECF /* appkg.PCA10059.0.2.13.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7AD0E8C3259AB378006AAECF /* appkg.PCA10059.0.2.13.zip */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
 		7AD6CA1C2050EED80076B096 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD6CA1B2050EED80076B096 /* libcrypto.a */; };
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
@@ -157,6 +157,8 @@
 		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
 		7A9274092105AB960062FA89 /* ToolTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTimer.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
+		7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.0.zip; sourceTree = "<group>"; };
+		7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.0.zip; sourceTree = "<group>"; };
 		7A98E263226858C50007F154 /* CBOREncoder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CBOREncoder.c; sourceTree = "<group>"; };
 		7A98E264226858C50007F154 /* CBOREncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBOREncoder.h; sourceTree = "<group>"; };
 		7A98E266226859420007F154 /* FIDODefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
@@ -184,8 +186,6 @@
 		7ACBD8CB2566424D00722984 /* Entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		7ACC0BF4257770B800F4026B /* tool_crypto_certificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_certificate.h; sourceTree = "<group>"; };
 		7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_certificate.c; sourceTree = "<group>"; };
-		7AD0E8C2259AB378006AAECF /* appkg.PCA10059_02.0.2.13.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.2.13.zip; sourceTree = "<group>"; };
-		7AD0E8C3259AB378006AAECF /* appkg.PCA10059.0.2.13.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059.0.2.13.zip; sourceTree = "<group>"; };
 		7AD501B92578883D00494B7C /* tool_piv_admin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_piv_admin.h; sourceTree = "<group>"; };
 		7AD501BA2578883D00494B7C /* tool_piv_admin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_piv_admin.c; sourceTree = "<group>"; };
 		7AD6CA1B2050EED80076B096 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
@@ -405,8 +405,8 @@
 		7AA7464223C2C400001938A7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				7AD0E8C2259AB378006AAECF /* appkg.PCA10059_02.0.2.13.zip */,
-				7AD0E8C3259AB378006AAECF /* appkg.PCA10059.0.2.13.zip */,
+				7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */,
+				7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -499,8 +499,6 @@
 			files = (
 				7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */,
 				7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */,
-				7AD0E8C5259AB378006AAECF /* appkg.PCA10059.0.2.13.zip in Resources */,
-				7AD0E8C4259AB378006AAECF /* appkg.PCA10059_02.0.2.13.zip in Resources */,
 				7A8AEBE924034F380098FE35 /* DFUProcessingWindow.xib in Resources */,
 				7A9B5F4F23FE581800F2EDE5 /* DFUStartWindow.xib in Resources */,
 				7AB119F323617DB600EEFF6C /* ToolPreferenceWindow.xib in Resources */,
@@ -509,6 +507,8 @@
 				64ED9A841647439300F39EAE /* InfoPlist.strings in Resources */,
 				7A850B8E227011F400F7BCD8 /* PinCodeParamWindow.xib in Resources */,
 				7A84EFA32254440600DF449D /* SetPinParamWindow.xib in Resources */,
+				7A9829C425C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip in Resources */,
+				7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
