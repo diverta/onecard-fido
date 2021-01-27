@@ -37,7 +37,7 @@
         [[self fieldVersionText] setStringValue:[NSString stringWithFormat:@"Version %@",
                                                  [ToolCommon getAppVersionString]]];
         // 著作権情報文字列を設定（バンドルに該当項目がないため、ここで管理）
-        [[self fieldCopyrightText] setStringValue:@"Copyright (c) 2017-2020 Diverta Inc."];
+        [[self fieldCopyrightText] setStringValue:@"Copyright (c) 2017-2021 Diverta Inc."];
         // 画面項目を初期化
         [self initFieldValue];
     }

@@ -33,6 +33,13 @@
 // 詳細ログ出力
 #define CDC_ACM_LOG_DEBUG false
 
+// 新規導入対象基板名＝PCA10059_02（MDBT50Q Dongle rev2.1.2）
+#define DFU_NEW_TARGET_BOARD_NAME       @"PCA10059_02"
+// 新規導入対象ソフトデバイス＝version 7.2
+#define DFU_NEW_TARGET_SOFTDEVICE_VER   7002000
+// 更新対象アプリケーション＝version 0.3.0
+#define DFU_UPD_TARGET_APP_VERSION      300
+
 @interface ToolDFUCommand ()
 
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
@@ -282,8 +289,8 @@
                       informativeText:informative];
             return false;
         }
-        // 認証器の現在バージョンが、0.3.0より古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
-        if (currentVersionDec < 300) {
+        // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
+        if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_OLD_USBBLD, update];
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NOT_AVAILABLE informativeText:informative];
             return false;
@@ -313,8 +320,8 @@
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
-        [self setCurrentBoardname:@"PCA10059_02"];
+        // 新規導入対象の基板名を設定
+        [self setCurrentBoardname:DFU_NEW_TARGET_BOARD_NAME];
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImageFile] == false) {
             [self notifyCancel];
@@ -400,8 +407,8 @@
             return false;
         }
         [[ToolLogFile defaultLogger] debugWithFormat:@"ToolDFUCommand: SoftDevice version: %09d", softDeviceVersion];
-        if (softDeviceVersion < 7002000) {
-            // ソフトデバイスのバージョンが v7.2 より前であればエラーメッセージを表示
+        if (softDeviceVersion < DFU_NEW_TARGET_SOFTDEVICE_VER) {
+            // ソフトデバイスのバージョンが所定バージョンより前であればエラーメッセージを表示
             [[self toolCDCHelper] disconnectDevice];
             [ToolPopupWindow critical:MSG_DFU_IMAGE_NEW_NOT_AVAILABLE informativeText:MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER];
             return false;
