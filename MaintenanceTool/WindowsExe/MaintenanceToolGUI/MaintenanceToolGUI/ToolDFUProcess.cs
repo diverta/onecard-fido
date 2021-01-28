@@ -269,10 +269,49 @@ namespace MaintenanceToolGUI
         }
 
         //
+        // バージョン照会処理
+        //
+        private ToolDFU ToolDFURef;
+        public void SendFWVersionGetRequest(ToolDFU toolDFURef, byte firmwareId)
+        {
+            // 呼出し元の参照を保持
+            ToolDFURef = toolDFURef;
+
+            // SET RECEIPTコマンドを生成（DFUリクエスト）
+            byte[] b = new byte[] {
+                NRFDfuConst.NRF_DFU_OP_FIRMWARE_VERSION, firmwareId, NRFDfuConst.NRF_DFU_BYTE_EOM };
+
+            // DFUリクエストを送信
+            if (DFUDeviceRef.SendDFURequest(b) == false) {
+                ToolDFURef.SoftDeviceVersionResponseReceived(false, 0);
+            }
+        }
+
+        private void OnFWVersionGetResponse(bool success, byte[] response)
+        {
+            // レスポンスがNGの場合
+            if (success == false || AssertDFUResponseSuccess(response) == false) {
+                ToolDFURef.SoftDeviceVersionResponseReceived(false, 0);
+            } else {
+                // レスポンスからバージョンを取得（5〜8バイト目、リトルエンディアン）
+                int versionNumber = AppCommon.ToInt32(response, 4, false);
+                ToolDFURef.SoftDeviceVersionResponseReceived(true, versionNumber);
+            }
+        }
+
+        //
         // DFUレスポンス受信時の処理
         //
         public void OnReceiveDFUResponse(bool success, byte[] response)
         {
+            // コマンドバイト（レスポンスの２バイト目）を取得
+            byte cmd = response[1];
+            if (cmd == NRFDfuConst.NRF_DFU_OP_FIRMWARE_VERSION) {
+                // バージョン照会の場合は別関数で処理
+                OnFWVersionGetResponse(success, response);
+                return;
+            }
+
             // 失敗時はメイン画面に制御を戻す
             if (success == false) {
                 TerminateDFUProcess(false);
@@ -284,8 +323,7 @@ namespace MaintenanceToolGUI
                 TerminateDFUProcess(false);
             }
 
-            // レスポンスの２バイト目（コマンドバイト）で処理分岐
-            byte cmd = response[1];
+            // コマンドバイトで処理分岐
             switch (cmd) {
             case NRFDfuConst.NRF_DFU_OP_RECEIPT_NOTIF_SET:
                 ReceiveSetReceiptRequest(response);

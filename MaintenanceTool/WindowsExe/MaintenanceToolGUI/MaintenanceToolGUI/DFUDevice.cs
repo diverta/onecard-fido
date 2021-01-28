@@ -25,6 +25,7 @@ namespace MaintenanceToolGUI
         public const int NRF_DFU_OP_MTU_GET = 0x07;
         public const int NRF_DFU_OP_OBJECT_WRITE = 0x08;
         public const int NRF_DFU_OP_PING = 0x09;
+        public const int NRF_DFU_OP_FIRMWARE_VERSION = 0x0b;
     }
 
     class DFUDevice
