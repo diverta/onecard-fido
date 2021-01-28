@@ -151,14 +151,51 @@ namespace MaintenanceToolGUI
 
             // 処理開始画面を表示
             if (dfuNewStartForm.OpenForm(mainForm)) {
-                // 処理開始画面でOKクリック-->DFU接続成功の場合、
-                // DFU主処理開始
-                DoProcessDFU();
+                // 処理開始画面でOKクリック-->DFU接続成功の場合
+                // ソフトデバイスのバージョン照会を実行
+                SoftDeviceVersionRequestSend();
             } else {
                 // キャンセルボタンがクリックされた場合は
                 // メイン画面に通知
                 NotifyCancel();
             }
+        }
+
+        private void SoftDeviceVersionRequestSend()
+        {
+            // ソフトデバイスのバージョン照会を実行
+            toolDFUProcess.SendFWVersionGetRequest(this, 0x01);
+        }
+
+        public void SoftDeviceVersionResponseReceived(bool success, int softDeviceVersion)
+        {
+            // ソフトデバイスのバージョン照会実行が失敗した場合
+            if (success == false) {
+                // DFUデバイスから切断し、メイン画面に制御を戻す
+                dfuDevice.CloseDFUDevice();
+                ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_CURRENT_VERSION_GET_FAILED);
+                NotifyCancel();
+                return;
+            }
+
+            // 取得できたバージョン番号
+            AppCommon.OutputLogDebug(string.Format(
+                "ToolDFUCommand: SoftDevice version: {0}", softDeviceVersion));
+            // ソフトデバイスのバージョンが古い場合
+            if (softDeviceVersion < DFU_NEW_TARGET_SOFTDEVICE_VER) {
+                // DFUデバイスから切断し、メイン画面に制御を戻す
+                dfuDevice.CloseDFUDevice();
+                ShowWarningMessage(
+                    ToolGUICommon.MSG_DFU_IMAGE_NEW_NOT_AVAILABLE,
+                    ToolGUICommon.MSG_DFU_TARGET_INVALID_SOFTDEVICE_VER);
+                NotifyCancel();
+                return;
+            }
+
+            // バージョンチェックOKの場合、DFU主処理開始
+            DoProcessDFU();
         }
 
         private void NotifyCancel()
