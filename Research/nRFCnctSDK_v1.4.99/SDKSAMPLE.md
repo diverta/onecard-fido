@@ -2,21 +2,14 @@
 
 Nordic社が用意しているnRF Connect SDKサンプルアプリ「[Bluetooth: Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/samples/bluetooth/peripheral_uart/README.html)」の動作確認手順について掲載します。
 
-#### [nRF52840 DKを使用したサンプル動作確認手順書はこちら](Research/nRFCnctSDK_v1.4.99/SDKSAMPLE52.md)
+#### [nRF52840 DKを使用したサンプル動作確認手順書はこちら](../../Research/nRFCnctSDK_v1.4.99/SDKSAMPLE52.md)
 
 ## 事前準備
 
 #### J-Linkのインストール
 
-PCとNordic開発ボード（nRF52840 DK等）をUSBケーブル経由で接続するためのソフトウェア「SEGGER J-Link」を、PCに導入願います。<br>
+PCとNordic開発ボード（nRF5340 DK）をUSBケーブル経由で接続するためのソフトウェア「SEGGER J-Link」を、PCに導入願います。<br>
 インストールの詳細につきましては、別途手順書「[NetBeansインストール手順](../../nRF52840_app/NETBEANSINST.md)」の該当章「<b>SEGGER J-Link</b>」をご参照願います。
-
-#### RTTViewerの準備
-
-サンプルアプリから出力されるデバッグ出力は、コンソール（UART出力）から参照することはできません。<br>
-このため、前述J-Linkに同梱のデバッグ出力参照ツール「RTTViewer」を使用します。
-
-設定の詳細につきましては、別途「[RTTViewer設定手順書](../../Research/nRFCnctSDK_v1.4.99/INSTALLRTTVW.md)」をご参照願います。
 
 #### ボードをPCに接続
 
@@ -244,8 +237,14 @@ bash-3.2$
 サンプルアプリのテストには、Androidのスマートフォンを使用します。<br>
 （今回はHUAWEI社のスマートフォン「nova lite 2」を使用）
 
-#### ペアリングの実行
+## ご参考
 
-2021/01/06現在、残念ながら、nRF5340 DK上でサンプルが正常に動作せず、確認できておりません。
+#### 確認時の不具合
 
-原因等を別途追求したいと思います。
+2021/01/06現在、残念ながら、nRF5340 DK上でサンプルが正常に動作せず、確認できておりませんでした。<br>
+はっきりした原因はいまだ不明ですが、以下２点を見直したところ、nRF5340 DK上でサンプルが正常に動作するようになりました。
+
+- アプリケーションを書込みする際は、事前にFlash ROMを全て消去する<br>
+Flash ROM消去は、nRF Connect for desktopのProgrammerツールで実行できます。
+
+- [SEGGER RTTViewer](../../Research/nRFCnctSDK_v1.4.99/INSTALLRTTVW.md)を使用せず、ターミナルにUARTデバッグプリントを表示させるようにする

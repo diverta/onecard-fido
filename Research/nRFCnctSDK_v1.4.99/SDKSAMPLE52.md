@@ -2,7 +2,7 @@
 
 Nordic社が用意しているnRF Connect SDKサンプルアプリ「[Bluetooth: Peripheral UART](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/samples/bluetooth/peripheral_uart/README.html)」の動作確認手順について掲載します。
 
-#### [nRF5340 DKを使用したサンプル動作確認手順書はこちら](Research/nRFCnctSDK_v1.4.99/SDKSAMPLE.md)
+#### [nRF5340 DKを使用したサンプル動作確認手順書はこちら](../../Research/nRFCnctSDK_v1.4.99/SDKSAMPLE.md)
 
 ## 事前準備
 
