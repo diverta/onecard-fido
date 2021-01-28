@@ -5,6 +5,13 @@ namespace MaintenanceToolGUI
 {
     public class ToolDFU
     {
+        // 新規導入対象基板名＝PCA10059_02（MDBT50Q Dongle rev2.1.2）
+        public const string DFU_NEW_TARGET_BOARD_NAME = "PCA10059_02";
+        // 新規導入対象ソフトデバイス＝version 7.2
+        public const int DFU_NEW_TARGET_SOFTDEVICE_VER = 7002000;
+        // 更新対象アプリケーション＝version 0.3.0
+        public const int DFU_UPD_TARGET_APP_VERSION = 300;
+ 
         // 画面の参照を保持
         private MainForm mainForm;
         private DFUStartForm dfuStartForm;
@@ -124,8 +131,8 @@ namespace MaintenanceToolGUI
 
         public void DoCommandDFUNew()
         {
-            // 新規導入対象の基板名は PCA10059_02（MDBT50Q Dongle rev2.1.2）で固定
-            CurrentBoardname = "PCA10059_02";
+            // 新規導入対象の基板名を設定
+            CurrentBoardname = DFU_NEW_TARGET_BOARD_NAME;
 
             // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
             if (ReadDFUImageFile() == false) {
@@ -205,6 +212,13 @@ namespace MaintenanceToolGUI
                     CurrentVersion, UpdateVersion);
                 ShowWarningMessage(
                     ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
+                return false;
+            }
+
+            // 認証器の現在バージョンが、所定バージョンより古い場合は利用不可（ソフトデバイスのバージョンが異なるため）
+            if (currentVersionDec < DFU_UPD_TARGET_APP_VERSION) {
+                string informative = string.Format(ToolGUICommon.MSG_DFU_CURRENT_VERSION_OLD_USBBLD, UpdateVersion);
+                ShowWarningMessage(ToolGUICommon.MSG_DFU_IMAGE_NOT_AVAILABLE, informative);
                 return false;
             }
 

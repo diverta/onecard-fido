@@ -64,6 +64,7 @@
         public const string MSG_DFU_UPDATE_VERSION_UNKNOWN = "FIDO認証器ファームウェアの更新バージョンが不明です。";
         public const string MSG_DFU_CURRENT_VERSION_UNKNOWN = "FIDO認証器ファームウェアの現在バージョンが不明です。";
         public const string MSG_DFU_CURRENT_VERSION_ALREADY_NEW = "FIDO認証器のファームウェア (現在のバージョン: {0}) を、バージョン{1}に更新することはできません。";
+        public const string MSG_DFU_CURRENT_VERSION_OLD_USBBLD = "FIDO認証器ファームウェアをバージョン{0}に更新するためには、USBブートローダーを最新バージョンに更新してください。";
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED = "FIDO認証器ファームウェアのバージョンが{0}に更新されました。";
         public const string MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED = "FIDO認証器ファームウェアのバージョンを{0}に更新できませんでした。";
         public const string MSG_DFU_PROCESS_TIMEOUT = "FIDO認証器ファームウェアの更新処理がタイムアウトしました。";
