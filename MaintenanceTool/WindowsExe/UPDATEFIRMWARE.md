@@ -47,3 +47,13 @@ MDBT50Q Dongleの緑色・黄色のLEDが同時点灯していることを確認
 <img src="../../MaintenanceTool/macOSApp/assets02/0010.jpg" width="400">
 
 以上で、ファームウェア更新処理は完了となります。
+
+## エラーメッセージ
+
+#### USBブートローダー更新必要時
+
+下図のようなメッセージが表示された場合は、USBブートローダーの更新が必要となります。
+
+<img src="assets02/0017.jpg" width="300">
+
+この場合は、別途手順書<b>「[USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」</b>に従い、MDBT50Q DongleのUSBブートローダーを更新願います。

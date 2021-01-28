@@ -49,3 +49,13 @@ MDBT50Q Dongleの緑色のLEDが点滅していることを確認します。
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0003.jpg" width="400">
 
 以上で、ファームウェア新規導入処理は完了となります。
+
+## エラーメッセージ
+
+#### USBブートローダー更新必要時
+
+下図のようなメッセージが表示された場合は、USBブートローダーの更新が必要となります。
+
+<img src="assets02/0018.jpg" width="300">
+
+この場合は、別途手順書<b>「[USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」</b>に従い、MDBT50Q DongleのUSBブートローダーを更新願います。
