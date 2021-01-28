@@ -232,10 +232,106 @@ bash-3.2$
 
 [注1] nRF5 SDKで開発された[nRF52840アプリケーション](../../nRF52840_app)は、別途「ソフトデバイス（`s140_nrf52_6.1.1_softdevice.hex`などといったファイル）」というファームウェアの事前インストールが必要でしたが、本手順書のビルド手順でファームウェアを作成した場合、ソフトデバイスの事前インストールは不要となっているようです。
 
+## サンプルアプリのデバッグ出力
+
+nRF5340 DK（PCA10095）は、３点の仮想COMポート（USB CDC ACMポート）が用意されているようです。<br>
+下記のように、仮想COMポート名は`<ボードのシリアル番号>N`形式（Nは1、3、5のいずれか）となっています。
+
+```
+bash-3.2$ ls -1 /dev/tty.usbmodem*
+/dev/tty.usbmodem0009601609431
+/dev/tty.usbmodem0009601609433
+/dev/tty.usbmodem0009601609435
+bash-3.2$
+```
+
+上記３点のうち、UARTデバッグプリントは下図のように、`/dev/tty.usbmodem0009601609435`に出力されたのを確認しています。
+
+<img src="assets01/0024.jpg" width="600">
+
 ## サンプルアプリのテスト
 
 サンプルアプリのテストには、Androidのスマートフォンを使用します。<br>
 （今回はHUAWEI社のスマートフォン「nova lite 2」を使用）
+
+#### テスト準備（Android側）
+
+AndroidにインストールしたnRF Connectアプリを起動し、BLEデバイスをスキャンすると、下図のように一覧に「Nordic_UART_Service」というデバイスがリストされます。<br>
+一覧右部の「Connect」をタップして、接続します。
+
+<img src="assets02/0001.jpg" width="150">
+
+下図のようにCLIENTタブに移りますので、右上の「DISCONNECT」というラベルの横にあるメニューをタップします。
+
+<img src="assets02/0002.jpg" width="150">
+
+「Discover services」を選択し、サービスディスカバリーを実行します。
+
+<img src="assets02/0003.jpg" width="150">
+
+一覧表示された「Nordic UART Service」をタップします。
+
+<img src="assets02/0004.jpg" width="150">
+
+キャラクタリスティックが一覧されますので「TX Characteristic」の横のアイコン（下に３本の矢印が向いているアイコン）をタップします。
+
+<img src="assets02/0005.jpg" width="150">
+
+「TX Characteristic」の横のアイコンの形が変わり、データ受信可能状態となります。
+
+<img src="assets02/0006.jpg" width="150">
+
+これでAndroid側の準備は完了です。
+
+#### テスト準備（PC側）
+
+先述したUARTプリント出力用のターミナルを開きます。<br>
+（UART送信データの入力用ターミナルを兼ねます）
+
+以下のようなコマンドを、ターミナルから実行します。
+
+```
+bash-3.2$ ls -1 /dev/tty.usbmodem*
+/dev/tty.usbmodem0009601609431
+/dev/tty.usbmodem0009601609433
+/dev/tty.usbmodem0009601609435
+bash-3.2$ screen /dev/tty.usbmodem0009601609435 115200
+```
+
+末尾が`5`になっている端末名を指定して、screenコマンドを実行すると、以下のようなUARTプリント出力用のターミナルが表示されます。
+
+<img src="assets02/0008.jpg" width="600">
+
+これでPC側の準備は完了です。
+
+#### テスト実行（PC-->Android）
+
+PC側のターミナル上で「`qwerty`」とタイプし[ENTER]キーを押下します。<br>
+（ターミナルには入力文字がエコーバックされないのでご注意）
+
+<img src="assets02/0008.jpg" width="600">
+
+BLEトランスポートを経由し、Android側で入力文字が受信され、画面上の「TX Characteristic」に「`Value: qwerty`」と表示される事を確認します。
+
+<img src="assets02/0007.jpg" width="150">
+
+#### テスト実行（Android-->PC）
+
+Android画面上の「RX Characteristic」右横のアイコンをタップすると、下図のようなテキストボックスが表示されます。<br>
+文字「`asdfg`」を入力し「SEND」をタップします。
+
+<img src="assets02/0009.jpg" width="150">
+
+BLEトランスポートを経由し、Android側から入力文字が送信され、PC側のターミナル上に「`asdfg`」と表示される事を確認します。
+
+<img src="assets02/0010.jpg" width="600">
+
+最後に、Android画面右上の「DISCONNECT」をタップし、nRF5340 DKとの接続を切断してください。<br>
+下図のように「DISCONNECT」の表示が「CONNECT」と変化し、切断された事を示します。
+
+<img src="assets02/0011.jpg" width="150">
+
+以上で、サンプルアプリのテストは完了となります。
 
 ## ご参考
 
