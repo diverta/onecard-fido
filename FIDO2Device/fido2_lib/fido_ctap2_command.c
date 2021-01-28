@@ -25,8 +25,6 @@
 #include "fido_hid_channel.h"
 #include "fido_hid_send.h"
 #include "fido_hid_receive.h"
-#include "fido_nfc_receive.h"
-#include "fido_nfc_send.h"
 #include "u2f.h"
 #include "ctap2_pubkey_credential.h"
 
@@ -65,9 +63,6 @@ static uint8_t *get_cbor_data_buffer(void)
         case TRANSPORT_BLE:
             buffer = fido_ble_receive_apdu()->data + 1;
             break;
-        case TRANSPORT_NFC:
-            buffer = fido_nfc_receive_apdu()->data + 1;
-            break;
         default:
             buffer = NULL;
             break;
@@ -84,9 +79,6 @@ static size_t get_cbor_data_buffer_size(void)
             break;
         case TRANSPORT_BLE:
             size = fido_ble_receive_apdu()->Lc - 1;
-            break;
-        case TRANSPORT_NFC:
-            size = fido_nfc_receive_apdu()->Lc + 1;
             break;
         default:
             size = 0;
@@ -109,10 +101,6 @@ static uint8_t get_ctap2_command_byte(void)
             break;
         case TRANSPORT_BLE:
             ctap2_cbor_buffer = fido_ble_receive_apdu()->data;
-            ctap2_command_byte = ctap2_cbor_buffer[0];
-            break;
-        case TRANSPORT_NFC:
-            ctap2_cbor_buffer = fido_nfc_receive_apdu()->data;
             ctap2_command_byte = ctap2_cbor_buffer[0];
             break;
         default:
@@ -239,9 +227,6 @@ void fido_ctap2_command_send_response(uint8_t ctap2_status, size_t length)
     } else if (m_transport_type == TRANSPORT_BLE) {
         uint8_t cmd = fido_ble_receive_header()->CMD;
         fido_ble_send_command_response(cmd, response_buffer, length);
-
-    } else if (m_transport_type == TRANSPORT_NFC) {
-        fido_nfc_send_command_response(response_buffer, length);
     } 
 }
 
@@ -568,12 +553,6 @@ static bool verify_ctap2_cbor_command(void)
         case TRANSPORT_BLE:
             if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
                 // BLE CTAP2 command
-                return true;
-            }
-            break;
-        case TRANSPORT_NFC:
-            if (fido_nfc_receive_apdu()->INS == 0x10) {
-                // NFC CTAP2 command
                 return true;
             }
             break;

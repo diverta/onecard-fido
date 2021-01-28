@@ -24,8 +24,8 @@ extern "C" {
 #define SSKEY_HASH_SIZE         32
 #define HMAC_SHA_256_SIZE       32
 
-// BLEデバイスによる自動認証機能
-#include "demo_ble_peripheral_auth.h"
+// BLEデバイスによる近接認証機能
+#include "ble_peripheral_auth.h"
 
 // fido_ble_pairing.c
 bool fido_ble_pairing_mode_get(void);

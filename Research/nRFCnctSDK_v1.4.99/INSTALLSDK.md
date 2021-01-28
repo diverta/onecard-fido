@@ -6,14 +6,14 @@
 
 まずは以下の手順書を参照し、現在使用中のSDK（nRF5 SDK v15.3.0）による開発環境が整備されていることを前提とします。
 
-#### [NetBeansインストール手順](../../nRF5_SDK_v15.3.0/NETBEANSINST.md)
-[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0/README.md)のビルドに必要なツールを準備します。<br>
+#### [NetBeansインストール手順](../../nRF52840_app/NETBEANSINST.md)
+[nRF52840アプリケーション](../../nRF52840_app/README.md)のビルドに必要なツールを準備します。<br>
 具体的には、nRF Connect SDKを新規導入するために最低限必要な、以下のツール群をインストールします。
 - nRFコマンドラインツール（nrfjprogコマンドが含まれる）
 - ARM GCCツールチェイン
 - SEGGER J-Link
 
-#### [nRF Connect for Desktop導入手順](../../nRF5_SDK_v15.3.0/NRFCONNECTINST.md)
+#### [nRF Connect for Desktop導入手順](../../nRF52840_app/NRFCONNECTINST.md)
 nRF Connect SDKインストール時に必要なGUIツールを準備します。
 
 #### [CMakeインストール手順](../../Research/nRFCnctSDK_v1.4.99/INSTALLCMAKE.md)

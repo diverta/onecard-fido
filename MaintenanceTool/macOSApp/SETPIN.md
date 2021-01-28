@@ -2,11 +2,22 @@
 
 ## 概要
 
-[FIDO認証器管理ツール](README.md)を使用して、[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)にPINコード（暗証番号）を設定する手順を掲載します。
+[FIDO認証器管理ツール](README.md)を使用して、FIDO認証器にPINコード（暗証番号）を設定する手順を掲載します。
 
-## 管理ツールのインストール
+## 認証器の準備
 
-[インストール手順](INSTALLPRG.md)を参照し、管理ツールをmacOSにインストールします。
+#### 使用機材
+
+本ドキュメントでは「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を、FIDO2認証器として使用します。
+
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="300">
+
+#### 管理ツールを導入
+
+[FIDO認証器管理ツール](../../MaintenanceTool/README.md)を、PC環境（macOS）に導入します。<br>
+以下の手順書をご参照願います。
+
+* <b>[インストール手順（macOS版）](INSTALLPRG.md) </b>
 
 ## PINコードの設定
 
@@ -14,7 +25,7 @@
 
 ### PINコードの新規設定
 
-管理ツールを起動し、USBポートに[nRF52840版FIDO認証器](../../nRF5_SDK_v15.3.0)を装着します。<br>
+管理ツールを起動し、USBポートにFIDO認証器を装着します。<br>
 その後「PINコード設定」ボタンをクリックします。
 
 <img src="assets/0013.png" width="400">
@@ -87,7 +98,7 @@ PINコードを解除したい場合は、管理ツール画面の「PINコー�
 
 認証器上の赤色LEDが高速点滅するので、認証器上のMAIN SW（タクトスイッチ）を１回プッシュしてください。
 
-<img src="../../FIDO2Device/MDBT50Q_Dongle/assets/0006.jpg" width="400">
+<img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0010.jpg" width="300">
 
 程なく、下図のようなポップアップ画面が表示され、処理が完了します。
 

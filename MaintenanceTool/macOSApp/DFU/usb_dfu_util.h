@@ -27,6 +27,7 @@
 #define NRF_DFU_OP_MTU_GET           0x07
 #define NRF_DFU_OP_OBJECT_WRITE      0x08
 #define NRF_DFU_OP_PING              0x09
+#define NRF_DFU_OP_FIRMWARE_VERSION  0x0b
 
 uint8_t *usb_dfu_object_frame_data(void);
 size_t   usb_dfu_object_frame_size(void);

@@ -6,11 +6,7 @@ nRF52 SDKのDFU機能（[Secure DFU Bootloader over Serial Link (UART/USB)](http
 
 ## 前提
 
-[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、<b>[署名機能付きUSBブートローダー](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader)</b>が導入されていることが前提となります。<br>
-署名機能付きUSBブートローダーの導入方法につきましては、「<b>[署名機能付きUSBブートローダー移行手順書](../../nRF5_SDK_v15.3.0/firmwares/secure_bootloader/MIGRATION.md)</b>」をご参照願います。
-
-## 操作方法
-「<b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b>」をご参照願います。
+[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、<b>[署名機能付きUSBブートローダー](../../nRF52840_app/firmwares/secure_bootloader)</b>が導入されていることが前提となります。
 
 ## プログラムの実装
 

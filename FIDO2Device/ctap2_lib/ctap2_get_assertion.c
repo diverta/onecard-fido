@@ -226,9 +226,9 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
 
 bool ctap2_get_assertion_is_tup_needed(void)
 {
-    // BLEデバイスによる自動認証が有効化されている場合に
+    // BLEデバイスによる近接認証が有効化されている場合に
     // 使用するBLEデバイススキャンパラメーターをロード
-    demo_ble_peripheral_auth_param_init();
+    ble_peripheral_auth_param_init();
 
     // BLEデバイスによる自動認証が有効化されていない場合は、
     // リクエストパラメーターにより、

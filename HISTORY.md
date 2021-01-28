@@ -37,7 +37,7 @@ MDBT50Q Dongle、およびファームウェアを修正しました。<br>
 
 - <b>[MDBT50Q Dongle（Rev2.1.2）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/FIDO2Device/MDBT50Q_Dongle/README.md)</b>
 
-- <b>[nRF52840ファームウェア（Version 0.2.11）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[nRF52840アプリケーション（Version 0.2.11）](https://github.com/diverta/onecard-fido/tree/improve-FIDO2DEV-MDBT50Q-Dongle-rev2_1_2/nRF5_SDK_v15.3.0/firmwares)</b>
 
 MDBT50Q Dongleの主な修正点は以下になります。
 - nRF52840アプリケーションに、セキュアIC（[ATECC608A](https://www.mouser.jp/new/microchip/microchip-atecc608a-crypto-devices/)）を組込み、秘密鍵／AESパスワードを読出し不可とする（[#347](https://github.com/diverta/onecard-fido/issues/347) ご参照）
@@ -105,7 +105,7 @@ FIDO認証器管理ツールを修正しました。<br>
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[nRF52840ファームウェア（Version 0.2.9）](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.9.zip)</b>
+- <b>[ファームウェア（Version 0.2.9）](https://github.com/diverta/onecard-fido/blob/impl-nRF52840-CCID-Interface-01/nRF5_SDK_v15.3.0/firmwares/app_dfu_package.0.2.9.zip)</b>
 
 修正点は以下になります。[注1]
 - USB CCIDインタフェースを追加実装 [注2]<br>
@@ -142,7 +142,7 @@ MDBT50Q_Dongleの最新ファームウェア（Version 0.2.8）は、macOS版 FI
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[nRF52840ファームウェア（Version 0.2.8）](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.8）](https://github.com/diverta/onecard-fido/blob/improve-nRF52840-jumping-to-BLmode/nRF5_SDK_v15.3.0/firmwares)</b>
 
 修正点は以下になります。
 - ブートローダーモード遷移コマンドを追加実装<br>（[#318](https://github.com/diverta/onecard-fido/pull/318) ご参照）<br>
@@ -198,7 +198,7 @@ macOS版 FIDO認証器管理ツールを修正しました。<br>
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[nRF52840ファームウェア（Version 0.2.5）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.5）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-disable-usb-cdc/nRF5_SDK_v15.3.0/firmwares)</b>
 
 修正点は以下になります。（[#299](https://github.com/diverta/onecard-fido/pull/299) ご参照）
 - MDBT50Q Dongleの仮想COMポートを閉塞<br>
@@ -229,7 +229,7 @@ FIDO認証器管理ツールを修正しました。<br>
 このバージョンのFIDO認証器管理ツールを使用される場合は、お手数ですが、合わせて[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを下記バージョンに更新いただきたくお願いします。</b><br>
 （鍵・証明書インストール時、管理ツール側で転送内容を暗号化するように修正したため、ファームウェア側が旧バージョンのままだと、転送内容が復号化されず、鍵・証明書インストールが正しく実行できません）
 
-- <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
 
 #### 2019/12/11
 
@@ -239,7 +239,7 @@ FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Don
 
 - <b>[Windows版 FIDO認証器管理ツール（Version 0.1.22）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-encrypt-pkcert/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-- <b>[nRF52840ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.4）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-decrypt-pkcert/nRF5_SDK_v15.3.0/firmwares)</b>
 
 修正点は以下になります。（[#281](https://github.com/diverta/onecard-fido/issues/281) ご参照）
 - 管理ツールによる秘密鍵転送時に、ECDH共通鍵により暗号化（AES256-CBC）を行うよう修正
@@ -271,7 +271,7 @@ FIDO認証器管理ツール、および[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Don
 
 - <b>[Windows版 FIDO認証器管理ツール（Version 0.1.20）](https://github.com/diverta/onecard-fido/blob/improve-FIDO2MT-Windows-demofunc-param/MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)</b>
 
-- <b>[nRF52840ファームウェア（Version 0.2.3）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-demofunc-param/nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.3）](https://github.com/diverta/onecard-fido/tree/improve-nRF52840-demofunc-param/nRF5_SDK_v15.3.0/firmwares)</b>
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能に必要なパラメーター登録機能を追加（[#266](https://github.com/diverta/onecard-fido/issues/266) ご参照）<br>
@@ -292,7 +292,7 @@ FIDO認証器管理ツールのログ参照手順書を作成しました。
 
 [MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)のファームウェアを修正しました。<br>
 
-- <b>[nRF52840ファームウェア（Version 0.2.2）](nRF5_SDK_v15.3.0/firmwares)</b>
+- <b>[ファームウェア（Version 0.2.2）](nRF5_SDK_v15.3.0/firmwares)</b>
 
 修正点は以下になります。
 - BLEデバイスによる自動認証機能（デモ機能）を追加（[#263](https://github.com/diverta/onecard-fido/issues/263) ご参照）<br>
@@ -317,7 +317,7 @@ Windows版 FIDO認証器管理ツール（Version 0.1.19）の修正はありま
 MDBT50Q Dongle、およびファームウェアを修正しました。<br>
 
 - <b>[MDBT50Q Dongle（rev2）](FIDO2Device/MDBT50Q_Dongle)</b>
-- <b>[FIDO2アプリケーション（Version 0.2.1）](nRF5_SDK_v15.3.0)</b>
+- <b>[ファームウェア（Version 0.2.1）](nRF5_SDK_v15.3.0)</b>
 
 修正点は以下になります。
 - MDBT50Q Dongleの基板（回路）を修正（[#237](https://github.com/diverta/onecard-fido/issues/237) ご参照）
@@ -330,7 +330,7 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
+- [nRF52840アプリケーション](nRF5_SDK_v15.3.0)
 
 修正点は以下になります。
 - MDBT50Q Dongleのバージョン情報を管理ツールから参照できるよう修正（[#248](https://github.com/diverta/onecard-fido/issues/248) ご参照）
@@ -366,7 +366,7 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
+- [nRF52840アプリケーション](nRF5_SDK_v15.3.0)
 
 修正点は以下になります。
 - 鍵・証明書がない状態でCTAP2ヘルスチェックを実行すると、ハングしてしまう不具合を解消（[#230](https://github.com/diverta/onecard-fido/issues/230) ご参照）
@@ -377,7 +377,7 @@ FIDO認証器管理ツール、およびファームウェアを修正しまし�
 
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
-- [FIDO2アプリケーション](nRF5_SDK_v15.3.0)
+- [nRF52840アプリケーション](nRF5_SDK_v15.3.0)
 
 主な修正点は以下になります。
 - PINGテスト機能を追加（[#224](https://github.com/diverta/onecard-fido/pull/224)、[#225](https://github.com/diverta/onecard-fido/pull/225) ご参照）
@@ -397,7 +397,7 @@ FIDO認証器管理ツールを修正しました。<br>
 
 #### 2019/06/13
 
-[FIDO2アプリケーション](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
+[nRF52840アプリケーション](nRF5_SDK_v15.3.0)を、最新のSDKバージョン「v15.3.0」に移行いたしました。
 
 なお、[移行前のプログラム](nRF5_SDK_v15.2.0)は、そのまま残してあります。<br>
 （今後はメンテナンスする予定はございません。ご容赦ください）
@@ -408,7 +408,7 @@ FIDO認証器管理ツールを修正しました。<br>
 
 以下のプログラムを修正しました。<br>
 
-- [FIDO2アプリケーション](nRF5_SDK_v15.2.0)
+- [ファームウェア](nRF5_SDK_v15.2.0)
 - [macOS版 FIDO認証器管理ツール](MaintenanceTool/macOSApp/MaintenanceTool.pkg)
 - [Windows版 FIDO認証器管理ツール](MaintenanceTool/WindowsExe/MaintenanceToolWin.zip)
 

@@ -14,7 +14,7 @@
 最新バージョンの[管理ツール](../../MaintenanceTool/macOSApp/MaintenanceTool.pkg)をmacOS環境に導入します。
 
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
-最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF5_SDK_v15.3.0)）をMDBT50Q Dongleに導入します。
+最新バージョンのファームウェア（[nRF52840アプリケーション](../../nRF52840_app)）をMDBT50Q Dongleに導入します。
 
 ### [PIV機能の基本設定手順](../../MaintenanceTool/macOSApp/PIVSETTING.md)
 macOS環境に導入した管理ツールにより、MDBT50Q Dongleに対し、PIV機能の基本設定を行います。<br>
