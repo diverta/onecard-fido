@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Diverta Inc.")]
 [assembly: AssemblyProduct("MaintenanceTool")]
-[assembly: AssemblyCopyright("Copyright © 2017-2020 Diverta Inc.")]
+[assembly: AssemblyCopyright("Copyright © 2017-2021 Diverta Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
