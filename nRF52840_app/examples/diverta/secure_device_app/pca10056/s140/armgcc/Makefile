@@ -7,7 +7,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059_01
 
 # application version info
-FW_REV := 0.3.1
+FW_REV := 0.3.0
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -535,8 +535,7 @@ deploy_dk:
 	@echo Application hex file for PCA10056 is now available.
 
 secure_pkg:
-	/bin/cp -p $(SDK_ROOT)/components/softdevice/s140/hex/s140_nrf52_7.2.0_softdevice.hex $(OUTPUT_DIRECTORY)/s140_nrf52_softdevice.hex
-	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0xB6,0x0100 --sd-id 0x0100 --softdevice $(OUTPUT_DIRECTORY)/s140_nrf52_softdevice.hex --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(HOME)/secure_bootloader_prvkey.pem $(DEPLOY_ROOT)/appkg.$(TARGET_BOARD).$(FW_REV).zip
+	/usr/local/bin/nrfutil pkg generate --hw-version 52 --sd-req 0x0100 --application-version-string $(FW_REV) --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex --key-file $(HOME)/secure_bootloader_prvkey.pem $(DEPLOY_ROOT)/appkg.$(TARGET_BOARD).$(FW_REV).zip
 	@echo Application zip package for secure bootloader is now available.
 
 TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
