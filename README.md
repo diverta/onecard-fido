@@ -27,7 +27,17 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 近年PCで採用が増大している小型USBコネクター<b>「USB Type-C プラグ」</b>を装備します。<br>
 PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスとして稼働します。
 
+## 機能イメージについて
+
+詳細につきましては、ドキュメント<b>[「セキュリティデバイス実装対応について」](https://github.com/diverta/onecard-fido/wiki/セキュリティデバイス実装対応について)</b>をご参照願います。
+
 ## What's new
+
+#### 2021/02/05
+
+nRF52840アプリケーションを、nRF5 SDK v17.0.2に移行しました。<br>
+これに伴い、FIDO認証器管理ツール、ファームウェアを修正しました。<br>
+詳細につきましては、ドキュメント<b>[「Release 202102」](https://github.com/diverta/onecard-fido/releases/tag/Release_202102)</b>をご参照願います。
 
 #### 2021/01/07
 
@@ -35,7 +45,3 @@ FIDO認証器管理ツール、ファームウェアを修正しました。<br>
 詳細につきましては、ドキュメント<b>[「Release 202101」](https://github.com/diverta/onecard-fido/releases/tag/Release_202101)</b>をご参照願います。
 
 #### [過去の更新履歴はこちら](HISTORY.md)
-
-## 機能イメージについて
-
-詳細につきましては、ドキュメント<b>[「セキュリティデバイス実装対応について」](https://github.com/diverta/onecard-fido/wiki/セキュリティデバイス実装対応について)</b>をご参照願います。

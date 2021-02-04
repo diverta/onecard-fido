@@ -2,6 +2,11 @@
 
 ## 概要
 
+[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)（nRF52840）上で稼働するアプリケーションです。<br>
+[nRF5 SDK v17.0.2](https://infocenter.nordicsemi.com/topic/struct_sdk/struct/sdk_nrf5_latest.html)を使用して開発されています。
+
+## 搭載機能
+
 ### FIDO2認証機能
 
 FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケーションです。[注1]
@@ -21,15 +26,9 @@ FIDO U2F／WebAuthn（CTAP2）の仕様に準拠したUSB HID／BLEアプリケ�
 PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br>
 詳細につきましては、別ドキュメント（[CCIDインターフェース追加対応](../CCID/README.md)）をご参照願います。
 
-## ハードウェア
-
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)＋PCのUSBポートの組み合わせによるWebAuthn操作等を想定しています。[注1]
-
-[注1] PCのUSBポートに装着するとUSB HIDデバイスとして動作しますが、ボタン電池を装着し、USBポートに接続しない状態で使用すると、BLEセントラルデバイスとして稼働するよう実装されています。<br>
-
 ## ファームウェア
 
-「nRF52840アプリケーション」のファームウェアは、フォルダー[`firmwares`](firmwares/README.md) に格納しています。<br>
+nRF52840アプリケーションのファームウェアは、フォルダー[`firmwares`](firmwares) に格納しています。<br>
 （詳細は別ドキュメント<b>「[MDBT50Q Dongle用ファームウェア](../nRF52840_app/firmwares/README.md)」</b>をご参照）
 
 ## 開発環境構築手順
@@ -45,7 +44,3 @@ PIVカードの仕様に準拠したUSB CCIDアプリケーションです。<br
 - <b>[nRF Utilインストール手順](NRFUTILINST.md)</b>
 
 - <b>[nRF Connect for Desktop導入手順](NRFCONNECTINST.md)</b>
-
-## 動作確認手順
-
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)の関連ドキュメントをご参照願います。
