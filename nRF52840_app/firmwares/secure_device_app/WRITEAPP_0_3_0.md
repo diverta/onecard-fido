@@ -19,7 +19,7 @@ MDBT50Q Dongle新ファームウェア（[version 0.3.0](https://github.com/dive
 MDBT50Q Dongleを初期化状態に戻す必要があるため、[MDBT50Q DongleをnRF52840 DKに直接配線](../../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)する必要があります。
 
 - <b>データについて</b><br>
-この移行作業を実施すると、MDBT50Q DongleのFlash ROM全領域が消去されるため、MDBT50Q Dongleに導入した秘密鍵・証明書や、PIN番号、WebAuthn認証情報などは、すべて消去されます。
+この導入作業を実施すると、MDBT50Q DongleのFlash ROM全領域が消去されるため、MDBT50Q Dongleに導入した秘密鍵・証明書や、PIN番号、WebAuthn認証情報などは、すべて消去されます。
 
 ## 事前準備
 
@@ -82,4 +82,4 @@ MDBT50Q Dongleを初期状態（ブートローダーとソフトデバイスだ
 
 <img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="200">
 
-以上で、MDBT50Q Dongleファームウェア（version 0.3.1）の導入は完了です。
+以上で、MDBT50Q Dongleファームウェア（version 0.3.0）の導入は完了です。
