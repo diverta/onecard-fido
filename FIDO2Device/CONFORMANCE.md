@@ -19,7 +19,7 @@ FIDO Conformance Toolsが起動されたら、ホーム画面の「FIDO2.0 Tests
 
 <img src="assets01/0003.jpg" width="540">
 
-ファイル選択ダイアログで、ファイル[「Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json」](Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json)を選択します。
+ファイル選択ダイアログで、ファイル[「Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json」](../Research/provisionalCA/Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json)を選択します。
 
 <img src="assets01/0004.jpg" width="540">
 
