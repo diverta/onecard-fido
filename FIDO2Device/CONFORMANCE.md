@@ -4,7 +4,7 @@ FIDOアライアンスが無償提供しているテストツール「FIDO Confo
 
 ## テスト前の準備
 
-FIDO Conformance Tools（v1.5.2）を起動します。<br>
+[FIDO Conformance Tools（v1.5.2）](https://builds.fidoalliance.org/Desktop%20UAF%20FIDO2%20U2F/v1.5.2/Standalone%20-%20FIDO%20Alliance%20-%20Certification%20Conformance%20Testing%20Tools%201.5.2.exe)を起動します。<br>
 プログラムアイコンを右クリック後「管理者として実行」を選択します。
 
 <img src="assets01/0001.jpg" width="500">
@@ -19,7 +19,7 @@ FIDO Conformance Toolsが起動されたら、ホーム画面の「FIDO2.0 Tests
 
 <img src="assets01/0003.jpg" width="540">
 
-ファイル選択ダイアログで、ファイル[「Virtual&#160;Secp256R1&#160;FIDO2&#160;Conformance&#160;Testing&#160;CTAP2&#160;Authenticator&#040;Diverta&#041;.json」](Virtual&#160;Secp256R1&#160;FIDO2&#160;Conformance&#160;Testing&#160;CTAP2&#160;Authenticator&#040;Diverta&#041;.json)を選択します。
+ファイル選択ダイアログで、ファイル[「Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json」](Virtual&#032;Secp256R1&#032;FIDO2&#032;Conformance&#032;Testing&#032;CTAP2&#032;Authenticator&#040;Diverta&#041;.json)を選択します。
 
 <img src="assets01/0004.jpg" width="540">
 
