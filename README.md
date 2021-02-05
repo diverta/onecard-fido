@@ -4,7 +4,7 @@ Nordic社のSoC「nRF5」にFIDO2認証機能等を実装するプロジェク�
 
 ## プログラム
 
-- <b>[nRF52840アプリケーション](nRF52840_app)（！！！現在移行作業中！！！）</b><br>
+- <b>[nRF52840アプリケーション](nRF52840_app)</b><br>
 FIDO2認証機能、PIVカードエミュレーション機能を実装したファームウェアです。<br>
 Nordic社のSoC「nRF52840」で動作し、[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)に書き込んで使用します。
 
@@ -32,6 +32,12 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 詳細につきましては、ドキュメント<b>[「セキュリティデバイス実装対応について」](https://github.com/diverta/onecard-fido/wiki/セキュリティデバイス実装対応について)</b>をご参照願います。
 
 ## What's new
+
+#### 2021/02/05
+
+nRF52840アプリケーションを、nRF5 SDK v17.0.2に移行しました。<br>
+これに伴い、FIDO認証器管理ツール、ファームウェアを修正しました。<br>
+詳細につきましては、ドキュメント<b>[「Release 202102」](https://github.com/diverta/onecard-fido/releases/tag/Release_202102)</b>をご参照願います。
 
 #### 2021/01/07
 
