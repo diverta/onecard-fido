@@ -14,6 +14,11 @@ extern "C" {
 #endif
 
 #define OPENPGP_INS_SELECT                  0xA4
+#define OPENPGP_INS_GET_DATA                0xCA
+
+#define TAG_AID                             0x4F
+#define TAG_HISTORICAL_BYTES                0x5F52
+#define TAG_PW_STATUS                       0xC4
 
 //
 // 関数群
