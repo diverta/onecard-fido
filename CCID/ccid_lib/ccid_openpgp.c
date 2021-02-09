@@ -7,10 +7,11 @@
 #include <string.h>
 
 #include "ccid_openpgp.h"
+#include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_key.h"
 
-#define MAX_PIN_LENGTH              64
-#define PW_STATUS_LENGTH            7
-#define PW_RETRY_COUNTER_DEFAULT    3
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 //
 // offset
@@ -32,6 +33,27 @@ static const uint8_t aid[] = {0xD2, 0x76, 0x00, 0x01, 0x24, 0x01, 0x03, 0x04, 0x
 //
 static const uint8_t historical_bytes[] = {0x00, 0x31, 0xC5, 0x73, 0xC0, 0x01, 0x40, 0x05, 0x90, 0x00};
 
+static const uint8_t extended_length_info[] = {
+    0x02, 0x02, HI(APDU_BUFFER_SIZE), LO(APDU_BUFFER_SIZE),
+    0x02, 0x02, HI(APDU_BUFFER_SIZE), LO(APDU_BUFFER_SIZE)
+};
+
+//
+// offset
+//  0: Support key import, pw1 status change, and algorithm attributes changes
+//  1: No SM algorithm
+//  3: No challenge support
+//  4: Cert length
+//  6: Other DO length
+//  8: No PIN block 2 format
+//  9: No MSE
+//
+static const uint8_t extended_capabilities[] = {
+    0x34, 0x00, 0x00, 0x00, 
+    HI(OPGP_MAX_CERT_LENGTH), LO(OPGP_MAX_CERT_LENGTH),
+    HI(OPGP_MAX_DO_LENGTH), LO(OPGP_MAX_DO_LENGTH),
+    0x00, 0x00};
+
 bool ccid_openpgp_aid_is_applet(command_apdu_t *capdu)
 {
     return (capdu->lc == 6 && memcmp(capdu->data, aid, capdu->lc) == 0);
@@ -48,38 +70,267 @@ static uint16_t openpgp_ins_select(command_apdu_t *capdu, response_apdu_t *rapdu
     return SW_NO_ERROR;
 }
 
-static uint16_t pin_get_retries(uint8_t *retries_pw1, uint8_t *retries_pw3, uint8_t *retries_rc)
+static size_t get_aid_bytes(uint8_t *buff)
 {
-    // TODO: リトライカウンターをFlash ROMから読出し
-    *retries_pw1 = PW_RETRY_COUNTER_DEFAULT;
-    *retries_pw3 = PW_RETRY_COUNTER_DEFAULT;
-    *retries_rc = PW_RETRY_COUNTER_DEFAULT;
+    memcpy(buff, aid, sizeof(aid));
+    // TODO: シリアル番号を埋める
+    // fill_sn(buff + 10);
+
+    // 設定したAIDの長さを戻す
+    return sizeof(aid);
+}
+
+static size_t get_historical_bytes(uint8_t *buff)
+{
+    // 設定したHistorical bytesの長さを戻す
+    memcpy(buff, historical_bytes, sizeof(historical_bytes));
+    return sizeof(historical_bytes);
+}
+
+static uint16_t get_aid(response_apdu_t *rapdu)
+{
+    rapdu->len = get_aid_bytes(rapdu->data);
     return SW_NO_ERROR;
 }
 
-static uint16_t set_pw_status(command_apdu_t *capdu, response_apdu_t *rapdu)
+static uint16_t get_historical(response_apdu_t *rapdu)
 {
+    rapdu->len = get_historical_bytes(rapdu->data);
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_pw_status(response_apdu_t *rapdu)
+{
+    size_t size;
+    uint16_t sw = openpgp_attr_get_pw_status(rapdu->data, &size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rapdu->len = size;
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_application_related_data(response_apdu_t *rapdu)
+{
+    uint16_t sw;
+    uint8_t offset = 0;
+    size_t len = 0;
     uint8_t *rdata = rapdu->data;
 
-    // TODO: PW statusの先頭バイトを、Flash ROMから読出し
-    // if (read_attr(DATA_PATH, TAG_PW_STATUS, rdata, 1) < 0) return SW_FILE_NOT_FOUND;
+    rdata[offset++] = TAG_AID;
+    rdata[offset++] = sizeof(aid);
+    offset += get_aid_bytes(rdata + offset);
 
-    // TODO: リトライカウンターをFlash ROMから読出し
-    uint8_t retries_pw1, retries_rc, retries_pw3;
-    uint16_t ret = pin_get_retries(&retries_pw1, &retries_rc, &retries_pw3);
-    if (ret != SW_NO_ERROR) {
-        return ret;
+    rdata[offset++] = HI(TAG_HISTORICAL_BYTES);
+    rdata[offset++] = LO(TAG_HISTORICAL_BYTES);
+    rdata[offset++] = sizeof(historical_bytes);
+    offset += get_historical_bytes(rdata + offset);
+
+    rdata[offset++] = HI(TAG_EXTENDED_LENGTH_INFO);
+    rdata[offset++] = LO(TAG_EXTENDED_LENGTH_INFO);
+    rdata[offset++] = sizeof(extended_length_info);
+    memcpy(rdata + offset, extended_length_info, sizeof(extended_length_info));
+    offset += sizeof(extended_length_info);
+
+    rdata[offset++] = TAG_DISCRETIONARY_DATA_OBJECTS;
+    rdata[offset++] = 0x81;
+
+    uint8_t length_pos = offset;
+    rdata[offset++] = 0;
+
+    rdata[offset++] = TAG_EXTENDED_CAPABILITIES;
+    rdata[offset++] = sizeof(extended_capabilities);
+    memcpy(rdata + offset, extended_capabilities, sizeof(extended_capabilities));
+    offset += sizeof(extended_capabilities);
+
+    rdata[offset++] = TAG_ALGORITHM_ATTRIBUTES_SIG;
+    sw = openpgp_key_get_attributes(TAG_ALGORITHM_ATTRIBUTES_SIG, rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
     }
+    rdata[offset++] = len;
+    offset += len;
 
-    // レスポンスを設定
-    rdata[1] = MAX_PIN_LENGTH;
-    rdata[2] = MAX_PIN_LENGTH;
-    rdata[3] = MAX_PIN_LENGTH;
-    rdata[4] = retries_pw1;
-    rdata[5] = retries_rc;
-    rdata[6] = retries_pw3;
-    rapdu->len = PW_STATUS_LENGTH;
+    rdata[offset++] = TAG_ALGORITHM_ATTRIBUTES_DEC;
+    sw = openpgp_key_get_attributes(TAG_ALGORITHM_ATTRIBUTES_DEC, rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
 
+    rdata[offset++] = TAG_ALGORITHM_ATTRIBUTES_AUT;
+    sw = openpgp_key_get_attributes(TAG_ALGORITHM_ATTRIBUTES_AUT, rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rdata[offset++] = TAG_PW_STATUS;
+    sw = openpgp_attr_get_pw_status(rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rdata[offset++] = TAG_KEY_FINGERPRINTS;
+    rdata[offset++] = KEY_FINGERPRINT_LENGTH * 3;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_SIG_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_DEC_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_AUT_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+
+    rdata[offset++] = TAG_CA_FINGERPRINTS;
+    rdata[offset++] = KEY_FINGERPRINT_LENGTH * 3;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_CA1_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_CA2_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_fingerprint(TAG_KEY_CA3_FINGERPRINT, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+
+    rdata[offset++] = TAG_KEY_GENERATION_DATES;
+    rdata[offset++] = KEY_DATETIME_LENGTH * 3;
+    sw = openpgp_key_get_datetime(TAG_KEY_SIG_GENERATION_DATES, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_datetime(TAG_KEY_DEC_GENERATION_DATES, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+    sw = openpgp_key_get_datetime(TAG_KEY_AUT_GENERATION_DATES, rdata + offset, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    offset += len;
+
+    uint8_t status;
+    rdata[offset++] = TAG_KEY_INFO;
+    rdata[offset++] = 6;
+    sw = openpgp_key_get_status(TAG_ALGORITHM_ATTRIBUTES_SIG, &status);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = 0x01;
+    rdata[offset++] = status;
+    sw = openpgp_key_get_status(TAG_ALGORITHM_ATTRIBUTES_DEC, &status);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = 0x02;
+    rdata[offset++] = status;
+    sw = openpgp_key_get_status(TAG_ALGORITHM_ATTRIBUTES_AUT, &status);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = 0x03;
+    rdata[offset++] = status;
+
+    rdata[length_pos] = offset - length_pos - 1;
+    rapdu->len = offset;
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_cardholder_related_data(response_apdu_t *rapdu)
+{
+    uint16_t sw;
+    uint8_t offset = 0;
+    size_t len = 0;
+    uint8_t *rdata = rapdu->data;
+
+    rdata[offset++] = TAG_NAME;
+    sw = openpgp_attr_get_name(rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rdata[offset++] = HI(TAG_LANG);
+    rdata[offset++] = LO(TAG_LANG);
+    sw = openpgp_attr_get_lang(rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rdata[offset++] = HI(TAG_SEX);
+    rdata[offset++] = LO(TAG_SEX);
+    sw = openpgp_attr_get_sex(rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rapdu->len = offset;
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_login_data(response_apdu_t *rapdu)
+{
+    size_t len = 0;
+    uint16_t sw = openpgp_attr_get_login_data(rapdu->data, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rapdu->len = len;
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_url_data(response_apdu_t *rapdu)
+{
+    size_t len = 0;
+    uint16_t sw = openpgp_attr_get_url_data(rapdu->data, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rapdu->len = len;
+    return SW_NO_ERROR;
+}
+
+static uint16_t get_security_support_template(response_apdu_t *rapdu)
+{
+    uint16_t sw;
+    uint8_t offset = 0;
+    size_t len = 0;
+    uint8_t *rdata = rapdu->data;
+
+    rdata[offset++] = TAG_DIGITAL_SIG_COUNTER;
+    sw = openpgp_attr_get_digital_sig_counter(rdata + offset + 1, &len);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    rdata[offset++] = len;
+    offset += len;
+
+    rapdu->len = offset;
     return SW_NO_ERROR;
 }
 
@@ -93,17 +344,21 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
     uint16_t tag = (uint16_t)(capdu->p1 << 8u) | capdu->p2;
     switch (tag) {
         case TAG_AID:
-            memcpy(rapdu->data, aid, sizeof(aid));
-            // TODO: シリアル番号を埋める
-            // fill_sn(rapdu->data + 10);
-            rapdu->len = sizeof(aid);
-            break;
+            return get_aid(rapdu);
         case TAG_HISTORICAL_BYTES:
-            memcpy(rapdu->data, historical_bytes, sizeof(historical_bytes));
-            rapdu->len = sizeof(historical_bytes);
-            break;
+            return get_historical(rapdu);
         case TAG_PW_STATUS:
-            return set_pw_status(capdu, rapdu);
+            return get_pw_status(rapdu);
+        case TAG_APPLICATION_RELATED_DATA:
+            return get_application_related_data(rapdu);
+        case TAG_CARDHOLDER_RELATED_DATA:
+            return get_cardholder_related_data(rapdu);
+        case TAG_LOGIN:
+            return get_login_data(rapdu);
+        case TAG_URL:
+            return get_url_data(rapdu);
+        case TAG_SECURITY_SUPPORT_TEMPLATE:
+            return get_security_support_template(rapdu);
         default:
             return SW_REFERENCE_DATA_NOT_FOUND;
     }
