@@ -9,6 +9,7 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_key.h"
+#include "ccid_openpgp_pin.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -367,6 +368,64 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
     return SW_NO_ERROR;
 }
 
+static uint16_t openpgp_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
+
+    // PIN種別判定／認証済みフラグをクリア
+    if (capdu->p2 == 0x81) {
+        ccid_openpgp_pin_type_set(OPGP_PIN_PW1);
+        ccid_openpgp_pin_pw1_mode81_set(false);
+    } else if (capdu->p2 == 0x82) {
+        ccid_openpgp_pin_type_set(OPGP_PIN_PW1);
+        ccid_openpgp_pin_pw1_mode82_set(false);
+    } else if (capdu->p2 == 0x83) {
+        ccid_openpgp_pin_type_set(OPGP_PIN_PW3);
+    } else {
+        return SW_WRONG_P1P2;
+    }
+
+    // PIN認証クリアの場合
+    if (capdu->p1 == 0xff) {
+        ccid_openpgp_pin_set_validated(false);
+        return SW_NO_ERROR;
+    }
+
+    // PINリトライカウンター照会の場合
+    if (capdu->lc == 0) {
+        if (ccid_openpgp_pin_is_validated()) {
+            return SW_NO_ERROR;
+        }
+        uint8_t retries;
+        uint16_t sw = ccid_openpgp_pin_get_retries(&retries);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        } else {
+            return SW_PIN_RETRIES + retries;
+        }
+    }
+
+    // 入力PINコードで認証
+    uint8_t retry_counter;
+    uint16_t sw = ccid_openpgp_pin_auth_verify(capdu->data, capdu->lc, &retry_counter);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // 認証済みフラグを設定
+    if (capdu->p2 == 0x81) {
+        ccid_openpgp_pin_pw1_mode81_set(true);
+    } else if (capdu->p2 == 0x82) {
+        ccid_openpgp_pin_pw1_mode82_set(true);
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -385,6 +444,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_GET_DATA:
             rapdu->sw = openpgp_ins_get_data(capdu, rapdu);
+            break;
+        case OPENPGP_INS_VERIFY:
+            rapdu->sw = openpgp_ins_verify(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
