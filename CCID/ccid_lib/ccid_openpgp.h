@@ -16,6 +16,7 @@ extern "C" {
 // FOR TEST
 #define OPENPGP_TEST_DATA
 
+#define OPENPGP_INS_VERIFY                  0x20
 #define OPENPGP_INS_SELECT                  0xA4
 #define OPENPGP_INS_GET_DATA                0xCA
 
