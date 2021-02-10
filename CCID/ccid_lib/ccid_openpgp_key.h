@@ -17,6 +17,13 @@ extern "C" {
 #define KEY_FINGERPRINT_LENGTH      20
 #define KEY_DATETIME_LENGTH         4
 
+// Key type
+typedef enum {
+    OPGP_KEY_SIG,
+    OPGP_KEY_ENC,
+    OPGP_KEY_AUT,
+} OPGP_KEY_TYPE;  
+    
 //
 // 関数群
 //

@@ -4,6 +4,8 @@
  *
  * Created on 2021/02/09, 16:27
  */
+#include <string.h>
+
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 
@@ -11,6 +13,10 @@
 #define DIGITAL_SIG_COUNTER_LENGTH  3
 
 #define PW_RETRY_COUNTER_DEFAULT    3
+
+#ifdef OPENPGP_TEST_DATA
+static char attr_name[] = "Here is the cardname";
+#endif
 
 static uint16_t get_retries(uint8_t *retries_pw1, uint8_t *retries_pw3, uint8_t *retries_rc)
 {
@@ -84,8 +90,8 @@ uint16_t openpgp_attr_get_digital_sig_counter(uint8_t *buf, size_t *size)
 uint16_t openpgp_attr_get_name(uint8_t *buf, size_t *size)
 {
     // TODO: 仮の実装です。
-    (void)buf;
-    *size = 0;
+    memcpy(buf, attr_name, strlen(attr_name));
+    *size = strlen(attr_name);
 
     // 正常終了
     return SW_NO_ERROR;
