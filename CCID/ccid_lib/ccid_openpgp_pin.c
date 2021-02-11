@@ -61,7 +61,7 @@ uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
             return SW_NO_ERROR;
         }
         uint8_t retries;
-        uint16_t sw = ccid_pin_auth_get_retries(pw->type, &retries);
+        uint16_t sw = ccid_pin_auth_get_retries(pw, &retries);
         if (sw != SW_NO_ERROR) {
             return sw;
         } else {

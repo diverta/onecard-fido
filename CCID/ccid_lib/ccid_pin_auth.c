@@ -7,14 +7,18 @@
 #include <string.h>
 
 #include "ccid_apdu.h"
+#include "ccid_openpgp_object.h"
 #include "ccid_pin.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 //
 // PIN種別情報
 //
-static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .default_retries = 3};
-static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3};
-static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3};
+static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "123456"};
+static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "12345678"};
+static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "12345678"};
 
 PIN_T *ccid_pin_auth_pin_t(PIN_TYPE type)
 {
@@ -60,46 +64,34 @@ static void current_retries_set(uint8_t retries)
     m_pin_current_retries = retries;
 }
 
-// 一時読込み用領域
-static uint8_t stored_pin[256];
-static size_t  stored_pin_size;
-static uint8_t stored_retries;
+//
+// PINオブジェクト項目参照
+//
+static uint8_t *stored_pin;
+static uint8_t  stored_pin_size;
+static uint8_t  stored_retries;
 
 static uint16_t ccid_pin_func_terminate(uint16_t sw)
 {
-    // 一時読み込み用領域をクリア
-    memset(stored_pin, 0, sizeof(stored_pin));
-    stored_pin_size = 0;
+    // PINオブジェクトの一時読み込み用領域をクリア
+    ccid_openpgp_object_pin_clear();
     return sw;
 }
 
 //
 // 関数群
 //
-static bool restore_pin_object(PIN_TYPE type)
+static bool restore_pin_object(PIN_T *pin)
 {
     // 登録されているリトライカウンターを取得
-    // if (ccid_piv_object_pin_get(type, pin->pin, &pin->retries) == false) {
-    //     return false;
-    // }
-
-    // TODO: 仮の実装です。
-    memset(stored_pin, 0, sizeof(stored_pin));
-    stored_pin_size = 0;
-    stored_retries = 3;
-    switch (type) {
-        case OPGP_PIN_PW3:
-        case OPGP_PIN_RC:
-            memcpy(stored_pin, "12345678", 8);
-            stored_pin_size = 8;
-            break;
-        case OPGP_PIN_PW1:
-            memcpy(stored_pin, "123456", 6);
-            stored_pin_size = 6;
-            break;
-        default:
-            break;
+    if (ccid_openpgp_object_pin_get(pin, &stored_pin, &stored_pin_size, &stored_retries) == false) {
+        return false;
     }
+
+#if LOG_DEBUG_PIN_OBJECT
+    fido_log_debug("PIN object data (type=%d, retries=%d): ", pin->type, stored_retries);
+    fido_log_print_hexdump_debug(stored_pin, stored_pin_size);
+#endif
 
     return true;
 }
@@ -156,7 +148,7 @@ uint16_t ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len)
     }
 
     // Flash ROMのPINオブジェクトを参照
-    if (restore_pin_object(pin->type) == false) {
+    if (restore_pin_object(pin) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
     // リトライカウンターの現在値を参照
@@ -183,7 +175,7 @@ uint16_t ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len)
     return ccid_pin_func_terminate(SW_NO_ERROR);
 }
 
-uint16_t ccid_pin_auth_get_retries(PIN_TYPE type, uint8_t *retries) 
+uint16_t ccid_pin_auth_get_retries(PIN_T *pin, uint8_t *retries) 
 {
     // パラメーターチェック
     if (retries == NULL) {
@@ -191,7 +183,7 @@ uint16_t ccid_pin_auth_get_retries(PIN_TYPE type, uint8_t *retries)
     }
 
     // Flash ROMのPINオブジェクトを参照
-    if (restore_pin_object(type) == false) {
+    if (restore_pin_object(pin) == false) {
         return SW_UNABLE_TO_PROCESS;
     }
 

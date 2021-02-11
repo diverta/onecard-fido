@@ -20,7 +20,7 @@ PIN_T      *ccid_pin_auth_pin_t(PIN_TYPE type);
 bool        ccid_pin_auth_failed(void);
 uint8_t     ccid_pin_auth_current_retries(void);
 uint16_t    ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len) ;
-uint16_t    ccid_pin_auth_get_retries(PIN_TYPE type, uint8_t *retries) ;
+uint16_t    ccid_pin_auth_get_retries(PIN_T *pin, uint8_t *retries) ;
 
 #ifdef __cplusplus
 }

@@ -17,6 +17,7 @@ extern "C" {
 
 // PIN type
 typedef enum {
+    PIN_TYPE_NONE,
     OPGP_PIN_PW1,
     OPGP_PIN_PW3,
     OPGP_PIN_RC,
@@ -29,6 +30,7 @@ typedef struct {
     uint8_t     size_max;
     bool        is_validated;
     uint8_t     default_retries;
+    char       *default_code;
 } PIN_T;
 
 #ifdef __cplusplus
