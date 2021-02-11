@@ -6,20 +6,9 @@
  */
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_pin.h"
+#include "ccid_pin_auth.h"
 
-static OPGP_PIN_TYPE m_pin_type;
 static uint8_t m_pw1_mode;
-static bool pw_is_validated;
-
-void ccid_openpgp_pin_type_set(OPGP_PIN_TYPE t)
-{
-    m_pin_type = t;
-}
-
-OPGP_PIN_TYPE ccid_openpgp_pin_type_get(void)
-{
-    return m_pin_type;
-}
 
 void ccid_openpgp_pin_pw1_mode81_set(bool b)
 {
@@ -39,31 +28,60 @@ void ccid_openpgp_pin_pw1_mode82_set(bool b)
     }
 }
 
-bool ccid_openpgp_pin_is_validated(void)
+uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
-    return pw_is_validated;
-}
+    // パラメーターのチェック
+    if (capdu->p1 != 0x00 && capdu->p1 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
 
-void ccid_openpgp_pin_set_validated(bool b)
-{
-    pw_is_validated = b;
-}
+    // PIN種別判定／認証済みフラグをクリア
+    PIN_T *pw;
+    if (capdu->p2 == 0x81) {
+        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+        ccid_openpgp_pin_pw1_mode81_set(false);
+    } else if (capdu->p2 == 0x82) {
+        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+        ccid_openpgp_pin_pw1_mode82_set(false);
+    } else if (capdu->p2 == 0x83) {
+        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
+    } else {
+        return SW_WRONG_P1P2;
+    }
 
-uint16_t ccid_openpgp_pin_get_retries(uint8_t *retries)
-{
-    // TODO: 仮の実装です。
-    *retries = 3;
-    return SW_NO_ERROR;
-}
+    // PIN認証クリアの場合
+    if (capdu->p1 == 0xff) {
+        pw->is_validated = false;
+        return SW_NO_ERROR;
+    }
 
-uint16_t ccid_openpgp_pin_auth_verify(uint8_t *pin_data, size_t pin_size, uint8_t *retries)
-{
-    // TODO: 仮の実装です。
-    // 戻り
-    //  SW_UNABLE_TO_PROCESS: IO失敗
-    //  SW_WRONG_LENGTH: PINの長さが異なる
-    //  SW_AUTHENTICATION_BLOCKED: リトライカウンターが 0
-    //  SW_SECURITY_STATUS_NOT_SATISFIED: PINが異なる
-    *retries = 3;
-    return SW_NO_ERROR;
+    // PINリトライカウンター照会の場合
+    if (capdu->lc == 0) {
+        if (pw->is_validated) {
+            return SW_NO_ERROR;
+        }
+        uint8_t retries;
+        uint16_t sw = ccid_pin_auth_get_retries(pw->type, &retries);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        } else {
+            return SW_PIN_RETRIES + retries;
+        }
+    }
+
+    // 入力PINコードで認証
+    uint16_t sw = ccid_pin_auth_verify(pw, capdu->data, capdu->lc);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // 認証済みフラグを設定
+    if (capdu->p2 == 0x81) {
+        ccid_openpgp_pin_pw1_mode81_set(true);
+    } else if (capdu->p2 == 0x82) {
+        ccid_openpgp_pin_pw1_mode82_set(true);
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;    
 }
