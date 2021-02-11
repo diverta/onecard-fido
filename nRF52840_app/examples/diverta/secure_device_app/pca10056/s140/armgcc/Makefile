@@ -353,6 +353,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_openpgp_attr.c \
   $(CIDLIB_DIR)/ccid_openpgp_key.c \
   $(CIDLIB_DIR)/ccid_openpgp_pin.c \
+  $(CIDLIB_DIR)/ccid_pin_auth.c \
   $(CIDLIB_DIR)/ccid_piv.c \
   $(CIDLIB_DIR)/ccid_piv_general_auth.c \
   $(CIDLIB_DIR)/ccid_piv_authenticate.c \
