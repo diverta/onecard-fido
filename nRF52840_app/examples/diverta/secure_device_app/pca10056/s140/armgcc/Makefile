@@ -391,6 +391,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/ccid_crypto.c \
+  $(PLTLIB_DIR)/ccid_flash_object.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
