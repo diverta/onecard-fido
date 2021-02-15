@@ -7,10 +7,17 @@
 #ifndef CCID_FLASH_OBJECT_H
 #define CCID_FLASH_OBJECT_H
 
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+uint8_t    *ccid_flash_object_read_buffer(void);
+uint8_t    *ccid_flash_object_write_buffer(void);
+size_t      ccid_flash_object_rw_buffer_size(void);
 
 #ifdef __cplusplus
 }

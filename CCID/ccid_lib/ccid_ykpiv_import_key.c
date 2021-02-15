@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ccid.h"
+#include "ccid_flash_object.h"
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
@@ -146,7 +147,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     uint8_t *QINV = p;
 
     // 鍵データを、Flash ROM書出用バッファにコピー（９バイト目を先頭とする）
-    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 8;
+    uint8_t *key_data_buff = ccid_flash_object_write_buffer() + 8;
     size_t key_size = 0;
     memcpy(key_data_buff + key_size, P, RSA2048_PQ_LENGTH);
     key_size += RSA2048_PQ_LENGTH;
