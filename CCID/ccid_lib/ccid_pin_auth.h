@@ -19,6 +19,7 @@ extern "C" {
 PIN_T      *ccid_pin_auth_pin_t(PIN_TYPE type);
 uint16_t    ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len);
 uint16_t    ccid_pin_auth_get_retries(PIN_T *pin);
+uint16_t    ccid_pin_auth_update_retries(PIN_T *pin);
 
 #ifdef __cplusplus
 }

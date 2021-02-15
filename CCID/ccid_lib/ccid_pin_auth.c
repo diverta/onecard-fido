@@ -172,3 +172,21 @@ uint16_t ccid_pin_auth_get_retries(PIN_T *pin)
     pin->current_retries = stored_retries;
     return ccid_pin_func_terminate(SW_NO_ERROR);
 }
+
+uint16_t ccid_pin_auth_update_retries(PIN_T *pin)
+{
+    // Flash ROMのPINオブジェクトを参照
+    // （登録されていない場合はデフォルトが戻ります）
+    if (restore_pin_object(pin) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // PIN／リトライカウンターをセットで登録
+    if (ccid_openpgp_object_pin_set(pin, stored_pin, stored_pin_size, pin->current_retries) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 一時読込領域を初期化して終了
+    return ccid_pin_func_terminate(SW_NO_ERROR);
+}
+
