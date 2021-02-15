@@ -16,9 +16,9 @@
 //
 // PIN種別情報
 //
-static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "123456"};
-static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "12345678"};
-static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .default_retries = 3, .default_code = "12345678"};
+static PIN_T pw1 = {.type = OPGP_PIN_PW1, .size_min = 6, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "123456"};
+static PIN_T pw3 = {.type = OPGP_PIN_PW3, .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "12345678"};
+static PIN_T rc  = {.type = OPGP_PIN_RC,  .size_min = 8, .size_max = 64, .is_validated = false, .current_retries = 3, .default_retries = 3, .default_code = "12345678"};
 
 PIN_T *ccid_pin_auth_pin_t(PIN_TYPE type)
 {
@@ -32,36 +32,6 @@ PIN_T *ccid_pin_auth_pin_t(PIN_TYPE type)
         default:
             return NULL;
     }
-}
-
-//
-// PIN認証処理関連
-//
-static bool    m_pin_auth_failed;
-static uint8_t m_pin_current_retries;
-
-bool ccid_pin_auth_failed(void)
-{
-    // 認証NGの場合は true
-    return m_pin_auth_failed;
-}
-
-uint8_t ccid_pin_auth_current_retries(void)
-{
-    // 現在のリトライカウンターを戻す
-    return m_pin_current_retries;
-}
-
-static void auth_failed_set(bool b)
-{
-    // 認証OK／NGの別を設定
-    m_pin_auth_failed = b;
-}
-
-static void current_retries_set(uint8_t retries)
-{
-    // 現在のリトライカウンターを設定
-    m_pin_current_retries = retries;
 }
 
 //
@@ -83,6 +53,11 @@ static uint16_t ccid_pin_func_terminate(uint16_t sw)
 //
 static bool restore_pin_object(PIN_T *pin)
 {
+    // パラメーターチェック
+    if (pin == NULL) {
+        return false;
+    }
+
     // 登録されているリトライカウンターを取得
     if (ccid_openpgp_object_pin_get(pin, &stored_pin, &stored_pin_size, &stored_retries) == false) {
         return false;
@@ -135,9 +110,9 @@ static bool pin_code_is_blank(bool *is_blank)
 
 uint16_t ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len) 
 {
-    // 内部変数を初期化
-    auth_failed_set(true);
-    current_retries_set(0);
+    // 認証済みフラグ／現在リトライカウンターを初期化
+    pin->is_validated = false;
+    pin->current_retries = 0;
 
     // パラメーターチェック
     if (pin == NULL || buf == NULL) {
@@ -166,22 +141,17 @@ uint16_t ccid_pin_auth_verify(PIN_T *pin, uint8_t *buf, uint8_t len)
     }
     if (is_equal == false) {
         // NGの場合はリトライカウンターを１減らす
-        current_retries_set(--current_cnt);
+        pin->current_retries = (--current_cnt);
     } else {
         // OKの場合はリトライカウンターをデフォルトに設定
-        current_retries_set(pin->default_retries);
-        auth_failed_set(false);
+        pin->current_retries = pin->default_retries;
+        pin->is_validated = true;
     }
     return ccid_pin_func_terminate(SW_NO_ERROR);
 }
 
-uint16_t ccid_pin_auth_get_retries(PIN_T *pin, uint8_t *retries) 
+uint16_t ccid_pin_auth_get_retries(PIN_T *pin) 
 {
-    // パラメーターチェック
-    if (retries == NULL) {
-        return SW_UNABLE_TO_PROCESS;
-    }
-
     // Flash ROMのPINオブジェクトを参照
     if (restore_pin_object(pin) == false) {
         return SW_UNABLE_TO_PROCESS;
@@ -193,11 +163,12 @@ uint16_t ccid_pin_auth_get_retries(PIN_T *pin, uint8_t *retries)
         return ccid_pin_func_terminate(SW_UNABLE_TO_PROCESS);
     }
     if (is_blank) {
-        *retries = 0;
+        // リトライカウンターの現在値を０に設定
+        pin->current_retries = 0;
         return ccid_pin_func_terminate(SW_NO_ERROR);
     }
 
     // リトライカウンターの現在値を設定して戻す
-    *retries = stored_retries;
+    pin->current_retries = stored_retries;
     return ccid_pin_func_terminate(SW_NO_ERROR);
 }

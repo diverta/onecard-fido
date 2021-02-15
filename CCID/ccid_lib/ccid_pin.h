@@ -29,6 +29,7 @@ typedef struct {
     uint8_t     size_min;
     uint8_t     size_max;
     bool        is_validated;
+    uint8_t     current_retries;
     uint8_t     default_retries;
     char       *default_code;
 } PIN_T;

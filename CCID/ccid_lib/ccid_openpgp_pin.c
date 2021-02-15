@@ -8,6 +8,10 @@
 #include "ccid_openpgp_pin.h"
 #include "ccid_pin_auth.h"
 
+//
+// PIN種別／認証モードを保持
+//
+static PIN_T  *m_pw;
 static uint8_t m_pw1_mode;
 
 void ccid_openpgp_pin_pw1_mode81_set(bool b)
@@ -36,41 +40,40 @@ uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
     }
 
     // PIN種別判定／認証済みフラグをクリア
-    PIN_T *pw;
     if (capdu->p2 == 0x81) {
-        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+        m_pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
         ccid_openpgp_pin_pw1_mode81_set(false);
     } else if (capdu->p2 == 0x82) {
-        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
+        m_pw = ccid_pin_auth_pin_t(OPGP_PIN_PW1);
         ccid_openpgp_pin_pw1_mode82_set(false);
     } else if (capdu->p2 == 0x83) {
-        pw = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
+        m_pw = ccid_pin_auth_pin_t(OPGP_PIN_PW3);
     } else {
         return SW_WRONG_P1P2;
     }
 
     // PIN認証クリアの場合
     if (capdu->p1 == 0xff) {
-        pw->is_validated = false;
+        m_pw->is_validated = false;
         return SW_NO_ERROR;
     }
 
     // PINリトライカウンター照会の場合
     if (capdu->lc == 0) {
-        if (pw->is_validated) {
+        if (m_pw->is_validated) {
             return SW_NO_ERROR;
         }
-        uint8_t retries;
-        uint16_t sw = ccid_pin_auth_get_retries(pw, &retries);
+        // Flash ROMに登録されているリトライカウンターを応答
+        uint16_t sw = ccid_pin_auth_get_retries(m_pw);
         if (sw != SW_NO_ERROR) {
             return sw;
         } else {
-            return SW_PIN_RETRIES + retries;
+            return SW_PIN_RETRIES + m_pw->current_retries;
         }
     }
 
     // 入力PINコードで認証
-    uint16_t sw = ccid_pin_auth_verify(pw, capdu->data, capdu->lc);
+    uint16_t sw = ccid_pin_auth_verify(m_pw, capdu->data, capdu->lc);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
