@@ -6,7 +6,11 @@
  */
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_pin.h"
+#include "ccid_openpgp_object.h"
 #include "ccid_pin_auth.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 //
 // PIN種別／認証モードを保持
@@ -85,6 +89,62 @@ uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu)
         ccid_openpgp_pin_pw1_mode82_set(true);
     }
 
-    // 正常終了
-    return SW_NO_ERROR;    
+    // 現在のリトライカウンターを更新
+    //  Flash ROM更新後、
+    //  ccid_openpgp_pin_retry または
+    //  ccid_openpgp_pin_resume のいずれかが
+    //  コールバックされます。
+    sw = ccid_pin_auth_update_retries(m_pw);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_openpgp_object_resume_prepare(capdu, rapdu);
+    }
+    return sw;
+}
+
+static void ccid_openpgp_pin_auth_resume(void)
+{
+    if (m_pw->is_validated == false) {
+        // ccid_pin_auth_verify において
+        // 認証NGの場合は、現在のリトライカウンターを戻す
+        fido_log_error("OpenPGP PIN verification fail");
+        ccid_openpgp_object_resume_process(SW_PIN_RETRIES + m_pw->current_retries);
+        return;
+    }
+
+    // 処理が正常終了
+    fido_log_info("OpenPGP PIN verification success");
+    ccid_openpgp_object_resume_process(SW_NO_ERROR);
+}
+
+//
+// Flash ROM更新後のコールバック関数
+//
+void ccid_openpgp_pin_retry(void)
+{
+    // 現在のリトライカウンターを再度更新
+    uint16_t sw = ccid_pin_auth_update_retries(m_pw);
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        fido_log_warning("OpenPGP PIN data registration retry");
+    } else {
+        // 異常時はエラーレスポンス処理を指示
+        fido_log_error("OpenPGP PIN data registration retry fail");
+        ccid_openpgp_object_resume_process(sw);        
+    }
+}
+
+void ccid_openpgp_pin_resume(bool success)
+{
+    if (success) {
+        // Flash ROM書込みが成功した場合はPIN認証完了
+        ccid_openpgp_pin_auth_resume();
+
+    } else {
+        // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
+        fido_log_error("OpenPGP PIN data registration fail");
+        ccid_openpgp_object_resume_process(SW_UNABLE_TO_PROCESS);
+        return;
+    }
+
 }
