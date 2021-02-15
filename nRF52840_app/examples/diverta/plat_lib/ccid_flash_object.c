@@ -92,12 +92,15 @@ bool ccid_flash_object_read_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, bool 
         return true;
     }
 
+    // オブジェクトデータの長さを取得
+    size_t total_size = read_buffer[0];
+
     // 読み込んだデータを、引数の領域にコピー
     if (obj_size != NULL) {
-        *obj_size = read_buffer[0];
+        *obj_size = total_size;
     }
     if (obj_buff != NULL) {
-        memcpy(obj_buff, ccid_flash_object_read_buffer() + 4, *obj_size);
+        memcpy(obj_buff, ccid_flash_object_read_buffer() + 4, total_size);
     }
     return true;
 }
