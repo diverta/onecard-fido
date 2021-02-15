@@ -26,6 +26,7 @@ NRF_LOG_MODULE_REGISTER();
 #include "fido_ble_pairing.h"
 #include "fido_flash.h"
 #include "fido_flash_common.h"
+#include "ccid_flash_object.h"
 #include "ccid_flash_piv_object.h"
 
 //
@@ -58,6 +59,7 @@ static void fido_flash_event_result_failure(void)
     fido_maintenance_command_flash_failed();
 
     // CCID関連処理を実行
+    ccid_flash_object_failed();
     ccid_flash_piv_object_failed();
 }
 
@@ -76,6 +78,7 @@ static void fido_flash_event_gc_done(void)
     fido_maintenance_command_flash_gc_done();
 
     // CCID関連処理を実行
+    ccid_flash_object_gc_done();
     ccid_flash_piv_object_gc_done();
 }
 
@@ -107,6 +110,7 @@ static void fido_flash_event_updated(fds_evt_t const *p_evt)
     }
 
     // CCID関連処理を実行
+    ccid_flash_object_record_updated();
     ccid_flash_piv_object_record_updated();
 }
 
@@ -124,6 +128,7 @@ static void fido_flash_event_file_deleted(fds_evt_t const *p_evt)
     }
 
     // CCID関連処理を実行
+    ccid_flash_object_record_deleted();
     ccid_flash_piv_object_record_deleted();
 }
 
