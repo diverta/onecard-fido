@@ -17,8 +17,10 @@ extern "C" {
 #define OPENPGP_TEST_DATA
 
 #define OPENPGP_INS_VERIFY                  0x20
+#define OPENPGP_INS_ACTIVATE                0x44
 #define OPENPGP_INS_SELECT                  0xA4
 #define OPENPGP_INS_GET_DATA                0xCA
+#define OPENPGP_INS_TERMINATE               0xE6
 
 //
 // データオブジェクトのタグ
