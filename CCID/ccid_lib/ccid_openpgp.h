@@ -29,6 +29,7 @@ extern "C" {
 #define TAG_OPGP_PW1                        0x01
 #define TAG_OPGP_PW3                        0x02
 #define TAG_OPGP_RC                         0x03
+#define TAG_ATTR_TERMINATED                 0xFC
 //   以下はOpenPGPの仕様に存在する定義
 #define TAG_AID                             0x4F
 #define TAG_NAME                            0x5B
