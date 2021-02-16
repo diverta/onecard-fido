@@ -9,6 +9,7 @@
 #include "fido_flash.h"
 #include "fido_flash_common.h"
 
+#include "ccid_flash_object.h"
 #include "ccid_ykpiv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
@@ -21,29 +22,6 @@ NRF_LOG_MODULE_REGISTER();
 
 // for debug data
 #define LOG_HEXDUMP_DEBUG false
-
-// レコード格納領域
-//   バッファ長（MAX_BUF_SIZE）は、
-//   このモジュールで管理する
-//   最大のレコードサイズに合わせます。
-#define MAX_BUF_SIZE     PIV_DATA_OBJ_DATA_WORDS_MAX
-static uint32_t          m_record_buf_R[MAX_BUF_SIZE];
-static uint32_t          m_record_buf_W[MAX_BUF_SIZE];
-
-uint8_t *ccid_flash_piv_object_read_buffer(void)
-{
-    return (uint8_t *)m_record_buf_R;
-}
-
-uint8_t *ccid_flash_piv_object_write_buffer(void)
-{
-    return (uint8_t *)m_record_buf_W;
-}
-
-size_t ccid_flash_piv_object_rw_buffer_size(void)
-{
-    return MAX_BUF_SIZE;
-}
 
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
@@ -115,7 +93,8 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
     }
 
     // Flash ROMから属性データを読込
-    if (fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, PIV_DATA_OBJ_ATTR_WORDS, m_record_buf_R, is_exist) == false) {
+    uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+    if (fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, PIV_DATA_OBJ_ATTR_WORDS, read_buffer, is_exist) == false) {
         return false;
     }
     // 既存データがなければここで終了
@@ -130,7 +109,7 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
     //       1    : アルゴリズム（1バイト）
     //       2 - 3: 予備（2バイト）
     //     オブジェクトデータの長さ: 1ワード（4バイト）
-    uint8_t *rec_bytes = ccid_flash_piv_object_read_buffer();
+    uint8_t *rec_bytes = ccid_flash_object_read_buffer();
     uint32_t size32_t;
     memcpy(&size32_t, rec_bytes + 4, sizeof(uint32_t));
 
@@ -150,7 +129,7 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
     //   m_record_buf_Rの３ワード目を先頭とし、
     //   オブジェクトデータが格納されます
     //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
-    return fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, is_exist);
+    return fido_flash_fds_record_read(PIV_DATA_OBJ_FILE_ID, record_key, record_words, read_buffer, is_exist);
 }
 
 static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8_t *obj_data, size_t obj_data_size)
@@ -163,7 +142,7 @@ static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8
     //       2 - 3: 予備（2バイト）
     //     オブジェクトデータの長さ: 1ワード（4バイト）
     //   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
-    uint8_t *rec_bytes = ccid_flash_piv_object_write_buffer();
+    uint8_t *rec_bytes = ccid_flash_object_write_buffer();
     rec_bytes[0] = obj_tag;
     rec_bytes[1] = obj_alg;
     uint32_t size32_t = (uint32_t)obj_data_size;
@@ -184,7 +163,9 @@ static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8
         // オブジェクトデータの長さから、必要ワード数を計算し、
         // データをFlash ROMに書込
         size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
-        return fido_flash_fds_record_write(PIV_DATA_OBJ_FILE_ID, record_key, record_words, m_record_buf_R, m_record_buf_W);
+        uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
+        uint32_t *write_buffer = (uint32_t *)ccid_flash_object_write_buffer();
+        return fido_flash_fds_record_write(PIV_DATA_OBJ_FILE_ID, record_key, record_words, read_buffer, write_buffer);
 
     } else {
         return false;
@@ -194,7 +175,7 @@ static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8
 static void copy_object_data_from_buffer(uint8_t *obj_alg, uint8_t *obj_data_buf, size_t *obj_data_size)
 {
     // オブジェクトの属性を取得
-    uint8_t *rec_bytes = ccid_flash_piv_object_read_buffer();
+    uint8_t *rec_bytes = ccid_flash_object_read_buffer();
     uint32_t size32_t;
     *obj_alg = rec_bytes[1];
     memcpy(&size32_t, rec_bytes + 4, sizeof(uint32_t));

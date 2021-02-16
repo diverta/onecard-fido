@@ -46,13 +46,7 @@ void ccid_apdu_response_set_pending(bool b)
 //
 // Applet
 //
-enum APPLET {
-  APPLET_NONE,
-  APPLET_PIV,
-  APPLET_OATH,
-  APPLET_OPENPGP
-};
-static enum APPLET current_applet;
+static CCID_APPLET current_applet;
 
 void ccid_apdu_stop_applet(void) 
 {

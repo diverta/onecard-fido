@@ -15,10 +15,6 @@
 extern "C" {
 #endif
 
-uint8_t *ccid_flash_piv_object_read_buffer(void);
-uint8_t *ccid_flash_piv_object_write_buffer(void);
-size_t   ccid_flash_piv_object_rw_buffer_size(void);
-
 bool ccid_flash_piv_object_card_admin_key_read(uint8_t *key, size_t *key_size, uint8_t *key_alg, bool *is_exist);
 bool ccid_flash_piv_object_card_admin_key_write(uint8_t *key, size_t key_size, uint8_t key_alg);
 

@@ -352,6 +352,9 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_openpgp.c \
   $(CIDLIB_DIR)/ccid_openpgp_attr.c \
   $(CIDLIB_DIR)/ccid_openpgp_key.c \
+  $(CIDLIB_DIR)/ccid_openpgp_object.c \
+  $(CIDLIB_DIR)/ccid_openpgp_pin.c \
+  $(CIDLIB_DIR)/ccid_pin_auth.c \
   $(CIDLIB_DIR)/ccid_piv.c \
   $(CIDLIB_DIR)/ccid_piv_general_auth.c \
   $(CIDLIB_DIR)/ccid_piv_authenticate.c \
@@ -388,6 +391,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/ccid_crypto.c \
+  $(PLTLIB_DIR)/ccid_flash_object.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \

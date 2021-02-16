@@ -8,6 +8,8 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_pin.h"
+#include "ccid_pin_auth.h"
 
 #define MAX_PIN_LENGTH              64
 #define DIGITAL_SIG_COUNTER_LENGTH  3
@@ -18,15 +20,17 @@
 static char attr_name[] = "Here is the cardname";
 #endif
 
-static uint16_t get_retries(uint8_t *retries_pw1, uint8_t *retries_pw3, uint8_t *retries_rc)
+static uint16_t get_retries(PIN_TYPE type, uint8_t *retries)
 {
     // リトライカウンターをFlash ROMから読出し
-    // TODO: 仮の実装です。
-    *retries_pw1 = PW_RETRY_COUNTER_DEFAULT;
-    *retries_pw3 = PW_RETRY_COUNTER_DEFAULT;
-    *retries_rc = 0;
+    PIN_T *pw = ccid_pin_auth_pin_t(type);
+    uint16_t sw = ccid_pin_auth_get_retries(pw);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
 
     // 正常終了
+    *retries = pw->current_retries;
     return SW_NO_ERROR;
 }
 
@@ -39,10 +43,23 @@ uint16_t openpgp_attr_get_pw_status(uint8_t *buf, size_t *size)
 
     // リトライカウンターをFlash ROMから読出し
     uint8_t retries_pw1, retries_pw3, retries_rc;
-    uint16_t sw = get_retries(&retries_pw1, &retries_pw3, &retries_rc);
+    uint16_t sw;
+    // PW1
+    sw = get_retries(OPGP_PIN_PW1, &retries_pw1);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
+    // PW3
+    sw = get_retries(OPGP_PIN_PW3, &retries_pw3);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    // RC
+    sw = get_retries(OPGP_PIN_RC, &retries_rc);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
     buf[offset++] = MAX_PIN_LENGTH;
     buf[offset++] = MAX_PIN_LENGTH;
     buf[offset++] = MAX_PIN_LENGTH;

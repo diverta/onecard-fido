@@ -9,6 +9,8 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_key.h"
+#include "ccid_openpgp_pin.h"
+#include "ccid_pin_auth.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -367,6 +369,11 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
     return SW_NO_ERROR;
 }
 
+static uint16_t openpgp_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_pin_auth(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -385,6 +392,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_GET_DATA:
             rapdu->sw = openpgp_ins_get_data(capdu, rapdu);
+            break;
+        case OPENPGP_INS_VERIFY:
+            rapdu->sw = openpgp_ins_verify(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

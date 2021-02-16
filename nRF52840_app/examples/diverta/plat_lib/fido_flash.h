@@ -97,6 +97,22 @@ extern "C" {
 #define PIV_DATA_OBJ_81_RECORD_KEY      (0xBFC4)
 
 //
+// 以下はOpenPGPアプリケーションで使用
+//
+// OpenPGPオブジェクト
+//   オブジェクトデータの長さ: 1ワード（4バイト）
+//   オブジェクトデータ = 可変長（最大256ワード＝1,024バイト）
+#define OPGP_DATA_OBJ_FILE_ID           (0xBFBE)
+#define OPGP_DATA_OBJ_WORDS_MAX         256
+//
+// OpenPGPオブジェクト格納ファイルで
+// 共通利用するレコードID
+//
+#define OPGP_DATA_OBJ_01_RECORD_KEY     (0xBFAE)
+#define OPGP_DATA_OBJ_02_RECORD_KEY     (0xBFAD)
+#define OPGP_DATA_OBJ_03_RECORD_KEY     (0xBFAC)
+
+//
 // fido_flash_event.c
 //
 void fido_flash_event_set_gc_forced(void);
