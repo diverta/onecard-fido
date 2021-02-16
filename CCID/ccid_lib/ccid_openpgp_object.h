@@ -15,13 +15,6 @@ extern "C" {
 #endif
 
 //
-// データオブジェクトのタグ
-//
-#define TAG_OPGP_NONE           0x00
-#define TAG_OPGP_PW1            0x01
-#define TAG_OPGP_PW3            0x02
-
-//
 // 関数群
 //
 void        ccid_openpgp_object_resume_prepare(command_apdu_t *capdu, response_apdu_t *rapdu);

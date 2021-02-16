@@ -7,6 +7,7 @@
 #include "sdk_common.h"
 
 #include "ccid_flash_object.h"
+#include "ccid_openpgp.h"
 #include "ccid_openpgp_object.h"
 #include "fido_flash.h"
 #include "fido_flash_common.h"
@@ -48,7 +49,7 @@ size_t ccid_flash_object_rw_buffer_size(void)
 //
 // オブジェクトのRead／Write
 //
-static bool get_record_key_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, uint16_t *file_id, uint16_t *record_key)
+static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint16_t *file_id, uint16_t *record_key)
 {
     switch (applet_id) {
         case APPLET_OPENPGP:
@@ -70,7 +71,7 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, uint16
     return true;
 }
 
-bool ccid_flash_object_read_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, bool *is_exist, uint8_t *obj_buff, size_t *obj_size)
+bool ccid_flash_object_read_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *obj_buff, size_t *obj_size)
 {
     // 引数からファイル名、レコードキーを取得
     uint16_t file_id;
@@ -115,7 +116,7 @@ static size_t calculate_record_words(size_t record_bytes)
     return record_words;
 }
 
-bool ccid_flash_object_write_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, uint8_t *obj_buff, size_t obj_size)
+bool ccid_flash_object_write_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size)
 {
     // 引数からファイル名、レコードキーを取得
     uint16_t file_id;

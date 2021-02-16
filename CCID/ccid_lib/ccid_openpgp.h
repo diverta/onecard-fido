@@ -20,8 +20,14 @@ extern "C" {
 #define OPENPGP_INS_SELECT                  0xA4
 #define OPENPGP_INS_GET_DATA                0xCA
 
+//
+// データオブジェクトのタグ
+//   以下はOpenPGPの仕様に存在しない定義
+#define TAG_OPGP_NONE                       0x00
+#define TAG_OPGP_PW1                        0x01
+#define TAG_OPGP_PW3                        0x02
+//   以下はOpenPGPの仕様に存在する定義
 #define TAG_AID                             0x4F
-#define TAG_NAME                            0x5B
 #define TAG_NAME                            0x5B
 #define TAG_LOGIN                           0x5E
 #define TAG_LANG                            0x5F2D

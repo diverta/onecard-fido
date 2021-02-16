@@ -5,6 +5,7 @@
  * Created on 2021/02/11, 15:46
  */
 #include "ccid_pin.h"
+#include "ccid_openpgp.h"
 #include "ccid_openpgp_pin.h"
 #include "ccid_openpgp_object.h"
 
@@ -42,15 +43,15 @@ void ccid_openpgp_object_resume_process(uint16_t sw)
 //
 // PIN管理用
 //
-static uint8_t pin_read_buffer[66];
+static uint8_t pin_read_buff[66];
 static uint8_t pin_write_buff[66];
 
 void ccid_openpgp_object_pin_clear(void)
 {
-    memset(pin_read_buffer, 0, sizeof(pin_read_buffer));
+    memset(pin_read_buff, 0, sizeof(pin_read_buff));
 }
 
-static uint8_t get_pin_obj_tag(PIN_TYPE type) 
+static uint16_t get_pin_obj_tag(PIN_TYPE type) 
 {
     switch (type) {
         case OPGP_PIN_PW1:
@@ -71,34 +72,34 @@ bool ccid_openpgp_object_pin_get(PIN_T *pin, uint8_t **pin_code, uint8_t *pin_si
     //   2 - 65 : PIN（最大64バイト）
     bool is_exist = false;
     size_t pin_buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), &is_exist, pin_read_buffer, &pin_buffer_size) == false) {
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), &is_exist, pin_read_buff, &pin_buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP PIN read fail: type=0x%02x", pin->type);
         return false;
     }
     if (is_exist == false) {
         // Flash ROMに登録されていない場合はデフォルトを設定
-        pin_read_buffer[0] = pin->default_retries;
-        pin_read_buffer[1] = strlen(pin->default_code);
-        memcpy(pin_read_buffer + 2, pin->default_code, strlen(pin->default_code));
-        pin_buffer_size = pin_read_buffer[1] + 2;
+        pin_read_buff[0] = pin->default_retries;
+        pin_read_buff[1] = strlen(pin->default_code);
+        memcpy(pin_read_buff + 2, pin->default_code, strlen(pin->default_code));
+        pin_buffer_size = pin_read_buff[1] + 2;
         fido_log_debug("OpenPGP PIN is not registered, use default: type=0x%02x", pin->type);
     }
 
 #if LOG_DEBUG_PIN_BUFFER
     fido_log_debug("PIN object data read buffer (type=0x%02x): ", pin->type);
-    fido_log_print_hexdump_debug(pin_read_buffer, pin_buffer_size);
+    fido_log_print_hexdump_debug(pin_read_buff, pin_buffer_size);
 #endif
 
     // PINとリトライカウンターを戻す
     if (retries != NULL) {
-        *retries = pin_read_buffer[0];
+        *retries = pin_read_buff[0];
     }
     if (pin_size != NULL) {
-        *pin_size = pin_read_buffer[1];
+        *pin_size = pin_read_buff[1];
     }
     if (pin_code != NULL) {
-        *pin_code = pin_read_buffer + 2;
+        *pin_code = pin_read_buff + 2;
     }
     return true;
 }
@@ -125,7 +126,7 @@ bool ccid_openpgp_object_pin_set(PIN_T *pin, uint8_t *pin_code, uint8_t pin_size
     //  ccid_openpgp_object_write_resume のいずれかが
     //  コールバックされます。
     size_t pin_buffer_size = pin_size + 2;
-    if (ccid_flash_object_write_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), pin_read_buffer, pin_buffer_size) == false) {
+    if (ccid_flash_object_write_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), pin_write_buff, pin_buffer_size) == false) {
         fido_log_error("OpenPGP PIN write fail: type=0x%02x", pin->type);
         return false;
     }

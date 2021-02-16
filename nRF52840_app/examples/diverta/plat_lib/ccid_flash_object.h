@@ -19,8 +19,8 @@ extern "C" {
 uint8_t    *ccid_flash_object_read_buffer(void);
 uint8_t    *ccid_flash_object_write_buffer(void);
 size_t      ccid_flash_object_rw_buffer_size(void);
-bool        ccid_flash_object_read_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, bool *is_exist, uint8_t *buff, size_t *size);
-bool        ccid_flash_object_write_by_tag(CCID_APPLET applet_id, uint8_t obj_tag, uint8_t *obj_buff, size_t obj_size);
+bool        ccid_flash_object_read_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, bool *is_exist, uint8_t *buff, size_t *size);
+bool        ccid_flash_object_write_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint8_t *obj_buff, size_t obj_size);
 
 //
 // コールバック関数群
