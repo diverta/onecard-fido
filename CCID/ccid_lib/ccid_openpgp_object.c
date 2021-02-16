@@ -58,6 +58,8 @@ static uint16_t get_pin_obj_tag(PIN_TYPE type)
             return TAG_OPGP_PW1;
         case OPGP_PIN_PW3:
             return TAG_OPGP_PW3;
+        case OPGP_PIN_RC:
+            return TAG_OPGP_RC;
         default:
             return TAG_OPGP_NONE;
     }

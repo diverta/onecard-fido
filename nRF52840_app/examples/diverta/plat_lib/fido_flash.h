@@ -110,6 +110,7 @@ extern "C" {
 //
 #define OPGP_DATA_OBJ_01_RECORD_KEY     (0xBFAE)
 #define OPGP_DATA_OBJ_02_RECORD_KEY     (0xBFAD)
+#define OPGP_DATA_OBJ_03_RECORD_KEY     (0xBFAC)
 
 //
 // fido_flash_event.c
