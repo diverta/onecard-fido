@@ -7,8 +7,7 @@
 #ifndef CCID_OPENPGP_ATTR_H
 #define CCID_OPENPGP_ATTR_H
 
-#include <stddef.h>
-#include <stdint.h>
+#include "ccid_pin.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +16,7 @@ extern "C" {
 //
 // 関数群
 //
+uint16_t    ccid_openpgp_attr_get_retries(PIN_TYPE type, uint8_t *retries);
 uint16_t    openpgp_attr_get_pw_status(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_login_data(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_url_data(uint8_t *buf, size_t *size);
