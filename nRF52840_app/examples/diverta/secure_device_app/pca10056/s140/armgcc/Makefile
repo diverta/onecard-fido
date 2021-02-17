@@ -351,6 +351,7 @@ SRC_FILES += \
   $(CIDLIB_DIR)/ccid_main.c \
   $(CIDLIB_DIR)/ccid_openpgp.c \
   $(CIDLIB_DIR)/ccid_openpgp_attr.c \
+  $(CIDLIB_DIR)/ccid_openpgp_data.c \
   $(CIDLIB_DIR)/ccid_openpgp_key.c \
   $(CIDLIB_DIR)/ccid_openpgp_object.c \
   $(CIDLIB_DIR)/ccid_openpgp_pin.c \
