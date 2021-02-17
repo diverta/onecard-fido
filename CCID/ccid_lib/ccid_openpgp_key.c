@@ -9,10 +9,21 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_key.h"
 
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
+
+// テスト用
+#define LOG_DEBUG_KEY_ATTR_DESC     false
+
 //
 // Keys for OpenPGP
 //
 #define KEY_TYPE_RSA                0x01
+
+// 鍵ステータス種別
+#define KEY_NOT_PRESENT             0x00
+#define KEY_GENERATED               0x01
+#define KEY_IMPORTED                0x02
 
 //
 // offset
@@ -42,22 +53,41 @@ static uint8_t key_aut_fingerprint[] = {0x81, 0x1F, 0xC4, 0x5F, 0x91, 0x1A, 0xC1
 static uint8_t key_sig_datetime[] = {0x5F, 0xEE, 0x7D, 0x1A};
 static uint8_t key_dec_datetime[] = {0x5F, 0xEE, 0x7D, 0x24};
 static uint8_t key_aut_datetime[] = {0x5F, 0xEE, 0x7D, 0x2E};
-static uint8_t key_sig_status = 0x01;
-static uint8_t key_dec_status = 0x01;
-static uint8_t key_aut_status = 0x01;
 #endif
 
+//
+// 鍵属性管理
+//
 uint16_t openpgp_key_get_attributes(uint16_t tag, uint8_t *buf, size_t *size) 
 {
-    // TODO: 仮の実装です。
-    (void)tag;
-    memcpy(buf, rsa_attr, sizeof(rsa_attr));
-    *size = sizeof(rsa_attr);
+    bool is_exist = false;
+    size_t buffer_size;
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("OpenPGP key attribute read fail: tag=0x%04x", tag);
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルト（RSA-2048）を設定
+        buffer_size = sizeof(rsa_attr);
+        memcpy(buf, rsa_attr, buffer_size);
+#if LOG_DEBUG_KEY_ATTR_DESC
+        fido_log_debug("OpenPGP key attribute is not registered, use default(RSA-2048): tag=0x%04x", tag);
+#endif
+    }
+
+    // サイズを戻す
+    if (size != NULL) {
+        *size = buffer_size;
+    }
 
     // 正常終了
     return SW_NO_ERROR;
 }
 
+//
+// 鍵フィンガープリント管理
+//
 uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
 {
     // TODO: 仮の実装です。
@@ -81,6 +111,9 @@ uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
     return SW_NO_ERROR;
 }
 
+//
+// 鍵タイムスタンプ管理
+//
 uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 {
     // TODO: 仮の実装です。
@@ -104,22 +137,47 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
     return SW_NO_ERROR;
 }
 
-uint16_t openpgp_key_get_status(uint16_t tag, uint8_t *status)
+//
+// 鍵ステータス管理
+//
+static uint16_t get_key_status_tag(OPGP_KEY_TYPE type) 
 {
-    // TODO: 仮の実装です。
-    switch (tag) {
+    switch (type) {
         case OPGP_KEY_SIG:
-            *status = key_sig_status;
-            break;
+            return TAG_KEY_SIG_STATUS;
         case OPGP_KEY_ENC:
-            *status = key_dec_status;
-            break;
+            return TAG_KEY_DEC_STATUS;
         case OPGP_KEY_AUT:
-            *status = key_aut_status;
-            break;
+            return TAG_KEY_AUT_STATUS;
         default:
-            *status = 0x00;
-            break;
+            return TAG_OPGP_NONE;
+    }
+}
+
+uint16_t openpgp_key_get_status(OPGP_KEY_TYPE type, uint8_t *status)
+{
+    // データオブジェクトのタグを取得
+    uint16_t tag = get_key_status_tag(type);
+    if (tag == TAG_OPGP_NONE) {
+        return SW_WRONG_DATA;
+    }
+
+    // 鍵ステータスをFlash ROMから読み込み
+    bool is_exist = false;
+    uint8_t status_;
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, &status_, NULL) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("OpenPGP key status read fail: tag=0x%04x", tag);
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルトを設定
+        status_ = KEY_NOT_PRESENT;
+    }
+
+    // ステータスを戻す
+    if (status != NULL) {
+        *status = status_;
     }
 
     // 正常終了
