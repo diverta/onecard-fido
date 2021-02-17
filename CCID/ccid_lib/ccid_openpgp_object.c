@@ -6,14 +6,16 @@
  */
 #include "ccid_pin.h"
 #include "ccid_openpgp.h"
-#include "ccid_openpgp_pin.h"
+#include "ccid_openpgp_data.h"
 #include "ccid_openpgp_object.h"
+#include "ccid_openpgp_pin.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 // テスト用
 #define LOG_DEBUG_PIN_BUFFER    false
+#define LOG_DEBUG_OBJ_BUFFER    false
 
 // Flash ROM書込み時に実行した関数の参照を保持
 static void *m_flash_func = NULL;
@@ -141,6 +143,91 @@ bool ccid_openpgp_object_pin_set(PIN_T *pin, uint8_t *pin_code, uint8_t pin_size
 }
 
 //
+// OpenPGPデータオブジェクト管理用
+//   最大データ長は仮設定です。
+//
+static uint8_t obj_read_buffer[16];
+static uint8_t obj_write_buff[16];
+
+bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, uint8_t *obj_size)
+{
+    // オブジェクトデータをFlash ROMから読出し
+    // バイトイメージ（最大66バイト）
+    //   0      : PINリトライカウンター
+    //   1      : PIN長
+    //   2 - 65 : PIN（最大64バイト）
+    bool is_exist = false;
+    size_t buffer_size;
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, obj_tag, &is_exist, obj_read_buffer, &buffer_size) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("OpenPGP data object read fail: tag=0x%04x", obj_tag);
+        return false;
+    }
+
+#if LOG_DEBUG_OBJ_BUFFER
+    if (is_exist) {
+        fido_log_debug("OpenPGP data object read buffer (tag=0x%04x): ", obj_tag);
+        fido_log_print_hexdump_debug(obj_read_buffer, buffer_size);
+    }
+#endif
+
+    // データ格納位置およびデータ長を戻す
+    if (obj_size != NULL) {
+        *obj_size = buffer_size;
+    }
+    if (obj_data != NULL) {
+        *obj_data = obj_read_buffer;
+    }
+    return true;
+}
+
+bool ccid_openpgp_object_data_set(uint16_t obj_tag, uint8_t *obj_data, uint8_t obj_size)
+{
+    // Flash ROMに登録するオブジェクトデータを生成
+    memcpy(obj_write_buff, obj_data, obj_size);
+
+#if LOG_DEBUG_OBJ_BUFFER
+    fido_log_debug("OpenPGP data object write buffer (tag=0x%04x): ", obj_tag);
+    fido_log_print_hexdump_debug(obj_write_buff, obj_size);
+#endif
+
+    // Flash ROMに登録
+    //  Flash ROM更新後、
+    //  ccid_openpgp_object_write_retry または
+    //  ccid_openpgp_object_write_resume のいずれかが
+    //  コールバックされます。
+    if (ccid_flash_object_write_by_tag(APPLET_OPENPGP, obj_tag, obj_write_buff, obj_size) == false) {
+        fido_log_error("OpenPGP object data write fail: tag=0x%04x", obj_tag);
+        return false;
+    }
+
+    // Flash ROM書込み後のコールバック先を判定するため、関数参照を設定
+    m_flash_func = (void *)ccid_openpgp_object_data_set;
+
+    // 処理成功
+    return true;
+}
+
+bool ccid_openpgp_object_data_delete_all(void)
+{
+    // Flash ROMから、全てのオブジェクトデータを削除
+    //  Flash ROM更新後、
+    //  ccid_openpgp_object_write_retry または
+    //  ccid_openpgp_object_write_resume のいずれかが
+    //  コールバックされます。
+    if (ccid_flash_object_delete_all(APPLET_OPENPGP) == false) {
+        fido_log_error("All OpenPGP object data delete fail");
+        return false;
+    }
+    
+    // Flash ROM書込み後のコールバック先を判定するため、関数参照を設定
+    m_flash_func = (void *)ccid_openpgp_object_data_delete_all;
+
+    // 処理成功
+    return true;
+}
+
+//
 // Flash ROM書込み後のコールバック関数
 //
 void ccid_openpgp_object_write_retry(void)
@@ -153,6 +240,12 @@ void ccid_openpgp_object_write_retry(void)
     if (m_flash_func == ccid_openpgp_object_pin_set) {
         ccid_openpgp_pin_retry();
     }
+    if (m_flash_func == ccid_openpgp_object_data_set) {
+        ccid_openpgp_data_retry();
+    }
+    if (m_flash_func == ccid_openpgp_object_data_delete_all) {
+        ccid_openpgp_data_retry();
+    }
 }
 
 void ccid_openpgp_object_write_resume(bool success)
@@ -164,5 +257,11 @@ void ccid_openpgp_object_write_resume(bool success)
     // 正常系の後続処理を実行
     if (m_flash_func == ccid_openpgp_object_pin_set) {
         ccid_openpgp_pin_resume(success);
+    }
+    if (m_flash_func == ccid_openpgp_object_data_set) {
+        ccid_openpgp_data_resume(success);
+    }
+    if (m_flash_func == ccid_openpgp_object_data_delete_all) {
+        ccid_openpgp_data_resume(success);
     }
 }

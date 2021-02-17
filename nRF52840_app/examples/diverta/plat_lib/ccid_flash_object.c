@@ -17,9 +17,6 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
-// for debug data
-#define LOG_HEXDUMP_DEBUG   true
-
 // Flash ROM書込み時に実行中のAPPLETを保持
 static CCID_APPLET m_applet_id = APPLET_NONE;
 
@@ -49,7 +46,7 @@ size_t ccid_flash_object_rw_buffer_size(void)
 //
 // オブジェクトのRead／Write
 //
-static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint16_t *file_id, uint16_t *record_key)
+static bool get_file_id(CCID_APPLET applet_id, uint16_t *file_id)
 {
     switch (applet_id) {
         case APPLET_OPENPGP:
@@ -57,6 +54,14 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
             break;
         default:
             return false;
+    }
+    return true;
+}
+
+static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint16_t *file_id, uint16_t *record_key)
+{
+    if (get_file_id(applet_id, file_id) == false) {
+        return false;
     }
     switch (obj_tag) {
         case TAG_OPGP_PW1:
@@ -67,6 +72,9 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
             break;
         case TAG_OPGP_RC:
             *record_key = OPGP_DATA_OBJ_03_RECORD_KEY;
+            break;
+        case TAG_ATTR_TERMINATED:
+            *record_key = OPGP_DATA_OBJ_04_RECORD_KEY;
             break;
         default:
             return false;
@@ -148,6 +156,21 @@ bool ccid_flash_object_write_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uin
     return fido_flash_fds_record_write(file_id, record_key, record_words, read_buffer, write_buffer);
 }
 
+bool ccid_flash_object_delete_all(CCID_APPLET applet_id)
+{
+    // 引数からファイル名を取得
+    uint16_t file_id;
+    if (get_file_id(applet_id, &file_id) == false) {
+        return false;
+    }
+
+    // 実行中のAPPLETを保持
+    m_applet_id = applet_id;
+
+    // データファイルをFlash ROMから削除
+    return fido_flash_fds_file_delete(file_id);
+}
+
 //
 // コールバック関数群
 //
@@ -203,4 +226,16 @@ void ccid_flash_object_record_updated(void)
 
 void ccid_flash_object_record_deleted(void)
 {
+    if (m_applet_id == APPLET_NONE) {
+        return;
+    }
+
+    // 判定用の参照を初期化
+    CCID_APPLET applet_id = m_applet_id;
+    m_applet_id = APPLET_NONE;
+
+    // 正常系の後続処理を実行
+    if (applet_id == APPLET_OPENPGP) {
+        ccid_openpgp_object_write_resume(true);
+    }
 }

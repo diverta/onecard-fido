@@ -8,6 +8,7 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_data.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_pin.h"
 #include "ccid_pin_auth.h"
@@ -374,6 +375,16 @@ static uint16_t openpgp_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu
     return ccid_openpgp_pin_auth(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_terminate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_data_terminate(capdu, rapdu);
+}
+
+static uint16_t openpgp_ins_activate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_data_activate(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -395,6 +406,12 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_VERIFY:
             rapdu->sw = openpgp_ins_verify(capdu, rapdu);
+            break;
+        case OPENPGP_INS_TERMINATE:
+            rapdu->sw = openpgp_ins_terminate(capdu, rapdu);
+            break;
+        case OPENPGP_INS_ACTIVATE:
+            rapdu->sw = openpgp_ins_activate(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

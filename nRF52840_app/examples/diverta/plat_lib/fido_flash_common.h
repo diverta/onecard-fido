@@ -17,6 +17,7 @@ void fido_flash_fds_force_gc(void);
 bool fido_flash_fds_record_get(fds_record_desc_t *record_desc, uint32_t *record_buffer);
 bool fido_flash_fds_record_read(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, bool *is_exist);
 bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t record_words, uint32_t *record_buf_R, uint32_t *record_buf_W);
+bool fido_flash_fds_file_delete(uint16_t file_id);
 
 #ifdef __cplusplus
 }
