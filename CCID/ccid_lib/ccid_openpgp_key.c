@@ -47,7 +47,7 @@ static uint8_t key_dec_status = 0x01;
 static uint8_t key_aut_status = 0x01;
 #endif
 
-uint16_t openpgp_key_get_attributes(uint8_t tag, uint8_t *buf, size_t *size) 
+uint16_t openpgp_key_get_attributes(uint16_t tag, uint8_t *buf, size_t *size) 
 {
     // TODO: 仮の実装です。
     (void)tag;
@@ -58,7 +58,7 @@ uint16_t openpgp_key_get_attributes(uint8_t tag, uint8_t *buf, size_t *size)
     return SW_NO_ERROR;
 }
 
-uint16_t openpgp_key_get_fingerprint(uint8_t tag, void *buf, size_t *size)
+uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
 {
     // TODO: 仮の実装です。
     switch (tag) {
@@ -81,7 +81,7 @@ uint16_t openpgp_key_get_fingerprint(uint8_t tag, void *buf, size_t *size)
     return SW_NO_ERROR;
 }
 
-uint16_t openpgp_key_get_datetime(uint8_t tag, void *buf, size_t *size)
+uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 {
     // TODO: 仮の実装です。
     switch (tag) {
@@ -104,7 +104,7 @@ uint16_t openpgp_key_get_datetime(uint8_t tag, void *buf, size_t *size)
     return SW_NO_ERROR;
 }
 
-uint16_t openpgp_key_get_status(uint8_t tag, uint8_t *status)
+uint16_t openpgp_key_get_status(uint16_t tag, uint8_t *status)
 {
     // TODO: 仮の実装です。
     switch (tag) {
