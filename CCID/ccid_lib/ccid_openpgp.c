@@ -370,6 +370,11 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
     return SW_NO_ERROR;
 }
 
+static uint16_t openpgp_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_data_put(capdu, rapdu);
+}
+
 static uint16_t openpgp_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     return ccid_openpgp_pin_auth(capdu, rapdu);
@@ -403,6 +408,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_GET_DATA:
             rapdu->sw = openpgp_ins_get_data(capdu, rapdu);
+            break;
+        case OPENPGP_INS_PUT_DATA:
+            rapdu->sw = openpgp_ins_put_data(capdu, rapdu);
             break;
         case OPENPGP_INS_VERIFY:
             rapdu->sw = openpgp_ins_verify(capdu, rapdu);

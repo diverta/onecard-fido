@@ -76,6 +76,9 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
         case TAG_ATTR_TERMINATED:
             *record_key = OPGP_DATA_OBJ_04_RECORD_KEY;
             break;
+        case TAG_PW_STATUS:
+            *record_key = OPGP_DATA_OBJ_05_RECORD_KEY;
+            break;
         default:
             return false;
     }
