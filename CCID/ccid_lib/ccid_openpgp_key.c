@@ -183,3 +183,108 @@ uint16_t openpgp_key_get_status(OPGP_KEY_TYPE type, uint8_t *status)
     // 正常終了
     return SW_NO_ERROR;
 }
+
+//
+// 鍵生成処理
+//
+static uint8_t m_key_attr[16];
+
+static OPGP_KEY_TYPE get_key_type(uint8_t tag)
+{
+    switch (tag) {
+        case 0xB6:
+            return OPGP_KEY_SIG;
+        case 0xB8:
+            return OPGP_KEY_ENC;
+        case 0xA4:
+            return OPGP_KEY_AUT;
+        default:
+            return OPGP_KEY_NONE;
+    }
+}
+
+static uint16_t get_key_attribute_tag(OPGP_KEY_TYPE type) 
+{
+    switch (type) {
+        case OPGP_KEY_SIG:
+            return TAG_ALGORITHM_ATTRIBUTES_SIG;
+        case OPGP_KEY_ENC:
+            return TAG_ALGORITHM_ATTRIBUTES_DEC;
+        case OPGP_KEY_AUT:
+            return TAG_ALGORITHM_ATTRIBUTES_AUT;
+        default:
+            return TAG_OPGP_NONE;
+    }
+}
+
+static uint16_t get_key_attribute(OPGP_KEY_TYPE key_type, uint8_t *key_attr_buf, size_t *key_attr_size)
+{
+    // 鍵種別から、データオブジェクトのタグを取得
+    uint16_t key_attr_tag = get_key_attribute_tag(key_type);
+    if (key_attr_tag == TAG_OPGP_NONE) {
+        return SW_WRONG_DATA;
+    }
+
+    // 鍵属性を取得
+    uint16_t sw = openpgp_key_get_attributes(key_attr_tag, key_attr_buf, key_attr_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+#if LOG_DEBUG_KEY_ATTR_DESC
+    fido_log_debug("OpenPGP key attribute buffer (tag=0x%04x): ", key_attr_tag);
+    fido_log_print_hexdump_debug(key_attr_buf, *key_attr_size);
+#endif
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
+uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p2 != 0x00) {
+        return SW_WRONG_P1P2;
+    }
+    if (capdu->lc != 2 && capdu->lc != 5) {
+        return SW_WRONG_LENGTH;
+    }
+
+    // 引数のタグから鍵種別を取得
+    OPGP_KEY_TYPE key_type = get_key_type(capdu->data[0]);
+    if (key_type == OPGP_KEY_NONE) {
+        return SW_WRONG_DATA;
+    }
+
+    // 鍵属性を取得
+    size_t key_attr_size;
+    uint16_t sw = get_key_attribute(key_type, m_key_attr, &key_attr_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    if (capdu->p1 == 0x81) {
+        // 鍵ステータスを取得
+        uint8_t status;
+        sw = openpgp_key_get_status(key_type, &status);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
+        // If key not present
+        if (status == KEY_NOT_PRESENT) {
+            return SW_REFERENCE_DATA_NOT_FOUND;
+        }
+        //
+        // TODO: Flash ROMから公開鍵を取得
+        //
+        // if (openpgp_key_get_key(key_type, &key, sizeof(key)) < 0) {
+        //     return SW_UNABLE_TO_PROCESS;
+        // }
+
+    } else {
+        return SW_WRONG_P1P2;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
+}

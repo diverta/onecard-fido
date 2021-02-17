@@ -390,6 +390,11 @@ static uint16_t openpgp_ins_activate(command_apdu_t *capdu, response_apdu_t *rap
     return ccid_openpgp_data_activate(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_generate_asymmetric_key_pair(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_key_pair_generate(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -420,6 +425,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_ACTIVATE:
             rapdu->sw = openpgp_ins_activate(capdu, rapdu);
+            break;
+        case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
+            rapdu->sw = openpgp_ins_generate_asymmetric_key_pair(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
