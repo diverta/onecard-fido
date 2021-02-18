@@ -104,3 +104,55 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
     // 正常終了
     return ccid_crypto_rsa_private_terminate(true, &rsa);
 }
+
+//
+// RSA秘密鍵／公開鍵生成関連
+//
+static bool rsa_generate_key_terminate(bool success, mbedtls_rsa_context *rsa)
+{
+    // リソースを解放
+    mbedtls_rsa_free(rsa);
+    return success;
+}
+
+bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits)
+{
+    // nrf_cc310 を初期化
+    fido_crypto_init();
+
+    // 変数初期化
+    mbedtls_rsa_context rsa;
+    mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
+
+    //
+    // mbedtls_rsa_gen_key を実行
+    //   exponent = 65537 (0x00010001)
+    //
+    int ret = mbedtls_rsa_gen_key(&rsa, ccid_crypto_rsa_random, NULL, nbits, 65537);
+    if (ret != 0) {
+        return rsa_generate_key_terminate(false, &rsa);
+    }
+
+    //
+    // mbedtls_rsa_export_raw を実行
+    // （N, P, Q, E のエクスポート）
+    // offset of rsa_private_key_raw
+    //    0: P
+    //  128: Q
+    //  256: E
+    //
+    size_t pq_size = nbits / 16;
+    size_t e_size = 4;
+    uint8_t *n = rsa_public_key_raw;
+    uint8_t *p = rsa_private_key_raw;
+    uint8_t *q = p + pq_size;
+    uint8_t *e = q + pq_size;
+    ret = mbedtls_rsa_export_raw(&rsa, n, pq_size * 2, p, pq_size, q, pq_size, NULL, 0, e, e_size);
+    if (ret != 0) {
+        NRF_LOG_ERROR("mbedtls_rsa_export_raw returns %d", ret);
+        return rsa_generate_key_terminate(false, &rsa);
+    }
+
+    // 正常終了
+    return rsa_generate_key_terminate(true, &rsa);
+}
