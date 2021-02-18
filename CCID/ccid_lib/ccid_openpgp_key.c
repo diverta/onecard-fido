@@ -8,6 +8,7 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_key.h"
+#include "ccid_openpgp_key_rsa.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -263,7 +264,22 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         return sw;
     }
 
-    if (capdu->p1 == 0x81) {
+    // 鍵アルゴリズムを取得
+    uint8_t key_alg = m_key_attr[0];
+    if (key_alg != KEY_TYPE_RSA) {
+        // RSA-2048以外はサポート外
+        fido_log_error("OpenPGP do not support algorithm 0x%02x ", key_alg);
+        return SW_WRONG_DATA;
+    }
+
+    if (capdu->p1 == 0x80) {
+        // RSA-2048キーペアを生成
+        sw = ccid_openpgp_key_rsa_generate(m_key_attr);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
+
+    } else if (capdu->p1 == 0x81) {
         // 鍵ステータスを取得
         uint8_t status;
         sw = openpgp_key_get_status(key_type, &status);
