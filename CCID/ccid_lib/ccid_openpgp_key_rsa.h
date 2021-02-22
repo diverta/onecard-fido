@@ -16,6 +16,7 @@ extern "C" {
 //
 // 関数群
 //
+uint8_t    *ccid_openpgp_key_rsa_private_key(void);
 uint8_t    *ccid_openpgp_key_rsa_public_key(void);
 uint16_t    ccid_openpgp_key_rsa_generate(uint8_t *key_attr);
 

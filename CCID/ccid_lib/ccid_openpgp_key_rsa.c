@@ -21,6 +21,11 @@
 //   256: N (public key)
 static uint8_t m_rsa_key[512];
 
+uint8_t *ccid_openpgp_key_rsa_private_key(void)
+{
+    return m_rsa_key;
+}
+
 uint8_t *ccid_openpgp_key_rsa_public_key(void)
 {
     return m_rsa_key + 256;
@@ -42,9 +47,6 @@ static uint16_t rsa_process_terminate(uint16_t sw)
 {
     // キープアライブタイマーを停止
     fido_repeat_process_timer_stop();
-
-    // 秘密鍵領域をクリア
-    memset(m_rsa_key, 0, sizeof(m_rsa_key));
     return sw;
 }
 

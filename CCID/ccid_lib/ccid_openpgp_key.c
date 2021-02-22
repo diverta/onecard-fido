@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ccid_openpgp.h"
+#include "ccid_openpgp_data.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_key_rsa.h"
 
@@ -306,9 +307,13 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         if (sw != SW_NO_ERROR) {
             return sw;
         }
-        //
-        // TODO: Flash ROMに公開鍵を保存
-        //
+        // レスポンスを生成
+        key_pair_generate_response(rapdu, m_key_attr);
+        // Flash ROMに公開鍵を保存
+        sw = ccid_openpgp_data_register_key(capdu, rapdu, key_tag, KEY_GENERATED);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
 
     } else if (capdu->p1 == 0x81) {
         // 鍵ステータスを取得
@@ -324,13 +329,12 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         //
         // TODO: Flash ROMから公開鍵を取得
         //
+        // レスポンスを生成
+        key_pair_generate_response(rapdu, m_key_attr);
 
     } else {
         return SW_WRONG_P1P2;
     }
-
-    // レスポンスを生成
-    key_pair_generate_response(rapdu, m_key_attr);
     
     // 正常終了
     return SW_NO_ERROR;
