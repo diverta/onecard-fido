@@ -17,8 +17,10 @@ extern "C" {
 //
 // 関数群
 //
-bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output);
-bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits);
+uint8_t    *ccid_crypto_rsa_e_bytes(void);
+uint8_t     ccid_crypto_rsa_e_size(void);
+bool        ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output);
+bool        ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits);
 
 #ifdef __cplusplus
 }

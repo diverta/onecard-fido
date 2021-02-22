@@ -11,6 +11,9 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+// テスト用
+#define LOG_DEBUG_RSA_EXPONENT      false
+
 #include "ccid.h"
 #include "ccid_piv_object.h"
 
@@ -19,6 +22,35 @@ NRF_LOG_MODULE_REGISTER();
 
 // for mbedtls_rsa_private
 #include "mbedtls/rsa.h"
+
+// for fido_get_uint32_from_bytes
+#include "fido_common.h"
+
+//
+// E は定数として、このモジュール内で管理
+//
+static uint8_t E[] = {0, 1, 0, 1};
+
+uint8_t *ccid_crypto_rsa_e_bytes(void)
+{
+    return E;
+}
+
+uint8_t ccid_crypto_rsa_e_size(void)
+{
+    return sizeof(E);
+}
+
+static int ccid_crypto_rsa_exponent(void)
+{
+    int int_e = (int)fido_get_uint32_from_bytes(E);
+
+#if LOG_DEBUG_RSA_EXPONENT
+    NRF_LOG_DEBUG("ccid_crypto_rsa_exponent returns %d", int_e);
+#endif
+
+    return int_e;
+}
 
 static bool ccid_crypto_rsa_private_terminate(bool success, mbedtls_rsa_context *rsa)
 {
@@ -70,7 +102,6 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
         NRF_LOG_ERROR("mbedtls_mpi_read_binary(Q) returns 0x%04x", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
-    uint8_t E[] = {0, 1, 0, 1};
     ret = mbedtls_mpi_read_binary(&rsa.E, E, sizeof(E));
     if (ret != 0) {
         NRF_LOG_ERROR("mbedtls_mpi_read_binary(E) returns 0x%04x", ret);
@@ -128,7 +159,7 @@ bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_pub
     // mbedtls_rsa_gen_key を実行
     //   exponent = 65537 (0x00010001)
     //
-    int ret = mbedtls_rsa_gen_key(&rsa, ccid_crypto_rsa_random, NULL, nbits, 65537);
+    int ret = mbedtls_rsa_gen_key(&rsa, ccid_crypto_rsa_random, NULL, nbits, ccid_crypto_rsa_exponent());
     if (ret != 0) {
         return rsa_generate_key_terminate(false, &rsa);
     }

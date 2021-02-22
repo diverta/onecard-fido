@@ -32,6 +32,19 @@ void fido_set_uint16_bytes(uint8_t *p_dest_buffer, uint16_t bytes)
     p_dest_buffer[1] = bytes >>  0 & 0xff;
 }
 
+uint32_t fido_get_uint32_from_bytes(uint8_t *p_src_buffer)
+{
+    // ４バイトのビッグエンディアン形式配列を、
+    // ４バイト整数に変換
+    uint32_t uint32;
+    uint8_t *p_dest_buffer = (uint8_t *)&uint32;
+    p_dest_buffer[0] = p_src_buffer[3];
+    p_dest_buffer[1] = p_src_buffer[2];
+    p_dest_buffer[2] = p_src_buffer[1];
+    p_dest_buffer[3] = p_src_buffer[0];
+    return uint32;
+}
+
 size_t fido_calculate_aes_block_size(size_t buffer_size)
 {    
     // 暗号化対象ブロックサイズを計算
