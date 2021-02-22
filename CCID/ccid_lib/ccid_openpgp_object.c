@@ -149,7 +149,7 @@ bool ccid_openpgp_object_pin_set(PIN_T *pin, uint8_t *pin_code, uint8_t pin_size
 static uint8_t obj_read_buffer[512];
 static uint8_t obj_write_buff[512];
 
-bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, uint8_t *obj_size)
+bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, size_t *obj_size)
 {
     // オブジェクトデータをFlash ROMから読出し
     bool is_exist = false;
@@ -177,7 +177,7 @@ bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, uint8_t 
     return true;
 }
 
-bool ccid_openpgp_object_data_set(uint16_t obj_tag, uint8_t *obj_data, uint8_t obj_size)
+bool ccid_openpgp_object_data_set(uint16_t obj_tag, uint8_t *obj_data, size_t obj_size)
 {
     // Flash ROMに登録するオブジェクトデータを生成
     memcpy(obj_write_buff, obj_data, obj_size);

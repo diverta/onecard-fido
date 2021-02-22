@@ -142,7 +142,7 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 //
 // 鍵ステータス管理
 //
-static uint16_t get_key_status_tag(uint16_t key_tag) 
+uint16_t ccid_openpgp_key_status_tag_get(uint16_t key_tag) 
 {
     switch (key_tag) {
         case TAG_KEY_SIG:
@@ -159,7 +159,7 @@ static uint16_t get_key_status_tag(uint16_t key_tag)
 uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
 {
     // データオブジェクトのタグを取得
-    uint16_t tag = get_key_status_tag(key_tag);
+    uint16_t tag = ccid_openpgp_key_status_tag_get(key_tag);
     if (tag == TAG_OPGP_NONE) {
         return SW_WRONG_DATA;
     }
