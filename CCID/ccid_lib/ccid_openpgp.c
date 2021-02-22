@@ -235,19 +235,19 @@ static uint16_t get_application_related_data(response_apdu_t *rapdu)
     uint8_t status;
     rdata[offset++] = TAG_KEY_INFO;
     rdata[offset++] = 6;
-    sw = openpgp_key_get_status(OPGP_KEY_SIG, &status);
+    sw = openpgp_key_get_status(TAG_KEY_SIG, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
     rdata[offset++] = 0x01;
     rdata[offset++] = status;
-    sw = openpgp_key_get_status(OPGP_KEY_ENC, &status);
+    sw = openpgp_key_get_status(TAG_KEY_DEC, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
     rdata[offset++] = 0x02;
     rdata[offset++] = status;
-    sw = openpgp_key_get_status(OPGP_KEY_AUT, &status);
+    sw = openpgp_key_get_status(TAG_KEY_AUT, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }

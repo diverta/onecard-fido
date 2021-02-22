@@ -141,24 +141,24 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 //
 // 鍵ステータス管理
 //
-static uint16_t get_key_status_tag(OPGP_KEY_TYPE type) 
+static uint16_t get_key_status_tag(uint16_t key_tag) 
 {
-    switch (type) {
-        case OPGP_KEY_SIG:
+    switch (key_tag) {
+        case TAG_KEY_SIG:
             return TAG_KEY_SIG_STATUS;
-        case OPGP_KEY_ENC:
+        case TAG_KEY_DEC:
             return TAG_KEY_DEC_STATUS;
-        case OPGP_KEY_AUT:
+        case TAG_KEY_AUT:
             return TAG_KEY_AUT_STATUS;
         default:
             return TAG_OPGP_NONE;
     }
 }
 
-uint16_t openpgp_key_get_status(OPGP_KEY_TYPE type, uint8_t *status)
+uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
 {
     // データオブジェクトのタグを取得
-    uint16_t tag = get_key_status_tag(type);
+    uint16_t tag = get_key_status_tag(key_tag);
     if (tag == TAG_OPGP_NONE) {
         return SW_WRONG_DATA;
     }
@@ -190,38 +190,38 @@ uint16_t openpgp_key_get_status(OPGP_KEY_TYPE type, uint8_t *status)
 //
 static uint8_t m_key_attr[16];
 
-static OPGP_KEY_TYPE get_key_type(uint8_t tag)
+static uint16_t get_key_tag(uint8_t tag)
 {
     switch (tag) {
         case 0xB6:
-            return OPGP_KEY_SIG;
+            return TAG_KEY_SIG;
         case 0xB8:
-            return OPGP_KEY_ENC;
+            return TAG_KEY_DEC;
         case 0xA4:
-            return OPGP_KEY_AUT;
+            return TAG_KEY_AUT;
         default:
-            return OPGP_KEY_NONE;
+            return TAG_OPGP_NONE;
     }
 }
 
-static uint16_t get_key_attribute_tag(OPGP_KEY_TYPE type) 
+static uint16_t get_key_attribute_tag(uint16_t key_tag) 
 {
-    switch (type) {
-        case OPGP_KEY_SIG:
+    switch (key_tag) {
+        case TAG_KEY_SIG:
             return TAG_ALGORITHM_ATTRIBUTES_SIG;
-        case OPGP_KEY_ENC:
+        case TAG_KEY_DEC:
             return TAG_ALGORITHM_ATTRIBUTES_DEC;
-        case OPGP_KEY_AUT:
+        case TAG_KEY_AUT:
             return TAG_ALGORITHM_ATTRIBUTES_AUT;
         default:
             return TAG_OPGP_NONE;
     }
 }
 
-static uint16_t get_key_attribute(OPGP_KEY_TYPE key_type, uint8_t *key_attr_buf, size_t *key_attr_size)
+static uint16_t get_key_attribute(uint16_t key_tag, uint8_t *key_attr_buf, size_t *key_attr_size)
 {
     // 鍵種別から、データオブジェクトのタグを取得
-    uint16_t key_attr_tag = get_key_attribute_tag(key_type);
+    uint16_t key_attr_tag = get_key_attribute_tag(key_tag);
     if (key_attr_tag == TAG_OPGP_NONE) {
         return SW_WRONG_DATA;
     }
@@ -280,14 +280,14 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     }
 
     // 引数のタグから鍵種別を取得
-    OPGP_KEY_TYPE key_type = get_key_type(capdu->data[0]);
-    if (key_type == OPGP_KEY_NONE) {
+    uint16_t key_tag = get_key_tag(capdu->data[0]);
+    if (key_tag == TAG_OPGP_NONE) {
         return SW_WRONG_DATA;
     }
 
     // 鍵属性を取得
     size_t key_attr_size;
-    uint16_t sw = get_key_attribute(key_type, m_key_attr, &key_attr_size);
+    uint16_t sw = get_key_attribute(key_tag, m_key_attr, &key_attr_size);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
@@ -313,7 +313,7 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     } else if (capdu->p1 == 0x81) {
         // 鍵ステータスを取得
         uint8_t status;
-        sw = openpgp_key_get_status(key_type, &status);
+        sw = openpgp_key_get_status(key_tag, &status);
         if (sw != SW_NO_ERROR) {
             return sw;
         }

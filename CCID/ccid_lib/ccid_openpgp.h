@@ -34,6 +34,9 @@ extern "C" {
 #define TAG_KEY_SIG_STATUS                  0x04
 #define TAG_KEY_DEC_STATUS                  0x05
 #define TAG_KEY_AUT_STATUS                  0x06
+#define TAG_KEY_SIG                         0x07
+#define TAG_KEY_DEC                         0x08
+#define TAG_KEY_AUT                         0x09
 #define TAG_ATTR_TERMINATED                 0xFC
 //   以下はOpenPGPの仕様に存在する定義
 #define TAG_AID                             0x4F
