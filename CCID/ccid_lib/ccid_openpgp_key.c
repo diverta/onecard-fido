@@ -326,9 +326,11 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         if (status == KEY_NOT_PRESENT) {
             return SW_REFERENCE_DATA_NOT_FOUND;
         }
-        //
-        // TODO: Flash ROMから公開鍵を取得
-        //
+        // Flash ROMから公開鍵を取得
+        sw = ccid_openpgp_key_rsa_read(key_tag);
+        if (sw != SW_NO_ERROR) {
+            return sw;
+        }
         // レスポンスを生成
         key_pair_generate_response(rapdu, m_key_attr);
 

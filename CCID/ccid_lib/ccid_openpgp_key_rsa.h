@@ -19,6 +19,7 @@ extern "C" {
 uint8_t    *ccid_openpgp_key_rsa_private_key(void);
 uint8_t    *ccid_openpgp_key_rsa_public_key(void);
 uint16_t    ccid_openpgp_key_rsa_generate(uint8_t *key_attr);
+uint16_t    ccid_openpgp_key_rsa_read(uint16_t key_tag);
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,7 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_key_rsa.h"
+#include "ccid_openpgp_object.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -50,6 +51,21 @@ static uint16_t rsa_process_terminate(uint16_t sw)
     return sw;
 }
 
+#if LOG_DEBUG_PKEY_BUFFER
+static void log_buffer(void)
+{
+    fido_log_debug("Private key first 32 bytes: ");
+    fido_log_print_hexdump_debug(m_rsa_key, 32);
+    fido_log_debug(" last 32 bytes: ");
+    fido_log_print_hexdump_debug(m_rsa_key + 224, 32);
+
+    fido_log_debug("Public key first 32 bytes: ");
+    fido_log_print_hexdump_debug(m_rsa_key + 256, 32);
+    fido_log_debug(" last 32 bytes: ");
+    fido_log_print_hexdump_debug(m_rsa_key + 256 + 224, 32);
+}
+#endif
+
 uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
 {
     // ビット数を取得
@@ -71,17 +87,33 @@ uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
     fido_log_info("OpenPGP key pair (RSA-2048) generate done");
 
 #if LOG_DEBUG_PKEY_BUFFER
-    fido_log_debug("Private key first 32 bytes: ");
-    fido_log_print_hexdump_debug(m_rsa_key, 32);
-    fido_log_debug(" last 32 bytes: ");
-    fido_log_print_hexdump_debug(m_rsa_key + 224, 32);
-
-    fido_log_debug("Public key first 32 bytes: ");
-    fido_log_print_hexdump_debug(m_rsa_key + 256, 32);
-    fido_log_debug(" last 32 bytes: ");
-    fido_log_print_hexdump_debug(m_rsa_key + 256 + 224, 32);
+    log_buffer();
 #endif
 
     // 正常終了
     return rsa_process_terminate(SW_NO_ERROR);
+}
+
+uint16_t ccid_openpgp_key_rsa_read(uint16_t key_tag)
+{
+    // 領域を初期化
+    memset(m_rsa_key, 0, sizeof(m_rsa_key));
+
+    // Flash ROMから秘密鍵・公開鍵を取得
+    uint8_t *buf;
+    if (ccid_openpgp_object_data_get(key_tag, &buf, NULL) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("OpenPGP private key read fail: tag=0x%04x", key_tag);
+        return SW_UNABLE_TO_PROCESS;
+    }
+
+    // 領域にコピー
+    memcpy(m_rsa_key, buf, sizeof(m_rsa_key));
+
+#if LOG_DEBUG_PKEY_BUFFER
+    log_buffer();
+#endif
+
+    // 正常終了
+    return SW_NO_ERROR;
 }

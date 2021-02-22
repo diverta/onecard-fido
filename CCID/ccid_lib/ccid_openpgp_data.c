@@ -7,6 +7,8 @@
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
 #include "ccid_openpgp_data.h"
+#include "ccid_openpgp_key.h"
+#include "ccid_openpgp_key_rsa.h"
 #include "ccid_openpgp_object.h"
 #include "ccid_pin.h"
 #include "ccid_pin_auth.h"
@@ -170,6 +172,70 @@ uint16_t ccid_openpgp_data_put(command_apdu_t *capdu, response_apdu_t *rapdu)
 }
 
 //
+// 秘密鍵生成後の鍵／ステータス登録処理
+//
+static uint16_t m_key_tag;
+static uint8_t m_key_status;
+
+static uint16_t register_key(void)
+{
+    // 例外抑止
+    if (m_key_tag == TAG_OPGP_NONE) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    // 秘密鍵をFlash ROMに登録
+    uint8_t *private_key = ccid_openpgp_key_rsa_private_key();
+    size_t private_key_size = 512;
+    if (ccid_openpgp_object_data_set(m_key_tag, private_key, private_key_size) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    return SW_NO_ERROR;
+}
+
+static uint16_t register_key_status(void)
+{
+    // 例外抑止
+    if (m_key_status == TAG_OPGP_NONE) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    // 秘密鍵ステータスのデータオブジェクトタグを取得
+    uint16_t tag = ccid_openpgp_key_status_tag_get(m_key_tag);
+    if (tag == TAG_OPGP_NONE) {
+        return SW_WRONG_DATA;
+    }
+    // 秘密鍵ステータスをFlash ROMに登録
+    //  Flash ROM更新後、
+    //  ccid_openpgp_data_retry または
+    //  ccid_openpgp_data_resume のいずれかが
+    //  コールバックされます。
+    if (ccid_openpgp_object_data_set(tag, &m_key_status, sizeof(m_key_status)) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    m_flash_func = register_key_status;
+    return SW_NO_ERROR;
+}
+
+uint16_t ccid_openpgp_data_register_key(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t key_tag, uint8_t key_status) 
+{
+    // 鍵種別／ステータスを待避
+    m_key_tag = key_tag;
+    m_key_status = key_status;
+
+    // 秘密鍵をFlash ROMに登録
+    //  Flash ROM更新後、
+    //  ccid_openpgp_data_retry または
+    //  ccid_openpgp_data_resume のいずれかが
+    //  コールバックされます。
+    uint16_t sw = register_key();
+    if (sw == SW_NO_ERROR) {
+        // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
+        ccid_openpgp_object_resume_prepare(capdu, rapdu);
+        m_flash_func = ccid_openpgp_data_register_key;
+    }
+    return sw;
+}
+
+//
 // Flash ROM更新後のコールバック関数
 //
 void ccid_openpgp_data_retry(void)
@@ -186,6 +252,14 @@ void ccid_openpgp_data_retry(void)
     if (m_flash_func == ccid_openpgp_data_put) {
         // オブジェクトデータ登録を再度実行
         sw = update_data_object(NULL);
+    }
+    if (m_flash_func == ccid_openpgp_data_register_key) {
+        // 秘密鍵データ登録を再度実行
+        sw = register_key();
+    }
+    if (m_flash_func == register_key_status) {
+        // 秘密鍵ステータス登録を再度実行
+        sw = register_key_status();
     }
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
@@ -210,12 +284,26 @@ void ccid_openpgp_data_resume(bool success)
         if (m_flash_func == ccid_openpgp_data_put) {
             fido_log_info("OpenPGP data object update success");
         }
+        if (m_flash_func == ccid_openpgp_data_register_key) {
+            // 秘密鍵データ登録は成功
+            fido_log_info("OpenPGP private key register success");
+            // 秘密鍵ステータス登録を実行
+            uint16_t sw = register_key_status();
+            if (sw != SW_NO_ERROR) {
+                // 異常時はエラーレスポンス処理を指示
+                fido_log_error("OpenPGP private key status update fail");
+                ccid_openpgp_object_resume_process(sw);        
+            }
+            return;
+        }
+        if (m_flash_func == register_key_status) {
+            fido_log_info("OpenPGP private key status update success");
+        }
         ccid_openpgp_object_resume_process(SW_NO_ERROR);
 
     } else {
         // Flash ROM書込みが失敗した場合はエラーレスポンス処理を指示
         fido_log_error("OpenPGP data object registration fail");
         ccid_openpgp_object_resume_process(SW_UNABLE_TO_PROCESS);
-        return;
     }
 }
