@@ -15,12 +15,15 @@
 #define LOG_DEBUG_PKEY_BUFFER       false
 
 // 鍵格納領域
-static uint8_t m_private_key[260];
-static uint8_t m_public_key[256];
+//   Offset
+//     0: P (private key)
+//   128: Q (private key)
+//   256: N (public key)
+static uint8_t m_rsa_key[512];
 
 uint8_t *ccid_openpgp_key_rsa_public_key(void)
 {
-    return m_public_key;
+    return m_rsa_key + 256;
 }
 
 static void rsa_process_timer_handler(void)
@@ -41,7 +44,7 @@ static uint16_t rsa_process_terminate(uint16_t sw)
     fido_repeat_process_timer_stop();
 
     // 秘密鍵領域をクリア
-    memset(m_private_key, 0, sizeof(m_private_key));
+    memset(m_rsa_key, 0, sizeof(m_rsa_key));
     return sw;
 }
 
@@ -59,7 +62,7 @@ uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
     rsa_process_timer_start();
 
     // RSA秘密鍵を生成
-    if (ccid_crypto_rsa_generate_key(m_private_key, m_public_key, nbits) == false) {
+    if (ccid_crypto_rsa_generate_key(m_rsa_key, m_rsa_key + 256, nbits) == false) {
         return rsa_process_terminate(SW_UNABLE_TO_PROCESS);
     }
 
@@ -67,14 +70,14 @@ uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
 
 #if LOG_DEBUG_PKEY_BUFFER
     fido_log_debug("Private key first 32 bytes: ");
-    fido_log_print_hexdump_debug(m_private_key, 32);
+    fido_log_print_hexdump_debug(m_rsa_key, 32);
     fido_log_debug(" last 32 bytes: ");
-    fido_log_print_hexdump_debug(m_private_key + 228, 32);
+    fido_log_print_hexdump_debug(m_rsa_key + 224, 32);
 
     fido_log_debug("Public key first 32 bytes: ");
-    fido_log_print_hexdump_debug(m_public_key, 32);
+    fido_log_print_hexdump_debug(m_rsa_key + 256, 32);
     fido_log_debug(" last 32 bytes: ");
-    fido_log_print_hexdump_debug(m_public_key + 224, 32);
+    fido_log_print_hexdump_debug(m_rsa_key + 256 + 224, 32);
 #endif
 
     // 正常終了

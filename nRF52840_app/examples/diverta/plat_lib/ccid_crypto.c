@@ -166,19 +166,16 @@ bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_pub
 
     //
     // mbedtls_rsa_export_raw を実行
-    // （N, P, Q, E のエクスポート）
+    // （N, P, Q のエクスポート）
     // offset of rsa_private_key_raw
     //    0: P
     //  128: Q
-    //  256: E
     //
     size_t pq_size = nbits / 16;
-    size_t e_size = 4;
     uint8_t *n = rsa_public_key_raw;
     uint8_t *p = rsa_private_key_raw;
     uint8_t *q = p + pq_size;
-    uint8_t *e = q + pq_size;
-    ret = mbedtls_rsa_export_raw(&rsa, n, pq_size * 2, p, pq_size, q, pq_size, NULL, 0, e, e_size);
+    ret = mbedtls_rsa_export_raw(&rsa, n, pq_size * 2, p, pq_size, q, pq_size, NULL, 0, NULL, 0);
     if (ret != 0) {
         NRF_LOG_ERROR("mbedtls_rsa_export_raw returns %d", ret);
         return rsa_generate_key_terminate(false, &rsa);
