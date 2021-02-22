@@ -241,6 +241,34 @@ static uint16_t get_key_attribute(OPGP_KEY_TYPE key_type, uint8_t *key_attr_buf,
     return SW_NO_ERROR;
 }
 
+static void key_pair_generate_response(response_apdu_t *rapdu, uint8_t *key_attr)
+{
+    uint8_t *rdata = rapdu->data;
+    rdata[0] = 0x7f;
+    rdata[1] = 0x49;
+    if (key_attr[0] == KEY_TYPE_RSA) {
+        uint16_t nbits = (key_attr[1] << 8) | key_attr[2];
+        uint16_t n_size = nbits / 8;
+        uint8_t e_size = ccid_crypto_rsa_e_size();
+        rdata[2] = 0x82;
+        rdata[3] = HI(6 + n_size + e_size);
+        rdata[4] = LO(6 + n_size + e_size);
+        rdata[5] = 0x81; 
+        // modulus
+        rdata[6] = 0x82;
+        rdata[7] = HI(n_size);
+        rdata[8] = LO(n_size);
+        memcpy(rdata + 9, ccid_openpgp_key_rsa_public_key(), n_size);
+        // exponent
+        rdata[9 + n_size] = 0x82; 
+        rdata[10 + n_size] = e_size;
+        memcpy(rdata + 11 + n_size, ccid_crypto_rsa_e_bytes(), e_size);
+        rapdu->len = 11 + n_size + e_size;
+    } else {
+        rapdu->len = 0;
+    }
+}
+
 uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // パラメーターのチェック
@@ -278,6 +306,9 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         if (sw != SW_NO_ERROR) {
             return sw;
         }
+        //
+        // TODO: Flash ROMに公開鍵を保存
+        //
 
     } else if (capdu->p1 == 0x81) {
         // 鍵ステータスを取得
@@ -293,14 +324,14 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         //
         // TODO: Flash ROMから公開鍵を取得
         //
-        // if (openpgp_key_get_key(key_type, &key, sizeof(key)) < 0) {
-        //     return SW_UNABLE_TO_PROCESS;
-        // }
 
     } else {
         return SW_WRONG_P1P2;
     }
 
+    // レスポンスを生成
+    key_pair_generate_response(rapdu, m_key_attr);
+    
     // 正常終了
     return SW_NO_ERROR;
 }
