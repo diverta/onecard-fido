@@ -97,6 +97,15 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
         case TAG_KEY_AUT_STATUS:
             *record_key = OPGP_DATA_OBJ_11_RECORD_KEY;
             break;
+        case TAG_KEY_SIG:
+            *record_key = OPGP_DATA_OBJ_12_RECORD_KEY;
+            break;
+        case TAG_KEY_DEC:
+            *record_key = OPGP_DATA_OBJ_13_RECORD_KEY;
+            break;
+        case TAG_KEY_AUT:
+            *record_key = OPGP_DATA_OBJ_14_RECORD_KEY;
+            break;
         default:
             return false;
     }

@@ -146,16 +146,12 @@ bool ccid_openpgp_object_pin_set(PIN_T *pin, uint8_t *pin_code, uint8_t pin_size
 // OpenPGPデータオブジェクト管理用
 //   最大データ長は仮設定です。
 //
-static uint8_t obj_read_buffer[16];
-static uint8_t obj_write_buff[16];
+static uint8_t obj_read_buffer[512];
+static uint8_t obj_write_buff[512];
 
 bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, uint8_t *obj_size)
 {
     // オブジェクトデータをFlash ROMから読出し
-    // バイトイメージ（最大66バイト）
-    //   0      : PINリトライカウンター
-    //   1      : PIN長
-    //   2 - 65 : PIN（最大64バイト）
     bool is_exist = false;
     size_t buffer_size;
     if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, obj_tag, &is_exist, obj_read_buffer, &buffer_size) == false) {
