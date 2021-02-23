@@ -76,6 +76,11 @@ uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
         fido_log_error("OpenPGP key fingerprint read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
     }
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルトを設定
+        buffer_size = KEY_FINGERPRINT_LENGTH;
+        memset(buf, 0, KEY_FINGERPRINT_LENGTH);
+    }
 
     // サイズを戻す
     if (size != NULL) {
@@ -97,6 +102,11 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key generate datetime read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
+    }
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルトを設定
+        buffer_size = KEY_DATETIME_LENGTH;
+        memset(buf, 0, KEY_DATETIME_LENGTH);
     }
 
     // サイズを戻す
@@ -153,6 +163,22 @@ uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
 
     // 正常終了
     return SW_NO_ERROR;
+}
+
+uint16_t ccid_openpgp_key_is_present(uint16_t key_tag)
+{
+    // 鍵ステータスを取得
+    uint8_t status;
+    uint16_t sw = openpgp_key_get_status(key_tag, &status);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    // If key not present
+    if (status == KEY_NOT_PRESENT) {
+        return SW_REFERENCE_DATA_NOT_FOUND;
+    } else {
+        return SW_NO_ERROR;
+    }    
 }
 
 //
@@ -285,15 +311,10 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         }
 
     } else if (capdu->p1 == 0x81) {
-        // 鍵ステータスを取得
-        uint8_t status;
-        sw = openpgp_key_get_status(key_tag, &status);
+        // 鍵ステータスを参照し、鍵がない場合はエラー
+        sw = ccid_openpgp_key_is_present(TAG_KEY_SIG);
         if (sw != SW_NO_ERROR) {
             return sw;
-        }
-        // If key not present
-        if (status == KEY_NOT_PRESENT) {
-            return SW_REFERENCE_DATA_NOT_FOUND;
         }
         // Flash ROMから公開鍵を取得
         sw = ccid_openpgp_key_rsa_read(key_tag);
