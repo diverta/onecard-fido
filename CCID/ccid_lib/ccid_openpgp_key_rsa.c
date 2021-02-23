@@ -51,6 +51,21 @@ static uint16_t rsa_process_terminate(uint16_t sw)
     return sw;
 }
 
+uint16_t ccid_openpgp_key_rsa_nbits(uint8_t *key_attr, unsigned int *p_nbits)
+{
+    // ビット数を取得
+    unsigned int nbits = (key_attr[1] << 8) | key_attr[2];
+    if (nbits != 2048) {
+        // RSA-2048以外はサポート外
+        fido_log_error("OpenPGP do not support RSA-%d ", nbits);
+        return SW_WRONG_DATA;
+    }
+    if (p_nbits != NULL) {
+        *p_nbits = nbits;
+    }
+    return SW_NO_ERROR;
+}
+
 #if LOG_DEBUG_PKEY_BUFFER
 static void log_buffer(void)
 {
@@ -69,11 +84,10 @@ static void log_buffer(void)
 uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
 {
     // ビット数を取得
-    unsigned int nbits = (key_attr[1] << 8) | key_attr[2];
-    if (nbits != 2048) {
-        // RSA-2048以外はサポート外
-        fido_log_error("OpenPGP do not support RSA-%d ", nbits);
-        return SW_WRONG_DATA;
+    unsigned int nbits;
+    uint16_t sw = ccid_openpgp_key_rsa_nbits(key_attr, &nbits);
+    if (sw != SW_NO_ERROR) {
+        return sw;
     }
 
     // キープアライブタイマーを開始
