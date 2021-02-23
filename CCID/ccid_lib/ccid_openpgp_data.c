@@ -128,6 +128,32 @@ static uint16_t update_pw_status(command_apdu_t *capdu)
     return SW_NO_ERROR;
 }
 
+static uint16_t update_fingerprint(command_apdu_t *capdu, uint16_t tag)
+{
+    // パラメーターチェック
+    if (capdu->lc != KEY_FINGERPRINT_LENGTH) {
+        return SW_WRONG_LENGTH;
+    }
+    // フィンガープリントをFlash ROMに設定
+    if (ccid_openpgp_object_data_set(tag, capdu->data, KEY_FINGERPRINT_LENGTH) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    return SW_NO_ERROR;
+}
+
+static uint16_t update_generation_dates(command_apdu_t *capdu, uint16_t tag)
+{
+    // パラメーターチェック
+    if (capdu->lc != KEY_DATETIME_LENGTH) {
+        return SW_WRONG_LENGTH;
+    }
+    // タイムスタンプをFlash ROMに設定
+    if (ccid_openpgp_object_data_set(tag, capdu->data, KEY_DATETIME_LENGTH) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    return SW_NO_ERROR;
+}
+
 static uint16_t update_data_object(command_apdu_t *capdu_)
 {
     // コマンドAPDU参照を待避
@@ -145,6 +171,10 @@ static uint16_t update_data_object(command_apdu_t *capdu_)
     switch (tag) {
         case TAG_PW_STATUS:
             return update_pw_status(capdu);
+        case TAG_KEY_SIG_FINGERPRINT:
+            return update_fingerprint(capdu, tag);
+        case TAG_KEY_SIG_GENERATION_DATES:
+            return update_generation_dates(capdu, tag);
         default:
             return SW_WRONG_P1P2;
     }
