@@ -8,6 +8,7 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_crypto.h"
 #include "ccid_openpgp_data.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_pin.h"
@@ -395,6 +396,11 @@ static uint16_t openpgp_ins_generate_asymmetric_key_pair(command_apdu_t *capdu, 
     return ccid_openpgp_key_pair_generate(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_pso(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_crypto_pso(capdu, rapdu);
+}
+
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
     // レスポンス長をゼロクリア
@@ -428,6 +434,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
             rapdu->sw = openpgp_ins_generate_asymmetric_key_pair(capdu, rapdu);
+            break;
+        case OPENPGP_INS_PSO:
+            rapdu->sw = openpgp_ins_pso(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;
