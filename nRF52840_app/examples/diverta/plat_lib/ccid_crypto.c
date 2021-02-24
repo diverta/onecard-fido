@@ -84,51 +84,34 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
     // 変数初期化
     mbedtls_rsa_context rsa;
     mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
-    int ret;
 
     //
-    // mbedtls_rsa_import_raw と等価の処理を実行
+    // mbedtls_rsa_import_raw を実行
     // （P, Q, E のインポート）
     //
     uint8_t *p_P = rsa_private_key_raw;
-    ret = mbedtls_mpi_read_binary(&rsa.P, p_P, RSA2048_PQ_LENGTH);
-    if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_mpi_read_binary(P) returns 0x%04x", ret);
-        return ccid_crypto_rsa_private_terminate(false, &rsa);
-    }
     uint8_t *p_Q = p_P + RSA2048_PQ_LENGTH;
-    ret = mbedtls_mpi_read_binary(&rsa.Q, p_Q, RSA2048_PQ_LENGTH);
+    int ret = mbedtls_rsa_import_raw(&rsa, NULL, 0, p_P, RSA2048_PQ_LENGTH, p_Q, RSA2048_PQ_LENGTH, NULL, 0, E, sizeof(E));
     if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_mpi_read_binary(Q) returns 0x%04x", ret);
+        NRF_LOG_ERROR("mbedtls_rsa_import_raw returns %d", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
-    ret = mbedtls_mpi_read_binary(&rsa.E, E, sizeof(E));
-    if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_mpi_read_binary(E) returns 0x%04x", ret);
-        return ccid_crypto_rsa_private_terminate(false, &rsa);
-    }
-
-    // Time extensionレスポンスを送信
-    ccid_response_time_extension();
 
     //
     // mbedtls_rsa_complete を実行
     //
     ret = mbedtls_rsa_complete(&rsa);
     if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_rsa_complete returns 0x%04x", ret);
+        NRF_LOG_ERROR("mbedtls_rsa_complete returns %d", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
-
-    // Time extensionレスポンスを送信
-    ccid_response_time_extension();
 
     //
     // mbedtls_rsa_private を実行
     //
     ret = mbedtls_rsa_private(&rsa, ccid_crypto_rsa_random, NULL, input, output);
     if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_rsa_private returns 0x%04x", ret);
+        NRF_LOG_ERROR("mbedtls_rsa_private returns %d", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
 
@@ -161,6 +144,7 @@ bool ccid_crypto_rsa_generate_key(uint8_t *rsa_private_key_raw, uint8_t *rsa_pub
     //
     int ret = mbedtls_rsa_gen_key(&rsa, ccid_crypto_rsa_random, NULL, nbits, ccid_crypto_rsa_exponent());
     if (ret != 0) {
+        NRF_LOG_ERROR("mbedtls_rsa_gen_key returns %d", ret);
         return rsa_generate_key_terminate(false, &rsa);
     }
 
