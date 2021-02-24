@@ -131,3 +131,59 @@ uint16_t ccid_openpgp_key_rsa_read(uint16_t key_tag)
     // 正常終了
     return SW_NO_ERROR;
 }
+
+static uint16_t pkcs1_v15_add_padding(const void *in, uint16_t in_size, uint8_t *out, uint16_t out_size) 
+{
+    // データ長チェック
+    if (out_size < 11 || in_size > out_size - 11) {
+        return SW_WRONG_DATA;
+    }
+    // データの余白サイズを計算
+    uint16_t pad_size = out_size - in_size - 3;
+    out[0] = 0x00;
+    out[1] = 0x01;
+    // データの左側余白に 0xff を埋める
+    memset(out + 2, 0xff, pad_size);
+    out[2 + pad_size] = 0x00;
+    // データを右詰めでセット
+    memcpy(out + pad_size + 3, in, in_size);
+    return SW_NO_ERROR;
+}
+
+uint16_t ccid_openpgp_key_rsa_signature(uint16_t key_tag, uint8_t *key_attr, uint8_t *data, size_t size, uint8_t *signature, size_t *p_signature_size)
+{
+    // 鍵ビット数を取得
+    unsigned int nbits;
+    uint16_t sw = ccid_openpgp_key_rsa_nbits(key_attr, &nbits);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // Flash ROMから鍵を取得
+    sw = ccid_openpgp_key_rsa_read(key_tag);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // データの余白埋め
+    size_t signature_size = nbits / 8;
+    sw = pkcs1_v15_add_padding(data, size, signature, signature_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // キープアライブタイマーを開始
+    rsa_process_timer_start();
+
+    // 署名生成
+    if (ccid_crypto_rsa_private(ccid_openpgp_key_rsa_private_key(), signature, signature) == false) {
+        return rsa_process_terminate(SW_UNABLE_TO_PROCESS);
+    }
+
+    // 正常終了
+    if (p_signature_size != NULL) {
+        *p_signature_size = signature_size;
+    }
+    fido_log_info("OpenPGP signature (RSA-2048) generate done");
+    return rsa_process_terminate(SW_NO_ERROR);
+}
