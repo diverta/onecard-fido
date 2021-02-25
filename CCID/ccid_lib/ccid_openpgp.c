@@ -364,6 +364,7 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
         case TAG_SECURITY_SUPPORT_TEMPLATE:
             return get_security_support_template(rapdu);
         default:
+            fido_log_error("openpgp_ins_get_data fail: reference data not found(0x%04x)", tag);
             return SW_REFERENCE_DATA_NOT_FOUND;
     }
 
