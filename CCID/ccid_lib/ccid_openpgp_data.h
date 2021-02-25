@@ -18,6 +18,8 @@ extern "C" {
 //
 uint16_t    ccid_openpgp_data_terminate(command_apdu_t *capdu, response_apdu_t *rapdu);
 uint16_t    ccid_openpgp_data_activate(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_data_put(command_apdu_t *capdu, response_apdu_t *rapdu);
+uint16_t    ccid_openpgp_data_register_key(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t key_tag, uint8_t key_status);
 void        ccid_openpgp_data_retry(void);
 void        ccid_openpgp_data_resume(bool success);
 

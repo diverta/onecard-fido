@@ -8,6 +8,7 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_crypto.h"
 #include "ccid_openpgp_data.h"
 #include "ccid_openpgp_key.h"
 #include "ccid_openpgp_pin.h"
@@ -235,19 +236,19 @@ static uint16_t get_application_related_data(response_apdu_t *rapdu)
     uint8_t status;
     rdata[offset++] = TAG_KEY_INFO;
     rdata[offset++] = 6;
-    sw = openpgp_key_get_status(OPGP_KEY_SIG, &status);
+    sw = openpgp_key_get_status(TAG_KEY_SIG, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
     rdata[offset++] = 0x01;
     rdata[offset++] = status;
-    sw = openpgp_key_get_status(OPGP_KEY_ENC, &status);
+    sw = openpgp_key_get_status(TAG_KEY_DEC, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
     rdata[offset++] = 0x02;
     rdata[offset++] = status;
-    sw = openpgp_key_get_status(OPGP_KEY_AUT, &status);
+    sw = openpgp_key_get_status(TAG_KEY_AUT, &status);
     if (sw != SW_NO_ERROR) {
         return sw;
     }
@@ -363,11 +364,17 @@ static uint16_t openpgp_ins_get_data(command_apdu_t *capdu, response_apdu_t *rap
         case TAG_SECURITY_SUPPORT_TEMPLATE:
             return get_security_support_template(rapdu);
         default:
+            fido_log_error("openpgp_ins_get_data fail: reference data not found(0x%04x)", tag);
             return SW_REFERENCE_DATA_NOT_FOUND;
     }
 
     // 正常終了
     return SW_NO_ERROR;
+}
+
+static uint16_t openpgp_ins_put_data(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_data_put(capdu, rapdu);
 }
 
 static uint16_t openpgp_ins_verify(command_apdu_t *capdu, response_apdu_t *rapdu) 
@@ -383,6 +390,16 @@ static uint16_t openpgp_ins_terminate(command_apdu_t *capdu, response_apdu_t *ra
 static uint16_t openpgp_ins_activate(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     return ccid_openpgp_data_activate(capdu, rapdu);
+}
+
+static uint16_t openpgp_ins_generate_asymmetric_key_pair(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_key_pair_generate(capdu, rapdu);
+}
+
+static uint16_t openpgp_ins_pso(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_crypto_pso(capdu, rapdu);
 }
 
 void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
@@ -404,6 +421,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case OPENPGP_INS_GET_DATA:
             rapdu->sw = openpgp_ins_get_data(capdu, rapdu);
             break;
+        case OPENPGP_INS_PUT_DATA:
+            rapdu->sw = openpgp_ins_put_data(capdu, rapdu);
+            break;
         case OPENPGP_INS_VERIFY:
             rapdu->sw = openpgp_ins_verify(capdu, rapdu);
             break;
@@ -412,6 +432,12 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_ACTIVATE:
             rapdu->sw = openpgp_ins_activate(capdu, rapdu);
+            break;
+        case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
+            rapdu->sw = openpgp_ins_generate_asymmetric_key_pair(capdu, rapdu);
+            break;
+        case OPENPGP_INS_PSO:
+            rapdu->sw = openpgp_ins_pso(capdu, rapdu);
             break;
         default:
             rapdu->sw = SW_INS_NOT_SUPPORTED;

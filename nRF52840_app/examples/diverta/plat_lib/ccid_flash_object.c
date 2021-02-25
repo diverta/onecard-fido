@@ -76,6 +76,59 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
         case TAG_ATTR_TERMINATED:
             *record_key = OPGP_DATA_OBJ_04_RECORD_KEY;
             break;
+        case TAG_PW_STATUS:
+            *record_key = OPGP_DATA_OBJ_05_RECORD_KEY;
+            break;
+        case TAG_ALGORITHM_ATTRIBUTES_SIG:
+            *record_key = OPGP_DATA_OBJ_06_RECORD_KEY;
+            break;
+        case TAG_ALGORITHM_ATTRIBUTES_DEC:
+            *record_key = OPGP_DATA_OBJ_07_RECORD_KEY;
+            break;
+        case TAG_ALGORITHM_ATTRIBUTES_AUT:
+            *record_key = OPGP_DATA_OBJ_08_RECORD_KEY;
+            break;
+        case TAG_KEY_SIG_STATUS:
+            *record_key = OPGP_DATA_OBJ_09_RECORD_KEY;
+            break;
+        case TAG_KEY_DEC_STATUS:
+            *record_key = OPGP_DATA_OBJ_10_RECORD_KEY;
+            break;
+        case TAG_KEY_AUT_STATUS:
+            *record_key = OPGP_DATA_OBJ_11_RECORD_KEY;
+            break;
+        case TAG_KEY_SIG:
+            *record_key = OPGP_DATA_OBJ_12_RECORD_KEY;
+            break;
+        case TAG_KEY_DEC:
+            *record_key = OPGP_DATA_OBJ_13_RECORD_KEY;
+            break;
+        case TAG_KEY_AUT:
+            *record_key = OPGP_DATA_OBJ_14_RECORD_KEY;
+            break;
+        case TAG_KEY_SIG_FINGERPRINT:
+            *record_key = OPGP_DATA_OBJ_15_RECORD_KEY;
+            break;
+        case TAG_KEY_DEC_FINGERPRINT:
+            *record_key = OPGP_DATA_OBJ_16_RECORD_KEY;
+            break;
+        case TAG_KEY_AUT_FINGERPRINT:
+            *record_key = OPGP_DATA_OBJ_17_RECORD_KEY;
+            break;
+        case TAG_KEY_SIG_GENERATION_DATES:
+            *record_key = OPGP_DATA_OBJ_18_RECORD_KEY;
+            break;
+        case TAG_KEY_DEC_GENERATION_DATES:
+            *record_key = OPGP_DATA_OBJ_19_RECORD_KEY;
+            break;
+        case TAG_KEY_AUT_GENERATION_DATES:
+            *record_key = OPGP_DATA_OBJ_20_RECORD_KEY;
+            break;
+        case TAG_KEY_CA1_FINGERPRINT:
+        case TAG_KEY_CA2_FINGERPRINT:
+        case TAG_KEY_CA3_FINGERPRINT:
+            *record_key = 0xBFFF;
+            break;
         default:
             return false;
     }

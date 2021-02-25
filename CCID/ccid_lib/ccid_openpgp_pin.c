@@ -36,6 +36,16 @@ void ccid_openpgp_pin_pw1_mode82_set(bool b)
     }
 }
 
+uint8_t ccid_openpgp_pin_pw1_mode81_get(void)
+{
+    return m_pw1_mode & 0x01;
+}
+
+uint8_t ccid_openpgp_pin_pw1_mode82_get(void)
+{
+    return m_pw1_mode & 0x02;
+}
+
 uint16_t ccid_openpgp_pin_auth(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     // パラメーターのチェック

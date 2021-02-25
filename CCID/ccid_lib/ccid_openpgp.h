@@ -17,9 +17,12 @@ extern "C" {
 #define OPENPGP_TEST_DATA
 
 #define OPENPGP_INS_VERIFY                  0x20
+#define OPENPGP_INS_PSO                     0x2A
+#define OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR 0x47
 #define OPENPGP_INS_ACTIVATE                0x44
 #define OPENPGP_INS_SELECT                  0xA4
 #define OPENPGP_INS_GET_DATA                0xCA
+#define OPENPGP_INS_PUT_DATA                0xDA
 #define OPENPGP_INS_TERMINATE               0xE6
 
 //
@@ -29,6 +32,12 @@ extern "C" {
 #define TAG_OPGP_PW1                        0x01
 #define TAG_OPGP_PW3                        0x02
 #define TAG_OPGP_RC                         0x03
+#define TAG_KEY_SIG_STATUS                  0x04
+#define TAG_KEY_DEC_STATUS                  0x05
+#define TAG_KEY_AUT_STATUS                  0x06
+#define TAG_KEY_SIG                         0x07
+#define TAG_KEY_DEC                         0x08
+#define TAG_KEY_AUT                         0x09
 #define TAG_ATTR_TERMINATED                 0xFC
 //   以下はOpenPGPの仕様に存在する定義
 #define TAG_AID                             0x4F
