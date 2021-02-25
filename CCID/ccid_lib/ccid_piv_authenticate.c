@@ -132,9 +132,15 @@ static uint16_t authenticate_internal_RSA2048(uint8_t tag, uint8_t *input_data, 
     uint8_t *rdata = rapdu->data;
     uint8_t *output_data = rdata + 8;
 
+    // キープアライブタイマーを開始
+    fido_repeat_process_timer_start(1000, ccid_response_time_extension);
+
     // 署名を生成
     bool ret = ccid_crypto_rsa_private(work_buf, input_data, output_data);
     memset(work_buf, 0, sizeof(work_buf));
+
+    // キープアライブタイマーを停止
+    fido_repeat_process_timer_stop();
     if (ret == false) {
         return SW_UNABLE_TO_PROCESS;
     }

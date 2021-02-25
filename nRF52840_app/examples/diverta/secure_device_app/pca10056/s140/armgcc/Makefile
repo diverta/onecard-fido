@@ -325,7 +325,6 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/cipher.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
   $(SDK_ROOT)/external/mbedtls/library/des.c \
-  $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(SDK_ROOT)/external/mbedtls/library/platform_util.c \
   $(SDK_ROOT)/external/mbedtls/library/rsa_internal.c \
@@ -349,15 +348,6 @@ SRC_FILES += \
   $(BLELIB_DIR)/fido_ble_service.c \
   $(CIDLIB_DIR)/ccid_apdu.c \
   $(CIDLIB_DIR)/ccid_main.c \
-  $(CIDLIB_DIR)/ccid_openpgp.c \
-  $(CIDLIB_DIR)/ccid_openpgp_attr.c \
-  $(CIDLIB_DIR)/ccid_openpgp_crypto.c \
-  $(CIDLIB_DIR)/ccid_openpgp_data.c \
-  $(CIDLIB_DIR)/ccid_openpgp_key.c \
-  $(CIDLIB_DIR)/ccid_openpgp_key_rsa.c \
-  $(CIDLIB_DIR)/ccid_openpgp_object.c \
-  $(CIDLIB_DIR)/ccid_openpgp_pin.c \
-  $(CIDLIB_DIR)/ccid_pin_auth.c \
   $(CIDLIB_DIR)/ccid_piv.c \
   $(CIDLIB_DIR)/ccid_piv_general_auth.c \
   $(CIDLIB_DIR)/ccid_piv_authenticate.c \
