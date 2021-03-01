@@ -19,6 +19,7 @@
                 <sourceRootElem>../../../components</sourceRootElem>
                 <sourceRootElem>../ble_lib</sourceRootElem>
                 <sourceRootElem>../plat_lib</sourceRootElem>
+                <sourceRootElem>../../../../CCID/openpgp_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
