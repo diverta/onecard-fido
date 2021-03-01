@@ -19,15 +19,6 @@ extern "C" {
 uint8_t    *ccid_flash_object_read_buffer(void);
 uint8_t    *ccid_flash_object_write_buffer(void);
 size_t      ccid_flash_object_rw_buffer_size(void);
-size_t      ccid_flash_object_calculate_words(size_t record_bytes);
-
-//
-// コールバック関数群
-//
-void        ccid_flash_object_failed(void);
-void        ccid_flash_object_gc_done(void);
-void        ccid_flash_object_record_updated(void);
-void        ccid_flash_object_record_deleted(void);
 
 #ifdef __cplusplus
 }

@@ -74,6 +74,16 @@ static bool get_record_key_by_tag(uint8_t tag, uint16_t *record_key)
 //
 // PIVオブジェクトのRead／Write
 //
+static size_t calculate_record_words(size_t record_bytes)
+{
+    // オブジェクトの長さから、必要ワード数を計算
+    size_t record_words = record_bytes / 4;
+    if (record_bytes % 4 > 0) {
+        record_words++;
+    }
+    return record_words;
+}
+
 static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
 {
     // レコードキーを取得
@@ -112,7 +122,7 @@ static bool read_piv_object_data_from_fds(uint8_t obj_tag, bool *is_exist)
 #endif
 
     // オブジェクトデータの長さから、必要ワード数を計算
-    size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + ccid_flash_object_calculate_words(size32_t);
+    size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
 
     // Flash ROMからオブジェクトデータを読込
     //   データが存在する場合は、
@@ -152,7 +162,7 @@ static bool write_piv_object_data_to_fds(uint8_t obj_tag, uint8_t obj_alg, uint8
     if (get_record_key_by_tag(obj_tag, &record_key)) {
         // オブジェクトデータの長さから、必要ワード数を計算し、
         // データをFlash ROMに書込
-        size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + ccid_flash_object_calculate_words(size32_t);
+        size_t record_words = PIV_DATA_OBJ_ATTR_WORDS + calculate_record_words(size32_t);
         uint32_t *read_buffer = (uint32_t *)ccid_flash_object_read_buffer();
         uint32_t *write_buffer = (uint32_t *)ccid_flash_object_write_buffer();
         return fido_flash_fds_record_write(PIV_DATA_OBJ_FILE_ID, record_key, record_words, read_buffer, write_buffer);

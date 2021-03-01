@@ -7,8 +7,6 @@
 #include "sdk_common.h"
 
 #include "fido_flash.h"
-#include "ccid_flash_openpgp_object.h"
-#include "ccid_flash_piv_object.h"
 
 // for logging informations
 #define NRF_LOG_MODULE_NAME ccid_flash_object
@@ -36,45 +34,4 @@ uint8_t *ccid_flash_object_write_buffer(void)
 size_t ccid_flash_object_rw_buffer_size(void)
 {
     return MAX_BUF_SIZE;
-}
-
-size_t ccid_flash_object_calculate_words(size_t record_bytes)
-{
-    // オブジェクトの長さから、必要ワード数を計算
-    size_t record_words = record_bytes / 4;
-    if (record_bytes % 4 > 0) {
-        record_words++;
-    }
-    return record_words;
-}
-
-//
-// コールバック関数群
-//
-void ccid_flash_object_failed(void)
-{
-    // CCID関連処理を実行
-    ccid_flash_piv_object_failed();
-    ccid_flash_openpgp_object_failed();
-}
-
-void ccid_flash_object_gc_done(void)
-{
-    // CCID関連処理を実行
-    ccid_flash_piv_object_gc_done();
-    ccid_flash_openpgp_object_gc_done();
-}
-
-void ccid_flash_object_record_updated(void)
-{
-    // CCID関連処理を実行
-    ccid_flash_piv_object_record_updated();
-    ccid_flash_openpgp_object_record_updated();
-}
-
-void ccid_flash_object_record_deleted(void)
-{
-    // CCID関連処理を実行
-    ccid_flash_piv_object_record_deleted();
-    ccid_flash_openpgp_object_record_deleted();
 }

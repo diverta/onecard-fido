@@ -441,23 +441,6 @@ INC_FOLDERS += \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
 
-# Source files of OpenPGP card emulation
-OPGLIB_DIR := $(CCID_DIR)/openpgp_lib
-SRC_FILES += \
-  $(OPGLIB_DIR)/ccid_openpgp_attr.c \
-  $(OPGLIB_DIR)/ccid_openpgp_crypto.c \
-  $(OPGLIB_DIR)/ccid_openpgp_data.c \
-  $(OPGLIB_DIR)/ccid_openpgp_key_rsa.c \
-  $(OPGLIB_DIR)/ccid_openpgp_key.c \
-  $(OPGLIB_DIR)/ccid_openpgp_object.c \
-  $(OPGLIB_DIR)/ccid_openpgp_pin.c \
-  $(OPGLIB_DIR)/ccid_openpgp.c \
-  $(OPGLIB_DIR)/ccid_pin_auth.c \
-  $(PLTLIB_DIR)/ccid_flash_openpgp_object.c \
-
-INC_FOLDERS += \
-  $(OPGLIB_DIR) \
-
 # Libraries common to all targets
 LIB_FILES += \
   $(SDK_ROOT)/external/nrf_cc310/lib/cortex-m4/hard-float/libnrf_cc310_0.9.13.a \
