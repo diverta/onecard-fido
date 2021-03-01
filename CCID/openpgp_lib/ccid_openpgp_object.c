@@ -76,7 +76,7 @@ bool ccid_openpgp_object_pin_get(PIN_T *pin, uint8_t **pin_code, uint8_t *pin_si
     //   2 - 65 : PIN（最大64バイト）
     bool is_exist = false;
     size_t pin_buffer_size;
-    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, get_pin_obj_tag(pin->type), &is_exist, pin_read_buff, &pin_buffer_size) == false) {
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), &is_exist, pin_read_buff, &pin_buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP PIN read fail: type=0x%02x", pin->type);
         return false;
@@ -130,7 +130,7 @@ bool ccid_openpgp_object_pin_set(PIN_T *pin, uint8_t *pin_code, uint8_t pin_size
     //  ccid_openpgp_object_write_resume のいずれかが
     //  コールバックされます。
     size_t pin_buffer_size = pin_size + 2;
-    if (ccid_flash_openpgp_object_write(APPLET_OPENPGP, get_pin_obj_tag(pin->type), pin_write_buff, pin_buffer_size) == false) {
+    if (ccid_flash_object_write_by_tag(APPLET_OPENPGP, get_pin_obj_tag(pin->type), pin_write_buff, pin_buffer_size) == false) {
         fido_log_error("OpenPGP PIN write fail: type=0x%02x", pin->type);
         return false;
     }
@@ -154,7 +154,7 @@ bool ccid_openpgp_object_data_get(uint16_t obj_tag, uint8_t **obj_data, size_t *
     // オブジェクトデータをFlash ROMから読出し
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, obj_tag, &is_exist, obj_read_buffer, &buffer_size) == false) {
+    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, obj_tag, &is_exist, obj_read_buffer, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP data object read fail: tag=0x%04x", obj_tag);
         return false;
@@ -192,7 +192,7 @@ bool ccid_openpgp_object_data_set(uint16_t obj_tag, uint8_t *obj_data, size_t ob
     //  ccid_openpgp_object_write_retry または
     //  ccid_openpgp_object_write_resume のいずれかが
     //  コールバックされます。
-    if (ccid_flash_openpgp_object_write(APPLET_OPENPGP, obj_tag, obj_write_buff, obj_size) == false) {
+    if (ccid_flash_object_write_by_tag(APPLET_OPENPGP, obj_tag, obj_write_buff, obj_size) == false) {
         fido_log_error("OpenPGP object data write fail: tag=0x%04x", obj_tag);
         return false;
     }
@@ -211,7 +211,7 @@ bool ccid_openpgp_object_data_delete_all(void)
     //  ccid_openpgp_object_write_retry または
     //  ccid_openpgp_object_write_resume のいずれかが
     //  コールバックされます。
-    if (ccid_flash_openpgp_object_delete_all(APPLET_OPENPGP) == false) {
+    if (ccid_flash_object_delete_all(APPLET_OPENPGP) == false) {
         fido_log_error("All OpenPGP object data delete fail");
         return false;
     }
