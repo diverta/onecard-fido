@@ -126,6 +126,7 @@ static bool rsa_generate_key_terminate(bool success, mbedtls_rsa_context *rsa)
 {
     // リソースを解放
     mbedtls_rsa_free(rsa);
+    fido_crypto_uninit();
     return success;
 }
 

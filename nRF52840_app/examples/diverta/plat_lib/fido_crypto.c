@@ -63,6 +63,21 @@ void fido_crypto_init(void)
     }
 }
 
+void fido_crypto_uninit(void)
+{
+    ret_code_t err_code;
+    if (nrf_crypto_is_initialized() == true) {
+        return;
+    }
+    // 初期化が実行ずみの場合は
+    // nrf_crypto_deinitを実行する
+    err_code = nrf_crypto_uninit();
+    if (err_code != NRF_SUCCESS) {
+        NRF_LOG_ERROR("nrf_crypto_uninit() returns 0x%02x ", err_code);
+        APP_ERROR_CHECK(err_code);
+    }
+}
+
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
 {    
     // nrf_cryptoの初期化を実行する
