@@ -347,3 +347,53 @@ void ccid_response_time_extension(void)
     // レスポンス送信
     usbd_ccid_send_data_frame(bulkin_data, CCID_CMD_HEADER_SIZE);
 }
+
+//
+// 共通関数
+//
+uint16_t ccid_get_tlv_element_size(uint8_t elem_no, uint8_t *data, size_t size, size_t *elem_header_size, uint16_t *elem_data_size, uint16_t elem_data_size_max) 
+{
+    if (size < 1) {
+        return SW_WRONG_LENGTH;
+    }
+    if (data[0] != elem_no) {
+        return SW_WRONG_DATA;
+    }
+    
+    if (data[1] < 0x80) {
+        *elem_data_size = data[1];
+        *elem_header_size = 2;
+
+    } else if (data[1] == 0x81) {
+        if (size < 2) {
+            return SW_WRONG_LENGTH;
+
+        } else {
+            *elem_data_size = data[2];
+            *elem_header_size = 3;
+        }
+
+    } else if (data[1] == 0x82) {
+        if (size < 3) {
+            return SW_WRONG_LENGTH;
+
+        } else {
+            *elem_data_size = (uint16_t)(data[2] << 8u) | data[3];
+            *elem_header_size = 4;
+        }
+
+    } else {
+        return SW_WRONG_LENGTH;
+    }
+
+    if (*elem_data_size + *elem_header_size > size) {
+        // length does not overflow, but data does overflow
+        return SW_WRONG_LENGTH;
+    }
+
+    if (*elem_data_size > elem_data_size_max) {
+        return SW_WRONG_DATA;
+    }
+
+    return SW_NO_ERROR;
+}
