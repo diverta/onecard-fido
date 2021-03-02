@@ -396,6 +396,11 @@ static uint16_t openpgp_ins_activate(command_apdu_t *capdu, response_apdu_t *rap
     return ccid_openpgp_data_activate(capdu, rapdu);
 }
 
+static uint16_t openpgp_ins_import_key(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    return ccid_openpgp_key_import(capdu, rapdu);
+}
+
 #if SUPPORT_GENKEY
 static uint16_t openpgp_ins_generate_asymmetric_key_pair(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
@@ -438,6 +443,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
             break;
         case OPENPGP_INS_ACTIVATE:
             rapdu->sw = openpgp_ins_activate(capdu, rapdu);
+            break;
+        case OPENPGP_INS_IMPORT_KEY:
+            rapdu->sw = openpgp_ins_import_key(capdu, rapdu);
             break;
 #if SUPPORT_GENKEY
         case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
