@@ -172,8 +172,12 @@ static uint16_t update_data_object(command_apdu_t *capdu_)
         case TAG_PW_STATUS:
             return update_pw_status(capdu);
         case TAG_KEY_SIG_FINGERPRINT:
+        case TAG_KEY_DEC_FINGERPRINT:
+        case TAG_KEY_AUT_FINGERPRINT:
             return update_fingerprint(capdu, tag);
         case TAG_KEY_SIG_GENERATION_DATES:
+        case TAG_KEY_DEC_GENERATION_DATES:
+        case TAG_KEY_AUT_GENERATION_DATES:
             return update_generation_dates(capdu, tag);
         default:
             return SW_WRONG_P1P2;

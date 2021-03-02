@@ -16,6 +16,7 @@ extern "C" {
 #endif
 
 void fido_crypto_init(void);
+void fido_crypto_uninit(void);
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
 void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
 bool fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size);
