@@ -41,7 +41,7 @@ uint16_t openpgp_key_get_attributes(uint16_t tag, uint8_t *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key attribute read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -71,7 +71,7 @@ uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key fingerprint read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -98,7 +98,7 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key generate datetime read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -146,7 +146,7 @@ uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
     // 鍵ステータスをFlash ROMから読み込み
     bool is_exist = false;
     uint8_t status_;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, &status_, NULL) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, &status_, NULL) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key status read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;

@@ -118,6 +118,7 @@ void usbd_service_stop_for_bootloader(void);
 #include "usbd_service_ccid.h"
 #include "usbd_service_hid.h"
 #include "ccid_flash_object.h"
+#include "ccid_flash_openpgp_object.h"
 #include "ccid_flash_piv_object.h"
 
 #ifdef __cplusplus
