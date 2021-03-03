@@ -128,6 +128,13 @@ uint16_t ccid_openpgp_key_rsa_read(uint16_t key_tag)
     log_buffer();
 #endif
 
+    // Flash ROMに保管されている公開鍵がブランクの場合はエラー
+    uint8_t *p = ccid_openpgp_key_rsa_public_key();
+    if (p[0] == 0) {
+        fido_log_error("OpenPGP public key is invalid: tag=0x%04x", key_tag);
+        return SW_UNABLE_TO_PROCESS;
+    }
+
     // 正常終了
     return SW_NO_ERROR;
 }
