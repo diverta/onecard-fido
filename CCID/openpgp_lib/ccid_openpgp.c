@@ -17,10 +17,6 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
-// 本アプリケーション内で鍵生成を行う場合 true
-//   性能面で問題があるため、現在機能を閉塞しています
-#define SUPPORT_GENKEY      false
-
 //
 // offset
 //  0: aid
@@ -401,12 +397,10 @@ static uint16_t openpgp_ins_import_key(command_apdu_t *capdu, response_apdu_t *r
     return ccid_openpgp_key_import(capdu, rapdu);
 }
 
-#if SUPPORT_GENKEY
 static uint16_t openpgp_ins_generate_asymmetric_key_pair(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
     return ccid_openpgp_key_pair_generate(capdu, rapdu);
 }
-#endif
 
 static uint16_t openpgp_ins_pso(command_apdu_t *capdu, response_apdu_t *rapdu) 
 {
@@ -447,11 +441,9 @@ void ccid_openpgp_apdu_process(command_apdu_t *capdu, response_apdu_t *rapdu)
         case OPENPGP_INS_IMPORT_KEY:
             rapdu->sw = openpgp_ins_import_key(capdu, rapdu);
             break;
-#if SUPPORT_GENKEY
         case OPENPGP_INS_GENERATE_ASYMMETRIC_KEY_PAIR:
             rapdu->sw = openpgp_ins_generate_asymmetric_key_pair(capdu, rapdu);
             break;
-#endif
         case OPENPGP_INS_PSO:
             rapdu->sw = openpgp_ins_pso(capdu, rapdu);
             break;
