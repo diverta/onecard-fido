@@ -108,6 +108,9 @@ static bool get_record_key_by_tag(CCID_APPLET applet_id, uint16_t obj_tag, uint1
         case TAG_KEY_AUT_GENERATION_DATES:
             *record_key = OPGP_DATA_OBJ_20_RECORD_KEY;
             break;
+        case TAG_DIGITAL_SIG_COUNTER:
+            *record_key = OPGP_DATA_OBJ_21_RECORD_KEY;
+            break;
         case TAG_KEY_CA1_FINGERPRINT:
         case TAG_KEY_CA2_FINGERPRINT:
         case TAG_KEY_CA3_FINGERPRINT:

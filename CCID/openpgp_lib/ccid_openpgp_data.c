@@ -249,6 +249,20 @@ static uint16_t register_key_status(void)
     return SW_NO_ERROR;
 }
 
+static uint16_t reset_sign_counter(void)
+{
+    // 署名カウンターをFlash ROMに登録
+    //  Flash ROM更新後、
+    //  ccid_openpgp_data_retry または
+    //  ccid_openpgp_data_resume のいずれかが
+    //  コールバックされます。
+    if (openpgp_attr_set_digital_sig_counter(0) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
+    m_flash_func = reset_sign_counter;
+    return SW_NO_ERROR;
+}
+
 uint16_t ccid_openpgp_data_register_key(command_apdu_t *capdu, response_apdu_t *rapdu, uint16_t key_tag, uint8_t key_status) 
 {
     // 鍵種別／ステータスを待避
@@ -295,6 +309,10 @@ void ccid_openpgp_data_retry(void)
         // 秘密鍵ステータス登録を再度実行
         sw = register_key_status();
     }
+    if (m_flash_func == reset_sign_counter) {
+        // 署名カウンターリセットを再度実行
+        sw = reset_sign_counter();
+    }
     if (sw == SW_NO_ERROR) {
         // 正常時は、Flash ROM書込みが完了するまで、レスポンスを抑止
         fido_log_warning("OpenPGP data object registration retry");
@@ -332,6 +350,19 @@ void ccid_openpgp_data_resume(bool success)
         }
         if (m_flash_func == register_key_status) {
             fido_log_info("OpenPGP private key status update success");
+            if (m_key_tag == TAG_KEY_SIG) {
+                // 署名カウンター登録を実行
+                uint16_t sw = reset_sign_counter();
+                if (sw != SW_NO_ERROR) {
+                    // 異常時はエラーレスポンス処理を指示
+                    fido_log_error("OpenPGP sign counter reset fail");
+                    ccid_openpgp_object_resume_process(sw);        
+                }
+                return;
+            }
+        }
+        if (m_flash_func == reset_sign_counter) {
+            fido_log_info("OpenPGP sign counter reset success");
         }
         ccid_openpgp_object_resume_process(SW_NO_ERROR);
 
