@@ -12,8 +12,11 @@
 
 //
 // 送受信データ格納用の一時バッファ
+// 受信用は、以下340バイト分を確保
+//   最大受信可能データ長（330バイト）
+//   コマンドヘッダー長（10バイト）
 //
-static uint8_t bulkout_data[288];
+static uint8_t bulkout_data[340];
 static uint8_t bulkin_data[288];
 
 // データ受信用一時変数
@@ -294,7 +297,12 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
         // Block size = Command header size + APDU size
         bulkout_size_expected += CCID_CMD_HEADER_SIZE;
 
-        if (bulkout_size_received == bulkout_size_expected) {
+        if (bulkout_size_expected > sizeof(bulkout_data)) {
+            // ブロックサイズが配列サイズを超えている場合は
+            // フレーム受信は継続するが、データは無効とする
+            bulkout_state = 2;
+
+        } else if (bulkout_size_received == bulkout_size_expected) {
             // ブロックサイズ＝フレームサイズの場合は、ブロック受信を完了し、
             // APDUの処理を実行
             return true;
@@ -323,6 +331,19 @@ bool ccid_data_frame_received(uint8_t *data, size_t len)
             return true;
 
         } else {
+            bulkout_state = 0;
+        }
+
+    // ブロックサイズが配列サイズを超えている場合は
+    // フレーム受信は継続するが、データは無効とする
+    } else if (bulkout_state == 2) {
+        if (bulkout_size_received + len < bulkout_size_expected) {
+            // 受信済みサイズがブロックサイズに満たない場合は、フレーム受信を継続
+            bulkout_size_received += len;
+        } else {
+            // ブロックサイズ以上受信した場合は、ブロック受信を完了
+            fido_log_error("APDU recv: data size(%d) exceeds buffer size(%d)",
+                bulkout_size_expected, sizeof(bulkout_data));
             bulkout_state = 0;
         }
     }
