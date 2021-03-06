@@ -22,7 +22,7 @@ Nordic社のSoC「nRF52840」を使用したFIDO2認証器です。<br>
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作しております。<br>
 PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスとして稼働し、ボタン乾電池装着時はBLEペリフェラルデバイスとして稼働します。
 
-- <b>MDBT50Q Dongle Mini（！！！現在開発中！！！）</b><br>
+- <b>[MDBT50Q Dongle Mini](FIDO2Device/MDBT50Q_Dongle_mini/README.md)（！！！現在開発中！！！）</b><br>
 上記「[MDBT50Q Dongle](FIDO2Device/MDBT50Q_Dongle)」を小型化し、USBドングルユースに特化したデバイスです。<br>
 近年PCで採用が増大している小型USBコネクター<b>「USB Type-C プラグ」</b>を装備します。<br>
 PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスとして稼働します。
