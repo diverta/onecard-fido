@@ -78,6 +78,10 @@ uint16_t ccid_openpgp_crypto_pso(command_apdu_t *capdu, response_apdu_t *rapdu)
     if (capdu->p1 == 0x9e && capdu->p2 == 0x9a) {
         // RSA鍵を使用し署名生成
         return compute_digital_signature(capdu, rapdu);
+
+    } else if (capdu->p1 == 0x80 && capdu->p2 == 0x86) {
+        // RSA鍵を使用し復号化
+        return decipher(capdu, rapdu);
     }
 
     return SW_WRONG_P1P2;
