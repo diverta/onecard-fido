@@ -21,6 +21,7 @@ uint16_t    openpgp_attr_get_pw_status(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_login_data(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_url_data(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_digital_sig_counter(uint8_t *buf, size_t *size);
+uint16_t    openpgp_attr_set_digital_sig_counter(uint32_t counter);
 uint16_t    openpgp_attr_get_name(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_lang(uint8_t *buf, size_t *size);
 uint16_t    openpgp_attr_get_sex(uint8_t *buf, size_t *size);

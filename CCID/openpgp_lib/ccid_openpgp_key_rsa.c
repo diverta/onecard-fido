@@ -81,6 +81,41 @@ static void log_buffer(void)
 }
 #endif
 
+uint16_t ccid_openpgp_key_rsa_import(uint8_t *key_attr, uint8_t *privkey_pq)
+{
+    // ビット数を取得
+    unsigned int nbits;
+    uint16_t sw = ccid_openpgp_key_rsa_nbits(key_attr, &nbits);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // 秘密鍵を引数の領域からコピー
+    size_t pq_size = nbits / 8;
+    memcpy(ccid_openpgp_key_rsa_private_key(), privkey_pq, pq_size);
+
+    // キープアライブタイマーを開始
+    rsa_process_timer_start();
+
+    // RSA秘密鍵をインポートし、同時に秘密鍵から公開鍵を生成
+    if (ccid_crypto_rsa_import(ccid_openpgp_key_rsa_private_key(), ccid_openpgp_key_rsa_public_key(), nbits) == false) {
+        return rsa_process_terminate(SW_UNABLE_TO_PROCESS);
+    }
+
+#if LOG_DEBUG_PKEY_BUFFER
+    uint8_t *p = ccid_openpgp_key_rsa_private_key();
+    fido_log_debug("pkey data first 256 bytes: ");
+    fido_log_print_hexdump_debug(p, 64);
+    fido_log_print_hexdump_debug(p + 64, 64);
+    fido_log_print_hexdump_debug(p + 128, 64);
+    fido_log_print_hexdump_debug(p + 192, 64);
+#endif
+
+    // 正常終了
+    fido_log_info("OpenPGP public key (RSA-2048) import done");
+    return rsa_process_terminate(SW_NO_ERROR);
+}
+
 uint16_t ccid_openpgp_key_rsa_generate(uint8_t *key_attr)
 {
     // ビット数を取得
@@ -127,6 +162,13 @@ uint16_t ccid_openpgp_key_rsa_read(uint16_t key_tag)
 #if LOG_DEBUG_PKEY_BUFFER
     log_buffer();
 #endif
+
+    // Flash ROMに保管されている公開鍵がブランクの場合はエラー
+    uint8_t *p = ccid_openpgp_key_rsa_public_key();
+    if (p[0] == 0) {
+        fido_log_error("OpenPGP public key is invalid: tag=0x%04x", key_tag);
+        return SW_UNABLE_TO_PROCESS;
+    }
 
     // 正常終了
     return SW_NO_ERROR;

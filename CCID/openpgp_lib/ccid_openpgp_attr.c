@@ -8,7 +8,11 @@
 
 #include "ccid_openpgp.h"
 #include "ccid_openpgp_attr.h"
+#include "ccid_openpgp_object.h"
 #include "ccid_pin_auth.h"
+
+// 業務処理／HW依存処理間のインターフェース
+#include "fido_platform.h"
 
 #define MAX_PIN_LENGTH              64
 #define DIGITAL_SIG_COUNTER_LENGTH  3
@@ -18,6 +22,9 @@
 #ifdef OPENPGP_TEST_DATA
 static char attr_name[] = "Here is the cardname";
 #endif
+
+// 一時格納領域
+static uint8_t m_work_buf[8];
 
 uint16_t ccid_openpgp_attr_get_retries(PIN_TYPE type, uint8_t *retries)
 {
@@ -93,11 +100,39 @@ uint16_t openpgp_attr_get_url_data(uint8_t *buf, size_t *size)
 
 uint16_t openpgp_attr_get_digital_sig_counter(uint8_t *buf, size_t *size)
 {
-    // TODO: 仮の実装です。
-    buf[0] = 0x00;
-    buf[1] = 0x00;
-    buf[2] = 0x01;
-    *size = DIGITAL_SIG_COUNTER_LENGTH;
+    bool is_exist = false;
+    size_t buffer_size;
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, TAG_DIGITAL_SIG_COUNTER, &is_exist, buf, &buffer_size) == false) {
+        // 読出しが失敗した場合はエラー
+        fido_log_error("OpenPGP sign counter read fail: tag=0x%04x", TAG_DIGITAL_SIG_COUNTER);
+        return SW_UNABLE_TO_PROCESS;
+    }
+    if (is_exist == false) {
+        // Flash ROMに登録されていない場合はデフォルトを設定
+        buffer_size = TAG_DIGITAL_SIG_COUNTER;
+        memset(buf, 0, TAG_DIGITAL_SIG_COUNTER);
+    }
+
+    // サイズを戻す
+    if (size != NULL) {
+        *size = buffer_size;
+    }
+
+    // 正常終了
+    return SW_NO_ERROR;
+}
+
+uint16_t openpgp_attr_set_digital_sig_counter(uint32_t counter)
+{
+    // カウンター値をビッグエンディアンで設定
+    m_work_buf[0] = counter >> 16 & 0xff;
+    m_work_buf[1] = counter >>  8 & 0xff;
+    m_work_buf[2] = counter >>  0 & 0xff;
+
+    // タイムスタンプをFlash ROMに設定
+    if (ccid_openpgp_object_data_set(TAG_DIGITAL_SIG_COUNTER, m_work_buf, DIGITAL_SIG_COUNTER_LENGTH) == false) {
+        return SW_UNABLE_TO_PROCESS;
+    }
 
     // 正常終了
     return SW_NO_ERROR;

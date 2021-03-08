@@ -76,6 +76,32 @@ static int ccid_crypto_rsa_random(void *ctx, unsigned char *buf, size_t size)
     return 0;
 }
 
+static int import_private_key_raw(mbedtls_rsa_context *rsa, uint8_t *rsa_private_key_raw)
+{
+    //
+    // mbedtls_rsa_import_raw を実行
+    // （P, Q, E のインポート）
+    //
+    uint8_t *p_P = rsa_private_key_raw;
+    uint8_t *p_Q = p_P + RSA2048_PQ_LENGTH;
+    int ret = mbedtls_rsa_import_raw(rsa, NULL, 0, p_P, RSA2048_PQ_LENGTH, p_Q, RSA2048_PQ_LENGTH, NULL, 0, E, sizeof(E));
+    if (ret != 0) {
+        NRF_LOG_ERROR("mbedtls_rsa_import_raw returns %d", ret);
+        return ret;
+    }
+
+    //
+    // mbedtls_rsa_complete を実行
+    //
+    ret = mbedtls_rsa_complete(rsa);
+    if (ret != 0) {
+        NRF_LOG_ERROR("mbedtls_rsa_complete returns %d", ret);
+        return ret;
+    }
+
+    return 0;
+}
+
 bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_t *output)
 {
     // nrf_cc310 を初期化
@@ -85,24 +111,10 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
     mbedtls_rsa_context rsa;
     mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
 
-    //
-    // mbedtls_rsa_import_raw を実行
-    // （P, Q, E のインポート）
-    //
-    uint8_t *p_P = rsa_private_key_raw;
-    uint8_t *p_Q = p_P + RSA2048_PQ_LENGTH;
-    int ret = mbedtls_rsa_import_raw(&rsa, NULL, 0, p_P, RSA2048_PQ_LENGTH, p_Q, RSA2048_PQ_LENGTH, NULL, 0, E, sizeof(E));
+    // 引数領域の秘密鍵をインポート
+    // （P、Q が連続して格納されている想定）
+    int ret = import_private_key_raw(&rsa, rsa_private_key_raw);
     if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_rsa_import_raw returns %d", ret);
-        return ccid_crypto_rsa_private_terminate(false, &rsa);
-    }
-
-    //
-    // mbedtls_rsa_complete を実行
-    //
-    ret = mbedtls_rsa_complete(&rsa);
-    if (ret != 0) {
-        NRF_LOG_ERROR("mbedtls_rsa_complete returns %d", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
 
@@ -112,6 +124,38 @@ bool ccid_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8
     ret = mbedtls_rsa_private(&rsa, ccid_crypto_rsa_random, NULL, input, output);
     if (ret != 0) {
         NRF_LOG_ERROR("mbedtls_rsa_private returns %d", ret);
+        return ccid_crypto_rsa_private_terminate(false, &rsa);
+    }
+
+    // 正常終了
+    return ccid_crypto_rsa_private_terminate(true, &rsa);
+}
+
+bool ccid_crypto_rsa_import(uint8_t *rsa_private_key_raw, uint8_t *rsa_public_key_raw, unsigned int nbits)
+{
+    // nrf_cc310 を初期化
+    fido_crypto_init();
+
+    // 変数初期化
+    mbedtls_rsa_context rsa;
+    mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
+
+    // 引数領域の秘密鍵をインポート
+    // （P、Q が連続して格納されている想定）
+    int ret = import_private_key_raw(&rsa, rsa_private_key_raw);
+    if (ret != 0) {
+        return ccid_crypto_rsa_private_terminate(false, &rsa);
+    }
+
+    //
+    // mbedtls_rsa_export_raw を実行
+    // （N のエクスポート）
+    //
+    size_t pq_size = nbits / 16;
+    uint8_t *n = rsa_public_key_raw;
+    ret = mbedtls_rsa_export_raw(&rsa, n, pq_size * 2, NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+    if (ret != 0) {
+        NRF_LOG_ERROR("mbedtls_rsa_export_raw returns %d", ret);
         return ccid_crypto_rsa_private_terminate(false, &rsa);
     }
 

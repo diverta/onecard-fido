@@ -14,8 +14,13 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// 本アプリケーション内で鍵生成を行う場合 true
+//   性能面で問題があるため、現在機能を閉塞しています
+#define SUPPORT_GENKEY              false
+
 // テスト用
 #define LOG_DEBUG_KEY_ATTR_DESC     false
+#define LOG_DEBUG_KEY_IMP_REQ_BUFF  false
 
 //
 // Keys for OpenPGP
@@ -41,7 +46,7 @@ uint16_t openpgp_key_get_attributes(uint16_t tag, uint8_t *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key attribute read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -71,7 +76,7 @@ uint16_t openpgp_key_get_fingerprint(uint16_t tag, void *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key fingerprint read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -98,7 +103,7 @@ uint16_t openpgp_key_get_datetime(uint16_t tag, void *buf, size_t *size)
 {
     bool is_exist = false;
     size_t buffer_size;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, buf, &buffer_size) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key generate datetime read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -146,7 +151,7 @@ uint16_t openpgp_key_get_status(uint16_t key_tag, uint8_t *status)
     // 鍵ステータスをFlash ROMから読み込み
     bool is_exist = false;
     uint8_t status_;
-    if (ccid_flash_object_read_by_tag(APPLET_OPENPGP, tag, &is_exist, &status_, NULL) == false) {
+    if (ccid_flash_openpgp_object_read(APPLET_OPENPGP, tag, &is_exist, &status_, NULL) == false) {
         // 読出しが失敗した場合はエラー
         fido_log_error("OpenPGP key status read fail: tag=0x%04x", tag);
         return SW_UNABLE_TO_PROCESS;
@@ -298,6 +303,7 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     }
 
     if (capdu->p1 == 0x80) {
+#if SUPPORT_GENKEY
         // RSA-2048キーペアを生成
         sw = ccid_openpgp_key_rsa_generate(m_key_attr);
         if (sw != SW_NO_ERROR) {
@@ -310,10 +316,14 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
         if (sw != SW_NO_ERROR) {
             return sw;
         }
+#else
+        // 本アプリケーション内で鍵生成は出来ません。
+        return SW_INS_NOT_SUPPORTED;
+#endif
 
     } else if (capdu->p1 == 0x81) {
         // 鍵ステータスを参照し、鍵がない場合はエラー
-        sw = ccid_openpgp_key_is_present(TAG_KEY_SIG);
+        sw = ccid_openpgp_key_is_present(key_tag);
         if (sw != SW_NO_ERROR) {
             return sw;
         }
@@ -331,4 +341,96 @@ uint16_t ccid_openpgp_key_pair_generate(command_apdu_t *capdu, response_apdu_t *
     
     // 正常終了
     return SW_NO_ERROR;
+}
+
+//
+// 鍵インポート処理
+// 
+uint16_t ccid_openpgp_key_import(command_apdu_t *capdu, response_apdu_t *rapdu) 
+{
+    // パラメーターのチェック
+    if (capdu->p1 != 0x3f || capdu->p2 != 0xff) {
+        return SW_WRONG_P1P2;
+    }
+
+    // リクエストデータの格納領域
+    uint8_t *cdata = capdu->data;
+    uint8_t *p = cdata;
+    size_t   elem_header_size;
+    uint16_t elem_data_size;
+    uint16_t sw;
+
+#if LOG_DEBUG_KEY_IMP_REQ_BUFF
+    fido_log_debug("ccid_openpgp_key_import capdu->data: ");
+    fido_log_print_hexdump_debug(capdu->data, capdu->lc);
+#endif
+
+    // Extended Header list, 4D
+    size_t remaining = capdu->lc;
+    sw = ccid_get_tlv_element_size(0x4d, p, remaining, &elem_header_size, &elem_data_size, remaining);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    p += elem_header_size;
+
+    // Control Reference Template to indicate the private key
+    //   タグ(B6, B8 or A4)から鍵種別を取得
+    uint16_t key_tag = get_key_tag(*p);
+    if (key_tag == TAG_OPGP_NONE) {
+        return SW_WRONG_DATA;
+    }
+    p++;
+    //   xx 00 or xx 03 84 01 01
+    //   xx = B6, B8 or A4
+    if (*p != 0x00 && *p != 0x03) {
+        return SW_WRONG_DATA;
+    }
+    p += *p + 1;
+
+    // Cardholder private key template
+    //   最大長は 22バイト
+    if (*p++ != 0x7f) {
+        return SW_WRONG_DATA;
+    }
+    uint16_t template_max_size = 22;
+    uint16_t template_size;
+    remaining = capdu->lc - (p - cdata);
+    sw = ccid_get_tlv_element_size(0x48, p, remaining, &elem_header_size, &template_size, template_max_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    p += elem_header_size;
+    p += template_size;
+
+    // private key data
+    //   E、P、Q の順で格納されています
+    if (*p++ != 0x5f) {
+        return SW_WRONG_DATA;
+    }
+    uint16_t total_key_size;
+    remaining = capdu->lc - (p - cdata);
+    sw = ccid_get_tlv_element_size(0x48, p, remaining, &elem_header_size, &total_key_size, remaining);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+    p += elem_header_size;
+
+    // 鍵種別に対応する鍵属性を取得
+    size_t key_attr_size;
+    sw = get_key_attribute(key_tag, m_key_attr, &key_attr_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // 秘密鍵をインポート
+    //   領域 p に、E、P、Q が連続して格納されている想定
+    //   ただし、Eはインポート不要なので除外
+    p += ccid_crypto_rsa_e_size();
+    sw = ccid_openpgp_key_rsa_import(m_key_attr, p);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // Flash ROMに秘密鍵を保存
+    return ccid_openpgp_data_register_key(capdu, rapdu, key_tag, KEY_IMPORTED);
 }
