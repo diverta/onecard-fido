@@ -229,3 +229,70 @@ uint16_t ccid_openpgp_key_rsa_signature(uint16_t key_tag, uint8_t *key_attr, uin
     fido_log_info("OpenPGP signature (RSA-2048) generate done");
     return rsa_process_terminate(SW_NO_ERROR);
 }
+
+static uint16_t pkcs1_v15_remove_padding(uint8_t *in, uint16_t in_size, uint8_t *out, size_t *out_size) 
+{
+    // データ長／内容をチェック
+    if (in_size < 11) {
+        return SW_WRONG_DATA;
+    }
+    if (in[0] != 0x00 || in[1] != 0x02) {
+        return SW_WRONG_DATA;
+    }
+    // 余白直前の 0x00 バイトの位置を探す
+    uint16_t i;
+    for (i = 2; i < in_size; ++i) {
+        if (in[i] == 0x00) {
+            break;
+        }
+    }
+    if (i == in_size || i - 2 < 8) {
+        return SW_WRONG_DATA;
+    }
+    // データの余白サイズを計算
+    uint16_t pad_size = i + 1;
+    // データバイトを、余白サイズ分、左側へ移動
+    memmove(out, in + pad_size, in_size - pad_size);
+    // 余白を外したデータ長を戻す
+    *out_size = in_size - pad_size;
+    return SW_NO_ERROR;
+}
+
+uint16_t ccid_openpgp_key_rsa_decrypt(uint16_t key_tag, uint8_t *key_attr, uint8_t *encrypted, uint8_t *decrypted, size_t *p_decrypted_size)
+{
+    // 鍵ビット数を取得
+    unsigned int nbits;
+    uint16_t sw = ccid_openpgp_key_rsa_nbits(key_attr, &nbits);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // Flash ROMから鍵を取得
+    sw = ccid_openpgp_key_rsa_read(key_tag);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // キープアライブタイマーを開始
+    rsa_process_timer_start();
+
+    // 復号化
+    if (ccid_crypto_rsa_private(ccid_openpgp_key_rsa_private_key(), encrypted, decrypted) == false) {
+        return rsa_process_terminate(SW_UNABLE_TO_PROCESS);
+    }
+
+    // データの余白外し
+    size_t size = nbits / 8;
+    size_t decrypted_size;
+    sw = pkcs1_v15_remove_padding(decrypted, size, decrypted, &decrypted_size);
+    if (sw != SW_NO_ERROR) {
+        return rsa_process_terminate(sw);
+    }
+
+    // 正常終了
+    if (p_decrypted_size != NULL) {
+        *p_decrypted_size = decrypted_size;
+    }
+    fido_log_info("OpenPGP decrypt (RSA-2048) done");
+    return rsa_process_terminate(SW_NO_ERROR);
+}
