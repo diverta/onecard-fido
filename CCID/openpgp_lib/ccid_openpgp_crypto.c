@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+// テスト用
+#define LOG_DEBUG_PSO_DEC_REQ_BUFF      false
+#define LOG_DEBUG_PSO_DEC_RES_BUFF      false
+
 // 鍵属性取得用領域
 static uint8_t m_key_attr[16];
 
@@ -34,6 +38,7 @@ static uint16_t get_pw1_status(uint8_t *status)
 
 static uint16_t compute_digital_signature(command_apdu_t *capdu, response_apdu_t *rapdu)
 {
+    // 認証済みフラグをチェック
     if (ccid_openpgp_pin_pw1_mode81_get() == 0) {
         return (SW_SECURITY_STATUS_NOT_SATISFIED);
     }
@@ -70,6 +75,54 @@ static uint16_t compute_digital_signature(command_apdu_t *capdu, response_apdu_t
 
     // 正常終了
     rapdu->len = signature_size;
+    return SW_NO_ERROR;
+}
+
+static uint16_t decipher(command_apdu_t *capdu, response_apdu_t *rapdu)
+{
+    // 認証済みフラグをチェック
+    if (ccid_openpgp_pin_pw1_mode82_get() == 0) {
+        return (SW_SECURITY_STATUS_NOT_SATISFIED);
+    }
+
+    // 鍵ステータスを参照し、鍵がない場合はエラー
+    uint16_t sw = ccid_openpgp_key_is_present(TAG_KEY_DEC);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+    // 鍵属性を取得
+    size_t key_attr_size;
+    sw = openpgp_key_get_attributes(TAG_ALGORITHM_ATTRIBUTES_DEC, m_key_attr, &key_attr_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+#if LOG_DEBUG_PSO_DEC_REQ_BUFF
+    fido_log_debug("decipher request data (256 bytes): ");
+    uint8_t *p = capdu->data + 1;
+    fido_log_print_hexdump_debug(p    , 64);
+    fido_log_print_hexdump_debug(p+ 64, 64);
+    fido_log_print_hexdump_debug(p+128, 64);
+    fido_log_print_hexdump_debug(p+192, 64);
+#endif
+
+    // RSA秘密鍵による復号化
+    uint8_t *encrypted = capdu->data + 1;
+    uint8_t *decrypted = rapdu->data;
+    size_t decrypted_size;
+    sw = ccid_openpgp_key_rsa_decrypt(TAG_KEY_DEC, m_key_attr, encrypted, decrypted, &decrypted_size);
+    if (sw != SW_NO_ERROR) {
+        return sw;
+    }
+
+#if LOG_DEBUG_PSO_DEC_RES_BUFF
+    fido_log_debug("decipher response data (%d bytes): ", decrypted_size);
+    fido_log_print_hexdump_debug(decrypted, decrypted_size);
+#endif
+
+    // 正常終了
+    rapdu->len = decrypted_size;
     return SW_NO_ERROR;
 }
 
