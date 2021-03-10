@@ -2,7 +2,7 @@
 
 ## 概要
 
-[管理ツール](../../../MaintenanceTool/README.md)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能に関する動作確認を行う手順について、以下に掲載いたします。
+[GPGツール](https://gpgtools.org)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能に関する動作確認を行う手順について、以下に掲載いたします。
 
 ## 作業の準備
 

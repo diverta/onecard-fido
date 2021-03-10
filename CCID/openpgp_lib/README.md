@@ -14,4 +14,4 @@ OpenPGPカードエミュレーション機能は、USB CCIDインターフェ�
 
 したがって、macOS環境でOpenPGPカードエミュレーション機能を利用するためには、[専用CCIDドライバー](../../CCID/INSTALLPRG.md)[注1]がインストールされている必要があります。
 
-[注1] macOS環境上で、MDBT50Q DongleをUSB CCIDデバイスとして認識できるよう、カスタマイズされています。詳細につきましては[別ドキュメント](CCID/ccid_lib/README.md)をご参照願います。
+[注1] macOS環境上で、MDBT50Q DongleをUSB CCIDデバイスとして認識できるよう、カスタマイズされています。詳細につきましては[別ドキュメント](../../CCID/ccid_lib/README.md)をご参照願います。
