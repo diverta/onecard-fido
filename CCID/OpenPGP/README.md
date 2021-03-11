@@ -6,6 +6,12 @@
 
 [OpenPGPカードエミュレーション機能](../../CCID/openpgp_lib/README.md)は、[USB CCIDインターフェース](../../CCID/ccid_lib/README.md)上で動作します。
 
+## 利用例
+
+<img src="assets01/0017.jpg" width="720"><br>
+<img src="assets01/0018.jpg" width="720">
+
+
 ## 手順書
 
 - <b>[CCIDドライバーインストール手順](../../CCID/INSTALLPRG.md)</b><br>
