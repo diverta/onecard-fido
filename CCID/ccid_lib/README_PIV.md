@@ -78,7 +78,7 @@ PIVに関する仕様は下記の通りです。
 
 #### 管理対象PIVオブジェクト
 本モジュールで管理対象とするPIVオブジェクト（PIVで使用する各種機密データ）は、下記一覧の通りとなっております。<br>
-[Yubico PIV Tool](https://developers.yubico.com/yubico-piv-tool/)や、[YubiKey Manager](https://www.yubico.com/products/services-software/download/yubikey-manager/)といった無償ツールを使用して、インストールすることを可能とする予定です。[注1][注2]
+[管理ツール](../../MaintenanceTool/README.md)によるメンテナンスが出来るようになっております。[注1][注2]
 
 |#|TAG|名称|説明|
 |:---:|:---|:---|:---|
@@ -94,7 +94,7 @@ PIVに関する仕様は下記の通りです。
 |10|`0x80`|PIV Card Application PIN|PIN番号[注4]|
 |11|`0x81`|PIN Unblocking Key|PUK番号[注4]|
 
-[注1]将来的に、[管理ツール](../../MaintenanceTool/README.md)によるメンテナンスが出来るようにすることを検討しています。<br>
+[注1][Yubico PIV Tool](https://developers.yubico.com/yubico-piv-tool/)や、[YubiKey Manager](https://www.yubico.com/products/services-software/download/yubikey-manager/)といった無償ツールを使用して、インストールすることも可能となっています。<br>
 [注2]インストールされたオブジェクトは、nRF52840のFlash ROMに格納されます。<br>
 [注3]TDEA（Triple Data Encryption Algorithm）暗号のみサポートしています。<br>
 [注4]共に固定長（8バイト）となっております。PIN／PUK番号が8バイトに満たない場合、残りの領域は`0xff`で埋められます。
