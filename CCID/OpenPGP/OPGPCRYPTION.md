@@ -4,6 +4,8 @@
 
 ## 想定局面
 
+<img src="assets01/0017.jpg" width="720">
+
 通常は、ファイルを暗号化するユーザーと、復号化するユーザーが別のケースが多いかと思われます。<br>
 したがって、ファイル暗号化手順と、ファイル復号化手順に分けて説明します。
 
@@ -13,7 +15,7 @@
 
 #### GPGツールのインストール
 macOS環境においてOpenPGP機能を使用するためには、GPGツールをインストールする必要があります。<br>
-具体的な手順は、別ドキュメント<b>「[GPG Suiteインストール手順](../../../CCID/OpenPGP/GPGINSTMAC.md)」</b>をご参照ください。
+具体的な手順は、別ドキュメント<b>「[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)」</b>をご参照ください。
 
 #### 公開鍵のインポート
 
@@ -56,13 +58,13 @@ GUIアプリ「GPG Keychain」を使うと、先ほどの公開鍵がインポ�
 
 暗号化されたファイルを、秘密鍵を使用して復号化します。
 
-秘密鍵は、手順書「[GPG Suiteによる鍵インストール手順](../../../CCID/OpenPGP/GPGKEYINST.md)」により生成し、MDBT50Q Dongleにインストールされたもの使用します。<br>
+秘密鍵は、手順書「[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)」により生成し、MDBT50Q Dongleにインストールされたもの使用します。<br>
 すなわち、暗号化手順で使用した公開鍵ファイル（`public_key.pgp`）の生成元である秘密鍵が使用されることになります。
 
 #### MDBT50Q Dongleのファームウェアを更新
 
 OpenPGP機能が動作するようにするため、MDBT50Q Dongleのファームウェアを、最新バージョンに更新しておきます。<br>
-具体的な手順は、別ドキュメント<b>「[ファームウェア更新手順](../../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)」</b>をご参照ください。
+具体的な手順は、別ドキュメント<b>「[ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)」</b>をご参照ください。
 
 #### 公開鍵のインポート
 
