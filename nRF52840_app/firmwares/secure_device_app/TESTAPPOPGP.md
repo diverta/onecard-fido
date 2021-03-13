@@ -10,12 +10,14 @@
 
 #### MDBT50Q Dongleの準備
 
-[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。<br>
-具体的な手順は、別ドキュメント「[nRF52840アプリケーション初回導入手順書](../../../nRF52840_app/firmwares/secure_device_app/WRITEAPP.md)」をご参照ください。
+[version 0.3.1](https://github.com/diverta/onecard-fido/blob/doc-20210311/nRF52840_app/firmwares/secure_device_app)以降の[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。<br>
+具体的な手順は、別ドキュメント「[nRF52840アプリケーション更新手順書](../../../nRF52840_app/firmwares/secure_device_app/UPDATEAPP.md)」をご参照ください。[注1]<br>
 
 MDBT50Q Dongleを、PCのUSBポートに装着すると、下図のように、基板上の緑色のLEDが点滅している状態になります。
 
 <img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="150">
+
+[注1] 導入されているnRF52840アプリケーションが、Version 0.3.0より前の場合は、別ドキュメント「[MDBT50Q Dongleファームウェア（version 0.3.0）導入手順書](../../../nRF52840_app/firmwares/secure_device_app/WRITEAPP_0_3_0.md)」をご参照願います。
 
 #### CCIDドライバーのインストール
 
@@ -51,3 +53,12 @@ GPGツールを使用した秘密鍵インストールの手順につきまし�
 
 [注1] GPGツールで生成した秘密鍵は、MDBT50Q Dongleにインストール（移動）後、２度と取り出すことが出来ないようになっております。<br>
 [注2] この手順はコマンドラインベースで非常に手間がかかるため、将来的に、[FIDO認証器管理ツール](../../../MaintenanceTool/README.md)のような専用GUIアプリを制作し、作業を簡略化させる方向で検討しております。
+
+#### ファイルの暗号化／復号化
+
+GPGツールで生成した秘密鍵／公開鍵により、ファイルの暗号化／復号化ができます。
+
+ファイルの暗号化は、公開鍵を使って実行します。<br>
+他方、その暗号されたファイルの復号化を実行する際は、前項にてMDBT50Q Dongleにインストールされた秘密鍵が必要となります。
+
+GPGツールを使用したファイル暗号化／復号化の手順につきましては、別ドキュメント<b>「[OpenPGPを使用したファイル暗号／復号化手順](../../../CCID/OpenPGP/OPGPCRYPTION.md)」</b>をご参照願います。[注2]
