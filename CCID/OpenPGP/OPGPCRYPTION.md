@@ -10,13 +10,24 @@
 通常は、ファイルを暗号化するユーザー（ファイル提供者）と、復号化するユーザー（ファイル受領者）が別のケースが多いかと思われます。<br>
 したがって、暗号化手順（ファイル提供者の手順）と、復号化手順（ファイル受領者の手順）に分けて説明します。
 
+## 事前準備
+
+OpenPGP機能を使用するために必要なGPGツール群「[GPG Suite](https://gpgtools.org)」と、秘密鍵が格納されている[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を準備します。
+
+#### GPG Suiteのインストール
+macOS環境においてOpenPGP機能を使用するためには、GPGツールをインストールする必要があります。<br>
+具体的な手順は、別ドキュメント<b>「[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)」</b>をご参照ください。
+
+#### MDBT50Q Dongleの準備
+
+秘密鍵が格納されているMDBT50Q Dongleを、あらかじめ準備します。[注1]<br>
+秘密鍵を格納する手順は、別ドキュメント<b>「[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)」</b>をご参照ください。
+
+[注1]ファイル暗号化時は公開鍵を使用するため、MDBT50Q Dongleは不要です。
+
 ## 暗号化手順
 
 あらかじめ取得しておいた公開鍵ファイルを使用し、任意のファイルを暗号化します。
-
-#### GPGツールのインストール
-macOS環境においてOpenPGP機能を使用するためには、GPGツールをインストールする必要があります。<br>
-具体的な手順は、別ドキュメント<b>「[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)」</b>をご参照ください。
 
 #### 公開鍵のインポート
 
@@ -61,11 +72,6 @@ GUIアプリ「GPG Keychain」を使うと、先ほどの公開鍵がインポ�
 
 秘密鍵は、手順書「[GPG Suiteによる鍵インストール手順](../../CCID/OpenPGP/GPGKEYINST.md)」により生成し、MDBT50Q Dongleにインストールされたもの使用します。<br>
 すなわち、暗号化手順で使用した公開鍵ファイル（`public_key.pgp`）の生成元である秘密鍵が使用されることになります。
-
-#### MDBT50Q Dongleのファームウェアを更新
-
-OpenPGP機能が動作するようにするため、MDBT50Q Dongleのファームウェアを、最新バージョンに更新しておきます。<br>
-具体的な手順は、別ドキュメント<b>「[ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)」</b>をご参照ください。
 
 #### 公開鍵のインポート
 
