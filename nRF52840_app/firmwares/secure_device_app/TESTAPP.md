@@ -27,6 +27,6 @@ FIDO2機能の動作確認（BLE）は、ヘルスチェック機能の実行に
 PIV機能の動作確認は、PIV機能設定の実行により行います。<br>
 管理ツールの`Option --> PIV機能設定`メニューで実行できます。
 
-### [OpenPGP機能の動作確認（macOS限定）](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPOPGP.md)
+### [OpenPGP機能（Beta）の動作確認](../../../nRF52840_app/firmwares/secure_device_app/TESTAPPOPGP.md)
 
-OpenPGP機能の動作確認は、管理ツールではなく、macOSに導入した[GPGツール](https://gpgtools.org)の実行により行います。
+OpenPGP機能（Beta）の動作確認は、管理ツールではなく、macOSに導入した[GPGツール](https://gpgtools.org)の実行により行います。

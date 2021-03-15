@@ -1,8 +1,8 @@
-# OpenPGP機能動作確認手順書
+# OpenPGP機能（Beta）動作確認手順書
 
 ## 概要
 
-[GPGツール](https://gpgtools.org)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能に関する動作確認を行う手順について、以下に掲載いたします。
+[GPGツール](https://gpgtools.org)を使用し、[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)のOpenPGP機能（Beta）に関する動作確認を行う手順について、以下に掲載いたします。
 
 ## 作業の準備
 
@@ -11,13 +11,11 @@
 #### MDBT50Q Dongleの準備
 
 [version 0.3.1](https://github.com/diverta/onecard-fido/blob/doc-20210311/nRF52840_app/firmwares/secure_device_app)以降の[nRF52840アプリケーション](../../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。<br>
-具体的な手順は、別ドキュメント「[nRF52840アプリケーション更新手順書](../../../nRF52840_app/firmwares/secure_device_app/UPDATEAPP.md)」をご参照ください。[注1]<br>
+具体的な手順は、別ドキュメント「[nRF52840アプリケーション更新手順書](../../../nRF52840_app/firmwares/secure_device_app/UPDATEAPP.md)」をご参照ください。<br>
 
 MDBT50Q Dongleを、PCのUSBポートに装着すると、下図のように、基板上の緑色のLEDが点滅している状態になります。
 
 <img src="../../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="150">
-
-[注1] 導入されているnRF52840アプリケーションが、Version 0.3.0より前の場合は、別ドキュメント「[MDBT50Q Dongleファームウェア（version 0.3.0）導入手順書](../../../nRF52840_app/firmwares/secure_device_app/WRITEAPP_0_3_0.md)」をご参照願います。
 
 #### CCIDドライバーのインストール
 

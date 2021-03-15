@@ -4,7 +4,7 @@
 
 ## 概要
 
-GPGツール群「GPG Suite」を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、秘密鍵をインストールします。
+GPGツール群「[GPG Suite](https://gpgtools.org)」を使用し、[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に、秘密鍵をインストールします。
 
 `gpg`というコマンドを使用し、概ね以下の流れで作業を進めます。
 - `gpg`コマンドを使用し、秘密鍵をPC上に生成
@@ -17,6 +17,19 @@ GPGツール群「GPG Suite」を使用し、[MDBT50Q Dongle](../../FIDO2Device/
 手順検証につきましては、下記リンクの記事を参考にさせていただきました。<br>
 「GPG ToolsでYubiKeyを使う」<br>
 　https://yoshi0808.github.io/new-technology/2021/02/13/yubikey_gpg/
+
+## 事前準備
+
+生成された秘密鍵の移動先である[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)と、`gpg`コマンドを実行するために必要なGPGツール群「[GPG Suite](https://gpgtools.org)」を準備します。
+
+#### MDBT50Q Dongleの準備
+
+[version 0.3.1](https://github.com/diverta/onecard-fido/blob/doc-20210311/nRF52840_app/firmwares/secure_device_app)以降の[nRF52840アプリケーション](../../nRF52840_app/firmwares/secure_device_app)が書き込まれたMDBT50Q Dongleを、あらかじめ準備します。<br>
+具体的な手順は、別ドキュメント「[nRF52840アプリケーション更新手順書](../../nRF52840_app/firmwares/secure_device_app/UPDATEAPP.md)」をご参照ください。
+
+#### GPG Suiteのインストール
+`gpg`コマンドを実行するためには、macOS環境にGPG Suiteをインストールする必要があります。<br>
+具体的な手順は、別ドキュメント<b>「[GPG Suiteインストール手順](../../CCID/OpenPGP/GPGINSTMAC.md)」</b>をご参照ください。
 
 ## 秘密鍵／公開鍵の生成手順
 
@@ -428,6 +441,13 @@ PC上に生成された秘密鍵を、`gpg`コマンドでMDBT50Q Dongleに移�
 その後は、PC上から秘密鍵を削除するようにします。
 
 この手順を実行した結果、PC上には秘密鍵が残らず、かつ２度とMDBT50Q Dongleから取り出すことが出来なくなります。
+
+#### MDBT50Q DongleをPCに装着
+
+始めに、MDBT50Q Dongleを、PCのUSBポートに装着します。<br>
+下図のように、基板上の緑色LEDが点滅している状態になります。
+
+<img src="../../nRF52840_app/firmwares/secure_device_app/assets01/0010.jpg" width="150">
 
 #### 秘密鍵をPC上から移動
 
