@@ -33,6 +33,13 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 
 ## What's new
 
+#### 2021/03/15
+
+nRF52840アプリケーションに、OpenPGPカードエミュレーション機能（ベータ）を新規搭載しました。<br>
+（まだ開発途上です）<br>
+これに伴い、ファームウェアを修正しました。<br>
+詳細につきましては、ドキュメント<b>[「OpenPGPカードエミュレーション対応」](https://github.com/diverta/onecard-fido/blob/doc-20210311/CCID/OpenPGP/README.md)</b>をご参照願います。
+
 #### 2021/02/05
 
 nRF52840アプリケーションを、nRF5 SDK v17.0.2に移行しました。<br>
