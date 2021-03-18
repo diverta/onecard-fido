@@ -1996,8 +1996,8 @@ Working distance&lt;br&gt;
 <part name="U1" library="Modules" deviceset="MDBT50Q-P1M" device=""/>
 <part name="FRAME1" library="Generic" deviceset="A4L-LOC" device=""/>
 <part name="X1" library="Parts" deviceset="NX3215SA" device="-32.768K-STD-MUA-9" value="NX3215SA-32.768K-STD-MUA-9"/>
-<part name="C1" library="Parts" deviceset="CAP" device="_0603" value="9pF"/>
-<part name="C2" library="Parts" deviceset="CAP" device="_0603" value="9pF"/>
+<part name="C1" library="Parts" deviceset="CAP" device="_0603" value="12pF"/>
+<part name="C2" library="Parts" deviceset="CAP" device="_0603" value="12pF"/>
 <part name="GND1" library="Supply" deviceset="0V" device=""/>
 <part name="C3" library="Parts" deviceset="CAP" device="_0603" value="4.7uF"/>
 <part name="C4" library="Parts" deviceset="CAP" device="_0603" value="4.7uF"/>
