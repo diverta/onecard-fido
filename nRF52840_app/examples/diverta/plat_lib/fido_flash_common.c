@@ -154,6 +154,18 @@ bool fido_flash_fds_record_write(uint16_t file_id, uint16_t record_key, size_t r
     return true;
 }
 
+bool fido_flash_fds_file_delete(uint16_t file_id)
+{
+    // 指定のファイルをFlash ROM領域から削除
+    ret_code_t ret = fds_file_delete(file_id);
+    if (ret != NRF_SUCCESS) {
+        NRF_LOG_ERROR("fds_file_delete returns 0x%02x ", ret);
+        return false;
+    }
+
+    return true;
+}
+
 //
 // 業務処理／HW依存処理間のインターフェース
 //

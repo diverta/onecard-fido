@@ -80,6 +80,11 @@ size_t    ccid_response_apdu_size_max(void);
 void      ccid_resume_reader_to_pc_data_block(void);
 void      ccid_response_time_extension(void);
 
+//
+// 共通関数
+//
+uint16_t  ccid_get_tlv_element_size(uint8_t elem_no, uint8_t *data, size_t size, size_t *elem_header_size, uint16_t *elem_data_size, uint16_t elem_data_size_max);
+
 #ifdef __cplusplus
 }
 #endif

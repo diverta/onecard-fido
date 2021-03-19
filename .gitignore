@@ -17,7 +17,14 @@ core
 .vs
 
 # ignore for NetBeans
+nRF52840_app/examples/ble_peripheral/ble_app_hrs_proj/nbproject/private/*
+nRF52840_app/examples/ble_peripheral/ble_app_hrs_proj/nbproject/configurations.xml
+
+nRF52840_app/examples/dfu/secure_bootloader_proj/nbproject/private/*
+nRF52840_app/examples/dfu/secure_bootloader_proj/nbproject/configurations.xml
+
 nRF52840_app/examples/diverta/secure_device_app_proj/nbproject/private/*
+nRF52840_app/examples/diverta/secure_device_app_proj/nbproject/configurations.xml
 
 # ignore eagle files
 *.b#*

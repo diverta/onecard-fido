@@ -38,6 +38,13 @@ extern "C" {
 #define SW_CLA_NOT_SUPPORTED        0x6E00
 #define SW_CHECKING_ERROR           0x6F00
 
+typedef enum {
+  APPLET_NONE,
+  APPLET_PIV,
+  APPLET_OATH,
+  APPLET_OPENPGP
+} CCID_APPLET;
+
 //
 // 構造体定義
 //

@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ccid.h"
+#include "ccid_flash_object.h"
 #include "ccid_piv.h"
 #include "ccid_piv_authenticate.h"
 #include "ccid_piv_object.h"
@@ -16,53 +17,6 @@
 
 // for debug data
 #define LOG_DEBUG_PKEY_BUFF     false
-
-static uint16_t tlv_get_element_size(uint8_t elem_no, uint8_t *data, size_t size, size_t *elem_header_size, uint16_t *elem_data_size, uint16_t elem_data_size_max) 
-{
-    if (size < 1) {
-        return SW_WRONG_LENGTH;
-    }
-    if (data[0] != elem_no) {
-        return SW_WRONG_DATA;
-    }
-    
-    if (data[1] < 0x80) {
-        *elem_data_size = data[1];
-        *elem_header_size = 2;
-
-    } else if (data[1] == 0x81) {
-        if (size < 2) {
-            return SW_WRONG_LENGTH;
-
-        } else {
-            *elem_data_size = data[2];
-            *elem_header_size = 3;
-        }
-
-    } else if (data[1] == 0x82) {
-        if (size < 3) {
-            return SW_WRONG_LENGTH;
-
-        } else {
-            *elem_data_size = (uint16_t)(data[2] << 8u) | data[3];
-            *elem_header_size = 4;
-        }
-
-    } else {
-        return SW_WRONG_LENGTH;
-    }
-
-    if (*elem_data_size + *elem_header_size > size) {
-        // length does not overflow, but data does overflow
-        return SW_WRONG_LENGTH;
-    }
-
-    if (*elem_data_size > elem_data_size_max) {
-        return SW_WRONG_DATA;
-    }
-
-    return SW_NO_ERROR;
-}
 
 static uint16_t import_rsa_private_key(command_apdu_t *capdu)
 {
@@ -81,7 +35,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     // Pの抽出
     //
     size_t remaining = capdu->lc;
-    ret = tlv_get_element_size(0x01, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    ret = ccid_get_tlv_element_size(0x01, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -95,7 +49,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     // Qの抽出
     //
     remaining = capdu->lc - (p - cdata);
-    ret = tlv_get_element_size(0x02, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    ret = ccid_get_tlv_element_size(0x02, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -109,7 +63,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     // DPの抽出
     //
     remaining = capdu->lc - (p - cdata);
-    ret = tlv_get_element_size(0x03, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    ret = ccid_get_tlv_element_size(0x03, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -123,7 +77,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     // DQの抽出
     //
     remaining = capdu->lc - (p - cdata);
-    ret = tlv_get_element_size(0x04, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    ret = ccid_get_tlv_element_size(0x04, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -137,7 +91,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     // QINVの抽出
     //
     remaining = capdu->lc - (p - cdata);
-    ret = tlv_get_element_size(0x05, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
+    ret = ccid_get_tlv_element_size(0x05, p, remaining, &elem_header_size, &elem_data_size, RSA2048_PQ_LENGTH);
     if (ret != SW_NO_ERROR) {
         return ret;
     }
@@ -146,7 +100,7 @@ static uint16_t import_rsa_private_key(command_apdu_t *capdu)
     uint8_t *QINV = p;
 
     // 鍵データを、Flash ROM書出用バッファにコピー（９バイト目を先頭とする）
-    uint8_t *key_data_buff = ccid_flash_piv_object_write_buffer() + 8;
+    uint8_t *key_data_buff = ccid_flash_object_write_buffer() + 8;
     size_t key_size = 0;
     memcpy(key_data_buff + key_size, P, RSA2048_PQ_LENGTH);
     key_size += RSA2048_PQ_LENGTH;

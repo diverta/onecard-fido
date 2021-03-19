@@ -27,3 +27,6 @@ MDBT50Q Dongleに、nRF52840アプリケーションを<b>新規に書き込む<
 
 #### [nRF52840アプリケーション動作確認手順書](../../../nRF52840_app/firmwares/secure_device_app/TESTAPP.md)
 管理ツールを使用し、nRF52840アプリケーションの動作確認を行う手順について記載しています。
+
+#### [FIDO仕様適合テスト手順書](../../../FIDO2Device/CONFORMANCE.md)
+FIDOアライアンスが無償提供しているテストツール「FIDO Conformance Tools」を使用し、FIDO仕様適合テストを実行する手順を掲載しています。

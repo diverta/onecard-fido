@@ -7,7 +7,7 @@ OUTPUT_DIRECTORY := _build
 TARGET_BOARD     := PCA10059_01
 
 # application version info
-FW_REV := 0.3.0
+FW_REV := 0.3.1
 CFLAGS += -DFW_REV=\"$(FW_REV)\"
 # hardware version info
 CFLAGS += -DHW_REV=\"$(TARGET_BOARD)\"
@@ -325,7 +325,6 @@ SRC_FILES += \
   $(SDK_ROOT)/external/mbedtls/library/cipher.c \
   $(SDK_ROOT)/external/mbedtls/library/cipher_wrap.c \
   $(SDK_ROOT)/external/mbedtls/library/des.c \
-  $(SDK_ROOT)/external/mbedtls/library/memory_buffer_alloc.c \
   $(SDK_ROOT)/external/mbedtls/library/platform.c \
   $(SDK_ROOT)/external/mbedtls/library/platform_util.c \
   $(SDK_ROOT)/external/mbedtls/library/rsa_internal.c \
@@ -385,6 +384,7 @@ SRC_FILES += \
   $(FD2LIB_DIR)/fido_u2f_command.c \
   $(PLTLIB_DIR)/application_init.c \
   $(PLTLIB_DIR)/ccid_crypto.c \
+  $(PLTLIB_DIR)/ccid_flash_object.c \
   $(PLTLIB_DIR)/ccid_flash_piv_object.c \
   $(PLTLIB_DIR)/fido_board.c \
   $(PLTLIB_DIR)/fido_crypto.c \
@@ -440,6 +440,23 @@ INC_FOLDERS += \
   $(FD2LIB_DIR) \
   $(PLTLIB_DIR) \
   $(U2FLIB_DIR) \
+
+# Source files of OpenPGP card emulation
+OPGLIB_DIR := $(CCID_DIR)/openpgp_lib
+SRC_FILES += \
+  $(OPGLIB_DIR)/ccid_openpgp_attr.c \
+  $(OPGLIB_DIR)/ccid_openpgp_crypto.c \
+  $(OPGLIB_DIR)/ccid_openpgp_data.c \
+  $(OPGLIB_DIR)/ccid_openpgp_key_rsa.c \
+  $(OPGLIB_DIR)/ccid_openpgp_key.c \
+  $(OPGLIB_DIR)/ccid_openpgp_object.c \
+  $(OPGLIB_DIR)/ccid_openpgp_pin.c \
+  $(OPGLIB_DIR)/ccid_openpgp.c \
+  $(OPGLIB_DIR)/ccid_pin_auth.c \
+  $(PLTLIB_DIR)/ccid_flash_openpgp_object.c \
+
+INC_FOLDERS += \
+  $(OPGLIB_DIR) \
 
 # Libraries common to all targets
 LIB_FILES += \
