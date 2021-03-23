@@ -239,7 +239,8 @@ You should consider upgrading via the 'pip install --upgrade pip' command.
 
 ## nRF Connect SDKのインストール
 
-前述のツール「west」を使用し、nRF Connect SDKのインストールを行います。
+前述のツール「west」を使用し、nRF Connect SDKのインストールを行います。<br>
+あらかじめ仮想環境に入った上で実施してください。
 
 #### リポジトリーのチェックアウト
 
@@ -249,9 +250,6 @@ GitHubリポジトリーから、nRF Connect SDKの全ファイルイメージ�
 （注：`west zephyr-export`の実行前に、`cmake`コマンドへの実行パスを通しています）
 
 ```
-cd ${HOME}/opt/
-mkdir ncs
-cd ncs
 west init -m https://github.com/nrfconnect/sdk-nrf
 west update
 PATH=${PATH}:/Applications/CMake.app/Contents/bin
@@ -261,77 +259,88 @@ west zephyr-export
 以下は実行例になります（途中ログを省略しています）。
 
 ```
-bash-3.2$ cd ${HOME}/opt/
-bash-3.2$ mkdir ncs
-bash-3.2$ cd ncs
-bash-3.2$ west init -m https://github.com/nrfconnect/sdk-nrf
-=== Initializing in /Users/makmorit/opt/ncs
---- Cloning manifest repository from https://github.com/nrfconnect/sdk-nrf, rev. master
-Initialized empty Git repository in /Users/makmorit/opt/ncs/.west/manifest-tmp/.git/
-remote: Enumerating objects: 4, done.
-remote: Counting objects: 100% (4/4), done.
-remote: Compressing objects: 100% (4/4), done.
+bash-3.2$ cd ${HOME}/opt/venv/ncs;source bin/activate
+(ncs) bash-3.2$
+(ncs) bash-3.2$ pwd
+/Users/makmorit/opt/venv/ncs
+(ncs) bash-3.2$
+(ncs) bash-3.2$ west init -m https://github.com/nrfconnect/sdk-nrf
+=== Initializing in /Users/makmorit/opt/venv/ncs
+--- no --manifest-rev was given; using remote's default branch: refs/heads/master
+--- Cloning manifest repository from https://github.com/nrfconnect/sdk-nrf, rev. refs/heads/master
+Initialized empty Git repository in /Users/makmorit/opt/venv/ncs/.west/manifest-tmp/.git/
+remote: Enumerating objects: 17, done.
+remote: Counting objects: 100% (17/17), done.
+remote: Compressing objects: 100% (15/15), done.
+remote: Total 60925 (delta 6), reused 3 (delta 2), pack-reused 60908
+Receiving objects: 100% (60925/60925), 29.21 MiB | 1.28 MiB/s, done.
 ：
-* [new tag]         v1.4.99-dev1    -> v1.4.99-dev1
-00cceb9a17da9a8f33b5a48cb179bc2ab8f85325 refs/remotes/origin/master
-Branch 'master' set up to track remote branch 'master' from 'origin'.
-Already on 'master'
+HEAD is now at f2faacbd Bluetooth: Mesh: Fix formatting of opcode handlers
 --- setting manifest.path to nrf
-=== Initialized. Now run "west update" inside /Users/makmorit/opt/ncs.
-bash-3.2$
-bash-3.2$ west update
+=== Initialized. Now run "west update" inside /Users/makmorit/opt/venv/ncs.
+(ncs) bash-3.2$
+(ncs) bash-3.2$ west update
 === updating zephyr (zephyr):
 --- zephyr: initializing
-Initialized empty Git repository in /Users/makmorit/opt/ncs/zephyr/.git/
---- zephyr: fetching, need revision 3366927a54986ad0ddf060d0e08ecc578adf11f0
-remote: Enumerating objects: 511091, done.
-remote: Total 511091 (delta 0), reused 0 (delta 0), pack-reused 511091
-Receiving objects: 100% (511091/511091), 335.47 MiB | 1.77 MiB/s, done.
-Resolving deltas: 100% (392665/392665), done.
+Initialized empty Git repository in /Users/makmorit/opt/venv/ncs/zephyr/.git/
+--- zephyr: fetching, need revision a2d2a5e169f7aec8d9de16787af99e59c56c09b7
+remote: Enumerating objects: 528521, done.
+remote: Total 528521 (delta 0), reused 0 (delta 0), pack-reused 528521
+Receiving objects: 100% (528521/528521), 350.77 MiB | 1.44 MiB/s, done.
 ：
-Resolving deltas: 100% (5922/5922), done.
-From https://github.com/zephyrproject-rtos/trusted-firmware-m
- * [new branch]      master     -> refs/west/master
-Updating files: 100% (8936/8936), done.
-HEAD is now at 6edaaaa CMakeLists.txt: Build TF-M based on new Kconfig options
-HEAD is now at 6edaaaa CMakeLists.txt: Build TF-M based on new Kconfig options
-bash-3.2$
-bash-3.2$ env | grep PATH
-PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Apple/usr/bin
-bash-3.2$
-bash-3.2$ PATH=${PATH}:/Applications/CMake.app/Contents/bin
-bash-3.2$
-bash-3.2$ env | grep PATH
-PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Apple/usr/bin:/Applications/CMake.app/Contents/bin
-bash-3.2$
-bash-3.2$ west zephyr-export
-Zephyr (/Users/makmorit/opt/ncs/zephyr/share/zephyr-package/cmake)
+HEAD is now at b209a60 Fix use of invalid disconnect reason in test procedures
+HEAD is now at b209a60 Fix use of invalid disconnect reason in test procedures
+(ncs) bash-3.2$ PATH=${PATH}:/Applications/CMake.app/Contents/bin
+(ncs) bash-3.2$ west zephyr-export
+Zephyr (/Users/makmorit/opt/venv/ncs/zephyr/share/zephyr-package/cmake)
 has been added to the user package registry in:
 ~/.cmake/packages/Zephyr
 
-ZephyrUnittest (/Users/makmorit/opt/ncs/zephyr/share/zephyrunittest-package/cmake)
+ZephyrUnittest (/Users/makmorit/opt/venv/ncs/zephyr/share/zephyrunittest-package/cmake)
 has been added to the user package registry in:
 ~/.cmake/packages/ZephyrUnittest
 
-bash-3.2$
+(ncs) bash-3.2$
 ```
 
-#### 環境変数のセット
+#### westコマンドのカスタマイズ
 
-ユーザーディレクトリー直下に、`.zephyrrc`というファイルを作成し、下記のような内容を記述しておきます。
+`west`コマンドに対し、ビルド用サブコマンド追加等のカスタマイズを行います。<br>
+Zephyrフォルダー配下で、コマンド`west completion bash`を実行します。
+
+以下は実行例になります。
 
 ```
-bash-3.2$ cd ${HOME}
-bash-3.2$ cat .zephyrrc
-# Environment variables for the GNU Arm Embedded toolchain
-export ZEPHYR_TOOLCHAIN_VARIANT=gcc-arm-none-eabi-9-2020-q2-update
-export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
-
-# Paths for command
-export PATH=${PATH}:/Applications/CMake.app/Contents/bin
-export PATH=${PATH}:${HOME}/opt/nRF-Command-Line-Tools_10_9_0_OSX/nrfjprog
-
-bash-3.2$
+(ncs) bash-3.2$ cd ${HOME}/opt/venv/ncs/zephyr
+(ncs) bash-3.2$ west completion bash > ${HOME}/opt/venv/ncs/west-completion.bash
+(ncs) bash-3.2$
 ```
+
+#### ツールチェイン名の整合
+
+`west update`実行の際、ツールチェイン名に`gnuarmemb`以外を指定すると、`west build`時に失敗してしまう不具合があるようです。<br>
+そこで、`${HOME}/opt/venv/ncs/zephyr/cmake/toolchain/`配下の`gnuarmemb`フォルダーを、`gcc-arm-none-eabi-9-2020-q2-update`として複製しておきます。[注1]
+
+```
+(ncs) bash-3.2$ cp -pr ${HOME}/opt/venv/ncs/zephyr/cmake/toolchain/gnuarmemb ${HOME}/opt/venv/ncs/zephyr/cmake/toolchain/gcc-arm-none-eabi-9-2020-q2-update
+(ncs) bash-3.2$ ls -al ${HOME}/opt/venv/ncs/zephyr/cmake/toolchain/
+total 16
+drwxr-xr-x  13 makmorit  staff   416  3 23 10:24 .
+drwxr-xr-x  37 makmorit  staff  1184  3 23 10:17 ..
+-rw-r--r--@  1 makmorit  staff  6148  3 23 10:24 .DS_Store
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 arcmwdt
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 cross-compile
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 espressif
+drwxr-xr-x   5 makmorit  staff   160  3 23 09:40 gcc-arm-none-eabi-9-2020-q2-update
+drwxr-xr-x   5 makmorit  staff   160  3 23 09:40 gnuarmemb
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 host
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 llvm
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 xcc
+drwxr-xr-x   4 makmorit  staff   128  3 23 09:40 xtools
+drwxr-xr-x   6 makmorit  staff   192  3 23 09:40 zephyr
+(ncs) bash-3.2$
+```
+
+[注1] ツールチェイン導入時、フォルダー名が`gcc-arm-none-eabi-9-2020-q2-update`としていたための措置になります。その他の名称である場合、当該名称に合わせるようにします。
 
 以上で、nRF Connect SDKのインストールは完了です。
