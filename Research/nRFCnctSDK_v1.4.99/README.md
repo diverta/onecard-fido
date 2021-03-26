@@ -18,3 +18,7 @@ OS: macOS Catalina（Version 10.15.5）<br>
 
 #### [nRF Connect SDKサンプル動作確認手順書](../../Research/nRFCnctSDK_v1.4.99/SDKSAMPLE.md)
 Nordic社が用意している[nRF Connect SDKサンプルアプリ](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/samples/bluetooth/peripheral_uart/README.html)の動作確認手順について掲載します。
+
+#### [SMPサンプルアプリ動作確認手順書](../../Research/nRFCnctSDK_v1.4.99/SMPSAMPLE.md)
+Nordic社が用意しているSMPサンプルアプリ「[SMP Server Sample](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/samples/subsys/mgmt/mcumgr/smp_svr/README.html)」の動作確認手順について掲載します。<br>
+SMPサンプルアプリのBLE DFU機能により、BLE経由でファームウェアが更新できることを確認します。
