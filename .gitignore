@@ -50,3 +50,4 @@ pyvenvs/ncs/tools
 pyvenvs/ncs/zephyr
 pyvenvs/ncs/pyvenv.cfg
 pyvenvs/ncs/west-completion.bash
+pyvenvs/ncs/nRF5340_app/secure_device_app/build_signed
