@@ -50,4 +50,7 @@ pyvenvs/ncs/tools
 pyvenvs/ncs/zephyr
 pyvenvs/ncs/pyvenv.cfg
 pyvenvs/ncs/west-completion.bash
+
+# ignore for nRF5340_app
 pyvenvs/ncs/nRF5340_app/secure_device_app/build_signed
+pyvenvs/ncs/nRF5340_app/secure_device_app_proj/nbproject/private
