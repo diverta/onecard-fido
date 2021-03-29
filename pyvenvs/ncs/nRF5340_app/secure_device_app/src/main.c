@@ -21,6 +21,7 @@
 #include <bluetooth/gatt.h>
 #include <settings/settings.h>
 
+#ifdef ORIGINAL_SOURCE
 static const struct bt_data ad[] = {
 	BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
 	BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_DIS_VAL)),
@@ -77,9 +78,11 @@ static int settings_runtime_load(void)
 #endif
 	return 0;
 }
+#endif
 
 void main(void)
 {
+#ifdef ORIGINAL_SOURCE
 	int err;
 
 	err = bt_enable(NULL);
@@ -105,4 +108,9 @@ void main(void)
 	}
 
 	printk("Advertising successfully started\n");
+#else
+	os_mgmt_register_group();
+	img_mgmt_register_group();
+	start_smp_bluetooth();
+#endif
 }

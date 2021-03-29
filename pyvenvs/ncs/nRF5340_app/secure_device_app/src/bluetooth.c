@@ -10,6 +10,7 @@
 #include <bluetooth/gatt.h>
 #include <mgmt/mcumgr/smp_bt.h>
 
+#define ORIGINAL_SOURCE
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(smp_bt_sample);
@@ -18,6 +19,9 @@ static struct k_work advertise_work;
 
 static const struct bt_data ad[] = {
 	BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+#ifndef ORIGINAL_SOURCE
+	BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_DIS_VAL)),
+#endif
 	BT_DATA_BYTES(BT_DATA_UUID128_ALL,
 		      0x84, 0xaa, 0x60, 0x74, 0x52, 0x8a, 0x8b, 0x86,
 		      0xd3, 0x4c, 0xb7, 0x1d, 0x1d, 0xdc, 0x53, 0x8d),
@@ -81,6 +85,13 @@ void start_smp_bluetooth(void)
 		LOG_ERR("Bluetooth init failed (err %d)", rc);
 		return;
 	}
+
+#ifndef ORIGINAL_SOURCE
+	// for DIS
+	if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+		settings_load();
+	}
+#endif
 
 	bt_conn_cb_register(&conn_callbacks);
 
