@@ -76,19 +76,11 @@ static struct bt_gatt_attr smp_bt_attrs[] = {
 	BT_GATT_CHARACTERISTIC(&smp_bt_chr_uuid.uuid,
 			       BT_GATT_CHRC_WRITE_WITHOUT_RESP |
 			       BT_GATT_CHRC_NOTIFY,
-#ifdef CONFIG_MCUMGR_SMP_BT_AUTHEN
-			       BT_GATT_PERM_WRITE_AUTHEN,
-#else
-			       BT_GATT_PERM_WRITE,
-#endif
+			       BT_GATT_PERM_WRITE_ENCRYPT,
 			       NULL, smp_bt_chr_write, NULL),
 	BT_GATT_CCC(smp_bt_ccc_changed,
-#ifdef CONFIG_MCUMGR_SMP_BT_AUTHEN
-			       BT_GATT_PERM_READ_AUTHEN |
-			       BT_GATT_PERM_WRITE_AUTHEN),
-#else
-			       BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
-#endif
+			       BT_GATT_PERM_READ_ENCRYPT |
+			       BT_GATT_PERM_WRITE_ENCRYPT),
 };
 
 static struct bt_gatt_service smp_bt_svc = BT_GATT_SERVICE(smp_bt_attrs);
