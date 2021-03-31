@@ -13,7 +13,7 @@ OS: macOS Catalina（Version 10.15.5）<br>
 
 ## 各種手順書
 
-#### [nRF Connect SDKインストール手順書](../../Research/nRFCnctSDK_v1.4.99/INSTALLSDK.md)
+#### [nRF Connect SDKインストール手順書](../../nRF5340_app/INSTALLSDK.md)
 「[nRF Connect SDK](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/index.html)」をmacOSにインストールする手順について掲載します。
 
 #### [nRF Connect SDKサンプル動作確認手順書](../../Research/nRFCnctSDK_v1.4.99/SDKSAMPLE.md)
