@@ -12,7 +12,7 @@
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
-LOG_MODULE_REGISTER(smp_bt_sample);
+LOG_MODULE_REGISTER(app_bluetooth);
 
 static struct k_work advertise_work;
 
@@ -70,7 +70,7 @@ static void bt_ready(int err)
 	k_work_submit(&advertise_work);
 }
 
-void start_smp_bluetooth(void)
+void app_bluetooth_start(void)
 {
 	k_work_init(&advertise_work, advertise);
 

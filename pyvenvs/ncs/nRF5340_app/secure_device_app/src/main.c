@@ -111,6 +111,6 @@ void main(void)
 #else
 	os_mgmt_register_group();
 	img_mgmt_register_group();
-	start_smp_bluetooth();
+	app_bluetooth_start();
 #endif
 }
