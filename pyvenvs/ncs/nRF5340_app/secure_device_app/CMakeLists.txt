@@ -9,4 +9,5 @@ FILE(GLOB ble_sources bluetooth/*.c)
 target_sources(app PRIVATE
     ${app_sources}
     ${ble_sources}
+    zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c
 )
