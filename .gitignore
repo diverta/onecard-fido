@@ -34,3 +34,23 @@ nRF52840_app/examples/diverta/secure_device_app_proj/nbproject/configurations.xm
 
 # ignore for macOS
 .DS_Store
+
+# ignore for nRF Connect SDK
+pyvenvs/ncs/.west
+pyvenvs/ncs/bin
+pyvenvs/ncs/bootloader
+pyvenvs/ncs/include
+pyvenvs/ncs/lib
+pyvenvs/ncs/mbedtls
+pyvenvs/ncs/modules
+pyvenvs/ncs/nrf
+pyvenvs/ncs/nrfxlib
+pyvenvs/ncs/test
+pyvenvs/ncs/tools
+pyvenvs/ncs/zephyr
+pyvenvs/ncs/pyvenv.cfg
+pyvenvs/ncs/west-completion.bash
+
+# ignore for nRF5340_app
+pyvenvs/ncs/nRF5340_app/secure_device_app/build_signed
+pyvenvs/ncs/nRF5340_app/secure_device_app_proj/nbproject/private
