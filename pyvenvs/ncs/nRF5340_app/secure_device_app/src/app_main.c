@@ -14,6 +14,7 @@
 #include "img_mgmt/img_mgmt.h"
 
 #include "app_main.h"
+#include "app_board.h"
 
 static bool app_initialized = false;
 
@@ -27,6 +28,9 @@ bool app_main_initialized(void)
 //
 void app_main(void) 
 {
+    // ボタン、LEDを使用可能にする
+    app_board_initialize();
+
     // BLE SMPサービスの設定
     os_mgmt_register_group();
     img_mgmt_register_group();
