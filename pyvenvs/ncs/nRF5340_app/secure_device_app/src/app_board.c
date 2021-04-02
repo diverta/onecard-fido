@@ -77,26 +77,25 @@ static const struct device *initialize_button(void)
 
 static const struct device *m_led_0;
 
-static const struct device *initialize_led_0(void)
+static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpio_flags_t flags)
 {
-    const struct device *led = device_get_binding(LED0_GPIO_LABEL);
+    const struct device *led = device_get_binding(name);
     if (led == NULL) {
-        LOG_ERR("Didn't find LED device %s", LED0_GPIO_LABEL);
+        LOG_ERR("Didn't find LED device %s", name);
         return NULL;
     }
 
-    int ret = gpio_pin_configure(led, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
+    int ret = gpio_pin_configure(led, pin, flags);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure LED device %s pin %d",
-               ret, LED0_GPIO_LABEL, LED0_GPIO_PIN);
+        LOG_ERR("Error %d: failed to configure LED device %s pin %d", ret, name, pin);
         return NULL;
     }
 
     // 最初は消灯しておく
-    gpio_pin_set(led, LED0_GPIO_PIN, 0);
+    gpio_pin_set(led, pin, 0);
 
     // LED0の参照を戻す
-    LOG_INF("Set up LED at %s pin %d", LED0_GPIO_LABEL, LED0_GPIO_PIN);
+    LOG_INF("Set up LED at %s pin %d", name, pin);
     return led;
 }
 
@@ -106,5 +105,5 @@ void app_board_initialize(void)
     button = initialize_button();
     
     // LED0の初期化
-    m_led_0 = initialize_led_0();
+    m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
 }
