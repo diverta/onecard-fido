@@ -10,6 +10,7 @@
 #include <drivers/gpio.h>
 
 #include "app_main.h"
+#include "app_board.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -106,4 +107,20 @@ void app_board_initialize(void)
     
     // LED0の初期化
     m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
+}
+
+void app_board_led_light(LED_COLOR led_color, bool led_on)
+{
+    // 業務で使用するLEDを点灯／消灯
+    //   LED1=Yellow (Orange)
+    //   LED2=Red
+    //   LED3=Green
+    //   LED4=Blue
+    switch (led_color) {
+        case LED_COLOR_YELLOW:
+            gpio_pin_set(m_led_0, LED0_GPIO_PIN, led_on ? 1 : 0);
+            break;
+        default:
+            break;
+    }
 }

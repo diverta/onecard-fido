@@ -7,14 +7,26 @@
 #ifndef APP_BOARD_H
 #define APP_BOARD_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// LED種別
+typedef enum _LED_COLOR {
+    LED_COLOR_NONE = 0,
+    LED_COLOR_RED,
+    LED_COLOR_GREEN,
+    LED_COLOR_BLUE,
+    LED_COLOR_YELLOW
+} LED_COLOR;
 
 //
 // 関数群
 //
 void    app_board_initialize(void);
+void    app_board_led_light(LED_COLOR led_color, bool led_on);
 
 #ifdef __cplusplus
 }
