@@ -7,10 +7,11 @@
 #include <zephyr/types.h>
 #include <zephyr.h>
 #include <device.h>
-#include <drivers/gpio.h>
+#include <sys/time_units.h>
 
 #include "app_main.h"
 #include "app_board.h"
+#include "app_board_define.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -19,11 +20,6 @@ LOG_MODULE_REGISTER(app_board);
 //
 // ボタン関連
 //
-#define SW0_NODE	DT_ALIAS(sw0)
-#define SW0_GPIO_LABEL	DT_GPIO_LABEL(SW0_NODE, gpios)
-#define SW0_GPIO_PIN	DT_GPIO_PIN(SW0_NODE, gpios)
-#define SW0_GPIO_FLAGS	(GPIO_INPUT | DT_GPIO_FLAGS(SW0_NODE, gpios))
-
 static const struct device *button;
 static struct gpio_callback button_cb_data;
 
@@ -34,7 +30,7 @@ static void button_pressed(const struct device *dev, struct gpio_callback *cb, u
     }
 
     // for research
-    LOG_DBG("Button pressed at %u", k_cycle_get_32());
+    LOG_DBG("Button pressed at %u", k_cyc_to_ms_floor32(k_cycle_get_32()));
 }
 
 static const struct device *initialize_button(void)
@@ -71,12 +67,7 @@ static const struct device *initialize_button(void)
 //
 // LED関連
 //
-#define LED0_NODE	DT_ALIAS(led0)
-#define LED0_GPIO_LABEL	DT_GPIO_LABEL(LED0_NODE, gpios)
-#define LED0_GPIO_PIN	DT_GPIO_PIN(LED0_NODE, gpios)
-#define LED0_GPIO_FLAGS	(GPIO_OUTPUT | DT_GPIO_FLAGS(LED0_NODE, gpios))
-
-static const struct device *m_led_0;
+static const struct device *m_led_0, *m_led_1, *m_led_2, *m_led_3;
 
 static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpio_flags_t flags)
 {
@@ -107,6 +98,9 @@ void app_board_initialize(void)
     
     // LED0の初期化
     m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
+    m_led_1 = initialize_led(LED1_GPIO_LABEL, LED1_GPIO_PIN, LED1_GPIO_FLAGS);
+    m_led_2 = initialize_led(LED2_GPIO_LABEL, LED2_GPIO_PIN, LED2_GPIO_FLAGS);
+    m_led_3 = initialize_led(LED3_GPIO_LABEL, LED3_GPIO_PIN, LED3_GPIO_FLAGS);
 }
 
 void app_board_led_light(LED_COLOR led_color, bool led_on)
@@ -119,6 +113,15 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
     switch (led_color) {
         case LED_COLOR_YELLOW:
             gpio_pin_set(m_led_0, LED0_GPIO_PIN, led_on ? 1 : 0);
+            break;
+        case LED_COLOR_RED:
+            gpio_pin_set(m_led_1, LED1_GPIO_PIN, led_on ? 1 : 0);
+            break;
+        case LED_COLOR_GREEN:
+            gpio_pin_set(m_led_2, LED2_GPIO_PIN, led_on ? 1 : 0);
+            break;
+        case LED_COLOR_BLUE:
+            gpio_pin_set(m_led_3, LED3_GPIO_PIN, led_on ? 1 : 0);
             break;
         default:
             break;
