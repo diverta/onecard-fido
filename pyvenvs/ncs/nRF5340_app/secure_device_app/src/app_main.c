@@ -34,6 +34,9 @@ void app_main_init(void)
     // ボタン、LEDを使用可能にする
     app_board_initialize();
 
+    // Flash ROMを使用可能にする
+    app_flash_initialize();
+    
     // Bluetoothサービスを開始
     app_bluetooth_start();
 
