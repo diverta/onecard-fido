@@ -7,6 +7,7 @@
 #ifndef APP_BOARD_H
 #define APP_BOARD_H
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -25,8 +26,9 @@ typedef enum _LED_COLOR {
 //
 // 関数群
 //
-void    app_board_initialize(void);
-void    app_board_led_light(LED_COLOR led_color, bool led_on);
+uint32_t    app_board_kernel_uptime_ms_get(void);
+void        app_board_initialize(void);
+void        app_board_led_light(LED_COLOR led_color, bool led_on);
 
 #ifdef __cplusplus
 }

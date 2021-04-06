@@ -13,9 +13,21 @@
 #include "app_board.h"
 #include "app_board_define.h"
 
+// ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_board);
+
+#define LOG_BUTTON_PRESSED      false
+
+//
+// 共通処理
+//
+uint32_t app_board_kernel_uptime_ms_get(void)
+{
+    // システム起動後の通算ミリ秒数を取得
+    return k_cyc_to_ms_floor32(k_cycle_get_32());
+}
 
 //
 // ボタン関連
@@ -35,25 +47,32 @@ static void button_pressed(const struct device *dev, struct gpio_callback *cb, u
 
     // ボタン検知時刻を取得
     static uint32_t time_pressed = 0;
-    uint32_t time_now = k_cyc_to_ms_floor32(k_cycle_get_32());
+    uint32_t time_now = app_board_kernel_uptime_ms_get();
  
     // ２回連続検知の場合は無視
     if (status_now == status_pressed) {
-       LOG_DBG("%s (invalid)", status_now ? "pushed" : "released");
-       return;
+#if LOG_BUTTON_PRESSED
+        LOG_DBG("%s (invalid)", status_now ? "pushed" : "released");
+#endif
+        return;
     }
     status_pressed = status_now;
 
     // 短時間の間に検知された場合は無視
     uint32_t elapsed = time_now - time_pressed;
     if (elapsed < 50) {
+#if LOG_BUTTON_PRESSED
         LOG_DBG("%s (ignored)", status_now ? "pushed" : "released");
+#endif
         return;
     }
     time_pressed = time_now;
 
-    // TODO: 現在状態／時刻をメインスレッドに引き渡す
+    // ボタン検知イベントを業務処理スレッドに引き渡す
+#if LOG_BUTTON_PRESSED
     LOG_DBG("%s (elapsed %u msec)", status_now ? "pushed" : "released", elapsed);
+#endif
+    app_main_event_set(status_now ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
 }
 
 static const struct device *initialize_button(void)
@@ -83,7 +102,7 @@ static const struct device *initialize_button(void)
     gpio_add_callback(button, &button_cb_data);
 
     // ボタンの参照を戻す
-    LOG_INF("Set up button at %s pin %d", SW0_GPIO_LABEL, SW0_GPIO_PIN);
+    LOG_DBG("Set up button at %s pin %d", SW0_GPIO_LABEL, SW0_GPIO_PIN);
     return button;
 }
 
@@ -110,7 +129,7 @@ static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpi
     gpio_pin_set(led, pin, 0);
 
     // LED0の参照を戻す
-    LOG_INF("Set up LED at %s pin %d", name, pin);
+    LOG_DBG("Set up LED at %s pin %d", name, pin);
     return led;
 }
 

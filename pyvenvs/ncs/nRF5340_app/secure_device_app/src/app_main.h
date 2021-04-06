@@ -13,11 +13,19 @@
 extern "C" {
 #endif
 
+// イベント種別
+typedef enum {
+    APEVT_NONE = 0,
+    APEVT_BUTTON_PUSHED,
+    APEVT_BUTTON_RELEASED,
+} APP_EVENT_T;
+
 //
 // 関数群
 //
 void    app_main_init(void);
 bool    app_main_initialized(void);
+bool    app_main_event_set(APP_EVENT_T event);
 void    app_bluetooth_start(void);
 
 #ifdef __cplusplus
