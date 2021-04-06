@@ -26,7 +26,7 @@ bool app_main_initialized(void)
 //
 // 業務処理エントリー関数
 //
-void app_main(void) 
+void app_main_init(void) 
 {
     // ボタン、LEDを使用可能にする
     app_board_initialize();

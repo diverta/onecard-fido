@@ -16,7 +16,7 @@ extern "C" {
 //
 // 関数群
 //
-void    app_main(void);
+void    app_main_init(void);
 bool    app_main_initialized(void);
 void    app_bluetooth_start(void);
 
