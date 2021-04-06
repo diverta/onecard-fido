@@ -11,3 +11,6 @@ target_sources(app PRIVATE
     ${ble_sources}
     zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c
 )
+target_include_directories(app PRIVATE 
+    bluetooth
+)

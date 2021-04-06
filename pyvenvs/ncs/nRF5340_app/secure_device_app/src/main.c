@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#ifdef ORIGINAL_SOURCE
 #include <zephyr/types.h>
 #include <stddef.h>
 #include <string.h>
@@ -20,6 +20,10 @@
 #include <bluetooth/uuid.h>
 #include <bluetooth/gatt.h>
 #include <settings/settings.h>
+
+#else
+#include "app_main.h"
+#endif
 
 #ifdef ORIGINAL_SOURCE
 static const struct bt_data ad[] = {
@@ -109,8 +113,6 @@ void main(void)
 
 	printk("Advertising successfully started\n");
 #else
-	os_mgmt_register_group();
-	img_mgmt_register_group();
-	app_bluetooth_start();
+        app_main_init();
 #endif
 }
