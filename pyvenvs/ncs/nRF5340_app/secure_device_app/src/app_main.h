@@ -26,7 +26,6 @@ typedef enum {
 void    app_main_init(void);
 bool    app_main_initialized(void);
 bool    app_main_event_set(APP_EVENT_T event);
-void    app_bluetooth_start(void);
 
 #ifdef __cplusplus
 }

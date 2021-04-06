@@ -7,15 +7,13 @@
 #include <zephyr/types.h>
 #include <zephyr.h>
 
-//
-// for Bluetooth smp service
-//
-#include "os_mgmt/os_mgmt.h"
-#include "img_mgmt/img_mgmt.h"
-
+#include "app_bluetooth.h"
 #include "app_main.h"
 #include "app_board.h"
 
+//
+// アプリケーション状態を保持
+//
 static bool app_initialized = false;
 
 bool app_main_initialized(void)
@@ -24,16 +22,12 @@ bool app_main_initialized(void)
 }
 
 //
-// 業務処理エントリー関数
+// 業務処理スレッド
 //
 void app_main_init(void) 
 {
     // ボタン、LEDを使用可能にする
     app_board_initialize();
-
-    // BLE SMPサービスの設定
-    os_mgmt_register_group();
-    img_mgmt_register_group();
 
     // Bluetoothサービスを開始
     app_bluetooth_start();
