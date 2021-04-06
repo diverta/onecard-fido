@@ -12,6 +12,7 @@
 #include "app_main.h"
 #include "app_board.h"
 #include "app_board_define.h"
+#include "app_event.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -72,7 +73,7 @@ static void button_pressed(const struct device *dev, struct gpio_callback *cb, u
 #if LOG_BUTTON_PRESSED
     LOG_DBG("%s (elapsed %u msec)", status_now ? "pushed" : "released", elapsed);
 #endif
-    app_main_event_set(status_now ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
+    app_event_notify(status_now ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
 }
 
 static const struct device *initialize_button(void)
