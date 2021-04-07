@@ -592,9 +592,18 @@
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/device.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/flash.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kernel.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kobject.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/libc-hooks.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/log_core.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/time.h</itemPath>
                       </logicalFolder>
                       <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/device_extern.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/devicetree_fixups.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/devicetree_unfixed.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/offsets.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/pm_config.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscall_list.h</itemPath>
                     </logicalFolder>
                   </logicalFolder>
                 </logicalFolder>
@@ -647,6 +656,7 @@
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/mutex.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/shmem.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/sleep.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/softirq.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/spinlock.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/sys.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/modules/libmetal/libmetal/lib/include/metal/time.h</itemPath>
@@ -697,6 +707,7 @@
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/uart.h</itemPath>
                     </logicalFolder>
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/device_extern.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscall_list.h</itemPath>
                   </logicalFolder>
                 </logicalFolder>
               </logicalFolder>
@@ -1078,6 +1089,10 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="fs" displayName="fs" projectFiles="true">
+            <logicalFolder name="nvs" displayName="nvs" projectFiles="true">
+              <itemPath>../../zephyr/subsys/fs/nvs/nvs.c</itemPath>
+              <itemPath>../../zephyr/subsys/fs/nvs/nvs_priv.h</itemPath>
+            </logicalFolder>
             <itemPath>../../zephyr/subsys/fs/fs.c</itemPath>
             <itemPath>../../zephyr/subsys/fs/fs_impl.c</itemPath>
             <itemPath>../../zephyr/subsys/fs/fs_impl.h</itemPath>
@@ -1126,6 +1141,7 @@
             <logicalFolder name="include" displayName="include" projectFiles="true">
               <logicalFolder name="settings" displayName="settings" projectFiles="true">
                 <itemPath>../../zephyr/subsys/settings/include/settings/settings_file.h</itemPath>
+                <itemPath>../../zephyr/subsys/settings/include/settings/settings_nvs.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="src" displayName="src" projectFiles="true">
@@ -1134,6 +1150,7 @@
               <itemPath>../../zephyr/subsys/settings/src/settings_init.c</itemPath>
               <itemPath>../../zephyr/subsys/settings/src/settings_line.c</itemPath>
               <itemPath>../../zephyr/subsys/settings/src/settings_none.c</itemPath>
+              <itemPath>../../zephyr/subsys/settings/src/settings_nvs.c</itemPath>
               <itemPath>../../zephyr/subsys/settings/src/settings_priv.h</itemPath>
               <itemPath>../../zephyr/subsys/settings/src/settings_store.c</itemPath>
             </logicalFolder>
@@ -1193,6 +1210,7 @@
       <df name="src">
         <in>app_board.c</in>
         <in>app_event.c</in>
+        <in>app_flash.c</in>
         <in>app_main.c</in>
         <in>main.c</in>
       </df>
@@ -3817,7 +3835,7 @@
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
             <pElem>../../zephyr/include/power</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3827,7 +3845,7 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
@@ -3839,8 +3857,8 @@
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
             <pElem>../../modules/hal/nordic/nrfx</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -4202,7 +4220,7 @@
             ex="false"
             tool="0"
             flavor2="3">
-        <cTool flags="0">
+        <cTool flags="1">
         </cTool>
       </item>
       <item path="../../zephyr/drivers/entropy/entropy_nrf5.c"
@@ -4426,23 +4444,25 @@
         </cTool>
       </item>
       <item path="../../zephyr/kernel/idle.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
+        <cTool flags="1">
           <incDir>
             <pElem>../../zephyr/kernel</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../zephyr/include</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/power</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/kernel/include</pElem>
             <pElem>../../zephyr/include/drivers/timer</pElem>
             <pElem>../../zephyr/arch/arm/include/aarch32/cortex_m</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -4824,7 +4844,7 @@
           <incDir>
             <pElem>../../zephyr/kernel</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -5077,12 +5097,13 @@
         </cTool>
       </item>
       <item path="../../zephyr/lib/os/cbprintf.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="0">
+        <cTool flags="1">
           <incDir>
             <pElem>../../zephyr/lib/os</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -5450,7 +5471,7 @@
             <pElem>../../zephyr/include/power</pElem>
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../modules/hal/nordic/nrfx</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6005,6 +6026,7 @@
       <item path="../../zephyr/subsys/fs/fs.c" ex="false" tool="0" flavor2="3">
         <cTool flags="1">
           <incDir>
+            <pElem>../../zephyr/subsys/fs</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
@@ -6025,6 +6047,7 @@
       <item path="../../zephyr/subsys/fs/fs_impl.c" ex="false" tool="0" flavor2="3">
         <cTool flags="1">
           <incDir>
+            <pElem>../../zephyr/subsys/fs</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
@@ -6036,6 +6059,10 @@
             <pElem>../../zephyr/include/fs</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/fs/nvs/nvs.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
         </cTool>
       </item>
       <item path="../../zephyr/subsys/ipc/rpmsg_service/rpmsg_backend.c"
@@ -6303,10 +6330,10 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
             <pElem>../../zephyr/include/power</pElem>
             <pElem>../../zephyr/include/logging</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6332,7 +6359,7 @@
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/subsys/power/policy</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6453,6 +6480,33 @@
         <cTool flags="1">
           <incDir>
             <pElem>../../zephyr/subsys/settings/src</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/settings/src/settings_nvs.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/subsys/settings/src</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/settings</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/fs</pElem>
+            <pElem>../../zephyr/subsys/settings/include/settings</pElem>
+            <pElem>../../zephyr/include/storage</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/subsys/settings/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -6582,6 +6636,31 @@
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_flash.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
+            <pElem>../../zephyr/include/fs</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -7188,20 +7267,20 @@
       <folder path="ncs/zephyr/drivers/console">
         <cTool>
           <incDir>
-            <pElem>../../zephyr/drivers/console</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/include/drivers</pElem>
-            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/drivers/console</pElem>
             <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg/zephyr/include/generated</pElem>
-            <pElem>../secure_device_app/build_signed/hci_rpmsg</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/console</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -7479,10 +7558,25 @@
           </incDir>
         </cTool>
       </folder>
-      <folder path="ncs/zephyr/subsys/fs">
+      <folder path="ncs/zephyr/subsys/fs/nvs">
         <cTool>
           <incDir>
-            <pElem>../../zephyr/subsys/fs</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
+            <pElem>../../zephyr/subsys/fs/nvs</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/fs</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -7536,7 +7630,7 @@
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../../zephyr/include/logging</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -7571,7 +7665,7 @@
         <cTool>
           <incDir>
             <pElem>../../zephyr/subsys/storage/flash_map</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
             <pElem>../../zephyr/include/sys</pElem>
@@ -7581,16 +7675,16 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
             <pElem>../../zephyr/include/storage</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/subsys/storage/stream">
         <cTool>
           <incDir>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/subsys/storage/stream</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/logging</pElem>
@@ -7602,9 +7696,9 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
             <pElem>../../zephyr/include/storage</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </folder>
