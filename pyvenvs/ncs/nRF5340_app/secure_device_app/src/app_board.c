@@ -19,6 +19,7 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_board);
 
+#define LOG_BUTTON_INITIALIZED  false
 #define LOG_BUTTON_PRESSED      false
 
 //
@@ -103,7 +104,9 @@ static const struct device *initialize_button(void)
     gpio_add_callback(button, &button_cb_data);
 
     // ボタンの参照を戻す
+#if LOG_BUTTON_INITIALIZED
     LOG_DBG("Set up button at %s pin %d", SW0_GPIO_LABEL, SW0_GPIO_PIN);
+#endif
     return button;
 }
 
@@ -130,7 +133,9 @@ static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpi
     gpio_pin_set(led, pin, 0);
 
     // LED0の参照を戻す
+#if LOG_BUTTON_INITIALIZED
     LOG_DBG("Set up LED at %s pin %d", name, pin);
+#endif
     return led;
 }
 
