@@ -11,6 +11,8 @@
 #include "app_main.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_flash.h"
+#include "app_timer.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -36,6 +38,9 @@ void app_main_init(void)
 
     // Flash ROMを使用可能にする
     app_flash_initialize();
+
+    // タイマーを使用可能にする
+    app_timer_initialize();
     
     // Bluetoothサービスを開始
     app_bluetooth_start();
