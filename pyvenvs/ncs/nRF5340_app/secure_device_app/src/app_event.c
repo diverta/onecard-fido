@@ -7,11 +7,16 @@
 #include <zephyr/types.h>
 #include <zephyr.h>
 
+#include "app_board.h"
 #include "app_event.h"
+#include "app_timer.h"
 
+// ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_event);
+
+#define LOG_NOTIFIED_EVENT      false
 
 //
 // イベント待ち行列の管理
@@ -25,6 +30,10 @@ typedef struct {
 
 bool app_event_notify(APP_EVENT_T event)
 {
+#if LOG_NOTIFIED_EVENT
+    LOG_DBG("App event notified (event type=%d)", event);
+#endif
+
     // 領域を確保
     size_t size = sizeof(APP_MAIN_FIFO_T);
     char *p_fifo = k_malloc(size);
@@ -64,7 +73,21 @@ static void button_pressed(APP_EVENT_T event)
             // 短押し
             LOG_DBG("Short pushed");
         }
+        // 開始済みのタイマーを停止
+        app_timer_stop_for_longpush();
     }
+
+    if (event == APEVT_BUTTON_PUSHED) {
+        // ボタン長押し時に先行してLEDを
+        // 点灯させるためのタイマーを開始
+        app_timer_start_for_longpush(3000, APEVT_BUTTON_PUSHED_LONG);
+    }
+}
+
+static void button_long_pushed(void)
+{
+    // LED1を点灯させる
+    app_board_led_light(LED_COLOR_YELLOW, true);
 }
 
 //
@@ -84,6 +107,9 @@ void app_event_process(void)
         case APEVT_BUTTON_PUSHED:
         case APEVT_BUTTON_RELEASED:
             button_pressed(event);
+            break;
+        case APEVT_BUTTON_PUSHED_LONG:
+            button_long_pushed();
             break;
         default:
             break;

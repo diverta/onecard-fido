@@ -15,6 +15,7 @@ extern "C" {
 typedef enum {
     APEVT_NONE = 0,
     APEVT_BUTTON_PUSHED,
+    APEVT_BUTTON_PUSHED_LONG,
     APEVT_BUTTON_RELEASED,
 } APP_EVENT_T;
 
