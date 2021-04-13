@@ -15,3 +15,8 @@ OS: macOS Catalina（Version 10.15.5）<br>
 
 #### [nRF Connect SDKインストール手順書](../../../nRF5340_app/INSTALLSDK.md)
 「[nRF Connect SDK](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/index.html)」をmacOSにインストールする手順について掲載します。
+
+## 各種調査手順・結果
+
+#### [TF-Mサンプルアプリ動作確認手順書](../../../pyvenvs/ncs/research/TFMSAMPLE.md)
+Zephyrプロジェクトから提供されている、Trusted Firmware（TF-M）サンプルアプリ「[TF-M PSA Level 1](https://docs.zephyrproject.org/latest/samples/tfm_integration/psa_level_1/README.html)」の動作確認手順について掲載します。
