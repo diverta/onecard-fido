@@ -64,7 +64,7 @@ bash-3.2$
 作成場所はプロジェクトフォルダー（`${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1`）直下とします。
 
 ```
-bash-3.2$ cd ${HOME}/opt/venv/ncs/research/smp_svr
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
 bash-3.2$ cat westbuild.sh
 #!/bin/bash
 
@@ -85,16 +85,14 @@ source ${NCS_HOME}/west-completion.bash
 source ${NCS_HOME}/bin/activate
 
 if [ "$1" == "-f" ]; then
-    # Flash for nRF5340 DK
-    # Manually flash the MCUboot bootloader image binary
-    cd build_signed
-    nrfjprog -f NRF53 --program tfm/bin/bl2.hex --sectorerase
+    # Erase flash
+    nrfjprog -f NRF53 --eraseall
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
     fi
-    # Flash the concatenated TF-M + Zephyr binary
-    ninja flash
+    # Flash for nRF5340 DK
+    ${NCS_HOME}/bin/west -v flash -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
@@ -102,10 +100,7 @@ if [ "$1" == "-f" ]; then
 else
     # Build for nRF5340 DK
     rm -rfv build_signed
-    mkdir build_signed
-    cd build_signed
-    cmake -GNinja -DBOARD=nrf5340dk_nrf5340_cpuappns ..
-    ninja
+    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuappns -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
@@ -140,9 +135,9 @@ cd ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
 
 ```
 bash-3.2$ cd ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
-bash-3.2$
 bash-3.2$ ./westbuild.sh
-Including boilerplate (Zephyr workspace): /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/zephyr/cmake/app/boilerplate.cmake
+-- west build: generating a build system
+Including boilerplate (Zephyr base): /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/zephyr/cmake/app/boilerplate.cmake
 -- Application: /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
 -- Zephyr version: 2.5.99 (/Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/zephyr)
 -- Found Python3: /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/bin/python3 (found suitable exact version "3.7.3") found components: Interpreter
@@ -166,6 +161,7 @@ Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/researc
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1/build_signed
+-- west build: building application
 [1/181] Preparing syscall dependency handling
 
 [11/181] Performing configure step for 'tfm'
@@ -182,10 +178,10 @@ Kconfig header saved to '/Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/researc
 Cloning into 'mbedcrypto-src'...
 remote: Enumerating objects: 18545, done.        
 remote: Counting objects: 100% (18545/18545), done.        
-remote: Compressing objects: 100% (8817/8817), done.        
-remote: Total 18545 (delta 14475), reused 12888 (delta 9600), pack-reused 0
-Receiving objects: 100% (18545/18545), 17.68 MiB | 2.13 MiB/s, done.
-Resolving deltas: 100% (14475/14475), done.
+remote: Compressing objects: 100% (8824/8824), done.        
+remote: Total 18545 (delta 14476), reused 12872 (delta 9593), pack-reused 0
+Receiving objects: 100% (18545/18545), 17.69 MiB | 2.09 MiB/s, done.
+Resolving deltas: 100% (14476/14476), done.
 Note: switching to 'mbedtls-2.24.0'.
 
 You are in 'detached HEAD' state. You can look around, make experimental
@@ -409,9 +405,9 @@ In file included from /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/modules/te
 /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/modules/tee/tfm/trusted-firmware-m/secure_fw/spm/cmsis_func/spm_func.c:56:1: note: in expansion of macro 'REGION_DECLARE_T'
    56 | REGION_DECLARE_T(Image$$, ARM_LIB_STACK_SEAL, $$ZI$$Base, uint32_t);
       | ^~~~~~~~~~~~~~~~
-[335/372] Linking C executable bin/bl2.axf
+[334/372] Linking C executable bin/bl2.axf
 Memory region         Used Size  Region Size  %age Used
-           FLASH:       26116 B        32 KB     79.70%
+           FLASH:       26484 B        32 KB     80.82%
              RAM:       23424 B       256 KB      8.94%
 [356/372] Linking C executable bin/tfm_s.axf
 Memory region         Used Size  Region Size  %age Used
@@ -523,22 +519,14 @@ cd ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
 以下は実行例になります。
 
 ```
-bash-3.2$ cd ${HOME}/opt/venv/ncs/research/smp_svr
-bash-3.2$
+bash-3.2$ cd ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1
 bash-3.2$ ./westbuild.sh -f
-Parsing hex file.
-Erasing page at address 0x0.
-Erasing page at address 0x1000.
-Erasing page at address 0x2000.
-Erasing page at address 0x3000.
-Erasing page at address 0x4000.
-Erasing page at address 0x5000.
-Erasing page at address 0x6000.
+Erasing user available code and UICR flash areas.
 Applying system reset.
-Checking that the area to write is not protected.
-Programming device.
-[0/1] Flashing nrf5340dk_nrf5340_cpuappns
+ZEPHYR_BASE=/Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/zephyr (origin: configfile)
 -- west flash: rebuilding
+cmake version 3.18.0 is OK; minimum version is 3.13.1
+Running CMake: /Applications/CMake.app/Contents/bin/cmake --build build_signed
 [0/14] Performing build step for 'tfm'
 ninja: no work to do.
 [2/5] Linking C executable zephyr/zephyr.elf
@@ -549,9 +537,11 @@ Memory region         Used Size  Region Size  %age Used
 
 [5/5] Generating zephyr/merged.hex
 -- west flash: using runner nrfjprog
+runners.nrfjprog: nrfjprog --ids
 Using board 960160943
 -- runners.nrfjprog: Flashing file: /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1/build_signed/zephyr/merged.hex
 -- runners.nrfjprog: Generating CP_APPLICATION hex file /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1/build_signed/zephyr/GENERATED_CP_APPLICATION_merged.hex
+runners.nrfjprog: nrfjprog --program /Users/makmorit/GitHub/onecard-fido/pyvenvs/ncs/research/psa_level_1/build_signed/zephyr/GENERATED_CP_APPLICATION_merged.hex --sectorerase -f NRF53 --coprocessor CP_APPLICATION --snr 960160943
 Parsing hex file.
 Erasing page at address 0x0.
 Erasing page at address 0x1000.
@@ -604,6 +594,7 @@ Erasing page at address 0x50000.
 Applying system reset.
 Checking that the area to write is not protected.
 Programming device.
+runners.nrfjprog: nrfjprog --pinreset -f NRF53 --snr 960160943
 Applying pin reset.
 -- runners.nrfjprog: Board with serial number 960160943 flashed successfully.
 bash-3.2$
@@ -620,9 +611,9 @@ bash-3.2$
 
 ```
 *** Booting Zephyr OS build v2.4.99-ncs1-1818-g54dea0b2b530  ***
-[00:00:02.514,038] <inf> app: att: System IAT size is: 544 bytes.
-[00:00:02.514,068] <inf> app: att: Requesting IAT with 64 byte challenge.
-[00:00:03.607,940] <inf> app: att: IAT data received: 544 bytes.
+[00:00:02.521,759] <inf> app: att: System IAT size is: 544 bytes.
+[00:00:02.521,759] <inf> app: att: Requesting IAT with 64 byte challenge.
+[00:00:03.616,302] <inf> app: att: IAT data received: 544 bytes.
           0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
 00000000 D2 84 43 A1 01 26 A0 59 01 D4 AA 3A 00 01 24 FF ..C..&.Y...:..$.
 00000010 58 40 00 11 22 33 44 55 66 77 88 99 AA BB CC DD X@.."3DUfw......
@@ -658,7 +649,7 @@ bash-3.2$
 000001F0 FF 6C 70 7F 36 0F 86 17 0C 7F 12 E0 B7 0D ED 1C .lp.6...........
 00000200 D2 26 73 71 3C D5 C8 2C 68 2A D5 98 BC 14 1E 76 .&sq<..,h*.....v
 00000210 2B A1 30 93 62 94 E5 9D 9D D3 76 D8 F1 25 DF 26 +.0.b.....v..%.&
-[00:00:03.855,041] <inf> app: Generating 256 bytes of random data.
+[00:00:03.863,555] <inf> app: Generating 256 bytes of random data.
           0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
 00000000 AA 11 FE 64 60 FA 00 A1 82 57 33 2A F8 4B 21 BA ...d`....W3*.K!.
 00000010 48 AB B1 2C 2F 2E EC 17 7F A7 FE 0F D2 5C 1A E5 H..,/........\..
@@ -676,7 +667,7 @@ bash-3.2$
 000000D0 E9 58 01 FB CF AC EB 70 B3 B6 B9 6A EC D7 7A 85 .X.....p...j..z.
 000000E0 1F CC 0D 9C 47 C8 8E C3 09 0E FE 63 2B 96 11 9C ....G......c+...
 000000F0 98 F6 C3 89 1C 0D 2C 65 EA 47 FB FA BB 78 FA C4 ......,e.G...x..
-[00:00:03.970,367] <inf> app: Calculating SHA-256 hash of value.
+[00:00:03.978,942] <inf> app: Calculating SHA-256 hash of value.
           0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
 00000000 E3 B0 C4 42 98 FC 1C 14 9A FB F4 C8 99 6F B9 24
 00000010 27 AE 41 E4 64 9B 93 4C A4 95 99 1B 78 52 B8 55

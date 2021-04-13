@@ -17,16 +17,14 @@ source ${NCS_HOME}/west-completion.bash
 source ${NCS_HOME}/bin/activate
 
 if [ "$1" == "-f" ]; then
-    # Flash for nRF5340 DK
-    # Manually flash the MCUboot bootloader image binary
-    cd build_signed
-    nrfjprog -f NRF53 --program tfm/bin/bl2.hex --sectorerase 
+    # Erase flash
+    nrfjprog -f NRF53 --eraseall
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
     fi
-    # Flash the concatenated TF-M + Zephyr binary
-    ninja flash
+    # Flash for nRF5340 DK
+    ${NCS_HOME}/bin/west -v flash -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
@@ -34,10 +32,7 @@ if [ "$1" == "-f" ]; then
 else
     # Build for nRF5340 DK
     rm -rfv build_signed
-    mkdir build_signed
-    cd build_signed
-    cmake -GNinja -DBOARD=nrf5340dk_nrf5340_cpuappns ..
-    ninja
+    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuappns -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
