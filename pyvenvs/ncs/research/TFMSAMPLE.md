@@ -674,3 +674,20 @@ bash-3.2$
 ```
 
 以上で、サンプルアプリの動作確認は完了となります。
+
+#### ご参考
+ブートローダーのログは、デフォルトで参照可能となっております。<br>
+ただし、標準のUARTポートからは出力されず、TF-M専用のUARTポートから出力されます。
+
+TF-M専用のUARTポートは、デフォルトで <b>TX=P0.25、RX=P0.26</b> となっております。<br>
+こちらのポートをターミナルから参照すると、以下のようなログ出力を確認できます。
+
+```
+[INF] Starting bootloader
+[INF] Swap type: none
+[INF] Swap type: none
+[INF] Bootloader chainload address offset: 0x8000
+[INF] Jumping to the first image slot
+[Sec Thread] Secure image initializing!
+Booting TFM v1.2.0
+```
