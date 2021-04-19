@@ -4,6 +4,8 @@
 
 日本国内の技適取得済みであるnRF52840搭載モジュール「MDBT50Q」を使用し、nRF52840 Dongleとほぼ同じ仕様で製作した、USBドングル基板です。
 
+<img src="../../FIDO2Device/MDBT50Q_Dongle_mini/pcb_rev1/assets01/0003.jpg" width="500">
+
 #### 特色
 - FIDO2機能（WebAuthn）をサポート
 - FIDO2機能はUSB HIDトランスポートをサポート
