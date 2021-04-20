@@ -15,6 +15,7 @@
 
 LOG_MODULE_DECLARE(app, CONFIG_LOG_DEFAULT_LEVEL);
 
+#if ORIGINAL_SOURCE
 psa_status_t att_get_pub_key(void)
 {
 	psa_status_t err = PSA_SUCCESS;
@@ -24,7 +25,7 @@ psa_status_t att_get_pub_key(void)
 	/* Log any eventual errors via app_log */
 	return err ? al_psa_status(err, __func__) : err;
 }
-
+#endif
 psa_status_t att_get_iat(uint8_t *ch_buffer, uint32_t ch_sz,
 			 uint8_t *token_buffer, uint32_t *token_sz)
 {
