@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
+#if ORIGINAL_SOURCE
 #include <zephyr.h>
 #include <logging/log_ctrl.h>
 #include <logging/log.h>
@@ -20,9 +20,13 @@ LOG_MODULE_DECLARE(app, CONFIG_LOG_DEFAULT_LEVEL);
 
 /* Create an instance of the system config struct for the application. */
 static struct cfg_data cfg;
+#else
+#include "app_main.h"
+#endif
 
 void main(void)
 {
+#if ORIGINAL_SOURCE
 	/* Initialize the TFM NS interface */
 	tfm_ns_interface_init();
 
@@ -49,4 +53,7 @@ void main(void)
 	while (1) {
 
 	}
+#else
+    app_main();
+#endif
 }
