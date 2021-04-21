@@ -51,7 +51,48 @@ static PSA_ITS_DATA_T m_its_data = {
     .data = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35}
 };
 
-void research(void)
+//
+// for Private key
+//
+#include "psa/crypto.h"
+#include "psa/crypto_compat.h"
+#include "psa/crypto_types.h"
+#include "psa/crypto_values.h"
+
+#define PRIVATE_KEY_prime256v1 \
+0xf1, 0xb7, 0x14, 0x23, 0x43, 0x40, 0x2f, 0x3b, 0x5d, 0xe7, 0x31, 0x5e, 0xa8, \
+0x94, 0xf9, 0xda, 0x5c, 0xf5, 0x03, 0xff, 0x79, 0x38, 0xa3, 0x7c, 0xa1, 0x4e, \
+0xb0, 0x32, 0x86, 0x98, 0x84, 0x50
+
+void research_private_key(void)
+{
+    // 秘密鍵のテストデータ
+    static const uint8_t private_key_256[] = {PRIVATE_KEY_prime256v1};
+
+    psa_key_type_t  key_type        = PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_CURVE_SECP256R1);
+    psa_algorithm_t key_alg         = PSA_ALG_ECDSA(PSA_ALG_SHA_256);
+    uint8_t        *private_key     = private_key_256;
+    size_t          private_key_len = sizeof(private_key_256);
+
+    psa_key_handle_t     key_handle;
+    psa_key_attributes_t key_attributes = psa_key_attributes_init();
+
+    // Setup the key policy for private key
+    psa_set_key_usage_flags(&key_attributes, PSA_KEY_USAGE_SIGN);
+    psa_set_key_algorithm(&key_attributes, key_alg);
+    psa_set_key_type(&key_attributes, key_type);
+
+    psa_status_t crypto_result = psa_import_key(&key_attributes, private_key, private_key_len, &key_handle);
+    LOG_INF("Private key import: psa_import_key returns %d", crypto_result);
+    if (crypto_result != PSA_SUCCESS) {
+        // TODO
+    }
+}
+
+//
+// for Protected Storage & Internal Trusted Storage
+//
+void research_secure_storage(void)
 {
     // メタデータ格納用
     struct psa_storage_info_t p_info;
@@ -112,5 +153,6 @@ void research(void)
 void app_main(void)
 {
     // 調査用
-    research();
+    research_private_key();
+    research_secure_storage();
 }
