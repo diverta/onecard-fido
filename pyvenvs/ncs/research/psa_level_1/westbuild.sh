@@ -29,10 +29,17 @@ if [ "$1" == "-f" ]; then
         deactivate
         exit 1
     fi
-else
-    # Build for nRF5340 DK
+elif [ "$1" == "-c" ]; then
+    # Config & build for nRF5340 DK
     rm -rfv build_signed
     ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuappns -d build_signed
+    if [ `echo $?` -ne 0 ]; then
+        deactivate
+        exit 1
+    fi
+else
+    # Build for nRF5340 DK
+    ${NCS_HOME}/bin/west build -b nrf5340dk_nrf5340_cpuappns -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
