@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../psa_level_1" name="0">
+      <df name="src">
+        <in>app_main.c</in>
+        <in>app_main.h</in>
+        <in>app_tfm_ns_interface.c</in>
+        <in>app_tfm_psa_its.c</in>
+        <in>app_tfm_psa_its.h</in>
+        <in>app_tfm_psa_ps.c</in>
+        <in>app_tfm_psa_ps.h</in>
+        <in>main.c</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="重要なファイル"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../psa_level_1/CMakeLists.txt</itemPath>
+      <itemPath>../psa_level_1/Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>../psa_level_1</Elem>
+  </sourceRootList>
+  <projectmakefile>../psa_level_1/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>GNU_ARM|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../psa_level_1</buildCommandWorkingDir>
+          <buildCommand>./westbuild.sh</buildCommand>
+          <cleanCommand>./westbuild.sh -c</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="../psa_level_1/src/app_main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_main.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_tfm_ns_interface.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_tfm_psa_its.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_tfm_psa_its.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_tfm_psa_ps.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/app_tfm_psa_ps.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../psa_level_1/src/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
