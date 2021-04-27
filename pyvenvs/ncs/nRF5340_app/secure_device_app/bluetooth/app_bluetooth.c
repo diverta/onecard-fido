@@ -15,6 +15,9 @@
 #include "os_mgmt/os_mgmt.h"
 #include "img_mgmt/img_mgmt.h"
 
+// for BLE pairing
+#include "app_ble_pairing.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
@@ -92,6 +95,12 @@ void app_bluetooth_start(void)
 
     // 接続時コールバックの設定
     bt_conn_cb_register(&conn_callbacks);
+
+    // BLEペアリングに関する初期設定
+    if (app_ble_pairing_init() == false) {
+        LOG_ERR("BLE pairing init failed");
+        return;
+    }
 
     // Initialize the Bluetooth mcumgr transport.
     smp_bt_register();

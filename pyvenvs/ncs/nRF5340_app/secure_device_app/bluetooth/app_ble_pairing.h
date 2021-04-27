@@ -1,0 +1,25 @@
+/* 
+ * File:   app_ble_pairing.h
+ * Author: makmorit
+ *
+ * Created on 2021/04/27, 10:18
+ */
+#ifndef APP_BLE_PAIRING_H
+#define APP_BLE_PAIRING_H
+
+#include <stdbool.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// 関数群
+//
+bool        app_ble_pairing_init(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* APP_BLE_PAIRING_H */
