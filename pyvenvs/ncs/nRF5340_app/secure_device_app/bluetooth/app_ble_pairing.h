@@ -16,7 +16,8 @@ extern "C" {
 //
 // 関数群
 //
-bool        app_ble_pairing_init(void);
+bool        app_ble_pairing_mode_set(bool b);
+bool        app_ble_pairing_mode(void);
 
 #ifdef __cplusplus
 }
