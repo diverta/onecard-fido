@@ -639,6 +639,7 @@
                         <logicalFolder name="include" displayName="include" projectFiles="true">
                           <logicalFolder name="sys" displayName="sys" projectFiles="true">
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/crc.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/errno_private.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_internal.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_loops.h</itemPath>
@@ -1343,6 +1344,7 @@
         <in>app_event.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
+        <in>app_process.c</in>
         <in>app_timer.c</in>
         <in>main.c</in>
       </df>
@@ -6796,7 +6798,6 @@
             <pElem>../../zephyr/include/net</pElem>
             <pElem>../../zephyr/include/bluetooth</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
-            <pElem>../secure_device_app/include</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6819,9 +6820,9 @@
             <pElem>../../zephyr/include/net</pElem>
             <pElem>../../zephyr/include/bluetooth</pElem>
             <pElem>../../modules/lib/mcumgr/cmd/img_mgmt/include/img_mgmt</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../../modules/lib/tinycbor/include/tinycbor</pElem>
             <pElem>../../modules/lib/mcumgr/cmd/os_mgmt/include/os_mgmt</pElem>
-            <pElem>../secure_device_app/include</pElem>
             <pElem>../../zephyr/include/mgmt/mcumgr</pElem>
             <pElem>../../modules/lib/mcumgr/cmd/os_mgmt/include</pElem>
             <pElem>../../modules/lib/mcumgr/cmd/img_mgmt/include</pElem>
@@ -6898,7 +6899,6 @@
             <pElem>../../zephyr/include/fs</pElem>
             <pElem>../../modules/fs/littlefs</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
-            <pElem>../secure_device_app/include</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6918,6 +6918,27 @@
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_process.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>

@@ -9,6 +9,7 @@
 
 #include "app_board.h"
 #include "app_event.h"
+#include "app_process.h"
 #include "app_timer.h"
 
 // ログ出力制御
@@ -52,7 +53,7 @@ bool app_event_notify(APP_EVENT_T event)
 }
 
 //
-// 各種イベント処理
+// ボタンイベント振分け処理
 //
 static void button_pressed(APP_EVENT_T event)
 {
@@ -68,10 +69,10 @@ static void button_pressed(APP_EVENT_T event)
     if (event == APEVT_BUTTON_RELEASED) {
         if (elapsed > 3000) {
             // 長押し
-            LOG_DBG("Long pushed");
+            app_process_button_pressed_long();
         } else {
             // 短押し
-            LOG_DBG("Short pushed");
+            app_process_button_pressed_short();
         }
         // 開始済みのタイマーを停止
         app_timer_stop_for_longpush();
@@ -82,12 +83,6 @@ static void button_pressed(APP_EVENT_T event)
         // 点灯させるためのタイマーを開始
         app_timer_start_for_longpush(3000, APEVT_BUTTON_PUSHED_LONG);
     }
-}
-
-static void button_long_pushed(void)
-{
-    // LED1を点灯させる
-    app_board_led_light(LED_COLOR_YELLOW, true);
 }
 
 //
@@ -109,10 +104,14 @@ void app_event_process(void)
             button_pressed(event);
             break;
         case APEVT_BUTTON_PUSHED_LONG:
-            button_long_pushed();
+            app_process_button_pushed_long();
             break;
         case APEVT_BLE_CONNECTED:
+            app_process_ble_connected();
+            break;
         case APEVT_BLE_DISCONNECTED:
+            app_process_ble_disconnected();
+            break;
         default:
             break;
     }

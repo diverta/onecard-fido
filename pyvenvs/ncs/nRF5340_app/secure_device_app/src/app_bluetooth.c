@@ -83,10 +83,10 @@ static void connected(struct bt_conn *conn, uint8_t err)
         LOG_ERR("Connection failed (err 0x%02x)", err);
     } else {
         LOG_INF("Connected");
-    }
 
-    // BLE接続イベントを業務処理スレッドに引き渡す
-    app_event_notify(APEVT_BLE_CONNECTED);
+        // BLE接続イベントを業務処理スレッドに引き渡す
+        app_event_notify(APEVT_BLE_CONNECTED);
+    }
 }
 
 static void disconnected(struct bt_conn *conn, uint8_t reason)
