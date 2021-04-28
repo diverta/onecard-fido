@@ -31,10 +31,11 @@ LOG_MODULE_REGISTER(app_bluetooth);
 static struct k_work advertise_work;
 
 // advertising data
-static struct bt_data ad[2];
+static struct bt_data ad[3];
 static struct bt_data ad_nobredr = BT_DATA_BYTES(BT_DATA_FLAGS, BT_LE_AD_NO_BREDR);
 static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITED | BT_LE_AD_NO_BREDR));
 static struct bt_data ad_uuid_smp = BT_DATA_BYTES(BT_DATA_UUID128_ALL, 0x84, 0xaa, 0x60, 0x74, 0x52, 0x8a, 0x8b, 0x86, 0xd3, 0x4c, 0xb7, 0x1d, 0x1d, 0xdc, 0x53, 0x8d);
+static struct bt_data ad_uuid_16 = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
 
 static void advertise(struct k_work *work)
 {
@@ -48,6 +49,7 @@ static void advertise(struct k_work *work)
 
     // サービスUUIDを設定
     ad[1] = ad_uuid_smp;
+    ad[2] = ad_uuid_16;
 
     // アドバタイジングを開始する
     bt_le_adv_stop();
