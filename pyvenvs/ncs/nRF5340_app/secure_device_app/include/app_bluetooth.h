@@ -7,6 +7,8 @@
 #ifndef APP_BLUETOOTH_H
 #define APP_BLUETOOTH_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -14,7 +16,8 @@ extern "C" {
 //
 // 関数群
 //
-void    app_bluetooth_start(void);
+bool        app_ble_start_advertising(void);
+void        app_bluetooth_start(void);
 
 #ifdef __cplusplus
 }
