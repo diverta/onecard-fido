@@ -4,6 +4,7 @@
  *
  * Created on 2021/04/06, 14:50
  */
+#include <zephyr.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 #include <bluetooth/gatt.h>
@@ -17,11 +18,15 @@
 
 // for BLE pairing
 #include "app_ble_pairing.h"
+#include "app_event.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_bluetooth);
 
+//
+// アドバタイズ関連
+//
 // work queue for advertise
 static struct k_work advertise_work;
 
@@ -55,20 +60,42 @@ static void advertise(struct k_work *work)
     LOG_INF("Advertising successfully started (%s mode)", app_ble_pairing_mode() ? "Pairing" : "Non-Pairing");
 }
 
+bool app_ble_start_advertising(void)
+{
+    int rc = k_work_submit_to_queue(&k_sys_work_q, &advertise_work);
+    if (rc == -EBUSY) {
+        LOG_ERR("Advertising submission failed (work item is cancelling / work queue is draining or plugged)");
+        return false;
+        
+    } else if (rc == -EINVAL) {
+        LOG_ERR("Advertising submission failed (work queue is null and the work item has never been run)");
+        return false;
+        
+    } else {
+        return true;
+    }
+}
+
 static void connected(struct bt_conn *conn, uint8_t err)
 {
+    (void)conn;
     if (err) {
         LOG_ERR("Connection failed (err 0x%02x)", err);
     } else {
         LOG_INF("Connected");
     }
+
+    // BLE接続イベントを業務処理スレッドに引き渡す
+    app_event_notify(APEVT_BLE_CONNECTED);
 }
 
 static void disconnected(struct bt_conn *conn, uint8_t reason)
 {
-    // アドバタイジング再開
+    (void)conn;
     LOG_INF("Disconnected (reason 0x%02x)", reason);
-    k_work_submit(&advertise_work);
+
+    // BLE切断イベントを業務処理スレッドに引き渡す
+    app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
 static struct bt_conn_cb conn_callbacks = {
@@ -85,7 +112,7 @@ static void bt_ready(int err)
 
     // アドバタイジング開始
     LOG_INF("Bluetooth initialized");
-    k_work_submit(&advertise_work);
+    app_ble_start_advertising();
 }
 
 void app_bluetooth_start(void)

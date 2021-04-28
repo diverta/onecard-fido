@@ -111,6 +111,8 @@ void app_event_process(void)
         case APEVT_BUTTON_PUSHED_LONG:
             button_long_pushed();
             break;
+        case APEVT_BLE_CONNECTED:
+        case APEVT_BLE_DISCONNECTED:
         default:
             break;
     }

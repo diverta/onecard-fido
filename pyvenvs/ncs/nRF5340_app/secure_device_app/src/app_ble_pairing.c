@@ -4,6 +4,7 @@
  *
  * Created on 2021/04/27, 10:18
  */
+#include <zephyr.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 
