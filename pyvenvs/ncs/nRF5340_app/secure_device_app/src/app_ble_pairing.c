@@ -7,11 +7,11 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 
+#include "app_ble_pairing.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_pairing);
-
-#include "app_ble_pairing.h"
 
 // ペアリングモードを保持
 static bool m_pairing_mode = false;
