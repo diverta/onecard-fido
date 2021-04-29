@@ -33,6 +33,14 @@ PCのUSBポート装着時はUSB HID／CCID／BLEセントラルデバイスと�
 
 ## What's new
 
+#### 2021/04/29
+
+MDBT50Q Dongle Miniを試作いたしました。
+
+- <b>[MDBT50Q Dongle Mini（Rev1）](https://github.com/diverta/onecard-fido/blob/doc-20210429/FIDO2Device/MDBT50Q_Dongle_mini/README.md)</b>
+
+※[ファームウェア](https://github.com/diverta/onecard-fido/blob/doc-20210429/nRF52840_app/firmwares/README.md)は、[MDBT50Q Dongle（Rev2.1.2）](https://github.com/diverta/onecard-fido/blob/doc-20210429/FIDO2Device/MDBT50Q_Dongle/README.md)と同一です。
+
 #### 2021/03/15
 
 nRF52840アプリケーションに、OpenPGPカードエミュレーション機能（ベータ）を新規搭載しました。<br>
