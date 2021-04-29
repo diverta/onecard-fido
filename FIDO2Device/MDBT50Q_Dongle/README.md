@@ -7,6 +7,7 @@
 <img src="../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/assets/0001.jpg" width="500">
 
 #### 特色
+- 外形寸法＝4.9cm x 1.9cm
 - FIDO2機能（WebAuthn）をサポート
 - FIDO2機能はUSB HID／BLEの両トランスポートをサポート
 - USB給電／ボタン電池の２電源方式
