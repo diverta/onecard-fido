@@ -17,7 +17,7 @@
 
 #### MDBT50Q Dongleとの比較
 
-|項目|MDBT50Q Dongle mini<br>(rev1)|MDBT50Q Dongle<br>(rev2.1.2)|コメント|
+|項目|[MDBT50Q Dongle mini<br>(rev1)](../../FIDO2Device/MDBT50Q_Dongle_mini/pcb_rev1/README.md)|[MDBT50Q Dongle<br>(rev2.1.2)](../../FIDO2Device/MDBT50Q_Dongle/pcb_rev2_1_2/README.md)|コメント|
 |:---|:---|:---|:---|
 |外形寸法|3.9cm x 1.8cm|4.9cm x 1.9cm||
 |給電方式|USB給電|USB給電＋ボタン電池||
@@ -44,19 +44,19 @@ MDBT50Q Dongle Miniで使用するファームウェアです。
 
 ### [ファームウェア更新手順](../../MaintenanceTool/macOSApp/UPDATEFIRMWARE.md)
 
-MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール（macOS版）](MaintenanceTool/macOSApp)により更新する手順について説明しています。
+MDBT50Q Dongleのファームウェアを、[FIDO認証器管理ツール（macOS版）](../../MaintenanceTool/macOSApp)により更新する手順について説明しています。
 
 ## 動作確認手順
 
-### [Edgeブラウザーを使用したWebAuthnテスト手順（Windows10 PC）](WEBAUTHNTEST.md)
+### [Edgeブラウザーを使用したWebAuthnテスト手順（Windows10 PC）](../../FIDO2Device/MDBT50Q_Dongle/WEBAUTHNTEST.md)
 
 MDBT50Q Dongleと、Edgeブラウザー、デモサイトを使用して、WebAuthnのユーザー登録／ログイン（MakeCredential／GetAssertion）の動作確認をする場合の手順を掲載しています。
 
-### [Googleアカウントのログイン確認手順（PC）](PCCHROME.md)
+### [Googleアカウントのログイン確認手順（PC）](../../FIDO2Device/MDBT50Q_Dongle/PCCHROME.md)
 
 MDBT50Q Dongleと、Googleアカウント、Chromeブラウザーを使用して、U2F Register／Authenticateの動作確認をする場合の手順を掲載しています。
 
-### [PIN番号を使用したmacOSログイン確認手順](PIVPINLOGIN.md)
+### [PIN番号を使用したmacOSログイン確認手順](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)
 
 MDBT50Q Dongleに設定したPIV機能を使用し、PIN番号によるmacOSログインを行うための確認手順を掲載しています。
 
@@ -64,6 +64,6 @@ MDBT50Q Dongleに設定したPIV機能を使用し、PIN番号によるmacOSロ�
 
 BLEセントラルサービスを使用したオプション機能です。
 
-### [BLE近接認証](BLEDAUTH.md)
+### [BLE近接認証](../../FIDO2Device/MDBT50Q_Dongle/BLEDAUTH.md)
 
 FIDO認証（WebAuthn／U2F）実行時、MDBT50Q Dongle上のボタンを押す代わりに、スマートフォンなどのBLEデバイスを近づけることにより、認証処理を自動的に続行させます。
