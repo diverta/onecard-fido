@@ -17,6 +17,7 @@ extern "C" {
 // タイマーのチャネルID
 // 
 #define CHID_FOR_LONGPUSH           0
+#define CHID_FOR_IDLING             1
 
 //
 // タイマーで使用する各種データを保持

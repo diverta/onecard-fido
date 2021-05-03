@@ -106,3 +106,21 @@ void app_timer_stop_for_longpush(void)
 {
     app_timer_stop(CHID_FOR_LONGPUSH);
 }
+
+//
+// アイドル状態が所定の時間連続したことを検知するタイマー
+//
+TIMER_CFG cfg_idling;
+
+void app_timer_start_for_idling(uint32_t timeout_ms, APP_EVENT_T event)
+{
+    cfg_idling.timeout_ms = timeout_ms;
+    cfg_idling.callback_event = event;
+    cfg_idling.is_repeat = false;
+    app_timer_start(CHID_FOR_IDLING, &cfg_idling);
+}
+
+void app_timer_stop_for_idling(void)
+{
+    app_timer_stop(CHID_FOR_IDLING);
+}
