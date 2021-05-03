@@ -11,6 +11,7 @@
 #include "app_bluetooth.h"
 #include "app_board.h"
 #include "app_event.h"
+#include "app_timer.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG

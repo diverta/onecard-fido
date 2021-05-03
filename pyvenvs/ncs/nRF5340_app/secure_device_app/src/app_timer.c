@@ -8,6 +8,7 @@
 #include <zephyr.h>
 #include <device.h>
 #include <drivers/counter.h>
+#include <errno.h>
 
 #include "app_timer.h"
 #include "app_timer_define.h"
