@@ -46,6 +46,10 @@ void app_process_button_pressed_short(void)
     LOG_DBG("Short pushed");
 }
 
+void app_process_ble_advertise_started(void)
+{
+}
+
 void app_process_ble_connected(void)
 {
 }
@@ -75,6 +79,9 @@ void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
     switch (event) {
+        case APEVT_BLE_ADVERTISE_STARTED:
+            app_process_ble_advertise_started();
+            break;
         case APEVT_BLE_CONNECTED:
             app_process_ble_connected();
             break;
