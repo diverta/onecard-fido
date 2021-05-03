@@ -62,3 +62,10 @@ void app_process_ble_disconnected(void)
         }
     }
 }
+
+void app_process_idling_detected(void)
+{
+    // ディープスリープ（system off）状態に遷移
+    // --> ボタン押下でシステムが再始動
+    app_board_prepare_for_deep_sleep();
+}

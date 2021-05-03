@@ -112,6 +112,9 @@ void app_event_process(void)
         case APEVT_BLE_DISCONNECTED:
             app_process_ble_disconnected();
             break;
+        case APEVT_IDLING_DETECTED:
+            app_process_idling_detected();
+            break;
         default:
             break;
     }

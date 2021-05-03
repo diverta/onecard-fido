@@ -19,6 +19,7 @@ void        app_process_button_pressed_long(void);
 void        app_process_button_pressed_short(void);
 void        app_process_ble_connected(void);
 void        app_process_ble_disconnected(void);
+void        app_process_idling_detected(void);
 
 #ifdef __cplusplus
 }
