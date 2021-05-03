@@ -97,7 +97,7 @@ void app_event_process(void)
     APP_EVENT_T event = fifo->event;
     k_free(fifo);
 
-    // 仮の実装です。
+    // イベントに対応する処理を実行
     switch (event) {
         case APEVT_BUTTON_PUSHED:
         case APEVT_BUTTON_RELEASED:
@@ -106,13 +106,8 @@ void app_event_process(void)
         case APEVT_BUTTON_PUSHED_LONG:
             app_process_button_pushed_long();
             break;
-        case APEVT_BLE_CONNECTED:
-            app_process_ble_connected();
-            break;
-        case APEVT_BLE_DISCONNECTED:
-            app_process_ble_disconnected();
-            break;
         default:
+            app_process_for_event(event);
             break;
     }
 }

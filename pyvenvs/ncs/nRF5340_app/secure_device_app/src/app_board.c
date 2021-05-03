@@ -175,3 +175,21 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
             break;
     }
 }
+
+//
+// ディープスリープ（system off）状態に遷移
+// --> ボタン押下でシステムが再始動
+//
+#include <hal/nrf_gpio.h>
+#include <power/power.h>
+
+void app_board_prepare_for_deep_sleep(void)
+{
+    // Configure to generate PORT event (wakeup) on button-1 press.
+    nrf_gpio_cfg_input(SW0_GPIO_PIN, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_sense_set(SW0_GPIO_PIN, NRF_GPIO_PIN_SENSE_LOW);
+
+    printk("Entering system off; press BUTTON to restart... \n\n\r");
+    pm_power_state_force((struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
+    k_sleep(K_MSEC(100));
+}

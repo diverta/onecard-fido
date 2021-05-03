@@ -29,6 +29,7 @@ typedef enum _LED_COLOR {
 uint32_t    app_board_kernel_uptime_ms_get(void);
 void        app_board_initialize(void);
 void        app_board_led_light(LED_COLOR led_color, bool led_on);
+void        app_board_prepare_for_deep_sleep(void);
 
 #ifdef __cplusplus
 }

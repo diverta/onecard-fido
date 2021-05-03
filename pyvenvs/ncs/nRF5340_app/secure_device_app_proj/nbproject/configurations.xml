@@ -1263,6 +1263,7 @@
               <itemPath>../../zephyr/subsys/power/policy/pm_policy.h</itemPath>
               <itemPath>../../zephyr/subsys/power/policy/policy_residency.c</itemPath>
             </logicalFolder>
+            <itemPath>../../zephyr/subsys/power/device.c</itemPath>
             <itemPath>../../zephyr/subsys/power/pm_ctrl.c</itemPath>
             <itemPath>../../zephyr/subsys/power/power.c</itemPath>
             <itemPath>../../zephyr/subsys/power/reboot.c</itemPath>
@@ -3354,8 +3355,8 @@
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
             <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
@@ -6506,6 +6507,25 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../zephyr/subsys/power/device.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/subsys/power</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/power</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../zephyr/subsys/power/pm_ctrl.c"
             ex="false"
             tool="0"
@@ -6843,6 +6863,7 @@
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
@@ -6850,6 +6871,8 @@
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/include</pElem>
+            <pElem>../../zephyr/include/power</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
