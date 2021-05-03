@@ -46,16 +46,37 @@ void app_process_button_pressed_short(void)
     LOG_DBG("Short pushed");
 }
 
+static void idling_timer_start(void)
+{
+    // BLE接続アイドルタイマーを停止
+    static bool timer_started = false;
+    if (timer_started) {
+        timer_started = false;
+        app_timer_stop_for_idling();
+    }
+
+    // BLE接続アイドルタイマーを開始
+    //   タイムアウト＝３分
+    app_timer_start_for_idling(180000, APEVT_IDLING_DETECTED);
+}
+
 void app_process_ble_advertise_started(void)
 {
+    // BLE接続アイドルタイマーを開始
+    idling_timer_start();
 }
 
 void app_process_ble_connected(void)
 {
+    // BLE接続アイドルタイマーを停止
+    app_timer_stop_for_idling();
 }
 
 void app_process_ble_disconnected(void)
 {
+    // BLE接続アイドルタイマーを開始
+    idling_timer_start();
+
     // BLE切断時の処理
     if (app_ble_pairing_mode()) {
         // ペアリングモード時は、
