@@ -7,6 +7,8 @@
 #ifndef APP_PROCESS_H
 #define APP_PROCESS_H
 
+#include "app_event.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,9 +19,7 @@ extern "C" {
 void        app_process_button_pushed_long(void);
 void        app_process_button_pressed_long(void);
 void        app_process_button_pressed_short(void);
-void        app_process_ble_connected(void);
-void        app_process_ble_disconnected(void);
-void        app_process_idling_detected(void);
+void        app_process_for_event(APP_EVENT_T event);
 
 #ifdef __cplusplus
 }

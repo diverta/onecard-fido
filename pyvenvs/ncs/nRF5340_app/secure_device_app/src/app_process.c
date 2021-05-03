@@ -10,6 +10,7 @@
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_event.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -68,4 +69,22 @@ void app_process_idling_detected(void)
     // ディープスリープ（system off）状態に遷移
     // --> ボタン押下でシステムが再始動
     app_board_prepare_for_deep_sleep();
+}
+
+void app_process_for_event(APP_EVENT_T event)
+{
+    // イベントに対応する処理を実行
+    switch (event) {
+        case APEVT_BLE_CONNECTED:
+            app_process_ble_connected();
+            break;
+        case APEVT_BLE_DISCONNECTED:
+            app_process_ble_disconnected();
+            break;
+        case APEVT_IDLING_DETECTED:
+            app_process_idling_detected();
+            break;
+        default:
+            break;
+    }
 }
