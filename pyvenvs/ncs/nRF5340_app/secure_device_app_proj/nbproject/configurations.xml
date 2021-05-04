@@ -288,8 +288,13 @@
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_gpiote.h</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_ipc.h</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_nvmc.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_power.h</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_power_clock.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_power_compat.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_systick.h</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_timer.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_usbd.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_usbreg.h</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/include/nrfx_wdt.h</itemPath>
                 </logicalFolder>
                 <logicalFolder name="src" displayName="src" projectFiles="true">
@@ -298,6 +303,11 @@
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_gpiote.c</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_ipc.c</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_nvmc.c</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_power.c</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_systick.c</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_usbd.c</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_usbd_errata.h</itemPath>
+                  <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_usbreg.c</itemPath>
                   <itemPath>../../modules/hal/nordic/nrfx/drivers/src/nrfx_wdt.c</itemPath>
                 </logicalFolder>
                 <itemPath>../../modules/hal/nordic/nrfx/drivers/nrfx_common.h</itemPath>
@@ -322,8 +332,11 @@
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_rng.h</itemPath>
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_rtc.h</itemPath>
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_spu.h</itemPath>
+                <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_systick.h</itemPath>
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_timer.h</itemPath>
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_uarte.h</itemPath>
+                <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_usbd.h</itemPath>
+                <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_usbreg.h</itemPath>
                 <itemPath>../../modules/hal/nordic/nrfx/hal/nrf_wdt.h</itemPath>
               </logicalFolder>
               <logicalFolder name="helpers" displayName="helpers" projectFiles="true">
@@ -616,6 +629,7 @@
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/device.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/flash.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/hwinfo.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kernel.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kobject.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/libc-hooks.h</itemPath>
@@ -637,14 +651,106 @@
                                      displayName="syscalls_links"
                                      projectFiles="true">
                         <logicalFolder name="include" displayName="include" projectFiles="true">
+                          <logicalFolder name="app_memory" displayName="app_memory" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/app_memory/mem_domain.h</itemPath>
+                          </logicalFolder>
+                          <logicalFolder name="arch" displayName="arch" projectFiles="true">
+                            <logicalFolder name="x86" displayName="x86" projectFiles="true">
+                              <logicalFolder name="intel64" displayName="intel64" projectFiles="true">
+                                <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/x86/intel64/syscall.h</itemPath>
+                              </logicalFolder>
+                            </logicalFolder>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/arch_inlines.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/cpu.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/syscall.h</itemPath>
+                          </logicalFolder>
+                          <logicalFolder name="kernel" displayName="kernel" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel/thread.h</itemPath>
+                          </logicalFolder>
+                          <logicalFolder name="linker" displayName="linker" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/section_tags.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/sections.h</itemPath>
+                          </logicalFolder>
+                          <logicalFolder name="logging" displayName="logging" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_instance.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_msg.h</itemPath>
+                          </logicalFolder>
                           <logicalFolder name="sys" displayName="sys" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/__assert.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/arch_interface.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/atomic.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/crc.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/device_mmio.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/dlist.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/errno_private.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/kobject.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/list_gen.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/mem_manage.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/printk.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/rb.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sflist.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/slist.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sys_heap.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sys_io.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/thread_stack.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/time_units.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_internal.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_loops.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_macro.h</itemPath>
                           </logicalFolder>
+                          <logicalFolder name="toolchain" displayName="toolchain" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain/common.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain/gcc.h</itemPath>
+                          </logicalFolder>
+                          <logicalFolder name="zephyr" displayName="zephyr" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/zephyr/types.h</itemPath>
+                          </logicalFolder>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/device.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/fatal.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/init.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/irq.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/irq_offload.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_includes.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_structs.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_version.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/mempool_heap.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sched_priq.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/spinlock.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys_clock.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/syscall.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/syscall_handler.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain.h</itemPath>
+                        </logicalFolder>
+                        <logicalFolder name="include_arch"
+                                       displayName="include_arch"
+                                       projectFiles="true">
+                          <logicalFolder name="x86" displayName="x86" projectFiles="true">
+                            <logicalFolder name="ia32" displayName="ia32" projectFiles="true">
+                              <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_arch/x86/ia32/syscall.h</itemPath>
+                            </logicalFolder>
+                          </logicalFolder>
+                        </logicalFolder>
+                        <logicalFolder name="include_logging"
+                                       displayName="include_logging"
+                                       projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_core.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_instance.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_msg.h</itemPath>
+                        </logicalFolder>
+                        <logicalFolder name="include_sys" displayName="include_sys" projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/atomic.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/libc-hooks.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_internal.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_loops.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_macro.h</itemPath>
+                        </logicalFolder>
+                        <logicalFolder name="include_zephyr"
+                                       displayName="include_zephyr"
+                                       projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_zephyr/types.h</itemPath>
                         </logicalFolder>
                       </logicalFolder>
                     </logicalFolder>
@@ -982,6 +1088,10 @@
             <itemPath>../../zephyr/drivers/gpio/gpio_nrfx.c</itemPath>
             <itemPath>../../zephyr/drivers/gpio/gpio_utils.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="hwinfo" displayName="hwinfo" projectFiles="true">
+            <itemPath>../../zephyr/drivers/hwinfo/hwinfo_nrf.c</itemPath>
+            <itemPath>../../zephyr/drivers/hwinfo/hwinfo_weak_impl.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="ipm" displayName="ipm" projectFiles="true">
             <itemPath>../../zephyr/drivers/ipm/ipm_nrfx_ipc.c</itemPath>
             <itemPath>../../zephyr/drivers/ipm/ipm_nrfx_ipc.h</itemPath>
@@ -992,6 +1102,11 @@
           <logicalFolder name="timer" displayName="timer" projectFiles="true">
             <itemPath>../../zephyr/drivers/timer/nrf_rtc_timer.c</itemPath>
             <itemPath>../../zephyr/drivers/timer/sys_clock_init.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="usb" displayName="usb" projectFiles="true">
+            <logicalFolder name="device" displayName="device" projectFiles="true">
+              <itemPath>../../zephyr/drivers/usb/device/usb_dc_nrfx.c</itemPath>
+            </logicalFolder>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="include" displayName="include" projectFiles="true">
@@ -1297,6 +1412,18 @@
               <itemPath>../../zephyr/subsys/storage/stream/stream_flash.c</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <logicalFolder name="usb" displayName="usb" projectFiles="true">
+            <logicalFolder name="class" displayName="class" projectFiles="true">
+              <logicalFolder name="hid" displayName="hid" projectFiles="true">
+                <itemPath>../../zephyr/subsys/usb/class/hid/core.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>../../zephyr/subsys/usb/usb_descriptor.c</itemPath>
+            <itemPath>../../zephyr/subsys/usb/usb_descriptor.h</itemPath>
+            <itemPath>../../zephyr/subsys/usb/usb_device.c</itemPath>
+            <itemPath>../../zephyr/subsys/usb/usb_transfer.c</itemPath>
+            <itemPath>../../zephyr/subsys/usb/usb_transfer.h</itemPath>
+          </logicalFolder>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -1347,6 +1474,8 @@
         <in>app_main.c</in>
         <in>app_process.c</in>
         <in>app_timer.c</in>
+        <in>app_usb.c</in>
+        <in>app_usb_hid.c</in>
         <in>main.c</in>
       </df>
       <df name="zephyr_custom">
@@ -3295,6 +3424,92 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../modules/hal/nordic/nrfx/drivers/src/nrfx_power.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/src</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../modules/hal/nordic/nrfx/drivers/src/nrfx_systick.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/src</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../modules/hal/nordic/nrfx/drivers/src/nrfx_usbd.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/src</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../modules/hal/nordic/nrfx/drivers/src/nrfx_usbreg.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/src</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../modules/hal/nordic/nrfx/drivers/src/nrfx_wdt.c"
             ex="false"
             tool="0"
@@ -4449,6 +4664,46 @@
         <cTool flags="0">
         </cTool>
       </item>
+      <item path="../../zephyr/drivers/hwinfo/hwinfo_nrf.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/drivers/hwinfo/hwinfo_weak_impl.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../zephyr/drivers/ipm/ipm_nrfx_ipc.c"
             ex="false"
             tool="0"
@@ -4506,6 +4761,13 @@
             <pElem>../secure_device_app/build_signed/hci_rpmsg/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/build_signed/hci_rpmsg</pElem>
           </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/drivers/usb/device/usb_dc_nrfx.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
         </cTool>
       </item>
       <item path="../../zephyr/kernel/banner.c" ex="false" tool="0" flavor2="3">
@@ -6760,6 +7022,86 @@
         <cTool flags="1">
         </cTool>
       </item>
+      <item path="../../zephyr/subsys/usb/class/hid/core.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/usb/usb_descriptor.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/usb/usb_device.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/usb/usb_transfer.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/configs.c"
             ex="false"
             tool="0"
@@ -6987,6 +7329,51 @@
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_usb.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_usb_hid.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/include/usb/class</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -7654,6 +8041,13 @@
           </incDir>
         </cTool>
       </folder>
+      <folder path="ncs/zephyr/drivers/hwinfo">
+        <cTool>
+          <incDir>
+            <pElem>../../zephyr/drivers/hwinfo</pElem>
+          </incDir>
+        </cTool>
+      </folder>
       <folder path="ncs/zephyr/drivers/ipm">
         <cTool>
           <incDir>
@@ -7708,6 +8102,33 @@
         <cTool>
           <incDir>
             <pElem>../../zephyr/drivers/timer</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/zephyr/drivers/usb">
+        <cTool>
+          <incDir>
+            <pElem>../../zephyr/drivers/usb/device</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/hal</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers/include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
+            <pElem>../../zephyr/include/drivers/clock_control</pElem>
+            <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -8017,6 +8438,28 @@
             <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
             <pElem>../../zephyr/include/storage</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/zephyr/subsys/usb/class">
+        <cTool>
+          <incDir>
+            <pElem>../../zephyr/subsys/usb/class/hid</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../../zephyr/include/usb/class</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </folder>

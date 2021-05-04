@@ -8,6 +8,8 @@
 #include <zephyr.h>
 #include <usb/usb_device.h>
 
+#include "app_usb_hid.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_usb);
@@ -20,6 +22,7 @@ static void status_cb(enum usb_dc_status_code status, const uint8_t *param)
     (void)param;
     switch (status) {
         case USB_DC_CONFIGURED:
+            app_usb_hid_configured(param);
             break;
         case USB_DC_DISCONNECTED:
             break;
