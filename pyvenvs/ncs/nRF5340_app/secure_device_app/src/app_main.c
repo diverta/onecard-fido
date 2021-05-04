@@ -13,6 +13,7 @@
 #include "app_event.h"
 #include "app_flash.h"
 #include "app_timer.h"
+#include "app_usb.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -35,6 +36,9 @@ void app_main_init(void)
 {
     // ボタン、LEDを使用可能にする
     app_board_initialize();
+
+    // USBを使用可能にする
+    app_usb_initialize();
 
     // Flash ROMを使用可能にする
     app_flash_initialize();
