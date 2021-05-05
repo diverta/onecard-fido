@@ -16,9 +16,6 @@ extern "C" {
 //
 // 関数群
 //
-void        app_process_button_pushed_long(void);
-void        app_process_button_pressed_long(void);
-void        app_process_button_pressed_short(void);
 void        app_process_for_event(APP_EVENT_T event);
 
 #ifdef __cplusplus

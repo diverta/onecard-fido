@@ -7,6 +7,8 @@
 #ifndef APP_EVENT_H
 #define APP_EVENT_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,8 +28,7 @@ typedef enum {
 //
 // 関数群
 //
-bool    app_event_notify(APP_EVENT_T event);
-void    app_event_process(void);
+bool        app_event_notify(APP_EVENT_T event);
 
 #ifdef __cplusplus
 }
