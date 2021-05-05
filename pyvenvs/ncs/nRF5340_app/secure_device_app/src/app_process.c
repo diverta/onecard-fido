@@ -59,6 +59,7 @@ static void idling_timer_start(void)
     // BLE接続アイドルタイマーを開始
     //   タイムアウト＝３分
     app_timer_start_for_idling(180000, APEVT_IDLING_DETECTED);
+    timer_started = true;
 }
 
 void app_process_ble_advertise_started(void)
