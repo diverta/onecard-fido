@@ -8,7 +8,7 @@
 #include <zephyr.h>
 
 #include "app_data_event.h"
-#include "app_data_process.h"
+#include "app_process.h"
 #include "app_main.h"
 
 // ログ出力制御
@@ -58,7 +58,7 @@ static void event_process(void)
     APP_DATA_FIFO_T *fifo = k_fifo_get(&app_data_fifo, K_FOREVER);
 
     // イベントに対応する処理を実行
-    app_data_process_for_event(fifo->event, fifo->data, fifo->size);
+    app_process_for_data_event(fifo->event, fifo->data, fifo->size);
 
     // FIFOデータを解放
     k_free(fifo);

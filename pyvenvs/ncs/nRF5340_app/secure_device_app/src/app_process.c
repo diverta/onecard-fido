@@ -10,6 +10,8 @@
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_data_event.h"
+#include "app_custom.h"
 #include "app_event.h"
 #include "app_timer.h"
 
@@ -153,6 +155,24 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_IDLING_DETECTED:
             ble_idling_detected();
+            break;
+        default:
+            break;
+    }
+}
+
+//
+// データ処理イベント
+//
+void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
+{
+    // イベントに対応する処理を実行
+    switch (event) {
+        case DATEVT_HID_REPORT_RECEIVED:
+            app_custom_hid_report_received(data, size);
+            break;
+        case DATEVT_HID_REPORT_SENT:
+            app_custom_hid_report_sent();
             break;
         default:
             break;
