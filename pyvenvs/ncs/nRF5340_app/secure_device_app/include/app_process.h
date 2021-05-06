@@ -7,7 +7,6 @@
 #ifndef APP_PROCESS_H
 #define APP_PROCESS_H
 
-#include "app_data_event.h"
 #include "app_event.h"
 
 #ifdef __cplusplus

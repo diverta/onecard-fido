@@ -8,6 +8,8 @@
 #define APP_EVENT_H
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,10 +27,18 @@ typedef enum {
     APEVT_IDLING_DETECTED,
 } APP_EVENT_T;
 
+// データ関連イベント種別
+typedef enum {
+    DATEVT_NONE = 0,
+    DATEVT_HID_REPORT_RECEIVED,
+    DATEVT_HID_REPORT_SENT,
+} DATA_EVENT_T;
+
 //
 // 関数群
 //
 bool        app_event_notify(APP_EVENT_T event);
+bool        app_event_notify_for_data(DATA_EVENT_T event, uint8_t *data, size_t data_size);
 
 #ifdef __cplusplus
 }

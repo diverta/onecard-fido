@@ -11,7 +11,7 @@
 #include <usb/usb_device.h>
 #include <usb/class/usb_hid.h>
 
-#include "app_data_event.h"
+#include "app_event.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -60,7 +60,7 @@ static void int_in_ready_cb(const struct device *dev)
     memset(m_report, 0, sizeof(m_report));
 
     // データ処理スレッドに通知
-    app_data_event_notify(DATEVT_HID_REPORT_SENT, NULL, 0);
+    app_event_notify_for_data(DATEVT_HID_REPORT_SENT, NULL, 0);
 }
 
 static void int_out_ready_cb(const struct device *dev)
@@ -80,7 +80,7 @@ static void int_out_ready_cb(const struct device *dev)
     LOG_HEXDUMP_DBG(m_report, ret_bytes, "Output report");
 #endif
     // データ処理スレッドに引き渡し
-    app_data_event_notify(DATEVT_HID_REPORT_RECEIVED, m_report, sizeof(m_report));
+    app_event_notify_for_data(DATEVT_HID_REPORT_RECEIVED, m_report, sizeof(m_report));
 }
 
 static void on_idle_cb(const struct device *dev, uint16_t report_id)

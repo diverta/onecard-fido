@@ -7,9 +7,6 @@
 #include <zephyr/types.h>
 #include <zephyr.h>
 
-#include "app_data_event.h"
-#include "app_usb_hid.h"
-
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
