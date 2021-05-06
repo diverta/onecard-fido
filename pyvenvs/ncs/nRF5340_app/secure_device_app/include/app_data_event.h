@@ -19,6 +19,7 @@ extern "C" {
 typedef enum {
     DATEVT_NONE = 0,
     DATEVT_HID_REPORT_RECEIVED,
+    DATEVT_HID_REPORT_SENT,
 } DATA_EVENT_T;
 
 //

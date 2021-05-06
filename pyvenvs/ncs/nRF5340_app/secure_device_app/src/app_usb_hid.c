@@ -19,6 +19,7 @@
 LOG_MODULE_REGISTER(app_usb_hid);
 
 #define LOG_DEBUG_REPORT        false
+#define LOG_DEBUG_INPUT_REPORT  false
 #define WRITE_REPORT_ON_IDLE_CB false
 
 // HIDデバイスのインスタンス
@@ -56,7 +57,10 @@ static void int_in_ready_cb(const struct device *dev)
 {
     // フレーム送信完了時の処理
     (void)dev;
-    LOG_DBG("Current interrupt IN transfer has completed.");
+    memset(m_report, 0, sizeof(m_report));
+
+    // データ処理スレッドに通知
+    app_data_event_notify(DATEVT_HID_REPORT_SENT, NULL, 0);
 }
 
 static void int_out_ready_cb(const struct device *dev)
@@ -126,4 +130,24 @@ void app_usb_hid_configured(const uint8_t *param)
     // 内部変数をクリア
     (void)param;
     memset(m_report, 0, sizeof(m_report));
+}
+
+bool app_usb_hid_send_report(uint8_t *data, size_t size)
+{
+    // データを設定
+    memcpy(m_report, data, size);
+
+    // USBデバイスにフレーム送信
+    int ret_bytes;
+    int ret = hid_int_ep_write(hdev, m_report, size, &ret_bytes);
+    if (ret != 0) {
+        LOG_ERR("hid_int_ep_write returns %d", ret);
+        return false;
+    }
+
+#if LOG_DEBUG_INPUT_REPORT
+    LOG_DBG("hid_int_ep_write done (%d bytes)", ret_bytes);
+    LOG_HEXDUMP_DBG(m_report, ret_bytes, "Input report");
+#endif
+    return true;
 }
