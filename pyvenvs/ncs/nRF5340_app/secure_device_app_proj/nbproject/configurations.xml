@@ -1477,6 +1477,7 @@
         <in>app_ble_pairing.c</in>
         <in>app_bluetooth.c</in>
         <in>app_board.c</in>
+        <in>app_custom.c</in>
         <in>app_data_event.c</in>
         <in>app_data_process.c</in>
         <in>app_event.c</in>
@@ -7225,6 +7226,26 @@
             <pElem>../secure_device_app/include</pElem>
             <pElem>../../zephyr/include/power</pElem>
             <pElem>../../modules/hal/nordic/nrfx</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_custom.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
