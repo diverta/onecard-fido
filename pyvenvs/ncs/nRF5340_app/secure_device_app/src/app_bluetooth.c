@@ -29,6 +29,7 @@ LOG_MODULE_REGISTER(app_bluetooth);
 //
 // work queue for advertise
 static struct k_work advertise_work;
+static struct k_work stop_advertise_work;
 
 // advertising data
 static struct bt_data ad[3];
@@ -37,10 +38,14 @@ static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITE
 static struct bt_data ad_uuid_smp = BT_DATA_BYTES(BT_DATA_UUID128_ALL, 0x84, 0xaa, 0x60, 0x74, 0x52, 0x8a, 0x8b, 0x86, 0xd3, 0x4c, 0xb7, 0x1d, 0x1d, 0xdc, 0x53, 0x8d);
 static struct bt_data ad_uuid_16 = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
 
+//
+// BLEアドバタイズ開始
+//
 static void advertise(struct k_work *work)
 {
     // ペアリングモードに応じ、
     // アドバタイズデータ（flags）を変更
+    (void)work;
     if (app_ble_pairing_mode()) {
         ad[0] = ad_limited;
     } else {
@@ -65,20 +70,44 @@ static void advertise(struct k_work *work)
     app_event_notify(APEVT_BLE_ADVERTISE_STARTED);
 }
 
-bool app_ble_start_advertising(void)
+static bool k_work_submission(struct k_work *p_work, const char *p_name)
 {
-    int rc = k_work_submit_to_queue(&k_sys_work_q, &advertise_work);
+    int rc = k_work_submit_to_queue(&k_sys_work_q, p_work);
     if (rc == -EBUSY) {
-        LOG_ERR("Advertising submission failed (work item is cancelling / work queue is draining or plugged)");
+        LOG_ERR("%s submission failed (work item is cancelling / work queue is draining or plugged)", p_name);
         return false;
         
     } else if (rc == -EINVAL) {
-        LOG_ERR("Advertising submission failed (work queue is null and the work item has never been run)");
+        LOG_ERR("%s submission failed (work queue is null and the work item has never been run)", p_name);
         return false;
         
     } else {
         return true;
     }
+}
+
+bool app_ble_start_advertising(void)
+{
+    return k_work_submission(&advertise_work, "Advertising");
+}
+
+//
+// BLEアドバタイズ停止
+//
+static void advertise_stop(struct k_work *work)
+{
+    // アドバタイジングを停止
+    (void)work;
+    int rc = bt_le_adv_stop();
+    LOG_INF("Advertising stopped (rc=%d)", rc);
+
+    // BLEアドバタイズ停止イベントを業務処理スレッドに引き渡す
+    app_event_notify(APEVT_BLE_ADVERTISE_STOPPED);
+}
+
+bool app_ble_stop_advertising(void)
+{
+    return k_work_submission(&stop_advertise_work, "Stop advertise");
 }
 
 static void connected(struct bt_conn *conn, uint8_t err)
@@ -134,6 +163,7 @@ void app_bluetooth_start(void)
 
     // アドバタイズ処理を work queue に入れる
     k_work_init(&advertise_work, advertise);
+    k_work_init(&stop_advertise_work, advertise_stop);
 
     // Enable Bluetooth.
     int rc = bt_enable(bt_ready);

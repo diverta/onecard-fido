@@ -17,6 +17,7 @@ extern "C" {
 // 関数群
 //
 bool        app_ble_start_advertising(void);
+bool        app_ble_stop_advertising(void);
 void        app_bluetooth_start(void);
 
 #ifdef __cplusplus
