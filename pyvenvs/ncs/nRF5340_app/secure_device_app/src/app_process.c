@@ -10,6 +10,7 @@
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_custom.h"
 #include "app_event.h"
 #include "app_timer.h"
 
@@ -18,7 +19,10 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_process);
 
-void app_process_button_pushed_long(void)
+//
+// ボタンイベント振分け処理
+//
+static void button_pushed_long(void)
 {
     // ボタン押下後、３秒経過した時の処理
     if (app_ble_pairing_mode() == false) {
@@ -28,7 +32,7 @@ void app_process_button_pushed_long(void)
     }
 }
 
-void app_process_button_pressed_long(void)
+static void button_pressed_long(void)
 {
     // ボタン押下-->３秒経過後にボタンを離した時の処理
     LOG_DBG("Long pushed");
@@ -41,10 +45,40 @@ void app_process_button_pressed_long(void)
     }
 }
 
-void app_process_button_pressed_short(void)
+static void button_pressed_short(void)
 {
     // ボタン押下-->３秒以内にボタンを離した時の処理
     LOG_DBG("Short pushed");
+}
+
+static void button_pressed(APP_EVENT_T event)
+{
+    // ボタン検知時刻を取得
+    static uint32_t time_pressed = 0;
+    uint32_t time_now = app_board_kernel_uptime_ms_get();
+
+    // ボタン検知間隔を取得
+    uint32_t elapsed = time_now - time_pressed;
+    time_pressed = time_now;
+
+    // ボタン検知間隔で判定
+    if (event == APEVT_BUTTON_RELEASED) {
+        if (elapsed > 3000) {
+            // 長押し
+            button_pressed_long();
+        } else {
+            // 短押し
+            button_pressed_short();
+        }
+        // 開始済みのタイマーを停止
+        app_timer_stop_for_longpush();
+    }
+
+    if (event == APEVT_BUTTON_PUSHED) {
+        // ボタン長押し時に先行してLEDを
+        // 点灯させるためのタイマーを開始
+        app_timer_start_for_longpush(3000, APEVT_BUTTON_PUSHED_LONG);
+    }
 }
 
 static void idling_timer_start(void)
@@ -59,21 +93,22 @@ static void idling_timer_start(void)
     // BLE接続アイドルタイマーを開始
     //   タイムアウト＝３分
     app_timer_start_for_idling(180000, APEVT_IDLING_DETECTED);
+    timer_started = true;
 }
 
-void app_process_ble_advertise_started(void)
+static void ble_advertise_started(void)
 {
     // BLE接続アイドルタイマーを開始
     idling_timer_start();
 }
 
-void app_process_ble_connected(void)
+static void ble_connected(void)
 {
     // BLE接続アイドルタイマーを停止
     app_timer_stop_for_idling();
 }
 
-void app_process_ble_disconnected(void)
+static void ble_disconnected(void)
 {
     // BLE接続アイドルタイマーを開始
     idling_timer_start();
@@ -90,7 +125,22 @@ void app_process_ble_disconnected(void)
     }
 }
 
-void app_process_idling_detected(void)
+static void usb_configured(void)
+{
+    // BLEアドバタイズを停止させる
+    app_ble_stop_advertising();
+
+    // BLE接続アイドルタイマーを停止
+    app_timer_stop_for_idling();
+}
+
+static void usb_disconnected(void)
+{
+    // システムを再始動させる
+    app_board_prepare_for_system_reset();
+}
+
+static void ble_idling_detected(void)
 {
     // ディープスリープ（system off）状態に遷移
     // --> ボタン押下でシステムが再始動
@@ -101,17 +151,48 @@ void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
     switch (event) {
+        case APEVT_BUTTON_PUSHED:
+        case APEVT_BUTTON_RELEASED:
+            button_pressed(event);
+            break;
+        case APEVT_BUTTON_PUSHED_LONG:
+            button_pushed_long();
+            break;
         case APEVT_BLE_ADVERTISE_STARTED:
-            app_process_ble_advertise_started();
+            ble_advertise_started();
             break;
         case APEVT_BLE_CONNECTED:
-            app_process_ble_connected();
+            ble_connected();
             break;
         case APEVT_BLE_DISCONNECTED:
-            app_process_ble_disconnected();
+            ble_disconnected();
+            break;
+        case APEVT_USB_CONFIGURED:
+            usb_configured();
+            break;
+        case APEVT_USB_DISCONNECTED:
+            usb_disconnected();
             break;
         case APEVT_IDLING_DETECTED:
-            app_process_idling_detected();
+            ble_idling_detected();
+            break;
+        default:
+            break;
+    }
+}
+
+//
+// データ処理イベント
+//
+void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
+{
+    // イベントに対応する処理を実行
+    switch (event) {
+        case DATEVT_HID_REPORT_RECEIVED:
+            app_custom_hid_report_received(data, size);
+            break;
+        case DATEVT_HID_REPORT_SENT:
+            app_custom_hid_report_sent();
             break;
         default:
             break;

@@ -8,6 +8,7 @@
 #include <zephyr.h>
 #include <device.h>
 #include <sys/time_units.h>
+#include <power/reboot.h>
 
 #include "app_main.h"
 #include "app_board.h"
@@ -192,4 +193,13 @@ void app_board_prepare_for_deep_sleep(void)
     printk("Entering system off; press BUTTON to restart... \n\n\r");
     pm_power_state_force((struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
     k_sleep(K_MSEC(100));
+}
+
+//
+// システムを再始動させる
+// （RESETボタン押下と等価の処理）
+//
+void app_board_prepare_for_system_reset(void)
+{
+    sys_reboot(SYS_REBOOT_WARM);
 }

@@ -7,10 +7,9 @@
 #include <zephyr/types.h>
 #include <zephyr.h>
 
-#include "app_board.h"
 #include "app_event.h"
+#include "app_main.h"
 #include "app_process.h"
-#include "app_timer.h"
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -23,11 +22,19 @@ LOG_MODULE_REGISTER(app_event);
 // イベント待ち行列の管理
 //
 K_FIFO_DEFINE(app_main_fifo);
+K_FIFO_DEFINE(app_data_fifo);
 
 typedef struct {
     void           *fifo_reserved;
     APP_EVENT_T     event;
 } APP_MAIN_FIFO_T;
+
+typedef struct {
+    void           *fifo_reserved;
+    DATA_EVENT_T    event;
+    uint8_t         data[64];
+    size_t          size;
+} APP_DATA_FIFO_T;
 
 bool app_event_notify(APP_EVENT_T event)
 {
@@ -37,77 +44,102 @@ bool app_event_notify(APP_EVENT_T event)
 
     // 領域を確保
     size_t size = sizeof(APP_MAIN_FIFO_T);
-    char *p_fifo = k_malloc(size);
+    APP_MAIN_FIFO_T *p_fifo = (APP_MAIN_FIFO_T *)k_malloc(size);
     if (p_fifo == NULL) {
         LOG_ERR("APP_MAIN_FIFO_T allocation failed");
         return false;
     }
 
     // イベントデータを待ち行列にセット
-    APP_MAIN_FIFO_T fifo = {
-        .event = event
-    };
-    memcpy(p_fifo, &fifo, size);
+    p_fifo->event = event;
     k_fifo_put(&app_main_fifo, p_fifo);
     return true;
 }
 
-//
-// ボタンイベント振分け処理
-//
-static void button_pressed(APP_EVENT_T event)
+bool app_event_notify_for_data(DATA_EVENT_T event, uint8_t *data, size_t data_size)
 {
-    // ボタン検知時刻を取得
-    static uint32_t time_pressed = 0;
-    uint32_t time_now = app_board_kernel_uptime_ms_get();
+#if LOG_NOTIFIED_EVENT
+    LOG_DBG("App data event notified (event type=%d)", event);
+#endif
 
-    // ボタン検知間隔を取得
-    uint32_t elapsed = time_now - time_pressed;
-    time_pressed = time_now;
-
-    // ボタン検知間隔で判定
-    if (event == APEVT_BUTTON_RELEASED) {
-        if (elapsed > 3000) {
-            // 長押し
-            app_process_button_pressed_long();
-        } else {
-            // 短押し
-            app_process_button_pressed_short();
-        }
-        // 開始済みのタイマーを停止
-        app_timer_stop_for_longpush();
+    // 領域を確保
+    size_t size = sizeof(APP_DATA_FIFO_T);
+    APP_DATA_FIFO_T *p_fifo = (APP_DATA_FIFO_T *)k_malloc(size);
+    if (p_fifo == NULL) {
+        LOG_ERR("APP_DATA_FIFO_T allocation failed");
+        return false;
     }
 
-    if (event == APEVT_BUTTON_PUSHED) {
-        // ボタン長押し時に先行してLEDを
-        // 点灯させるためのタイマーを開始
-        app_timer_start_for_longpush(3000, APEVT_BUTTON_PUSHED_LONG);
-    }
+    // イベントデータを待ち行列にセット
+    p_fifo->event = event;
+    p_fifo->size = data_size;
+    memcpy(p_fifo->data, data, data_size);
+    k_fifo_put(&app_data_fifo, p_fifo);
+    return true;
 }
 
 //
-// 業務スレッドのイベント処理
+// スレッドのイベント処理
 //
-void app_event_process(void)
+static void app_event_process(void)
 {
     // イベント検知まで待機
     APP_MAIN_FIFO_T *fifo = k_fifo_get(&app_main_fifo, K_FOREVER);
 
-    // FIFOデータを解放
-    APP_EVENT_T event = fifo->event;
-    k_free(fifo);
-
     // イベントに対応する処理を実行
-    switch (event) {
-        case APEVT_BUTTON_PUSHED:
-        case APEVT_BUTTON_RELEASED:
-            button_pressed(event);
-            break;
-        case APEVT_BUTTON_PUSHED_LONG:
-            app_process_button_pushed_long();
-            break;
-        default:
-            app_process_for_event(event);
-            break;
+    app_process_for_event(fifo->event);
+
+    // FIFOデータを解放
+    k_free(fifo);
+}
+
+static void app_main_thread(void)
+{
+    while (true) {
+        // アプリケーション初期化前の場合はイベントを無視
+        if (app_main_initialized() == false) {
+            continue;
+        }
+
+        // 各種イベントを処理
+        app_event_process();
     }
 }
+
+//
+// データ関連イベント処理
+//
+static void app_data_event_process(void)
+{
+    // イベント検知まで待機
+    APP_DATA_FIFO_T *fifo = k_fifo_get(&app_data_fifo, K_FOREVER);
+
+    // イベントに対応する処理を実行
+    app_process_for_data_event(fifo->event, fifo->data, fifo->size);
+
+    // FIFOデータを解放
+    k_free(fifo);
+}
+
+static void app_data_thread(void)
+{
+    while (true) {
+        // アプリケーション初期化前の場合はイベントを無視
+        if (app_main_initialized() == false) {
+            continue;
+        }
+
+        // 各種イベントを処理
+        app_data_event_process();
+    }
+}
+
+//
+// スレッド本体
+//
+// STACKSIZE: size of stack area used by thread
+// PRIORITY:  scheduling priority used by thread
+#define STACKSIZE   1024
+#define PRIORITY    7
+K_THREAD_DEFINE(app_main_thread_id, STACKSIZE, app_main_thread, NULL, NULL, NULL, PRIORITY, 0, 0);
+K_THREAD_DEFINE(app_data_thread_id, STACKSIZE, app_data_thread, NULL, NULL, NULL, PRIORITY, 0, 0);

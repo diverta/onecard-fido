@@ -49,11 +49,11 @@ static void app_timer_start(uint8_t chan_id, TIMER_CFG *cfg)
 
     int err = counter_set_channel_alarm(m_counter_dev, chan_id, &cfg->alarm_cfg);
     if (-EINVAL == err) {
-        LOG_ERR("Alarm settings invalid");
+        LOG_ERR("Alarm settings invalid (chan_id=%d)", chan_id);
     } else if (-ENOTSUP == err) {
-        LOG_ERR("Alarm setting request not supported");
+        LOG_ERR("Alarm setting request not supported (chan_id=%d)", chan_id);
     } else if (err != 0) {
-        LOG_ERR("Error counter_set_channel_alarm returns %d", err);
+        LOG_ERR("Error counter_set_channel_alarm returns %d (chan_id=%d)", err, chan_id);
     }
 
 #if LOG_TIMER_START_STOP

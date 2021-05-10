@@ -13,6 +13,7 @@
 #include "app_event.h"
 #include "app_flash.h"
 #include "app_timer.h"
+#include "app_usb.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -36,6 +37,9 @@ void app_main_init(void)
     // ボタン、LEDを使用可能にする
     app_board_initialize();
 
+    // USBを使用可能にする
+    app_usb_initialize();
+
     // Flash ROMを使用可能にする
     app_flash_initialize();
 
@@ -48,17 +52,3 @@ void app_main_init(void)
     // 初期処理完了済み
     app_initialized = true;
 }
-
-static void app_main_thread(void)
-{
-    while (true) {
-        // 各種イベントを処理
-        app_event_process();
-    }
-}
-
-// STACKSIZE: size of stack area used by thread
-// PRIORITY:  scheduling priority used by thread
-#define STACKSIZE   1024
-#define PRIORITY    7
-K_THREAD_DEFINE(app_main_thread_id, STACKSIZE, app_main_thread, NULL, NULL, NULL, PRIORITY, 0, 0);
