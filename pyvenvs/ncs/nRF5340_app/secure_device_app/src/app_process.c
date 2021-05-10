@@ -125,6 +125,21 @@ static void ble_disconnected(void)
     }
 }
 
+static void usb_configured(void)
+{
+    // BLEアドバタイズを停止させる
+    app_ble_stop_advertising();
+
+    // BLE接続アイドルタイマーを停止
+    app_timer_stop_for_idling();
+}
+
+static void usb_disconnected(void)
+{
+    // システムを再始動させる
+    app_board_prepare_for_system_reset();
+}
+
 static void ble_idling_detected(void)
 {
     // ディープスリープ（system off）状態に遷移
@@ -151,6 +166,12 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BLE_DISCONNECTED:
             ble_disconnected();
+            break;
+        case APEVT_USB_CONFIGURED:
+            usb_configured();
+            break;
+        case APEVT_USB_DISCONNECTED:
+            usb_disconnected();
             break;
         case APEVT_IDLING_DETECTED:
             ble_idling_detected();
