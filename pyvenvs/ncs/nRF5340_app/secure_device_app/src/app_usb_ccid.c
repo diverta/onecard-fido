@@ -109,6 +109,9 @@ static void on_ep_data_out(uint8_t ep)
     LOG_DBG("usb_read done (%d bytes)", m_rx_buf_size);
     LOG_HEXDUMP_DBG(m_rx_buf, m_rx_buf_size, "Output data");
 #endif
+
+    // データ処理スレッドに引き渡し
+    app_event_notify_for_data(DATEVT_CCID_DATA_RECEIVED, m_rx_buf, m_rx_buf_size);
 }
 
 static void on_ep_data_in(uint8_t ep)

@@ -194,6 +194,9 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
         case DATEVT_HID_REPORT_SENT:
             app_custom_hid_report_sent();
             break;
+        case DATEVT_CCID_DATA_RECEIVED:
+            app_custom_ccid_data_received(data, size);
+            break;
         default:
             break;
     }

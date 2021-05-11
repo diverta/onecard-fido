@@ -13,6 +13,7 @@
 LOG_MODULE_REGISTER(app_custom);
 
 #define LOG_DEBUG_HID_REPORT        false
+#define LOG_DEBUG_CCID_DATA         false
 
 //
 // データ処理イベント関連
@@ -27,4 +28,12 @@ void app_custom_hid_report_received(uint8_t *data, size_t size)
 
 void app_custom_hid_report_sent(void)
 {
+}
+
+void app_custom_ccid_data_received(uint8_t *data, size_t size)
+{
+#if LOG_DEBUG_CCID_DATA
+    LOG_DBG("received %d bytes", size);
+    LOG_HEXDUMP_DBG(data, size, "CCID data");
+#endif
 }
