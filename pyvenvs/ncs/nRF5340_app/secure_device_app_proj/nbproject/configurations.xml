@@ -733,9 +733,22 @@
                             </logicalFolder>
                           </logicalFolder>
                         </logicalFolder>
+                        <logicalFolder name="include_devicetree"
+                                       displayName="include_devicetree"
+                                       projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_devicetree/zephyr.h</itemPath>
+                        </logicalFolder>
+                        <logicalFolder name="include_drivers"
+                                       displayName="include_drivers"
+                                       projectFiles="true">
+                          <logicalFolder name="usb" displayName="usb" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_drivers/usb/usb_dc.h</itemPath>
+                          </logicalFolder>
+                        </logicalFolder>
                         <logicalFolder name="include_logging"
                                        displayName="include_logging"
                                        projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_core.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_instance.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_logging/log_msg.h</itemPath>
@@ -747,6 +760,11 @@
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_internal.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_loops.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_sys/util_macro.h</itemPath>
+                        </logicalFolder>
+                        <logicalFolder name="include_usb" displayName="include_usb" projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_usb/usb_common.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_usb/usb_device.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_usb/usbstruct.h</itemPath>
                         </logicalFolder>
                         <logicalFolder name="include_zephyr"
                                        displayName="include_zephyr"
@@ -1479,7 +1497,7 @@
         </df>
       </df>
       <df name="include">
-        <in>app_usb_ccid.h</in>
+        <in>app_usb_ccid_define.h</in>
       </df>
       <df name="src">
         <in>app_ble_pairing.c</in>
@@ -1501,11 +1519,6 @@
           <df name="mgmt">
             <df name="mcumgr">
               <in>smp_bt.c</in>
-            </df>
-          </df>
-          <df name="usb">
-            <df name="class">
-              <in>usb_ccid.c</in>
             </df>
           </df>
         </df>
@@ -7164,7 +7177,7 @@
         <cTool flags="1">
         </cTool>
       </item>
-      <item path="../secure_device_app/include/app_usb_ccid.h"
+      <item path="../secure_device_app/include/app_usb_ccid_define.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7254,8 +7267,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
-            <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -7263,6 +7276,7 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -7405,7 +7419,26 @@
       <item path="../secure_device_app/src/app_usb_ccid.c"
             ex="false"
             tool="0"
-            flavor2="0">
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
       </item>
       <item path="../secure_device_app/src/app_usb_hid.c"
             ex="false"
@@ -7442,13 +7475,6 @@
         </cTool>
       </item>
       <item path="../secure_device_app/zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="1">
-        </cTool>
-      </item>
-      <item path="../secure_device_app/zephyr_custom/subsys/usb/class/usb_ccid.c"
             ex="false"
             tool="0"
             flavor2="3">
@@ -7506,19 +7532,6 @@
             <pElem>../../modules/lib/tinycbor/include/tinycbor</pElem>
             <pElem>../../modules/lib/tinycbor/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
-      </folder>
-      <folder path="0/zephyr_custom/subsys/usb">
-        <cTool>
-          <incDir>
-            <pElem>../secure_device_app/zephyr_custom/subsys/usb/class</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
-            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
-            <pElem>../../zephyr/include/drivers/usb</pElem>
-            <pElem>../../zephyr/include/usb</pElem>
-            <pElem>../secure_device_app/zephyr_custom/include/usb/class</pElem>
-            <pElem>../secure_device_app/include</pElem>
           </incDir>
         </cTool>
       </folder>
