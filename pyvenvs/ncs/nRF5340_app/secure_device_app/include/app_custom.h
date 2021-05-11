@@ -20,6 +20,7 @@ extern "C" {
 //
 void        app_custom_hid_report_received(uint8_t *data, size_t size);
 void        app_custom_hid_report_sent(void);
+void        app_custom_ccid_data_received(uint8_t *data, size_t size);
 
 #ifdef __cplusplus
 }
