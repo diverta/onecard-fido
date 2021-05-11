@@ -8,9 +8,7 @@ FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
     zephyr_custom/subsys/mgmt/mcumgr/smp_bt.c
-    zephyr_custom/subsys/usb/class/usb_ccid.c
 )
 target_include_directories(app PRIVATE 
     include
-    zephyr_custom/include/usb/class
 )
