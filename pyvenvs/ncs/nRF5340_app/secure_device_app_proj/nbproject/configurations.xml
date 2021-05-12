@@ -1036,6 +1036,7 @@
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/cache.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/counter.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/device.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/entropy.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/flash.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/gpio.h</itemPath>
@@ -7801,6 +7802,8 @@
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
@@ -7810,7 +7813,10 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
             <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
             <pElem>../../mbedtls/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
