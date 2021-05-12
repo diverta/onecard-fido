@@ -37,3 +37,11 @@ void app_custom_ccid_data_received(uint8_t *data, size_t size)
     LOG_HEXDUMP_DBG(data, size, "CCID data");
 #endif
 }
+
+//
+// ボタン押下時の処理
+//
+void app_custom_button_pressed_short(void)
+{
+    LOG_DBG("Short pushed");
+}

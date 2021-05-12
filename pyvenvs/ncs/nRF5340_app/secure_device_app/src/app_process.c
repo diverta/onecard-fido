@@ -48,7 +48,8 @@ static void button_pressed_long(void)
 static void button_pressed_short(void)
 {
     // ボタン押下-->３秒以内にボタンを離した時の処理
-    LOG_DBG("Short pushed");
+    // 各種業務処理を実行
+    app_custom_button_pressed_short();
 }
 
 static void button_pressed(APP_EVENT_T event)
