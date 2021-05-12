@@ -1496,13 +1496,11 @@
           </df>
         </df>
       </df>
-      <df name="include">
-        <in>app_usb_ccid_define.h</in>
-      </df>
       <df name="src">
         <in>app_ble_pairing.c</in>
         <in>app_bluetooth.c</in>
         <in>app_board.c</in>
+        <in>app_crypto.c</in>
         <in>app_custom.c</in>
         <in>app_event.c</in>
         <in>app_flash.c</in>
@@ -3367,7 +3365,7 @@
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
             <pElem>../../modules/hal/nordic/nrfx</pElem>
-            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3388,7 +3386,7 @@
             <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
-            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </item>
@@ -3575,7 +3573,7 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
-            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </item>
@@ -7177,11 +7175,6 @@
         <cTool flags="1">
         </cTool>
       </item>
-      <item path="../secure_device_app/include/app_usb_ccid_define.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../secure_device_app/src/app_ble_pairing.c"
             ex="false"
             tool="0"
@@ -7260,6 +7253,11 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../secure_device_app/src/app_crypto.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
       <item path="../secure_device_app/src/app_custom.c"
             ex="false"
             tool="0"
@@ -7267,16 +7265,15 @@
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
-            <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../secure_device_app/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -8255,18 +8252,18 @@
         <cTool>
           <incDir>
             <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
-            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../modules/hal/nordic/nrfx/drivers</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
-            <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
-            <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
-            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </folder>
