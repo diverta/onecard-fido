@@ -15,6 +15,7 @@
 #include <mbedtls/aes.h>
 #include <mbedtls/cipher.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/des.h>
 #include <mbedtls/platform.h>
 #include <mbedtls/sha256.h>
 
@@ -28,9 +29,11 @@ LOG_MODULE_REGISTER(app_crypto);
 #define LOG_DEBUG_AES_DECRYPTED_DATA    false
 #define LOG_DEBUG_RANDOM_VECTOR_DATA    false
 #define LOG_DEBUG_SHA256_HASH_DATA      false
+#define LOG_DEBUG_DES3_ECB_DATA         false
 
 #define AES_KEY_SIZE        32
 #define SHA256_HASH_SIZE    32
+#define DES3_CRYPTO_SIZE    8
 
 // 作業領域
 static uint8_t m_aes_iv[16];
@@ -164,6 +167,30 @@ bool app_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *h
 #if LOG_DEBUG_SHA256_HASH_DATA
     LOG_DBG("%d bytes", SHA256_HASH_SIZE);
     LOG_HEXDUMP_DBG(hash_digest, SHA256_HASH_SIZE, "SHA-256 hash data");
+#endif
+
+    return true;
+}
+
+//
+// 3DES-ECB暗号化処理
+//
+bool app_crypto_des3_ecb(const uint8_t *in, uint8_t *out, const uint8_t *key)
+{
+    mbedtls_des3_context ctx;
+    mbedtls_des3_init(&ctx);
+    mbedtls_des3_set3key_enc(&ctx, key);
+
+    int ret = mbedtls_des3_crypt_ecb(&ctx, in, out);
+    mbedtls_des3_free(&ctx);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_des3_crypt_ecb returns %d", ret);
+        return false;
+    }
+
+#if LOG_DEBUG_DES3_ECB_DATA
+    LOG_DBG("%d bytes", DES3_CRYPTO_SIZE);
+    LOG_HEXDUMP_DBG(out, DES3_CRYPTO_SIZE, "3DES-ECB crypto data");
 #endif
 
     return true;
