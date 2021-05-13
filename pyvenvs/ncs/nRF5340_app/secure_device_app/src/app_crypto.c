@@ -16,6 +16,7 @@
 #include <mbedtls/cipher.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/platform.h>
+#include <mbedtls/sha256.h>
 
 // ログ出力制御
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -26,8 +27,10 @@ LOG_MODULE_REGISTER(app_crypto);
 #define LOG_DEBUG_AES_ENCRYPTED_DATA    false
 #define LOG_DEBUG_AES_DECRYPTED_DATA    false
 #define LOG_DEBUG_RANDOM_VECTOR_DATA    false
+#define LOG_DEBUG_SHA256_HASH_DATA      false
 
-#define AES_KEY_SIZE 32
+#define AES_KEY_SIZE        32
+#define SHA256_HASH_SIZE    32
 
 // 作業領域
 static uint8_t m_aes_iv[16];
@@ -142,6 +145,25 @@ bool app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size)
 #if LOG_DEBUG_RANDOM_VECTOR_DATA
     LOG_DBG("%d bytes", vector_size);
     LOG_HEXDUMP_DBG(vector_buf, vector_size, "Random vector data");
+#endif
+
+    return true;
+}
+
+//
+// ハッシュ生成
+//
+bool app_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest)
+{
+    int ret = mbedtls_sha256_ret(data, data_size, hash_digest, false);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_sha256_ret returns %d", ret);
+        return false;
+    }
+
+#if LOG_DEBUG_SHA256_HASH_DATA
+    LOG_DBG("%d bytes", SHA256_HASH_SIZE);
+    LOG_HEXDUMP_DBG(hash_digest, SHA256_HASH_SIZE, "SHA-256 hash data");
 #endif
 
     return true;
