@@ -4,6 +4,8 @@
  *
  * Created on 2021/05/06, 9:53
  */
+#ifndef APP_TEST
+
 #include <zephyr/types.h>
 #include <zephyr.h>
 
@@ -45,3 +47,5 @@ void app_custom_button_pressed_short(void)
 {
     LOG_DBG("Short pushed");
 }
+
+#endif /* APP_TEST */
