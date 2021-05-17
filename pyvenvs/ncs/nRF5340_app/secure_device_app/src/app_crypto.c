@@ -35,12 +35,21 @@ LOG_MODULE_REGISTER(app_crypto);
 // 定義体
 #include "app_crypto_define.h"
 
-// 作業領域
-static uint8_t m_aes_iv[AES_IV_SIZE];
+//
+// CTR-DRBG共有情報
+//
+static mbedtls_ctr_drbg_context m_drbg_ctx;
+
+void *app_crypto_ctr_drbg_context(void)
+{
+    return (void *)&m_drbg_ctx;
+}
 
 //
 // AES-256暗号化処理
 //
+static uint8_t m_aes_iv[AES_IV_SIZE];
+
 static bool aes_cbc_256_init(mbedtls_cipher_context_t *p_ctx)
 {
     mbedtls_cipher_init(p_ctx);
@@ -134,12 +143,10 @@ bool app_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t
 //
 // ランダムベクター生成
 //
-static mbedtls_ctr_drbg_context m_drbg_ctx;
-
 bool app_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_size)
 {
     // ランダムベクターを生成
-    int ret = mbedtls_ctr_drbg_random(&m_drbg_ctx, vector_buf, vector_size);
+    int ret = mbedtls_ctr_drbg_random(app_crypto_ctr_drbg_context(), vector_buf, vector_size);
     if (ret != 0) {
         LOG_ERR("mbedtls_ctr_drbg_random returns %d", ret);
         return false;
