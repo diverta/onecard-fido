@@ -32,12 +32,11 @@ LOG_MODULE_REGISTER(app_crypto);
 #define LOG_DEBUG_SHA256_HASH_DATA      false
 #define LOG_DEBUG_DES3_ECB_DATA         false
 
-#define AES_KEY_SIZE        32
-#define SHA256_HASH_SIZE    32
-#define DES3_CRYPTO_SIZE    8
+// 定義体
+#include "app_crypto_define.h"
 
 // 作業領域
-static uint8_t m_aes_iv[16];
+static uint8_t m_aes_iv[AES_IV_SIZE];
 
 //
 // AES-256暗号化処理
