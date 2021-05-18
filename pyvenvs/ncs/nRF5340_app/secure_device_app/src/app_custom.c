@@ -4,6 +4,7 @@
  *
  * Created on 2021/05/06, 9:53
  */
+#include "app_custom.h"
 #ifndef APP_TEST
 
 #include <zephyr/types.h>

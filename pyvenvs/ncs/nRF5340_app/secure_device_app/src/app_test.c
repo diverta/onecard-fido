@@ -4,6 +4,7 @@
  *
  * Created on 2021/05/17, 10:13
  */
+#include "app_custom.h"
 #ifdef APP_TEST
 
 #include <zephyr/types.h>
@@ -143,6 +144,7 @@ static void test_ccid_status(uint8_t *data, size_t size)
 //
 #include "app_crypto.h"
 #include "app_crypto_define.h"
+#include "app_crypto_ec.h"
 
 static uint8_t plaintext[64];
 static uint8_t encrypted[64];
@@ -219,6 +221,39 @@ static void test_app_crypto(void)
 }
 
 //
+// for EC crypto test
+//
+static uint8_t work_buf_2[64];
+static uint8_t work_buf_3[65];
+
+static char *prv_key_str = "519b423d715f8b581f4fa8ee59f4771a5b44c8130b4e3eacca54a56dda72b464";
+static char *pub_key_str = "041ccbe91c075fc7f4f033bfa248db8fccd3565de94bbfb12f3c59ff46c271bf83ce4014c68811f9a21a1fdb2c0e6113e06db7ca93b7404e78dc7ccd5ca89a4ca9";
+static char *in_hash_str = "44acf6b7e36c1342c2c5897204fe09504e1e2efb1a900377dbc4e7a6a133ec56";
+
+static void test_app_crypto_ec(void)
+{
+    // ECDSA署名を実行
+    hex2bin(prv_key_str, strlen(prv_key_str), work_buf, sizeof(work_buf));
+    hex2bin(in_hash_str, strlen(in_hash_str), rand_buf, SHA256_HASH_SIZE);
+    if (app_crypto_ec_dsa_sign(work_buf, rand_buf, SHA256_HASH_SIZE, work_buf_2) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_ec_dsa_sign done");
+    LOG_HEXDUMP_DBG(rand_buf, SHA256_HASH_SIZE, "Input SHA-256 hash data");
+    LOG_HEXDUMP_DBG(work_buf_2, sizeof(work_buf_2), "Output ECDSA signature data");
+
+    // 署名を公開鍵で検証
+    hex2bin(pub_key_str, strlen(pub_key_str), work_buf_3, sizeof(work_buf_3));
+    if (app_crypto_ec_dsa_verify(work_buf_3, rand_buf, SHA256_HASH_SIZE, work_buf_2) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_ec_dsa_verify done");
+    
+    // テスト正常完了
+    LOG_DBG("Tests completed");
+}
+
+//
 // エントリー関数
 //
 void app_custom_hid_report_received(uint8_t *data, size_t size)
@@ -248,6 +283,7 @@ void app_custom_ccid_data_received(uint8_t *data, size_t size)
 void app_custom_button_pressed_short(void)
 {
     test_app_crypto();
+    test_app_crypto_ec();
 }
 
 #endif /* APP_TEST */
