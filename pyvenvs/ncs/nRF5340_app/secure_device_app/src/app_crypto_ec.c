@@ -9,6 +9,7 @@
 
 // for Mbed TLS
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
 #include <mbedtls/platform.h>
 
@@ -160,4 +161,58 @@ bool app_crypto_ec_keypair_generate(uint8_t *private_key_raw_data, uint8_t *publ
     }
 
     return keypair_generate_terminate(true);
+}
+
+//
+// ECDH共通鍵生成
+//
+static mbedtls_ecdh_context ecdh_context;
+
+static bool calculate_ecdh_terminate(bool b)
+{
+    // Free resources
+    mbedtls_ecdh_free(&ecdh_context);
+    return b;
+}
+
+bool app_crypto_ec_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *public_key_raw_data, uint8_t *shared_sec_raw_data, size_t shared_sec_raw_data_size)
+{
+    // Initialize ECDH context
+    mbedtls_ecdh_init(&ecdh_context);
+    int ret = mbedtls_ecdh_setup(&ecdh_context, MBEDTLS_ECP_DP_SECP256R1);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_ecdh_setup returns %d", ret);
+        return calculate_ecdh_terminate(false);
+    }
+
+    // 秘密鍵（32バイト）のバイナリーを読込み
+    ret = mbedtls_mpi_read_binary(&ecdh_context.d, private_key_raw_data, 32);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_mpi_read_binary returns %d", ret);
+        return calculate_ecdh_terminate(false);
+    }
+
+    // 公開鍵のバイナリーを読込み
+    // （最初の１バイトが 0x04 で始まることが前提）
+    ret = mbedtls_ecp_point_read_binary(&ecdh_context.grp, &ecdh_context.Q, public_key_raw_data, 65);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_ecp_point_read_binary returns %d", ret);
+        return calculate_ecdh_terminate(false);
+    }
+
+    // ECDH共通鍵を生成
+    ret = mbedtls_ecdh_compute_shared(&ecdh_context.grp, &ecdh_context.z, &ecdh_context.Q, &ecdh_context.d, &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context());
+    if (ret != 0) {
+        LOG_ERR("mbedtls_ecdh_compute_shared returns %d", ret);
+        return calculate_ecdh_terminate(false);
+    }
+
+    // ECDH共通鍵をビッグエンディアンでバッファにコピー
+    ret = mbedtls_mpi_write_binary(&ecdh_context.z, shared_sec_raw_data, shared_sec_raw_data_size);
+    if (ret != 0) {
+        LOG_ERR("mbedtls_mpi_write_binary returns %d", ret);
+        return calculate_ecdh_terminate(false);
+    }
+
+    return calculate_ecdh_terminate(true);
 }

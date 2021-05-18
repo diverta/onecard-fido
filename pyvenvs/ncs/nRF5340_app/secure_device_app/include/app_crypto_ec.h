@@ -21,6 +21,7 @@ extern "C" {
 bool        app_crypto_ec_dsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature);
 bool        app_crypto_ec_dsa_verify(uint8_t *public_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature);
 bool        app_crypto_ec_keypair_generate(uint8_t *private_key_raw_data, uint8_t *public_key_raw_data);
+bool        app_crypto_ec_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *public_key_raw_data, uint8_t *shared_sec_raw_data, size_t shared_sec_raw_data_size);
 
 #ifdef __cplusplus
 }

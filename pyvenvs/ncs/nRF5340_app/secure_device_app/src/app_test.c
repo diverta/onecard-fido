@@ -226,6 +226,10 @@ static void test_app_crypto(void)
 static uint8_t work_buf_2[64];
 static uint8_t work_buf_3[65];
 
+static uint8_t work_buf_4[32];
+static uint8_t work_buf_5[65];
+static uint8_t work_buf_6[32];
+
 static char *prv_key_str = "519b423d715f8b581f4fa8ee59f4771a5b44c8130b4e3eacca54a56dda72b464";
 static char *pub_key_str = "041ccbe91c075fc7f4f033bfa248db8fccd3565de94bbfb12f3c59ff46c271bf83ce4014c68811f9a21a1fdb2c0e6113e06db7ca93b7404e78dc7ccd5ca89a4ca9";
 static char *in_hash_str = "44acf6b7e36c1342c2c5897204fe09504e1e2efb1a900377dbc4e7a6a133ec56";
@@ -248,7 +252,28 @@ static void test_app_crypto_ec(void)
         return;
     }
     LOG_DBG("app_crypto_ec_dsa_verify done");
-    
+
+    // EC鍵ペアを生成
+    if (app_crypto_ec_keypair_generate(work_buf_4, work_buf_5) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_ec_keypair_generate done");
+    LOG_HEXDUMP_DBG(work_buf_4, sizeof(work_buf_4), "new EC private key data");
+    LOG_HEXDUMP_DBG(work_buf_5, sizeof(work_buf_5), "new EC public key data");
+
+    // ECDH共通鍵を生成
+    if (app_crypto_ec_calculate_ecdh(work_buf_4, work_buf_3, work_buf_6, sizeof(work_buf_6)) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_ec_keypair_generate done (with new EC private key)");
+    LOG_HEXDUMP_DBG(work_buf_6, sizeof(work_buf_6), "ECDH shared secret data");
+
+    if (app_crypto_ec_calculate_ecdh(work_buf, work_buf_5, work_buf_6, sizeof(work_buf_6)) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_ec_keypair_generate done (with new EC public key)");
+    LOG_HEXDUMP_DBG(work_buf_6, sizeof(work_buf_6), "ECDH shared secret data");
+
     // テスト正常完了
     LOG_DBG("Tests completed");
 }

@@ -87,6 +87,7 @@
             <itemPath>../../mbedtls/include/mbedtls/cipher_internal.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/ctr_drbg.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/des.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ecdh.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/ecdsa.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/ecp.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/entropy.h</itemPath>
@@ -754,6 +755,8 @@
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/sections.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="logging" displayName="logging" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_core.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_instance.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_msg.h</itemPath>
                           </logicalFolder>
@@ -7885,16 +7888,6 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
-            <pElem>../secure_device_app/src</pElem>
-            <pElem>../../zephyr/include</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
-            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../zephyr/include/sys</pElem>
-            <pElem>../../zephyr/include/kernel</pElem>
-            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -7995,6 +7988,17 @@
             flavor2="3">
         <cTool flags="1">
           <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
