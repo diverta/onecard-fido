@@ -35,78 +35,88 @@ uint32_t app_board_kernel_uptime_ms_get(void)
 //
 // ボタン関連
 //
-static const struct device *button;
-static struct gpio_callback button_cb_data;
+static const struct device *button_0;
+static struct gpio_callback button_cb_0;
 
-static void button_pressed(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
+static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status_pressed, uint32_t *time_pressed)
 {
     if (app_main_initialized() == false) {
-        return;
+        return false;
     }
 
     // ボタン検知状態を取得
-    static int status_pressed = 0;
-    int status_now = gpio_pin_get(dev, SW0_GPIO_PIN);
+    int status_now = gpio_pin_get(dev, pin);
 
     // ボタン検知時刻を取得
-    static uint32_t time_pressed = 0;
     uint32_t time_now = app_board_kernel_uptime_ms_get();
  
     // ２回連続検知の場合は無視
-    if (status_now == status_pressed) {
+    if (status_now == *status_pressed) {
 #if LOG_BUTTON_PRESSED
         LOG_DBG("%s (invalid)", status_now ? "pushed" : "released");
 #endif
-        return;
+        return false;
     }
-    status_pressed = status_now;
+    *status_pressed = status_now;
 
     // 短時間の間に検知された場合は無視
-    uint32_t elapsed = time_now - time_pressed;
+    uint32_t elapsed = time_now - *time_pressed;
     if (elapsed < 50) {
 #if LOG_BUTTON_PRESSED
         LOG_DBG("%s (ignored)", status_now ? "pushed" : "released");
 #endif
-        return;
+        return false;
     }
-    time_pressed = time_now;
+    *time_pressed = time_now;
 
-    // ボタン検知イベントを業務処理スレッドに引き渡す
 #if LOG_BUTTON_PRESSED
     LOG_DBG("%s (elapsed %u msec)", status_now ? "pushed" : "released", elapsed);
 #endif
-    app_event_notify(status_now ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
+    return true;
 }
 
-static const struct device *initialize_button(void)
+static void button_pressed_0(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
 {
-    const struct device *button = device_get_binding(SW0_GPIO_LABEL);
+    // ボタン検知状態・検知時刻を保持
+    static int status_pressed = 0;
+    static uint32_t time_pressed = 0;
+
+    // ボタン検知処理
+    if (button_pressed(dev, SW0_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+        return;
+    }
+
+    // ボタン検知イベントを業務処理スレッドに引き渡す
+    app_event_notify(status_pressed ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
+}
+
+static const struct device *initialize_button(const char *name, gpio_pin_t pin, gpio_flags_t flags, struct gpio_callback *callback, gpio_callback_handler_t handler)
+{
+    const struct device *button = device_get_binding(name);
     if (button == NULL) {
-        LOG_ERR("Error: didn't find %s device", SW0_GPIO_LABEL);
+        LOG_ERR("Error: didn't find %s device", name);
         return NULL;
     }
 
-    int ret = gpio_pin_configure(button, SW0_GPIO_PIN, SW0_GPIO_FLAGS);
+    int ret = gpio_pin_configure(button, pin, flags);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure %s pin %d",
-           ret, SW0_GPIO_LABEL, SW0_GPIO_PIN);
+        LOG_ERR("Error %d: failed to configure %s pin %d", ret, name, pin);
         return NULL;
     }
 
-    ret = gpio_pin_interrupt_configure(button, SW0_GPIO_PIN, GPIO_INT_EDGE_BOTH);
+    ret = gpio_pin_interrupt_configure(button, pin, GPIO_INT_EDGE_BOTH);
     if (ret != 0) {
-        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d",
-                ret, SW0_GPIO_LABEL, SW0_GPIO_PIN);
+        LOG_ERR("Error %d: failed to configure interrupt on %s pin %d", ret, name, pin);
         return NULL;
     }
 
     // ボタン押下時のコールバックを設定
-    gpio_init_callback(&button_cb_data, button_pressed, BIT(SW0_GPIO_PIN));
-    gpio_add_callback(button, &button_cb_data);
+    gpio_init_callback(callback, handler, BIT(pin));
+    gpio_add_callback(button, callback);
 
     // ボタンの参照を戻す
 #if LOG_BUTTON_INITIALIZED
-    LOG_DBG("Set up button at %s pin %d", SW0_GPIO_LABEL, SW0_GPIO_PIN);
+    LOG_DBG("Set up button at %s pin %d", name, pin);
 #endif
     return button;
 }
@@ -143,7 +153,7 @@ static const struct device *initialize_led(const char *name, gpio_pin_t pin, gpi
 void app_board_initialize(void)
 {
     // ボタンの初期化
-    button = initialize_button();
+    button_0 = initialize_button(SW0_GPIO_LABEL, SW0_GPIO_PIN, SW0_GPIO_FLAGS, &button_cb_0, button_pressed_0);
     
     // LED0の初期化
     m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
