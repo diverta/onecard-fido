@@ -145,6 +145,7 @@ static void test_ccid_status(uint8_t *data, size_t size)
 #include "app_crypto.h"
 #include "app_crypto_define.h"
 #include "app_crypto_ec.h"
+#include "app_crypto_rsa.h"
 
 static uint8_t plaintext[64];
 static uint8_t encrypted[64];
@@ -279,6 +280,60 @@ static void test_app_crypto_ec(void)
 }
 
 //
+// for RSA crypto test
+//
+static uint8_t work_buf_7[256];
+static uint8_t work_buf_8[256];
+static uint8_t work_buf_9[256];
+static uint8_t work_buf_A[256];
+
+static char *rsa_key_str = 
+"fdfc51bb70f3774a828b27689772a94966e3a5e8be449ff7c330d271aa1643d0ccc74fe4924ca9d3824b55a92610e7cd9551fdb88d92a609305b90b56f00b2e4dfac7f31e1ff9175a2491722976b2370262e1484a5c978fb3a597099e5e3852e88797052de7bd9fc9d7c5d323c202b3615b72f96a0ca0457d75b2fce3ff510f9"
+"c0647355277f4409bbfe43f754f6233de99de225700d9bcbbe8cde4506f3d3effa930fc1dc579baafcf43c5a2fb4005de9aa886d0a0237b80bc36aa160548f552b6cfbafbe2745a2d097a69a39c44ca3d2292cbf31db19bdf6ad872545f283005122ea9ef9f87ddf0a439f3bd05d46ebfaaca2e7faa9beb0f0507ca5200329e1"
+;
+
+static void test_app_crypto_rsa_1(void)
+{
+    // 秘密鍵
+    hex2bin(rsa_key_str, strlen(rsa_key_str), work_buf_7, sizeof(work_buf_7));
+
+    // 入力データ作成
+    if (app_crypto_generate_random_vector(work_buf_9, sizeof(work_buf_9)) == false) {
+        return;
+    }
+    LOG_HEXDUMP_DBG(work_buf_9, sizeof(work_buf_9), "Input data for RSA private");
+
+    // RSA private を実行
+    if (app_crypto_rsa_private(work_buf_7, work_buf_9, work_buf_A) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_rsa_private done");
+    LOG_HEXDUMP_DBG(work_buf_A, sizeof(work_buf_A), "Output data");
+}
+
+static void test_app_crypto_rsa_2(void)
+{
+    // 秘密鍵から公開鍵を生成
+    if (app_crypto_rsa_import_pubkey_from_prvkey(work_buf_7, work_buf_8) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_rsa_import done");
+    LOG_HEXDUMP_DBG(work_buf_7, sizeof(work_buf_7), "RSA private key data");
+    LOG_HEXDUMP_DBG(work_buf_8, sizeof(work_buf_8), "RSA public key data");
+}
+
+static void test_app_crypto_rsa_3(void)
+{
+    // RSA public を実行
+    LOG_HEXDUMP_DBG(work_buf_A, sizeof(work_buf_A), "Input data for RSA public");
+    if (app_crypto_rsa_public(work_buf_8, work_buf_A, work_buf_9) == false) {
+        return;
+    }
+    LOG_DBG("app_crypto_rsa_public done");
+    LOG_HEXDUMP_DBG(work_buf_9, sizeof(work_buf_9), "Output data");
+}
+
+//
 // エントリー関数
 //
 void app_custom_hid_report_received(uint8_t *data, size_t size)
@@ -307,8 +362,29 @@ void app_custom_ccid_data_received(uint8_t *data, size_t size)
 
 void app_custom_button_pressed_short(void)
 {
-    test_app_crypto();
-    test_app_crypto_ec();
+    static uint8_t cnt = 0;
+    switch(cnt) {
+        case 0:
+            test_app_crypto();
+            break;
+        case 1:
+            test_app_crypto_ec();
+            break;
+        case 2:
+            test_app_crypto_rsa_1();
+            break;
+        case 3:
+            test_app_crypto_rsa_2();
+            break;
+        case 4:
+            test_app_crypto_rsa_3();
+            break;
+        default:
+            LOG_INF("All test done");
+            cnt = 0;
+            return;
+    }
+    cnt++;
 }
 
 #endif /* APP_TEST */
