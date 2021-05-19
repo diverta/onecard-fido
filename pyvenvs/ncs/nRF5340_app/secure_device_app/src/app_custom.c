@@ -49,4 +49,9 @@ void app_custom_button_pressed_short(void)
     LOG_DBG("Short pushed");
 }
 
+void app_custom_button_1_pressed(void)
+{
+    LOG_DBG("Button 2 pushed");
+}
+
 #endif /* APP_TEST */

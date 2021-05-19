@@ -82,6 +82,11 @@ static void button_pressed(APP_EVENT_T event)
     }
 }
 
+static void button_1_pressed(void)
+{
+    app_custom_button_1_pressed();
+}
+
 static void idling_timer_start(void)
 {
     // BLE接続アイドルタイマーを停止
@@ -158,6 +163,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_BUTTON_PUSHED_LONG:
             button_pushed_long();
+            break;
+        case APEVT_BUTTON_1_RELEASED:
+            button_1_pressed();
             break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();

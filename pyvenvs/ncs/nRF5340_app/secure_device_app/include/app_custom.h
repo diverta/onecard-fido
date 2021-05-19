@@ -22,6 +22,7 @@ void        app_custom_hid_report_received(uint8_t *data, size_t size);
 void        app_custom_hid_report_sent(void);
 void        app_custom_ccid_data_received(uint8_t *data, size_t size);
 void        app_custom_button_pressed_short(void);
+void        app_custom_button_1_pressed(void);
 
 #ifdef __cplusplus
 }
