@@ -18,7 +18,7 @@ LOG_MODULE_REGISTER(app_custom);
 //
 // データ処理イベント関連
 //
-void app_custom_hid_report_received(uint8_t *data, size_t size)
+void app_main_hid_report_received(uint8_t *data, size_t size)
 {
 #if LOG_DEBUG_HID_REPORT
     LOG_DBG("received %d bytes", size);
@@ -26,11 +26,11 @@ void app_custom_hid_report_received(uint8_t *data, size_t size)
 #endif
 }
 
-void app_custom_hid_report_sent(void)
+void app_main_hid_report_sent(void)
 {
 }
 
-void app_custom_ccid_data_received(uint8_t *data, size_t size)
+void app_main_ccid_data_received(uint8_t *data, size_t size)
 {
 #if LOG_DEBUG_CCID_DATA
     LOG_DBG("received %d bytes", size);
@@ -41,12 +41,12 @@ void app_custom_ccid_data_received(uint8_t *data, size_t size)
 //
 // ボタン押下時の処理
 //
-void app_custom_button_pressed_short(void)
+void app_main_button_pressed_short(void)
 {
     LOG_DBG("Short pushed");
 }
 
-void app_custom_button_1_pressed(void)
+void app_main_button_1_pressed(void)
 {
     LOG_DBG("Button 2 pushed");
 }

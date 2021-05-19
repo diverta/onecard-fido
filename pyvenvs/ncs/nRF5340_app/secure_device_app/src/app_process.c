@@ -49,7 +49,7 @@ static void button_pressed_short(void)
 {
     // ボタン押下-->３秒以内にボタンを離した時の処理
     // 各種業務処理を実行
-    app_custom_button_pressed_short();
+    app_main_button_pressed_short();
 }
 
 static void button_pressed(APP_EVENT_T event)
@@ -84,7 +84,7 @@ static void button_pressed(APP_EVENT_T event)
 
 static void button_1_pressed(void)
 {
-    app_custom_button_1_pressed();
+    app_main_button_1_pressed();
 }
 
 static void idling_timer_start(void)
@@ -198,13 +198,13 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
     // イベントに対応する処理を実行
     switch (event) {
         case DATEVT_HID_REPORT_RECEIVED:
-            app_custom_hid_report_received(data, size);
+            app_main_hid_report_received(data, size);
             break;
         case DATEVT_HID_REPORT_SENT:
-            app_custom_hid_report_sent();
+            app_main_hid_report_sent();
             break;
         case DATEVT_CCID_DATA_RECEIVED:
-            app_custom_ccid_data_received(data, size);
+            app_main_ccid_data_received(data, size);
             break;
         default:
             break;
