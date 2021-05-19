@@ -10,8 +10,8 @@
 #include "app_ble_pairing.h"
 #include "app_bluetooth.h"
 #include "app_board.h"
-#include "app_custom.h"
 #include "app_event.h"
+#include "app_main.h"
 #include "app_timer.h"
 
 // ログ出力制御

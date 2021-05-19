@@ -19,6 +19,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_main);
 
+#define LOG_DEBUG_HID_REPORT        false
+#define LOG_DEBUG_CCID_DATA         false
+
 //
 // アプリケーション状態を保持
 //
@@ -30,7 +33,7 @@ bool app_main_initialized(void)
 }
 
 //
-// 業務処理スレッド
+// アプリケーション初期化処理
 //
 void app_main_init(void) 
 {
@@ -51,4 +54,40 @@ void app_main_init(void)
 
     // 初期処理完了済み
     app_initialized = true;
+}
+
+//
+// データ処理イベント関連
+//
+void app_main_hid_report_received(uint8_t *data, size_t size)
+{
+#if LOG_DEBUG_HID_REPORT
+    LOG_DBG("received %d bytes", size);
+    LOG_HEXDUMP_DBG(data, size, "HID report");
+#endif
+}
+
+void app_main_hid_report_sent(void)
+{
+}
+
+void app_main_ccid_data_received(uint8_t *data, size_t size)
+{
+#if LOG_DEBUG_CCID_DATA
+    LOG_DBG("received %d bytes", size);
+    LOG_HEXDUMP_DBG(data, size, "CCID data");
+#endif
+}
+
+//
+// ボタン押下時の処理
+//
+void app_main_button_pressed_short(void)
+{
+    LOG_DBG("Short pushed");
+}
+
+void app_main_button_1_pressed(void)
+{
+    LOG_DBG("Button 2 pushed");
 }
