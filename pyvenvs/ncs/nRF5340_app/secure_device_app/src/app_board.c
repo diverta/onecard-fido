@@ -35,8 +35,8 @@ uint32_t app_board_kernel_uptime_ms_get(void)
 //
 // ボタン関連
 //
-static const struct device *button_0;
-static struct gpio_callback button_cb_0;
+static const struct device *button_0,   *button_1;
+static struct gpio_callback button_cb_0, button_cb_1;
 
 static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status_pressed, uint32_t *time_pressed)
 {
@@ -88,6 +88,21 @@ static void button_pressed_0(const struct device *dev, struct gpio_callback *cb,
 
     // ボタン検知イベントを業務処理スレッドに引き渡す
     app_event_notify(status_pressed ? APEVT_BUTTON_PUSHED : APEVT_BUTTON_RELEASED);
+}
+
+static void button_pressed_1(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
+{
+    // ボタン検知状態・検知時刻を保持
+    static int status_pressed = 0;
+    static uint32_t time_pressed = 0;
+
+    // ボタン検知処理
+    if (button_pressed(dev, SW1_GPIO_PIN, &status_pressed, &time_pressed) == false) {
+        return;
+    }
+
+    // ボタン検知イベントを業務処理スレッドに引き渡す
+    app_event_notify(status_pressed ? APEVT_BUTTON_1_PUSHED : APEVT_BUTTON_1_RELEASED);
 }
 
 static const struct device *initialize_button(const char *name, gpio_pin_t pin, gpio_flags_t flags, struct gpio_callback *callback, gpio_callback_handler_t handler)
@@ -154,6 +169,7 @@ void app_board_initialize(void)
 {
     // ボタンの初期化
     button_0 = initialize_button(SW0_GPIO_LABEL, SW0_GPIO_PIN, SW0_GPIO_FLAGS, &button_cb_0, button_pressed_0);
+    button_1 = initialize_button(SW1_GPIO_LABEL, SW1_GPIO_PIN, SW1_GPIO_FLAGS, &button_cb_1, button_pressed_1);
     
     // LED0の初期化
     m_led_0 = initialize_led(LED0_GPIO_LABEL, LED0_GPIO_PIN, LED0_GPIO_FLAGS);
