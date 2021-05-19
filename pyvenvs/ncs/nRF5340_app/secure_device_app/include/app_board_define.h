@@ -21,6 +21,11 @@ extern "C" {
 #define SW0_GPIO_PIN	DT_GPIO_PIN(SW0_NODE, gpios)
 #define SW0_GPIO_FLAGS	(GPIO_INPUT | DT_GPIO_FLAGS(SW0_NODE, gpios))
 
+#define SW1_NODE	DT_ALIAS(sw1)
+#define SW1_GPIO_LABEL	DT_GPIO_LABEL(SW1_NODE, gpios)
+#define SW1_GPIO_PIN	DT_GPIO_PIN(SW1_NODE, gpios)
+#define SW1_GPIO_FLAGS	(GPIO_INPUT | DT_GPIO_FLAGS(SW1_NODE, gpios))
+
 //
 // LED関連
 //

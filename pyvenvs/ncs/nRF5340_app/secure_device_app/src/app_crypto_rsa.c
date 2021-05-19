@@ -91,7 +91,7 @@ bool app_crypto_rsa_private(uint8_t *rsa_private_key_raw, uint8_t *input, uint8_
     int ret = mbedtls_rsa_private(&rsa_context, &mbedtls_ctr_drbg_random, app_crypto_ctr_drbg_context(), input, output);
     if (ret != 0) {
         if (ret == (MBEDTLS_ERR_RSA_PRIVATE_FAILED + MBEDTLS_ERR_MPI_BAD_INPUT_DATA)) {
-            LOG_ERR("Bad input data given ", ret);
+            LOG_ERR("Bad input data given ");
         } else {
             LOG_ERR("mbedtls_rsa_private returns %d", ret);
         }
@@ -124,7 +124,7 @@ bool app_crypto_rsa_public(uint8_t *rsa_public_key_raw, uint8_t *input, uint8_t 
     ret = mbedtls_rsa_public(&rsa_context, input, output);
     if (ret != 0) {
         if (ret == (MBEDTLS_ERR_RSA_PUBLIC_FAILED + MBEDTLS_ERR_MPI_BAD_INPUT_DATA)) {
-            LOG_ERR("Bad input data given ", ret);
+            LOG_ERR("Bad input data given ");
         } else {
             LOG_ERR("mbedtls_rsa_public returns %d", ret);
         }
