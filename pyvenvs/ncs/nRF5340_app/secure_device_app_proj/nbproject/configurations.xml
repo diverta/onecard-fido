@@ -102,6 +102,7 @@
             <itemPath>../../mbedtls/include/mbedtls/platform.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/platform_util.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/poly1305.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/rsa.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/sha1.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/sha256.h</itemPath>
             <itemPath>../../mbedtls/include/mbedtls/sha512.h</itemPath>
@@ -1091,6 +1092,7 @@
                 <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/cmac_alt.h</itemPath>
                 <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/ecp_alt.h</itemPath>
                 <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/gcm_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/rsa_alt.h</itemPath>
                 <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/sha256_alt.h</itemPath>
                 <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/threading_alt.h</itemPath>
               </logicalFolder>
@@ -1629,6 +1631,7 @@
         <in>app_board.c</in>
         <in>app_crypto.c</in>
         <in>app_crypto_ec.c</in>
+        <in>app_crypto_rsa.c</in>
         <in>app_custom.c</in>
         <in>app_event.c</in>
         <in>app_flash.c</in>
@@ -7858,6 +7861,31 @@
         </cTool>
       </item>
       <item path="../secure_device_app/src/app_crypto_ec.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_crypto_rsa.c"
             ex="false"
             tool="0"
             flavor2="3">

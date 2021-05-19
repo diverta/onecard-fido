@@ -16,6 +16,7 @@ extern "C" {
 #define SHA256_HASH_SIZE    32
 #define DES3_KEY_SIZE       24
 #define DES3_CRYPTO_SIZE    8
+#define RSA2048_PQ_SIZE     128
 
 #ifdef __cplusplus
 }
