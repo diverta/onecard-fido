@@ -73,6 +73,86 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+        <logicalFolder name="include" displayName="include" projectFiles="true">
+          <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+            <itemPath>../../mbedtls/include/mbedtls/aes.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/asn1.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/base64.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/bignum.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ccm.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/chacha20.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/chachapoly.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/cipher.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/cipher_internal.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ctr_drbg.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/des.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ecdh.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ecdsa.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/ecp.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/entropy.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/gcm.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/hmac_drbg.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/md.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/md_internal.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/memory_buffer_alloc.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/oid.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/pem.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/pk.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/platform.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/platform_util.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/poly1305.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/rsa.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/sha1.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/sha256.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/sha512.h</itemPath>
+            <itemPath>../../mbedtls/include/mbedtls/threading.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="library" displayName="library" projectFiles="true">
+          <itemPath>../../mbedtls/library/aesni.c</itemPath>
+          <itemPath>../../mbedtls/library/arc4.c</itemPath>
+          <itemPath>../../mbedtls/library/aria.c</itemPath>
+          <itemPath>../../mbedtls/library/asn1parse.c</itemPath>
+          <itemPath>../../mbedtls/library/asn1write.c</itemPath>
+          <itemPath>../../mbedtls/library/base64.c</itemPath>
+          <itemPath>../../mbedtls/library/bignum.c</itemPath>
+          <itemPath>../../mbedtls/library/blowfish.c</itemPath>
+          <itemPath>../../mbedtls/library/camellia.c</itemPath>
+          <itemPath>../../mbedtls/library/cipher.c</itemPath>
+          <itemPath>../../mbedtls/library/cipher_wrap.c</itemPath>
+          <itemPath>../../mbedtls/library/common.h</itemPath>
+          <itemPath>../../mbedtls/library/ctr_drbg.c</itemPath>
+          <itemPath>../../mbedtls/library/des.c</itemPath>
+          <itemPath>../../mbedtls/library/entropy.c</itemPath>
+          <itemPath>../../mbedtls/library/entropy_poll.c</itemPath>
+          <itemPath>../../mbedtls/library/error.c</itemPath>
+          <itemPath>../../mbedtls/library/gcm.c</itemPath>
+          <itemPath>../../mbedtls/library/havege.c</itemPath>
+          <itemPath>../../mbedtls/library/hkdf.c</itemPath>
+          <itemPath>../../mbedtls/library/hmac_drbg.c</itemPath>
+          <itemPath>../../mbedtls/library/md.c</itemPath>
+          <itemPath>../../mbedtls/library/md2.c</itemPath>
+          <itemPath>../../mbedtls/library/md4.c</itemPath>
+          <itemPath>../../mbedtls/library/md5.c</itemPath>
+          <itemPath>../../mbedtls/library/nist_kw.c</itemPath>
+          <itemPath>../../mbedtls/library/oid.c</itemPath>
+          <itemPath>../../mbedtls/library/padlock.c</itemPath>
+          <itemPath>../../mbedtls/library/pk.c</itemPath>
+          <itemPath>../../mbedtls/library/pk_wrap.c</itemPath>
+          <itemPath>../../mbedtls/library/pkcs12.c</itemPath>
+          <itemPath>../../mbedtls/library/pkcs5.c</itemPath>
+          <itemPath>../../mbedtls/library/pkparse.c</itemPath>
+          <itemPath>../../mbedtls/library/pkwrite.c</itemPath>
+          <itemPath>../../mbedtls/library/platform.c</itemPath>
+          <itemPath>../../mbedtls/library/platform_util.c</itemPath>
+          <itemPath>../../mbedtls/library/ripemd160.c</itemPath>
+          <itemPath>../../mbedtls/library/timing.c</itemPath>
+          <itemPath>../../mbedtls/library/version.c</itemPath>
+          <itemPath>../../mbedtls/library/version_features.c</itemPath>
+          <itemPath>../../mbedtls/library/xtea.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
       <logicalFolder name="modules" displayName="modules" projectFiles="true">
         <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
           <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
@@ -517,6 +597,9 @@
       </logicalFolder>
       <logicalFolder name="nrf" displayName="nrf" projectFiles="true">
         <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+          <logicalFolder name="entropy" displayName="entropy" projectFiles="true">
+            <itemPath>../../nrf/drivers/entropy/entropy_cc310.c</itemPath>
+          </logicalFolder>
           <logicalFolder name="hw_cc310" displayName="hw_cc310" projectFiles="true">
             <itemPath>../../nrf/drivers/hw_cc310/hw_cc310.c</itemPath>
           </logicalFolder>
@@ -673,6 +756,8 @@
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/sections.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="logging" displayName="logging" projectFiles="true">
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_core.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_instance.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_msg.h</itemPath>
                           </logicalFolder>
@@ -733,6 +818,11 @@
                             </logicalFolder>
                           </logicalFolder>
                         </logicalFolder>
+                        <logicalFolder name="include_arch_riscv"
+                                       displayName="include_arch_riscv"
+                                       projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_arch_riscv/syscall.h</itemPath>
+                        </logicalFolder>
                         <logicalFolder name="include_devicetree"
                                        displayName="include_devicetree"
                                        projectFiles="true">
@@ -744,6 +834,12 @@
                           <logicalFolder name="usb" displayName="usb" projectFiles="true">
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_drivers/usb/usb_dc.h</itemPath>
                           </logicalFolder>
+                        </logicalFolder>
+                        <logicalFolder name="include_linker"
+                                       displayName="include_linker"
+                                       projectFiles="true">
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_linker/section_tags.h</itemPath>
+                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_linker/sections.h</itemPath>
                         </logicalFolder>
                         <logicalFolder name="include_logging"
                                        displayName="include_logging"
@@ -957,6 +1053,7 @@
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/cache.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/counter.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/device.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/entropy.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/flash.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/gpio.h</itemPath>
@@ -985,6 +1082,22 @@
       </logicalFolder>
       <logicalFolder name="nrfxlib" displayName="nrfxlib" projectFiles="true">
         <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
+          <logicalFolder name="nrf_cc312_mbedcrypto"
+                         displayName="nrf_cc312_mbedcrypto"
+                         projectFiles="true">
+            <logicalFolder name="include" displayName="include" projectFiles="true">
+              <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/aes_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/ccm_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/cmac_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/ecp_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/gcm_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/rsa_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/sha256_alt.h</itemPath>
+                <itemPath>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls/threading_alt.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
           <logicalFolder name="nrf_cc312_platform"
                          displayName="nrf_cc312_platform"
                          projectFiles="true">
@@ -992,6 +1105,7 @@
               <itemPath>../../nrfxlib/crypto/nrf_cc312_platform/include/nrf_cc3xx_platform.h</itemPath>
               <itemPath>../../nrfxlib/crypto/nrf_cc312_platform/include/nrf_cc3xx_platform_abort.h</itemPath>
               <itemPath>../../nrfxlib/crypto/nrf_cc312_platform/include/nrf_cc3xx_platform_defines.h</itemPath>
+              <itemPath>../../nrfxlib/crypto/nrf_cc312_platform/include/nrf_cc3xx_platform_entropy.h</itemPath>
               <itemPath>../../nrfxlib/crypto/nrf_cc312_platform/include/nrf_cc3xx_platform_mutex.h</itemPath>
             </logicalFolder>
             <logicalFolder name="src" displayName="src" projectFiles="true">
@@ -1012,6 +1126,21 @@
             <itemPath>../../nrfxlib/mpsl/include/mpsl_clock.h</itemPath>
             <itemPath>../../nrfxlib/mpsl/include/mpsl_timeslot.h</itemPath>
             <itemPath>../../nrfxlib/mpsl/include/nrf_errno.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="nrf_security"
+                       displayName="nrf_security"
+                       projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
+              <logicalFolder name="replacements"
+                             displayName="replacements"
+                             projectFiles="true">
+                <itemPath>../../nrfxlib/nrf_security/src/mbedtls/replacements/memory_buffer_alloc.c</itemPath>
+                <itemPath>../../nrfxlib/nrf_security/src/mbedtls/replacements/pem.c</itemPath>
+              </logicalFolder>
+              <itemPath>../../nrfxlib/nrf_security/src/mbedtls/mbedtls_heap.c</itemPath>
+            </logicalFolder>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="softdevice_controller"
@@ -1496,18 +1625,19 @@
           </df>
         </df>
       </df>
-      <df name="include">
-        <in>app_usb_ccid_define.h</in>
-      </df>
       <df name="src">
         <in>app_ble_pairing.c</in>
         <in>app_bluetooth.c</in>
         <in>app_board.c</in>
+        <in>app_crypto.c</in>
+        <in>app_crypto_ec.c</in>
+        <in>app_crypto_rsa.c</in>
         <in>app_custom.c</in>
         <in>app_event.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
         <in>app_process.c</in>
+        <in>app_test.c</in>
         <in>app_timer.c</in>
         <in>app_usb.c</in>
         <in>app_usb_ccid.c</in>
@@ -1975,6 +2105,385 @@
             <pElem>../../modules/crypto/mbedtls/include/mbedtls</pElem>
             <pElem>../../modules/crypto/mbedtls/include</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/aesni.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/arc4.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/aria.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/asn1parse.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/asn1write.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/base64.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/bignum.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/blowfish.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/camellia.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/cipher.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/cipher_wrap.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/ctr_drbg.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/des.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/entropy.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/entropy_poll.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/error.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/gcm.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/havege.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/hkdf.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/hmac_drbg.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/md.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/md2.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/md4.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/md5.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/nist_kw.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/oid.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/padlock.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pk.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pk_wrap.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pkcs12.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pkcs5.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pkparse.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/pkwrite.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/platform.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/platform_util.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/ripemd160.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/timing.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/version.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/version_features.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/library</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../mbedtls/library/xtea.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </item>
@@ -4024,6 +4533,13 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../nrf/drivers/entropy/entropy_cc310.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+        </cTool>
+      </item>
       <item path="../../nrf/drivers/hw_cc310/hw_cc310.c"
             ex="false"
             tool="0"
@@ -4268,6 +4784,56 @@
             <pElem>../../modules/hal/nordic/nrfx</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../nrfxlib/nrf_security/src/mbedtls/mbedtls_heap.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../nrfxlib/nrf_security/src/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../zephyr/include/linker</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../nrfxlib/nrf_security/src/mbedtls/replacements/memory_buffer_alloc.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../nrfxlib/nrf_security/src/mbedtls/replacements/pem.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </item>
@@ -6448,6 +7014,9 @@
             <pElem>../../zephyr/subsys/bluetooth</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../zephyr/subsys/bluetooth/host/uuid.c"
@@ -6799,6 +7368,9 @@
             <pElem>../../modules/lib/tinycbor/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../zephyr/subsys/net/buf.c" ex="false" tool="0" flavor2="3">
@@ -6991,6 +7563,9 @@
             <pElem>../../zephyr/subsys/settings/src</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../zephyr/subsys/settings/src/settings_nvs.c"
@@ -7018,6 +7593,9 @@
             <pElem>../../zephyr/subsys/settings/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../zephyr/subsys/settings/src/settings_store.c"
@@ -7177,11 +7755,6 @@
         <cTool flags="1">
         </cTool>
       </item>
-      <item path="../secure_device_app/include/app_usb_ccid_define.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../secure_device_app/src/app_ble_pairing.c"
             ex="false"
             tool="0"
@@ -7260,15 +7833,17 @@
           </incDir>
         </cTool>
       </item>
-      <item path="../secure_device_app/src/app_custom.c"
+      <item path="../secure_device_app/src/app_crypto.c"
             ex="false"
             tool="0"
             flavor2="3">
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
             <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -7276,7 +7851,71 @@
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_crypto_ec.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
             <pElem>../secure_device_app/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_crypto_rsa.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_mbedcrypto/include/mbedtls</pElem>
+            <pElem>../../mbedtls/include/mbedtls</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../../mbedtls/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_custom.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -7359,6 +7998,27 @@
             <pElem>../secure_device_app/src</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_test.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -7497,6 +8157,13 @@
           </incDir>
         </cTool>
       </folder>
+      <folder path="0/build_signed/mcuboot">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
       <folder path="0/build_signed/mcuboot/zephyr/misc">
         <cTool>
           <incDir>
@@ -7511,6 +8178,9 @@
             <pElem>../secure_device_app/build_signed/zephyr/misc/generated</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="0/zephyr_custom">
@@ -7533,6 +8203,23 @@
             <pElem>../../modules/lib/tinycbor/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/bootloader">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/mbedtls">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/modules/crypto/tinycrypt">
@@ -7547,6 +8234,9 @@
           <incDir>
             <pElem>../../modules/fs/littlefs</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/modules/hal/libmetal/libmetal/lib/system/zephyr/cortexm">
@@ -7576,6 +8266,13 @@
             <pElem>../../zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/modules/lib/mcumgr">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/modules/lib/mcumgr/cborattr">
@@ -7684,6 +8381,28 @@
         <cTool>
           <incDir>
             <pElem>../../modules/lib/tinycbor/src</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/nrf/drivers/entropy">
+        <cTool>
+          <incDir>
+            <pElem>../../nrf/drivers/entropy</pElem>
+            <pElem>../../zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/cortex_m/mpu</pElem>
+            <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
+            <pElem>../../nrfxlib/crypto/nrf_cc312_platform/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
       </folder>
@@ -7940,6 +8659,16 @@
           <incDir>
             <pElem>../../nrfxlib/crypto/nrf_cc312_platform/src</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/nrfxlib/nrf_security/src/mbedtls/replacements">
+        <cTool>
+          <incDir>
+            <pElem>../../nrfxlib/nrf_security/src/mbedtls/replacements</pElem>
+          </incDir>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/arch/arm/core/aarch32/cortex_m/cmse">
@@ -7994,6 +8723,9 @@
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/drivers/bluetooth">
@@ -8003,6 +8735,9 @@
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/logging</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/drivers/clock_control">
@@ -8217,6 +8952,9 @@
             <pElem>../../modules/hal/nordic/nrfx</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/lib/libc/minimal/source/stdlib">
@@ -8342,6 +9080,13 @@
           </incDir>
         </cTool>
       </folder>
+      <folder path="ncs/zephyr/subsys/dfu">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
       <folder path="ncs/zephyr/subsys/dfu/boot">
         <cTool>
           <incDir>
@@ -8404,6 +9149,9 @@
             <pElem>../../zephyr/include/fs</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/subsys/ipc">
@@ -8419,6 +9167,9 @@
             <pElem>../../zephyr/subsys/mgmt/mcumgr</pElem>
             <pElem>../../zephyr/include/net</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/subsys/net">
@@ -8478,6 +9229,13 @@
             <pElem>../secure_device_app/build_signed/hci_rpmsg/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/build_signed/hci_rpmsg</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/zephyr/subsys/settings">
+        <cTool>
+          <preprocessorList>
+            <Elem>APP_TEST</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/subsys/storage">
