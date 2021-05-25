@@ -23,6 +23,14 @@ nRF52840を使用し、Threadネットワーク内で稼働するLock（施錠�
 
 サンプルアプリ[`CHIP nRF Connect Lock Example Application`](https://github.com/project-chip/connectedhomeip/blob/master/examples/lock-app/nrfconnect/README.md)をビルドし、nRF52840に書込みを行う手順を記載しています。
 
+#### OpenThread RCPアプリケーション導入手順
+
+サンプルアプリを使って動作確認する際、Threadネットワークの相手側となる「[`OpenThread RCPアプリケーション`](https://github.com/openthread/ot-nrf528xx/blob/main/src/nrf52840/README.md)」の導入手順を記載しています。
+
+#### [OpenThread Border Router導入手順](../../Research/Matter/OTBRSETUP.md)
+
+サンプルアプリを使って動作確認する際、Threadネットワーク〜インターネット間のルーター役となる「[`OpenThread Border Router`](https://openthread.io/guides/border-router)」の構築手順を記載しています。
+
 ### [nRF Connect CHIPプラットフォームについて](../../Research/Matter/CHIPPLATFORM.md)
 
 nRF5340／nRF52840の標準プラットフォームである「nRF Connect SDK」をベースとし、Matterアプリケーションを実装するプラットフォームモデルです。<br>
