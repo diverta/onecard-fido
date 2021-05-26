@@ -66,90 +66,7 @@ bash-3.2$
 ```
 
 イメージのコピーが完了したら、SDカードをラズベリーパイの基板にセット後、電源を入れてシステムを起動します。<br>
-システムが起動したら、以下のコマンドを次々と実行します。
-
-#### システム更新
-
-```
-sudo apt-get update
-sudo apt-get upgrade
-```
-
-下記は実行例になります。
-
-```
-pi@raspberrypi:~ $ sudo apt-get update
-Get:1 http://archive.raspberrypi.org/debian buster InRelease [32.7 kB]                             
-Get:2 http://raspbian.raspberrypi.org/raspbian buster InRelease [15.0 kB]                          
-Get:3 http://archive.raspberrypi.org/debian buster/main armhf Packages [376 kB]
-Get:4 http://raspbian.raspberrypi.org/raspbian buster/main armhf Packages [13.0 MB]
-Fetched 13.4 MB in 25s (547 kB/s)                                                                  
-Reading package lists... Done
-pi@raspberrypi:~ $ sudo apt-get upgrade
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-Calculating upgrade... Done
-The following packages will be upgraded:
-  agnostics alsa-utils apt apt-utils avahi-daemon base-files bind9-host chromium-browser
-  chromium-browser-l10n chromium-codecs-ffmpeg-extra curl groff-base gstreamer1.0-alsa
-  gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good
-  gstreamer1.0-x iputils-ping libapt-inst2.0 libapt-pkg5.0 libavahi-client3 libavahi-common-data
-：
-Processing triggers for desktop-file-utils (0.23-4) ...
-Processing triggers for mime-support (3.62) ...
-Processing triggers for hicolor-icon-theme (0.17-2) ...
-Processing triggers for gnome-menus (3.31.4-3) ...
-Processing triggers for libc-bin (2.28-10+rpi1) ...
-Processing triggers for man-db (2.8.5-2) ...
-Processing triggers for dbus (1.12.20-0+deb10u1) ...
-Processing triggers for install-info (6.5.0.dfsg.1-4+b1) ...
-Processing triggers for initramfs-tools (0.133+deb10u1) ...
-Processing triggers for libvlc-bin:armhf (3.0.12-0+deb10u1+rpt2) ...
-pi@raspberrypi:~ $
-```
-
-#### Dockerのインストール
-
-```
-curl -sSL https://get.docker.com | sh
-sudo usermod -aG docker $USER
-```
-
-Dockerのインストールが完了したら、ラズパイを再起動させます。
-
-```
-sudo reboot
-```
-
-ラズパイが再起動したら、コマンド`systemctl status docker`により、Dockerがサービスとして立ち上がっていることを確認します。<br>
-下記は実行例になります。
-
-```
-pi@raspberrypi:~ $ systemctl status docker
-● docker.service - Docker Application Container Engine
-   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
-   Active: active (running) since Tue 2021-05-25 13:46:31 JST; 4min 17s ago
-     Docs: https://docs.docker.com
- Main PID: 1307 (dockerd)
-    Tasks: 11
-   CGroup: /system.slice/docker.service
-           └─1307 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-
- 5月 25 13:46:28 raspberrypi dockerd[1307]: time="2021-05-25T13:46:28.346994945+09:00" level=warning
- 5月 25 13:46:28 raspberrypi dockerd[1307]: time="2021-05-25T13:46:28.347219847+09:00" level=warning
- 5月 25 13:46:28 raspberrypi dockerd[1307]: time="2021-05-25T13:46:28.347278911+09:00" level=warning
- 5月 25 13:46:28 raspberrypi dockerd[1307]: time="2021-05-25T13:46:28.348862808+09:00" level=info ms
- 5月 25 13:46:29 raspberrypi dockerd[1307]: time="2021-05-25T13:46:29.577920159+09:00" level=info ms
- 5月 25 13:46:30 raspberrypi dockerd[1307]: time="2021-05-25T13:46:30.086066919+09:00" level=info ms
- 5月 25 13:46:30 raspberrypi dockerd[1307]: time="2021-05-25T13:46:30.657677883+09:00" level=info ms
- 5月 25 13:46:30 raspberrypi dockerd[1307]: time="2021-05-25T13:46:30.658105134+09:00" level=info ms
- 5月 25 13:46:31 raspberrypi systemd[1]: Started Docker Application Container Engine.
- 5月 25 13:46:31 raspberrypi dockerd[1307]: time="2021-05-25T13:46:31.914400663+09:00" level=info ms
-pi@raspberrypi:~ $
-```
-
-#### gitのインストール
+システムが起動したら、為念でgitのインストールを実行します。
 
 ```
 sudo apt install git
@@ -168,11 +85,20 @@ git はすでに最新バージョン (1:2.20.1-2+deb10u3) です。
 pi@raspberrypi:~ $
 ```
 
-## OTBRの構築
+## OTBRのインストール
+
+下記サイトの指示に従い、インストールを進めます。<br>
+[https://openthread.io/guides/border-router/raspberry-pi](https://openthread.io/guides/border-router/raspberry-pi)
 
 #### ソースコードの取得
 
 GitHubから、OTBRのソースコードを取得します。<br>
+下記コマンドを実行します。
+
+```
+git clone https://github.com/openthread/ot-br-posix
+```
+
 下記は実行例になります。
 
 ```
@@ -192,6 +118,13 @@ pi@raspberrypi:~ $
 #### インストールの準備
 
 依存ライブラリー／パッケージの導入を実行します。<br>
+下記コマンドを実行します。
+
+```
+cd ot-br-posix
+./script/bootstrap
+```
+
 下記は実行例になります。
 
 ```
@@ -242,6 +175,12 @@ pi@raspberrypi:~/ot-br-posix $
 #### インストールの実行
 
 OTBRのビルド／インストールを実行します。<br>
+下記コマンドを実行します。
+
+```
+INFRA_IF_NAME=eth0 ./script/setup
+```
+
 下記は実行例になります。
 
 ```
@@ -402,3 +341,227 @@ pi@raspberrypi:~ $
 下図のような管理画面が表示されれば、`otbr-web.service`が正常に稼働していることを示します。
 
 <img src="assets01/0009.jpg" width=500>
+
+以上で、OpenThread Border Router（OTBR）の構築は完了です。
+
+## Wi-Fi APのセットアップ
+
+OTBRと、Thread設定用スマートフォンを接続させるために必要となる、Wi-Fi AP（アクセスポイント）のセットアップを実行します。
+
+#### 依存パッケージの導入
+
+下記コマンドを実行します。
+
+```
+sudo apt-get install hostapd dnsmasq tayga
+```
+
+#### IPv4アドレスの設定
+
+`/etc/dhcpcd.conf`に、下記エントリーを追加します。
+
+```
+denyinterfaces wlan0
+```
+
+`/etc/network/interfaces.d/wlan0`に、下記エントリーを追加します。
+
+```
+allow-hotplug wlan0
+iface wlan0 inet static
+    address 192.168.1.2
+    netmask 255.255.255.0
+    network 192.168.1.0
+    broadcast 192.168.1.255
+```
+
+#### `hostapd`の設定
+
+`/etc/hostapd/hostapd.conf`に、下記エントリーを追加します。
+
+```
+# The Wi-Fi interface configured for static IPv4 addresses
+interface=wlan0
+
+# Use the 802.11 Netlink interface driver
+driver=nl80211
+
+# The user-defined name of the network
+ssid=BorderRouter-AP
+
+# Use the 2.4GHz band
+hw_mode=g
+
+# Use channel 6
+channel=6
+
+# Enable 802.11n
+ieee80211n=1
+
+# Enable WMM
+wmm_enabled=1
+
+# Enable 40MHz channels with 20ns guard interval
+ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]
+
+# Accept all MAC addresses
+macaddr_acl=0
+
+# Use WPA authentication
+auth_algs=1
+
+# Require clients to know the network name
+ignore_broadcast_ssid=0
+
+# Use WPA2
+wpa=2
+
+# Use a pre-shared key
+wpa_key_mgmt=WPA-PSK
+
+# The network passphrase
+wpa_passphrase=12345678
+
+# Use AES, instead of TKIP
+rsn_pairwise=CCMP
+```
+
+`/etc/default/hostapd`に、以下のエントリーを記述します。
+
+```
+DAEMON_CONF="/etc/hostapd/hostapd.conf"
+```
+
+`hostapd`がシステム始動時に自動的に起動するよう設定します。<br>
+以下のコマンドを実行します。
+```
+sudo systemctl unmask hostapd
+sudo systemctl start hostapd
+```
+
+`/etc/systemd/system/hostapd.service`に、以下のエントリーを記述します。
+
+```
+[Unit]
+Description=Hostapd IEEE 802.11 Access Point
+After=sys-subsystem-net-devices-wlan0.device
+BindsTo=sys-subsystem-net-devices-wlan0.device
+
+[Service]
+Type=forking
+PIDFile=/var/run/hostapd.pid
+ExecStart=/usr/sbin/hostapd -B /etc/hostapd/hostapd.conf -P /var/run/hostapd.pid
+
+[Install]
+WantedBy=multi-user.target
+```
+
+`/etc/rc.local`の最後に、以下のエントリーを記述します。
+
+```
+sudo service hostapd start
+```
+
+以上が完了したら、ラズパイを再起動させます。
+```
+sudo Preboot
+```
+
+ラズパイが起動したら、任意のPCから、Wi-FiのSSID`BorderRouter-AP`が参照できることを確認します。
+
+これで`hostapd`の設定は完了です。
+
+#### `dnsmasq`の設定
+
+`/etc/dnsmasq.conf`に、以下のエントリーを追加します。
+
+```
+# The Wi-Fi interface configured for static IPv4 addresses
+interface=wlan0
+
+# Explicitly specify the address to listen on
+listen-address=192.168.1.2
+
+# Bind to the interface to make sure we aren't sending things elsewhere
+bind-interfaces
+
+# Forward DNS requests to the Google DNS
+server=8.8.8.8
+
+# Don't forward short names
+domain-needed
+
+# Never forward addresses in non-routed address spaces
+bogus-priv
+
+# Assign IP addresses between 192.168.1.50 and 192.168.1.150 with a 12 hour lease time
+dhcp-range=192.168.1.50,192.168.1.150,12h
+```
+
+`/lib/systemd/system/bind9.service`の次のエントリーを修正します。
+
+```
+【修正前】
+After=network.target
+
+【修正後】
+After="network.target dnsmasq.service"
+```
+
+#### NATの設定
+
+`/etc/tayga.conf`に、以下のエントリーを追加します。
+
+```
+prefix 64:ff9b::/96
+dynamic-pool 192.168.255.0/24
+ipv6-addr 2001:db8:1::1
+ipv4-addr 192.168.255.1
+```
+
+`/etc/default/tayga`に、以下のエントリーを追加します。
+
+```
+RUN="yes"
+```
+
+#### IP転送設定
+
+以下のコマンドを実行します。
+```
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo sh -c "echo 1 > /proc/sys/net/ipv6/conf/all/forwarding"
+```
+
+`/etc/sysctl.conf`に、以下のエントリーを追加します。
+
+```
+net.ipv4.ip_forward=1
+```
+
+以下のコマンドを実行します
+```
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+```
+
+続いて`/etc/rc.local`の最後に、以下のエントリーを追加します。
+
+```
+iptables-restore < /etc/iptables.ipv4.nat
+```
+
+以上が完了したら、ラズパイを再起動します。
+```
+sudo reboot
+```
+
+#### Wi-Fi APの動作確認
+
+ラズパイが再始動したら、SSID`BorderRouter-AP`に接続し、インターネット上の任意のサイトをWebブラウザーで開きます。<br>
+ブラウザーにサイトが表示されたら、Wi-Fi APは正常動作していることになります。
+
+以上で、Wi-Fi APのセットアップは完了です。
