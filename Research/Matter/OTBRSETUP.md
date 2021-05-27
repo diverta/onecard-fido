@@ -106,12 +106,12 @@ pi@raspberrypi:~ $ pwd
 /home/pi
 pi@raspberrypi:~ $ git clone https://github.com/openthread/ot-br-posix
 Cloning into 'ot-br-posix'...
-remote: Enumerating objects: 76975, done.
-remote: Counting objects: 100% (10289/10289), done.
-remote: Compressing objects: 100% (465/465), done.
-remote: Total 76975 (delta 9993), reused 9979 (delta 9823), pack-reused 66686
-Receiving objects: 100% (76975/76975), 46.31 MiB | 3.29 MiB/s, done.
-Resolving deltas: 100% (52163/52163), done.
+remote: Enumerating objects: 76983, done.
+remote: Counting objects: 100% (10297/10297), done.
+remote: Compressing objects: 100% (471/471), done.
+remote: Total 76983 (delta 10001), reused 9979 (delta 9825), pack-reused 66686
+Receiving objects: 100% (76983/76983), 46.32 MiB | 3.11 MiB/s, done.
+Resolving deltas: 100% (52171/52171), done.
 pi@raspberrypi:~ $
 ```
 
@@ -295,27 +295,26 @@ pi@raspberrypi:~ $ sudo systemctl status
              │ ├─531 /usr/sbin/lightdm
              │ └─574 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp
              ：
-             ├─docker.service
-             │ └─625 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
              ├─avahi-daemon.service
-             │ ├─398 avahi-daemon: running [raspberrypi.local]
-             │ └─448 avahi-daemon: chroot helper
+             │ ├─413 avahi-daemon: running [raspberrypi.local]
+             │ └─455 avahi-daemon: chroot helper
              ├─otbr-web.service
-             │ └─421 /usr/sbin/otbr-web
+             │ └─384 /usr/sbin/otbr-web
              ├─wpa_supplicant.service
-             │ └─447 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+             │ └─407 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
              ├─triggerhappy.service
-             │ └─451 /usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket
+             │ └─412 /usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket --user nobody --deviceglob /dev/input/event*
              ├─systemd-logind.service
-             │ └─404 /lib/systemd/systemd-logind
+             │ └─390 /lib/systemd/systemd-logind
              ├─rtkit-daemon.service
-             │ └─936 /usr/lib/rtkit/rtkit-daemon
+             │ └─769 /usr/lib/rtkit/rtkit-daemon
              ├─cups.service
-             │ └─417 /usr/sbin/cupsd -l
+             │ ├─381 /usr/sbin/cupsd -l
+             │ └─941 /usr/lib/cups/notifier/dbus dbus://
              ├─polkit.service
-             │ └─510 /usr/lib/policykit-1/polkitd --no-debug
+             │ └─507 /usr/lib/policykit-1/polkitd --no-debug
              ├─otbr-agent.service
-             │ └─420 /usr/sbin/otbr-agent -I wpan0 -B eth0 spinel+hdlc+uart:///dev/ttyACM0 trel://et
+             │ └─383 /usr/sbin/otbr-agent -I wpan0 -B eth0 spinel+hdlc+uart:///dev/ttyACM0 trel://eth0
              ：
 pi@raspberrypi:~ $
 ```
@@ -356,14 +355,76 @@ OTBRと、Thread設定用スマートフォンを接続させるために必要�
 sudo apt-get install hostapd dnsmasq tayga
 ```
 
+下記は実行例になります。
+
+```
+pi@raspberrypi:~ $ sudo apt-get install hostapd dnsmasq tayga
+パッケージリストを読み込んでいます... 完了
+依存関係ツリーを作成しています                
+状態情報を読み取っています... 完了
+tayga はすでに最新バージョン (0.9.2-8) です。
+以下のパッケージが新たにインストールされます:
+  dnsmasq dnsmasq-base hostapd
+アップグレード: 0 個、新規インストール: 3 個、削除: 0 個、保留: 115 個。
+1,048 kB のアーカイブを取得する必要があります。
+この操作後に追加で 2,649 kB のディスク容量が消費されます。
+取得:1 http://archive.raspberrypi.org/debian buster/main armhf dnsmasq-base armhf 2.80-1+rpt1+deb10u1 [400 kB]
+取得:2 http://ftp.jaist.ac.jp/pub/Linux/raspbian-archive/raspbian buster/main armhf hostapd armhf 2:2.7+git20190128+0c1e29f-6+deb10u3 [632 kB]
+取得:3 http://archive.raspberrypi.org/debian buster/main armhf dnsmasq all 2.80-1+rpt1+deb10u1 [16.5 kB]
+1,048 kB を 3秒 で取得しました (362 kB/s)
+以前に未選択のパッケージ hostapd を選択しています。
+(データベースを読み込んでいます ... 現在 121579 個のファイルとディレクトリがインストールされています。)
+.../hostapd_2%3a2.7+git20190128+0c1e29f-6+deb10u3_armhf.deb を展開する準備をしています ...
+hostapd (2:2.7+git20190128+0c1e29f-6+deb10u3) を展開しています...
+以前に未選択のパッケージ dnsmasq-base を選択しています。
+.../dnsmasq-base_2.80-1+rpt1+deb10u1_armhf.deb を展開する準備をしています ...
+dnsmasq-base (2.80-1+rpt1+deb10u1) を展開しています...
+以前に未選択のパッケージ dnsmasq を選択しています。
+.../dnsmasq_2.80-1+rpt1+deb10u1_all.deb を展開する準備をしています ...
+dnsmasq (2.80-1+rpt1+deb10u1) を展開しています...
+dnsmasq-base (2.80-1+rpt1+deb10u1) を設定しています ...
+dnsmasq (2.80-1+rpt1+deb10u1) を設定しています ...
+Created symlink /etc/systemd/system/multi-user.target.wants/dnsmasq.service → /lib/systemd/system/dnsmasq.service.
+Job for dnsmasq.service failed because the control process exited with error code.
+See "systemctl status dnsmasq.service" and "journalctl -xe" for details.
+invoke-rc.d: initscript dnsmasq, action "start" failed.
+● dnsmasq.service - dnsmasq - A lightweight DHCP and caching DNS server
+   Loaded: loaded (/lib/systemd/system/dnsmasq.service; enabled; vendor preset: enabled)
+   Active: failed (Result: exit-code) since Thu 2021-05-27 10:51:00 JST; 41ms ago
+  Process: 1129 ExecStartPre=/usr/sbin/dnsmasq --test (code=exited, status=0/SUCCESS)
+  Process: 1130 ExecStart=/etc/init.d/dnsmasq systemd-exec (code=exited, status=2)
+
+ 5月 27 10:51:00 raspberrypi systemd[1]: Starting dnsmasq - A lightweight DHCP and caching DNS server...
+ 5月 27 10:51:00 raspberrypi dnsmasq[1129]: dnsmasq: syntax check OK.
+ 5月 27 10:51:00 raspberrypi dnsmasq[1130]: dnsmasq: failed to create listening socket for port 53: アドレスは既に使用中です
+ 5月 27 10:51:00 raspberrypi dnsmasq[1130]: failed to create listening socket for port 53: アドレスは既に使用中です
+ 5月 27 10:51:00 raspberrypi dnsmasq[1130]: FAILED to start up
+ 5月 27 10:51:00 raspberrypi systemd[1]: dnsmasq.service: Control process exited, code=exited, status=2/INVALIDARGUMENT
+ 5月 27 10:51:00 raspberrypi systemd[1]: dnsmasq.service: Failed with result 'exit-code'.
+ 5月 27 10:51:00 raspberrypi systemd[1]: Failed to start dnsmasq - A lightweight DHCP and caching DNS server.
+hostapd (2:2.7+git20190128+0c1e29f-6+deb10u3) を設定しています ...
+Created symlink /etc/systemd/system/multi-user.target.wants/hostapd.service → /lib/systemd/system/hostapd.service.
+Job for hostapd.service failed because the control process exited with error code.
+See "systemctl status hostapd.service" and "journalctl -xe" for details.
+Created symlink /etc/systemd/system/hostapd.service → /dev/null.
+systemd (241-7~deb10u6+rpi1) のトリガを処理しています ...
+man-db (2.8.5-2) のトリガを処理しています ...
+dbus (1.12.20-0+deb10u1) のトリガを処理しています ...
+pi@raspberrypi:~ $
+```
+
+途中、`dnsmasq: failed to create listening socket for port 53: アドレスは既に使用中です`というメッセージが表示されますが、手順上は問題ありません。
+
 #### IPv4アドレスの設定
 
+まずは`wlan0`に対するDHCPを無効化します。<br>
 `/etc/dhcpcd.conf`に、下記エントリーを追加します。
 
 ```
 denyinterfaces wlan0
 ```
 
+次に、`wlan0`に対し、固定IPアドレスを割り当てます。<br>
 `/etc/network/interfaces.d/wlan0`に、下記エントリーを追加します。
 
 ```
@@ -377,6 +438,7 @@ iface wlan0 inet static
 
 #### `hostapd`の設定
 
+`hostapd`（Wi-Fi APプロセス）の設定を行います。<br>
 `/etc/hostapd/hostapd.conf`に、下記エントリーを追加します。
 
 ```
@@ -426,13 +488,14 @@ wpa_passphrase=12345678
 rsn_pairwise=CCMP
 ```
 
+Wi-Fi APプロセスをバックグラウンド稼働させるようにします。<br>
 `/etc/default/hostapd`に、以下のエントリーを記述します。
 
 ```
 DAEMON_CONF="/etc/hostapd/hostapd.conf"
 ```
 
-`hostapd`がシステム始動時に自動的に起動するよう設定します。<br>
+Wi-Fi APプロセスが、システム始動時に自動的に起動するよう設定します。<br>
 以下のコマンドを実行します。
 ```
 sudo systemctl unmask hostapd
@@ -464,16 +527,18 @@ sudo service hostapd start
 
 以上が完了したら、ラズパイを再起動させます。
 ```
-sudo Preboot
+sudo reboot
 ```
 
 ラズパイが起動したら、任意のPCから、Wi-FiのSSID`BorderRouter-AP`が参照できることを確認します。
+
+<img src="assets01/0011.jpg" width=400>
 
 これで`hostapd`の設定は完了です。
 
 #### `dnsmasq`の設定
 
-`/etc/dnsmasq.conf`に、以下のエントリーを追加します。
+`/etc/dnsmasq.conf`を、以下のエントリーで置き換えます。
 
 ```
 # The Wi-Fi interface configured for static IPv4 addresses
@@ -483,7 +548,7 @@ interface=wlan0
 listen-address=192.168.1.2
 
 # Bind to the interface to make sure we aren't sending things elsewhere
-bind-interfaces
+bind-dynamic
 
 # Forward DNS requests to the Google DNS
 server=8.8.8.8
@@ -561,7 +626,88 @@ sudo reboot
 
 #### Wi-Fi APの動作確認
 
-ラズパイが再始動したら、SSID`BorderRouter-AP`に接続し、インターネット上の任意のサイトをWebブラウザーで開きます。<br>
+ラズパイが再始動したら、サービスの稼働状況を為念確認します。<br>
+以下は実行例になります。
+
+```
+pi@raspberrypi:~ $ sudo systemctl status
+● raspberrypi
+    State: running
+     Jobs: 0 queued
+   Failed: 0 units
+    Since: Thu 1970-01-01 09:00:03 JST; 51 years 4 months ago
+   CGroup: /
+           ├─user.slice
+           │ └─user-1000.slice
+                ：
+           │     ├─1149 sudo systemctl status
+           │     ├─1150 systemctl status
+           │     └─1151 pager
+           ├─init.scope
+           │ └─1 /sbin/init splash
+           └─system.slice
+             ├─lightdm.service
+             │ ├─568 /usr/sbin/lightdm
+             │ └─595 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -nov
+             ：
+             ├─tayga.service
+             │ └─640 /usr/sbin/tayga --pidfile /var/run/tayga.pid
+             ├─hostapd.service
+             │ └─531 /usr/sbin/hostapd -B /etc/hostapd/hostapd.conf -P /var/run/hostapd.pid
+             ├─dbus.service
+             │ └─447 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activat
+             ├─hciuart.service
+             │ └─643 /usr/bin/hciattach /dev/serial1 bcm43xx 921600 noflow - b8:27:eb:dc:c8:26
+             ├─udisks2.service
+             │ └─460 /usr/lib/udisks2/udisksd
+             ├─dnsmasq.service
+             │ └─604 /usr/sbin/dnsmasq -x /run/dnsmasq/dnsmasq.pid -u dnsmasq -r /run/dnsmasq/resolv.conf -7
+             ├─avahi-daemon.service
+             │ ├─445 avahi-daemon: running [raspberrypi.local]
+             │ └─479 avahi-daemon: chroot helper
+             ├─otbr-web.service
+             │ └─497 /usr/sbin/otbr-web
+             ├─wpa_supplicant.service
+             │ └─452 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+             ├─triggerhappy.service
+             │ └─492 /usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket --user
+             ├─systemd-logind.service
+             │ └─482 /lib/systemd/systemd-logind
+             ├─rtkit-daemon.service
+             │ └─932 /usr/lib/rtkit/rtkit-daemon
+             ├─cups.service
+             │ ├─ 464 /usr/sbin/cupsd -l
+             │ └─1063 /usr/lib/cups/notifier/dbus dbus://
+             ├─polkit.service
+             │ └─548 /usr/lib/policykit-1/polkitd --no-debug
+             ├─otbr-agent.service
+             │ └─476 /usr/sbin/otbr-agent -I wpan0 -B eth0 spinel+hdlc+uart:///dev/ttyACM0 trel://eth0
+             ├─cron.service
+             │ └─438 /usr/sbin/cron -f
+             ├─systemd-udevd.service
+             │ └─169 /lib/systemd/systemd-udevd
+             ├─rsyslog.service
+             │ └─443 /usr/sbin/rsyslogd -n -iNONE
+             ├─bluetooth.service
+             │ └─681 /usr/lib/bluetooth/bluetoothd
+             ├─mdns.service
+             │ └─741 /usr/sbin/mdnsd
+             ├─systemd-journald.service
+             │ └─110 /lib/systemd/systemd-journald
+             ├─bind9.service
+             │ └─524 /usr/sbin/named -u bind
+             ├─rng-tools.service
+             │ └─472 /usr/sbin/rngd -r /dev/hwrng
+             ├─dhcpcd.service
+             │ └─532 /sbin/dhcpcd -q -b
+             └─cups-browsed.service
+               └─549 /usr/sbin/cups-browsed
+pi@raspberrypi:~ $
+```
+
+次に、任意のPCから、SSID`BorderRouter-AP`に接続し、インターネット上の任意のサイトをWebブラウザーで開きます。<br>
 ブラウザーにサイトが表示されたら、Wi-Fi APは正常動作していることになります。
+
+<img src="assets01/0012.jpg" width=600>
 
 以上で、Wi-Fi APのセットアップは完了です。
