@@ -1,12 +1,16 @@
 # OpenThread Border Router導入手順
 
-`Raspberry Pi 3 Type B`を使用し、OpenThread Border Router（以下、本ドキュメントにおいて <b>OTBR</b> と略します。）として構築する手順を記載しています。
+`Raspberry Pi 3 Model B`を使用し、OpenThread Border Router（以下、本ドキュメントにおいて <b>OTBR</b> と略します。）として構築する手順を記載しています。
 
-## Linuxシステム（ラズベリーパイ）の準備
+下記は、`Raspberry Pi 3 Model B`＋[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)を使用した、OTBRの構築イメージになります。
+
+<img src="assets01/0014.jpg" width=500>
+
+## Linuxシステム（ラズパイ）の準備
 
 EthernetとWi-Fiが同時に使用できるPCに、Linuxシステムを構築します。
 
-今回の例では、`Raspberry Pi 3 Model B`（ラズベリーパイ）という基板を使用します。
+今回の例では、`Raspberry Pi 3 Model B`（本ドキュメントではラズパイと略します。）という基板を使用します。
 
 <img src="assets01/0007.jpg" width=500>
 
@@ -65,7 +69,7 @@ Disk /dev/rdisk2 ejected
 bash-3.2$
 ```
 
-イメージのコピーが完了したら、SDカードをラズベリーパイの基板にセット後、電源を入れてシステムを起動します。<br>
+イメージのコピーが完了したら、SDカードをラズパイの基板にセット後、電源を入れてシステムを起動します。<br>
 システムが起動したら、為念でgitのインストールを実行します。
 
 ```
@@ -228,10 +232,10 @@ pi@raspberrypi:~/ot-br-posix $
 
 #### RCPの設定
 
-別途、nRF52840を使いセットアップしたRCP（Radio Co-Processor）を、ラズパイのOTBRに割り当てます。<br>
-今回の例では、nRF52840デバイスとして、以前に製作した「MDBT50Q Dongle」を使用しております。
+別途、nRF52840を使いセットアップした`OpenThread RCP（Radio Co-Processor）Dongle`を、ラズパイのOTBRに割り当てます。<br>
+今回の例では、nRF52840デバイスとして、以前に製作した「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を使用しております。
 
-まずはラズパイのUSBポートに、nRF52840を装着します。
+まずはラズパイのUSBポートに、MDBT50Q Dongleを装着します。
 
 <img src="assets01/0008.jpg" width=500>
 
@@ -263,7 +267,7 @@ OTBR_AGENT_OPTS="-I wpan0 -B eth0 spinel+hdlc+uart:///dev/ttyACM0 trel://eth0"
 pi@raspberrypi:~ $
 ```
 
-ここまで確認できたら、nRF52840をUSBポートに装着したまま、ラズパイを再起動します。
+ここまで確認できたら、MDBT50Q DongleをUSBポートに装着したまま、ラズパイを再起動します。
 
 ```
 sudo reboot
@@ -711,3 +715,55 @@ pi@raspberrypi:~ $
 <img src="assets01/0012.jpg" width=600>
 
 以上で、Wi-Fi APのセットアップは完了です。
+
+
+## ご参考
+
+本件調査で作成したラズパイのシステムを丸ごとバックアップしておきます。
+
+#### バックアップの準備
+
+ラズパイからシステムが書き込まれているSDカードを抜いて、macOSに接続します。<br>
+自動的に`boot`という名前のボリュームでマウントされます。
+
+こちらのマウントを解除します。<br>
+以下は実行例になります。
+
+```
+bash-3.2$ df
+Filesystem    512-blocks      Used Available Capacity iused      ifree %iused  Mounted on
+/dev/disk1s1   976490568  21455304 618022152     4%  487391 4881965449    0%   /
+devfs                392       392         0   100%     685          0  100%   /dev
+/dev/disk1s2   976490568 331313808 618022152    35% 1379723 4881073117    0%   /System/Volumes/Data
+/dev/disk1s5   976490568   4196392 618022152     1%       2 4882452838    0%   /private/var/vm
+map auto_home          0         0         0   100%       0          0  100%   /System/Volumes/Data/home
+/dev/disk2s1      516190     99383    416807    20%       0          0  100%   /Volumes/boot
+bash-3.2$
+bash-3.2$ sudo umount -fv /Volumes/boot
+Password:
+/dev/disk2s1 unmount from /Volumes/boot
+bash-3.2$
+```
+
+#### バックアップの実行
+
+ファイルシステムのマウントを解除したら、ディスクユーティリティーコマンドでバックアップを取得します。<br>
+以下のコマンドを実行します。
+```
+sudo dd if=<バックアップ元のファイルシステム> of=<バックアップ先のファイル名>
+```
+
+以下は実行例になります。
+
+```
+bash-3.2$ sudo dd if=/dev/disk2 of=RaspberryPi3B_backup.img
+30253056+0 records in
+30253056+0 records out
+15489564672 bytes transferred in 2497.155708 secs (6202883 bytes/sec)
+bash-3.2$
+bash-3.2$ ls -al RaspberryPi3B_backup.img
+-rw-r--r--  1 root  staff  15489564672  5 27 16:22 RaspberryPi3B_backup.img
+bash-3.2$
+```
+
+以上で、ラズパイシステムSDカードのバックアップは完了です。
