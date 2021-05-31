@@ -5,7 +5,7 @@
 ## サンプルに関する調査
 
 Zigbee Allianceが、Threadネットワーク内で稼働するLock（施錠）アプリのサンプルを公開しているようです。<br>
-この中に、nRF5340 Lockアプリというサンプルがあるので、手始めにこのサンプルアプリについて調査します。
+この中に、nRF52840 Lockアプリというサンプルがあるので、手始めにこのサンプルアプリについて調査します。
 
 ## nRF52840 Lockアプリ
 
@@ -23,9 +23,9 @@ nRF52840を使用し、Threadネットワーク内で稼働するLock（施錠�
 
 サンプルアプリ[`CHIP nRF Connect Lock Example Application`](https://github.com/project-chip/connectedhomeip/blob/master/examples/lock-app/nrfconnect/README.md)をビルドし、nRF52840に書込みを行う手順を記載しています。
 
-#### OpenThread RCPアプリケーション導入手順
+#### [OpenThread RPC Dongle導入手順](../../Research/Matter/RCPDONGLEBUILD.md)
 
-サンプルアプリを使って動作確認する際、Threadネットワークの相手側となる「[`OpenThread RCPアプリケーション`](https://github.com/openthread/ot-nrf528xx/blob/main/src/nrf52840/README.md)」の導入手順を記載しています。
+サンプルアプリを使って動作確認する際、Threadネットワークの相手側となる`OpenThread RPC Dongle`を導入する手順について記載しています。
 
 #### [OpenThread Border Router導入手順](../../Research/Matter/OTBRSETUP.md)
 
