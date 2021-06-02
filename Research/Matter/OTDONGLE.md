@@ -1,18 +1,31 @@
-# OpenThread RPC Dongle導入手順
+# OpenThread Dongle導入手順
 
-サンプルアプリ[`CHIP nRF Connect Lock Example Application`](https://github.com/project-chip/connectedhomeip/blob/master/examples/lock-app/nrfconnect/README.md)を使って動作確認する際、Threadネットワークの相手側となる`OpenThread RPC Dongle`を導入する手順について記載しています。
+[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)を`OpenThread Dongle`として使用する手順について記載しています。
 
 ## 概要
 
-`OpenThread RPC Dongle`は、`OpenThread Border Router`とセットで、Threadネットワークを構築するための構成要素です。
+`OpenThread Dongle`は、MDBT50Q DongleをThreadネットワークの構成要素として転用させたデバイスです。<br>
+本件調査では、下記の３種類を使用します。
+
+|#|デバイス名|説明|備考|
+|:---:|:---|:---|:---|
+|1|<b>OpenThread RCP Dongle</b>|Thread Leader Deviceとして使用<br>（Radio Co-Processor）|Border Routerのツールで操作|
+|2|<b>OpenThread FTD Dongle</b>|Thread Router Deviceとして使用|UART CLIにより操作|
+|3|<b>OpenThread MTD Dongle</b>|Thread End Deviceとして使用|UART CLIにより操作|
+
+MDBT50Q Dongle（nRF52840）を`OpenThread Dongle`として利用するためには、以降の手順により「[OpenThreadサンプルアプリケーション](https://github.com/openthread/ot-nrf528xx/blob/main/src/nrf52840/README.md)」をMDBT50Q Dongleに導入する必要があります。
+
+[注1]Threadネットワークの構成要素についての詳細は「[`OpenThread > Guides > Node Roles and Types`](https://openthread.io/guides/thread-primer/node-roles-and-types)」ご参照
+
+#### OpenThread RCP Dongle
+
+`OpenThread RCP Dongle`は、`OpenThread Border Router`とセットで、Threadネットワークを構築するための構成要素です。
 
 <img src="assets01/0015.jpg" width=500>
 
-本件調査では、`OpenThread RPC Dongle`として[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../../Research/Matter/OTBRSETUP.md)を使用したいと思います。
+下図は`OpenThread RPC Dongle`として[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../../Research/Matter/OTBRSETUP.md)を使用する構成例です。
 
 <img src="assets01/0014.jpg" width=500>
-
-MDBT50Q Dongle（nRF52840）を`OpenThread RPC Dongle`として利用するためには、以降の手順により「[OpenThread RCPアプリケーション](https://github.com/openthread/ot-nrf528xx/blob/main/src/nrf52840/README.md)」をMDBT50Q Dongleに導入する必要があります。
 
 ## ビルドの準備
 
@@ -178,84 +191,75 @@ bash-3.2$
 
 #### 書込用ファームウェアの作成
 
-ビルドにより生成されたファームウェアイメージ`build/bin/ot-rcp`を、`.hex`形式に変換します。<br>
+ビルドにより、`build/bin/`配下に生成されたファームウェアイメージ（３点）を、`.hex`形式に変換します。
+
+|#|ファイル名|説明|変換後ファイル名|
+|:---:|:---|:---|:---|
+|1|`ot-rcp`|OpenThread RCP Dongle用ファームウェア|`ot-rcp.hex`|
+|2|`ot-cli-ftd`|OpenThread FTD Dongle用ファームウェア|`ot-cli-ftd.hex`|
+|3|`ot-cli-mtd`|OpenThread MTD Dongle用ファームウェア|`ot-cli-mtd.hex`|
+
+
 以下は実行例になります。
 
 ```
+bash-3.2$ cd ${HOME}/GitHub/ot-nrf528xx
 bash-3.2$ ls -al build/bin/
-total 5032
-drwxr-xr-x   7 makmorit  staff     224  5 27 15:07 .
-drwxr-xr-x  18 makmorit  staff     576  5 27 15:07 ..
--rwxr-xr-x   1 makmorit  staff  666532  5 27 15:07 ot-cli-ftd
--rwxr-xr-x   1 makmorit  staff  503488  5 27 15:07 ot-cli-mtd
--rwxr-xr-x   1 makmorit  staff  642220  5 27 15:07 ot-ncp-ftd
--rwxr-xr-x   1 makmorit  staff  515112  5 27 15:07 ot-ncp-mtd
--rwxr-xr-x   1 makmorit  staff  242592  5 27 15:07 ot-rcp
+total 9192
+drwxr-xr-x   7 makmorit  staff      224  6  1 10:38 .
+drwxr-xr-x  19 makmorit  staff      608  6  1 14:12 ..
+-rwxr-xr-x   1 makmorit  staff  1190220  6  1 10:38 ot-cli-ftd
+-rwxr-xr-x   1 makmorit  staff  1059404  6  1 10:38 ot-cli-mtd
+-rwxr-xr-x   1 makmorit  staff  1132120  6  1 10:38 ot-ncp-ftd
+-rwxr-xr-x   1 makmorit  staff  1070840  6  1 10:38 ot-ncp-mtd
+-rwxr-xr-x   1 makmorit  staff   242592  6  1 10:38 ot-rcp
+bash-3.2$
 bash-3.2$
 bash-3.2$ arm-none-eabi-objcopy -O ihex build/bin/ot-rcp ot-rcp.hex
+bash-3.2$ arm-none-eabi-objcopy -O ihex build/bin/ot-cli-ftd ot-cli-ftd.hex
+bash-3.2$ arm-none-eabi-objcopy -O ihex build/bin/ot-cli-mtd ot-cli-mtd.hex
 bash-3.2$
-bash-3.2$ ls -al
-total 384
-drwxr-xr-x  15 makmorit  staff     480  5 27 15:09 .
-drwxr-xr-x  13 makmorit  staff     416  5 27 14:34 ..
-：
-drwxr-xr-x  18 makmorit  staff     576  5 27 15:07 build
-drwxr-xr-x  34 makmorit  staff    1088  5 27 14:37 openthread
--rw-r--r--   1 makmorit  staff  173133  5 27 15:09 ot-rcp.hex
-drwxr-xr-x   6 makmorit  staff     192  5 27 14:35 script
-drwxr-xr-x   8 makmorit  staff     256  5 27 14:35 src
-drwxr-xr-x   5 makmorit  staff     160  5 27 14:35 third_party
+bash-3.2$ ls -al *.hex
+-rw-r--r--  1 makmorit  staff  925136  6  2 10:33 ot-cli-ftd.hex
+-rw-r--r--  1 makmorit  staff  748989  6  2 10:33 ot-cli-mtd.hex
+-rw-r--r--  1 makmorit  staff  173268  6  2 10:33 ot-rcp.hex
 bash-3.2$
 ```
 
 #### ファームウェアの書込み
 
-前述の書込用ファームウェア（`ot-rcp.hex`）を、MDBT50Q Dongleに書込みます。<br>
+前述の書込用ファームウェア（`ot-xxx.hex`）を、それぞれMDBT50Q Dongleに書込みます。<br>
 [nRF Connectツール](../../nRF52840_app/NRFCONNECTINST.md)を使用して書込みすると便利です。
 
-nRF Connectツール・nRF52840 DKを使用した、MDBT50Q Dongleへのファームウェア書込みについての具体的な手順は、「[USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」[注1]を参考にしてください。
+nRF Connectツールのアプリ「Programmer」を起動します。
 
-[注1]`ot-rcp.hex`書き込みの際は、ソフトデバイス`s140_nrf52_7.2.0_softdevice.hex`の追加指定は不要です。
+<img src="assets01/0016.jpg" width=400>
 
-## ファームウェアの動作確認
+「Programmer」が起動したら、右側のエリアに`.hex`ファイルをドラッグ＆ドロップして配置します。<br>
+下図は`ot-cli-ftd.hex`を右側のエリアに配置したところです。
 
-ファームウェアの書込みが完了したMDBT50Q Dongleを、`OpenThread Border Router`となるラズパイのUSBポートに装着し、Threadネットワーク設定と、その動作確認を行います。
+<img src="assets01/0017.jpg" width=400>
 
-#### Threadネットワーク設定
+画面左上部のプルダウンリストから「PCA10056」を選択します。
 
-任意の端末から、Webブラウザーで`OT Border Router`ページを表示します。<br>
-Chromeブラウザーを使用する場合は、`OpenThread Border Router`のIPアドレスをそのままURL欄に入力して[Enter]を押下します。
+<img src="assets01/0018.jpg" width=400>
 
-ブラウザーに`OT Border Router`ページが表示されます。<br>
-画面左側にある「`Form`」のリンクをクリックします。
+書込み用のnRF52840 DKに接続されます。<br>
+その後、画面右下部の「Write」ボタンをクリックし、書込みを開始させます。
 
-<img src="assets01/0016.jpg" width=500>
+<img src="assets01/0019.jpg" width=400>
 
-「`Form Thread Networks`」ページが表示されます。<br>
-入力内容に変更を加えず、画面下部の「`Form`」ボタンをクリックします。
+書込みが完了すると、左側のエリアに書込みイメージが表示されます。<br>
+画面左上部のプルダウンリストから「Close Device」を選択し、nRF52840 DKから切断します。
 
-<img src="assets01/0017.jpg" width=500>
+<img src="assets01/0020.jpg" width=400>
 
-下図のようなポップアップが表示されるので「`OKAY`」をクリックします。
+メニューの「Quit」を選択して、nRF Connectツールを終了させます。
 
-<img src="assets01/0018.jpg" width=500>
+<img src="assets01/0021.jpg" width=400>
 
-下図のようなポップアップが表示されたら、Threadネットワーク設定は完了になります。<br>
-「`OKAY`」をクリックします。
+以上で、ファームウェアの書込みは完了です。
 
-<img src="assets01/0019.jpg" width=500>
+nRF Connectツール・nRF52840 DKを使用した、MDBT50Q Dongleへのファームウェア書込みについての詳細（機器配線方法、etc）は「[USBブートローダー書込み手順書](../../nRF52840_app/firmwares/secure_bootloader/WRITESBL.md)」[注1]を参考にしてください。
 
-#### 動作確認
-
-`OpenThread Border Router`に装着されたMDBT50Q Dongleが、`OpenThread RPC Dongle`として動作しているか確認します。<br>
-`OT Border Router`ページの画面左側にある「`Status`」のリンクをクリックすると、下図のような「`Get Status`」画面に遷移します。
-
-<img src="assets01/0020.jpg" width=500>
-
-「`Get Status`」画面を下にスクロールします。<br>
-「`RCP:Version`」欄に「`OPENTHREAD/0.01.00; NRF52840; mmm dd yyyy HH:MM:SS`」と表示されていることを確認します。<br>
-（`mmm dd yyyy HH:MM:SS`＝ファームウェア作成時刻）
-
-<img src="assets01/0021.jpg" width=500>
-
-以上で、`OpenThread RPC Dongle`の導入は完了です。
+[注1]`ot-xxx.hex`書き込みの際は、ソフトデバイス`s140_nrf52_7.2.0_softdevice.hex`の追加指定は不要です。

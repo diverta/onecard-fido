@@ -23,16 +23,23 @@ nRF52840を使用し、Threadネットワーク内で稼働するLock（施錠�
 
 サンプルアプリ[`CHIP nRF Connect Lock Example Application`](https://github.com/project-chip/connectedhomeip/blob/master/examples/lock-app/nrfconnect/README.md)をビルドし、nRF52840に書込みを行う手順を記載しています。
 
-#### [OpenThread RPC Dongle導入手順](../../Research/Matter/RCPDONGLEBUILD.md)
-
-サンプルアプリを使って動作確認する際、Threadネットワークの相手側となる`OpenThread RPC Dongle`を導入する手順について記載しています。
-
-#### [OpenThread Border Router導入手順](../../Research/Matter/OTBRSETUP.md)
-
-サンプルアプリを使って動作確認する際、Threadネットワーク〜インターネット間のルーター役となる「[`OpenThread Border Router`](https://openthread.io/guides/border-router)」の構築手順を記載しています。
-
 ### [nRF Connect CHIPプラットフォームについて](../../Research/Matter/CHIPPLATFORM.md)
 
 nRF5340／nRF52840の標準プラットフォームである「nRF Connect SDK」をベースとし、Matterアプリケーションを実装するプラットフォームモデルです。<br>
 下記リンクの翻訳になります。<br>
 [https://github.com/project-chip/connectedhomeip/blob/master/docs/guides/nrfconnect_platform_overview.md](https://github.com/project-chip/connectedhomeip/blob/master/docs/guides/nrfconnect_platform_overview.md)
+
+## Threadネットワークについての調査
+
+#### [OpenThread Dongle導入手順](../../Research/Matter/OTDONGLE.md)
+
+[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)を`OpenThread Dongle`として使用する手順について記載しています。
+
+#### [OpenThread Border Router導入手順](../../Research/Matter/OTBRSETUP.md)
+
+Threadネットワーク〜インターネット間のルーター役となる「[`OpenThread Border Router`](https://openthread.io/guides/border-router)」の構築手順を記載しています。
+
+#### [OpenThread Commissioner導入手順](../../Research/Matter/OTCOMMSETUP.md)
+
+`OpenThread Commissioner`は、Threadネットワークを、他のThreadネットワークに参加（Join）させるために必要となる設定用アプリケーションです。<br>
+この`OpenThread Commissioner`を、Raspberry Pi 3にインストールする手順について記載しています。

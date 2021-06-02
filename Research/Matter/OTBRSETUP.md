@@ -232,7 +232,7 @@ pi@raspberrypi:~/ot-br-posix $
 
 #### RCPの設定
 
-別途、nRF52840を使いセットアップした`OpenThread RCP（Radio Co-Processor）Dongle`を、ラズパイのOTBRに割り当てます。<br>
+別途、nRF52840を使いセットアップした`OpenThread RCP Dongle`[注1]を、ラズパイのOTBRに割り当てます。<br>
 今回の例では、nRF52840デバイスとして、以前に製作した「[MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)」を使用しております。
 
 まずはラズパイのUSBポートに、MDBT50Q Dongleを装着します。
@@ -272,6 +272,8 @@ pi@raspberrypi:~ $
 ```
 sudo reboot
 ```
+
+[注1]RCP=`Radio Co-Processor`
 
 #### 各サービスの稼働確認
 
