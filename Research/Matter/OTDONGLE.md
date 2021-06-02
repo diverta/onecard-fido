@@ -23,7 +23,7 @@ MDBT50Q Dongle（nRF52840）を`OpenThread Dongle`として利用するために
 
 <img src="assets01/0015.jpg" width=500>
 
-下図は`OpenThread RPC Dongle`として[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../../Research/Matter/OTBRSETUP.md)を使用する構成例です。
+下図は`OpenThread RCP Dongle`として[MDBT50Q Dongle](https://github.com/diverta/onecard-fido/tree/master/FIDO2Device/MDBT50Q_Dongle)、`OpenThread Border Router`として[Raspberry Pi 3](../../Research/Matter/OTBRSETUP.md)を使用する構成例です。
 
 <img src="assets01/0014.jpg" width=500>
 
