@@ -43,3 +43,7 @@ Threadネットワーク〜インターネット間のルーター役となる�
 
 `OpenThread Commissioner`は、Thread Routerデバイスを、Thread Leaderデバイスの管理下に配備（Join）させるために必要となる設定用アプリケーションです。<br>
 この`OpenThread Commissioner`を、Raspberry Pi 3にインストールする手順について記載しています。
+
+#### [【WIP】サンプルThreadネットワーク構築手順](../../Research/Matter/OTNETSETUP.md)
+
+`OpenThread Commissioner`と`OpenThread CLI`を使用し、サンプルのThreadネットワークを構築する手順を記載しています。
