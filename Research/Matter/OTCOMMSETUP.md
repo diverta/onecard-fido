@@ -4,7 +4,7 @@
 
 ## 概要
 
-`OpenThread Commissioner`は、OpenThreadネットワークを、他のOpenThreadネットワークに参加（Join）させるために必要となる設定用アプリケーションです。
+`OpenThread Commissioner`は、Thread Routerデバイスを、Thread Leaderデバイスの管理下に配備（Join）させるために必要となる設定用アプリケーションです。
 
 <img src="assets01/0022.jpg" width=600>
 

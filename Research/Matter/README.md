@@ -41,5 +41,5 @@ Threadネットワーク〜インターネット間のルーター役となる�
 
 #### [OpenThread Commissioner導入手順](../../Research/Matter/OTCOMMSETUP.md)
 
-`OpenThread Commissioner`は、Threadネットワークを、他のThreadネットワークに参加（Join）させるために必要となる設定用アプリケーションです。<br>
+`OpenThread Commissioner`は、Thread Routerデバイスを、Thread Leaderデバイスの管理下に配備（Join）させるために必要となる設定用アプリケーションです。<br>
 この`OpenThread Commissioner`を、Raspberry Pi 3にインストールする手順について記載しています。
