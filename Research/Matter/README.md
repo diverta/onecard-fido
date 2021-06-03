@@ -2,6 +2,13 @@
 
 新しいスマートホーム共通規格「Matter」についての調査になります。
 
+## 概要
+
+#### [Matterについて](../../Research/Matter/MATTERDESC.md)
+新しいスマートホーム共通規格「Matter」についての概要を記述しています。<br>
+下記リンクの翻訳からまとめたドキュメントになります。<br>
+[GitHub - project-chip/connectedhomeip](https://github.com/project-chip/connectedhomeip)
+
 ## サンプルに関する調査
 
 Zigbee Allianceが、Threadネットワーク内で稼働するLock（施錠）アプリのサンプルを公開しているようです。<br>
@@ -43,7 +50,3 @@ Threadネットワーク〜インターネット間のルーター役となる�
 
 `OpenThread Commissioner`は、Thread Routerデバイスを、Thread Leaderデバイスの管理下に配備（Join）させるために必要となる設定用アプリケーションです。<br>
 この`OpenThread Commissioner`を、Raspberry Pi 3にインストールする手順について記載しています。
-
-#### [【WIP】サンプルThreadネットワーク構築手順](../../Research/Matter/OTNETSETUP.md)
-
-`OpenThread Commissioner`と`OpenThread CLI`を使用し、サンプルのThreadネットワークを構築する手順を記載しています。
