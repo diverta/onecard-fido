@@ -36,7 +36,7 @@ nRF5340／nRF52840の標準プラットフォームである「nRF Connect SDK�
 下記リンクの翻訳になります。<br>
 [https://github.com/project-chip/connectedhomeip/blob/master/docs/guides/nrfconnect_platform_overview.md](https://github.com/project-chip/connectedhomeip/blob/master/docs/guides/nrfconnect_platform_overview.md)
 
-## Threadネットワークについての調査
+## CHIPネットワークについての調査
 
 #### [OpenThread Dongle導入手順](../../Research/Matter/OTDONGLE.md)
 
@@ -45,6 +45,12 @@ nRF5340／nRF52840の標準プラットフォームである「nRF Connect SDK�
 #### [OpenThread Border Router導入手順](../../Research/Matter/OTBRSETUP.md)
 
 Threadネットワーク〜インターネット間のルーター役となる「[`OpenThread Border Router`](https://openthread.io/guides/border-router)」の構築手順を記載しています。
+
+#### [CHIPネットワーク設定手順](../../Research/Matter/OTBRSETUP.md)
+
+前述のOpenThread Border Router、OpenThread Dongleを使用し、CHIPネットワークを設定する手順について掲載しています。
+
+## ご参考
 
 #### [OpenThread Commissioner導入手順](../../Research/Matter/OTCOMMSETUP.md)
 
