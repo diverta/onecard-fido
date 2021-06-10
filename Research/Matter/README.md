@@ -46,7 +46,7 @@ nRF5340／nRF52840の標準プラットフォームである「nRF Connect SDK�
 
 Threadネットワーク〜インターネット間のルーター役となる「[`OpenThread Border Router`](https://openthread.io/guides/border-router)」の構築手順を記載しています。
 
-#### [CHIPネットワーク設定手順](../../Research/Matter/OTBRSETUP.md)
+#### [CHIPネットワーク設定手順](../../Research/Matter/CHIPNWSETTING.md)
 
 前述のOpenThread Border Router、OpenThread Dongleを使用し、CHIPネットワークを設定する手順について掲載しています。
 
