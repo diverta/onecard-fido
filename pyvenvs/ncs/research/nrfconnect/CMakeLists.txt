@@ -15,12 +15,10 @@
 #
 cmake_minimum_required(VERSION 3.13.1)
 
-get_filename_component(CHIP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/third_party/connectedhomeip REALPATH)
+get_filename_component(CHIP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../connectedhomeip REALPATH)
 get_filename_component(NLIO_ROOT ${CHIP_ROOT}/third_party/nlio/repo/include REALPATH)
 get_filename_component(NRFCONNECT_COMMON ${CHIP_ROOT}/examples/platform/nrfconnect REALPATH)
 get_filename_component(LOCK_COMMON ${CHIP_ROOT}/examples/lock-app/lock-common REALPATH)
-
-include(${CHIP_ROOT}/config/nrfconnect/app/check-nrfconnect-version.cmake)
 
 # Load NCS/Zephyr build system
 set(CONF_FILE ${CHIP_ROOT}/config/nrfconnect/app/sample-defaults.conf prj.conf)
@@ -31,6 +29,8 @@ endif()
 
 list(APPEND ZEPHYR_EXTRA_MODULES ${CHIP_ROOT}/config/nrfconnect/chip-module)
 find_package(Zephyr HINTS $ENV{ZEPHYR_BASE})
+
+include(${CHIP_ROOT}/config/nrfconnect/app/check-nrfconnect-version.cmake)
 
 target_compile_options(app PRIVATE -Werror)
 
