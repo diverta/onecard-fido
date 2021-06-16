@@ -16,7 +16,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
+#if ORIGINAL_SOURCE
 #include "AppTask.h"
 
 #include <logging/log.h>
@@ -30,8 +30,14 @@ using namespace ::chip;
 using namespace ::chip::Inet;
 using namespace ::chip::DeviceLayer;
 
+#else
+int applicationMain(void);
+
+#endif
+
 int main()
 {
+#if ORIGINAL_SOURCE
     int ret = 0;
 
     k_thread_priority_set(k_current_get(), K_PRIO_COOP(CONFIG_NUM_COOP_PRIORITIES - 1));
@@ -79,4 +85,7 @@ int main()
 exit:
     LOG_ERR("Exited with code %d", ret);
     return ret;
+#else
+    return applicationMain();
+#endif
 }

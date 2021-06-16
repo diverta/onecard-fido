@@ -39,13 +39,16 @@ project(chip-nrfconnect-lock-example)
 include(${CHIP_ROOT}/config/nrfconnect/app/enable-gnu-std.cmake)
 
 target_include_directories(app PRIVATE 
+                           include
                            main/include 
                            ${LOCK_COMMON} 
                            ${NLIO_ROOT}
                            ${NRFCONNECT_COMMON}/util/include
                            ${NRFCONNECT_COMMON}/app/include)
 
+FILE(GLOB app_sources source/*.cpp)
 target_sources(app PRIVATE
+               ${app_sources}
                main/AppTask.cpp
                main/BoltLockManager.cpp
                main/main.cpp
