@@ -4,7 +4,7 @@
  *
  * Created on 2021/06/16, 15:51
  */
-#include "AppTask.h"
+#include "AppProcess.h"
 
 #include <logging/log.h>
 #include <platform/CHIPDeviceLayer.h>
@@ -64,5 +64,5 @@ int applicationMain(void)
         return ret;
     }
 
-    return GetAppTask().StartApp();
+    return applicationProcess();
 }
