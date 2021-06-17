@@ -64,5 +64,5 @@ int applicationMain(void)
         return ret;
     }
 
-    return applicationProcess();
+    return AppProcessMain();
 }

@@ -9,4 +9,5 @@
 //
 // 関数群
 //
-int         applicationProcess(void);
+int         AppProcessMain(void);
+void        AppProcessUpdateLEDLock(bool b);
