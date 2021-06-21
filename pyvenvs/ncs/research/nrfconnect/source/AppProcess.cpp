@@ -46,7 +46,43 @@ void AppLEDInit(void)
     sLED_4.Init(DK_LED4);
 }
 
+void AppLEDAnimate(void)
+{
+    // LED点滅処理を実行
+    sLED_1.Animate();
+    sLED_2.Animate();
+    sLED_3.Animate();
+    sLED_4.Animate();
+}
+
+void AppLEDKeepOnLED1(void)
+{
+    sLED_1.Set(true);
+}
+
+void AppLEDSetLongBlinkLED1(void)
+{
+    // LEDを1秒間隔で点滅させる
+    //   点灯950ms、消灯50ms
+    sLED_1.Blink(950, 50);
+}
+
+void AppLEDSetHalfBlinkLED1(void)
+{
+    // LEDを200ms間隔で点滅させる
+    sLED_1.Blink(100, 100);
+}
+
+void AppLEDSetShortBlinkLED1(void)
+{
+    // LEDを1秒間隔で点滅させる
+    //   点灯50ms、消灯950ms
+    sLED_1.Blink(50, 950);
+}
+
+//
 // LED点灯／消灯のための状態管理
+//
 static bool sIsThreadProvisioned     = false;
 static bool sIsThreadEnabled         = false;
 static bool sHaveBLEConnections      = false;
@@ -69,29 +105,26 @@ static void updateLEDStatus(void)
     if (SelectedFunctionIsFactoryReset() == false) {
         if (sHaveServiceConnectivity) {
             // サービス実行中
-            sLED_1.Set(true);
+            AppLEDKeepOnLED1();
 
         } else if (sIsThreadProvisioned && sIsThreadEnabled) {
             // Thread使用可能状態
-            sLED_1.Blink(950, 50);
+            AppLEDSetLongBlinkLED1();
 
         } else if (sHaveBLEConnections) {
             // BLE接続状態
-            sLED_1.Blink(100, 100);
+            AppLEDSetHalfBlinkLED1();
 
         } else {
             // アイドル状態
-            sLED_1.Blink(50, 950);
+            AppLEDSetShortBlinkLED1();
         }
     }
 
-    sLED_1.Animate();
-    sLED_2.Animate();
-    sLED_3.Animate();
-    sLED_4.Animate();
+    AppLEDAnimate();
 }
 
-void AppProcessUpdateLEDLock(bool b)
+void AppLEDSetToggleLED2(bool b)
 {
     // Set lock status LED back to show state of lock.
     sLED_2.Set(b);
@@ -99,7 +132,7 @@ void AppProcessUpdateLEDLock(bool b)
     sLED_4.Set(false);
 }
 
-void AppProcessBlinkAllLED(void)
+void AppLEDSetBlinkAllLED(void)
 {
     sLED_1.Set(false);
     sLED_2.Set(false);
@@ -168,7 +201,7 @@ static bool applicationProcessInit()
     AppBoltLockerInitialize();
 
     // Lock状態をLEDに反映
-    AppProcessUpdateLEDLock(AppBoltLockerIsLocked());
+    AppLEDSetToggleLED2(AppBoltLockerIsLocked());
 
     // Init ZCL Data Model and start server
     InitServer();

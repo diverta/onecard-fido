@@ -10,5 +10,5 @@
 // 関数群
 //
 int         AppProcessMain(void);
-void        AppProcessUpdateLEDLock(bool b);
-void        AppProcessBlinkAllLED(void);
+void        AppLEDSetToggleLED2(bool b);
+void        AppLEDSetBlinkAllLED(void);
