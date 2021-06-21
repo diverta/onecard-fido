@@ -11,3 +11,4 @@
 //
 int         AppProcessMain(void);
 void        AppProcessUpdateLEDLock(bool b);
+void        AppProcessBlinkAllLED(void);

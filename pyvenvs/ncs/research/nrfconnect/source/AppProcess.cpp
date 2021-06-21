@@ -89,6 +89,19 @@ void AppProcessUpdateLEDLock(bool b)
     sLED_4.Set(false);
 }
 
+void AppProcessBlinkAllLED(void)
+{
+    sLED_1.Set(false);
+    sLED_2.Set(false);
+    sLED_3.Set(false);
+    sLED_4.Set(false);
+
+    sLED_1.Blink(500);
+    sLED_2.Blink(500);
+    sLED_3.Blink(500);
+    sLED_4.Blink(500);
+}
+
 static void collectStatesFromCHIPStack(void)
 {
     // Collect connectivity and configuration state from the CHIP stack.  Because the
@@ -139,7 +152,7 @@ static int applicationProcessInit()
     sLED_4.Init(DK_LED4);
 
     // Initialize buttons
-    int ret = dk_buttons_init(ButtonEventHandler);
+    int ret = dk_buttons_init(AppEventHandlerForButton);
     if (ret) {
         LOG_ERR("dk_buttons_init() returns %d", ret);
         return ret;
