@@ -15,8 +15,7 @@ LOG_MODULE_DECLARE(AppProcess);
 
 #include "AppBoltLocker.h"
 #include "AppEventHandler.h"
-#include "AppTimer.h"
-#include "AppUtil.h"
+#include "AppDFU.h"
 
 //
 // for CHIP classes
@@ -102,7 +101,7 @@ static void updateLEDStatus(void)
     // rate of 100ms.
     //
     // Otherwise, blink the LED ON for a very short time.
-    if (SelectedFunctionIsFactoryReset() == false) {
+    if (AppEventHandlerButtonPushedLong() == false) {
         if (sHaveServiceConnectivity) {
             // サービス実行中
             AppLEDKeepOnLED1();
@@ -195,7 +194,7 @@ static bool applicationProcessInit()
     }
 
     // Confirm firmware image
-    AppUtilConfirmFWImage();
+    AppDFUConfirmFirmwareImage();
 
     // Bolt lock manager
     AppBoltLockerInitialize();
