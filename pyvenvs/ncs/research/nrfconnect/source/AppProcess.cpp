@@ -36,6 +36,16 @@ static LEDWidget sLED_2;
 static LEDWidget sLED_3;
 static LEDWidget sLED_4;
 
+void AppLEDInit(void)
+{
+    // Initialize LEDs
+    LEDWidget::InitGpio();
+    sLED_1.Init(DK_LED1);
+    sLED_2.Init(DK_LED2);
+    sLED_3.Init(DK_LED3);
+    sLED_4.Init(DK_LED4);
+}
+
 // LED点灯／消灯のための状態管理
 static bool sIsThreadProvisioned     = false;
 static bool sIsThreadEnabled         = false;
@@ -141,25 +151,15 @@ void publishService(void)
 //
 // 初期化処理
 //
-static int applicationProcessInit()
+static bool applicationProcessInit()
 {
-    // Initialize LEDs
-    LEDWidget::InitGpio();
+    // LED初期化処理
+    AppLEDInit();
 
-    sLED_1.Init(DK_LED1);
-    sLED_2.Init(DK_LED2);
-    sLED_3.Init(DK_LED3);
-    sLED_4.Init(DK_LED4);
-
-    // Initialize buttons
-    int ret = dk_buttons_init(AppEventHandlerForButton);
-    if (ret) {
-        LOG_ERR("dk_buttons_init() returns %d", ret);
-        return ret;
+    // ボタンイベント用の初期化処理
+    if (AppEventHandlerInit() == false) {
+        return false;
     }
-
-    // Initialize timer user data
-    AppTimerInitialize();
 
     // Confirm firmware image
     AppUtilConfirmFWImage();
@@ -174,7 +174,7 @@ static int applicationProcessInit()
     InitServer();
     ConfigurationMgr().LogDeviceConfig();
     PrintOnboardingCodes(chip::RendezvousInformationFlag(chip::RendezvousInformationFlag::kBLE));
-    return 0;
+    return true;
 }
 
 //
@@ -182,19 +182,18 @@ static int applicationProcessInit()
 //
 int AppProcessMain(void)
 {
-    int ret = applicationProcessInit();
-    if (ret != 0) {
-        return ret;
+    // アプリケーション初期化処理
+    if (applicationProcessInit() == false) {
+        return 1;
     }
 
-    while (ret == 0) {
-        // アプリケーション処理を実行
-        ret = applicationProcessEvent();
-
+    // アプリケーション処理を実行
+    while (AppEventHandlerDispatch() == 0) {
         // CHIPスタックの状態を取得し、LEDに反映
         collectStatesFromCHIPStack();
         updateLEDStatus();
         publishService();
     }
-    return ret;
+
+    return 0;
 }
