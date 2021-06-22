@@ -123,6 +123,12 @@ static void updateLEDStatus(void)
     AppLEDAnimate();
 }
 
+void AppLEDSetBlinkLED2(void)
+{
+    // Start flashing the LEDs rapidly to indicate action initiation.
+    sLED_2.Blink(50, 50);
+}
+
 void AppLEDSetToggleLED2(bool b)
 {
     // Set lock status LED back to show state of lock.
