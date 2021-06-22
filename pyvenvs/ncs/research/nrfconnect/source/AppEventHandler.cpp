@@ -48,7 +48,6 @@ enum ButtonPushStatus_t {
 
 ButtonPushStatus_t mButtonPushStatus = kButtonPushedNone;
 bool mFunctionTimerActive   = false;
-bool mSoftwareUpdateEnabled = false;
 
 bool AppEventHandlerButtonPushedLong(void)
 {
@@ -268,8 +267,8 @@ static void StartBLEAdvertisementHandler(AppEvent *aEvent)
 {
     // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
     (void)aEvent;
-    if (ConnectivityMgr().IsThreadProvisioned() && !mSoftwareUpdateEnabled) {
-        LOG_INF("NFC Tag emulation and BLE advertisement not started - device is commissioned to a Thread network.");
+    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
+        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
         return;
     }
 
