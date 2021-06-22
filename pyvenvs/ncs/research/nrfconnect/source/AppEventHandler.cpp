@@ -103,8 +103,9 @@ int AppEventHandlerDispatch(void)
 #define BUTTON_3_MASK DK_BTN3_MSK
 #define BUTTON_4_MASK DK_BTN4_MSK
 
+#define BUTTON_NONE_EVENT       0
 #define BUTTON_PUSH_EVENT       1
-#define BUTTON_RELEASE_EVENT    0
+#define BUTTON_RELEASE_EVENT    2
 
 static void FunctionHandler(AppEvent * aEvent);
 static void LockActionEventHandler(AppEvent * aEvent);
@@ -116,26 +117,27 @@ static void ButtonEventHandler(uint32_t button_state, uint32_t has_changed)
     AppEvent event;
 
     if (BUTTON_1_MASK & has_changed) {
-        event.ButtonAction = (BUTTON_1_MASK & button_state) ? BUTTON_PUSH_EVENT : BUTTON_RELEASE_EVENT;
         event.Handler      = FunctionHandler;
+        event.ButtonAction = (BUTTON_1_MASK & button_state) ? BUTTON_PUSH_EVENT : BUTTON_RELEASE_EVENT;
         PostEvent(&event);
     }
 
     if (BUTTON_2_MASK & button_state & has_changed) {
-        event.ButtonAction = BUTTON_PUSH_EVENT;
         event.Handler      = LockActionEventHandler;
+        event.HandlerParam = nullptr;
+        event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
 
     if (BUTTON_3_MASK & button_state & has_changed) {
-        event.ButtonAction = BUTTON_PUSH_EVENT;
         event.Handler      = StartThreadHandler;
+        event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
 
     if (BUTTON_4_MASK & button_state & has_changed) {
-        event.ButtonAction = BUTTON_PUSH_EVENT;
         event.Handler      = StartBLEAdvertisementHandler;
+        event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
 }
@@ -238,11 +240,18 @@ static void FunctionHandler(AppEvent *aEvent)
 
 static void LockActionEventHandler(AppEvent *aEvent)
 {
-    //
-    // TODO: MatterコマンドがCHIPネットワークから送信されたのと
-    //       等価の処理を行う（仮実装）
-    //
-    (void)aEvent;
+    bool simulated = (aEvent->ButtonAction != BUTTON_NONE_EVENT);
+    AppBoltLockerSendLockAction(simulated, aEvent->HandlerParam);
+}
+
+void AppEventHandlerLockActionEventPost(void *param)
+{
+    AppEvent event = {
+        .Handler = LockActionEventHandler,
+        .HandlerParam = param,
+        .ButtonAction = BUTTON_NONE_EVENT
+    };
+    PostEvent(&event);
 }
 
 static void StartThreadHandler(AppEvent *aEvent)
