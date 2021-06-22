@@ -16,7 +16,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-#if ORIGINAL_SOURCE
+#ifdef ORIGINAL_SOURCE
 #include "AppTask.h"
 
 #include <logging/log.h>
@@ -37,7 +37,7 @@ int applicationMain(void);
 
 int main()
 {
-#if ORIGINAL_SOURCE
+#ifdef ORIGINAL_SOURCE
     int ret = 0;
 
     k_thread_priority_set(k_current_get(), K_PRIO_COOP(CONFIG_NUM_COOP_PRIORITIES - 1));

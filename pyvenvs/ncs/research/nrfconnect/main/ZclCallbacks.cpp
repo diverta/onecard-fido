@@ -15,7 +15,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
+#ifdef ORIGINAL_SOURCE
 #include <support/logging/CHIPLogging.h>
 
 #include "AppTask.h"
@@ -66,3 +66,4 @@ void emberAfOnOffClusterInitCallback(EndpointId endpoint)
 {
     GetAppTask().UpdateClusterState();
 }
+#endif
