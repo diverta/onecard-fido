@@ -37,16 +37,12 @@ static void Button1PushedShortHandler(void)
 
 static void Button1Pushed3SecondsHandler(void)
 {
-    // Turn off all LEDs before starting blink to make sure blink is co-ordinated.
-    AppLEDSetBlinkAllLED();
-    LOG_INF("Factory Reset Triggered. Release button within 3 seconds to cancel.");
+    AppProcessFactoryResetTriggered();
 }
 
 static void Button1PushedSemiLongHandler(void)
 {
-    // Set lock status LED back to show state of lock.
-    AppLEDSetToggleLED2(AppBoltLockerIsLocked());
-    LOG_INF("Factory Reset has been Canceled");
+    AppProcessFactoryResetCancelled();
 }
 
 static void Button1PushedLongHandler(void)
@@ -124,11 +120,6 @@ enum ButtonPushStatus_t {
 
 static ButtonPushStatus_t mButtonPushStatus = kButtonPushedNone;
 static bool mFunctionTimerActive = false;
-
-bool AppEventHandlerButtonPushedLong(void)
-{
-    return (mButtonPushStatus == kButtonPushedLong);
-}
 
 //
 // イベントキュー関連
