@@ -26,6 +26,72 @@ LOG_MODULE_DECLARE(AppEventHandler);
 using namespace ::chip::DeviceLayer;
 
 //
+// 業務処理群
+//
+static void Button1PushedShortHandler(void)
+{
+    // trigger a software update.
+    AppDFUEnableFirmwareUpdate();
+}
+
+static void Button1Pushed3SecondsHandler(void)
+{
+    // Turn off all LEDs before starting blink to make sure blink is co-ordinated.
+    AppLEDSetBlinkAllLED();
+    LOG_INF("Factory Reset Triggered. Release button within 3 seconds to cancel.");
+}
+
+static void Button1PushedSemiLongHandler(void)
+{
+    // Set lock status LED back to show state of lock.
+    AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    LOG_INF("Factory Reset has been Canceled");
+}
+
+static void Button1PushedLongHandler(void)
+{
+    // Actually trigger Factory Reset
+    ConfigurationMgr().InitiateFactoryReset();
+}
+
+static void Button3PushedShortHandler(void)
+{
+    //
+    // TODO: 不要な機能（後日削除します）
+    //
+    if (AddTestPairing() != CHIP_NO_ERROR) {
+        LOG_ERR("Failed to add test pairing");
+    }
+
+    if (!ConnectivityMgr().IsThreadProvisioned()) {
+        StartDefaultThreadNetwork();
+        LOG_INF("Device is not commissioned to a Thread network. Starting with the default configuration.");
+    } else {
+        LOG_INF("Device is commissioned to a Thread network.");
+    }
+}
+
+static void Button4PushedShortHandler(void)
+{
+    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
+    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
+        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
+        return;
+    }
+
+    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
+        LOG_INF("BLE Advertisement is already enabled");
+        return;
+    }
+
+    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
+        LOG_INF("Enabled BLE Advertisement");
+    } else {
+        LOG_ERR("OpenDefaultPairingWindow() failed");
+    }
+}
+
+//
 // イベント関連
 //
 struct AppEvent;
@@ -42,12 +108,12 @@ struct AppEvent {
 
 enum ButtonPushStatus_t {
     kButtonPushedNone  = 0,
-    kButtonPushedShort = 0,
+    kButtonPushedShort,
     kButtonPushedLong,
 };
 
-ButtonPushStatus_t mButtonPushStatus = kButtonPushedNone;
-bool mFunctionTimerActive   = false;
+static ButtonPushStatus_t mButtonPushStatus = kButtonPushedNone;
+static bool mFunctionTimerActive = false;
 
 bool AppEventHandlerButtonPushedLong(void)
 {
@@ -107,17 +173,17 @@ int AppEventHandlerDispatch(void)
 #define BUTTON_PUSH_EVENT       1
 #define BUTTON_RELEASE_EVENT    2
 
-static void FunctionHandler(AppEvent * aEvent);
+static void Button1EventHandler(AppEvent * aEvent);
 static void LockActionEventHandler(AppEvent * aEvent);
-static void StartThreadHandler(AppEvent * aEvent);
-static void StartBLEAdvertisementHandler(AppEvent * aEvent);
+static void Button3EventHandler(AppEvent * aEvent);
+static void Button4EventHandler(AppEvent * aEvent);
 
 static void ButtonEventHandler(uint32_t button_state, uint32_t has_changed)
 {
     AppEvent event;
 
     if (BUTTON_1_MASK & has_changed) {
-        event.Handler      = FunctionHandler;
+        event.Handler      = Button1EventHandler;
         event.ButtonAction = (BUTTON_1_MASK & button_state) ? BUTTON_PUSH_EVENT : BUTTON_RELEASE_EVENT;
         PostEvent(&event);
     }
@@ -130,13 +196,13 @@ static void ButtonEventHandler(uint32_t button_state, uint32_t has_changed)
     }
 
     if (BUTTON_3_MASK & button_state & has_changed) {
-        event.Handler      = StartThreadHandler;
+        event.Handler      = Button3EventHandler;
         event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
 
     if (BUTTON_4_MASK & button_state & has_changed) {
-        event.Handler      = StartBLEAdvertisementHandler;
+        event.Handler      = Button4EventHandler;
         event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
@@ -188,19 +254,7 @@ static void CancelTimer(void)
 //
 // イベント処理群
 //
-static void ButtonPushedShortHandler(AppEvent *aEvent)
-{
-    // trigger a software update.
-    AppDFUEnableFirmwareUpdate();
-}
-
-static void ButtonPushedLongHandler(AppEvent *aEvent)
-{
-    // Actually trigger Factory Reset
-    ConfigurationMgr().InitiateFactoryReset();
-}
-
-static void FunctionHandler(AppEvent *aEvent)
+static void Button1EventHandler(AppEvent *aEvent)
 {
     // To trigger software update: 
     //   press the BUTTON_1 button briefly (< FACTORY_RESET_TRIGGER_TIMEOUT)
@@ -223,17 +277,13 @@ static void FunctionHandler(AppEvent *aEvent)
             CancelTimer();
             mFunctionTimerActive = false;
             mButtonPushStatus = kButtonPushedNone;
-            ButtonPushedShortHandler(aEvent);
+            Button1PushedShortHandler();
 
         } else if (mFunctionTimerActive && mButtonPushStatus == kButtonPushedLong) {
-            // Set lock status LED back to show state of lock.
-            AppLEDSetToggleLED2(AppBoltLockerIsLocked());
             CancelTimer();
             mFunctionTimerActive = false;
-
-            // Change the function to none selected since factory reset has been canceled.
             mButtonPushStatus = kButtonPushedNone;
-            LOG_INF("Factory Reset has been Canceled");
+            Button1PushedSemiLongHandler();
         }
     }
 }
@@ -254,43 +304,16 @@ void AppEventHandlerLockActionEventPost(void *param)
     PostEvent(&event);
 }
 
-static void StartThreadHandler(AppEvent *aEvent)
+static void Button3EventHandler(AppEvent *aEvent)
 {
-    //
-    // TODO: 不要な機能（後日削除します）
-    //
     (void)aEvent;
-    if (AddTestPairing() != CHIP_NO_ERROR) {
-        LOG_ERR("Failed to add test pairing");
-    }
-
-    if (!ConnectivityMgr().IsThreadProvisioned()) {
-        StartDefaultThreadNetwork();
-        LOG_INF("Device is not commissioned to a Thread network. Starting with the default configuration.");
-    } else {
-        LOG_INF("Device is commissioned to a Thread network.");
-    }
+    Button3PushedShortHandler();
 }
 
-static void StartBLEAdvertisementHandler(AppEvent *aEvent)
+static void Button4EventHandler(AppEvent *aEvent)
 {
-    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
     (void)aEvent;
-    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
-        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
-        return;
-    }
-
-    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
-        LOG_INF("BLE Advertisement is already enabled");
-        return;
-    }
-
-    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
-        LOG_INF("Enabled BLE Advertisement");
-    } else {
-        LOG_ERR("OpenDefaultPairingWindow() failed");
-    }
+    Button4PushedShortHandler();
 }
 
 static void FunctionTimerEventHandler(AppEvent *aEvent)
@@ -298,19 +321,15 @@ static void FunctionTimerEventHandler(AppEvent *aEvent)
     // If we reached here, the button was held past FACTORY_RESET_TRIGGER_TIMEOUT, initiate factory reset
     (void)aEvent;
     if (mFunctionTimerActive && mButtonPushStatus == kButtonPushedShort) {
-        LOG_INF("Factory Reset Triggered. Release button within %ums to cancel.", FACTORY_RESET_TRIGGER_TIMEOUT);
-
         // Start timer for FACTORY_RESET_CANCEL_WINDOW_TIMEOUT to allow user to cancel, if required.
         StartTimer(FACTORY_RESET_CANCEL_WINDOW_TIMEOUT);
         mFunctionTimerActive = true;
         mButtonPushStatus = kButtonPushedLong;
-
-        // Turn off all LEDs before starting blink to make sure blink is co-ordinated.
-        AppLEDSetBlinkAllLED();
+        Button1Pushed3SecondsHandler();
 
     } else if (mFunctionTimerActive && mButtonPushStatus == kButtonPushedLong) {
         mButtonPushStatus = kButtonPushedNone;
-        ButtonPushedLongHandler(aEvent);
+        Button1PushedLongHandler();
     }
 }
 
