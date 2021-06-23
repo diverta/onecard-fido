@@ -11,6 +11,7 @@ LOG_MODULE_DECLARE(AppBoltLocker);
 
 #include "AppProcess.h"
 #include "AppEventHandler.h"
+#include "AppLED.h"
 
 //
 // 状態保持用変数

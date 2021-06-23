@@ -15,6 +15,7 @@ LOG_MODULE_DECLARE(AppEventHandler);
 #include "AppBoltLocker.h"
 #include "AppProcess.h"
 #include "AppDFU.h"
+#include "AppLED.h"
 
 // TODO: 不要な機能（後日削除します）
 #include "ThreadUtil.h" 
