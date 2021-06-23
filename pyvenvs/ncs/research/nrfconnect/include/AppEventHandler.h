@@ -12,4 +12,4 @@
 bool        AppEventHandlerInit(void);
 int         AppEventHandlerDispatch(void);
 bool        AppEventHandlerButtonPushedLong(void);
-void        AppEventHandlerLockActionEventPost(void *param);
+void        AppEventHandlerFunctionEventPost(void (*func)(void *), void *param);

@@ -55,6 +55,12 @@ static void Button1PushedLongHandler(void)
     ConfigurationMgr().InitiateFactoryReset();
 }
 
+static void Button2PushedShortHandler(void)
+{
+    // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
+    AppBoltLockerSimulateLockAction();
+}
+
 static void Button3PushedShortHandler(void)
 {
     //
@@ -101,10 +107,13 @@ typedef void (*EventHandler)(AppEvent *);
 struct AppEvent {
     // 全イベントに共通の属性
     EventHandler Handler;
-    void        *HandlerParam;
 
     // ボタンイベント専用の属性
     uint8_t      ButtonAction;
+
+    // イベントコールバック／引数
+    void       (*Callback)(void *);
+    void        *CallbackParam;
 };
 
 enum ButtonPushStatus_t {
@@ -175,13 +184,18 @@ int AppEventHandlerDispatch(void)
 #define BUTTON_RELEASE_EVENT    2
 
 static void Button1EventHandler(AppEvent * aEvent);
-static void LockActionEventHandler(AppEvent * aEvent);
+static void Button2EventHandler(AppEvent * aEvent);
 static void Button3EventHandler(AppEvent * aEvent);
 static void Button4EventHandler(AppEvent * aEvent);
 
 static void ButtonEventHandler(uint32_t button_state, uint32_t has_changed)
 {
-    AppEvent event;
+    AppEvent event = {
+        .Handler       = nullptr,
+        .ButtonAction  = BUTTON_NONE_EVENT,
+        .Callback      = nullptr,
+        .CallbackParam = nullptr
+    };
 
     if (BUTTON_1_MASK & has_changed) {
         event.Handler      = Button1EventHandler;
@@ -190,8 +204,7 @@ static void ButtonEventHandler(uint32_t button_state, uint32_t has_changed)
     }
 
     if (BUTTON_2_MASK & button_state & has_changed) {
-        event.Handler      = LockActionEventHandler;
-        event.HandlerParam = nullptr;
+        event.Handler      = Button2EventHandler;
         event.ButtonAction = BUTTON_PUSH_EVENT;
         PostEvent(&event);
     }
@@ -232,7 +245,10 @@ static void TimerEventHandler(k_timer *timer)
 {
     (void)timer;
     AppEvent event = {
-        .Handler = FunctionTimerEventHandler
+        .Handler       = FunctionTimerEventHandler,
+        .ButtonAction  = BUTTON_NONE_EVENT,
+        .Callback      = nullptr,
+        .CallbackParam = nullptr
     };
     PostEvent(&event);
 }
@@ -250,6 +266,30 @@ static void StartTimer(uint32_t aTimeoutInMs)
 static void CancelTimer(void)
 {
     k_timer_stop(&sFunctionTimer);
+}
+
+//
+// カスタムイベント処理
+//   他の業務処理スレッドと、このモジュールで管理する
+//   イベントとの同期を取るのが目的
+//
+static void FunctionEventPostHandler(AppEvent *aEvent)
+{
+    if (aEvent->Callback == nullptr) {
+        return;
+    }
+    (*aEvent->Callback)(aEvent->CallbackParam);
+}
+
+void AppEventHandlerFunctionEventPost(void (*func)(void *), void *param)
+{
+    AppEvent event = {
+        .Handler       = FunctionEventPostHandler,
+        .ButtonAction  = BUTTON_NONE_EVENT,
+        .Callback      = func,
+        .CallbackParam = param
+    };
+    PostEvent(&event);
 }
 
 //
@@ -289,20 +329,10 @@ static void Button1EventHandler(AppEvent *aEvent)
     }
 }
 
-static void LockActionEventHandler(AppEvent *aEvent)
+static void Button2EventHandler(AppEvent *aEvent)
 {
-    bool simulated = (aEvent->ButtonAction != BUTTON_NONE_EVENT);
-    AppBoltLockerSendLockAction(simulated, aEvent->HandlerParam);
-}
-
-void AppEventHandlerLockActionEventPost(void *param)
-{
-    AppEvent event = {
-        .Handler = LockActionEventHandler,
-        .HandlerParam = param,
-        .ButtonAction = BUTTON_NONE_EVENT
-    };
-    PostEvent(&event);
+    (void)aEvent;
+    Button2PushedShortHandler();
 }
 
 static void Button3EventHandler(AppEvent *aEvent)
