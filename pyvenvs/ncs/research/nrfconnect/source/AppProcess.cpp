@@ -12,6 +12,9 @@
 
 LOG_MODULE_DECLARE(AppProcess);
 
+// TODO: 不要な機能（後日削除します）
+#include "ThreadUtil.h" 
+
 #include "AppBoltLocker.h"
 #include "AppEventHandler.h"
 #include "AppDFU.h"
@@ -33,7 +36,7 @@ static bool sHaveBLEConnections      = false;
 static bool sHaveServiceConnectivity = false;
 static bool sIsFactoryResetTriggered = false;
 
-void AppProcessFactoryResetTriggered(void)
+static void FactoryResetTriggered(void)
 {
     // Turn off all LEDs before starting blink to make sure blink is co-ordinated.
     AppLEDSetBlinkAllLED();
@@ -41,7 +44,7 @@ void AppProcessFactoryResetTriggered(void)
     LOG_INF("Factory Reset Triggered. Release button within 3 seconds to cancel.");
 }
 
-void AppProcessFactoryResetCancelled(void)
+static void FactoryResetCancelled(void)
 {
     // Set lock status LED back to show state of lock.
     AppLEDSetToggleLED2(AppBoltLockerIsLocked());
@@ -169,4 +172,72 @@ int AppProcessMain(void)
     }
 
     return 0;
+}
+
+//
+// 業務処理群
+//
+void AppProcessButton1PushedShort(void)
+{
+    // trigger a software update.
+    AppDFUEnableFirmwareUpdate();
+}
+
+void AppProcessButton1Pushed3Seconds(void)
+{
+    FactoryResetTriggered();
+}
+
+void AppProcessButton1PushedSemiLong(void)
+{
+    FactoryResetCancelled();
+}
+
+void AppProcessButton1PushedLong(void)
+{
+    // Actually trigger Factory Reset
+    ConfigurationMgr().InitiateFactoryReset();
+}
+
+void AppProcessButton2PushedShort(void)
+{
+    // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
+    AppBoltLockerSimulateLockAction();
+}
+
+void AppProcessButton3PushedShort(void)
+{
+    //
+    // TODO: 不要な機能（後日削除します）
+    //
+    if (AddTestPairing() != CHIP_NO_ERROR) {
+        LOG_ERR("Failed to add test pairing");
+    }
+
+    if (!ConnectivityMgr().IsThreadProvisioned()) {
+        StartDefaultThreadNetwork();
+        LOG_INF("Device is not commissioned to a Thread network. Starting with the default configuration.");
+    } else {
+        LOG_INF("Device is commissioned to a Thread network.");
+    }
+}
+
+void AppProcessButton4PushedShort(void)
+{
+    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
+    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
+        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
+        return;
+    }
+
+    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
+        LOG_INF("BLE Advertisement is already enabled");
+        return;
+    }
+
+    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
+        LOG_INF("Enabled BLE Advertisement");
+    } else {
+        LOG_ERR("OpenDefaultPairingWindow() failed");
+    }
 }

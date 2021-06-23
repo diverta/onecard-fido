@@ -5,94 +5,12 @@
  * Created on 2021/06/17, 11:59
  */
 #include <zephyr.h>
-#include <platform/CHIPDeviceLayer.h>
-#include <app/server/Server.h>
 #include <dk_buttons_and_leds.h>
 #include <logging/log.h>
 
 LOG_MODULE_DECLARE(AppEventHandler);
 
-#include "AppBoltLocker.h"
 #include "AppProcess.h"
-#include "AppDFU.h"
-#include "AppLED.h"
-
-// TODO: 不要な機能（後日削除します）
-#include "ThreadUtil.h" 
-
-//
-// for CHIP classes
-//   ConnectivityMgr(), ConfigurationMgr()
-//
-using namespace ::chip::DeviceLayer;
-
-//
-// 業務処理群
-//
-static void Button1PushedShortHandler(void)
-{
-    // trigger a software update.
-    AppDFUEnableFirmwareUpdate();
-}
-
-static void Button1Pushed3SecondsHandler(void)
-{
-    AppProcessFactoryResetTriggered();
-}
-
-static void Button1PushedSemiLongHandler(void)
-{
-    AppProcessFactoryResetCancelled();
-}
-
-static void Button1PushedLongHandler(void)
-{
-    // Actually trigger Factory Reset
-    ConfigurationMgr().InitiateFactoryReset();
-}
-
-static void Button2PushedShortHandler(void)
-{
-    // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
-    AppBoltLockerSimulateLockAction();
-}
-
-static void Button3PushedShortHandler(void)
-{
-    //
-    // TODO: 不要な機能（後日削除します）
-    //
-    if (AddTestPairing() != CHIP_NO_ERROR) {
-        LOG_ERR("Failed to add test pairing");
-    }
-
-    if (!ConnectivityMgr().IsThreadProvisioned()) {
-        StartDefaultThreadNetwork();
-        LOG_INF("Device is not commissioned to a Thread network. Starting with the default configuration.");
-    } else {
-        LOG_INF("Device is commissioned to a Thread network.");
-    }
-}
-
-static void Button4PushedShortHandler(void)
-{
-    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
-    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
-        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
-        return;
-    }
-
-    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
-        LOG_INF("BLE Advertisement is already enabled");
-        return;
-    }
-
-    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
-        LOG_INF("Enabled BLE Advertisement");
-    } else {
-        LOG_ERR("OpenDefaultPairingWindow() failed");
-    }
-}
 
 //
 // イベント関連
@@ -309,13 +227,13 @@ static void Button1EventHandler(AppEvent *aEvent)
             CancelTimer();
             mFunctionTimerActive = false;
             mButtonPushStatus = kButtonPushedNone;
-            Button1PushedShortHandler();
+            AppProcessButton1PushedShort();
 
         } else if (mFunctionTimerActive && mButtonPushStatus == kButtonPushedLong) {
             CancelTimer();
             mFunctionTimerActive = false;
             mButtonPushStatus = kButtonPushedNone;
-            Button1PushedSemiLongHandler();
+            AppProcessButton1PushedSemiLong();
         }
     }
 }
@@ -323,19 +241,19 @@ static void Button1EventHandler(AppEvent *aEvent)
 static void Button2EventHandler(AppEvent *aEvent)
 {
     (void)aEvent;
-    Button2PushedShortHandler();
+    AppProcessButton2PushedShort();
 }
 
 static void Button3EventHandler(AppEvent *aEvent)
 {
     (void)aEvent;
-    Button3PushedShortHandler();
+    AppProcessButton3PushedShort();
 }
 
 static void Button4EventHandler(AppEvent *aEvent)
 {
     (void)aEvent;
-    Button4PushedShortHandler();
+    AppProcessButton4PushedShort();
 }
 
 static void FunctionTimerEventHandler(AppEvent *aEvent)
@@ -347,11 +265,11 @@ static void FunctionTimerEventHandler(AppEvent *aEvent)
         StartTimer(FACTORY_RESET_CANCEL_WINDOW_TIMEOUT);
         mFunctionTimerActive = true;
         mButtonPushStatus = kButtonPushedLong;
-        Button1Pushed3SecondsHandler();
+        AppProcessButton1Pushed3Seconds();
 
     } else if (mFunctionTimerActive && mButtonPushStatus == kButtonPushedLong) {
         mButtonPushStatus = kButtonPushedNone;
-        Button1PushedLongHandler();
+        AppProcessButton1PushedLong();
     }
 }
 

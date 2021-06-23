@@ -10,5 +10,10 @@
 // 関数群
 //
 int         AppProcessMain(void);
-void        AppProcessFactoryResetTriggered(void);
-void        AppProcessFactoryResetCancelled(void);
+void        AppProcessButton1PushedShort(void);
+void        AppProcessButton1Pushed3Seconds(void);
+void        AppProcessButton1PushedSemiLong(void);
+void        AppProcessButton1PushedLong(void);
+void        AppProcessButton2PushedShort(void);
+void        AppProcessButton3PushedShort(void);
+void        AppProcessButton4PushedShort(void);
