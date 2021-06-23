@@ -11,4 +11,4 @@
 //
 void        AppBoltLockerInitialize(void);
 bool        AppBoltLockerIsLocked(void);
-void        AppBoltLockerSendLockAction(bool simulated, void *param);
+void        AppBoltLockerSimulateLockAction(void);

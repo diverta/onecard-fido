@@ -87,17 +87,28 @@ static void UpdateClusterState()
 
 static k_timer sLockTimer;
 
-typedef void (*TimerEventHandlerFunc)(void);
 static void AutoReLockTimerEventHandler(void);
 static void ActuatorMovementTimerEventHandler(void);
+
+static void AppEventHandlerCallback(void *param)
+{
+    bool *pAutoLockTimerArmed = (bool *)param;
+    if (*pAutoLockTimerArmed) {
+        // 自動ロックタイマー（n秒）満了時の場合
+        AutoReLockTimerEventHandler();
+    } else {
+        // 通常解錠／施錠ロックタイマー（２秒）満了時の場合
+        ActuatorMovementTimerEventHandler();
+    }
+}
 
 static void TimerEventHandler(k_timer *timer)
 {
     // タイマー満了時は、AppEventHandler経由で、
-    // ２秒経過後の関数を実行する
+    // 指定秒数経過後の関数を実行する
     (void)timer;
-    TimerEventHandlerFunc func = mAutoLockTimerArmed ? AutoReLockTimerEventHandler : ActuatorMovementTimerEventHandler;
-    AppEventHandlerLockActionEventPost((void *)func);
+    bool param = mAutoLockTimerArmed;
+    AppEventHandlerFunctionEventPost(AppEventHandlerCallback, (void *)&param);
 }
 
 static void InitializeTimer(void)
@@ -177,32 +188,10 @@ static bool InitiateAction(Actor_t aActor, Action_t aAction)
 //
 // イベントキューからのコールバック
 //
-void AppBoltLockerSendLockAction(bool simulated, void *func)
+void AppBoltLockerSimulateLockAction(void)
 {
-    // タイマー満了時の場合
-    TimerEventHandlerFunc f = (TimerEventHandlerFunc)func;
-    if (f == AutoReLockTimerEventHandler) {
-        AutoReLockTimerEventHandler();
-        return;
-    }
-    if (f == ActuatorMovementTimerEventHandler) {
-        ActuatorMovementTimerEventHandler();
-        return;
-    }
-
-    Action_t action = INVALID_ACTION;
-    Actor_t  actor  = INVALID_ACTOR;
-
-    if (simulated == false) {
-        action = mCurrentAction;
-        actor  = mCurrentActor;
-    } else {
-        action = IsUnlocked() ? LOCK_ACTION : UNLOCK_ACTION;
-        actor  = SIMULATION_ACTOR;
-    }
-    if (action == INVALID_ACTION) {
-        return;
-    }
+    Action_t action = IsUnlocked() ? LOCK_ACTION : UNLOCK_ACTION;
+    Actor_t  actor  = SIMULATION_ACTOR;
 
     if (InitiateAction(actor, action) == false) {
         LOG_INF("Action is already in progress or active.");
