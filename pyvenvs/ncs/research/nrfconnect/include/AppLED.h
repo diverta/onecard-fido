@@ -17,4 +17,6 @@ void        AppLEDSetHalfBlinkLED1(void);
 void        AppLEDSetShortBlinkLED1(void);
 void        AppLEDSetBlinkLED2(void);
 void        AppLEDSetToggleLED2(bool b);
+void        AppLEDSetToggleLED3(bool b);
+void        AppLEDSetToggleLED4(bool b);
 void        AppLEDSetBlinkAllLED(void);

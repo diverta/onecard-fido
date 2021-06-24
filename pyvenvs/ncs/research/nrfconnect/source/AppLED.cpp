@@ -75,8 +75,16 @@ void AppLEDSetToggleLED2(bool b)
 {
     // Set lock status LED back to show state of lock.
     sLED_2.Set(b);
-    sLED_3.Set(false);
-    sLED_4.Set(false);
+}
+
+void AppLEDSetToggleLED3(bool b)
+{
+    sLED_3.Set(b);
+}
+
+void AppLEDSetToggleLED4(bool b)
+{
+    sLED_4.Set(b);
 }
 
 void AppLEDSetBlinkAllLED(void)

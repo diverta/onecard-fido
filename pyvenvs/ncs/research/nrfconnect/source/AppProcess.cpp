@@ -12,9 +12,6 @@
 
 LOG_MODULE_DECLARE(AppProcess);
 
-// TODO: 不要な機能（後日削除します）
-#include "ThreadUtil.h" 
-
 #include "AppBoltLocker.h"
 #include "AppEventHandler.h"
 #include "AppDFU.h"
@@ -48,6 +45,8 @@ static void FactoryResetCancelled(void)
 {
     // Set lock status LED back to show state of lock.
     AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+    AppLEDSetToggleLED4(false);
     sIsFactoryResetTriggered = false;
     LOG_INF("Factory Reset has been Canceled");
 }
@@ -145,6 +144,7 @@ static bool applicationProcessInit()
 
     // Lock状態をLEDに反映
     AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
 
     // Init ZCL Data Model and start server
     InitServer();
@@ -207,19 +207,17 @@ void AppProcessButton2PushedShort(void)
 
 void AppProcessButton3PushedShort(void)
 {
-    //
-    // TODO: 不要な機能（後日削除します）
-    //
-    if (AddTestPairing() != CHIP_NO_ERROR) {
-        LOG_ERR("Failed to add test pairing");
-    }
+    if (AppBoltLockerAutoRelockEnabled()) {
+        AppBoltLockerEnableAutoRelock(false);
+        LOG_INF("Auto Re-lock is turned to disabled");
 
-    if (!ConnectivityMgr().IsThreadProvisioned()) {
-        StartDefaultThreadNetwork();
-        LOG_INF("Device is not commissioned to a Thread network. Starting with the default configuration.");
     } else {
-        LOG_INF("Device is commissioned to a Thread network.");
+        // ３０秒後に自動再施錠するよう設定
+        AppBoltLockerEnableAutoRelock(true);
+        AppBoltLockerSetAutoLockDuration(30);
+        LOG_INF("Auto Re-lock is turned to enabled");
     }
+    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
 }
 
 void AppProcessButton4PushedShort(void)

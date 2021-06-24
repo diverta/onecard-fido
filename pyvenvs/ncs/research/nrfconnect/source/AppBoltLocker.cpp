@@ -225,7 +225,7 @@ static void ActionCompleted(Action_t aAction, Actor_t aActor)
     }
 
     if (aActor == SIMULATION_ACTOR) {
-        LOG_INF("CHIP cluster state will update manually");
+        LOG_DBG("CHIP cluster state will update manually");
         UpdateClusterState();
     }
 }
@@ -279,13 +279,13 @@ void emberAfPostAttributeChangeCallback(EndpointId endpoint, ClusterId clusterId
         return;
     }
 
-    LOG_INF("InitiateAction called: endpoint=%d", endpoint);
+    LOG_DBG("InitiateAction called: endpoint=%d", endpoint);
     InitiateAction(REAL_ACTOR, *value ? LOCK_ACTION : UNLOCK_ACTION);
 }
 
 void emberAfOnOffClusterInitCallback(EndpointId endpoint)
 {
-    LOG_INF("CHIP cluster state will update: endpoint=%d", endpoint);
+    LOG_DBG("CHIP cluster state will update: endpoint=%d", endpoint);
     UpdateClusterState();
 }
 
@@ -301,4 +301,22 @@ void AppBoltLockerInitialize(void)
 bool AppBoltLockerIsLocked(void)
 {
     return !IsUnlocked();
+}
+
+bool AppBoltLockerAutoRelockEnabled(void)
+{
+    return mAutoRelock;
+}
+
+void AppBoltLockerEnableAutoRelock(bool aOn)
+{
+    // 解錠後、指定秒数が経過したら
+    // 自動的に再施錠させるようにする
+    mAutoRelock = aOn;
+}
+
+void AppBoltLockerSetAutoLockDuration(uint32_t aDurationInSec)
+{
+    // 解錠-->自動再施錠実行に要する経過秒数を設定
+    mAutoLockDuration = aDurationInSec;
 }
