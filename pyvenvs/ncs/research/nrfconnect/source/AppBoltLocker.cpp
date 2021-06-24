@@ -11,7 +11,6 @@ LOG_MODULE_DECLARE(AppBoltLocker);
 
 #include "AppProcess.h"
 #include "AppEventHandler.h"
-#include "AppLED.h"
 
 //
 // 状態保持用変数
@@ -142,7 +141,7 @@ static void ActionInitiated(Action_t aAction, Actor_t aActor)
     }
 
     // Start flashing the LEDs rapidly to indicate action initiation.
-    AppLEDSetBlinkLED2();
+    AppProcessActionInitiated();
 }
 
 static bool InitiateAction(Actor_t aActor, Action_t aAction)
@@ -213,15 +212,15 @@ static void AutoReLockTimerEventHandler(void)
 static void ActionCompleted(Action_t aAction, Actor_t aActor)
 {
     // if the action has been completed by the lock, update the bolt lock trait.
-    // Turn on the lock LED if in a LOCKED state OR
-    // Turn off the lock LED if in an UNLOCKED state.
     if (aAction == LOCK_ACTION) {
+        // Turn on the lock LED if in a LOCKED state OR
+        AppProcessActionCompleted(true);
         LOG_INF("Lock Action has been completed");
-        AppLEDSetToggleLED2(true);
 
     } else if (aAction == UNLOCK_ACTION) {
+        // Turn off the lock LED if in an UNLOCKED state.
+        AppProcessActionCompleted(false);
         LOG_INF("Unlock Action has been completed");
-        AppLEDSetToggleLED2(false);
     }
 
     if (aActor == SIMULATION_ACTOR) {

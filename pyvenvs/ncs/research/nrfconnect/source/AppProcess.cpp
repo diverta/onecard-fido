@@ -239,3 +239,15 @@ void AppProcessButton4PushedShort(void)
         LOG_ERR("OpenDefaultPairingWindow() failed");
     }
 }
+
+void AppProcessActionInitiated(void)
+{
+    // 解錠／施錠動作が開始された時の処理
+    AppLEDSetBlinkLED2();
+}
+
+void AppProcessActionCompleted(bool isLockAction)
+{
+    // 解錠／施錠動作が完了した時の処理
+    AppLEDSetToggleLED2(isLockAction);
+}
