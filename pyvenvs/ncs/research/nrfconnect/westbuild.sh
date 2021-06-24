@@ -18,16 +18,16 @@ source ${NCS_HOME}/west-completion.bash
 source ${NCS_HOME}/bin/activate
 
 if [ "$1" == "-f" ]; then
-    # Flash for nRF52840 DK
+    # Flash for nRF5340 DK
     ${NCS_HOME}/bin/west -v flash -d build
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
     fi
 else
-    # Build for nRF52840 DK
+    # Build for nRF5340 DK
     rm -rfv build
-    ${NCS_HOME}/bin/west build -c -b nrf52840dk_nrf52840 -d build
+    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuapp -d build
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
