@@ -2,6 +2,27 @@
 
 サンプルアプリ[`CHIP nRF Connect Lock Example Application`](https://github.com/project-chip/connectedhomeip/blob/master/examples/lock-app/nrfconnect/README.md)をビルドし、nRF52840に書込みを行う手順を記載しています。
 
+## 前提ソフトウェアの準備
+
+サンプルアプリのビルドに必要なソフトウェアを取得します。
+
+#### gnの取得
+
+Googleの開発ツール`gn`を開発元から取得します。
+
+リポジトリー[`https://gn.googlesource.com/gn/`](https://gn.googlesource.com/gn/)をWebブラウザーで開きます。<br>
+下図のようなページが表示されます。
+
+<img src="assets02/0001.jpg" width=500>
+
+下の方にスクロールし「Getting a binary」の「macOS」というリンク（下図参照）をクリックすると、`gn`のバイナリーファイルを格納した`gn-mac-amd64.zip`がダウンロードされます。
+
+<img src="assets02/0002.jpg" width=500>
+
+`gn-mac-amd64.zip`を解凍して、実行可能ファイル`gn`を取り出します。
+
+<img src="assets02/0003.jpg" width=400>
+
 ## ソースコードの準備
 
 #### ファイルをコピー
@@ -45,11 +66,6 @@ include(${CHIP_ROOT}/config/nrfconnect/app/check-nrfconnect-version.cmake)
 CONFIG_CHIP_PROJECT_CONFIG="main/include/CHIPProjectConfig.h"
 CONFIG_CHIP_NFC_COMMISSIONING=n
 ```
-
-#### `gn`を追加
-
-サンプルアプリビルド時に、`gn`という実行ファイルが必要になるようです。<br>
-Googleのサイト（[`https://gn.googlesource.com/gn/`](https://gn.googlesource.com/gn/)）からmacOS用のバイナリーファイルをダウンロードし、プロジェクトディレクトリー配下に配置します。
 
 #### ビルドスクリプトを作成
 
@@ -103,9 +119,13 @@ exit 0
 
 `third_party`というフォルダーは不要なので、適宜削除しておきます。
 
+#### gnを配置
+
+前述の手順で取得した実行可能ファイル`gn`を、プロジェクトディレクトリー配下に配置します。
+
 以上の準備を行ったプロジェクトディレクトリーのイメージは下図の通りになります。
 
-<img src="assets01/0004.jpg" width=400>
+<img src="assets02/0004.jpg" width=400>
 
 ## ファームウェアのビルドと書込み
 
