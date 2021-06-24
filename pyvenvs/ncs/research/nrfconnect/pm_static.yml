@@ -1,0 +1,13 @@
+app:
+  address: 0x0
+  end_address: 0xfc000
+  region: flash_primary
+  size: 0xfc000
+settings_storage:
+  address: 0xfc000
+  end_address: 0x100000
+  placement:
+    before:
+    - end
+  region: flash_primary
+  size: 0x4000

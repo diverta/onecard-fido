@@ -27,7 +27,7 @@ if [ "$1" == "-f" ]; then
 else
     # Build for nRF5340 DK
     rm -rfv build
-    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuapp -d build
+    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuapp -d build -- -DPM_STATIC_YML_FILE="pm_static.yml"
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
