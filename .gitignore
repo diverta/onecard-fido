@@ -1,5 +1,4 @@
 _build
-build
 RTE
 
 *.uvguix.user
@@ -18,14 +17,9 @@ core
 .vs
 
 # ignore for NetBeans
-nRF52840_app/examples/ble_peripheral/ble_app_hrs_proj/nbproject/private/*
-nRF52840_app/examples/ble_peripheral/ble_app_hrs_proj/nbproject/configurations.xml
-
-nRF52840_app/examples/dfu/secure_bootloader_proj/nbproject/private/*
-nRF52840_app/examples/dfu/secure_bootloader_proj/nbproject/configurations.xml
-
-nRF52840_app/examples/diverta/secure_device_app_proj/nbproject/private/*
-nRF52840_app/examples/diverta/secure_device_app_proj/nbproject/configurations.xml
+private
+build_signed
+build
 
 # ignore eagle files
 *.b#*
@@ -51,7 +45,3 @@ pyvenvs/ncs/tools
 pyvenvs/ncs/zephyr
 pyvenvs/ncs/pyvenv.cfg
 pyvenvs/ncs/west-completion.bash
-
-# ignore for nRF5340_app
-pyvenvs/ncs/nRF5340_app/secure_device_app/build_signed
-pyvenvs/ncs/nRF5340_app/secure_device_app_proj/nbproject/private
