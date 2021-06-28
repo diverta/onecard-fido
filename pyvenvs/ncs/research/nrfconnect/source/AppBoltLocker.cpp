@@ -91,8 +91,8 @@ static void ActuatorMovementTimerEventHandler(void);
 
 static void AppEventHandlerCallback(void *param)
 {
-    bool *pAutoLockTimerArmed = (bool *)param;
-    if (*pAutoLockTimerArmed) {
+    (void)param;
+    if (mAutoLockTimerArmed) {
         // 自動ロックタイマー（n秒）満了時の場合
         AutoReLockTimerEventHandler();
     } else {
@@ -106,8 +106,7 @@ static void TimerEventHandler(k_timer *timer)
     // タイマー満了時は、AppEventHandler経由で、
     // 指定秒数経過後の関数を実行する
     (void)timer;
-    bool param = mAutoLockTimerArmed;
-    AppEventHandlerFunctionEventPost(AppEventHandlerCallback, (void *)&param);
+    AppEventHandlerFunctionEventPost(AppEventHandlerCallback, nullptr);
 }
 
 static void InitializeTimer(void)

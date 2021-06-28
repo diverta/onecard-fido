@@ -207,7 +207,15 @@ void AppProcessButton2PushedShort(void)
 
 void AppProcessButton3PushedShort(void)
 {
+    // 解錠状態では、自動再施錠の設定変更が
+    // 出来ないようガードする
+    if (AppBoltLockerIsLocked() == false) {
+        LOG_WRN("Auto Re-lock cannot be toggled while unlocked");
+        return;
+    }
+
     if (AppBoltLockerAutoRelockEnabled()) {
+        // 自動再施錠をしないよう設定
         AppBoltLockerEnableAutoRelock(false);
         LOG_INF("Auto Re-lock is turned to disabled");
 
