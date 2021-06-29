@@ -265,3 +265,13 @@ void AppProcessActionCompleted(bool isLockAction)
     // 解錠／施錠動作が完了した時の処理
     AppLEDSetToggleLED2(isLockAction);
 }
+
+void AppProcessUSBConfigured(void)
+{
+    LOG_INF("USB connected");
+}
+
+void AppProcessUSBDisconnected(void)
+{
+    LOG_INF("USB disconnected");
+}
