@@ -275,3 +275,13 @@ void AppProcessUSBDisconnected(void)
 {
     LOG_INF("USB disconnected");
 }
+
+void AppProcessHIDReportReceived(uint8_t *data, size_t size)
+{
+    (void)data;
+    (void)size;
+}
+
+void AppProcessHIDReportSent(void)
+{
+}
