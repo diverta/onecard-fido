@@ -16,6 +16,7 @@ LOG_MODULE_DECLARE(AppProcess);
 #include "AppEventHandler.h"
 #include "AppDFU.h"
 #include "AppLED.h"
+#include "AppUSB.h"
 
 //
 // for CHIP classes
@@ -133,6 +134,11 @@ static bool applicationProcessInit()
 
     // ボタンイベント用の初期化処理
     if (AppEventHandlerInit() == false) {
+        return false;
+    }
+
+    // USB初期化処理
+    if (AppUSBInitialize() == false) {
         return false;
     }
 

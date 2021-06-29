@@ -3063,6 +3063,7 @@
         <in>AppLED.cpp</in>
         <in>AppMain.cpp</in>
         <in>AppProcess.cpp</in>
+        <in>AppUSB.cpp</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -22744,12 +22745,12 @@
             flavor2="11">
         <ccTool flags="1">
           <incDir>
-            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../../../../connectedhomeip/src/platform/Zephyr</pElem>
             <pElem>../../../../../connectedhomeip/src/include/platform</pElem>
             <pElem>../../../../../connectedhomeip/src/lib/support</pElem>
             <pElem>../../../../../connectedhomeip/src/platform/nrfconnect</pElem>
             <pElem>../../../../../connectedhomeip/src/include/platform/internal</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -22784,15 +22785,33 @@
             <pElem>../../../../../../opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/c++/9.3.1/arm-none-eabi/thumb/v7e-m/nofp/bits</pElem>
             <pElem>../../zephyr/include/arch</pElem>
             <pElem>../../modules/lib/openthread/include/openthread</pElem>
-            <pElem>../../zephyr/include/drivers/usb</pElem>
             <pElem>../nrfconnect/include</pElem>
             <pElem>../../../../../connectedhomeip/examples/platform/nrfconnect/app/include</pElem>
-            <pElem>../../zephyr/include/usb</pElem>
             <pElem>../../../../../connectedhomeip/src/include</pElem>
             <pElem>../../../../../connectedhomeip/src</pElem>
             <pElem>../../../../../connectedhomeip/src/lib</pElem>
             <pElem>../../modules/lib/openthread/include</pElem>
             <pElem>../nrfconnect/build/modules/connectedhomeip/gen/include</pElem>
+            <pElem>../nrfconnect/build</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="../nrfconnect/source/AppUSB.cpp" ex="false" tool="1" flavor2="11">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../nrfconnect/build/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/include/arch</pElem>
             <pElem>../nrfconnect/build</pElem>
           </incDir>
         </ccTool>
