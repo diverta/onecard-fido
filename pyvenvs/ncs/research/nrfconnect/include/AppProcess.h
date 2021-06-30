@@ -19,4 +19,7 @@ void        AppProcessButton3PushedShort(void);
 void        AppProcessButton4PushedShort(void);
 void        AppProcessActionInitiated(void);
 void        AppProcessActionCompleted(bool isLockAction);
-
+void        AppProcessUSBConfigured(void);
+void        AppProcessUSBDisconnected(void);
+void        AppProcessHIDReportReceived(uint8_t *data, size_t size);
+void        AppProcessHIDReportSent(void);

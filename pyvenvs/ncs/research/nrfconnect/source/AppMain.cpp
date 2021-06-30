@@ -4,13 +4,14 @@
  *
  * Created on 2021/06/16, 15:51
  */
-#include "AppProcess.h"
-
+#include <zephyr.h>
 #include <logging/log.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <support/CHIPMem.h>
 
 LOG_MODULE_REGISTER(AppMain);
+
+#include "AppProcess.h"
 
 //
 // Initialize CHIP layer

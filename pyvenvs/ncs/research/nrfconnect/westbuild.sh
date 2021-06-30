@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Build target
+#   nrf5340dk_nrf5340_cpuapp
+#   nrf52840dk_nrf52840
+export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
+
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
@@ -18,16 +23,22 @@ source ${NCS_HOME}/west-completion.bash
 source ${NCS_HOME}/bin/activate
 
 if [ "$1" == "-f" ]; then
-    # Flash for nRF5340 DK
+    # Flash for nRF5340/nRF52840
     ${NCS_HOME}/bin/west -v flash -d build
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
     fi
 else
-    # Build for nRF5340 DK
     rm -rfv build
-    ${NCS_HOME}/bin/west build -c -b nrf5340dk_nrf5340_cpuapp -d build -- -DPM_STATIC_YML_FILE="pm_static.yml"
+    if [ "${BUILD_TARGET}" == "nrf5340dk_nrf5340_cpuapp" ]; then
+        # Build for nRF5340
+        YML_FILE=configuration/${BUILD_TARGET}/pm_static.yml
+        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build -- -DPM_STATIC_YML_FILE="${YML_FILE}"
+    else
+        # Build for nRF52840
+        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build
+    fi
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1

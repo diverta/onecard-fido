@@ -16,6 +16,7 @@ LOG_MODULE_DECLARE(AppProcess);
 #include "AppEventHandler.h"
 #include "AppDFU.h"
 #include "AppLED.h"
+#include "AppUSB.h"
 
 //
 // for CHIP classes
@@ -133,6 +134,11 @@ static bool applicationProcessInit()
 
     // ボタンイベント用の初期化処理
     if (AppEventHandlerInit() == false) {
+        return false;
+    }
+
+    // USB初期化処理
+    if (AppUSBInitialize() == false) {
         return false;
     }
 
@@ -258,4 +264,24 @@ void AppProcessActionCompleted(bool isLockAction)
 {
     // 解錠／施錠動作が完了した時の処理
     AppLEDSetToggleLED2(isLockAction);
+}
+
+void AppProcessUSBConfigured(void)
+{
+    LOG_INF("USB connected");
+}
+
+void AppProcessUSBDisconnected(void)
+{
+    LOG_INF("USB disconnected");
+}
+
+void AppProcessHIDReportReceived(uint8_t *data, size_t size)
+{
+    (void)data;
+    (void)size;
+}
+
+void AppProcessHIDReportSent(void)
+{
 }
