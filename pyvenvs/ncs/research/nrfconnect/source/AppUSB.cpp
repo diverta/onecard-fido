@@ -150,6 +150,11 @@ static void int_out_ready_cb(const struct device *dev)
         return;
     }
 
+#if LOG_DEBUG_REPORT
+    LOG_DBG("hid_int_ep_read done (%d bytes)", m_report_size);
+    LOG_HEXDUMP_DBG(m_report, m_report_size, "Output report");
+#endif
+
     // イベント管理に通知
     AppEventHandlerFunctionEventPost(AppEventHandlerCallback, (void *)int_out_ready_cb);
 }
@@ -158,4 +163,24 @@ static void on_idle_cb(const struct device *dev, uint16_t report_id)
 {
     (void)dev;
     (void)report_id;
+}
+
+bool AppUSBHidSendReport(uint8_t *data, size_t size)
+{
+    // データを設定
+    memcpy(m_report, data, size);
+
+    // USBデバイスにフレーム送信
+    int ret = hid_int_ep_write(hdev, m_report, size, &m_report_size);
+    if (ret != 0) {
+        LOG_ERR("hid_int_ep_write returns %d", ret);
+        return false;
+    }
+
+#if LOG_DEBUG_REPORT
+    LOG_DBG("hid_int_ep_write done (%d bytes)", m_report_size);
+    LOG_HEXDUMP_DBG(m_report, m_report_size, "Input report");
+#endif
+
+    return true;
 }
