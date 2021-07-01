@@ -1302,6 +1302,9 @@
             </logicalFolder>
             <logicalFolder name="usb" displayName="usb" projectFiles="true">
               <logicalFolder name="class" displayName="class" projectFiles="true">
+                <logicalFolder name="hid" displayName="hid" projectFiles="true">
+                  <itemPath>../../zephyr/subsys/usb/class/hid/core.c</itemPath>
+                </logicalFolder>
                 <itemPath>../../zephyr/subsys/usb/class/cdc_acm.c</itemPath>
               </logicalFolder>
               <itemPath>../../zephyr/subsys/usb/os_desc.h</itemPath>
@@ -3060,6 +3063,7 @@
         <in>AppBoltLocker.cpp</in>
         <in>AppDFU.cpp</in>
         <in>AppEventHandler.cpp</in>
+        <in>AppHIDCommand.cpp</in>
         <in>AppLED.cpp</in>
         <in>AppMain.cpp</in>
         <in>AppProcess.cpp</in>
@@ -22306,6 +22310,33 @@
             tool="0"
             flavor2="3">
         <cTool flags="7">
+          <incDir>
+            <pElem>../../zephyr/subsys/usb/class</pElem>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../nrfconnect/build/zephyr/include/generated/syscalls</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../nrfconnect/build/zephyr/include/generated</pElem>
+            <pElem>../../zephyr/include/drivers</pElem>
+            <pElem>../../zephyr/include/usb/class</pElem>
+            <pElem>../../zephyr/include/drivers/usb</pElem>
+            <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../../zephyr/include/arch</pElem>
+            <pElem>../nrfconnect/build</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../zephyr/subsys/usb/class/hid/core.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="3">
         </cTool>
       </item>
       <item path="../../zephyr/subsys/usb/usb_descriptor.c"
@@ -22678,6 +22709,27 @@
           </incDir>
         </ccTool>
       </item>
+      <item path="../nrfconnect/source/AppHIDCommand.cpp"
+            ex="false"
+            tool="1"
+            flavor2="11">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../nrfconnect/include</pElem>
+            <pElem>../../zephyr/include/arch</pElem>
+            <pElem>../nrfconnect/build</pElem>
+          </incDir>
+        </ccTool>
+      </item>
       <item path="../nrfconnect/source/AppLED.cpp" ex="false" tool="1" flavor2="11">
         <ccTool flags="1">
           <incDir>
@@ -22707,6 +22759,13 @@
             <pElem>../../../../../connectedhomeip/src/platform/nrfconnect</pElem>
             <pElem>../../../../../connectedhomeip/src/include/platform/internal</pElem>
             <pElem>../../zephyr/include/sys</pElem>
+            <pElem>../../zephyr/include</pElem>
+            <pElem>../../zephyr/include/kernel</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
+            <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../zephyr/include/net</pElem>
             <pElem>../../../../../connectedhomeip/src/lib/core</pElem>
             <pElem>../../../../../connectedhomeip/src/system</pElem>
@@ -22718,13 +22777,6 @@
             <pElem>../../../../../connectedhomeip/src/platform/OpenThread</pElem>
             <pElem>../../../../../connectedhomeip/src/lib/mdns/platform</pElem>
             <pElem>../../../../../connectedhomeip/src/lib/mdns</pElem>
-            <pElem>../../zephyr/include</pElem>
-            <pElem>../../zephyr/include/kernel</pElem>
-            <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
-            <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../zephyr/include/posix</pElem>
             <pElem>../nrfconnect/build/zephyr/include/generated</pElem>
             <pElem>../../../../../../opt/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/c++/9.3.1/arm-none-eabi/thumb/v7e-m/nofp/bits</pElem>
@@ -22745,12 +22797,12 @@
             flavor2="11">
         <ccTool flags="1">
           <incDir>
+            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../../../../connectedhomeip/src/platform/Zephyr</pElem>
             <pElem>../../../../../connectedhomeip/src/include/platform</pElem>
             <pElem>../../../../../connectedhomeip/src/lib/support</pElem>
             <pElem>../../../../../connectedhomeip/src/platform/nrfconnect</pElem>
             <pElem>../../../../../connectedhomeip/src/include/platform/internal</pElem>
-            <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -22800,6 +22852,7 @@
         <ccTool flags="1">
           <incDir>
             <pElem>../../zephyr/include/logging</pElem>
+            <pElem>../nrfconnect/build/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/include/sys</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
@@ -22811,6 +22864,8 @@
             <pElem>../nrfconnect/build/zephyr/include/generated</pElem>
             <pElem>../../zephyr/include/drivers/usb</pElem>
             <pElem>../../zephyr/include/usb</pElem>
+            <pElem>../../zephyr/include/usb/class</pElem>
+            <pElem>../nrfconnect/include</pElem>
             <pElem>../../zephyr/include/arch</pElem>
             <pElem>../nrfconnect/build</pElem>
           </incDir>
@@ -23723,25 +23778,24 @@
           </incDir>
         </cTool>
       </folder>
-      <folder path="GitHub/ncs/zephyr/subsys/usb/class">
+      <folder path="GitHub/ncs/zephyr/subsys/usb/class/hid">
         <cTool>
           <incDir>
-            <pElem>../../zephyr/subsys/usb/class</pElem>
+            <pElem>../../zephyr/subsys/usb/class/hid</pElem>
             <pElem>../../zephyr/include/logging</pElem>
             <pElem>../../zephyr/include/sys</pElem>
-            <pElem>../nrfconnect/build/zephyr/include/generated/syscalls</pElem>
             <pElem>../../zephyr/include</pElem>
             <pElem>../../zephyr/include/kernel</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../zephyr/modules/hal_nordic/nrfx</pElem>
             <pElem>../../zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../nrfconnect/build/zephyr/include/generated</pElem>
-            <pElem>../../zephyr/include/drivers</pElem>
-            <pElem>../../zephyr/include/usb/class</pElem>
             <pElem>../../zephyr/include/drivers/usb</pElem>
             <pElem>../../zephyr/include/usb</pElem>
             <pElem>../../zephyr/subsys/usb</pElem>
+            <pElem>../../zephyr/include/usb/class</pElem>
             <pElem>../../zephyr/include/arch</pElem>
             <pElem>../nrfconnect/build</pElem>
           </incDir>

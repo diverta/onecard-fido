@@ -15,6 +15,7 @@ LOG_MODULE_DECLARE(AppProcess);
 #include "AppBoltLocker.h"
 #include "AppEventHandler.h"
 #include "AppDFU.h"
+#include "AppHIDCommand.h"
 #include "AppLED.h"
 #include "AppUSB.h"
 
@@ -183,10 +184,53 @@ int AppProcessMain(void)
 //
 // 業務処理群
 //
+static void StartBLEAdvertiseForCommission(void)
+{
+    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
+    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
+        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
+        return;
+    }
+
+    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
+        LOG_INF("BLE Advertisement is already enabled");
+        return;
+    }
+
+    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
+        LOG_INF("Enabled BLE Advertisement");
+    } else {
+        LOG_ERR("OpenDefaultPairingWindow() failed");
+    }
+}
+
+static void ToggleAutoRelockEnabled(void)
+{
+    // 解錠状態では、自動再施錠の設定変更が
+    // 出来ないようガードする
+    if (AppBoltLockerIsLocked() == false) {
+        LOG_WRN("Auto Re-lock cannot be toggled while unlocked");
+        return;
+    }
+    
+    if (AppBoltLockerAutoRelockEnabled()) {
+        // 自動再施錠をしないよう設定
+        AppBoltLockerEnableAutoRelock(false);
+        LOG_INF("Auto Re-lock is turned to disabled");
+        
+    } else {
+        // ３０秒後に自動再施錠するよう設定
+        AppBoltLockerEnableAutoRelock(true);
+        AppBoltLockerSetAutoLockDuration(30);
+        LOG_INF("Auto Re-lock is turned to enabled");
+    }
+    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+}
+
 void AppProcessButton1PushedShort(void)
 {
-    // trigger a software update.
-    AppDFUEnableFirmwareUpdate();
+    // コミッショニングのためのBLEアドバタイジング開始処理
+    StartBLEAdvertiseForCommission();
 }
 
 void AppProcessButton1Pushed3Seconds(void)
@@ -213,45 +257,14 @@ void AppProcessButton2PushedShort(void)
 
 void AppProcessButton3PushedShort(void)
 {
-    // 解錠状態では、自動再施錠の設定変更が
-    // 出来ないようガードする
-    if (AppBoltLockerIsLocked() == false) {
-        LOG_WRN("Auto Re-lock cannot be toggled while unlocked");
-        return;
-    }
-
-    if (AppBoltLockerAutoRelockEnabled()) {
-        // 自動再施錠をしないよう設定
-        AppBoltLockerEnableAutoRelock(false);
-        LOG_INF("Auto Re-lock is turned to disabled");
-
-    } else {
-        // ３０秒後に自動再施錠するよう設定
-        AppBoltLockerEnableAutoRelock(true);
-        AppBoltLockerSetAutoLockDuration(30);
-        LOG_INF("Auto Re-lock is turned to enabled");
-    }
-    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+    // 解錠後の自動施錠実行設定（On/Off）を変更
+    ToggleAutoRelockEnabled();
 }
 
 void AppProcessButton4PushedShort(void)
 {
-    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
-    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
-        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
-        return;
-    }
-
-    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
-        LOG_INF("BLE Advertisement is already enabled");
-        return;
-    }
-
-    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
-        LOG_INF("Enabled BLE Advertisement");
-    } else {
-        LOG_ERR("OpenDefaultPairingWindow() failed");
-    }
+    // trigger a software update.
+    AppDFUEnableFirmwareUpdate();
 }
 
 void AppProcessActionInitiated(void)
@@ -266,6 +279,24 @@ void AppProcessActionCompleted(bool isLockAction)
     AppLEDSetToggleLED2(isLockAction);
 }
 
+void AppProcessUSBHIDCommand(uint8_t command)
+{
+    // USB HID I/Fからコマンド投入時の処理
+    switch (command) {
+        case 0xcf:
+            // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
+            AppBoltLockerSimulateLockAction();
+            break;
+        case 0xce:
+            // 解錠後の自動施錠実行設定（On/Off）を変更
+            ToggleAutoRelockEnabled();
+            break;
+        default:
+            LOG_ERR("HID Command 0x%02x is invalid", command);
+            break;
+    }
+}
+
 void AppProcessUSBConfigured(void)
 {
     LOG_INF("USB connected");
@@ -278,8 +309,7 @@ void AppProcessUSBDisconnected(void)
 
 void AppProcessHIDReportReceived(uint8_t *data, size_t size)
 {
-    (void)data;
-    (void)size;
+    AppHIDCommandReceived(data, size);
 }
 
 void AppProcessHIDReportSent(void)
