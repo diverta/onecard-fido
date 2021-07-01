@@ -5,6 +5,11 @@
 #   nrf52840dk_nrf52840
 export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
 
+# Build target
+#   None for Nordic boards
+#   MDBT50Q_dongle_rev2
+export BOARD_TARGET=
+
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
@@ -37,7 +42,11 @@ else
         ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build -- -DPM_STATIC_YML_FILE="${YML_FILE}"
     else
         # Build for nRF52840
-        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build
+        if [ -n "${BOARD_TARGET}" ]; then
+            DTS_FILE=configuration/${BUILD_TARGET}/${BOARD_TARGET}.overlay
+            DTS_OPT="-- -DDTC_OVERLAY_FILE=${DTS_FILE}"
+        fi
+        ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build ${DTS_OPT}
     fi
     if [ `echo $?` -ne 0 ]; then
         deactivate
