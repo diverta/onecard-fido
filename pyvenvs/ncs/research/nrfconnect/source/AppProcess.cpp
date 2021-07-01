@@ -183,7 +183,7 @@ int AppProcessMain(void)
 //
 // 業務処理群
 //
-static void startBLEAdvertiseForCommission(void)
+static void StartBLEAdvertiseForCommission(void)
 {
     // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
     if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
@@ -203,10 +203,33 @@ static void startBLEAdvertiseForCommission(void)
     }
 }
 
+static void ToggleAutoRelockEnabled(void)
+{
+    // 解錠状態では、自動再施錠の設定変更が
+    // 出来ないようガードする
+    if (AppBoltLockerIsLocked() == false) {
+        LOG_WRN("Auto Re-lock cannot be toggled while unlocked");
+        return;
+    }
+    
+    if (AppBoltLockerAutoRelockEnabled()) {
+        // 自動再施錠をしないよう設定
+        AppBoltLockerEnableAutoRelock(false);
+        LOG_INF("Auto Re-lock is turned to disabled");
+        
+    } else {
+        // ３０秒後に自動再施錠するよう設定
+        AppBoltLockerEnableAutoRelock(true);
+        AppBoltLockerSetAutoLockDuration(30);
+        LOG_INF("Auto Re-lock is turned to enabled");
+    }
+    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+}
+
 void AppProcessButton1PushedShort(void)
 {
     // コミッショニングのためのBLEアドバタイジング開始処理
-    startBLEAdvertiseForCommission();
+    StartBLEAdvertiseForCommission();
 }
 
 void AppProcessButton1Pushed3Seconds(void)
@@ -233,25 +256,8 @@ void AppProcessButton2PushedShort(void)
 
 void AppProcessButton3PushedShort(void)
 {
-    // 解錠状態では、自動再施錠の設定変更が
-    // 出来ないようガードする
-    if (AppBoltLockerIsLocked() == false) {
-        LOG_WRN("Auto Re-lock cannot be toggled while unlocked");
-        return;
-    }
-
-    if (AppBoltLockerAutoRelockEnabled()) {
-        // 自動再施錠をしないよう設定
-        AppBoltLockerEnableAutoRelock(false);
-        LOG_INF("Auto Re-lock is turned to disabled");
-
-    } else {
-        // ３０秒後に自動再施錠するよう設定
-        AppBoltLockerEnableAutoRelock(true);
-        AppBoltLockerSetAutoLockDuration(30);
-        LOG_INF("Auto Re-lock is turned to enabled");
-    }
-    AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+    // 解錠後の自動施錠実行設定（On/Off）を変更
+    ToggleAutoRelockEnabled();
 }
 
 void AppProcessButton4PushedShort(void)
