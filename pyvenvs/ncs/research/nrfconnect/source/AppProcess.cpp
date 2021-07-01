@@ -183,10 +183,30 @@ int AppProcessMain(void)
 //
 // 業務処理群
 //
+static void startBLEAdvertiseForCommission(void)
+{
+    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
+    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
+        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
+        return;
+    }
+
+    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
+        LOG_INF("BLE Advertisement is already enabled");
+        return;
+    }
+
+    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
+        LOG_INF("Enabled BLE Advertisement");
+    } else {
+        LOG_ERR("OpenDefaultPairingWindow() failed");
+    }
+}
+
 void AppProcessButton1PushedShort(void)
 {
-    // trigger a software update.
-    AppDFUEnableFirmwareUpdate();
+    // コミッショニングのためのBLEアドバタイジング開始処理
+    startBLEAdvertiseForCommission();
 }
 
 void AppProcessButton1Pushed3Seconds(void)
@@ -236,22 +256,8 @@ void AppProcessButton3PushedShort(void)
 
 void AppProcessButton4PushedShort(void)
 {
-    // In case of having software update enabled, allow on starting BLE advertising after Thread provisioning.
-    if (ConnectivityMgr().IsThreadProvisioned() && AppDFUFirmwareUpdateEnabled() == false) {
-        LOG_INF("BLE advertisement not started - device is commissioned to a Thread network.");
-        return;
-    }
-
-    if (ConnectivityMgr().IsBLEAdvertisingEnabled()) {
-        LOG_INF("BLE Advertisement is already enabled");
-        return;
-    }
-
-    if (OpenDefaultPairingWindow(chip::ResetAdmins::kNo) == CHIP_NO_ERROR) {
-        LOG_INF("Enabled BLE Advertisement");
-    } else {
-        LOG_ERR("OpenDefaultPairingWindow() failed");
-    }
+    // trigger a software update.
+    AppDFUEnableFirmwareUpdate();
 }
 
 void AppProcessActionInitiated(void)
