@@ -15,6 +15,7 @@ LOG_MODULE_DECLARE(AppProcess);
 #include "AppBoltLocker.h"
 #include "AppEventHandler.h"
 #include "AppDFU.h"
+#include "AppHIDCommand.h"
 #include "AppLED.h"
 #include "AppUSB.h"
 
@@ -308,8 +309,7 @@ void AppProcessUSBDisconnected(void)
 
 void AppProcessHIDReportReceived(uint8_t *data, size_t size)
 {
-    (void)data;
-    (void)size;
+    AppHIDCommandReceived(data, size);
 }
 
 void AppProcessHIDReportSent(void)
