@@ -28,7 +28,7 @@
             android:textColor="@android:color/black" />
 
         <Button
-            android:id="@+id/buttonAdvertise"
+            android:id="@+id/buttonDoCommand"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"

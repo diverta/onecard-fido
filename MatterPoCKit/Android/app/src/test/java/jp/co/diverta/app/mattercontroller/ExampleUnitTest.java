@@ -1,4 +1,4 @@
-package jp.co.diverta.app.securedongleapp;
+package jp.co.diverta.app.mattercontroller;
 
 import org.junit.Test;
 
