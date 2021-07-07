@@ -11,7 +11,10 @@ public class ChipCompletionListener implements ChipDeviceController.CompletionLi
     // セントラルマネージャーの参照を保持
     private BLECentral centralRef;
 
+    private boolean mCommissioningCompleted = false;
+
     public ChipCompletionListener(BLECentral bc) {
+        mCommissioningCompleted = false;
         centralRef = bc;
     }
 
@@ -31,9 +34,16 @@ public class ChipCompletionListener implements ChipDeviceController.CompletionLi
 
     @Override
     public void onPairingComplete(int i) {
-        // ペアリング完了時の処理
-        boolean success = (i == 0);
-        centralRef.onBLEPairingCompleted(success);
+        if (i == 0) {
+            // ペアリング完了時の処理
+            centralRef.onBLEPairingCompleted(true);
+            return;
+        }
+        // すでに一連の処理が完了している場合は無視
+        if (mCommissioningCompleted == false) {
+            centralRef.onBLEPairingCompleted(false);
+            mCommissioningCompleted = true;
+        }
     }
 
     @Override
@@ -43,7 +53,17 @@ public class ChipCompletionListener implements ChipDeviceController.CompletionLi
 
     @Override
     public void onNetworkCommissioningComplete(int i) {
-
+        if (i == 0) {
+            // コミッショニング完了時の処理
+            centralRef.onCommissioningComplete(true);
+            mCommissioningCompleted = true;
+            return;
+        }
+        // すでに一連の処理が完了している場合は無視
+        if (mCommissioningCompleted == false) {
+            centralRef.onCommissioningComplete(false);
+            mCommissioningCompleted = true;
+        }
     }
 
     @Override
@@ -58,7 +78,11 @@ public class ChipCompletionListener implements ChipDeviceController.CompletionLi
 
     @Override
     public void onError(Throwable throwable) {
-
+        // すでに一連の処理が完了している場合は無視
+        if (mCommissioningCompleted == false) {
+            centralRef.onCommissioningComplete(false);
+            mCommissioningCompleted = true;
+        }
     }
 
     @Override
