@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity
     // 画面オブジェクト
     public TextView textViewStatus;
     public Button buttonPairing;
+    public Button buttonUpdateAddress;
     public Button buttonDoCommand;
 
     // ログ表示用
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
         // 画面の設定
         setContentView(R.layout.activity_main);
         buttonPairing = findViewById(R.id.buttonPairing);
+        buttonUpdateAddress = findViewById(R.id.buttonUpdateAddress);
         buttonDoCommand = findViewById(R.id.buttonDoCommand);
         textViewStatus = findViewById(R.id.textViewStatus);
 
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         // イベントリスナーの設定
         MainActivityClickListener onClickListener = new MainActivityClickListener(this);
         buttonPairing.setOnClickListener(onClickListener);
+        buttonUpdateAddress.setOnClickListener(onClickListener);
         buttonDoCommand.setOnClickListener(onClickListener);
 
         // 位置情報の許可を求める（API 23以降で必須）
