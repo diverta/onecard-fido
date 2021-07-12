@@ -45,7 +45,7 @@ public class BLECentral
     private BLECentralScanTimeoutThread mScanTimeoutThread = new BLECentralScanTimeoutThread();
 
     // CHIPクライアント
-    ChipDeviceController mDeviceController = new ChipDeviceController();
+    ChipDeviceController mDeviceController = null;
     public ChipDeviceController getDeviceController() {
         return mDeviceController;
     }
@@ -57,7 +57,10 @@ public class BLECentral
     //
     // デバイススキャン関連処理
     //
-    public void startScan() {
+    public void startScan(ChipDeviceController deviceController) {
+        // ChipDeviceControllerの参照を保持
+        mDeviceController = deviceController;
+
         // Bluetoothの使用準備
         mBleManager = commandRef.getBluetoothManager();
         mBleAdapter = mBleManager.getAdapter();
