@@ -31,4 +31,14 @@ public class ChipDeviceIdUtil
     public static void setNextAvailableId(Context context, long newId) {
         getPrefs(context).edit().putLong(DEVICE_ID_PREFS_KEY, newId).apply();
     }
+
+    public static String getServiceNameFromAvailableId(Context context, long fabricId) {
+        // このアプリで保持しているDevice IDと
+        // fabric IDから、
+        // "000000014A77CBB3-0000000000000005"形式の
+        // Service Nameを生成
+        long deviceId = getNextAvailableId(context) - 1;
+        String serviceName = String.format("%016X-%016X", fabricId, deviceId);
+        return serviceName;
+    }
 }
