@@ -40,7 +40,7 @@ public class ChipServiceResolver
             // NSD Serviceの参照取得が失敗した場合は、
             // コマンドクラスに制御を戻す
             Log.e(TAG, "NSD service manager cannot get");
-            commandRef.onChipServiceResolved(false);
+            commandRef.onChipServiceResolved(false, null);
             return;
         }
 
@@ -101,13 +101,8 @@ public class ChipServiceResolver
             return;
         }
 
-        // デバイスのIPv6アドレス／ポート番号を取得
-        String hostAddress = serviceInfo.getHost().getHostAddress();
-        int port = serviceInfo.getPort();
-        Log.d(TAG, String.format("Resolved device: Host=%s Port=%d", hostAddress, port));
-
         // コマンドクラスに制御を戻す
-        commandRef.onChipServiceResolved(true);
+        commandRef.onChipServiceResolved(true, serviceInfo);
     }
 
     //
@@ -141,7 +136,7 @@ public class ChipServiceResolver
             stopDiscover();
 
             // コマンドクラスに制御を戻す
-            commandRef.onChipServiceResolved(false);
+            commandRef.onChipServiceResolved(false, null);
         }
     }
 
