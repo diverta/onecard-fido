@@ -3,6 +3,7 @@ package jp.co.diverta.app.mattercontroller;
 import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.os.Handler;
 import android.util.Log;
 
 import static android.net.nsd.NsdManager.PROTOCOL_DNS_SD;
@@ -18,8 +19,12 @@ public class ChipServiceResolver
     // NSD Managerの参照を保持
     private NsdManager mNsdManager = null;
 
-    // ディスカバリー開始が行われたかどうかを保持
+    // ディスカバリーが開始されたかどうかを保持
     private boolean mDiscoveryStarted = false;
+
+    // ディスカバリー処理のコールバックを保持
+    private ChipServiceDiscoveryListener mDiscoveryListener = null;
+    private ChipServiceResolverListener mResolverListener = null;
 
     public ChipServiceResolver(MainActivityCommand mac) {
         commandRef = mac;
@@ -42,9 +47,12 @@ public class ChipServiceResolver
         // NSD Managerにサービス検索を依頼
         mNsdManager = (NsdManager)systemService;
         String serviceType = "_matter._tcp";
-        ChipServiceDiscoveryListener discoveryListener = new ChipServiceDiscoveryListener(this);
-        mNsdManager.discoverServices(serviceType, PROTOCOL_DNS_SD, discoveryListener);
+        mDiscoveryListener = new ChipServiceDiscoveryListener(this);
+        mNsdManager.discoverServices(serviceType, PROTOCOL_DNS_SD, mDiscoveryListener);
         mDiscoveryStarted = true;
+
+        // 操作タイムアウト監視を開始
+        startOperationTimeout();
     }
 
     public void onChipServiceDiscovered(boolean success, NsdServiceInfo serviceInfo) {
@@ -52,7 +60,6 @@ public class ChipServiceResolver
         if (mDiscoveryStarted == false) {
             return;
         }
-        mDiscoveryStarted = false;
 
         // ディスカバリー内容が不正の場合は終了
         if (success == false || serviceInfo == null) {
@@ -69,10 +76,25 @@ public class ChipServiceResolver
             return;
         }
 
+        // ディスカバー処理を停止
+        stopDiscover();
+
         // NSD Managerにデバイス検索を依頼
-        ChipServiceResolverListener resolverListener = new ChipServiceResolverListener(this);
-        mNsdManager.resolveService(serviceInfo, resolverListener);
+        mResolverListener = new ChipServiceResolverListener(this);
+        mNsdManager.resolveService(serviceInfo, mResolverListener);
     }
+
+    private void stopDiscover() {
+        // ディスカバリー開始済みフラグをクリア
+        mDiscoveryStarted = false;
+
+        // 操作タイムアウトの監視を停止
+        cancelOperationTimeout();
+
+        // ディスカバー処理を停止
+        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+    }
+
 
     public void onChipServiceResolved(boolean success, NsdServiceInfo serviceInfo) {
         if (success == false || serviceInfo == null) {
@@ -87,4 +109,43 @@ public class ChipServiceResolver
         // コマンドクラスに制御を戻す
         commandRef.onChipServiceResolved(true);
     }
+
+    //
+    // 操作タイムアウト監視関連
+    //
+    public void startOperationTimeout() {
+        // 操作指示から５秒後にタイムアウトさせるようにする
+        mOperationTimeoutThread = new ChipServiceResolver.OperationTimeoutThread();
+        mOperationTimeoutHandler.postDelayed(mOperationTimeoutThread, 5000);
+    }
+
+    public void cancelOperationTimeout() {
+        // タイムアウト監視を停止
+        if (mOperationTimeoutThread != null) {
+            mOperationTimeoutHandler.removeCallbacks(mOperationTimeoutThread);
+            mOperationTimeoutThread = null;
+        }
+    }
+
+    private class OperationTimeoutThread implements Runnable
+    {
+        @Override
+        public void run() {
+            // すでに停止済みの場合は終了
+            if (mDiscoveryStarted == false) {
+                return;
+            }
+            // タイムアウトが発生した場合は、操作を停止
+            commandRef.appendStatusText(commandRef.getResourceString(R.string.msg_operation_timeout));
+            Log.d(TAG, "SRP service discover operation timed out");
+            stopDiscover();
+
+            // コマンドクラスに制御を戻す
+            commandRef.onChipServiceResolved(false);
+        }
+    }
+
+    // 操作タイムアウト監視で使用するオブジェクト
+    private Handler mOperationTimeoutHandler = new Handler();
+    private ChipServiceResolver.OperationTimeoutThread mOperationTimeoutThread = null;
 }
