@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity
     public TextView textViewStatus;
     public Button buttonPairing;
     public Button buttonUpdateAddress;
-    public Button buttonDoCommand;
+    public Button buttonOffCommand;
+    public Button buttonOnCommand;
 
     // ログ表示用
     private String TAG = getClass().getName();
@@ -34,7 +35,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         buttonPairing = findViewById(R.id.buttonPairing);
         buttonUpdateAddress = findViewById(R.id.buttonUpdateAddress);
-        buttonDoCommand = findViewById(R.id.buttonDoCommand);
+        buttonOffCommand = findViewById(R.id.buttonOffCommand);
+        buttonOnCommand = findViewById(R.id.buttonOnCommand);
         textViewStatus = findViewById(R.id.textViewStatus);
 
         // 共有情報の初期化
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity
         MainActivityClickListener onClickListener = new MainActivityClickListener(this);
         buttonPairing.setOnClickListener(onClickListener);
         buttonUpdateAddress.setOnClickListener(onClickListener);
-        buttonDoCommand.setOnClickListener(onClickListener);
+        buttonOffCommand.setOnClickListener(onClickListener);
+        buttonOnCommand.setOnClickListener(onClickListener);
 
         // 位置情報の許可を求める（API 23以降で必須）
         if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -64,15 +67,6 @@ public class MainActivity extends AppCompatActivity
     //
     // オブジェクトを操作するための関数群
     //
-    public void changeButtonDoCommandCaption(boolean start) {
-        // コマンド実行ボタンのキャプションを変更
-        if (start) {
-            buttonDoCommand.setText(getString(R.string.start_ble_advertisement));
-        } else {
-            buttonDoCommand.setText(getString(R.string.stop_ble_advertisement));
-        }
-    }
-
     public void displayStatusText(String text) {
         // ステータス表示欄に文字列を表示
         textViewStatus.setText(text);

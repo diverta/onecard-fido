@@ -119,6 +119,19 @@ public class MainActivityCommand
     }
 
     //
+    // Matterコマンドを実行するための関数群
+    //
+    public void performOffCommand() {
+        // TODO: 仮の仕様です。
+        Log.d(TAG, "Off command");
+    }
+
+    public void performOnCommand() {
+        // TODO: 仮の仕様です。
+        Log.d(TAG, "On command");
+    }
+
+    //
     // MainActivityにアクセスするための関数群
     //
     public void displayStatusText(String s) {

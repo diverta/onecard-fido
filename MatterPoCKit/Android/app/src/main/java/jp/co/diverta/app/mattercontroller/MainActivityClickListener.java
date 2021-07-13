@@ -23,8 +23,11 @@ public class MainActivityClickListener implements View.OnClickListener
             case R.id.buttonUpdateAddress:
                 buttonUpdateAddressClicked();
                 break;
-            case R.id.buttonDoCommand:
-                buttonDoCommandClicked();
+            case R.id.buttonOffCommand:
+                buttonOffCommandClicked();
+                break;
+            case R.id.buttonOnCommand:
+                buttonOnCommandClicked();
                 break;
             default:
                 break;
@@ -37,18 +40,18 @@ public class MainActivityClickListener implements View.OnClickListener
     }
 
     private void buttonUpdateAddressClicked() {
-        // TODO: 仮の仕様です。
-        //       MatterデバイスのIPv6アドレス／ポート番号を取得
+        // MatterデバイスのIPv6アドレス／ポート番号を取得し、
+        // フレームワークに設定
         commandRef.startUpdateAddress();
     }
 
-    private void buttonDoCommandClicked() {
-        String buttonCaption = guiRef.getString(R.string.start_ble_advertisement);
-        if (guiRef.buttonDoCommand.getText().equals(buttonCaption)) {
-            // TODO: 後日実装
+    private void buttonOffCommandClicked() {
+        // Offコマンドを実行
+        commandRef.performOffCommand();
+    }
 
-        } else {
-            // TODO: 後日実装
-        }
+    private void buttonOnCommandClicked() {
+        // Onコマンドを実行
+        commandRef.performOnCommand();
     }
 }

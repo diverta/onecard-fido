@@ -13,7 +13,6 @@ public class MainActivityGUIHandler extends Handler
     public static final int BUTTONS_DISABLE = 4;
     public static final int BUTTON_DOCMD_ENABLE = 5;
     public static final int BUTTON_DOCMD_DISABLE = 6;
-    public static final int BUTTON_DOCMD_CHANGE_CAPTION = 7;
 
     private MainActivity guiRef;
 
@@ -43,9 +42,6 @@ public class MainActivityGUIHandler extends Handler
             case BUTTON_DOCMD_DISABLE:
                 setDoCommandButtonEnabled(false);
                 break;
-            case BUTTON_DOCMD_CHANGE_CAPTION:
-                guiRef.changeButtonDoCommandCaption((boolean)msg.obj);
-                break;
             default:
                 break;
         }
@@ -54,30 +50,30 @@ public class MainActivityGUIHandler extends Handler
     //
     // 画面オブジェクトを操作するための関数群
     //
-
     public void setButtonsEnabled(boolean b) {
         // ボタンを押下可能／不可能に変更
         guiRef.buttonPairing.setEnabled(b);
         guiRef.buttonUpdateAddress.setEnabled(b);
-        guiRef.buttonDoCommand.setEnabled(b);
         if (b) {
             guiRef.buttonPairing.setTextColor(Color.BLACK);
             guiRef.buttonUpdateAddress.setTextColor(Color.BLACK);
-            guiRef.buttonDoCommand.setTextColor(Color.BLACK);
         } else {
             guiRef.buttonPairing.setTextColor(Color.GRAY);
             guiRef.buttonUpdateAddress.setTextColor(Color.GRAY);
-            guiRef.buttonDoCommand.setTextColor(Color.GRAY);
         }
+        setDoCommandButtonEnabled(b);
     }
 
     public void setDoCommandButtonEnabled(boolean b) {
         // ボタンを押下可能／不可能に変更
-        guiRef.buttonDoCommand.setEnabled(b);
+        guiRef.buttonOffCommand.setEnabled(b);
+        guiRef.buttonOnCommand.setEnabled(b);
         if (b) {
-            guiRef.buttonDoCommand.setTextColor(Color.BLACK);
+            guiRef.buttonOffCommand.setTextColor(Color.BLACK);
+            guiRef.buttonOnCommand.setTextColor(Color.BLACK);
         } else {
-            guiRef.buttonDoCommand.setTextColor(Color.GRAY);
+            guiRef.buttonOffCommand.setTextColor(Color.GRAY);
+            guiRef.buttonOnCommand.setTextColor(Color.GRAY);
         }
     }
 }
