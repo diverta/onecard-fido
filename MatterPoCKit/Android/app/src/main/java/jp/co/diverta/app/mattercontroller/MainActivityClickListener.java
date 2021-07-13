@@ -4,14 +4,12 @@ import android.view.View;
 
 public class MainActivityClickListener implements View.OnClickListener
 {
-    // オブジェクトの参照を保持
-    private MainActivity guiRef;
+    // コマンドクラスの参照を保持
     private MainActivityCommand commandRef;
 
-    public MainActivityClickListener(MainActivity ma) {
-        // 画面オブジェクトの参照を保持
-        guiRef = ma;
-        commandRef = new MainActivityCommand(ma);
+    public MainActivityClickListener(MainActivityCommand mac) {
+        // コマンドクラスの参照を保持
+        commandRef = mac;
     }
 
     @Override

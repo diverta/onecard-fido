@@ -42,8 +42,11 @@ public class MainActivity extends AppCompatActivity
         // 共有情報の初期化
         KeyValueStoreManager.initialize(getApplicationContext());
 
+        // コマンドクラスの生成
+        MainActivityCommand mac = new MainActivityCommand(this);
+
         // イベントリスナーの設定
-        MainActivityClickListener onClickListener = new MainActivityClickListener(this);
+        MainActivityClickListener onClickListener = new MainActivityClickListener(mac);
         buttonPairing.setOnClickListener(onClickListener);
         buttonUpdateAddress.setOnClickListener(onClickListener);
         buttonOffCommand.setOnClickListener(onClickListener);
