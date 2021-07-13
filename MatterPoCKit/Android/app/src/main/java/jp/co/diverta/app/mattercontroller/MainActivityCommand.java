@@ -92,8 +92,10 @@ public class MainActivityCommand
         long deviceId = ChipDeviceIdUtil.getNextAvailableId(getApplicationContext()) - 1;
 
         // ChipDeviceControllerのアドレス情報を更新
+        //   同期型の処理なので、コールバック設定は不要
         try {
             mChipClient.getDeviceController().updateAddress(deviceId, hostAddress, port);
+            Log.d(TAG, "Matter device address update completed");
             onUpdateAddressTerminated(true);
 
         } catch (Exception e) {
