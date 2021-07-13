@@ -23,11 +23,13 @@ public class ChipServiceResolver
     private boolean mDiscoveryStarted = false;
 
     // ディスカバリー処理のコールバックを保持
-    private ChipServiceDiscoveryListener mDiscoveryListener = null;
-    private ChipServiceResolverListener mResolverListener = null;
+    private ChipServiceDiscoveryListener mDiscoveryListener;
+    private ChipServiceResolverListener mResolverListener;
 
     public ChipServiceResolver(MainActivityCommand mac) {
         commandRef = mac;
+        mDiscoveryListener = new ChipServiceDiscoveryListener(this);
+        mResolverListener = new ChipServiceResolverListener(this);
     }
 
     public void startResolve() {
@@ -47,7 +49,6 @@ public class ChipServiceResolver
         // NSD Managerにサービス検索を依頼
         mNsdManager = (NsdManager)systemService;
         String serviceType = "_matter._tcp";
-        mDiscoveryListener = new ChipServiceDiscoveryListener(this);
         mNsdManager.discoverServices(serviceType, PROTOCOL_DNS_SD, mDiscoveryListener);
         mDiscoveryStarted = true;
 
@@ -80,7 +81,6 @@ public class ChipServiceResolver
         stopDiscover();
 
         // NSD Managerにデバイス検索を依頼
-        mResolverListener = new ChipServiceResolverListener(this);
         mNsdManager.resolveService(serviceInfo, mResolverListener);
     }
 

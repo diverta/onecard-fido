@@ -19,8 +19,9 @@ public class MainActivityCommand
     //   Address Updateを実施済みかどうかを保持
     private boolean mAddressUpdated = false;
 
-    // ChipClientの参照を保持
-    private ChipClient mChipClient = null;
+    // ChipClient、ChipServiceResolverの参照を保持
+    private ChipClient mChipClient;
+    private ChipServiceResolver mServiceResolver;
 
     // ログ表示用
     private String TAG = getClass().getName();
@@ -31,6 +32,7 @@ public class MainActivityCommand
         handlerRef = guiRef.guiHandler;
         bleCentral = new BLECentral(this);
         mChipClient = new ChipClient(this);
+        mServiceResolver = new ChipServiceResolver(this);
 
         // コマンド実行ボタンを押下不可に設定
         setButtonDoCommandEnabled(false);
@@ -75,7 +77,7 @@ public class MainActivityCommand
         setButtonsEnabled(false);
         displayStatusText(getResourceString(R.string.msg_update_address_will_start));
         // Matterデバイス検索処理を開始
-        new ChipServiceResolver(this).startResolve();
+        mServiceResolver.startResolve();
     }
 
     public void onChipServiceResolved(boolean success, NsdServiceInfo serviceInfo) {
