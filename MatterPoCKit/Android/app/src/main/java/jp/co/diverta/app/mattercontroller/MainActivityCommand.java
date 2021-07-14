@@ -37,7 +37,7 @@ public class MainActivityCommand
         mServiceResolver = new ChipServiceResolver(this);
 
         // コマンド実行ボタンを押下不可に設定
-        setButtonDoCommandEnabled(false);
+        // setButtonDoCommandEnabled(false);
     }
 
     public void startBLEConnection() {
@@ -52,7 +52,7 @@ public class MainActivityCommand
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // コマンド実行ボタンを押下不可に設定
-        setButtonDoCommandEnabled(false);
+        // setButtonDoCommandEnabled(false);
         // BLEが無効の場合
         displayStatusText(getResourceString(R.string.msg_bluetooth_is_turned_off));
     }
@@ -61,7 +61,7 @@ public class MainActivityCommand
         // ボタンを押下可に変更
         setButtonsEnabled(true);
         // コマンド実行ボタンを押下不可に設定
-        setButtonDoCommandEnabled(false);
+        // setButtonDoCommandEnabled(false);
         if (success) {
             appendStatusText(getResourceString(R.string.msg_pairing_success));
         } else {
@@ -117,7 +117,7 @@ public class MainActivityCommand
             appendStatusText(getResourceString(R.string.msg_update_address_success));
         } else {
             // コマンド実行ボタンを押下不可に設定
-            setButtonDoCommandEnabled(false);
+            // setButtonDoCommandEnabled(false);
             appendStatusText(getResourceString(R.string.msg_update_address_failure));
         }
     }
