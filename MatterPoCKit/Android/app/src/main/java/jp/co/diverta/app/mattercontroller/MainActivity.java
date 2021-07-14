@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import chip.devicecontroller.KeyValueStoreManager;
+import chip.devicecontroller.ChipDeviceController;
+import chip.devicecontroller.PreferencesKeyValueStoreManager;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -39,8 +40,10 @@ public class MainActivity extends AppCompatActivity
         buttonOnCommand = findViewById(R.id.buttonOnCommand);
         textViewStatus = findViewById(R.id.textViewStatus);
 
-        // 共有情報の初期化
-        KeyValueStoreManager.initialize(getApplicationContext());
+        if (savedInstanceState == null) {
+            // 共有情報の初期化
+            ChipDeviceController.setKeyValueStoreManager(new PreferencesKeyValueStoreManager(getApplicationContext()));
+        }
 
         // コマンドクラスの生成
         MainActivityCommand mac = new MainActivityCommand(this);
