@@ -6,7 +6,9 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Message;
 import android.util.Log;
 
+import chip.devicecontroller.ChipClusters;
 import jp.co.diverta.app.mattercontroller.ble.BLECentral;
+import jp.co.diverta.app.mattercontroller.chip.ClusterCallback;
 
 public class MainActivityCommand
 {
@@ -124,13 +126,46 @@ public class MainActivityCommand
     // Matterコマンドを実行するための関数群
     //
     public void performOffCommand() {
-        // TODO: 仮の仕様です。
-        Log.d(TAG, "Off command");
+        // メッセージを表示
+        displayStatusText(getResourceString(R.string.msg_off_command_will_start));
+
+        // デバイス参照を取得
+        long devicePtr = getActiveDevicePtr();
+
+        // Offコマンドを実行
+        int endpoint = 1;
+        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        onOffCluster.off(new ClusterCallback(this));
     }
 
     public void performOnCommand() {
-        // TODO: 仮の仕様です。
-        Log.d(TAG, "On command");
+        // メッセージを表示
+        displayStatusText(getResourceString(R.string.msg_on_command_will_start));
+
+        // デバイス参照を取得
+        long devicePtr = getActiveDevicePtr();
+
+        // Onコマンドを実行
+        int endpoint = 1;
+        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        onOffCluster.on(new ClusterCallback(this));
+    }
+
+    private long getActiveDevicePtr() {
+        // 最後にコミッショニングを完了したデバイスIDから、
+        // デバイス参照を取得
+        long deviceId = ChipDeviceIdUtil.getLastDeviceId(getApplicationContext());
+        long devicePtr = mChipClient.getDeviceController().getDevicePointer(deviceId);
+        return devicePtr;
+    }
+
+    public void onOnOffCommandTerminated(boolean success) {
+        // 終了メッセージを表示
+        if (success) {
+            appendStatusText(getResourceString(R.string.msg_perform_command_success));
+        } else {
+            appendStatusText(getResourceString(R.string.msg_perform_command_failure));
+        }
     }
 
     //

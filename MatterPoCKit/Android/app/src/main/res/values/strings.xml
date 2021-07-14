@@ -19,4 +19,8 @@
     <string name="msg_pairing_start_fail">ペアリング処理を開始することができませんでした。</string>
     <string name="msg_operation_timeout">操作がタイムアウトしました。</string>
     <string name="msg_bluetooth_is_turned_off">Bluetoothがオフになっています。Bluetoothをオンにしてください。</string>
+    <string name="msg_off_command_will_start">Offコマンドを実行します。</string>
+    <string name="msg_on_command_will_start">Onコマンドを実行します。</string>
+    <string name="msg_perform_command_success">コマンド実行が成功しました。</string>
+    <string name="msg_perform_command_failure">コマンド実行が失敗しました。</string>
 </resources>
