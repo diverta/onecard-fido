@@ -91,7 +91,7 @@ public class MainActivityCommand
         String hostAddress = serviceInfo.getHost().getHostAddress();
         int port = serviceInfo.getPort();
         Log.d(TAG, String.format("Matter device resolved: Host=%s Port=%d", hostAddress, port));
-        long deviceId = ChipDeviceIdUtil.getNextAvailableId(getApplicationContext()) - 1;
+        long deviceId = ChipDeviceIdUtil.getLastDeviceId(getApplicationContext());
 
         // ChipDeviceControllerのアドレス情報を更新
         //   同期型の処理なので、コールバック設定は不要
