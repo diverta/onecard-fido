@@ -5,6 +5,8 @@
 
 ## 構成
 
+本キットは、Matterコントローラー／デバイス／ハブの３点から構成されます。
+
 #### Matterコントローラー
 Matterコマンドを実行させる側の、Androidスマートフォン用のアプリです。
 
@@ -14,7 +16,7 @@ Matterコマンドを実行させる側の、Androidスマートフォン用の�
 Matterコマンドを実行する側となる、nRF52840を組み込んだデバイスです。<br>
 以前製作した「[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)」を、当面使用する想定です。
 
-<img src="assets01/0002.jpg" width="400">
+<img src="assets01/0002.jpg" width="320">
 
 #### Matterハブ
 Matterコントローラー〜Matterデバイス間の中継役（ハブ）となるデバイスです。<br>
@@ -34,8 +36,8 @@ Raspberry Pi 3 Model Bを使用しています。
 - <b>[Matterコントローラー導入手順]()</b><br>
 コントローラーアプリを、Android環境にインストールする手順について掲載します。
 
-- <b>[Matterデバイス導入手順]()</b><br>
-デバイスにnRF52840アプリケーションをインストールする手順について掲載します。
+- <b>[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)</b><br>
+Matterデバイスアプリ（ファームウェア）をnRF52840環境にインストールする手順について掲載します。
 
 - <b>[Matterハブ導入手順]()</b><br>
 Matterハブに、必要なソフトウェアをインストールする手順について掲載します。
