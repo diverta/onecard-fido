@@ -41,8 +41,8 @@ Raspberry Pi 3 Model Bを使用しています。
 - <b>[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)</b><br>
 Matterデバイスアプリ（ファームウェア）をnRF52840環境にインストールする手順について掲載します。
 
-- <b>[Matterハブ導入手順]()</b><br>
-Matterハブに、必要なソフトウェアをインストールする手順について掲載します。
+- <b>[Matterハブ導入手順](../MatterPoCKit/SETUPHUB.md)</b><br>
+Matterハブを構築する手順について掲載します。
 
 - <b>[Matterコマンド実行手順]()</b><br>
 コントローラーアプリを使用し、デバイスにMatterコマンドを送信する手順について掲載します。
