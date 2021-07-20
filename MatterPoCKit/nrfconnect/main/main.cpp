@@ -40,8 +40,6 @@ int main()
 #ifdef ORIGINAL_SOURCE
     int ret = 0;
 
-    k_thread_priority_set(k_current_get(), K_PRIO_COOP(CONFIG_NUM_COOP_PRIORITIES - 1));
-
     ret = chip::Platform::MemoryInit();
     if (ret != CHIP_NO_ERROR)
     {

@@ -116,7 +116,7 @@ void publishService(void)
     static uint32_t kPublishServicePeriodUs = 5000000;
     static uint64_t mLastPublishServiceTimeUS = 0;
 
-    uint64_t nowUS = chip::System::Platform::Layer::GetClock_Monotonic();
+    uint64_t nowUS = chip::System::Clock::GetMonotonicMicroseconds();
     uint64_t nextChangeTimeUS = mLastPublishServiceTimeUS + kPublishServicePeriodUs;
 
     if (nowUS > nextChangeTimeUS) {

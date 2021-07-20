@@ -3,12 +3,12 @@
 # Build target
 #   nrf5340dk_nrf5340_cpuapp
 #   nrf52840dk_nrf52840
-export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
+export BUILD_TARGET=nrf52840dk_nrf52840
 
 # Build target
 #   None for Nordic boards
 #   MDBT50Q_dongle_rev2
-export BOARD_TARGET=
+export BOARD_TARGET=MDBT50Q_dongle_rev2
 
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
@@ -22,6 +22,7 @@ export PATH=${PATH}:.
 # bash completion
 export REPO_HOME=${HOME}/GitHub/onecard-fido
 export NCS_HOME=${REPO_HOME}/pyvenvs/ncs
+export ZEPHYR_BASE=${NCS_HOME}/zephyr
 source ${NCS_HOME}/west-completion.bash
 
 # Enter Python3 venv
@@ -35,7 +36,7 @@ if [ "$1" == "-f" ]; then
         exit 1
     fi
 else
-    rm -rfv build
+    rm -rf build
     if [ "${BUILD_TARGET}" == "nrf5340dk_nrf5340_cpuapp" ]; then
         # Build for nRF5340
         YML_FILE=configuration/${BUILD_TARGET}/pm_static.yml
