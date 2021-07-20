@@ -8,7 +8,7 @@ export BUILD_TARGET=nrf52840dk_nrf52840
 # Build target
 #   None for Nordic boards
 #   MDBT50Q_dongle_rev2
-export BOARD_TARGET=
+export BOARD_TARGET=MDBT50Q_dongle_rev2
 
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
