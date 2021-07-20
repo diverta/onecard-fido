@@ -34,7 +34,7 @@ BLE切断後ふたたび、Matterコマンド実行を試したい場合は、�
 
 #### Matterデバイスの準備
 
-別途手順書「[Matterデバイスアプリ導入手順](../MatterPoCKit/SETUPHUB.md)」でファームウェアを書き込んだ[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)を、任意のPCのUSBポートに装着します。<br>
+別途手順書「[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)」でファームウェアを書き込んだ[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)を、任意のPCのUSBポートに装着します。<br>
 これで、MDBT50Q Dongleのファームウェアが開始し、Matterデバイスとして動作します。
 
 Matterデバイスは、Matterハブの開始が完了してから、動作を開始させるようにしてください。
@@ -62,9 +62,11 @@ Wi-Fi設定画面の`BorderRouter-AP`が接続ずみに変化します。
 
 以下の手順でMatterコマンド実行を試行します。[注]
 
-- Matterデバイスのリセット
-- Matterデバイスのコミッショニング
-- Matterコマンドの実行
+- <b>Matterデバイスのリセット</b>
+
+- <b>Matterデバイスのコミッショニング</b>
+
+- <b>Matterコマンドの実行</b>
 
 [注]最終更新日時点で、Matterコマンド実行は、ペアリング時に確立されたBLE接続を経由して行う実装となっています。このため、Android側もしくはnRF52840側のいずれかにおいてBLE接続が切断された後、再度コマンド実行を試行したい場合は、常に上記３点の手順を実施いただく必要があります。
 

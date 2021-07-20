@@ -1,5 +1,7 @@
 # Matter評価キット
 
+最終更新日：2021/07/20
+
 ## 概要
 新しいスマートホーム共通規格「[Matter](https://buildwithmatter.com)」についての評価用ハードウェア／ソフトウェアです。
 
@@ -44,5 +46,5 @@ Matterデバイスアプリ（ファームウェア）をnRF52840環境にイン
 - <b>[Matterハブ構築手順](../MatterPoCKit/SETUPHUB.md)</b><br>
 Matterハブを構築する手順について掲載します。
 
-- <b>[Matterコマンド実行手順]()</b><br>
+- <b>[Matterコマンド実行手順](../MatterPoCKit/DOCOMMAND.md)</b><br>
 コントローラーアプリを使用し、デバイスにMatterコマンドを送信する手順について掲載します。
