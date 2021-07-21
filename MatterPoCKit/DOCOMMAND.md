@@ -102,18 +102,22 @@ Matterコントローラーは、Matterハブに対し、Matterデバイスと�
 コミッショニングは、MatterハブのWi-Fiアクセスポイントを使用して実行します。<br>
 ただし、それに先立ち、Matterデバイスの固有情報を収集するため、Matterコントローラー〜Matterデバイス間で、BLEペアリングを実行する必要があります。
 
-Androidスマートフォンに導入した、Matterコントローラーアプリを起動し「ペアリング実行」をタップします。
+まずは、Matterデバイスの基板上にあるボタンを１回押下し、BLEアドバタイズを開始させます。
 
-<img src="assets01/0011.jpg" width="160">
+<img src="assets01/0005.jpg" width="300">
+
+次に、Androidスマートフォンに導入した、Matterコントローラーアプリを起動し「ペアリング実行」をタップします。
+
+<img src="assets02/0009.jpg" width="160">
 
 ペアリング処理が開始されます。<br>
 Matterデバイス（MDBT50Q Dongle）からBLE経由で情報取得が行われた後、Wi-Fi経由で先述の「コミッショニング」処理が自動的に実行されます。
 
-<img src="assets01/0012.jpg" width="160">
+<img src="assets02/0010.jpg" width="160">
 
 概ね１分以内でペアリング処理が完了します。
 
-<img src="assets01/0013.jpg" width="160">
+<img src="assets02/0011.jpg" width="160">
 
 これで、Matterコマンドを実行できる準備が整いました。
 
@@ -134,7 +138,7 @@ Matterデバイス（MDBT50Q Dongle）からBLE経由で情報取得が行われ
 
 ここで「Offコマンド」実行をタップします
 
-<img src="assets01/0014.jpg" width="160">
+<img src="assets02/0012.jpg" width="160">
 
 Offコマンドが実行され、緑色LEDが消灯します。<br>
 （Off状態を示しています）
@@ -143,11 +147,11 @@ Offコマンドが実行され、緑色LEDが消灯します。<br>
 
 コマンドが完了します。
 
-<img src="assets01/0015.jpg" width="160">
+<img src="assets02/0013.jpg" width="160">
 
 次に「Onコマンド」実行をタップします
 
-<img src="assets01/0016.jpg" width="160">
+<img src="assets02/0014.jpg" width="160">
 
 Onコマンドが実行され、緑色LEDが再び点灯します。<br>
 （On状態を示しています）
@@ -156,6 +160,6 @@ Onコマンドが実行され、緑色LEDが再び点灯します。<br>
 
 コマンドが完了します。
 
-<img src="assets01/0017.jpg" width="160">
+<img src="assets02/0015.jpg" width="160">
 
 以上で、Matterコマンドの実行は完了になります。
