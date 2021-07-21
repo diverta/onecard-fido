@@ -1,7 +1,5 @@
 package jp.co.diverta.app.mattercontroller.chip;
 
-import android.util.Log;
-
 import chip.devicecontroller.ChipClusters.DefaultClusterCallback;
 import jp.co.diverta.app.mattercontroller.MainActivityCommand;
 

@@ -12,7 +12,6 @@ JLinkSettings.ini
 *.db
 
 # ignore sub directories
-Release
 core
 .vs
 
