@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import chip.devicecontroller.ChipClusters;
+import chip.devicecontroller.ChipClusters.OnOffCluster;
 import jp.co.diverta.app.mattercontroller.ble.BLECentral;
 import jp.co.diverta.app.mattercontroller.chip.ClusterCallback;
 
@@ -14,8 +15,10 @@ public class MainActivityCommand
 {
     // オブジェクトの参照を保持
     private MainActivity guiRef;
-    private MainActivityGUIHandler handlerRef;
     private BLECentral bleCentral;
+
+    // 別スレッドから画面操作するためのハンドラー
+    private MainActivityGUIHandler handlerRef;
 
     // アドレス更新済みフラグ
     //   Address Updateを実施済みかどうかを保持
@@ -31,7 +34,7 @@ public class MainActivityCommand
     public MainActivityCommand(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
-        handlerRef = guiRef.guiHandler;
+        handlerRef = new MainActivityGUIHandler(guiRef);
         bleCentral = new BLECentral(this);
         mChipClient = new ChipClient(this);
         mServiceResolver = new ChipServiceResolver(this);
@@ -134,7 +137,7 @@ public class MainActivityCommand
 
         // Offコマンドを実行
         int endpoint = 1;
-        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        ChipClusters.OnOffCluster onOffCluster = new OnOffCluster(devicePtr, endpoint);
         onOffCluster.off(new ClusterCallback(this));
     }
 
@@ -147,7 +150,7 @@ public class MainActivityCommand
 
         // Onコマンドを実行
         int endpoint = 1;
-        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        ChipClusters.OnOffCluster onOffCluster = new OnOffCluster(devicePtr, endpoint);
         onOffCluster.on(new ClusterCallback(this));
     }
 

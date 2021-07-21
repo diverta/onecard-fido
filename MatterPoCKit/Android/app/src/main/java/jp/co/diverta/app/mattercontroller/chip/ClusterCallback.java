@@ -2,10 +2,10 @@ package jp.co.diverta.app.mattercontroller.chip;
 
 import android.util.Log;
 
-import chip.devicecontroller.ChipClusters;
+import chip.devicecontroller.ChipClusters.DefaultClusterCallback;
 import jp.co.diverta.app.mattercontroller.MainActivityCommand;
 
-public class ClusterCallback implements ChipClusters.DefaultClusterCallback
+public class ClusterCallback implements DefaultClusterCallback
 {
     // ログ表示用
     private String TAG = getClass().getName();

@@ -24,9 +24,6 @@ public class MainActivity extends AppCompatActivity
     // ログ表示用
     private String TAG = getClass().getName();
 
-    // 別スレッドから画面操作するためのハンドラー
-    public MainActivityGUIHandler guiHandler = new MainActivityGUIHandler(this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
