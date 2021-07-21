@@ -40,6 +40,10 @@ public class MainActivityCommand
         mChipClient = new ChipClient(this);
         mServiceResolver = new ChipServiceResolver(this);
 
+        // デバイス検索ボタンを不活性化
+        // TODO: 仮の実装です。
+        setButtonUpdateAddressEnabled(false);
+
         // アドレス更新済みフラグをクリア（コマンド実行ボタンも制御）
         setDeviceDiscovered(false);
     }
@@ -216,6 +220,14 @@ public class MainActivityCommand
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_DOCMD_ENABLE);
         } else {
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_DOCMD_DISABLE);
+        }
+    }
+
+    public void setButtonUpdateAddressEnabled(boolean enable) {
+        if (enable) {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_UPADR_ENABLE);
+        } else {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_UPADR_DISABLE);
         }
     }
 

@@ -13,6 +13,8 @@ public class MainActivityGUIHandler extends Handler
     public static final int BUTTONS_DISABLE = 4;
     public static final int BUTTON_DOCMD_ENABLE = 5;
     public static final int BUTTON_DOCMD_DISABLE = 6;
+    public static final int BUTTON_UPADR_ENABLE = 7;
+    public static final int BUTTON_UPADR_DISABLE = 8;
 
     private MainActivity guiRef;
 
@@ -42,6 +44,12 @@ public class MainActivityGUIHandler extends Handler
             case BUTTON_DOCMD_DISABLE:
                 setDoCommandButtonEnabled(false);
                 break;
+            case BUTTON_UPADR_ENABLE:
+                setUpdateAddressButtonEnabled(true);
+                break;
+            case BUTTON_UPADR_DISABLE:
+                setUpdateAddressButtonEnabled(false);
+                break;
             default:
                 break;
         }
@@ -50,21 +58,18 @@ public class MainActivityGUIHandler extends Handler
     //
     // 画面オブジェクトを操作するための関数群
     //
-    public void setButtonsEnabled(boolean b) {
+    private void setButtonsEnabled(boolean b) {
         // ボタンを押下可能／不可能に変更
         guiRef.buttonPairing.setEnabled(b);
-        guiRef.buttonUpdateAddress.setEnabled(b);
         if (b) {
             guiRef.buttonPairing.setTextColor(Color.BLACK);
-            guiRef.buttonUpdateAddress.setTextColor(Color.BLACK);
         } else {
             guiRef.buttonPairing.setTextColor(Color.GRAY);
-            guiRef.buttonUpdateAddress.setTextColor(Color.GRAY);
         }
         setDoCommandButtonEnabled(b);
     }
 
-    public void setDoCommandButtonEnabled(boolean b) {
+    private void setDoCommandButtonEnabled(boolean b) {
         // ボタンを押下可能／不可能に変更
         guiRef.buttonOffCommand.setEnabled(b);
         guiRef.buttonOnCommand.setEnabled(b);
@@ -74,6 +79,16 @@ public class MainActivityGUIHandler extends Handler
         } else {
             guiRef.buttonOffCommand.setTextColor(Color.GRAY);
             guiRef.buttonOnCommand.setTextColor(Color.GRAY);
+        }
+    }
+
+    private void setUpdateAddressButtonEnabled(boolean b) {
+        // ボタンを押下可能／不可能に変更
+        guiRef.buttonUpdateAddress.setEnabled(b);
+        if (b) {
+            guiRef.buttonUpdateAddress.setTextColor(Color.BLACK);
+        } else {
+            guiRef.buttonUpdateAddress.setTextColor(Color.GRAY);
         }
     }
 }
