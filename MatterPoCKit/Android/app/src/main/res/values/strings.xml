@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MatterControllerApp</string>
     <string name="pairing_and_connect">ペアリング実行</string>
-    <string name="update_address">Matterデバイスに接続</string>
+    <string name="update_address">Matterデバイスを検索</string>
     <string name="perform_on_command">Onコマンド実行</string>
     <string name="perform_off_command">Offコマンド実行</string>
     <string name="tips_text_initial">コマンド実行ボタンをタップし、Matterコマンドを実行してください。\n\nMatterデバイスとペアリングが行われていない場合は、まずペアリングを実行してください。</string>
@@ -9,10 +9,10 @@
     <string name="msg_pairing_will_start">ペアリングを開始します。</string>
     <string name="msg_pairing_success">ペアリングが成功しました。</string>
     <string name="msg_pairing_failure">ペアリングが失敗しました。</string>
-    <string name="msg_update_address_will_start">Matterデバイス接続を開始します。</string>
-    <string name="msg_update_address_no_device">接続可能なMatterデバイスが無いようです。まずペアリングを実行してください。</string>
-    <string name="msg_update_address_success">Matterデバイス接続が成功しました。</string>
-    <string name="msg_update_address_failure">Matterデバイス接続が失敗しました。</string>
+    <string name="msg_update_address_will_start">Matterデバイス検索を開始します。</string>
+    <string name="msg_update_address_no_device">検索可能なMatterデバイスが無いようです。まずペアリングを実行してください。</string>
+    <string name="msg_update_address_success">Matterデバイス検索が成功しました。</string>
+    <string name="msg_update_address_failure">Matterデバイス検索が失敗しました。</string>
     <string name="msg_pairing_scan_timeout">Matterデバイスをスキャンできませんでした。MatterデバイスがBLEアドバタイズを開始していない可能性があります。</string>
     <string name="msg_pairing_ble_fail">MatterデバイスとのBLE接続が確立できませんでした。途中で通信エラー等が発生した可能性があります。</string>
     <string name="msg_pairing_commission_fail">MatterデバイスをMatterハブに参加させることができませんでした。途中で通信エラー等が発生した可能性があります。</string>

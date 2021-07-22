@@ -18,8 +18,8 @@
 			label = "LED Red";
 		};
 		led3: led_3 {
-			gpios = < &gpio0 0x8 0x1 >;
-			label = "RGB LED Red";
+			gpios = < &gpio0 0xc 0x1 >;
+			label = "RGB LED Blue";
 		};
 	};
 	buttons {

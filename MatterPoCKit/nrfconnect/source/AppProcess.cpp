@@ -34,6 +34,17 @@ static bool sIsThreadEnabled         = false;
 static bool sHaveBLEConnections      = false;
 static bool sHaveServiceConnectivity = false;
 static bool sIsFactoryResetTriggered = false;
+static bool sIsBLEAdvertizeEnabled   = false;
+
+static void SetLED2Status(void)
+{
+    // 青色LEDと緑色LEDが同時点灯しないようにする
+    if (sIsBLEAdvertizeEnabled) {
+        AppLEDSetToggleLED2(false);
+    } else {
+        AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    }
+}
 
 static void FactoryResetTriggered(void)
 {
@@ -46,11 +57,33 @@ static void FactoryResetTriggered(void)
 static void FactoryResetCancelled(void)
 {
     // Set lock status LED back to show state of lock.
-    AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    SetLED2Status();
     AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
-    AppLEDSetToggleLED4(false);
+    AppLEDSetToggleLED4(sIsBLEAdvertizeEnabled);
     sIsFactoryResetTriggered = false;
     LOG_INF("Factory Reset has been Canceled");
+}
+
+static void CheckBLEAdvertizeEnabled(void)
+{
+    // 現在の状態を保持
+    static bool enabled = false;
+
+    if (!enabled && sIsBLEAdvertizeEnabled) {
+        // アドバタイズOff-->Onに遷移時は
+        // 青色LEDを点灯し、緑色LEDを消す
+        SetLED2Status();
+        AppLEDSetToggleLED4(true);
+
+    } else if (enabled && !sIsBLEAdvertizeEnabled) {
+        // アドバタイズOn-->Offに遷移時は
+        // 青色LEDを消灯し、緑色LEDを復活
+        AppLEDSetToggleLED4(false);
+        SetLED2Status();
+    }
+
+    // 現在の状態を更新
+    enabled = sIsBLEAdvertizeEnabled;
 }
 
 static void updateLEDStatus(void)
@@ -68,6 +101,10 @@ static void updateLEDStatus(void)
     //
     // Otherwise, blink the LED ON for a very short time.
     if (sIsFactoryResetTriggered == false) {
+        // 青色LEDの制御
+        CheckBLEAdvertizeEnabled();
+
+        // 橙色LEDの点灯制御
         if (sHaveServiceConnectivity) {
             // サービス実行中
             AppLEDKeepOnLED1();
@@ -101,6 +138,7 @@ static void collectStatesFromCHIPStack(void)
         sIsThreadEnabled         = ConnectivityMgr().IsThreadEnabled();
         sHaveBLEConnections      = (ConnectivityMgr().NumBLEConnections() != 0);
         sHaveServiceConnectivity = ConnectivityMgr().HaveServiceConnectivity();
+        sIsBLEAdvertizeEnabled   = ConnectivityMgr().IsBLEAdvertisingEnabled();
         PlatformMgr().UnlockChipStack();
     }
 }
@@ -284,10 +322,14 @@ void AppProcessUSBHIDCommand(uint8_t command)
     // USB HID I/Fからコマンド投入時の処理
     switch (command) {
         case 0xcf:
+            // リセット処理を行う（工場出荷状態に戻す）
+            ConfigurationMgr().InitiateFactoryReset();
+            break;
+        case 0xce:
             // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
             AppBoltLockerSimulateLockAction();
             break;
-        case 0xce:
+        case 0xcd:
             // 解錠後の自動施錠実行設定（On/Off）を変更
             ToggleAutoRelockEnabled();
             break;

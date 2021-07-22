@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import chip.devicecontroller.ChipClusters;
+import chip.devicecontroller.ChipClusters.OnOffCluster;
 import jp.co.diverta.app.mattercontroller.ble.BLECentral;
 import jp.co.diverta.app.mattercontroller.chip.ClusterCallback;
 
@@ -14,12 +15,15 @@ public class MainActivityCommand
 {
     // オブジェクトの参照を保持
     private MainActivity guiRef;
-    private MainActivityGUIHandler handlerRef;
     private BLECentral bleCentral;
 
-    // アドレス更新済みフラグ
+    // 別スレッドから画面操作するためのハンドラー
+    private MainActivityGUIHandler handlerRef;
+
+    // Matterデバイス検索済みフラグ
+    //   初回ペアリング／コミッショニング、または
     //   Address Updateを実施済みかどうかを保持
-    private boolean mAddressUpdated = false;
+    private boolean mDeviceDiscovered = false;
 
     // ChipClient、ChipServiceResolverの参照を保持
     private ChipClient mChipClient;
@@ -31,16 +35,24 @@ public class MainActivityCommand
     public MainActivityCommand(MainActivity ma) {
         // 画面オブジェクトの参照を保持
         guiRef = ma;
-        handlerRef = guiRef.guiHandler;
+        handlerRef = new MainActivityGUIHandler(guiRef);
         bleCentral = new BLECentral(this);
         mChipClient = new ChipClient(this);
         mServiceResolver = new ChipServiceResolver(this);
 
-        // コマンド実行ボタンを押下不可に設定
-        // setButtonDoCommandEnabled(false);
+        // デバイス検索ボタンを不活性化
+        // TODO: 仮の実装です。
+        setButtonUpdateAddressEnabled(false);
+
+        // アドレス更新済みフラグをクリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(false);
     }
 
     public void startBLEConnection() {
+        // 処理開始ログ
+        Log.d(TAG, "Matter device commissioning start");
+        // アドレス更新済みフラグをクリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(false);
         // ボタンを押下不可に変更
         setButtonsEnabled(false);
         displayStatusText(getResourceString(R.string.msg_pairing_will_start));
@@ -51,8 +63,8 @@ public class MainActivityCommand
     public void cannotStartBLEConnection() {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
-        // コマンド実行ボタンを押下不可に設定
-        // setButtonDoCommandEnabled(false);
+        // アドレス更新済みフラグをクリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(false);
         // BLEが無効の場合
         displayStatusText(getResourceString(R.string.msg_bluetooth_is_turned_off));
     }
@@ -60,23 +72,32 @@ public class MainActivityCommand
     public void onBLEConnectionTerminated(boolean success) {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
-        // コマンド実行ボタンを押下不可に設定
-        // setButtonDoCommandEnabled(false);
+        // アドレス更新済みフラグを設定／クリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(success);
         if (success) {
             appendStatusText(getResourceString(R.string.msg_pairing_success));
+            Log.d(TAG, "Matter device commissioning success");
         } else {
             appendStatusText(getResourceString(R.string.msg_pairing_failure));
+            Log.d(TAG, "Matter device commissioning failed");
         }
+    }
+
+    private void setDeviceDiscovered(boolean discovered) {
+        // アドレス更新済みフラグを設定／クリア
+        mDeviceDiscovered = discovered;
+        // コマンド実行ボタンを押下可／不可に設定
+        setButtonDoCommandEnabled(mDeviceDiscovered);
     }
 
     //
     // Update address
     //
     public void startUpdateAddress() {
-        // アドレス更新済みフラグをクリア
-        mAddressUpdated = false;
-        // ボタンを押下不可に変更
-        setButtonsEnabled(false);
+        // 処理開始ログ
+        Log.d(TAG, "Matter device address update start");
+        // アドレス更新済みフラグをクリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(false);
         displayStatusText(getResourceString(R.string.msg_update_address_will_start));
         // Matterデバイス検索処理を開始
         mServiceResolver.startResolve();
@@ -99,7 +120,6 @@ public class MainActivityCommand
         //   同期型の処理なので、コールバック設定は不要
         try {
             mChipClient.getDeviceController().updateAddress(deviceId, hostAddress, port);
-            Log.d(TAG, "Matter device address update completed");
             onUpdateAddressTerminated(true);
 
         } catch (Exception e) {
@@ -111,14 +131,14 @@ public class MainActivityCommand
     public void onUpdateAddressTerminated(boolean success) {
         // ボタンを押下可に変更
         setButtonsEnabled(true);
+        // アドレス更新済みフラグを設定／クリア（コマンド実行ボタンも制御）
+        setDeviceDiscovered(success);
         if (success) {
-            // アドレス更新済みフラグを設定
-            mAddressUpdated = true;
             appendStatusText(getResourceString(R.string.msg_update_address_success));
+            Log.d(TAG, "Matter device address update completed");
         } else {
-            // コマンド実行ボタンを押下不可に設定
-            // setButtonDoCommandEnabled(false);
             appendStatusText(getResourceString(R.string.msg_update_address_failure));
+            Log.d(TAG, "Matter device address update not completed");
         }
     }
 
@@ -128,26 +148,28 @@ public class MainActivityCommand
     public void performOffCommand() {
         // メッセージを表示
         displayStatusText(getResourceString(R.string.msg_off_command_will_start));
+        Log.d(TAG, "Matter device off command start");
 
         // デバイス参照を取得
         long devicePtr = getActiveDevicePtr();
 
         // Offコマンドを実行
         int endpoint = 1;
-        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        ChipClusters.OnOffCluster onOffCluster = new OnOffCluster(devicePtr, endpoint);
         onOffCluster.off(new ClusterCallback(this));
     }
 
     public void performOnCommand() {
         // メッセージを表示
         displayStatusText(getResourceString(R.string.msg_on_command_will_start));
+        Log.d(TAG, "Matter device on command start");
 
         // デバイス参照を取得
         long devicePtr = getActiveDevicePtr();
 
         // Onコマンドを実行
         int endpoint = 1;
-        ChipClusters.OnOffCluster onOffCluster = new ChipClusters.OnOffCluster(devicePtr, endpoint);
+        ChipClusters.OnOffCluster onOffCluster = new OnOffCluster(devicePtr, endpoint);
         onOffCluster.on(new ClusterCallback(this));
     }
 
@@ -163,8 +185,10 @@ public class MainActivityCommand
         // 終了メッセージを表示
         if (success) {
             appendStatusText(getResourceString(R.string.msg_perform_command_success));
+            Log.d(TAG, "Matter device on/off command success");
         } else {
             appendStatusText(getResourceString(R.string.msg_perform_command_failure));
+            Log.d(TAG, "Matter device on/off command failed");
         }
     }
 
@@ -196,6 +220,14 @@ public class MainActivityCommand
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_DOCMD_ENABLE);
         } else {
             handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_DOCMD_DISABLE);
+        }
+    }
+
+    public void setButtonUpdateAddressEnabled(boolean enable) {
+        if (enable) {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_UPADR_ENABLE);
+        } else {
+            handlerRef.sendEmptyMessage(MainActivityGUIHandler.BUTTON_UPADR_DISABLE);
         }
     }
 

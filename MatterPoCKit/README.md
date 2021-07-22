@@ -37,8 +37,8 @@ Raspberry Pi 3 Model Bを使用しています。
 
 ## 手順書
 
-- <b>[Matterコントローラー導入手順]()</b><br>
-コントローラーアプリを、Android環境にインストールする手順について掲載します。
+- <b>[Matterコントローラーアプリ導入手順](../MatterPoCKit/INSTALLPRG.md)</b><br>
+Matterコントローラーアプリを、Android環境にインストールする手順について掲載します。
 
 - <b>[Matterデバイスアプリ導入手順](../MatterPoCKit/INSTALLFW.md)</b><br>
 Matterデバイスアプリ（ファームウェア）をnRF52840環境にインストールする手順について掲載します。
