@@ -34,6 +34,7 @@ static bool sIsThreadEnabled         = false;
 static bool sHaveBLEConnections      = false;
 static bool sHaveServiceConnectivity = false;
 static bool sIsFactoryResetTriggered = false;
+static bool sIsBLEAdvertizeEnabled   = false;
 
 static void FactoryResetTriggered(void)
 {
@@ -48,7 +49,6 @@ static void FactoryResetCancelled(void)
     // Set lock status LED back to show state of lock.
     AppLEDSetToggleLED2(AppBoltLockerIsLocked());
     AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
-    AppLEDSetToggleLED4(false);
     sIsFactoryResetTriggered = false;
     LOG_INF("Factory Reset has been Canceled");
 }
@@ -68,6 +68,10 @@ static void updateLEDStatus(void)
     //
     // Otherwise, blink the LED ON for a very short time.
     if (sIsFactoryResetTriggered == false) {
+        // 青色LEDの制御
+        AppLEDSetToggleLED4(sIsBLEAdvertizeEnabled);
+
+        // 橙色LEDの点灯制御
         if (sHaveServiceConnectivity) {
             // サービス実行中
             AppLEDKeepOnLED1();
@@ -101,6 +105,7 @@ static void collectStatesFromCHIPStack(void)
         sIsThreadEnabled         = ConnectivityMgr().IsThreadEnabled();
         sHaveBLEConnections      = (ConnectivityMgr().NumBLEConnections() != 0);
         sHaveServiceConnectivity = ConnectivityMgr().HaveServiceConnectivity();
+        sIsBLEAdvertizeEnabled   = ConnectivityMgr().IsBLEAdvertisingEnabled();
         PlatformMgr().UnlockChipStack();
     }
 }
