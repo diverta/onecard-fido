@@ -36,6 +36,16 @@ static bool sHaveServiceConnectivity = false;
 static bool sIsFactoryResetTriggered = false;
 static bool sIsBLEAdvertizeEnabled   = false;
 
+static void SetLED2Status(void)
+{
+    // 青色LEDと緑色LEDが同時点灯しないようにする
+    if (sIsBLEAdvertizeEnabled) {
+        AppLEDSetToggleLED2(false);
+    } else {
+        AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    }
+}
+
 static void FactoryResetTriggered(void)
 {
     // Turn off all LEDs before starting blink to make sure blink is co-ordinated.
@@ -47,10 +57,33 @@ static void FactoryResetTriggered(void)
 static void FactoryResetCancelled(void)
 {
     // Set lock status LED back to show state of lock.
-    AppLEDSetToggleLED2(AppBoltLockerIsLocked());
+    SetLED2Status();
     AppLEDSetToggleLED3(AppBoltLockerAutoRelockEnabled());
+    AppLEDSetToggleLED4(sIsBLEAdvertizeEnabled);
     sIsFactoryResetTriggered = false;
     LOG_INF("Factory Reset has been Canceled");
+}
+
+static void CheckBLEAdvertizeEnabled(void)
+{
+    // 現在の状態を保持
+    static bool enabled = false;
+
+    if (!enabled && sIsBLEAdvertizeEnabled) {
+        // アドバタイズOff-->Onに遷移時は
+        // 青色LEDを点灯し、緑色LEDを消す
+        SetLED2Status();
+        AppLEDSetToggleLED4(true);
+
+    } else if (enabled && !sIsBLEAdvertizeEnabled) {
+        // アドバタイズOn-->Offに遷移時は
+        // 青色LEDを消灯し、緑色LEDを復活
+        AppLEDSetToggleLED4(false);
+        SetLED2Status();
+    }
+
+    // 現在の状態を更新
+    enabled = sIsBLEAdvertizeEnabled;
 }
 
 static void updateLEDStatus(void)
@@ -69,7 +102,7 @@ static void updateLEDStatus(void)
     // Otherwise, blink the LED ON for a very short time.
     if (sIsFactoryResetTriggered == false) {
         // 青色LEDの制御
-        AppLEDSetToggleLED4(sIsBLEAdvertizeEnabled);
+        CheckBLEAdvertizeEnabled();
 
         // 橙色LEDの点灯制御
         if (sHaveServiceConnectivity) {
