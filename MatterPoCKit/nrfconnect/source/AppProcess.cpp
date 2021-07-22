@@ -284,10 +284,14 @@ void AppProcessUSBHIDCommand(uint8_t command)
     // USB HID I/Fからコマンド投入時の処理
     switch (command) {
         case 0xcf:
+            // リセット処理を行う（工場出荷状態に戻す）
+            ConfigurationMgr().InitiateFactoryReset();
+            break;
+        case 0xce:
             // CHIPから解錠・施錠コマンドを受信したのと等価の処理を行う
             AppBoltLockerSimulateLockAction();
             break;
-        case 0xce:
+        case 0xcd:
             // 解錠後の自動施錠実行設定（On/Off）を変更
             ToggleAutoRelockEnabled();
             break;
