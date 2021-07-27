@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7A24839826AFE3CC00FC16C7"
-               BuildableName = "mattercontroller.app"
+               BuildableName = "MatterController.app"
                BlueprintName = "mattercontroller"
                ReferencedContainer = "container:mattercontroller.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7A24839826AFE3CC00FC16C7"
-            BuildableName = "mattercontroller.app"
+            BuildableName = "MatterController.app"
             BlueprintName = "mattercontroller"
             ReferencedContainer = "container:mattercontroller.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7A24839826AFE3CC00FC16C7"
-            BuildableName = "mattercontroller.app"
+            BuildableName = "MatterController.app"
             BlueprintName = "mattercontroller"
             ReferencedContainer = "container:mattercontroller.xcodeproj">
          </BuildableReference>

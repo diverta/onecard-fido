@@ -14,18 +14,18 @@
 		7A2483A926AFE3CC00FC16C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A2483A826AFE3CC00FC16C7 /* Assets.xcassets */; };
 		7A2483AC26AFE3CC00FC16C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A2483AA26AFE3CC00FC16C7 /* LaunchScreen.storyboard */; };
 		7A2483AF26AFE3CC00FC16C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A2483AE26AFE3CC00FC16C7 /* main.m */; };
-		7A2483B726AFE44000FC16C7 /* CHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A2483B626AFE44000FC16C7 /* CHIP.framework */; };
-		7A2483B826AFE44000FC16C7 /* CHIP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7A2483B626AFE44000FC16C7 /* CHIP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7A4F7E0A26B006CD00539B0A /* CHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; };
+		7A4F7E0B26B006CD00539B0A /* CHIP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		7A2483B926AFE44000FC16C7 /* Embed Frameworks */ = {
+		7A4F7E0C26B006CD00539B0A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7A2483B826AFE44000FC16C7 /* CHIP.framework in Embed Frameworks */,
+				7A4F7E0B26B006CD00539B0A /* CHIP.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,7 +45,7 @@
 		7A2483AB26AFE3CC00FC16C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7A2483AD26AFE3CC00FC16C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A2483AE26AFE3CC00FC16C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7A2483B626AFE44000FC16C7 /* CHIP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CHIP.framework; path = ../CHIP.framework; sourceTree = "<group>"; };
+		7A4F7E0926B006CD00539B0A /* CHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A2483B726AFE44000FC16C7 /* CHIP.framework in Frameworks */,
+				7A4F7E0A26B006CD00539B0A /* CHIP.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +98,7 @@
 		7A2483B526AFE44000FC16C7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7A2483B626AFE44000FC16C7 /* CHIP.framework */,
+				7A4F7E0926B006CD00539B0A /* CHIP.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -113,7 +113,7 @@
 				7A24839526AFE3CC00FC16C7 /* Sources */,
 				7A24839626AFE3CC00FC16C7 /* Frameworks */,
 				7A24839726AFE3CC00FC16C7 /* Resources */,
-				7A2483B926AFE44000FC16C7 /* Embed Frameworks */,
+				7A4F7E0C26B006CD00539B0A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
