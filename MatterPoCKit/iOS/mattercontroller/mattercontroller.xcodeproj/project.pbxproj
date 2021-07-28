@@ -14,6 +14,7 @@
 		7A2483A926AFE3CC00FC16C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A2483A826AFE3CC00FC16C7 /* Assets.xcassets */; };
 		7A2483AC26AFE3CC00FC16C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A2483AA26AFE3CC00FC16C7 /* LaunchScreen.storyboard */; };
 		7A2483AF26AFE3CC00FC16C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A2483AE26AFE3CC00FC16C7 /* main.m */; };
+		7A454E8226B1336C00B49622 /* MatterCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A454E8126B1336C00B49622 /* MatterCommand.m */; };
 		7A4F7E0A26B006CD00539B0A /* CHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; };
 		7A4F7E0B26B006CD00539B0A /* CHIP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -45,6 +46,9 @@
 		7A2483AB26AFE3CC00FC16C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7A2483AD26AFE3CC00FC16C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A2483AE26AFE3CC00FC16C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7A454E8126B1336C00B49622 /* MatterCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MatterCommand.m; sourceTree = "<group>"; };
+		7A454E8426B133A500B49622 /* MatterCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatterCommand.h; sourceTree = "<group>"; };
+		7A454E8526B153C100B49622 /* MatterStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatterStrings.h; sourceTree = "<group>"; };
 		7A4F7E0926B006CD00539B0A /* CHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -63,6 +67,7 @@
 		7A24839026AFE3CC00FC16C7 = {
 			isa = PBXGroup;
 			children = (
+				7A454E8026B1332C00B49622 /* business */,
 				7A24839B26AFE3CC00FC16C7 /* mattercontroller */,
 				7A24839A26AFE3CC00FC16C7 /* Products */,
 				7A2483B526AFE44000FC16C7 /* Frameworks */,
@@ -101,6 +106,16 @@
 				7A4F7E0926B006CD00539B0A /* CHIP.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7A454E8026B1332C00B49622 /* business */ = {
+			isa = PBXGroup;
+			children = (
+				7A454E8426B133A500B49622 /* MatterCommand.h */,
+				7A454E8126B1336C00B49622 /* MatterCommand.m */,
+				7A454E8526B153C100B49622 /* MatterStrings.h */,
+			);
+			path = business;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +193,7 @@
 				7A24839E26AFE3CC00FC16C7 /* AppDelegate.m in Sources */,
 				7A2483AF26AFE3CC00FC16C7 /* main.m in Sources */,
 				7A2483A126AFE3CC00FC16C7 /* SceneDelegate.m in Sources */,
+				7A454E8226B1336C00B49622 /* MatterCommand.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
