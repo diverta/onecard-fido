@@ -30,14 +30,72 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hLp-Sk-d1O" userLabel="ButtonPairing">
+                                <rect key="frame" x="16" y="70" width="288" height="35"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="GZg-8P-7r5"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="288" id="zFb-hG-Lci"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HiraMaruProN-W4" family="Hiragino Maru Gothic ProN" pointSize="16"/>
+                                <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" title="ペアリング実行"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SVv-Kt-B5S" userLabel="ButtonOffCommand">
+                                <rect key="frame" x="16" y="170" width="135" height="70"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="135" id="LAu-e1-Gyh"/>
+                                    <constraint firstAttribute="height" constant="70" id="ezn-W5-dee"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HiraMaruProN-W4" family="Hiragino Maru Gothic ProN" pointSize="16"/>
+                                <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" title="Offコマンド実行"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X9C-Ge-rC0" userLabel="ButtonOnCommand">
+                                <rect key="frame" x="169" y="170" width="135" height="70"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="3hg-jD-dDH"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="135" id="NAS-T0-upd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HiraMaruProN-W4" family="Hiragino Maru Gothic ProN" pointSize="16"/>
+                                <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" title="Onコマンド実行"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fga-sd-LjJ" userLabel="ButtonAddressUpdate">
+                                <rect key="frame" x="16" y="120" width="288" height="35"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="288" id="F20-Sy-qu5"/>
+                                    <constraint firstAttribute="height" constant="35" id="Rmg-We-8BF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HiraMaruProN-W4" family="Hiragino Maru Gothic ProN" pointSize="16"/>
+                                <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" title="Matterデバイスを検索"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="hLp-Sk-d1O" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="26" id="1Tp-pp-ZRb"/>
+                            <constraint firstItem="SVv-Kt-B5S" firstAttribute="baseline" secondItem="X9C-Ge-rC0" secondAttribute="baseline" id="Cr3-6t-AfG"/>
+                            <constraint firstItem="SVv-Kt-B5S" firstAttribute="top" secondItem="fga-sd-LjJ" secondAttribute="bottom" constant="15" id="KoN-Cy-N29"/>
+                            <constraint firstItem="hLp-Sk-d1O" firstAttribute="trailing" secondItem="X9C-Ge-rC0" secondAttribute="trailing" id="Pja-Gd-o6a"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="fga-sd-LjJ" secondAttribute="trailing" symbolic="YES" id="UX5-pN-s99"/>
+                            <constraint firstItem="hLp-Sk-d1O" firstAttribute="leading" secondItem="SVv-Kt-B5S" secondAttribute="leading" id="WvB-Lc-iaz"/>
+                            <constraint firstItem="X9C-Ge-rC0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SVv-Kt-B5S" secondAttribute="trailing" constant="8" symbolic="YES" id="a7H-Wb-q4a"/>
+                            <constraint firstItem="fga-sd-LjJ" firstAttribute="top" secondItem="hLp-Sk-d1O" secondAttribute="bottom" constant="15" id="d8g-XE-y4A"/>
+                            <constraint firstItem="hLp-Sk-d1O" firstAttribute="leading" secondItem="fga-sd-LjJ" secondAttribute="leading" id="lLJ-DN-ars"/>
+                            <constraint firstItem="hLp-Sk-d1O" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="tJR-UH-oCI"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="MatterControllerApp" id="MAP-iX-Bmx"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-621" y="137"/>
+            <point key="canvasLocation" x="-622.5" y="136.26760563380282"/>
         </scene>
     </scenes>
 </document>
