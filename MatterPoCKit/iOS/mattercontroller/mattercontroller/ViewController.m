@@ -9,7 +9,7 @@
 #import "MatterCommand.h"
 #import "MatterStrings.h"
 
-@interface ViewController ()
+@interface ViewController () <MatterCommandDelegate>
 
     @property (assign) IBOutlet UIButton    *buttonPairing;
     @property (assign) IBOutlet UIButton    *buttonUpdateAddress;
@@ -38,6 +38,11 @@
 #pragma mark - ボタン押下時の処理
 
     - (IBAction)buttonPairingClicked:(id)sender {
+        // ボタンを押下不可に変更
+        [self setButtonsEnabled:false];
+        [self displayStatusText:msg_pairing_will_start];
+        // スキャンを開始
+        [[self matterCommand] startBLEConnection:self];
     }
 
     - (IBAction)buttonUpdateAddressClicked:(id)sender {
@@ -84,7 +89,33 @@
 
     - (void)initializeCommand {
         // コマンドクラスを初期化
-        [self setMatterCommand:[[MatterCommand alloc] initWithViewControllerRef:self]];
+        [self setMatterCommand:[[MatterCommand alloc] initWithDelegate:self]];
+    }
+
+    - (void)didPairingComplete:(bool)success {
+        // すでにペアリング処理が完了している場合は無視
+        if ([[self buttonPairing] isEnabled]) {
+            return;
+        }
+        // ボタンを押下可に変更
+        [self setButtonsEnabled:true];
+        // コマンド実行ボタンを押下可／不可に設定
+        [self setButtonDoCommandEnabled:success];
+        // ステータス表示欄にメッセージを追加表示
+        if (success) {
+            [self appendStatusText:msg_pairing_success];
+            NSLog(@"Matter device commissioning success");
+        } else {
+            [self appendStatusText:msg_pairing_failure];
+            NSLog(@"Matter device commissioning failed");
+        }
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        if (message) {
+            // ステータス表示欄に文字列を追加表示
+            [self appendStatusText:message];
+        }
     }
 
 @end

@@ -17,6 +17,7 @@
 		7A454E8226B1336C00B49622 /* MatterCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A454E8126B1336C00B49622 /* MatterCommand.m */; };
 		7A4F7E0A26B006CD00539B0A /* CHIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; };
 		7A4F7E0B26B006CD00539B0A /* CHIP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4F7E0926B006CD00539B0A /* CHIP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7AFB030626B2380A00876E54 /* DefaultsUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AFB030526B2380A00876E54 /* DefaultsUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +51,8 @@
 		7A454E8426B133A500B49622 /* MatterCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatterCommand.h; sourceTree = "<group>"; };
 		7A454E8526B153C100B49622 /* MatterStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatterStrings.h; sourceTree = "<group>"; };
 		7A4F7E0926B006CD00539B0A /* CHIP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CHIP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AFB030426B2380A00876E54 /* DefaultsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DefaultsUtils.h; path = "../../../../../connectedhomeip/src/darwin/CHIPTool/CHIPTool/Framework Helpers/DefaultsUtils.h"; sourceTree = "<group>"; };
+		7AFB030526B2380A00876E54 /* DefaultsUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DefaultsUtils.m; path = "../../../../../connectedhomeip/src/darwin/CHIPTool/CHIPTool/Framework Helpers/DefaultsUtils.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,7 @@
 		7A24839026AFE3CC00FC16C7 = {
 			isa = PBXGroup;
 			children = (
+				7AFB030326B237AB00876E54 /* Framework Helpers */,
 				7A454E8026B1332C00B49622 /* business */,
 				7A24839B26AFE3CC00FC16C7 /* mattercontroller */,
 				7A24839A26AFE3CC00FC16C7 /* Products */,
@@ -116,6 +120,15 @@
 				7A454E8526B153C100B49622 /* MatterStrings.h */,
 			);
 			path = business;
+			sourceTree = "<group>";
+		};
+		7AFB030326B237AB00876E54 /* Framework Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7AFB030426B2380A00876E54 /* DefaultsUtils.h */,
+				7AFB030526B2380A00876E54 /* DefaultsUtils.m */,
+			);
+			path = "Framework Helpers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A2483A426AFE3CC00FC16C7 /* ViewController.m in Sources */,
+				7AFB030626B2380A00876E54 /* DefaultsUtils.m in Sources */,
 				7A24839E26AFE3CC00FC16C7 /* AppDelegate.m in Sources */,
 				7A2483AF26AFE3CC00FC16C7 /* main.m in Sources */,
 				7A2483A126AFE3CC00FC16C7 /* SceneDelegate.m in Sources */,

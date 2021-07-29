@@ -9,10 +9,21 @@
 
 #import <CHIP/CHIP.h>
 
+@protocol MatterCommandDelegate;
+
 @interface MatterCommand : NSObject <CHIPDevicePairingDelegate>
 
-    - (id)initWithViewControllerRef:(id)ref;
+    - (id)initWithDelegate:(id<MatterCommandDelegate>)delegate;
+    - (void)startBLEConnection:(id)ref;
 
 @end
+
+@protocol MatterCommandDelegate <NSObject>
+
+    - (void)notifyMessage:(NSString *)message;
+    - (void)didPairingComplete:(bool)success;
+
+@end
+
 
 #endif /* MatterCommand_h */
