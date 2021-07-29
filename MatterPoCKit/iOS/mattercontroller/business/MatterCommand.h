@@ -14,7 +14,7 @@
 @interface MatterCommand : NSObject <CHIPDevicePairingDelegate>
 
     - (id)initWithDelegate:(id<MatterCommandDelegate>)delegate;
-    - (void)startBLEConnection:(id)ref;
+    - (void)startBLEConnection;
 
 @end
 

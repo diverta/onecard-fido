@@ -102,13 +102,15 @@
 
 #pragma mark - Public method
 
-    - (void)startBLEConnection:(id)ref {
+    - (void)startBLEConnection {
         // 処理開始ログ
         NSLog(@"Matter device commissioning start");
         uint32_t setupPINCode = 20202021;
         uint16_t discriminator = 0x0f00;
         [self handleRendezVousBLE:discriminator setupPINCode:setupPINCode];
     }
+
+#pragma mark - Pairing & Commissioning
 
     - (void)pairingCompleted:(bool)success {
         if (success == false) {

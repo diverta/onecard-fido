@@ -42,7 +42,7 @@
         [self setButtonsEnabled:false];
         [self displayStatusText:msg_pairing_will_start];
         // スキャンを開始
-        [[self matterCommand] startBLEConnection:self];
+        [[self matterCommand] startBLEConnection];
     }
 
     - (IBAction)buttonUpdateAddressClicked:(id)sender {
