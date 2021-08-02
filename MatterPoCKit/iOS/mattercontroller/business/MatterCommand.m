@@ -13,14 +13,14 @@
     // 画面の参照を保持
     @property (nonatomic, weak) id<MatterCommandDelegate> delegate;
     // 非同期処理用のキュー（画面用）
-    @property (nonatomic) dispatch_queue_t mainQueue;
+    @property (nonatomic) dispatch_queue_t          mainQueue;
     // Matterライブラリーのオブジェクト参照
     @property (readwrite) CHIPDeviceController     *chipController;
     @property (nonatomic) CHIPNetworkCommissioning *cluster;
     @property (nonatomic) CHIPOnOff                *clusterOnOff;
     // コミッショニングに必要なパラメーターを保持
-    @property (nonatomic) NSData               *operationalDataset;
-    @property (nonatomic) NSData               *networkId;
+    @property (nonatomic) NSData                   *operationalDataset;
+    @property (nonatomic) NSData                   *networkId;
 
 @end
 
@@ -133,31 +133,25 @@
         }
         // For debug
         [self printDeviceList];
-        // コミッショニング処理を続行
-        if ([self addThreadNetwork] == false) {
-            NSLog(@"Status: Failed to trigger the connection with the device");
+        // 接続完了ハンドラーを設定
+        __weak typeof(self) weakSelf = self;
+        CHIPDeviceConnectionCallback handler = ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
+            [weakSelf onConnectForAddNetwork:chipDevice error:error isWiFi:NO endpoint:0];
+        };
+        // デバイス接続-->コミッショニング依頼処理を続行
+        if (CHIPGetConnectedDevice(handler) == false) {
+            NSLog(@"Failed to trigger the connection with the device");
             [[self delegate] didPairingComplete:false];
             return;
         }
     }
 
-    - (bool)addThreadNetwork {
-        // 接続完了ハンドラーを設定
-        __weak typeof(self) weakSelf = self;
-        CHIPDeviceConnectionCallback handler = ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
-            if (chipDevice == nil) {
-                NSLog(@"Status: Failed to establish a connection with the device");
-                [[weakSelf delegate] didPairingComplete:false];
-                return;
-            }
-            // 接続完了時の処理
-            [weakSelf onConnectForAddNetwork:chipDevice error:error isWiFi:NO endpoint:0];
-        };
-        bool success = CHIPGetConnectedDevice(handler);
-        return success;
-    }
-
     - (void)onConnectForAddNetwork:(CHIPDevice *)chipDevice error:(NSError *)error isWiFi:(BOOL)isWiFi endpoint:(uint16_t)endpoint{
+        if (chipDevice == nil) {
+            NSLog(@"Failed to establish a connection with the device");
+            [[self delegate] didPairingComplete:false];
+            return;
+        }
         if (error != nil) {
             NSLog(@"Error connecting device for adding network: %@", error);
             [[self delegate] didPairingComplete:false];
@@ -169,7 +163,7 @@
             [weakSelf onAddNetworkResponse:error isWiFi:isWiFi];
         };
         // コミッショニング依頼処理を実行
-        [self setCluster:[[CHIPNetworkCommissioning alloc] initWithDevice:chipDevice endpoint:endpoint queue:dispatch_get_main_queue()]];
+        [self setCluster:[[CHIPNetworkCommissioning alloc] initWithDevice:chipDevice endpoint:endpoint queue:[self mainQueue]]];
         uint64_t breadcrumb = 0;
         uint32_t timeoutMs = 3000;
         [[self cluster] addThreadNetwork:[self operationalDataset] breadcrumb:breadcrumb timeoutMs:timeoutMs responseHandler:handler];
@@ -242,12 +236,6 @@
         // 接続完了ハンドラーを設定
         __weak typeof(self) weakSelf = self;
         CHIPDeviceConnectionCallback handler = ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
-            if (chipDevice == nil) {
-                NSLog(@"Status: Failed to establish a connection with the device");
-                [[weakSelf delegate] didPerformCommandComplete:false];
-                return;
-            }
-            // 接続処理完了時
             [weakSelf onConnectForCommandOnOff:chipDevice error:error isOff:isOff endpoint:endpoint];
         };
         // 接続処理を実行
@@ -256,6 +244,11 @@
     }
 
     - (void)onConnectForCommandOnOff:(CHIPDevice *)chipDevice error:(NSError *)error isOff:(bool)isOff endpoint:(uint16_t)endpoint{
+        if (chipDevice == nil) {
+            NSLog(@"Failed to establish a connection with the device");
+            [[self delegate] didPerformCommandComplete:false];
+            return;
+        }
         if (error != nil) {
             NSLog(@"Error connecting device for on/off command: %@", error);
             [[self delegate] didPerformCommandComplete:false];
@@ -267,7 +260,7 @@
             [weakSelf onCommandOnOffResponse:error values:values isOff:isOff];
         };
         // コマンド実行
-        [self setClusterOnOff:[[CHIPOnOff alloc] initWithDevice:chipDevice endpoint:endpoint queue:dispatch_get_main_queue()]];
+        [self setClusterOnOff:[[CHIPOnOff alloc] initWithDevice:chipDevice endpoint:endpoint queue:[self mainQueue]]];
         if (isOff) {
             [[self clusterOnOff] off:handler];
         } else {
