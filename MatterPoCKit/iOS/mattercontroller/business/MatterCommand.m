@@ -142,25 +142,37 @@
     }
 
     - (bool)addThreadNetwork {
-        bool success = CHIPGetConnectedDevice(^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
+        // 接続完了ハンドラーを設定
+        __weak typeof(self) weakSelf = self;
+        CHIPDeviceConnectionCallback handler = ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
             if (chipDevice == nil) {
                 NSLog(@"Status: Failed to establish a connection with the device");
-                [[self delegate] didPairingComplete:false];
+                [[weakSelf delegate] didPairingComplete:false];
                 return;
             }
-
-            [self setCluster:[[CHIPNetworkCommissioning alloc] initWithDevice:chipDevice endpoint:0 queue:dispatch_get_main_queue()]];
-
-            __weak typeof(self) weakSelf = self;
-            uint64_t breadcrumb = 0;
-            uint32_t timeoutMs = 3000;
-            [[self cluster] addThreadNetwork:[self operationalDataset]
-                breadcrumb:breadcrumb timeoutMs:timeoutMs
-                responseHandler:^(NSError *error, NSDictionary *values) {
-                [weakSelf onAddNetworkResponse:error isWiFi:NO];
-            }];
-        });
+            // 接続完了時の処理
+            [weakSelf onConnectForAddNetwork:chipDevice error:error isWiFi:NO endpoint:0];
+        };
+        bool success = CHIPGetConnectedDevice(handler);
         return success;
+    }
+
+    - (void)onConnectForAddNetwork:(CHIPDevice *)chipDevice error:(NSError *)error isWiFi:(BOOL)isWiFi endpoint:(uint16_t)endpoint{
+        if (error != nil) {
+            NSLog(@"Error connecting device for adding network: %@", error);
+            [[self delegate] didPairingComplete:false];
+            return;
+        }
+        // コミッショニング依頼処理の完了ハンドラーを設定
+        __weak typeof(self) weakSelf = self;
+        ResponseHandler handler = ^(NSError *error, NSDictionary *values) {
+            [weakSelf onAddNetworkResponse:error isWiFi:isWiFi];
+        };
+        // コミッショニング依頼処理を実行
+        [self setCluster:[[CHIPNetworkCommissioning alloc] initWithDevice:chipDevice endpoint:endpoint queue:dispatch_get_main_queue()]];
+        uint64_t breadcrumb = 0;
+        uint32_t timeoutMs = 3000;
+        [[self cluster] addThreadNetwork:[self operationalDataset] breadcrumb:breadcrumb timeoutMs:timeoutMs responseHandler:handler];
     }
 
     - (void)onAddNetworkResponse:(NSError *)error isWiFi:(BOOL)isWiFi {
@@ -169,7 +181,7 @@
             [[self delegate] didPairingComplete:false];
             return;
         }
-
+        // コミッショニング先のネットワークIDを取得
         NSData * networkId;
         if (isWiFi) {
             NSString * ssid = CHIPGetDomainValueForKey(kCHIPToolDefaultsDomain, kNetworkSSIDDefaultsKey);
@@ -177,15 +189,15 @@
         } else {
             networkId = [self networkId];
         }
-
+        // コミッショニング処理の完了ハンドラーを設定
         __weak typeof(self) weakSelf = self;
+        ResponseHandler handler = ^(NSError * err, NSDictionary * values) {
+            [weakSelf onEnableNetworkResponse:err];
+        };
+        // コミッショニング処理を実行
         uint64_t breadcrumb = 0;
         uint32_t timeoutMs = 3000;
-        [[self cluster] enableNetwork:networkId
-            breadcrumb:breadcrumb timeoutMs:timeoutMs
-            responseHandler:^(NSError * err, NSDictionary * values) {
-            [weakSelf onEnableNetworkResponse:err];
-        }];
+        [[self cluster] enableNetwork:networkId breadcrumb:breadcrumb timeoutMs:timeoutMs responseHandler:handler];
     }
 
     - (void)onEnableNetworkResponse:(NSError *)error {
