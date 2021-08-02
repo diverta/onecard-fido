@@ -15,6 +15,8 @@
 
     - (id)initWithDelegate:(id<MatterCommandDelegate>)delegate;
     - (void)startBLEConnection;
+    - (void)performOffCommand;
+    - (void)performOnCommand;
 
 @end
 
@@ -22,6 +24,7 @@
 
     - (void)notifyMessage:(NSString *)message;
     - (void)didPairingComplete:(bool)success;
+    - (void)didPerformCommandComplete:(bool)success;
 
 @end
 

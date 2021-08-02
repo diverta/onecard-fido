@@ -49,9 +49,17 @@
     }
 
     - (IBAction)buttonOffCommandClicked:(id)sender {
+        // メッセージを表示
+        [self displayStatusText:msg_off_command_will_start];
+        // Offコマンドを実行
+        [[self matterCommand] performOffCommand];
     }
 
     - (IBAction)buttonOnCommandClicked:(id)sender {
+        // メッセージを表示
+        [self displayStatusText:msg_on_command_will_start];
+        // Onコマンドを実行
+        [[self matterCommand] performOnCommand];
     }
 
 # pragma mark - 画面制御
@@ -108,6 +116,17 @@
         } else {
             [self appendStatusText:msg_pairing_failure];
             NSLog(@"Matter device commissioning failed");
+        }
+    }
+
+    - (void)didPerformCommandComplete:(bool)success {
+        // 終了メッセージを表示
+        if (success) {
+            [self appendStatusText:msg_perform_command_success];
+            NSLog(@"Matter device on/off command success");
+        } else {
+            [self appendStatusText:msg_perform_command_failure];
+            NSLog(@"Matter device on/off command failed");
         }
     }
 

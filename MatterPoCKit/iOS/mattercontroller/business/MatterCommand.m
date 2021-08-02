@@ -17,6 +17,7 @@
     // Matterライブラリーのオブジェクト参照
     @property (readwrite) CHIPDeviceController     *chipController;
     @property (nonatomic) CHIPNetworkCommissioning *cluster;
+    @property (nonatomic) CHIPOnOff                *clusterOnOff;
     // コミッショニングに必要なパラメーターを保持
     @property (nonatomic) NSData               *operationalDataset;
     @property (nonatomic) NSData               *networkId;
@@ -110,6 +111,18 @@
         [self handleRendezVousBLE:discriminator setupPINCode:setupPINCode];
     }
 
+    - (void)performOffCommand {
+        // 処理開始ログ
+        NSLog(@"Matter device off command start");
+        [self performCommandOnOff:true endpoint:1];
+    }
+
+    - (void)performOnCommand {
+        // 処理開始ログ
+        NSLog(@"Matter device on command start");
+        [self performCommandOnOff:false endpoint:1];
+    }
+
 #pragma mark - Pairing & Commissioning
 
     - (void)pairingCompleted:(bool)success {
@@ -196,6 +209,64 @@
                 NSLog(@"Paired Matter device (%d)", (int)i);
             }
         }
+    }
+
+#pragma mark - Perform on & off command
+
+    - (void)performCommandOnOff:(bool)isOff endpoint:(uint16_t)endpoint {
+        // コミッション済みデバイスのIDを取得
+        uint64_t deviceId = CHIPGetNextAvailableDeviceID() - 1;
+        // 接続処理を実行
+        if ([self connectForCommandOnOff:isOff deviceId:deviceId endpoint:endpoint] == false) {
+            NSLog(@"Failed to trigger the connection with the device (id=%d)", (int)deviceId);
+            [[self delegate] didPerformCommandComplete:false];
+            return;
+        }
+        // 接続処理完了待ち
+        NSLog(@"Waiting for connection with the device (id=%d)", (int)deviceId);
+    }
+
+    - (bool)connectForCommandOnOff:(bool)isOff deviceId:(uint64_t)deviceId endpoint:(uint16_t)endpoint {
+        bool success = CHIPGetConnectedDeviceWithID(deviceId, ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
+            if (chipDevice == nil) {
+                NSLog(@"Status: Failed to establish a connection with the device");
+                [[self delegate] didPerformCommandComplete:false];
+                return;
+            }
+            // 接続処理完了時
+            [self onConnectForCommandOnOff:chipDevice error:error isOff:isOff endpoint:endpoint];
+        });
+        return success;
+    }
+
+    - (void)onConnectForCommandOnOff:(CHIPDevice *)chipDevice error:(NSError *)error isOff:(bool)isOff endpoint:(uint16_t)endpoint{
+        if (error != nil) {
+            NSLog(@"Error connecting device for on/off command: %@", error);
+            [[self delegate] didPerformCommandComplete:false];
+            return;
+        }
+        // 実行コマンドの完了ハンドラーを設定
+        __weak typeof(self) weakSelf = self;
+        ResponseHandler handler = ^(NSError * error, NSDictionary * values) {
+            [weakSelf onCommandOnOffResponse:error values:values isOff:isOff];
+        };
+        // コマンド実行
+        [self setClusterOnOff:[[CHIPOnOff alloc] initWithDevice:chipDevice endpoint:endpoint queue:dispatch_get_main_queue()]];
+        if (isOff) {
+            [[self clusterOnOff] off:handler];
+        } else {
+            [[self clusterOnOff] on:handler];
+        }
+    }
+
+    - (void)onCommandOnOffResponse:(NSError *)error values:(NSDictionary *)values isOff:(bool)isOff {
+        if (error != nil) {
+            NSLog(@"Error performing on/off command: %@", error);
+            [[self delegate] didPerformCommandComplete:false];
+            return;
+        }
+        // コマンド実行完了
+        [[self delegate] didPerformCommandComplete:true];
     }
 
 @end
