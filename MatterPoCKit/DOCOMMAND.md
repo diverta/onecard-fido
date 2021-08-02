@@ -29,8 +29,10 @@ BLE切断後ふたたび、Matterコマンド実行を試したい場合は、�
 
 別途手順書「[Matterハブ構築手順](../MatterPoCKit/SETUPHUB.md)」の「Matterハブ開始手順」に従い、Matterハブを開始させます。
 
-なお、Matterハブは後述「ペアリング／コミッショニング」で使用する、Wi-Fiアクセスポイントとなります。<br>
-デフォルトのSSIDは`BorderRouter-AP`、パスワードはMatterハブ内のファイル`/etc/hostapd/hostapd.conf`に記載されている`wpa_passphrase`になります。
+なお、Matterハブは後述「ペアリング／コミッショニング」で使用する、Thread[注1]ネットワークのルーターとなります。<br>
+コミッショニング処理において、MatterデバイスはThread経由でMatterハブに接続する必要があるため、Matterハブが準備できていないと、ペアリング／コミッショニングが正常に完了しません。
+
+[注1]Thread=IEEE 802.15.4準拠の無線通信規格（ZigBeeに類似した規格）。BLEとは互換性がありません。
 
 #### Matterデバイスの準備
 
@@ -41,20 +43,7 @@ Matterデバイスは、Matterハブの開始が完了してから、動作を�
 
 #### Matterコントローラーの準備
 
-MatterコントローラーとなるAndroidスマートフォンを、MatterハブのWi-Fiアクセスポイントに接続させるように設定します。<br>
-Wi-Fi設定画面から、`BorderRouter-AP`というアクセスポイントを選択します。
-
-<img src="../Research/Matter/assets01/0032.jpg" width="160">
-
-パスワードを入力し「接続」をタップします。
-
-<img src="../Research/Matter/assets01/0033.jpg" width="160">
-
-Wi-Fi設定画面の`BorderRouter-AP`が接続ずみに変化します。
-
-<img src="../Research/Matter/assets01/0034.jpg" width="160">
-
-次に、BluetoothをOnにしておきます。
+MatterコントローラーとなるAndroidスマートフォンのBluetoothをOnにしておきます。
 
 <img src="../Research/Matter/assets01/0035.jpg" width="160">
 
@@ -99,8 +88,8 @@ MatterデバイスとなるMDBT50Q Dongleを、工場出荷状態に戻します
 Matterコントローラーは、Matterハブに対し、Matterデバイスとの通信が可能になるよう指示します。<br>
 この処理は「コミッショニング」と呼ばれています。
 
-コミッショニングは、MatterハブのWi-Fiアクセスポイントを使用して実行します。<br>
-ただし、それに先立ち、Matterデバイスの固有情報を収集するため、Matterコントローラー〜Matterデバイス間で、BLEペアリングを実行する必要があります。
+コミッショニングは、MatterハブのThreadルーター機能を使用して実行します。<br>
+ただし、それに先立ち、Matterデバイスの固有情報を収集する必要があるため、Matterコントローラー〜Matterデバイス間で、BLEペアリングが行われます。
 
 まずは、Matterデバイスの基板上にあるボタンを１回押下し、BLEアドバタイズを開始させます。<br>
 基板上の青色LEDが点灯したことを確認してください。
@@ -112,7 +101,7 @@ Matterコントローラーは、Matterハブに対し、Matterデバイスと�
 <img src="assets02/0009.jpg" width="160">
 
 ペアリング処理が開始されます。<br>
-Matterデバイス（MDBT50Q Dongle）からBLE経由で情報取得が行われた後、Wi-Fi経由で先述の「コミッショニング」処理が自動的に実行されます。
+Matterデバイス（MDBT50Q Dongle）からBLE経由で情報取得が行われた後、Matterデバイス側で、先述の「コミッショニング」処理が自動的にThread経由で実行されます。
 
 <img src="assets02/0010.jpg" width="160">
 
