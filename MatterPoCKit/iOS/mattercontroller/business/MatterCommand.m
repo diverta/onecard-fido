@@ -227,15 +227,19 @@
     }
 
     - (bool)connectForCommandOnOff:(bool)isOff deviceId:(uint64_t)deviceId endpoint:(uint16_t)endpoint {
-        bool success = CHIPGetConnectedDeviceWithID(deviceId, ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
+        // 接続完了ハンドラーを設定
+        __weak typeof(self) weakSelf = self;
+        CHIPDeviceConnectionCallback handler = ^(CHIPDevice * _Nullable chipDevice, NSError * _Nullable error) {
             if (chipDevice == nil) {
                 NSLog(@"Status: Failed to establish a connection with the device");
-                [[self delegate] didPerformCommandComplete:false];
+                [[weakSelf delegate] didPerformCommandComplete:false];
                 return;
             }
             // 接続処理完了時
-            [self onConnectForCommandOnOff:chipDevice error:error isOff:isOff endpoint:endpoint];
-        });
+            [weakSelf onConnectForCommandOnOff:chipDevice error:error isOff:isOff endpoint:endpoint];
+        };
+        // 接続処理を実行
+        bool success = CHIPGetConnectedDeviceWithID(deviceId, handler);
         return success;
     }
 
