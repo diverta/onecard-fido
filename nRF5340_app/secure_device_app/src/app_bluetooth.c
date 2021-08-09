@@ -9,16 +9,10 @@
 #include <bluetooth/conn.h>
 #include <bluetooth/gatt.h>
 
-//
-// for Bluetooth smp service
-//
-#include <mgmt/mcumgr/smp_bt.h>
-#include "os_mgmt/os_mgmt.h"
-#include "img_mgmt/img_mgmt.h"
-
 // for BLE pairing
 #include "app_ble_pairing.h"
 #include "app_event.h"
+#include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -35,7 +29,6 @@ static struct k_work stop_advertise_work;
 static struct bt_data ad[3];
 static struct bt_data ad_nobredr = BT_DATA_BYTES(BT_DATA_FLAGS, BT_LE_AD_NO_BREDR);
 static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITED | BT_LE_AD_NO_BREDR));
-static struct bt_data ad_uuid_smp = BT_DATA_BYTES(BT_DATA_UUID128_ALL, 0x84, 0xaa, 0x60, 0x74, 0x52, 0x8a, 0x8b, 0x86, 0xd3, 0x4c, 0xb7, 0x1d, 0x1d, 0xdc, 0x53, 0x8d);
 static struct bt_data ad_uuid_16 = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
 
 //
@@ -53,12 +46,17 @@ static void advertise(struct k_work *work)
     }
 
     // サービスUUIDを設定
-    ad[1] = ad_uuid_smp;
-    ad[2] = ad_uuid_16;
+    ad[1] = ad_uuid_16;
+
+    // BLE SMPサービスUUIDを追加設定
+    size_t ad_len = 2;
+    if (app_ble_smp_ad_uuid_set(&ad[2])) {
+        ad_len++;
+    }
 
     // アドバタイジングを開始する
     bt_le_adv_stop();
-    int rc = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ARRAY_SIZE(ad), NULL, 0);
+    int rc = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ad_len, NULL, 0);
     if (rc) {
         LOG_ERR("Advertising failed to start (rc %d)", rc);
         return;
@@ -152,8 +150,7 @@ static void bt_ready(int err)
 void app_bluetooth_start(void)
 {
     // BLE SMPサービスの設定
-    os_mgmt_register_group();
-    img_mgmt_register_group();
+    app_ble_smp_register_group();
 
     // ペアリングモードを設定
     if (app_ble_pairing_mode_set(false) == false) {
@@ -176,5 +173,5 @@ void app_bluetooth_start(void)
     bt_conn_cb_register(&conn_callbacks);
 
     // Initialize the Bluetooth mcumgr transport.
-    smp_bt_register();
+    app_ble_smp_bt_register();
 }
