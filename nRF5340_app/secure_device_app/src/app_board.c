@@ -208,7 +208,7 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 // --> ボタン押下でシステムが再始動
 //
 #include <hal/nrf_gpio.h>
-#include <power/power.h>
+#include <pm/pm.h>
 
 void app_board_prepare_for_deep_sleep(void)
 {

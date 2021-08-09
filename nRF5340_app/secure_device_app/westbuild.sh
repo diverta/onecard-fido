@@ -37,7 +37,7 @@ if [ "$1" == "-f" ]; then
 else
     # Build for nRF5340/nRF52840
     rm -rf build_signed
-    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DCONFIG_MCUBOOT_SIGNATURE_KEY_FILE=\"bootloader/mcuboot/root-rsa-2048.pem\" -DOVERLAY_CONFIG=overlay-smp.conf
+    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DOVERLAY_CONFIG=overlay-smp.conf
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
