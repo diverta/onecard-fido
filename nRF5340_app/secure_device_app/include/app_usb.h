@@ -15,6 +15,7 @@ extern "C" {
 // 関数群
 //
 void        app_usb_initialize(void);
+bool        app_usb_deinitialize(void);
 
 #ifdef __cplusplus
 }

@@ -53,3 +53,19 @@ void app_usb_initialize(void)
 
     LOG_INF("USB initialized");
 }
+
+//
+// USBデバイス停止処理
+//
+bool app_usb_deinitialize(void)
+{
+    // USBを停止
+    int ret = usb_disable();
+    if (ret != 0) {
+        LOG_ERR("Failed to disable USB");
+        return false;
+    }
+
+    LOG_INF("USB deinitialized");
+    return true;
+}
