@@ -229,3 +229,19 @@ void app_board_prepare_for_system_reset(void)
 {
     sys_reboot(SYS_REBOOT_WARM);
 }
+
+//
+// ブートローダーモードに遷移させる
+//
+#include <hal/nrf_power.h>
+
+#define BOOTLOADER_DFU_GPREGRET         (0xB0)
+#define BOOTLOADER_DFU_START_BIT_MASK   (0x01)
+#define BOOTLOADER_DFU_START            (BOOTLOADER_DFU_GPREGRET | BOOTLOADER_DFU_START_BIT_MASK)
+
+void app_board_prepare_for_bootloader_mode(void)
+{
+    // ブートローダーモードに遷移させるため、
+    // GPREGRETレジスターにその旨の値を設定
+    nrf_power_gpregret_set(NRF_POWER, BOOTLOADER_DFU_START);
+}
