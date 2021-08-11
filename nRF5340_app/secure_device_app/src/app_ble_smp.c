@@ -6,7 +6,7 @@
  */
 #include <stdbool.h>
 
-#ifdef CONFIG_MCUMGR
+#ifdef CONFIG_MCUMGR_SMP_BT_CUSTOM
 //
 // for Bluetooth smp service
 //

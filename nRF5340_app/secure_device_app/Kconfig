@@ -1,0 +1,15 @@
+# Copyright (c) 2021 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+#
+# Enable the customized source
+#
+config MCUMGR_SMP_BT_CUSTOM
+	bool "Bluetooth mcumgr SMP transport"
+	select BT
+	select BT_PERIPHERAL
+	select BT_GATT_DYNAMIC_DB
+	help
+	  Enables handling of SMP commands received over Bluetooth.
+
+source "Kconfig.zephyr"
