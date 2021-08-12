@@ -10,6 +10,7 @@
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
+#include <logging/log_ctrl.h>
 LOG_MODULE_REGISTER(app_dfu);
 
 #include "app_board.h"
@@ -28,9 +29,10 @@ bool app_dfu_prepare_for_bootloader(void)
     app_board_prepare_for_bootloader_mode();
 
     // ブートローダーに制御を移す
-    //   １秒待機後、システムリセットを実行
-    LOG_INF("Entering to bootloader...");
-    app_timer_start_for_idling(1000, APEVT_ENTER_TO_BOOTLOADER);
+    //   2秒待機後、システムリセットを実行
+    LOG_INF("Entering to bootloader mode");
+    LOG_PROCESS();
+    app_timer_start_for_idling(2000, APEVT_ENTER_TO_BOOTLOADER);
     return true;
 }
 
@@ -53,8 +55,9 @@ bool app_dfu_commit(void)
     }
 
     // ブートローダーに制御を移す
-    //   １秒待機後、システムリセットを実行
-    LOG_INF("Entering to bootloader...");
-    app_timer_start_for_idling(1000, APEVT_ENTER_TO_BOOTLOADER);
+    //   2秒待機後、システムリセットを実行
+    LOG_INF("Boot write image confirmed");
+    LOG_PROCESS();
+    app_timer_start_for_idling(2000, APEVT_ENTER_TO_BOOTLOADER);
     return true;
 }

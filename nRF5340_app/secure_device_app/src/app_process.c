@@ -153,6 +153,12 @@ static void ble_idling_detected(void)
     app_board_prepare_for_deep_sleep();
 }
 
+static void enter_to_bootloader(void)
+{
+    // ブートローダーに制御を移すため、システムを再始動
+    app_board_prepare_for_system_reset();
+}
+
 void app_process_for_event(APP_EVENT_T event)
 {
     // イベントに対応する処理を実行
@@ -184,6 +190,9 @@ void app_process_for_event(APP_EVENT_T event)
             break;
         case APEVT_IDLING_DETECTED:
             ble_idling_detected();
+            break;
+        case APEVT_ENTER_TO_BOOTLOADER:
+            enter_to_bootloader();
             break;
         default:
             break;
