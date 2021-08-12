@@ -1,82 +1,145 @@
 # ファームウェア更新機能
 
-#### `pyocd`のインストール
+最新更新日：2021/08/12
+
+## ツールの準備
+
+ファームウェア更新は、`dfu-util`というツールにより行います。
+
+コマンド`brew install dfu-util`を実行してインストールします。<br>
+以下は実行例になります。
 
 ```
-(ncs) bash-3.2$ pip install pyocd
-Collecting pyocd
-  Downloading https://files.pythonhosted.org/packages/da/7a/f67482d46c954f6ecd22f0e45115c94ecb1992b7c3a3fedd2a89781062bf/pyocd-0.31.0-py3-none-any.whl (12.5MB)
-    100% |████████████████████████████████| 12.5MB 2.7MB/s
-Collecting intervaltree<4.0,>=3.0.2 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/50/fb/396d568039d21344639db96d940d40eb62befe704ef849b27949ded5c3bb/intervaltree-3.1.0.tar.gz
-Requirement already satisfied: pyyaml<6.0,>=5.1 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from pyocd) (5.4.1)
-Collecting hidapi; platform_system != "Linux" (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/82/4a/f0634b2cea7ee5ed4c4dc1e9a86e49df9df8b7794723a7d728156e03993a/hidapi-0.10.1-cp37-cp37m-macosx_10_9_x86_64.whl (43kB)
-    100% |████████████████████████████████| 51kB 4.7MB/s
-Collecting pyusb<2.0,>=1.2.1 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/15/a8/4982498b2ab44d1fcd5c49f07ea3795eab01601dc143b009d333fcace3b9/pyusb-1.2.1-py3-none-any.whl (58kB)
-    100% |████████████████████████████████| 61kB 5.9MB/s
-Collecting pyocd-pemicro>=1.0.0.post2 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/e1/84/26abfc902ac2225d8a4478e190f4143973a6c9966949e54b8e711f078e36/pyocd_pemicro-1.0.6-py3-none-any.whl
-Requirement already satisfied: pyelftools<1.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from pyocd) (0.27)
-Collecting capstone<5.0,>=4.0 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/f2/ae/21dbb3ccc30d5cc9e8cdd8febfbf5d16d93b8c10e595280d2aa4631a0d1f/capstone-4.0.2.tar.gz (2.0MB)
-    100% |████████████████████████████████| 2.0MB 3.4MB/s
-Collecting cmsis-pack-manager>=0.2.10 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/d0/a4/79c0952953dfefa4e4527943151bdf014b00adb20df10e73e8f076b27144/cmsis_pack_manager-0.2.10-py2.py3-none-macosx_10_13_x86_64.whl (3.2MB)
-    100% |████████████████████████████████| 3.2MB 21.7MB/s
-Collecting prettytable<3.0,>=2.0 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/26/1b/42b59a4038bc0442e3a0085bc0de385658131eef8a88946333f870559b09/prettytable-2.1.0-py3-none-any.whl
-Collecting pylink-square<1.0,>=0.8.2 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/fb/0f/ab60002217044bb48dc5b800f16ad8a5808e635358bd134e433196d929fe/pylink_square-0.10.0-py2.py3-none-any.whl (76kB)
-    100% |████████████████████████████████| 81kB 4.1MB/s
-Collecting naturalsort<2.0,>=1.5 (from pyocd)
-  Downloading https://files.pythonhosted.org/packages/0c/84/ce1985c8c61d2ac21a4b3a5d586ed0794b855f925ecc47adca546f0c7022/naturalsort-1.5.1.tar.gz
-Requirement already satisfied: intelhex<3.0,>=2.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from pyocd) (2.3.0)
-Requirement already satisfied: six<2.0,>=1.15.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from pyocd) (1.15.0)
-Requirement already satisfied: colorama<1.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from pyocd) (0.4.4)
-Collecting sortedcontainers<3.0,>=2.0 (from intervaltree<4.0,>=3.0.2->pyocd)
-  Downloading https://files.pythonhosted.org/packages/32/46/9cb0e58b2deb7f82b84065f37f3bffeb12413f947f9388e4cac22c4621ce/sortedcontainers-2.4.0-py2.py3-none-any.whl
-Requirement already satisfied: setuptools>=19.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from hidapi; platform_system != "Linux"->pyocd) (40.8.0)
-Collecting pypemicro==0.1.7 (from pyocd-pemicro>=1.0.0.post2->pyocd)
-  Downloading https://files.pythonhosted.org/packages/d7/e4/3c0e16487212dc4f1bfb4b57245dccec35cb6a6914e09b08649d87d276c5/pypemicro-0.1.7-py3-none-any.whl (3.7MB)
-    100% |████████████████████████████████| 3.7MB 2.3MB/s
-Collecting milksnake>=0.1.2 (from cmsis-pack-manager>=0.2.10->pyocd)
-  Downloading https://files.pythonhosted.org/packages/27/be/e10e73f857ac98ef43587fa8db37a3ef6de56e728037a7b9728de26711c7/milksnake-0.1.5-py2.py3-none-any.whl
-Collecting appdirs>=1.4 (from cmsis-pack-manager>=0.2.10->pyocd)
-  Using cached https://files.pythonhosted.org/packages/3b/00/2344469e2084fb287c2e0b57b72910309874c3245463acd6cf5e3db69324/appdirs-1.4.4-py2.py3-none-any.whl
-Collecting importlib-metadata; python_version < "3.8" (from prettytable<3.0,>=2.0->pyocd)
-  Downloading https://files.pythonhosted.org/packages/07/76/c4674c460f5ff4b5f7a962214e46295e20504dfde9fcba78fd728dfe2ac9/importlib_metadata-4.6.3-py3-none-any.whl
-Collecting wcwidth (from prettytable<3.0,>=2.0->pyocd)
-  Using cached https://files.pythonhosted.org/packages/59/7c/e39aca596badaf1b78e8f547c807b04dae603a433d3e7a7e04d67f2ef3e5/wcwidth-0.2.5-py2.py3-none-any.whl
-Collecting psutil>=5.2.2 (from pylink-square<1.0,>=0.8.2->pyocd)
-  Downloading https://files.pythonhosted.org/packages/fe/19/83ab423a7b69cafe4078dea751acdff7377e4b59c71e3718125ba3c341f9/psutil-5.8.0-cp37-cp37m-macosx_10_9_x86_64.whl (236kB)
-    100% |████████████████████████████████| 245kB 4.9MB/s
-Collecting future (from pylink-square<1.0,>=0.8.2->pyocd)
-  Using cached https://files.pythonhosted.org/packages/45/0b/38b06fd9b92dc2b68d58b75f900e97884c45bedd2ff83203d933cf5851c9/future-0.18.2.tar.gz
-Requirement already satisfied: cffi>=1.6.0 in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from milksnake>=0.1.2->cmsis-pack-manager>=0.2.10->pyocd) (1.14.5)
-Collecting typing-extensions>=3.6.4; python_version < "3.8" (from importlib-metadata; python_version < "3.8"->prettytable<3.0,>=2.0->pyocd)
-  Using cached https://files.pythonhosted.org/packages/2e/35/6c4fff5ab443b57116cb1aad46421fb719bed2825664e8fe77d66d99bcbc/typing_extensions-3.10.0.0-py3-none-any.whl
-Collecting zipp>=0.5 (from importlib-metadata; python_version < "3.8"->prettytable<3.0,>=2.0->pyocd)
-  Downloading https://files.pythonhosted.org/packages/92/d9/89f433969fb8dc5b9cbdd4b4deb587720ec1aeb59a020cf15002b9593eef/zipp-3.5.0-py3-none-any.whl
-Requirement already satisfied: pycparser in ./GitHub/onecard-fido/pyvenvs/ncs/lib/python3.7/site-packages (from cffi>=1.6.0->milksnake>=0.1.2->cmsis-pack-manager>=0.2.10->pyocd) (2.20)
-Installing collected packages: sortedcontainers, intervaltree, hidapi, pyusb, pypemicro, pyocd-pemicro, capstone, milksnake, appdirs, cmsis-pack-manager, typing-extensions, zipp, importlib-metadata, wcwidth, prettytable, psutil, future, pylink-square, naturalsort, pyocd
-  Running setup.py install for intervaltree ... done
-  Running setup.py install for capstone ... done
-  Running setup.py install for future ... done
-  Running setup.py install for naturalsort ... done
-Successfully installed appdirs-1.4.4 capstone-4.0.2 cmsis-pack-manager-0.2.10 future-0.18.2 hidapi-0.10.1 importlib-metadata-4.6.3 intervaltree-3.1.0 milksnake-0.1.5 naturalsort-1.5.1 prettytable-2.1.0 psutil-5.8.0 pylink-square-0.10.0 pyocd-0.31.0 pyocd-pemicro-1.0.6 pypemicro-0.1.7 pyusb-1.2.1 sortedcontainers-2.4.0 typing-extensions-3.10.0.0 wcwidth-0.2.5 zipp-3.5.0
-You are using pip version 19.0.3, however version 21.2.2 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
-(ncs) bash-3.2$
+bash-3.2$ brew install dfu-util
+Updating Homebrew...
+==> Auto-updated Homebrew!
+Updated 3 taps (homebrew/core, homebrew/cask and homebrew/services).
+：
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/manifests/1.0.24
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/blobs/sha256:034ae259f17afb5894860cdb1786fd6d391359e8d221c0f765e
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:034ae259f17afb5894860cdb1786fd6d391
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/dfu-util/manifests/0.10
+######################################################################## 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/dfu-util/blobs/sha256:3baa1c97498ad73a60b12c1d1ffa192a9b57946be6ced7ab8
+==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:3baa1c97498ad73a60b12c1d1ffa192a9b5
+######################################################################## 100.0%
+==> Installing dependencies for dfu-util: libusb
+==> Installing dfu-util dependency: libusb
+==> Pouring libusb--1.0.24.catalina.bottle.tar.gz
+🍺  /usr/local/Cellar/libusb/1.0.24: 22 files, 516.7KB
+==> Installing dfu-util
+==> Pouring dfu-util--0.10.catalina.bottle.tar.gz
+🍺  /usr/local/Cellar/dfu-util/0.10: 13 files, 231.4KB
+==> `brew cleanup` has not been run in 30 days, running now...
+Removing: /usr/local/Cellar/autoconf/2.69... (67 files, 3.0MB)
+：
+Removing: /Users/makmorit/Library/Logs/Homebrew/python@3.9... (2 files, 4.4KB)
+bash-3.2$
 ```
 
-#### インストール後の動作確認
+## 更新ファームウェアイメージの書込み
+
+nRF5340アプリケーションの更新ファームウェアイメージ`app_update.bin`は、ディレクトリー[`nRF5340_app/firmwares/secure_device_app`](../nRF5340_app/firmwares/secure_device_app)配下に格納されています。
+
+この`app_update.bin`を、`dfu-util`を使用し、nRF5340に書込みます。
+
+#### ブートローダーモードに遷移
+
+nRF5340をPCのUSBポートに接続し、ブートローダーモードに遷移させます。
+
+最終更新日現在、nRF5340アプリケーションの下記処理により、ブートローダーモードに遷移させることができます。<br>
+下記は、基板上のボタン１押下時に、ブートローダーモードに遷移させる例です。
+```
+#include "app_dfu.h"
+
+//
+// ボタン押下時の処理
+//
+void app_main_button_pressed_short(void)
+{
+    // ブートローダーモード遷移を指示
+    app_dfu_prepare_for_bootloader();
+}
 
 ```
-(ncs) bash-3.2$ pyocd list
-  #   Probe                             Unique ID  
----------------------------------------------------
-  0   Segger J-Link OB-K22-NordicSemi   960160943  
-(ncs) bash-3.2$
+
+この直後、コマンド`dfu-util -l`を実行すると、接続されたnRF5340が、PCに認識されているかどうか確認できます。<br>
+下記は、認識されている場合の実行例になります。
+
+```
+bash-3.2$ dfu-util -l
+dfu-util 0.10
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2020 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+Found Runtime: [2fe3:0100] ver=0206, devnum=31, cfg=1, intf=0, path="20-1", alt=0, name="UNKNOWN", serial="DD25B4A2039693C9"
+bash-3.2$
+```
+
+#### 書込み実行
+
+ブートローダーモードに遷移した後、コマンド`dfu-util --alt 1 --download <ファイル名>`を実行すると、更新ファームウェアイメージがnRF5340に転送されます。<br>
+下記は実行例になります。
+
+```
+bash-3.2$ export BIN_FILE=${HOME}/GitHub/onecard-fido/nRF5340_app/firmwares/secure_device_app/app_update.bin
+bash-3.2$ dfu-util --alt 1 --download ${BIN_FILE}
+dfu-util 0.10
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2020 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release!!!
+Opening DFU capable USB device...
+ID 2fe3:0100
+Run-time device DFU version 0110
+Claiming USB DFU Runtime Interface...
+Determining device status: state = appIDLE, status = 0
+Device really in Runtime Mode, send DFU detach request...
+Resetting USB...
+Opening DFU USB Device...
+Claiming USB DFU Interface...
+Setting Alternate Setting #1 ...
+Determining device status: state = dfuIDLE, status = 0
+dfuIDLE, continuing
+DFU mode device DFU version 0110
+Device returned transfer size 128
+Copying data from PC to DFU device
+Download	[=========================] 100%       152384 bytes
+Download done.
+state(2) = dfuIDLE, status(0) = No error condition is present
+Done!
+bash-3.2$
+```
+
+#### 転送ファームウェアの受け入れ
+
+nRF5340側では、更新ファームウェアイメージの転送が完了すると、自動的に更新後のアプリケーションが始動します。
+
+ただし、ブートローダー側では、明示的に転送ファームウェアの受け入れが行われない場合、次回リセット時に、更新前のアプリケーションを復元／再始動させる仕様となっています。<br>
+このため、nRF5340アプリケーション側で、転送ファームウェアの受け入れを実行します。
+
+転送ファームウェア受け入れが実行された場合、自動的にファームウェアが再始動され、以降のリセット時も、更新前のアプリケーションへの復元は行われません。
+
+最終更新日現在、nRF5340アプリケーションの下記処理により、転送ファームウェア受け入れが実行できます。<br>
+下記は、基板上のボタン２押下時に、転送ファームウェア受け入れを実行させる例です。
+```
+#include "app_dfu.h"
+
+//
+// ボタン押下時の処理
+//
+void app_main_button_1_pressed(void)
+{
+    // DFUによる変更内容のコミットを指示
+    app_dfu_commit();
+}
 ```
