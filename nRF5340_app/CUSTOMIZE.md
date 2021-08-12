@@ -85,3 +85,99 @@ bash-3.2$ diff ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/bootloader/mcuboot/boot/z
 > 	default 0x10000
 bash-3.2$
 ```
+
+##### ncs/zephyr/subsys/usb/class/dfu/usb_dfu.c
+
+- ファームウェアイメージを抜き取られるのを回避<br>
+`dfu-util`の`upload`コマンド実行により、ファームウェアイメージ（定数等を含むプログラム部分）をPCなどに容易にエクスポートできてしまう脆弱性があります。<br>
+このため、nRF5340側のブートローダーで`upload`コマンドを実行できないよう、該当処理のコードを削除しています。
+
+```
+bash-3.2$ diff ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/zephyr/subsys/usb/class/dfu/usb_dfu.c.original ${HOME}/GitHub/onecard-fido/pyvenvs/ncs/zephyr/subsys/usb/class/dfu/usb_dfu.c
+499,582d498
+< 	case DFU_UPLOAD:
+< 		LOG_DBG("DFU_UPLOAD block %d, len %d, state %d",
+< 			pSetup->wValue, pSetup->wLength, dfu_data.state);
+<
+< 		if (dfu_check_app_state()) {
+< 			return -EINVAL;
+< 		}
+<
+< 		switch (dfu_data.state) {
+< 		case dfuIDLE:
+< 			dfu_reset_counters();
+< 			LOG_DBG("DFU_UPLOAD start");
+< 		case dfuUPLOAD_IDLE:
+< 			if (!pSetup->wLength ||
+< 			    dfu_data.block_nr != pSetup->wValue) {
+< 				LOG_DBG("DFU_UPLOAD block %d, expected %d, "
+< 					"len %d", pSetup->wValue,
+< 					dfu_data.block_nr, pSetup->wLength);
+< 				dfu_data.state = dfuERROR;
+< 				dfu_data.status = errUNKNOWN;
+< 				break;
+< 			}
+<
+< 			/* Upload in progress */
+< 			bytes_left = dfu_data.flash_upload_size -
+< 				     dfu_data.bytes_sent;
+< 			if (bytes_left < pSetup->wLength) {
+< 				len = bytes_left;
+< 			} else {
+< 				len = pSetup->wLength;
+< 			}
+<
+< 			if (len > USB_DFU_MAX_XFER_SIZE) {
+< 				/*
+< 				 * The host could requests more data as stated
+< 				 * in wTransferSize. Limit upload length to the
+< 				 * size of the request-buffer.
+< 				 */
+< 				len = USB_DFU_MAX_XFER_SIZE;
+< 			}
+<
+< 			if (len) {
+< 				const struct flash_area *fa;
+<
+< 				ret = flash_area_open(dfu_data.flash_area_id,
+< 						      &fa);
+< 				if (ret) {
+< 					dfu_data.state = dfuERROR;
+< 					dfu_data.status = errFILE;
+< 					break;
+< 				}
+< 				ret = flash_area_read(fa, dfu_data.bytes_sent,
+< 						      *data, len);
+< 				flash_area_close(fa);
+< 				if (ret) {
+< 					dfu_data.state = dfuERROR;
+< 					dfu_data.status = errFILE;
+< 					break;
+< 				}
+< 			}
+< 			*data_len = len;
+<
+< 			dfu_data.bytes_sent += len;
+< 			dfu_data.block_nr++;
+<
+< 			if (dfu_data.bytes_sent == dfu_data.flash_upload_size &&
+< 			    len < pSetup->wLength) {
+< 				/* Upload completed when a
+< 				 * short packet is received
+< 				 */
+< 				*data_len = 0;
+< 				dfu_data.state = dfuIDLE;
+< 			} else
+< 				dfu_data.state = dfuUPLOAD_IDLE;
+<
+< 			break;
+< 		default:
+< 			LOG_ERR("DFU_UPLOAD wrong state %d", dfu_data.state);
+< 			dfu_data.state = dfuERROR;
+< 			dfu_data.status = errUNKNOWN;
+< 			dfu_reset_counters();
+< 			return -EINVAL;
+< 		}
+< 		break;
+bash-3.2$
+```
