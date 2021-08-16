@@ -45,6 +45,53 @@ git checkout v4.3
 git submodule update --init
 ```
 
+以下は実行例になります。
+
+```
+bash-3.2$ cd ${HOME}/GitHub/
+bash-3.2$ git clone https://github.com/espressif/esp-idf.git
+Cloning into 'esp-idf'...
+remote: Enumerating objects: 263451, done.
+remote: Counting objects: 100% (2042/2042), done.
+remote: Compressing objects: 100% (1065/1065), done.
+remote: Total 263451 (delta 973), reused 1881 (delta 914), pack-reused 261409
+Receiving objects: 100% (263451/263451), 147.92 MiB | 1.76 MiB/s, done.
+Resolving deltas: 100% (194560/194560), done.
+Updating files: 100% (9158/9158), done.
+bash-3.2$ pwd
+/Users/makmorit/GitHub
+bash-3.2$ cd esp-idf
+bash-3.2$ git checkout v4.3
+Note: switching to 'v4.3'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at c9646ff0be versions: Update version to 4.3.0
+bash-3.2$ git submodule update --init
+Submodule 'components/asio/asio' (https://github.com/espressif/asio.git) registered for path 'components/asio/asio'
+Submodule 'components/bootloader/subproject/components/micro-ecc/micro-ecc' (https://github.com/kmackay/micro-ecc.git) registered for path 'components/bootloader/subproject/components/micro-ecc/micro-ecc'
+Submodule 'components/bt/controller/lib_esp32' (https://github.com/espressif/esp32-bt-lib.git) registered for path 'components/bt/controller/lib_esp32'
+：
+Submodule path 'components/spiffs/spiffs': checked out 'f5e26c4e933189593a71c6b82cda381a7b21e41c'
+Submodule path 'components/tinyusb/tinyusb': checked out '334e95fac52a607150157ae5199a19e11f843982'
+Submodule path 'components/unity/unity': checked out '7d2bf62b7e6afaf38153041a9d53c21aeeca9a25'
+Submodule path 'examples/build_system/cmake/import_lib/main/lib/tinyxml2': checked out '7e8e249990ec491ec15990cf95b6d871a66cf64a'
+Submodule path 'examples/peripherals/secure_element/atecc608_ecdsa/components/esp-cryptoauthlib': checked out 'c3d3a69021cfec3236ca2c0b63be4048ec6643a4'
+bash-3.2$
+```
 
 #### ESP-IDFをインストール
 ESP32の開発ツール「ESP-IDF」をインストールします。<br>
@@ -55,6 +102,40 @@ cd ${HOME}/GitHub/esp-idf
 ./install.sh
 ```
 
+以下は実行例になります。
+
+```
+bash-3.2$ ./install.sh
+Detecting the Python interpreter
+Checking "python" ...
+Checking "python3" ...
+Python 3.9.5
+"python3" has been detected
+Installing ESP-IDF tools
+Installing tools: xtensa-esp32-elf, xtensa-esp32s2-elf, xtensa-esp32s3-elf, riscv32-esp-elf, esp32ulp-elf, esp32s2ulp-elf, openocd-esp32
+Installing xtensa-esp32-elf@esp-2020r3-8.4.0
+Downloading xtensa-esp32-elf-gcc8_4_0-esp-2020r3-macos.tar.gz to /Users/makmorit/.espressif/dist/xtensa-esp32-elf-gcc8_4_0-esp-2020r3-macos.tar.gz.tmp
+Done
+Extracting /Users/makmorit/.espressif/dist/xtensa-esp32-elf-gcc8_4_0-esp-2020r3-macos.tar.gz to /Users/makmorit/.espressif/tools/xtensa-esp32-elf/esp-2020r3-8.4.0
+：
+Collecting MarkupSafe>=2.0
+  Downloading https://dl.espressif.com/pypi/markupsafe/MarkupSafe-2.0.1-cp39-cp39-macosx_10_9_x86_64.whl (13 kB)
+Building wheels for collected packages: reedsolo
+  Building wheel for reedsolo (setup.py) ... done
+  Created wheel for reedsolo: filename=reedsolo-1.5.4-py3-none-any.whl size=28968 sha256=cd7cd0aefef909dd3580b89b081f87a713baaadb4ec52c030959ea74bf9d45f8
+  Stored in directory: /Users/makmorit/Library/Caches/pip/wheels/f7/1f/ed/764f0e7a774d1d580c3f5c865e78e2922d7f6d3924eef78b56
+Successfully built reedsolo
+Installing collected packages: six, MarkupSafe, Werkzeug, python-engineio, Jinja2, itsdangerous, click, python-socketio, pycparser, greenlet, Flask, brotli, Pygments, pygdbmi, gevent, Flask-SocketIO, Flask-Compress, cffi, reedsolo, pyserial, pyparsing, pyelftools, kconfiglib, gdbgui, future, ecdsa, cryptography, construct, bitstring
+Successfully installed Flask-0.12.5 Flask-Compress-1.10.1 Flask-SocketIO-2.9.6 Jinja2-3.0.1 MarkupSafe-2.0.1 Pygments-2.10.0 Werkzeug-0.16.1 bitstring-3.1.9 brotli-1.0.9 cffi-1.14.6 click-8.0.1 construct-2.10.54 cryptography-3.4.7 ecdsa-0.17.0 future-0.18.2 gdbgui-0.13.2.0 gevent-1.5.0 greenlet-1.1.1 itsdangerous-2.0.1 kconfiglib-13.7.1 pycparser-2.20 pyelftools-0.27 pygdbmi-0.9.0.2 pyparsing-2.3.1 pyserial-3.5 python-engineio-3.14.2 python-socketio-4.6.1 reedsolo-1.5.4 six-1.16.0
+WARNING: You are using pip version 21.2.3; however, version 21.2.4 is available.
+You should consider upgrading via the '/Users/makmorit/.espressif/python_env/idf4.3_py3.9_env/bin/python -m pip install --upgrade pip' command.
+All done! You can now run:
+
+  . ./export.sh
+
+bash-3.2$
+```
+
 ## ビルドの実行
 
 ESP-IDFのツールを使用し、ESP32版サンプルアプリのビルドを実行します。
@@ -62,6 +143,21 @@ ESP-IDFのツールを使用し、ESP32版サンプルアプリのビルドを�
 #### ソースコードの配置
 
 MatterのGitHubリポジトリーに含まれているサンプルアプリのソースコードを、任意の場所にコピーします。
+
+#### メイクファイルの修正
+
+メイクファイル`CMakeLists.txt`に記述されているパスのうち、コピーしたことにより、相対パスが変わってしまう部分を修正します。
+
+```
+bash-5.1$ pwd
+/Users/makmorit/GitHub/onecard-fido/MatterPoCKit/esp32
+bash-5.1$ diff /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/esp32/CMakeLists.txt.original /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/esp32/CMakeLists.txt
+24c24
+<     "${CMAKE_CURRENT_LIST_DIR}/../../common/QRCode"
+---
+>     "${CMAKE_CURRENT_LIST_DIR}/third_party/connectedhomeip/examples/common/QRCode"
+bash-5.1$
+```
 
 #### シンボリックリンクの作成
 
@@ -78,10 +174,13 @@ ln -s ${HOME}/GitHub/connectedhomeip ${HOME}/GitHub/onecard-fido/MatterPoCKit/es
 bash-5.1$ pwd
 /Users/makmorit/GitHub/onecard-fido/MatterPoCKit/esp32
 bash-5.1$
+bash-5.1$ rm -v third_party/*
+third_party/connectedhomeip
 bash-5.1$ ls -al third_party
 total 0
 drwxr-xr-x   2 makmorit  staff   64  8 16 15:01 .
 drwxr-xr-x  10 makmorit  staff  320  8 16 14:41 ..
+bash-5.1$
 bash-5.1$ ln -s ${HOME}/GitHub/connectedhomeip ${HOME}/GitHub/onecard-fido/MatterPoCKit/esp32/third_party/connectedhomeip
 bash-5.1$ ls -al third_party
 total 0
