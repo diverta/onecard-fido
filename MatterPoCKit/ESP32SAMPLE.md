@@ -1,10 +1,18 @@
-# ESP32サンプルアプリのビルド手順
+# ESP32版サンプルアプリのビルド手順
+
+[ESP32版サンプルアプリ](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32)をビルドし、開発ボード「ESP32-DevKitC」に書き込む手順について掲載します。
+
+以下のガイドを参考に作業を進めます。<br>
+<b>・[CHIP ESP32 Lock Example](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32/README.md)</b>
 
 ## 事前準備
 
-ESP32版サンプルアプリのビルドに必要な物件を準備します。<br>
-以下のガイドを参考に作業を進めます。<br>
-<b>・[CHIP ESP32 Lock Example](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32/README.md)</b>
+ESP32版サンプルアプリのビルドに必要な物件を準備します。
+
+- bashを最新版に更新
+- リポジトリーをチェックアウト
+- ESP-IDFをインストール
+- gnの取得
 
 #### bashを最新版に更新
 
@@ -136,13 +144,36 @@ All done! You can now run:
 bash-3.2$
 ```
 
+#### gnの取得
+
+Googleの開発ツール`gn`を開発元から取得します。
+
+リポジトリー[`https://gn.googlesource.com/gn/`](https://gn.googlesource.com/gn/)をWebブラウザーで開きます。<br>
+下図のようなページが表示されます。
+
+<img src="../Research/Matter/assets02/0001.jpg" width=500>
+
+下の方にスクロールし「Getting a binary」の「macOS」というリンク（下図参照）をクリックすると、`gn`のバイナリーファイルを格納した`gn-mac-amd64.zip`がダウンロードされます。
+
+<img src="../Research/Matter/assets02/0002.jpg" width=500>
+
+`gn-mac-amd64.zip`を解凍して、実行可能ファイル`gn`を取り出します。
+
+<img src="../Research/Matter/assets02/0003.jpg" width=400>
+
 ## ビルドの実行
 
 ESP-IDFのツールを使用し、ESP32版サンプルアプリのビルドを実行します。
 
 #### ソースコードの配置
 
-MatterのGitHubリポジトリーに含まれているサンプルアプリのソースコードを、任意の場所にコピーします。
+[MatterのGitHubリポジトリー](https://github.com/project-chip/connectedhomeip)に含まれている[サンプルアプリのソースコード](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32)を、任意の場所にコピーします。<br>
+ソースコード配置ディレクトリーの直下に、コマンドツール`gn`も一緒に配置します。
+
+以降の手順は、ソースコードが`${HOME}/GitHub/onecard-fido/MatterPoCKit/esp32`配下にコピーされたと想定しています。
+
+<img src="assets03/0019.jpg" width=400>
+
 
 #### メイクファイルの修正
 
@@ -189,7 +220,6 @@ drwxr-xr-x  10 makmorit  staff  320  8 16 14:41 ..
 lrwxr-xr-x   1 makmorit  staff   38  8 16 15:02 connectedhomeip -> /Users/makmorit/GitHub/connectedhomeip
 bash-5.1$
 ```
-
 
 #### ビルド実行
 
@@ -290,6 +320,16 @@ bash-5.1$
 ## 書込みの実行
 
 ビルドしたESP32版サンプルアプリのファームウェアを、開発ボードである「ESP32-DevKitC」に転送します。<br>
+
+#### 開発ボードの準備
+
+開発ボード「ESP32-DevKitC」を、USBケーブルでPCに接続します。<br>
+基板上の赤いLEDが点灯し、動作が開始されます。
+
+<img src="assets03/0020.jpg" width=300>
+
+#### 書込みコマンドの実行
+
 以下のコマンドを実行します。
 
 ```
