@@ -9,14 +9,15 @@
 
 ESP32版サンプルアプリの動作確認に必要な物件を準備します。
 
-- 制御ツールのインストール
-- 基板の準備
+- Matterコントローラーの準備
+- Matterデバイスの準備
+- Matterハブの準備
 
-### 制御ツールのインストール
+### Matterコントローラーの準備
 
-コマンドラインベースの制御ツール[`Python CHIP Device Controller`](https://github.com/project-chip/connectedhomeip/tree/master/src/controller/python)を、PCにインストールします。
+Matterコントローラーとなる、コマンドラインベースの制御ツール[`Python CHIP Device Controller`](https://github.com/project-chip/connectedhomeip/tree/master/src/controller/python)を、PCにインストールします。
 
-#### ビルドとインストール
+#### 制御ツールのインストール
 
 [MatterのGitHubリポジトリー](https://github.com/project-chip/connectedhomeip)に含まれている`Python CHIP Device Controller`を、提供されているシェル（[`build_python.sh`](https://github.com/project-chip/connectedhomeip/blob/master/scripts/build_python.sh)）を使用してビルド／インストールします。
 
@@ -139,11 +140,11 @@ chip-device-ctrl > exit
 bash-3.2$
 ```
 
-以上で、制御ツールのインストールは完了です。
+以上で、Matterコントローラーの準備は完了です。
 
-### 基板の準備
+### Matterデバイスの準備
 
-開発ボード「ESP32-DevKitC」に、LED、ボタンを２点ずつ装着します。
+Matterデバイスとなる、開発ボード「ESP32-DevKitC」に、LED、ボタンを２点ずつ装着します。
 
 #### LED／ボタンの装着
 
@@ -188,6 +189,16 @@ screen `ls /dev/tty.usbserial*` 115200
 
 <img src="assets04/0003.jpg" width="400">
 
-以上で、基板の準備は完了です。
+以上で、Matterデバイスの準備は完了です。
+
+### Matterハブの準備
+
+別途手順書「[Matterハブ構築手順](../MatterPoCKit/SETUPHUB.md)」の「Matterハブ開始手順」に従い、Matterハブを開始させます。
+
+<img src="assets04/0005.jpg" width="400">
+
+なお、Matterハブは後述「ペアリング／コミッショニング」で使用する、Wi-Fiネットワークのルーターとなります。<br>
+コミッショニング処理において、MatterデバイスはWi-Fi経由でMatterハブに接続する必要があるため、Matterハブが準備できていないと、ペアリング／コミッショニングが正常に完了しません。
+
 
 <img src="assets04/0004.jpg" width="400">
