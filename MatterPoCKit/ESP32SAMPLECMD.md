@@ -154,6 +154,19 @@ bash-3.2$
 
 <img src="assets04/0002.jpg" width="400">
 
+##### 装着部品
+
+|名称|ESP32-DevKitC| |装着部品[注1]|備考|
+|:--|:-:|:-:|:-|:--|
+|System State LED|IO25  | --> |緑色LED|Anode側に接続[注2]|
+|Lock State LED |IO26  | -->  |赤色LED|Anode側に接続[注2]|
+|Lock Button |IO34  | <-- |タクトスイッチ（橙）|High-active[注3]|
+|Function Button |IO35  | <--  |タクトスイッチ（黒）|High-active[注3]|
+
+[注1] LED・ボタンの色は適宜決めています<br>
+[注2] Cathode側には抵抗器を経由し0Vに接続します。抵抗器の定数は、使用LEDの性能によって適宜決めます<br>
+[注3] High-active＝スイッチで3.3Vに接続するとOn（3.3Vには抵抗器を介して接続）、未接続でOff
+
 #### 基板の接続
 
 LED／ボタンの装着が終わりましたら、ボードをPCのUSBポートに接続します。<br>
@@ -161,4 +174,20 @@ LED／ボタンの装着が終わりましたら、ボードをPCのUSBポート
 
 <img src="assets04/0001.jpg" width="400">
 
+#### ターミナルの準備
+
+開発ボードからのデバッグプリントを表示させるため、ターミナルを起動し、開発ボードと接続しておきます。<br>
+以下のコマンドを実行します。
+
+```
+screen `ls /dev/tty.usbserial*` 115200
+```
+
+以下は実行例になります。<br>
+（下図は開発ボード上のリセットボタンを押下した時のデバッグプリントです）
+
+<img src="assets04/0003.jpg" width="400">
+
 以上で、基板の準備は完了です。
+
+<img src="assets04/0004.jpg" width="400">
