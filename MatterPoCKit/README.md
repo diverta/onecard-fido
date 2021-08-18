@@ -54,3 +54,14 @@ Matterハブを構築する手順について掲載します。
 - <b>[Matterコントローラーアプリ（iOS版）](../MatterPoCKit/iOS/README.md)</b><br>
 最終更新日現在、開発者がApple Developer Programメンバーシップを保有していないため、アプリをダウンロード-->インストールしていただく手段を用意できません。<br>
 従いまして、現状は参考実装扱いとしております（実機動作確認済み）。
+
+## Wi-Fi版Matterデバイス（ご参考）
+
+開発ボード「ESP32-DevKitC」上に[ESP32版サンプルアプリ](https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/esp32)を導入し、Wi-Fi版Matterデバイスの動作確認を行いました。<br>
+結論としてはThread版Matterデバイスと等価の動作をします。
+
+- <b>[ESP32版サンプルアプリのビルド手順](../MatterPoCKit/ESP32SAMPLE.md)</b><br>
+ESP32版サンプルアプリをビルドし、開発ボード「ESP32-DevKitC」に書き込む手順について掲載します。
+
+- <b>[ESP32版サンプルアプリの動作確認手順](../MatterPoCKit/ESP32SAMPLECMD.md)</b><br>
+開発ボード「ESP32-DevKitC」に書き込まれたESP32版サンプルアプリの動作確認手順について掲載します。
