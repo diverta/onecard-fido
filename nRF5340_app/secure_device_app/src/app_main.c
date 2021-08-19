@@ -23,6 +23,13 @@ LOG_MODULE_REGISTER(app_main);
 #define LOG_DEBUG_CCID_DATA         false
 
 //
+// 業務処理関連
+//
+#include "fido_hid_channel.h"
+#include "fido_hid_receive.h"
+#include "fido_hid_send.h"
+
+//
 // アプリケーション状態を保持
 //
 static bool app_initialized = false;
@@ -52,6 +59,10 @@ void app_main_init(void)
     // Bluetoothサービスを開始
     app_bluetooth_start();
 
+    // 業務処理の初期化
+    // アプリケーションで使用するCIDを初期化
+    fido_hid_channel_initialize_cid();
+
     // 初期処理完了済み
     app_initialized = true;
 }
@@ -61,6 +72,9 @@ void app_main_init(void)
 //
 void app_main_hid_report_received(uint8_t *data, size_t size)
 {
+    if (fido_hid_receive_request_frame(data, size)) {
+        fido_hid_receive_on_request_received();
+    }
 #if LOG_DEBUG_HID_REPORT
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "HID report");
@@ -69,6 +83,7 @@ void app_main_hid_report_received(uint8_t *data, size_t size)
 
 void app_main_hid_report_sent(void)
 {
+    fido_hid_send_input_report_complete();
 }
 
 void app_main_ccid_data_received(uint8_t *data, size_t size)
