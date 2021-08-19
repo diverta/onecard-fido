@@ -11,7 +11,17 @@ endif()
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
+    ../../FIDO2Device/fido2_lib/fido_command.c
+    ../../FIDO2Device/fido2_lib/fido_ctap2_command.c
+    ../../FIDO2Device/fido2_lib/fido_hid_channel.c
+    ../../FIDO2Device/fido2_lib/fido_hid_receive.c
+    ../../FIDO2Device/fido2_lib/fido_hid_send.c
+    ../../FIDO2Device/fido2_lib/fido_receive_apdu.c
+    ../../FIDO2Device/fido2_lib/fido_u2f_command.c
 )
 target_include_directories(app PRIVATE 
     include
+    ../../FIDO2Device/ctap2_lib
+    ../../FIDO2Device/fido2_lib
+    ../../FIDO2Device/u2f_lib
 )
