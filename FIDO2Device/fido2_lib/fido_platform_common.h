@@ -77,7 +77,11 @@ uint32_t fido_flash_blp_auth_param_service_uuid_scan_enable(void);
 //  プラットフォームに固有なヘッダーファイル
 //  "fido_log.h"を用意し、それをインクルード
 // 
+#ifdef FIDO_ZEPHYR
+#include "app_platform.h"
+#else
 #include "fido_log.h"
+#endif
 
 //
 // fido_status_indicator.c

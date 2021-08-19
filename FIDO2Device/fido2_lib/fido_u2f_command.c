@@ -27,6 +27,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_u2f_command);
+#endif
+
 // キープアライブ・タイマー
 #define U2F_KEEPALIVE_INTERVAL_MSEC 500
 

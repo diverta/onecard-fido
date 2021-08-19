@@ -13,6 +13,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_receive_apdu);
+#endif
+
 // for debug receiving data
 #define LOG_DEBUG_RECEIVING false
 

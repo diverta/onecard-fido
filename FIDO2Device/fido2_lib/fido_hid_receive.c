@@ -23,6 +23,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_hid_receive);
+#endif
+
 // 使用するコマンド／ステータスの読替え
 #if CTAP2_SUPPORTED
 #define FIDO_COMMAND_ERROR   CTAP2_COMMAND_ERROR
