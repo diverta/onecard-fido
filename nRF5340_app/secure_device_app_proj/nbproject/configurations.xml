@@ -6288,16 +6288,19 @@
           <incDir>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/src</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/storage</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/include/bootutil</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/zephyr/include/flash_map_backend</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -15863,9 +15866,6 @@
             <pElem>../secure_device_app/build_signed/mcuboot/zephyr</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
-          <preprocessorList>
-            <Elem>APP_TEST</Elem>
-          </preprocessorList>
         </cTool>
       </item>
       <item path="../secure_device_app/build_signed/mcuboot/zephyr/misc/generated/configs.c"

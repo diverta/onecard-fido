@@ -486,6 +486,9 @@ void fido_u2f_command_msg(TRANSPORT_TYPE transport_type)
 
 void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
 {
+    // 本処理を開始
+    fido_log_info("U2F Ping start");
+
     // LEDをビジー状態に遷移
     fido_status_indicator_busy();
 
@@ -496,7 +499,6 @@ void fido_u2f_command_ping(TRANSPORT_TYPE transport_type)
     // リクエストのヘッダーとデータを編集せず
     // レスポンスとして戻す（エコーバック）
     fido_u2f_command_send_response(get_receive_apdu()->data, get_receive_apdu()->data_length);
-    fido_log_info("U2F Ping done");
 }
 
 void fido_u2f_command_flash_failed(void)
