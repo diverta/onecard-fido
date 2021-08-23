@@ -32,6 +32,7 @@ typedef enum {
     APEVT_BLE_DISCONNECTED,
     APEVT_IDLING_DETECTED,
     APEVT_ENTER_TO_BOOTLOADER,
+    APEVT_LED_BLINK,
 } APP_EVENT_T;
 
 // データ関連イベント種別

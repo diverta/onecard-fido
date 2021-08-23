@@ -125,3 +125,22 @@ void app_timer_stop_for_idling(void)
 {
     app_timer_stop(CHID_FOR_IDLING);
 }
+
+//
+// LEDを点滅させるための繰り返しタイマー
+//
+TIMER_CFG cfg_blinking;
+
+void app_timer_start_for_blinking(void)
+{
+    // 100 msごとに繰り返し
+    cfg_blinking.timeout_ms = 100;
+    cfg_blinking.callback_event = APEVT_LED_BLINK;
+    cfg_blinking.is_repeat = true;
+    app_timer_start(CHID_FOR_BLINKING, &cfg_blinking);
+}
+
+void app_timer_stop_for_blinking(void)
+{
+    app_timer_stop(CHID_FOR_BLINKING);
+}

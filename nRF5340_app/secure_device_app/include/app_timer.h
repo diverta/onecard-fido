@@ -21,6 +21,8 @@ void        app_timer_start_for_longpush(uint32_t timeout_ms, APP_EVENT_T event)
 void        app_timer_stop_for_longpush(void);
 void        app_timer_start_for_idling(uint32_t timeout_ms, APP_EVENT_T event);
 void        app_timer_stop_for_idling(void);
+void        app_timer_start_for_blinking(void);
+void        app_timer_stop_for_blinking(void);
 
 #ifdef __cplusplus
 }
