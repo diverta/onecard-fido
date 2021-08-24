@@ -18,6 +18,7 @@ extern "C" {
 //
 void        app_process_for_event(APP_EVENT_T event);
 void        app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size);
+void        app_process_initialize(void);
 
 #ifdef __cplusplus
 }

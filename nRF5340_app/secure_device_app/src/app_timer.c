@@ -131,6 +131,15 @@ void app_timer_stop_for_idling(void)
 //
 TIMER_CFG cfg_blinking;
 
+void app_timer_start_for_blinking_begin(uint32_t timeout_ms)
+{
+    // 指定ms wait
+    cfg_blinking.timeout_ms = timeout_ms;
+    cfg_blinking.callback_event = APEVT_LED_BLINK_BEGIN;
+    cfg_blinking.is_repeat = false;
+    app_timer_start(CHID_FOR_BLINKING, &cfg_blinking);
+}
+
 void app_timer_start_for_blinking(void)
 {
     // 100 msごとに繰り返し

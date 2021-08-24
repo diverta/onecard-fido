@@ -59,12 +59,12 @@ void app_main_init(void)
     // Bluetoothサービスを開始
     app_bluetooth_start();
 
+    // その他の初期化処理
+    app_process_initialize();
+
     // 業務処理の初期化
     // アプリケーションで使用するCIDを初期化
     fido_hid_channel_initialize_cid();
-
-    // LED点滅管理用のタイマーを始動
-    app_timer_start_for_blinking();
 
     // 初期処理完了済み
     app_initialized = true;
