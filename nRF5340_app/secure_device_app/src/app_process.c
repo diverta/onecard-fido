@@ -12,6 +12,7 @@
 #include "app_board.h"
 #include "app_event.h"
 #include "app_main.h"
+#include "app_status_indicator.h"
 #include "app_timer.h"
 
 // ログ出力制御
@@ -138,6 +139,10 @@ static void usb_configured(void)
 
     // BLE接続アイドルタイマーを停止
     app_timer_stop_for_idling();
+    
+    // USBが使用可能になったことを
+    // LED点滅制御に通知
+    app_status_indicator_notify_usb_available(true);
 }
 
 static void usb_disconnected(void)
@@ -148,6 +153,10 @@ static void usb_disconnected(void)
 
 static void ble_idling_detected(void)
 {
+    // LED点滅管理タイマーを停止し、全LEDを消灯
+    app_timer_stop_for_blinking();
+    app_status_indicator_light_all(false);
+
     // ディープスリープ（system off）状態に遷移
     // --> ボタン押下でシステムが再始動
     app_board_prepare_for_deep_sleep();
@@ -161,8 +170,8 @@ static void enter_to_bootloader(void)
 
 static void led_blink_begin(void)
 {
-    // TODO: 
     // アイドル時のLED点滅パターンを設定
+    app_status_indicator_idle();
 
     // LED点滅管理用のタイマーを始動
     //   100msごとにAPEVT_LED_BLINKが通知される
@@ -171,8 +180,8 @@ static void led_blink_begin(void)
 
 static void led_blink(void)
 {
-    // TODO: 
     // LED点滅管理を実行
+    app_status_indicator_blink();
 }
 
 void app_process_for_event(APP_EVENT_T event)
