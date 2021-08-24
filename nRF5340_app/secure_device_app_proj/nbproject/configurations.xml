@@ -1017,7 +1017,9 @@
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/device.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/flash.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/gpio.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/kernel.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/kobject.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/libc-hooks.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/log_core.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/log_msg2.h</itemPath>
@@ -1026,6 +1028,8 @@
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/device_extern.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/devicetree_fixups.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/devicetree_unfixed.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/kobj-types-enum.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/offsets.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscall_list.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/version.h</itemPath>
                   </logicalFolder>
@@ -1142,6 +1146,7 @@
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/log_msg2.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/rand32.h</itemPath>
                     <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/time.h</itemPath>
+                    <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscalls/uart.h</itemPath>
                   </logicalFolder>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/device_extern.h</itemPath>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/devicetree_fixups.h</itemPath>
@@ -2913,6 +2918,7 @@
         <in>app_main.c</in>
         <in>app_platform.c</in>
         <in>app_process.c</in>
+        <in>app_status_indicator.c</in>
         <in>app_timer.c</in>
         <in>app_usb.c</in>
         <in>app_usb_ccid.c</in>
@@ -2987,6 +2993,7 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -3008,6 +3015,7 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -3111,6 +3119,7 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -16185,6 +16194,27 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_status_indicator.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>

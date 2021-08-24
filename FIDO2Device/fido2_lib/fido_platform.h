@@ -15,6 +15,10 @@
 extern "C" {
 #endif
 
+#ifdef FIDO_ZEPHYR
+#include "app_platform.h"
+
+#else
 // ハードウェアの差異に依存しない定義を集約
 #include "fido_platform_common.h"
 
@@ -43,6 +47,7 @@ uint32_t  fido_flash_cert_data_length(void);
 //
 uint8_t *fido_flash_password_get(void);
 bool     fido_flash_password_set(uint8_t *random_vector);
+#endif
 
 #ifdef __cplusplus
 }
