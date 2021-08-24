@@ -17,6 +17,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_hid_send);
+#endif
+
 // FIDO機能のHIDリクエストデータ格納領域
 static uint8_t hid_fido_send_buffer[USBD_HID_PACKET_SIZE];
 static size_t  hid_fido_send_buffer_length;

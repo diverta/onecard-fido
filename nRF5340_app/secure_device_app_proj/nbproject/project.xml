@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../secure_device_app</sourceRootElem>
+                <sourceRootElem>../../FIDO2Device/fido2_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

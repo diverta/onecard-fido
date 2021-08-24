@@ -24,6 +24,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_command);
+#endif
+
 // ユーザー所在確認タイムアウト（３０秒）
 #define USER_PRESENCE_VERIFY_TIMEOUT_MSEC 30000
 
