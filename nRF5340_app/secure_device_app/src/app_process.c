@@ -28,8 +28,9 @@ static void button_pushed_long(void)
     // ボタン押下後、３秒経過した時の処理
     if (app_ble_pairing_mode() == false) {
         // 非ペアリングモード時は、
-        // ペアリングモード遷移前に、LED1を点灯させる
-        app_board_led_light(LED_COLOR_YELLOW, true);
+        // ペアリングモード遷移前に
+        // 黄色LEDを連続点灯させる
+        app_status_indicator_pairing_mode();
     }
 }
 
@@ -123,8 +124,9 @@ static void ble_disconnected(void)
     // BLE切断時の処理
     if (app_ble_pairing_mode()) {
         // ペアリングモード時は、
-        // 非ペアリングモード遷移前に、LED1を消灯させる
-        app_board_led_light(LED_COLOR_YELLOW, false);
+        // 非ペアリングモード遷移前に、
+        // アイドル時のLED点滅パターンを設定
+        app_status_indicator_idle();
         // 非ペアリングモード遷移-->アドバタイズ再開
         if (app_ble_pairing_mode_set(false)) {
             app_ble_start_advertising();
