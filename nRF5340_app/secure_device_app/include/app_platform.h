@@ -42,6 +42,15 @@ extern "C" {
 #define fido_status_indicator_ble_scanning  app_status_indicator_ble_scanning
 
 //
+// 管理コマンド用関数群
+//
+bool        fido_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size);
+bool        fido_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size);
+void        ble_peripheral_auth_param_request(uint8_t *request, size_t request_size);
+bool        ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size);
+bool        ble_service_common_erase_bond_data(void (*_response_func)(bool));
+
+//
 // 関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);

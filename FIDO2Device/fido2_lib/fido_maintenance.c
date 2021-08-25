@@ -18,6 +18,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_maintenance);
+#endif
+
 // 自動認証パラメーター設定関連
 #include "ble_peripheral_auth.h"
 
