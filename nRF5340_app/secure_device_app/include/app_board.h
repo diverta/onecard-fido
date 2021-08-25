@@ -27,6 +27,7 @@ typedef enum _LED_COLOR {
 // 関数群
 //
 uint32_t    app_board_kernel_uptime_ms_get(void);
+bool        app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size);
 void        app_board_initialize(void);
 void        app_board_led_light(LED_COLOR led_color, bool led_on);
 void        app_board_prepare_for_deep_sleep(void);
