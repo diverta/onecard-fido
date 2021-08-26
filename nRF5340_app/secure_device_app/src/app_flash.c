@@ -14,7 +14,6 @@
 
 #include "app_flash.h"
 
-#define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_flash);
 
@@ -71,4 +70,66 @@ void app_flash_initialize(void)
 
     // 初期化完了
     flash_initialized = true;
+}
+
+bool app_flush_fs_mount(void)
+{
+    // マウント実行
+    int rc = fs_mount(&lfs_storage_mnt);
+    if (rc < 0) {
+        LOG_ERR("fs_mount returns %d", rc);
+        return false;
+    }
+
+    return true;
+}
+
+bool app_flush_fs_unmount(void)
+{
+    // マウント実行
+    int rc = fs_unmount(&lfs_storage_mnt);
+    if (rc < 0) {
+        LOG_ERR("fs_unmount returns %d", rc);
+        return false;
+    }
+
+    return true;
+}
+
+bool app_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size)
+{
+    // ファイルシステムをマウント
+    if (app_flush_fs_mount() == false) {
+        return false;
+    }
+
+    // ファイルシステムの統計情報を取得
+    struct fs_statvfs stat;
+    int rc = fs_statvfs(lfs_storage_mnt.mnt_point, &stat);
+    if (rc < 0) {
+        LOG_ERR("fs_statvfs returns %d", rc);
+        return false;
+    }
+    LOG_DBG("Flash stat (bsize=%d, bfree=%d, blocks=%d, frsize=%d)", 
+            (int)stat.f_bsize, (int)stat.f_bfree, (int)stat.f_blocks, (int)stat.f_frsize);
+
+    // 格納領域を初期化
+    memset(stat_csv_data, 0, *stat_csv_size);
+
+    // 各項目をCSV化し、引数のバッファに格納
+    int words = (int)stat.f_frsize / 4;
+    sprintf((char *)stat_csv_data, 
+        "words_available=%d,words_used=%d,freeable_words=%d,largest_contig=%d,valid_records=%d,dirty_records=%d,corruption=%d", 
+        (int)stat.f_blocks * words, 
+        ((int)stat.f_blocks - (int)stat.f_bfree) * words,
+        (int)stat.f_bfree * words,
+        0,
+        0, 
+        0,
+        0);
+    *stat_csv_size = strlen((char *)stat_csv_data);
+    LOG_DBG("Flash ROM statistics csv created (%d bytes)", *stat_csv_size);
+
+    // ファイルシステムをアンマウント
+    return app_flush_fs_unmount();
 }
