@@ -98,7 +98,9 @@
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_receive.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_send.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_platform_common.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_receive_apdu.c</itemPath>
@@ -1018,6 +1020,7 @@
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/flash.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/gpio.h</itemPath>
+                      <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/hwinfo.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/kernel.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/kobject.h</itemPath>
                       <itemPath>../secure_device_app/build_signed/mcuboot/zephyr/include/generated/syscalls/libc-hooks.h</itemPath>
@@ -2129,8 +2132,73 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="include" displayName="include" projectFiles="true">
+              <logicalFolder name="arch" displayName="arch" projectFiles="true">
+                <logicalFolder name="arm" displayName="arm" projectFiles="true">
+                  <logicalFolder name="aarch32" displayName="aarch32" projectFiles="true">
+                    <logicalFolder name="cortex_m" displayName="cortex_m" projectFiles="true">
+                      <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/cortex_m/fpu.h</itemPath>
+                    </logicalFolder>
+                    <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/asm_inline_gcc.h</itemPath>
+                    <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/exc.h</itemPath>
+                    <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/irq.h</itemPath>
+                    <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/misc.h</itemPath>
+                    <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/thread.h</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="common" displayName="common" projectFiles="true">
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/arch/common/addr_types.h</itemPath>
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/arch/common/ffs.h</itemPath>
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/arch/common/sys_io.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="debug" displayName="debug" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/debug/coredump.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/debug/gcov.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+                <logicalFolder name="clock_control"
+                               displayName="clock_control"
+                               projectFiles="true">
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/clock_control/nrf_clock_control.h</itemPath>
+                </logicalFolder>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/clock_control.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/counter.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/entropy.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/flash.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/gpio.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/ipm.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/uart.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="fs" displayName="fs" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/fs/fs.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/fs/fs_interface.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/fs/fs_sys.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/fs/littlefs.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="linker" displayName="linker" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/linker/linker-defs.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="logging" displayName="logging" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/logging/log_backend.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/logging/log_backend_std.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/logging/log_ctrl.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/logging/log_msg2.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/logging/log_output.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="net" displayName="net" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/net/buf.h</itemPath>
+              </logicalFolder>
               <logicalFolder name="shell" displayName="shell" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_fprintf.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_history.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_log_backend.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_types.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="sys" displayName="sys" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/byteorder.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/fdtable.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/timeutil.h</itemPath>
               </logicalFolder>
               <itemPath>../../pyvenvs/ncs/zephyr/include/cache.h</itemPath>
               <itemPath>../../pyvenvs/ncs/zephyr/include/sw_isr_table.h</itemPath>
@@ -2330,6 +2398,7 @@
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/l2cap_internal.h</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/monitor.h</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/scan.h</itemPath>
+                  <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/settings.c</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/settings.h</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/smp.c</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/smp.h</itemPath>
@@ -3071,6 +3140,27 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
@@ -12273,6 +12363,33 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/pm</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/drivers/bluetooth</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth/common</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/settings.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth/host</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/settings</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/net</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/bluetooth</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth/common</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
