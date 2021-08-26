@@ -12,6 +12,7 @@
 #include "app_board.h"
 #include "app_event.h"
 #include "app_flash.h"
+#include "app_process.h"
 #include "app_timer.h"
 #include "app_usb.h"
 

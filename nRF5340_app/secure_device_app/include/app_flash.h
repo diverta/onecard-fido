@@ -15,6 +15,9 @@ extern "C" {
 // 関数群
 //
 void        app_flash_initialize(void);
+bool        app_flush_fs_mount(void);
+bool        app_flush_fs_unmount(void);
+bool        app_flash_get_stat_csv(uint8_t *stat_csv_data, size_t *stat_csv_size);
 
 #ifdef __cplusplus
 }

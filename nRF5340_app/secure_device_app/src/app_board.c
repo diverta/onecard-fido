@@ -4,6 +4,8 @@
  *
  * Created on 2021/04/02, 16:25
  */
+#include <stdio.h>
+#include <string.h>
 #include <zephyr/types.h>
 #include <zephyr.h>
 #include <device.h>
@@ -16,7 +18,6 @@
 #include "app_event.h"
 
 // ログ出力制御
-#define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_board);
 
@@ -30,6 +31,21 @@ uint32_t app_board_kernel_uptime_ms_get(void)
 {
     // システム起動後の通算ミリ秒数を取得
     return k_cyc_to_ms_floor32(k_cycle_get_32());
+}
+
+bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_size)
+{
+    // 格納領域を初期化
+    memset(info_csv_data, 0, *info_csv_size);
+
+    // 各項目をCSV化し、引数のバッファに格納
+    sprintf((char *)info_csv_data,
+        "DEVICE_NAME=\"%s\",FW_REV=\"%s\",HW_REV=\"%s\"", 
+            CONFIG_BT_DIS_MODEL, CONFIG_BT_DIS_FW_REV_STR, CONFIG_BT_DIS_HW_REV_STR);
+
+    *info_csv_size = strlen((char *)info_csv_data);
+    LOG_DBG("Application version info csv created (%d bytes)", *info_csv_size);
+    return true;
 }
 
 //

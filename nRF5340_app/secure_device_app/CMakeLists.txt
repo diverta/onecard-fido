@@ -16,6 +16,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_hid_channel.c
     ../../FIDO2Device/fido2_lib/fido_hid_receive.c
     ../../FIDO2Device/fido2_lib/fido_hid_send.c
+    ../../FIDO2Device/fido2_lib/fido_maintenance.c
     ../../FIDO2Device/fido2_lib/fido_receive_apdu.c
     ../../FIDO2Device/fido2_lib/fido_u2f_command.c
 )
