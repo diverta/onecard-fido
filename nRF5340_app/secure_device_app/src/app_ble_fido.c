@@ -55,7 +55,7 @@ static ssize_t on_receive(struct bt_conn *conn, const struct bt_gatt_attr *attr,
     m_conn_on_receive = conn;
 
     // データ処理スレッドに引き渡し
-    app_event_notify_for_data(DATEVT_BLE_REQUEST_RECEIVED, buf, len);
+    app_event_notify_for_data(DATEVT_BLE_REQUEST_RECEIVED, (uint8_t *)buf, len);
     return len;
 }
 

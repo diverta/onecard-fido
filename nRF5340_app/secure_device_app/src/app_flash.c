@@ -11,6 +11,7 @@
 #include <storage/flash_map.h>
 #include <fs/fs.h>
 #include <fs/littlefs.h>
+#include <stdio.h>
 
 #include "app_flash.h"
 
