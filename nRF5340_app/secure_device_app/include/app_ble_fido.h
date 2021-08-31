@@ -7,9 +7,8 @@
 #ifndef APP_BLE_FIDO_H
 #define APP_BLE_FIDO_H
 
-#include <zephyr/types.h>
-#include <bluetooth/conn.h>
-#include <bluetooth/gatt.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <bluetooth/uuid.h>
 
 #ifdef __cplusplus
@@ -52,7 +51,7 @@ extern "C" {
 //
 // 関数群
 //
-int         app_ble_fido_send_data(struct bt_conn *conn, const uint8_t *data, uint16_t len);
+bool        app_ble_fido_send_data(const uint8_t *data, uint16_t len);
 
 #ifdef __cplusplus
 }

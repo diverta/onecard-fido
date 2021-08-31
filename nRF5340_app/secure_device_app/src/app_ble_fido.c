@@ -15,6 +15,9 @@
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_fido);
 
+// 受信時に使用した接続を保持
+struct bt_conn *m_conn_on_receive = NULL;
+
 // Control Pointバイト長、
 // Service Revisionに関する情報を保持
 static uint8_t control_point_length[2] = {0x00, 0x40};   // 64Bytes
@@ -106,7 +109,7 @@ BT_GATT_SERVICE_DEFINE(
     ),
 );
 
-int app_ble_fido_send_data(struct bt_conn *conn, const uint8_t *data, uint16_t len)
+static int send_data(struct bt_conn *conn, const uint8_t *data, uint16_t len)
 {
     struct bt_gatt_notify_params params = {0};
     const struct bt_gatt_attr *attr = &fido_svc.attrs[2];
@@ -126,4 +129,18 @@ int app_ble_fido_send_data(struct bt_conn *conn, const uint8_t *data, uint16_t l
     } else {
         return -EINVAL;
     }
+}
+
+bool app_ble_fido_send_data(const uint8_t *data, uint16_t len)
+{
+    // 受信時に使用した接続を使用し、送信を実行
+    if (m_conn_on_receive == NULL) {
+        return false;
+    }
+    int ret = send_data(m_conn_on_receive, data, len);
+    if (ret != 0) {
+        LOG_ERR("send_data returns %d", ret);
+        return false;
+    }
+    return true;
 }
