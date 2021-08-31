@@ -144,3 +144,18 @@ bool app_ble_fido_send_data(const uint8_t *data, uint16_t len)
     }
     return true;
 }
+
+bool app_ble_fido_connected(void)
+{
+    // 受信時に使用した接続が使用可能か検査
+    if (m_conn_on_receive == NULL) {
+        return false;
+    }
+    struct bt_conn_info info;
+    int ret = bt_conn_get_info(m_conn_on_receive, &info);
+    if (ret != 0) {
+        LOG_ERR("bt_conn_get_info returns %d", ret);
+        return false;
+    }
+    return true;
+}

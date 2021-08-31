@@ -10,6 +10,7 @@
 //
 // トランスポート関連
 //
+#include "app_ble_fido.h"
 #include "app_ble_pairing.h"
 #include "app_usb_hid.h"
 
@@ -26,6 +27,12 @@ bool fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer
 bool fido_ble_pairing_mode_get(void)
 {
     return app_ble_pairing_mode();
+}
+
+bool fido_ble_service_disconnected(void)
+{
+    // BLEクライアントとの接続が切り離されている場合 true
+    return (app_ble_fido_connected() == false);
 }
 
 //
