@@ -9,6 +9,7 @@
 #include <bluetooth/gatt.h>
 
 #include "app_ble_fido.h"
+#include "app_event.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
@@ -46,21 +47,23 @@ static void ccc_cfg_changed(const struct bt_gatt_attr *attr, uint16_t value)
 
 static ssize_t on_receive(struct bt_conn *conn, const struct bt_gatt_attr *attr, const void *buf, uint16_t len, uint16_t offset, uint8_t flags)
 {
-    // U2F Status(TX) 書込み時の処理
-    LOG_DBG("Received data, handle %d, conn %p", attr->handle, (void *)conn);
+    // U2F Control Point(RX) 受信時の処理
+    LOG_DBG("Received data (%d bytes), handle %d, conn %p ", len, attr->handle, (void *)conn);
+    m_conn_on_receive = conn;
 
-    // TODO: 仮の実装です。
-    uint8_t testbuf[] = {0x83, 0x00, 0x02, 0x90, 0x00};
-    app_ble_fido_send_data(conn, testbuf, sizeof(testbuf));
-
+    // データ処理スレッドに引き渡し
+    app_event_notify_for_data(DATEVT_BLE_REQUEST_RECEIVED, buf, len);
     return len;
 }
 
 static void on_sent(struct bt_conn *conn, void *user_data)
 {
-    // U2F Control Point(RX) 転送完了時の処理
+    // U2F Status(TX) 書込み時完了時の処理
     (void)user_data;
     LOG_DBG("Data send, conn %p", (void *)conn);
+
+    // データ処理スレッドに通知
+    app_event_notify_for_data(DATEVT_BLE_RESPONSE_SENT, user_data, 0);
 }
 
 // FIDO BLE Service Declaration

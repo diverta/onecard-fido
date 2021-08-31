@@ -22,6 +22,7 @@ LOG_MODULE_REGISTER(app_main);
 
 #define LOG_DEBUG_HID_REPORT        false
 #define LOG_DEBUG_CCID_DATA         false
+#define LOG_DEBUG_BLE_DATA          false
 
 //
 // 業務処理関連
@@ -95,6 +96,21 @@ void app_main_ccid_data_received(uint8_t *data, size_t size)
 #if LOG_DEBUG_CCID_DATA
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "CCID data");
+#endif
+}
+
+void app_main_ble_request_received(uint8_t *data, size_t size)
+{
+#if LOG_DEBUG_BLE_DATA
+    LOG_DBG("received %d bytes", size);
+    LOG_HEXDUMP_DBG(data, size, "BLE data");
+#endif
+}
+
+void app_main_ble_response_sent(void)
+{
+#if LOG_DEBUG_BLE_DATA
+    LOG_DBG("BLE data sent");
 #endif
 }
 

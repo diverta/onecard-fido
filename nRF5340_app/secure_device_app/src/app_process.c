@@ -248,6 +248,12 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
         case DATEVT_CCID_DATA_RECEIVED:
             app_main_ccid_data_received(data, size);
             break;
+        case DATEVT_BLE_REQUEST_RECEIVED:
+            app_main_ble_request_received(data, size);
+            break;
+        case DATEVT_BLE_RESPONSE_SENT:
+            app_main_ble_response_sent();
+            break;
         default:
             break;
     }
