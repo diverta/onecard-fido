@@ -19,6 +19,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_ble_receive);
+#endif
+
 // for debug hex dump data
 #define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 

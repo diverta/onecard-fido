@@ -15,6 +15,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_ble_send);
+#endif
+
 // for debug hex dump data
 #define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 
@@ -118,6 +122,20 @@ static void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buf
 // 
 static bool no_callback_flag;
 
+#ifdef FIDO_ZEPHYR
+static void ble_u2f_status_response_send(bool no_callback)
+{
+    // TODO: 仮の実装です。
+    fido_log_info("ble response will send");
+}
+
+void fido_ble_send_on_tx_complete(void)
+{
+    // TODO: 仮の実装です。
+    fido_log_info("ble data sent");
+}
+
+#else
 static void ble_u2f_status_response_send(bool no_callback)
 {
     uint32_t data_length;
@@ -173,6 +191,7 @@ void fido_ble_send_on_tx_complete(void)
         ble_u2f_status_response_send(no_callback_flag);
     }
 }
+#endif
 
 
 void fido_ble_send_response_retry(void)
