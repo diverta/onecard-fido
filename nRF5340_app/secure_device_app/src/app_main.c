@@ -22,10 +22,13 @@ LOG_MODULE_REGISTER(app_main);
 
 #define LOG_DEBUG_HID_REPORT        false
 #define LOG_DEBUG_CCID_DATA         false
+#define LOG_DEBUG_BLE_DATA          false
 
 //
 // 業務処理関連
 //
+#include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
@@ -95,6 +98,25 @@ void app_main_ccid_data_received(uint8_t *data, size_t size)
 #if LOG_DEBUG_CCID_DATA
     LOG_DBG("received %d bytes", size);
     LOG_HEXDUMP_DBG(data, size, "CCID data");
+#endif
+}
+
+void app_main_ble_request_received(uint8_t *data, size_t size)
+{
+    if (fido_ble_receive_control_point(data, size)) {
+        fido_ble_receive_on_request_received();
+    }
+#if LOG_DEBUG_BLE_DATA
+    LOG_DBG("received %d bytes", size);
+    LOG_HEXDUMP_DBG(data, size, "BLE data");
+#endif
+}
+
+void app_main_ble_response_sent(void)
+{
+    fido_ble_send_on_tx_complete();
+#if LOG_DEBUG_BLE_DATA
+    LOG_DBG("BLE data sent");
 #endif
 }
 

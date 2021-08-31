@@ -11,7 +11,10 @@ endif()
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
+    ../../FIDO2Device/fido2_lib/fido_ble_receive.c
+    ../../FIDO2Device/fido2_lib/fido_ble_send.c
     ../../FIDO2Device/fido2_lib/fido_command.c
+    ../../FIDO2Device/fido2_lib/fido_common.c
     ../../FIDO2Device/fido2_lib/fido_ctap2_command.c
     ../../FIDO2Device/fido2_lib/fido_hid_channel.c
     ../../FIDO2Device/fido2_lib/fido_hid_receive.c

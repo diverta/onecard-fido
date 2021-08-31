@@ -51,6 +51,13 @@ bool        ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *respon
 bool        ble_service_common_erase_bond_data(void (*_response_func)(bool));
 
 //
+// FIDOトランスポート用関数群
+//
+bool        fido_ble_response_send(uint8_t *u2f_status_buffer, size_t u2f_status_buffer_length, bool *busy);
+bool        fido_ble_pairing_mode_get(void);
+bool        fido_ble_service_disconnected(void);
+
+//
 // 関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);

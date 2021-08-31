@@ -15,6 +15,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_ble_send);
+#endif
+
 // for debug hex dump data
 #define NRF_LOG_HEXDUMP_DEBUG_PACKET false
 
@@ -118,6 +122,7 @@ static void ble_u2f_status_setup(uint8_t command_for_response, uint8_t *data_buf
 // 
 static bool no_callback_flag;
 
+
 static void ble_u2f_status_response_send(bool no_callback)
 {
     uint32_t data_length;
@@ -138,6 +143,19 @@ static void ble_u2f_status_response_send(bool no_callback)
     // フラグを退避
     no_callback_flag = no_callback;
 
+#ifdef FIDO_ZEPHYR
+    // ヘッダー項目、データ部を編集
+    uint8_t offset = edit_u2f_staus_header(send_info_t.command_for_response, send_info_t.data_length, send_info_t.sequence);
+    data_length = edit_u2f_staus_data(offset);
+
+    // u2f_status_bufferに格納されたパケットを送信
+    if (fido_ble_response_send(u2f_status_buffer, u2f_status_buffer_length, &send_info_t.busy)) {
+        // 送信済みバイト数、シーケンスを更新
+        send_info_t.sent_length += data_length;
+        send_info_t.sequence++;
+    }
+
+#else
     while (send_info_t.sent_length < send_info_t.data_length) {
 
         // ヘッダー項目、データ部を編集
@@ -161,17 +179,35 @@ static void ble_u2f_status_response_send(bool no_callback)
             }
         }
     }
+#endif
 }
 
 
 void fido_ble_send_on_tx_complete(void)
 {
+#ifdef FIDO_ZEPHYR
+    // 最終レコードの場合
+    if (send_info_t.sent_length == send_info_t.data_length) {
+        // 送信情報を初期化
+        memset(&send_info_t, 0x00, sizeof(send_info_t));
+        // FIDOレスポンス送信完了時の処理を実行
+        if (!no_callback_flag) {
+            fido_command_on_response_send_completed(TRANSPORT_BLE);
+        }
+
+    } else {
+        // 次のフレームの送信を実行
+        ble_u2f_status_response_send(no_callback_flag);
+    }
+
+#else
     if (send_info_t.busy == true) {
         // フラグがbusyの場合、再送のため１回だけ
         // ble_u2f_status_response_send関数を呼び出す
         send_info_t.busy = false;
         ble_u2f_status_response_send(no_callback_flag);
     }
+#endif
 }
 
 
