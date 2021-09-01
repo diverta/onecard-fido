@@ -11,7 +11,6 @@
 #include "app_ble_fido.h"
 #include "app_event.h"
 
-#define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_fido);
 
@@ -76,7 +75,7 @@ BT_GATT_SERVICE_DEFINE(
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_TX, 
         BT_GATT_CHRC_NOTIFY, 
-        BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, 
+        BT_GATT_PERM_READ, 
         NULL, NULL, NULL
     ),
     BT_GATT_CCC(
@@ -86,7 +85,7 @@ BT_GATT_SERVICE_DEFINE(
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_RX, 
         BT_GATT_CHRC_WRITE | BT_GATT_CHRC_WRITE_WITHOUT_RESP, 
-        BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, 
+        BT_GATT_PERM_WRITE, 
         NULL, on_receive, NULL
     ),
     BT_GATT_CHARACTERISTIC(
