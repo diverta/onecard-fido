@@ -11,7 +11,6 @@
 #include "app_ble_fido.h"
 #include "app_event.h"
 
-#define LOG_LEVEL LOG_LEVEL_DBG
 #include <logging/log.h>
 LOG_MODULE_REGISTER(app_ble_fido);
 
@@ -76,35 +75,35 @@ BT_GATT_SERVICE_DEFINE(
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_TX, 
         BT_GATT_CHRC_NOTIFY, 
-        BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, 
+        BT_GATT_PERM_READ_ENCRYPT, 
         NULL, NULL, NULL
     ),
     BT_GATT_CCC(
         ccc_cfg_changed, 
-        BT_GATT_PERM_READ | BT_GATT_PERM_WRITE
+        BT_GATT_PERM_READ_ENCRYPT | BT_GATT_PERM_WRITE_ENCRYPT
     ),
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_RX, 
         BT_GATT_CHRC_WRITE | BT_GATT_CHRC_WRITE_WITHOUT_RESP, 
-        BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, 
+        BT_GATT_PERM_WRITE_ENCRYPT, 
         NULL, on_receive, NULL
     ),
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_RX_LEN, 
         BT_GATT_CHRC_READ, 
-        BT_GATT_PERM_READ, 
+        BT_GATT_PERM_READ_ENCRYPT, 
         read_rx_len, NULL, control_point_length
     ),
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_SERVICE_REVBF, 
         BT_GATT_CHRC_WRITE | BT_GATT_CHRC_READ, 
-        BT_GATT_PERM_READ, 
+        BT_GATT_PERM_READ_ENCRYPT, 
         read_service_rev_bitfield, NULL, service_revision_bitfield
     ),
     BT_GATT_CHARACTERISTIC(
         BT_UUID_FIDO_SERVICE_REV, 
         BT_GATT_CHRC_READ, 
-        BT_GATT_PERM_READ, 
+        BT_GATT_PERM_READ_ENCRYPT, 
         read_service_rev, NULL, service_revision
     ),
 );

@@ -8,6 +8,7 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 #include <bluetooth/gatt.h>
+#include <settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_pairing.h"
@@ -130,9 +131,22 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
     app_event_notify(APEVT_BLE_DISCONNECTED);
 }
 
+static void security_changed(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    if (err == BT_SECURITY_ERR_SUCCESS) {
+        LOG_INF("Security changed: %s level %u", log_strdup(addr), level);
+    } else {
+        LOG_WRN("Security failed: %s level %u err %d", log_strdup(addr), level, err);
+    }
+}
+
 static struct bt_conn_cb conn_callbacks = {
     .connected = connected,
     .disconnected = disconnected,
+    .security_changed = security_changed,
 };
 
 static void bt_ready(int err)
@@ -140,6 +154,11 @@ static void bt_ready(int err)
     if (err) {
         LOG_ERR("Bluetooth init failed (err %d)", err);
         return;
+    }
+
+    // 永続化機能を初期化
+    if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+        settings_load();
     }
 
     // アドバタイジング開始

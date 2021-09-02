@@ -78,15 +78,5 @@ bool ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, siz
 
 bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
 {
-    // TODO:
-    // Zephyrでは、現状のCONFIGだと
-    // ペアリング情報が永続化されない様子。
-    // なので当面、別段の処理を実行せず、
-    // 常に正常レスポンスを戻すようにする
-    
-    // ペアリング情報削除後に実行される処理
-    if (_response_func != NULL) {
-        (*_response_func)(true);
-    }
-    return true;
+    return app_ble_pairing_erase_bond_data(_response_func);
 }
