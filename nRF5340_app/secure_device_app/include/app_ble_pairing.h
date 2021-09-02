@@ -18,6 +18,7 @@ extern "C" {
 //
 bool        app_ble_pairing_mode_set(bool b);
 bool        app_ble_pairing_mode(void);
+bool        app_ble_pairing_erase_bond_data(void (*response_func)(bool));
 
 #ifdef __cplusplus
 }
