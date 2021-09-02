@@ -8,6 +8,7 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/conn.h>
 #include <bluetooth/gatt.h>
+#include <settings/settings.h>
 
 // for BLE pairing
 #include "app_ble_pairing.h"
@@ -153,6 +154,11 @@ static void bt_ready(int err)
     if (err) {
         LOG_ERR("Bluetooth init failed (err %d)", err);
         return;
+    }
+
+    // 永続化機能を初期化
+    if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+        settings_load();
     }
 
     // アドバタイジング開始
