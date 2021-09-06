@@ -9,7 +9,6 @@
 #include <usb/usb_device.h>
 
 #include "app_event.h"
-#include "app_main.h"
 #include "app_usb_hid.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -29,7 +28,6 @@ static void status_cb(enum usb_dc_status_code status, const uint8_t *param)
         case USB_DC_CONFIGURED:
             app_event_notify(APEVT_USB_CONFIGURED);
             app_usb_hid_configured(param);
-            app_main_hid_configured();
             break;
         case USB_DC_DISCONNECTED:
             app_event_notify(APEVT_USB_DISCONNECTED);

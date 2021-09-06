@@ -145,6 +145,9 @@ static void usb_configured(void)
     // USBが使用可能になったことを
     // LED点滅制御に通知
     app_status_indicator_notify_usb_available(true);
+
+    // 各種業務処理を実行
+    app_main_hid_configured();
 }
 
 static void usb_disconnected(void)
