@@ -182,6 +182,7 @@ void app_bluetooth_start(void)
     k_work_init(&stop_advertise_work, advertise_stop);
 
     // Enable Bluetooth.
+    //   同時に、内部でNVSの初期化(nvs_init)が行われます。
     int rc = bt_enable(bt_ready);
     if (rc != 0) {
         LOG_ERR("Bluetooth init failed (err %d)", rc);
