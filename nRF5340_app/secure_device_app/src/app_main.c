@@ -64,10 +64,6 @@ void app_main_init(void)
     // その他の初期化処理
     app_process_initialize();
 
-    // 業務処理の初期化
-    // アプリケーションで使用するCIDを初期化
-    fido_hid_channel_initialize_cid();
-
     // 初期処理完了済み
     app_initialized = true;
 }
@@ -75,6 +71,13 @@ void app_main_init(void)
 //
 // データ処理イベント関連
 //
+void app_main_hid_configured(void)
+{
+    // USB HID I/Fが使用可能になった場合、
+    // アプリケーションで使用するCIDを初期化
+    fido_hid_channel_initialize_cid();
+}
+
 void app_main_hid_report_received(uint8_t *data, size_t size)
 {
     if (fido_hid_receive_request_frame(data, size)) {

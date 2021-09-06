@@ -21,6 +21,7 @@ extern "C" {
 void        app_main_init(void);
 bool        app_main_initialized(void);
 
+void        app_main_hid_configured(void);
 void        app_main_hid_report_received(uint8_t *data, size_t size);
 void        app_main_hid_report_sent(void);
 void        app_main_ccid_data_received(uint8_t *data, size_t size);
