@@ -51,6 +51,8 @@ typedef enum {
 //
 bool        app_event_notify(APP_EVENT_T event);
 bool        app_event_notify_for_data(DATA_EVENT_T event, uint8_t *data, size_t data_size);
+void        app_event_main_enable(bool b);
+void        app_event_data_enable(bool b);
 
 #ifdef __cplusplus
 }

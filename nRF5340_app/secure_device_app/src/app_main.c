@@ -8,10 +8,7 @@
 #include <zephyr.h>
 
 #include "app_bluetooth.h"
-#include "app_main.h"
 #include "app_board.h"
-#include "app_event.h"
-#include "app_flash.h"
 #include "app_process.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -34,16 +31,6 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 
 //
-// アプリケーション状態を保持
-//
-static bool app_initialized = false;
-
-bool app_main_initialized(void)
-{
-    return app_initialized;
-}
-
-//
 // アプリケーション初期化処理
 //
 void app_main_init(void) 
@@ -54,29 +41,28 @@ void app_main_init(void)
     // USBを使用可能にする
     app_usb_initialize();
 
-    // Flash ROMを使用可能にする
-    app_flash_initialize();
-
     // タイマーを使用可能にする
     app_timer_initialize();
-    
+
     // Bluetoothサービスを開始
+    //   同時に、Flash ROMストレージが
+    //   使用可能となります。
     app_bluetooth_start();
 
     // その他の初期化処理
     app_process_initialize();
-
-    // 業務処理の初期化
-    // アプリケーションで使用するCIDを初期化
-    fido_hid_channel_initialize_cid();
-
-    // 初期処理完了済み
-    app_initialized = true;
 }
 
 //
 // データ処理イベント関連
 //
+void app_main_hid_configured(void)
+{
+    // USB HID I/Fが使用可能になった場合、
+    // アプリケーションで使用するCIDを初期化
+    fido_hid_channel_initialize_cid();
+}
+
 void app_main_hid_report_received(uint8_t *data, size_t size)
 {
     if (fido_hid_receive_request_frame(data, size)) {

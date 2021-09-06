@@ -8,7 +8,6 @@
 #include <zephyr.h>
 
 #include "app_event.h"
-#include "app_main.h"
 #include "app_process.h"
 
 // ログ出力制御
@@ -81,6 +80,13 @@ bool app_event_notify_for_data(DATA_EVENT_T event, uint8_t *data, size_t data_si
 //
 // スレッドのイベント処理
 //
+static bool main_event_enabled = false;
+
+void app_event_main_enable(bool b)
+{
+    main_event_enabled = b;
+}
+
 static void app_event_process(void)
 {
     // イベント検知まで待機
@@ -96,26 +102,32 @@ static void app_event_process(void)
 static void app_main_thread(void)
 {
     while (true) {
-        // アプリケーション初期化前の場合はイベントを無視
-        if (app_main_initialized() == false) {
-            continue;
-        }
-
         // 各種イベントを処理
-        app_event_process();
+        if (main_event_enabled) {
+            app_event_process();
+        }
     }
 }
 
 //
 // データ関連イベント処理
 //
+static bool data_event_enabled = false;
+
+void app_event_data_enable(bool b)
+{
+    data_event_enabled = b;
+}
+
 static void app_data_event_process(void)
 {
     // イベント検知まで待機
     APP_DATA_FIFO_T *fifo = k_fifo_get(&app_data_fifo, K_FOREVER);
 
     // イベントに対応する処理を実行
-    app_process_for_data_event(fifo->event, fifo->data, fifo->size);
+    if (data_event_enabled) {
+        app_process_for_data_event(fifo->event, fifo->data, fifo->size);
+    }
 
     // FIFOデータを解放
     k_free(fifo);
@@ -124,13 +136,10 @@ static void app_data_event_process(void)
 static void app_data_thread(void)
 {
     while (true) {
-        // アプリケーション初期化前の場合はイベントを無視
-        if (app_main_initialized() == false) {
-            continue;
-        }
-
         // 各種イベントを処理
-        app_data_event_process();
+        if (main_event_enabled) {
+            app_data_event_process();
+        }
     }
 }
 
