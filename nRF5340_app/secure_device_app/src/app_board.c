@@ -12,7 +12,6 @@
 #include <sys/time_units.h>
 #include <power/reboot.h>
 
-#include "app_main.h"
 #include "app_board.h"
 #include "app_board_define.h"
 #include "app_event.h"
@@ -53,10 +52,16 @@ bool app_board_get_version_info_csv(uint8_t *info_csv_data, size_t *info_csv_siz
 //
 static const struct device *button_0,   *button_1;
 static struct gpio_callback button_cb_0, button_cb_1;
+static bool button_press_enabled = false;
+
+void app_board_button_press_enable(bool b)
+{
+    button_press_enabled = b;
+}
 
 static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status_pressed, uint32_t *time_pressed)
 {
-    if (app_main_initialized() == false) {
+    if (button_press_enabled == false) {
         return false;
     }
 
@@ -65,7 +70,7 @@ static bool button_pressed(const struct device *dev, gpio_pin_t pin, int *status
 
     // ボタン検知時刻を取得
     uint32_t time_now = app_board_kernel_uptime_ms_get();
- 
+
     // ２回連続検知の場合は無視
     if (status_now == *status_pressed) {
 #if LOG_BUTTON_PRESSED

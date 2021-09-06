@@ -104,10 +104,26 @@ static void idling_timer_start(void)
     timer_started = true;
 }
 
+//
+// データチャネル関連処理
+//
+static void data_channel_initialized(void)
+{
+    // データ処理イベント（DATEVT_XXXX）を
+    // 通知できるようにする
+    app_event_data_enable(true);
+
+    // ボタン押下検知ができるようにする
+    app_board_button_press_enable(true);
+}
+
 static void ble_advertise_started(void)
 {
     // BLE接続アイドルタイマーを開始
     idling_timer_start();
+
+    // BLEチャネル初期化完了
+    data_channel_initialized();
 }
 
 static void ble_connected(void)
@@ -141,10 +157,13 @@ static void usb_configured(void)
 
     // BLE接続アイドルタイマーを停止
     app_timer_stop_for_idling();
-    
+
     // USBが使用可能になったことを
     // LED点滅制御に通知
     app_status_indicator_notify_usb_available(true);
+
+    // USBチャネル初期化完了
+    data_channel_initialized();
 
     // 各種業務処理を実行
     app_main_hid_configured();
@@ -267,6 +286,10 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
 //
 void app_process_initialize(void)
 {
+    // 業務処理イベント（APEVT_XXXX）を
+    // 通知できるようにする
+    app_event_main_enable(true);
+
     // LED点滅管理用のタイマーを
     // 500ms後に始動させるようにする
     //   500ms wait --> 

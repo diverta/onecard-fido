@@ -8,9 +8,7 @@
 #include <zephyr.h>
 
 #include "app_bluetooth.h"
-#include "app_main.h"
 #include "app_board.h"
-#include "app_event.h"
 #include "app_process.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -33,16 +31,6 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_send.h"
 
 //
-// アプリケーション状態を保持
-//
-static bool app_initialized = false;
-
-bool app_main_initialized(void)
-{
-    return app_initialized;
-}
-
-//
 // アプリケーション初期化処理
 //
 void app_main_init(void) 
@@ -63,9 +51,6 @@ void app_main_init(void)
 
     // その他の初期化処理
     app_process_initialize();
-
-    // 初期処理完了済み
-    app_initialized = true;
 }
 
 //
