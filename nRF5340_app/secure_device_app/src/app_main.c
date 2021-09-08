@@ -9,7 +9,7 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
-#include "app_process.h"
+#include "app_event.h"
 #include "app_timer.h"
 #include "app_usb.h"
 
@@ -44,13 +44,14 @@ void app_main_init(void)
     // タイマーを使用可能にする
     app_timer_initialize();
 
-    // Bluetoothサービスを開始
+    // 業務処理イベント（APEVT_XXXX）を
+    // 通知できるようにする
+    app_event_main_enable(true);
+
+    // Bluetoothサービス開始を指示
     //   同時に、Flash ROMストレージが
     //   使用可能となります。
     app_bluetooth_start();
-
-    // その他の初期化処理
-    app_process_initialize();
 }
 
 //

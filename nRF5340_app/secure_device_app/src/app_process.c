@@ -13,6 +13,7 @@
 #include "app_event.h"
 #include "app_main.h"
 #include "app_status_indicator.h"
+#include "app_settings.h"
 #include "app_timer.h"
 
 // ログ出力制御
@@ -115,6 +116,27 @@ static void data_channel_initialized(void)
 
     // ボタン押下検知ができるようにする
     app_board_button_press_enable(true);
+}
+
+static void ble_available(void)
+{
+    // LED点滅管理用のタイマーを
+    // 500ms後に始動させるようにする
+    //   500ms wait --> 
+    //   APEVT_LED_BLINK_BEGINが通知される
+    app_timer_start_for_blinking_begin(500);
+
+    // 永続化機能を初期化
+    app_settings_initialize();
+    
+    // アドバタイジング開始
+    app_ble_start_advertising();
+}
+
+static void ble_unavailable(void)
+{
+    // 全色LEDを点灯
+    app_status_indicator_abort();
 }
 
 static void ble_advertise_started(void)
@@ -222,6 +244,12 @@ void app_process_for_event(APP_EVENT_T event)
         case APEVT_BUTTON_1_RELEASED:
             button_1_pressed();
             break;
+        case APEVT_BLE_AVAILABLE:
+            ble_available();
+            break;
+        case APEVT_BLE_UNAVAILABLE:
+            ble_unavailable();
+            break;
         case APEVT_BLE_ADVERTISE_STARTED:
             ble_advertise_started();
             break;
@@ -279,20 +307,4 @@ void app_process_for_data_event(DATA_EVENT_T event, uint8_t *data, size_t size)
         default:
             break;
     }
-}
-
-//
-// 業務処理初期化
-//
-void app_process_initialize(void)
-{
-    // 業務処理イベント（APEVT_XXXX）を
-    // 通知できるようにする
-    app_event_main_enable(true);
-
-    // LED点滅管理用のタイマーを
-    // 500ms後に始動させるようにする
-    //   500ms wait --> 
-    //   APEVT_LED_BLINK_BEGINが通知される
-    app_timer_start_for_blinking_begin(500);
 }
