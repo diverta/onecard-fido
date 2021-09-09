@@ -44,46 +44,25 @@ CONFIG_SETTINGS=y
 サブツリーが存在しない場合は、自動的に新規生成されます。
 
 以下の内容を登録します。
-- `name`：サブツリー名称
-- `h_set`：サブツリーに登録されているキーが読み込まれた時に実行される関数
-- `h_commit`：サブツリーに登録されている全てのキーが読み込まれた時に実行される関数
 
-サンプルコードは以下になります。
+|キーワード|名称|内容|
+|:--|:-|:-|
+|`name`|サブツリー名称||
+|`h_set`|キー参照callback   |サブツリーに登録されているキーが読み込まれた時に実行される関数|
+|`h_commit`|参照完了callback|サブツリーに登録されている全てのキーが読み込まれた時に実行される関数|
+
+nRF5340アプリケーションのコードは以下になります。
 
 ```
 //
-// nRF5340_app/secure_device_app/src/app_main.c
+// nRF5340_app/secure_device_app/src/app_settings.c
 //
 #include <settings/settings.h>
 
-// 登録データの読込用バッファ
-static uint8_t settings_buf[128];
-
-static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
-{
-    // サブツリーに登録されているキーが読み込まれた時に実行されます。
-    int read_len = read_cb(cb_arg, settings_buf, sizeof(settings_buf));
-    if (read_len < 0) {
-        LOG_ERR("Failed to read from storage: read_cb returns %d", read_len);
-    }
-    LOG_INF("h_set called: key[%s] value[%s]", log_strdup(key), log_strdup(settings_buf));
-    return 0;
-}
-
-static int h_commit(void)
-{
-    // サブツリーに登録されている全てのキーが読み込まれた時に実行されます。
-    LOG_INF("h_commit called");
-    return 0;
-}
-
-struct settings_handler my_conf = {
-    .name = "foo",
-    .h_set = h_set,
-    .h_commit = h_commit,
-};
-
-struct settings_handler app_conf = {
+// サブツリー設定
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg);
+static int h_commit(void);
+static struct settings_handler app_conf = {
     .name     = "app",
     .h_set    = h_set,
     .h_commit = h_commit,
@@ -98,6 +77,48 @@ void app_settings_initialize(void)
     if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
         settings_load();
     }
+}
+```
+
+`h_set`の実装コードです。<br>
+サブツリーに登録されているキーごとに呼び出され、関数内でキーに対応するデータを読み込むことができます。
+
+```
+// 登録データの読込用バッファ
+static uint8_t settings_buf[128];
+
+// app_settings_loadで指定された検索キーを保持
+static const char *settings_key_to_find = NULL;
+
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+    ：
+    // 検索対象かどうかを判定
+    if (settings_key_to_find == NULL || strcmp(key, settings_key_to_find) != 0) {
+        return 0;
+    }
+
+    // バッファ長を上限として、検索対象のデータを読込
+    size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
+    int read_len = read_cb(cb_arg, settings_buf, max);
+    if (read_len < 0) {
+        LOG_ERR("Failed to read from storage: read_cb returns %d", read_len);
+        return read_len;
+    }
+    ：
+}
+```
+
+`h_commit`の実装コードです。<br>
+サブツリーに登録されている全てのキーについて、`h_set`呼び出しが完了すると実行されます。<br>
+関数内ではロード完了時の処理を記述します。
+
+```
+static int h_commit(void)
+{
+    // 検索キーをクリア
+    settings_key_to_find = NULL;
+    return 0;
 }
 ```
 
