@@ -225,55 +225,44 @@ bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
 
 #### データの登録
 
-データをサブツリーに登録するためには、API`settings_save_one`を呼び出します。<br>
-引数には、データのキー名称と、データおよびデータ長を指定します。
-
-サンプルコードは以下になります。
+nRF5340アプリケーションでは、データ登録用の関数として、`app_settings_save`を用意しています。<br>
+関数引数には登録用キーと、登録データ格納用のバッファを指定します。
 
 ```
 //
-// nRF5340_app/secure_device_app/src/app_main.c
+// 呼び出し例
 //
-const char *mk = "app/sample";
-const char *m = "sample value";
+#include "app_settings.h"
 
-void app_main_button_pressed_short(void)
+APP_SETTINGS_KEY key1 = {0xBFFE, 0xBFEE, false, 0};
+char *m1 = "sample value 01";
+app_settings_save(&key1, m1, strlen(m1));
+```
+
+データをサブツリーに登録するために、内部でZephyrのAPI`settings_save_one`を呼び出しています。<br>
+
+```
+//
+// nRF5340_app/secure_device_app/src/app_settings.c
+//
+bool app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_size)
 {
-    LOG_DBG("Short pushed");
+    // キー名を生成
+    create_app_settings_key(key, settings_key);
+
     // サブツリーにデータを登録
-    int ret = settings_save_one(mk, m, strlen(m));
+    int ret = settings_save_one(settings_key, value, value_size);
     if (ret != 0) {
         LOG_ERR("settings_save_one returns %d", ret);
-        return;
+        return false;
     }
-    LOG_INF("settings_save_one done: key[%s] value[%s]", log_strdup(mk), log_strdup(m));
+
+    return true;
 }
 ```
 
-以下はサンプルコード実行時のログになります。
+`app_settings_save`で登録したデータを、後に業務処理で参照したい場合は、前述関数`app_settings_find`を実行します。
 
-```
-#
-# データがサブツリーに未登録の状態で起動
-#
-*** Booting Zephyr OS build v2.6.0-rc1-ncs1-3-g0944459b5b62  ***
-：
-[00:00:00.049,407] <inf> app_settings: h_commit called
-#
-# `settings_save_one`を実行し、データをサブツリーに登録
-#
-[00:00:06.178,527] <dbg> app_main.app_main_button_pressed_short: Short pushed
-[00:00:06.179,565] <inf> app_main: settings_save_one done: key[app/sample] value[sample value]
-#
-# `settings_save_one`の実行後にリセットを実施
-# `settings_save_one`で登録したデータが、`h_set`で参照されています。
-#
-*** Booting Zephyr OS build v2.6.0-rc1-ncs1-3-g0944459b5b62  ***
-：
-[00:00:00.042,144] <inf> app_settings: h_set called: key[sample] value[sample value]
-[00:00:00.049,560] <inf> app_settings: h_commit called
-
-```
 
 #### データの削除
 
