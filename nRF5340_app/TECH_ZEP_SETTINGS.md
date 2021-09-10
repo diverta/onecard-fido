@@ -84,6 +84,103 @@ void app_settings_initialize(void)
 サブツリーに登録されているキーごとに呼び出され、関数内でキーに対応するデータを読み込むことができます。
 
 ```
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+    ：
+    // バッファ長を上限として、検索対象のデータを読込
+    size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
+    int read_len = read_cb(cb_arg, settings_buf, max);
+    ：
+}
+```
+
+`h_commit`の実装コードです。<br>
+サブツリーに登録されている全てのキーについて、`h_set`呼び出しが完了すると実行されます。<br>
+関数内ではロード完了時の処理を記述します。
+
+```
+static int h_commit(void)
+{
+    // 検索キーをクリア
+    settings_key_to_find = NULL;
+    return 0;
+}
+```
+
+#### データの参照
+
+nRF5340アプリケーションでは、登録データ参照用の関数として、`app_settings_find`を用意しています。<br>
+関数引数には登録用キーと、登録データ読込用のバッファを指定します。
+
+```
+//
+// 呼び出し例
+//
+#include "app_settings.h"
+
+APP_SETTINGS_KEY key = {0xBFFD, 0xBFED, false, 0};
+app_settings_find(&key, c, &s);
+
+//
+// nRF5340_app/secure_device_app/src/app_settings.c
+//
+bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
+{
+    // データ格納領域を初期化
+    memset(settings_buf, 0, sizeof(settings_buf));
+    settings_buf_size = 0;
+
+    // サブツリーをロード
+    //   検索対象データが settings_buf に
+    //   格納されます。
+    if (app_settings_load(key) == false) {
+        return false;
+    }
+    ：
+}
+```
+
+登録用キー`APP_SETTINGS_KEY`は以下のような内容になっています。<br>
+具体的にはnRF52840アプリケーションで使用していた[ファイルID／レコードキー](https://github.com/diverta/onecard-fido/blob/master/nRF52840_app/examples/diverta/plat_lib/fido_flash.h)と同様の想定です。
+
+|キーワード|名称|内容|
+|:--|:-|:-|
+|`file_id`|ファイルID|データを業務単位にまとめるためのID<br>（業務共通／FIDO／PIV／OpenPGP）|
+|`record_key`|レコードキー|データを識別するためのキー|
+|`serial`|連番|レコードキー配下のデータを識別する番号<br>（同一レコードID配下に複数のデータを登録したい場合に使用）|
+|`use_serial`|連番使用|連番を使用する場合`true`、使用しない場合`false`|
+
+サブツリーに登録されているデータを参照するために、内部でZephyrのAPI`settings_load_subtree`を呼び出しています。[注1]<br>
+引数には、前述のサブツリー名称`app`（`app_conf.name`）を指定します。
+
+同時に、モジュール変数`settings_key_to_find`に、検索対象のキーを設定しておきます。
+
+```
+static bool app_settings_load(APP_SETTINGS_KEY *key)
+{
+    // キー名を生成
+    create_app_settings_key(key, settings_key);
+
+    if (settings_name_steq(settings_key, app_conf.name, &settings_key_to_find) == 0) {
+        // 検索対象のキーが抽出できなかった場合は何も行わない
+        return false;
+    }
+
+    // サブツリーをロード
+    int ret = settings_load_subtree(app_conf.name);
+    if (ret != 0) {
+        LOG_ERR("settings_load_subtree returns %d", ret);
+        return false;
+    }
+
+    return true;
+}
+```
+
+前述の通り、`settings_load_subtree`を呼び出すと、登録されているキーごとに`h_set`が１回ずつ呼び出されます。<br>
+`h_set`では、呼び出しごとにキーが`settings_key_to_find`と同じかどうか判定し、同じであれば`settings_buf`に検索対象のデータを読込みます。
+
+```
 // 登録データの読込用バッファ
 static uint8_t settings_buf[128];
 
@@ -109,55 +206,19 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
 }
 ```
 
-`h_commit`の実装コードです。<br>
-サブツリーに登録されている全てのキーについて、`h_set`呼び出しが完了すると実行されます。<br>
-関数内ではロード完了時の処理を記述します。
+`app_settings_find`は、最後に検索対象のデータを`settings_buf`から引数`value`の領域にコピーし、呼び出し先に戻ります。<br>
+検索対象データ長は`value_size`に設定されます。<br>
+（検索対象のデータが見つからなかった場合は、`value_size`に`0`が設定されます）
 
 ```
-static int h_commit(void)
+bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
 {
-    // 検索キーをクリア
-    settings_key_to_find = NULL;
-    return 0;
+    ：
+    // ロードしたデータをコピー
+    memcpy(value, settings_buf, settings_buf_size);
+    *value_size = settings_buf_size;
+    return true;
 }
-```
-
-#### データの参照
-
-登録されているデータを参照するためには、API`settings_load_subtree`を呼び出します。[注1]<br>
-引数には、前述のサブツリー名称`app`を指定します。
-
-サンプルコードは以下になります。
-
-```
-//
-// nRF5340_app/secure_device_app/src/app_main.c
-//
-void app_main_button_1_pressed(void)
-{
-    LOG_DBG("Button 2 pushed");
-    // サブツリーをロード
-    int ret = settings_load_subtree("app");
-    if (ret != 0) {
-        LOG_ERR("settings_load_subtree returns %d", ret);
-        return;
-    }
-    LOG_INF("settings_load_subtree done");
-}
-```
-
-以下はサンプルコード実行時のログになります。
-
-サブツリーをロードすると、登録されているキーごとに`h_set`が１回ずつ呼び出され、バッファ`settings_buf`に登録データがセットされます。<br>
-全てのキーについて`h_set`の実行が完了すると、`h_commit`が呼び出され、ロード完了を通知します。
-
-```
-*** Booting Zephyr OS build v2.6.0-rc1-ncs1-3-g0944459b5b62  ***
-：
-[00:00:16.498,596] <dbg> app_main.app_main_button_1_pressed: Button 2 pushed
-[00:00:16.498,687] <inf> app_settings: h_set called: key[sample] value[sample value]
-[00:00:16.499,114] <inf> app_settings: h_commit called
-[00:00:16.499,114] <inf> app_main: settings_load_subtree done
 ```
 
 [注1] nRF5340アプリケーションでは、ボンディング機能を有効化するため、初期処理において`settings_load`を呼び出すようにしています。このため、`settings_load`実行時、自動的に`settings_load_subtree`が１度呼び出される仕様になっています。
