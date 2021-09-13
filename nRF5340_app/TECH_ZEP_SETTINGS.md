@@ -133,7 +133,7 @@ bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
     // サブツリーをロード
     //   検索対象データが settings_buf に
     //   格納されます。
-    if (app_settings_load(key) == false) {
+    if (app_settings_load(key, &settings_key_to_find) == false) {
         return false;
     }
     ：
@@ -156,12 +156,12 @@ bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
 同時に、モジュール変数`settings_key_to_find`に、検索対象のキーを設定しておきます。
 
 ```
-static bool app_settings_load(APP_SETTINGS_KEY *key)
+static bool app_settings_load(APP_SETTINGS_KEY *key, const char **key_to_find)
 {
     // キー名を生成
     create_app_settings_key(key, settings_key);
 
-    if (settings_name_steq(settings_key, app_conf.name, &settings_key_to_find) == 0) {
+    if (settings_name_steq(settings_key, app_conf.name, key_to_find) == 0) {
         // 検索対象のキーが抽出できなかった場合は何も行わない
         return false;
     }
@@ -187,20 +187,24 @@ static uint8_t settings_buf[128];
 // app_settings_loadで指定された検索キーを保持
 static const char *settings_key_to_find = NULL;
 
-static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+static int find_setting(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
-    ：
-    // 検索対象かどうかを判定
-    if (settings_key_to_find == NULL || strcmp(key, settings_key_to_find) != 0) {
-        return 0;
-    }
-
     // バッファ長を上限として、検索対象のデータを読込
     size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
     int read_len = read_cb(cb_arg, settings_buf, max);
     if (read_len < 0) {
         LOG_ERR("Failed to read from storage: read_cb returns %d", read_len);
         return read_len;
+    }
+    ：
+}
+
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+    ：
+    // キーが検索対象であれば、検索対象のデータを読込
+    if (settings_key_to_find != NULL && strcmp(key, settings_key_to_find) == 0) {
+        return find_setting(key, len, read_cb, cb_arg);
     }
     ：
 }
@@ -263,51 +267,74 @@ bool app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_size)
 
 `app_settings_save`で登録したデータを、後に業務処理で参照したい場合は、前述関数`app_settings_find`を実行します。
 
-
 #### データの削除
 
-ひとたびサブツリーに登録したキーは、`settings_delete`により消去されるまで、サブツリーに残ります。<br>
-注意点として、サブツリー全体を消去するAPIはないため、含まれているキーをすべて検索し、逐一消去する必要があります。
-
-サンプルコードは以下になります。
+nRF5340アプリケーションでは、登録データ削除用の関数として、`app_settings_delete`を用意しています。<br>
+関数引数には削除用キーを指定します。
 
 ```
 //
-// nRF5340_app/secure_device_app/src/app_main.c
+// 呼び出し例
 //
-const char *mk = "app/sample";
+#include "app_settings.h"
 
-void app_main_button_1_pressed(void)
+// キーに該当するデータを個別削除
+APP_SETTINGS_KEY key1 = {0xBFFE, 0xBFEE, false, 0};
+app_settings_delete(&key1);
+
+// 0xBFFE 配下のデータを全削除
+APP_SETTINGS_KEY key2 = {0xBFFE, 0, false, 0};
+app_settings_delete(&key2);
+
+```
+
+引数`APP_SETTINGS_KEY`の`record_key`が指定されている場合は、キーに該当するデータを個別削除します。<br>
+`record_key`が指定されていない場合（`record_key`==`0`の場合）は、`file_id`配下のデータを全削除します。
+
+いずれも、データをサブツリーから削除するために、内部でZephyrのAPI`settings_delete`を呼び出しています。<br>
+
+
+```
+//
+// nRF5340_app/secure_device_app/src/app_settings.c
+//
+bool app_settings_delete(APP_SETTINGS_KEY *key)
 {
-    LOG_DBG("Button 2 pushed");
-    int ret = settings_delete(mk);
-    if (ret != 0) {
-        LOG_ERR("settings_delete returns %d", ret);
-        return;
+    ：
+    if (key->record_key == 0) {
+        // record_keyが指定されていない場合
+        // 指定された file_id に属するデータを
+        // サブツリーから全て削除
+        if (app_settings_load(key, &settings_key_to_delete) == false) {
+            return false;
+        }
+
+    } else {
+        // サブツリーから該当データだけを削除
+        int ret = settings_delete(settings_key);
+        if (ret != 0) {
+            LOG_ERR("settings_delete returns %d", ret);
+            return false;
+        }
     }
-    LOG_INF("settings_delete done");
+
+    return true;
 }
 ```
 
-以下はサンプルコード実行時のログになります。
+全削除の場合は、サブツリーに登録されているキーをすべて参照する必要があるため、`app_settings_load`を経由して行います。<br>
+`app_settings_load`により呼び出された`h_set`内で、サブツリーに登録されているキーを、指定された`file_id`と比較し、一致した場合は、そのキーのデータをサブツリーから削除しています。
 
 ```
-#
-# キー`app/sample`を消去します。
-#
-*** Booting Zephyr OS build v2.6.0-rc1-ncs1-3-g0944459b5b62  ***
-：
-[00:00:00.042,114] <inf> app_settings: h_set called: key[sample] value[sample value 2]
-[00:00:00.049,285] <inf> app_settings: h_commit called
-：
-[00:00:11.556,823] <dbg> app_main.app_main_button_1_pressed: Button 2 pushed
-[00:00:11.557,312] <inf> app_main: settings_delete done
-#
-# `settings_delete`の実行後にリセットを実施。
-# キー`app/sample`がサブツリーから消去されたため、`h_set`で参照されなくなりました。
-#
-*** Booting Zephyr OS build v2.6.0-rc1-ncs1-3-g0944459b5b62  ***
-：
-[00:00:00.049,407] <inf> app_settings: h_commit called
-：
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+    ：
+    // キーが削除対象であれば、該当キーのデータをサブツリーから削除
+    if (settings_key_to_delete != NULL && strncmp(key, settings_key_to_delete, strlen(settings_key_to_delete)) == 0) {
+        sprintf(settings_key_temp, "%s/%s", app_conf.name, key);
+        return settings_delete(settings_key_temp);
+    }
+    ：
+}
+
 ```
