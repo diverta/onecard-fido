@@ -22,9 +22,6 @@
 fido_log_module_register(fido_maintenance);
 #endif
 
-// 自動認証パラメーター設定関連
-#include "ble_peripheral_auth.h"
-
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
 

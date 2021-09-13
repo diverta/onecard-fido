@@ -80,3 +80,27 @@ bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
 {
     return app_ble_pairing_erase_bond_data(_response_func);
 }
+
+//
+// [Dummy] BLE自動認証関連
+//
+void ble_peripheral_auth_param_init(void)
+{
+}
+
+bool ble_peripheral_auth_scan_enable(void)
+{
+    return false;
+}
+
+bool ble_peripheral_auth_start_scan(void *context)
+{
+    (void)context;
+    return false;
+}
+
+size_t ble_peripheral_auth_scan_param_prepare(uint8_t *p_buff)
+{
+    (void)p_buff;
+    return 0;
+}
