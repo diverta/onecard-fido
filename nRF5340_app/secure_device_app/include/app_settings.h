@@ -30,6 +30,7 @@ typedef struct {
 void        app_settings_initialize(void);
 bool        app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_size);
 bool        app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size);
+bool        app_settings_delete(APP_SETTINGS_KEY *key);
 
 #ifdef __cplusplus
 }

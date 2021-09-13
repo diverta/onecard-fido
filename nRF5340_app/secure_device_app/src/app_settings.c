@@ -23,9 +23,11 @@ static size_t  settings_buf_size;
 
 // キー名称の編集用バッファ
 static uint8_t settings_key[32];
+static uint8_t settings_key_temp[32];
 
 // app_settings_loadで指定された検索キーを保持
-static const char *settings_key_to_find = NULL;
+static const char *settings_key_to_find   = NULL;
+static const char *settings_key_to_delete = NULL;
 
 // サブツリー設定
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg);
@@ -62,6 +64,12 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
         return find_setting(key, len, read_cb, cb_arg);
     }
 
+    // キーが削除対象であれば、該当キーのデータをサブツリーから削除
+    if (settings_key_to_delete != NULL && strncmp(key, settings_key_to_delete, strlen(settings_key_to_delete)) == 0) {
+        sprintf(settings_key_temp, "%s/%s", app_conf.name, key);
+        return settings_delete(settings_key_temp);
+    }
+
     return 0;
 }
 
@@ -72,7 +80,8 @@ static int h_commit(void)
 #endif
 
     // 検索キーをクリア
-    settings_key_to_find = NULL;
+    settings_key_to_find   = NULL;
+    settings_key_to_delete = NULL;
     return 0;
 }
 
@@ -92,8 +101,10 @@ static void create_app_settings_key(APP_SETTINGS_KEY *key, char *buf)
     // キー名を生成
     if (key->use_serial) {
         sprintf(buf, "%s/%04x/%04x/%04x", app_conf.name, key->file_id, key->record_key, key->serial);
-    } else {
+    } else if (key->record_key != 0) {
         sprintf(buf, "%s/%04x/%04x", app_conf.name, key->file_id, key->record_key);
+    } else {
+        sprintf(buf, "%s/%04x", app_conf.name, key->file_id);
     }
 }
 
@@ -117,12 +128,12 @@ bool app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_size)
     return true;
 }
 
-static bool app_settings_load(APP_SETTINGS_KEY *key)
+static bool app_settings_load(APP_SETTINGS_KEY *key, const char **key_to_find)
 {
     // キー名を生成
     create_app_settings_key(key, settings_key);
 
-    if (settings_name_steq(settings_key, app_conf.name, &settings_key_to_find) == 0) {
+    if (settings_name_steq(settings_key, app_conf.name, key_to_find) == 0) {
         // 検索対象のキーが抽出できなかった場合は何も行わない
         return false;
     }
@@ -149,12 +160,41 @@ bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
     // サブツリーをロード
     //   検索対象データが settings_buf に
     //   格納されます。
-    if (app_settings_load(key) == false) {
+    if (app_settings_load(key, &settings_key_to_find) == false) {
         return false;
     }
 
     // ロードしたデータをコピー
     memcpy(value, settings_buf, settings_buf_size);
     *value_size = settings_buf_size;
+    return true;
+}
+
+bool app_settings_delete(APP_SETTINGS_KEY *key)
+{
+    // キー名を生成
+    create_app_settings_key(key, settings_key);
+
+    if (key->record_key == 0) {
+        // record_keyが指定されていない場合
+        // 指定された file_id に属するデータを
+        // サブツリーから全て削除
+        if (app_settings_load(key, &settings_key_to_delete) == false) {
+            return false;
+        }
+
+    } else {
+        // サブツリーから該当データだけを削除
+        int ret = settings_delete(settings_key);
+        if (ret != 0) {
+            LOG_ERR("settings_delete returns %d", ret);
+            return false;
+        }
+    }
+
+#if LOG_SETTINGS_DEBUG
+    LOG_INF("settings_delete done: key[%s]", log_strdup(settings_key));
+#endif
+
     return true;
 }
