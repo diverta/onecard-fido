@@ -36,17 +36,8 @@ static struct settings_handler app_conf = {
     .h_commit = h_commit,
 };
 
-static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+static int find_setting(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
-#if LOG_SETTINGS_EXIST_KEY
-    LOG_INF("h_set called: key[app/%s] length[%d]", log_strdup(key), len);
-#endif
-
-    // 検索対象かどうかを判定
-    if (settings_key_to_find == NULL || strcmp(key, settings_key_to_find) != 0) {
-        return 0;
-    }
-
     // バッファ長を上限として、検索対象のデータを読込
     size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
     int read_len = read_cb(cb_arg, settings_buf, max);
@@ -57,6 +48,20 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
 
     // 読み込んだバイト数を保持
     settings_buf_size = read_len;
+    return 0;
+}
+
+static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
+{
+#if LOG_SETTINGS_EXIST_KEY
+    LOG_INF("h_set called: key[app/%s] length[%d]", log_strdup(key), len);
+#endif
+
+    // キーが検索対象であれば、検索対象のデータを読込
+    if (settings_key_to_find != NULL && strcmp(key, settings_key_to_find) == 0) {
+        return find_setting(key, len, read_cb, cb_arg);
+    }
+
     return 0;
 }
 
