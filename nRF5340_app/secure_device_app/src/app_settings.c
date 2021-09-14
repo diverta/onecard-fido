@@ -18,7 +18,7 @@ LOG_MODULE_REGISTER(app_settings);
 #include "app_settings.h"
 
 // 登録データの読込用バッファ
-static uint8_t settings_buf[128];
+static uint8_t settings_buf[CONFIG_APP_SETTINGS_BUFFER_SIZE];
 static size_t  settings_buf_size;
 
 // キー名称の編集用バッファ
@@ -126,6 +126,9 @@ static int h_commit(void)
 
 void app_settings_initialize(void)
 {
+    // データバッファサイズをログ表示
+    LOG_INF("Buffer size for reading data from storage: %lu bytes", sizeof(settings_buf));
+
     // 業務処理で使用する永続化用のサブツリーを登録
     settings_register(&app_conf);
 
