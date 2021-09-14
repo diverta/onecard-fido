@@ -29,6 +29,10 @@ static uint8_t settings_key_temp[32];
 static const char *settings_key_to_find   = NULL;
 static const char *settings_key_to_delete = NULL;
 
+// h_set内でデータ内容を比較するために
+// 使用する関数の参照を保持
+static bool (*settings_condition_func)(void *data, size_t size);
+
 // サブツリー設定
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg);
 static int h_commit(void);
@@ -58,8 +62,18 @@ static int find_setting(const char *key, size_t len, settings_read_cb read_cb, v
         return read_len;
     }
 
-    // 読み込んだバイト数を保持
-    settings_buf_size = read_len;
+    if (settings_condition_func != NULL) {
+        // データ内容を比較し、所定の内容と一致していれば、
+        // 読み込んだバイト数を保持
+        if ((*settings_condition_func)(settings_buf, read_len)) {
+            settings_buf_size = read_len;
+        }
+
+    } else {
+        // 読み込んだバイト数を保持
+        settings_buf_size = read_len;
+    }
+
     return 0;
 }
 
@@ -178,9 +192,17 @@ static bool app_settings_load(APP_SETTINGS_KEY *key, const char **key_to_find)
 
 bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
 {
+    return app_settings_search(key, value, value_size, NULL);
+}
+
+bool app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size))
+{
     // データ格納領域を初期化
     memset(settings_buf, 0, sizeof(settings_buf));
     settings_buf_size = 0;
+
+    // 条件判定用関数の参照を保持
+    settings_condition_func = _condition_func;
 
     // サブツリーをロード
     //   検索対象データがサブツリー内に存在する場合、
