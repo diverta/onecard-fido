@@ -40,8 +40,13 @@ static struct settings_handler app_conf = {
 
 static int find_setting(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
+    // すでに検索済みの場合は終了
+    if (settings_buf_size > 0) {
+        return 0;
+    }
+
     // キーが検索対象でない場合は終了
-    if (strcmp(key, settings_key_to_find) != 0) {
+    if (strncmp(key, settings_key_to_find, strlen(settings_key_to_find)) != 0) {
         return 0;
     }
 
@@ -178,14 +183,17 @@ bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
     settings_buf_size = 0;
 
     // サブツリーをロード
-    //   検索対象データが settings_buf に
-    //   格納されます。
+    //   検索対象データがサブツリー内に存在する場合、
+    //   データが settings_buf に格納され、
+    //   データ長が settings_buf_size に設定されます。
     if (app_settings_load(key, &settings_key_to_find) == false) {
         return false;
     }
 
     // ロードしたデータをコピー
-    memcpy(value, settings_buf, settings_buf_size);
+    if (settings_buf_size > 0) {
+        memcpy(value, settings_buf, settings_buf_size);
+    }
     *value_size = settings_buf_size;
     return true;
 }
