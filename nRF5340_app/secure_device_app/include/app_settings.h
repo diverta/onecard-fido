@@ -32,6 +32,7 @@ bool        app_settings_save(APP_SETTINGS_KEY *key, void *value, size_t value_s
 bool        app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size);
 bool        app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size));
 bool        app_settings_delete(APP_SETTINGS_KEY *key);
+bool        app_settings_delete_multi(APP_SETTINGS_KEY *key);
 
 #ifdef __cplusplus
 }

@@ -13,6 +13,7 @@
 LOG_MODULE_REGISTER(app_settings);
 
 #define LOG_SETTINGS_DEBUG          false
+#define LOG_SETTINGS_DELETE         false
 #define LOG_SETTINGS_EXIST_KEY      false
 
 #include "app_settings.h"
@@ -90,6 +91,11 @@ static int delete_setting(const char *key)
     if (rc < 0) {
         LOG_ERR("Failed to delete from storage: settings_delete returns %d", rc);
     }
+
+#if LOG_SETTINGS_DELETE
+    LOG_INF("settings_delete done: key[%s]", log_strdup(settings_key_temp));
+#endif
+
     return rc;
 }
 
@@ -228,26 +234,30 @@ bool app_settings_delete(APP_SETTINGS_KEY *key)
     // キー名を生成
     create_app_settings_key(key, settings_key);
 
-    if (key->record_key == 0) {
-        // record_keyが指定されていない場合
-        // 指定された file_id に属するデータを
-        // サブツリーから全て削除
-        if (app_settings_load(key, &settings_key_to_delete) == false) {
-            return false;
-        }
-
-    } else {
-        // サブツリーから該当データだけを削除
-        int ret = settings_delete(settings_key);
-        if (ret != 0) {
-            LOG_ERR("settings_delete returns %d", ret);
-            return false;
-        }
+    // サブツリーから該当データだけを削除
+    int ret = settings_delete(settings_key);
+    if (ret != 0) {
+        LOG_ERR("settings_delete returns %d", ret);
+        return false;
     }
 
-#if LOG_SETTINGS_DEBUG
+#if LOG_SETTINGS_DELETE
     LOG_INF("settings_delete done: key[%s]", log_strdup(settings_key));
 #endif
+
+    return true;
+}
+
+bool app_settings_delete_multi(APP_SETTINGS_KEY *key)
+{
+    // キー名を生成
+    create_app_settings_key(key, settings_key);
+
+    // 指定されたキーの配下に属するデータを
+    // サブツリーから全て削除
+    if (app_settings_load(key, &settings_key_to_delete) == false) {
+        return false;
+    }
 
     return true;
 }
