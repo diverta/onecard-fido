@@ -40,6 +40,11 @@ static struct settings_handler app_conf = {
 
 static int find_setting(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
+    // キーが検索対象でない場合は終了
+    if (strcmp(key, settings_key_to_find) != 0) {
+        return 0;
+    }
+
     // バッファ長を上限として、検索対象のデータを読込
     size_t max = (len > sizeof(settings_buf) ? sizeof(settings_buf) : len);
     int read_len = read_cb(cb_arg, settings_buf, max);
@@ -53,6 +58,22 @@ static int find_setting(const char *key, size_t len, settings_read_cb read_cb, v
     return 0;
 }
 
+static int delete_setting(const char *key)
+{
+    // キーが削除対象でない場合は終了
+    if (strncmp(key, settings_key_to_delete, strlen(settings_key_to_delete)) != 0) {
+        return 0;
+    }
+
+    // 該当キーのデータをサブツリーから削除
+    sprintf(settings_key_temp, "%s/%s", app_conf.name, key);
+    int rc = settings_delete(settings_key_temp);
+    if (rc < 0) {
+        LOG_ERR("Failed to delete from storage: settings_delete returns %d", rc);
+    }
+    return rc;
+}
+
 static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg)
 {
 #if LOG_SETTINGS_EXIST_KEY
@@ -60,14 +81,13 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
 #endif
 
     // キーが検索対象であれば、検索対象のデータを読込
-    if (settings_key_to_find != NULL && strcmp(key, settings_key_to_find) == 0) {
+    if (settings_key_to_find != NULL) {
         return find_setting(key, len, read_cb, cb_arg);
     }
 
     // キーが削除対象であれば、該当キーのデータをサブツリーから削除
-    if (settings_key_to_delete != NULL && strncmp(key, settings_key_to_delete, strlen(settings_key_to_delete)) == 0) {
-        sprintf(settings_key_temp, "%s/%s", app_conf.name, key);
-        return settings_delete(settings_key_temp);
+    if (settings_key_to_delete != NULL) {
+        return delete_setting(key);
     }
 
     return 0;
