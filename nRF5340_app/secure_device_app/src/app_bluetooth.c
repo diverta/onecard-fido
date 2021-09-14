@@ -152,18 +152,17 @@ static struct bt_conn_cb conn_callbacks = {
 static void bt_ready(int err)
 {
     if (err) {
+        // BLE使用不能イベントを業務処理スレッドに引き渡す
+        app_event_notify(APEVT_BLE_UNAVAILABLE);
         LOG_ERR("Bluetooth init failed (err %d)", err);
         return;
     }
 
-    // 永続化機能を初期化
-    if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
-        settings_load();
-    }
-
-    // アドバタイジング開始
+    // Bluetooth初期処理完了
     LOG_INF("Bluetooth initialized");
-    app_ble_start_advertising();
+
+    // BLE使用可能イベントを業務処理スレッドに引き渡す
+    app_event_notify(APEVT_BLE_AVAILABLE);
 }
 
 void app_bluetooth_start(void)
@@ -185,6 +184,8 @@ void app_bluetooth_start(void)
     //   同時に、内部でNVSの初期化(nvs_init)が行われます。
     int rc = bt_enable(bt_ready);
     if (rc != 0) {
+        // BLE使用不能イベントを業務処理スレッドに引き渡す
+        app_event_notify(APEVT_BLE_UNAVAILABLE);
         LOG_ERR("Bluetooth init failed (err %d)", rc);
         return;
     }

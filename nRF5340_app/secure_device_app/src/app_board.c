@@ -10,7 +10,6 @@
 #include <zephyr.h>
 #include <device.h>
 #include <sys/time_units.h>
-#include <power/reboot.h>
 
 #include "app_board.h"
 #include "app_board_define.h"
@@ -248,7 +247,7 @@ void app_board_prepare_for_deep_sleep(void)
 //
 void app_board_prepare_for_system_reset(void)
 {
-    sys_reboot(SYS_REBOOT_WARM);
+    NVIC_SystemReset();
 }
 
 //
