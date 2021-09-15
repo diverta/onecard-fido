@@ -66,6 +66,16 @@ bool        fido_ble_pairing_mode_get(void);
 bool        fido_ble_service_disconnected(void);
 
 //
+// タイマー関連
+//
+void        fido_user_presence_verify_timer_stop(void);
+void        fido_user_presence_verify_timer_start(uint32_t timeout_msec, void *p_context);
+void        fido_hid_channel_lock_timer_stop(void);
+void        fido_hid_channel_lock_timer_start(uint32_t lock_ms);
+void        fido_repeat_process_timer_stop(void);
+void        fido_repeat_process_timer_start(uint32_t timeout_msec, void (*handler)(void));
+
+//
 // 関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
