@@ -14,6 +14,7 @@ extern "C" {
 //
 // 関数群
 //
+uint8_t    *fido_crypto_sskey_public_key(void);
 void        fido_crypto_sskey_init(bool force);
 
 #ifdef __cplusplus
