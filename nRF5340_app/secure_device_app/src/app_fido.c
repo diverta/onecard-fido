@@ -4,16 +4,12 @@
  *
  * Created on 2021/09/16, 10:03
  */
-
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
 #ifdef FIDO_ZEPHYR
 fido_log_module_register(app_fido);
 #endif
-
-// Zephyrに依存する処理
-#include "app_crypto_ec.h"
 
 //
 // EC鍵ペア関連
@@ -46,8 +42,13 @@ uint8_t *fido_crypto_keypair_public_key(void)
 // 鍵交換用キーペア格納領域
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
-static uint8_t private_key_raw_data[RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[RAW_PUBLIC_KEY_SIZE];
+static uint8_t private_key_raw_data_for_ss[RAW_PRIVATE_KEY_SIZE];
+static uint8_t public_key_raw_data_for_ss[RAW_PUBLIC_KEY_SIZE];
+
+uint8_t *fido_crypto_sskey_public_key(void)
+{
+    return public_key_raw_data_for_ss;
+}
 
 // 鍵交換用キーペアが生成済みかどうかを保持
 static bool keypair_generated = false;
@@ -63,9 +64,7 @@ void fido_crypto_sskey_init(bool force)
 
     // 秘密鍵および公開鍵を生成し、
     // モジュール変数内で保持
-    fido_crypto_keypair_generate();
-    memcpy(private_key_raw_data, fido_crypto_keypair_private_key(), sizeof(private_key_raw_data));
-    memcpy(public_key_raw_data, fido_crypto_keypair_public_key(), sizeof(public_key_raw_data));
+    app_crypto_ec_keypair_generate(private_key_raw_data_for_ss, public_key_raw_data_for_ss);
 
     // 生成済みフラグを設定
     if (!keypair_generated) {

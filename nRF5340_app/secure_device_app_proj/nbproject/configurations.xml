@@ -76,6 +76,7 @@
       <logicalFolder name="FIDO2Device" displayName="FIDO2Device" projectFiles="true">
         <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.h</itemPath>
@@ -3121,6 +3122,29 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../../tinycbor/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../FIDO2Device/fido2_lib</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c"
             ex="false"
             tool="0"
@@ -3142,16 +3166,16 @@
           <incDir>
             <pElem>../../FIDO2Device/ctap2_lib</pElem>
             <pElem>../../../tinycbor/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../FIDO2Device/fido2_lib</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
@@ -16540,16 +16564,16 @@
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
