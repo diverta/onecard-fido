@@ -15,6 +15,15 @@
 extern "C" {
 #endif
 
+// crypto関連の共通定義
+#define RAW_PRIVATE_KEY_SIZE    32
+#define RAW_PUBLIC_KEY_SIZE     64
+#define SHARED_SECRET_SIZE      32
+#define ECDSA_SIGNATURE_SIZE    64
+#define SHA_256_HASH_SIZE       32
+#define SSKEY_HASH_SIZE         32
+#define HMAC_SHA_256_SIZE       32
+
 #ifdef FIDO_ZEPHYR
 #include "app_platform.h"
 

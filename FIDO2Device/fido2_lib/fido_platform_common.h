@@ -15,15 +15,6 @@
 extern "C" {
 #endif
 
-// crypto関連の定義
-#define RAW_PRIVATE_KEY_SIZE    32
-#define RAW_PUBLIC_KEY_SIZE     64
-#define SHARED_SECRET_SIZE      32
-#define ECDSA_SIGNATURE_SIZE    64
-#define SHA_256_HASH_SIZE       32
-#define SSKEY_HASH_SIZE         32
-#define HMAC_SHA_256_SIZE       32
-
 // BLEデバイスによる近接認証機能
 #include "ble_peripheral_auth.h"
 
@@ -61,6 +52,15 @@ bool     fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32
 uint8_t *fido_flash_client_pin_store_pin_code_hash(void);
 uint32_t fido_flash_client_pin_store_retry_counter(void);
 bool     fido_flash_client_pin_store_pin_code_exist(void);
+
+//
+// fido_flash_token_counter.c
+//
+bool     fido_flash_token_counter_delete(void);
+bool     fido_flash_token_counter_write(uint8_t *p_appid_hash, uint32_t token_counter, uint8_t *p_hash_for_check);
+bool     fido_flash_token_counter_read(uint8_t *p_appid_hash);
+uint32_t fido_flash_token_counter_value(void);
+uint8_t *fido_flash_token_counter_get_check_hash(void);
 
 //
 // fido_flash_blp_auth_param.c
