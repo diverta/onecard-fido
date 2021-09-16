@@ -16,9 +16,11 @@
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
 
+#ifdef CONFIG_USE_ATECC608A
 // for ATECC608A
 #include "atecc.h"
 #include "atecc_aes.h"
+#endif
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
