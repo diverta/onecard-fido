@@ -20,6 +20,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_maintenance_skcert);
+#endif
+
 // for debug apdu data
 #define LOG_DEBUG_PUBKEY_BUFF   false
 
