@@ -36,6 +36,17 @@ bool fido_ble_service_disconnected(void)
 }
 
 //
+// タイマー関連
+//
+void fido_hid_channel_lock_timer_stop(void)
+{
+}
+
+void fido_hid_channel_lock_timer_start(uint32_t lock_ms)
+{
+}
+
+//
 // DFU関連
 //
 #include "app_dfu.h"

@@ -133,7 +133,7 @@ static int h_commit(void)
 void app_settings_initialize(void)
 {
     // データバッファサイズをログ表示
-    LOG_INF("Buffer size for reading data from storage: %lu bytes", sizeof(settings_buf));
+    LOG_INF("Buffer size for reading data from storage: %d bytes", sizeof(settings_buf));
 
     // 業務処理で使用する永続化用のサブツリーを登録
     settings_register(&app_conf);
