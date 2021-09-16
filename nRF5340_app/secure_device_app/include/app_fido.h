@@ -16,6 +16,8 @@ extern "C" {
 //
 uint8_t    *fido_crypto_sskey_public_key(void);
 void        fido_crypto_sskey_init(bool force);
+uint8_t     fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data);
+uint8_t    *fido_crypto_sskey_hash(void);
 
 #ifdef __cplusplus
 }
