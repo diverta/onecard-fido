@@ -25,6 +25,7 @@ extern "C" {
 #define HMAC_SHA_256_SIZE       32
 
 #ifdef FIDO_ZEPHYR
+#include "app_fido.h"
 #include "app_platform.h"
 
 #else

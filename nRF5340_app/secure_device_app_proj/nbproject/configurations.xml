@@ -94,6 +94,7 @@
           <itemPath>../../FIDO2Device/fido2_lib/fido_ble_send.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_command.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_command.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_command_common.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_command_common.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_common.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
@@ -756,6 +757,7 @@
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/entropy.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/errno_private.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/flash.h</itemPath>
+                        <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/gpio.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/hwinfo.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kernel.h</itemPath>
                         <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/include/generated/syscalls/kobject.h</itemPath>
@@ -1506,13 +1508,18 @@
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_driver_wrappers.c</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_driver_wrappers.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_ecp.c</itemPath>
+                    <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_ecp.h</itemPath>
+                    <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_invasive.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_random_impl.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_rsa.c</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_rsa.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_se.c</itemPath>
+                    <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_se.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_service_integration.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_slot_management.c</itemPath>
+                    <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_slot_management.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_storage.c</itemPath>
+                    <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_crypto_storage.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/psa_its_file.c</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/ripemd160.c</itemPath>
                     <itemPath>../../pyvenvs/ncs/modules/crypto/mbedtls/mbedtls/library/rsa.c</itemPath>
@@ -3009,6 +3016,7 @@
         <in>app_crypto_rsa.c</in>
         <in>app_dfu.c</in>
         <in>app_event.c</in>
+        <in>app_fido.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
         <in>app_platform.c</in>
@@ -3041,6 +3049,7 @@
       <itemPath>../../../tinycbor/src/cborinternal_p.h</itemPath>
       <itemPath>../../../tinycbor/src/cborparser.c</itemPath>
       <itemPath>../../../tinycbor/src/compilersupport_p.h</itemPath>
+      <itemPath>../../../tinycbor/src/tinycbor-version.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="重要なファイル"
@@ -3207,6 +3216,28 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_command_common.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
@@ -6544,16 +6575,19 @@
           <incDir>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/src</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/storage</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/include/bootutil</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/zephyr/include/flash_map_backend</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/bootloader/mcuboot/boot/bootutil/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
+            <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
         </cTool>
       </item>
@@ -10022,6 +10056,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/nrfxlib/nrf_security/src/mbedtls/mbedtls_heap.c"
@@ -12636,6 +12673,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/subsys/bluetooth</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/zephyr/subsys/bluetooth/host/uuid.c"
@@ -12697,6 +12737,9 @@
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/zephyr/subsys/fs/fs_impl.c"
@@ -12718,6 +12761,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/fs</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/zephyr/subsys/fs/littlefs_fs.c"
@@ -12747,6 +12793,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/drivers</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/zephyr/subsys/fs/nvs/nvs.c"
@@ -13126,6 +13175,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/subsys/settings/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </item>
       <item path="../../pyvenvs/ncs/zephyr/subsys/settings/src/settings_init.c"
@@ -16481,6 +16533,28 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../secure_device_app/src/app_fido.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../secure_device_app/src/app_flash.c"
             ex="false"
             tool="0"
@@ -16737,6 +16811,9 @@
             <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated</pElem>
             <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="0/build_signed/hci_rpmsg/zephyr">
@@ -16751,6 +16828,7 @@
         <cTool>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -16770,6 +16848,7 @@
           </incDir>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -16796,6 +16875,7 @@
           </incDir>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -16804,12 +16884,16 @@
           <incDir>
             <pElem>../../FIDO2Device/fido2_lib</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/bootloader">
         <cTool>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -16817,6 +16901,14 @@
         <cTool>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/modules">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -16982,6 +17074,13 @@
           </incDir>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/nrf">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -17259,6 +17358,7 @@
           </incDir>
           <preprocessorList>
             <Elem>APP_TEST</Elem>
+            <Elem>FIDO_ZEPHYR</Elem>
           </preprocessorList>
         </cTool>
       </folder>
@@ -17267,6 +17367,13 @@
           <incDir>
             <pElem>../../nrfxlib/nrf_security/src/mbedtls/replacements</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/pyvenvs/ncs/modules/crypto/mbedtls">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/modules/crypto/tinycrypt">
@@ -17281,6 +17388,9 @@
           <incDir>
             <pElem>../../pyvenvs/ncs/modules/fs/littlefs</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/modules/hal/libmetal/libmetal/lib/system/zephyr/cortexm">
@@ -17311,6 +17421,13 @@
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/pyvenvs/ncs/modules/lib/mcumgr">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/modules/lib/mcumgr/cborattr">
@@ -17421,6 +17538,9 @@
           <incDir>
             <pElem>../../pyvenvs/ncs/modules/lib/tinycbor/src</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/modules/lib/tinycbor/src054">
@@ -17562,6 +17682,9 @@
             <pElem>../../pyvenvs/ncs/nrf/subsys/bootloader/include</pElem>
             <pElem>../secure_device_app/build_signed/hci_rpmsg/b0n</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/nrf/subsys/bootloader/bl_boot">
@@ -17713,6 +17836,9 @@
           <incDir>
             <pElem>../../pyvenvs/ncs/nrfxlib/crypto/nrf_cc312_platform/src</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/nrfxlib/nrf_security/src/mbedtls/replacements">
@@ -17785,6 +17911,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/zephyr/drivers/clock_control">
@@ -18010,6 +18139,9 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/zephyr/lib/libc/minimal/source/stdlib">
@@ -18241,6 +18373,9 @@
             <pElem>../../pyvenvs/ncs/zephyr/subsys/mgmt/mcumgr</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/net</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/zephyr/subsys/net">
@@ -18303,6 +18438,20 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
             <pElem>../secure_device_app/build_signed/hci_rpmsg</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/pyvenvs/ncs/zephyr/subsys/settings">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="ncs/pyvenvs/ncs/zephyr/subsys/storage">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/pyvenvs/ncs/zephyr/subsys/storage/flash_map">
@@ -18387,6 +18536,13 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/dfu</pElem>
             <pElem>../secure_device_app/build_signed/mcuboot</pElem>
           </incDir>
+        </cTool>
+      </folder>
+      <folder path="ncs/zephyr">
+        <cTool>
+          <preprocessorList>
+            <Elem>FIDO_ZEPHYR</Elem>
+          </preprocessorList>
         </cTool>
       </folder>
       <folder path="ncs/zephyr/arch/arm/core/aarch32/cortex_m/cmse">
