@@ -18,6 +18,8 @@ fido_log_module_register(app_fido);
 
 // for debug hex dump data
 #define LOG_HEXDUMP_DEBUG_SSKEY     false
+#define LOG_HEXDUMP_DEBUG_ENCRYPTED false
+#define LOG_HEXDUMP_DEBUG_DECRYPTED false
 
 //
 // EC鍵ペア関連
@@ -140,4 +142,37 @@ uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
 uint8_t *fido_crypto_sskey_hash(void)
 {
     return sskey_hash;
+}
+
+//
+// AES-CBC暗号化関連
+//
+size_t fido_crypto_aes_cbc_256_decrypt(uint8_t *p_key, uint8_t *p_encrypted, size_t encrypted_size, uint8_t *decrypted) 
+{
+#if LOG_HEXDUMP_DEBUG_ENCRYPTED
+    fido_log_debug("Encrypted data(%dbytes):", encrypted_size);
+    fido_log_print_hexdump_debug(p_encrypted, encrypted_size, "");
+#endif
+
+    size_t decrypted_size;
+    if (app_crypto_aes_cbc_256_decrypt(p_key, p_encrypted, encrypted_size, decrypted, &decrypted_size) == false) {
+        return 0;
+    }
+
+#if LOG_HEXDUMP_DEBUG_DECRYPTED
+    fido_log_debug("Decrypted data(%dbytes):", decrypted_size);
+    fido_log_print_hexdump_debug(decrypted, decrypted_size, "");
+#endif
+
+    return decrypted_size;
+}
+
+size_t fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext, size_t plaintext_size, uint8_t *encrypted) 
+{
+    size_t encrypted_size;
+    if (app_crypto_aes_cbc_256_encrypt(p_key, p_plaintext, plaintext_size, encrypted, &encrypted_size) == false) {
+        return 0;
+    }
+
+    return encrypted_size;
 }
