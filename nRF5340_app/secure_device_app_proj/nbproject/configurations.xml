@@ -82,6 +82,7 @@
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_common.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h</itemPath>
@@ -109,6 +110,9 @@
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_send.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_cryption.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_maintenance_skcert.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_platform.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_platform_common.h</itemPath>
@@ -116,6 +120,17 @@
           <itemPath>../../FIDO2Device/fido2_lib/fido_receive_apdu.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_u2f_command.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="u2f_lib" displayName="u2f_lib" projectFiles="true">
+          <itemPath>../../FIDO2Device/u2f_lib/u2f.h</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_authenticate.c</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_authenticate.h</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_keyhandle.c</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_keyhandle.h</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_register.c</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_register.h</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.c</itemPath>
+          <itemPath>../../FIDO2Device/u2f_lib/u2f_signature.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="mbedtls" displayName="mbedtls" projectFiles="true">
@@ -787,82 +802,43 @@
                                      projectFiles="true">
                         <logicalFolder name="include" displayName="include" projectFiles="true">
                           <logicalFolder name="app_memory" displayName="app_memory" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/app_memory/mem_domain.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="arch" displayName="arch" projectFiles="true">
                             <logicalFolder name="x86" displayName="x86" projectFiles="true">
                               <logicalFolder name="intel64" displayName="intel64" projectFiles="true">
-                                <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/x86/intel64/syscall.h</itemPath>
                               </logicalFolder>
                             </logicalFolder>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/arch_inlines.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/cpu.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/structs.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/arch/syscall.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="kernel" displayName="kernel" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel/thread.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel/thread_stack.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="linker" displayName="linker" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/section_tags.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/linker/sections.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="logging" displayName="logging" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_core.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_instance.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/logging/log_msg.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="sys" displayName="sys" projectFiles="true">
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/__assert.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/arch_interface.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/atomic.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/atomic_builtin.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/cbprintf.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/cbprintf_cxx.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/cbprintf_internal.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/crc.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/device_mmio.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/dlist.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/errno_private.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/kobject.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/list_gen.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/mem_manage.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/printk.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/rb.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sflist.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/slist.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sys_heap.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/sys_io.h</itemPath>
+                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/mpsc_packet.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/thread_stack.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/time_units.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_internal.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_loops.h</itemPath>
                             <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys/util_macro.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="toolchain" displayName="toolchain" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain/common.h</itemPath>
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain/gcc.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="tracing" displayName="tracing" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/tracing/tracing_macros.h</itemPath>
                           </logicalFolder>
                           <logicalFolder name="zephyr" displayName="zephyr" projectFiles="true">
-                            <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/zephyr/types.h</itemPath>
                           </logicalFolder>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/device.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/fatal.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/init.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/irq.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/irq_offload.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_includes.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_structs.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/kernel_version.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/mempool_heap.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sched_priq.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/spinlock.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/sys_clock.h</itemPath>
-                          <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/syscall.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/syscall_handler.h</itemPath>
                           <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include/toolchain.h</itemPath>
                         </logicalFolder>
@@ -871,7 +847,6 @@
                                        projectFiles="true">
                           <logicalFolder name="x86" displayName="x86" projectFiles="true">
                             <logicalFolder name="ia32" displayName="ia32" projectFiles="true">
-                              <itemPath>../secure_device_app/build_signed/hci_rpmsg/b0n/zephyr/misc/generated/syscalls_links/include_arch/x86/ia32/syscall.h</itemPath>
                             </logicalFolder>
                           </logicalFolder>
                         </logicalFolder>
@@ -1169,6 +1144,7 @@
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/devicetree_unfixed.h</itemPath>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/kobj-types-enum.h</itemPath>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/offsets.h</itemPath>
+                  <itemPath>../secure_device_app/build_signed/zephyr/include/generated/pm_config.h</itemPath>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/syscall_list.h</itemPath>
                   <itemPath>../secure_device_app/build_signed/zephyr/include/generated/version.h</itemPath>
                 </logicalFolder>
@@ -2165,6 +2141,10 @@
                     <logicalFolder name="cortex_m" displayName="cortex_m" projectFiles="true">
                       <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/cortex_m/fpu.h</itemPath>
                     </logicalFolder>
+                    <logicalFolder name="mpu" displayName="mpu" projectFiles="true">
+                      <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu/arm_mpu.h</itemPath>
+                      <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu/arm_mpu_v8m.h</itemPath>
+                    </logicalFolder>
                     <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/asm_inline_gcc.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/exc.h</itemPath>
                     <itemPath>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/irq.h</itemPath>
@@ -2177,16 +2157,33 @@
                   <itemPath>../../pyvenvs/ncs/zephyr/include/arch/common/ffs.h</itemPath>
                   <itemPath>../../pyvenvs/ncs/zephyr/include/arch/common/sys_io.h</itemPath>
                 </logicalFolder>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/arch/structs.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="bluetooth" displayName="bluetooth" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/addr.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/buf.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/crypto.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/hci.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/hci_raw.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/l2cap.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/bluetooth/uuid.h</itemPath>
               </logicalFolder>
               <logicalFolder name="debug" displayName="debug" projectFiles="true">
                 <itemPath>../../pyvenvs/ncs/zephyr/include/debug/coredump.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/debug/gcov.h</itemPath>
               </logicalFolder>
               <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+                <logicalFolder name="bluetooth" displayName="bluetooth" projectFiles="true">
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/bluetooth/hci_driver.h</itemPath>
+                </logicalFolder>
                 <logicalFolder name="clock_control"
                                displayName="clock_control"
                                projectFiles="true">
                   <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/clock_control/nrf_clock_control.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="timer" displayName="timer" projectFiles="true">
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/timer/nrf_rtc_timer.h</itemPath>
+                  <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/timer/system_timer.h</itemPath>
                 </logicalFolder>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/clock_control.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/drivers/counter.h</itemPath>
@@ -2202,6 +2199,13 @@
                 <itemPath>../../pyvenvs/ncs/zephyr/include/fs/fs_sys.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/fs/littlefs.h</itemPath>
               </logicalFolder>
+              <logicalFolder name="ipc" displayName="ipc" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/ipc/rpmsg_service.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="kernel" displayName="kernel" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/kernel/thread.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/kernel/thread_stack.h</itemPath>
+              </logicalFolder>
               <logicalFolder name="linker" displayName="linker" projectFiles="true">
                 <itemPath>../../pyvenvs/ncs/zephyr/include/linker/linker-defs.h</itemPath>
               </logicalFolder>
@@ -2215,6 +2219,10 @@
               <logicalFolder name="net" displayName="net" projectFiles="true">
                 <itemPath>../../pyvenvs/ncs/zephyr/include/net/buf.h</itemPath>
               </logicalFolder>
+              <logicalFolder name="pm" displayName="pm" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/pm/device.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/pm/state.h</itemPath>
+              </logicalFolder>
               <logicalFolder name="shell" displayName="shell" projectFiles="true">
                 <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_fprintf.h</itemPath>
@@ -2222,13 +2230,50 @@
                 <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_log_backend.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/shell/shell_types.h</itemPath>
               </logicalFolder>
+              <logicalFolder name="storage" displayName="storage" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/storage/flash_map.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/storage/stream_flash.h</itemPath>
+              </logicalFolder>
               <logicalFolder name="sys" displayName="sys" projectFiles="true">
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/__assert.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/arch_interface.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/atomic_builtin.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/bitarray.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/sys/byteorder.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/cbprintf.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/cbprintf_internal.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/dlist.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/sys/fdtable.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/kobject.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/math_extras_impl.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/mpsc_packet.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/mpsc_pbuf.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/notify.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/onoff.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/printk.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/rb.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/ring_buffer.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/sem.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/sflist.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/slist.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/speculation.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/sys_heap.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/sys_io.h</itemPath>
+                <itemPath>../../pyvenvs/ncs/zephyr/include/sys/time_units.h</itemPath>
                 <itemPath>../../pyvenvs/ncs/zephyr/include/sys/timeutil.h</itemPath>
               </logicalFolder>
               <itemPath>../../pyvenvs/ncs/zephyr/include/cache.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/device.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/fatal.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/init.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/kernel.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/kernel_structs.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/mempool_heap.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/sched_priq.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/spinlock.h</itemPath>
               <itemPath>../../pyvenvs/ncs/zephyr/include/sw_isr_table.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/sys_clock.h</itemPath>
+              <itemPath>../../pyvenvs/ncs/zephyr/include/syscall.h</itemPath>
               <itemPath>../../pyvenvs/ncs/zephyr/include/timeout_q.h</itemPath>
               <itemPath>../../pyvenvs/ncs/zephyr/include/wait_q.h</itemPath>
             </logicalFolder>
@@ -3018,6 +3063,7 @@
         <in>app_dfu.c</in>
         <in>app_event.c</in>
         <in>app_fido.c</in>
+        <in>app_fido_flash.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
         <in>app_platform.c</in>
@@ -3064,6 +3110,7 @@
   <sourceRootList>
     <Elem>../secure_device_app</Elem>
     <Elem>../../FIDO2Device/fido2_lib</Elem>
+    <Elem>../../FIDO2Device/u2f_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -3165,7 +3212,30 @@
         <cTool flags="1">
           <incDir>
             <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../../tinycbor/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../../FIDO2Device/fido2_lib</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../FIDO2Device/ctap2_lib</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
@@ -3385,6 +3455,48 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../../tinycbor/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../FIDO2Device/fido2_lib/fido_receive_apdu.c"
             ex="false"
             tool="0"
@@ -3425,6 +3537,26 @@
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
+      </item>
+      <item path="../../FIDO2Device/u2f_lib/u2f_authenticate.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../FIDO2Device/u2f_lib/u2f_keyhandle.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../FIDO2Device/u2f_lib/u2f_register.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
+      </item>
+      <item path="../../FIDO2Device/u2f_lib/u2f_signature.c"
+            ex="false"
+            tool="0"
+            flavor2="2">
       </item>
       <item path="../../bootloader/mcuboot/boot/bootutil/src/bootutil_misc.c"
             ex="false"
@@ -16564,17 +16696,40 @@
         <cTool flags="1">
           <incDir>
             <pElem>../secure_device_app/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../secure_device_app/src/app_fido_flash.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../secure_device_app/src</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../../FIDO2Device/fido2_lib</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>

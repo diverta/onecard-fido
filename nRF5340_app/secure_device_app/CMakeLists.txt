@@ -14,6 +14,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c
     ../../FIDO2Device/ctap2_lib/ctap2_client_pin.c
+    ../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c
     ../../FIDO2Device/fido2_lib/fido_ble_receive.c
     ../../FIDO2Device/fido2_lib/fido_ble_send.c
     ../../FIDO2Device/fido2_lib/fido_command.c
