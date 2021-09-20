@@ -29,6 +29,7 @@ extern "C" {
 #include "app_platform.h"
 
 // Zephyrに依存する処理
+#include "app_crypto.h"
 #include "app_crypto_ec.h"
 
 #else

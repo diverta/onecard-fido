@@ -22,7 +22,7 @@ fido_log_module_register(app_fido);
 #define LOG_HEXDUMP_DEBUG_DECRYPTED false
 
 //
-// 暗号化関連
+// ハッシュ生成関連
 //
 void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
 {
@@ -33,6 +33,12 @@ void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *
 void fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data)
 {
     app_crypto_generate_hmac_sha256(key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
+}
+
+void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size)
+{
+    // Generate a random vector of specified length.
+    app_crypto_generate_random_vector(vector_buf, vector_buf_size);
 }
 
 //
