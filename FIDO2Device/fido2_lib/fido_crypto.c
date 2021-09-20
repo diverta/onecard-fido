@@ -1,5 +1,5 @@
 /* 
- * File:   app_fido.c
+ * File:   fido_crypto.c
  * Author: makmorit
  *
  * Created on 2021/09/16, 10:03
@@ -13,7 +13,7 @@
 #include "fido_platform.h"
 
 #ifdef FIDO_ZEPHYR
-fido_log_module_register(app_fido);
+fido_log_module_register(fido_crypto);
 #endif
 
 // for debug hex dump data

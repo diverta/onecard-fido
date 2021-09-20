@@ -25,12 +25,13 @@ extern "C" {
 #define HMAC_SHA_256_SIZE       32
 
 #ifdef FIDO_ZEPHYR
-#include "app_fido.h"
-#include "app_platform.h"
+// Zephyrに依存しない処理
+#include "fido_crypto.h"
 
 // Zephyrに依存する処理
 #include "app_crypto.h"
 #include "app_crypto_ec.h"
+#include "app_platform.h"
 
 #else
 // ハードウェアの差異に依存しない定義を集約

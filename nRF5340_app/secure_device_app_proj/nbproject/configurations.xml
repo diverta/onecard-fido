@@ -75,6 +75,7 @@
       </logicalFolder>
       <logicalFolder name="FIDO2Device" displayName="FIDO2Device" projectFiles="true">
         <logicalFolder name="ctap2_lib" displayName="ctap2_lib" projectFiles="true">
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.h</itemPath>
@@ -84,9 +85,15 @@
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin.h</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_common.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_common.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_get_assertion.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_make_credential.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_make_credential.h</itemPath>
+          <itemPath>../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c</itemPath>
           <itemPath>../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h</itemPath>
         </logicalFolder>
         <logicalFolder name="fido2_lib" displayName="fido2_lib" projectFiles="true">
@@ -100,8 +107,12 @@
           <itemPath>../../FIDO2Device/fido2_lib/fido_command_common.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_common.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_common.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_crypto.c</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_crypto.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_ctap2_command.h</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_flash.c</itemPath>
+          <itemPath>../../FIDO2Device/fido2_lib/fido_flash.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.c</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_channel.h</itemPath>
           <itemPath>../../FIDO2Device/fido2_lib/fido_hid_receive.c</itemPath>
@@ -3070,8 +3081,6 @@
         <in>app_crypto_rsa.c</in>
         <in>app_dfu.c</in>
         <in>app_event.c</in>
-        <in>app_fido.c</in>
-        <in>app_fido_flash.c</in>
         <in>app_flash.c</in>
         <in>app_main.c</in>
         <in>app_platform.c</in>
@@ -3119,6 +3128,7 @@
     <Elem>../secure_device_app</Elem>
     <Elem>../../FIDO2Device/fido2_lib</Elem>
     <Elem>../../FIDO2Device/u2f_lib</Elem>
+    <Elem>../../FIDO2Device/ctap2_lib</Elem>
   </sourceRootList>
   <projectmakefile></projectmakefile>
   <confs>
@@ -3177,87 +3187,105 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../../tinycbor/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../../../tinycbor/src</pElem>
-            <pElem>../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_client_pin.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../../tinycbor/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_client_pin.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.c"
             ex="false"
             tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../../FIDO2Device/ctap2_lib</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../FIDO2Device/fido2_lib</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_client_pin_token.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_common.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_extension_hmac_secret.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_get_assertion.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_get_assertion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_make_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_make_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../FIDO2Device/ctap2_lib/ctap2_pubkey_credential.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../FIDO2Device/fido2_lib/fido_ble_receive.c"
             ex="false"
@@ -3356,6 +3384,27 @@
           </incDir>
         </cTool>
       </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_crypto.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
       <item path="../../FIDO2Device/fido2_lib/fido_ctap2_command.c"
             ex="false"
             tool="0"
@@ -3366,6 +3415,27 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../FIDO2Device/ctap2_lib</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
+            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
+            <pElem>../secure_device_app/include</pElem>
+            <pElem>../secure_device_app/build_signed</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../../FIDO2Device/fido2_lib/fido_flash.c"
+            ex="false"
+            tool="0"
+            flavor2="3">
+        <cTool flags="1">
+          <incDir>
+            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
+            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
@@ -3501,7 +3571,6 @@
             <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>
@@ -16694,51 +16763,6 @@
             <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
             <pElem>../secure_device_app/include</pElem>
             <pElem>../secure_device_app/build_signed/zephyr/include/generated</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../secure_device_app/src/app_fido.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../secure_device_app/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../secure_device_app/include</pElem>
-            <pElem>../secure_device_app/build_signed</pElem>
-          </incDir>
-        </cTool>
-      </item>
-      <item path="../secure_device_app/src/app_fido_flash.c"
-            ex="false"
-            tool="0"
-            flavor2="3">
-        <cTool flags="1">
-          <incDir>
-            <pElem>../secure_device_app/src</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/logging</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/lib/libc/minimal/include</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/sys</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/kernel</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/cmsis/CMSIS/Core/Include</pElem>
-            <pElem>../../pyvenvs/ncs/modules/hal/nordic/nrfx/mdk</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch/arm/aarch32/mpu</pElem>
-            <pElem>../../pyvenvs/ncs/zephyr/include/arch</pElem>
-            <pElem>../secure_device_app/include</pElem>
-            <pElem>../../FIDO2Device/fido2_lib</pElem>
             <pElem>../secure_device_app/build_signed</pElem>
           </incDir>
         </cTool>

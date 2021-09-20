@@ -1,11 +1,11 @@
 /* 
- * File:   app_fido.h
+ * File:   fido_crypto.h
  * Author: makmorit
  *
  * Created on 2021/09/16, 10:03
  */
-#ifndef APP_FIDO_H
-#define APP_FIDO_H
+#ifndef FIDO_CRYPTO_H
+#define FIDO_CRYPTO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,4 +28,4 @@ size_t      fido_crypto_aes_cbc_256_encrypt(uint8_t *p_key, uint8_t *p_plaintext
 }
 #endif
 
-#endif /* APP_FIDO_H */
+#endif /* FIDO_CRYPTO_H */

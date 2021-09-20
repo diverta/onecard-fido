@@ -20,6 +20,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_command.c
     ../../FIDO2Device/fido2_lib/fido_command_common.c
     ../../FIDO2Device/fido2_lib/fido_common.c
+    ../../FIDO2Device/fido2_lib/fido_crypto.c
     ../../FIDO2Device/fido2_lib/fido_ctap2_command.c
     ../../FIDO2Device/fido2_lib/fido_hid_channel.c
     ../../FIDO2Device/fido2_lib/fido_hid_receive.c

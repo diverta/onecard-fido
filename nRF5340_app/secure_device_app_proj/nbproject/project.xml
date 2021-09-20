@@ -13,6 +13,7 @@
                 <sourceRootElem>../secure_device_app</sourceRootElem>
                 <sourceRootElem>../../FIDO2Device/fido2_lib</sourceRootElem>
                 <sourceRootElem>../../FIDO2Device/u2f_lib</sourceRootElem>
+                <sourceRootElem>../../FIDO2Device/ctap2_lib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
