@@ -22,3 +22,8 @@ nRF5340アプリケーションのファームウェアは、フォルダー[`fi
 - <b>[NetBeansインストール手順](../nRF52840_app/NETBEANSINST.md)</b>
 
 - <b>[nRF Connect SDKインストール手順書](../nRF5340_app/INSTALLSDK.md)</b>
+
+## 技術情報
+
+- <b>[データの永続化について](../nRF5340_app/TECH_ZEP_SETTINGS.md)</b><br>
+Zephyrプラットフォームにおけるデータの永続化に関する技術情報を、補足的に掲載しています。

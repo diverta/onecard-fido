@@ -16,15 +16,18 @@
 #include "u2f_keyhandle.h"
 #include "ctap2_pubkey_credential.h"
 
-// for token counter
-#include "fido_flash_token_counter.h"
-
+#ifdef CONFIG_USE_ATECC608A
 // for ATECC608A
 #include "atecc.h"
 #include "atecc_aes.h"
+#endif
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
+
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_command_common);
+#endif
 
 //
 // CTAP2、U2Fで共用する各種処理
