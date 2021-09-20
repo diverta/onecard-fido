@@ -22,6 +22,20 @@ fido_log_module_register(app_fido);
 #define LOG_HEXDUMP_DEBUG_DECRYPTED false
 
 //
+// 暗号化関連
+//
+void fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size)
+{
+    app_crypto_generate_sha256_hash(data, data_size, hash_digest);
+    *hash_digest_size = SHA_256_HASH_SIZE;
+}
+
+void fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data)
+{
+    app_crypto_generate_hmac_sha256(key_data, key_data_size, src_data, src_data_size, src_data_2, src_data_2_size, dest_data);
+}
+
+//
 // EC鍵ペア関連
 //
 // 鍵ペア情報をRAWデータに変換する領域
