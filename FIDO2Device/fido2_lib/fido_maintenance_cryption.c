@@ -17,6 +17,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(fido_maintenance_cryption);
+#endif
+
 // for debug data
 #define LOG_DEBUG_CBOR_REQUEST      false
 #define LOG_DEBUG_CRYPTION_DATA     false
