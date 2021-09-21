@@ -229,3 +229,78 @@ bool fido_flash_token_counter_delete(void)
         return false;
     }
 }
+
+//
+// リトライカウンター関連
+//
+// PINリトライカウンター管理用
+//   レコードサイズ = 9 ワード
+//     PINコードハッシュ: 8ワード（32バイト）
+//     リトライカウンター: 1ワード（4バイト)
+static uint32_t m_pin_store_hash_record[FIDO_PIN_RETRY_COUNTER_RECORD_SIZE];
+
+static bool pin_code_hash_record_find(void)
+{
+    // 作業領域の初期化
+    size_t size = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * sizeof(uint32_t);
+    memset(m_pin_store_hash_record, 0, size);
+
+    // Flash ROMから既存データを検索し、
+    // 見つかった場合は true を戻す
+    APP_SETTINGS_KEY key = {FIDO_PIN_RETRY_COUNTER_FILE_ID, FIDO_PIN_RETRY_COUNTER_RECORD_KEY, false, 0};
+    if (app_settings_find(&key, (void *)m_pin_store_hash_record, &size) == false) {
+        return false;
+    }
+
+#if LOG_HEXDUMP_PIN_CODE_HASH
+    LOG_HEXDUMP_INF((void *)m_pin_store_hash_record, size, "pin store hash record");
+#endif
+
+    return true;
+}
+
+bool fido_flash_client_pin_store_hash_read(void)
+{
+    // Flash ROMから既存データを読込み、
+    // 既存データがあれば、データを
+    // m_pin_store_hash_record に読込む
+    return pin_code_hash_record_find();
+}
+
+uint8_t *fido_flash_client_pin_store_pin_code_hash(void)
+{
+    // レコード領域の先頭アドレスを戻す
+    return (uint8_t *)m_pin_store_hash_record;
+}
+
+uint32_t fido_flash_client_pin_store_retry_counter(void)
+{
+    // カウンターを取得して戻す
+    // （レコード領域先頭から９ワード目）
+    return m_pin_store_hash_record[8];
+}
+
+bool fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter)
+{
+    // PINコードハッシュ部 (8ワード)
+    // NULLが引き渡された場合は、更新しないものとする
+    if (p_pin_code_hash != NULL) {
+        memcpy((uint8_t *)m_pin_store_hash_record, p_pin_code_hash, SHA_256_HASH_SIZE);
+    }
+
+    // トークンカウンター部 (1ワード)
+    m_pin_store_hash_record[8] = retry_counter;
+
+    // Flash ROMに書込むキー／サイズを設定
+    APP_SETTINGS_KEY key = {FIDO_PIN_RETRY_COUNTER_FILE_ID, FIDO_PIN_RETRY_COUNTER_RECORD_KEY, false, 0};
+    size_t size = FIDO_PIN_RETRY_COUNTER_RECORD_SIZE * sizeof(uint32_t);
+    if (app_settings_save(&key, (void *)m_pin_store_hash_record, size)) {
+        // 書込み成功の場合は、CTAP2コマンドの処理を継続
+        fido_ctap2_command_retry_counter_record_updated();
+        return true;
+
+    } else {
+        // 書込み失敗の場合は、呼び出し元に制御を戻す
+        return false;
+    }
+}
