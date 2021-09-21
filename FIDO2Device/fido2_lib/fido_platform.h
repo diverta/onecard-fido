@@ -27,11 +27,13 @@ extern "C" {
 #ifdef FIDO_ZEPHYR
 // Zephyrに依存しない処理
 #include "fido_crypto.h"
+#include "fido_flash.h"
 
 // Zephyrに依存する処理
 #include "app_crypto.h"
 #include "app_crypto_ec.h"
 #include "app_platform.h"
+#include "app_settings.h"
 
 #else
 // ハードウェアの差異に依存しない定義を集約
