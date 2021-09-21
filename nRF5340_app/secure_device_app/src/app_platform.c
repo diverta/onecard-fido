@@ -4,6 +4,8 @@
  *
  * Created on 2021/08/19, 9:52
  */
+#include <stdio.h>
+#include <string.h>
 #include <zephyr/types.h>
 #include <zephyr.h>
 
@@ -81,10 +83,18 @@ void ble_peripheral_auth_param_request(uint8_t *request, size_t request_size)
 
 bool ble_peripheral_auth_param_response(uint8_t cmd_type, uint8_t *response, size_t *response_size)
 {
-    (void)cmd_type;
-    (void)response;
-    (void)response_size;
-    return false;
+    //
+    // 以下の実装はダミーです。
+    //
+    // 領域を初期化
+    memset(response, 0x00, *response_size);
+    //
+    // CSVを編集
+    //   <自動認証有効化フラグ>,<スキャン対象サービスUUID>,<スキャン秒数>
+    //
+    sprintf((char *)response, "0,,0");
+    *response_size = strlen((char *)response);
+    return true;
 }
 
 bool ble_service_common_erase_bond_data(void (*_response_func)(bool))
