@@ -28,11 +28,16 @@ uint8_t    *fido_flash_password_get(void);
 bool        fido_flash_password_set(uint8_t *random_vector);
 
 bool        fido_flash_token_counter_delete(void);
+uint32_t    fido_flash_token_counter_value(void);
+uint8_t    *fido_flash_token_counter_get_check_hash(void);
+bool        fido_flash_token_counter_read(uint8_t *p_unique_key);
+bool        fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counter, uint8_t *p_rpid_hash);
 
 bool        fido_flash_client_pin_store_hash_read(void);
 uint8_t    *fido_flash_client_pin_store_pin_code_hash(void);
 uint32_t    fido_flash_client_pin_store_retry_counter(void);
 bool        fido_flash_client_pin_store_hash_write(uint8_t *p_pin_code_hash, uint32_t retry_counter);
+bool        fido_flash_client_pin_store_pin_code_exist(void);
 
 #ifdef __cplusplus
 }
