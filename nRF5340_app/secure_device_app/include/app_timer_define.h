@@ -14,21 +14,12 @@ extern "C" {
 #endif
 
 //
-// タイマーのチャネルID
-// 
-#define CHID_FOR_LONGPUSH           0
-#define CHID_FOR_IDLING             1
-#define CHID_FOR_BLINKING           2
-
-//
 // タイマーで使用する各種データを保持
 //
 typedef struct {
-    uint8_t     chan_id;
     uint32_t    timeout_ms;
     APP_EVENT_T callback_event;
     bool        is_repeat;
-    struct counter_alarm_cfg alarm_cfg;
 } TIMER_CFG;
 
 #ifdef __cplusplus

@@ -124,7 +124,7 @@ static void ble_available(void)
     // 500ms後に始動させるようにする
     //   500ms wait --> 
     //   APEVT_LED_BLINK_BEGINが通知される
-    app_timer_start_for_blinking_begin(500);
+    app_timer_start_for_blinking_begin(500, APEVT_LED_BLINK_BEGIN);
 
     // 永続化機能を初期化
     app_settings_initialize();
@@ -221,7 +221,7 @@ static void led_blink_begin(void)
 
     // LED点滅管理用のタイマーを始動
     //   100msごとにAPEVT_LED_BLINKが通知される
-    app_timer_start_for_blinking();
+    app_timer_start_for_blinking(100, APEVT_LED_BLINK);
 }
 
 static void led_blink(void)
