@@ -126,25 +126,12 @@ static void handler_for_blinking(struct k_timer *timer)
     }
 }
 
-void app_timer_start_for_blinking_begin(uint32_t timeout_ms, APP_EVENT_T event)
-{
-    // 指定ms wait
-    cfg_blinking.timeout_ms = timeout_ms;
-    cfg_blinking.callback_event = event;
-    cfg_blinking.is_repeat = false;
-    app_timer_start(&timer_for_blinking, &cfg_blinking);
-
-#if LOG_TIMER_START_STOP
-    LOG_DBG("Set oneshot timer in %u msec", timeout_ms);
-#endif
-}
-
 void app_timer_start_for_blinking(uint32_t timeout_ms, APP_EVENT_T event)
 {
-    // 100 msごとに繰り返し
+    // APEVT_LED_BLINK時は、100 msごとに繰り返し
     cfg_blinking.timeout_ms = timeout_ms;
     cfg_blinking.callback_event = event;
-    cfg_blinking.is_repeat = true;
+    cfg_blinking.is_repeat = (event == APEVT_LED_BLINK);
     app_timer_start(&timer_for_blinking, &cfg_blinking);
 
 #if LOG_TIMER_START_STOP
