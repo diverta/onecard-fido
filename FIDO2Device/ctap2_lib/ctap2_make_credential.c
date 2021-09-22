@@ -25,6 +25,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ctap2_make_credential);
+#endif
+
 // for debug cbor data
 #define LOG_DEBUG_CLHASH_DATA_BUFF  false
 #define LOG_HEXDUMP_DEBUG_CBOR      false
