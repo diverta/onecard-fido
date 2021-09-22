@@ -22,16 +22,22 @@ LOG_MODULE_REGISTER(app_timer);
 static struct k_timer timer_for_longpush;
 static struct k_timer timer_for_idling;
 static struct k_timer timer_for_blinking;
+static struct k_timer timer_for_generic_oneshot;
+static struct k_timer timer_for_generic_repeat;
 
 static void handler_for_longpush(struct k_timer *timer);
 static void handler_for_idling(struct k_timer *timer);
 static void handler_for_blinking(struct k_timer *timer);
+static void handler_for_generic_oneshot(struct k_timer *timer);
+static void handler_for_generic_repeat(struct k_timer *timer);
 
 void app_timer_initialize(void) 
 {
     k_timer_init(&timer_for_longpush, handler_for_longpush, NULL);
     k_timer_init(&timer_for_idling,   handler_for_idling,   NULL);
     k_timer_init(&timer_for_blinking, handler_for_blinking, NULL);
+    k_timer_init(&timer_for_generic_oneshot, handler_for_generic_oneshot, NULL);
+    k_timer_init(&timer_for_generic_repeat,  handler_for_generic_repeat,  NULL);
 }
 
 static void app_timer_start(struct k_timer *timer, TIMER_CFG *cfg)
@@ -142,6 +148,84 @@ void app_timer_start_for_blinking(uint32_t timeout_ms, APP_EVENT_T event)
 void app_timer_stop_for_blinking(void)
 {
     app_timer_stop(&timer_for_blinking);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Canceled timer");
+#endif
+}
+
+//
+// 業務処理用 汎用ワンショットタイマー
+//
+TIMER_CFG cfg_generic_oneshot;
+static void (*callback_for_generic_oneshot)(void);
+
+static void handler_for_generic_oneshot(struct k_timer *timer)
+{
+    // タイムアウト時の処理を実行する
+    (void)timer;
+    if (callback_for_generic_oneshot != NULL) {
+        (*callback_for_generic_oneshot)();
+    }
+}
+
+void app_timer_start_for_generic_oneshot(uint32_t timeout_ms, void (*callback_func)(void))
+{
+    cfg_generic_oneshot.timeout_ms = timeout_ms;
+    cfg_generic_oneshot.callback_event = APEVT_NONE;
+    cfg_generic_oneshot.is_repeat = false;
+    callback_for_generic_oneshot = callback_func;
+    app_timer_start(&timer_for_generic_oneshot, &cfg_generic_oneshot);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Set repeat timer in %u msec", timeout_ms);
+#endif
+}
+
+void app_timer_stop_for_generic_oneshot(void)
+{
+    callback_for_generic_oneshot = NULL;
+    app_timer_stop(&timer_for_generic_oneshot);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Canceled timer");
+#endif
+}
+
+//
+// 業務処理用 汎用リピートタイマー
+//
+TIMER_CFG cfg_generic_repeat;
+static void (*callback_for_generic_repeat)(void);
+
+static void handler_for_generic_repeat(struct k_timer *timer)
+{
+    // タイムアウト時の処理を実行する
+    if (callback_for_generic_repeat != NULL) {
+        (*callback_for_generic_repeat)();
+    }
+
+    // 次のタイマーを実行
+    app_timer_start(timer, &cfg_generic_repeat);
+}
+
+void app_timer_start_for_generic_repeat(uint32_t timeout_ms, void (*callback_func)(void))
+{
+    cfg_generic_repeat.timeout_ms = timeout_ms;
+    cfg_generic_repeat.callback_event = APEVT_NONE;
+    cfg_generic_repeat.is_repeat = true;
+    callback_for_generic_repeat = callback_func;
+    app_timer_start(&timer_for_generic_repeat, &cfg_generic_repeat);
+
+#if LOG_TIMER_START_STOP
+    LOG_DBG("Set repeat timer in %u msec", timeout_ms);
+#endif
+}
+
+void app_timer_stop_for_generic_repeat(void)
+{
+    callback_for_generic_repeat = NULL;
+    app_timer_stop(&timer_for_generic_repeat);
 
 #if LOG_TIMER_START_STOP
     LOG_DBG("Canceled timer");
