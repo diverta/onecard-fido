@@ -26,6 +26,7 @@ LOG_MODULE_REGISTER(app_main);
 //
 #include "fido_ble_receive.h"
 #include "fido_ble_send.h"
+#include "fido_command.h"
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
@@ -112,7 +113,8 @@ void app_main_ble_response_sent(void)
 //
 void app_main_button_pressed_short(void)
 {
-    LOG_DBG("Short pushed");
+    // FIDO固有の処理を実行
+    fido_command_mainsw_event_handler();
 }
 
 void app_main_button_1_pressed(void)

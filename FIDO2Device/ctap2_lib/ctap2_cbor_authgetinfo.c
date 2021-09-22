@@ -11,6 +11,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ctap2_cbor_authgetinfo);
+#endif
+
 #define NUM_OF_CBOR_ELEMENTS        6
 #define NUM_OF_VERSIONS             2
 #define NUM_OF_OPTIONS              4

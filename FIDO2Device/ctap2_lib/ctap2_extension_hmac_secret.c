@@ -14,6 +14,10 @@
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
 
+#ifdef FIDO_ZEPHYR
+fido_log_module_register(ctap2_extension_hmac_secret);
+#endif
+
 // for debug cbor data
 #define LOG_DEBUG_SALT_BUFF false
 #define LOG_DEBUG_CBOR_BUFF false

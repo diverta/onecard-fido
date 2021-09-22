@@ -17,6 +17,9 @@ extern "C" {
 void        fido_crypto_generate_sha256_hash(uint8_t *data, size_t data_size, uint8_t *hash_digest, size_t *hash_digest_size);
 void        fido_crypto_calculate_hmac_sha256(uint8_t *key_data, size_t key_data_size, uint8_t *src_data, size_t src_data_size, uint8_t *src_data_2, size_t src_data_2_size, uint8_t *dest_data);
 void        fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_size);
+void        fido_crypto_keypair_generate(void);
+uint8_t    *fido_crypto_keypair_private_key(void);
+uint8_t    *fido_crypto_keypair_public_key(void);
 uint8_t    *fido_crypto_sskey_public_key(void);
 void        fido_crypto_sskey_init(bool force);
 uint8_t     fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data);
