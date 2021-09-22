@@ -30,6 +30,7 @@ target_sources(app PRIVATE
     ../../FIDO2Device/fido2_lib/fido_maintenance_cryption.c
     ../../FIDO2Device/fido2_lib/fido_maintenance_skcert.c
     ../../FIDO2Device/fido2_lib/fido_receive_apdu.c
+    ../../FIDO2Device/fido2_lib/fido_timer.c
     ../../FIDO2Device/fido2_lib/fido_u2f_command.c
     ../../../tinycbor/src/cborencoder.c
     ../../../tinycbor/src/cborerrorstrings.c
