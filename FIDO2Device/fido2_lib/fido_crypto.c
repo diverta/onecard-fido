@@ -67,6 +67,26 @@ uint8_t *fido_crypto_keypair_public_key(void)
 }
 
 //
+// ECDSA署名関連
+//
+bool fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
+{
+    // 署名実行
+    if (app_crypto_ec_dsa_sign(private_key_be, hash_digest, digest_size, signature) == false) {
+        return false;
+    }
+    *signature_size = ECDSA_SIGNATURE_SIZE;
+    return true;
+}
+
+bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t signature_size)
+{
+    // 署名検証実行
+    (void)signature_size;
+    return app_crypto_ec_dsa_verify(public_key_be, hash_digest, digest_size, signature);
+}
+
+//
 // 鍵交換関連
 //
 // 鍵交換用キーペア格納領域
