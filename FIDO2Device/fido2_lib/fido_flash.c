@@ -4,12 +4,14 @@
  *
  * Created on 2021/09/20, 11:07
  */
+#include <stdlib.h>
 //
 // プラットフォーム非依存コード
 //
 #include "fido_flash_define.h"
 #include "fido_ctap2_command.h"
 #include "fido_maintenance_skcert.h"
+#include "fido_u2f_command.h"
 
 // 業務処理／HW依存処理間のインターフェース
 #include "fido_platform.h"
@@ -20,6 +22,7 @@ fido_log_module_register(fido_flash);
 
 // for debug hex dump data
 #define LOG_HEXDUMP_SKEY_CERT_DATA      false
+#define LOG_DEBUG_TOKEN_COUNTER         false
 #define LOG_HEXDUMP_PIN_CODE_HASH       false
 
 //
@@ -216,6 +219,173 @@ bool fido_flash_password_set(uint8_t *random_vector)
 //
 //  トークンカウンター関連
 //
+//  トークンカウンター管理用
+//  レコードサイズ = 17 ワード
+//    レコードキー: 8ワード（32バイト）
+//      U2Fの場合＝appIdHash
+//      CTAP2の場合＝Public Key Credential Sourceから生成されたSHA-256ハッシュ値
+//      （実質、Webサイト＋ユーザー＋鍵の組み合わせでユニークとなるキー）
+//    トークンカウンター: 1ワード（4バイト)
+//    Webサイト情報: 8ワード（32バイト）
+//      U2Fの場合＝appIdHash
+//      CTAP2の場合＝rpIdHash
+static uint32_t m_token_counter_record_buffer[FIDO_TOKEN_COUNTER_RECORD_SIZE];
+
+uint32_t fido_flash_token_counter_value(void)
+{
+    // カウンターを取得して戻す
+    // （レコード領域先頭から９ワード目）
+    return m_token_counter_record_buffer[8];
+}
+
+uint8_t *fido_flash_token_counter_get_check_hash(void)
+{
+    // カウンターに紐づくチェック用ハッシュが
+    // 格納されている先頭アドレスを戻す
+    // バッファ先頭からのオフセットは９ワード分
+    uint8_t *hash_for_check = (uint8_t *)(m_token_counter_record_buffer + 9);
+    return hash_for_check;
+}
+
+// 同一キー判定用
+static void *m_unique_key;
+
+// レコード連番を保持
+static uint16_t m_serial;
+static uint16_t m_serial_max;
+
+// 作業領域
+static char work_buf[16];
+
+static bool get_serial_from_settings_key(const char *settings_key, uint16_t *serial)
+{
+    // settings_key が14バイトでない場合は終了
+    if (strlen(settings_key) != 14) {
+        *serial = 0;
+        return false;
+    }
+
+    // settings_keyから連番を取り出す
+    // 先頭の11バイト目から4バイト
+    //   settings_key: "BFFB/BFEB/nnnn"形式。先頭の"app/"は含まれない
+    strncpy(work_buf, settings_key + 10, 4);
+
+    // 連番を引数領域に設定
+    int i = atoi(work_buf);
+    *serial = (uint16_t)i;
+    return true;
+}
+
+static bool cmpkey_token_counter_record(const char *settings_key, void *data, size_t size)
+{
+    // settings_keyから連番を取り出す
+    uint16_t serial;
+    (void)get_serial_from_settings_key(settings_key, &serial);
+
+    // 最大の連番を更新
+    if (serial > m_serial_max) {
+        m_serial_max = serial;
+    }
+
+    // 同じキーのレコードかどうか判定 (先頭32バイトを比較)
+    (void)size;
+    if (memcmp(data, m_unique_key, 32) == 0) {
+        // 同一キーレコードの連番を保持
+        m_serial = serial;
+        return true;
+
+    } else {
+        m_serial = 0;
+        return false;
+    }
+}
+
+static bool token_counter_record_find(uint8_t *p_unique_key)
+{
+    // 最大連番をゼロクリア
+    m_serial_max = 0;
+
+    // レコードキーの参照を保持
+    m_unique_key = (void *)p_unique_key;
+
+    // Flash ROMから既存データを走査
+    APP_SETTINGS_KEY key = {FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, false, 0};
+    bool exist;
+    size_t size;
+    if (app_settings_search(&key, &exist, m_token_counter_record_buffer, &size, cmpkey_token_counter_record) == false) {
+        return false;
+    }
+
+    // 既存データがあれば true
+    return exist;
+}
+
+bool fido_flash_token_counter_read(uint8_t *p_unique_key)
+{
+    // Flash ROMから既存データを読込み、
+    // 既存データがあれば、データを
+    // m_token_counter_record_bufferに読込む
+    bool ret = token_counter_record_find(p_unique_key);
+
+#if LOG_DEBUG_TOKEN_COUNTER
+    if (ret) {
+        LOG_INF("Token counter record found (serial=%d, counter=%d)", m_serial, fido_flash_token_counter_value());
+    } else {
+        LOG_INF("Token counter record not found");
+    }
+#endif
+
+    return ret;
+}
+
+bool fido_flash_token_counter_write(uint8_t *p_unique_key, uint32_t token_counter, uint8_t *p_rpid_hash)
+{
+    // Flash ROMから既存データを走査し、
+    // 更新または新規追加のためのレコード連番を取得
+    bool found = token_counter_record_find(p_unique_key);
+
+    // ユニークキー部 (8ワード)
+    memcpy((uint8_t *)m_token_counter_record_buffer, p_unique_key, 32);
+
+    // トークンカウンター部 (1ワード)
+    m_token_counter_record_buffer[8] = token_counter;
+
+    // rpIdHash部 (8ワード)
+    // バッファ先頭からのオフセットは９ワード（36バイト）分
+    if (p_rpid_hash != NULL) {
+        memcpy((uint8_t *)m_token_counter_record_buffer + 36, p_rpid_hash, 32);
+    }
+
+    // Flash ROMに書込むキー／サイズを設定
+    APP_SETTINGS_KEY key = {FIDO_TOKEN_COUNTER_FILE_ID, FIDO_TOKEN_COUNTER_RECORD_KEY, true, 0};
+    size_t size = FIDO_TOKEN_COUNTER_RECORD_SIZE * sizeof(uint32_t);
+    if (found) {
+        // 既存のデータが存在する場合は上書き
+        key.serial = m_serial;
+
+    } else {
+        // 既存のデータが存在しない場合は新規追加
+        key.serial = m_serial_max + 1;
+    }
+
+#if LOG_DEBUG_TOKEN_COUNTER
+    LOG_INF("Token counter record %s (serial=%d, counter=%d)", found ? "updated" : "created", key.serial, token_counter);
+#endif
+    
+    // Flash ROMに書込
+    if (app_settings_save(&key, (void *)m_token_counter_record_buffer, size)) {
+        // 書込み成功の場合は、U2F／CTAP2コマンドの処理を継続
+        fido_u2f_command_token_counter_record_updated();
+        fido_ctap2_command_token_counter_record_updated();
+        return true;
+
+    } else {
+        // 書込み失敗の場合は、呼び出し元に制御を戻す
+        LOG_ERR("Token counter record %s fail", found ? "update" : "create");
+        return false;
+    }
+}
+
 bool fido_flash_token_counter_delete(void)
 {
     // トークンカウンターをFlash ROM領域から削除
