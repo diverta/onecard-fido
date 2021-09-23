@@ -61,10 +61,13 @@ bool fido_flash_skey_cert_read(void)
     memset(skey_cert_data, 0xff, sizeof(uint32_t) * SKEY_CERT_WORD_NUM);
 
     // Flash ROMから既存データを検索し、
-    // 見つかった場合は true を戻す
+    // 見つかった場合は skey_cert_data にデータをセット
+    //   見つからなかった場合、skey_cert_data にデータはセットされないが、
+    //   関数戻り値は true とします。
     APP_SETTINGS_KEY key = {FIDO_SKEY_CERT_FILE_ID, FIDO_SKEY_CERT_RECORD_KEY, false, 0};
+    bool exist;
     size_t size;
-    if (app_settings_find(&key, (void *)skey_cert_data, &size) == false) {
+    if (app_settings_find(&key, &exist, (void *)skey_cert_data, &size) == false) {
         return false;
     }
 
@@ -156,13 +159,14 @@ static bool read_random_vector(uint32_t *p_random_vector)
     // Flash ROMから既存データを検索し、
     // 見つかった場合は true を戻す
     APP_SETTINGS_KEY key = {FIDO_AESKEYS_FILE_ID, FIDO_AESKEYS_RECORD_KEY, false, 0};
+    bool exist;
     size_t size;
-    if (app_settings_find(&key, (void *)p_random_vector, &size) == false) {
+    if (app_settings_find(&key, &exist, (void *)p_random_vector, &size) == false) {
         return false;
     }
 
     // レコードが存在しない場合は false を戻す
-    if (size == 0) {
+    if (exist == false) {
         LOG_ERR("AES password not exist");
         return false;
     }
@@ -248,7 +252,8 @@ static bool pin_code_hash_record_find(void)
     // Flash ROMから既存データを検索し、
     // 見つかった場合は true を戻す
     APP_SETTINGS_KEY key = {FIDO_PIN_RETRY_COUNTER_FILE_ID, FIDO_PIN_RETRY_COUNTER_RECORD_KEY, false, 0};
-    if (app_settings_find(&key, (void *)m_pin_store_hash_record, &size) == false) {
+    bool exist;
+    if (app_settings_find(&key, &exist, (void *)m_pin_store_hash_record, &size) == false) {
         return false;
     }
 
@@ -256,7 +261,8 @@ static bool pin_code_hash_record_find(void)
     LOG_HEXDUMP_INF((void *)m_pin_store_hash_record, size, "pin store hash record");
 #endif
 
-    return true;
+    // 既存データがあれば true
+    return exist;
 }
 
 bool fido_flash_client_pin_store_hash_read(void)
