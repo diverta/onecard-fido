@@ -19,6 +19,7 @@ extern "C" {
 // 関数群
 //
 void        app_main_init(void);
+void        app_main_data_channel_initialized(void);
 void        app_main_hid_configured(void);
 void        app_main_hid_report_received(uint8_t *data, size_t size);
 void        app_main_hid_report_sent(void);

@@ -22,6 +22,28 @@ LOG_MODULE_REGISTER(app_crypto_ec);
 #include "app_crypto.h"
 #include "app_crypto_define.h"
 
+// 作業領域
+static uint8_t public_key_raw_data_work[EC_RAW_PUBKEY_SIZE+1];
+
+static void copy_pubkey_no_header_byte(uint8_t *dest_data, uint8_t *src_data)
+{
+    // 先頭バイト(0x04)を削除するため、１バイトずつ前にずらしてコピー
+    for (uint8_t i = 0; i < EC_RAW_PUBKEY_SIZE; i++) {
+        dest_data[i] = src_data[i + 1];
+    }
+}
+
+static void copy_pubkey_with_header_byte(uint8_t *dest_data, uint8_t *src_data)
+{
+    // 先頭バイト(0x04)を挿入するため、１バイトずつ後ろにずらしてコピー
+    for (uint8_t i = 0; i < EC_RAW_PUBKEY_SIZE; i++) {
+        dest_data[i + 1] = src_data[i];
+    }
+
+    // 先頭バイト(0x04)を設定
+    dest_data[0] = 0x04;
+}
+
 //
 // ECDSA署名処理
 //
@@ -49,7 +71,7 @@ bool app_crypto_ec_dsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest,
     }
 
     // 署名に使用する秘密鍵（32バイト）を取得
-    ret = mbedtls_mpi_read_binary(&ecdsa_context.d, private_key_be, 32);
+    ret = mbedtls_mpi_read_binary(&ecdsa_context.d, private_key_be, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_read_binary returns %d", ret);
         return dsa_sign_terminate(false);
@@ -91,9 +113,12 @@ bool app_crypto_ec_dsa_verify(uint8_t *public_key_be, uint8_t const *hash_digest
         return dsa_sign_terminate(false);
     }
 
+    // 公開鍵のバイナリーに先頭バイト(0x04)を挿入
+    copy_pubkey_with_header_byte(public_key_raw_data_work, public_key_be);
+
     // 公開鍵のバイナリーを読込み
     // （最初の１バイトが 0x04 で始まることが前提）
-    ret = mbedtls_ecp_point_read_binary(&ecdsa_context.grp, &ecdsa_context.Q, public_key_be, 65);
+    ret = mbedtls_ecp_point_read_binary(&ecdsa_context.grp, &ecdsa_context.Q, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_read_binary returns %d", ret);
         return dsa_sign_terminate(false);
@@ -148,17 +173,20 @@ bool app_crypto_ec_keypair_generate(uint8_t *private_key_raw_data, uint8_t *publ
     }
 
     // 生成されたキーペアをビッグエンディアンでバッファにコピー
-    ret = mbedtls_mpi_write_binary(&ecp_keypair.d, private_key_raw_data, 32);
+    ret = mbedtls_mpi_write_binary(&ecp_keypair.d, private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_write_binary returns %d", ret);
         return keypair_generate_terminate(false);
     }
     size_t size;
-    ret = mbedtls_ecp_point_write_binary(&ecp_keypair.grp, &ecp_keypair.Q, MBEDTLS_ECP_PF_UNCOMPRESSED, &size, public_key_raw_data, 65);
+    ret = mbedtls_ecp_point_write_binary(&ecp_keypair.grp, &ecp_keypair.Q, MBEDTLS_ECP_PF_UNCOMPRESSED, &size, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_write_binary returns %d", ret);
         return keypair_generate_terminate(false);
     }
+
+    // 公開鍵のバイナリーから先頭バイト(0x04)を削除
+    copy_pubkey_no_header_byte(public_key_raw_data, public_key_raw_data_work);
 
     return keypair_generate_terminate(true);
 }
@@ -186,15 +214,18 @@ bool app_crypto_ec_calculate_ecdh(uint8_t *private_key_raw_data, uint8_t *public
     }
 
     // 秘密鍵（32バイト）のバイナリーを読込み
-    ret = mbedtls_mpi_read_binary(&ecdh_context.d, private_key_raw_data, 32);
+    ret = mbedtls_mpi_read_binary(&ecdh_context.d, private_key_raw_data, EC_RAW_PRIVKEY_SIZE);
     if (ret != 0) {
         LOG_ERR("mbedtls_mpi_read_binary returns %d", ret);
         return calculate_ecdh_terminate(false);
     }
 
+    // 公開鍵のバイナリーに先頭バイト(0x04)を挿入
+    copy_pubkey_with_header_byte(public_key_raw_data_work, public_key_raw_data);
+
     // 公開鍵のバイナリーを読込み
     // （最初の１バイトが 0x04 で始まることが前提）
-    ret = mbedtls_ecp_point_read_binary(&ecdh_context.grp, &ecdh_context.Q, public_key_raw_data, 65);
+    ret = mbedtls_ecp_point_read_binary(&ecdh_context.grp, &ecdh_context.Q, public_key_raw_data_work, EC_RAW_PUBKEY_SIZE+1);
     if (ret != 0) {
         LOG_ERR("mbedtls_ecp_point_read_binary returns %d", ret);
         return calculate_ecdh_terminate(false);

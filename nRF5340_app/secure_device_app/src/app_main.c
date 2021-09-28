@@ -30,6 +30,7 @@ LOG_MODULE_REGISTER(app_main);
 #include "fido_hid_channel.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
+#include "ctap2_client_pin.h"
 
 //
 // アプリケーション初期化処理
@@ -58,6 +59,14 @@ void app_main_init(void)
 //
 // データ処理イベント関連
 //
+void app_main_data_channel_initialized(void)
+{
+    // BLEまたはUSB HID I/Fが使用可能になった場合、
+    // 業務処理をオープンさせる前に、
+    // CTAP2で使用する機密データを初期化
+    ctap2_client_pin_init();
+}
+
 void app_main_hid_configured(void)
 {
     // USB HID I/Fが使用可能になった場合、

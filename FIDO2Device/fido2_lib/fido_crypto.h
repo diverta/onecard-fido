@@ -20,6 +20,8 @@ void        fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vecto
 void        fido_crypto_keypair_generate(void);
 uint8_t    *fido_crypto_keypair_private_key(void);
 uint8_t    *fido_crypto_keypair_public_key(void);
+bool        fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size);
+bool        fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t signature_size);
 uint8_t    *fido_crypto_sskey_public_key(void);
 void        fido_crypto_sskey_init(bool force);
 uint8_t     fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data);

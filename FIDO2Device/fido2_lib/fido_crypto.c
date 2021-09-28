@@ -48,24 +48,12 @@ void fido_crypto_generate_random_vector(uint8_t *vector_buf, size_t vector_buf_s
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
 static uint8_t private_key_raw_data[RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data[RAW_PUBLIC_KEY_SIZE+1];
-
-static void remove_pubkey_header_byte(uint8_t *data)
-{
-    // 先頭バイト(0x04)を削除するため、１バイトずつ前にずらす
-    for (uint8_t i = 0; i < RAW_PUBLIC_KEY_SIZE; i++) {
-        data[i] = data[i + 1];
-    }
-
-    // 末尾に 0x00 を設定
-    data[RAW_PUBLIC_KEY_SIZE] = 0x00;
-}
+static uint8_t public_key_raw_data[RAW_PUBLIC_KEY_SIZE];
 
 void fido_crypto_keypair_generate(void)
 {
     // キーペアを新規生成する
     app_crypto_ec_keypair_generate(private_key_raw_data, public_key_raw_data);
-    remove_pubkey_header_byte(public_key_raw_data);
 }
 
 uint8_t *fido_crypto_keypair_private_key(void)
@@ -79,13 +67,33 @@ uint8_t *fido_crypto_keypair_public_key(void)
 }
 
 //
+// ECDSA署名関連
+//
+bool fido_crypto_ecdsa_sign(uint8_t *private_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t *signature_size)
+{
+    // 署名実行
+    if (app_crypto_ec_dsa_sign(private_key_be, hash_digest, digest_size, signature) == false) {
+        return false;
+    }
+    *signature_size = ECDSA_SIGNATURE_SIZE;
+    return true;
+}
+
+bool fido_crypto_ecdsa_sign_verify(uint8_t *public_key_be, uint8_t const *hash_digest, size_t digest_size, uint8_t *signature, size_t signature_size)
+{
+    // 署名検証実行
+    (void)signature_size;
+    return app_crypto_ec_dsa_verify(public_key_be, hash_digest, digest_size, signature);
+}
+
+//
 // 鍵交換関連
 //
 // 鍵交換用キーペア格納領域
 //   この領域に格納される鍵は
 //   ビッグエンディアン配列となる
 static uint8_t private_key_raw_data_for_ss[RAW_PRIVATE_KEY_SIZE];
-static uint8_t public_key_raw_data_for_ss[RAW_PUBLIC_KEY_SIZE+1];
+static uint8_t public_key_raw_data_for_ss[RAW_PUBLIC_KEY_SIZE];
 
 uint8_t *fido_crypto_sskey_public_key(void)
 {
@@ -107,7 +115,6 @@ void fido_crypto_sskey_init(bool force)
     // 秘密鍵および公開鍵を生成し、
     // モジュール変数内で保持
     app_crypto_ec_keypair_generate(private_key_raw_data_for_ss, public_key_raw_data_for_ss);
-    remove_pubkey_header_byte(public_key_raw_data_for_ss);
 
     // 生成済みフラグを設定
     if (!keypair_generated) {
@@ -124,7 +131,6 @@ void fido_crypto_sskey_init(bool force)
 // 共通鍵格納領域
 //   この領域に格納される共通鍵(Shared secret key)は、
 //   ビッグエンディアン配列となる
-static uint8_t client_pubkey_work[RAW_PUBLIC_KEY_SIZE+1];
 static uint8_t sskey_raw_data[SHARED_SECRET_SIZE];
 static uint8_t sskey_hash[SHA_256_HASH_SIZE];
 
@@ -136,13 +142,9 @@ uint8_t fido_crypto_sskey_generate(uint8_t *client_public_key_raw_data)
         return CTAP1_ERR_OTHER;
     }
 
-    // 公開鍵の先頭に 0x04 を付加
-    memcpy(client_pubkey_work + 1, client_public_key_raw_data, RAW_PUBLIC_KEY_SIZE);
-    client_pubkey_work[0] = 0x04;
-    
     // CTAP2クライアントから受け取った公開鍵と、自分で生成した秘密鍵を使用し、
     // 共通鍵を生成
-    if (app_crypto_ec_calculate_ecdh(private_key_raw_data_for_ss, client_pubkey_work, sskey_raw_data, sizeof(sskey_raw_data)) == false) {
+    if (app_crypto_ec_calculate_ecdh(private_key_raw_data_for_ss, client_public_key_raw_data, sskey_raw_data, sizeof(sskey_raw_data)) == false) {
         return CTAP1_ERR_OTHER;
     }
 

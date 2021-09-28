@@ -110,6 +110,9 @@ static void idling_timer_start(void)
 //
 static void data_channel_initialized(void)
 {
+    // 業務処理の初期化
+    app_main_data_channel_initialized();
+
     // データ処理イベント（DATEVT_XXXX）を
     // 通知できるようにする
     app_event_data_enable(true);

@@ -1,6 +1,6 @@
 # データの永続化について
 
-最新更新日：2021/09/14
+最新更新日：2021/09/23
 
 ## 概要
 
@@ -172,7 +172,9 @@ nRF5340アプリケーションでは、登録データ参照用の関数とし�
 #include "app_settings.h"
 
 APP_SETTINGS_KEY key = {0xBFFD, 0xBFED, false, 0};
-app_settings_find(&key, c, &s);
+bool exist;
+size_t size;
+app_settings_find(&key, &exist, data, &size);
 ```
 
 登録用キー`APP_SETTINGS_KEY`は以下のような内容になっています。<br>
@@ -191,17 +193,18 @@ app_settings_find(&key, c, &s);
 //
 // nRF5340_app/secure_device_app/src/app_settings.c
 //
-bool app_settings_find(APP_SETTINGS_KEY *key, void *value, size_t *value_size)
+bool app_settings_find(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size)
 {
-    return app_settings_search(key, value, value_size, NULL);
+    return app_settings_search(key, exist, value, value_size, NULL);
 }
 
-bool app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size))
+bool app_settings_search(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size, bool (*_condition_func)(const char *key, void *data, size_t size))
 {
     :
     // サブツリーをロード
-    //   検索対象データが settings_buf に
-    //   格納されます。
+    //   検索対象データがサブツリー内に存在する場合、
+    //   データが settings_buf に格納され、
+    //   データ長が settings_buf_size に設定されます。
     if (app_settings_load(key, &settings_key_to_find) == false) {
         return false;
     }
@@ -270,13 +273,17 @@ static int h_set(const char *key, size_t len, settings_read_cb read_cb, void *cb
 検索対象データ長は`value_size`に設定されます。<br>
 （検索対象のデータが見つからなかった場合は、`value_size`に`0`が設定されます）
 
+検索対象のデータが見つかった場合は、`exist`に`true`が設定されます。<br>
+（見つからなかった場合は`false`が設定されます）
+
 ```
-bool app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size))
+bool app_settings_search(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size, bool (*_condition_func)(const char *key, void *data, size_t size))
 {
     :
     // ロードしたデータをコピー
     if (settings_buf_size > 0) {
         memcpy(value, settings_buf, settings_buf_size);
+        *exist = true;
     }
     *value_size = settings_buf_size;
     return true;
@@ -299,7 +306,7 @@ nRF5340アプリケーションでは、データ検索用関数として、`app
 //
 #include "app_settings.h"
 
-bool _condition_func(void *data, size_t size)
+bool _condition_func(const char *key, void *data, size_t size)
 {
     // サブツリーに登録されているデータについて、
     // 指定条件に合致するかどうかをチェック
@@ -307,7 +314,7 @@ bool _condition_func(void *data, size_t size)
 }
 
 APP_SETTINGS_KEY key0 = {0xBFFE, 0, false, 0};
-app_settings_search(&key0, buf, &size, _condition_func);
+app_settings_search(&key0, &exist, buf, &size, _condition_func);
 ```
 
 データ参照の際には、サブツリーに登録されているキーをすべて参照する必要があるため、`app_settings_load`を経由して行います。
@@ -316,7 +323,7 @@ app_settings_search(&key0, buf, &size, _condition_func);
 //
 // nRF5340_app/secure_device_app/src/app_settings.c
 //
-bool app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size))
+bool app_settings_search(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size, bool (*_condition_func)(const char *key, void *data, size_t size))
 {
     :
     // 条件判定用関数の参照を保持
@@ -373,18 +380,23 @@ static int find_setting(const char *key, size_t len, settings_read_cb read_cb, v
 検索対象データ長は`value_size`に設定されます。<br>
 （検索対象のデータが見つからなかった場合は、`value_size`に`0`が設定されます）
 
+検索対象のデータが見つかった場合は、`exist`に`true`が設定されます。<br>
+（見つからなかった場合は`false`が設定されます）
+
 ```
-bool app_settings_search(APP_SETTINGS_KEY *key, void *value, size_t *value_size, bool (*_condition_func)(void *data, size_t size))
+bool app_settings_search(APP_SETTINGS_KEY *key, bool *exist, void *value, size_t *value_size, bool (*_condition_func)(const char *key, void *data, size_t size))
 {
     :
     // ロードしたデータをコピー
     if (settings_buf_size > 0) {
         memcpy(value, settings_buf, settings_buf_size);
+        *exist = true;
     }
     *value_size = settings_buf_size;
     return true;
 }
 ```
+
 
 #### データの削除
 

@@ -43,17 +43,6 @@ static bool ble_peripheral_auth_scan_started = false;
 // レスポンス完了後の処理を停止させるフラグ
 static bool abort_flag = false;
 
-bool fido_command_do_abort(void)
-{
-    // レスポンス完了後の処理を停止させる場合は、
-    // 全色LEDを点灯させたのち、無限ループに入る
-    if (abort_flag) {
-        fido_status_indicator_abort();
-        while(true);
-    }
-    return abort_flag;
-}
-
 void fido_command_abort_flag_set(bool flag)
 {
     abort_flag = flag;
@@ -309,6 +298,11 @@ static void on_ble_request_receive_completed(void)
 
 void fido_command_on_request_receive_completed(TRANSPORT_TYPE transport_type)
 {
+    if (abort_flag) {
+        // 全業務閉塞中の場合はここで終了
+        return;
+    }
+
     switch (transport_type) {
         case TRANSPORT_HID:
             on_hid_request_receive_completed();
@@ -356,7 +350,7 @@ void on_hid_response_send_completed(void)
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case CTAP2_COMMAND_INIT:
-            fido_log_info("CTAPHID_INIT end");
+            fido_ctap2_command_init_response_sent();
             break;
         case CTAP2_COMMAND_PING:
             fido_u2f_command_ping_response_sent();
@@ -398,8 +392,9 @@ void fido_command_on_response_send_completed(TRANSPORT_TYPE transport_type)
             break;
     }
 
-    if (fido_command_do_abort()) {
-        // レスポンス完了後の処理を停止させる場合はここで終了
-        return;
+    if (abort_flag) {
+        // レスポンス完了後の処理を停止させる場合は、
+        // 全色LEDを点灯させたのち、全業務を閉塞
+        fido_status_indicator_abort();
     }
 }
