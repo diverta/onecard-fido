@@ -623,8 +623,31 @@ void ctap2_client_pin_send_response(void)
             break;
         case subcmd_GetPinToken:
             // レスポンスを戻す
-            fido_log_debug("getPinToken: retry counter store success");
+            fido_log_debug("getPINToken: retry counter store success");
             fido_ctap2_command_send_response(check_pin_status_code, m_response_length);
+            break;
+        default:
+            break;
+    }
+}
+
+void ctap2_client_pin_response_sent(void)
+{
+    switch (ctap2_request.subCommand) {
+        case subcmd_GetRetries:
+            fido_log_info("authenticatorClientPIN(getRetries) end");
+            break;
+        case subcmd_GetKeyAgreement:
+            fido_log_info("authenticatorClientPIN(getKeyAgreement) end");
+            break;
+        case subcmd_SetPin:
+            fido_log_info("authenticatorClientPIN(setPIN) end");
+            break;
+        case subcmd_ChangePin:
+            fido_log_info("authenticatorClientPIN(changePIN) end");
+            break;
+        case subcmd_GetPinToken:
+            fido_log_info("authenticatorClientPIN(getPINToken) end");
             break;
         default:
             break;

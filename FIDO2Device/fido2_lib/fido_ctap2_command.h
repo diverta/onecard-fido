@@ -33,6 +33,7 @@ void fido_ctap2_command_flash_gc_done(void);
 void fido_ctap2_command_token_counter_file_deleted(void);
 void fido_ctap2_command_retry_counter_record_updated(void);
 void fido_ctap2_command_token_counter_record_updated(void);
+void fido_ctap2_command_init_response_sent(void);
 void fido_ctap2_command_cbor_response_sent(void);
 
 #ifdef __cplusplus

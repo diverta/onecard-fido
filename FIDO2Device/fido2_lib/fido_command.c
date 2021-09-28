@@ -356,7 +356,7 @@ void on_hid_response_send_completed(void)
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {
         case CTAP2_COMMAND_INIT:
-            fido_log_info("CTAPHID_INIT end");
+            fido_ctap2_command_init_response_sent();
             break;
         case CTAP2_COMMAND_PING:
             fido_u2f_command_ping_response_sent();
