@@ -105,6 +105,8 @@ class ImageController: UITableViewController {
 `baseController.transporter`の正体ですが、事前に他の画面上でスキャンしておいたBLEペリフェラルデバイスの情報（`DiscoveredPeripheral`）を保持したものと思われます。<br>
 （`BaseViewController`は、`ImageController`のさらに親コンポーネントになります）
 
+なお、`peripheral.basePeripheral`とあるのは、BLEペリフェラルクラス`CBPeripheral`の参照です。[注1]
+
 ```
 //
 // IOS-nRF-Connect-Device-Manager/Example/Example/View Controllers/Manager/BaseViewController.swift
@@ -121,6 +123,8 @@ class BaseViewController: UITabBarController {
     }
     :
 ```
+
+[注1] 管理ツールでは、スキャンしたBLEペリフェラルデバイスに接続された後、コールバック関数`connectPeripheral`の引数として渡ってくる参照（`(CBPeripheral *)peripheral`）になります。
 
 #### 画面からの起動
 
