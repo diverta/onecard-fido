@@ -21,6 +21,107 @@ BLE経由のファームウェア更新機能を、[管理ツール](../Maintena
 
 下記内容は、ソースコードを追跡し、iOSにおけるファームウェア更新機能の挙動を調査したものです。
 
+#### FirmwareUpgradeManagerクラスの初期化
+
+ファームウェア更新機能を実装するクラスである[`FirmwareUpgradeManager`](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager#firmwareupgrademanager)は、処理の冒頭で初期化が必要です。<br>
+また、初期化を実行するためには、別途、`McuMgrTransport`というトランスポート実装クラスが必要となります。
+
+今回事例で使用する`McuMgrBleTransport`は、`McuMgrTransport`のBLE実装クラスです。<br>
+冒頭で、nRF5340アプリケーションに同梱されているBLE SMPサービス／キャラクタリスティックUUIDが定義されています。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/Bluetooth/McuMgrBleTransport.swift
+//
+public class McuMgrBleTransport: NSObject {
+
+    public static let SMP_SERVICE = CBUUID(string: "8D53DC1D-1DB7-4CD3-868B-8A527460AA84")
+    public static let SMP_CHARACTERISTIC = CBUUID(string: "DA2E7828-FBCE-4E01-AE9E-261174997C48")
+    :
+    public convenience init(_ target: CBPeripheral) {
+        self.init(target.identifier)
+    }
+    :
+
+extension McuMgrBleTransport: McuMgrTransport {
+    :
+    public func send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>) {
+        :
+    }
+
+    public func connect(_ callback: @escaping ConnectionCallback) {
+        :
+    }
+
+    public func close() {
+        :
+    }
+    :
+```
+
+
+`FirmwareUpgradeManager`を、BLEトランスポート実装クラス`McuMgrBleTransport`を使い初期化します。<br>
+（`McuMgrTransport`は、`McuMgrBleTransport`の抽象クラスになります）
+
+```
+class FirmwareUpgradeViewController: UIViewController, McuMgrViewController {
+    :
+    private var dfuManager: FirmwareUpgradeManager!
+    var transporter: McuMgrTransport! {
+        didSet {
+            dfuManager = FirmwareUpgradeManager(transporter: transporter, delegate: self)
+            :
+        }
+    }
+```
+
+`FirmwareUpgradeManager`の`transporter`に、`McuMgrBleTransport`が設定されるのは、画面が表示された時点のようです。<br>
+下記の`ImageController`は、`FirmwareUpgradeManager`（`McuMgrViewController`の継承クラス）の親コンポーネントになります。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Example/Example/View Controllers/Manager/ImageController.swift
+//
+class ImageController: UITableViewController {
+    :
+    override func viewDidAppear(_ animated: Bool) {
+        showModeSwitch()
+
+        // Set the connection status label as transport delegate.
+        let baseController = parent as! BaseViewController
+        let bleTransporter = baseController.transporter as? McuMgrBleTransport
+        bleTransporter?.delegate = connectionStatus
+    }
+    :
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let baseController = parent as! BaseViewController
+        let transporter = baseController.transporter!
+
+        var destination = segue.destination as? McuMgrViewController
+        destination?.transporter = transporter
+        :
+```
+
+`baseController.transporter`の正体ですが、事前に他の画面上でスキャンしておいたBLEペリフェラルデバイスの情報（`DiscoveredPeripheral`）を保持したものと思われます。<br>
+（`BaseViewController`は、`ImageController`のさらに親コンポーネントになります）
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Example/Example/View Controllers/Manager/BaseViewController.swift
+//
+class BaseViewController: UITabBarController {
+
+    var transporter: McuMgrTransport!
+    var peripheral: DiscoveredPeripheral! {
+        didSet {
+            let bleTransporter = McuMgrBleTransport(peripheral.basePeripheral)
+            bleTransporter.logDelegate = UIApplication.shared.delegate as? McuMgrLogDelegate
+            transporter = bleTransporter
+        }
+    }
+    :
+```
+
 #### 画面からの起動
 
 ボタン押下＋モード選択（下記例では`Test and confirm`）により、`dfuManager.start`でファームウェア更新機能が起動されます。
@@ -96,26 +197,16 @@ extension FirmwareUpgradeViewController: UIDocumentMenuDelegate, UIDocumentPicke
 }
 ```
 
-処理の本体である`dfuManager`は、[`FirmwareUpgradeManager`](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager#firmwareupgrademanager)というモジュール（クラス）のようです。
-
-```
-private var dfuManager: FirmwareUpgradeManager!
-```
-
-`dfuManager.start`が実行される部分は下記になります。
+処理の本体である`dfuManager`は、前述の`FirmwareUpgradeManager`クラスです。<br>
+`dfuManager.start`の実装は下記になります。
 
 ```
 //
 // IOS-nRF-Connect-Device-Manager/Source/Managers/DFU/FirmwareUpgradeManager.swift
 //
 public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
-  :
-  public init(transporter: McuMgrTransport, delegate: FirmwareUpgradeDelegate?) {
-      self.imageManager = ImageManager(transporter: transporter)
-      self.defaultManager = DefaultManager(transporter: transporter)
-      self.delegate = delegate
-      self.state = .none
-  }
+
+  private var dfuManager: FirmwareUpgradeManager!
 
   public func start(data: Data) throws {
       :
