@@ -23,47 +23,15 @@ BLE経由のファームウェア更新機能を、[管理ツール](../Maintena
 
 #### FirmwareUpgradeManagerクラスの初期化
 
-ファームウェア更新機能を実装するクラスである[`FirmwareUpgradeManager`](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager#firmwareupgrademanager)は、処理の冒頭で初期化が必要です。<br>
-また、初期化を実行するためには、別途、`McuMgrTransport`というトランスポート実装クラスが必要となります。
+ファームウェア更新機能を実装するクラスである[`FirmwareUpgradeManager`](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager#firmwareupgrademanager)は、処理の冒頭で初期化が必要です。
 
-今回事例で使用する`McuMgrBleTransport`は、`McuMgrTransport`のBLE実装クラスです。<br>
-冒頭で、nRF5340アプリケーションに同梱されているBLE SMPサービス／キャラクタリスティックUUIDが定義されています。
+初期化時は、BLEトランスポート実装クラス`McuMgrBleTransport`を引数に指定します。<br>
+（`McuMgrTransport`は、`McuMgrBleTransport`の抽象クラスになります[注1]）
 
 ```
 //
-// IOS-nRF-Connect-Device-Manager/Source/Bluetooth/McuMgrBleTransport.swift
+// IOS-nRF-Connect-Device-Manager/Example/Example/View Controllers/Manager/FirmwareUpgradeViewController.swift
 //
-public class McuMgrBleTransport: NSObject {
-
-    public static let SMP_SERVICE = CBUUID(string: "8D53DC1D-1DB7-4CD3-868B-8A527460AA84")
-    public static let SMP_CHARACTERISTIC = CBUUID(string: "DA2E7828-FBCE-4E01-AE9E-261174997C48")
-    :
-    public convenience init(_ target: CBPeripheral) {
-        self.init(target.identifier)
-    }
-    :
-
-extension McuMgrBleTransport: McuMgrTransport {
-    :
-    public func send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>) {
-        :
-    }
-
-    public func connect(_ callback: @escaping ConnectionCallback) {
-        :
-    }
-
-    public func close() {
-        :
-    }
-    :
-```
-
-
-`FirmwareUpgradeManager`を、BLEトランスポート実装クラス`McuMgrBleTransport`を使い初期化します。<br>
-（`McuMgrTransport`は、`McuMgrBleTransport`の抽象クラスになります）
-
-```
 class FirmwareUpgradeViewController: UIViewController, McuMgrViewController {
     :
     private var dfuManager: FirmwareUpgradeManager!
@@ -222,3 +190,183 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
       :
   }
 ```
+
+## BLEトランスポートの実装
+
+下記内容は、前述`FirmwareUpgradeManager`の動作に必要な、BLEトランスポート`McuMgrBleTransport`の実装について調査したものです。
+
+#### McuMgrTransport
+
+`McuMgrTransport`は、`McuMgrBleTransport`の基底クラスです。<br>
+以下のようなメソッドをインターフェースしますが、`McuMgrBleTransport`は、このクラスのBLE実装となっています。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/McuMgrTransport.swift
+//
+public protocol McuMgrTransport: AnyObject {
+    func getScheme() -> McuMgrScheme
+    func send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>)
+    func connect(_ callback: @escaping ConnectionCallback)
+    func close()
+    func addObserver(_ observer: ConnectionObserver);
+    func removeObserver(_ observer: ConnectionObserver);
+}
+```
+
+本ドキュメントでは、通常使用しないと思われる`getScheme`、`connect`、`addObserver`、`removeObserver`については調査を省略し、`send`、`close`についての調査内容を掲載します。
+
+#### init
+
+`McuMgrBleTransport`を初期化する関数です。
+
+引数は`CBPeripheral`の参照になります。[注1]<br>
+すなわち、ターゲットとなるBLEペリフェラルデバイスに接続でき、かつペリフェラル上で稼働するBLE SMPサービスがディスカバーされている事が前提となります。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/Bluetooth/McuMgrBleTransport.swift
+//
+public class McuMgrBleTransport: NSObject {
+    :
+    public convenience init(_ target: CBPeripheral) {
+        self.init(target.identifier)
+    }
+    :
+```
+
+[注1] このswiftコード内では引数（`CBPeripheral`の参照）は直接使用せず、代わりに内部生成した`CBCentralManager`を使い、UUID（`CBPeripheral.identifier`）が一致する`CBPeripheral`の参照を間接取得しているようです。
+
+#### send
+
+`McuMgrBleTransport`からデータをBLE送信する関数です。
+
+下記は呼び出し例です。<br>
+送信データ／イメージ番号[注2]／オフセット、および送信成功／失敗時に呼び出されるコールバック関数が、引数となります。
+
+```
+public class ImageManager: McuManager {
+    :
+    public func upload(data: Data, image: Int, offset: UInt, callback: @escaping McuMgrCallback<McuMgrUploadResponse>) {
+        :
+        // Build request and send.
+        send(op: .write, commandId: ID_UPLOAD, payload: payload, callback: callback)
+    }
+    :
+    private lazy var uploadCallback: McuMgrCallback<McuMgrUploadResponse> = {
+        :
+    }
+}
+```
+
+実装は下記の通りです。<br>
+送信失敗時はリトライが行われます。[注3]
+
+```
+extension McuMgrBleTransport: McuMgrTransport {
+
+    public func send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>) {
+        dispatchQueue.async {
+            // Max concurrent opertaion count is set to 1, so operations are
+            // executed one after another. A new one will be started when the
+            // queue is empty, or the when the last operation finishes.
+            self.operationQueue.addOperation {
+                for _ in 0..<McuMgrBleTransport.MAX_RETRIES {
+                    let retry = self._send(data: data, callback: callback)
+                    if !retry {
+                        break
+                    }
+                }
+            }
+        }
+    }
+```
+
+サブルーチン`_send`の実装は下記の通りです。
+
+具体的には、送信前のチェック／セットアップを実行[注4]した後、`CBPeripheral.writeValue`を呼び出し、BLEペリフェラルデバイスにデータを転送します。<br>
+送信バイト数の上限（MTU）は、別途`CBPeripheral.maximumWriteValueLength`で設定します。
+
+```
+extension McuMgrBleTransport: McuMgrTransport {
+    private func _send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>) -> Bool {
+        :
+        let targetPeripheral: CBPeripheral
+
+        if let existing = peripheral, centralManager.state == .poweredOn {
+            targetPeripheral = existing
+        } else {
+            :
+        }
+        :
+        // Make sure the SMP characteristic is not nil.
+        guard let smpCharacteristic = smpCharacteristic else {
+            :
+            return false
+        }
+
+        // Close the lock.
+        lock.close(key: Keys.awaitingResponse)
+
+        // Check that data length does not exceed the mtu.
+        let mtu = targetPeripheral.maximumWriteValueLength(for: .withoutResponse)
+        if data.count > mtu {
+            :
+            return false
+        }
+
+        // Write the value to the characteristic.
+        log(msg: "-> \(data.hexEncodedString(options: .prepend0x))", atLevel: .debug)
+        targetPeripheral.writeValue(data, for: smpCharacteristic, type: .withoutResponse)
+
+        // Wait for the response.
+        let result = lock.block(timeout: DispatchTime.now() + .seconds(McuMgrBleTransport.TRANSACTION_TIMEOUT))
+        :
+```
+
+転送処理が成功または失敗した場合は、所定のコールバックが実行されます。
+
+```
+extension McuMgrBleTransport: McuMgrTransport {
+    private func _send<T: McuMgrResponse>(data: Data, callback: @escaping McuMgrCallback<T>) -> Bool {
+        :
+        switch result {
+        case .timeout:
+            log(msg: "Request timed out", atLevel: .error)
+            fail(error: McuMgrTransportError.sendTimeout, callback: callback)
+        case .error(let error):
+            log(msg: "Request failed: \(error)", atLevel: .error)
+            fail(error: error, callback: callback)
+        case .success:
+            do {
+                // Build the McuMgrResponse.
+                log(msg: "<- \(responseData?.hexEncodedString(options: .prepend0x) ?? "0 bytes")",
+                    atLevel: .debug)
+                let response: T = try McuMgrResponse.buildResponse(scheme: getScheme(),
+                                                                   data: responseData)
+                success(response: response, callback: callback)
+            } catch {
+                fail(error: error, callback: callback)
+            }
+        }
+        return false
+    }
+
+    private func success<T: McuMgrResponse>(response: T, callback: @escaping McuMgrCallback<T>) {
+        :
+        DispatchQueue.main.async {
+            callback(response, nil)
+        }
+    }
+
+    private func fail<T: McuMgrResponse>(error: Error, callback: @escaping McuMgrCallback<T>) {
+        :
+        DispatchQueue.main.async {
+            callback(nil, error)
+        }
+    }
+```
+
+[注2] ファームウェア更新イメージファイルに更新イメージが複数同梱されている場合、特定のイメージ番号を指定するユースケースを想定しているようです。本プロジェクトでは、１点の更新イメージしか搭載しないため、０固定となります。<br>
+[注3] 送信リトライ回数（`McuMgrBleTransport.MAX_RETRIES`）は３回となっています。<br>
+[注4] 接続されていない場合は接続まで待ち、BLE SMPサービスがディスカバーされていない場合はディスカバーを実行します。
