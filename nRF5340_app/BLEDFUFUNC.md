@@ -17,6 +17,41 @@ BLE経由のファームウェア更新機能を、[管理ツール](../Maintena
 残念ながら、[管理ツール](../MaintenanceTool/macOSApp)と同じプラットフォーム（macOS、Objective-C）で実装された版は、Nordic社から公開されていないようです。<br>
 管理ツールに搭載する場合は、Swift --> Objective-Cへの移植作業が必要となります。
 
+#### コードの参照方法
+
+リポジトリー[`nRF Connect Device Manager`](https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager)をPCにチェックアウトした後、CocoaPodを使用し、依存ライブラリーをダウンロードします。<br>
+ダウンロードに必要なPodfileは、リポジトリーの`Example`配下に`Podfile`という名称で配置されています。
+
+以下はCocoaPodsの実行例になります。<br>
+（CocoaPodsの導入コマンドを含みます）
+
+```
+bash-3.2$ sudo gem install cocoapods
+Password:
+Fetching i18n-1.8.10.gem
+:
+Installing ri documentation for cocoapods-1.11.2
+Done installing documentation for concurrent-ruby, i18n, tzinfo, zeitwerk, activesupport, nap, fuzzy_match, httpclient, algoliasearch, ffi, ethon, typhoeus, netrc, public_suffix, addressable, cocoapods-core, claide, cocoapods-deintegrate, cocoapods-downloader, cocoapods-plugins, cocoapods-search, cocoapods-trunk, cocoapods-try, molinillo, atomos, colored2, nanaimo, rexml, xcodeproj, escape, fourflusher, gh_inspector, ruby-macho, cocoapods after 20 seconds
+34 gems installed
+bash-3.2$
+bash-3.2$ pod setup
+Setup completed
+bash-3.2$
+bash-3.2$ cd ${HOME}/GitHub/IOS-nRF-Connect-Device-Manager/Example
+bash-3.2$ pod install
+Analyzing dependencies
+Adding spec repo `trunk` with CDN `https://cdn.cocoapods.org/`
+Downloading dependencies
+Installing McuManager (0.12.0)
+Installing SwiftCBOR (0.4.3)
+Generating Pods project
+Integrating client project
+Pod installation complete! There is 1 dependency from the Podfile and 2 total pods installed.
+bash-3.2$
+```
+
+これで、Xcodeからサンプルコードを参照／ビルドする事ができるようになります。
+
 ## ファームウェア更新機能の実装
 
 下記内容は、ソースコードを追跡し、iOSにおけるファームウェア更新機能の挙動を調査したものです。
