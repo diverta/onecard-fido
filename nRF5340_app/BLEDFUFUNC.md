@@ -1,6 +1,6 @@
 # ファームウェア更新機能についての調査
 
-最新更新日：2021/09/29
+最新更新日：2021/10/01
 
 ## 概要
 
@@ -225,6 +225,216 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
       :
   }
 ```
+
+#### ファームウェア更新イメージ転送前の処理
+
+`FirmwareUpgradeManager.start`では、以下の処理が行われます。
+
+- ファームウェア更新イメージのハッシュを計算
+- ファームウェア更新イメージのチェック
+- ファームウェア更新イメージの転送を開始
+
+まず最初に、ファームウェア更新イメージのハッシュを計算します。
+
+```
+    public func start(data: Data) throws {
+        :
+        imageData = data
+        hash = try McuMgrImage(data: imageData).hash
+        :
+```
+
+次に、ファームウェア更新イメージについてのチェックを行うため、BLEペリフェラルデバイスにステータスを照会（`Validation`）します。
+
+```
+    public func start(data: Data) throws {
+        :
+        validate()
+```
+
+`validate()`では、BLEペリフェラルデバイスにリクエスト`ID_STATE`を送信します。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    :
+    private func validate() {
+        setState(.validate)
+        if !paused {
+            imageManager.list(callback: validateCallback)
+        }
+    }
+    :
+
+public class ImageManager: McuManager {
+    :
+    public func list(callback: @escaping McuMgrCallback<McuMgrImageStateResponse>) {
+        send(op: .read, commandId: ID_STATE, payload: nil, callback: callback)
+    }
+    :
+```
+
+レスポンス`McuMgrImageStateResponse`を参照し、ファームウェア更新イメージについて、諸々チェックを行います。
+
+- 更新ファームウェアが、現在デバイスで稼働中のファームウェアと同一か？
+- デバイスのスロット#1に格納されたイメージが`confirmed`か？
+- デバイスのスロット#1に格納されたイメージが`pending`か？
+- 更新ファームウェアが、すでにデバイスに転送済みか？
+
+上記４点のチェックに該当しない場合は、ファームウェア更新イメージの転送が開始されます。<br>
+（`upload()`が実行されます）
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    private lazy var validateCallback: McuMgrCallback<McuMgrImageStateResponse> =
+    { [weak self] (response: McuMgrImageStateResponse?, error: Error?) in
+        :
+        // Check if the new firmware is different then the active one.
+        if Data(images[0].hash) == self.hash {
+            :
+            return
+        }
+
+        // If the image in slot 1 is confirmed, we won't be able to erase or
+        // test the slot. Therefore, we confirm the image in slot 0 to allow us
+        // to modify the image in slot 1.
+        if images.count > 1 && images[1].confirmed {
+            self.validationConfirm(hash: images[0].hash)
+            return
+        }
+
+        // If the image in slot 1 is pending, we won't be able to
+        // erase or test the slot. Therefore, We must reset the device and
+        // revalidate the new image state.
+        if images.count > 1 && images[1].pending {
+            self.defaultManager.transporter.addObserver(self)
+            self.defaultManager.reset(callback: self.resetCallback)
+            return
+        }
+
+        // Check if the firmware has already been uploaded.
+        if images.count > 1 && Data(images[1].hash) == self.hash {
+            // Firmware is identical to the one in slot 1. No need to send
+            // anything.
+            :
+        }
+
+        // Validation successful, begin with image upload.
+        self.upload()
+    }
+```
+
+#### ファームウェア更新イメージの転送
+
+`FirmwareUpgradeManager.upload`では、ファームウェア更新イメージの転送が行われます。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    private func upload() {
+        setState(.upload)
+        if !paused {
+            _ = imageManager.upload(data: imageData, delegate: self)
+        }
+    }
+```
+
+実処理は、`ImageManager.upload`で行われます。
+
+```
+public class ImageManager: McuManager {
+    public func upload(data: Data, image: Int = 0, delegate: ImageUploadDelegate?) -> Bool {
+        :
+        // Set image data.
+        imageData = data
+
+        // Set the slot we're uploading the image to.
+        imageNumber = image
+        :
+        log(msg: "Uploading image (\(data.count) bytes)...", atLevel: .application)
+        upload(data: imageData!, image: imageNumber, offset: 0, callback: uploadCallback)
+        return true
+    }
+```
+
+転送処理では、後述の`McuMgrBleTransport.send`１回あたり送信バイト数上限（MTU）が存在するため、数回に分割送信されます。<br>
+下記の同名のサブルーチン`upload`が、分割送信のたびに呼び出されます。
+
+```
+    public func upload(data: Data, image: Int, offset: UInt, callback: @escaping McuMgrCallback<McuMgrUploadResponse>) {
+        // Calculate the number of remaining bytes.
+        let remainingBytes: UInt = UInt(data.count) - offset
+        :
+        // Get the length of image data to send.
+        let maxDataLength: UInt = UInt(mtu) - UInt(packetOverhead)
+        let dataLength: UInt = min(maxDataLength, remainingBytes)
+
+        // Build the request payload.
+        var payload: [String:CBOR] = ["data": CBOR.byteString([UInt8](data[offset..<(offset+dataLength)])),
+                                      "off": CBOR.unsignedInt(UInt64(offset))]
+        :
+        // Build request and send.
+        send(op: .write, commandId: ID_UPLOAD, payload: payload, callback: callback)
+    }
+```
+
+`send`による転送が完了すると、`uploadCallback`がコールバックされ、次の分割送信が実行されます。
+
+```
+    private lazy var uploadCallback: McuMgrCallback<McuMgrUploadResponse> = {
+        [weak self] (response: McuMgrUploadResponse?, error: Error?) in
+        :
+        // Make sure the response is not nil.
+        guard let response = response else {
+            self.cancelUpload(error: ImageUploadError.invalidPayload)
+            return
+        }
+        // Check for an error return code.
+        guard response.isSuccess() else {
+            self.cancelUpload(error: ImageUploadError.mcuMgrErrorCode(response.returnCode))
+            return
+        }
+        // Get the offset from the response.
+        if let offset = response.off {
+            // Set the image upload offset.
+            self.offset = offset
+            :
+            // Check if the upload has completed.
+            if offset == imageData.count {
+                self.log(msg: "Upload finished", atLevel: .application)
+                self.resetUploadVariables()
+                :
+                return
+            }
+
+            // Send the next packet of data.
+            self.sendNext(from: UInt(offset))
+            :
+    }
+
+    private func sendNext(from offset: UInt) {
+        :
+        upload(data: imageData!, image: imageNumber, offset: offset, callback: uploadCallback)
+    }
+```
+
+全ての分割送信が完了した場合は、下記`resetUploadVariables`が呼び出され、終了処理が行われます。
+
+```
+    private func resetUploadVariables() {
+        objc_sync_enter(self)
+        // Reset upload state.
+        uploadState = .none
+
+        // Deallocate and nil image data pointers.
+        imageData = nil
+
+        // Reset upload vars.
+        imageNumber = 0
+        offset = 0
+        objc_sync_exit(self)
+    }
+```
+
+以上で、ファームウェア更新イメージ転送処理が完了します。
 
 ## BLEトランスポートの実装
 
