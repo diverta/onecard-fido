@@ -11,6 +11,7 @@ endif()
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
     ${app_sources}
+    ../../FIDO2Device/ctap2_lib/ctap2_cbor.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_authgetinfo.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_encode.c
     ../../FIDO2Device/ctap2_lib/ctap2_cbor_parse.c
@@ -42,14 +43,10 @@ target_sources(app PRIVATE
     ../../FIDO2Device/u2f_lib/u2f_keyhandle.c
     ../../FIDO2Device/u2f_lib/u2f_register.c
     ../../FIDO2Device/u2f_lib/u2f_signature.c
-    ../../../tinycbor/src/cborencoder.c
-    ../../../tinycbor/src/cborerrorstrings.c
-    ../../../tinycbor/src/cborparser.c
 )
 target_include_directories(app PRIVATE 
     include
     ../../FIDO2Device/ctap2_lib
     ../../FIDO2Device/fido2_lib
     ../../FIDO2Device/u2f_lib
-    ../../../tinycbor/src
 )

@@ -4,7 +4,7 @@
  *
  * Created on 2019/05/20, 10:30
  */
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
 #include "ctap2_common.h"
@@ -47,7 +47,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_create(void)
     CborEncoder extensions;
     uint8_t     ret;
 
-    cbor_encoder_init(&extensions, extension_cbor, sizeof(extension_cbor), 0);
+    ctap2_cbor_encoder_init(&extensions, extension_cbor, sizeof(extension_cbor), 0);
 
     CborEncoder hmac_secret_map;
     ret = cbor_encoder_create_map(&extensions, &hmac_secret_map, 1);
@@ -70,7 +70,7 @@ uint8_t ctap2_extension_hmac_secret_cbor_for_create(void)
         return CTAP1_ERR_OTHER;
     }
 
-    extension_cbor_size = cbor_encoder_get_buffer_size(&extensions, extension_cbor);
+    extension_cbor_size = ctap2_cbor_encoder_get_buffer_size(&extensions, extension_cbor);
     return CTAP1_ERR_SUCCESS;
 }
 
@@ -97,7 +97,7 @@ static uint8_t generate_cbor_for_get(uint8_t *encrypted_output, size_t encrypted
     CborEncoder extensions;
     uint8_t     ret;
 
-    cbor_encoder_init(&extensions, extension_cbor, sizeof(extension_cbor), 0);
+    ctap2_cbor_encoder_init(&extensions, extension_cbor, sizeof(extension_cbor), 0);
 
     CborEncoder hmac_secret_map;
     ret = cbor_encoder_create_map(&extensions, &hmac_secret_map, 1);
@@ -121,7 +121,7 @@ static uint8_t generate_cbor_for_get(uint8_t *encrypted_output, size_t encrypted
         return CTAP1_ERR_OTHER;
     }
 
-    extension_cbor_size = cbor_encoder_get_buffer_size(&extensions, extension_cbor);
+    extension_cbor_size = ctap2_cbor_encoder_get_buffer_size(&extensions, extension_cbor);
     return CTAP1_ERR_SUCCESS;
 }
 

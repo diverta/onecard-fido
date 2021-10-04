@@ -4,7 +4,7 @@
  *
  * Created on 2019/01/03, 11:05
  */
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"
@@ -118,7 +118,8 @@ uint8_t ctap2_get_assertion_decode_request(uint8_t *cbor_data_buffer, size_t cbo
     ctap2_request.options.up = true;
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }
@@ -439,7 +440,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 {
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Map初期化
     CborEncoder map;
@@ -492,7 +493,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
 #if LOG_DEBUG_CBOR_RESPONSE
     fido_log_debug("authenticatorGetAssertion response(%d bytes):", *encoded_buff_size);
