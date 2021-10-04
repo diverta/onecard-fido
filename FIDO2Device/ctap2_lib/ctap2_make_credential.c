@@ -10,6 +10,7 @@
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_define.h"
 #include "ctap2_cbor_encode.h"
+#include "ctap2_cbor_parse.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_common.h"
 #include "ctap2_extension_hmac_secret.h"
@@ -94,7 +95,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     ctap2_request.options.up = true;
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }

@@ -89,7 +89,8 @@ static uint8_t decode_request_cbor(uint8_t *cbor_data_buffer, size_t cbor_data_l
     memset(&ctap2_request, 0x00, sizeof(ctap2_request));
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }

@@ -22,6 +22,7 @@ extern "C" {
 
 void        ctap2_cbor_encoder_init(CborEncoder *encoder, uint8_t *encoded_buff, size_t encoded_buff_size, int flags);
 size_t      ctap2_cbor_encoder_get_buffer_size(const CborEncoder *encoder, const uint8_t *encoded_buff);
+CborError   ctap2_cbor_parser_init(const uint8_t *cbor_data_buffer, size_t cbor_data_size, uint32_t flags, CborParser *parser, CborValue *it);
 
 #ifdef __cplusplus
 }
