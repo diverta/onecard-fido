@@ -105,7 +105,7 @@ uint8_t ctap2_cbor_encode_response_retry_counter(uint8_t *encoded_buff, size_t *
     
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Mapに格納する要素数の設定
     size_t map_elements_num = 1;
@@ -135,7 +135,7 @@ uint8_t ctap2_cbor_encode_response_retry_counter(uint8_t *encoded_buff, size_t *
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
     return CTAP1_ERR_SUCCESS;
 }
@@ -147,7 +147,7 @@ uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *
     
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Mapに格納する要素数の設定
     size_t map_elements_num = 1;
@@ -177,7 +177,7 @@ uint8_t ctap2_cbor_encode_response_key_agreement(uint8_t *encoded_buff, size_t *
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
     return CTAP1_ERR_SUCCESS;
 }
@@ -189,10 +189,10 @@ uint8_t ctap2_cbor_encode_response_set_pin(uint8_t *encoded_buff, size_t *encode
     
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
     return CTAP1_ERR_SUCCESS;
 }
@@ -204,7 +204,7 @@ uint8_t ctap2_cbor_encode_response_get_pin_token(uint8_t *encoded_buff, size_t *
     
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Mapに格納する要素数の設定
     size_t map_elements_num = 1;
@@ -232,7 +232,7 @@ uint8_t ctap2_cbor_encode_response_get_pin_token(uint8_t *encoded_buff, size_t *
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
     return CTAP1_ERR_SUCCESS;
 }

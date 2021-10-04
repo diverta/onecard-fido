@@ -439,7 +439,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
 {
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Map初期化
     CborEncoder map;
@@ -492,7 +492,7 @@ uint8_t ctap2_get_assertion_encode_response(uint8_t *encoded_buff, size_t *encod
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
 #if LOG_DEBUG_CBOR_RESPONSE
     fido_log_debug("authenticatorGetAssertion response(%d bytes):", *encoded_buff_size);

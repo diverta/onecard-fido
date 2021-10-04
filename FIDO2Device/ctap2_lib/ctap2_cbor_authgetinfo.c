@@ -208,7 +208,7 @@ uint8_t ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *enc
     
     // CBORエンコーダー初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // CBORエンコード実行
     if (encode_authgetinfo_response_message(&encoder) == false) {
@@ -218,7 +218,7 @@ uint8_t ctap2_cbor_authgetinfo_encode_request(uint8_t *encoded_buff, size_t *enc
     }
 
     // エンコードされたバッファのサイズを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
     fido_log_debug("Encoding success (%d bytes)", *encoded_buff_size);
     return CTAP1_ERR_SUCCESS;
 }
