@@ -7,10 +7,11 @@
 #include <string.h>
 
 #include "ctap2_cbor.h"
-#include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
+#include "ctap2_cbor_define.h"
 #include "ctap2_cbor_encode.h"
 #include "ctap2_client_pin_token.h"
+#include "ctap2_common.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_command_common.h"

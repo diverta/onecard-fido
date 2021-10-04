@@ -5,6 +5,7 @@
  * Created on 2018/12/25, 13:21
  */
 #include "ctap2_cbor.h"
+#include "ctap2_cbor_define.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_pubkey_credential.h"
