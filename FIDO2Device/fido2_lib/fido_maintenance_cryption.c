@@ -7,7 +7,7 @@
 //
 // プラットフォーム非依存コード
 //
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_common.h"
 #include "fido_command_common.h"

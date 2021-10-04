@@ -4,7 +4,7 @@
  *
  * Created on 2019/05/20, 10:30
  */
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "fido_command_common.h"
 #include "fido_common.h"
 #include "ctap2_common.h"

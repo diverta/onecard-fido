@@ -7,7 +7,7 @@
 #ifndef CTAP_CBOR_PARSE_H
 #define CTAP_CBOR_PARSE_H
 
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_common.h"
 
 #ifdef __cplusplus

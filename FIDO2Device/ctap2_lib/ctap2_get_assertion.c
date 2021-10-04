@@ -4,7 +4,7 @@
  *
  * Created on 2019/01/03, 11:05
  */
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_cbor_parse.h"

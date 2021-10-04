@@ -6,7 +6,7 @@
  */
 #include <string.h>
 
-#include "cbor.h"
+#include "ctap2_cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
 #include "ctap2_cbor_encode.h"
