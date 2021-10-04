@@ -9,7 +9,7 @@
 #include "cbor.h"
 #include "ctap2_common.h"
 #include "ctap2_cbor_authgetinfo.h"
-#include "ctap2_cbor_parse.h"
+#include "ctap2_cbor_encode.h"
 #include "ctap2_client_pin_token.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
@@ -271,7 +271,7 @@ static uint8_t generate_credential_pubkey(uint8_t *keypair_public_key)
     uint8_t *x = keypair_public_key;
     uint8_t *y = keypair_public_key + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
-    uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
+    uint8_t ret = ctap2_cbor_encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
