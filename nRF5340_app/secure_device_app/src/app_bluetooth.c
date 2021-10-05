@@ -13,6 +13,7 @@
 // for BLE pairing
 #include "app_ble_pairing.h"
 #include "app_event.h"
+#include "app_ble_fido.h"
 #include "app_ble_smp.h"
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -30,7 +31,6 @@ static struct k_work stop_advertise_work;
 static struct bt_data ad[3];
 static struct bt_data ad_nobredr = BT_DATA_BYTES(BT_DATA_FLAGS, BT_LE_AD_NO_BREDR);
 static struct bt_data ad_limited = BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_LIMITED | BT_LE_AD_NO_BREDR));
-static struct bt_data ad_uuid_16 = BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(0xfffd), BT_UUID_16_ENCODE(BT_UUID_DIS_VAL));
 
 //
 // BLEアドバタイズ開始
@@ -46,8 +46,8 @@ static void advertise(struct k_work *work)
         ad[0] = ad_nobredr;
     }
 
-    // サービスUUIDを設定
-    ad[1] = ad_uuid_16;
+    // BLE FIDOサービスUUIDを設定
+    app_ble_fido_ad_uuid_set(&ad[1]);
 
     // BLE SMPサービスUUIDを追加設定
     size_t ad_len = 2;

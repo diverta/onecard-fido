@@ -51,6 +51,7 @@ extern "C" {
 //
 // 関数群
 //
+void        app_ble_fido_ad_uuid_set(void *data);
 bool        app_ble_fido_send_data(const uint8_t *data, uint16_t len);
 bool        app_ble_fido_connected(void);
 

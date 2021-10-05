@@ -24,6 +24,11 @@ export NCS_HOME=${REPO_HOME}/pyvenvs/ncs
 export ZEPHYR_BASE=${NCS_HOME}/zephyr
 source ${NCS_HOME}/west-completion.bash
 
+# Retrieve config value from prj.conf
+retrieve_prj_conf() {
+    grep $1 prj.conf | sed -e "s/.*\"\(.*\)\"/\1/"
+}
+
 # Enter Python3 venv
 source ${NCS_HOME}/bin/activate
 
@@ -43,7 +48,9 @@ else
         exit 1
     fi
     # Deploy binary file for DFU
-    cp -pv build_signed/zephyr/app_update.bin ../firmwares/secure_device_app/
+    HW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_HW_REV_STR`
+    FW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_FW_REV_STR`
+    cp -pv build_signed/zephyr/app_update.bin ../firmwares/secure_device_app/app_update.${HW_REV_STR}.${FW_REV_STR}.bin
     echo Application binary for secure bootloader is now available.
 fi
 
