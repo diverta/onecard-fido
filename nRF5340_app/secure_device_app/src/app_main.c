@@ -72,6 +72,9 @@ void app_main_data_channel_initialized(void)
     // CTAP2で使用する機密データを初期化
     ctap2_client_pin_init();
 
+    // バージョンをデバッグ出力
+    LOG_INF("Secure device application (%s) version %s", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR);
+
     // 初期化処理完了
     initialized = true;
 }
