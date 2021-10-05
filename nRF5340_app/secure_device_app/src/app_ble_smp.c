@@ -20,7 +20,7 @@ static struct bt_data ad_uuid_smp = BT_DATA_BYTES(BT_DATA_UUID128_ALL, 0x84, 0xa
 bool app_ble_smp_ad_uuid_set(void *data)
 {
     struct bt_data *p_bt_data = (struct bt_data *)data;
-    p_bt_data = &ad_uuid_smp;
+    *p_bt_data = ad_uuid_smp;
     return true;
 }
 
