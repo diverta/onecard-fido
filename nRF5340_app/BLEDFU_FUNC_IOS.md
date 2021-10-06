@@ -131,7 +131,7 @@ class BaseViewController: UITabBarController {
 
 #### 画面からの起動
 
-ボタン押下＋モード選択（下記例では`Test and confirm`）により、`dfuManager.start`でファームウェア更新機能が起動されます。
+ボタン押下＋モード選択（下記例では`Test and confirm`）により、`dfuManager.start()`でファームウェア更新機能が起動されます。
 
 ```
 //
@@ -205,7 +205,7 @@ extension FirmwareUpgradeViewController: UIDocumentMenuDelegate, UIDocumentPicke
 ```
 
 処理の本体である`dfuManager`は、前述の`FirmwareUpgradeManager`クラスです。<br>
-`dfuManager.start`の実装は下記になります。
+`dfuManager.start()`の実装は下記になります。
 
 ```
 //
@@ -228,7 +228,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
 
 #### ファームウェア更新イメージ転送前の処理
 
-`FirmwareUpgradeManager.start`では、以下の処理が行われます。
+`FirmwareUpgradeManager.start()`では、以下の処理が行われます。
 
 - ファームウェア更新イメージのハッシュを計算
 - ファームウェア更新イメージのチェック
@@ -244,7 +244,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
         :
 ```
 
-次に、ファームウェア更新イメージについてのチェックを行うため、BLEペリフェラルデバイスにステータスを照会（`Validation`）します。
+次に、ファームウェア更新イメージについてのチェックを行うため、BLEペリフェラルデバイスにステータスを照会（`validate()`）します。
 
 ```
     public func start(data: Data) throws {
@@ -271,6 +271,23 @@ public class ImageManager: McuManager {
         send(op: .read, commandId: ID_STATE, payload: nil, callback: callback)
     }
     :
+```
+
+デバイスから受領するレスポンスは、以下のようなイメージになっています。
+
+```
+{
+    "images":[
+        {
+            "slot":0,"version":"0.0.0","hash":"QW8thibgCorU5iJir/u8gjaUju28TulJwyBdhSlq7pg=",
+            "bootable":true,"pending":false,"confirmed":true,"active":true,"permanent":false
+        },{
+            "slot":1,"version":"0.0.0","hash":"QW8thibgCorU5iJir/u8gjaUju28TulJwyBdhSlq7pg=",
+            "bootable":true,"pending":false,"confirmed":false,"active":false,"permanent":false
+        }
+    ],
+    "splitStatus":0
+}
 ```
 
 レスポンス`McuMgrImageStateResponse`を参照し、ファームウェア更新イメージについて、諸々チェックを行います。
@@ -325,7 +342,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
 
 #### ファームウェア更新イメージの転送
 
-`FirmwareUpgradeManager.upload`では、ファームウェア更新イメージの転送が行われます。
+`FirmwareUpgradeManager.upload()`では、ファームウェア更新イメージの転送が行われます。
 
 ```
 public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
@@ -337,7 +354,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
     }
 ```
 
-実処理は、`ImageManager.upload`で行われます。
+実処理は、`ImageManager.upload()`で行われます。
 
 ```
 public class ImageManager: McuManager {
@@ -355,8 +372,8 @@ public class ImageManager: McuManager {
     }
 ```
 
-転送処理では、後述の`McuMgrBleTransport.send`１回あたり送信バイト数上限（MTU）が存在するため、数回に分割送信されます。<br>
-下記の同名のサブルーチン`upload`が、分割送信のたびに呼び出されます。
+転送処理では、後述の`McuMgrBleTransport.send()`１回あたり送信バイト数上限（MTU）が存在するため、数回に分割送信されます。<br>
+下記の同名のサブルーチン`upload()`が、分割送信のたびに呼び出されます。
 
 ```
     public func upload(data: Data, image: Int, offset: UInt, callback: @escaping McuMgrCallback<McuMgrUploadResponse>) {
@@ -376,22 +393,12 @@ public class ImageManager: McuManager {
     }
 ```
 
-`send`による転送が完了すると、`uploadCallback`がコールバックされ、次の分割送信が実行されます。
+`send`による転送が完了すると、`uploadCallback()`がコールバックされ、次の分割送信が実行されます。
 
 ```
     private lazy var uploadCallback: McuMgrCallback<McuMgrUploadResponse> = {
         [weak self] (response: McuMgrUploadResponse?, error: Error?) in
         :
-        // Make sure the response is not nil.
-        guard let response = response else {
-            self.cancelUpload(error: ImageUploadError.invalidPayload)
-            return
-        }
-        // Check for an error return code.
-        guard response.isSuccess() else {
-            self.cancelUpload(error: ImageUploadError.mcuMgrErrorCode(response.returnCode))
-            return
-        }
         // Get the offset from the response.
         if let offset = response.off {
             // Set the image upload offset.
@@ -401,6 +408,7 @@ public class ImageManager: McuManager {
             if offset == imageData.count {
                 self.log(msg: "Upload finished", atLevel: .application)
                 self.resetUploadVariables()
+                self.uploadDelegate?.uploadDidFinish()
                 :
                 return
             }
@@ -416,25 +424,381 @@ public class ImageManager: McuManager {
     }
 ```
 
-全ての分割送信が完了した場合は、下記`resetUploadVariables`が呼び出され、終了処理が行われます。
+全ての分割送信が完了した場合は、`self.uploadDelegate?.uploadDidFinish()`が呼び出されます。<br>
+（実体は`FirmwareUpgradeManager.uploadDidFinish()`になります）
 
 ```
-    private func resetUploadVariables() {
-        objc_sync_enter(self)
-        // Reset upload state.
-        uploadState = .none
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    public func uploadDidFinish() {
+        // On a successful upload move to the next state.
+        switch mode {
+        case .confirmOnly:
+            confirm()
+        case .testOnly, .testAndConfirm:
+            test()
+        }
+    }
+```
 
-        // Deallocate and nil image data pointers.
-        imageData = nil
+#### ファームウェア更新イメージ転送後の処理
 
-        // Reset upload vars.
-        imageNumber = 0
-        offset = 0
-        objc_sync_exit(self)
+前述の通り、転送後の処理として、`FirmwareUpgradeManager.test()`が実行されます。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    private func test() {
+        setState(.test)
+        if !paused {
+            imageManager.test(hash: [UInt8](hash), callback: testCallback)
+        }
+    }
+```
+
+呼び出し先の`ImageManager.test()`では、`ID_STATE`コマンドが送信されます。
+
+```
+public class ImageManager: McuManager {
+    public func test(hash: [UInt8], callback: @escaping McuMgrCallback<McuMgrImageStateResponse>) {
+        let payload: [String:CBOR] = ["hash": CBOR.byteString(hash),
+                                      "confirm": CBOR.boolean(false)]
+        send(op: .write, commandId: ID_STATE, payload: payload, callback: callback)
+    }
+```
+
+送信リクエストおよびレスポンスは以下のイメージになります。
+
+```
+//
+// request payload
+//   転送したファームウェア更新イメージファイルのハッシュが送信されます。
+//
+{
+    "confirm":false,"hash":"n5/abwxPAbcaIAsYgsRMJSJsec1HIafpIq0j4N8Goso="
+}
+
+//
+// response payload
+//   requestに対する応答として、スロットの状況が戻ります。
+//
+{
+    "images":[
+        {
+            "slot":0,"version":"0.0.0","hash":"QW8thibgCorU5iJir/u8gjaUju28TulJwyBdhSlq7pg=",
+            "bootable":true,"pending":false,"confirmed":true,"active":true,"permanent":false
+        },{
+            "slot":1,"version":"0.0.0","hash":"n5/abwxPAbcaIAsYgsRMJSJsec1HIafpIq0j4N8Goso=",
+            "bootable":true,"pending":true,"confirmed":false,"active":false,"permanent":false
+        }
+    ],
+    "splitStatus":0
+}
+```
+
+#### デバイスのリセット
+
+続いて、`FirmwareUpgradeManager.testCallback()`がコールバックされます。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    private lazy var testCallback: McuMgrCallback<McuMgrImageStateResponse> =
+    { [weak self] (response: McuMgrImageStateResponse?, error: Error?) in
+        :
+        // Check that the image in slot 1 is pending (i.e. test succeeded).
+        if !images[1].pending {
+            self.fail(error: FirmwareUpgradeError.unknown("Tested image is not in a pending state."))
+            return
+        }
+        // Test image succeeded. Begin device reset.
+        self.reset()
+    }
+```
+
+呼び出し先の`FirmwareUpgradeManager.reset()`では、デバイスのリセット要求が行われます。<br>
+同時に、`addObserver()`で、リセット完了の監視を開始します。
+
+```
+    private func reset() {
+        setState(.reset)
+        if !paused {
+            defaultManager.transporter.addObserver(self)
+            defaultManager.reset(callback: resetCallback)
+        }
+    }
+```
+
+呼び出し先の`DefaultManager`では、コマンド`ID_RESET`の送信が行われます。<br>
+リクエスト、レスポンスともにブランクとなっております。
+
+```
+public class DefaultManager: McuManager {
+    public func reset(callback: @escaping McuMgrCallback<McuMgrResponse>) {
+        send(op: .write, commandId: ID_RESET, payload: nil, callback: callback)
+    }
+```
+
+リセット要求時は、まず`resetCallback()`が呼び出されます。
+
+```
+    private lazy var resetCallback: McuMgrCallback<McuMgrResponse> =
+    { [weak self] (response: McuMgrResponse?, error: Error?) in
+        :
+        // Check for McuMgrReturnCode error.
+        if !response.isSuccess() {
+            self.fail(error: FirmwareUpgradeError.mcuMgrReturnCodeError(response.returnCode))
+            return
+        }
+        self.resetResponseTime = Date()
+        self.log(msg: "Reset request sent. Waiting for reset...", atLevel: .application)
+    }
+```
+
+デバイスのリセットには10〜20秒程度かかりますので、その間は待ちとなります。<br>
+リセット後の再起動待ちは、`ConnectionObserver`が担当します。
+
+```
+//
+// McuMgrTransport.swift
+//
+/// The connection state observer protocol.
+public protocol ConnectionObserver: AnyObject {
+    /// Called whenever the peripheral state changes.
+    ///
+    /// - parameter transport: the Mcu Mgr transport object.
+    /// - parameter state: The new state of the peripheral.
+    func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState)
+}
+
+public protocol McuMgrTransport: AnyObject {
+    func addObserver(_ observer: ConnectionObserver);
+}
+```
+
+リセット後の再起動が行われると、`McuMgrTransportState`を経由し、`McuMgrBleTransport.transport()`が呼び出されます。
+
+```
+public class McuMgrBleTransport: NSObject {
+
+    private func notifyStateChanged(_ state: McuMgrTransportState) {
+        // The list of observers may be modified by each observer.
+        // Better iterate a copy of it.
+        let array = [ConnectionObserver](observers)
+        for observer in array {
+            observer.transport(self, didChangeStateTo: state)
+        }
+    }
+```
+
+`observer.transport()`の実体は、下記`FirmwareUpgradeManager.transport()`となっております。<br>
+ここで、再接続が実行されます。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    public func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState) {
+        transport.removeObserver(self)
+        :
+        let remainingTime = estimatedSwapTime - timeSinceReset
+        if remainingTime > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + remainingTime) { [weak self] in
+                self?.reconnect()
+            }
+        } else {
+            reconnect()
+        }
+    }
+
+    private func reconnect() {
+        imageManager.transporter.connect { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case .connected:
+                self.log(msg: "Reconnect successful.", atLevel: .info)
+                :
+                return
+            }
+
+            // Continue the upgrade after reconnect.
+            switch self.state {
+            :
+            case .reset:
+                switch self.mode {
+                :
+                default:
+                    self.log(msg: "Upgrade complete", atLevel: .application)
+                    self.success()
+                }
+            :
+            }
+        }
+    }
+```
+
+最終的には`delegate?.upgradeDidComplete()`（実体は`FirmwareUpgradeViewController.upgradeDidComplete()`）が呼び出され、画面に制御が戻ります。
+
+```
+    private func success() {
+        :
+        delegate?.upgradeDidComplete()
+        :
     }
 ```
 
 以上で、ファームウェア更新イメージ転送処理が完了します。
+
+#### ファームウェア更新イメージの反映
+
+転送されたファームウェア更新イメージを、nRF5340に反映します。<br>
+再度、先述の`FirmwareUpgradeManager.start()`から処理を実行します。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/Managers/DFU/FirmwareUpgradeManager.swift
+//
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    public func start(data: Data) throws {
+        :
+        imageData = data
+        hash = try McuMgrImage(data: imageData).hash
+        :
+        validate()
+        :
+    }
+
+    private func validate() {
+        setState(.validate)
+        if !paused {
+            imageManager.list(callback: validateCallback)
+        }
+    }
+```
+
+転送処理時と同様、下記のようなレスポンスが戻ります。
+
+```
+{
+    "images":[
+        {
+            "slot":0,"version":"0.0.0","hash":"n5/abwxPAbcaIAsYgsRMJSJsec1HIafpIq0j4N8Goso=",
+            "bootable":true,"pending":false,"confirmed":false,"active":true,"permanent":false
+        },{
+            "slot":1,"version":"0.0.0","hash":"QW8thibgCorU5iJir/u8gjaUju28TulJwyBdhSlq7pg=",
+            "bootable":true,"pending":false,"confirmed":true,"active":false,"permanent":false
+        }
+    ],
+    "splitStatus":0
+}
+```
+
+すでにファームウェア更新イメージが転送済みですので、下記コード<br>
+`Data(images[0].hash) == self.hash`かつ`images[0].confirmed == false`<br>
+のケースに該当します。
+
+ですので、`self.confirm()`が実行されます。
+
+```
+    private lazy var validateCallback: McuMgrCallback<McuMgrImageStateResponse> =
+    { [weak self] (response: McuMgrImageStateResponse?, error: Error?) in
+        :
+        // Check if the new firmware is different then the active one.
+        if Data(images[0].hash) == self.hash {
+            if images[0].confirmed {
+                :
+            } else {
+                // The new firmware is in test mode.
+                switch self.mode {
+                case .confirmOnly, .testAndConfirm:
+                    self.confirm()
+                    :
+                }
+            }
+            return
+        }
+    }
+
+    private func confirm() {
+        setState(.confirm)
+        if !paused {
+            imageManager.confirm(hash: [UInt8](hash), callback: confirmCallback)
+        }
+    }
+```
+
+`confirm`では、`ID_STATE`コマンドが送信されます。
+
+```
+    public func confirm(hash: [UInt8]? = nil, callback: @escaping McuMgrCallback<McuMgrImageStateResponse>) {
+        var payload: [String:CBOR] = ["confirm": CBOR.boolean(true)]
+        if let hash = hash {
+            payload.updateValue(CBOR.byteString(hash), forKey: "hash")
+        }
+        send(op: .write, commandId: ID_STATE, payload: payload, callback: callback)
+    }
+```
+
+送信リクエストおよびレスポンスは以下のイメージになります。
+
+```
+//
+// request payload
+//   転送したファームウェア更新イメージファイルのハッシュが送信されます。
+//
+{
+    "confirm":true,"hash":"n5/abwxPAbcaIAsYgsRMJSJsec1HIafpIq0j4N8Goso="
+}
+
+//
+// response payload
+//   requestに対する応答として、スロットの状況が戻ります。
+//
+{
+    "images":[
+        {
+            "slot":0,"version":"0.0.0","hash":"n5/abwxPAbcaIAsYgsRMJSJsec1HIafpIq0j4N8Goso=",
+            "bootable":true,"pending":false,"confirmed":true,"active":true,"permanent":false
+        },{
+            "slot":1,"version":"0.0.0","hash":"QW8thibgCorU5iJir/u8gjaUju28TulJwyBdhSlq7pg=",
+            "bootable":true,"pending":false,"confirmed":false,"active":false,"permanent":false
+        }
+    ],
+    "splitStatus":0
+}
+```
+
+最後に、`confirmCallback()`がコールバックされます。<br>
+デバイスの再リセットが不要であることに注意します。
+
+ここでも`FirmwareUpgradeManager.success()`が呼び出され、最終的に制御が画面に戻ります。
+
+```
+    private lazy var confirmCallback: McuMgrCallback<McuMgrImageStateResponse> =
+    { [weak self] (response: McuMgrImageStateResponse?, error: Error?) in
+        :
+        switch self.mode {
+        :
+        case .testAndConfirm:
+            // Check that the upgrade image has successfully booted.
+            if Data(images[0].hash) != self.hash {
+                self.fail(error: FirmwareUpgradeError.unknown("Device failed to boot into new image."))
+                return
+            }
+            // Check that the new image is in confirmed state.
+            if !images[0].confirmed {
+                self.fail(error: FirmwareUpgradeError.unknown("Image is not in a confirmed state."))
+                return
+            }
+            // Confirm successful.
+            self.log(msg: "Upgrade complete", atLevel: .application)
+            self.success()
+        case .testOnly:
+            // Impossible state. Ignore.
+            break
+        }
+    }
+}
+```
+
+以上で、ファームウェア更新イメージ反映処理が完了します。
 
 ## BLEトランスポートの実装
 
@@ -459,7 +823,7 @@ public protocol McuMgrTransport: AnyObject {
 }
 ```
 
-本ドキュメントでは、通常使用しないと思われる`getScheme`、`connect`、`addObserver`、`removeObserver`については調査を省略し、`send`、`close`についての調査内容を掲載します。
+本ドキュメントでは、通常使用しないと思われる`getScheme()`、`connect()`については調査を省略し、`send()`、`close()`についての調査内容を掲載します。
 
 #### init
 
