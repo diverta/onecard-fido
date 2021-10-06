@@ -61,10 +61,22 @@ void app_main_init(void)
 //
 void app_main_data_channel_initialized(void)
 {
+    // 初期化処理が実行済みの場合は終了
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+
     // BLEまたはUSB HID I/Fが使用可能になった場合、
     // 業務処理をオープンさせる前に、
     // CTAP2で使用する機密データを初期化
     ctap2_client_pin_init();
+
+    // バージョンをデバッグ出力
+    LOG_INF("Secure device application (%s) version %s", CONFIG_BT_DIS_HW_REV_STR, CONFIG_BT_DIS_FW_REV_STR);
+
+    // 初期化処理完了
+    initialized = true;
 }
 
 void app_main_hid_configured(void)

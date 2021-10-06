@@ -6,11 +6,13 @@
  */
 #include <string.h>
 
-#include "cbor.h"
-#include "ctap2_common.h"
+#include "ctap2_cbor.h"
 #include "ctap2_cbor_authgetinfo.h"
+#include "ctap2_cbor_define.h"
+#include "ctap2_cbor_encode.h"
 #include "ctap2_cbor_parse.h"
 #include "ctap2_client_pin_token.h"
+#include "ctap2_common.h"
 #include "ctap2_extension_hmac_secret.h"
 #include "ctap2_pubkey_credential.h"
 #include "fido_command_common.h"
@@ -93,7 +95,8 @@ uint8_t ctap2_make_credential_decode_request(uint8_t *cbor_data_buffer, size_t c
     ctap2_request.options.up = true;
 
     // CBOR parser初期化
-    ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
+    //   0x0fff: CborValidateCanonicalFormat
+    ret = ctap2_cbor_parser_init(cbor_data_buffer, cbor_data_length, 0x0fff, &parser, &it);
     if (ret != CborNoError) {
         return CTAP2_ERR_CBOR_PARSING;
     }
@@ -265,19 +268,19 @@ static uint8_t generate_credential_pubkey(uint8_t *keypair_public_key)
     // CBORエンコーダー初期化
     CborEncoder encoder;
     memset(credential_pubkey, 0x00, sizeof(credential_pubkey));
-    cbor_encoder_init(&encoder, credential_pubkey, sizeof(credential_pubkey), 0);
+    ctap2_cbor_encoder_init(&encoder, credential_pubkey, sizeof(credential_pubkey), 0);
 
     // CBORエンコード実行
     uint8_t *x = keypair_public_key;
     uint8_t *y = keypair_public_key + 32;
     int32_t alg = ctap2_request.cred_param.COSEAlgorithmIdentifier;
-    uint8_t ret = encode_cose_pubkey(&encoder, x, y, alg);
+    uint8_t ret = ctap2_cbor_encode_cose_pubkey(&encoder, x, y, alg);
     if (ret != CborNoError) {
         return CTAP1_ERR_OTHER;
     }
 
     // CBORエンコードデータ長を取得
-    credential_pubkey_size = cbor_encoder_get_buffer_size(&encoder, credential_pubkey);
+    credential_pubkey_size = ctap2_cbor_encoder_get_buffer_size(&encoder, credential_pubkey);
 
 #if LOG_DEBUG_AUTH_DATA_ITEMS
     fido_log_debug("credentialPublicKey CBOR(%d bytes):", credential_pubkey_size);
@@ -438,7 +441,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
 {
     // CBORエンコーダーを初期化
     CborEncoder encoder;
-    cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
+    ctap2_cbor_encoder_init(&encoder, encoded_buff, *encoded_buff_size, 0);
 
     // Map初期化
     CborEncoder map;
@@ -530,7 +533,7 @@ uint8_t ctap2_make_credential_encode_response(uint8_t *encoded_buff, size_t *enc
     }
 
     // CBORバッファの長さを設定
-    *encoded_buff_size = cbor_encoder_get_buffer_size(&encoder, encoded_buff);
+    *encoded_buff_size = ctap2_cbor_encoder_get_buffer_size(&encoder, encoded_buff);
 
 #if LOG_DEBUG_CBOR_RESPONSE
     fido_log_debug("authenticatorMakeCredential response(%d bytes):", *encoded_buff_size);
