@@ -552,28 +552,11 @@ public class DefaultManager: McuManager {
     }
 ```
 
-デバイスのリセットには10〜20秒程度かかりますので、その間は待ちとなります。<br>
-リセット後の再起動待ちは、`ConnectionObserver`が担当します。
+デバイスのリセットには10秒程度かかりますので、その間は待ちとなります。<br>
+当然のことながら、BLE接続は切れてしまいます。
 
-```
-//
-// McuMgrTransport.swift
-//
-/// The connection state observer protocol.
-public protocol ConnectionObserver: AnyObject {
-    /// Called whenever the peripheral state changes.
-    ///
-    /// - parameter transport: the Mcu Mgr transport object.
-    /// - parameter state: The new state of the peripheral.
-    func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState)
-}
-
-public protocol McuMgrTransport: AnyObject {
-    func addObserver(_ observer: ConnectionObserver);
-}
-```
-
-リセット後の再起動が行われると、`McuMgrTransportState`を経由し、`McuMgrBleTransport.transport()`が呼び出されます。
+リセット後のBLE切断を検知すると、`McuMgrBleTransport.notifyStateChanged()`を経由し、`ConnectionObserver.transport()`が呼び出されます。<br>
+（後述、`ConnectionObserver`に関する記述をご参照）
 
 ```
 public class McuMgrBleTransport: NSObject {
@@ -588,13 +571,19 @@ public class McuMgrBleTransport: NSObject {
     }
 ```
 
-`observer.transport()`の実体は、下記`FirmwareUpgradeManager.transport()`となっております。<br>
-ここで、再接続が実行されます。
+`ConnectionObserver.transport()`の実体は、下記`FirmwareUpgradeManager.transport()`となっております。<br>
+ここで、再接続が10秒後に実行されます。<br>
+（`dfuManager.estimatedSwapTime = 10.0`）
 
 ```
 public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
     public func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState) {
         transport.removeObserver(self)
+        // Disregard connected state.
+        guard state == .disconnected else {
+            return
+        }
+        self.log(msg: "Device has disconnected (reset). Reconnecting...", atLevel: .info)
         :
         let remainingTime = estimatedSwapTime - timeSinceReset
         if remainingTime > 0 {
@@ -614,8 +603,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
             switch result {
             case .connected:
                 self.log(msg: "Reconnect successful.", atLevel: .info)
-                :
-                return
+            :
             }
 
             // Continue the upgrade after reconnect.
@@ -790,9 +778,7 @@ public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObser
             // Confirm successful.
             self.log(msg: "Upgrade complete", atLevel: .application)
             self.success()
-        case .testOnly:
-            // Impossible state. Ignore.
-            break
+        :
         }
     }
 }
@@ -822,8 +808,6 @@ public protocol McuMgrTransport: AnyObject {
     func removeObserver(_ observer: ConnectionObserver);
 }
 ```
-
-本ドキュメントでは、通常使用しないと思われる`getScheme()`、`connect()`については調査を省略し、`send()`、`close()`についての調査内容を掲載します。
 
 #### init
 
@@ -979,3 +963,109 @@ extension McuMgrBleTransport: McuMgrTransport {
 [注2] ファームウェア更新イメージファイルに更新イメージが複数同梱されている場合、特定のイメージ番号を指定するユースケースを想定しているようです。本プロジェクトでは、１点の更新イメージしか搭載しないため、０固定となります。<br>
 [注3] 送信リトライ回数（`McuMgrBleTransport.MAX_RETRIES`）は３回となっています。<br>
 [注4] 接続されていない場合は接続まで待ち、BLE SMPサービスがディスカバーされていない場合はディスカバーを実行します。
+
+#### addObserver／removeObserver
+
+`McuMgrTransport`の`addObserver()`、`removeObserver()`は、接続状態変更監視を開始／終了させるための関数です。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/McuMgrTransport.swift
+//
+/// The connection state observer protocol.
+public protocol McuMgrTransport: AnyObject {
+    func addObserver(_ observer: ConnectionObserver);
+    func removeObserver(_ observer: ConnectionObserver);
+}
+```
+
+`McuMgrBleTransport`における実装は以下になります。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/Bluetooth/McuMgrBleTransport.swift
+//
+public class McuMgrBleTransport: NSObject {
+    /// An array of observers.
+    private var observers: [ConnectionObserver]
+
+    public func addObserver(_ observer: ConnectionObserver) {
+        observers.append(observer)
+    }
+
+    public func removeObserver(_ observer: ConnectionObserver) {
+        if let index = observers.firstIndex(where: {$0 === observer}) {
+            observers.remove(at: index)
+        }
+    }
+
+    private func notifyStateChanged(_ state: McuMgrTransportState) {
+        // The list of observers may be modified by each observer.
+        // Better iterate a copy of it.
+        let array = [ConnectionObserver](observers)
+        for observer in array {
+            observer.transport(self, didChangeStateTo: state)
+        }
+    }
+}    
+```
+
+`notifyStateChanged()`が呼び出されると、`addObserver`によって設定された`ConnectionObserver`を経由して`ConnectionObserver.transport()`が呼び出され、接続状態の変更内容に応じた処理を行う事ができます。
+
+#### ConnectionObserver
+
+デバイスが接続／切断状態になったことを監視するために用意されています。
+
+```
+//
+// IOS-nRF-Connect-Device-Manager/Source/McuMgrTransport.swift
+//
+/// The connection state observer protocol.
+public protocol ConnectionObserver: AnyObject {
+    /// Called whenever the peripheral state changes.
+    ///
+    /// - parameter transport: the Mcu Mgr transport object.
+    /// - parameter state: The new state of the peripheral.
+    func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState)
+}
+```
+
+`ConnectionObserver.transport()`は、クラス`FirmwareUpgradeManager`に実装されています。
+
+```
+public class FirmwareUpgradeManager : FirmwareUpgradeController, ConnectionObserver {
+    public func transport(_ transport: McuMgrTransport, didChangeStateTo state: McuMgrTransportState) {
+        transport.removeObserver(self)
+        // Disregard connected state.
+        guard state == .disconnected else {
+            return
+        }
+        self.log(msg: "Device has disconnected (reset). Reconnecting...", atLevel: .info)
+        :
+    }
+}
+```
+
+一方、`ConnectionObserver.transport()`は、前述の`McuMgrBleTransport.notifyStateChanged()`経由で呼び出されます。<br>
+すなわち、デバイスが接続／切断された時点（下記関数が実行された時点）で、`FirmwareUpgradeManager.transport()`が実行されます。
+
+```
+extension McuMgrBleTransport: CBCentralManagerDelegate {
+    public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        :
+        state = .disconnected
+        notifyStateChanged(.disconnected)
+    }
+}
+
+extension McuMgrBleTransport: CBPeripheralDelegate {
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didUpdateNotificationStateFor characteristic: CBCharacteristic,
+                           error: Error?) {
+        :
+        state = .connected
+        notifyStateChanged(.connected)
+        :
+    }
+}
+```
