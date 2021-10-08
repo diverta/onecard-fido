@@ -52,7 +52,7 @@
         }
         // BLEが無効化されている場合は通知
         if ([[self manager] state] != CBCentralManagerStatePoweredOn) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_PARING_ERR_BT_OFF error:nil];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_BLUETOOTH_OFF error:nil];
             return;
         }
         // 引数のサービスUUIDを有するペリフェラルのスキャン開始
@@ -101,7 +101,7 @@
         // スキャンを停止
         [self cancelScanForPeripherals];
         // スキャンタイムアウトの場合は通知
-        [[self delegate] helperDidFailConnectionWith:MSG_U2F_DEVICE_SCAN_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_DEVICE_SCAN_TIMEOUT error:nil];
     }
 
 #pragma mark - Connect peripheral
@@ -131,7 +131,7 @@
         // 接続タイムアウト監視を停止
         [self cancelConnectionTimeoutMonitor:peripheral];
         // 接続失敗を通知
-        [[self delegate] helperDidFailConnectionWith:MSG_U2F_DEVICE_CONNECT_FAILED error:error];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_DEVICE_CONNECT_FAILED error:error];
     }
 
     - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral
@@ -150,7 +150,7 @@
 
     - (void)connectionDidTimeout {
         // 接続タイムアウトを通知
-        [[self delegate] helperDidFailConnectionWith:MSG_U2F_DEVICE_CONNREQ_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_DEVICE_CONNREQ_TIMEOUT error:nil];
     }
 
 #pragma mark - Discover services
@@ -170,7 +170,7 @@
         [self cancelDiscoverServicesTimeoutMonitor:peripheral];
         // BLEサービスディスカバーに失敗の場合は通知
         if (error) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_SERVICE_NOT_DISCOVERED error:error];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_SERVICE_NOT_DISCOVERED error:error];
             return;
         }
         // サービスを判定し、その参照を保持
@@ -184,7 +184,7 @@
         }
         // サービスがない場合は通知
         if ([self connectedService] == nil) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_U2F_SERVICE_NOT_FOUND error:nil];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_SERVICE_NOT_FOUND error:nil];
             return;
         }
         // ディスカバー完了を通知
@@ -193,7 +193,7 @@
 
     - (void)discoverServicesDidTimeout {
         // サービスディスカバータイムアウトの場合は通知
-        [[self delegate] helperDidFailConnectionWith:MSG_DISCOVER_U2F_SERVICES_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_DISCOVER_SERVICE_TIMEOUT error:nil];
     }
 
 #pragma mark - Discover characteristics
@@ -217,7 +217,7 @@
         [self cancelDiscoverCharacteristicsTimeoutMonitor:service];
         // キャラクタリスティックのディスカバーエラー発生の場合は通知
         if (error) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_CHARACT_NOT_DISCOVERED error:error];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_CHARACT_NOT_DISCOVERED error:error];
             return;
         }
         // Notifyキャラクタリスティックに対する監視を開始
@@ -226,7 +226,7 @@
 
     - (void)discoverCharacteristicsDidTimeout {
         // キャラクタリスティック・ディスカバータイムアウトの場合は通知
-        [[self delegate] helperDidFailConnectionWith:MSG_DISCOVER_U2F_CHARAS_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_DISCOVER_CHARACT_TIMEOUT error:nil];
     }
 
 #pragma mark - Subscribe characteristic
@@ -234,7 +234,7 @@
     - (void)subscribeCharacteristic:(CBService *)service {
         // サービスにキャラクタリスティックがない場合は通知
         if ([[service characteristics] count] < 1) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_CHARACT_NOT_EXIST error:nil];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_CHARACT_NOT_EXIST error:nil];
             return;
         }
         // Write／Notifyキャラクタリスティックの参照を保持
@@ -261,7 +261,7 @@
         [self cancelSubscribeCharacteristicTimeoutMonitor:characteristic];
         // 監視開始エラー発生の場合は通知
         if (error) {
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_NOTIFICATION_FAILED error:error];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_NOTIFICATION_FAILED error:error];
             return;
         }
         if (characteristic.isNotifying) {
@@ -270,13 +270,13 @@
             [[self delegate] helperDidDiscoverCharacteristics];
         } else {
             // 監視が停止している場合は通知
-            [[self delegate] helperDidFailConnectionWith:MSG_BLE_NOTIFICATION_STOP error:nil];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_NOTIFICATION_STOP error:nil];
         }
     }
 
     - (void)subscribeCharacteristicDidTimeout {
         // 監視ステータス更新タイムアウトの旨をAppDelegateに通知
-        [[self delegate] helperDidFailConnectionWith:MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT error:nil];
     }
 
 #pragma mark - Write value for characteristics
@@ -292,7 +292,7 @@
                  error:(NSError *)error {
         // Writeキャラクタリスティック書込エラー発生の場合は通知
         if (error) {
-            [[self delegate] helperDidFailConnectionWith:MSG_REQUEST_SEND_FAILED error:error];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_REQUEST_SEND_FAILED error:error];
             return;
         }
         // 書込み完了を通知
@@ -312,7 +312,7 @@
         [self cancelResponseTimeoutMonitor:[self characteristicForNotify]];
         // Notifyキャラクタリスティックからデータ取得時にエラー発生の場合通知
         if (error) {
-            [[self delegate] helperDidFailConnectionWith:MSG_RESPONSE_RECEIVE_FAILED error:error];
+            [[self delegate] helperDidFailConnectionWith:BLE_ERR_RESPONSE_RECEIVE_FAILED error:error];
             return;
         }
         // 受信データを転送
@@ -321,7 +321,7 @@
 
     - (void)responseDidTimeout {
         // レスポンスタイムアウト発生の場合は通知
-        [[self delegate] helperDidFailConnectionWith:MSG_REQUEST_TIMEOUT error:nil];
+        [[self delegate] helperDidFailConnectionWith:BLE_ERR_REQUEST_TIMEOUT error:nil];
     }
 
 #pragma mark - Disconnect from peripheral

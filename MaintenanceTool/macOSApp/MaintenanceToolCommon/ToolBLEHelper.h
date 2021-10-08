@@ -10,6 +10,26 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
+// エラー種別
+typedef enum : NSInteger {
+    BLE_ERR_BLUETOOTH_OFF,
+    BLE_ERR_DEVICE_CONNECT_FAILED,
+    BLE_ERR_DEVICE_CONNREQ_TIMEOUT,
+    BLE_ERR_DEVICE_SCAN_TIMEOUT,
+    BLE_ERR_SERVICE_NOT_DISCOVERED,
+    BLE_ERR_SERVICE_NOT_FOUND,
+    BLE_ERR_DISCOVER_SERVICE_TIMEOUT,
+    BLE_ERR_CHARACT_NOT_DISCOVERED,
+    BLE_ERR_DISCOVER_CHARACT_TIMEOUT,
+    BLE_ERR_CHARACT_NOT_EXIST,
+    BLE_ERR_NOTIFICATION_FAILED,
+    BLE_ERR_NOTIFICATION_STOP,
+    BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT,
+    BLE_ERR_REQUEST_SEND_FAILED,
+    BLE_ERR_RESPONSE_RECEIVE_FAILED,
+    BLE_ERR_REQUEST_TIMEOUT,
+} BLEErrorReason;
+
 @protocol ToolBLEHelperDelegate;
 
 @interface ToolBLEHelper : NSObject
@@ -28,7 +48,7 @@
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)helperDidConnectPeripheral;
-    - (void)helperDidFailConnectionWith:(NSString *)message error:(NSError *)error;
+    - (void)helperDidFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error;
     - (void)helperDidDisconnect;
     - (void)helperDidDiscoverService;
     - (void)helperDidDiscoverCharacteristics;

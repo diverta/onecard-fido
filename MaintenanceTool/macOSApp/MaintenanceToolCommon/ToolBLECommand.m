@@ -349,18 +349,9 @@
         }
     }
 
-    - (void)helperDidFailConnectionWith:(NSString *)message error:(NSError *)error {
-        // BLEペアリング処理時のエラーメッセージを、適切なメッセージに変更する
-        if ([self command] == COMMAND_PAIRING) {
-            if ([message isEqualToString:MSG_U2F_DEVICE_SCAN_TIMEOUT]) {
-                message = MSG_BLE_PARING_ERR_TIMED_OUT;
-            } else if ([message isEqualToString:MSG_BLE_NOTIFICATION_FAILED]) {
-                message = MSG_BLE_PARING_ERR_PAIR_MODE;
-            } else if ([message isEqualToString:MSG_BLE_PARING_ERR_BT_OFF] == false) {
-                message = MSG_BLE_PARING_ERR_UNKNOWN;
-            }
-        }
+    - (void)helperDidFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
         // ログをファイル出力
+        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
         if (error) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
         } else {
@@ -375,6 +366,58 @@
         [self setLastCommandSuccess:false];
         // デバイス接続を切断
         [[self toolBLEHelper] helperWillDisconnect];
+    }
+
+    - (NSString *)helperMessageOnFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
+        // BLE処理時のエラーコードを、適切なメッセージに変更する
+        switch (reason) {
+            case BLE_ERR_BLUETOOTH_OFF:
+                return MSG_BLE_PARING_ERR_BT_OFF;
+            case BLE_ERR_DEVICE_CONNECT_FAILED:
+                return MSG_U2F_DEVICE_CONNECT_FAILED;
+            case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
+                return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
+            case BLE_ERR_DEVICE_SCAN_TIMEOUT:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_TIMED_OUT;
+                } else {
+                    return MSG_U2F_DEVICE_SCAN_TIMEOUT;
+                }
+            case BLE_ERR_SERVICE_NOT_DISCOVERED:
+                return MSG_BLE_SERVICE_NOT_DISCOVERED;
+            case BLE_ERR_SERVICE_NOT_FOUND:
+                return MSG_BLE_U2F_SERVICE_NOT_FOUND;
+            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
+                return MSG_DISCOVER_U2F_SERVICES_TIMEOUT;
+            case BLE_ERR_CHARACT_NOT_DISCOVERED:
+                return MSG_BLE_CHARACT_NOT_DISCOVERED;
+            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
+                return MSG_DISCOVER_U2F_CHARAS_TIMEOUT;
+            case BLE_ERR_CHARACT_NOT_EXIST:
+                return MSG_BLE_CHARACT_NOT_EXIST;
+            case BLE_ERR_NOTIFICATION_FAILED:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_PAIR_MODE;
+                } else {
+                    return MSG_BLE_NOTIFICATION_FAILED;
+                }
+            case BLE_ERR_NOTIFICATION_STOP:
+                return MSG_BLE_NOTIFICATION_STOP;
+            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
+                return MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT;
+            case BLE_ERR_REQUEST_SEND_FAILED:
+                return MSG_REQUEST_SEND_FAILED;
+            case BLE_ERR_RESPONSE_RECEIVE_FAILED:
+                return MSG_RESPONSE_RECEIVE_FAILED;
+            case BLE_ERR_REQUEST_TIMEOUT:
+                return MSG_REQUEST_TIMEOUT;
+            default:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_UNKNOWN;
+                } else {
+                    return MSG_OCCUR_BLECONN_ERROR;
+                }
+        }
     }
 
     - (void)helperDidReadForCharacteristic:(NSData *)responseMessage {
