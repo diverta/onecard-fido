@@ -2,7 +2,7 @@
 //  ToolBLEHelper.h
 //  MaintenanceTool
 //
-//  Created by Makoto Morita on 2018/01/22.
+//  Created by Makoto Morita on 2021/10/07.
 //
 #ifndef ToolBLEHelper_h
 #define ToolBLEHelper_h
@@ -12,30 +12,28 @@
 
 @protocol ToolBLEHelperDelegate;
 
-    @interface ToolBLEHelper : NSObject
-
-    @property (nonatomic, strong) NSString *serviceName;
-    @property (nonatomic, strong) NSArray  *serviceUUIDs;
-    @property (nonatomic, strong) NSArray  *characteristicUUIDs;
-
-    @property (nonatomic, weak)   id<ToolBLEHelperDelegate> delegate;
+@interface ToolBLEHelper : NSObject
 
     - (id)initWithDelegate:(id<ToolBLEHelperDelegate>)delegate;
-    - (void)centralManagerWillConnect;
-    - (void)centralManagerWillDisconnect;
-    - (void)centralManagerWillSend:(NSArray<NSData *> *)bleMessages;
-    - (void)centralManagerWillStartResponseTimeout;
+    - (void)helperWillConnectWithUUID:(NSString *)uuidString;
+    - (void)helperWillDisconnect;
+    - (void)helperWillDiscoverServiceWithUUID:(NSString *)uuidString;
+    - (void)helperWillDiscoverCharacteristicsWithUUIDs:(NSArray<NSString *> *)uuids;
+    - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage;
+    - (void)helperWillReadForCharacteristics;
 
 @end
 
 @protocol ToolBLEHelperDelegate <NSObject>
 
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
-
-    - (void)centralManagerDidConnect;
-    - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error;
-    - (void)centralManagerDidReceive:(NSData *)bleMessage;
-    - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error;
+    - (void)helperDidConnectPeripheral;
+    - (void)helperDidFailConnectionWith:(NSString *)message error:(NSError *)error;
+    - (void)helperDidDisconnectWith:(NSString *)message error:(NSError *)error;
+    - (void)helperDidDiscoverService;
+    - (void)helperDidDiscoverCharacteristics;
+    - (void)helperDidWriteForCharacteristics;
+    - (void)helperDidReadForCharacteristic:(NSData *)responseMessage;
 
 @end
 

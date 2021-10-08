@@ -30,7 +30,7 @@
 		7A54339D2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A54339C2328C3F100F2FCA5 /* ToolU2FHealthCheckCommand.m */; };
 		7A568BEC2590326A006B5F5E /* PIVPreferenceWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */; };
 		7A568BEF2590451F006B5F5E /* PIVPreferenceWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */; };
-		7A5E6160270EC2D400C4AA3D /* ToolBLEConnectionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5E615F270EC2D400C4AA3D /* ToolBLEConnectionHelper.m */; };
+		7A5E6160270EC2D400C4AA3D /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */; };
 		7A629F4524C00245007ABA89 /* ToolContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A629F4424C00245007ABA89 /* ToolContext.m */; };
 		7A66721F258ADEDE00CAF308 /* ToolInfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */; };
 		7A667221258ADF5000CAF308 /* ToolInfoWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A667220258ADF5000CAF308 /* ToolInfoWindow.m */; };
@@ -47,9 +47,7 @@
 		7A8AEBEB240358760098FE35 /* DFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8AEBEA240358760098FE35 /* DFUStartWindow.m */; };
 		7A8AEBF1240393E00098FE35 /* DFUProcessingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8AEBF0240393E00098FE35 /* DFUProcessingWindow.m */; };
 		7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A8E0E2623791A2D00B47026 /* ToolLogFile.m */; };
-		7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274012105AB950062FA89 /* ToolTimer.m */; };
 		7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274032105AB950062FA89 /* ToolBLECommand.m */; };
-		7A92740D2105AB960062FA89 /* ToolBLEHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9274042105AB950062FA89 /* ToolBLEHelper.m */; };
 		7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A92740A2105AB960062FA89 /* ToolCommon.m */; };
 		7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */; };
 		7A9829C425C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip in Resources */ = {isa = PBXBuildFile; fileRef = 7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */; };
@@ -120,8 +118,8 @@
 		7A568BEB2590326A006B5F5E /* PIVPreferenceWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PIVPreferenceWindow.xib; sourceTree = "<group>"; };
 		7A568BED259044AF006B5F5E /* PIVPreferenceWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PIVPreferenceWindow.h; sourceTree = "<group>"; };
 		7A568BEE2590451F006B5F5E /* PIVPreferenceWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PIVPreferenceWindow.m; sourceTree = "<group>"; };
-		7A5E615E270EC2B700C4AA3D /* ToolBLEConnectionHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEConnectionHelper.h; sourceTree = "<group>"; };
-		7A5E615F270EC2D400C4AA3D /* ToolBLEConnectionHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEConnectionHelper.m; sourceTree = "<group>"; };
+		7A5E615E270EC2B700C4AA3D /* ToolBLEHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
+		7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
 		7A629F4424C00245007ABA89 /* ToolContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolContext.m; sourceTree = "<group>"; };
 		7A629F4624C00262007ABA89 /* ToolContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolContext.h; sourceTree = "<group>"; };
 		7A66721E258ADEDE00CAF308 /* ToolInfoWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolInfoWindow.xib; sourceTree = "<group>"; };
@@ -151,14 +149,10 @@
 		7A8AEBF0240393E00098FE35 /* DFUProcessingWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DFUProcessingWindow.m; sourceTree = "<group>"; };
 		7A8E0E2523791A0A00B47026 /* ToolLogFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolLogFile.h; sourceTree = "<group>"; };
 		7A8E0E2623791A2D00B47026 /* ToolLogFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolLogFile.m; sourceTree = "<group>"; };
-		7A9274012105AB950062FA89 /* ToolTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTimer.m; sourceTree = "<group>"; };
 		7A9274022105AB950062FA89 /* ToolBLECommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLECommand.h; sourceTree = "<group>"; };
 		7A9274032105AB950062FA89 /* ToolBLECommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLECommand.m; sourceTree = "<group>"; };
-		7A9274042105AB950062FA89 /* ToolBLEHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLEHelper.m; sourceTree = "<group>"; };
 		7A9274052105AB950062FA89 /* ToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommon.h; sourceTree = "<group>"; };
-		7A9274062105AB950062FA89 /* ToolBLEHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLEHelper.h; sourceTree = "<group>"; };
 		7A9274072105AB960062FA89 /* ToolCommonMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolCommonMessage.h; sourceTree = "<group>"; };
-		7A9274092105AB960062FA89 /* ToolTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTimer.h; sourceTree = "<group>"; };
 		7A92740A2105AB960062FA89 /* ToolCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolCommon.m; sourceTree = "<group>"; };
 		7A9829C125C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_02.0.3.0.zip; sourceTree = "<group>"; };
 		7A9829C225C0EC7300820D02 /* appkg.PCA10059_01.0.3.0.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = appkg.PCA10059_01.0.3.0.zip; sourceTree = "<group>"; };
@@ -379,17 +373,13 @@
 		7A9273FF2105AB590062FA89 /* MaintenanceToolCommon */ = {
 			isa = PBXGroup;
 			children = (
-				7A5E615E270EC2B700C4AA3D /* ToolBLEConnectionHelper.h */,
-				7A5E615F270EC2D400C4AA3D /* ToolBLEConnectionHelper.m */,
-				7A9274062105AB950062FA89 /* ToolBLEHelper.h */,
-				7A9274042105AB950062FA89 /* ToolBLEHelper.m */,
+				7A5E615E270EC2B700C4AA3D /* ToolBLEHelper.h */,
+				7A5E615F270EC2D400C4AA3D /* ToolBLEHelper.m */,
 				7A9274022105AB950062FA89 /* ToolBLECommand.h */,
 				7A9274032105AB950062FA89 /* ToolBLECommand.m */,
 				7A9274052105AB950062FA89 /* ToolCommon.h */,
 				7A92740A2105AB960062FA89 /* ToolCommon.m */,
 				7A9274072105AB960062FA89 /* ToolCommonMessage.h */,
-				7A9274092105AB960062FA89 /* ToolTimer.h */,
-				7A9274012105AB950062FA89 /* ToolTimer.m */,
 				7A0D20BD224089E70022EA8E /* ToolHIDHelper.h */,
 				7A0D20BB2240899B0022EA8E /* ToolHIDHelper.m */,
 				7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */,
@@ -533,7 +523,6 @@
 				7A16228F226DC24B00FC5F07 /* AES256CBC.c in Sources */,
 				7A75A6EE25678037003AF1A6 /* ToolCCIDHelper.m in Sources */,
 				7A9F1060226DB4EE007AEB41 /* fido_blob.c in Sources */,
-				7A92740B2105AB960062FA89 /* ToolTimer.m in Sources */,
 				64ED9A861647439300F39EAE /* main.m in Sources */,
 				7A92740C2105AB960062FA89 /* ToolBLECommand.m in Sources */,
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
@@ -566,12 +555,11 @@
 				7A850B8D227011F400F7BCD8 /* PinCodeParamWindow.m in Sources */,
 				7AEE1DDF23BB33EE008A00C7 /* ToolDFUCommand.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
-				7A5E6160270EC2D400C4AA3D /* ToolBLEConnectionHelper.m in Sources */,
+				7A5E6160270EC2D400C4AA3D /* ToolBLEHelper.m in Sources */,
 				7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */,
 				7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */,
 				7AB119F5236182E900EEFF6C /* ToolPreferenceCommand.m in Sources */,
 				7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */,
-				7A92740D2105AB960062FA89 /* ToolBLEHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
