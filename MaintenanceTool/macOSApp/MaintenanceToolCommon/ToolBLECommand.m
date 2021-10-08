@@ -390,7 +390,7 @@
         }
     }
 
-    - (void)helperDidDisconnectWith:(NSString *)message error:(NSError *)error {
+    - (void)helperDidDisconnect {
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;

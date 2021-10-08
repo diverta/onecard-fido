@@ -145,7 +145,7 @@
             [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_DISCONNECTED];
         }
         // 切断完了を通知
-        [[self delegate] helperDidDisconnectWith:nil error:nil];
+        [[self delegate] helperDidDisconnect];
     }
 
     - (void)connectionDidTimeout {
@@ -331,7 +331,7 @@
         if ([self connectedPeripheral] != nil) {
             [[self manager] cancelPeripheralConnection:[self connectedPeripheral]];
         } else {
-            [[self delegate] helperDidDisconnectWith:nil error:nil];
+            [[self delegate] helperDidDisconnect];
         }
     }
 

@@ -29,7 +29,7 @@
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)helperDidConnectPeripheral;
     - (void)helperDidFailConnectionWith:(NSString *)message error:(NSError *)error;
-    - (void)helperDidDisconnectWith:(NSString *)message error:(NSError *)error;
+    - (void)helperDidDisconnect;
     - (void)helperDidDiscoverService;
     - (void)helperDidDiscoverCharacteristics;
     - (void)helperDidWriteForCharacteristics;
