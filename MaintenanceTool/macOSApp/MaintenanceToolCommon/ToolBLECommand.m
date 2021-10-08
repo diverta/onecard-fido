@@ -316,16 +316,22 @@
 #pragma mark - Call back from ToolBLEHelper
 
     - (void)helperDidConnectPeripheral {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
         NSString *uuidString = U2FServiceUUID;
         [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:uuidString];
     }
 
     - (void)helperDidDiscoverService {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
         NSArray<NSString *> *characteristicUUIDs = @[U2FControlPointCharUUID, U2FStatusCharUUID];
         [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
     }
 
     - (void)helperDidDiscoverCharacteristics {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
         // 送信済フレーム数をクリア
         [self setBleRequestFrameNumber:0];
         // U2F Control Pointに、実行するコマンドを書き込み

@@ -75,7 +75,7 @@
 
     - (void)cancelScanForPeripherals {
         // スキャンを停止
-        [self.manager stopScan];
+        [[self manager] stopScan];
         [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_STOPPED];
     }
 
@@ -121,7 +121,6 @@
         }
         // 接続されたペリフェラルの参照を保持
         [self setConnectedPeripheral:peripheral];
-        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
         // 接続完了を通知
         [[self delegate] helperDidConnectPeripheral];
     }
@@ -178,7 +177,6 @@
         for (CBService *service in [peripheral services]) {
             if ([[self serviceUUIDs] containsObject:service.UUID]) {
                 [self setConnectedService:service];
-                [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
                 break;
             }
         }
@@ -264,9 +262,8 @@
             [[self delegate] helperDidFailConnectionWith:BLE_ERR_NOTIFICATION_FAILED error:error];
             return;
         }
-        if (characteristic.isNotifying) {
+        if ([characteristic isNotifying]) {
             // 監視開始の場合は、ディスカバー完了を通知
-            [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
             [[self delegate] helperDidDiscoverCharacteristics];
         } else {
             // 監視が停止している場合は通知
