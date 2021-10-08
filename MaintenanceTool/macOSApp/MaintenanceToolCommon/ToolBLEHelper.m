@@ -6,7 +6,6 @@
 //
 #import "ToolBLEHelper.h"
 #import "ToolCommonMessage.h"
-#import "ToolLogFile.h"
 
 @interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -68,7 +67,7 @@
         // BLEペリフェラルをスキャン
         [self setConnectedPeripheral:nil];
         [[self manager] scanForPeripheralsWithServices:nil options:scanningOptions];
-        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_START];
+        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_SCAN_START error:nil];
         // スキャンタイムアウト監視を開始
         [self startScanningTimeoutMonitor];
     }
@@ -76,7 +75,7 @@
     - (void)cancelScanForPeripherals {
         // スキャンを停止
         [[self manager] stopScan];
-        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_STOPPED];
+        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_SCAN_STOPPED error:nil];
     }
 
     - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
@@ -138,11 +137,7 @@
         // ペリフェラルの参照を解除
         [self setConnectedPeripheral:nil];
         // ログをファイル出力
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", MSG_U2F_DEVICE_DISCONNECTED, [error description]];
-        } else {
-            [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_DISCONNECTED];
-        }
+        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_DISCONNECTED error:error];
         // 切断完了を通知
         [[self delegate] helperDidDisconnect];
     }

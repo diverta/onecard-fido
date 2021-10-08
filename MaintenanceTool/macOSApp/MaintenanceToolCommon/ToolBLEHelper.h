@@ -15,6 +15,9 @@ typedef enum : NSInteger {
     BLE_ERR_BLUETOOTH_OFF,
     BLE_ERR_DEVICE_CONNECT_FAILED,
     BLE_ERR_DEVICE_CONNREQ_TIMEOUT,
+    BLE_ERR_DEVICE_DISCONNECTED,
+    BLE_ERR_DEVICE_SCAN_START,
+    BLE_ERR_DEVICE_SCAN_STOPPED,
     BLE_ERR_DEVICE_SCAN_TIMEOUT,
     BLE_ERR_SERVICE_NOT_DISCOVERED,
     BLE_ERR_SERVICE_NOT_FOUND,
@@ -54,6 +57,7 @@ typedef enum : NSInteger {
     - (void)helperDidDiscoverCharacteristics;
     - (void)helperDidWriteForCharacteristics;
     - (void)helperDidReadForCharacteristic:(NSData *)responseMessage;
+    - (void)helperNotifyStatus:(BLEErrorReason)reason error:(NSError *)error;
 
 @end
 

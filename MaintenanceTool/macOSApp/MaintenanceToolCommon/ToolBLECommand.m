@@ -374,6 +374,16 @@
         [[self toolBLEHelper] helperWillDisconnect];
     }
 
+    - (void)helperNotifyStatus:(BLEErrorReason)reason error:(NSError *)error {
+        // ログをファイル出力
+        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
+        } else {
+            [[ToolLogFile defaultLogger] info:message];
+        }
+    }
+
     - (NSString *)helperMessageOnFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
         // BLE処理時のエラーコードを、適切なメッセージに変更する
         switch (reason) {
@@ -383,6 +393,12 @@
                 return MSG_U2F_DEVICE_CONNECT_FAILED;
             case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
                 return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
+            case BLE_ERR_DEVICE_DISCONNECTED:
+                return MSG_U2F_DEVICE_DISCONNECTED;
+            case BLE_ERR_DEVICE_SCAN_START:
+                return MSG_U2F_DEVICE_SCAN_START;
+            case BLE_ERR_DEVICE_SCAN_STOPPED:
+                return MSG_U2F_DEVICE_SCAN_STOPPED;
             case BLE_ERR_DEVICE_SCAN_TIMEOUT:
                 if ([self command] == COMMAND_PAIRING) {
                     return MSG_BLE_PARING_ERR_TIMED_OUT;
