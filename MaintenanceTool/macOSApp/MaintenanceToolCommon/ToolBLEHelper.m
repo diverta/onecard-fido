@@ -14,7 +14,8 @@
     @property(nonatomic) CBPeripheral       *connectedPeripheral;
     @property(nonatomic) CBService          *connectedService;
     @property(nonatomic) CBCharacteristic   *characteristicForWrite;
-    @property(nonatomic) CBCharacteristic   *characteristicForNotify;;
+    @property(nonatomic) CBCharacteristic   *characteristicForWriteNoResp;
+    @property(nonatomic) CBCharacteristic   *characteristicForNotify;
     @property(nonatomic, strong) NSArray    *serviceUUIDs;
     @property(nonatomic, strong) NSArray    *characteristicUUIDs;
 
@@ -232,11 +233,16 @@
         }
         // Write／Notifyキャラクタリスティックの参照を保持
         [self setCharacteristicForWrite:nil];
+        [self setCharacteristicForWriteNoResp:nil];
         [self setCharacteristicForNotify:nil];
         for (CBCharacteristic *characteristic in [service characteristics]) {
             if ([characteristic properties] & CBCharacteristicPropertyWrite) {
                 [self setCharacteristicForWrite:characteristic];
-            } else if ([characteristic properties] & CBCharacteristicPropertyNotify) {
+            }
+            if ([characteristic properties] & CBCharacteristicPropertyWriteWithoutResponse) {
+                [self setCharacteristicForWriteNoResp:characteristic];
+            }
+            if ([characteristic properties] & CBCharacteristicPropertyNotify) {
                 [self setCharacteristicForNotify:characteristic];
             }
         }
@@ -275,9 +281,16 @@
 
     - (void)helperWillWriteForCharacteristics:(NSData *)requestMessage {
         // Writeキャラクタリスティックへの書き込みを開始
-        [[self connectedPeripheral] writeValue:requestMessage
-                             forCharacteristic:[self characteristicForWrite]
-                                          type:CBCharacteristicWriteWithResponse];
+        if ([self characteristicForWrite]) {
+            [[self connectedPeripheral] writeValue:requestMessage
+                                 forCharacteristic:[self characteristicForWrite]
+                                              type:CBCharacteristicWriteWithResponse];
+        } else if ([self characteristicForWriteNoResp]) {
+            [[self connectedPeripheral] writeValue:requestMessage
+                                 forCharacteristic:[self characteristicForWriteNoResp]
+                                              type:CBCharacteristicWriteWithoutResponse];
+            [[self delegate] helperDidWriteForCharacteristics];
+        }
     }
 
     - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
@@ -288,7 +301,9 @@
             return;
         }
         // 書込み完了を通知
-        [[self delegate] helperDidWriteForCharacteristics];
+        if ([self characteristicForWrite]) {
+            [[self delegate] helperDidWriteForCharacteristics];
+        }
     }
 
 #pragma mark - Read value for characteristics
