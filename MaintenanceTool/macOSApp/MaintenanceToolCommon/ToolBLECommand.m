@@ -14,13 +14,17 @@
 #import "ToolU2FHealthCheckCommand.h"
 #import "ToolLogFile.h"
 
+#define U2FServiceUUID          @"0000FFFD-0000-1000-8000-00805F9B34FB"
+#define U2FControlPointCharUUID @"F1D0FFF1-DEAA-ECEE-B42F-C9BA7ED623BB"
+#define U2FStatusCharUUID       @"F1D0FFF2-DEAA-ECEE-B42F-C9BA7ED623BB"
+
 @interface ToolBLECommand () <ToolBLEHelperDelegate>
     // コマンドを保持
     @property (nonatomic) Command   command;
     // 送信PINGデータを保持
     @property (nonatomic) NSData   *pingData;
     // BLE接続に関する情報を保持
-    @property (nonatomic) ToolBLEHelper     *toolBLECentral;
+    @property (nonatomic) ToolBLEHelper     *toolBLEHelper;
     @property (nonatomic) NSUInteger         bleConnectionRetryCount;
     @property (nonatomic) bool               bleTransactionStarted;
     @property (nonatomic) NSString          *lastCommandMessage;
@@ -29,6 +33,8 @@
     @property (nonatomic) NSArray<NSData *> *bleRequestArray;
     @property (nonatomic) NSData            *bleResponseData;
     @property (nonatomic) uint8_t            bleResponseCmd;
+    // 送信フレーム数を保持
+    @property (nonatomic) NSUInteger         bleRequestFrameNumber;
     // 処理クラス
     @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
     @property (nonatomic) ToolU2FHealthCheckCommand   *toolU2FHealthCheckCommand;
@@ -44,7 +50,7 @@
         self = [super init];
         if (self) {
             [self setDelegate:delegate];
-            [self setToolBLECentral:[[ToolBLEHelper alloc] initWithDelegate:self]];
+            [self setToolBLEHelper:[[ToolBLEHelper alloc] initWithDelegate:self]];
             [self setToolCTAP2HealthCheckCommand:[[ToolCTAP2HealthCheckCommand alloc] init]];
             [[self toolCTAP2HealthCheckCommand] setTransportParam:TRANSPORT_BLE
                                                    toolBLECommand:self
@@ -304,29 +310,54 @@
         // ポップアップ表示させるためのリザルトを保持
         [self setLastCommandSuccess:result];
         // デバイス接続を切断
-        [[self toolBLECentral] centralManagerWillDisconnect];
+        [[self toolBLEHelper] helperWillDisconnect];
     }
 
-#pragma mark - Call back from ToolBLECentral
+#pragma mark - Call back from ToolBLEHelper
 
-    - (void)centralManagerDidConnect {
-        // U2F Control Pointに実行コマンドを書込
-        [[self toolBLECentral] centralManagerWillSend:[self bleRequestArray]];
+    - (void)helperDidConnectPeripheral {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
+        NSString *uuidString = U2FServiceUUID;
+        [[self toolBLEHelper] helperWillDiscoverServiceWithUUID:uuidString];
+    }
+
+    - (void)helperDidDiscoverService {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_BLE_U2F_SERVICE_FOUND];
+        NSArray<NSString *> *characteristicUUIDs = @[U2FControlPointCharUUID, U2FStatusCharUUID];
+        [[self toolBLEHelper] helperWillDiscoverCharacteristicsWithUUIDs:characteristicUUIDs];
+    }
+
+    - (void)helperDidDiscoverCharacteristics {
+        // ログを出力
+        [[ToolLogFile defaultLogger] info:MSG_BLE_NOTIFICATION_START];
+        // 送信済フレーム数をクリア
+        [self setBleRequestFrameNumber:0];
+        // U2F Control Pointに、実行するコマンドを書き込み
+        NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
+        [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
         [self setBleTransactionStarted:true];
     }
 
-    - (void)centralManagerDidFailConnectionWith:(NSString *)message error:(NSError *)error {
-        // BLEペアリング処理時のエラーメッセージを、適切なメッセージに変更する
-        if ([self command] == COMMAND_PAIRING) {
-            if ([message isEqualToString:MSG_U2F_DEVICE_SCAN_TIMEOUT]) {
-                message = MSG_BLE_PARING_ERR_TIMED_OUT;
-            } else if ([message isEqualToString:MSG_BLE_NOTIFICATION_FAILED]) {
-                message = MSG_BLE_PARING_ERR_PAIR_MODE;
-            } else if ([message isEqualToString:MSG_BLE_PARING_ERR_BT_OFF] == false) {
-                message = MSG_BLE_PARING_ERR_UNKNOWN;
-            }
+    - (void)helperDidWriteForCharacteristics {
+        // 送信済みフレーム数を設定
+        [self setBleRequestFrameNumber:([self bleRequestFrameNumber] + 1)];
+        // 後続処理有無の判定
+        if ([self bleRequestFrameNumber] == [[self bleRequestArray] count]) {
+            // 全フレームが送信済であれば、U2F Status経由のレスポンス待ち（レスポンスタイムアウト監視開始）
+            [[self toolBLEHelper] helperWillReadForCharacteristics];
+            [[ToolLogFile defaultLogger] info:MSG_REQUEST_SENT];
+        } else {
+            // U2F Control Pointへ、後続フレームの書き込みを実行
+            NSData *value = [[self bleRequestArray] objectAtIndex:[self bleRequestFrameNumber]];
+            [[self toolBLEHelper] helperWillWriteForCharacteristics:value];
         }
+    }
+
+    - (void)helperDidFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
         // ログをファイル出力
+        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
         if (error) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
         } else {
@@ -340,13 +371,81 @@
         // ポップアップ表示させるためのリザルトを保持
         [self setLastCommandSuccess:false];
         // デバイス接続を切断
-        [[self toolBLECentral] centralManagerWillDisconnect];
+        [[self toolBLEHelper] helperWillDisconnect];
     }
 
-    - (void)centralManagerDidReceive:(NSData *)bleMessage {
-        if ([self isResponseCompleted:bleMessage]) {
+    - (void)helperNotifyStatus:(BLEErrorReason)reason error:(NSError *)error {
+        // ログをファイル出力
+        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
+        } else {
+            [[ToolLogFile defaultLogger] info:message];
+        }
+    }
+
+    - (NSString *)helperMessageOnFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
+        // BLE処理時のエラーコードを、適切なメッセージに変更する
+        switch (reason) {
+            case BLE_ERR_BLUETOOTH_OFF:
+                return MSG_BLE_PARING_ERR_BT_OFF;
+            case BLE_ERR_DEVICE_CONNECT_FAILED:
+                return MSG_U2F_DEVICE_CONNECT_FAILED;
+            case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
+                return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
+            case BLE_ERR_DEVICE_DISCONNECTED:
+                return MSG_U2F_DEVICE_DISCONNECTED;
+            case BLE_ERR_DEVICE_SCAN_START:
+                return MSG_U2F_DEVICE_SCAN_START;
+            case BLE_ERR_DEVICE_SCAN_STOPPED:
+                return MSG_U2F_DEVICE_SCAN_STOPPED;
+            case BLE_ERR_DEVICE_SCAN_TIMEOUT:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_TIMED_OUT;
+                } else {
+                    return MSG_U2F_DEVICE_SCAN_TIMEOUT;
+                }
+            case BLE_ERR_SERVICE_NOT_DISCOVERED:
+                return MSG_BLE_SERVICE_NOT_DISCOVERED;
+            case BLE_ERR_SERVICE_NOT_FOUND:
+                return MSG_BLE_U2F_SERVICE_NOT_FOUND;
+            case BLE_ERR_DISCOVER_SERVICE_TIMEOUT:
+                return MSG_DISCOVER_U2F_SERVICES_TIMEOUT;
+            case BLE_ERR_CHARACT_NOT_DISCOVERED:
+                return MSG_BLE_CHARACT_NOT_DISCOVERED;
+            case BLE_ERR_DISCOVER_CHARACT_TIMEOUT:
+                return MSG_DISCOVER_U2F_CHARAS_TIMEOUT;
+            case BLE_ERR_CHARACT_NOT_EXIST:
+                return MSG_BLE_CHARACT_NOT_EXIST;
+            case BLE_ERR_NOTIFICATION_FAILED:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_PAIR_MODE;
+                } else {
+                    return MSG_BLE_NOTIFICATION_FAILED;
+                }
+            case BLE_ERR_NOTIFICATION_STOP:
+                return MSG_BLE_NOTIFICATION_STOP;
+            case BLE_ERR_SUBSCRIBE_CHARACT_TIMEOUT:
+                return MSG_SUBSCRIBE_U2F_STATUS_TIMEOUT;
+            case BLE_ERR_REQUEST_SEND_FAILED:
+                return MSG_REQUEST_SEND_FAILED;
+            case BLE_ERR_RESPONSE_RECEIVE_FAILED:
+                return MSG_RESPONSE_RECEIVE_FAILED;
+            case BLE_ERR_REQUEST_TIMEOUT:
+                return MSG_REQUEST_TIMEOUT;
+            default:
+                if ([self command] == COMMAND_PAIRING) {
+                    return MSG_BLE_PARING_ERR_UNKNOWN;
+                } else {
+                    return MSG_OCCUR_BLECONN_ERROR;
+                }
+        }
+    }
+
+    - (void)helperDidReadForCharacteristic:(NSData *)responseMessage {
+        if ([self isResponseCompleted:responseMessage]) {
             // 後続レスポンスがあれば、タイムアウト監視を再開させ、後続レスポンスを待つ
-            [self.toolBLECentral centralManagerWillStartResponseTimeout];
+            [[self toolBLEHelper] helperWillReadForCharacteristics];
         } else {
             // 後続レスポンスがなければ、トランザクション完了と判断
             [[ToolLogFile defaultLogger] info:MSG_RESPONSE_RECEIVED];
@@ -356,7 +455,7 @@
         }
     }
 
-    - (void)centralManagerDidDisconnectWith:(NSString *)message error:(NSError *)error {
+    - (void)helperDidDisconnect {
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;
@@ -417,7 +516,7 @@
         [self setLastCommandSuccess:false];
         // BLEデバイス接続処理を開始する
         [self setBleTransactionStarted:false];
-        [[self toolBLECentral] centralManagerWillConnect];
+        [[self toolBLEHelper] helperWillConnectWithUUID:U2FServiceUUID];
     }
 
 #pragma mark - Interface for PinCodeParamWindow
