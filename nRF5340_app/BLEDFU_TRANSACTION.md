@@ -460,3 +460,51 @@ Transmit SMP response (3 bytes)
     "splitStatus":0
 }
 ```
+
+## （ご参考）CBOR様式の差異について
+
+BLE DFU機能では、前述の通りCBORというデータ形式を使用しています。<br>
+下記に詳しい仕様記述があります。
+
+- <b>RFC 8949 - Concise Binary Object Representation (CBOR)</b><br>
+ [https://www.rfc-editor.org/rfc/rfc8949.html](https://www.rfc-editor.org/rfc/rfc8949.html)
+
+CBOR自体は、FIDO機能でも使用されていますが、配列データ[注1]のデータエンコード／デコード形式に差異があります。
+
+#### FIDO機能のCBORエンコード
+
+`definite-length encoding`という形式を使用しています。
+
+配列に含まれる要素数が決まっている（固定数の）場合に使用します。<br>
+下記は`[1, [2, 3], [4, 5]]`という配列をエンコードしたものです。
+
+```
+83        -- Array of length 3
+   01     -- 1
+   82     -- Array of length 2
+      02  -- 2
+      03  -- 3
+   82     -- Array of length 2
+      04  -- 4
+      05  -- 5
+```
+
+#### BLE DFU機能のCBORエンコード
+
+`indefinite-length encoding`という形式を使用しています。
+
+配列に含まれる要素数が決まっていない（可変数の）場合に使用します。<br>
+下記は`{"Fun":true, "Amt":-2}`という連想配列をエンコードしたものです。
+
+```
+BF           -- Start indefinite-length map
+   63        -- First key, UTF-8 string length 3
+      46756e --   "Fun"
+   F5        -- First value, true
+   63        -- Second key, UTF-8 string length 3
+      416d74 --   "Amt"
+   21        -- Second value, -2
+FF           -- "break"
+```
+
+[注1] 配列データには、Map（Key／Valueを持つ連想配列）、Array（単純配列）などがあります。
