@@ -109,7 +109,7 @@ ff
 
 nRF5340のFlash ROM領域（スロット）の情報を照会します。
 
-##### SMPリクエスト（Android-->nRF5340、以下同）
+#### SMPリクエスト（Android-->nRF5340、以下同）
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
@@ -118,13 +118,13 @@ nRF5340のFlash ROM領域（スロット）の情報を照会します。
 本体はブランクです。<br>
 （ブランクであっても、開始、終了文字である`bf ff`が出力されるので、本体は２バイトになります）
 
-##### SMPレスポンス（nRF5340-->Android、以下同）
+#### SMPレスポンス（nRF5340-->Android、以下同）
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`1`:`READ(response)`|`0`|本体のバイト数|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### データサンプル
+#### データサンプル
 
 ```
 Incoming SMP request (10 bytes)
@@ -141,7 +141,7 @@ Transmit SMP response (142 bytes)
 6b 73 70 6c 69 74 53 74 61 74 75 73 00 ff
 ```
 
-##### 参考：テキストデコードイメージ
+#### 参考：テキストデコードイメージ
 
 【レスポンス】<br>
 ファームウェア更新イメージが書き込まれる前ですので、スロット#1の情報はありません。
@@ -158,23 +158,94 @@ Transmit SMP response (142 bytes)
 }
 ```
 
+### 転送実行
+
+ファームウェア更新イメージを、nRF5340に分割転送します。
+
+#### SMPリクエスト
+
+|`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|`2`:`WRITE(request)`|`0`|本体のバイト数[注1]|`1`:`IMAGE`|`0`|`1`:`UPLOAD`|
+
+#### SMPレスポンス
+
+|`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|`3`:`WRITE(response)`|`0`|本体のバイト数|`1`:`IMAGE`|`0`|`1`:`UPLOAD`|
+
+#### データサンプル
+
+先頭パケット（分割送信の１回目）のサンプルです。
+
+```
+Incoming SMP request (248 bytes)
+02 00 00 f0 00 01 00 01 bf 64 64 61 74 61 58 d1
+3d b8 f3 96 00 00 00 00 00 02 00 00 c4 a9 03 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ff 63 6c 65 6e 1a 00 03 ad 14 63 73 68 61 43 88
+fe 49 63 6f 66 66 00 ff
+Transmit SMP response (20 bytes)
+03 00 00 0c 00 01 00 01 bf 62 72 63 00 63 6f 66
+66 18 d0 ff
+```
+
+#### 参考：テキストデコードイメージ
+
+【リクエスト】<br>
+転送データ長は`d1`（209バイト）、総データ長は`03ad14`（240,916バイト）です。<br>
+SHA値は、ファームウェア更新イメージファイルから算出したハッシュ値の先頭３バイトのみ抽出しているようです。[注2]
+
+```
+{   
+    "data":3db8f3960000000000020000c4a90300...ffffffffffffffffffffffffffffffff,
+    "len":03ad14,
+    "sha":88fe49,
+    "off":0
+}
+```
+
+【レスポンス】<br>
+リターンコード、オフセット[注3]が戻るようです。
+
+```
+{
+    "rc":0,"off":d0
+}
+```
+
+[注1] 本体のバイト数上限は`f0`（240バイト）となっています。<br>
+[注2] 調査に使用したファームウェア更新イメージファイル`app_update.PCA10095.0.4.1.bin`から計算されたSHA-256ハッシュ値は`88fe494d209728471713d6e98ba4ef7a55fd02d40a83349207851232f89e2bd4`でした。<br>
+[注3] 次回転送時に要求する転送データの先頭インデックス（通常、書き込んだ通算バイト数の値）になります。概ね８の倍数になる事が多いようです。
+
 ### 反映一時停止要求
 
 nRF5340のFlash ROM領域（スロット）に書き込まれているファームウェア更新イメージを、一時的に反映しないようにします。
 
-##### SMPリクエスト
+#### SMPリクエスト
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`2`:`WRITE(request)`|`0`|`50`|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### SMPレスポンス
+#### SMPレスポンス
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`3`:`WRITE(response)`|`0`|本体のバイト数|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### データサンプル
+#### データサンプル
 
 ```
 Incoming SMP request (58 bytes)
@@ -203,7 +274,7 @@ Transmit SMP response (3 bytes)
 73 00 ff
 ```
 
-##### 参考：テキストデコードイメージ
+#### 参考：テキストデコードイメージ
 
 【リクエスト】
 
@@ -236,13 +307,13 @@ Transmit SMP response (3 bytes)
 
 nRF5340にリセット実行（アプリケーションの再起動）を要求します。
 
-##### SMPリクエスト
+#### SMPリクエスト
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`2`:`WRITE(request)`|`0`|`2`|`0`:`OS`|`0`|`5`:`RESET`|
 
-##### SMPレスポンス
+#### SMPレスポンス
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
@@ -252,19 +323,19 @@ nRF5340にリセット実行（アプリケーションの再起動）を要求�
 
 nRF5340のFlash ROM領域（スロット）の情報を照会します。
 
-##### SMPリクエスト
+#### SMPリクエスト
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`0`:`READ(request)`|`0`|`2`|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### SMPレスポンス
+#### SMPレスポンス
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`1`:`READ(response)`|`0`|本体のバイト数|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### データサンプル
+#### データサンプル
 
 ```
 Incoming SMP request (10 bytes)
@@ -290,7 +361,7 @@ Transmit SMP response (3 bytes)
 73 00 ff
 ```
 
-##### 参考：テキストデコードイメージ
+#### 参考：テキストデコードイメージ
 
 【レスポンス】<br>
 前述「リセット要求」後のリセットにより、スロット#0、#1の内容が入れ替わっている事がわかります。
@@ -319,19 +390,19 @@ Transmit SMP response (3 bytes)
 
 nRF5340のFlash ROM領域（スロット）に書き込まれているファームウェア更新イメージを反映します。
 
-##### SMPリクエスト
+#### SMPリクエスト
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`2`:`WRITE(request)`|`0`|`50`|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### SMPレスポンス
+#### SMPレスポンス
 
 |`operation`|`flags`|`length`|`group`|`sequence`|`command id`|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |`3`:`WRITE(response)`|`0`|本体のバイト数|`1`:`IMAGE`|`0`|`0`:`STATE`|
 
-##### データサンプル
+#### データサンプル
 
 ```
 Incoming SMP request (58 bytes)
@@ -360,7 +431,7 @@ Transmit SMP response (3 bytes)
 73 00 ff
 ```
 
-##### 参考：テキストデコードイメージ
+#### 参考：テキストデコードイメージ
 
 【リクエスト】
 
