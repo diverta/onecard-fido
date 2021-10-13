@@ -42,6 +42,17 @@ bool fido_ble_service_disconnected(void)
 //
 #include "app_dfu.h"
 
+bool usbd_service_support_bootloader_mode(void)
+{
+#ifdef CONFIG_MCUMGR_SMP_BT_CUSTOM
+    // BLE DFU版は、ブートローダーモード遷移をサポートしない
+    return false;
+#else
+    // USB DFU版は、ブートローダーモード遷移をサポートする
+    return true;
+#endif
+}
+
 void usbd_service_stop_for_bootloader(void)
 {
     // ブートローダーモード遷移を指示
