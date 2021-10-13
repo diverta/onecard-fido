@@ -67,6 +67,12 @@
             return false;
         }
         
+        // デバイスがビジー状態でないかどうか検査
+        if (usb_cdc_acm_device_is_not_busy(path) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];
+            return false;
+        }
+
         // デバイス接続を実行
         if (usb_cdc_acm_device_open(path) == false) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"ToolCDCHelper: %s", log_debug_message()];

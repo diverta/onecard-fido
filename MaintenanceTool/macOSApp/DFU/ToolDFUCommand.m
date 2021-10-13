@@ -27,8 +27,8 @@
 #define TIMEOUT_SEC_DFU_OPER_RESPONSE  3.0
 
 // CDC ACM接続処理用の試行回数・インターバル
-#define MAX_CNT_FOR_ACM_CONNECT        10
-#define INTERVAL_SEC_FOR_ACM_CONNECT   0.5
+#define MAX_CNT_FOR_ACM_CONNECT        5
+#define INTERVAL_SEC_FOR_ACM_CONNECT   1.0
 
 // 詳細ログ出力
 #define CDC_ACM_LOG_DEBUG false
@@ -445,7 +445,7 @@
     - (bool)searchACMDevicePath {
         // 最大５秒間繰り返す
         for (int i = 0; i < MAX_CNT_FOR_ACM_CONNECT; i++) {
-            // 0.5秒間ウェイト
+            // １秒間ウェイト
             [NSThread sleepForTimeInterval:INTERVAL_SEC_FOR_ACM_CONNECT];
             // DFU対象デバイスに接続
             NSString *ACMDevicePath = [self getConnectedDevicePath];
