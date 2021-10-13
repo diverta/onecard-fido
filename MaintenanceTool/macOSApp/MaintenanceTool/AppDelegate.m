@@ -346,9 +346,10 @@
     - (void)toolPreferenceInquiryDidProcess:(Command)command
                                  CMD:(uint8_t)cmd response:(NSData *)resp
                               result:(bool)result message:(NSString *)message {
-        // 処理失敗時は終了
+        // 処理失敗時は、BLE自動認証機能を無効化し、ヘルスチェック処理を実行
         if (result == false) {
-            [self commandDidProcess:COMMAND_NONE result:result message:message];
+            [[ToolContext instance] setBleScanAuthEnabled:false];
+            [self resumeHealthCheckCommand];
             return;
         }
         // ツール設定情報を共有情報に保持させる
@@ -362,6 +363,11 @@
                 return;
             }
         }
+        // ヘルスチェック処理を実行
+        [self resumeHealthCheckCommand];
+    }
+
+    - (void)resumeHealthCheckCommand {
         switch ([self healthCheckCommand]) {
             case COMMAND_TEST_MAKE_CREDENTIAL:
                 // HID CTAP2ヘルスチェック処理を実行（PINコード入力画面を開く）
