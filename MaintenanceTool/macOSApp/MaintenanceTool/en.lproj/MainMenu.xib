@@ -80,18 +80,6 @@
                                     <action selector="menuItemViewLogDidSelect:" target="494" id="qrw-Xf-a6q"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ファームウェアを更新" id="sxt-Mu-jyP">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemDFUTestDidSelect:" target="494" id="KuA-SO-sVc"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="ファームウェアを新規導入" id="83P-ZN-a21" userLabel="MenuItemDFUNew">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemDFUNewDidSelect:" target="494" id="a8l-t4-qcI"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="a4Q-zm-HjO"/>
                             <menuItem title="New..." hidden="YES" keyEquivalent="n" id="82">
                                 <connections>
@@ -436,11 +424,30 @@
                                     <action selector="menuItemEraseBondDidSelect:" target="494" id="8tI-f8-yS1"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="ブートローダーモード遷移" id="ZIq-GE-Ddb">
+                            <menuItem title="ファームウェア更新（USB）" id="ZIq-GE-Ddb">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="menuItemBLModeDidSelect:" target="494" id="YIb-Z9-8Tz"/>
-                                </connections>
+                                <menu key="submenu" title="ファームウェア更新（USB）" id="S6H-YM-Q7o">
+                                    <items>
+                                        <menuItem title="ブートローダーモード遷移" id="zLA-iW-mMM">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemBLModeDidSelect:" target="494" id="DRw-pM-EgK"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ファームウェアを更新" id="eQd-2K-QLS">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemDFUTestDidSelect:" target="494" id="Bcj-Ub-fvZ"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="ファームウェアを新規導入" id="Dci-ge-0Sb">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="menuItemDFUNewDidSelect:" target="494" id="ly7-Mw-341"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                         </items>
                     </menu>
@@ -693,9 +700,9 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
-                <outlet property="menuItemBLMode" destination="ZIq-GE-Ddb" id="tt5-hT-XG7"/>
-                <outlet property="menuItemDFU" destination="sxt-Mu-jyP" id="LgB-99-JI9"/>
-                <outlet property="menuItemDFUNew" destination="83P-ZN-a21" id="0iQ-xm-DGo"/>
+                <outlet property="menuItemBLMode" destination="zLA-iW-mMM" id="Evh-19-duL"/>
+                <outlet property="menuItemDFU" destination="eQd-2K-QLS" id="f2t-XT-f7i"/>
+                <outlet property="menuItemDFUNew" destination="Dci-ge-0Sb" id="uPC-vO-YCW"/>
                 <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
                 <outlet property="menuItemOption" destination="295" id="x73-fM-PHP"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>

@@ -39,6 +39,7 @@
 #define MSG_FORMAT_END_MESSAGE      @"%1$@が%2$@しました。"
 #define MSG_ERASE_BONDS             @"FIDO認証器からペアリング情報をすべて削除します。"
 #define MSG_PROMPT_ERASE_BONDS      @"削除後はBLE経由のユーザー登録／ログインができなくなります。\n削除処理を実行しますか？"
+#define MSG_BOOT_LOADER_MODE_UNSUPP @"FIDO認証器をブートローダーモードに遷移できません。"
 #define MSG_BOOT_LOADER_MODE        @"FIDO認証器をブートローダーモードに遷移させます。"
 #define MSG_PROMPT_BOOT_LOADER_MODE @"ブートローダーモードに遷移したら、nRFコマンドラインツール等により、ファームウェア更新イメージファイルを転送できます。\n遷移処理を実行しますか？"
 

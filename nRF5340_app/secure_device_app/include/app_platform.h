@@ -88,6 +88,7 @@ uint8_t    *fido_flash_token_counter_get_check_hash(void);
 // 関数群
 //
 void        usbd_hid_frame_send(uint8_t *buffer_for_send, size_t size);
+bool        usbd_service_support_bootloader_mode(void);
 void        usbd_service_stop_for_bootloader(void);
 
 #ifdef __cplusplus

@@ -26,6 +26,22 @@ static struct termios original_tc_attrs;
 static uint8_t _buffer[4096];
 static size_t   bytesRead;
 
+bool usb_cdc_acm_device_is_not_busy(const char *path)
+{
+    // シリアルポートをノンブロッキングモードで開く
+    int flags = (O_RDWR | O_NOCTTY | O_NONBLOCK);
+    file_descriptor = open(path, flags);
+    if (file_descriptor < 0) {
+        // Resource busyの場合は errno=16
+        log_debug("%s: Opening %s failed with error: %s(%d)", __func__,
+                  path, strerror(errno), errno);
+        return false;
+    }
+    // シリアルポートを閉じる
+    close(file_descriptor);
+    return true;
+}
+
 bool usb_cdc_acm_device_open(const char *path)
 {
     // シリアルポートを開く
