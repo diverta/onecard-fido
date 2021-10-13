@@ -282,14 +282,27 @@
         [self doRequest:message CID:cid CMD:HID_CMD_BOOTLOADER_MODE];
     }
 
+    - (bool)checkStatusCode:(NSData *)responseMessage {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            [self displayMessage:MSG_BOOT_LOADER_MODE_UNSUPP];
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     - (void)doResponseHidBootloaderMode:(NSData *)message CMD:(uint8_t)cmd {
+        // ステータスコードを確認
+        bool result = [self checkStatusCode:message];
         if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
             // DFUコマンドに制御を戻す
             ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
             [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
         } else if ([[self toolCommandRef] isMemberOfClass:[AppDelegate class]]) {
             // AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:true message:nil];
+            [self commandDidProcess:[self command] result:result message:nil];
         }
     }
 
