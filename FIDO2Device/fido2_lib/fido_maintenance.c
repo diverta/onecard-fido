@@ -152,13 +152,20 @@ static void command_preference_parameter_maintenance(void)
 static void command_bootloader_mode(void)
 {
     // 最初にレスポンスを送信
-    send_command_response(CTAP1_ERR_SUCCESS, 1);
+    if (usbd_service_support_bootloader_mode()) {
+        send_command_response(CTAP1_ERR_SUCCESS, 1);
+    } else {
+        fido_log_error("Bootloader mode is not supported");
+        send_command_response(CTAP1_ERR_INVALID_COMMAND, 1);
+    }
 }
 
 static void jump_to_bootloader_mode(void)
 {
     // ブートローダーモードに遷移させるための処理を実行
-    usbd_service_stop_for_bootloader();
+    if (usbd_service_support_bootloader_mode()) {
+        usbd_service_stop_for_bootloader();
+    }
 }
 
 static void command_erase_bonding_data(void)
