@@ -31,11 +31,10 @@
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
     @property (assign) IBOutlet NSMenuItem  *menuItemOption;
     @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
-    @property (assign) IBOutlet NSMenuItem  *menuItemBLMode;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
-    @property (assign) IBOutlet NSMenuItem  *menuItemDFU;
-    @property (assign) IBOutlet NSMenuItem  *menuItemDFUNew;
+    @property (assign) IBOutlet NSMenuItem  *menuItemUSBDFU;
+    @property (assign) IBOutlet NSMenuItem  *menuItemBLEDFU;
 
     @property (nonatomic) ToolBLECommand    *toolBLECommand;
     @property (nonatomic) ToolHIDCommand    *toolHIDCommand;
@@ -114,10 +113,9 @@
         [self.menuItemOption setEnabled:enabled];
         [self.menuItemPreferences setHidden:!(enabled)];
         [self.menuItemViewLog setEnabled:enabled];
-        [self.menuItemDFU setEnabled:enabled];
-        [self.menuItemDFUNew setEnabled:enabled];
         [self.menuItemEraseBond setEnabled:enabled];
-        [self.menuItemBLMode setEnabled:enabled];
+        [self.menuItemUSBDFU setEnabled:enabled];
+        [self.menuItemBLEDFU setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -328,6 +326,10 @@
         [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
         [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE
                                            withData:nil forCommand:self];
+    }
+
+    - (IBAction)menuItemBLEDFUDidSelect:(id)sender {
+        [ToolPopupWindow warning:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
     }
 
 #pragma mark - Perform health check
