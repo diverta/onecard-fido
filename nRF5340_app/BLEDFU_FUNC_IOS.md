@@ -1,12 +1,14 @@
-# ファームウェア更新機能についての調査
+# BLE DFU機能のサンプルコード調査
 
 最終更新日：2021/10/01
 
+Nordic社から提供されている、iOS版のBLE DFUアプリのサンプルコードについて調査した結果を掲載しています。
+
 ## 概要
 
-nRF Connectで提供しているBLE経由のファームウェア更新機能（[BLE DFU機能](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/guides/device_mgmt/dfu.html#mcuboot)）について、Nordic社からソースコードが提供されているようです。
+nRF Connectで提供しているBLE経由のファームウェア更新機能（[BLE DFU機能](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/guides/device_mgmt/dfu.html#mcuboot)）について、Nordic社からサンプルコードが提供されているようです。
 
-BLE経由のファームウェア更新機能を、[管理ツール](../MaintenanceTool/macOSApp)に組み込めるよう、ソースコードの調査・解析を行います。
+BLE経由のファームウェア更新機能を、[管理ツール](../MaintenanceTool/macOSApp)に組み込めるよう、サンプルコードの調査・解析を行います。
 
 #### 参照したコード
 下記リポジトリーのコードを参照しました。<br>

@@ -1,10 +1,12 @@
-# BLE DFU機能のトランザクション調査
+# BLE DFU機能のトランザクション
 
-最終更新日：2021/10/12
+最終更新日：2021/10/14
 
 ## 概要
 
-nRF Connectで提供しているBLE経由のファームウェア更新機能（[BLE DFU機能](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/guides/device_mgmt/dfu.html#mcuboot)）について、処理中に発生するトランザクションの調査・解析を行います。
+nRF Connectで提供しているBLE経由のファームウェア更新機能（[BLE DFU機能](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/guides/device_mgmt/dfu.html#mcuboot)）について、処理中に発生するトランザクションの情報を掲載しています。
+
+最終更新日現在、調査中のステータスとなっております。
 
 #### 実行したツール
 ログ採取が可能なツールである、Nordic社提供の「[nRF Connectアプリ](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Connect-for-mobile)」を使用しています。
