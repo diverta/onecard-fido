@@ -9,6 +9,7 @@
 
 #include "app_bluetooth.h"
 #include "app_board.h"
+#include "app_dfu.h"
 #include "app_event.h"
 #include "app_timer.h"
 #include "app_usb.h"
@@ -140,5 +141,6 @@ void app_main_button_pressed_short(void)
 
 void app_main_button_1_pressed(void)
 {
-    LOG_DBG("Button 2 pushed");
+    // DFUによる変更内容のコミットを指示
+    app_dfu_commit();
 }
