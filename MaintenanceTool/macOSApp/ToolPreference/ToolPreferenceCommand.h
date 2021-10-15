@@ -7,7 +7,6 @@
 #ifndef ToolPreferenceCommand_h
 #define ToolPreferenceCommand_h
 
-#import "AppDelegate.h"
 #import "ToolCommon.h"
 
 // サービスUUID、スキャン秒数の桁数（固定）

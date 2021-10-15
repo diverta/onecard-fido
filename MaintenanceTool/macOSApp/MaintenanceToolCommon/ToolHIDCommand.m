@@ -6,7 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
@@ -300,7 +300,7 @@
             // DFUコマンドに制御を戻す
             ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
             [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
-        } else if ([[self toolCommandRef] isMemberOfClass:[AppDelegate class]]) {
+        } else if ([[self toolCommandRef] isMemberOfClass:[ToolAppCommand class]]) {
             // AppDelegateに制御を戻す
             [self commandDidProcess:[self command] result:result message:nil];
         }
