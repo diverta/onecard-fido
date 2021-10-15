@@ -9,7 +9,7 @@
 #import "tool_crypto_des.h"
 #import "tool_piv_admin.h"
 
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "PIVPreferenceWindow.h"
 #import "ToolCCIDCommon.h"
 #import "ToolCCIDHelper.h"
@@ -43,7 +43,7 @@
     // PIV設定情報クラスの参照を保持
     @property (nonatomic) ToolPIVSetting    *toolPIVSetting;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate     *appDelegate;
+    @property (nonatomic, weak) ToolAppCommand  *appDelegate;
     @property (nonatomic) PIVPreferenceWindow   *pivPreferenceWindow;
 
 @end

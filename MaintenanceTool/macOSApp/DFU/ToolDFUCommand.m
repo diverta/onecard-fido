@@ -15,7 +15,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "DFUStartWindow.h"
 #import "DFUProcessingWindow.h"
 
@@ -45,7 +45,7 @@
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
     @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate    *delegate;
+    @property (nonatomic, weak) ToolAppCommand *delegate;
     @property (nonatomic) DFUStartWindow       *dfuStartWindow;
     @property (nonatomic) DFUProcessingWindow  *dfuProcessingWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
@@ -554,16 +554,14 @@
     - (void)notifyEndMessage:(bool)success {
         // AppDelegateに制御を戻す
         dispatch_async([self mainQueue], ^{
-            AppDelegate *app = (AppDelegate *)[self delegate];
-            [app toolDFUCommandDidTerminate:COMMAND_USB_DFU result:success message:nil];
+            [[self delegate] toolDFUCommandDidTerminate:COMMAND_USB_DFU result:success message:nil];
         });
     }
 
     - (void)notifyCancel {
         // AppDelegateに制御を戻す（ポップアップメッセージを表示しない）
         dispatch_async([self mainQueue], ^{
-            AppDelegate *app = (AppDelegate *)[self delegate];
-            [app toolDFUCommandDidTerminate:COMMAND_NONE result:true message:nil];
+            [[self delegate] toolDFUCommandDidTerminate:COMMAND_NONE result:true message:nil];
         });
     }
 

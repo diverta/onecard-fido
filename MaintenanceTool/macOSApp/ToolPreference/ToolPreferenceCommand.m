@@ -7,12 +7,14 @@
 #import <Foundation/Foundation.h>
 #import "ToolPreferenceCommand.h"
 #import "ToolPreferenceWindow.h"
+#import "ToolAppCommand.h"
 
 @interface ToolPreferenceCommand ()
 
-    @property (nonatomic, weak) AppDelegate         *delegate;
+    @property (nonatomic, weak) ToolAppCommand      *delegate;
     @property (nonatomic) ToolPreferenceWindow      *toolPreferenceWindow;
     @property (nonatomic) ToolPreferenceCommandType commandType;
+    @property (nonatomic) ToolAppCommand            *toolAppCommand;
 
     // コマンドを実行するためのリクエストデータを保持
     @property (nonatomic) NSData *processData;
@@ -94,7 +96,7 @@
 
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType {
         // USBポートに装着されているかどうかチェック
-        if (![[self delegate] checkUSBHIDConnection]) {
+        if (![[self delegate] checkForHIDCommand]) {
             return;
         }
 
@@ -157,8 +159,7 @@
         // 画面を閉じる
         [[self toolPreferenceWindow] close];
         // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        AppDelegate *app = (AppDelegate *)[self delegate];
-        [app toolPreferenceWindowDidClose];
+        [[self delegate] toolPreferenceWindowDidClose];
     }
 
 @end
