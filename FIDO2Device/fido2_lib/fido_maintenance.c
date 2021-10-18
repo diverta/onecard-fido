@@ -22,6 +22,9 @@
 fido_log_module_register(fido_maintenance);
 #endif
 
+// トランスポート種別を保持
+static TRANSPORT_TYPE m_transport_type;
+
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
 
@@ -190,8 +193,11 @@ static void command_erase_bonding_data_response(bool success)
     }
 }
 
-void fido_maintenance_command(void)
+void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 {
+    // トランスポート種別を保持
+    m_transport_type = transport_type;
+
     // リクエストデータ受信後に実行すべき処理を判定
     uint8_t cmd = fido_hid_receive_header()->CMD;
     switch (cmd) {

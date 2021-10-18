@@ -258,7 +258,7 @@ static void on_hid_request_receive_completed(void)
         case MNT_COMMAND_PREFERENCE_PARAM:
         case MNT_COMMAND_BOOTLOADER_MODE:
         case MNT_COMMAND_ERASE_BONDING_DATA:
-            fido_maintenance_command();
+            fido_maintenance_command(TRANSPORT_HID);
             break;
         default:
             // 不正なコマンドであるため
@@ -280,19 +280,27 @@ static void on_ble_request_receive_completed(void)
         // ユーザー所在確認中はエラーを戻す
         return;
     }
-    if (cmd == U2F_COMMAND_MSG) {
-        if (p_apdu->CLA != 0x00) {
-            // CTAP2コマンドを処理する。
-            fido_ctap2_command_cbor(TRANSPORT_BLE);
+    switch (cmd) {
+        case U2F_COMMAND_MSG:
+            if (p_apdu->CLA != 0x00) {
+                // CTAP2コマンドを処理する。
+                fido_ctap2_command_cbor(TRANSPORT_BLE);
 
-        } else {
-            // U2Fコマンド／管理用コマンドを処理する。
-            fido_u2f_command_msg(TRANSPORT_BLE);
-        }
-
-    } else if (cmd == U2F_COMMAND_PING) {
-        // PINGレスポンスを実行
-        fido_u2f_command_ping(TRANSPORT_BLE);
+            } else {
+                // U2Fコマンド／管理用コマンドを処理する。
+                fido_u2f_command_msg(TRANSPORT_BLE);
+            }
+            break;
+        case CTAP2_COMMAND_PING:
+            // PINGレスポンスを実行
+            fido_u2f_command_ping(TRANSPORT_BLE);
+            break;
+        case MNT_COMMAND_GET_APP_VERSION:
+            // バージョン情報取得コマンドを実行
+            fido_maintenance_command(TRANSPORT_BLE);
+            break;
+        default:
+            break;
     }
 }
 
@@ -329,18 +337,26 @@ static void on_ble_response_send_completed(void)
     fido_ble_receive_frame_count_clear();
 
     // 全フレーム送信後に行われる後続処理を実行
-    if (fido_ble_receive_header()->CMD == U2F_COMMAND_MSG) {
-        if (fido_ble_receive_apdu()->CLA != 0x00) {
-            // CTAP2コマンドを処理する。
-            fido_ctap2_command_cbor_response_sent();
+    uint8_t cmd = fido_ble_receive_header()->CMD;
+    switch (cmd) {
+        case U2F_COMMAND_MSG:
+            if (fido_ble_receive_apdu()->CLA != 0x00) {
+                // CTAP2コマンドを処理する。
+                fido_ctap2_command_cbor_response_sent();
 
-        } else {
-            // U2Fコマンド／管理用コマンドを処理する。
-            fido_u2f_command_msg_response_sent();
-        }
-    }
-    if (fido_ble_receive_header()->CMD == U2F_COMMAND_PING) {
-        fido_u2f_command_ping_response_sent();
+            } else {
+                // U2Fコマンド／管理用コマンドを処理する。
+                fido_u2f_command_msg_response_sent();
+            }
+            break;
+        case CTAP2_COMMAND_PING:
+            fido_u2f_command_ping_response_sent();
+            break;
+        case MNT_COMMAND_GET_APP_VERSION:
+            fido_maintenance_command_report_sent();
+            break;
+        default:
+            break;
     }
 }
 
