@@ -14,13 +14,13 @@
 
 @interface AppDelegate () <ToolAppCommandDelegate, ToolFilePanelDelegate>
 
-    @property (assign) IBOutlet NSWindow   *window;
-    @property (assign) IBOutlet NSButton   *button1;
-    @property (assign) IBOutlet NSButton   *button2;
-    @property (assign) IBOutlet NSButton   *button3;
-    @property (assign) IBOutlet NSButton   *button4;
-    @property (assign) IBOutlet NSButton   *buttonQuit;
-    @property (assign) IBOutlet NSTextView *textView;
+    @property (assign) IBOutlet NSWindow    *window;
+    @property (assign) IBOutlet NSButton    *button1;
+    @property (assign) IBOutlet NSButton    *button2;
+    @property (assign) IBOutlet NSButton    *button3;
+    @property (assign) IBOutlet NSButton    *button4;
+    @property (assign) IBOutlet NSButton    *buttonQuit;
+    @property (assign) IBOutlet NSTextView  *textView;
 
     @property (assign) IBOutlet NSTextField *fieldPath1;
     @property (assign) IBOutlet NSTextField *fieldPath2;
@@ -65,8 +65,8 @@
     - (void)appendLogMessage:(NSString *)message {
         // テキストフィールドにメッセージを追加し、末尾に移動
         if (message) {
-            self.textView.string = [self.textView.string stringByAppendingFormat:@"%@\n", message];
-            [self.textView performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
+            [[self textView] setString:[[[self textView] string] stringByAppendingFormat:@"%@\n", message]];
+            [[self textView] performSelector:@selector(scrollToEndOfDocument:) withObject:nil afterDelay:0];
         }
     }
 
@@ -74,23 +74,23 @@
 
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
-        [self.button1 setEnabled:enabled];
-        [self.button2 setEnabled:enabled];
-        [self.button3 setEnabled:enabled];
-        [self.button4 setEnabled:enabled];
-        [self.fieldPath1 setEnabled:enabled];
-        [self.fieldPath2 setEnabled:enabled];
-        [self.buttonPath1 setEnabled:enabled];
-        [self.buttonPath2 setEnabled:enabled];
-        [self.buttonQuit setEnabled:enabled];
-        [self.menuItemTestUSB setEnabled:enabled];
-        [self.menuItemTestBLE setEnabled:enabled];
-        [self.menuItemOption setEnabled:enabled];
-        [self.menuItemPreferences setHidden:!(enabled)];
-        [self.menuItemViewLog setEnabled:enabled];
-        [self.menuItemEraseBond setEnabled:enabled];
-        [self.menuItemUSBDFU setEnabled:enabled];
-        [self.menuItemBLEDFU setEnabled:enabled];
+        [[self button1] setEnabled:enabled];
+        [[self button2] setEnabled:enabled];
+        [[self button3] setEnabled:enabled];
+        [[self button4] setEnabled:enabled];
+        [[self fieldPath1] setEnabled:enabled];
+        [[self fieldPath2] setEnabled:enabled];
+        [[self buttonPath1] setEnabled:enabled];
+        [[self buttonPath2] setEnabled:enabled];
+        [[self buttonQuit] setEnabled:enabled];
+        [[self menuItemTestUSB] setEnabled:enabled];
+        [[self menuItemTestBLE] setEnabled:enabled];
+        [[self menuItemOption] setEnabled:enabled];
+        [[self menuItemPreferences] setHidden:!(enabled)];
+        [[self menuItemViewLog] setEnabled:enabled];
+        [[self menuItemEraseBond] setEnabled:enabled];
+        [[self menuItemUSBDFU] setEnabled:enabled];
+        [[self menuItemBLEDFU] setEnabled:enabled];
     }
 
     - (IBAction)button1DidPress:(id)sender {
@@ -116,10 +116,10 @@
     }
 
     - (IBAction)button3DidPress:(id)sender {
-        if ([self checkPathEntry:self.fieldPath1 messageIfError:MSG_PROMPT_SELECT_PKEY_PATH] == false) {
+        if ([self checkPathEntry:[self fieldPath1] messageIfError:MSG_PROMPT_SELECT_PKEY_PATH] == false) {
             return;
         }
-        if ([self checkPathEntry:self.fieldPath2 messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
+        if ([self checkPathEntry:[self fieldPath2] messageIfError:MSG_PROMPT_SELECT_CRT_PATH] == false) {
             return;
         }
         NSArray<NSString *> *paths = @[[[self fieldPath1] stringValue], [[self fieldPath2] stringValue]];
