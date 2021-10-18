@@ -10,6 +10,8 @@
 //
 // プラットフォーム非依存コード
 //
+#include "fido_ble_receive.h"
+#include "fido_ble_send.h"
 #include "fido_hid_receive.h"
 #include "fido_hid_send.h"
 #include "fido_maintenance.h"
@@ -25,6 +27,23 @@ fido_log_module_register(fido_maintenance);
 // トランスポート種別を保持
 static TRANSPORT_TYPE m_transport_type;
 
+static uint8_t get_command_byte(void)
+{
+    uint8_t cmd;
+    switch (m_transport_type) {
+        case TRANSPORT_HID:
+            cmd = fido_hid_receive_header()->CMD;
+            break;
+        case TRANSPORT_BLE:
+            cmd = fido_ble_receive_header()->CMD;
+            break;
+        default:
+            cmd = 0x00;
+            break;
+    }
+    return cmd;
+}
+
 // 関数プロトタイプ
 static void command_erase_bonding_data_response(bool success);
 
@@ -35,12 +54,19 @@ static uint8_t response_buffer[1024];
 
 static void send_command_response(uint8_t ctap2_status, size_t length)
 {
-    // レスポンスデータを送信パケットに設定し送信
-    uint32_t cid = fido_hid_receive_header()->CID;
-    uint32_t cmd = fido_hid_receive_header()->CMD;
     // １バイトめにステータスコードをセット
     response_buffer[0] = ctap2_status;
-    fido_hid_send_command_response(cid, cmd, response_buffer, length);
+
+    // レスポンスデータを送信パケットに設定し送信
+    if (m_transport_type == TRANSPORT_HID) {
+        uint32_t cid = fido_hid_receive_header()->CID;
+        uint8_t cmd = fido_hid_receive_header()->CMD;
+        fido_hid_send_command_response(cid, cmd, response_buffer, length);
+
+    } else if (m_transport_type == TRANSPORT_BLE) {
+        uint8_t cmd = fido_ble_receive_header()->CMD;
+        fido_ble_send_command_response(cmd, response_buffer, length);
+    } 
 }
 
 static void send_command_error_response(uint8_t ctap2_status) 
@@ -199,7 +225,7 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
     m_transport_type = transport_type;
 
     // リクエストデータ受信後に実行すべき処理を判定
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
             command_get_flash_stat();
@@ -230,7 +256,7 @@ void fido_maintenance_command(TRANSPORT_TYPE transport_type)
 void fido_maintenance_command_report_sent(void)
 {
     // 全フレーム送信後に行われる後続処理を実行
-    uint8_t cmd = fido_hid_receive_header()->CMD;
+    uint8_t cmd = get_command_byte();
     switch (cmd) {
         case MNT_COMMAND_GET_FLASH_STAT:
             fido_log_info("Get flash ROM statistics end");
