@@ -88,6 +88,7 @@ static void command_get_flash_stat(void)
     size_t   buffer_size = sizeof(response_buffer - 1);
     if (fido_flash_get_stat_csv(buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+        return;
     }
     //
     // レスポンスを送信
@@ -114,6 +115,7 @@ static void command_get_app_version(void)
     size_t   buffer_size = sizeof(response_buffer - 1);
     if (fido_board_get_version_info_csv(buffer, &buffer_size) == false) {
         send_command_error_response(CTAP2_ERR_VENDOR_FIRST + 10);
+        return;
     }
     //
     // レスポンスを送信
