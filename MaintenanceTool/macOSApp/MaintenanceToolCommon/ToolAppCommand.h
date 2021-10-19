@@ -29,6 +29,7 @@
     - (void)doCommandHidU2fHealthCheck;
     - (void)doCommandEraseBond;
     - (void)doCommandBLMode;
+    - (void)doCommandBLEDFU;
     - (bool)checkForHIDCommand;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;

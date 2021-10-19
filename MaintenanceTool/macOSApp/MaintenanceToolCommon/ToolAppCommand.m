@@ -6,6 +6,7 @@
 //
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
+#import "ToolBLEDFUCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolContext.h"
 #import "ToolDFUCommand.h"
@@ -19,6 +20,7 @@
 
     @property (nonatomic) ToolBLECommand        *toolBLECommand;
     @property (nonatomic) ToolHIDCommand        *toolHIDCommand;
+    @property (nonatomic) ToolBLEDFUCommand     *toolBLEDFUCommand;
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
@@ -47,6 +49,7 @@
             // PIV機能の初期設定
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
+            [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
             [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
         }
         return self;
@@ -158,6 +161,11 @@
                 [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE withData:nil forCommand:self];
             }
         }
+    }
+
+    - (void)doCommandBLEDFU {
+        // TODO: 事前にBLE経由でバージョン情報を取得
+        [ToolPopupWindow warning:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
     }
 
     - (bool)checkForHIDCommand {

@@ -231,7 +231,8 @@
     }
 
     - (IBAction)menuItemBLEDFUDidSelect:(id)sender {
-        [ToolPopupWindow warning:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
+        // ファームウェア更新をBLE経由で実行
+        [[self toolAppCommand] doCommandBLEDFU];
     }
 
 #pragma mark - Call back from ToolFilePanel
