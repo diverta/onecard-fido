@@ -35,6 +35,8 @@
     @property (nonatomic) uint8_t            bleResponseCmd;
     // 送信フレーム数を保持
     @property (nonatomic) NSUInteger         bleRequestFrameNumber;
+    // 呼び出し元のコマンドオブジェクト参照を保持
+    @property(nonatomic, weak) id            toolCommandRef;
     // 処理クラス
     @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
     @property (nonatomic) ToolU2FHealthCheckCommand   *toolU2FHealthCheckCommand;
@@ -104,15 +106,7 @@
     }
 
     - (void)doResponseGetVersionInfo {
-        // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:[self bleResponseData]];
-        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        // 情報取得CSVからバージョン情報を抽出
-        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
-        NSString *strFWRev = array[1];
-        NSString *strHWRev = array[2];
-        // TODO: 仮
-        [[ToolLogFile defaultLogger] debugWithFormat:@"%@ %@", strFWRev, strHWRev];
+        // BLE接続を切断 --> AppCommandに制御を戻す
         [self commandDidProcess:true message:nil];
     }
 
@@ -214,7 +208,12 @@
 #pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
+        [self bleCommandWillProcess:command forCommand:nil];
+    }
+
+    - (void)bleCommandWillProcess:(Command)command forCommand:(id)commandRef {
         // コマンドに応じ、以下の処理に分岐
+        [self setToolCommandRef:commandRef];
         [self setCommand:command];
         switch (command) {
             case COMMAND_TEST_REGISTER:
@@ -482,6 +481,12 @@
     }
 
     - (void)helperDidDisconnect {
+        // 戻り先が画面でない場合はコマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] bleCommandDidProcess:[self command]
+                                   toolCommandRef:[self toolCommandRef] response:[self bleResponseData]];
+            return;
+        }
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;

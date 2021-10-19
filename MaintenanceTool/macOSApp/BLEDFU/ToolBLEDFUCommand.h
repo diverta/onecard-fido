@@ -10,6 +10,8 @@
 @interface ToolBLEDFUCommand : NSObject
 
     - (id)initWithDelegate:(id)delegate;
+    - (void)getVersionInfoWithCommand:(ToolBLECommand *)toolBLECommand;
+    - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response;
 
 @end
 

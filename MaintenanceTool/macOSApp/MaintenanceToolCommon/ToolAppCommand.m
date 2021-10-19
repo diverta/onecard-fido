@@ -166,7 +166,7 @@
     - (void)doCommandBLEDFU {
         // 事前にBLE経由でバージョン情報を取得
         [[self delegate] disableUserInterface];
-        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO];
+        [[self toolBLEDFUCommand] getVersionInfoWithCommand:[self toolBLECommand]];
     }
 
     - (bool)checkForHIDCommand {
@@ -351,6 +351,14 @@
 
 
 #pragma mark - Call back from ToolBLECommand
+
+    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref response:(NSData *)response {
+        // 下位のコマンドクラスにデータと制御を引き渡す
+        if ([ref isMemberOfClass:[ToolBLEDFUCommand class]]) {
+            ToolBLEDFUCommand *toolBLEDFUCommand = (ToolBLEDFUCommand *)ref;
+            [toolBLEDFUCommand toolBLECommandDidProcess:command response:response];
+        }
+    }
 
     - (void)bleCommandDidProcess:(Command)command
                           result:(bool)result message:(NSString *)message {
