@@ -175,6 +175,13 @@
     }
 
     - (void)doResponseHidGetFlashStat:(NSData *)message {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認
+        uint8_t *requestBytes = (uint8_t *)[message bytes];
+        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
+            // エラーの場合は画面に制御を戻す
+            [self commandDidProcess:[self command] result:false message:nil];
+            return;
+        }
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [self extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
