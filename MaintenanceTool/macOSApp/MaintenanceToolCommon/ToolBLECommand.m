@@ -96,6 +96,26 @@
         [self commandDidProcess:result message:nil];
     }
 
+    - (void)doRequestGetVersionInfo {
+        // BLE経由でバージョン情報を取得
+        unsigned char arr[] = {0x00};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        [self doBLECommandRequestFrom:commandData cmd:HID_CMD_GET_VERSION_INFO];
+    }
+
+    - (void)doResponseGetVersionInfo {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:[self bleResponseData]];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        // 情報取得CSVからバージョン情報を抽出
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
+        NSString *strFWRev = array[1];
+        NSString *strHWRev = array[2];
+        // TODO: 仮
+        [[ToolLogFile defaultLogger] debugWithFormat:@"%@ %@", strFWRev, strHWRev];
+        [self commandDidProcess:true message:nil];
+    }
+
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
         // 分割送信のために64バイトごとのコマンド配列を作成する
         [self setBleRequestArray:[self generateCommandArrayFrom:dataForCommand cmd:cmd]];
@@ -212,6 +232,9 @@
                 // CTAP2コマンドを生成して実行
                 [self doCtap2HealthCheck];
                 break;
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self doRequestGetVersionInfo];
+                break;
             default:
                 [self setBleRequestArray:nil];
                 break;
@@ -234,7 +257,7 @@
             // キープアライブの場合は引き続き次のレスポンスを待つ
             receivedData = nil;
             
-        } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83) {
+        } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83 || bytesBLEHeader[0] == HID_CMD_GET_VERSION_INFO) {
             // ヘッダーから全受信データ長を取得
             totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
             // 4バイト目から後ろを切り出して連結
@@ -294,6 +317,9 @@
             case COMMAND_TEST_BLE_PING:
                 // PINGレスポンスの内容をチェックし、画面に制御を戻す
                 [self doResponseCommandPing];
+                break;
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self doResponseGetVersionInfo];
                 break;
             default:
                 break;

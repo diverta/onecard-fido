@@ -164,8 +164,9 @@
     }
 
     - (void)doCommandBLEDFU {
-        // TODO: 事前にBLE経由でバージョン情報を取得
-        [ToolPopupWindow warning:MSG_CMDTST_MENU_NOT_SUPPORTED informativeText:nil];
+        // 事前にBLE経由でバージョン情報を取得
+        [[self delegate] disableUserInterface];
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO];
     }
 
     - (bool)checkForHIDCommand {
