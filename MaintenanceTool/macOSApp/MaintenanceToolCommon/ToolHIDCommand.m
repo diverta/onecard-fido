@@ -183,7 +183,7 @@
             return;
         }
         // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
         // 情報取得CSVから空き領域に関する情報を抽出
@@ -235,27 +235,14 @@
 
     - (void)doResponseHidGetVersionInfo:(NSData *)message {
         // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         // 情報取得CSVからバージョン情報を抽出
-        NSString *strDeviceName = @"";
-        NSString *strFWRev = @"";
-        NSString *strHWRev = @"";
-        NSString *strSecic = @"";
-        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
-            NSArray *items = [element componentsSeparatedByString:@"="];
-            NSString *key = [items objectAtIndex:0];
-            NSString *val = [items objectAtIndex:1];
-            if ([key isEqualToString:@"DEVICE_NAME"]) {
-                strDeviceName = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"FW_REV"]) {
-                strFWRev = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"HW_REV"]) {
-                strHWRev = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"ATECC608A"]) {
-                strSecic = [self extractCSVItemFrom:val];
-            }
-        }
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
+        NSString *strDeviceName = array[0];
+        NSString *strFWRev = array[1];
+        NSString *strHWRev = array[2];
+        NSString *strSecic = array[3];
         if ([self command] == COMMAND_HID_GET_VERSION_FOR_DFU) {
             if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
                 // DFUコマンドにファームウェアバージョンを戻す
@@ -606,23 +593,6 @@
         // 即時でアプリケーションに制御を戻す
         [[self delegate] hidCommandDidProcess:command
             CMD:0x00 response:nil result:result message:message];
-    }
-
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
-    }
-
-    - (NSString *)extractCSVItemFrom:(NSString *)val {
-        // 文字列の前後に２重引用符が含まれていない場合は終了
-        if ([val length] < 2) {
-            return val;
-        }
-        // 取得した項目から、２重引用符を削除
-        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-        return item;
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {

@@ -28,6 +28,7 @@ typedef enum : NSInteger {
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_PING,
     COMMAND_TEST_BLE_PING,
+    COMMAND_BLE_GET_VERSION_INFO,
     COMMAND_HID_GET_FLASH_STAT,
     COMMAND_HID_GET_VERSION_INFO,
     COMMAND_HID_GET_VERSION_FOR_DFU,
@@ -80,6 +81,10 @@ typedef enum : NSInteger {
                    informativeText:(NSString *)informativeText;
 
     + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
+
+    + (NSArray<NSString *> *)extractValuesFromVersionInfo:(NSString *)versionInfoCSV;
+    + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage;
+    + (NSString *)extractCSVItemFrom:(NSString *)val;
 
 @end
 
