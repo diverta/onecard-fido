@@ -8,6 +8,7 @@
 #define ToolDFU_h
 
 #import "usb_dfu_util.h"
+#import "ToolCommon.h"
 
 @interface ToolDFUCommand : NSObject
 
@@ -17,9 +18,7 @@
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)hidCommandDidDetectConnect:(id)toolHIDCommandRef;
     - (void)hidCommandDidDetectRemoval:(id)toolHIDCommandRef;
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev;
-    - (void)notifyBootloaderModeResponse:(NSData *)message CMD:(uint8_t)cmd;
-
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)response;
     - (void)commandWillChangeToBootloaderMode;
 
 @end

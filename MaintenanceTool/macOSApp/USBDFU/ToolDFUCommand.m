@@ -155,14 +155,32 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev {
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)response {
+        switch (command) {
+            case COMMAND_HID_GET_VERSION_FOR_DFU:
+                [self notifyFirmwareVersion:response];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self notifyBootloaderModeResponse:response CMD:cmd];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)notifyFirmwareVersion:(NSData *)versionInfoResponse {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:versionInfoResponse];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        // 情報取得CSVからバージョン情報を抽出
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
         // 認証器の現在バージョン、基板名を保持
-        [self setCurrentVersion:strFWRev];
-        [self setCurrentBoardname:strHWRev];
+        [self setCurrentVersion:array[1]];
+        [self setCurrentBoardname:array[2]];
         // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
         if ([self needCompareUpdateVersion]) {
             // バージョン情報を比較して終了判定
-            bool result = [self compareUpdateVersion:strFWRev];
+            bool result = [self compareUpdateVersion:[self currentVersion]];
             // 処理進捗画面に対し、処理結果を通知する
             [[self dfuProcessingWindow] commandDidTerminateDFUProcess:result];
         } else {
