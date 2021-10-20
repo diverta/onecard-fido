@@ -51,8 +51,7 @@
         [self setStrHWRev:array[2]];
         [[ToolLogFile defaultLogger] debugWithFormat:@"%@ %@", [self strFWRev], [self strHWRev]];
         // TODO: 画面に制御を戻す
-        ToolAppCommand *toolAppCommand = (ToolAppCommand *)[self delegate];
-        [[toolAppCommand delegate] commandDidProcess:true message:nil processNameOfCommand:nil];
+        [self commandDidTerminate:COMMAND_NONE result:true message:nil];
     }
 
     - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
@@ -63,6 +62,12 @@
             default:
                 break;
         }
+    }
+
+    - (void)commandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
+        // ホーム画面に制御を戻す
+        ToolAppCommand *toolAppCommand = (ToolAppCommand *)[self delegate];
+        [toolAppCommand commandDidProcess:command result:result message:message];
     }
 
 @end

@@ -28,7 +28,7 @@ typedef enum : NSInteger {
     @property (nonatomic) NSString  *serviceUUIDString;
     @property (nonatomic) NSString  *serviceUUIDScanSec;
 
-    - (id)initWithDelegate:(id)delegate;
+    - (id)initWithDelegate:(id)delegate toolHIDCommandRef:(id)ref;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
     // AppDelegate経由でコマンドを実行

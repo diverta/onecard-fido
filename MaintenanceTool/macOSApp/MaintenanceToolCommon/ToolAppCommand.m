@@ -45,7 +45,7 @@
             [self setToolHIDCommand:[[ToolHIDCommand alloc] initWithDelegate:self]];
             [self setToolBLECommand:[[ToolBLECommand alloc] initWithDelegate:self]];
             // 設定画面の初期設定
-            [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self]];
+            [self setToolPreferenceCommand:[[ToolPreferenceCommand alloc] initWithDelegate:self toolHIDCommandRef:[self toolHIDCommand]]];
             // PIV機能の初期設定
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
@@ -270,7 +270,7 @@
         }
     }
 
-#pragma mark - Private methods
+#pragma mark - Interface for AppDelegate
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type {
         // コマンド種別に対応する処理名称を設定
@@ -381,8 +381,8 @@
         switch (command) {
             case COMMAND_TOOL_PREF_PARAM:
             case COMMAND_TOOL_PREF_PARAM_INQUIRY:
-                // ツール設定コマンドに応答メッセージを引き渡す
-                [self toolPreferenceDidProcess:command
+                // ツール設定画面に応答メッセージを引き渡す
+                [[self toolPreferenceCommand] toolPreferenceDidProcess:command
                         CMD:cmd response:resp result:result message:message];
                 break;
             default:
@@ -407,45 +407,6 @@
         [[ToolLogFile defaultLogger] info:MSG_HID_REMOVED];
         // DFU処理にHID接続切断を通知
         [[self toolDFUCommand] hidCommandDidDetectRemoval:[self toolHIDCommand]];
-    }
-
-#pragma mark - Interface for ToolPreferenceWindow
-
-    - (void)toolPreferenceWillProcess:(Command)command withData:(NSData *)data {
-        // コマンド実行のために必要なデータを設定し、コマンドを実行
-        [[self toolHIDCommand] hidHelperWillProcess:command withData:data];
-    }
-
-    - (void)toolPreferenceDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message {
-        // ツール設定画面に応答メッセージを引き渡す
-        [[self toolPreferenceCommand] toolPreferenceDidProcess:command
-            CMD:cmd response:resp result:result message:message];
-    }
-
-    - (void)toolPreferenceWindowDidClose {
-        // ツール設定画面を閉じた時は、ポップアップを表示しない
-        [self commandDidProcess:COMMAND_NONE result:true message:nil];
-    }
-
-#pragma mark - Interface for ToolDFUCommand
-
-    - (void)toolDFUCommandDidStart {
-        // DFU処理開始時
-        [self commandStartedProcess:COMMAND_USB_DFU type:TRANSPORT_HID];
-    }
-
-    - (void)toolDFUCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
-        // DFU処理完了時
-        [self commandDidProcess:command result:result message:message];
-    }
-
-#pragma mark - Interface for ToolPIVCommand
-
-    - (void)toolPIVCommandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
-        // PIV関連処理完了時
-        [self commandDidProcess:command result:result message:message];
     }
 
 @end

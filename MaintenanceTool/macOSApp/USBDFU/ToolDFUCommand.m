@@ -45,7 +45,7 @@
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
     @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
     // 画面の参照を保持
-    @property (nonatomic, weak) ToolAppCommand *delegate;
+    @property (nonatomic, weak) ToolAppCommand *toolAppCommand;
     @property (nonatomic) DFUStartWindow       *dfuStartWindow;
     @property (nonatomic) DFUProcessingWindow  *dfuProcessingWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
@@ -74,7 +74,7 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            [self setDelegate:delegate];
+            [self setToolAppCommand:(ToolAppCommand *)delegate];
         }
         // 内部保持バージョンをクリア
         [self setCurrentVersion:@""];
@@ -364,7 +364,7 @@
         [[[self dfuStartWindow] parentWindow] beginSheet:dialog
                                        completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf dfuStartWindowDidClose:[self delegate] modalResponse:response];
+            [weakSelf dfuStartWindowDidClose:[self toolAppCommand] modalResponse:response];
         }];
         // バージョン情報を、ダイアログの該当欄に設定
         [[self dfuStartWindow] setWindowParameter:self
@@ -469,7 +469,7 @@
         [[[self dfuProcessingWindow] parentWindow] beginSheet:dialog
                                             completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf dfuProcessingWindowDidClose:[self delegate] modalResponse:response];
+            [weakSelf dfuProcessingWindowDidClose:[self toolAppCommand] modalResponse:response];
         }];
     }
 
@@ -510,7 +510,7 @@
         });
         dispatch_async([self mainQueue], ^{
             // メイン画面に開始メッセージを出力
-            [[self delegate] toolDFUCommandDidStart];
+            [[self toolAppCommand] commandStartedProcess:COMMAND_USB_DFU type:TRANSPORT_HID];
         });
     }
 
@@ -552,16 +552,16 @@
     }
 
     - (void)notifyEndMessage:(bool)success {
-        // AppDelegateに制御を戻す
+        // メイン画面に制御を戻す
         dispatch_async([self mainQueue], ^{
-            [[self delegate] toolDFUCommandDidTerminate:COMMAND_USB_DFU result:success message:nil];
+            [[self toolAppCommand] commandDidProcess:COMMAND_USB_DFU result:success message:nil];
         });
     }
 
     - (void)notifyCancel {
-        // AppDelegateに制御を戻す（ポップアップメッセージを表示しない）
+        // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
         dispatch_async([self mainQueue], ^{
-            [[self delegate] toolDFUCommandDidTerminate:COMMAND_NONE result:true message:nil];
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
         });
     }
 
