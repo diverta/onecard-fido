@@ -101,6 +101,15 @@
         [[ToolLogFile defaultLogger]
              debugWithFormat:@"ToolBLEDFUCommand: Firmware version %s, board name %s",
              mcumgr_app_image_bin_version(), mcumgr_app_image_bin_boardname()];
+        // .binファイルからイメージを読込
+        const char *zip_path = mcumgr_app_image_bin_filename();
+        if (mcumgr_app_image_bin_read(zip_path) == false) {
+            [self notifyErrorMessage:MSG_DFU_IMAGE_READ_FAILED];
+            return false;
+        }
+        // ログ出力
+        [[ToolLogFile defaultLogger]
+             debugWithFormat:@"ToolBLEDFUCommand: DFU image file (%d bytes)", mcumgr_app_image_bin_size()];
         return true;
     }
 

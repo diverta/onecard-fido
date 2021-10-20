@@ -14,5 +14,8 @@ char       *mcumgr_app_image_bin_filename(void);
 char       *mcumgr_app_image_bin_version(void);
 char       *mcumgr_app_image_bin_boardname(void);
 bool        mcumgr_app_image_bin_filename_get(const char *bin_file_dir_path, const char *bin_file_name_prefix);
+uint8_t    *mcumgr_app_image_bin(void);
+size_t      mcumgr_app_image_bin_size(void);
+bool        mcumgr_app_image_bin_read(const char *bin_file_path);
 
 #endif /* mcumgr_app_image_h */
