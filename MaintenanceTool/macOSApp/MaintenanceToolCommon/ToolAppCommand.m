@@ -231,9 +231,7 @@
         [[self toolPreferenceCommand] toolPreferenceInquiryWillProcess];
     }
 
-    - (void)toolPreferenceInquiryDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message {
+    - (void)toolPreferenceInquiryDidProcess:(bool)result {
         // 処理失敗時は、BLE自動認証機能を無効化し、ヘルスチェック処理を実行
         if (result == false) {
             [[ToolContext instance] setBleScanAuthEnabled:false];
@@ -393,7 +391,7 @@
     - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response {
         // 下位のコマンドクラスにデータと制御を引き渡す
         if ([ref isMemberOfClass:[ToolPreferenceCommand class]]) {
-            [[self toolPreferenceCommand] toolHIDCommandDidProcess:command CMD:cmd response:response result:true message:nil];
+            [[self toolPreferenceCommand] hidCommandDidProcess:command CMD:cmd response:response];
         }
         if ([ref isMemberOfClass:[ToolDFUCommand class]]) {
             [[self toolDFUCommand] hidCommandDidProcess:command CMD:cmd response:response];

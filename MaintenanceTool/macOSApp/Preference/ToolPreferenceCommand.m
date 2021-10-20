@@ -110,7 +110,7 @@
         [self generateRequestCommandAuthParamGet:[self commandType]];
 
         // HID経由でコマンドを実行
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData]];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData] forCommand:self];
     }
 
     - (void)toolPreferenceInquiryWillProcess {
@@ -119,22 +119,19 @@
         [self generateRequestCommandAuthParamGet:[self commandType]];
 
         // HID経由でコマンドを実行
-        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM_INQUIRY withData:[self processData]];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM_INQUIRY withData:[self processData] forCommand:self];
     }
 
-    - (void)toolPreferenceDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message {
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp {
         // 取得データをクラス変数に設定
         bool success = [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
         if (command == COMMAND_TOOL_PREF_PARAM) {
             // 画面に制御を戻す
             [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
-                                                                 success:(success & result) message:message];
+                                                                 success:success message:nil];
         } else {
             // 上位コマンドクラスに再び制御を戻す
-            [[self toolAppCommand] toolPreferenceInquiryDidProcess:command
-                    CMD:cmd response:resp result:(success & result) message:message];
+            [[self toolAppCommand] toolPreferenceInquiryDidProcess:success];
         }
     }
 

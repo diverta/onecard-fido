@@ -40,9 +40,7 @@
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
 
-    - (void)toolPreferenceInquiryDidProcess:(Command)command
-                                        CMD:(uint8_t)cmd response:(NSData *)resp
-                                     result:(bool)result message:(NSString *)message;
+    - (void)toolPreferenceInquiryDidProcess:(bool)result;
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type;
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message;

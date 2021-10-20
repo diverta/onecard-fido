@@ -31,14 +31,12 @@ typedef enum : NSInteger {
     - (id)initWithDelegate:(id)delegate toolHIDCommandRef:(id)ref;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
-    // AppDelegate経由でコマンドを実行
+    // HID経由でコマンドを実行
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType;
     - (void)toolPreferenceInquiryWillProcess;
 
-    // AppDelegate経由で実行したコマンドの応答
-    - (void)toolPreferenceDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message;
+    // HID経由で実行したコマンドの応答
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp;
 
 @end
 
