@@ -14,7 +14,6 @@
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
-#import "ToolDFUCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -234,6 +233,11 @@
     }
 
     - (void)doResponseHidGetVersionInfo:(NSData *)message {
+        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:0x00 response:message];
+            return;
+        }
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
@@ -243,14 +247,6 @@
         NSString *strFWRev = array[1];
         NSString *strHWRev = array[2];
         NSString *strSecic = array[3];
-        if ([self command] == COMMAND_HID_GET_VERSION_FOR_DFU) {
-            if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
-                // DFUコマンドにファームウェアバージョンを戻す
-                ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-                [toolDFUCommand notifyFirmwareVersion:strFWRev boardname:strHWRev];
-            }
-            return;
-        }
         // 画面に制御を戻す
         [self displayMessage:MSG_VERSION_INFO_HEADER];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
@@ -276,27 +272,11 @@
         [self doRequest:message CID:cid CMD:HID_CMD_BOOTLOADER_MODE];
     }
 
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            [self displayMessage:MSG_BOOT_LOADER_MODE_UNSUPP];
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     - (void)doResponseHidBootloaderMode:(NSData *)message CMD:(uint8_t)cmd {
-        // ステータスコードを確認
-        bool result = [self checkStatusCode:message];
-        if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
-            // DFUコマンドに制御を戻す
-            ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-            [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
-        } else if ([[self toolCommandRef] isMemberOfClass:[ToolAppCommand class]]) {
-            // AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:result message:nil];
+        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
+            return;
         }
     }
 
@@ -417,7 +397,10 @@
         [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
     }
 
-    - (void)hidHelperWillProcess:(Command)command {
+    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
+        // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
+        [self setToolCommandRef:commandRef];
+        [self setProcessData:data];
         // コマンドを待避
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
@@ -475,20 +458,11 @@
 
 #pragma mark - For process from other command
 
-    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
-        // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
-        [self setToolCommandRef:commandRef];
-        [self setProcessData:data];
-        [self hidHelperWillProcess:command];
+    - (void)hidHelperWillProcess:(Command)command {
+        [self hidHelperWillProcess:command withData:nil forCommand:nil];
     }
 
 #pragma mark - For tool preference parameters
-
-    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data {
-        // AppDelegateからコマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
-        [self setProcessData:data];
-        [self hidHelperWillProcess:command];
-    }
 
     - (void)doToolPreferenceParameter {
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
@@ -502,9 +476,8 @@
 
     - (void)doResponseToolPreferenceParameter:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // AppDelegateに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
-        [[self delegate] hidCommandDidProcess:[self command]
-            CMD:cmd response:message result:true message:nil];
+        // 上位コマンドクラスに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
+        [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -558,8 +531,7 @@
                 break;
             default:
                 // メッセージを画面表示
-                [[self delegate] hidCommandDidProcess:[self command]
-                    CMD:cmd response:message result:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                [[self delegate] hidCommandDidProcess:[self command] result:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -591,8 +563,7 @@
 
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
         // 即時でアプリケーションに制御を戻す
-        [[self delegate] hidCommandDidProcess:command
-            CMD:0x00 response:nil result:result message:message];
+        [[self delegate] hidCommandDidProcess:command result:result message:message];
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {

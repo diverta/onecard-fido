@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/14.
 //
+#import "FIDODefines.h"
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
@@ -157,8 +158,7 @@
                              informativeText:MSG_PROMPT_BOOT_LOADER_MODE]) {
                 // ブートローダーモード遷移
                 [[self delegate] disableUserInterface];
-                [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE withData:nil forCommand:self];
+                [self changeToBootloaderMode];
             }
         }
     }
@@ -270,6 +270,21 @@
         }
     }
 
+#pragma mark - Perform bootloader mode
+
+    - (void)changeToBootloaderMode {
+        // ブートローダーモード遷移
+        [self hidCommandStartedProcess:COMMAND_HID_BOOTLOADER_MODE];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_HID_BOOTLOADER_MODE withData:nil forCommand:self];
+    }
+
+    - (void)didChangeToBootloaderMode:(Command)command response:(NSData *)response {
+        // レスポンスメッセージの１バイト目（ステータスコード）を確認し、画面に制御を戻す
+        uint8_t *requestBytes = (uint8_t *)[response bytes];
+        bool result = (requestBytes[0] == CTAP1_ERR_SUCCESS);
+        [self commandDidProcess:command result:result message:MSG_BOOT_LOADER_MODE_UNSUPP];
+    }
+
 #pragma mark - Interface for AppDelegate
 
     - (void)commandStartedProcess:(Command)command type:(TransportType)type {
@@ -375,20 +390,24 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)hidCommandDidProcess:(Command)command
-                             CMD:(uint8_t)cmd response:(NSData *)resp
-                          result:(bool)result message:(NSString *)message {
-        switch (command) {
-            case COMMAND_TOOL_PREF_PARAM:
-            case COMMAND_TOOL_PREF_PARAM_INQUIRY:
-                // ツール設定画面に応答メッセージを引き渡す
-                [[self toolPreferenceCommand] toolPreferenceDidProcess:command
-                        CMD:cmd response:resp result:result message:message];
-                break;
-            default:
-                [self commandDidProcess:command result:result message:message];
-                break;
+    - (void)hidCommandDidProcess:(Command)command toolCommandRef:(id)ref CMD:(uint8_t)cmd response:(NSData *)response {
+        // 下位のコマンドクラスにデータと制御を引き渡す
+        if ([ref isMemberOfClass:[ToolPreferenceCommand class]]) {
+            [[self toolPreferenceCommand] toolHIDCommandDidProcess:command CMD:cmd response:response result:true message:nil];
         }
+        if ([ref isMemberOfClass:[ToolDFUCommand class]]) {
+            [[self toolDFUCommand] hidCommandDidProcess:command CMD:cmd response:response];
+        }
+        if ([ref isMemberOfClass:[ToolAppCommand class]]) {
+            // 画面に制御を戻す
+            if (command == COMMAND_HID_BOOTLOADER_MODE) {
+                [self didChangeToBootloaderMode:command response:response];
+            }
+        }
+    }
+
+    - (void)hidCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
+        [self commandDidProcess:command result:result message:message];
     }
 
     - (void)hidCommandStartedProcess:(Command)command {
