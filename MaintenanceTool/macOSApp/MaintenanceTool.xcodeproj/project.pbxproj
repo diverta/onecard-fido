@@ -27,7 +27,7 @@
 		7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41F22B2043B2D40055ACBF /* ToolPopupWindow.m */; };
 		7A41FCA72575EA0D00CA06F9 /* ToolPIVImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */; };
 		7A41FCAA2575F0B000CA06F9 /* tool_crypto_private_key.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */; };
-		7A4D1171271E63340095C29E /* BLEDFUWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUWindow.m */; };
+		7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */; };
 		7A4D1174271E63D30095C29E /* ToolBLEDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */; };
 		7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D1178271E6A740095C29E /* usb_cdc_util.c */; };
 		7A4D1187271E6A750095C29E /* ToolDFUCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A4D117B271E6A740095C29E /* ToolDFUCommand.m */; };
@@ -116,8 +116,8 @@
 		7A41FCA62575EA0D00CA06F9 /* ToolPIVImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolPIVImporter.m; sourceTree = "<group>"; };
 		7A41FCA82575F0B000CA06F9 /* tool_crypto_private_key.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tool_crypto_private_key.h; sourceTree = "<group>"; };
 		7A41FCA92575F0B000CA06F9 /* tool_crypto_private_key.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_private_key.c; sourceTree = "<group>"; };
-		7A4D116F271E63340095C29E /* BLEDFUWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUWindow.h; sourceTree = "<group>"; };
-		7A4D1170271E63340095C29E /* BLEDFUWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUWindow.m; sourceTree = "<group>"; };
+		7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDFUStartWindow.h; sourceTree = "<group>"; };
+		7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDFUStartWindow.m; sourceTree = "<group>"; };
 		7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolBLEDFUCommand.h; sourceTree = "<group>"; };
 		7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolBLEDFUCommand.m; sourceTree = "<group>"; };
 		7A4D1176271E6A740095C29E /* ToolDFUCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolDFUCommand.h; sourceTree = "<group>"; };
@@ -327,8 +327,8 @@
 		7A4D116E271E62CD0095C29E /* BLEDFU */ = {
 			isa = PBXGroup;
 			children = (
-				7A4D116F271E63340095C29E /* BLEDFUWindow.h */,
-				7A4D1170271E63340095C29E /* BLEDFUWindow.m */,
+				7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */,
+				7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */,
 				7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */,
 				7A4D1173271E63D30095C29E /* ToolBLEDFUCommand.m */,
 				7AB0CEF1271FE82600DA96FD /* mcumgr_app_image.h */,
@@ -589,7 +589,7 @@
 				7A4D1187271E6A750095C29E /* ToolDFUCommand.m in Sources */,
 				7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */,
 				7A4D1186271E6A750095C29E /* usb_cdc_util.c in Sources */,
-				7A4D1171271E63340095C29E /* BLEDFUWindow.m in Sources */,
+				7A4D1171271E63340095C29E /* BLEDFUStartWindow.m in Sources */,
 				7A6687922575CCC70054F0DE /* ToolPIVCommand.m in Sources */,
 				7A5E6160270EC2D400C4AA3D /* ToolBLEHelper.m in Sources */,
 				7AB4B16E271E6E8B0099D51B /* ToolClientPINCommand.m in Sources */,

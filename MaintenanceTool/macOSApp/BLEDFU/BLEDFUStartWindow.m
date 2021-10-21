@@ -1,25 +1,23 @@
 //
-//  BLEDFUWindow.m
+//  BLEDFUStartWindow.m
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2021/10/18.
 //
-#import "BLEDFUWindow.h"
-#import "ToolAppCommand.h"
+#import "BLEDFUStartWindow.h"
+#import "ToolBLEDFUCommand.h"
 
-@interface BLEDFUWindow ()
+@interface BLEDFUStartWindow ()
 
-    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
-
-    @property (nonatomic, weak) NSWindow        *parentWindow;
-    @property (assign) IBOutlet NSButton        *buttonOK;
-    @property (assign) IBOutlet NSButton        *buttonCancel;
-    @property (assign) IBOutlet NSTextField     *labelUpdateVersion;
-    @property (assign) IBOutlet NSTextField     *labelCurrentVersion;
+    @property (nonatomic, weak) ToolBLEDFUCommand   *toolBLEDFUCommand;
+    @property (assign) IBOutlet NSButton            *buttonOK;
+    @property (assign) IBOutlet NSButton            *buttonCancel;
+    @property (assign) IBOutlet NSTextField         *labelUpdateVersion;
+    @property (assign) IBOutlet NSTextField         *labelCurrentVersion;
 
 @end
 
-@implementation BLEDFUWindow
+@implementation BLEDFUStartWindow
 
     - (void)windowDidLoad {
         [super windowDidLoad];
@@ -33,13 +31,17 @@
         [[self labelCurrentVersion] setStringValue:@""];
     }
 
-    - (void)setToolAppCommandRef:(id)ref {
-        // コマンドクラスの参照を設定
-        [self setToolAppCommand:(ToolAppCommand *)ref];
+    - (void)setWindowParameter:(id)toolBLEDFUCommandRef currentVersion:(NSString *)current updateVersion:(NSString *)update{
+        // DFU処理クラスの参照を設定
+        [self setToolBLEDFUCommand:(ToolBLEDFUCommand *)toolBLEDFUCommandRef];
+        // バージョンラベルを設定
+        [[self labelUpdateVersion] setStringValue:update];
+        [[self labelCurrentVersion] setStringValue:current];
     }
 
     - (IBAction)buttonOKDidPress:(id)sender {
         // TODO: 仮の実装です。
+        [self terminateWindow:NSModalResponseCancel];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
