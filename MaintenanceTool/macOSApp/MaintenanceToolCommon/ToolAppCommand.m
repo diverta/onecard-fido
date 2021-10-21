@@ -358,7 +358,8 @@
     }
 
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
-        [[self delegate] commandDidProcess:result message:message processNameOfCommand:[self processNameOfCommand]];
+        [[self delegate] commandDidProcess:result message:message
+                      processNameOfCommand:(command == COMMAND_NONE) ? nil : [self processNameOfCommand]];
         [self setProcessNameOfCommand:nil];
     }
 
