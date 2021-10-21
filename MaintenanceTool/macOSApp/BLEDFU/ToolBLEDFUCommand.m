@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
@@ -21,12 +22,13 @@
 @interface ToolBLEDFUCommand ()
 
     // 上位クラスの参照を保持
-    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
+    @property (nonatomic, weak) ToolAppCommand     *toolAppCommand;
     // 画面の参照を保持
-    @property (nonatomic) BLEDFUStartWindow     *bleDfuStartWindow;
+    @property (nonatomic) BLEDFUStartWindow        *bleDfuStartWindow;
+    @property (nonatomic) BLEDFUProcessingWindow   *bleDfuProcessingWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
-    @property (nonatomic) dispatch_queue_t       mainQueue;
-    @property (nonatomic) dispatch_queue_t       subQueue;
+    @property (nonatomic) dispatch_queue_t          mainQueue;
+    @property (nonatomic) dispatch_queue_t          subQueue;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -52,6 +54,7 @@
         [self setUpdateVersionFromImage:@""];
         // 画面のインスタンスを生成
         [self setBleDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
+        [self setBleDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.bledfu", DISPATCH_QUEUE_SERIAL)];
@@ -59,8 +62,9 @@
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
-        // 処理開始画面に親画面参照をセット
+        // 処理開始／進捗画面に親画面参照をセット
         [[self bleDfuStartWindow] setParentWindow:parentWindow];
+        [[self bleDfuProcessingWindow] setParentWindow:parentWindow];
         // 事前にBLE経由でバージョン情報を取得
         ToolBLECommand *toolBLECommand = (ToolBLECommand *)toolBLECommandRef;
         [toolBLECommand bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
@@ -126,8 +130,50 @@
     }
 
     - (void)invokeDFUProcess {
-        // TODO: 仮の実装です。
-        [self notifyCancel];
+        // 処理進捗画面（ダイアログ）をモーダルで表示
+        [self bleDfuProcessingWindowWillOpen];
+        // 処理進捗画面にDFU処理開始を通知
+        [[self bleDfuProcessingWindow] commandDidStartDFUProcess];
+        // サブスレッドでDFU処理を実行開始
+        [self startDFUProcess];
+    }
+
+#pragma mark - Interface for DFUProcessingWindow
+
+    - (void)bleDfuProcessingWindowWillOpen {
+        NSWindow *dialog = [[self bleDfuProcessingWindow] window];
+        ToolBLEDFUCommand * __weak weakSelf = self;
+        [[[self bleDfuProcessingWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf bleDfuProcessingWindowDidClose:[self toolAppCommand] modalResponse:response];
+        }];
+    }
+
+    - (void)bleDfuProcessingWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        [[self bleDfuProcessingWindow] close];
+        switch (modalResponse) {
+            case NSModalResponseOK:
+                [self notifyEndMessage:true];
+                break;
+            case NSModalResponseAbort:
+                [self notifyEndMessage:false];
+                break;
+            default:
+                // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
+                [self notifyCancel];
+                break;
+        }
+    }
+
+#pragma mark - Main process
+
+    - (void)startDFUProcess {
+        // TODO: サブスレッドでDFU処理を実行
+
+        // メイン画面に開始メッセージを出力
+        dispatch_async([self mainQueue], ^{
+            [[self toolAppCommand] commandStartedProcess:COMMAND_BLE_DFU type:TRANSPORT_BLE];
+        });
     }
 
 #pragma mark - Private methods
@@ -199,6 +245,13 @@
 
     - (void)notifyErrorMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] error:message];
+    }
+
+    - (void)notifyEndMessage:(bool)success {
+        // メイン画面に制御を戻す
+        dispatch_async([self mainQueue], ^{
+            [[self toolAppCommand] commandDidProcess:COMMAND_BLE_DFU result:success message:nil];
+        });
     }
 
     - (void)notifyCancel {

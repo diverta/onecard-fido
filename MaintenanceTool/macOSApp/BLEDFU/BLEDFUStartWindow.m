@@ -40,8 +40,8 @@
     }
 
     - (IBAction)buttonOKDidPress:(id)sender {
-        // TODO: 仮の実装です。
-        [self terminateWindow:NSModalResponseCancel];
+        // このウィンドウを終了
+        [self terminateWindow:NSModalResponseOK];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
