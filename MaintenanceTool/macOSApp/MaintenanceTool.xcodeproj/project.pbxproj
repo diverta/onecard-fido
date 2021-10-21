@@ -69,6 +69,7 @@
 		7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7AB4B164271E6E8B0099D51B /* SetPinParamWindow.xib */; };
 		7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B166271E6E8B0099D51B /* debug_log.c */; };
 		7AB4B174271E6E8B0099D51B /* AES256CBC.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4B167271E6E8B0099D51B /* AES256CBC.c */; };
+		7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */; };
 		7ACBD8CC2566424D00722984 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBD8CB2566424D00722984 /* Entitlements.plist */; };
 		7ACC0BF6257770B800F4026B /* tool_crypto_certificate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ACC0BF5257770B800F4026B /* tool_crypto_certificate.c */; };
 		7AD501BB2578883D00494B7C /* tool_piv_admin.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AD501BA2578883D00494B7C /* tool_piv_admin.c */; };
@@ -194,6 +195,7 @@
 		7AB4B168271E6E8B0099D51B /* fido_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fido_blob.h; sourceTree = "<group>"; };
 		7AB4B169271E6E8B0099D51B /* FIDODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FIDODefines.h; sourceTree = "<group>"; };
 		7AB4B16A271E6E8B0099D51B /* ToolClientPINCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolClientPINCommand.h; sourceTree = "<group>"; };
+		7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BLEDFUStartWindow.xib; sourceTree = "<group>"; };
 		7ACA8D792251B55100B132E2 /* MaintenanceTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaintenanceTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ACBD8C925663EFA00722984 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
 		7ACBD8CB2566424D00722984 /* Entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 		7A4D116E271E62CD0095C29E /* BLEDFU */ = {
 			isa = PBXGroup;
 			children = (
+				7ABDC69A272131F200F3E761 /* BLEDFUStartWindow.xib */,
 				7A4D116F271E63340095C29E /* BLEDFUStartWindow.h */,
 				7A4D1170271E63340095C29E /* BLEDFUStartWindow.m */,
 				7A4D1172271E63C00095C29E /* ToolBLEDFUCommand.h */,
@@ -536,6 +539,7 @@
 				7A9829C325C0EC7300820D02 /* appkg.PCA10059_02.0.3.0.zip in Resources */,
 				7AB4B172271E6E8B0099D51B /* SetPinParamWindow.xib in Resources */,
 				7AB0CEF0271FE79D00DA96FD /* app_update.PCA10095.0.4.0.bin in Resources */,
+				7ABDC69B272131F200F3E761 /* BLEDFUStartWindow.xib in Resources */,
 				64ED9A901647439300F39EAE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

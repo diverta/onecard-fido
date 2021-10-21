@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "BLEDFUStartWindow.h"
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
@@ -21,6 +22,11 @@
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
+    // 画面の参照を保持
+    @property (nonatomic) BLEDFUStartWindow     *bleDfuStartWindow;
+    // 非同期処理用のキュー（画面用／DFU処理用）
+    @property (nonatomic) dispatch_queue_t       mainQueue;
+    @property (nonatomic) dispatch_queue_t       subQueue;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -44,10 +50,17 @@
         // 内部保持バージョンをクリア
         [self setCurrentVersion:@""];
         [self setUpdateVersionFromImage:@""];
+        // 画面のインスタンスを生成
+        [self setBleDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
+        // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
+        [self setMainQueue:dispatch_get_main_queue()];
+        [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.bledfu", DISPATCH_QUEUE_SERIAL)];
         return self;
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
+        // 処理開始画面に親画面参照をセット
+        [[self bleDfuStartWindow] setParentWindow:parentWindow];
         // 事前にBLE経由でバージョン情報を取得
         ToolBLECommand *toolBLECommand = (ToolBLECommand *)toolBLECommandRef;
         [toolBLECommand bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
@@ -82,7 +95,38 @@
             [self notifyCancel];
             return;
         }
-        // TODO: 画面に制御を戻す
+        // 処理開始画面を表示
+        [self dfuStartWindowWillOpen];
+    }
+
+#pragma mark - Interface for DFUStartWindow
+
+    - (void)dfuStartWindowWillOpen {
+        NSWindow *dialog = [[self bleDfuStartWindow] window];
+        ToolBLEDFUCommand * __weak weakSelf = self;
+        [[[self bleDfuStartWindow] parentWindow] beginSheet:dialog completionHandler:^(NSModalResponse response){
+            // ダイアログが閉じられた時の処理
+            [weakSelf dfuStartWindowDidClose:[self toolAppCommand] modalResponse:response];
+        }];
+        // バージョン情報を、ダイアログの該当欄に設定
+        [[self bleDfuStartWindow] setWindowParameter:self
+            currentVersion:[self currentVersion] updateVersion:[self updateVersionFromImage]];
+    }
+
+    - (void)dfuStartWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
+        // 画面を閉じる
+        [[self bleDfuStartWindow] close];
+        if (modalResponse == NSModalResponseCancel) {
+            // キャンセルボタンがクリックされた場合は、ポップアップ画面を出さずに終了
+            [self notifyCancel];
+            return;
+        }
+        // DFU処理開始
+        [self invokeDFUProcess];
+    }
+
+    - (void)invokeDFUProcess {
+        // TODO: 仮の実装です。
         [self notifyCancel];
     }
 
@@ -159,7 +203,9 @@
 
     - (void)notifyCancel {
         // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
-        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        dispatch_async([self mainQueue], ^{
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        });
     }
 
 @end
