@@ -298,8 +298,8 @@
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
-        int currentVersionDec = [self calculateDecimalVersion:[self currentVersion]];
-        int updateVersionDec = [self calculateDecimalVersion:update];
+        int currentVersionDec = [ToolCommon calculateDecimalVersion:[self currentVersion]];
+        int updateVersionDec = [ToolCommon calculateDecimalVersion:update];
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
@@ -316,15 +316,6 @@
         // 更新バージョンを保持
         [self setUpdateVersionFromImage:update];
         return true;
-    }
-
-    - (int)calculateDecimalVersion:(NSString *)versionStr {
-        // バージョン文字列 "1.2.11" -> "010211" 形式に変換
-        int decimalVersion = 0;
-        for (NSString *element in [versionStr componentsSeparatedByString:@"."]) {
-            decimalVersion = decimalVersion * 100 + [element intValue];
-        }
-        return decimalVersion;
     }
 
     - (bool)versionCheckForDFU {

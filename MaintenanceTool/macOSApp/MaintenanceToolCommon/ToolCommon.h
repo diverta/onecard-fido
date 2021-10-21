@@ -85,6 +85,7 @@ typedef enum : NSInteger {
     + (NSArray<NSString *> *)extractValuesFromVersionInfo:(NSString *)versionInfoCSV;
     + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage;
     + (NSString *)extractCSVItemFrom:(NSString *)val;
+    + (int)calculateDecimalVersion:(NSString *)versionStr;
 
 @end
 
