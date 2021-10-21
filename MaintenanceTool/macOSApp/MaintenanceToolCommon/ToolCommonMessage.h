@@ -59,6 +59,7 @@
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
 #define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
+#define PROCESS_NAME_BLE_DFU                        @"FIDO認証器のファームウェア更新"
 #define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
 #define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
 #define PROCESS_NAME_CCID_PIV_CHANGE_PIN            @"PIV PINコード変更"

@@ -296,6 +296,9 @@
             case COMMAND_TEST_BLE_PING:
                 [self setProcessNameOfCommand:PROCESS_NAME_TEST_BLE_PING];
                 break;
+            case COMMAND_BLE_DFU:
+                [self setProcessNameOfCommand:PROCESS_NAME_BLE_DFU];
+                break;
             // HID関連
             case COMMAND_ERASE_BONDS:
                 [self setProcessNameOfCommand:PROCESS_NAME_ERASE_BONDS];
