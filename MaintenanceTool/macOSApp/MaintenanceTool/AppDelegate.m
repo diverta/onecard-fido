@@ -232,7 +232,7 @@
 
     - (IBAction)menuItemBLEDFUDidSelect:(id)sender {
         // ファームウェア更新をBLE経由で実行
-        [[self toolAppCommand] doCommandBLEDFU];
+        [[self toolAppCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
 #pragma mark - Call back from ToolFilePanel

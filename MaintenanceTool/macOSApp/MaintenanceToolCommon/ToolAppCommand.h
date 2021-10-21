@@ -29,7 +29,6 @@
     - (void)doCommandHidU2fHealthCheck;
     - (void)doCommandEraseBond;
     - (void)doCommandBLMode;
-    - (void)doCommandBLEDFU;
     - (bool)checkForHIDCommand;
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
@@ -39,6 +38,7 @@
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow;
 
     - (void)toolPreferenceInquiryDidProcess:(bool)result;
 

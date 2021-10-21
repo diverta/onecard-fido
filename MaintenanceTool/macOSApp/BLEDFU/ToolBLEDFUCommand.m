@@ -7,7 +7,6 @@
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
-#import "ToolCommon.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
@@ -21,7 +20,7 @@
 @interface ToolBLEDFUCommand ()
 
     // 上位クラスの参照を保持
-    @property (nonatomic, weak) id delegate;
+    @property (nonatomic, weak) ToolAppCommand  *toolAppCommand;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -40,14 +39,28 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            [self setDelegate:delegate];
+            [self setToolAppCommand:(ToolAppCommand *)delegate];
         }
+        // 内部保持バージョンをクリア
+        [self setCurrentVersion:@""];
+        [self setUpdateVersionFromImage:@""];
         return self;
     }
 
-    - (void)getVersionInfoWithCommand:(ToolBLECommand *)toolBLECommand {
+    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef {
         // 事前にBLE経由でバージョン情報を取得
+        ToolBLECommand *toolBLECommand = (ToolBLECommand *)toolBLECommandRef;
         [toolBLECommand bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
+    }
+
+    - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
+        switch (command) {
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self setVersionInfoArrayFromResponse:response];
+                break;
+            default:
+                break;
+        }
     }
 
     - (void)setVersionInfoArrayFromResponse:(NSData *)response {
@@ -61,32 +74,16 @@
         [self setCurrentBoardname:array[2]];
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImageFile] == false) {
-            [self commandDidTerminate:COMMAND_NONE result:true message:nil];
+            [self notifyCancel];
             return;
         }
         // ツール同梱のイメージファイルのバージョンが、稼働中のファームウェアのバージョンより古い場合は処理を中止
         if ([self dfuImageIsAvailable] == false) {
-            [self commandDidTerminate:COMMAND_NONE result:true message:nil];
+            [self notifyCancel];
             return;
         }
         // TODO: 画面に制御を戻す
-        [self commandDidTerminate:COMMAND_NONE result:true message:nil];
-    }
-
-    - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
-        switch (command) {
-            case COMMAND_BLE_GET_VERSION_INFO:
-                [self setVersionInfoArrayFromResponse:response];
-                break;
-            default:
-                break;
-        }
-    }
-
-    - (void)commandDidTerminate:(Command)command result:(bool)result message:(NSString *)message {
-        // ホーム画面に制御を戻す
-        ToolAppCommand *toolAppCommand = (ToolAppCommand *)[self delegate];
-        [toolAppCommand commandDidProcess:command result:result message:message];
+        [self notifyCancel];
     }
 
 #pragma mark - Private methods
@@ -158,6 +155,11 @@
 
     - (void)notifyErrorMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] error:message];
+    }
+
+    - (void)notifyCancel {
+        // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
+        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end

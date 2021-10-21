@@ -163,12 +163,6 @@
         }
     }
 
-    - (void)doCommandBLEDFU {
-        // 事前にBLE経由でバージョン情報を取得
-        [[self delegate] disableUserInterface];
-        [[self toolBLEDFUCommand] getVersionInfoWithCommand:[self toolBLECommand]];
-    }
-
     - (bool)checkForHIDCommand {
         // USBポートに接続されていない場合はfalse
         return [[self toolHIDCommand] checkUSBHIDConnection];
@@ -221,6 +215,12 @@
         // ファームウェア新規導入処理を実行するため、確認ダイアログを表示
         [[self delegate] disableUserInterface];
         [[self toolDFUCommand] dfuNewProcessWillStart:sender parentWindow:parentWindow];
+    }
+
+    - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ファームウェア更新処理を実行するため、DFU開始画面を表示
+        [[self delegate] disableUserInterface];
+        [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];
     }
 
 #pragma mark - Perform health check
