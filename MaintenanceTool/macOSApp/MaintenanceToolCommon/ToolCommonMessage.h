@@ -197,6 +197,10 @@
 #define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 
+#pragma mark - BLE DFU関連
+#define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
+#define MSG_DFU_VERSION_INFO_GET_FAILED         @"FIDO認証器ファームウェアのバージョンが取得できませんでした。"
+
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
 #define MSG_DFU_IMAGE_NEW_NOT_AVAILABLE         @"ファームウェア新規導入機能が利用できません。"

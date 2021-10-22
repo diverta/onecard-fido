@@ -84,14 +84,20 @@
     - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
         switch (command) {
             case COMMAND_BLE_GET_VERSION_INFO:
-                [self setVersionInfoArrayFromResponse:response];
+                [self notifyFirmwareVersion:response];
                 break;
             default:
                 break;
         }
     }
 
-    - (void)setVersionInfoArrayFromResponse:(NSData *)response {
+    - (void)notifyFirmwareVersion:(NSData *)response {
+        if (response == nil || [response length] == 0) {
+            // エラーが発生したとみなし、画面に制御を戻す
+            [ToolPopupWindow critical:MSG_DFU_SUB_PROCESS_FAILED informativeText:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [self notifyCancel];
+            return;
+        }
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [ToolCommon extractCBORBytesFrom:response];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
