@@ -16,6 +16,9 @@
 // for DFU image file
 #import "mcumgr_app_image.h"
 
+// 処理タイムアウト（転送／反映チェック処理）
+#define TIMEOUT_SEC_DFU_PROCESS         180.0
+
 // 更新対象アプリケーション＝version 0.4.0
 #define DFU_UPD_TARGET_APP_VERSION      400
 
@@ -29,6 +32,10 @@
     // 非同期処理用のキュー（画面用／DFU処理用）
     @property (nonatomic) dispatch_queue_t          mainQueue;
     @property (nonatomic) dispatch_queue_t          subQueue;
+    // 処理タイムアウト検知フラグ
+    @property (nonatomic) bool                      needTimeoutMonitor;
+    // バージョン更新判定フラグ
+    @property (nonatomic) bool                      needCompareUpdateVersion;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -58,6 +65,10 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.bledfu", DISPATCH_QUEUE_SERIAL)];
+        // 処理タイムアウト検知フラグをリセット
+        [self setNeedTimeoutMonitor:false];
+        // バージョン更新判定フラグをリセット
+        [self setNeedCompareUpdateVersion:false];
         return self;
     }
 
@@ -159,6 +170,8 @@
                 [self notifyEndMessage:false];
                 break;
             default:
+                // 処理タイムアウト検知を不要とする
+                [self setNeedTimeoutMonitor:false];
                 // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
                 [self notifyCancel];
                 break;
@@ -168,12 +181,46 @@
 #pragma mark - Main process
 
     - (void)startDFUProcess {
+        // 処理タイムアウト監視を開始
+        [self startDFUTimeoutMonitor];
         // TODO: サブスレッドでDFU処理を実行
 
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
             [[self toolAppCommand] commandStartedProcess:COMMAND_BLE_DFU type:TRANSPORT_BLE];
         });
+    }
+
+    - (void)notifyErrorToProcessingWindow {
+        dispatch_async([self mainQueue], ^{
+            // 処理失敗時は処理タイムアウト検知を不要とする
+            [self setNeedTimeoutMonitor:false];
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        });
+    }
+
+#pragma mark - Process timeout monitor
+
+    - (void)startDFUTimeoutMonitor {
+        // 処理タイムアウト監視を事前停止
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(DFUProcessDidTimeout) object:nil];
+        // 処理タイムアウト監視を開始（指定秒後にタイムアウト）
+        [self performSelector:@selector(DFUProcessDidTimeout) withObject:nil afterDelay:TIMEOUT_SEC_DFU_PROCESS];
+        // 処理タイムアウト検知フラグを設定
+        [self setNeedTimeoutMonitor:true];
+    }
+
+    - (void)DFUProcessDidTimeout {
+        // 処理タイムアウト検知フラグが設定されている場合
+        if ([self needTimeoutMonitor]) {
+            // バージョン更新判定フラグをリセット
+            [self setNeedCompareUpdateVersion:false];
+            // 処理タイムアウトを検知したので、異常終了と判断
+            [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
+            // 処理進捗画面に対し、処理失敗の旨を通知する
+            [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        }
     }
 
 #pragma mark - Private methods
