@@ -67,10 +67,8 @@
         // メインスレッド／サブスレッドにバインドされるデフォルトキューを取得
         [self setMainQueue:dispatch_get_main_queue()];
         [self setSubQueue:dispatch_queue_create("jp.co.diverta.fido.maintenancetool.bledfu", DISPATCH_QUEUE_SERIAL)];
-        // 処理タイムアウト検知フラグをリセット
-        [self setNeedTimeoutMonitor:false];
-        // バージョン更新判定フラグをリセット
-        [self setNeedCompareUpdateVersion:false];
+        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+        [self clearFlagsForProcess];
         return self;
     }
 
@@ -119,6 +117,8 @@
     }
 
     - (void)compareUpdateVersion {
+        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+        [self clearFlagsForProcess];
         // TODO: バージョン情報を比較-->処理進捗画面に対し、処理結果を通知する
     }
 
@@ -204,10 +204,8 @@
     - (void)cancelProcess {
         // キャンセルフラグを設定
         [self setCancelFlag:true];
-        // 処理タイムアウト検知を不要とする
-        [self setNeedTimeoutMonitor:false];
-        // バージョン更新判定フラグをリセット
-        [self setNeedCompareUpdateVersion:false];
+        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+        [self clearFlagsForProcess];
         // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
         [self notifyCancel];
     }
@@ -232,8 +230,8 @@
 
     - (void)notifyErrorToProcessingWindow {
         dispatch_async([self mainQueue], ^{
-            // 処理失敗時は処理タイムアウト検知を不要とする
-            [self setNeedTimeoutMonitor:false];
+            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+            [self clearFlagsForProcess];
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
         });
@@ -253,8 +251,8 @@
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウト検知フラグが設定されている場合
         if ([self needTimeoutMonitor]) {
-            // バージョン更新判定フラグをリセット
-            [self setNeedCompareUpdateVersion:false];
+            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+            [self clearFlagsForProcess];
             // 処理タイムアウトを検知したので、異常終了と判断
             [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
             // 処理進捗画面に対し、処理失敗の旨を通知する
@@ -364,6 +362,15 @@
         // 更新バージョンを保持
         [self setUpdateVersionFromImage:update];
         return true;
+    }
+
+#pragma mark - Private common methods
+
+    - (void)clearFlagsForProcess {
+        // 処理タイムアウト検知フラグをリセット
+        [self setNeedTimeoutMonitor:false];
+        // バージョン更新判定フラグをリセット
+        [self setNeedCompareUpdateVersion:false];
     }
 
     - (void)notifyProgress:(NSString *)message {
