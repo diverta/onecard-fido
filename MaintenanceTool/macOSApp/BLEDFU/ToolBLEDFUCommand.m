@@ -120,9 +120,28 @@
     - (void)compareUpdateVersion {
         // 処理タイムアウト検知／バージョン更新判定フラグをリセット
         [self clearFlagsForProcess];
-        // TODO: バージョン情報を比較
+        // バージョン情報を比較
+        bool ret = [self compareUpdateCurrentVersionToAppImage:[self currentVersion]];
         // 処理進捗画面に対し、処理結果を通知する
-        [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:true];
+        [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:ret];
+    }
+
+    - (bool)compareUpdateCurrentVersionToAppImage:(NSString *)update {
+        // バージョン情報を比較
+        char *fw_version = mcumgr_app_image_bin_version();
+        NSString *expected = [[NSString alloc] initWithUTF8String:fw_version];
+        if (strcmp([update UTF8String], fw_version) == 0) {
+            // バージョンが同じであればDFU処理は正常終了とする
+            [self notifyMessage:
+             [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED, expected]];
+            return true;
+        } else {
+            // バージョンが同じでなければ異常終了とする
+            [self notifyErrorMessage:
+             [NSString stringWithFormat:MSG_DFU_FIRMWARE_VERSION_UPDATED_FAILED,
+              expected]];
+            return false;
+        }
     }
 
     - (void)resumeDfuProcessStart {
