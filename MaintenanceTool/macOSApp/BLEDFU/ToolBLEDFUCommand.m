@@ -26,6 +26,7 @@
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand     *toolAppCommand;
+    @property (nonatomic, weak) ToolBLECommand     *toolBLECommand;
     // 画面の参照を保持
     @property (nonatomic) BLEDFUStartWindow        *bleDfuStartWindow;
     @property (nonatomic) BLEDFUProcessingWindow   *bleDfuProcessingWindow;
@@ -77,8 +78,8 @@
         [[self bleDfuStartWindow] setParentWindow:parentWindow];
         [[self bleDfuProcessingWindow] setParentWindow:parentWindow];
         // 事前にBLE経由でバージョン情報を取得
-        ToolBLECommand *toolBLECommand = (ToolBLECommand *)toolBLECommandRef;
-        [toolBLECommand bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
+        [self setToolBLECommand:(ToolBLECommand *)toolBLECommandRef];
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
 
     - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
@@ -119,7 +120,9 @@
     - (void)compareUpdateVersion {
         // 処理タイムアウト検知／バージョン更新判定フラグをリセット
         [self clearFlagsForProcess];
-        // TODO: バージョン情報を比較-->処理進捗画面に対し、処理結果を通知する
+        // TODO: バージョン情報を比較
+        // 処理進捗画面に対し、処理結果を通知する
+        [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:true];
     }
 
     - (void)resumeDfuProcessStart {
@@ -221,6 +224,8 @@
             if ([self performDFUProcess] == false) {
                 [self notifyErrorToProcessingWindow];
             }
+            // DFU反映待ち処理に移行
+            [self performDFUUpdateMonitor];
         });
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
@@ -295,6 +300,19 @@
             [NSThread sleepForTimeInterval:1.0];
         }
         return true;
+    }
+
+    - (void) performDFUUpdateMonitor {
+        // 10秒間待機
+        for (int i = 0; i < 10; i++) {
+            // 処理進捗画面でCancelボタンが押下された時は処理を中止
+            if ([self cancelFlag]) {
+                return;
+            }
+            [NSThread sleepForTimeInterval:1.0];
+        }
+        // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
+        [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
 
 #pragma mark - Private methods
