@@ -15,7 +15,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "DFUStartWindow.h"
 #import "DFUProcessingWindow.h"
 
@@ -45,7 +45,7 @@
     @property (nonatomic)       ToolCDCHelper  *toolCDCHelper;
     @property (nonatomic, weak) ToolHIDCommand *toolHIDCommand;
     // 画面の参照を保持
-    @property (nonatomic, weak) AppDelegate    *delegate;
+    @property (nonatomic, weak) ToolAppCommand *toolAppCommand;
     @property (nonatomic) DFUStartWindow       *dfuStartWindow;
     @property (nonatomic) DFUProcessingWindow  *dfuProcessingWindow;
     // 非同期処理用のキュー（画面用／DFU処理用）
@@ -74,7 +74,7 @@
     - (id)initWithDelegate:(id)delegate {
         self = [super init];
         if (self) {
-            [self setDelegate:delegate];
+            [self setToolAppCommand:(ToolAppCommand *)delegate];
         }
         // 内部保持バージョンをクリア
         [self setCurrentVersion:@""];
@@ -155,14 +155,32 @@
 
 #pragma mark - Call back from ToolHIDCommand
 
-    - (void)notifyFirmwareVersion:(NSString *)strFWRev boardname:(NSString *)strHWRev {
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)response {
+        switch (command) {
+            case COMMAND_HID_GET_VERSION_FOR_DFU:
+                [self notifyFirmwareVersion:response];
+                break;
+            case COMMAND_HID_BOOTLOADER_MODE:
+                [self notifyBootloaderModeResponse:response CMD:cmd];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)notifyFirmwareVersion:(NSData *)versionInfoResponse {
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:versionInfoResponse];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        // 情報取得CSVからバージョン情報を抽出
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
         // 認証器の現在バージョン、基板名を保持
-        [self setCurrentVersion:strFWRev];
-        [self setCurrentBoardname:strHWRev];
+        [self setCurrentVersion:array[1]];
+        [self setCurrentBoardname:array[2]];
         // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
         if ([self needCompareUpdateVersion]) {
             // バージョン情報を比較して終了判定
-            bool result = [self compareUpdateVersion:strFWRev];
+            bool result = [self compareUpdateVersion:[self currentVersion]];
             // 処理進捗画面に対し、処理結果を通知する
             [[self dfuProcessingWindow] commandDidTerminateDFUProcess:result];
         } else {
@@ -280,8 +298,8 @@
             return false;
         }
         // 認証器の現在バージョンが、更新イメージファイルのバージョンより新しい場合は利用不可
-        int currentVersionDec = [self calculateDecimalVersion:[self currentVersion]];
-        int updateVersionDec = [self calculateDecimalVersion:update];
+        int currentVersionDec = [ToolCommon calculateDecimalVersion:[self currentVersion]];
+        int updateVersionDec = [ToolCommon calculateDecimalVersion:update];
         if (currentVersionDec > updateVersionDec) {
             NSString *informative = [NSString stringWithFormat:MSG_DFU_CURRENT_VERSION_ALREADY_NEW,
                                      [self currentVersion], update];
@@ -298,15 +316,6 @@
         // 更新バージョンを保持
         [self setUpdateVersionFromImage:update];
         return true;
-    }
-
-    - (int)calculateDecimalVersion:(NSString *)versionStr {
-        // バージョン文字列 "1.2.11" -> "010211" 形式に変換
-        int decimalVersion = 0;
-        for (NSString *element in [versionStr componentsSeparatedByString:@"."]) {
-            decimalVersion = decimalVersion * 100 + [element intValue];
-        }
-        return decimalVersion;
     }
 
     - (bool)versionCheckForDFU {
@@ -364,7 +373,7 @@
         [[[self dfuStartWindow] parentWindow] beginSheet:dialog
                                        completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf dfuStartWindowDidClose:[self delegate] modalResponse:response];
+            [weakSelf dfuStartWindowDidClose:[self toolAppCommand] modalResponse:response];
         }];
         // バージョン情報を、ダイアログの該当欄に設定
         [[self dfuStartWindow] setWindowParameter:self
@@ -469,7 +478,7 @@
         [[[self dfuProcessingWindow] parentWindow] beginSheet:dialog
                                             completionHandler:^(NSModalResponse response){
             // ダイアログが閉じられた時の処理
-            [weakSelf dfuProcessingWindowDidClose:[self delegate] modalResponse:response];
+            [weakSelf dfuProcessingWindowDidClose:[self toolAppCommand] modalResponse:response];
         }];
     }
 
@@ -510,7 +519,7 @@
         });
         dispatch_async([self mainQueue], ^{
             // メイン画面に開始メッセージを出力
-            [[self delegate] toolDFUCommandDidStart];
+            [[self toolAppCommand] commandStartedProcess:COMMAND_USB_DFU type:TRANSPORT_HID];
         });
     }
 
@@ -552,18 +561,16 @@
     }
 
     - (void)notifyEndMessage:(bool)success {
-        // AppDelegateに制御を戻す
+        // メイン画面に制御を戻す
         dispatch_async([self mainQueue], ^{
-            AppDelegate *app = (AppDelegate *)[self delegate];
-            [app toolDFUCommandDidTerminate:COMMAND_USB_DFU result:success message:nil];
+            [[self toolAppCommand] commandDidProcess:COMMAND_USB_DFU result:success message:nil];
         });
     }
 
     - (void)notifyCancel {
-        // AppDelegateに制御を戻す（ポップアップメッセージを表示しない）
+        // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
         dispatch_async([self mainQueue], ^{
-            AppDelegate *app = (AppDelegate *)[self delegate];
-            [app toolDFUCommandDidTerminate:COMMAND_NONE result:true message:nil];
+            [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
         });
     }
 

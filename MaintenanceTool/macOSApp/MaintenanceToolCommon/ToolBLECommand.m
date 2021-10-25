@@ -35,6 +35,8 @@
     @property (nonatomic) uint8_t            bleResponseCmd;
     // 送信フレーム数を保持
     @property (nonatomic) NSUInteger         bleRequestFrameNumber;
+    // 呼び出し元のコマンドオブジェクト参照を保持
+    @property(nonatomic, weak) id            toolCommandRef;
     // 処理クラス
     @property (nonatomic) ToolCTAP2HealthCheckCommand *toolCTAP2HealthCheckCommand;
     @property (nonatomic) ToolU2FHealthCheckCommand   *toolU2FHealthCheckCommand;
@@ -94,6 +96,18 @@
         // PINGレスポンスの内容をチェックし、画面に制御を戻す
         bool result = [[self bleResponseData] isEqualToData:[self pingData]];
         [self commandDidProcess:result message:nil];
+    }
+
+    - (void)doRequestGetVersionInfo {
+        // BLE経由でバージョン情報を取得
+        unsigned char arr[] = {0x00};
+        NSData *commandData = [[NSData alloc] initWithBytes:arr length:sizeof(arr)];
+        [self doBLECommandRequestFrom:commandData cmd:HID_CMD_GET_VERSION_INFO];
+    }
+
+    - (void)doResponseGetVersionInfo {
+        // BLE接続を切断 --> AppCommandに制御を戻す
+        [self commandDidProcess:true message:nil];
     }
 
     - (void)doBLECommandRequestFrom:(NSData *)dataForCommand cmd:(uint8_t)cmd {
@@ -194,7 +208,12 @@
 #pragma mark - Public methods
 
     - (void)bleCommandWillProcess:(Command)command {
+        [self bleCommandWillProcess:command forCommand:nil];
+    }
+
+    - (void)bleCommandWillProcess:(Command)command forCommand:(id)commandRef {
         // コマンドに応じ、以下の処理に分岐
+        [self setToolCommandRef:commandRef];
         [self setCommand:command];
         switch (command) {
             case COMMAND_TEST_REGISTER:
@@ -211,6 +230,9 @@
             case COMMAND_TEST_GET_ASSERTION:
                 // CTAP2コマンドを生成して実行
                 [self doCtap2HealthCheck];
+                break;
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self doRequestGetVersionInfo];
                 break;
             default:
                 [self setBleRequestArray:nil];
@@ -234,7 +256,7 @@
             // キープアライブの場合は引き続き次のレスポンスを待つ
             receivedData = nil;
             
-        } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83) {
+        } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83 || bytesBLEHeader[0] == HID_CMD_GET_VERSION_INFO) {
             // ヘッダーから全受信データ長を取得
             totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
             // 4バイト目から後ろを切り出して連結
@@ -294,6 +316,9 @@
             case COMMAND_TEST_BLE_PING:
                 // PINGレスポンスの内容をチェックし、画面に制御を戻す
                 [self doResponseCommandPing];
+                break;
+            case COMMAND_BLE_GET_VERSION_INFO:
+                [self doResponseGetVersionInfo];
                 break;
             default:
                 break;
@@ -456,6 +481,12 @@
     }
 
     - (void)helperDidDisconnect {
+        // 戻り先が画面でない場合はコマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] bleCommandDidProcess:[self command]
+                                   toolCommandRef:[self toolCommandRef] response:[self bleResponseData]];
+            return;
+        }
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
         if ([self retryBLEConnection]) {
             return;

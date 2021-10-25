@@ -6,7 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 
-#import "AppDelegate.h"
+#import "ToolAppCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolHIDCommand.h"
 #import "ToolHIDHelper.h"
@@ -14,7 +14,6 @@
 #import "ToolClientPINCommand.h"
 #import "ToolCTAP2HealthCheckCommand.h"
 #import "ToolU2FHealthCheckCommand.h"
-#import "ToolDFUCommand.h"
 #import "ToolPopupWindow.h"
 #import "FIDODefines.h"
 #import "ToolLogFile.h"
@@ -183,7 +182,7 @@
             return;
         }
         // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [self extractCBORBytesFrom:message];
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
         [[ToolLogFile defaultLogger] debugWithFormat:@"Flash ROM statistics: %@", responseCSV];
         // 情報取得CSVから空き領域に関する情報を抽出
@@ -234,36 +233,20 @@
     }
 
     - (void)doResponseHidGetVersionInfo:(NSData *)message {
-        // 戻りメッセージから、取得情報CSVを抽出
-        NSData *responseBytes = [self extractCBORBytesFrom:message];
-        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
-        // 情報取得CSVからバージョン情報を抽出
-        NSString *strDeviceName = @"";
-        NSString *strFWRev = @"";
-        NSString *strHWRev = @"";
-        NSString *strSecic = @"";
-        for (NSString *element in [responseCSV componentsSeparatedByString:@","]) {
-            NSArray *items = [element componentsSeparatedByString:@"="];
-            NSString *key = [items objectAtIndex:0];
-            NSString *val = [items objectAtIndex:1];
-            if ([key isEqualToString:@"DEVICE_NAME"]) {
-                strDeviceName = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"FW_REV"]) {
-                strFWRev = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"HW_REV"]) {
-                strHWRev = [self extractCSVItemFrom:val];
-            } else if ([key isEqualToString:@"ATECC608A"]) {
-                strSecic = [self extractCSVItemFrom:val];
-            }
-        }
-        if ([self command] == COMMAND_HID_GET_VERSION_FOR_DFU) {
-            if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
-                // DFUコマンドにファームウェアバージョンを戻す
-                ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-                [toolDFUCommand notifyFirmwareVersion:strFWRev boardname:strHWRev];
-            }
+        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:0x00 response:message];
             return;
         }
+        // 戻りメッセージから、取得情報CSVを抽出
+        NSData *responseBytes = [ToolCommon extractCBORBytesFrom:message];
+        NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
+        // 情報取得CSVからバージョン情報を抽出
+        NSArray<NSString *> *array = [ToolCommon extractValuesFromVersionInfo:responseCSV];
+        NSString *strDeviceName = array[0];
+        NSString *strFWRev = array[1];
+        NSString *strHWRev = array[2];
+        NSString *strSecic = array[3];
         // 画面に制御を戻す
         [self displayMessage:MSG_VERSION_INFO_HEADER];
         [self displayMessage:[NSString stringWithFormat:MSG_VERSION_INFO_DEVICE_NAME, strDeviceName]];
@@ -289,27 +272,11 @@
         [self doRequest:message CID:cid CMD:HID_CMD_BOOTLOADER_MODE];
     }
 
-    - (bool)checkStatusCode:(NSData *)responseMessage {
-        // レスポンスメッセージの１バイト目（ステータスコード）を確認
-        uint8_t *requestBytes = (uint8_t *)[responseMessage bytes];
-        if (requestBytes[0] != CTAP1_ERR_SUCCESS) {
-            [self displayMessage:MSG_BOOT_LOADER_MODE_UNSUPP];
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     - (void)doResponseHidBootloaderMode:(NSData *)message CMD:(uint8_t)cmd {
-        // ステータスコードを確認
-        bool result = [self checkStatusCode:message];
-        if ([[self toolCommandRef] isMemberOfClass:[ToolDFUCommand class]]) {
-            // DFUコマンドに制御を戻す
-            ToolDFUCommand *toolDFUCommand = (ToolDFUCommand *)[self toolCommandRef];
-            [toolDFUCommand notifyBootloaderModeResponse:message CMD:cmd];
-        } else if ([[self toolCommandRef] isMemberOfClass:[AppDelegate class]]) {
-            // AppDelegateに制御を戻す
-            [self commandDidProcess:[self command] result:result message:nil];
+        // 別クラスからの呼び出しの場合、上位コマンドクラスに制御を戻す
+        if ([self toolCommandRef]) {
+            [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
+            return;
         }
     }
 
@@ -430,7 +397,10 @@
         [[self toolU2FHealthCheckCommand] doU2FResponse:[self command] responseMessage:message];
     }
 
-    - (void)hidHelperWillProcess:(Command)command {
+    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
+        // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
+        [self setToolCommandRef:commandRef];
+        [self setProcessData:data];
         // コマンドを待避
         [self setCommand:command];
         // コマンドに応じ、以下の処理に分岐
@@ -488,20 +458,11 @@
 
 #pragma mark - For process from other command
 
-    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data forCommand:(id)commandRef {
-        // 他のコマンドから、コマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
-        [self setToolCommandRef:commandRef];
-        [self setProcessData:data];
-        [self hidHelperWillProcess:command];
+    - (void)hidHelperWillProcess:(Command)command {
+        [self hidHelperWillProcess:command withData:nil forCommand:nil];
     }
 
 #pragma mark - For tool preference parameters
-
-    - (void)hidHelperWillProcess:(Command)command withData:(NSData *)data {
-        // AppDelegateからコマンドバイトとリクエストメッセージ本体を受取り、コマンドを実行
-        [self setProcessData:data];
-        [self hidHelperWillProcess:command];
-    }
 
     - (void)doToolPreferenceParameter {
         // リクエスト実行に必要な新規CIDを取得するため、CTAPHID_INITを実行
@@ -515,9 +476,8 @@
 
     - (void)doResponseToolPreferenceParameter:(NSData *)message
                             CID:(NSData *)cid CMD:(uint8_t)cmd {
-        // AppDelegateに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
-        [[self delegate] hidCommandDidProcess:[self command]
-            CMD:cmd response:message result:true message:nil];
+        // 上位コマンドクラスに制御を戻し、コマンドバイトと応答メッセージ本体を戻す
+        [[self delegate] hidCommandDidProcess:[self command] toolCommandRef:[self toolCommandRef] CMD:cmd response:message];
     }
 
 #pragma mark - Call back from ToolHIDHelper
@@ -571,8 +531,7 @@
                 break;
             default:
                 // メッセージを画面表示
-                [[self delegate] hidCommandDidProcess:[self command]
-                    CMD:cmd response:message result:false message:MSG_OCCUR_UNKNOWN_ERROR];
+                [[self delegate] hidCommandDidProcess:[self command] result:false message:MSG_OCCUR_UNKNOWN_ERROR];
                 break;
         }
     }
@@ -604,25 +563,7 @@
 
     - (void)commandDidProcess:(Command)command result:(bool)result message:(NSString *)message {
         // 即時でアプリケーションに制御を戻す
-        [[self delegate] hidCommandDidProcess:command
-            CMD:0x00 response:nil result:result message:message];
-    }
-
-    - (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
-        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
-        size_t cborLength = [responseMessage length] - 1;
-        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
-        return cborBytes;
-    }
-
-    - (NSString *)extractCSVItemFrom:(NSString *)val {
-        // 文字列の前後に２重引用符が含まれていない場合は終了
-        if ([val length] < 2) {
-            return val;
-        }
-        // 取得した項目から、２重引用符を削除
-        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-        return item;
+        [[self delegate] hidCommandDidProcess:command result:result message:message];
     }
 
     - (NSData *)getNewCIDFrom:(NSData *)hidInitResponseMessage {

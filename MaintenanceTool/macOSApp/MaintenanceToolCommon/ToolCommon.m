@@ -150,4 +150,55 @@
         [[ToolLogFile defaultLogger] error:errorMsg];
     }
 
+#pragma mark - Utilities for others
+
+    + (NSArray<NSString *> *)extractValuesFromVersionInfo:(NSString *)versionInfoCSV {
+        // 情報取得CSVからバージョン情報を抽出
+        NSString *strDeviceName = @"";
+        NSString *strFWRev = @"";
+        NSString *strHWRev = @"";
+        NSString *strSecic = @"";
+        for (NSString *element in [versionInfoCSV componentsSeparatedByString:@","]) {
+            NSArray *items = [element componentsSeparatedByString:@"="];
+            NSString *key = [items objectAtIndex:0];
+            NSString *val = [items objectAtIndex:1];
+            if ([key isEqualToString:@"DEVICE_NAME"]) {
+                strDeviceName = [ToolCommon extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"FW_REV"]) {
+                strFWRev = [ToolCommon extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"HW_REV"]) {
+                strHWRev = [ToolCommon extractCSVItemFrom:val];
+            } else if ([key isEqualToString:@"ATECC608A"]) {
+                strSecic = [ToolCommon extractCSVItemFrom:val];
+            }
+        }
+        return @[strDeviceName, strFWRev, strHWRev, strSecic];
+    }
+
+    + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage {
+        // CBORバイト配列（レスポンスの２バイト目以降）を抽出
+        size_t cborLength = [responseMessage length] - 1;
+        NSData *cborBytes = [responseMessage subdataWithRange:NSMakeRange(1, cborLength)];
+        return cborBytes;
+    }
+
+    + (NSString *)extractCSVItemFrom:(NSString *)val {
+        // 文字列の前後に２重引用符が含まれていない場合は終了
+        if ([val length] < 2) {
+            return val;
+        }
+        // 取得した項目から、２重引用符を削除
+        NSString *item = [val stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        return item;
+    }
+
+    + (int)calculateDecimalVersion:(NSString *)versionStr {
+        // バージョン文字列 "1.2.11" -> "010211" 形式に変換
+        int decimalVersion = 0;
+        for (NSString *element in [versionStr componentsSeparatedByString:@"."]) {
+            decimalVersion = decimalVersion * 100 + [element intValue];
+        }
+        return decimalVersion;
+    }
+
 @end

@@ -7,10 +7,13 @@
 #import <Foundation/Foundation.h>
 #import "ToolPreferenceCommand.h"
 #import "ToolPreferenceWindow.h"
+#import "ToolAppCommand.h"
+#import "ToolHIDCommand.h"
 
 @interface ToolPreferenceCommand ()
 
-    @property (nonatomic, weak) AppDelegate         *delegate;
+    @property (nonatomic, weak) ToolAppCommand      *toolAppCommand;
+    @property (nonatomic, weak) ToolHIDCommand      *toolHIDCommand;
     @property (nonatomic) ToolPreferenceWindow      *toolPreferenceWindow;
     @property (nonatomic) ToolPreferenceCommandType commandType;
 
@@ -22,13 +25,14 @@
 @implementation ToolPreferenceCommand
 
     - (id)init {
-        return [self initWithDelegate:nil];
+        return [self initWithDelegate:nil toolHIDCommandRef:nil];
     }
 
-    - (id)initWithDelegate:(id)delegate {
+    - (id)initWithDelegate:(id)delegate toolHIDCommandRef:(id)ref {
         self = [super init];
         if (self) {
-            [self setDelegate:delegate];
+            [self setToolAppCommand:(ToolAppCommand *)delegate];
+            [self setToolHIDCommand:(ToolHIDCommand *)ref];
         }
 
         // 使用するダイアログを生成
@@ -94,7 +98,7 @@
 
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType {
         // USBポートに装着されているかどうかチェック
-        if (![[self delegate] checkUSBHIDConnection]) {
+        if (![[self toolAppCommand] checkForHIDCommand]) {
             return;
         }
 
@@ -105,8 +109,8 @@
         [self setCommandType:commandType];
         [self generateRequestCommandAuthParamGet:[self commandType]];
 
-        // AppDelegate経由でコマンドを実行
-        [[self delegate] toolPreferenceWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData]];
+        // HID経由でコマンドを実行
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM withData:[self processData] forCommand:self];
     }
 
     - (void)toolPreferenceInquiryWillProcess {
@@ -114,23 +118,20 @@
         [self setCommandType:COMMAND_AUTH_PARAM_GET];
         [self generateRequestCommandAuthParamGet:[self commandType]];
 
-        // AppDelegate経由でコマンドを実行
-        [[self delegate] toolPreferenceWillProcess:COMMAND_TOOL_PREF_PARAM_INQUIRY withData:[self processData]];
+        // HID経由でコマンドを実行
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_TOOL_PREF_PARAM_INQUIRY withData:[self processData] forCommand:self];
     }
 
-    - (void)toolPreferenceDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message {
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp {
         // 取得データをクラス変数に設定
         bool success = [self parseResponseCommandAuthParamGet:[self commandType] fromData:resp];
         if (command == COMMAND_TOOL_PREF_PARAM) {
             // 画面に制御を戻す
             [[self toolPreferenceWindow] toolPreferenceCommandDidProcess:[self commandType]
-                                                                 success:(success & result) message:message];
+                                                                 success:success message:nil];
         } else {
-            // AppDelegateに再び制御を戻す
-            [[self delegate] toolPreferenceInquiryDidProcess:command
-                    CMD:cmd response:resp result:(success & result) message:message];
+            // 上位コマンドクラスに再び制御を戻す
+            [[self toolAppCommand] toolPreferenceInquiryDidProcess:success];
         }
     }
 
@@ -156,9 +157,8 @@
     - (void)toolPreferenceWindowDidClose:(id)sender modalResponse:(NSInteger)modalResponse {
         // 画面を閉じる
         [[self toolPreferenceWindow] close];
-        // AppDelegateに制御を戻す（ポップアップメッセージは表示しない）
-        AppDelegate *app = (AppDelegate *)[self delegate];
-        [app toolPreferenceWindowDidClose];
+        // ホーム画面に制御を戻す（ポップアップメッセージは表示しない）
+        [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
     }
 
 @end

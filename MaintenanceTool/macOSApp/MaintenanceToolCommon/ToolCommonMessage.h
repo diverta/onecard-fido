@@ -59,6 +59,7 @@
 #define PROCESS_NAME_CLIENT_PIN_CHANGE              @"PINコード変更"
 #define PROCESS_NAME_AUTH_RESET                     @"PINコード解除"
 #define PROCESS_NAME_USB_DFU                        @"FIDO認証器のファームウェア更新"
+#define PROCESS_NAME_BLE_DFU                        @"FIDO認証器のファームウェア更新"
 #define PROCESS_NAME_ERASE_BONDS                    @"ペアリング情報削除"
 #define PROCESS_NAME_BOOT_LOADER_MODE               @"ブートローダーモード遷移"
 #define PROCESS_NAME_CCID_PIV_CHANGE_PIN            @"PIV PINコード変更"
@@ -196,12 +197,17 @@
 #define MSG_HID_CONNECTED                       @"USB HIDデバイスに接続されました。"
 #define MSG_HID_CMD_RESPONSE_TIMEOUT            @"認証器からの応答が受信できませんでした。"
 
+#pragma mark - BLE DFU関連
+#define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
+#define MSG_DFU_VERSION_INFO_GET_FAILED         @"FIDO認証器ファームウェアのバージョンが取得できませんでした。"
+
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
 #define MSG_DFU_IMAGE_NEW_NOT_AVAILABLE         @"ファームウェア新規導入機能が利用できません。"
 #define MSG_DFU_IMAGE_FILENAME_CANNOT_GET       @"更新ファームウェアファイル名の取得に失敗しました。"
 #define MSG_DFU_IMAGE_READ_FAILED               @"更新ファームウェアの読込に失敗しました。"
 #define MSG_DFU_IMAGE_TRANSFER_FAILED           @"更新ファームウェアの転送に失敗しました。"
+#define MSG_DFU_IMAGE_TRANSFER_CANCELED         @"更新ファームウェアの転送が中断されました。"
 #define MSG_DFU_IMAGE_TRANSFER_SUCCESS          @"更新ファームウェアの転送が完了しました。"
 #define MSG_DFU_TARGET_NOT_BOOTLOADER_MODE      @"FIDO認証器をブートローダーモードに遷移させることができません。"
 #define MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER    @"FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。"

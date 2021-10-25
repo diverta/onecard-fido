@@ -7,7 +7,6 @@
 #ifndef ToolPreferenceCommand_h
 #define ToolPreferenceCommand_h
 
-#import "AppDelegate.h"
 #import "ToolCommon.h"
 
 // サービスUUID、スキャン秒数の桁数（固定）
@@ -29,17 +28,15 @@ typedef enum : NSInteger {
     @property (nonatomic) NSString  *serviceUUIDString;
     @property (nonatomic) NSString  *serviceUUIDScanSec;
 
-    - (id)initWithDelegate:(id)delegate;
+    - (id)initWithDelegate:(id)delegate toolHIDCommandRef:(id)ref;
     - (void)toolPreferenceWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
 
-    // AppDelegate経由でコマンドを実行
+    // HID経由でコマンドを実行
     - (void)toolPreferenceWillProcess:(ToolPreferenceCommandType)commandType;
     - (void)toolPreferenceInquiryWillProcess;
 
-    // AppDelegate経由で実行したコマンドの応答
-    - (void)toolPreferenceDidProcess:(Command)command
-                                 CMD:(uint8_t)cmd response:(NSData *)resp
-                              result:(bool)result message:(NSString *)message;
+    // HID経由で実行したコマンドの応答
+    - (void)hidCommandDidProcess:(Command)command CMD:(uint8_t)cmd response:(NSData *)resp;
 
 @end
 

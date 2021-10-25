@@ -449,6 +449,12 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="ファームウェア更新（BLE）" id="nEi-dB-ibl">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="menuItemBLEDFUDidSelect:" target="494" id="Toq-GT-30E"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -700,14 +706,13 @@
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
                 <outlet property="fieldPath1" destination="IXA-ys-cwj" id="Q5v-QF-Hdj"/>
                 <outlet property="fieldPath2" destination="fmr-Gc-dtE" id="eQP-pC-y7G"/>
-                <outlet property="menuItemBLMode" destination="zLA-iW-mMM" id="Evh-19-duL"/>
-                <outlet property="menuItemDFU" destination="eQd-2K-QLS" id="f2t-XT-f7i"/>
-                <outlet property="menuItemDFUNew" destination="Dci-ge-0Sb" id="uPC-vO-YCW"/>
+                <outlet property="menuItemBLEDFU" destination="nEi-dB-ibl" id="iG3-rT-HSS"/>
                 <outlet property="menuItemEraseBond" destination="LIf-cp-Zj9" id="UkR-JG-1vs"/>
                 <outlet property="menuItemOption" destination="295" id="x73-fM-PHP"/>
                 <outlet property="menuItemPreferences" destination="129" id="rj0-qF-aUa"/>
                 <outlet property="menuItemTestBLE" destination="496" id="RMH-jx-yJ2"/>
                 <outlet property="menuItemTestUSB" destination="377" id="YsN-4Q-UKb"/>
+                <outlet property="menuItemUSBDFU" destination="ZIq-GE-Ddb" id="miI-3p-8c2"/>
                 <outlet property="menuItemViewLog" destination="ZNn-Z2-Lob" id="fdH-aw-VBx"/>
                 <outlet property="textView" destination="541" id="558"/>
                 <outlet property="window" destination="371" id="532"/>

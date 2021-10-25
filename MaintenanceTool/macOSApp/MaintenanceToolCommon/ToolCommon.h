@@ -28,6 +28,7 @@ typedef enum : NSInteger {
     COMMAND_PAIRING,
     COMMAND_TEST_CTAPHID_PING,
     COMMAND_TEST_BLE_PING,
+    COMMAND_BLE_GET_VERSION_INFO,
     COMMAND_HID_GET_FLASH_STAT,
     COMMAND_HID_GET_VERSION_INFO,
     COMMAND_HID_GET_VERSION_FOR_DFU,
@@ -40,6 +41,7 @@ typedef enum : NSInteger {
     COMMAND_TOOL_PREF_PARAM,
     COMMAND_TOOL_PREF_PARAM_INQUIRY,
     COMMAND_USB_DFU,
+    COMMAND_BLE_DFU,
     COMMAND_ERASE_BONDS,
     COMMAND_CCID_PIV_CHANGE_PIN,
     COMMAND_CCID_PIV_CHANGE_PUK,
@@ -80,6 +82,11 @@ typedef enum : NSInteger {
                    informativeText:(NSString *)informativeText;
 
     + (void)logErrorMessageWithFuncError:(NSString *)errorMsgTemplate;
+
+    + (NSArray<NSString *> *)extractValuesFromVersionInfo:(NSString *)versionInfoCSV;
+    + (NSData *)extractCBORBytesFrom:(NSData *)responseMessage;
+    + (NSString *)extractCSVItemFrom:(NSString *)val;
+    + (int)calculateDecimalVersion:(NSString *)versionStr;
 
 @end
 
