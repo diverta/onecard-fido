@@ -36,6 +36,8 @@
     @property (nonatomic) bool                      needTimeoutMonitor;
     // バージョン更新判定フラグ
     @property (nonatomic) bool                      needCompareUpdateVersion;
+    // 処理キャンセルフラグ
+    @property (nonatomic) bool                      cancelFlag;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -95,7 +97,7 @@
         if (response == nil || [response length] == 0) {
             // エラーが発生したとみなし、画面に制御を戻す
             [ToolPopupWindow critical:MSG_DFU_SUB_PROCESS_FAILED informativeText:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [self notifyCancel];
+            [self cancelProcess];
             return;
         }
         // 戻りメッセージから、取得情報CSVを抽出
@@ -106,6 +108,21 @@
         // 取得したバージョン情報を内部保持
         [self setCurrentVersion:array[1]];
         [self setCurrentBoardname:array[2]];
+        // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
+        if ([self needCompareUpdateVersion]) {
+            // バージョン情報を比較して終了判定
+            [self compareUpdateVersion];
+        } else {
+            // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+            [self resumeDfuProcessStart];
+        }
+    }
+
+    - (void)compareUpdateVersion {
+        // TODO: バージョン情報を比較-->処理進捗画面に対し、処理結果を通知する
+    }
+
+    - (void)resumeDfuProcessStart {
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImageFile] == false) {
             [self notifyCancel];
@@ -147,6 +164,8 @@
     }
 
     - (void)invokeDFUProcess {
+        // キャンセルフラグをクリア
+        [self setCancelFlag:false];
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
@@ -176,12 +195,21 @@
                 [self notifyEndMessage:false];
                 break;
             default:
-                // 処理タイムアウト検知を不要とする
-                [self setNeedTimeoutMonitor:false];
-                // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
-                [self notifyCancel];
+                // 処理をキャンセルする
+                [self cancelProcess];
                 break;
         }
+    }
+
+    - (void)cancelProcess {
+        // キャンセルフラグを設定
+        [self setCancelFlag:true];
+        // 処理タイムアウト検知を不要とする
+        [self setNeedTimeoutMonitor:false];
+        // バージョン更新判定フラグをリセット
+        [self setNeedCompareUpdateVersion:false];
+        // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
+        [self notifyCancel];
     }
 
 #pragma mark - Main process
@@ -189,8 +217,13 @@
     - (void)startDFUProcess {
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
-        // TODO: サブスレッドでDFU処理を実行
-
+        // サブスレッドでDFU処理を実行
+        dispatch_async([self subQueue], ^{
+            // 処理失敗時は、処理進捗画面に対し通知
+            if ([self performDFUProcess] == false) {
+                [self notifyErrorToProcessingWindow];
+            }
+        });
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
             [[self toolAppCommand] commandStartedProcess:COMMAND_BLE_DFU type:TRANSPORT_BLE];
@@ -227,6 +260,43 @@
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
         }
+    }
+
+#pragma mark - DFU process
+
+    - (bool)performDFUProcess {
+        // DFUを実行
+        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
+        if ([self performDFU] == false) {
+            // DFU転送失敗時
+            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
+            return false;
+
+        } else if ([self cancelFlag]) {
+            // 処理キャンセル時は、即時で画面に制御を戻す
+            [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
+            return true;
+
+        } else {
+            // DFU転送成功時は、バージョン更新判定フラグをセット
+            [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+            [self setNeedCompareUpdateVersion:true];
+            [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
+            return true;
+        }
+    }
+
+    - (bool)performDFU {
+        // TODO: 仮の実装です。
+        for (int i = 0; i < 20; i++) {
+            // 処理進捗画面でCancelボタンが押下された時は処理を中止
+            if ([self cancelFlag]) {
+                return true;
+            }
+            // １秒間ウェイト
+            [NSThread sleepForTimeInterval:1.0];
+        }
+        return true;
     }
 
 #pragma mark - Private methods
@@ -294,6 +364,17 @@
         // 更新バージョンを保持
         [self setUpdateVersionFromImage:update];
         return true;
+    }
+
+    - (void)notifyProgress:(NSString *)message {
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面に進捗を通知
+            [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message];
+        });
+    }
+
+    - (void)notifyMessage:(NSString *)message {
+        [[ToolLogFile defaultLogger] info:message];
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
