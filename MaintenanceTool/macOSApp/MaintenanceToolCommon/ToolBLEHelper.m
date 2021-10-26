@@ -90,9 +90,9 @@
             }
             // スキャンタイムアウト監視を停止
             [self cancelScanningTimeoutMonitor];
-            // スキャンを停止し、ペリフェラルに接続
+            // スキャンを停止し、スキャン完了を通知
             [self cancelScanForPeripherals];
-            [self connectPeripheral:peripheral];
+            [[self delegate] helperDidScanForPeripheral:peripheral withUUID:[foundServiceUUIDs UUIDString]];
             break;
         }
     }
@@ -106,8 +106,9 @@
 
 #pragma mark - Connect peripheral
 
-    - (void)connectPeripheral:(CBPeripheral *)peripheral {
+    - (void)helperWillconnectPeripheral:(id)peripheralRef {
         // ペリフェラルに接続し、接続タイムアウト監視を開始
+        CBPeripheral *peripheral = (CBPeripheral *)peripheralRef;
         [[self manager] connectPeripheral:peripheral options:nil];
         [self startConnectionTimeoutMonitor:peripheral];
     }

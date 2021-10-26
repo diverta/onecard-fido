@@ -340,6 +340,13 @@
 
 #pragma mark - Call back from ToolBLEHelper
 
+    - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
+        // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
+        if ([uuidString isEqualToString:@"FFFD"]) {
+            [[self toolBLEHelper] helperWillconnectPeripheral:peripheralRef];
+        }
+    }
+
     - (void)helperDidConnectPeripheral {
         // ログを出力
         [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_CONNECTED];
