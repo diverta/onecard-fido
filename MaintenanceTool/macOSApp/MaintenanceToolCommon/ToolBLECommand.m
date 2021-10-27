@@ -387,9 +387,9 @@
         }
     }
 
-    - (void)helperDidFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
+    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason {
         // ログをファイル出力
-        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
+        NSString *message = [self helperMessageOnFailConnection:reason];
         if (error) {
             [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
         } else {
@@ -406,7 +406,7 @@
         [[self toolBLEHelper] helperWillDisconnect];
     }
 
-    - (NSString *)helperMessageOnFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
+    - (NSString *)helperMessageOnFailConnection:(BLEErrorReason)reason {
         // BLE処理時のエラーコードを、適切なメッセージに変更する
         switch (reason) {
             case BLE_ERR_BLUETOOTH_OFF:

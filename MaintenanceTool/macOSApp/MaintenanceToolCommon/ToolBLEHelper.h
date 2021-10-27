@@ -51,7 +51,7 @@ typedef enum : NSInteger {
     - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString;
     - (void)helperDidConnectPeripheral;
-    - (void)helperDidFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error;
+    - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason;
     - (void)helperDidDisconnectWithError:(NSError *)error;
     - (void)helperDidDiscoverService;
     - (void)helperDidDiscoverCharacteristics;
