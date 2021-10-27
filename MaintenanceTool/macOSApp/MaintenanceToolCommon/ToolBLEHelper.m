@@ -4,6 +4,9 @@
 //
 //  Created by Makoto Morita on 2021/10/07.
 //
+#import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+
 #import "ToolBLEHelper.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
@@ -39,8 +42,6 @@
     }
 
     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-        CBCentralManagerState _state = (CBCentralManagerState)[central state];
-        [[self delegate] notifyCentralManagerStateUpdate:_state];
     }
 
 #pragma mark - Entry for process

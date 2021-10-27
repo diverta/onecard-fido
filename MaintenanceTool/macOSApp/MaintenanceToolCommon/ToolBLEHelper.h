@@ -7,9 +7,6 @@
 #ifndef ToolBLEHelper_h
 #define ToolBLEHelper_h
 
-#import <Foundation/Foundation.h>
-#import <CoreBluetooth/CoreBluetooth.h>
-
 // エラー種別
 typedef enum : NSInteger {
     BLE_ERR_BLUETOOTH_OFF,
@@ -48,7 +45,6 @@ typedef enum : NSInteger {
 
 @protocol ToolBLEHelperDelegate <NSObject>
 
-    - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state;
     - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString;
     - (void)helperDidConnectPeripheral;
     - (void)helperDidFailConnectionWithError:(NSError *)error reason:(BLEErrorReason)reason;

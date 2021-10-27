@@ -495,9 +495,6 @@
                                       message:[self lastCommandMessage]];
     }
 
-    - (void)notifyCentralManagerStateUpdate:(CBCentralManagerState)state {
-    }
-
 #pragma mark - Retry BLE connection
 
     - (bool)retryBLEConnection {
