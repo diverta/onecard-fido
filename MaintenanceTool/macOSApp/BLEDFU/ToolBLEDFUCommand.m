@@ -9,6 +9,7 @@
 #import "ToolAppCommand.h"
 #import "ToolBLECommand.h"
 #import "ToolBLEDFUCommand.h"
+#import "ToolBLESMPCommand.h"
 #import "ToolCommonMessage.h"
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
@@ -22,11 +23,13 @@
 // 更新対象アプリケーション＝version 0.4.0
 #define DFU_UPD_TARGET_APP_VERSION      400
 
-@interface ToolBLEDFUCommand ()
+@interface ToolBLEDFUCommand () <ToolBLESMPCommandDelegate>
 
     // 上位クラスの参照を保持
     @property (nonatomic, weak) ToolAppCommand     *toolAppCommand;
     @property (nonatomic, weak) ToolBLECommand     *toolBLECommand;
+    // トランザクションクラスの参照を保持
+    @property (nonatomic) ToolBLESMPCommand        *toolBLESMPCommand;
     // 画面の参照を保持
     @property (nonatomic) BLEDFUStartWindow        *bleDfuStartWindow;
     @property (nonatomic) BLEDFUProcessingWindow   *bleDfuProcessingWindow;
@@ -35,6 +38,8 @@
     @property (nonatomic) dispatch_queue_t          subQueue;
     // 処理タイムアウト検知フラグ
     @property (nonatomic) bool                      needTimeoutMonitor;
+    // リセット要求済みフラグ
+    @property (nonatomic) bool                      resetApplicationRequested;
     // バージョン更新判定フラグ
     @property (nonatomic) bool                      needCompareUpdateVersion;
     // 処理キャンセルフラグ
@@ -62,6 +67,8 @@
         // 内部保持バージョンをクリア
         [self setCurrentVersion:@""];
         [self setUpdateVersionFromImage:@""];
+        // トランザクションクラスを生成
+        [self setToolBLESMPCommand:[[ToolBLESMPCommand alloc] initWithDelegate:self]];
         // 画面のインスタンスを生成
         [self setBleDfuStartWindow:[[BLEDFUStartWindow alloc] initWithWindowNibName:@"BLEDFUStartWindow"]];
         [self setBleDfuProcessingWindow:[[BLEDFUProcessingWindow alloc] initWithWindowNibName:@"BLEDFUProcessingWindow"]];
@@ -237,15 +244,8 @@
     - (void)startDFUProcess {
         // 処理タイムアウト監視を開始
         [self startDFUTimeoutMonitor];
-        // サブスレッドでDFU処理を実行
-        dispatch_async([self subQueue], ^{
-            // 処理失敗時は、処理進捗画面に対し通知
-            if ([self performDFUProcess] == false) {
-                [self notifyErrorToProcessingWindow];
-            }
-            // DFU反映待ち処理に移行
-            [self performDFUUpdateMonitor];
-        });
+        // BLE DFU処理を開始
+        [self doConnect];
         // メイン画面に開始メッセージを出力
         dispatch_async([self mainQueue], ^{
             [[self toolAppCommand] commandStartedProcess:COMMAND_BLE_DFU type:TRANSPORT_BLE];
@@ -286,52 +286,118 @@
 
 #pragma mark - DFU process
 
-    - (bool)performDFUProcess {
-        // DFUを実行
-        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
-        if ([self performDFU] == false) {
-            // DFU転送失敗時
-            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
-            return false;
-
-        } else if ([self cancelFlag]) {
-            // 処理キャンセル時は、即時で画面に制御を戻す
-            [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
-            return true;
-
-        } else {
-            // DFU転送成功時は、バージョン更新判定フラグをセット
-            [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
-            [self setNeedCompareUpdateVersion:true];
-            [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
-            return true;
-        }
+    - (void)doConnect {
+        // リセット要求済みフラグをクリア
+        [self setResetApplicationRequested:false];
+        // BLE SMPサービスに接続 --> doRequestGetSlotInfoが呼び出される
+        [[self toolBLESMPCommand] commandWillConnect];
     }
 
-    - (bool)performDFU {
-        // TODO: 仮の実装です。
-        for (int i = 0; i < 20; i++) {
-            // 処理進捗画面でCancelボタンが押下された時は処理を中止
-            if ([self cancelFlag]) {
-                return true;
-            }
-            // １秒間ウェイト
-            [NSThread sleepForTimeInterval:1.0];
+    - (void)doRequestGetSlotInfo {
+        // DFU実行開始を通知
+        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
+        // BLE経由でスロット照会を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_GET_SLOT_INFO request:nil forCommand:self];
+    }
+
+    - (void)doResponseGetSlotInfo:(bool)success response:(NSData *)response {
+        // 処理失敗時は、画面に制御を戻す
+        if (success == false) {
+            [self notifyErrorMessage:MSG_DFU_SLOT_INFO_GET_FAILED];
+            [self notifyErrorToProcessingWindow];
+            return;
         }
-        return true;
+        // 反映一時停止要求に移行
+        [self doRequestChangeToTestStatus];
+    }
+
+    - (void)doRequestChangeToTestStatus {
+        // BLE経由で反映一時停止要求を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS request:nil forCommand:self];
+    }
+
+    - (void)doResponseChangeToTestStatus:(bool)success response:(NSData *)response {
+        // 処理失敗時は、画面に制御を戻す
+        if (success == false) {
+            [self notifyErrorMessage:MSG_DFU_CHANGE_TO_TEST_STATUS_FAILED];
+            [self notifyErrorToProcessingWindow];
+            return;
+        }
+        // DFU転送成功を通知
+        [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
+        // リセット要求処理に移行
+        [self doRequestResetApplication];
+    }
+
+    - (void)doRequestResetApplication {
+        // BLE経由でリセット要求を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_RESET_APPLICATION request:nil forCommand:self];
+    }
+
+    - (void)doResponseResetApplication:(bool)success response:(NSData *)response {
+        // 処理失敗時は、画面に制御を戻す
+        if (success == false) {
+            [self notifyErrorMessage:MSG_DFU_RESET_APPLICATION_FAILED];
+            [self notifyErrorToProcessingWindow];
+            return;
+        }
+        // リセット要求済みフラグを設定
+        [self setResetApplicationRequested:true];
+        // nRF側が自動的にリセット --> 切断検知によりDFU反映待ち処理に移行
+        [[ToolLogFile defaultLogger] debug:@"Requested to reset application"];
     }
 
     - (void) performDFUUpdateMonitor {
+        // 処理進捗画面に通知
+        [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
         // 10秒間待機
         for (int i = 0; i < 10; i++) {
             // 処理進捗画面でCancelボタンが押下された時は処理を中止
             if ([self cancelFlag]) {
+                [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
                 return;
             }
             [NSThread sleepForTimeInterval:1.0];
         }
+        // バージョン更新判定フラグをセット
+        [self setNeedCompareUpdateVersion:true];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
+    }
+
+#pragma mark - Callback from BLE SMP transaction
+
+    - (void)bleSmpCommandDidConnect {
+        // スロット照会実行からスタート
+        [self doRequestGetSlotInfo];
+    }
+
+    - (void)bleSmpCommandDidProcess:(Command)command success:(bool)success response:(NSData *)response forCommand:(id)ref {
+        switch (command) {
+            case COMMAND_BLE_DFU_GET_SLOT_INFO:
+                [self doResponseGetSlotInfo:success response:response];
+                break;
+            case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
+                [self doResponseChangeToTestStatus:success response:response];
+                break;
+            case COMMAND_BLE_DFU_RESET_APPLICATION:
+                [self doResponseResetApplication:success response:response];
+                break;
+            default:
+                break;
+        }
+    }
+
+    - (void)bleSmpCommandDidDisconnectWithError:(NSError *)error {
+        // リセット要求中に接続断が検知された場合
+        if (error && [self resetApplicationRequested]) {
+            // リセット要求済みフラグをクリア
+            [self setResetApplicationRequested:false];
+            // DFU反映待ち処理に移行
+            dispatch_async([self subQueue], ^{
+                [self performDFUUpdateMonitor];
+            });
+        }
     }
 
 #pragma mark - Private methods

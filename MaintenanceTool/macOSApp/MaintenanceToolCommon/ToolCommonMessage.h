@@ -200,6 +200,9 @@
 #pragma mark - BLE DFU関連
 #define MSG_DFU_SUB_PROCESS_FAILED              @"ファームウェア更新機能の内部処理が失敗しました。"
 #define MSG_DFU_VERSION_INFO_GET_FAILED         @"FIDO認証器ファームウェアのバージョンが取得できませんでした。"
+#define MSG_DFU_SLOT_INFO_GET_FAILED            @"FIDO認証器のプログラム領域情報が取得できませんでした。"
+#define MSG_DFU_CHANGE_TO_TEST_STATUS_FAILED    @"FIDO認証器ファームウェアの反映一時停止要求に失敗しました。"
+#define MSG_DFU_RESET_APPLICATION_FAILED        @"FIDO認証器ファームウェアの再始動要求に失敗しました。"
 
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
