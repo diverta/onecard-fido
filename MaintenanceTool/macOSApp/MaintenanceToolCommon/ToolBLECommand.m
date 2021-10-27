@@ -343,7 +343,7 @@
     - (void)helperDidScanForPeripheral:(id)peripheralRef withUUID:(NSString *)uuidString {
         // スキャンされたサービスUUIDを比較し、同じであればペリフェラル接続を試行
         if ([uuidString isEqualToString:@"FFFD"]) {
-            [[self toolBLEHelper] helperWillconnectPeripheral:peripheralRef];
+            [[self toolBLEHelper] helperWillConnectPeripheral:peripheralRef];
         }
     }
 
@@ -406,16 +406,6 @@
         [[self toolBLEHelper] helperWillDisconnect];
     }
 
-    - (void)helperNotifyStatus:(BLEErrorReason)reason error:(NSError *)error {
-        // ログをファイル出力
-        NSString *message = [self helperMessageOnFailConnectionWith:reason error:error];
-        if (error) {
-            [[ToolLogFile defaultLogger] errorWithFormat:@"%@ %@", message, [error description]];
-        } else {
-            [[ToolLogFile defaultLogger] info:message];
-        }
-    }
-
     - (NSString *)helperMessageOnFailConnectionWith:(BLEErrorReason)reason error:(NSError *)error {
         // BLE処理時のエラーコードを、適切なメッセージに変更する
         switch (reason) {
@@ -427,10 +417,6 @@
                 return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
             case BLE_ERR_DEVICE_DISCONNECTED:
                 return MSG_U2F_DEVICE_DISCONNECTED;
-            case BLE_ERR_DEVICE_SCAN_START:
-                return MSG_U2F_DEVICE_SCAN_START;
-            case BLE_ERR_DEVICE_SCAN_STOPPED:
-                return MSG_U2F_DEVICE_SCAN_STOPPED;
             case BLE_ERR_DEVICE_SCAN_TIMEOUT:
                 if ([self command] == COMMAND_PAIRING) {
                     return MSG_BLE_PARING_ERR_TIMED_OUT;
@@ -487,7 +473,11 @@
         }
     }
 
-    - (void)helperDidDisconnect {
+    - (void)helperDidDisconnectWithError:(NSError *)error {
+        // エラーをログ出力
+        if (error) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"BLE disconnected with message: %@", [error description]];
+        }
         // 戻り先が画面でない場合はコマンドクラスに制御を戻す
         if ([self toolCommandRef]) {
             [[self delegate] bleCommandDidProcess:[self command]

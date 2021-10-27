@@ -6,6 +6,7 @@
 //
 #import "ToolBLEHelper.h"
 #import "ToolCommonMessage.h"
+#import "ToolLogFile.h"
 
 @interface ToolBLEHelper () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -68,7 +69,7 @@
         // BLEペリフェラルをスキャン
         [self setConnectedPeripheral:nil];
         [[self manager] scanForPeripheralsWithServices:nil options:scanningOptions];
-        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_SCAN_START error:nil];
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_START];
         // スキャンタイムアウト監視を開始
         [self startScanningTimeoutMonitor];
     }
@@ -76,7 +77,7 @@
     - (void)cancelScanForPeripherals {
         // スキャンを停止
         [[self manager] stopScan];
-        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_SCAN_STOPPED error:nil];
+        [[ToolLogFile defaultLogger] info:MSG_U2F_DEVICE_SCAN_STOPPED];
     }
 
     - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
@@ -106,7 +107,7 @@
 
 #pragma mark - Connect peripheral
 
-    - (void)helperWillconnectPeripheral:(id)peripheralRef {
+    - (void)helperWillConnectPeripheral:(id)peripheralRef {
         // ペリフェラルに接続し、接続タイムアウト監視を開始
         CBPeripheral *peripheral = (CBPeripheral *)peripheralRef;
         [[self manager] connectPeripheral:peripheral options:nil];
@@ -138,10 +139,8 @@
                      error:(NSError *)error {
         // ペリフェラルの参照を解除
         [self setConnectedPeripheral:nil];
-        // ログをファイル出力
-        [[self delegate] helperNotifyStatus:BLE_ERR_DEVICE_DISCONNECTED error:error];
         // 切断完了を通知
-        [[self delegate] helperDidDisconnect];
+        [[self delegate] helperDidDisconnectWithError:error];
     }
 
     - (void)connectionDidTimeout {
@@ -339,7 +338,7 @@
         if ([self connectedPeripheral] != nil) {
             [[self manager] cancelPeripheralConnection:[self connectedPeripheral]];
         } else {
-            [[self delegate] helperDidDisconnect];
+            [[self delegate] helperDidDisconnectWithError:nil];
         }
     }
 
