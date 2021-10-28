@@ -312,8 +312,10 @@
     }
 
     - (void)doRequestChangeToTestStatus {
+        // SHA-256ハッシュデータをイメージから抽出
+        NSData *hash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
         // BLE経由で反映一時停止要求を実行
-        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS request:nil forCommand:self];
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS request:hash forCommand:self];
     }
 
     - (void)doResponseChangeToTestStatus:(bool)success response:(NSData *)response {

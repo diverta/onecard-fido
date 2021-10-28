@@ -94,6 +94,7 @@ bool mcumgr_app_image_bin_filename_get(const char *bin_file_dir_path, const char
 //
 static uint8_t mcumgr_app_bin[524288];
 static size_t  mcumgr_app_bin_size;
+static uint8_t mcumgr_app_bin_hash_sha256[32];
 
 uint8_t *mcumgr_app_image_bin(void)
 {
@@ -103,6 +104,11 @@ uint8_t *mcumgr_app_image_bin(void)
 size_t mcumgr_app_image_bin_size(void)
 {
     return mcumgr_app_bin_size;
+}
+
+uint8_t *mcumgr_app_image_bin_hash_sha256(void)
+{
+    return mcumgr_app_bin_hash_sha256;
 }
 
 static bool read_app_image_file(const char *file_name, size_t max_size, uint8_t *data, size_t *size)
@@ -132,6 +138,62 @@ static bool read_app_image_file(const char *file_name, size_t max_size, uint8_t 
     return true;
 }
 
+static uint32_t byte_to_uint32(uint8_t *p)
+{
+    // ４バイトのリトルエンディアン形式データを数値変換
+    uint32_t n = 0;
+    n += (p[3] << 24) & 0xff000000;
+    n += (p[2] << 16) & 0x00ff0000;
+    n += (p[1] <<  8) & 0x0000ff00;
+    n += (p[0] <<  0) & 0x000000ff;
+    return n;
+}
+
+static uint16_t byte_to_uint16(uint8_t *p)
+{
+    // ２バイトのリトルエンディアン形式データを数値変換
+    uint16_t n = 0;
+    n += (p[1] <<  8) & 0xff00;
+    n += (p[0] <<  0) & 0x00ff;
+    return n;
+}
+
+static bool extract_image_hash_sha256(void)
+{
+    // magicの値を抽出
+    uint8_t *image = mcumgr_app_bin;
+    uint32_t magic = byte_to_uint32(image);
+    // イメージヘッダー／データ長を抽出
+    uint32_t image_header_size = byte_to_uint32(image + 8);
+    uint32_t image_data_size = byte_to_uint32(image + 12);
+    uint32_t image_size = image_header_size + image_data_size;
+    // イメージヘッダーから、イメージTLVの開始位置を計算
+    uint8_t *tlv_info;
+    if (magic == 0x96f3b83c) {
+        tlv_info = image + image_size;
+    } else {
+        tlv_info = image + image_size + 4;
+    }
+    // イメージTLVからSHA-256ハッシュの開始位置を検出
+    while (tlv_info < image + mcumgr_app_bin_size) {
+        // タグ／長さを抽出
+        uint16_t tag = byte_to_uint16(tlv_info);
+        tlv_info += 2;
+        uint16_t len = byte_to_uint16(tlv_info);
+        tlv_info += 2;
+        // SHA-256のタグであり、長さが32バイトであればデータをバッファにコピー
+        if (tag == 0x10 && len == 0x20) {
+            memcpy(mcumgr_app_bin_hash_sha256, tlv_info, len);
+            return true;
+        } else {
+            tlv_info += len;
+        }
+    }
+    // SHA-256ハッシュが見つからなかった場合はエラー
+    log_debug("%s: SHA-256 hash of image not found", __func__);
+    return false;
+}
+
 bool mcumgr_app_image_bin_read(const char *bin_file_path)
 {
     // データバッファ／サイズを初期化
@@ -142,5 +204,6 @@ bool mcumgr_app_image_bin_read(const char *bin_file_path)
     if (read_app_image_file(bin_file_path, max_size, mcumgr_app_bin, &mcumgr_app_bin_size) == false) {
         return false;
     }
-    return true;
+    // イメージからSHA-256ハッシュを抽出
+    return extract_image_hash_sha256();
 }
