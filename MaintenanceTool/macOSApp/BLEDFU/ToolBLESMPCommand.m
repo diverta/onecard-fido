@@ -7,6 +7,7 @@
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"
 #import "ToolLogFile.h"
+#import <CommonCrypto/CommonCrypto.h>
 
 #define SmpServiceUUID          @"8D53DC1D-1DB7-4CD3-868B-8A527460AA84"
 #define SmpCharacteristicUUID   @"DA2E7828-FBCE-4E01-AE9E-261174997C48"
@@ -138,14 +139,17 @@
     - (void)doRequestChangeToTestStatus {
         // リクエストデータを生成
         uint8_t bodyBytes[] = {
-            0x02, 0x00, 0x00, 0x32, 0x00, 0x01, 0x00, 0x00, 0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72,
-            0x6d, 0xf4, 0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff
+            0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0xf4,
+            0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20
         };
         uint16_t len = sizeof(bodyBytes);
-        NSData *body = [[NSData alloc] initWithBytes:bodyBytes length:len];
-        NSData *header = [self buildSmpHeader:OP_WRITE_REQ flags:0x00 len:len group:GRP_IMG_MGMT seq:0x00 id_int:CMD_IMG_MGMT_STATE];
+        NSMutableData *body = [[NSMutableData alloc] initWithBytes:bodyBytes length:len];
+        // 本体にSHA-256ハッシュを連結
+        [body appendData:[self requestData]];
+        // 終端文字を連結
+        [self appendSmpBodyTerminatorByteTo:body];
+        // ヘッダーを生成
+        NSData *header = [self buildSmpHeader:OP_WRITE_REQ flags:0x00 len:[body length] group:GRP_IMG_MGMT seq:0x00 id_int:CMD_IMG_MGMT_STATE];
         // リクエストデータを送信
         [self sendSmpRequestData:body withHeader:header];
     }
@@ -285,6 +289,13 @@
         };
         NSData *data = [[NSData alloc] initWithBytes:header length:sizeof(header)];
         return data;
+    }
+
+    - (void)appendSmpBodyTerminatorByteTo:(NSMutableData *)bodyData {
+        // 終端文字を連結
+        uint8_t bodyTerminator[] = {0xff};
+        NSData *terminator = [[NSData alloc] initWithBytes:bodyTerminator length:sizeof(bodyTerminator)];
+        [bodyData appendData:terminator];
     }
 
     - (uint16_t)getSmpResponseBodySize:(NSData *)responseData {
