@@ -70,6 +70,10 @@ typedef enum : NSInteger {
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
     + (NSData *)generateSHA256HashDataOf:(NSData *)data;
+    + (void)setLENumber16:(uint16_t)n toBEBytes:(uint8_t *)p;
+    + (void)setLENumber32:(uint32_t)n toBEBytes:(uint8_t *)p;
+    + (uint16_t)getLENumber16FromBEBytes:(uint8_t *)p;
+    + (uint32_t)getLENumber32FromBEBytes:(uint8_t *)p;
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
