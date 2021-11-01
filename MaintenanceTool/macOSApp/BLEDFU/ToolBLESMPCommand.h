@@ -27,6 +27,7 @@
     - (void)bleSmpCommandDidConnect;
     - (void)bleSmpCommandDidProcess:(Command)command success:(bool)success response:(NSData *)response forCommand:(id)commandRef;
     - (void)bleSmpCommandDidDisconnectWithError:(NSError *)error;
+    - (void)bleSmpCommandNotifyProgressOfUploadImage:(uint8_t)percentage;
 
 @end
 

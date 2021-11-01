@@ -402,6 +402,12 @@
         }
     }
 
+    - (void)bleSmpCommandNotifyProgressOfUploadImage:(uint8_t)percentage {
+        // 転送状況を表示させる
+        NSString *progress = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
+        [self notifyProgress:progress];
+    }
+
 #pragma mark - Private methods
 
     - (bool)readDFUImageFile {
