@@ -7,7 +7,6 @@
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"
 #import "ToolLogFile.h"
-#import <CommonCrypto/CommonCrypto.h>
 
 #define SmpServiceUUID          @"8D53DC1D-1DB7-4CD3-868B-8A527460AA84"
 #define SmpCharacteristicUUID   @"DA2E7828-FBCE-4E01-AE9E-261174997C48"
