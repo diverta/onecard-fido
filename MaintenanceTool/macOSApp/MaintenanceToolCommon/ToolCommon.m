@@ -11,6 +11,9 @@
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
+// for SHA-256 hash calculate
+#include <CommonCrypto/CommonCrypto.h>
+
 @interface ToolCommon ()
 
 @end
@@ -48,6 +51,15 @@
         free(randomBytes);
 
         return randomBytesData;
+    }
+
+    + (NSData *)generateSHA256HashDataOf:(NSData *)data {
+        uint8_t hash[32];
+        uint8_t *dataBytes = (uint8_t *)[data bytes];
+        CC_SHA256(dataBytes, (CC_LONG)[data length], hash);
+
+        NSData *hashData = [[NSData alloc] initWithBytes:hash length:sizeof(hash)];
+        return hashData;
     }
 
 #pragma mark - Utilities for check entry

@@ -43,6 +43,7 @@ typedef enum : NSInteger {
     COMMAND_USB_DFU,
     COMMAND_BLE_DFU,
     COMMAND_BLE_DFU_GET_SLOT_INFO,
+    COMMAND_BLE_DFU_UPLOAD_IMAGE,
     COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS,
     COMMAND_BLE_DFU_RESET_APPLICATION,
     COMMAND_ERASE_BONDS,
@@ -68,6 +69,7 @@ typedef enum : NSInteger {
     + (NSString *)getAppVersionString;
     + (NSData *)generateHexBytesFrom:(NSString *)hexString;
     + (NSData *)generateRandomBytesDataOf:(size_t)size;
+    + (NSData *)generateSHA256HashDataOf:(NSData *)data;
 
     + (bool) checkMustEntry:(NSTextField *)textField informativeText:(NSString *)informativeText;
     + (bool) checkFileExist:(NSTextField *)textField informativeText:(NSString *)informativeText;
