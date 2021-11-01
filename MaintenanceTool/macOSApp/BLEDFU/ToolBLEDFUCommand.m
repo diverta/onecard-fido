@@ -18,7 +18,7 @@
 #import "mcumgr_app_image.h"
 
 // 処理タイムアウト（転送／反映チェック処理）
-#define TIMEOUT_SEC_DFU_PROCESS         180.0
+#define TIMEOUT_SEC_DFU_PROCESS         300.0
 
 // 更新対象アプリケーション＝version 0.4.0
 #define DFU_UPD_TARGET_APP_VERSION      400
