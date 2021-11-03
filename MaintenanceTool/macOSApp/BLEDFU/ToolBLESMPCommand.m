@@ -118,9 +118,9 @@
         }
     }
 
-    - (void)commandDidProcess {
+    - (void)commandDidProcess:(bool)success {
         // コマンドクラスに制御を戻す
-        [[self delegate] bleSmpCommandDidProcess:[self command] success:[self success]
+        [[self delegate] bleSmpCommandDidProcess:[self command] success:success
                                         response:[self responseData] forCommand:[self toolCommandRef]];
     }
 
@@ -136,7 +136,7 @@
 
     - (void)doResponseGetSlotInfo {
         // コマンドクラスに制御を戻す
-        [self commandDidProcess];
+        [self commandDidProcess:true];
     }
 
     - (void)doRequestChangeToTestStatus {
@@ -159,7 +159,7 @@
 
     - (void)doResponseChangeToTestStatus {
         // コマンドクラスに制御を戻す
-        [self commandDidProcess];
+        [self commandDidProcess:true];
     }
 
     - (void)doRequestResetApplication {
@@ -174,7 +174,7 @@
 
     - (void)doResponseResetApplication {
         // コマンドクラスに制御を戻す
-        [self commandDidProcess];
+        [self commandDidProcess:true];
     }
 
 #pragma mark - Callback from ToolBLEHelper
