@@ -415,8 +415,6 @@
                 return MSG_U2F_DEVICE_CONNECT_FAILED;
             case BLE_ERR_DEVICE_CONNREQ_TIMEOUT:
                 return MSG_U2F_DEVICE_CONNREQ_TIMEOUT;
-            case BLE_ERR_DEVICE_DISCONNECTED:
-                return MSG_U2F_DEVICE_DISCONNECTED;
             case BLE_ERR_DEVICE_SCAN_TIMEOUT:
                 if ([self command] == COMMAND_PAIRING) {
                     return MSG_BLE_PARING_ERR_TIMED_OUT;
