@@ -39,8 +39,6 @@
     @property (nonatomic) NSMutableData     *responseData;
     // 物理接続が切れた旨を保持
     @property (nonatomic) bool               unexpectedDisconnection;
-    // 処理成功／失敗を保持
-    @property (nonatomic) bool               success;
 
 @end
 
@@ -84,8 +82,6 @@
 #pragma mark - Request and response
 
     - (void)doRequest {
-        // 処理失敗／成功フラグをクリア
-        [self setSuccess:false];
         // リクエストデータを送信
         switch ([self command]) {
             case COMMAND_BLE_DFU_GET_SLOT_INFO:
@@ -242,7 +238,6 @@
         }
         // 全フレームを受信したら、レスポンス処理を実行
         if (received == totalSize) {
-            [self setSuccess:true];
             [self doResponse];
             received = 0;
             totalSize = 0;
@@ -265,6 +260,8 @@
         // 物理切断が検知された場合は、接続復旧までその旨を保持
         if (error) {
             [self setUnexpectedDisconnection:true];
+        } else {
+            [[ToolLogFile defaultLogger] info:@"SMP service disconnected"];
         }
         // デバイス接続の切断完了を通知
         [[self delegate] bleSmpCommandDidDisconnectWithError:error];
