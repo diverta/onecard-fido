@@ -17,6 +17,10 @@
 // for DFU image file
 #import "mcumgr_app_image.h"
 
+// for CBOR decode
+#include "debug_log.h"
+#include "mcumgr_cbor_decode.h"
+
 // 処理タイムアウト（転送／反映チェック処理）
 #define TIMEOUT_SEC_DFU_PROCESS         300.0
 
@@ -44,6 +48,8 @@
     @property (nonatomic) bool                      needCompareUpdateVersion;
     // 処理キャンセルフラグ
     @property (nonatomic) bool                      cancelFlag;
+    // デバイス接続の切断理由を保持
+    @property (nonatomic) bool                      disconnectByError;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -307,6 +313,11 @@
             [self notifyErrorToProcessingWindow];
             return;
         }
+        // スロット照会情報を参照し、チェックでNGの場合、BLE接続を切断
+        if ([self checkSlotInfoWith:response] == false) {
+            [self doDisconnectByError:true];
+            return;
+        }
         // 反映一時停止要求に移行
         [self doRequestChangeToTestStatus];
     }
@@ -367,6 +378,11 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
 
+    - (void)doDisconnectByError:(bool)b {
+        [self setDisconnectByError:b];
+        [[self toolBLESMPCommand] commandWillDisconnect];
+    }
+
 #pragma mark - Callback from BLE SMP transaction
 
     - (void)bleSmpCommandDidConnect {
@@ -399,6 +415,10 @@
             dispatch_async([self subQueue], ^{
                 [self performDFUUpdateMonitor];
             });
+        } else if ([self disconnectByError]) {
+            // エラーとして画面に制御を戻す
+            [self setDisconnectByError:false];
+            [self notifyErrorToProcessingWindow];
         }
     }
 
@@ -475,6 +495,45 @@
         return true;
     }
 
+    - (bool)checkSlotInfoWith:(NSData *)response {
+        // スロット照会情報を参照
+        if ([self parseSmpSlotInfo:response] == false) {
+            return false;
+        }
+        // SHA-256ハッシュデータをイメージから抽出
+        NSData *imageHash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
+        // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
+        if ([self checkSmpImageAlreadyConfirmed:response imageHash:imageHash]) {
+            [[ToolLogFile defaultLogger] error:MSG_DFU_IMAGE_ALREADY_INSTALLED];
+            [self notifyToolCommandMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)parseSmpSlotInfo:(NSData *)responseData {
+        // レスポンス（CBOR）を解析し、スロット照会情報を取得
+        uint8_t *bytes = (uint8_t *)[responseData bytes];
+        size_t size = [responseData length];
+        if (mcumgr_cbor_decode_slot_info(bytes, size) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOR encode error: %s", log_debug_message()];
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkSmpImageAlreadyConfirmed:(NSData *)responseData imageHash:(NSData *)imageHash {
+        // スロット照会情報から、スロット#0のハッシュを抽出
+        uint8_t *hash0 = mcumgr_cbor_decode_slot_info_hash(0);
+        NSData *hashData0 = [[NSData alloc] initWithBytes:hash0 length:32];
+        // 既に転送対象イメージが導入されている場合は true
+        if (mcumgr_cbor_decode_slot_info_active(0) && [hashData0 isEqualToData:imageHash]) {
+            return true;
+        }
+        // 転送対象イメージが未導入と判定
+        return false;
+    }
+
 #pragma mark - Private common methods
 
     - (void)clearFlagsForProcess {
@@ -510,6 +569,13 @@
         // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
         dispatch_async([self mainQueue], ^{
             [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
+        });
+    }
+
+    - (void)notifyToolCommandMessage:(NSString *)message {
+        // メイン画面にメッセージ文字列を表示する
+        dispatch_async([self mainQueue], ^{
+            [[[self toolAppCommand] delegate] notifyAppCommandMessage:message];
         });
     }
 
