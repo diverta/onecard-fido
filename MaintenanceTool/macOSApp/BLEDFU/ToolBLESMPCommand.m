@@ -39,6 +39,8 @@
     @property (nonatomic) NSMutableData     *responseData;
     // 物理接続が切れた旨を保持
     @property (nonatomic) bool               unexpectedDisconnection;
+    // デバイス接続の切断理由を保持
+    @property (nonatomic) bool               disconnectByError;
 
 @end
 
@@ -76,7 +78,7 @@
 
     - (void)commandWillDisconnect {
         // デバイス接続を切断
-        [[self toolBLEHelper] helperWillDisconnect];
+        [self doDisconnectByError:false];
     }
 
 #pragma mark - Request and response
@@ -187,7 +189,7 @@
         if ([self unexpectedDisconnection]) {
             // 物理接続断によるエラー発生後の接続復旧である場合は、このクラスの論理接続を破棄
             [self setUnexpectedDisconnection:false];
-            [[self toolBLEHelper] helperWillDisconnect];
+            [self doDisconnectByError:false];
 
         } else {
             // SMPサービスUUIDによる接続検知の場合は、SMPサービス接続を試行
@@ -253,7 +255,7 @@
             [[ToolLogFile defaultLogger] error:message];
         }
         // デバイス接続を切断
-        [[self toolBLEHelper] helperWillDisconnect];
+        [self doDisconnectByError:true];
     }
 
     - (void)helperDidDisconnectWithError:(NSError *)error {
@@ -263,11 +265,22 @@
         } else {
             [[ToolLogFile defaultLogger] info:@"SMP service disconnected"];
         }
-        // デバイス接続の切断完了を通知
-        [[self delegate] bleSmpCommandDidDisconnectWithError:error];
+        if ([self disconnectByError]) {
+            // レスポンスエラーとしてコマンドクラスに通知
+            [self setDisconnectByError:false];
+            [self commandDidProcess:false];
+        } else {
+            // 切断をコマンドクラスに通知
+            [[self delegate] bleSmpCommandDidDisconnectWithError:error];
+        }
     }
 
 #pragma mark - Private methods
+
+    - (void)doDisconnectByError:(bool)b {
+        [self setDisconnectByError:b];
+        [[self toolBLEHelper] helperWillDisconnect];
+    }
 
     - (void)sendSmpRequestData:(NSData *)requestBody withHeader:(NSData *)requestHeader {
         // ヘッダーと本体を連結
