@@ -1,5 +1,5 @@
 //
-//  mcumgr_cbor_decode.m
+//  mcumgr_cbor_decode.c
 //  MaintenanceTool
 //
 //  Created by Makoto Morita on 2021/11/02.
@@ -115,6 +115,30 @@ static bool parse_boolean_value(const CborValue *map, const char *string, bool *
     return true;
 }
 
+static void mcumgr_cbor_decode_slot_info_init(void)
+{
+    // 構造体を初期化
+    size_t size = sizeof(SLOT_INFO) * SLOT_CNT;
+    memset(slot_infos, 0, size);
+}
+
+static bool parse_root_map(const uint8_t *buffer, size_t size, CborParser *parser, CborValue *root_map)
+{
+    // CBOR parser初期化
+    CborError ret = cbor_parser_init(buffer, size, CborValidateCanonicalFormat, parser, root_map);
+    if (ret != CborNoError) {
+        log_debug("%s: cbor_parser_init returns %d", __func__, ret);
+        return false;
+    }
+    // ルートのMapを抽出
+    CborType type = cbor_value_get_type(root_map);
+    if (type != CborMapType) {
+        log_debug("%s: cbor_value_get_type returns type %d", __func__, type);
+        return false;
+    }
+    return true;
+}
+
 static bool parse_array(const CborValue *map, const char *string, CborValue *result)
 {
     // Mapから指定キーのエントリーを抽出
@@ -132,77 +156,65 @@ static bool parse_array(const CborValue *map, const char *string, CborValue *res
     return true;
 }
 
-static void mcumgr_cbor_decode_slot_info_init(void)
+static bool parse_images_array(const CborValue *array)
 {
-    // 構造体を初期化
-    size_t size = sizeof(SLOT_INFO) * SLOT_CNT;
-    memset(slot_infos, 0, size);
-}
-
-static bool mcumgr_cbor_decode_slot_info_term(bool b)
-{
-    return b;
+    // 配列内を探索
+    CborValue map;
+    CborError ret = cbor_value_enter_container(array, &map);
+    if (ret != CborNoError) {
+        log_debug("%s: cbor_value_enter_container returns %d", __func__, ret);
+        return false;
+    }
+    while (ret == CborNoError) {
+        // break byteを検出したらループ脱出、配列要素がMapでない場合はエラー
+        CborType type = cbor_value_get_type(&map);
+        if (type == CborInvalidType) {
+            break;
+        } else if (type != CborMapType) {
+            log_debug("%s: cbor_value_get_type returns type %d", __func__, type);
+            return false;
+        }
+        // "slot"エントリーを抽出（数値）
+        int slot;
+        if (parse_integer_value(&map, "slot", &slot) == false) {
+            return false;
+        }
+        slot_infos[slot].slot_no = slot;
+        // "hash"エントリーを抽出（バイト配列）
+        if (parse_fixed_bytes_value(&map, "hash", slot_infos[slot].hash_bytes, HASH_SIZE) == false) {
+            return false;
+        }
+        // "active"エントリーを抽出（bool）
+        if (parse_boolean_value(&map, "active", &slot_infos[slot].active) == false) {
+            return false;
+        }
+        // 次の配列要素に移動
+        ret = cbor_value_advance(&map);
+        if (ret != CborNoError) {
+            log_debug("%s: cbor_value_advance returns %d", __func__, ret);
+            return false;
+        }
+    }
+    return true;
 }
 
 bool mcumgr_cbor_decode_slot_info(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
     // 初期処理
     mcumgr_cbor_decode_slot_info_init();
-    // CBOR parser初期化
+    // ルートのMapを抽出
     CborParser parser;
-    CborValue it;
-    CborError ret = cbor_parser_init(cbor_data_buffer, cbor_data_length, CborValidateCanonicalFormat, &parser, &it);
-    if (ret != CborNoError) {
-        log_debug("%s: cbor_parser_init returns %d", __func__, ret);
-        return mcumgr_cbor_decode_slot_info_term(false);
-    }
-    CborType type = cbor_value_get_type(&it);
-    if (type != CborMapType) {
-        log_debug("%s: cbor_value_get_type returns type %d", __func__, type);
-        return mcumgr_cbor_decode_slot_info_term(false);
+    CborValue root_map;
+    if (parse_root_map(cbor_data_buffer, cbor_data_length, &parser, &root_map) == false) {
+        return false;
     }
     // "images"エントリーを抽出（配列）
     CborValue array;
-    if (parse_array(&it, "images", &array) == false) {
-        return mcumgr_cbor_decode_slot_info_term(false);
-    }
-    // 配列内を探索
-    CborValue map;
-    ret = cbor_value_enter_container(&array, &map);
-    if (ret != CborNoError) {
-        log_debug("%s: cbor_value_enter_container returns %d", __func__, ret);
-        return mcumgr_cbor_decode_slot_info_term(false);
-    }
-    while (ret == CborNoError) {
-        // break byteを検出したらループ脱出、配列要素がMapでない場合はエラー
-        type = cbor_value_get_type(&map);
-        if (type == CborInvalidType) {
-            break;
-        } else if (type != CborMapType) {
-            log_debug("%s: cbor_value_get_type returns type %d", __func__, type);
-            return mcumgr_cbor_decode_slot_info_term(false);
-        }
-        // "slot"エントリーを抽出（数値）
-        int slot;
-        if (parse_integer_value(&map, "slot", &slot) == false) {
-            return mcumgr_cbor_decode_slot_info_term(false);
-        }
-        slot_infos[slot].slot_no = slot;
-        // "hash"エントリーを抽出（バイト配列）
-        if (parse_fixed_bytes_value(&map, "hash", slot_infos[slot].hash_bytes, HASH_SIZE) == false) {
-            return mcumgr_cbor_decode_slot_info_term(false);
-        }
-        // "active"エントリーを抽出（bool）
-        if (parse_boolean_value(&map, "active", &slot_infos[slot].active) == false) {
-            return mcumgr_cbor_decode_slot_info_term(false);
-        }
-        // 次の配列要素に移動
-        ret = cbor_value_advance(&map);
-        if (ret != CborNoError) {
-            log_debug("%s: cbor_value_advance returns %d", __func__, ret);
-            return mcumgr_cbor_decode_slot_info_term(false);
+    if (parse_array(&root_map, "images", &array)) {
+        if (parse_images_array(&array) == false) {
+            return false;
         }
     }
     // 正常終了
-    return mcumgr_cbor_decode_slot_info_term(true);
+    return true;
 }

@@ -56,6 +56,7 @@
 		7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9FC7E822431F0A009F569B /* ToolInstallCommand.m */; };
 		7AA9288425872F4A00BC7F1B /* tool_crypto_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */; };
 		7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */; };
+		7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */; };
 		7AB0CEF0271FE79D00DA96FD /* app_update.PCA10095.0.4.0.bin in Resources */ = {isa = PBXBuildFile; fileRef = 7AB0CEEF271FE79D00DA96FD /* app_update.PCA10095.0.4.0.bin */; };
 		7AB0CEF3271FE82600DA96FD /* mcumgr_app_image.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */; };
 		7AB3BC7B22530BA000519124 /* ToolFilePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3BC7A22530BA000519124 /* ToolFilePanel.m */; };
@@ -79,7 +80,6 @@
 		7ADA84641FE36E6D00879CB4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7ADA84631FE36E6D00879CB4 /* Images.xcassets */; };
 		7AE4CBB125844C2200691DBC /* ToolPIVSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AE4CBB025844C2200691DBC /* ToolPIVSetting.m */; };
 		7AEAFD732241D3B300ABB6E6 /* ToolHIDCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */; };
-		7AF422792730CBF500D15457 /* mcumgr_cbor_decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF422782730CBF500D15457 /* mcumgr_cbor_decode.m */; };
 		7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */; };
 /* End PBXBuildFile section */
 
@@ -174,6 +174,7 @@
 		7AA9288325872F4A00BC7F1B /* tool_crypto_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tool_crypto_common.c; sourceTree = "<group>"; };
 		7AAD21E52717FD3B00C5CCA4 /* ToolAppCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolAppCommand.h; sourceTree = "<group>"; };
 		7AAD21E62717FD5900C5CCA4 /* ToolAppCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolAppCommand.m; sourceTree = "<group>"; };
+		7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mcumgr_cbor_decode.c; sourceTree = "<group>"; };
 		7AB0CEEF271FE79D00DA96FD /* app_update.PCA10095.0.4.0.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = app_update.PCA10095.0.4.0.bin; sourceTree = "<group>"; };
 		7AB0CEF1271FE82600DA96FD /* mcumgr_app_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_app_image.h; sourceTree = "<group>"; };
 		7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mcumgr_app_image.c; sourceTree = "<group>"; };
@@ -217,7 +218,6 @@
 		7AEAFD712241D3B300ABB6E6 /* ToolHIDCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolHIDCommand.m; sourceTree = "<group>"; };
 		7AEAFD722241D3B300ABB6E6 /* ToolHIDCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolHIDCommand.h; sourceTree = "<group>"; };
 		7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mcumgr_cbor_decode.h; sourceTree = "<group>"; };
-		7AF422782730CBF500D15457 /* mcumgr_cbor_decode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mcumgr_cbor_decode.m; sourceTree = "<group>"; };
 		7AF9B0F02728E4250070F8A4 /* ToolBLESMPCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolBLESMPCommand.m; sourceTree = "<group>"; };
 		7AF9B0F12728E4250070F8A4 /* ToolBLESMPCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBLESMPCommand.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -353,7 +353,7 @@
 				7AB0CEF1271FE82600DA96FD /* mcumgr_app_image.h */,
 				7AB0CEF2271FE82600DA96FD /* mcumgr_app_image.c */,
 				7AF422772730C9BE00D15457 /* mcumgr_cbor_decode.h */,
-				7AF422782730CBF500D15457 /* mcumgr_cbor_decode.m */,
+				7AB0410F2733625E00B80C53 /* mcumgr_cbor_decode.c */,
 			);
 			path = BLEDFU;
 			sourceTree = "<group>";
@@ -586,6 +586,7 @@
 				7A41F22C2043B2D40055ACBF /* ToolPopupWindow.m in Sources */,
 				7A712EBD2570BCDC00E45E2D /* tool_crypto_des.c in Sources */,
 				7AAD21E72717FD5900C5CCA4 /* ToolAppCommand.m in Sources */,
+				7AB041102733625E00B80C53 /* mcumgr_cbor_decode.c in Sources */,
 				7AF9B0F22728E4250070F8A4 /* ToolBLESMPCommand.m in Sources */,
 				7AB4B16C271E6E8B0099D51B /* ECDH.c in Sources */,
 				7A3A1B20271E6F7E006864A1 /* PinCodeParamWindow.m in Sources */,
@@ -608,7 +609,6 @@
 				7A8E0E2723791A2D00B47026 /* ToolLogFile.m in Sources */,
 				7AB4B173271E6E8B0099D51B /* debug_log.c in Sources */,
 				7A3A1B2A271E6F8D006864A1 /* ToolPreferenceCommand.m in Sources */,
-				7AF422792730CBF500D15457 /* mcumgr_cbor_decode.m in Sources */,
 				7A9FC7EA22431F0B009F569B /* ToolInstallCommand.m in Sources */,
 				7A92740F2105AB960062FA89 /* ToolCommon.m in Sources */,
 				7A4D118E271E6A750095C29E /* usb_dfu_util.c in Sources */,
