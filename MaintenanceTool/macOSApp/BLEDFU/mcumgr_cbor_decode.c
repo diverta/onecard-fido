@@ -19,6 +19,7 @@ typedef struct _slot_info {
 
 typedef struct _result_info {
     uint8_t  rc;
+    uint32_t off;
 } RESULT_INFO;
 
 static SLOT_INFO   slot_infos[SLOT_CNT];
@@ -45,6 +46,11 @@ bool mcumgr_cbor_decode_slot_info_active(int slot_no)
 uint8_t mcumgr_cbor_decode_result_info_rc(void)
 {
     return result_info.rc;
+}
+
+uint32_t mcumgr_cbor_decode_result_info_off(void)
+{
+    return result_info.off;
 }
 
 static bool parse_integer_value(const CborValue *map, const char *string, int *result)
@@ -220,6 +226,17 @@ static bool parse_rc(const CborValue *map)
     return true;
 }
 
+static bool parse_off(const CborValue *map)
+{
+    // "off"エントリーを抽出（数値）
+    int off;
+    if (parse_integer_value(map, "off", &off) == false) {
+        return false;
+    }
+    result_info.off = (uint32_t)off;
+    return true;
+}
+
 bool mcumgr_cbor_decode_slot_info(uint8_t *cbor_data_buffer, size_t cbor_data_length)
 {
     // 初期処理
@@ -241,6 +258,28 @@ bool mcumgr_cbor_decode_slot_info(uint8_t *cbor_data_buffer, size_t cbor_data_le
         if (parse_rc(&root_map) == false) {
             return false;
         }
+    }
+    // 正常終了
+    return true;
+}
+
+bool mcumgr_cbor_decode_result_info(uint8_t *cbor_data_buffer, size_t cbor_data_length)
+{
+    // 初期処理
+    mcumgr_cbor_decode_slot_info_init();
+    // ルートのMapを抽出
+    CborParser parser;
+    CborValue root_map;
+    if (parse_root_map(cbor_data_buffer, cbor_data_length, &parser, &root_map) == false) {
+        return false;
+    }
+    // "rc"エントリーを抽出（数値）
+    if (parse_rc(&root_map) == false) {
+        return false;
+    }
+    // "off"エントリーを抽出（数値）
+    if (parse_off(&root_map) == false) {
+        return false;
     }
     // 正常終了
     return true;
