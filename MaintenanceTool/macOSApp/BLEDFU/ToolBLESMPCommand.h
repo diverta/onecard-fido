@@ -20,6 +20,9 @@
     - (void)commandWillProcess:(Command)command request:(NSData *)request forCommand:(id)commandRef;
     - (void)commandWillDisconnect;
 
+    // 転送済みバイト数を保持
+    @property (nonatomic) size_t imageBytesSent;
+
 @end
 
 @protocol ToolBLESMPCommandDelegate <NSObject>

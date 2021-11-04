@@ -89,6 +89,9 @@
             case COMMAND_BLE_DFU_GET_SLOT_INFO:
                 [self doRequestGetSlotInfo];
                 break;
+            case COMMAND_BLE_DFU_UPLOAD_IMAGE:
+                [self doRequestUploadImage];
+                break;
             case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
                 [self doRequestChangeToTestStatus];
                 break;
@@ -105,6 +108,9 @@
         switch ([self command]) {
             case COMMAND_BLE_DFU_GET_SLOT_INFO:
                 [self doResponseGetSlotInfo];
+                break;
+            case COMMAND_BLE_DFU_UPLOAD_IMAGE:
+                [self doResponseUploadImage];
                 break;
             case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
                 [self doResponseChangeToTestStatus];
@@ -134,6 +140,19 @@
     }
 
     - (void)doResponseGetSlotInfo {
+        // コマンドクラスに制御を戻す
+        [self commandDidProcess:true];
+    }
+
+    - (void)doRequestUploadImage {
+        // リクエストデータを生成
+        NSData *body = [self generateBodyForRequestUploadImage:[self requestData]];
+        NSData *header = [self buildSmpHeader:OP_WRITE_REQ flags:0x00 len:[body length] group:GRP_IMG_MGMT seq:0x00 id_int:CMD_IMG_MGMT_UPLOAD];
+        // リクエストデータを送信
+        [self sendSmpRequestData:body withHeader:header];
+    }
+
+    - (void)doResponseUploadImage {
         // コマンドクラスに制御を戻す
         [self commandDidProcess:true];
     }
@@ -360,6 +379,96 @@
             default:
                 return MSG_OCCUR_BLECONN_ERROR;
         }
+    }
+
+#pragma mark - Transfer image data request
+
+    - (NSData *)generateBodyForRequestUploadImage:(NSData *)imageDataTotal {
+        // リクエストデータ
+        uint8_t bodyBytes[] = {0xbf};
+        NSMutableData *body = [[NSMutableData alloc] initWithBytes:bodyBytes length:sizeof(bodyBytes)];
+        if ([self imageBytesSent] == 0) {
+            // 初回呼び出しの場合、イメージ長を設定
+            [body appendData:[self generateLenBytes:[imageDataTotal length]]];
+            // イメージのハッシュ値を設定
+            NSData *hash = [ToolCommon generateSHA256HashDataOf:imageDataTotal];
+            [body appendData:[self generateShaBytes:hash]];
+        }
+        // 転送済みバイト数を設定
+        [body appendData:[self generateOffBytes:[self imageBytesSent]]];
+        // 転送イメージを連結（データ本体が240バイトに収まるよう、上限サイズを事前計算）
+        size_t remainingSize = 240 - [body length] - 1;
+        [body appendData:[self generateDataBytes:imageDataTotal bytesSent:[self imageBytesSent] remainingSize:remainingSize]];
+        // 終端文字を設定
+        uint8_t bodyTerminator[] = {0xff};
+        NSData *terminator = [[NSData alloc] initWithBytes:bodyTerminator length:sizeof(bodyTerminator)];
+        [body appendData:terminator];
+        return body;
+    }
+
+    - (NSData *)generateDataBytes:(NSData *)imageData bytesSent:(size_t)bytesSent remainingSize:(size_t)remaining {
+        // 転送バイト数を設定
+        uint8_t bodyBytes[] = {
+            0x64, 0x64, 0x61, 0x74, 0x61, 0x58, 0x00
+        };
+        // 転送バイト数
+        size_t bytesToSend = remaining - sizeof(bodyBytes);
+        if (bytesToSend > [imageData length] - bytesSent) {
+            bytesToSend = [imageData length] - bytesSent;
+        }
+        bodyBytes[6] = (uint8_t)bytesToSend;
+        // 転送イメージを抽出
+        NSData *sendData = [imageData subdataWithRange:NSMakeRange(bytesSent, bytesToSend)];
+        // 転送イメージを連結
+        NSMutableData *body = [[NSMutableData alloc] initWithBytes:bodyBytes length:sizeof(bodyBytes)];
+        [body appendData:sendData];
+        return body;
+    }
+
+    - (NSData *)generateLenBytes:(size_t)bytesTotal {
+        // イメージ長を設定
+        uint8_t lenBytes[] = {
+            0x63, 0x6c, 0x65, 0x6e, 0x1a, 0x00, 0x00, 0x00, 0x00
+        };
+        [ToolCommon setLENumber32:(uint32_t)bytesTotal toBEBytes:(lenBytes + 5)];
+        NSData *lenData = [[NSData alloc] initWithBytes:lenBytes length:sizeof(lenBytes)];
+        return lenData;
+    }
+
+    - (NSData *)generateShaBytes:(NSData *)hashBytes {
+        // イメージのハッシュ値を設定
+        uint8_t shaBytes[] = {
+            0x63, 0x73, 0x68, 0x61, 0x43, 0x00, 0x00, 0x00,
+        };
+        // 指定領域から３バイト分の領域に、SHA-256ハッシュの先頭３バイト分を設定
+        uint8_t *bytes = (uint8_t *)[hashBytes bytes];
+        memcpy(shaBytes + 5, bytes, 3);
+        NSData *shaData = [[NSData alloc] initWithBytes:shaBytes length:sizeof(shaBytes)];
+        return shaData;
+    }
+
+    - (NSData *)generateOffBytes:(size_t)bytesSent {
+        // 転送済みバイト数を設定
+        uint8_t offBytes[] = {
+            0x63, 0x6f, 0x66, 0x66, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
+        NSUInteger len = sizeof(offBytes);
+        if (bytesSent == 0) {
+            len = 5;
+        } else if (bytesSent < 0x100) {
+            offBytes[4] = 0x18;
+            offBytes[5] = (uint8_t)bytesSent;
+            len = 6;
+        } else if (bytesSent < 0x10000) {
+            offBytes[4] = 0x19;
+            [ToolCommon setLENumber16:(uint16_t)bytesSent toBEBytes:(offBytes + 5)];
+            len = 7;
+        } else {
+            offBytes[4] = 0x1a;
+            [ToolCommon setLENumber32:(uint32_t)bytesSent toBEBytes:(offBytes + 5)];
+        }
+        NSData *offData = [[NSData alloc] initWithBytes:offBytes length:len];
+        return offData;
     }
 
 @end
