@@ -336,6 +336,11 @@
             [self notifyErrorToProcessingWindow];
             return;
         }
+        // スロット照会情報を参照し、チェックでNGの場合、BLE接続を切断
+        if ([self checkUploadedSlotInfoWith:response] == false) {
+            [self doDisconnectByError:true];
+            return;
+        }
         // DFU転送成功を通知
         [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_SUCCESS];
         // リセット要求処理に移行
@@ -506,6 +511,22 @@
         if ([self checkSmpImageAlreadyConfirmed:response imageHash:imageHash]) {
             [[ToolLogFile defaultLogger] error:MSG_DFU_IMAGE_ALREADY_INSTALLED];
             [self notifyToolCommandMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
+            return false;
+        }
+        return true;
+    }
+
+    - (bool)checkUploadedSlotInfoWith:(NSData *)response {
+        // スロット照会情報を参照
+        if ([self parseSmpSlotInfo:response] == false) {
+            return false;
+        }
+        // スロット情報の代わりに rc が設定されている場合はエラー
+        uint8_t rc = mcumgr_cbor_decode_result_info_rc();
+        if (rc != 0) {
+            NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc];
+            [[ToolLogFile defaultLogger] error:message];
+            [self notifyToolCommandMessage:message];
             return false;
         }
         return true;

@@ -213,6 +213,7 @@
 #define MSG_DFU_IMAGE_TRANSFER_CANCELED         @"更新ファームウェアの転送が中断されました。"
 #define MSG_DFU_IMAGE_TRANSFER_SUCCESS          @"更新ファームウェアの転送が完了しました。"
 #define MSG_DFU_IMAGE_ALREADY_INSTALLED         @"更新ファームウェアが既に導入済みなので、ファームウェア更新処理を続行できません。"
+#define MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC    @"更新ファームウェアの転送後に不明なエラー（rc=%d）が発生しました。"
 #define MSG_DFU_TARGET_NOT_BOOTLOADER_MODE      @"FIDO認証器をブートローダーモードに遷移させることができません。"
 #define MSG_DFU_TARGET_NOT_SECURE_BOOTLOADER    @"FIDO認証器に、署名機能付きUSBブートローダーと、バージョン0.2.8以降のファームウェアをセットで導入してください。"
 #define MSG_DFU_TARGET_NOT_CONNECTED            @"FIDO認証器がブートローダーモードに遷移していません。"
