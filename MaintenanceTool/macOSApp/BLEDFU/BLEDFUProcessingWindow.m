@@ -16,6 +16,7 @@
     @property (assign) IBOutlet NSTextField         *labelTitle;
     @property (assign) IBOutlet NSTextField         *labelProgress;
     @property (assign) IBOutlet NSLevelIndicator    *levelIndicator;
+    @property (assign) IBOutlet NSButton            *buttonCancel;
 
 @end
 
@@ -32,6 +33,8 @@
         [[self labelTitle] setStringValue:MSG_DFU_PROCESS_TITLE_GOING];
         [[self labelProgress] setStringValue:@""];
         [[self levelIndicator] setIntegerValue:0];
+        // Cancelボタンを使用不可とする
+        [[self buttonCancel] setEnabled:false];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {

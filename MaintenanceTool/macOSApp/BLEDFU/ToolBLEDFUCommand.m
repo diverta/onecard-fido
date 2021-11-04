@@ -413,11 +413,6 @@
         [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
         // 10秒間待機
         for (int i = 0; i < 10; i++) {
-            // 処理進捗画面でCancelボタンが押下された時は処理を中止
-            if ([self cancelFlag]) {
-                [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
-                return;
-            }
             [NSThread sleepForTimeInterval:1.0];
         }
         // バージョン更新判定フラグをセット
