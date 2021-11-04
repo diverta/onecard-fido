@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/19.
 //
+#import "BLEDFUDefine.h"
 #import "BLEDFUProcessingWindow.h"
 #import "BLEDFUStartWindow.h"
 #import "ToolAppCommand.h"
@@ -20,12 +21,6 @@
 // for CBOR decode
 #include "debug_log.h"
 #include "mcumgr_cbor_decode.h"
-
-// 処理タイムアウト（転送／反映チェック処理）
-#define TIMEOUT_SEC_DFU_PROCESS         300.0
-
-// 更新対象アプリケーション＝version 0.4.0
-#define DFU_UPD_TARGET_APP_VERSION      400
 
 @interface ToolBLEDFUCommand () <ToolBLESMPCommandDelegate>
 
@@ -411,8 +406,8 @@
     - (void) performDFUUpdateMonitor {
         // 処理進捗画面に通知
         [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
-        // 10秒間待機
-        for (int i = 0; i < 10; i++) {
+        // 20秒間待機
+        for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
             [NSThread sleepForTimeInterval:1.0];
         }
         // バージョン更新判定フラグをセット
