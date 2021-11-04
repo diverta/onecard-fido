@@ -50,6 +50,8 @@
     @property (nonatomic) bool                      cancelFlag;
     // デバイス接続の切断理由を保持
     @property (nonatomic) bool                      disconnectByError;
+    // 転送するイメージデータを保持
+    @property (nonatomic) NSData                   *imageToUpload;
 
     // 更新イメージファイル名から取得したバージョン
     @property (nonatomic) NSString *updateVersionFromImage;
@@ -318,8 +320,49 @@
             [self doDisconnectByError:true];
             return;
         }
-        // 反映一時停止要求に移行
-        [self doRequestChangeToTestStatus];
+        // 転送イメージ全体を取得
+        [self setImageToUpload:[[NSData alloc] initWithBytes:mcumgr_app_image_bin() length:mcumgr_app_image_bin_size()]];
+        // 転送済みバイト数を事前にクリア
+        [[self toolBLESMPCommand] setImageBytesSent:0];
+        // 転送処理に移行
+        [self doRequestUploadImage];
+    }
+
+    - (void)doRequestUploadImage {
+        // BLE経由でイメージ転送を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_UPLOAD_IMAGE request:[self imageToUpload] forCommand:self];
+    }
+
+    - (void)doResponseUploadImage:(bool)success response:(NSData *)response {
+        // 処理失敗時は、画面に制御を戻す
+        if (success == false) {
+            [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
+            [self notifyErrorToProcessingWindow];
+            return;
+        }
+        // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
+        if ([self checkUploadResultInfoWith:response] == false) {
+            [self doDisconnectByError:true];
+            return;
+        }
+        // 転送結果情報の off 値を転送済みバイト数に設定
+        size_t imageBytesSent = mcumgr_cbor_decode_result_info_off();
+        [[self toolBLESMPCommand] setImageBytesSent:imageBytesSent];
+        // 転送比率を計算
+        size_t imageBytesTotal = [[self imageToUpload] length];
+        int percentage = (int)imageBytesSent * 100 / (int)imageBytesTotal;
+        [[ToolLogFile defaultLogger] debugWithFormat:@"DFU image sent %d bytes (%d%%)", imageBytesSent, percentage];
+        // 転送状況を画面表示
+        NSString *progressMessage = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
+        [self notifyProgress:progressMessage];
+        // イメージ全体が転送されたかどうかチェック
+        if (imageBytesSent < imageBytesTotal) {
+            // 転送処理を続行
+            [self doRequestUploadImage];
+        } else {
+            // 反映一時停止要求に移行
+            [self doRequestChangeToTestStatus];
+        }
     }
 
     - (void)doRequestChangeToTestStatus {
@@ -399,6 +442,9 @@
         switch (command) {
             case COMMAND_BLE_DFU_GET_SLOT_INFO:
                 [self doResponseGetSlotInfo:success response:response];
+                break;
+            case COMMAND_BLE_DFU_UPLOAD_IMAGE:
+                [self doResponseUploadImage:success response:response];
                 break;
             case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
                 [self doResponseChangeToTestStatus:success response:response];
@@ -553,6 +599,25 @@
         }
         // 転送対象イメージが未導入と判定
         return false;
+    }
+
+    - (bool)checkUploadResultInfoWith:(NSData *)responseData {
+        // レスポンス（CBOR）を解析し、転送結果情報を取得
+        uint8_t *bytes = (uint8_t *)[responseData bytes];
+        size_t size = [responseData length];
+        if (mcumgr_cbor_decode_result_info(bytes, size) == false) {
+            [[ToolLogFile defaultLogger] errorWithFormat:@"CBOR encode error: %s", log_debug_message()];
+            return false;
+        }
+        // 転送結果情報の rc が設定されている場合はエラー
+        uint8_t rc = mcumgr_cbor_decode_result_info_rc();
+        if (rc != 0) {
+            NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc];
+            [[ToolLogFile defaultLogger] error:message];
+            [self notifyToolCommandMessage:message];
+            return false;
+        }
+        return true;
     }
 
 #pragma mark - Private common methods
