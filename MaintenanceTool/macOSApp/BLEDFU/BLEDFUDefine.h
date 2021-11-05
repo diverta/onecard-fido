@@ -15,5 +15,7 @@
 #define DFU_PROCESS_SEC_ESTIMATED       280
 // イメージ反映所要時間（秒）
 #define DFU_WAITING_SEC_ESTIMATED       20
+// イメージ反映モード　true＝テストモード[Swap type: test]、false＝通常モード[Swap type: perm]
+#define IMAGE_UPDATE_TEST_MODE          false
 
 #endif /* BLEDFUDefine_h */

@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/27.
 //
+#import "BLEDFUDefine.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"
 #import "ToolCommonMessage.h"
@@ -160,9 +161,15 @@
     - (void)doRequestChangeToTestStatus {
         // リクエストデータを生成
         uint8_t bodyBytes[] = {
-            0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0xf4,
+            0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x00,
             0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20
         };
+        // イメージ反映モードを設定（confirm=false/true）
+        if (IMAGE_UPDATE_TEST_MODE) {
+            bodyBytes[9] = 0xf4;
+        } else {
+            bodyBytes[9] = 0xf5;
+        }
         uint16_t len = sizeof(bodyBytes);
         NSMutableData *body = [[NSMutableData alloc] initWithBytes:bodyBytes length:len];
         // 本体にSHA-256ハッシュを連結
