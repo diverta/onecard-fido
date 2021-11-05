@@ -1,0 +1,19 @@
+//
+//  BLEDFUDefine.h
+//  MaintenanceTool
+//
+//  Created by Makoto Morita on 2021/11/04.
+//
+#ifndef BLEDFUDefine_h
+#define BLEDFUDefine_h
+
+// 更新対象アプリケーション＝version 0.4.0
+#define DFU_UPD_TARGET_APP_VERSION      400
+// 処理タイムアウト（転送／反映チェック処理）
+#define TIMEOUT_SEC_DFU_PROCESS         300.0
+// DFU総所要時間（秒）
+#define DFU_PROCESS_SEC_ESTIMATED       280
+// イメージ反映所要時間（秒）
+#define DFU_WAITING_SEC_ESTIMATED       20
+
+#endif /* BLEDFUDefine_h */

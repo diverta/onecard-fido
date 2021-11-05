@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="BLEDFUProcessingWindow">
             <connections>
+                <outlet property="buttonCancel" destination="xO2-hg-Sis" id="mjq-XH-Iyk"/>
                 <outlet property="labelProgress" destination="fcq-yN-nDr" id="pUx-a3-Yt9"/>
                 <outlet property="labelTitle" destination="CC3-FK-I4B" id="4VM-Yt-iTm"/>
                 <outlet property="levelIndicator" destination="Trg-eO-TjT" id="dEs-PS-GZw"/>

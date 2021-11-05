@@ -11,6 +11,9 @@
 #import "ToolLogFile.h"
 #import "ToolPopupWindow.h"
 
+// for SHA-256 hash calculate
+#include <CommonCrypto/CommonCrypto.h>
+
 @interface ToolCommon ()
 
 @end
@@ -48,6 +51,49 @@
         free(randomBytes);
 
         return randomBytesData;
+    }
+
+    + (NSData *)generateSHA256HashDataOf:(NSData *)data {
+        uint8_t hash[32];
+        uint8_t *dataBytes = (uint8_t *)[data bytes];
+        CC_SHA256(dataBytes, (CC_LONG)[data length], hash);
+
+        NSData *hashData = [[NSData alloc] initWithBytes:hash length:sizeof(hash)];
+        return hashData;
+    }
+
+    + (void)setLENumber16:(uint16_t)n toBEBytes:(uint8_t *)p {
+        // 指定領域から２バイト分の領域に、数値データをビッグエンディアン形式で設定
+        p[0] = n >> 8 & 0xff;
+        p[1] = n >> 0 & 0xff;
+    }
+
+    + (void)setLENumber32:(uint32_t)n toBEBytes:(uint8_t *)p {
+        // 指定領域から４バイト分の領域に、数値データをビッグエンディアン形式で設定
+        p[0] = n >> 24 & 0xff;
+        p[1] = n >> 16 & 0xff;
+        p[2] = n >>  8 & 0xff;
+        p[3] = n >>  0 & 0xff;
+    }
+
+    + (uint16_t)getLENumber16FromBEBytes:(uint8_t *)p {
+        // 指定領域から２バイト分の領域を、リトルエンディアン形式で数値データに変換
+        uint16_t uint16;
+        uint8_t *q = (uint8_t *)&uint16;
+        q[0] = p[1];
+        q[1] = p[0];
+        return uint16;
+    }
+
+    + (uint32_t)getLENumber32FromBEBytes:(uint8_t *)p {
+        // 指定領域から４バイト分の領域を、リトルエンディアン形式で数値データに変換
+        uint32_t uint32;
+        uint8_t *q = (uint8_t *)&uint32;
+        q[0] = p[3];
+        q[1] = p[2];
+        q[2] = p[1];
+        q[3] = p[0];
+        return uint32;
     }
 
 #pragma mark - Utilities for check entry
