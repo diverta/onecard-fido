@@ -104,9 +104,11 @@
 
     - (void)notifyFirmwareVersion:(NSData *)response {
         if (response == nil || [response length] == 0) {
-            // エラーが発生したとみなし、画面に制御を戻す
-            [ToolPopupWindow critical:MSG_DFU_SUB_PROCESS_FAILED informativeText:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [self cancelProcess];
+            // エラーが発生したとみなす
+            [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [self notifyToolCommandMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
+            // BLE接続を切断
+            [self doDisconnectByError:true];
             return;
         }
         // 戻りメッセージから、取得情報CSVを抽出
@@ -157,12 +159,12 @@
     - (void)resumeDfuProcessStart {
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImageFile] == false) {
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // ツール同梱のイメージファイルのバージョンが、稼働中のファームウェアのバージョンより古い場合は処理を中止
         if ([self dfuImageIsAvailable] == false) {
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // 処理開始画面を表示
@@ -188,7 +190,7 @@
         [[self bleDfuStartWindow] close];
         if (modalResponse == NSModalResponseCancel) {
             // キャンセルボタンがクリックされた場合は、ポップアップ画面を出さずに終了
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // DFU処理開始
@@ -221,25 +223,17 @@
         [[self bleDfuProcessingWindow] close];
         switch (modalResponse) {
             case NSModalResponseOK:
-                [self notifyEndMessage:true];
+                [self notifyProcessTerminated:true];
                 break;
             case NSModalResponseAbort:
-                [self notifyEndMessage:false];
+                [self notifyProcessTerminated:false];
+                break;
+            case NSModalResponseCancel:
+                [self notifyProcessCanceled];
                 break;
             default:
-                // 処理をキャンセルする
-                [self cancelProcess];
                 break;
         }
-    }
-
-    - (void)cancelProcess {
-        // キャンセルフラグを設定
-        [self setCancelFlag:true];
-        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-        [self clearFlagsForProcess];
-        // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
-        [self notifyCancel];
     }
 
 #pragma mark - Main process
@@ -632,16 +626,16 @@
         [[ToolLogFile defaultLogger] error:message];
     }
 
-    - (void)notifyEndMessage:(bool)success {
-        // メイン画面に制御を戻す
+    - (void)notifyProcessTerminated:(bool)success {
         dispatch_async([self mainQueue], ^{
+            // メイン画面に制御を戻す
             [[self toolAppCommand] commandDidProcess:COMMAND_BLE_DFU result:success message:nil];
         });
     }
 
-    - (void)notifyCancel {
-        // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
+    - (void)notifyProcessCanceled {
         dispatch_async([self mainQueue], ^{
+            // メイン画面に制御を戻す
             [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
         });
     }
