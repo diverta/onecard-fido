@@ -105,8 +105,7 @@
     - (void)notifyFirmwareVersion:(NSData *)response {
         if (response == nil || [response length] == 0) {
             // エラーが発生したとみなす
-            [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [self notifyToolCommandMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [self notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
             // BLE接続を切断
             [self doDisconnectByError:true];
             return;
@@ -537,8 +536,7 @@
         NSData *imageHash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
         // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
         if ([self checkSmpImageAlreadyConfirmed:response imageHash:imageHash]) {
-            [[ToolLogFile defaultLogger] error:MSG_DFU_IMAGE_ALREADY_INSTALLED];
-            [self notifyToolCommandMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
+            [self notifyErrorMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
             return false;
         }
         return true;
@@ -553,8 +551,7 @@
         uint8_t rc = mcumgr_cbor_decode_result_info_rc();
         if (rc != 0) {
             NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc];
-            [[ToolLogFile defaultLogger] error:message];
-            [self notifyToolCommandMessage:message];
+            [self notifyErrorMessage:message];
             return false;
         }
         return true;
@@ -595,8 +592,7 @@
         uint8_t rc = mcumgr_cbor_decode_result_info_rc();
         if (rc != 0) {
             NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc];
-            [[ToolLogFile defaultLogger] error:message];
-            [self notifyToolCommandMessage:message];
+            [self notifyErrorMessage:message];
             return false;
         }
         return true;
@@ -620,10 +616,12 @@
 
     - (void)notifyMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] info:message];
+        [self notifyToolCommandMessage:message];
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] error:message];
+        [self notifyToolCommandMessage:message];
     }
 
     - (void)notifyProcessTerminated:(bool)success {
