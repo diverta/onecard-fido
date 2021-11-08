@@ -355,22 +355,22 @@
             // 転送処理を続行
             [self doRequestUploadImage];
         } else {
-            // 反映一時停止要求に移行
-            [self doRequestChangeToTestStatus];
+            // 反映要求に移行
+            [self doRequestChangeImageUpdateMode];
         }
     }
 
-    - (void)doRequestChangeToTestStatus {
+    - (void)doRequestChangeImageUpdateMode {
         // SHA-256ハッシュデータをイメージから抽出
         NSData *hash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
-        // BLE経由で反映一時停止要求を実行
-        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS request:hash forCommand:self];
+        // BLE経由で反映要求を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE request:hash forCommand:self];
     }
 
-    - (void)doResponseChangeToTestStatus:(bool)success response:(NSData *)response {
+    - (void)doResponseChangeImageUpdateMode:(bool)success response:(NSData *)response {
         // 処理失敗時は、画面に制御を戻す
         if (success == false) {
-            [self notifyErrorMessage:MSG_DFU_CHANGE_TO_TEST_STATUS_FAILED];
+            [self notifyErrorMessage:MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED];
             [self notifyErrorToProcessingWindow];
             return;
         }
@@ -436,8 +436,8 @@
             case COMMAND_BLE_DFU_UPLOAD_IMAGE:
                 [self doResponseUploadImage:success response:response];
                 break;
-            case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
-                [self doResponseChangeToTestStatus:success response:response];
+            case COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE:
+                [self doResponseChangeImageUpdateMode:success response:response];
                 break;
             case COMMAND_BLE_DFU_RESET_APPLICATION:
                 [self doResponseResetApplication:success response:response];
