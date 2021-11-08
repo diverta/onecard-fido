@@ -17,6 +17,7 @@
     - (void)commandDidNotifyDFUProcess:(NSString *)message;
     - (void)commandDidNotifyCancelable:(bool)cancelable;
     - (void)commandDidTerminateDFUProcess:(bool)result;
+    - (void)commandDidCancelDFUProcess;
 
 @end
 

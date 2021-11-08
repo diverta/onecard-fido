@@ -228,6 +228,8 @@
                 [self notifyProcessTerminated:false];
                 break;
             case NSModalResponseCancel:
+                // メッセージをポップアップ表示したのち、画面に制御を戻す
+                [ToolPopupWindow critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil];
                 [self notifyProcessCanceled];
                 break;
             default:
@@ -260,6 +262,15 @@
             [self clearFlagsForProcess];
             // 処理進捗画面に対し、処理失敗の旨を通知する
             [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
+        });
+    }
+
+    - (void)notifyCancelToProcessingWindow {
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+            [self clearFlagsForProcess];
+            // 処理進捗画面に対し、処理キャンセルの旨を通知する
+            [[self bleDfuProcessingWindow] commandDidCancelDFUProcess];
         });
     }
 
@@ -330,6 +341,11 @@
         if (success == false) {
             [self notifyErrorMessage:MSG_DFU_IMAGE_TRANSFER_FAILED];
             [self notifyErrorToProcessingWindow];
+            return;
+        }
+        // 処理進捗画面でCancelボタンが押下された時は、転送処理を終了し、BLE接続を切断
+        if ([self cancelFlag]) {
+            [self doDisconnectByError:false];
             return;
         }
         // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
@@ -461,6 +477,10 @@
             // エラーとして画面に制御を戻す
             [self setDisconnectByError:false];
             [self notifyErrorToProcessingWindow];
+        } else if ([self cancelFlag]) {
+            // 転送キャンセルとして画面に制御を戻す
+            [self setCancelFlag:false];
+            [self notifyCancelToProcessingWindow];
         }
     }
 

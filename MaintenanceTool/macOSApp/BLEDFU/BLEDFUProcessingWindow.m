@@ -83,6 +83,11 @@
         }
     }
 
+    - (void)commandDidCancelDFUProcess {
+        // DFU処理がキャンセルされた場合はCancelを戻す
+        [self terminateWindow:NSModalResponseCancel];
+    }
+
 #pragma mark - progress timer
 
     - (void)countupProgressValue:(NSTimer *)timer {
