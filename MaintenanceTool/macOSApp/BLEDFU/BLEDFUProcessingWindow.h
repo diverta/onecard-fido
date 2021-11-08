@@ -13,8 +13,9 @@
 
     @property (nonatomic) NSWindow *parentWindow;
 
-    - (void)commandDidStartDFUProcess;
+    - (void)commandDidStartDFUProcess:(id)toolCommandRef;
     - (void)commandDidNotifyDFUProcess:(NSString *)message;
+    - (void)commandDidNotifyCancelable:(bool)cancelable;
     - (void)commandDidTerminateDFUProcess:(bool)result;
 
 @end

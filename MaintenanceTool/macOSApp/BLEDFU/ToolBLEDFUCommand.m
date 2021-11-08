@@ -202,7 +202,7 @@
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
-        [[self bleDfuProcessingWindow] commandDidStartDFUProcess];
+        [[self bleDfuProcessingWindow] commandDidStartDFUProcess:self];
         // サブスレッドでDFU処理を実行開始
         [self startDFUProcess];
     }
@@ -233,6 +233,12 @@
             default:
                 break;
         }
+    }
+
+    - (void)bleDfuProcessingWindowNotifyCancel {
+        // 処理進捗画面のCancelボタンがクリックされた場合は、キャンセルフラグを設定
+        [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
+        [self setCancelFlag:true];
     }
 
 #pragma mark - Main process
@@ -343,9 +349,13 @@
         [self notifyProgress:progressMessage];
         // イメージ全体が転送されたかどうかチェック
         if (imageBytesSent < imageBytesTotal) {
+            // 処理進捗画面のCancelボタンを押下可能とする
+            [self notifyCancelableToProcessingWindow:true];
             // 転送処理を続行
             [self doRequestUploadImage];
         } else {
+            // 処理進捗画面のCancelボタンを押下不可とする
+            [self notifyCancelableToProcessingWindow:false];
             // 反映要求に移行
             [self doRequestChangeImageUpdateMode];
         }
@@ -611,6 +621,13 @@
         dispatch_async([self mainQueue], ^{
             // 処理進捗画面に進捗を通知
             [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message];
+        });
+    }
+
+    - (void)notifyCancelableToProcessingWindow:(bool)cancelable {
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面のCancelボタンを押下可／不可とする
+            [[self bleDfuProcessingWindow] commandDidNotifyCancelable:cancelable];
         });
     }
 

@@ -19,6 +19,9 @@
     @property (assign) IBOutlet NSLevelIndicator    *levelIndicator;
     @property (assign) IBOutlet NSButton            *buttonCancel;
 
+    // コマンドクラスの参照を保持
+    @property (nonatomic) ToolBLEDFUCommand         *toolBLEDFUCommand;
+
 @end
 
 @implementation BLEDFUProcessingWindow
@@ -40,8 +43,10 @@
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
-        // このウィンドウを終了
-        [self terminateWindow:NSModalResponseCancel];
+        // Cancelボタンを使用不可とする
+        [[self buttonCancel] setEnabled:false];
+        // Cancelボタンがクリックされた旨をコマンドクラスに通知
+        [[self toolBLEDFUCommand] bleDfuProcessingWindowNotifyCancel];
     }
 
     - (void)terminateWindow:(NSModalResponse)response {
@@ -49,7 +54,9 @@
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
-    - (void)commandDidStartDFUProcess {
+    - (void)commandDidStartDFUProcess:(id)toolCommandRef {
+        // コマンドクラスの参照を保持
+        [self setToolBLEDFUCommand:(ToolBLEDFUCommand *)toolCommandRef];
         // 画面項目を初期化
         [self initFieldValue];
         // プログレスバーの進捗カウントアップを開始
@@ -60,6 +67,11 @@
 
     - (void)commandDidNotifyDFUProcess:(NSString *)message {
         [[self labelProgress] setStringValue:message];
+    }
+
+    - (void)commandDidNotifyCancelable:(bool)cancelable {
+        // Cancelボタンを使用可／不可とする
+        [[self buttonCancel] setEnabled:cancelable];
     }
 
     - (void)commandDidTerminateDFUProcess:(bool)result {
