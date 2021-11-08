@@ -278,12 +278,10 @@
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウト検知フラグが設定されている場合
         if ([self needTimeoutMonitor]) {
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
             // 処理タイムアウトを検知したので、異常終了と判断
             [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-            // 処理進捗画面に対し、処理失敗の旨を通知する
-            [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
+            // BLE接続を切断
+            [self doDisconnectByError:true];
         }
     }
 
