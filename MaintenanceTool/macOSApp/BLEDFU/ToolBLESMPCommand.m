@@ -244,9 +244,11 @@
 
     - (void)helperDidReadForCharacteristic:(NSData *)responseData {
         // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"Incoming SMP response (%d bytes)", [responseData length]];
-        [[ToolLogFile defaultLogger] hexdump:responseData];
+        if ([self command] != COMMAND_BLE_DFU_UPLOAD_IMAGE) {
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"Incoming SMP response (%d bytes)", [responseData length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
+        }
         // 受信済みバイト数を保持
         static uint16_t received = 0;
         static uint16_t totalSize = 0;
@@ -315,9 +317,11 @@
         // リクエストデータを送信
         [[self toolBLEHelper] helperWillWriteForCharacteristics:sendData];
         // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"Transmit SMP request (%d bytes)", [sendData length]];
-        [[ToolLogFile defaultLogger] hexdump:sendData];
+        if ([self command] != COMMAND_BLE_DFU_UPLOAD_IMAGE) {
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"Transmit SMP request (%d bytes)", [sendData length]];
+            [[ToolLogFile defaultLogger] hexdump:sendData];
+        }
     }
 
     - (NSData *)buildSmpHeader:(uint8_t)op flags:(uint8_t)flags len:(uint16_t)len
