@@ -95,14 +95,20 @@
     - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
         switch (command) {
             case COMMAND_BLE_GET_VERSION_INFO:
-                [self notifyFirmwareVersion:response];
+                if ([self needCompareUpdateVersion]) {
+                    // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
+                    [self notifyFirmwareVersionForComplete:response];
+                } else {
+                    // バージョン更新判定フラグがセットされていない場合（処理開始画面の表示前）
+                    [self notifyFirmwareVersionForStart:response];
+                }
                 break;
             default:
                 break;
         }
     }
 
-    - (void)notifyFirmwareVersion:(NSData *)response {
+    - (void)notifyFirmwareVersionForComplete:(NSData *)response {
         if (response == nil || [response length] == 0) {
             // エラーが発生したとみなす
             [self notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
@@ -110,6 +116,27 @@
             [self doDisconnectByError:true];
             return;
         }
+        // 戻りメッセージからバージョン情報を抽出し内部保持
+        [self extractVersionAndBoardnameFrom:response];
+        // バージョン情報を比較して終了判定
+        [self compareUpdateVersion];
+    }
+
+    - (void)notifyFirmwareVersionForStart:(NSData *)response {
+        if (response == nil || [response length] == 0) {
+            // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
+            [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [ToolPopupWindow critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil];
+            [self notifyProcessCanceled];
+            return;
+        }
+        // 戻りメッセージからバージョン情報を抽出し内部保持
+        [self extractVersionAndBoardnameFrom:response];
+        // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+        [self resumeDfuProcessStart];
+    }
+
+    - (void)extractVersionAndBoardnameFrom:(NSData *)response {
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [ToolCommon extractCBORBytesFrom:response];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
@@ -118,14 +145,6 @@
         // 取得したバージョン情報を内部保持
         [self setCurrentVersion:array[1]];
         [self setCurrentBoardname:array[2]];
-        // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
-        if ([self needCompareUpdateVersion]) {
-            // バージョン情報を比較して終了判定
-            [self compareUpdateVersion];
-        } else {
-            // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
-            [self resumeDfuProcessStart];
-        }
     }
 
     - (void)compareUpdateVersion {
