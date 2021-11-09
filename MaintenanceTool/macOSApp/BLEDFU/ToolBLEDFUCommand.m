@@ -221,7 +221,7 @@
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
-        [[self bleDfuProcessingWindow] commandDidStartDFUProcess:self];
+        [[self bleDfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:(100 + DFU_WAITING_SEC_ESTIMATED)];
         // サブスレッドでDFU処理を実行開始
         [self startDFUProcess];
     }
@@ -325,7 +325,7 @@
 
     - (void)doRequestGetSlotInfo {
         // DFU実行開始を通知
-        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
+        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE progressValue:0];
         // BLE経由でスロット照会を実行
         [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_GET_SLOT_INFO request:nil forCommand:self];
     }
@@ -381,7 +381,7 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"DFU image sent %d bytes (%d%%)", imageBytesSent, percentage];
         // 転送状況を画面表示
         NSString *progressMessage = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
-        [self notifyProgress:progressMessage];
+        [self notifyProgress:progressMessage progressValue:percentage];
         // イメージ全体が転送されたかどうかチェック
         if (imageBytesSent < imageBytesTotal) {
             // 処理進捗画面のCancelボタンを押下可能とする
@@ -440,12 +440,14 @@
     }
 
     - (void) performDFUUpdateMonitor {
-        // 処理進捗画面に通知
-        [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
-        // 20秒間待機
+        // 反映待ち（リセットによるファームウェア再始動完了まで待機）
         for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
+            // 処理進捗画面に通知
+            [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:(100 + i)];
             [NSThread sleepForTimeInterval:1.0];
         }
+        // 処理進捗画面に通知
+        [self notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:(100 + DFU_WAITING_SEC_ESTIMATED)];
         // バージョン更新判定フラグをセット
         [self setNeedCompareUpdateVersion:true];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
@@ -501,12 +503,6 @@
             [self setCancelFlag:false];
             [self notifyCancelToProcessingWindow];
         }
-    }
-
-    - (void)bleSmpCommandNotifyProgressOfUploadImage:(uint8_t)percentage {
-        // 転送状況を表示させる
-        NSString *progress = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
-        [self notifyProgress:progress];
     }
 
 #pragma mark - Private methods
@@ -656,10 +652,10 @@
         [self setNeedCompareUpdateVersion:false];
     }
 
-    - (void)notifyProgress:(NSString *)message {
+    - (void)notifyProgress:(NSString *)message progressValue:(int)progress {
         dispatch_async([self mainQueue], ^{
             // 処理進捗画面に進捗を通知
-            [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message];
+            [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message progressValue:progress];
         });
     }
 
