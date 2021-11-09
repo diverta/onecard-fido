@@ -19,6 +19,9 @@
     @property (assign) IBOutlet NSLevelIndicator    *levelIndicator;
     @property (assign) IBOutlet NSButton            *buttonCancel;
 
+    // コマンドクラスの参照を保持
+    @property (nonatomic) ToolBLEDFUCommand         *toolBLEDFUCommand;
+
 @end
 
 @implementation BLEDFUProcessingWindow
@@ -34,14 +37,15 @@
         [[self labelTitle] setStringValue:MSG_DFU_PROCESS_TITLE_GOING];
         [[self labelProgress] setStringValue:@""];
         [[self levelIndicator] setIntegerValue:0];
-        [[self levelIndicator] setMaxValue:DFU_PROCESS_SEC_ESTIMATED];
         // Cancelボタンを使用不可とする
         [[self buttonCancel] setEnabled:false];
     }
 
     - (IBAction)buttonCancelDidPress:(id)sender {
-        // このウィンドウを終了
-        [self terminateWindow:NSModalResponseCancel];
+        // Cancelボタンを使用不可とする
+        [[self buttonCancel] setEnabled:false];
+        // Cancelボタンがクリックされた旨をコマンドクラスに通知
+        [[self toolBLEDFUCommand] bleDfuProcessingWindowNotifyCancel];
     }
 
     - (void)terminateWindow:(NSModalResponse)response {
@@ -49,17 +53,23 @@
         [[self parentWindow] endSheet:[self window] returnCode:response];
     }
 
-    - (void)commandDidStartDFUProcess {
+    - (void)commandDidStartDFUProcess:(id)toolCommandRef maxProgressValue:(int)progressMax {
+        // コマンドクラスの参照を保持
+        [self setToolBLEDFUCommand:(ToolBLEDFUCommand *)toolCommandRef];
         // 画面項目を初期化
         [self initFieldValue];
-        // プログレスバーの進捗カウントアップを開始
-        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self
-                                       selector:@selector(countupProgressValue:)
-                                       userInfo:nil repeats:YES];
+        [[self levelIndicator] setMaxValue:progressMax];
     }
 
-    - (void)commandDidNotifyDFUProcess:(NSString *)message {
+    - (void)commandDidNotifyDFUProcess:(NSString *)message progressValue:(int)progress {
+        // 進捗メッセージ、プログレスバーを更新
         [[self labelProgress] setStringValue:message];
+        [[self levelIndicator] setIntValue:progress];
+    }
+
+    - (void)commandDidNotifyCancelable:(bool)cancelable {
+        // Cancelボタンを使用可／不可とする
+        [[self buttonCancel] setEnabled:cancelable];
     }
 
     - (void)commandDidTerminateDFUProcess:(bool)result {
@@ -71,16 +81,9 @@
         }
     }
 
-#pragma mark - progress timer
-
-    - (void)countupProgressValue:(NSTimer *)timer {
-        // プログレスバーの進捗を１秒ごとにカウントアップ
-        NSInteger progress = [[self levelIndicator] integerValue] + 1;
-        [[self levelIndicator] setIntegerValue:progress];
-        if (progress == [[self levelIndicator] maxValue]) {
-            // プログレスバーの右端に到達した場合は、タイマーを無効化
-            [timer invalidate];
-        }
+    - (void)commandDidCancelDFUProcess {
+        // DFU処理がキャンセルされた場合はCancelを戻す
+        [self terminateWindow:NSModalResponseCancel];
     }
 
 @end

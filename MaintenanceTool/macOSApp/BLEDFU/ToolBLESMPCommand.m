@@ -4,6 +4,7 @@
 //
 //  Created by Makoto Morita on 2021/10/27.
 //
+#import "BLEDFUDefine.h"
 #import "ToolBLEHelper.h"
 #import "ToolBLESMPCommand.h"
 #import "ToolCommonMessage.h"
@@ -92,8 +93,8 @@
             case COMMAND_BLE_DFU_UPLOAD_IMAGE:
                 [self doRequestUploadImage];
                 break;
-            case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
-                [self doRequestChangeToTestStatus];
+            case COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE:
+                [self doRequestChangeImageUpdateMode];
                 break;
             case COMMAND_BLE_DFU_RESET_APPLICATION:
                 [self doRequestResetApplication];
@@ -112,8 +113,8 @@
             case COMMAND_BLE_DFU_UPLOAD_IMAGE:
                 [self doResponseUploadImage];
                 break;
-            case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
-                [self doResponseChangeToTestStatus];
+            case COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE:
+                [self doResponseChangeImageUpdateMode];
                 break;
             case COMMAND_BLE_DFU_RESET_APPLICATION:
                 [self doResponseResetApplication];
@@ -157,12 +158,18 @@
         [self commandDidProcess:true];
     }
 
-    - (void)doRequestChangeToTestStatus {
+    - (void)doRequestChangeImageUpdateMode {
         // リクエストデータを生成
         uint8_t bodyBytes[] = {
-            0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0xf4,
+            0xbf, 0x67, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x00,
             0x64, 0x68, 0x61, 0x73, 0x68, 0x58, 0x20
         };
+        // イメージ反映モードを設定（confirm=false/true）
+        if (IMAGE_UPDATE_TEST_MODE) {
+            bodyBytes[9] = 0xf4;
+        } else {
+            bodyBytes[9] = 0xf5;
+        }
         uint16_t len = sizeof(bodyBytes);
         NSMutableData *body = [[NSMutableData alloc] initWithBytes:bodyBytes length:len];
         // 本体にSHA-256ハッシュを連結
@@ -175,7 +182,7 @@
         [self sendSmpRequestData:body withHeader:header];
     }
 
-    - (void)doResponseChangeToTestStatus {
+    - (void)doResponseChangeImageUpdateMode {
         // コマンドクラスに制御を戻す
         [self commandDidProcess:true];
     }
@@ -237,9 +244,11 @@
 
     - (void)helperDidReadForCharacteristic:(NSData *)responseData {
         // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"Incoming SMP response (%d bytes)", [responseData length]];
-        [[ToolLogFile defaultLogger] hexdump:responseData];
+        if ([self command] != COMMAND_BLE_DFU_UPLOAD_IMAGE) {
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"Incoming SMP response (%d bytes)", [responseData length]];
+            [[ToolLogFile defaultLogger] hexdump:responseData];
+        }
         // 受信済みバイト数を保持
         static uint16_t received = 0;
         static uint16_t totalSize = 0;
@@ -308,9 +317,11 @@
         // リクエストデータを送信
         [[self toolBLEHelper] helperWillWriteForCharacteristics:sendData];
         // ログ出力
-        [[ToolLogFile defaultLogger]
-         debugWithFormat:@"Transmit SMP request (%d bytes)", [sendData length]];
-        [[ToolLogFile defaultLogger] hexdump:sendData];
+        if ([self command] != COMMAND_BLE_DFU_UPLOAD_IMAGE) {
+            [[ToolLogFile defaultLogger]
+             debugWithFormat:@"Transmit SMP request (%d bytes)", [sendData length]];
+            [[ToolLogFile defaultLogger] hexdump:sendData];
+        }
     }
 
     - (NSData *)buildSmpHeader:(uint8_t)op flags:(uint8_t)flags len:(uint16_t)len

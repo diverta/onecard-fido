@@ -95,20 +95,48 @@
     - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
         switch (command) {
             case COMMAND_BLE_GET_VERSION_INFO:
-                [self notifyFirmwareVersion:response];
+                if ([self needCompareUpdateVersion]) {
+                    // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
+                    [self notifyFirmwareVersionForComplete:response];
+                } else {
+                    // バージョン更新判定フラグがセットされていない場合（処理開始画面の表示前）
+                    [self notifyFirmwareVersionForStart:response];
+                }
                 break;
             default:
                 break;
         }
     }
 
-    - (void)notifyFirmwareVersion:(NSData *)response {
+    - (void)notifyFirmwareVersionForComplete:(NSData *)response {
         if (response == nil || [response length] == 0) {
-            // エラーが発生したとみなし、画面に制御を戻す
-            [ToolPopupWindow critical:MSG_DFU_SUB_PROCESS_FAILED informativeText:MSG_DFU_VERSION_INFO_GET_FAILED];
-            [self cancelProcess];
+            // エラーが発生したとみなす
+            [self notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
+            // BLE接続を切断
+            [self doDisconnectByError:true];
             return;
         }
+        // 戻りメッセージからバージョン情報を抽出し内部保持
+        [self extractVersionAndBoardnameFrom:response];
+        // バージョン情報を比較して終了判定
+        [self compareUpdateVersion];
+    }
+
+    - (void)notifyFirmwareVersionForStart:(NSData *)response {
+        if (response == nil || [response length] == 0) {
+            // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
+            [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
+            [ToolPopupWindow critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil];
+            [self notifyProcessCanceled];
+            return;
+        }
+        // 戻りメッセージからバージョン情報を抽出し内部保持
+        [self extractVersionAndBoardnameFrom:response];
+        // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
+        [self resumeDfuProcessStart];
+    }
+
+    - (void)extractVersionAndBoardnameFrom:(NSData *)response {
         // 戻りメッセージから、取得情報CSVを抽出
         NSData *responseBytes = [ToolCommon extractCBORBytesFrom:response];
         NSString *responseCSV = [[NSString alloc] initWithData:responseBytes encoding:NSASCIIStringEncoding];
@@ -117,14 +145,6 @@
         // 取得したバージョン情報を内部保持
         [self setCurrentVersion:array[1]];
         [self setCurrentBoardname:array[2]];
-        // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
-        if ([self needCompareUpdateVersion]) {
-            // バージョン情報を比較して終了判定
-            [self compareUpdateVersion];
-        } else {
-            // 認証器の現在バージョンと基板名が取得できたら、ファームウェア更新画面を表示
-            [self resumeDfuProcessStart];
-        }
     }
 
     - (void)compareUpdateVersion {
@@ -157,12 +177,12 @@
     - (void)resumeDfuProcessStart {
         // 基板名に対応するファームウェア更新イメージファイルから、バイナリーイメージを読込
         if ([self readDFUImageFile] == false) {
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // ツール同梱のイメージファイルのバージョンが、稼働中のファームウェアのバージョンより古い場合は処理を中止
         if ([self dfuImageIsAvailable] == false) {
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // 処理開始画面を表示
@@ -188,7 +208,7 @@
         [[self bleDfuStartWindow] close];
         if (modalResponse == NSModalResponseCancel) {
             // キャンセルボタンがクリックされた場合は、ポップアップ画面を出さずに終了
-            [self notifyCancel];
+            [self notifyProcessCanceled];
             return;
         }
         // DFU処理開始
@@ -201,7 +221,7 @@
         // 処理進捗画面（ダイアログ）をモーダルで表示
         [self bleDfuProcessingWindowWillOpen];
         // 処理進捗画面にDFU処理開始を通知
-        [[self bleDfuProcessingWindow] commandDidStartDFUProcess];
+        [[self bleDfuProcessingWindow] commandDidStartDFUProcess:self maxProgressValue:(100 + DFU_WAITING_SEC_ESTIMATED)];
         // サブスレッドでDFU処理を実行開始
         [self startDFUProcess];
     }
@@ -221,25 +241,25 @@
         [[self bleDfuProcessingWindow] close];
         switch (modalResponse) {
             case NSModalResponseOK:
-                [self notifyEndMessage:true];
+                [self notifyProcessTerminated:true];
                 break;
             case NSModalResponseAbort:
-                [self notifyEndMessage:false];
+                [self notifyProcessTerminated:false];
+                break;
+            case NSModalResponseCancel:
+                // メッセージをポップアップ表示したのち、画面に制御を戻す
+                [ToolPopupWindow critical:MSG_DFU_IMAGE_TRANSFER_CANCELED informativeText:nil];
+                [self notifyProcessCanceled];
                 break;
             default:
-                // 処理をキャンセルする
-                [self cancelProcess];
                 break;
         }
     }
 
-    - (void)cancelProcess {
-        // キャンセルフラグを設定
+    - (void)bleDfuProcessingWindowNotifyCancel {
+        // 処理進捗画面のCancelボタンがクリックされた場合は、キャンセルフラグを設定
+        [self notifyMessage:MSG_DFU_IMAGE_TRANSFER_CANCELED];
         [self setCancelFlag:true];
-        // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-        [self clearFlagsForProcess];
-        // 処理進捗画面を閉じ、ポップアップ画面を出さずに終了
-        [self notifyCancel];
     }
 
 #pragma mark - Main process
@@ -264,6 +284,15 @@
         });
     }
 
+    - (void)notifyCancelToProcessingWindow {
+        dispatch_async([self mainQueue], ^{
+            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
+            [self clearFlagsForProcess];
+            // 処理進捗画面に対し、処理キャンセルの旨を通知する
+            [[self bleDfuProcessingWindow] commandDidCancelDFUProcess];
+        });
+    }
+
 #pragma mark - Process timeout monitor
 
     - (void)startDFUTimeoutMonitor {
@@ -278,12 +307,10 @@
     - (void)DFUProcessDidTimeout {
         // 処理タイムアウト検知フラグが設定されている場合
         if ([self needTimeoutMonitor]) {
-            // 処理タイムアウト検知／バージョン更新判定フラグをリセット
-            [self clearFlagsForProcess];
             // 処理タイムアウトを検知したので、異常終了と判断
             [self notifyErrorMessage:MSG_DFU_PROCESS_TIMEOUT];
-            // 処理進捗画面に対し、処理失敗の旨を通知する
-            [[self bleDfuProcessingWindow] commandDidTerminateDFUProcess:false];
+            // BLE接続を切断
+            [self doDisconnectByError:true];
         }
     }
 
@@ -298,7 +325,7 @@
 
     - (void)doRequestGetSlotInfo {
         // DFU実行開始を通知
-        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE];
+        [self notifyProgress:MSG_DFU_PROCESS_TRANSFER_IMAGE progressValue:0];
         // BLE経由でスロット照会を実行
         [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_GET_SLOT_INFO request:nil forCommand:self];
     }
@@ -335,6 +362,11 @@
             [self notifyErrorToProcessingWindow];
             return;
         }
+        // 処理進捗画面でCancelボタンが押下された時は、転送処理を終了し、BLE接続を切断
+        if ([self cancelFlag]) {
+            [self doDisconnectByError:false];
+            return;
+        }
         // 転送結果情報を参照し、チェックでNGの場合、BLE接続を切断
         if ([self checkUploadResultInfoWith:response] == false) {
             [self doDisconnectByError:true];
@@ -349,28 +381,32 @@
         [[ToolLogFile defaultLogger] debugWithFormat:@"DFU image sent %d bytes (%d%%)", imageBytesSent, percentage];
         // 転送状況を画面表示
         NSString *progressMessage = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
-        [self notifyProgress:progressMessage];
+        [self notifyProgress:progressMessage progressValue:percentage];
         // イメージ全体が転送されたかどうかチェック
         if (imageBytesSent < imageBytesTotal) {
+            // 処理進捗画面のCancelボタンを押下可能とする
+            [self notifyCancelableToProcessingWindow:true];
             // 転送処理を続行
             [self doRequestUploadImage];
         } else {
-            // 反映一時停止要求に移行
-            [self doRequestChangeToTestStatus];
+            // 処理進捗画面のCancelボタンを押下不可とする
+            [self notifyCancelableToProcessingWindow:false];
+            // 反映要求に移行
+            [self doRequestChangeImageUpdateMode];
         }
     }
 
-    - (void)doRequestChangeToTestStatus {
+    - (void)doRequestChangeImageUpdateMode {
         // SHA-256ハッシュデータをイメージから抽出
         NSData *hash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
-        // BLE経由で反映一時停止要求を実行
-        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS request:hash forCommand:self];
+        // BLE経由で反映要求を実行
+        [[self toolBLESMPCommand] commandWillProcess:COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE request:hash forCommand:self];
     }
 
-    - (void)doResponseChangeToTestStatus:(bool)success response:(NSData *)response {
+    - (void)doResponseChangeImageUpdateMode:(bool)success response:(NSData *)response {
         // 処理失敗時は、画面に制御を戻す
         if (success == false) {
-            [self notifyErrorMessage:MSG_DFU_CHANGE_TO_TEST_STATUS_FAILED];
+            [self notifyErrorMessage:MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED];
             [self notifyErrorToProcessingWindow];
             return;
         }
@@ -404,12 +440,14 @@
     }
 
     - (void) performDFUUpdateMonitor {
-        // 処理進捗画面に通知
-        [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE];
-        // 20秒間待機
+        // 反映待ち（リセットによるファームウェア再始動完了まで待機）
         for (int i = 0; i < DFU_WAITING_SEC_ESTIMATED; i++) {
+            // 処理進捗画面に通知
+            [self notifyProgress:MSG_DFU_PROCESS_WAITING_UPDATE progressValue:(100 + i)];
             [NSThread sleepForTimeInterval:1.0];
         }
+        // 処理進捗画面に通知
+        [self notifyProgress:MSG_DFU_PROCESS_CONFIRM_VERSION progressValue:(100 + DFU_WAITING_SEC_ESTIMATED)];
         // バージョン更新判定フラグをセット
         [self setNeedCompareUpdateVersion:true];
         // BLE経由でバージョン情報を取得 --> notifyFirmwareVersionが呼び出される
@@ -436,8 +474,8 @@
             case COMMAND_BLE_DFU_UPLOAD_IMAGE:
                 [self doResponseUploadImage:success response:response];
                 break;
-            case COMMAND_BLE_DFU_CHANGE_TO_TEST_STATUS:
-                [self doResponseChangeToTestStatus:success response:response];
+            case COMMAND_BLE_DFU_CHANGE_IMAGE_UPDATE_MODE:
+                [self doResponseChangeImageUpdateMode:success response:response];
                 break;
             case COMMAND_BLE_DFU_RESET_APPLICATION:
                 [self doResponseResetApplication:success response:response];
@@ -460,13 +498,11 @@
             // エラーとして画面に制御を戻す
             [self setDisconnectByError:false];
             [self notifyErrorToProcessingWindow];
+        } else if ([self cancelFlag]) {
+            // 転送キャンセルとして画面に制御を戻す
+            [self setCancelFlag:false];
+            [self notifyCancelToProcessingWindow];
         }
-    }
-
-    - (void)bleSmpCommandNotifyProgressOfUploadImage:(uint8_t)percentage {
-        // 転送状況を表示させる
-        NSString *progress = [NSString stringWithFormat:MSG_DFU_PROCESS_TRANSFER_IMAGE_FORMAT, percentage];
-        [self notifyProgress:progress];
     }
 
 #pragma mark - Private methods
@@ -545,8 +581,7 @@
         NSData *imageHash = [[NSData alloc] initWithBytes:mcumgr_app_image_bin_hash_sha256() length:32];
         // 既に転送対象イメージが導入されている場合は、画面／ログにその旨を出力し、処理を中止
         if ([self checkSmpImageAlreadyConfirmed:response imageHash:imageHash]) {
-            [[ToolLogFile defaultLogger] error:MSG_DFU_IMAGE_ALREADY_INSTALLED];
-            [self notifyToolCommandMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
+            [self notifyErrorMessage:MSG_DFU_IMAGE_ALREADY_INSTALLED];
             return false;
         }
         return true;
@@ -561,8 +596,7 @@
         uint8_t rc = mcumgr_cbor_decode_result_info_rc();
         if (rc != 0) {
             NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_INSTALL_FAILED_WITH_RC, rc];
-            [[ToolLogFile defaultLogger] error:message];
-            [self notifyToolCommandMessage:message];
+            [self notifyErrorMessage:message];
             return false;
         }
         return true;
@@ -603,8 +637,7 @@
         uint8_t rc = mcumgr_cbor_decode_result_info_rc();
         if (rc != 0) {
             NSString *message = [NSString stringWithFormat:MSG_DFU_IMAGE_TRANSFER_FAILED_WITH_RC, rc];
-            [[ToolLogFile defaultLogger] error:message];
-            [self notifyToolCommandMessage:message];
+            [self notifyErrorMessage:message];
             return false;
         }
         return true;
@@ -619,31 +652,40 @@
         [self setNeedCompareUpdateVersion:false];
     }
 
-    - (void)notifyProgress:(NSString *)message {
+    - (void)notifyProgress:(NSString *)message progressValue:(int)progress {
         dispatch_async([self mainQueue], ^{
             // 処理進捗画面に進捗を通知
-            [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message];
+            [[self bleDfuProcessingWindow] commandDidNotifyDFUProcess:message progressValue:progress];
+        });
+    }
+
+    - (void)notifyCancelableToProcessingWindow:(bool)cancelable {
+        dispatch_async([self mainQueue], ^{
+            // 処理進捗画面のCancelボタンを押下可／不可とする
+            [[self bleDfuProcessingWindow] commandDidNotifyCancelable:cancelable];
         });
     }
 
     - (void)notifyMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] info:message];
+        [self notifyToolCommandMessage:message];
     }
 
     - (void)notifyErrorMessage:(NSString *)message {
         [[ToolLogFile defaultLogger] error:message];
+        [self notifyToolCommandMessage:message];
     }
 
-    - (void)notifyEndMessage:(bool)success {
-        // メイン画面に制御を戻す
+    - (void)notifyProcessTerminated:(bool)success {
         dispatch_async([self mainQueue], ^{
+            // メイン画面に制御を戻す
             [[self toolAppCommand] commandDidProcess:COMMAND_BLE_DFU result:success message:nil];
         });
     }
 
-    - (void)notifyCancel {
-        // メイン画面に制御を戻す（ポップアップメッセージを表示しない）
+    - (void)notifyProcessCanceled {
         dispatch_async([self mainQueue], ^{
+            // メイン画面に制御を戻す
             [[self toolAppCommand] commandDidProcess:COMMAND_NONE result:true message:nil];
         });
     }
