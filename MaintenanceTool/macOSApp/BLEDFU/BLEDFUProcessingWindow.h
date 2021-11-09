@@ -13,8 +13,8 @@
 
     @property (nonatomic) NSWindow *parentWindow;
 
-    - (void)commandDidStartDFUProcess:(id)toolCommandRef;
-    - (void)commandDidNotifyDFUProcess:(NSString *)message;
+    - (void)commandDidStartDFUProcess:(id)toolCommandRef maxProgressValue:(int)progressMax;
+    - (void)commandDidNotifyDFUProcess:(NSString *)message progressValue:(int)progress;
     - (void)commandDidNotifyCancelable:(bool)cancelable;
     - (void)commandDidTerminateDFUProcess:(bool)result;
     - (void)commandDidCancelDFUProcess;
