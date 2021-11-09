@@ -26,7 +26,12 @@ source ${NCS_HOME}/west-completion.bash
 
 # Retrieve config value from prj.conf
 retrieve_prj_conf() {
-    grep $1 prj.conf | sed -e "s/.*\"\(.*\)\"/\1/"
+    if [ "${BUILD_TARGET}" == "nrf52840dk_nrf52840" ]; then
+        CONFIG_FILE=boards/nrf52840dk_nrf52840.conf
+    else
+        CONFIG_FILE=prj.conf
+    fi
+    grep $1 ${CONFIG_FILE} | sed -e "s/.*\"\(.*\)\"/\1/"
 }
 
 # Enter Python3 venv
