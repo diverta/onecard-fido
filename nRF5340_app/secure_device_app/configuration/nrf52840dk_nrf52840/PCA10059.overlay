@@ -1,0 +1,7 @@
+/ {
+	buttons {
+		button0: button_0 {
+			gpios = < &gpio1 0x6 0x11 >;
+		};
+	};
+};
