@@ -44,7 +44,9 @@ else
     HW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_HW_REV_STR`
     if [ -n "${HW_REV_STR}" ]; then
         DTS_FILE=configuration/${BUILD_TARGET}/${HW_REV_STR}.overlay
-        DTS_OPT="-DDTC_OVERLAY_FILE=${DTS_FILE}"
+        if [ -f ${DTS_FILE} ]; then
+            DTS_OPT="-DDTC_OVERLAY_FILE=${DTS_FILE}"
+        fi
     fi
     # Build for nRF5340/nRF52840
     rm -rf build_signed
