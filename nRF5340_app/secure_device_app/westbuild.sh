@@ -5,11 +5,6 @@
 #   nrf52840dk_nrf52840
 export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
 
-# Build target
-#   None for Nordic boards
-#   MDBT50Q_dongle_rev2
-export BOARD_TARGET=
-
 # Environment variables for the GNU Arm Embedded toolchain
 export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
 export GNUARMEMB_TOOLCHAIN_PATH="${HOME}/opt/gcc-arm-none-eabi-9-2020-q2-update"
@@ -45,15 +40,20 @@ if [ "$1" == "-f" ]; then
         exit 1
     fi
 else
+    # Config for target board
+    HW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_HW_REV_STR`
+    if [ -n "${HW_REV_STR}" ]; then
+        DTS_FILE=configuration/${BUILD_TARGET}/${HW_REV_STR}.overlay
+        DTS_OPT="-DDTC_OVERLAY_FILE=${DTS_FILE}"
+    fi
     # Build for nRF5340/nRF52840
     rm -rf build_signed
-    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DOVERLAY_CONFIG=overlay-smp.conf
+    ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DOVERLAY_CONFIG=overlay-smp.conf ${DTS_OPT}
     if [ `echo $?` -ne 0 ]; then
         deactivate
         exit 1
     fi
     # Deploy binary file for DFU
-    HW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_HW_REV_STR`
     FW_REV_STR=`retrieve_prj_conf CONFIG_BT_DIS_FW_REV_STR`
     cp -pv build_signed/zephyr/app_update.bin ../firmwares/secure_device_app/app_update.${HW_REV_STR}.${FW_REV_STR}.bin
     echo Application binary for secure bootloader is now available.
