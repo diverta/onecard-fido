@@ -37,7 +37,7 @@ static void extract_fw_version(char *file_name)
     memset(mcumgr_app_bin_version, 0, sizeof(mcumgr_app_bin_version));
     memset(mcumgr_app_bin_boardname, 0, sizeof(mcumgr_app_bin_boardname));
     // ファイル名をバッファにコピー
-    char buf[32];
+    char buf[40];
     strcpy(buf, file_name);
     // ファイル名（app_update.PCA10095.0.4.0.bin）からバージョン情報を抽出して保持
     int ver = 0, rev = 0, sub = 0;
