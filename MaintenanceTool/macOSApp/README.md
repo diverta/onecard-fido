@@ -45,8 +45,12 @@ FIDO認証器のヘルスチェックを実行する手順を掲載していま�
 - <b>[PIV機能設定手順](PIVSETTING.md)</b><br>
 [PIV機能](../../FIDO2Device/MDBT50Q_Dongle/PIVPINLOGIN.md)に必要な各種設定の手順を掲載しています。
 
-- <b>[ファームウェア更新手順](UPDATEFIRMWARE.md)</b><br>
+- <b>[ファームウェア更新手順（USB）](UPDATEFIRMWARE.md)</b><br>
 [MDBT50Q Dongle](../../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新する手順を掲載しています。
+
+- <b>[ファームウェア更新手順（BLE）](../../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b><br>
+管理ツールから、Zephyrプラットフォームを使用したファームウェアを更新する手順を掲載しています。<br>
+対象ファームウェアのバージョンは「0.4.0」以降となっています。
 
 - <b>[管理ツールのログファイル](VIEWLOG.md)</b><br>
 FIDO認証器管理ツールから出力されるログファイルについて説明しています。

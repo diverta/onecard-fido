@@ -45,15 +45,8 @@ nRF5340アプリケーションのビルド用ファイル[`overlay-usb-dfu.conf
 
 ## 各種手順書
 
+- <b>[ファームウェア更新手順（BLE）](../MaintenanceTool/macOSApp/UPDATEFW_BLE.md)</b><br>
+[macOS版管理ツール](../MaintenanceTool/macOSApp/README.md)を使用し、nRF5340アプリケーションを、BLE経由でインストールする手順について掲載しています。
+
 - <b>[ファームウェア更新手順（USB）](INSTALLFW_USB.md)</b><br>
 nRF5340アプリケーションを、USB経由でインストールする手順について掲載しています。
-
-## 開発情報
-
-現在開発中のBLE DFU機能について、各種調査結果を掲載しています。
-
-- <b>[BLE DFU機能のトランザクション](../nRF5340_app/BLEDFU_TRANSACTION.md)</b><br>
-BLE DFU機能について、処理中に発生するトランザクションの情報を掲載しています。
-
-- <b>[BLE DFU機能のサンプルコード調査](../nRF5340_app/BLEDFU_FUNC_IOS.md)</b><br>
-Nordic社から提供されている、iOS版のBLE DFUアプリのサンプルコードについて調査した結果を掲載しています。
