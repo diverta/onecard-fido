@@ -52,15 +52,25 @@ static void pairing_cancel(struct bt_conn *conn)
     LOG_INF("Pairing canceled");
 }
 
+static void bond_deleted(uint8_t id, const bt_addr_le_t *addr)
+{
+    (void)id;
+    const uint8_t *data = addr->a.val;
+    LOG_INF("Bonding information deleted: address=%x%x%x%x%x%x",
+            data[5], data[4], data[3], data[2], data[1], data[0]);
+}
+
 static const struct bt_conn_auth_cb cb_for_non_pair = {
     .pairing_confirm = pairing_confirm,
     .pairing_failed = pairing_failed,
     .cancel = pairing_cancel,
+    .bond_deleted = bond_deleted,
 };
 
 static const struct bt_conn_auth_cb cb_for_pair = {
     .pairing_complete = pairing_complete,
     .pairing_failed = pairing_failed,
+    .bond_deleted = bond_deleted,
 };
 
 bool register_callbacks(void)
