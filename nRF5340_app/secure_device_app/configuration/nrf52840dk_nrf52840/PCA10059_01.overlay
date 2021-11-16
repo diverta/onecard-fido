@@ -1,0 +1,34 @@
+/ {
+	leds {
+		led0: led_0 {
+			gpios = < &gpio0 0x1a 0x1 >;
+			label = "LED Yellow";
+		};
+		led1: led_1 {
+			gpios = < &gpio0 0x8 0x1 >;
+			label = "RGB LED Red";
+		};
+		led2: led_2 {
+			gpios = < &gpio1 0x9 0x1 >;
+			label = "RGB LED Green";
+		};
+		led3: led_3 {
+			gpios = < &gpio0 0xc 0x1 >;
+			label = "RGB LED Blue";
+		};
+	};
+	buttons {
+		button0: button_0 {
+			gpios = < &gpio1 0x6 0x11 >;
+		};
+		button1: button_1 {
+			gpios = < &gpio1 0x7 0x11 >;
+		};
+		button2: button_2 {
+			gpios = < &gpio1 0x5 0x11 >;
+		};
+		button3: button_3 {
+			gpios = < &gpio1 0x3 0x11 >;
+		};
+	};
+};
