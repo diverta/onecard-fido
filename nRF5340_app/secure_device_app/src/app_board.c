@@ -232,9 +232,15 @@ void app_board_led_light(LED_COLOR led_color, bool led_on)
 
 void app_board_prepare_for_deep_sleep(void)
 {
+    // ポート番号（Port 0=0x00, Port 1=0x20）をピン番号に付加
+    uint32_t sw0_pin_number = SW0_GPIO_PIN;
+    if (strcmp(SW0_GPIO_LABEL, "GPIO_1") == 0) {
+        sw0_pin_number |= (0x1 << 5);
+    }
+
     // Configure to generate PORT event (wakeup) on button-1 press.
-    nrf_gpio_cfg_input(SW0_GPIO_PIN, NRF_GPIO_PIN_PULLUP);
-    nrf_gpio_cfg_sense_set(SW0_GPIO_PIN, NRF_GPIO_PIN_SENSE_LOW);
+    nrf_gpio_cfg_input(sw0_pin_number, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_sense_set(sw0_pin_number, NRF_GPIO_PIN_SENSE_LOW);
 
     printk("Entering system off; press BUTTON to restart... \n\n\r");
     pm_power_state_force((struct pm_state_info){PM_STATE_SOFT_OFF, 0, 0});
