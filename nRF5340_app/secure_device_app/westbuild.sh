@@ -21,7 +21,9 @@ source ${NCS_HOME}/west-completion.bash
 
 # Retrieve config value from prj.conf
 retrieve_prj_conf() {
-    if [ "${BUILD_TARGET}" == "nrf52840dk_nrf52840" ]; then
+    if [ "${BUILD_TARGET}" == "nrf5340dk_nrf5340_cpuapp" ]; then
+        CONFIG_FILE=boards/nrf5340dk_nrf5340_cpuapp.conf
+    elif [ "${BUILD_TARGET}" == "nrf52840dk_nrf52840" ]; then
         CONFIG_FILE=boards/nrf52840dk_nrf52840.conf
     else
         CONFIG_FILE=prj.conf
