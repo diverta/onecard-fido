@@ -2,7 +2,6 @@
 
 # Build target
 #   nrf5340dk_nrf5340_cpuapp
-#   nrf52840dk_nrf52840
 export BUILD_TARGET=nrf5340dk_nrf5340_cpuapp
 
 # Environment variables for the GNU Arm Embedded toolchain
@@ -23,8 +22,6 @@ source ${NCS_HOME}/west-completion.bash
 retrieve_prj_conf() {
     if [ "${BUILD_TARGET}" == "nrf5340dk_nrf5340_cpuapp" ]; then
         CONFIG_FILE=boards/nrf5340dk_nrf5340_cpuapp.conf
-    elif [ "${BUILD_TARGET}" == "nrf52840dk_nrf52840" ]; then
-        CONFIG_FILE=boards/nrf52840dk_nrf52840.conf
     else
         CONFIG_FILE=prj.conf
     fi
@@ -35,7 +32,7 @@ retrieve_prj_conf() {
 source ${NCS_HOME}/bin/activate
 
 if [ "$1" == "-f" ]; then
-    # Flash for nRF5340/nRF52840
+    # Flash for nRF5340
     ${NCS_HOME}/bin/west -v flash -d build_signed
     if [ `echo $?` -ne 0 ]; then
         deactivate
@@ -50,7 +47,7 @@ else
             DTS_OPT="-DDTC_OVERLAY_FILE=${DTS_FILE}"
         fi
     fi
-    # Build for nRF5340/nRF52840
+    # Build for nRF5340
     rm -rf build_signed
     ${NCS_HOME}/bin/west build -c -b ${BUILD_TARGET} -d build_signed -- -DOVERLAY_CONFIG=overlay-smp.conf ${DTS_OPT}
     if [ `echo $?` -ne 0 ]; then
