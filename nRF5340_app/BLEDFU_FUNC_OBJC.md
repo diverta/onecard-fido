@@ -1,12 +1,12 @@
 # ファームウェア更新機能（BLE）
 
 ## 概要
-ブートローダー「[MCUboot](https://www.mcuboot.com/documentation/readme-zephyr/)」を導入した[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
+ブートローダー「[MCUboot](https://www.mcuboot.com/documentation/readme-zephyr/)」を導入したFIDO認証器に対し、管理ツールから、ファームウェアを更新できる機能です。<br>
 ZephyrアプリケーションのBLE DFU機能（[BLE SMPサービス](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/1.1.0/nrf/include/bluetooth/services/dfu_smp_c.html)）を使用して実装されています。
 
 ## 前提
 
-[MDBT50Q Dongle](../FIDO2Device/MDBT50Q_Dongle/README.md)に、<b>BLE SMPサービスを組み込んだ[Zephyrアプリケーション](../nRF5340_app/secure_device_app)</b>が導入されていることが前提となります。
+FIDO認証器に、<b>BLE SMPサービスを組み込んだ[Zephyrアプリケーション](../nRF5340_app/secure_device_app)</b>が導入されていることが前提となります。
 
 ## プログラムの実装
 
@@ -50,7 +50,7 @@ macOS版管理ツールの関連モジュール配下になります。
 ```
 
 メイン画面のメニュー選択により、メソッド`bleDfuProcessWillStart`を呼び出すと、DFU処理実行が開始されます。<br>
-事前に、`checkUSBHIDConnection`により、MDBT50Q DongleがPCのUSBポートに装着されているかチェックします。
+事前に、`checkUSBHIDConnection`により、FIDO認証器がPCのUSBポートに装着されているかチェックします。
 
 ```
 @implementation ToolAppCommand
@@ -307,7 +307,7 @@ BLE切断検知時は`bleSmpCommandDidDisconnectWithError`が実行されます�
 
 #### 更新イメージ反映完了
 
-DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報照会を実行し、現在バージョン（MDBT50Q Dongle上に反映されているバージョン）を問い合わせます。
+DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報照会を実行し、現在バージョン（FIDO認証器上に反映されているバージョン）を問い合わせます。
 
 ```
     - (void) performDFUUpdateMonitor {
@@ -322,7 +322,7 @@ DFU処理クラスは、25秒間の待機後、BLE経由でバージョン情報
     }
 ```
 
-MDBT50Q Dongleからバージョン情報が応答されると、MDBT50Q Dongleに転送したファームウェアのバージョンと、現在バージョンを比較します。
+FIDO認証器からバージョン情報が応答されると、FIDO認証器に転送したファームウェアのバージョンと、現在バージョンを比較します。
 
 ```
     - (void)notifyFirmwareVersionForComplete:(NSData *)response {
