@@ -11,6 +11,7 @@
 #import "ToolCommonMessage.h"
 #import "ToolContext.h"
 #import "ToolDFUCommand.h"
+#import "ToolFIDOAttestationCommand.h"
 #import "ToolHIDCommand.h"
 #import "ToolLogFile.h"
 #import "ToolPIVCommand.h"
@@ -25,6 +26,7 @@
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
+    @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
     // 実行するヘルスチェックの種別を保持
@@ -52,6 +54,8 @@
             // DFU機能の初期設定
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
             [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
+            // FIDO鍵・証明書設定機能の初期設定
+            [self setToolFIDOAttestationCommand:[[ToolFIDOAttestationCommand alloc] initWithDelegate:self]];
         }
         return self;
     }
@@ -65,28 +69,18 @@
     }
 
     - (void)doCommandEraseSkeyCert {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_ERASE_SKEY_CERT
-                             informativeText:MSG_PROMPT_ERASE_SKEY_CERT]) {
-                // 鍵・証明書削除
-                [[self delegate] disableUserInterface];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
-            }
-        }
+        // 鍵・証明書削除
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_ERASE_SKEY_CERT];
     }
 
     - (void)doCommandInstallSkeyCert:(NSArray<NSString *> *)filePaths {
-        if ([self checkForHIDCommand]) {
-            if ([ToolPopupWindow promptYesNo:MSG_INSTALL_SKEY_CERT
-                             informativeText:MSG_PROMPT_INSTL_SKEY_CERT]) {
-                // 鍵・証明書インストール
-                [[self delegate] disableUserInterface];
-                [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY_CERT
-                                              skeyFilePath:filePaths[0]
-                                              certFilePath:filePaths[1]];
-                [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY_CERT];
-            }
-        }
+        // 鍵・証明書インストール
+        [[self delegate] disableUserInterface];
+        [[self toolHIDCommand] setInstallParameter:COMMAND_INSTALL_SKEY_CERT
+                                      skeyFilePath:filePaths[0]
+                                      certFilePath:filePaths[1]];
+        [[self toolHIDCommand] hidHelperWillProcess:COMMAND_INSTALL_SKEY_CERT];
     }
 
     - (void)doCommandTestCtapHidPing {
@@ -169,6 +163,14 @@
     }
 
 #pragma mark - For opening other window
+
+    - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        if ([self checkForHIDCommand]) {
+            // FIDO鍵・証明書設定画面を開く
+            [[self delegate] disableUserInterface];
+            [[self toolFIDOAttestationCommand] fidoAttestationWindowWillOpen:sender parentWindow:parentWindow];
+        }
+    }
 
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
         if ([self checkForHIDCommand]) {
