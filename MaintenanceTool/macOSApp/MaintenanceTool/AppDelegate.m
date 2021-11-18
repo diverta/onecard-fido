@@ -15,19 +15,19 @@
 
     @property (assign) IBOutlet NSWindow    *window;
     @property (assign) IBOutlet NSButton    *buttonPairing;
+    @property (assign) IBOutlet NSButton    *buttonUnpairing;
     @property (assign) IBOutlet NSButton    *buttonFIDOAttestation;
     @property (assign) IBOutlet NSButton    *buttonSetPinParam;
+    @property (assign) IBOutlet NSButton    *buttonSetPivParam;
+    @property (assign) IBOutlet NSButton    *buttonSetBLEDFU;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
     @property (assign) IBOutlet NSMenuItem  *menuItemTestUSB;
     @property (assign) IBOutlet NSMenuItem  *menuItemTestBLE;
-    @property (assign) IBOutlet NSMenuItem  *menuItemOption;
-    @property (assign) IBOutlet NSMenuItem  *menuItemEraseBond;
     @property (assign) IBOutlet NSMenuItem  *menuItemPreferences;
     @property (assign) IBOutlet NSMenuItem  *menuItemViewLog;
     @property (assign) IBOutlet NSMenuItem  *menuItemUSBDFU;
-    @property (assign) IBOutlet NSMenuItem  *menuItemBLEDFU;
 
     @property (nonatomic) ToolAppCommand    *toolAppCommand;
 @end
@@ -66,22 +66,27 @@
     - (void)enableButtons:(bool)enabled {
         // ボタンや入力欄の使用可能／不可制御
         [[self buttonPairing] setEnabled:enabled];
+        [[self buttonUnpairing] setEnabled:enabled];
         [[self buttonFIDOAttestation] setEnabled:enabled];
         [[self buttonSetPinParam] setEnabled:enabled];
+        [[self buttonSetPivParam] setEnabled:enabled];
+        [[self buttonSetBLEDFU] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
-        [[self menuItemOption] setEnabled:enabled];
         [[self menuItemPreferences] setHidden:!(enabled)];
         [[self menuItemViewLog] setEnabled:enabled];
-        [[self menuItemEraseBond] setEnabled:enabled];
         [[self menuItemUSBDFU] setEnabled:enabled];
-        [[self menuItemBLEDFU] setEnabled:enabled];
     }
 
     - (IBAction)buttonPairingDidPress:(id)sender {
         // ペアリング実行
         [[self toolAppCommand] doCommandPairing];
+    }
+
+    - (IBAction)buttonUnpairingDidPress:(id)sender {
+        // ペアリング情報削除
+        [[self toolAppCommand] doCommandEraseBond];
     }
 
     - (IBAction)buttonFIDOAttestationDidPress:(id)sender {
@@ -92,6 +97,16 @@
     - (IBAction)buttonSetPinParamDidPress:(id)sender {
         // PINコード設定画面を開く
         [[self toolAppCommand] setPinParamWindowWillOpen:self parentWindow:[self window]];
+    }
+
+    - (IBAction)buttonSetPivParamDidPress:(id)sender {
+        // PIV機能設定画面を表示
+        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
+    }
+
+    - (IBAction)buttonSetBLEDFUDidPress:(id)sender {
+        // ファームウェア更新をBLE経由で実行
+        [[self toolAppCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -144,11 +159,6 @@
         [[self toolAppCommand] doCommandTestBlePing];
     }
 
-    - (IBAction)menuItemOptionPivSettingsDidSelect:(id)sender {
-        // PIV機能設定画面を表示
-        [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
-    }
-
     - (IBAction)menuItemPreferencesDidSelect:(id)sender {
         // ツール設定画面を開く
         [[self toolAppCommand] toolPreferenceWindowWillOpen:self parentWindow:[self window]];
@@ -170,19 +180,9 @@
         [[self toolAppCommand] dfuNewProcessWillStart:self parentWindow:[self window]];
     }
 
-    - (IBAction)menuItemEraseBondDidSelect:(id)sender {
-        // ペアリング情報削除
-        [[self toolAppCommand] doCommandEraseBond];
-    }
-
     - (IBAction)menuItemBLModeDidSelect:(id)sender {
         // ブートローダーモード遷移
         [[self toolAppCommand] doCommandBLMode];
-    }
-
-    - (IBAction)menuItemBLEDFUDidSelect:(id)sender {
-        // ファームウェア更新をBLE経由で実行
-        [[self toolAppCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
     }
 
 #pragma mark - Call back from ToolAppCommand
