@@ -109,7 +109,7 @@
     }
 
     - (void)notifyFirmwareVersionForComplete:(bool)success response:(NSData *)response {
-        if (success == false || response == nil || [response length] == 0) {
+        if (success == false || response == nil || [response length] < 2) {
             // エラーが発生したとみなす
             [self notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
             // BLE接続を切断
@@ -123,7 +123,7 @@
     }
 
     - (void)notifyFirmwareVersionForStart:(bool)success response:(NSData *)response {
-        if (success == false || response == nil || [response length] == 0) {
+        if (success == false || response == nil || [response length] < 2) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
             [ToolPopupWindow critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil];
