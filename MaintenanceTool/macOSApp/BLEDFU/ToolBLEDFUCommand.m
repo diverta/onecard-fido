@@ -92,15 +92,15 @@
         [[self toolBLECommand] bleCommandWillProcess:COMMAND_BLE_GET_VERSION_INFO forCommand:self];
     }
 
-    - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response {
+    - (void)toolBLECommandDidProcess:(Command)command success:(bool)success response:(NSData *)response {
         switch (command) {
             case COMMAND_BLE_GET_VERSION_INFO:
                 if ([self needCompareUpdateVersion]) {
                     // バージョン更新判定フラグがセットされている場合（ファームウェア反映待ち）
-                    [self notifyFirmwareVersionForComplete:response];
+                    [self notifyFirmwareVersionForComplete:success response:response];
                 } else {
                     // バージョン更新判定フラグがセットされていない場合（処理開始画面の表示前）
-                    [self notifyFirmwareVersionForStart:response];
+                    [self notifyFirmwareVersionForStart:success response:response];
                 }
                 break;
             default:
@@ -108,8 +108,8 @@
         }
     }
 
-    - (void)notifyFirmwareVersionForComplete:(NSData *)response {
-        if (response == nil || [response length] == 0) {
+    - (void)notifyFirmwareVersionForComplete:(bool)success response:(NSData *)response {
+        if (success == false || response == nil || [response length] == 0) {
             // エラーが発生したとみなす
             [self notifyErrorMessage:MSG_DFU_VERSION_INFO_GET_FAILED];
             // BLE接続を切断
@@ -122,8 +122,8 @@
         [self compareUpdateVersion];
     }
 
-    - (void)notifyFirmwareVersionForStart:(NSData *)response {
-        if (response == nil || [response length] == 0) {
+    - (void)notifyFirmwareVersionForStart:(bool)success response:(NSData *)response {
+        if (success == false || response == nil || [response length] == 0) {
             // エラーが発生した場合は、メッセージをログ出力／ポップアップ表示したのち、画面に制御を戻す
             [[ToolLogFile defaultLogger] error:MSG_DFU_VERSION_INFO_GET_FAILED];
             [ToolPopupWindow critical:MSG_DFU_VERSION_INFO_GET_FAILED informativeText:nil];
