@@ -14,7 +14,7 @@
     - (id)initWithDelegate:(id)delegate;
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow toolBLECommandRef:(id)toolBLECommandRef;
     - (void)bleDfuProcessingWindowNotifyCancel;
-    - (void)toolBLECommandDidProcess:(Command)command response:(NSData *)response;
+    - (void)toolBLECommandDidProcess:(Command)command success:(bool)success response:(NSData *)response;
 
 @end
 

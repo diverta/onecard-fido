@@ -240,6 +240,24 @@
         }
     }
 
+    - (bool)isBLEKeepaliveByte:(uint8_t)commandByte {
+        // キープアライブの場合は true
+        return (commandByte == 0x82);
+    }
+
+    - (bool)isBLECommandByte:(uint8_t)commandByte {
+        // BLEコマンドバイトの場合は true
+        switch (commandByte) {
+            case 0x81:
+            case 0x83:
+            case HID_CMD_GET_VERSION_INFO:
+            case HID_CMD_UNKNOWN_ERROR:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     - (bool)isResponseCompleted:(NSData *)responseData {
         // 受信データおよび長さを保持
         static NSUInteger     totalLength;
@@ -252,11 +270,11 @@
             // INITフレームの場合は、CMDを退避しておく
             [self setBleResponseCmd:bytesBLEHeader[0]];
         }
-        if (bytesBLEHeader[0] == 0x82) {
+        if ([self isBLEKeepaliveByte:bytesBLEHeader[0]]) {
             // キープアライブの場合は引き続き次のレスポンスを待つ
             receivedData = nil;
             
-        } else if (bytesBLEHeader[0] == 0x81 || bytesBLEHeader[0] == 0x83 || bytesBLEHeader[0] == HID_CMD_GET_VERSION_INFO) {
+        } else if ([self isBLECommandByte:bytesBLEHeader[0]]) {
             // ヘッダーから全受信データ長を取得
             totalLength  = bytesBLEHeader[1] * 256 + bytesBLEHeader[2];
             // 4バイト目から後ろを切り出して連結
@@ -479,7 +497,7 @@
         // 戻り先が画面でない場合はコマンドクラスに制御を戻す
         if ([self toolCommandRef]) {
             [[self delegate] bleCommandDidProcess:[self command]
-                                   toolCommandRef:[self toolCommandRef] response:[self bleResponseData]];
+                                   toolCommandRef:[self toolCommandRef] result:[self lastCommandSuccess] response:[self bleResponseData]];
             return;
         }
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
