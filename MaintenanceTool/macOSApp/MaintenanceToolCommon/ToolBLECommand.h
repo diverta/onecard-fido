@@ -31,7 +31,7 @@
 
     - (void)notifyToolCommandMessage:(NSString *)message;
     - (void)bleCommandStartedProcess:(Command)command;
-    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref response:(NSData *)response;
+    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref result:(bool)result response:(NSData *)response;
     - (void)bleCommandDidProcess:(Command)command result:(bool)result message:(NSString *)message;
 
 @end
