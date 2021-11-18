@@ -369,11 +369,11 @@
 
 #pragma mark - Call back from ToolBLECommand
 
-    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref response:(NSData *)response {
+    - (void)bleCommandDidProcess:(Command)command toolCommandRef:(id)ref result:(bool)result response:(NSData *)response {
         // 下位のコマンドクラスにデータと制御を引き渡す
         if ([ref isMemberOfClass:[ToolBLEDFUCommand class]]) {
             ToolBLEDFUCommand *toolBLEDFUCommand = (ToolBLEDFUCommand *)ref;
-            [toolBLEDFUCommand toolBLECommandDidProcess:command response:response];
+            [toolBLEDFUCommand toolBLECommandDidProcess:command success:result response:response];
         }
     }
 

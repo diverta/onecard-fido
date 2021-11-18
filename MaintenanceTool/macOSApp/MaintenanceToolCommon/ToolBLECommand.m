@@ -479,7 +479,7 @@
         // 戻り先が画面でない場合はコマンドクラスに制御を戻す
         if ([self toolCommandRef]) {
             [[self delegate] bleCommandDidProcess:[self command]
-                                   toolCommandRef:[self toolCommandRef] response:[self bleResponseData]];
+                                   toolCommandRef:[self toolCommandRef] result:[self lastCommandSuccess] response:[self bleResponseData]];
             return;
         }
         // トランザクション実行中に切断された場合は、接続を再試行（回数上限あり）
