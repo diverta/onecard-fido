@@ -220,6 +220,11 @@
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // DFU処理を開始するかどうかのプロンプトを表示
+        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_BLE_DFU_PROCESS
+                         informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS] == false) {
+            return;
+        }
         // ファームウェア更新処理を実行するため、DFU開始画面を表示
         [[self delegate] disableUserInterface];
         [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];

@@ -203,6 +203,8 @@
 #define MSG_DFU_SLOT_INFO_GET_FAILED            @"FIDO認証器のプログラム領域情報が取得できませんでした。"
 #define MSG_DFU_CHANGE_IMAGE_UPDATE_MODE_FAILED @"FIDO認証器ファームウェアの反映要求に失敗しました。"
 #define MSG_DFU_RESET_APPLICATION_FAILED        @"FIDO認証器ファームウェアの再始動要求に失敗しました。"
+#define MSG_PROMPT_START_BLE_DFU_PROCESS        @"ファームウェア更新処理を開始しますか？"
+#define MSG_COMMENT_START_BLE_DFU_PROCESS       @"BLEペアリングの済んだFIDO認証器が\nBLEペリフェラルモードになっているのを\n確認した後、Yesボタンをクリックすると、\nBLE経由でファームウェア更新処理が\n開始されます。\n\nFIDO認証器は、バージョン0.4.0以降の\nファームウェアが導入済みのものをご利用\nください。"
 
 #pragma mark - USB DFU関連
 #define MSG_DFU_IMAGE_NOT_AVAILABLE             @"ファームウェア更新機能が利用できません。"
