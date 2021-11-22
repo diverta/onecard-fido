@@ -518,7 +518,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="lHS-3K-zvA"/>
                         </constraints>
-                        <buttonCell key="cell" type="push" title="FIDO鍵・証明書管理" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
+                        <buttonCell key="cell" type="push" title="FIDO鍵・証明書設定" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GqT-Ly-b3r">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
