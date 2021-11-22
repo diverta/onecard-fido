@@ -17,6 +17,7 @@
 #import "ToolPIVCommand.h"
 #import "ToolPopupWindow.h"
 #import "ToolPreferenceCommand.h"
+#import "ToolDFUCommand.h"
 
 @interface ToolAppCommand () <ToolHIDCommandDelegate, ToolBLECommandDelegate>
 
@@ -26,6 +27,7 @@
     @property (nonatomic) ToolPreferenceCommand *toolPreferenceCommand;
     @property (nonatomic) ToolUSBDFUCommand     *toolUSBDFUCommand;
     @property (nonatomic) ToolPIVCommand        *toolPIVCommand;
+    @property (nonatomic) ToolDFUCommand        *toolDFUCommand;
     @property (nonatomic) ToolFIDOAttestationCommand *toolFIDOAttestationCommand;
     // 処理機能名称を保持
     @property (nonatomic) NSString *processNameOfCommand;
@@ -52,6 +54,7 @@
             // PIV機能の初期設定
             [self setToolPIVCommand:[[ToolPIVCommand alloc] initWithDelegate:self]];
             // DFU機能の初期設定
+            [self setToolDFUCommand:[[ToolDFUCommand alloc] initWithDelegate:self]];
             [self setToolBLEDFUCommand:[[ToolBLEDFUCommand alloc] initWithDelegate:self]];
             [self setToolUSBDFUCommand:[[ToolUSBDFUCommand alloc] initWithDelegate:self]];
             // FIDO鍵・証明書設定機能の初期設定
@@ -180,6 +183,12 @@
         }
     }
 
+    - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow {
+        // ファームウェア更新画面を開く
+        [[self delegate] disableUserInterface];
+        [[self toolDFUCommand] toolDFUWindowWillOpen:sender parentWindow:parentWindow];
+    }
+
     - (void)pinCodeParamWindowWillOpenForHID:(id)sender parentWindow:(NSWindow *)parentWindow {
         // HID CTAP2ヘルスチェック処理を実行するため、PINコード入力画面を開く
         [[self toolHIDCommand] pinCodeParamWindowWillOpen:sender parentWindow:parentWindow];
@@ -206,11 +215,8 @@
     }
 
     - (void)dfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
-        if ([self checkForHIDCommand]) {
-            // ファームウェア更新処理を実行するため、DFU開始画面を表示
-            [[self delegate] disableUserInterface];
-            [[self toolUSBDFUCommand] dfuProcessWillStart:sender parentWindow:parentWindow toolHIDCommandRef:[self toolHIDCommand]];
-        }
+        // ファームウェア更新処理を実行
+        [[self toolUSBDFUCommand] dfuProcessWillStart:sender parentWindow:parentWindow toolHIDCommandRef:[self toolHIDCommand]];
     }
 
     - (void)dfuNewProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
@@ -220,13 +226,7 @@
     }
 
     - (void)bleDfuProcessWillStart:(id)sender parentWindow:(NSWindow *)parentWindow {
-        // DFU処理を開始するかどうかのプロンプトを表示
-        if ([ToolPopupWindow promptYesNo:MSG_PROMPT_START_BLE_DFU_PROCESS
-                         informativeText:MSG_COMMENT_START_BLE_DFU_PROCESS] == false) {
-            return;
-        }
-        // ファームウェア更新処理を実行するため、DFU開始画面を表示
-        [[self delegate] disableUserInterface];
+        // ファームウェア更新処理を実行
         [[self toolBLEDFUCommand] bleDfuProcessWillStart:sender parentWindow:parentWindow toolBLECommandRef:[self toolBLECommand]];
     }
 

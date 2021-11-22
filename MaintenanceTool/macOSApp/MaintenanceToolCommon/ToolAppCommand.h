@@ -33,6 +33,7 @@
 
     - (void)fidoAttestationWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)setPinParamWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
+    - (void)toolDFUWindowWillOpen:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pinCodeParamWindowWillOpenForHID:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)pinCodeParamWindowWillOpenForBLE:(id)sender parentWindow:(NSWindow *)parentWindow;
     - (void)PreferenceWindowWillOpenWithParent:(NSWindow *)parent;

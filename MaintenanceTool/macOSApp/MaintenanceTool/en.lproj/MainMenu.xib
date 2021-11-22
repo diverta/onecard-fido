@@ -428,12 +428,6 @@
                                                 <action selector="menuItemBLModeDidSelect:" target="494" id="DRw-pM-EgK"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="ファームウェアを更新" id="eQd-2K-QLS">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="menuItemDFUTestDidSelect:" target="494" id="Bcj-Ub-fvZ"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="ファームウェアを新規導入" id="Dci-ge-0Sb">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -562,14 +556,14 @@
                             <action selector="buttonSetPivParamDidPress:" target="494" id="T9c-7f-6GF"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1rF-YJ-d6M" userLabel="buttonBLEDFU">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1rF-YJ-d6M" userLabel="buttonDFU">
                         <rect key="frame" x="223" y="243" width="149" height="32"/>
                         <buttonCell key="cell" type="push" title="ファームウェア更新" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tlh-pK-ssk">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="buttonSetBLEDFUDidPress:" target="494" id="tKz-1O-xVi"/>
+                            <action selector="buttonDFUDidPress:" target="494" id="tKz-1O-xVi"/>
                         </connections>
                     </button>
                     <box title="BLEペアリング" translatesAutoresizingMaskIntoConstraints="NO" id="7vp-JY-k4p" userLabel="BoxBLE">
@@ -641,10 +635,10 @@
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="buttonDFU" destination="1rF-YJ-d6M" id="jnA-lM-anu"/>
                 <outlet property="buttonFIDOAttestation" destination="IdI-T9-vnq" id="pVS-77-IMc"/>
                 <outlet property="buttonPairing" destination="Mg1-7s-419" id="hT7-R3-AGo"/>
                 <outlet property="buttonQuit" destination="hcA-hD-g4U" id="dfo-pB-wHb"/>
-                <outlet property="buttonSetBLEDFU" destination="1rF-YJ-d6M" id="jnA-lM-anu"/>
                 <outlet property="buttonSetPinParam" destination="FlF-Id-KYb" id="xxD-HA-LNp"/>
                 <outlet property="buttonSetPivParam" destination="4k9-eQ-arQ" id="NVQ-yP-CV5"/>
                 <outlet property="buttonUnpairing" destination="N4p-NW-EKe" id="46E-lc-jqS"/>

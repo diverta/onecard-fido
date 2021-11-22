@@ -19,7 +19,7 @@
     @property (assign) IBOutlet NSButton    *buttonFIDOAttestation;
     @property (assign) IBOutlet NSButton    *buttonSetPinParam;
     @property (assign) IBOutlet NSButton    *buttonSetPivParam;
-    @property (assign) IBOutlet NSButton    *buttonSetBLEDFU;
+    @property (assign) IBOutlet NSButton    *buttonDFU;
     @property (assign) IBOutlet NSButton    *buttonQuit;
     @property (assign) IBOutlet NSTextView  *textView;
 
@@ -70,7 +70,7 @@
         [[self buttonFIDOAttestation] setEnabled:enabled];
         [[self buttonSetPinParam] setEnabled:enabled];
         [[self buttonSetPivParam] setEnabled:enabled];
-        [[self buttonSetBLEDFU] setEnabled:enabled];
+        [[self buttonDFU] setEnabled:enabled];
         [[self buttonQuit] setEnabled:enabled];
         [[self menuItemTestUSB] setEnabled:enabled];
         [[self menuItemTestBLE] setEnabled:enabled];
@@ -104,9 +104,9 @@
         [[self toolAppCommand] PreferenceWindowWillOpenWithParent:[self window]];
     }
 
-    - (IBAction)buttonSetBLEDFUDidPress:(id)sender {
-        // ファームウェア更新をBLE経由で実行
-        [[self toolAppCommand] bleDfuProcessWillStart:self parentWindow:[self window]];
+    - (IBAction)buttonDFUDidPress:(id)sender {
+        // ファームウェア更新画面を表示
+        [[self toolAppCommand] toolDFUWindowWillOpen:self parentWindow:[self window]];
     }
 
     - (IBAction)buttonQuitDidPress:(id)sender {
@@ -170,10 +170,6 @@
         [NSURL fileURLWithPath:[[ToolLogFile defaultLogger] logFilePathString] isDirectory:false];
         NSArray *fileURLs = [NSArray arrayWithObjects:url, nil];
         [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:fileURLs];
-    }
-
-    - (IBAction)menuItemDFUTestDidSelect:(id)sender {
-        [[self toolAppCommand] dfuProcessWillStart:self parentWindow:[self window]];
     }
 
     - (IBAction)menuItemDFUNewDidSelect:(id)sender {
